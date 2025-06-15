@@ -3,6 +3,8 @@
 - [Table of Contents](#table-of-contents)
 - [How the repository was set up](#how-the-repository-was-set-up)
   - [Basics](#basics)
+- [Reference](#reference)
+  - [Cheatsheets](#cheatsheets)
 
 # How the repository was set up
 
@@ -20,4 +22,12 @@
     docs/repo_setup.md
     .markdownlint.json
     README.md
+    .gitignore
     ```
+
+# Reference
+
+## Cheatsheets
+
+- https://www.typescriptlang.org/cheatsheets/
+- https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets
