@@ -13,10 +13,10 @@
 3. Cloned the repository locally.
 4. Added the basics:
     ```text
-    - `LICENSE` file
-    - `.vscode/extensions.json`
-    - `.vscode/settings.json`
-    - `docs/about_vscode.md`
-    - `docs/repo_setup.md`
-    - markdownlint configuration file: `.markdownlint.json`
+    LICENSE
+    .vscode/extensions.json
+    .vscode/settings.json
+    docs/about_vscode.md
+    docs/repo_setup.md
+    .markdownlint.json
     ```
