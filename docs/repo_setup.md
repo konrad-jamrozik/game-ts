@@ -108,6 +108,7 @@ It was set up as follows:
 
 # Reference
 
+- https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4
 - https://github.com/konrad-jamrozik/game/blob/main/docs/web_frontend_setup.md
 - https://github.com/konrad-jamrozik/game-python/blob/main/web/README.md
 - https://github.com/konrad-jamrozik/game-python/blob/main/web/README_web.md
