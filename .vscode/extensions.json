@@ -5,12 +5,17 @@
 	// List of extensions which should be recommended for users of this workspace.
 	"recommendations": [
 		// Linter for markdown files.
+		// https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
         "DavidAnson.vscode-markdownlint",
 		// Provides capability to generate and keep-up-to-date markdown table of contents.
+		// And bunch more useful features for markdown files.
+		// https://marketplace.visualstudio.com/items?itemName=yzhang.markdown-all-in-one
         "yzhang.markdown-all-in-one",
 		// Mermaid diagrams in markdown.
+		// https://marketplace.visualstudio.com/items?itemName=bierner.markdown-mermaid
         "bierner.markdown-mermaid",
 		// Formatter for JavaScript and TypeScript files.
+		// https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode
         "esbenp.prettier-vscode"		
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.

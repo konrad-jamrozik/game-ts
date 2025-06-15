@@ -1,4 +1,7 @@
 {
+    // This is vscode workspace settings file for this repository.
+    // https://code.visualstudio.com/docs/configure/settings#_workspace-settings
+    
     "files.associations": {
         // LICENSE is by default treated as a markdown file, making it be
         // in purview of markdownlint.
