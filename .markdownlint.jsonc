@@ -1,0 +1,55 @@
+{
+  // This repository is markdownlint-enabled.
+  // Website: https://github.com/DavidAnson/markdownlint
+  // VS Code extension: https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
+  //
+  // The implicit, default set of rules is defined in:
+  // https://github.com/DavidAnson/markdownlint/blob/v0.30.0/doc/Rules.md
+
+  // MD013 - Line length
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md013.md
+  //
+  // "line_length" : 120
+  // Allow lines of length 120 instead of the default 80. Keep in sync with editor.rulers in .vscode/settings.json.
+  //
+  // "tables": false
+  // Do not include tables. Breaking a line in a table to meet the line length would add a line break in the table
+  // itself. We do not want that.
+  //
+  // "headings": false
+  // Do not include headings. One cannot break lines in headings, and we sometimes need long ones, e.g. for FAQs.
+  //
+  // "codeblock": false
+  // Do not include code blocks. We sometimes need long code blocks, e.g. for CLI command lines.
+  "MD013": { "line_length": 120, "tables": false, "headings": false, "code_blocks": false },
+
+  // MD025 - Multiple top-level headings in the same document
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md025.md
+  //
+  // I like multiple top-level headings.
+  "MD025": false,
+
+  // MD028 - Blank line inside blockquote
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md028.md
+  //
+  // Sometimes I use multiple consecutive block quotes for inline notes:
+  // https://github.com/orgs/community/discussions/16925
+  "MD028": false,
+
+  // MD031 - Fenced code blocks should be surrounded by blank lines
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md031.md
+  //
+  // Sometimes I use fenced code blocks in lists and entering blank lines
+  // would break the compact list spacing.
+  "MD031": false,
+
+  // MD034 - Inline HTML
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
+  //
+  // Forbid using inline HTML elements except <br/>. We use <br/> within tables.
+  "MD033": { "allowed_elements": ["br"] },
+
+  // MD034 - Bare URL used
+  // https://github.com/DavidAnson/markdownlint/blob/main/doc/md034.md
+  "MD034": false
+}

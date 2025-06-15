@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        // LICENSE is by default treated as a markdown file, making it be
+        // in purview of markdownlint.
+        // By setting it to plaintext we disable markdownlint for LICENSE.
+        "LICENSE": "plaintext"
+    },
+    "editor.rulers": [80, 100, 120]
+}
