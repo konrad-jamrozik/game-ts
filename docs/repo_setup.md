@@ -8,7 +8,7 @@
 
 ## Basics
 
-1. Installed and configured VS Code.
+1. Installed VS Code on my local OS.
 2. Created the repository via GitHub web UI.
 3. Cloned the repository locally.
 4. Added the basics:
@@ -19,4 +19,5 @@
     docs/about_vscode.md
     docs/repo_setup.md
     .markdownlint.json
+    README.md
     ```
