@@ -3,18 +3,9 @@
 - [Table of Contents](#table-of-contents)
 - [How the repository was set up](#how-the-repository-was-set-up)
 - [Basic setup](#basic-setup)
-  - [VS Code configuration](#vs-code-configuration)
-  - [Markdownlint configuration](#markdownlint-configuration)
-  - [git and .gitignore configuration](#git-and-gitignore-configuration)
   - [License setup](#license-setup)
   - [README setup](#readme-setup)
-- [Web project setup](#web-project-setup)
-  - [npm \& Node.js configuration](#npm--nodejs-configuration)
-  - [TypeScript configuration](#typescript-configuration)
-  - [Vite configuration](#vite-configuration)
-  - [Vitest configuration](#vitest-configuration)
-  - [ESLint configuration](#eslint-configuration)
-  - [Prettier configuration](#prettier-configuration)
+  - [Markdown files in docs folder](#markdown-files-in-docs-folder)
   - [GitHub CI/CD configuration](#github-cicd-configuration)
 - [Reference](#reference)
   - [Cheatsheets](#cheatsheets)
@@ -38,69 +29,25 @@
     .gitignore
     ```
 
-## VS Code configuration
-
-🚧TODO🚧
-
-Extension, workspace settings, launch.json, tasks.json
-
-## Markdownlint configuration
-
-🚧TODO🚧
-
-## git and .gitignore configuration
-
-🚧TODO🚧
-
 ## License setup
 
-🚧TODO🚧
+Added `LICENSE` file to have http://creativecommons.org/licenses/by-nc/4.0/.
+I chose it by analyzing existing licenses, originally inspired by XCF license,
+which is the same.
+
+Then I had to ensure markdownlint is not reporting issues with it -
+refer to doc on markdownlint to see how I did it.
 
 ## README setup
 
-🚧TODO🚧
+Added `README.md` with the usual information.
 
-# Web project setup
+## Markdown files in docs folder
 
-The web project is using following core technologies, alphabetically:
+I wrote various documentation files in the `docs` folder when setting up the repository for the first time.
 
-- Node.js
-- npm
-- React
-- TypeScript
-- Vite
-- Vitest
-
-It was set up as follows:
-
-- 🚧TODO🚧 Installed `node.js` and `npm` using `nvm-windows`, per [Using a Node installer to install Node.js and npm][npm-use-nvm].
-- 🚧TODO🚧 Followed [Vite Scaffolding Your First Vite Project][vite-scaffold] with [template-react-ts] to scaffold the project.
-- 🚧TODO🚧 Added and configured:
-  - Typescript - tsconfig.js,
-  - ESLint - TODO
-  - Prettier - TODO
-
-## npm & Node.js configuration
-
-## TypeScript configuration
-
-🚧TODO🚧
-
-## Vite configuration
-
-🚧TODO🚧
-
-## Vitest configuration
-
-🚧TODO🚧
-
-## ESLint configuration
-
-🚧TODO🚧
-
-## Prettier configuration
-
-🚧TODO🚧
+Most notably, ran `Markdown All in One: Create Table of Contents` action to generate table of contents.
+This command comes from the `Markdown All in One` extension, which is recommended in the `.vscode/extensions.json` file.
 
 ## GitHub CI/CD configuration
 
@@ -117,7 +64,3 @@ It was set up as follows:
 
 - https://www.typescriptlang.org/cheatsheets/
 - https://github.com/typescript-cheatsheets/react#reacttypescript-cheatsheets
-
-[npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
-[vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project
-[template-react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts

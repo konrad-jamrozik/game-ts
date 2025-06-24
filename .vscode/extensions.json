@@ -3,6 +3,7 @@
 	// Extension identifier format: ${publisher}.${name}. Example: vscode.csharp
 
 	// List of extensions which should be recommended for users of this workspace.
+	// I have dedicated docs for many of these extensions in the /docs folder.
 	"recommendations": [
 		// Linter for markdown files.
 		// https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint

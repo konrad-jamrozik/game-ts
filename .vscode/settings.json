@@ -4,7 +4,7 @@
     
     "files.associations": {
         // LICENSE is by default treated as a markdown file, making it be
-        // in purview of markdownlint.
+        // in purview of markdownlint, creating unwanted warnings.
         // By setting it to plaintext we disable markdownlint for LICENSE.
         "LICENSE": "plaintext"
     },
@@ -16,6 +16,7 @@
     "cSpell.words": [
         "Cheatsheets",
         "Jamrozik",
-        "Solarius"
-    ]
+        "Solarius",
+        "substep"
+    ],
 }
