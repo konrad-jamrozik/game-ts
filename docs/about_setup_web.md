@@ -1,7 +1,7 @@
 
-# About web project setup
+# About the web project setup
 
-- [About web project setup](#about-web-project-setup)
+- [About the web project setup](#about-the-web-project-setup)
 - [Web project setup](#web-project-setup)
   - [npm \& Node.js configuration](#npm--nodejs-configuration)
   - [TypeScript configuration](#typescript-configuration)
@@ -10,7 +10,7 @@
   - [ESLint configuration](#eslint-configuration)
   - [Prettier configuration](#prettier-configuration)
 
-This doc describes how the web project as set up, which is a substep of the overall [repository setup](./repo_setup.md).
+This doc describes how the web project as set up, which is a substep of the overall [repository setup](./about_setup_repo.md).
 
 # Web project setup
 
@@ -53,7 +53,6 @@ It was set up as follows:
 ## Prettier configuration
 
 🚧TODO🚧
-
 
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project

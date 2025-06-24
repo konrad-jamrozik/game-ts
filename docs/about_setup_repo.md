@@ -1,7 +1,6 @@
-# Table of Contents
+# About repository setup
 
-- [Table of Contents](#table-of-contents)
-- [How the repository was set up](#how-the-repository-was-set-up)
+- [About repository setup](#about-repository-setup)
 - [Basic setup](#basic-setup)
   - [License setup](#license-setup)
   - [README setup](#readme-setup)
@@ -9,8 +8,6 @@
   - [GitHub CI/CD configuration](#github-cicd-configuration)
 - [Reference](#reference)
   - [Cheatsheets](#cheatsheets)
-
-# How the repository was set up
 
 # Basic setup
 
@@ -20,13 +17,15 @@
 4. Added the basics:
     ```text
     LICENSE
-    .vscode/extensions.json
-    .vscode/settings.json
-    docs/about_vscode.md
-    docs/repo_setup.md
-    .markdownlint.json
     README.md
     .gitignore
+    .vscode/extensions.json
+    .vscode/settings.json
+    docs/about_setup_repo.md
+    docs/about_vscode.md
+    docs/about_misc_tools.md
+    docs/about_setup_web.md
+    .markdownlint.json
     ```
 
 ## License setup
