@@ -23,9 +23,13 @@ The web project is using following core technologies, alphabetically:
 - Vite
 - Vitest
 
-It was set up as follows:
+I set it up as follows:
 
-- 🚧TODO🚧 Installed `node.js` and `npm` using `nvm-windows`, per [Using a Node installer to install Node.js and npm][npm-use-nvm].
+1. Installed `node.js` and `npm` using `nvm-windows`, per
+[Using a Node installer to install Node.js and npm][npm-use-nvm].  
+As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][node-releases] and [blog post][node-24.0-blog].
+`nvm-windows` development stopped at `v1.2.2`.
+
 - 🚧TODO🚧 Followed [Vite Scaffolding Your First Vite Project][vite-scaffold] with [template-react-ts] to scaffold the project.
 - 🚧TODO🚧 Added and configured:
   - Typescript - tsconfig.js,
@@ -57,3 +61,5 @@ It was set up as follows:
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project
 [template-react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
+[node-24.0-blog]: https://nodejs.org/en/blog/release/v24.0.0
+[node-releases]: https://nodejs.org/en/about/previous-releases

@@ -14,7 +14,7 @@
 1. Installed VS Code on my local OS.
 2. Created the repository via GitHub web UI.
 3. Cloned the repository locally.
-4. Added the basics:
+4. Added the basics, and documentation of how the basics were set up:
     ```text
     LICENSE
     README.md
@@ -37,9 +37,13 @@ which is the same.
 Then I had to ensure markdownlint is not reporting issues with it -
 refer to doc on markdownlint to see how I did it.
 
+See [README setup](#readme-setup) for the license image / badge / button / shield.
+
 ## README setup
 
-Added `README.md` with the usual information.
+Added `README.md` with the usual information. The license image / badge / button / shield can be found e.g. at:
+
+- https://github.com/santisoler/cc-licenses/blob/main/README.md#cc-attribution-noncommercial-40-international
 
 ## Markdown files in docs folder
 
@@ -50,7 +54,7 @@ This command comes from the `Markdown All in One` extension, which is recommende
 
 ## GitHub CI/CD configuration
 
-🚧TODO🚧
+🚧TODO🚧 - planning to use GitHub pages
 
 # Reference
 
