@@ -3,12 +3,13 @@
 
 - [About the web project setup](#about-the-web-project-setup)
 - [Web project setup](#web-project-setup)
-  - [npm \& Node.js configuration](#npm--nodejs-configuration)
-  - [TypeScript configuration](#typescript-configuration)
-  - [Vite configuration](#vite-configuration)
-  - [Vitest configuration](#vitest-configuration)
-  - [ESLint configuration](#eslint-configuration)
-  - [Prettier configuration](#prettier-configuration)
+- [npm \& Node.js configuration](#npm--nodejs-configuration)
+- [TypeScript configuration](#typescript-configuration)
+- [Vite configuration](#vite-configuration)
+- [Vitest configuration](#vitest-configuration)
+- [ESLint configuration](#eslint-configuration)
+- [Prettier configuration](#prettier-configuration)
+- [Reference](#reference)
 
 This doc describes how the web project as set up, which is a substep of the overall [repository setup](./about_setup_repo.md).
 
@@ -36,27 +37,33 @@ As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][n
   - ESLint - TODO
   - Prettier - TODO
 
-## npm & Node.js configuration
-
-## TypeScript configuration
+# npm & Node.js configuration
 
 🚧TODO🚧
 
-## Vite configuration
+# TypeScript configuration
 
 🚧TODO🚧
 
-## Vitest configuration
+# Vite configuration
 
 🚧TODO🚧
 
-## ESLint configuration
+# Vitest configuration
 
 🚧TODO🚧
 
-## Prettier configuration
+# ESLint configuration
 
 🚧TODO🚧
+
+# Prettier configuration
+
+🚧TODO🚧
+
+# Reference
+
+- [Chat about basic repo setup](https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4)
 
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project
