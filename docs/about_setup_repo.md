@@ -1,7 +1,7 @@
 # About repository setup
 
 - [About repository setup](#about-repository-setup)
-- [Basic setup](#basic-setup)
+- [Basic setup from scratch](#basic-setup-from-scratch)
   - [License setup](#license-setup)
   - [README setup](#readme-setup)
   - [Markdown files in docs folder](#markdown-files-in-docs-folder)
@@ -9,7 +9,9 @@
 - [Reference](#reference)
   - [Cheatsheets](#cheatsheets)
 
-# Basic setup
+# Basic setup from scratch
+
+Here is how I set up this repository and dev env from scratch:
 
 1. Installed VS Code on my local OS.
 2. Created the repository via GitHub web UI.
@@ -45,20 +47,21 @@ Added `README.md` with the usual information. The license image / badge / button
 
 - https://github.com/santisoler/cc-licenses/blob/main/README.md#cc-attribution-noncommercial-40-international
 
+Ran `Markdown All in One: Create Table of Contents` action to generate table of contents.
+This command comes from the `Markdown All in One` extension, which is recommended in the `.vscode/extensions.json` file.
+
 ## Markdown files in docs folder
 
 I wrote various documentation files in the `docs` folder when setting up the repository for the first time.
 
-Most notably, ran `Markdown All in One: Create Table of Contents` action to generate table of contents.
-This command comes from the `Markdown All in One` extension, which is recommended in the `.vscode/extensions.json` file.
 
 ## GitHub CI/CD configuration
 
-🚧TODO🚧 - planning to use GitHub pages
+🚧TODO🚧 - planning to use GitHub pages per [this chat](https://chatgpt.com/share/686b7522-18b4-8011-93cf-47e77e1ad535).
 
 # Reference
 
-- https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4
+- [Chat about basic repo setup](https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4)
 - https://github.com/konrad-jamrozik/game/blob/main/docs/web_frontend_setup.md
 - https://github.com/konrad-jamrozik/game-python/blob/main/web/README.md
 - https://github.com/konrad-jamrozik/game-python/blob/main/web/README_web.md
