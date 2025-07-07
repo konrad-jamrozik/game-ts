@@ -28,7 +28,7 @@ The web project is using following core technologies, alphabetically:
 I set it up as follows:
 
 1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
-1. To scaffold the initial React + TypeScript + Vite project, executed [Vite setup commands](about_vite.md#vite-setup-commands).
+1. To scaffold the initial React + TypeScript + Vite project, I executed [Vite setup commands](about_vite.md#vite-setup-commands).
 
 - 🚧TODO🚧 Added and configured:
   - Typescript - tsconfig.js,
@@ -63,7 +63,7 @@ See also:
 
 - [nvm-windows]: `nvm-windows` development stopped at `v1.2.2`.
 - [node-releases]
-- [Node 24.0 blog post][node-24.0-blog].
+- [Node 24.0 blog post][node-24.0-blog]
 
 
 🚧TODO🚧

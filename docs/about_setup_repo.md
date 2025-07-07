@@ -5,6 +5,7 @@
   - [License setup](#license-setup)
   - [README setup](#readme-setup)
   - [Markdown files in docs folder](#markdown-files-in-docs-folder)
+  - [Web project setup](#web-project-setup)
   - [GitHub CI/CD configuration](#github-cicd-configuration)
   - [Cheatsheets](#cheatsheets)
 
@@ -52,6 +53,10 @@ This command comes from the `Markdown All in One` extension, which is recommende
 ## Markdown files in docs folder
 
 I wrote various documentation files in the `docs` folder when setting up the repository for the first time.
+
+## Web project setup
+
+I set up the React + TypeScript + Vite web project as described in the [about_setup_web.md](about_setup_web.md) document.
 
 ## GitHub CI/CD configuration
 
