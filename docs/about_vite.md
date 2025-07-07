@@ -18,8 +18,12 @@ For more on tsc vs Babel vs SWC, see [Babel vs tsc] and [Vite react-ts vs react-
 
 ```powershell
 npm create vite@latest web -- --template react-ts
+
+# As of 2025-07-7: the above will prompt to install create-vite@7.0.0 package.
 cd web
 npm install
+# As of 2025-07-07: added 233 packages, and audited 234 packages in 18s
+
 npm run dev # To locally verify that things work
 # git add, commit and push
 ```
