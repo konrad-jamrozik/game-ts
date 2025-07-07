@@ -31,7 +31,12 @@ I set it up as follows:
 As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][node-releases] and [blog post][node-24.0-blog].
 `nvm-windows` development stopped at `v1.2.2`.
 
-- 🚧TODO🚧 Followed [Vite Scaffolding Your First Vite Project][vite-scaffold] with [template-react-ts] to scaffold the project.
+2. Followed [Vite Scaffolding Your First Vite Project][vite-scaffold] with [template-react-ts] to scaffold the project.
+   See also:  
+   - [Vite react-ts vs react-swc-ts][soq-vite-swc] for the discussion about using `swc` vs `tsc`.
+   - [babel vs tsc].
+   - [What is babel].
+
 - 🚧TODO🚧 Added and configured:
   - Typescript - tsconfig.js,
   - ESLint - TODO
@@ -67,6 +72,9 @@ As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][n
 
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project
+[soq-vite-swc]: https://stackoverflow.com/questions/79111563/what-is-the-difference-of-typescript-vs-typescript-swc-when-creating-a-vite-pr
+[babel vs tsc]: https://www.typescriptlang.org/docs/handbook/babel-with-typescript.html
 [template-react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [node-24.0-blog]: https://nodejs.org/en/blog/release/v24.0.0
 [node-releases]: https://nodejs.org/en/about/previous-releases
+[What is babel]: https://babeljs.io/docs/
