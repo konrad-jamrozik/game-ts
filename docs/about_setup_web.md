@@ -9,7 +9,7 @@
 - [Vitest configuration](#vitest-configuration)
 - [ESLint configuration](#eslint-configuration)
 - [Prettier configuration](#prettier-configuration)
-- [Reference](#reference)
+- [References](#references)
 
 This doc describes how the web project as set up, which is a substep of the overall [repository setup](./about_setup_repo.md).
 
@@ -66,9 +66,12 @@ As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][n
 
 🚧TODO🚧
 
-# Reference
+# References
 
 - [Chat about basic repo setup](https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4)
+- https://github.com/konrad-jamrozik/game/blob/main/docs/web_frontend_setup.md
+- https://github.com/konrad-jamrozik/game-python/blob/main/web/README.md
+- https://github.com/konrad-jamrozik/game-python/blob/main/web/README_web.md
 
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project

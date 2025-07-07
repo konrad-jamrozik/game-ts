@@ -6,7 +6,6 @@
   - [README setup](#readme-setup)
   - [Markdown files in docs folder](#markdown-files-in-docs-folder)
   - [GitHub CI/CD configuration](#github-cicd-configuration)
-- [Reference](#reference)
   - [Cheatsheets](#cheatsheets)
 
 # Basic setup from scratch
@@ -54,17 +53,9 @@ This command comes from the `Markdown All in One` extension, which is recommende
 
 I wrote various documentation files in the `docs` folder when setting up the repository for the first time.
 
-
 ## GitHub CI/CD configuration
 
 🚧TODO🚧 - planning to use GitHub pages per [this chat](https://chatgpt.com/share/686b7522-18b4-8011-93cf-47e77e1ad535).
-
-# Reference
-
-- [Chat about basic repo setup](https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4)
-- https://github.com/konrad-jamrozik/game/blob/main/docs/web_frontend_setup.md
-- https://github.com/konrad-jamrozik/game-python/blob/main/web/README.md
-- https://github.com/konrad-jamrozik/game-python/blob/main/web/README_web.md
 
 ## Cheatsheets
 
