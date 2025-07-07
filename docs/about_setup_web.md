@@ -3,7 +3,9 @@
 
 - [About the web project setup](#about-the-web-project-setup)
 - [Web project setup](#web-project-setup)
-- [npm \& Node.js configuration](#npm--nodejs-configuration)
+- [nvm-windows, Node.js and npm configuration](#nvm-windows-nodejs-and-npm-configuration)
+  - [Install nvm-windows, and Node.js \& npm using it](#install-nvm-windows-and-nodejs--npm-using-it)
+  - [Commands to update to latest nvm, Node.js and npm version](#commands-to-update-to-latest-nvm-nodejs-and-npm-version)
 - [TypeScript configuration](#typescript-configuration)
 - [Vitest configuration](#vitest-configuration)
 - [ESLint configuration](#eslint-configuration)
@@ -25,19 +27,44 @@ The web project is using following core technologies, alphabetically:
 
 I set it up as follows:
 
-1. Installed `node.js` and `npm` using `nvm-windows`, per
-[Using a Node installer to install Node.js and npm][npm-use-nvm].  
-As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][node-releases] and [blog post][node-24.0-blog].
-`nvm-windows` development stopped at `v1.2.2`.
-
-1. Executed [Vite setup commands](about_vite.md#vite-setup-commands) to scaffold the initial React + TypeScript + Vite project.
+1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
+1. To scaffold the initial React + TypeScript + Vite project, executed [Vite setup commands](about_vite.md#vite-setup-commands).
 
 - 🚧TODO🚧 Added and configured:
   - Typescript - tsconfig.js,
   - ESLint - TODO
   - Prettier - TODO
 
-# npm & Node.js configuration
+# nvm-windows, Node.js and npm configuration
+
+## Install nvm-windows, and Node.js & npm using it
+
+First install `nvm-for-windows`, by following: [Using a Node installer to install Node.js and npm][npm-use-nvm]
+
+Then follow the [commands below](#commands-to-update-to-latest-nvm-nodejs-and-npm-version).
+
+## Commands to update to latest nvm, Node.js and npm version
+
+```powershell
+# First, we ensure we are on latest nvm, which should be `1.2.2` as of 2025-07-07 and never go above that.
+nvm upgrade
+
+# Now we install and switch to latest Node.js and npm version.
+nvm install latest
+nvm use <the_version_displayed_by_nvm>
+
+# List versions
+nvm --version # 1.2.2 as of 2025-07-07. Should never change.
+nvm current # v24.3.0 as of 2025-07-07
+npm --version # 11.4.2 as of 2025-07-07
+```
+
+See also:
+
+- [nvm-windows]: `nvm-windows` development stopped at `v1.2.2`.
+- [node-releases]
+- [Node 24.0 blog post][node-24.0-blog].
+
 
 🚧TODO🚧
 
@@ -69,3 +96,4 @@ As of 2026-06-24 the newest `node.js` is `24.2` with `npm v11`. See [releases][n
 [node-24.0-blog]: https://nodejs.org/en/blog/release/v24.0.0
 [node-releases]: https://nodejs.org/en/about/previous-releases
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
+[nvm-windows]: https://github.com/coreybutler/nvm-windows
