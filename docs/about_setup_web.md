@@ -35,7 +35,7 @@ I set it up as follows:
 - 🚧KJA Added and configured:
   - Typescript - tsconfig.js,
   - ESLint - TODO
-  - Prettier - TODO
+  - Prettier - TODO https://react.dev/learn/editor-setup#formatting
 
 # nvm-windows, Node.js and npm configuration
 

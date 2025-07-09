@@ -25,6 +25,11 @@ export default tseslint.config([
       ...tseslint.configs.strictTypeChecked,
       ...tseslint.configs.stylisticTypeChecked,
 
+      // React configs
+      // --------------------
+      // Came with [create-vite react-ts] template.
+      // Explained at [eslint-plugin-react-hooks about].
+      // Source at [eslint-plugin-react-hooks src].
       reactHooks.configs['recommended-latest'],
       reactRefresh.configs.vite,
     ],
@@ -57,3 +62,5 @@ export default tseslint.config([
 // [ts-eslint recommended configs]: https://typescript-eslint.io/users/configs/#recommended-configurations
 // [ts-eslint]: https://ts-eslint.io/users/configs/
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
+// [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
+// [eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
