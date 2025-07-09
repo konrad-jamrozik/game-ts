@@ -31,6 +31,8 @@ export default tseslint.config([
       // Explained at [eslint-plugin-react-hooks about].
       // Source at [eslint-plugin-react-hooks src].
       reactHooks.configs['recommended-latest'],
+      // Came with [create-vite react-ts] template.
+      // Package at [eslint-plugin-react-refresh pkg].
       reactRefresh.configs.vite,
     ],
     languageOptions: {
@@ -64,3 +66,4 @@ export default tseslint.config([
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
 // [eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+// [eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
