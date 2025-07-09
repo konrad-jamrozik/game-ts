@@ -36,6 +36,7 @@ the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tscon
 ## Added settings from well-known tsconfig bases
 
 🚧KJA Include settings from the vite-react and strictest [tsconfig bases] specifically [vite-react] and [strictest].
+[tsconfig bases]
 
 ## Targeted newest ECMAScript version
 
@@ -44,9 +45,9 @@ the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tscon
 [allowImportingTsExtensions]: https://chatgpt.com/share/67ef5b2e-5c98-8011-9be2-5b82258cc788
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
-[tsconfig bases]: https://github.com/tsconfig/bases#centralized-recommendations-for-tsconfig-bases from https://www.typescriptlang.org/tsconfig#target
 [vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react
 
 [tsconfig doc]: https://www.typescriptlang.org/tsconfig
 [Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [tsc CLI options]: https://www.typescriptlang.org/docs/handbook/compiler-options.html
+[tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases . Also mentioned at https://www.typescriptlang.org/tsconfig#target

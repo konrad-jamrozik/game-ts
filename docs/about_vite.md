@@ -14,6 +14,8 @@ The SWC version requires `--template react-swc-ts` but we use the Babel version,
 
 For more on tsc vs Babel vs SWC, see [Babel vs tsc] and [Vite react-ts vs react-swc-ts][soq-vite-swc].
 
+Note that [Vite pre-bundles dependencies using esbuild][vite-pre-bundle].
+
 # Vite setup commands
 
 ```powershell
@@ -38,3 +40,4 @@ npm run dev # To locally verify that things work
 [SWC]: https://swc.rs/
 [template-react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [vite-scaffold]: https://vite.dev/guide/#scaffolding-your-first-vite-project
+[vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start

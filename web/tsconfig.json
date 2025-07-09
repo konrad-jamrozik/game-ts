@@ -1,7 +1,64 @@
+// Overall context: docs/about_tsconfig.md
+// Reference: https://www.typescriptlang.org/tsconfig/
+//
+// The file contents adapted based on the initially generated [vite-react config base]
+// as well as [create-vite react-ts] from the official [tsconfig bases].
 {
-  "files": [],
+  "files": [], // This ensures this top-level tsconfig.json is not applied anywhere.
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
-  ]
+  ],
+  "compilerOptions": {
+
+    // Basics
+    // --------------------
+    // Support the latest ES2024 as of 2026-07-08. See [version history].
+    "target": "ES2024",
+    // Use the latest ECMAScript module syntax (import/export), matching whatever the latest standard is.
+    // This is useful for modern bundlers or runtimes that support native ES modules.
+    "module": "ESNext",
+    // Do not type check all declaration files (*.d.ts).
+    // Speeds up compilation but may hide some type errors from third-party libraries.
+    // See also Vite doc note on that here:
+    // https://vite.dev/guide/features.html#other-compiler-options-affecting-the-build-result
+    "skipLibCheck": true,
+
+    // Config for Vite & its bundler
+    // --------------------
+    // Use module resolution matching modern bundlers like Vite.
+    "moduleResolution": "bundler",
+    // Allow syntax like "import { foo } from './foo.ts'".
+    // See:
+    // - Vite's section on perf: [vite-reduce-resolve]
+    // - [chat: allowImportingTsExtensions]
+    "allowImportingTsExtensions": true,
+    // Vite doc requests this to be true:
+    // https://vite.dev/guide/features.html#isolatedmodules
+    // This is because esbuild (used by Vite, see [vite-pre-bundle])
+    // only performs transpilation without type information.
+    // It doesn't support certain features like const enum and implicit type-only imports.
+    "isolatedModules": true,
+    // Make TypeScript preserve import/export statements exactly as written, 
+    // without rewriting or eliding them. 
+    // This is important for bundlers that expect to see the original module syntax.
+    "verbatimModuleSyntax": true,
+    // Treat every file as a module (not a script), 
+    // even if it doesn’t have any import/export statements. 
+    // This affects scoping and module resolution.
+    "moduleDetection": "force",
+    // TypeScript will not output any JavaScript files when compiling; 
+    // it only performs type checking.
+    "noEmit": true,
+
+
+  }
 }
+
+// [chat: allowImportingTsExtensions] https://chatgpt.com/share/67ef5b2e-5c98-8011-9be2-5b82258cc788
+// [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
+// [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
+// [version history]: https://en.wikipedia.org/wiki/ECMAScript_version_history
+// [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
+// [vite-react config base]: https://www.npmjs.com/package/@tsconfig/vite-react
+// [vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations
