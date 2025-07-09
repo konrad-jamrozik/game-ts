@@ -6,12 +6,14 @@
 {
   // Applicability of this config.
   // --------------------
-  "files": [], // This ensures this top-level tsconfig.json is not applied anywhere by itself.
+  // The tsconfig.json file itself is a base config that doesn't apply to any files directly.
+  "files": [],
+  // But the current dir project is composed of the react app and node vite config files.
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
-  
+
   "compilerOptions": {
 
     // Basics
