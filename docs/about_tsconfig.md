@@ -40,7 +40,7 @@ I updated the `tsconfig` settings based on the following:
 - What was initially provided by the Vite template [create-vite react-ts]
 - What is recommended by the [vite-react] config base from the official [tsconfig bases]
 - What Vite doc says about `tsconfig` options like:
-  - [vite-pre-bundle] mentioning `esbuild` an hence requiring `isolatedModules` per [vite-isolattedmodules]
+  - [vite-pre-bundle] mentioning `esbuild` an hence requiring `isolatedModules` per [vite-isolatedmodules]
   - Explanation [why `skipLibCheck` is used by the template][vite-skiplibcheck].
   - Notes on options to [reduce resolve operations][vite-reduce-resolve].
 - What is recommended by the [strictest] config base from the official [tsconfig bases]
@@ -53,14 +53,13 @@ I updated the `tsconfig` settings based on the following:
 
 🚧KJA Make root dedup configs code and have newest EST target.
 
-
 [Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
 [tsc CLI options]: https://www.typescriptlang.org/docs/handbook/compiler-options.html
-[tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases . Also mentioned at https://www.typescriptlang.org/tsconfig#target
+[tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
 [tsconfig doc]: https://www.typescriptlang.org/tsconfig
-[vite-isolattedmodules]: https://vite.dev/guide/features.html#isolatedmodules
+[vite-isolatedmodules]: https://vite.dev/guide/features.html#isolatedmodules
 [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
 [vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react
 [vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations
