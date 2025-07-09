@@ -30,7 +30,7 @@ npm run dev # To locally verify that things work
 
 # Vite configuration
 
-🚧TODO🚧
+🚧KJA
 
 [Babel vs tsc]: https://www.typescriptlang.org/docs/handbook/babel-with-typescript.html
 [Babel]: https://babeljs.io/docs/

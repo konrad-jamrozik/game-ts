@@ -60,7 +60,7 @@ I set up the React + TypeScript + Vite web project as described in the [about_se
 
 ## GitHub CI/CD configuration
 
-🚧TODO🚧 - planning to use GitHub pages per [this chat](https://chatgpt.com/share/686b7522-18b4-8011-93cf-47e77e1ad535).
+🚧KJA - planning to use GitHub pages per [this chat](https://chatgpt.com/share/686b7522-18b4-8011-93cf-47e77e1ad535).
 
 ## Cheatsheets
 

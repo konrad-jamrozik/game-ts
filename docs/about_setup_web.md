@@ -29,8 +29,9 @@ I set it up as follows:
 
 1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
 1. To scaffold the initial React + TypeScript + Vite project, I executed [Vite setup commands](about_vite.md#vite-setup-commands).
+1. 🚧KJA I updated the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
 
-- 🚧TODO🚧 Added and configured:
+- 🚧KJA Added and configured:
   - Typescript - tsconfig.js,
   - ESLint - TODO
   - Prettier - TODO
@@ -65,25 +66,23 @@ See also:
 - [node-releases]
 - [Node 24.0 blog post][node-24.0-blog]
 
-
-🚧TODO🚧
+🚧KJA
 
 # TypeScript configuration
 
-🚧TODO🚧
-
+🚧KJA
 
 # Vitest configuration
 
-🚧TODO🚧
+🚧KJA
 
 # ESLint configuration
 
-🚧TODO🚧
+🚧KJA
 
 # Prettier configuration
 
-🚧TODO🚧
+🚧KJA
 
 # References
 
