@@ -20,4 +20,25 @@
         "Solarius",
         "substep"
     ],
+    // https://colors.artyclick.com/color-names-dictionary/color-names/rhino-color
+    "peacock.color": "#19426d",
+    "workbench.colorCustomizations": {
+        "activityBar.activeBackground": "#235b96",
+        "activityBar.background": "#235b96",
+        "activityBar.foreground": "#e7e7e7",
+        "activityBar.inactiveForeground": "#e7e7e799",
+        "activityBarBadge.background": "#4e122f",
+        "activityBarBadge.foreground": "#e7e7e7",
+        "commandCenter.border": "#e7e7e799",
+        "sash.hoverBorder": "#235b96",
+        "statusBar.background": "#19426d",
+        "statusBar.foreground": "#e7e7e7",
+        "statusBarItem.hoverBackground": "#235b96",
+        "statusBarItem.remoteBackground": "#19426d",
+        "statusBarItem.remoteForeground": "#e7e7e7",
+        "titleBar.activeBackground": "#19426d",
+        "titleBar.activeForeground": "#e7e7e7",
+        "titleBar.inactiveBackground": "#19426d99",
+        "titleBar.inactiveForeground": "#e7e7e799"
+    }
 }
