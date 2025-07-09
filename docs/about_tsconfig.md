@@ -4,7 +4,7 @@
 - [Initial tsconfig\*.json files setup](#initial-tsconfigjson-files-setup)
 - [tsconfig\*.json adjustments I made](#tsconfigjson-adjustments-i-made)
   - [Deduplicated values](#deduplicated-values)
-  - [Added settings from well-known tsconfig bases](#added-settings-from-well-known-tsconfig-bases)
+  - [Updated settings based on existing documentation](#updated-settings-based-on-existing-documentation)
   - [Targeted newest ECMAScript version](#targeted-newest-ecmascript-version)
 
 Per [tsconfig doc], a TSConfig file in a directory indicates that the directory is the root
@@ -33,7 +33,18 @@ Where there was a lot of duplication of config values between the `tsconfig.app.
 🚧KJA I deduplicated the common logic to `tsconfig.json` by moving duplicated config values there and using
 the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tsconfig.node.json` files.
 
-## Added settings from well-known tsconfig bases
+## Updated settings based on existing documentation
+
+I updated the `tsconfig` settings based on the following:
+
+- What was initially provided by the Vite template [create-vite react-ts]
+- What is recommended by the [vite-react] config base from the official [tsconfig bases]
+- What Vite doc says about `tsconfig` options like:
+  - [vite-pre-bundle] mentioning `esbuild` an hence requiring `isolatedModules` per [vite-isolattedmodules]
+  - Explanation [why `skipLibCheck` is used by the template][vite-skiplibcheck].
+  - Notes on options to [reduce resolve operations][vite-reduce-resolve].
+- What is recommended by the [strictest] config base from the official [tsconfig bases]
+- What the [tsconfig reference doc][tsconfig doc] says.
 
 🚧KJA Include settings from the vite-react and strictest [tsconfig bases] specifically [vite-react] and [strictest].
 [tsconfig bases]
@@ -42,12 +53,15 @@ the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tscon
 
 🚧KJA Make root dedup configs code and have newest EST target.
 
-[allowImportingTsExtensions]: https://chatgpt.com/share/67ef5b2e-5c98-8011-9be2-5b82258cc788
+
+[Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
-[vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react
-
-[tsconfig doc]: https://www.typescriptlang.org/tsconfig
-[Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [tsc CLI options]: https://www.typescriptlang.org/docs/handbook/compiler-options.html
 [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases . Also mentioned at https://www.typescriptlang.org/tsconfig#target
+[tsconfig doc]: https://www.typescriptlang.org/tsconfig
+[vite-isolattedmodules]: https://vite.dev/guide/features.html#isolatedmodules
+[vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
+[vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react
+[vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations
+[vite-skiplibcheck]: https://vite.dev/guide/features.html#other-compiler-options-affecting-the-build-result

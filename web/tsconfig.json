@@ -1,8 +1,5 @@
-// Overall context: docs/about_tsconfig.md
-// Reference: https://www.typescriptlang.org/tsconfig/
-//
-// The file contents adapted based on the initially generated [vite-react config base]
-// as well as [create-vite react-ts] from the official [tsconfig bases].
+// Doc on overall context, including how this file content was determined: 
+//   docs/about_tsconfig.md
 {
   // Applicability of this config.
   // --------------------
