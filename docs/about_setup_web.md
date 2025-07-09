@@ -29,7 +29,8 @@ I set it up as follows:
 
 1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
 1. To scaffold the initial React + TypeScript + Vite project, I executed [Vite setup commands](about_vite.md#vite-setup-commands).
-1. 🚧KJA I updated the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
+1. I updated the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
+1. I configured [eslint] code linting rules. See [About ESLint](about_eslint.md).
 
 - 🚧KJA Added and configured:
   - Typescript - tsconfig.js,
@@ -92,6 +93,7 @@ See also:
 - https://github.com/konrad-jamrozik/game-python/blob/main/web/README_web.md
 
 [Chat about React + TS + Vite]: https://chatgpt.com/c/684e85cf-dc74-8011-ae8b-18e5d8a16be4
+[eslint]: https://eslint.org/
 [node-24.0-blog]: https://nodejs.org/en/blog/release/v24.0.0
 [node-releases]: https://nodejs.org/en/about/previous-releases
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
