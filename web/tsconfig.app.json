@@ -1,4 +1,8 @@
 {
+  // Applicability of this config.
+  // --------------------
+  "include": ["src"],
+  
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
@@ -16,5 +20,4 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
 }

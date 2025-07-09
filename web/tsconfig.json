@@ -4,11 +4,14 @@
 // The file contents adapted based on the initially generated [vite-react config base]
 // as well as [create-vite react-ts] from the official [tsconfig bases].
 {
-  "files": [], // This ensures this top-level tsconfig.json is not applied anywhere.
+  // Applicability of this config.
+  // --------------------
+  "files": [], // This ensures this top-level tsconfig.json is not applied anywhere by itself.
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }
   ],
+  
   "compilerOptions": {
 
     // Basics
