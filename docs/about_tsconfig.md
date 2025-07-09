@@ -18,10 +18,12 @@ This section describes how I initially set up values of the `tsconfig*.json` fil
 The `tsconfig*.json` files in the `web` project were initially generated with a Vite template
 (see [about-vite.md](about_vite.md)), and then adjusted by me to fit the needs of the project.
 
-The vite-generated tsconfig files were structured as follows upon generation:
+The vite-generated tsconfig files were structured as follows upon generation by Vite:
 
 `web/tsconfig.json` - pertains to no files (`"files": []`), only references `./tsconfig.app.json` and `./tsconfig.node.json`.
+
 `web/tsconfig.app.json` - pertains to the app code: `"include": ["src"]`.
+
 `web/tsconfig.node.json` - pertains to Node vite config: `"include": ["vite.config.ts"]`.
 
 Where there was a lot of duplication of config values between the `tsconfig.app.json` and `tsconfig.node.json` files.
@@ -30,20 +32,20 @@ Where there was a lot of duplication of config values between the `tsconfig.app.
 
 ## Deduplicated values
 
-🚧KJA I deduplicated the common logic to `tsconfig.json` by moving duplicated config values there and using
+I deduplicated the common logic to `tsconfig.json` by moving duplicated config values there and using
 the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tsconfig.node.json` files.
 
 ## Updated settings based on existing documentation
 
 I updated the `tsconfig` settings based on the following:
 
-- What was initially provided by the Vite template [create-vite react-ts]
-- What is recommended by the [vite-react] config base from the official [tsconfig bases]
+- What was initially provided by the Vite template [create-vite react-ts].
+- What is recommended by the [vite-react] config base from the official [tsconfig bases].
+- What is recommended by the [strictest] config base from the official [tsconfig bases].
 - What Vite doc says about `tsconfig` options like:
   - [vite-pre-bundle] mentioning `esbuild` an hence requiring `isolatedModules` per [vite-isolatedmodules]
   - Explanation [why `skipLibCheck` is used by the template][vite-skiplibcheck].
   - Notes on options to [reduce resolve operations][vite-reduce-resolve].
-- What is recommended by the [strictest] config base from the official [tsconfig bases]
 - What the [tsconfig reference doc][tsconfig doc] says.
 
 🚧KJA Include settings from the vite-react and strictest [tsconfig bases] specifically [vite-react] and [strictest].

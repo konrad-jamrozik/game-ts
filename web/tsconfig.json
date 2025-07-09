@@ -1,4 +1,4 @@
-// Doc on overall context, including how this file content was determined: 
+// Doc on overall context, including how this file content was determined:
 //   docs/about_tsconfig.md
 {
   // Applicability of this config.
@@ -41,24 +41,54 @@
     // only performs transpilation without type information.
     // It doesn't support certain features like const enum and implicit type-only imports.
     "isolatedModules": true,
-    // Make TypeScript preserve import/export statements exactly as written, 
-    // without rewriting or eliding them. 
+    // Make TypeScript preserve import/export statements exactly as written,
+    // without rewriting or eliding them.
     // This is important for bundlers that expect to see the original module syntax.
+    // Also required by [running TypeScript files directly] per [erasableSyntaxOnly].
     "verbatimModuleSyntax": true,
-    // Treat every file as a module (not a script), 
-    // even if it doesn’t have any import/export statements. 
+    // Treat every file as a module (not a script),
+    // even if it doesn’t have any import/export statements.
     // This affects scoping and module resolution.
     "moduleDetection": "force",
-    // TypeScript will not output any JavaScript files when compiling; 
+    // TypeScript will not output any JavaScript files when compiling;
     // it only performs type checking.
     "noEmit": true,
+    // Required by [running TypeScript files directly] per [erasableSyntaxOnly].
+    "rewriteRelativeImportExtensions": true,
 
-
+    // Type-checking and linting
+    // Primarily based on the [strictest] config base from the official [tsconfig bases].
+    // The options in this section are sorted alphabetically.
+    // --------------------
+    "allowUnreachableCode": false,
+    "allowUnusedLabels": false,
+    "checkJs": true,
+    // [erasableSyntaxOnly] is a recent addition, to accommodate the fact that Node as of v23.6
+    // supports [running TypeScript files directly].
+    // This config didn't originate from [strictest] but from [create-vite react-ts] template.
+    "erasableSyntaxOnly": true,
+    // [strictest] sets it to true but we set it to false, as we don't want interop. Only new shiny stuff.
+    "esModuleInterop": false,
+    "exactOptionalPropertyTypes": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitReturns": true,
+    "noPropertyAccessFromIndexSignature": true,
+    "noUncheckedIndexedAccess": true,
+    // Not present in [strictest], but added by me by reading:
+    // https://www.typescriptlang.org/tsconfig/#noUncheckedSideEffectImports
+    "noUncheckedSideEffectImports": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "strict": true,
   }
 }
 
 // [chat: allowImportingTsExtensions] https://chatgpt.com/share/67ef5b2e-5c98-8011-9be2-5b82258cc788
 // [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
+// [erasableSyntaxOnly]: https://www.typescriptlang.org/tsconfig/#erasableSyntaxOnly
+// [running TypeScript files directly]: https://nodejs.org/api/typescript.html#type-stripping
+// [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
 // [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
 // [version history]: https://en.wikipedia.org/wiki/ECMAScript_version_history
 // [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start

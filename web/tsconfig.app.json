@@ -9,15 +9,14 @@
     "useDefineForClassFields": true,
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
 
-    /* Bundler mode extensions for React */
+    // Extensions for react for config for Vite & its bundler
+    // --------------------
+    // Controls how JSX constructs are emitted in JavaScript files. 
+    // This only affects output of JS files that started in .tsx (react) files.
+    // react-jsx: emit .js files with the JSX changed to _jsx calls optimized for production
+    // See also [jsx]
     "jsx": "react-jsx",
-
-    /* Linting */
-    "strict": true,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
-    "erasableSyntaxOnly": true,
-    "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
   },
 }
+
+// [jsx]: https://www.typescriptlang.org/tsconfig/#jsx
