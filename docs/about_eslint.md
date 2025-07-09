@@ -16,10 +16,11 @@ mentions instructions how to update the config, which I took into account when
 ## eslint adjustments I made
 
 1. I updated the config to target latest ECMA script standard.
-2. I made it extend few strict base configs I found in my research.
-3. I tweaked each rule to my specific needs.
+1. I made it extend few strict base configs I found in my research.
+1. I tweaked each rule to my specific needs.
 
-Specifically, I made the config extend the following base configs:
+For the details of the configs I decided to extend, refer to the comments
+in the config file itself [eslint.config.js](../web/eslint.config.js).
 
 🚧KJA
 
