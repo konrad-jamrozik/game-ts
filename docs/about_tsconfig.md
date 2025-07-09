@@ -47,6 +47,7 @@ I updated the `tsconfig` settings based on the following:
   - Explanation [why `skipLibCheck` is used by the template][vite-skiplibcheck].
   - Notes on options to [reduce resolve operations][vite-reduce-resolve].
 - What the [tsconfig reference doc][tsconfig doc] says.
+- The recommendation from [this blog post][ts 5.9 tsconfig].
 
 🚧KJA Include settings from the vite-react and strictest [tsconfig bases] specifically [vite-react] and [strictest].
 [tsconfig bases]
@@ -58,6 +59,7 @@ I updated the `tsconfig` settings based on the following:
 [Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
+[ts 5.9 tsconfig]: https://devblogs.microsoft.com/typescript/announcing-typescript-5-9-beta/
 [tsc CLI options]: https://www.typescriptlang.org/docs/handbook/compiler-options.html
 [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
 [tsconfig doc]: https://www.typescriptlang.org/tsconfig
