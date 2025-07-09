@@ -40,6 +40,8 @@
     // This is because esbuild (used by Vite, see [vite-pre-bundle])
     // only performs transpilation without type information.
     // It doesn't support certain features like const enum and implicit type-only imports.
+    // Not strictly necessary to declare here as it is implied by [erasableSyntaxOnly],
+    // per https://github.com/vitejs/vite/pull/19892
     "isolatedModules": true,
     // Make TypeScript preserve import/export statements exactly as written,
     // without rewriting or eliding them.
