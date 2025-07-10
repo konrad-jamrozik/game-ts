@@ -7,13 +7,10 @@
   // The tsconfig.json file itself is a base config that doesn't apply to any files directly.
   "files": [],
   // But the current dir project is composed of the react app and node vite config files.
-  "references": [
-    { "path": "./tsconfig.app.json" },
-    { "path": "./tsconfig.node.json" }
-  ],
+  // See https://www.typescriptlang.org/docs/handbook/project-references.html
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
 
   "compilerOptions": {
-
     // Basics
     // --------------------
     // Support the latest ES2024 as of 2026-07-08. See [version history].
@@ -83,7 +80,7 @@
     "noUncheckedSideEffectImports": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
-    "strict": true,
+    "strict": true
   }
 }
 
@@ -97,3 +94,4 @@
 // [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
 // [vite-react config base]: https://www.npmjs.com/package/@tsconfig/vite-react
 // [vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations
+

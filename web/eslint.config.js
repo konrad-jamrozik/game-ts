@@ -9,7 +9,6 @@ import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import'
-import eslintPrettier from 'eslint-config-prettier'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -77,8 +76,12 @@ export default tseslint.config([
       // "parser" from the doc of [eslint-react].
       parser: tseslint.parser,
       parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        // Explained at [typed-linting].
+        // This line, coming from [create-vite react-ts] template, has been commented out by me:
+        // This is because it is subsumed by projectService below.
+        // // project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        //
+        // Explained at [typed-linting] as well as in
+        // https://typescript-eslint.io/blog/project-service
         projectService: true,
         // Came with [create-vite react-ts] template. Explained at [typed-linting].
         // The "import.meta" value is explained in [import.meta].

@@ -8,6 +8,7 @@
   - [eslint adjustments I made](#eslint-adjustments-i-made)
   - [Commands I executed to install the required eslint packages](#commands-i-executed-to-install-the-required-eslint-packages)
 - [ESLint and other tools](#eslint-and-other-tools)
+- [Linting more files](#linting-more-files)
 
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
@@ -64,6 +65,10 @@ Note: a lot of the packages were already installed by the [create-vite react-ts]
 
 Do not run formatter rules, like Prettier, as ESLint rules.
 Read more on that in [About Prettier - Prettier and other tools](about_prettier.md#prettier-and-other-tools).
+
+# Linting more files
+
+Read https://typescript-eslint.io/blog/project-service#additional-files
 
 🚧KJA
 
