@@ -8,6 +8,7 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
+import eslintImport from 'eslint-plugin-import'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -51,6 +52,16 @@ export default tseslint.config([
       // require type information. Curiously, both of them are mentioned in recommended-type-checked,
       // but only one is enabled. See [recommended-type-checked src].
       eslintReact.configs["recommended-type-checked"],
+
+      // Import order
+      // --------------------
+      // See also comment on rule "'sort-imports': 'off'"
+      // Configs src:
+      // https://github.com/import-js/eslint-plugin-import/tree/main/config
+      eslintImport.flatConfigs.recommended,
+      eslintImport.flatConfigs.typescript,
+      eslintImport.flatConfigs.react,
+
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -64,8 +75,26 @@ export default tseslint.config([
         // Came with [create-vite react-ts] template. Explained at [typed-linting].
         // The "import.meta" value is explained in [import.meta].
         tsconfigRootDir: import.meta.dirname
-      },      
+      },
     },
+    rules: {
+      // https://eslint.org/docs/latest/rules/sort-imports
+      // Turned off. Using 'import/order' instead.
+      // 'import/order' sorts by semantics, while sort-imports sorts by import syntax used, then alphabetically.
+      // Another rejected solution: https://github.com/lydell/eslint-plugin-simple-import-sort
+      // It uses this sort order:
+      // https://github.com/lydell/eslint-plugin-simple-import-sort#sort-order
+      'sort-imports': 'off',
+      'import/order': [
+        'error',
+        {
+          // options: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md#options
+          warnOnUnassignedImports: true,
+          'newlines-between': 'never',
+          alphabetize: { order: 'asc', orderImportKind: 'asc' },
+        },
+      ],      
+    }
   },
 ])
 
@@ -95,3 +124,5 @@ export default tseslint.config([
 // [ts-eslint recommended configs]: https://typescript-eslint.io/users/configs/#recommended-configurations
 // [ts-eslint]: https://ts-eslint.io/users/configs/
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
+// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
+// [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
