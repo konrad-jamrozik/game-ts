@@ -6,7 +6,7 @@ import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
-import globals from 'globals'
+import globals, { node } from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import'
 
@@ -14,6 +14,17 @@ export default tseslint.config([
   globalIgnores(['dist']),
   {
     files: ['**/*.{ts,tsx}'],
+    settings: {
+      // This setting ensures that the [vite public directory]
+      // can be correctly resolved by [eslint-plugin-import].
+      // Doc:
+      // https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#resolvers
+      'import/resolver': {
+        node: {
+          paths: ['src', 'public'],
+        },
+      },
+    },
     extends: [
       // [eslint configs]
       // --------------------
@@ -144,6 +155,8 @@ export default tseslint.config([
 // [all]: https://typescript-eslint.io/users/configs/#all
 // [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 // [eslint configs]: https://eslint.org/docs/latest/use/configure/configuration-files#using-predefined-configurations
+// [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
 // [eslint-plugin-react pkg]: https://www.npmjs.com/package/eslint-plugin-react
 // [eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
 // [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
@@ -164,6 +177,5 @@ export default tseslint.config([
 // [ts-eslint recommended configs]: https://typescript-eslint.io/users/configs/#recommended-configurations
 // [ts-eslint]: https://ts-eslint.io/users/configs/
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
-// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
-// [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+// [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
 
