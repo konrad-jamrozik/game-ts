@@ -15,13 +15,21 @@ export default tseslint.config([
   {
     files: ['**/*.{ts,tsx}'],
     settings: {
-      // This setting ensures that the [vite public directory]
-      // can be correctly resolved by [eslint-plugin-import].
-      // Doc:
-      // https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#resolvers
-      'import/resolver': {
-        node: {
-          paths: ['src', 'public'],
+      import: {
+        resolver: {
+          typescript: true, // [ts resolver]
+          node: {
+            // The paths/public here ensures that the [vite public directory]
+            // can be correctly resolved by [eslint-plugin-import].
+            // Doc:
+            // https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#resolvers
+            paths: ['src', 'public'],
+          },
+          alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
+        },
+        // [ts resolver]
+        parsers: {
+          '@typescript-eslint/parser': ['.ts', '.tsx'],
         },
       },
     },
@@ -81,7 +89,7 @@ export default tseslint.config([
       // which explains how to use https://github.com/prettier/eslint-config-prettier
       // to disable eslint formatting rules that conflict with Prettier.
 
-      // 🚧KJA add lodash, unicorn, maybe sonarjs
+      // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -178,4 +186,5 @@ export default tseslint.config([
 // [ts-eslint]: https://ts-eslint.io/users/configs/
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
+// [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
 
