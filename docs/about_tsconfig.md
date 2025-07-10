@@ -34,6 +34,7 @@ Where there was a lot of duplication of config values between the `tsconfig.app.
 
 I deduplicated the common logic to `tsconfig.json` by moving duplicated config values there and using
 the `"extends": "./tsconfig.json"` entries in the `tsconfig.app.json` and `tsconfig.node.json` files.
+This matches the official guidance: [ts project references guidance].
 
 ## Updated settings based on existing documentation
 
@@ -49,20 +50,20 @@ I updated the `tsconfig` settings based on the following:
 - What the [tsconfig reference doc][tsconfig doc] says.
 - The recommendation from [this blog post][ts 5.9 tsconfig].
 
-🚧KJA Include settings from the vite-react and strictest [tsconfig bases] specifically [vite-react] and [strictest].
-[tsconfig bases]
-
 ## Targeted newest ECMAScript version
 
-🚧KJA Make root dedup configs code and have newest EST target.
+I targeted the newest ECMAScript version, which is currently ES2024, as of TypeScript 5.9.
+See [version history] for the latest ECMAScript version.
 
 [Compiling TypeScript]: https://code.visualstudio.com/docs/typescript/typescript-compiling
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
 [ts 5.9 tsconfig]: https://devblogs.microsoft.com/typescript/announcing-typescript-5-9-beta/
+[ts project references guidance]: https://www.typescriptlang.org/docs/handbook/project-references.html#guidance
 [tsc CLI options]: https://www.typescriptlang.org/docs/handbook/compiler-options.html
 [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
 [tsconfig doc]: https://www.typescriptlang.org/tsconfig
+[version history]: https://en.wikipedia.org/wiki/ECMAScript_version_history
 [vite-isolatedmodules]: https://vite.dev/guide/features.html#isolatedmodules
 [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
 [vite-react]: https://www.npmjs.com/package/@tsconfig/vite-react

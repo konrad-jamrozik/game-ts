@@ -7,7 +7,9 @@
   // The tsconfig.json file itself is a base config that doesn't apply to any files directly.
   "files": [],
   // But the current dir project is composed of the react app and node vite config files.
-  // See https://www.typescriptlang.org/docs/handbook/project-references.html
+  // See also:
+  // - https://www.typescriptlang.org/docs/handbook/project-references.html
+  // - https://www.typescriptlang.org/docs/handbook/project-references.html#guidance
   "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.node.json" }],
 
   "compilerOptions": {
@@ -94,3 +96,4 @@
 // [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
 // [vite-react config base]: https://www.npmjs.com/package/@tsconfig/vite-react
 // [vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations
+

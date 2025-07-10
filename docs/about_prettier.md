@@ -2,7 +2,7 @@
 
 [prettier] is the formatter of choice for TypeScript and JavaScript projects.
 
-Prettier is recommended by react [the react doc][react prettier].
+Prettier is recommended by react: [doc][react prettier].
 
 # Initial prettier config setup
 
