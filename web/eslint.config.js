@@ -69,6 +69,8 @@ export default tseslint.config([
       // In case of issues with formatting / Prettier, see docs/about_prettier.md,
       // which explains how to use https://github.com/prettier/eslint-config-prettier
       // to disable eslint formatting rules that conflict with Prettier.
+
+      // 🚧KJA add lodash, unicorn, maybe sonarjs
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -96,6 +98,33 @@ export default tseslint.config([
       // It uses this sort order:
       // https://github.com/lydell/eslint-plugin-simple-import-sort#sort-order
       'sort-imports': 'off',
+      // console is used for debugging
+      // https://eslint.org/docs/latest/rules/no-console
+      'no-console': 'off',
+      // https://eslint.org/docs/latest/rules/func-style
+      'func-style': [
+        'error',
+        'declaration', // I like declaration more than the default 'expression'
+      ],
+      // See @typescript-eslint/no-magic-numbers
+      'no-magic-numbers': 'off',
+      // https://typescript-eslint.io/rules/no-magic-numbers/
+      // https://eslint.org/docs/latest/rules/no-magic-numbers#options
+      '@typescript-eslint/no-magic-numbers': 'off',
+      // https://typescript-eslint.io/rules/no-confusing-void-expression
+      '@typescript-eslint/no-confusing-void-expression': [
+        'error',
+        {
+          // If this would not be ignored, React JSX code like this:
+          //   onClick={() => setCount((count) => count + 2)}
+          // would have to be written out as:
+          //   onClick={() => {
+          //     setCount((count) => count + 2)
+          //   }}
+          // https://typescript-eslint.io/rules/no-confusing-void-expression/#ignorevoidreturningfunctions
+          ignoreVoidReturningFunctions: true,
+        },
+      ],
       'import/order': [
         'error',
         {
@@ -137,3 +166,4 @@ export default tseslint.config([
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
 // [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+
