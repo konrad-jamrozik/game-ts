@@ -1,9 +1,10 @@
+import eslintReact from "@eslint-react/eslint-plugin"
 import js from '@eslint/js'
-import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
-import tseslint from 'typescript-eslint'
 import { globalIgnores } from 'eslint/config'
+import globals from 'globals'
+import tseslint from 'typescript-eslint'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -34,10 +35,22 @@ export default tseslint.config([
       // Came with [create-vite react-ts] template.
       // Package at [eslint-plugin-react-refresh pkg].
       reactRefresh.configs.vite,
+      // From [eslint-react], [eslint-react pkg], originally based on the subsets proposed
+      // by [create-vite react-ts] template README, which were:
+      // [eslint-plugin-react-x pkg] and [eslint-plugin-react-dom pkg]
+      //
+      // The "recommended-type-checked" is mentioned in [eslint-react pkg].
+      //
+      // Note: Per the [eslint-react FAQ], it subsumes [eslint-plugin-react pkg].
+      eslintReact.configs["recommended-type-checked"],
     ],
+    // "jsx", from the doc of [eslint-react].
+    jsx: "react-jsx",
     languageOptions: {
       ecmaVersion: 2024,
       globals: globals.browser,
+      // "parser" from the doc of [eslint-react].
+      parser: tseslint.parser,
       parserOptions: {
         project: ['./tsconfig.node.json', './tsconfig.app.json'],
         // Explained at [typed-linting].
@@ -67,3 +80,13 @@ export default tseslint.config([
 // [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
 // [eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
 // [eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
+// [eslint-react]: https://eslint-react.xyz/
+// [eslint-react pkg]: https://www.npmjs.com/package/@eslint-react/eslint-plugin
+// [eslint-react faq]: https://eslint-react.xyz/docs/faq
+// [eslint-plugin-react-x pkg]: https://www.npmjs.com/package/eslint-plugin-react-x
+// [eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
+// [eslint-plugin-react pkg]: https://www.npmjs.com/package/eslint-plugin-react
+
+// 🚧KJA install e.g.
+// npm install --save-dev typescript-eslint @eslint-react/eslint-plugin
+// from https://www.npmjs.com/package/@eslint-react/eslint-plugin
