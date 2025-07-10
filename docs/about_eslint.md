@@ -2,6 +2,23 @@
 
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
+# How to run eslint
+
+## Integrate eslint with VS Code
+
+https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+
+## Run eslint from command line
+
+`npm run lint`
+
+Doc: https://eslint.org/docs/latest/use/command-line-interface
+
+Flags used:
+
+- https://eslint.org/docs/latest/use/command-line-interface#--report-unused-disable-directives
+- https://eslint.org/docs/latest/use/command-line-interface#--max-warnings
+
 # Initial eslint config setup
 
 This section describes how I initially configured `eslint` in the `web` project.
@@ -17,10 +34,18 @@ mentions instructions how to update the config, which I took into account when
 
 1. I updated the config to target latest ECMA script standard.
 1. I made it extend few strict base configs I found in my research.
-1. I tweaked each rule to my specific needs.
+1. I updated the `web/package.json/scripts` commands for eslint.
+1. I tweaked each rule to my specific needs. This is ongoing process.
 
 For the details of the configs I decided to extend, refer to the comments
 in the config file itself [eslint.config.js](../web/eslint.config.js).
+
+## Commands I executed to install the required eslint packages
+
+```powershell
+# https://eslint-react.xyz/docs/getting-started/typescript
+npm install --save-dev typescript-eslint @eslint-react/eslint-plugin
+```
 
 🚧KJA
 

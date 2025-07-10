@@ -29,7 +29,11 @@
 
 		// To set VS Code IDE theme, to distinguish between different workspaces.
 		// https://marketplace.visualstudio.com/items?itemName=johnpapa.vscode-peacock
-		"johnpapa.vscode-peacock"
+		"johnpapa.vscode-peacock",
+
+		// ESlint for VS Code
+		// https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+		"dbaeumer.vscode-eslint",
 	],
 	// List of extensions recommended by VS Code that should not be recommended for users of this workspace.
 	"unwantedRecommendations": [

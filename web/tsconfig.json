@@ -1,5 +1,6 @@
-// Doc on overall context, including how this file content was determined:
-//   docs/about_tsconfig.md
+/**
+ * See docs/about_tsconfig.md for context on this file.
+ */
 {
   // Applicability of this config.
   // --------------------

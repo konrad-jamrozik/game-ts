@@ -1,3 +1,6 @@
+/**
+ * See docs/about_eslint.md for context on this file.
+ */
 import eslintReact from "@eslint-react/eslint-plugin"
 import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
@@ -44,8 +47,6 @@ export default tseslint.config([
       // Note: Per the [eslint-react FAQ], it subsumes [eslint-plugin-react pkg].
       eslintReact.configs["recommended-type-checked"],
     ],
-    // "jsx", from the doc of [eslint-react].
-    jsx: "react-jsx",
     languageOptions: {
       ecmaVersion: 2024,
       globals: globals.browser,

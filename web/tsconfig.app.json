@@ -1,3 +1,6 @@
+/**
+ * See docs/about_tsconfig.md for context on this file.
+ */
 {
   // Applicability of this config.
   // --------------------
@@ -14,9 +17,10 @@
     // Controls how JSX constructs are emitted in JavaScript files. 
     // This only affects output of JS files that started in .tsx (react) files.
     // react-jsx: emit .js files with the JSX changed to _jsx calls optimized for production
-    // See also [jsx]
+    // See also [jsx][eslint-react config].
     "jsx": "react-jsx",
   },
 }
 
 // [jsx]: https://www.typescriptlang.org/tsconfig/#jsx
+// [eslint-react config]: https://eslint-react.xyz/docs/getting-started/typescript
