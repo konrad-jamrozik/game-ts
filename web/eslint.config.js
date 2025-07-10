@@ -42,7 +42,7 @@ export default tseslint.config([
       // by [create-vite react-ts] template README, which were:
       // [eslint-plugin-react-x pkg] and [eslint-plugin-react-dom pkg]
       //
-      // The "recommended-type-checked" is mentioned in [eslint-react pkg].
+      // The "recommended-type-checked" is mentioned in [eslint-react pkg] and in [eslint-react presets].
       //
       // Note: Per the [eslint-react FAQ], it subsumes [eslint-plugin-react pkg].
       eslintReact.configs["recommended-type-checked"],
@@ -83,6 +83,7 @@ export default tseslint.config([
 // [eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
 // [eslint-react]: https://eslint-react.xyz/
 // [eslint-react pkg]: https://www.npmjs.com/package/@eslint-react/eslint-plugin
+// [eslint-react presets]: https://eslint-react.xyz/docs/presets
 // [eslint-react faq]: https://eslint-react.xyz/docs/faq
 // [eslint-plugin-react-x pkg]: https://www.npmjs.com/package/eslint-plugin-react-x
 // [eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
