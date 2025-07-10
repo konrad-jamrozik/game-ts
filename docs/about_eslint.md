@@ -1,5 +1,13 @@
 # About eslint
 
+- [About eslint](#about-eslint)
+- [How to run eslint](#how-to-run-eslint)
+  - [Integrate eslint with VS Code](#integrate-eslint-with-vs-code)
+  - [Run eslint from command line](#run-eslint-from-command-line)
+- [Initial eslint config setup](#initial-eslint-config-setup)
+  - [eslint adjustments I made](#eslint-adjustments-i-made)
+  - [Commands I executed to install the required eslint packages](#commands-i-executed-to-install-the-required-eslint-packages)
+
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
 # How to run eslint
@@ -46,6 +54,9 @@ in the config file itself [eslint.config.js](../web/eslint.config.js).
 # https://eslint-react.xyz/docs/getting-started/typescript
 npm install --save-dev typescript-eslint @eslint-react/eslint-plugin
 ```
+
+Note: a lot of the packages were already installed by the [create-vite react-ts] template.
+
 
 🚧KJA
 
