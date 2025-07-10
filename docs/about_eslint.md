@@ -57,7 +57,6 @@ npm install --save-dev typescript-eslint @eslint-react/eslint-plugin
 
 Note: a lot of the packages were already installed by the [create-vite react-ts] template.
 
-
 🚧KJA
 
 [eslint]: https://eslint.org/
