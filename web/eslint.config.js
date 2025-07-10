@@ -137,4 +137,3 @@ export default tseslint.config([
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
 // [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
-

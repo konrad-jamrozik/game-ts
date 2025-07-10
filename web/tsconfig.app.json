@@ -5,7 +5,7 @@
   // Applicability of this config.
   // --------------------
   "include": ["src"],
-  
+
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
@@ -14,12 +14,12 @@
 
     // Extensions for react for config for Vite & its bundler
     // --------------------
-    // Controls how JSX constructs are emitted in JavaScript files. 
+    // Controls how JSX constructs are emitted in JavaScript files.
     // This only affects output of JS files that started in .tsx (react) files.
     // react-jsx: emit .js files with the JSX changed to _jsx calls optimized for production
     // See also [jsx][eslint-react config].
-    "jsx": "react-jsx",
-  },
+    "jsx": "react-jsx"
+  }
 }
 
 // [jsx]: https://www.typescriptlang.org/tsconfig/#jsx
