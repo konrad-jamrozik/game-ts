@@ -30,12 +30,12 @@ I set it up as follows:
 1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
 1. To scaffold the initial React + TypeScript + Vite project, I executed [Vite setup commands](about_vite.md#vite-setup-commands).
 1. I updated the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
-1. I configured [eslint] code linting rules. See [About ESLint](about_eslint.md).
-
-- 🚧KJA Added and configured:
-  - Typescript - tsconfig.js,
-  - ESLint - TODO
-  - Prettier - TODO https://react.dev/learn/editor-setup#formatting
+1. I configured [prettier]. See [About Prettier](about_prettier.md).
+1. 🚧KJA I configured [eslint] code linting rules. See [About ESLint](about_eslint.md).
+1. 🚧KJA I updated the existing code to produce no errors or warning on prettier and eslint.
+1. 🚧KJA I added vitest-based unit tests.
+1. 🚧KJA I added GitHub actions-based CI
+1. 🚧KJA I added GitHub pages-based CD. See https://chatgpt.com/c/684e89ec-d7ac-8011-8152-374e139e9adf
 
 # nvm-windows, Node.js and npm configuration
 
@@ -80,6 +80,10 @@ See also:
 # ESLint configuration
 
 🚧KJA
+https://eslint.org/blog/2024/04/eslint-config-inspector/
+Use this to verify these rules are not used:
+// Note on performance:
+// https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import
 
 # Prettier configuration
 
@@ -98,3 +102,4 @@ See also:
 [node-releases]: https://nodejs.org/en/about/previous-releases
 [npm-use-nvm]: https://docs.npmjs.com/downloading-and-installing-node-js-and-npm#using-a-node-version-manager-to-install-nodejs-and-npm
 [nvm-windows]: https://github.com/coreybutler/nvm-windows
+[prettier]: https://prettier.io/

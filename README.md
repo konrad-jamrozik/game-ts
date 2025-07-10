@@ -6,7 +6,7 @@ This repository contains personal code of Konrad Jamrozik, written for his game 
 
 # Sources overview
 
-🚧 WIP 🚧
+🚧KJA
 
 # License
 

@@ -7,6 +7,7 @@
 - [Initial eslint config setup](#initial-eslint-config-setup)
   - [eslint adjustments I made](#eslint-adjustments-i-made)
   - [Commands I executed to install the required eslint packages](#commands-i-executed-to-install-the-required-eslint-packages)
+- [ESLint and other tools](#eslint-and-other-tools)
 
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
@@ -58,6 +59,11 @@ npm install eslint-plugin-import --save-dev
 ```
 
 Note: a lot of the packages were already installed by the [create-vite react-ts] template.
+
+# ESLint and other tools
+
+Do not run formatter rules, like Prettier, as ESLint rules.
+Read more on that in [About Prettier - Prettier and other tools](about_prettier.md#prettier-and-other-tools).
 
 🚧KJA
 

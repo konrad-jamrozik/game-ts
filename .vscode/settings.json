@@ -1,13 +1,39 @@
 {
     // This is vscode workspace settings file for this repository.
     // https://code.visualstudio.com/docs/configure/settings#_workspace-settings
-    
+
     "files.associations": {
         // LICENSE is by default treated as a markdown file, making it be
         // in purview of markdownlint, creating unwanted warnings.
         // By setting it to plaintext we disable markdownlint for LICENSE.
         "LICENSE": "plaintext"
     },
+
+    // Formatter settings
+    // --------------------
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+    "[typescriptreact]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode"
+    },
+
+    "editor.formatOnPaste": false,
+    "editor.formatOnType": false,
+    "editor.formatOnSave": true,
+    "editor.formatOnSaveMode": "file", // required to format on save
+    // Do not format files if dir is missing prettier config.
+    "prettier.requireConfig": true,
+    "files.autoSave": "off",
+    // end of formatter settings
+
+    "typescript.suggest.paths": true,
+    "javascript.suggest.paths": true,
+
     "editor.rulers": [
         80,
         100,

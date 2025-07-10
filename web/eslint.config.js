@@ -1,7 +1,7 @@
 /**
  * See docs/about_eslint.md for context on this file.
  */
-import eslintReact from "@eslint-react/eslint-plugin"
+import eslintReact from '@eslint-react/eslint-plugin'
 import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
@@ -9,6 +9,7 @@ import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import'
+import eslintPrettier from 'eslint-config-prettier'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -51,17 +52,24 @@ export default tseslint.config([
       // - @eslint-react/prefer-read-only-props
       // require type information. Curiously, both of them are mentioned in recommended-type-checked,
       // but only one is enabled. See [recommended-type-checked src].
-      eslintReact.configs["recommended-type-checked"],
+      eslintReact.configs['recommended-type-checked'],
 
       // Import order
       // --------------------
       // See also comment on rule "'sort-imports': 'off'"
       // Configs src:
       // https://github.com/import-js/eslint-plugin-import/tree/main/config
+      // Note on performance:
+      // https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import
       eslintImport.flatConfigs.recommended,
       eslintImport.flatConfigs.typescript,
       eslintImport.flatConfigs.react,
 
+      // Formatting
+      // --------------------
+      // In case of issues with formatting / Prettier, see docs/about_prettier.md,
+      // which explains how to use https://github.com/prettier/eslint-config-prettier
+      // to disable eslint formatting rules that conflict with Prettier.
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -74,7 +82,7 @@ export default tseslint.config([
         projectService: true,
         // Came with [create-vite react-ts] template. Explained at [typed-linting].
         // The "import.meta" value is explained in [import.meta].
-        tsconfigRootDir: import.meta.dirname
+        tsconfigRootDir: import.meta.dirname,
       },
     },
     rules: {
@@ -93,8 +101,8 @@ export default tseslint.config([
           'newlines-between': 'never',
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
-      ],      
-    }
+      ],
+    },
   },
 ])
 
@@ -126,3 +134,4 @@ export default tseslint.config([
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
 // [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+
