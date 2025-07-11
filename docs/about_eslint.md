@@ -2,9 +2,10 @@
 
 - [About eslint](#about-eslint)
 - [How to run eslint](#how-to-run-eslint)
-- [Prevent VS Code eslint extension from trying to lint unrelated files](#prevent-vs-code-eslint-extension-from-trying-to-lint-unrelated-files)
   - [Integrate eslint with VS Code](#integrate-eslint-with-vs-code)
   - [Run eslint from command line](#run-eslint-from-command-line)
+- [How to inspect eslint config with config inspector](#how-to-inspect-eslint-config-with-config-inspector)
+- [How to prevent VS Code eslint extension from trying to lint unrelated files](#how-to-prevent-vs-code-eslint-extension-from-trying-to-lint-unrelated-files)
 - [Initial eslint config setup](#initial-eslint-config-setup)
   - [eslint adjustments I made](#eslint-adjustments-i-made)
   - [Commands I executed to install the required eslint packages](#commands-i-executed-to-install-the-required-eslint-packages)
@@ -14,17 +15,6 @@
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
 # How to run eslint
-
-# Prevent VS Code eslint extension from trying to lint unrelated files
-
-Set `eslint.workingDirectories: web` in `.vscode/settings.json` file.
-Otherwise you will in VS Code Output / ESLint errors like:
-
-``` text
-[Error - 1:17:56 AM] Calculating config file for file:///.../game-ts/.vscode/settings.json) failed.
-Error: Could not find config file.
-    at assertConfigurationExists (C:\...\game-ts\node_modules\eslint\lib\config\config-loader.js:80:17)
-```
 
 ## Integrate eslint with VS Code
 
@@ -55,6 +45,27 @@ Flags used:
 
 - https://eslint.org/docs/latest/use/command-line-interface#--report-unused-disable-directives
 - https://eslint.org/docs/latest/use/command-line-interface#--max-warnings
+
+# How to inspect eslint config with config inspector
+
+Use the config inspector:
+`npx @eslint/config-inspector@latest`
+
+Docs:
+
+- https://eslint.org/blog/2024/04/eslint-config-inspector/
+- https://github.com/eslint/config-inspector
+
+# How to prevent VS Code eslint extension from trying to lint unrelated files
+
+Set `eslint.workingDirectories: web` in `.vscode/settings.json` file.
+Otherwise you will in VS Code Output / ESLint errors like:
+
+``` text
+[Error - 1:17:56 AM] Calculating config file for file:///.../game-ts/.vscode/settings.json) failed.
+Error: Could not find config file.
+    at assertConfigurationExists (C:\...\game-ts\node_modules\eslint\lib\config\config-loader.js:80:17)
+```
 
 # Initial eslint config setup
 

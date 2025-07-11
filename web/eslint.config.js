@@ -167,6 +167,25 @@ export default plugTypescriptEslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
+      // Note: per the performance note of typescript-eslint:
+      // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import
+      // Following rules should also be disabled, if performance suffers:
+      // import/named - already disabled by import-x/typescript
+      // import/namespace
+      // import/default
+      // import/no-named-as-default-member
+      // import/no-unresolved
+      //
+      // And these rules should be used only in CI:
+      // import/no-named-as-default
+      // import/no-cycle
+      // import/no-unused-modules
+      // import/no-deprecated
+      //
+      // import/extensions - a bit unclear
+      //
+      // Use the ESLint config inspector to verify these rules usage (see docs/about_eslint.md).
+
       'tsdoc/syntax': 'error', // [eslint-plugin-tsdoc]
     },
   },
