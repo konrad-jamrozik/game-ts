@@ -55,8 +55,8 @@ Note: [the docs][MUI MCP] also mention how to test the MCP server with [MCP insp
 npx @modelcontextprotocol/inspector npx -y @mui/mcp@latest
 ```
 
-Albeit it doesn't seem to work - the inspector page comes up, but I see `Command / mcp-server-everything`
-and cannot connect to it.
+And then [per this FAQ](https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-there-are-errors-in-connection),
+in the inspector page, set the `Command` to `npx`, `Args` to `-y @mui/mcp@latest`, and then click `Connect`.
 
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
