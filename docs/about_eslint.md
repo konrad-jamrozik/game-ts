@@ -116,7 +116,5 @@ Read more on that in [About Prettier - Prettier and other tools](about_prettier.
 
 Read https://typescript-eslint.io/blog/project-service#additional-files
 
-🚧KJA
-
-[eslint]: https://eslint.org/
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
+[eslint]: https://eslint.org/

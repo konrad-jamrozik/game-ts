@@ -84,5 +84,13 @@
     ],
     // https://code.visualstudio.com/docs/copilot/chat/mcp-servers
     "chat.mcp.enabled": true,
-    "chat.mcp.discovery.enabled": true
+    "chat.mcp.discovery.enabled": true,
+    "todo-tree.filtering.excludeGlobs": [
+        "**/*.d.ts"
+    ],
+    "todo-tree.general.tags": [
+        "🚧kja",
+        "🚧KJA",
+    ],
+    "todo-tree.highlights.enabled": true,    
 }

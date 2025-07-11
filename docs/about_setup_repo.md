@@ -1,15 +1,14 @@
 # About repository setup
 
 - [About repository setup](#about-repository-setup)
-- [Basic setup from scratch](#basic-setup-from-scratch)
+- [Initial repository setup](#initial-repository-setup)
   - [License setup](#license-setup)
   - [README setup](#readme-setup)
   - [Markdown files in docs folder](#markdown-files-in-docs-folder)
   - [Web project setup](#web-project-setup)
-  - [GitHub CI/CD configuration](#github-cicd-configuration)
   - [Cheatsheets](#cheatsheets)
 
-# Basic setup from scratch
+# Initial repository setup
 
 Here is how I set up this repository and dev env from scratch:
 
@@ -25,10 +24,13 @@ Here is how I set up this repository and dev env from scratch:
     .vscode/settings.json
     docs/about_setup_repo.md
     docs/about_vscode.md
-    docs/about_misc_tools.md
     docs/about_setup_web.md
     .markdownlint.json
     ```
+
+  See sections below on [License setup](#license-setup), [README setup](#readme-setup),
+  and [Markdown files in docs folder](#markdown-files-in-docs-folder) for more details.
+5. Set up the `web` project as described in [About the web project setup](about_setup_web.md).
 
 ## License setup
 
@@ -57,10 +59,6 @@ I wrote various documentation files in the `docs` folder when setting up the rep
 ## Web project setup
 
 I set up the React + TypeScript + Vite web project as described in the [about_setup_web.md](about_setup_web.md) document.
-
-## GitHub CI/CD configuration
-
-🚧KJA - planning to use GitHub pages per [this chat](https://chatgpt.com/share/686b7522-18b4-8011-93cf-47e77e1ad535).
 
 ## Cheatsheets
 

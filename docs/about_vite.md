@@ -32,7 +32,7 @@ npm run dev # To locally verify that things work
 
 # Vite configuration
 
-🚧KJA
+Refer to [../web/vite.config.ts](../web/vite.config.ts) for the Vite configuration.
 
 [Babel vs tsc]: https://www.typescriptlang.org/docs/handbook/babel-with-typescript.html
 [Babel]: https://babeljs.io/docs/

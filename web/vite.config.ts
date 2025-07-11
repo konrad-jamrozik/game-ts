@@ -6,6 +6,6 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/#config-intellisense
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
-  base: '/game-ts/',
+  base: '/game-ts/', // This is needed for GitHub Pages deployment.
   plugins: [react()],
 })

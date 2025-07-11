@@ -6,20 +6,19 @@
 - [nvm-windows, Node.js and npm configuration](#nvm-windows-nodejs-and-npm-configuration)
   - [Install nvm-windows, and Node.js \& npm using it](#install-nvm-windows-and-nodejs--npm-using-it)
   - [Commands to update to latest nvm, Node.js and npm version](#commands-to-update-to-latest-nvm-nodejs-and-npm-version)
-- [TypeScript configuration](#typescript-configuration)
-- [Vitest configuration](#vitest-configuration)
-- [ESLint configuration](#eslint-configuration)
-- [Prettier configuration](#prettier-configuration)
 - [References](#references)
 
 This doc describes how the web project as set up, which is a substep of the overall [repository setup](./about_setup_repo.md).
 
 # Web project setup
 
-The web project is using following core technologies, alphabetically:
+The web project is composed of following core technologies: TypeScript + Vite + React.
+
+It is using the following technologies, alphabetically:
 
 - MUI (Material-UI)
 - Node.js
+- nvm-windows
 - npm
 - React
 - TypeScript
@@ -37,7 +36,7 @@ Setup steps executed:
 7. Add radash. See [About radash](about_radash_lodash.md).
 8. Setup continuous integration and deployment to GitHub pages. See [About GitHub pages](about_github_pages.md).
 9. Add MUI. See [About MUI](about_mui.md).
-10. 🚧KJA Add vitest-based unit tests.
+10. 🚧KJA Add vitest-based unit tests
 
 # nvm-windows, Node.js and npm configuration
 
@@ -68,24 +67,6 @@ See also:
 - [nvm-windows]: `nvm-windows` development stopped at `v1.2.2`.
 - [node-releases]
 - [Node 24.0 blog post][node-24.0-blog]
-
-🚧KJA
-
-# TypeScript configuration
-
-🚧KJA
-
-# Vitest configuration
-
-🚧KJA
-
-# ESLint configuration
-
-🚧KJA
-
-# Prettier configuration
-
-🚧KJA
 
 # References
 

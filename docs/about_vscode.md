@@ -5,12 +5,12 @@
 - `.vscode/extensions.json`: Recommended extensions for the workspace.
 - `.vscode/settings.json`: Workspace settings, such as editor configurations and file associations.
 
-🚧 TODO:
+🚧KJA: launch and tasks json
 
 - `launch.json`: Debugging configurations.
 - `tasks.json`: Task runner configurations.
   
-🚧 TODO: MCP and other AI tools:
+🚧KJA: MCP and other AI tools:
 
 - https://code.visualstudio.com/docs/copilot/overview
 - https://code.visualstudio.com/docs/copilot/overview#_extend-chat-with-tools

@@ -18,4 +18,5 @@ https://docs.github.com/en/pages/getting-started-with-github-pages/github-pages-
 
 # Pondered alternatives
 
+`Where can I host my project?`:  
 https://chatgpt.com/c/684e89ec-d7ac-8011-8152-374e139e9adf

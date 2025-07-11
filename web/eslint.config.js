@@ -85,7 +85,7 @@ export default plugTypescriptEslint.config([
       // --------------------
       plugUnicorn.configs.all, // [eslint-plugin-unicorn]
 
-      // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
+      // 🚧KJA eslint: maybe sonarjs, github, awesome, https://github.com/dustinspecker/awesome-eslint
     ],
     languageOptions: {
       ecmaVersion: 2024,
