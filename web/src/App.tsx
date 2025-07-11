@@ -3,10 +3,6 @@ import './App.css'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
-/**
- * @invalid
- * To check if ESLint works.
- */
 function App() {
   const [count, setCount] = useState(0)
 

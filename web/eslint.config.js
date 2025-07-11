@@ -218,6 +218,16 @@ export default plugTypescriptEslint.config([
           ignore: ['vite-env.d.ts', '^AI.*'], // vite-env.d.ts is a file name provided by Vite by default
         },
       ],
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
+      // Sometimes I need empty files while figuring out how to make things work
+      'unicorn/no-empty-file': 'off',
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-nested-ternary.md
+      // Conflicts with prettier: it removes the parentheses
+      'unicorn/no-nested-ternary': 'off',
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-negated-condition.md
+      'unicorn/no-negated-condition': 'off',
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-keyword-prefix.md
+      'unicorn/no-keyword-prefix': 'off',
     },
   },
 ])
