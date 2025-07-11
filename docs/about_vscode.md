@@ -1,6 +1,6 @@
 # About VS Code
 
-## Initial setup
+# Initial setup
 
 - `.vscode/extensions.json`: Recommended extensions for the workspace.
 - `.vscode/settings.json`: Workspace settings, such as editor configurations and file associations.
@@ -17,7 +17,7 @@
 - https://code.visualstudio.com/docs/copilot/copilot-customization
 - https://docs.github.com/en/copilot/customizing-copilot/adding-repository-custom-instructions-for-github-copilot
 
-## Clearing VS Code cache
+# Clearing VS Code cache
 
 First, close all VS Code instances.
 
@@ -27,7 +27,29 @@ rm -Recurse -Force .\Cache\
 rm -Recurse -Force .\CachedData\
 ```
 
-## Tips & tricks
+# Tips & tricks
 
 - VS Code treats some JSON files as JSON with comments via the `files.associations` setting:
   https://code.visualstudio.com/docs/languages/json#_json-with-comments
+
+# Troubleshooting
+
+## Markdown `Open Preview to the Side` fails with `Error loading webview:`
+
+If the command `Markdown: Open Preview to the Side` from the `bierner.markdown-preview-github-styles` extension
+fails with the following error:
+
+``` text
+Error loading webview: Error: Could not register service worker: InvalidStateError: Failed to register a ServiceWorker: The document is in an invalid state.
+```
+
+then clear VS Code cache [as described in docs/about_vscode.md](about_vscode.md#clearing-vs-code-cache).
+
+## Markdown "Open Preview to the Side" is formatted badly
+
+Ensure these extensions are not installed and restart VS Code:
+
+``` text
+docsmsft.docs-markdown
+docsmsft.docs-preview
+```
