@@ -10,7 +10,7 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import-x'
 import eslintUnicorn from 'eslint-plugin-unicorn'
-// import eslintTsdoc from 'eslint-plugin-tsdoc'
+import eslintTsdoc from 'eslint-plugin-tsdoc'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 
 export default tseslint.config([
@@ -18,9 +18,9 @@ export default tseslint.config([
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
-    // plugins: {
-    //   eslintTsdoc,
-    // },
+    plugins: {
+      tsdoc: eslintTsdoc,
+    },
     settings: {
       // Based on [eslint-plugin-import-x resolver] and [eslint-import-resolver-typescript].
       'import-x/resolver-next': [
@@ -92,7 +92,7 @@ export default tseslint.config([
       // which explains how to use https://github.com/prettier/eslint-config-prettier
       // to disable eslint formatting rules that conflict with Prettier.
 
-      // Miscellaneous rules
+      // Miscellaneous
       // --------------------
       eslintUnicorn.configs.all, // [eslint-plugin-unicorn]
       // eslintTsdoc, // [eslint-plugin-tsdoc]
@@ -162,6 +162,7 @@ export default tseslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
+      'tsdoc/syntax': 'error', // [eslint-plugin-tsdoc]
     },
   },
 ])
