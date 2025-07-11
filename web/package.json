@@ -14,6 +14,7 @@
     "format:fix": "prettier . --end-of-line auto --write"
   },
   "dependencies": {
+    "radash": "^12.1.1",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
   },

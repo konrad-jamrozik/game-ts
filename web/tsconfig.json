@@ -15,7 +15,7 @@
   "compilerOptions": {
     // Basics
     // --------------------
-    // Support the latest ES2024 as of 2026-07-08. See [version history].
+    // Support the latest ES2024 as of 2026-07-08. See [ES version history].
     "target": "ES2024",
     // Use the latest ECMAScript module syntax (import/export), matching whatever the latest standard is.
     // This is useful for modern bundlers or runtimes that support native ES modules.
@@ -92,7 +92,7 @@
 // [running TypeScript files directly]: https://nodejs.org/api/typescript.html#type-stripping
 // [strictest]: https://www.npmjs.com/package/@tsconfig/strictest
 // [tsconfig bases]: https://www.typescriptlang.org/docs/handbook/tsconfig-json.html#tsconfig-bases
-// [version history]: https://en.wikipedia.org/wiki/ECMAScript_version_history
+// [ES version history]: https://en.wikipedia.org/wiki/ECMAScript_version_history
 // [vite-pre-bundle]: https://vite.dev/guide/why.html#slow-server-start
 // [vite-react config base]: https://www.npmjs.com/package/@tsconfig/vite-react
 // [vite-reduce-resolve]: https://vite.dev/guide/performance.html#reduce-resolve-operations

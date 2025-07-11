@@ -25,17 +25,19 @@ The web project is using following core technologies, alphabetically:
 - Vite
 - Vitest
 
-I set it up as follows:
+Setup steps executed:
 
-1. I followed the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
-1. To scaffold the initial React + TypeScript + Vite project, I executed [Vite setup commands](about_vite.md#vite-setup-commands).
-1. I updated the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
-1. I configured [prettier]. See [About Prettier](about_prettier.md).
-1. 🚧KJA I configured [eslint] code linting rules. See [About ESLint](about_eslint.md).
-1. 🚧KJA I updated the existing code to produce no errors or warning on prettier and eslint.
-1. 🚧KJA I added vitest-based unit tests.
-1. 🚧KJA I added GitHub actions-based CI
-1. 🚧KJA I added GitHub pages-based CD. See https://chatgpt.com/c/684e89ec-d7ac-8011-8152-374e139e9adf
+1. Follow the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
+1. To scaffold the initial React + TypeScript + Vite project, execute [Vite setup commands](about_vite.md#vite-setup-commands).
+1. Update the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
+1. Setup [prettier]. See [About Prettier](about_prettier.md).
+1. 🚧KJA Setup [eslint] code linting rules. See [About ESLint](about_eslint.md).
+1. 🚧KJA Update the existing code to produce no errors or warning on prettier and eslint.
+1. 🚧KJA Add radash.
+1. 🚧KJA Add MUI.
+1. 🚧KJA Add vitest-based unit tests.
+1. 🚧KJA Add GitHub actions-based CI
+1. 🚧KJA Add GitHub pages-based CD. See https://chatgpt.com/c/684e89ec-d7ac-8011-8152-374e139e9adf
 
 # nvm-windows, Node.js and npm configuration
 
