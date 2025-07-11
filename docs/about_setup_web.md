@@ -28,16 +28,15 @@ The web project is using following core technologies, alphabetically:
 Setup steps executed:
 
 1. Follow the process to [install nvm-windows, and Node.js & npm using it](#install-nvm-windows-and-nodejs--npm-using-it).
-1. To scaffold the initial React + TypeScript + Vite project, execute [Vite setup commands](about_vite.md#vite-setup-commands).
-1. Update the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
-1. Setup [prettier]. See [About Prettier](about_prettier.md).
-1. 🚧KJA Setup [eslint] code linting rules. See [About ESLint](about_eslint.md).
-1. 🚧KJA Update the existing code to produce no errors or warning on prettier and eslint.
-1. 🚧KJA Add radash.
-1. 🚧KJA Add MUI.
-1. 🚧KJA Add vitest-based unit tests.
-1. 🚧KJA Add GitHub actions-based CI
-1. 🚧KJA Add GitHub pages-based CD. See https://chatgpt.com/c/684e89ec-d7ac-8011-8152-374e139e9adf
+2. To scaffold the initial React + TypeScript + Vite project, execute [Vite setup commands](about_vite.md#vite-setup-commands).
+3. Update the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
+4. Setup [prettier]. See [About Prettier](about_prettier.md).
+5. Setup [eslint] code linting rules. See [About ESLint](about_eslint.md).
+6. Update the existing code to produce no errors or warning on prettier and eslint (continuous process).
+7. Add radash. See [About radash](about_radash_lodash.md).
+8. Setup continuous integration and deployment to GitHub pages. See [About GitHub pages](about_github_pages.md).
+9. 🚧KJA Add MUI.
+10. 🚧KJA Add vitest-based unit tests.
 
 # nvm-windows, Node.js and npm configuration
 
