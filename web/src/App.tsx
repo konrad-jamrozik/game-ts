@@ -4,19 +4,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 /**
- *    This is the special summary section.
- *
- * @inheritDoc
- * blah
- *
- * @unscrupulous
- * blah
- *
- * @inheritDoc
- * blah blah
- *
- *  @example @example
- * bla
+ * @invalid
+ * To check if ESLint works.
  */
 function App() {
   const [count, setCount] = useState(0)

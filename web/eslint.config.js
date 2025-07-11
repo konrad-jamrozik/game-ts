@@ -1,25 +1,25 @@
 /**
  * See docs/about_eslint.md for context on this file.
  */
-import eslintReact from '@eslint-react/eslint-plugin'
+import plugReact from '@eslint-react/eslint-plugin'
 import js from '@eslint/js'
-import reactHooks from 'eslint-plugin-react-hooks'
-import reactRefresh from 'eslint-plugin-react-refresh'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import plugImportX from 'eslint-plugin-import-x'
+import plugReactHooks from 'eslint-plugin-react-hooks'
+import plugReactRefresh from 'eslint-plugin-react-refresh'
+import plugTsdoc from 'eslint-plugin-tsdoc'
+import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
-import tseslint from 'typescript-eslint'
-import eslintImport from 'eslint-plugin-import-x'
-import eslintUnicorn from 'eslint-plugin-unicorn'
-import eslintTsdoc from 'eslint-plugin-tsdoc'
-import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
+import plugTypescriptEslint from 'typescript-eslint'
 
-export default tseslint.config([
+export default plugTypescriptEslint.config([
   globalIgnores(['dist']),
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
     plugins: {
-      tsdoc: eslintTsdoc,
+      tsdoc: plugTsdoc,
     },
     settings: {
       // Based on [eslint-plugin-import-x resolver] and [eslint-import-resolver-typescript].
@@ -47,18 +47,18 @@ export default tseslint.config([
       // Note: not using the [all] [all src] config due to warning on conflicts plus
       // my read of the source code suggests it disables many baseline eslint rules
       // (probably overridden by ts-eslint rules).
-      ...tseslint.configs.strictTypeChecked,
-      ...tseslint.configs.stylisticTypeChecked,
+      ...plugTypescriptEslint.configs.strictTypeChecked,
+      ...plugTypescriptEslint.configs.stylisticTypeChecked,
 
       // React configs
       // --------------------
       // Came with [create-vite react-ts] template.
       // Explained at [eslint-plugin-react-hooks about].
       // Source at [eslint-plugin-react-hooks src].
-      reactHooks.configs['recommended-latest'],
+      plugReactHooks.configs['recommended-latest'],
       // Came with [create-vite react-ts] template.
       // Package at [eslint-plugin-react-refresh pkg].
-      reactRefresh.configs.vite,
+      plugReactRefresh.configs.vite,
       // From [eslint-react], [eslint-react pkg], originally based on the subsets proposed
       // by [create-vite react-ts] template README, which were:
       // [eslint-plugin-react-x pkg] and [eslint-plugin-react-dom pkg]
@@ -71,7 +71,7 @@ export default tseslint.config([
       // - @eslint-react/prefer-read-only-props
       // require type information. Curiously, both of them are mentioned in recommended-type-checked,
       // but only one is enabled. See [recommended-type-checked src].
-      eslintReact.configs['recommended-type-checked'],
+      plugReact.configs['recommended-type-checked'],
 
       // Import order
       // --------------------
@@ -82,9 +82,9 @@ export default tseslint.config([
       // https://github.com/import-js/eslint-plugin-import/tree/main/config
       // Note on performance:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import
-      eslintImport.flatConfigs.recommended,
-      eslintImport.flatConfigs.typescript,
-      eslintImport.flatConfigs.react,
+      plugImportX.flatConfigs.recommended,
+      plugImportX.flatConfigs.typescript,
+      plugImportX.flatConfigs.react,
 
       // Formatting
       // --------------------
@@ -94,7 +94,7 @@ export default tseslint.config([
 
       // Miscellaneous
       // --------------------
-      eslintUnicorn.configs.all, // [eslint-plugin-unicorn]
+      plugUnicorn.configs.all, // [eslint-plugin-unicorn]
       // eslintTsdoc, // [eslint-plugin-tsdoc]
 
       // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
@@ -103,7 +103,7 @@ export default tseslint.config([
       ecmaVersion: 2024,
       globals: globals.browser,
       // "parser" from the doc of [eslint-react].
-      parser: tseslint.parser,
+      parser: plugTypescriptEslint.parser,
       parserOptions: {
         // This line, coming from [create-vite react-ts] template, has been commented out by me:
         // This is because it is subsumed by projectService below.
