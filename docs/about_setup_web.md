@@ -82,6 +82,7 @@ See also:
 # ESLint configuration
 
 🚧KJA https://eslint.org/blog/2024/04/eslint-config-inspector/
+https://github.com/eslint/config-inspector
 Use this to verify these rules are not used:
 // Note on performance:
 // https://typescript-eslint.io/troubleshooting/typed-linting/performance#eslint-plugin-import

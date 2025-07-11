@@ -6,14 +6,20 @@ import js from '@eslint/js'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
-import globals, { node } from 'globals'
+import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import'
+import eslintUnicorn from 'eslint-plugin-unicorn'
+import eslintTsdoc from 'eslint-plugin-tsdoc'
 
 export default tseslint.config([
   globalIgnores(['dist']),
   {
+    name: 'cfg',
     files: ['**/*.{ts,tsx}'],
+    plugins: {
+      eslintTsdoc,
+    },
     settings: {
       import: {
         resolver: {
@@ -89,7 +95,13 @@ export default tseslint.config([
       // which explains how to use https://github.com/prettier/eslint-config-prettier
       // to disable eslint formatting rules that conflict with Prettier.
 
+      // Miscellaneous rules
+      // --------------------
+      eslintUnicorn.configs.all, // [eslint-plugin-unicorn]
+
       // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
+
+      ,
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -153,6 +165,7 @@ export default tseslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
+      'tsdoc/syntax': 'warn',
     },
   },
 ])
@@ -187,4 +200,6 @@ export default tseslint.config([
 // [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 // [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
 // [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
+// [eslint-plugin-unicorn]: https://github.com/sindresorhus/eslint-plugin-unicorn
+// [eslint-plugin-tsdoc]: https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
 
