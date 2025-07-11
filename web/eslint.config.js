@@ -19,20 +19,9 @@ export default plugTypescriptEslint.config([
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
     plugins: {
+      // Note: the plugin [eslint-plugin-tsdoc] must be imported as a plugin,
+      // not via extends, because of its definition.
       tsdoc: plugTsdoc,
-    },
-    settings: {
-      // Based on [eslint-plugin-import-x resolver] and [eslint-import-resolver-typescript].
-      'import-x/resolver-next': [
-        createTypeScriptImportResolver({
-          alwaysTryTypes: true, // Always try to resolve types under `<root>@types` directory even if it doesn't contain any source code, like `@types/unist`
-          projectService: true,
-          // This was figured out by myself.
-          // It ensures that the [vite public directory]
-          // can be correctly resolved by [eslint-plugin-import-x].
-          roots: ['public'],
-        }),
-      ],
     },
     extends: [
       // [eslint configs]
@@ -95,7 +84,6 @@ export default plugTypescriptEslint.config([
       // Miscellaneous
       // --------------------
       plugUnicorn.configs.all, // [eslint-plugin-unicorn]
-      // eslintTsdoc, // [eslint-plugin-tsdoc]
 
       // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
     ],
@@ -116,6 +104,23 @@ export default plugTypescriptEslint.config([
         // The "import.meta" value is explained in [import.meta].
         tsconfigRootDir: import.meta.dirname,
       },
+    },
+    settings: {
+      // Based on [eslint-plugin-import-x resolver] and [eslint-import-resolver-typescript].
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true, // Always try to resolve types under `<root>@types` directory even if it doesn't contain any source code, like `@types/unist`
+          projectService: true,
+          // This was figured out by myself.
+          // It ensures that the [vite public directory]
+          // can be correctly resolved by [eslint-plugin-import-x].
+          // As a result, a line like this:
+          //   import viteLogo from '/vite.svg'
+          // will no longer trigger:
+          // https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/no-unresolved.md
+          roots: ['public'],
+        }),
+      ],
     },
     rules: {
       // https://eslint.org/docs/latest/rules/sort-imports
@@ -167,39 +172,41 @@ export default plugTypescriptEslint.config([
   },
 ])
 
-// [@eslint/js]: https://www.npmjs.com/package/@eslint/js
-// [@types/node]: https://www.npmjs.com/package/@types/node?activeTab=readme
-// [all src]: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/all.ts
-// [all]: https://typescript-eslint.io/users/configs/#all
-// [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
-// [eslint configs]: https://eslint.org/docs/latest/use/configure/configuration-files#using-predefined-configurations
-// [eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
-// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
-// [eslint-plugin-react pkg]: https://www.npmjs.com/package/eslint-plugin-react
-// [eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
-// [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
-// [eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
-// [eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
-// [eslint-plugin-react-x pkg]: https://www.npmjs.com/package/eslint-plugin-react-x
-// [eslint-react faq]: https://eslint-react.xyz/docs/faq
-// [eslint-react pkg]: https://www.npmjs.com/package/@eslint-react/eslint-plugin
-// [eslint-react presets]: https://eslint-react.xyz/docs/presets
-// [eslint-react type info]: https://eslint-react.xyz/docs/configuration/configure-project-config#type-information
-// [eslint-react]: https://eslint-react.xyz/
-// [import.meta]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta
-// [js-eslint all src]: https://github.com/eslint/eslint/blob/35cf44c22e36b1554486e7a75c870e86c10b83f8/packages/js/src/configs/eslint-all.js
-// [linting with type information]: https://typescript-eslint.io/getting-started/typed-linting/#shared-configurations
-// [recommended-type-checked-src]: https://github.com/Rel1cx/eslint-react/blob/f10515104f223bf548e67e611cfb9f3ec6a68ef9/packages/plugins/eslint-plugin/src/configs/recommended-type-checked.ts#L7-L11
-// [strictTypeChecked]: https://typescript-eslint.io/users/configs/#recommended-configurations
-// [stylisticTypeChecked]: https://typescript-eslint.io/users/configs/#recommended-configurations
-// [ts-eslint recommended configs]: https://typescript-eslint.io/users/configs/#recommended-configurations
-// [ts-eslint]: https://ts-eslint.io/users/configs/
-// [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
-// [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
-// [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
-// [eslint-plugin-unicorn]: https://github.com/sindresorhus/eslint-plugin-unicorn
-// [eslint-plugin-tsdoc]: https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
-// [eslint-plugin-import-x]: https://github.com/un-ts/eslint-plugin-import-x
-// [eslint-plugin-import-x resolver]: https://github.com/un-ts/eslint-plugin-import-x#import-xresolver-next
-// [eslint-import-resolver-typescript]: https://github.com/import-js/eslint-import-resolver-typescript#eslintconfigjs
-// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import
+/*
+[@eslint/js]: https://www.npmjs.com/package/@eslint/js
+[@types/node]: https://www.npmjs.com/package/@types/node?activeTab=readme
+[all src]: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/all.ts
+[all]: https://typescript-eslint.io/users/configs/#all
+[create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
+[eslint configs]: https://eslint.org/docs/latest/use/configure/configuration-files#using-predefined-configurations
+[eslint-import-resolver-typescript]: https://github.com/import-js/eslint-import-resolver-typescript#eslintconfigjs
+[eslint-plugin-import order]: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md
+[eslint-plugin-import-x resolver]: https://github.com/un-ts/eslint-plugin-import-x#import-xresolver-next
+[eslint-plugin-import-x]: https://github.com/un-ts/eslint-plugin-import-x
+[eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import
+[eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
+[eslint-plugin-react pkg]: https://www.npmjs.com/package/eslint-plugin-react
+[eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
+[eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
+[eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+[eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
+[eslint-plugin-react-x pkg]: https://www.npmjs.com/package/eslint-plugin-react-x
+[eslint-plugin-tsdoc]: https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
+[eslint-plugin-unicorn]: https://github.com/sindresorhus/eslint-plugin-unicorn
+[eslint-react faq]: https://eslint-react.xyz/docs/faq
+[eslint-react pkg]: https://www.npmjs.com/package/@eslint-react/eslint-plugin
+[eslint-react presets]: https://eslint-react.xyz/docs/presets
+[eslint-react type info]: https://eslint-react.xyz/docs/configuration/configure-project-config#type-information
+[eslint-react]: https://eslint-react.xyz/
+[import.meta]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/import.meta
+[js-eslint all src]: https://github.com/eslint/eslint/blob/35cf44c22e36b1554486e7a75c870e86c10b83f8/packages/js/src/configs/eslint-all.js
+[linting with type information]: https://typescript-eslint.io/getting-started/typed-linting/#shared-configurations
+[recommended-type-checked-src]: https://github.com/Rel1cx/eslint-react/blob/f10515104f223bf548e67e611cfb9f3ec6a68ef9/packages/plugins/eslint-plugin/src/configs/recommended-type-checked.ts#L7-L11
+[strictTypeChecked]: https://typescript-eslint.io/users/configs/#recommended-configurations
+[stylisticTypeChecked]: https://typescript-eslint.io/users/configs/#recommended-configurations
+[ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
+[ts-eslint recommended configs]: https://typescript-eslint.io/users/configs/#recommended-configurations
+[ts-eslint]: https://ts-eslint.io/users/configs/
+[typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
+[vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
+*/
