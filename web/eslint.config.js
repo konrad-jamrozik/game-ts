@@ -10,16 +10,16 @@ import globals from 'globals'
 import tseslint from 'typescript-eslint'
 import eslintImport from 'eslint-plugin-import'
 import eslintUnicorn from 'eslint-plugin-unicorn'
-import eslintTsdoc from 'eslint-plugin-tsdoc'
+// import eslintTsdoc from 'eslint-plugin-tsdoc'
 
 export default tseslint.config([
   globalIgnores(['dist']),
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
-    plugins: {
-      eslintTsdoc,
-    },
+    // plugins: {
+    //   eslintTsdoc,
+    // },
     settings: {
       import: {
         resolver: {
@@ -98,7 +98,7 @@ export default tseslint.config([
       // Miscellaneous rules
       // --------------------
       eslintUnicorn.configs.all, // [eslint-plugin-unicorn]
-      eslintTsdoc,
+      // eslintTsdoc, // [eslint-plugin-tsdoc]
 
       // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
     ],
@@ -164,7 +164,6 @@ export default tseslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
-      'tsdoc/syntax': 'error',
     },
   },
 ])

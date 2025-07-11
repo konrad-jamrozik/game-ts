@@ -2,6 +2,7 @@
 
 - [About eslint](#about-eslint)
 - [How to run eslint](#how-to-run-eslint)
+- [Prevent VS Code eslint extension from trying to lint unrelated files](#prevent-vs-code-eslint-extension-from-trying-to-lint-unrelated-files)
   - [Integrate eslint with VS Code](#integrate-eslint-with-vs-code)
   - [Run eslint from command line](#run-eslint-from-command-line)
 - [Initial eslint config setup](#initial-eslint-config-setup)
@@ -14,9 +15,29 @@
 
 # How to run eslint
 
+# Prevent VS Code eslint extension from trying to lint unrelated files
+
+Set `eslint.workingDirectories: web` in `.vscode/settings.json` file.
+Otherwise you will in VS Code Output / ESLint errors like:
+
+``` text
+[Error - 1:17:56 AM] Calculating config file for file:///.../game-ts/.vscode/settings.json) failed.
+Error: Could not find config file.
+    at assertConfigurationExists (C:\...\game-ts\node_modules\eslint\lib\config\config-loader.js:80:17)
+```
+
 ## Integrate eslint with VS Code
 
 https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint
+
+Add to `.vscode/settings.json`:
+
+``` json
+    "eslint.useFlatConfig": true,
+    "eslint.workingDirectories": [
+        "web"
+    ]
+```
 
 ## Run eslint from command line
 
