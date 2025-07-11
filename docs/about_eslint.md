@@ -36,7 +36,13 @@ Add to `.vscode/settings.json`:
     "eslint.useFlatConfig": true,
     "eslint.workingDirectories": [
         "web"
-    ]
+    ],
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "typescript",
+        "typescriptreact"
+    ]      
 ```
 
 ## Run eslint from command line
@@ -76,12 +82,16 @@ in the config file itself [eslint.config.js](../web/eslint.config.js).
 ```powershell
 # https://eslint-react.xyz/docs/getting-started/typescript
 npm install --save-dev typescript-eslint @eslint-react/eslint-plugin
-# https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#installation
-npm install --save-dev eslint-plugin-import 
+# https://github.com/un-ts/eslint-plugin-import-x#installation
+# OBSOLETE/SUBSUMED BY eslint-plugin-import-x: https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#installation
+npm install --save-dev eslint-plugin-import-x
+# https://github.com/import-js/eslint-import-resolver-typescript#eslint-plugin-import-x
+npm install --save-dev eslint-import-resolver-typescript
 # https://github.com/sindresorhus/eslint-plugin-unicorn
 npm install --save-dev eslint eslint-plugin-unicorn
 # https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
 npm install --save-dev eslint-plugin-tsdoc
+
 ```
 
 Note: a lot of the packages were already installed by the [create-vite react-ts] template.

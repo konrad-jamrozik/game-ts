@@ -8,9 +8,10 @@ import reactRefresh from 'eslint-plugin-react-refresh'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import tseslint from 'typescript-eslint'
-import eslintImport from 'eslint-plugin-import'
+import eslintImport from 'eslint-plugin-import-x'
 import eslintUnicorn from 'eslint-plugin-unicorn'
 // import eslintTsdoc from 'eslint-plugin-tsdoc'
+import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 
 export default tseslint.config([
   globalIgnores(['dist']),
@@ -21,23 +22,17 @@ export default tseslint.config([
     //   eslintTsdoc,
     // },
     settings: {
-      import: {
-        resolver: {
-          typescript: true, // [ts resolver]
-          node: {
-            // The paths/public here ensures that the [vite public directory]
-            // can be correctly resolved by [eslint-plugin-import].
-            // Doc:
-            // https://github.com/import-js/eslint-plugin-import/tree/main?tab=readme-ov-file#resolvers
-            paths: ['src', 'public'],
-          },
-          alwaysTryTypes: true, // always try to resolve types under `<root>@types` directory even it doesn't contain any source code, like `@types/unist`
-        },
-        // [ts resolver]
-        parsers: {
-          '@typescript-eslint/parser': ['.ts', '.tsx'],
-        },
-      },
+      // Based on [eslint-plugin-import-x resolver] and [eslint-import-resolver-typescript].
+      'import-x/resolver-next': [
+        createTypeScriptImportResolver({
+          alwaysTryTypes: true, // Always try to resolve types under `<root>@types` directory even if it doesn't contain any source code, like `@types/unist`
+          projectService: true,
+          // This was figured out by myself.
+          // It ensures that the [vite public directory]
+          // can be correctly resolved by [eslint-plugin-import-x].
+          roots: ['public'],
+        }),
+      ],
     },
     extends: [
       // [eslint configs]
@@ -80,6 +75,8 @@ export default tseslint.config([
 
       // Import order
       // --------------------
+      // See [eslint-plugin-import-x] for details.
+      // Notably, [eslint-plugin-import] is obsolete.
       // See also comment on rule "'sort-imports': 'off'"
       // Configs src:
       // https://github.com/import-js/eslint-plugin-import/tree/main/config
@@ -155,10 +152,11 @@ export default tseslint.config([
           ignoreVoidReturningFunctions: true,
         },
       ],
-      'import/order': [
+      // https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md
+      'import-x/order': [
         'error',
         {
-          // options: https://github.com/import-js/eslint-plugin-import/blob/main/docs/rules/order.md#options
+          // options: https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md#options
           warnOnUnassignedImports: true,
           'newlines-between': 'never',
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
@@ -200,4 +198,7 @@ export default tseslint.config([
 // [ts resolver]: https://github.com/import-js/eslint-import-resolver-typescript
 // [eslint-plugin-unicorn]: https://github.com/sindresorhus/eslint-plugin-unicorn
 // [eslint-plugin-tsdoc]: https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
-
+// [eslint-plugin-import-x]: https://github.com/un-ts/eslint-plugin-import-x
+// [eslint-plugin-import-x resolver]: https://github.com/un-ts/eslint-plugin-import-x#import-xresolver-next
+// [eslint-import-resolver-typescript]: https://github.com/import-js/eslint-import-resolver-typescript#eslintconfigjs
+// [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import
