@@ -62,7 +62,7 @@ export default plugTypescriptEslint.config([
       // but only one is enabled. See [recommended-type-checked src].
       plugReact.configs['recommended-type-checked'],
 
-      // Import order
+      // Imports
       // --------------------
       // See [eslint-plugin-import-x] for details.
       // Notably, [eslint-plugin-import] is obsolete.
@@ -123,6 +123,9 @@ export default plugTypescriptEslint.config([
       ],
     },
     rules: {
+      // [eslint configs]
+      // --------------------
+
       // https://eslint.org/docs/latest/rules/sort-imports
       // Turned off. Using 'import/order' instead.
       // 'import/order' sorts by semantics, while sort-imports sorts by import syntax used, then alphabetically.
@@ -140,6 +143,10 @@ export default plugTypescriptEslint.config([
       ],
       // See @typescript-eslint/no-magic-numbers
       'no-magic-numbers': 'off',
+
+      // [ts-eslint] configs
+      // --------------------
+
       // https://typescript-eslint.io/rules/no-magic-numbers/
       // https://eslint.org/docs/latest/rules/no-magic-numbers#options
       '@typescript-eslint/no-magic-numbers': 'off',
@@ -157,6 +164,10 @@ export default plugTypescriptEslint.config([
           ignoreVoidReturningFunctions: true,
         },
       ],
+
+      // Imports
+      // --------------------
+
       // https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md
       'import-x/order': [
         'error',
@@ -186,7 +197,27 @@ export default plugTypescriptEslint.config([
       //
       // Use the ESLint config inspector to verify these rules usage (see docs/about_eslint.md).
 
+      // Formatting
+      // --------------------
+      // Empty so far.
+
+      // Miscellaneous - TSDoc
+      // --------------------
       'tsdoc/syntax': 'error', // [eslint-plugin-tsdoc]
+
+      // Miscellaneous - Unicorn
+      // --------------------
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/filename-case.md
+      'unicorn/filename-case': [
+        'error',
+        {
+          cases: {
+            camelCase: true, // for files primarily exporting a function
+            pascalCase: true, // allow PascalCase for React components, as they require it
+          },
+          ignore: ['vite-env.d.ts', '^AI.*'], // vite-env.d.ts is a file name provided by Vite by default
+        },
+      ],
     },
   },
 ])
