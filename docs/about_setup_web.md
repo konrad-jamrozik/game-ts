@@ -18,6 +18,7 @@ This doc describes how the web project as set up, which is a substep of the over
 
 The web project is using following core technologies, alphabetically:
 
+- MUI (Material-UI)
 - Node.js
 - npm
 - React
@@ -32,10 +33,10 @@ Setup steps executed:
 3. Update the `tsconfig.*.json` files. See [About tsconfig.json](about_tsconfig.md).
 4. Setup [prettier]. See [About Prettier](about_prettier.md).
 5. Setup [eslint] code linting rules. See [About ESLint](about_eslint.md).
-6. Update the existing code to produce no errors or warning on prettier and eslint (continuous process).
+6. Update the initial, existing code to produce no errors or warning on eslint and prettier.
 7. Add radash. See [About radash](about_radash_lodash.md).
 8. Setup continuous integration and deployment to GitHub pages. See [About GitHub pages](about_github_pages.md).
-9. 🚧KJA Add MUI.
+9. Add MUI. See [About MUI](about_mui.md).
 10. 🚧KJA Add vitest-based unit tests.
 
 # nvm-windows, Node.js and npm configuration
