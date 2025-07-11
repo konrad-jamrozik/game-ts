@@ -98,10 +98,9 @@ export default tseslint.config([
       // Miscellaneous rules
       // --------------------
       eslintUnicorn.configs.all, // [eslint-plugin-unicorn]
+      eslintTsdoc,
 
       // 🚧KJA add lodash, unicorn, maybe sonarjs, github, tsdoc, awesome
-
-      ,
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -165,7 +164,7 @@ export default tseslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
-      'tsdoc/syntax': 'warn',
+      'tsdoc/syntax': 'error',
     },
   },
 ])
