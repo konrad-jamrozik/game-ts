@@ -143,6 +143,9 @@ export default plugTypescriptEslint.config([
       ],
       // See @typescript-eslint/no-magic-numbers
       'no-magic-numbers': 'off',
+      // I don't care about comment capitalization
+      // https://eslint.org/docs/latest/rules/capitalized-comments
+      'capitalized-comments': 'off',
 
       // [ts-eslint] configs
       // --------------------
