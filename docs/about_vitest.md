@@ -64,8 +64,29 @@ describe('App', () => {
 ## Running tests
 
 ```powershell
-npx vitest run
+npm run test:ui
 ```
+
+See also the other variants in [`package.json`](../web/package.json).
+
+## Vitest UI port configuration
+
+By default, Vitest UI tries to use port 51204 for its API server. On some systems, this port may be reserved or restricted,
+causing errors like `EACCES: permission denied ::1:51204`.
+
+To avoid this, specify a different port (e.g., 6174) using the `--api.port` option:
+
+```powershell
+vitest --ui --api.port=6174
+```
+
+Or update your `package.json` script:
+
+```jsonc
+"test:ui": "vitest --ui --api.port=6174"
+```
+
+This ensures Vitest UI starts on a port that is less likely to be restricted.
 
 ## Notes
 

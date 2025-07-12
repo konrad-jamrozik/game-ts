@@ -16,9 +16,9 @@
     "format": "prettier . --check --end-of-line auto",
     "format:debug": "prettier . --check --end-of-line auto --log-level debug",
     "format:fix": "prettier . --end-of-line auto --write",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:ui": "vitest --ui",
+    "test": "vitest --run",
+    "test:watch": "vitest --watch",
+    "test:ui": "vitest --ui --api.port=6174",
     "test:cov": "vitest --coverage"
   },
   "dependencies": {
