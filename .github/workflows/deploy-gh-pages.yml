@@ -38,6 +38,7 @@ jobs:
           npm clean-install
 
       - name: Run tests
+        # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.
         run: |
           npm run test -- --pool=forks --retry=1
 
