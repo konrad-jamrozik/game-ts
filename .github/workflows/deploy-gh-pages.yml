@@ -19,7 +19,11 @@ concurrency:
 
 jobs:
   build-and-deploy:
+    name: Build and Deploy
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./web    
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -31,12 +35,14 @@ jobs:
 
       - name: Install dependencies
         run: |
-          cd web
-          npm ci
+          npm clean-install
+
+      - name: Run tests
+        run: |
+          npm run test -- --pool=forks --retry=1
 
       - name: Build project
         run: |
-          cd web
           npm run build
 
       - name: Upload artifact
