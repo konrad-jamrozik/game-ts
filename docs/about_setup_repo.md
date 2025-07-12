@@ -23,8 +23,9 @@ Here is how I set up this repository and dev env from scratch:
     .vscode/extensions.json
     .vscode/settings.json
     docs/about_setup_repo.md
-    docs/about_vscode.md
     docs/about_setup_web.md
+    docs/about_vscode.md
+    docs/about_misc_tools.md
     .markdownlint.json
     ```
 
