@@ -5,7 +5,8 @@ import viteLogo from '/vite.svg'
 
 function App() {
   const [count, setCount] = useState(0),
-    [showSuccess, setShowSuccess] = useState(false)
+    [showSuccess, setShowSuccess] = useState(false),
+    [agents, setAgents] = useState(0)
 
   return (
     <>
@@ -22,10 +23,20 @@ function App() {
         <button type="button" onClick={() => setCount((cnt) => cnt + 1)}>
           count is {count}
         </button>
-        <button type="button" onClick={() => setShowSuccess(true)}>
+        <button
+          type="button"
+          onClick={() => {
+            setAgents((previousAgents) => previousAgents + 1)
+            setShowSuccess(true)
+          }}
+        >
           Add agents
         </button>
         {showSuccess && <div>success</div>}
+        <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
+          <span>Agents counter</span>
+          <span>{agents}</span>
+        </div>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
