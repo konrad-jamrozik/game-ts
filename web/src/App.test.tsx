@@ -15,11 +15,12 @@ describe('App', () => {
     render(<App />)
     // Check label exists
     expect(screen.getByText(/agents counter/iu)).toBeInTheDocument()
-    // Check initial value
-    expect(screen.getByText('0')).toBeInTheDocument()
+    // Check initial value using label association
+    const agentsValue = screen.getByLabelText(/agents counter/iu)
+    expect(agentsValue).toHaveTextContent('0')
     // Click the button
     await userEvent.click(screen.getByRole('button', { name: /add agents/iu }))
     // Check updated value
-    expect(screen.getByText('1')).toBeInTheDocument()
+    expect(agentsValue).toHaveTextContent('1')
   })
 })

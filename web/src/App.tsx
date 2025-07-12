@@ -1,3 +1,6 @@
+import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import './App.css'
 import reactLogo from './assets/react.svg'
@@ -20,23 +23,27 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        <button type="button" onClick={() => setCount((cnt) => cnt + 1)}>
+        <Button variant="contained" onClick={() => setCount((cnt) => cnt + 1)}>
           count is {count}
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
+          variant="outlined"
           onClick={() => {
             setAgents((previousAgents) => previousAgents + 1)
             setShowSuccess(true)
           }}
         >
           Add agents
-        </button>
+        </Button>
         {showSuccess && <div>success</div>}
-        <div style={{ alignItems: 'center', display: 'flex', gap: 8 }}>
-          <span>Agents counter</span>
-          <span>{agents}</span>
-        </div>
+        <Stack direction="row" alignItems="center" spacing={1}>
+          <Typography id="agents-label" variant="body1">
+            Agents counter
+          </Typography>
+          <Typography variant="h6" component="span" aria-labelledby="agents-label">
+            {agents}
+          </Typography>
+        </Stack>
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
