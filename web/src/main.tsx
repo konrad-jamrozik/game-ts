@@ -13,4 +13,3 @@ if (rootElement) {
 } else {
   console.error('Could not find #root element! Ensure that index.html has an element with id="root"')
 }
-
