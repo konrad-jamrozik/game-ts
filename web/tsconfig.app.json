@@ -13,6 +13,12 @@
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "useDefineForClassFields": true,
     "lib": ["ES2024", "DOM", "DOM.Iterable"],
+    // Without vitest/globals `npm run build` fails with:
+    //   Error: src/App.test.tsx(6,1): error TS2582: Cannot find name 'describe'.
+    //   Do you need to install type definitions for a test runner?
+    //   Try npm i --save-dev @types/jest or npm i --save-dev @types/mocha.
+    // See also:
+    // https://vitest.dev/config/#globals
     "types": ["vitest/globals"],
 
     // Extensions for react for config for Vite & its bundler

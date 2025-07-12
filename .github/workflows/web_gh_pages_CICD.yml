@@ -1,4 +1,6 @@
-# Simple workflow for deploying static content to GitHub Pages
+# Deploys to
+# https://konrad-jamrozik.github.io/game-ts/
+# See docs/about_github_pages.md for more details.
 name: Deploy to GitHub Pages
 
 on:
