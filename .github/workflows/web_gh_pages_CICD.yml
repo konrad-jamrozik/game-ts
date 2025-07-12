@@ -39,6 +39,14 @@ jobs:
         run: |
           npm clean-install
 
+      - name: Run linter
+        run: |
+          npm run lint
+
+      - name: Run formatter
+        run: |
+          npm run format
+
       - name: Run tests
         # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.
         run: |
