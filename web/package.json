@@ -15,7 +15,11 @@
     "preview": "vite preview",
     "format": "prettier . --check --end-of-line auto",
     "format:debug": "prettier . --check --end-of-line auto --log-level debug",
-    "format:fix": "prettier . --end-of-line auto --write"
+    "format:fix": "prettier . --end-of-line auto --write",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:ui": "vitest --ui",
+    "test:cov": "vitest --coverage"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",

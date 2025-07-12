@@ -11,7 +11,12 @@ npm install --save-dev vitest @testing-library/react @testing-library/jest-dom @
 
 # Install type definitions for TypeScript
 npm install --save-dev @types/testing-library__react @types/testing-library__jest-dom @types/testing-library__user-event
+
+# Install Vitest UI for a better test experience: https://vitest.dev/guide/ui
+npm install --save-dev @vitest/ui
 ```
+
+Then add appropriate `test` scripts to your `package.json`.
 
 ## Configuration
 
