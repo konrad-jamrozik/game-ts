@@ -10,8 +10,12 @@
 - Added [.github/instructions/copilot-instructions.md](../.github/instructions/copilot-instructions.md)
   by using VSCode June 2025 [copilot instructions wizard][Generate copilot instructions].
   Read about [copilot instructions].
+- Added [context7 MCP] based on the [MCP gallery]. Also added relevant line to `copilot-instructions.md`.
+  Note: One can also append to Agent chat `#context7`.
 
+[context7 MCP]: https://context7.com/
 [copilot instructions]: https://code.visualstudio.com/docs/copilot/copilot-customization#_custom-instructions
 [Generate copilot instructions]: https://code.visualstudio.com/docs/copilot/copilot-customization#_generate-an-instructions-file-for-your-workspace
+[MCP gallery]: https://code.visualstudio.com/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp

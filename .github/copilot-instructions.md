@@ -48,7 +48,9 @@
 
 - See `web/package.json` for all scripts and dependencies.
 - See `docs/about_*` for detailed setup and conventions.
-- For MUI or Vitest/testing questions, always check `docs/about_mui.md` and `docs/about_vitest.md` first.
+- For MUI questions, always check `docs/about_mui.md` and `.github/instructions/mui.instructions.md` first.
+- For Vitest/testing questions, always check `docs/about_vitest.md` and `.github/instructions/vitest.instructions.md` first.
+- Use context7 MCP server when looking for documentations of used libraries or frameworks.
 
 ---
 For any unclear or missing conventions, check the `docs/` directory or ask for clarification.

@@ -6,7 +6,15 @@
             "args": ["-y", "@mui/mcp@latest"],
             "cwd": "${input:cwd}",
             "dev": {}
-        }
+        },
+		"context7": {
+			"type": "stdio",
+			"command": "npx",
+			"args": [
+				"-y",
+				"@upstash/context7-mcp@latest"
+			],
+		}        
     },
     "inputs": [
         {
