@@ -4,7 +4,8 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [count, setCount] = useState(0),
+    [showSuccess, setShowSuccess] = useState(false)
 
   return (
     <>
@@ -21,6 +22,10 @@ function App() {
         <button type="button" onClick={() => setCount((cnt) => cnt + 1)}>
           count is {count}
         </button>
+        <button type="button" onClick={() => setShowSuccess(true)}>
+          Add agents
+        </button>
+        {showSuccess && <div>success</div>}
         <p>
           Edit <code>src/App.tsx</code> and save to test HMR
         </p>
