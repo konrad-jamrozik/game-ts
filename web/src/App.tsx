@@ -7,7 +7,7 @@ import GameControls from './GameControls'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
-function App() {
+function App(): React.JSX.Element {
   // Game state
   const [turn, setTurn] = useState(0)
   const [agents, setAgents] = useState(0)
