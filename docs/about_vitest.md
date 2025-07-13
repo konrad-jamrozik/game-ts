@@ -88,6 +88,15 @@ Or update your `package.json` script:
 
 This ensures Vitest UI starts on a port that is less likely to be restricted.
 
+## React testing library
+
+🚧KJA React testing library expand based on previous project docs
+https://testing-library.com/docs/queries/about/#priority
+https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
+https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-labelledby
+
+Need to document separate doc about labelling elements
+
 ## Notes
 
 - Vitest is recommended for Vite + React projects.

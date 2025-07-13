@@ -146,6 +146,8 @@ export default plugTypescriptEslint.config([
       // I don't care about comment capitalization
       // https://eslint.org/docs/latest/rules/capitalized-comments
       'capitalized-comments': 'off',
+      // https://eslint.org/docs/latest/rules/no-inline-comments
+      'no-inline-comments': 'off',
 
       // [ts-eslint] configs
       // --------------------
@@ -273,3 +275,4 @@ export default plugTypescriptEslint.config([
 [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
 */
+// 🚧KJA add eslint for vitest
