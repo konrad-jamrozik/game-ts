@@ -29,6 +29,9 @@ function App() {
           <Button variant="contained" onClick={() => setAgents((prevAgents) => prevAgents + 1)}>
             hire agents
           </Button>
+        </Stack>
+        {/* Game controls (advance/reset) */}
+        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <Button variant="contained" onClick={() => setTurn((prevTurn) => prevTurn + 1)}>
             advance turn
           </Button>
