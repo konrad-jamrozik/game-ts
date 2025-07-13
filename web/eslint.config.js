@@ -31,13 +31,13 @@ export default plugTypescriptEslint.config([
 
       // [ts-eslint] configs
       // --------------------
-      // Configured to strictest per [ts-eslint recommended configs].
+      // Configured to [all] [all src] config, ins spite of  warning on conflicts.
+      // This is because it is missing the strictest configs, as recommended by [ts-eslint recommended configs],
+      // are missing some critical rules, like explicit-function-return-type.
       // See also [linting with type information].
-      // Note: not using the [all] [all src] config due to warning on conflicts plus
-      // my read of the source code suggests it disables many baseline eslint rules
-      // (probably overridden by ts-eslint rules).
-      ...plugTypescriptEslint.configs.strictTypeChecked,
-      ...plugTypescriptEslint.configs.stylisticTypeChecked,
+      ...plugTypescriptEslint.configs.all,
+      // ...plugTypescriptEslint.configs.strictTypeChecked,
+      // ...plugTypescriptEslint.configs.stylisticTypeChecked,
 
       // React configs
       // --------------------
@@ -172,6 +172,17 @@ export default plugTypescriptEslint.config([
           //   }}
           // https://typescript-eslint.io/rules/no-confusing-void-expression/#ignorevoidreturningfunctions
           ignoreVoidReturningFunctions: true,
+        },
+      ],
+      // https://typescript-eslint.io/rules/naming-convention
+      '@typescript-eslint/naming-convention': [
+        'error',
+        {
+          selector: 'function',
+          format: [
+            'camelCase', // default value
+            'PascalCase', // allow PascalCase for React components, as they require it
+          ],
         },
       ],
 
