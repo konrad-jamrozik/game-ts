@@ -37,6 +37,7 @@ Setup steps executed:
 8. Setup continuous integration and deployment to GitHub pages. See [About GitHub pages](about_github_pages.md).
 9. Add MUI. See [About MUI](about_mui.md).
 10. 🚧KJA Add vitest-based unit tests
+11. 🚧KJA Add debug configs
 
 # nvm-windows, Node.js and npm configuration
 
