@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 import './App.css'
+import GameControls from './GameControls'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
@@ -31,23 +32,14 @@ function App() {
           </Button>
         </Stack>
         {/* Game controls (advance/reset) */}
-        <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button variant="contained" onClick={() => setTurn((prevTurn) => prevTurn + 1)}>
-            advance turn
-          </Button>
-          <Button
-            variant="contained"
-            color="error"
-            onClick={() => {
-              setTurn(0)
-              setAgents(0)
-              setMoney(100)
-            }}
-          >
-            reset game
-          </Button>
-        </Stack>
-
+        <GameControls
+          onAdvanceTurn={() => setTurn((prevTurn) => prevTurn + 1)}
+          onResetGame={() => {
+            setTurn(0)
+            setAgents(0)
+            setMoney(100)
+          }}
+        />
         {/* Game state display */}
         <Stack direction="row" alignItems="center" spacing={2}>
           <Typography id="turn-label" variant="body1">
