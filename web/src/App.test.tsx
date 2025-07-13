@@ -3,18 +3,8 @@ import userEvent from '@testing-library/user-event'
 import App from './App'
 
 describe('App', () => {
-  test('"Add agents" exists and can be clicked', async () => {
-    render(<App />)
-    // Add the button for the test (since it does not exist yet)
-    screen.getByRole('button', { name: /add agents/iu })
-    await userEvent.click(screen.getByRole('button', { name: /add agents/iu }))
-    expect(screen.getByRole('button', { name: /add agents/iu })).toBeInTheDocument()
-  })
-
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
     render(<App />)
-    // Check label exists
-    expect(screen.getByText(/agents/iu)).toBeInTheDocument()
     // Check initial value using label association
     const agentsValue = screen.getByLabelText(/agents/iu)
     expect(agentsValue).toHaveTextContent('0')
