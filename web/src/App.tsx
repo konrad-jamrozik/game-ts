@@ -12,9 +12,6 @@ function App() {
   const [agents, setAgents] = useState(0)
   const [money, setMoney] = useState(100)
 
-  // For demo button (not used in tests)
-  const [count, setCount] = useState(0)
-
   return (
     <>
       <div>
@@ -27,21 +24,16 @@ function App() {
       </div>
       <h1>Vite + React</h1>
       <div className="card">
-        {/* Demo button, not part of game logic */}
-        <Button variant="contained" onClick={() => setCount((cnt) => cnt + 1)}>
-          count is {count}
-        </Button>
-
         {/* Game controls */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button variant="outlined" onClick={() => setAgents((prevAgents) => prevAgents + 1)}>
+          <Button variant="contained" onClick={() => setAgents((prevAgents) => prevAgents + 1)}>
             hire agents
           </Button>
-          <Button variant="outlined" onClick={() => setTurn((prevTurn) => prevTurn + 1)}>
+          <Button variant="contained" onClick={() => setTurn((prevTurn) => prevTurn + 1)}>
             advance turn
           </Button>
           <Button
-            variant="outlined"
+            variant="contained"
             color="error"
             onClick={() => {
               setTurn(0)
