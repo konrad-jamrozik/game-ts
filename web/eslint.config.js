@@ -148,6 +148,11 @@ export default plugTypescriptEslint.config([
       'capitalized-comments': 'off',
       // https://eslint.org/docs/latest/rules/no-inline-comments
       'no-inline-comments': 'off',
+      // https://eslint.org/docs/latest/rules/max-lines-per-function
+      'max-lines-per-function': ['error', { max: 100 }],
+      // I don't care about variable initialization rules that much.
+      // https://eslint.org/docs/latest/rules/one-var
+      'one-var': ['error', 'never'],
 
       // [ts-eslint] configs
       // --------------------
@@ -223,8 +228,8 @@ export default plugTypescriptEslint.config([
           ignore: ['vite-env.d.ts', '^AI.*'], // vite-env.d.ts is a file name provided by Vite by default
         },
       ],
-      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
       // Sometimes I need empty files while figuring out how to make things work
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-empty-file.md
       'unicorn/no-empty-file': 'off',
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-nested-ternary.md
       // Conflicts with prettier: it removes the parentheses
@@ -233,6 +238,9 @@ export default plugTypescriptEslint.config([
       'unicorn/no-negated-condition': 'off',
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-keyword-prefix.md
       'unicorn/no-keyword-prefix': 'off',
+      // I like abbreviations
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
+      'unicorn/prevent-abbreviations': 'off',
     },
   },
 ])
