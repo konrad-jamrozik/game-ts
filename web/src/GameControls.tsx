@@ -1,18 +1,19 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import * as React from 'react'
 
 interface GameControlsProps {
-  onAdvanceTurn: () => void
-  onResetGame: () => void
+  readonly onAdvanceTurn: () => void
+  readonly onResetGame: () => void
 }
 
-function GameControls({ onAdvanceTurn, onResetGame }: GameControlsProps) {
+function GameControls(props: GameControlsProps): React.JSX.Element {
   return (
     <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-      <Button variant="contained" onClick={onAdvanceTurn}>
+      <Button variant="contained" onClick={props.onAdvanceTurn}>
         advance turn
       </Button>
-      <Button variant="contained" color="error" onClick={onResetGame}>
+      <Button variant="contained" color="error" onClick={props.onResetGame}>
         reset game
       </Button>
     </Stack>
