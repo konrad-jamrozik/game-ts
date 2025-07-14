@@ -25,7 +25,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./web    
+        working-directory: ./web
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -39,15 +39,13 @@ jobs:
         run: |
           npm clean-install
 
-      - name: Run linter
-        run: |
-          npm run lint
-        # 🚧KJA temporary linter ignore failures
-        continue-on-error: true
-
       - name: Run formatter
         run: |
           npm run format
+
+      - name: Run linter
+        run: |
+          npm run lint
 
       - name: Run tests
         # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.

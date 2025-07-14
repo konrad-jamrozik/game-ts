@@ -101,23 +101,9 @@ Then add appropriate `test` scripts to your `package.json`.
 
 ## Configuration
 
-Add `vitest.config.ts` in the `web/` directory:
+Add [`web/vitest.config.ts`](/web/vitest.config.ts).
 
-```ts
-import { defineConfig } from 'vitest/config'
-import react from '@vitejs/plugin-react'
-
-export default defineConfig({
-  plugins: [react()],
-  test: {
-    environment: 'jsdom',
-    globals: true,
-    setupFiles: './src/setupTests.ts',
-  },
-})
-```
-
-Create `src/setupTests.ts`:
+Create `test/setupTests.ts`:
 
 ```ts
 import '@testing-library/jest-dom'
@@ -125,7 +111,7 @@ import '@testing-library/jest-dom'
 
 ## Example test file
 
-Create `src/App.test.tsx`:
+Create `test/App.test.tsx`:
 
 ```tsx
 import { render, screen } from '@testing-library/react'

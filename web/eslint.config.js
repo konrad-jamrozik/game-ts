@@ -87,7 +87,6 @@ export default plugTypescriptEslint.config([
       plugUnicorn.configs.all, // [eslint-plugin-unicorn]
 
       // 🚧KJA eslint: maybe sonarjs, github, awesome, https://github.com/dustinspecker/awesome-eslint
-      // 🚧KJA eslint: fix all remaining failures, may CI lint build fail
     ],
     languageOptions: {
       ecmaVersion: 2024,
