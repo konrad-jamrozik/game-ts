@@ -39,6 +39,7 @@ Setup steps executed:
 10. Add vitest-based React-testing-library-based unit tests. See [About vitest](about_vitest.md).
 11. Add debugging configs (`launch.json`) and docs. See [About Debugging](about_debugging.md).
 12. Add VS Code Build and Test tasks in [`tasks.json`](../.vscode/tasks.json) file.
+13. Add React compiler. See [About React](about_react.md).
 
 # nvm-windows, Node.js and npm configuration
 
