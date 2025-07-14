@@ -42,6 +42,7 @@
     "cSpell.words": [
         "bierner",
         "Cheatsheets",
+        "CICD",
         "dedup",
         "docsmsft",
         "Jamrozik",
@@ -49,7 +50,9 @@
         "radash",
         "Solarius",
         "sonarjs",
-        "substep"
+        "substep",
+        "vite",
+        "vitest"
     ],
     // https://colors.artyclick.com/color-names-dictionary/color-names/rhino-color
     "peacock.color": "#19426d",
