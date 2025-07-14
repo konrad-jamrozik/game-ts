@@ -102,9 +102,12 @@ npm install --save-dev eslint-import-resolver-typescript
 npm install --save-dev eslint eslint-plugin-unicorn
 # https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
 npm install --save-dev eslint-plugin-tsdoc
-https://github.com/vitest-dev/eslint-plugin-vitest
-npm install --save-dev @vitest/eslint-plugin 
-
+# https://github.com/vitest-dev/eslint-plugin-vitest
+npm install --save-dev @vitest/eslint-plugin
+# https://github.com/testing-library/eslint-plugin-testing-library#installation
+npm install --save-dev eslint-plugin-testing-library
+# https://github.com/testing-library/eslint-plugin-jest-dom#installation
+npm install --save-dev eslint-plugin-jest-dom
 ```
 
 Note: a lot of the packages were already installed by the [create-vite react-ts] template.

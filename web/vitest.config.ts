@@ -14,6 +14,8 @@ export default defineConfig({
     coverage: {
       include: ['src/**/*.ts', 'src/**/*.tsx'],
     },
+    // https://github.com/jsdom/jsdom
+    // https://testing-library.com/docs/react-testing-library/setup#using-without-jest
     environment: 'jsdom',
     globals: true,
     setupFiles: './test/setupTests.ts',
