@@ -125,7 +125,6 @@ export default plugTypescriptEslint.config([
     rules: {
       // [eslint configs]
       // --------------------
-
       // https://eslint.org/docs/latest/rules/sort-imports
       // Turned off. Using 'import/order' instead.
       // 'import/order' sorts by semantics, while sort-imports sorts by import syntax used, then alphabetically.
@@ -153,10 +152,12 @@ export default plugTypescriptEslint.config([
       // I don't care about variable initialization rules that much.
       // https://eslint.org/docs/latest/rules/one-var
       'one-var': ['error', 'never'],
+      // Needed e.g. when initializing React contexts.
+      // https://eslint.org/docs/latest/rules/no-undefined
+      'no-undefined': 'off',
 
       // [ts-eslint] configs
       // --------------------
-
       // https://typescript-eslint.io/rules/no-magic-numbers/
       // https://eslint.org/docs/latest/rules/no-magic-numbers#options
       '@typescript-eslint/no-magic-numbers': 'off',
@@ -186,9 +187,16 @@ export default plugTypescriptEslint.config([
         },
       ],
 
+      // React configs
+      // --------------------
+      // Vite uses
+      // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+      // Per
+      // https://vite.dev/guide/features.html#hot-module-replacement
+      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
+
       // Imports
       // --------------------
-
       // https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md
       'import-x/order': [
         'error',
