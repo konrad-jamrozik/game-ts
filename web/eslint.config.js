@@ -15,6 +15,7 @@ import plugTypescriptEslint from 'typescript-eslint'
 import plugVitest from '@vitest/eslint-plugin'
 import plugReactTestLib from 'eslint-plugin-testing-library'
 import plugJestDom from 'eslint-plugin-jest-dom'
+import plugReactCompiler from 'eslint-plugin-react-compiler'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist']),
@@ -64,6 +65,9 @@ export default plugTypescriptEslint.config([
       // require type information. Curiously, both of them are mentioned in recommended-type-checked,
       // but only one is enabled. See [recommended-type-checked src].
       plugReact.configs['recommended-type-checked'],
+      // [eslint-plugin-react-compiler]
+      // See also: docs/about_react.md#initial-react-19-compiler-setup
+      plugReactCompiler.configs.recommended,
 
       // Imports
       // --------------------
@@ -386,10 +390,5 @@ export default plugTypescriptEslint.config([
 [ts-eslint]: https://ts-eslint.io/users/configs/
 [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
+[eslint-plugin-react-compiler]: https://www.npmjs.com/package/eslint-plugin-react-compiler
 */
-// 🚧KJA add eslint for vitest
-// extends: [
-//   'plugin:testing-library/react',
-//   'plugin:jest-dom/recommended',
-//   'plugin:vitest/legacy-all',
-// ],

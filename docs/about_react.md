@@ -1,23 +1,27 @@
 # About React
 
-# Setup React 19 compiler
+# Initial React 19 compiler setup
 
 ``` powershell
+# https://react.dev/learn/react-compiler
 npm install --save-dev babel-plugin-react-compiler@rc 
 npm install --save-dev eslint-plugin-react-hooks@^6.0.0-rc.1
 ```
 
-Reference:
+Then modified `vite.config.ts` to use the plugin per:
+  https://react.dev/learn/react-compiler#usage-with-vite
 
-- https://react.dev/learn/react-compiler
-- https://react.dev/learn/react-compiler#usage-with-vite
+And configured eslint plugin. See:
 
-# Typing react
+- [About ESLint](about_eslint.md#initial-eslint-config-setup).
+- https://react.dev/learn/react-compiler#something-is-not-working-after-compilation
+
+# Typing React - Typescript & React Cheatsheet
 
 Main documentation are those two articles in React Typescript Cheatsheet:
 
-https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example
-https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components
+- https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example
+- https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/function_components
 
 ## When to use which React Element/Node
 
