@@ -38,8 +38,8 @@
 - **CI/CD:** All pushes to `main` trigger lint, format, test, build, and deploy to GitHub Pages.
 
 ## Integration Points & External Dependencies
-
 - **MUI (Material UI):** Used for UI components. MCP server is configured for AI assistance.
+- **React:** All UI is built with React and TypeScript. For React-specific conventions, see `docs/about_react.md` and `.github/instructions/react.instructions.md`.
 - **Radash:** Utility library, see `docs/about_radash_lodash.md`.
 - **GitHub Pages:** Deployment target. See `docs/about_github_pages.md`.
 - **nvm-windows:** Node version management. See `docs/about_setup_web.md`.
@@ -49,6 +49,7 @@
 - See `web/package.json` for all scripts and dependencies.
 - See `docs/about_*` for detailed setup and conventions.
 - For MUI questions, always check `docs/about_mui.md` and `.github/instructions/mui.instructions.md` first.
+- For React questions, always check `docs/about_react.md` and `.github/instructions/react.instructions.md` first.
 - For Vitest/testing questions, always check `docs/about_vitest.md` and `.github/instructions/vitest.instructions.md` first.
 - Use context7 MCP server when looking for documentations of used libraries or frameworks.
 
