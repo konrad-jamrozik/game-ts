@@ -194,6 +194,21 @@ export default plugTypescriptEslint.config([
       // Per
       // https://vite.dev/guide/features.html#hot-module-replacement
       // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
+      //
+      // ReactNode is the type of "children" prop, often passed as input to React components.
+      // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
+      '@typescript-eslint/prefer-readonly-parameter-types': [
+        'error',
+        {
+          allow: [
+            {
+              from: 'package',
+              name: ['ReactNode'],
+              package: 'react',
+            },
+          ],
+        },
+      ],
 
       // Imports
       // --------------------

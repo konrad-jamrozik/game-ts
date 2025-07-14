@@ -24,3 +24,12 @@ JSX.Element is more common in return types, while React.ReactElement is a bit mo
 
 Relevant doc:
 https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example/#useful-react-prop-type-examples
+
+# interface vs type
+
+https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic_type_example/#more-advice
+
+> always use interface for public API's definition when authoring a library or 3rd party ambient type definitions,
+> as this allows a consumer to extend them via declaration merging if some definitions are missing.
+
+> consider using type for your React Component Props and State, for consistency and because it is more constrained.
