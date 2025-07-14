@@ -186,15 +186,6 @@ export default plugTypescriptEslint.config([
           ],
         },
       ],
-
-      // React configs
-      // --------------------
-      // Vite uses
-      // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
-      // Per
-      // https://vite.dev/guide/features.html#hot-module-replacement
-      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
-      //
       // ReactNode is the type of "children" prop, often passed as input to React components.
       // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
       '@typescript-eslint/prefer-readonly-parameter-types': [
@@ -209,6 +200,15 @@ export default plugTypescriptEslint.config([
           ],
         },
       ],
+
+      // React configs
+      // --------------------
+      // Vite uses
+      // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+      // Per
+      // https://vite.dev/guide/features.html#hot-module-replacement
+      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
+      // 'react-refresh/only-export-components'
 
       // Imports
       // --------------------
