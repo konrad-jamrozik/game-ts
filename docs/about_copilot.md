@@ -31,7 +31,6 @@
   - Workspace, VS Code, terminal
 - [Context items (#-mentions)](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_hashmentions)
   - [Files and Directories](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-files-as-context)
-
   - See also: Tools.
 - [Tools](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-tools)
   - Built-in tools, see [list of built-in tools](#list-of-built-in-tools)
