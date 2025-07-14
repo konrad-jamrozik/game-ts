@@ -20,6 +20,10 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - For styles, prefer CSS modules or MUI's styling solutions. Avoid global styles except in `index.css`.
 - Follow linting and formatting rules (see `docs/about_eslint.md` and `docs/about_prettier.md`).
 
+## Testing & Verification
+
+- Always verify any changes to React .tsx files by running `npm run test` from `web` directory.
+
 ## Documentation & References
 
 - See `docs/about_react.md` for project-specific React conventions.
