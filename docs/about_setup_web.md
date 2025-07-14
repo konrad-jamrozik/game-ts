@@ -36,8 +36,9 @@ Setup steps executed:
 7. Add radash. See [About radash](about_radash_lodash.md).
 8. Setup continuous integration and deployment to GitHub pages. See [About GitHub pages](about_github_pages.md).
 9. Add MUI. See [About MUI](about_mui.md).
-10. 🚧KJA Add vitest-based unit tests
-11. 🚧KJA Add debug configs
+10. Add vitest-based unit tests
+11. Add debugging configs (`launch.json`) and docs ([About Debugging](about_debugging.md))
+12. Add VS Code Build and Test tasks in [`tasks.json`](../.vscode/tasks.json) file.
 
 # nvm-windows, Node.js and npm configuration
 

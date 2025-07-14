@@ -1,7 +1,88 @@
 
 # About vitest
 
-## Initial Vitest setup
+- [About vitest](#about-vitest)
+- [Running tests](#running-tests)
+- [Vitest UI port configuration](#vitest-ui-port-configuration)
+- [React testing library](#react-testing-library)
+  - [Querying elements by roles and labels](#querying-elements-by-roles-and-labels)
+- [Notes](#notes)
+- [Initial Vitest setup](#initial-vitest-setup)
+  - [Configuration](#configuration)
+  - [Example test file](#example-test-file)
+
+# Running tests
+
+```powershell
+npm run test:ui
+```
+
+See also the other variants in [`package.json`](../web/package.json).
+
+# Vitest UI port configuration
+
+By default, Vitest UI tries to use port 51204 for its API server. On some systems, this port may be reserved or restricted,
+causing errors like `EACCES: permission denied ::1:51204`.
+
+To avoid this, specify a different port (e.g., 6174) using the `--api.port` option:
+
+```powershell
+vitest --ui --api.port=6174
+```
+
+Or update your `package.json` script:
+
+```jsonc
+"test:ui": "vitest --ui --api.port=6174"
+```
+
+This ensures Vitest UI starts on a port that is less likely to be restricted.
+
+# React testing library
+
+Vitest uses [React Testing Library] under the hood.
+
+Reference:
+
+- [Querying priority]
+- https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
+- https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-labelledby
+
+## Querying elements by roles and labels
+
+Per the React Testing Library [Querying priority], elements should be ideally queried by their role with
+e.g. `screen.getByRole('button', { name: 'add agents' })` and as a secondary approach by label like
+e.g. `screen.getByLabelText('Add agents')`.
+
+These concepts are not trivial. Default HTML element roles are defined at:
+  https://www.w3.org/TR/html-aria/#docconformance
+
+Some elements do not have roles, like `<div>` or `<span>`.
+
+In such cases querying should be done by label text:
+  https://testing-library.com/docs/queries/bylabeltext
+
+Which relies on the concept of accessible label to match find the labelled element:
+  https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name
+  https://www.tpgi.com/what-is-an-accessible-name/
+
+Notably the label can be defined with `for` attribute of `<label>`:
+  https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
+
+or `aria-labelledby` attribute of the element:
+  https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-labelledby
+
+# Notes
+
+- Vitest is recommended for Vite + React projects.
+- @testing-library/react is used for rendering and interacting with React components.
+- @testing-library/jest-dom provides custom matchers for assertions.
+- @testing-library/user-event simulates user interactions.
+- jsdom provides a browser-like environment for tests.
+
+If the app imports static assets (like images), it may need mocking of them or adjust imports for testing.
+
+# Initial Vitest setup
 
 ```powershell
 cd web
@@ -61,48 +142,7 @@ describe('App', () => {
 })
 ```
 
-## Running tests
+🚧KJA find guidance on vitest test dir layout and fix it
 
-```powershell
-npm run test:ui
-```
-
-See also the other variants in [`package.json`](../web/package.json).
-
-## Vitest UI port configuration
-
-By default, Vitest UI tries to use port 51204 for its API server. On some systems, this port may be reserved or restricted,
-causing errors like `EACCES: permission denied ::1:51204`.
-
-To avoid this, specify a different port (e.g., 6174) using the `--api.port` option:
-
-```powershell
-vitest --ui --api.port=6174
-```
-
-Or update your `package.json` script:
-
-```jsonc
-"test:ui": "vitest --ui --api.port=6174"
-```
-
-This ensures Vitest UI starts on a port that is less likely to be restricted.
-
-## React testing library
-
-🚧KJA React testing library expand based on previous project docs
-https://testing-library.com/docs/queries/about/#priority
-https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Elements/label
-https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-labelledby
-
-Need to document separate doc about labelling elements
-
-## Notes
-
-- Vitest is recommended for Vite + React projects.
-- @testing-library/react is used for rendering and interacting with React components.
-- @testing-library/jest-dom provides custom matchers for assertions.
-- @testing-library/user-event simulates user interactions.
-- jsdom provides a browser-like environment for tests.
-
-If your app imports static assets (like images), you may need to mock them or adjust imports for testing.
+[Querying priority]: https://testing-library.com/docs/queries/about/#priority
+[React Testing Library]: https://testing-library.com/docs/react-testing-library/intro/
