@@ -203,12 +203,7 @@ export default plugTypescriptEslint.config([
 
       // React configs
       // --------------------
-      // Vite uses
-      // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
-      // Per
-      // https://vite.dev/guide/features.html#hot-module-replacement
-      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
-      // 'react-refresh/only-export-components'
+      // See the dedicated config for 'react-refresh/only-export-components' below.
 
       // Imports
       // --------------------
@@ -275,6 +270,34 @@ export default plugTypescriptEslint.config([
       // I like abbreviations
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
       'unicorn/prevent-abbreviations': 'off',
+    },
+  },
+  {
+    files: ['**/*ContextProvider*.{ts,tsx,js,jsx}'],
+    rules: {
+      // Used to initialize context like:
+      //   export const GameStateContext = createContext<GameState>(undefined!)
+      // Without it it would have to be
+      //   export const GameStateContext = createContext<GameState | undefined>(undefined)
+      // But any context is effectively always not undefined, because it should always be accessed
+      // by its Provider which initializes it with a value.
+      // https://typescript-eslint.io/rules/no-non-null-assertion/
+      '@typescript-eslint/no-non-null-assertion': 'off',
+
+      // Vite uses
+      // https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+      // Per
+      // https://vite.dev/guide/features.html#hot-module-replacement
+      // https://github.com/ArnaudBarre/eslint-plugin-react-refresh
+      // BUG: the allowConstantExport option does not appear to work correctly.
+      // I verified that:
+      // - the config plugReactRefresh.configs.vite, is used which should enable it.
+      // - it is enabled here
+      // - eslint config inspector shows it is enabled.
+      // And yet it flags on this line:
+      //   export const GameStateContext = createContext<GameState>(undefined!)
+      // which is "export const" so it should be allowed.
+      'react-refresh/only-export-components': 'off',
     },
   },
 ])
