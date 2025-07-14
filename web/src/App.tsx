@@ -1,6 +1,5 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
-
 import { Fragment } from 'react'
 import './App.css'
 import GameControls from './GameControls'
