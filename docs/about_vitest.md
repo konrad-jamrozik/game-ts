@@ -142,7 +142,5 @@ describe('App', () => {
 })
 ```
 
-🚧KJA find guidance on vitest test dir layout and fix it
-
 [Querying priority]: https://testing-library.com/docs/queries/about/#priority
 [React Testing Library]: https://testing-library.com/docs/react-testing-library/intro/

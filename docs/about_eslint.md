@@ -102,6 +102,8 @@ npm install --save-dev eslint-import-resolver-typescript
 npm install --save-dev eslint eslint-plugin-unicorn
 # https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
 npm install --save-dev eslint-plugin-tsdoc
+https://github.com/vitest-dev/eslint-plugin-vitest
+npm install --save-dev @vitest/eslint-plugin 
 
 ```
 

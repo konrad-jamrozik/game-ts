@@ -12,6 +12,7 @@ import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
+import plugVitest from '@vitest/eslint-plugin'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist']),
@@ -273,6 +274,49 @@ export default plugTypescriptEslint.config([
       'unicorn/prevent-abbreviations': 'off',
     },
   },
+
+  {
+    // Vitest config for tests in web/test dir
+    files: ['../../test/**/*.{ts,tsx,js,jsx}'],
+    plugins: { vitest: plugVitest },
+    languageOptions: {
+      globals: {
+        ...vitest.environments.env.globals,
+      },
+    },
+    settings: {
+      vitest: {
+        typecheck: true,
+      },
+    },
+    extends: [
+      // https://github.com/vitest-dev/eslint-plugin-vitest/tree/main?tab=readme-ov-file#all
+      ...plugVitest.configs.all,
+    ],
+    rules: {
+      // Name tests "test" and put them within "describe" blocks.
+      // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/consistent-test-it.md
+      'vitest/consistent-test-it': ['error', { fn: 'test', withinDescribe: 'test' }],
+
+      // Force async test to declare in first line they expect to have assertions in them.
+      // (yes, it is a meta-defensive code measure)
+      // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
+      'vitest/prefer-expect-assertions': ['error', { onlyFunctionsWithAsyncKeyword: true }],
+
+      // Tests titles can start from capital letters.
+      // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-lowercase-title.md
+      'vitest/prefer-lowercase-title': 'off',
+
+      // Hooks are OK, plus required for manual cleanup. See rule for 'testing-library/no-manual-cleanup'.
+      // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/no-hooks.md
+      'vitest/no-hooks': 'off',
+
+      // vitest doesn't hook up to the cleanup function, so manual cleanup is necessary.
+      // Details here: https://stackoverflow.com/a/78494069/986533
+      // https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-manual-cleanup.md
+      'testing-library/no-manual-cleanup': 'off',
+    },
+  },
   {
     files: ['**/*ContextProvider*.{ts,tsx,js,jsx}'],
     rules: {
@@ -342,3 +386,8 @@ export default plugTypescriptEslint.config([
 [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
 */
 // 🚧KJA add eslint for vitest
+// extends: [
+//   'plugin:testing-library/react',
+//   'plugin:jest-dom/recommended',
+//   'plugin:vitest/legacy-all',
+// ],
