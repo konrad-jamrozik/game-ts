@@ -4,7 +4,7 @@
 {
   // Applicability of this config.
   // --------------------
-  "include": ["src"],
+  "include": ["src", "test"],
 
   "extends": "./tsconfig.json",
 
