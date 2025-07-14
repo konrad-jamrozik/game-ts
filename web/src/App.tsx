@@ -1,20 +1,19 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useState } from 'react'
+import { Fragment, use } from 'react'
 import './App.css'
 import GameControls from './GameControls'
-import { GameStateContextProvider } from './GameStateContextProvider'
+import { GameStateContext } from './GameStateContextProvider'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
-  const [turn, setTurn] = useState(0)
-  const [agents, setAgents] = useState(0)
-  const [money, setMoney] = useState(100)
+  const gs = use(GameStateContext)
+  const { turn, setTurn, agents, setAgents, money, setMoney } = gs
 
   return (
-    <GameStateContextProvider value={{ agents, money, setAgents, setMoney, setTurn, turn }}>
+    <Fragment>
       <div>
         <a href="https://vite.dev" target="_blank" rel="noreferrer noopener">
           <img src={viteLogo} className="logo" alt="Vite logo" />
@@ -69,7 +68,7 @@ function App(): React.JSX.Element {
         </p>
       </div>
       <p className="read-the-docs">Click on the Vite and React logos to learn more</p>
-    </GameStateContextProvider>
+    </Fragment>
   )
 }
 

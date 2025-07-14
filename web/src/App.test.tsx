@@ -1,10 +1,15 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from './App'
+import { GameStateContextProvider } from './GameStateContextProvider'
 
 describe('App', () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
-    render(<App />)
+    render(
+      <GameStateContextProvider>
+        <App />
+      </GameStateContextProvider>,
+    )
     // Check initial value using label association
     const agentsValue = screen.getByLabelText(/agents/iu)
     expect(agentsValue).toHaveTextContent('0')
@@ -15,7 +20,11 @@ describe('App', () => {
   })
 
   test("When 'advance turn' button is clicked, the turn advances", async () => {
-    render(<App />)
+    render(
+      <GameStateContextProvider>
+        <App />
+      </GameStateContextProvider>,
+    )
     // Check initial turn value
     const turnValue = screen.getByLabelText(/turn/iu)
     expect(turnValue).toHaveTextContent('0')
@@ -26,7 +35,11 @@ describe('App', () => {
   })
 
   test("Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset", async () => {
-    render(<App />)
+    render(
+      <GameStateContextProvider>
+        <App />
+      </GameStateContextProvider>,
+    )
     // Click the 'Reset game' button
     await userEvent.click(screen.getByRole('button', { name: /reset game/iu }))
     // Assert that now the game turn, agents count and money are reset to initial values.

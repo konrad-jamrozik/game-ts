@@ -1,6 +1,8 @@
-import type { ReactNode } from 'react'
+import { type ReactNode, createContext } from 'react'
 import { useGameState, type GameState } from './GameState'
-import { GameStateContext } from './GameStateContext'
+
+export const GameStateContext = createContext<GameState>(undefined!)
+
 interface GameProviderProps {
   readonly children: ReactNode
 }
