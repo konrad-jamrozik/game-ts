@@ -1,21 +1,25 @@
 /**
  * See docs/about_eslint.md for context on this file.
+ * Future work: add more plugins from https://github.com/dustinspecker/awesome-eslint
+ * Candidates:
+ * - sonarjs,
+ * - github.
  */
 import plugReact from '@eslint-react/eslint-plugin'
 import js from '@eslint/js'
+import plugVitest from '@vitest/eslint-plugin'
 import { createTypeScriptImportResolver } from 'eslint-import-resolver-typescript'
 import plugImportX from 'eslint-plugin-import-x'
+import plugJestDom from 'eslint-plugin-jest-dom'
+import plugReactCompiler from 'eslint-plugin-react-compiler'
 import plugReactHooks from 'eslint-plugin-react-hooks'
 import plugReactRefresh from 'eslint-plugin-react-refresh'
+import plugReactTestLib from 'eslint-plugin-testing-library'
 import plugTsdoc from 'eslint-plugin-tsdoc'
 import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
-import plugVitest from '@vitest/eslint-plugin'
-import plugReactTestLib from 'eslint-plugin-testing-library'
-import plugJestDom from 'eslint-plugin-jest-dom'
-import plugReactCompiler from 'eslint-plugin-react-compiler'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist']),
@@ -91,8 +95,6 @@ export default plugTypescriptEslint.config([
       // Miscellaneous
       // --------------------
       plugUnicorn.configs.all, // [eslint-plugin-unicorn]
-
-      // 🚧KJA eslint: maybe sonarjs, github, awesome, https://github.com/dustinspecker/awesome-eslint
     ],
     languageOptions: {
       ecmaVersion: 2024,

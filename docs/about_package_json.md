@@ -31,5 +31,3 @@ ls "$env:LocalAppData/npm-cache/"
 https://docs.npmjs.com/cli/v7/configuring-npm/folders#cache
 
 See also my OneNote: `Notes reorg / technologies / npm (uninstall, cache)`
-
-🚧KJA try the compiler https://react.dev/learn/react-compiler
