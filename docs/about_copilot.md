@@ -29,12 +29,23 @@
   - Ask, Edit, Agent, Custom
 - [Chat participants (@-mentions)](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_atmentions)
   - Workspace, VS Code, terminal
-- [Context items (#-mentions](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_hashmentions)
+- [Context items (#-mentions)](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_hashmentions)
   - [Files and Directories](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-files-as-context)
-  - [codebase](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_perform-a-codebase-search)
-  - [Tools](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-tools)
+
+  - See also: Tools.
+- [Tools](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-tools)
+  - Built-in tools, see [list of built-in tools](#list-of-built-in-tools)
+    - [codebase](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_perform-a-codebase-search)
     - [fetch, githubRepo](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-web-content)
     - [changes, problems, testFailure](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_prompt-examples)
-- [MCP servers](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
-- [Tool sets](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_define-tool-sets)
-- [Tool approvals](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_manage-tool-approvals)
+  - [MCP servers](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+  - [Tool sets](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_define-tool-sets)
+  - [Tool approvals](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_manage-tool-approvals)
+
+# List of built-in tools
+
+The only way I found to list the built-in tools is to do the following:
+
+- Open Copilot Chat window.
+- In bottom right, select the "Tools /Wrench and SCrewdriver" icon with tooltip of "Configure tools...".
+- This will display the list of tools in the top-center search bar.
