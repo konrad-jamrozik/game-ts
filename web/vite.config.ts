@@ -8,5 +8,11 @@ import { defineConfig } from 'vite'
 /** @type {import('vite').UserConfig} */
 export default defineConfig({
   base: '/game-ts/', // This is needed for GitHub Pages deployment.
-  plugins: [react()],
+  plugins: [
+    react({
+      babel: {
+        plugins: [['babel-plugin-react-compiler', {}]],
+      },
+    }),
+  ],
 })

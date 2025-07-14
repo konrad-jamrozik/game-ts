@@ -1,5 +1,17 @@
 # About React
 
+# Setup React 19 compiler
+
+``` powershell
+npm install --save-dev babel-plugin-react-compiler@rc 
+npm install --save-dev eslint-plugin-react-hooks@^6.0.0-rc.1
+```
+
+Reference:
+
+- https://react.dev/learn/react-compiler
+- https://react.dev/learn/react-compiler#usage-with-vite
+
 # Typing react
 
 Main documentation are those two articles in React Typescript Cheatsheet:
