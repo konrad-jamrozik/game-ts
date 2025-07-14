@@ -3,7 +3,10 @@
  * Future work: add more plugins from https://github.com/dustinspecker/awesome-eslint
  * Candidates:
  * - sonarjs,
- * - github.
+ * - github
+ * - perfectionist: https://perfectionist.dev/
+ *   found it in deprecation notice in a rule I disabled in my previous game eslint config:
+ *     https://typescript-eslint.io/rules/sort-type-constituents/
  */
 import plugReact from '@eslint-react/eslint-plugin'
 import js from '@eslint/js'
