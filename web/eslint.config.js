@@ -277,11 +277,11 @@ export default plugTypescriptEslint.config([
 
   {
     // Vitest config for tests in web/test dir
-    files: ['../../test/**/*.{ts,tsx,js,jsx}'],
+    files: ['test/**/*.{ts,tsx,js,jsx}'],
     plugins: { vitest: plugVitest },
     languageOptions: {
       globals: {
-        ...vitest.environments.env.globals,
+        ...plugVitest.environments.env.globals,
       },
     },
     settings: {
@@ -291,7 +291,7 @@ export default plugTypescriptEslint.config([
     },
     extends: [
       // https://github.com/vitest-dev/eslint-plugin-vitest/tree/main?tab=readme-ov-file#all
-      ...plugVitest.configs.all,
+      plugVitest.configs.all,
     ],
     rules: {
       // Name tests "test" and put them within "describe" blocks.
