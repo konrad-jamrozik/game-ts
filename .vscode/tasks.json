@@ -3,9 +3,26 @@
 	"tasks": [
 		{
 			"type": "shell",
-			"label": "test:web",
+			"label": "build",
+			"command": "npm run build",
+			"args": [],
+			"group": "build",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"options": {
+				"cwd": "web"
+			}
+		},
+		{
+			"type": "shell",
+			"label": "test",
 			"command": "npm run test",
 			"args": [],
+			// Per [custom tasks]:
+			// Tasks that belong to the test group can be executed by running "Run Test Task" from the Command Palette.
+			// Apparently the same applies to "Run Build Task".
 			"group": "test",
 			"isBackground": false,
 			"problemMatcher": [
@@ -14,6 +31,8 @@
 			"options": {
 				"cwd": "web"
 			}
-		}
+		},
 	]
 }
+
+// [custom tasks]: https://code.visualstudio.com/docs/debugtest/tasks#_custom-tasks
