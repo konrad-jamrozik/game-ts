@@ -6,7 +6,7 @@ This repository contains personal code of Konrad Jamrozik, written for his game 
 
 # Sources overview
 
-🚧KJA document sources overview
+Main sources are in the [`web/src`](web/src) directory, with tests in the [`web/tests`](web/tests) directory.
 
 # License
 
