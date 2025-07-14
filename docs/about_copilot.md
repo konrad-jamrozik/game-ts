@@ -19,3 +19,22 @@
 [MCP gallery]: https://code.visualstudio.com/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
+
+## Copilot features index
+
+- [Custom instructions](https://code.visualstudio.com/docs/copilot/copilot-customization#_custom-instructions)
+  - [Global](https://code.visualstudio.com/docs/copilot/copilot-customization#_use-a-githubcopilotinstructionsmd-file)
+  - [Domain-specific](https://code.visualstudio.com/docs/copilot/copilot-customization#_use-instructionsmd-files)
+- [Chat Modes](https://code.visualstudio.com/docs/copilot/chat/chat-modes)
+  - Ask, Edit, Agent, Custom
+- [Chat participants (@-mentions)](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_atmentions)
+  - Workspace, VS Code, terminal
+- [Context items (#-mentions](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_hashmentions)
+  - [Files and Directories](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_add-files-as-context)
+  - [codebase](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_perform-a-codebase-search)
+  - [Tools](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-tools)
+    - [fetch, githubRepo](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_reference-web-content)
+    - [changes, problems, testFailure](https://code.visualstudio.com/docs/copilot/chat/copilot-chat-context#_prompt-examples)
+- [MCP servers](https://code.visualstudio.com/docs/copilot/chat/mcp-servers)
+- [Tool sets](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_define-tool-sets)
+- [Tool approvals](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode?wt.md_id=AZ-MVP-5004796#_manage-tool-approvals)
