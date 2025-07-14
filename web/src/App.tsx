@@ -1,16 +1,16 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { Fragment, use } from 'react'
+import { Fragment } from 'react'
 import './App.css'
 import GameControls from './GameControls'
-import { GameStateContext } from './GameStateContextProvider'
+import { useGameStateContext } from './GameStateContextProvider'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
-  const gs = use(GameStateContext)
-  const { turn, setTurn, agents, setAgents, money, setMoney } = gs
+  const gs = useGameStateContext()
+  const { turn, agents, setAgents, money } = gs
 
   return (
     <Fragment>
@@ -31,14 +31,7 @@ function App(): React.JSX.Element {
           </Button>
         </Stack>
         {/* Game controls (advance/reset) */}
-        <GameControls
-          onAdvanceTurn={() => setTurn((prevTurn) => prevTurn + 1)}
-          onResetGame={() => {
-            setTurn(0)
-            setAgents(0)
-            setMoney(100)
-          }}
-        />
+        <GameControls />
         {/* Game state display */}
         <Stack direction="row" alignItems="center" spacing={2}>
           <Typography id="turn-label" variant="body1">

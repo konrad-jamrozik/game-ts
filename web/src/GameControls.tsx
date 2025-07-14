@@ -1,19 +1,27 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
+import { useGameStateContext } from './GameStateContextProvider'
 
-interface GameControlsProps {
-  readonly onAdvanceTurn: () => void
-  readonly onResetGame: () => void
-}
+function GameControls(): React.JSX.Element {
+  const { setTurn, setAgents, setMoney } = useGameStateContext()
 
-function GameControls(props: GameControlsProps): React.JSX.Element {
+  function handleAdvanceTurn(): void {
+    setTurn((prevTurn) => prevTurn + 1)
+  }
+
+  function handleResetGame(): void {
+    setTurn(0)
+    setAgents(0)
+    setMoney(100)
+  }
+
   return (
     <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-      <Button variant="contained" onClick={props.onAdvanceTurn}>
+      <Button variant="contained" onClick={handleAdvanceTurn}>
         advance turn
       </Button>
-      <Button variant="contained" color="error" onClick={props.onResetGame}>
+      <Button variant="contained" color="error" onClick={handleResetGame}>
         reset game
       </Button>
     </Stack>
