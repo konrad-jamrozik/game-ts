@@ -1,0 +1,19 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "shell",
+			"label": "test:web",
+			"command": "npm run test",
+			"args": [],
+			"group": "test",
+			"isBackground": false,
+			"problemMatcher": [
+				"$tsc"
+			],
+			"options": {
+				"cwd": "web"
+			}
+		}
+	]
+}
