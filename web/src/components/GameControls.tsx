@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useGameStateContext } from './GameStateContextProvider'
+import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
 function GameControls(): React.JSX.Element {
   const { setTurn, setAgents, setMoney } = useGameStateContext()

@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useGameStateContext } from './GameStateContextProvider'
+import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
 export function GameStateDisplay(): React.JSX.Element {
   const { turn, agents, money } = useGameStateContext()

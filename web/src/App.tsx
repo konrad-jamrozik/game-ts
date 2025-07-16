@@ -2,10 +2,10 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Fragment } from 'react'
 import './App.css'
-import GameControls from './GameControls'
-import { useGameStateContext } from './GameStateContextProvider'
-import { GameStateDisplay } from './GameStateDisplay'
 import reactLogo from './assets/react.svg'
+import GameControls from './components/GameControls'
+import { GameStateDisplay } from './components/GameStateDisplay'
+import { useGameStateContext } from './contexts/GameStateContextProvider'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {

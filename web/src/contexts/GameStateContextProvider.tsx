@@ -1,5 +1,5 @@
 import { type ReactNode, use, createContext } from 'react'
-import { useGameState, type GameState } from './GameState'
+import { useGameState, type GameState } from '../model/GameState'
 
 export const GameStateContext = createContext<GameState>(undefined!)
 

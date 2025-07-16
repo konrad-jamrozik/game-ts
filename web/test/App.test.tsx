@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, test, expect } from 'vitest'
 import App from '../src/App'
-import { GameStateContextProvider } from '../src/GameStateContextProvider'
+import { GameStateContextProvider } from '../src/contexts/GameStateContextProvider'
 
 describe(App, () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
