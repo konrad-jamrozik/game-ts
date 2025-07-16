@@ -21,7 +21,14 @@ function GameControls(): React.JSX.Element {
       <Button variant="contained" onClick={handleAdvanceTurn}>
         advance turn
       </Button>
-      <Button variant="contained" color="error" onClick={handleResetGame}>
+      <Button
+        variant="contained"
+        onClick={handleResetGame}
+        sx={{
+          backgroundColor: (theme) => theme.palette.error.dark,
+          '&:hover': { backgroundColor: (theme) => theme.palette.error.main },
+        }}
+      >
         reset game
       </Button>
     </Stack>

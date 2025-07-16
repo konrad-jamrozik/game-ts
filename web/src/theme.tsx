@@ -8,11 +8,12 @@ const theme = createTheme({
         primary: {
           main: '#556cd6',
         },
-        // secondary: {
-        //   main: '#19857b',
-        // },
         error: {
           main: red.A400,
+        },
+        background: {
+          default: '#212121',
+          paper: '#424242',
         },
       },
     },
@@ -23,6 +24,10 @@ const theme = createTheme({
         },
         error: {
           main: red.A400,
+        },
+        background: {
+          default: '#f5f5f5',
+          paper: '#fff',
         },
       },
     },

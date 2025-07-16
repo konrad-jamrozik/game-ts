@@ -1,4 +1,4 @@
-import { ThemeProvider } from '@mui/material'
+import { CssBaseline, ThemeProvider } from '@mui/material'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import App from './components/App.tsx'
@@ -11,9 +11,11 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <GameStateContextProvider>
-          <App />
-        </GameStateContextProvider>
+        <CssBaseline>
+          <GameStateContextProvider>
+            <App />
+          </GameStateContextProvider>
+        </CssBaseline>
       </ThemeProvider>
     </StrictMode>,
   )

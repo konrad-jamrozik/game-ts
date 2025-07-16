@@ -204,20 +204,10 @@ export default plugTypescriptEslint.config([
           ],
         },
       ],
-      // ReactNode is the type of "children" prop, often passed as input to React components.
+      // Turned off as causing too many false positives. But see the commented out snippet
+      // at the bottom of this file.
       // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
-      '@typescript-eslint/prefer-readonly-parameter-types': [
-        'error',
-        {
-          allow: [
-            {
-              from: 'package',
-              name: ['ReactNode'],
-              package: 'react',
-            },
-          ],
-        },
-      ],
+      '@typescript-eslint/prefer-readonly-parameter-types': 'off',
 
       // React configs
       // --------------------
@@ -365,6 +355,23 @@ export default plugTypescriptEslint.config([
 ])
 
 /*
+
+// Snippet below is not used, but may be useful in the future
+      // ReactNode is the type of "children" prop, often passed as input to React components.
+      // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
+      '@typescript-eslint/prefer-readonly-parameter-types': [
+        'error',
+        {
+          allow: [
+            {
+              from: 'package',
+              name: ['ReactNode'],
+              package: 'react',
+            },
+          ],
+        },
+      ],
+      
 [@eslint/js]: https://www.npmjs.com/package/@eslint/js
 [@types/node]: https://www.npmjs.com/package/@types/node?activeTab=readme
 [all src]: https://github.com/typescript-eslint/typescript-eslint/blob/main/packages/eslint-plugin/src/configs/eslintrc/all.ts
