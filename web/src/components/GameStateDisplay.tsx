@@ -1,17 +1,31 @@
 import Box from '@mui/material/Box'
-import { DataGrid, type GridColDef } from '@mui/x-data-grid'
+import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
+
+export interface AssetRow {
+  name: 'Money' | 'Agents' | 'Turn'
+  value: number
+}
 
 export function GameStateDisplay(): React.JSX.Element {
   const { turn, agents, money } = useGameStateContext()
-  const columns: GridColDef[] = [
-    { field: 'asset', flex: 1, headerName: 'Asset', minWidth: 100 },
-    { field: 'value', flex: 1, headerName: 'Value', minWidth: 100 },
-  ]
   const rows = [
-    { asset: 'Turn', id: 0, value: turn },
-    { asset: 'Agents', id: 1, value: agents },
-    { asset: 'Money', id: 2, value: money },
+    { name: 'Turn', id: 0, value: turn },
+    { name: 'Agents', id: 1, value: agents },
+    { name: 'Money', id: 2, value: money },
+  ]
+  const columns: GridColDef[] = [
+    { field: 'name', flex: 1, headerName: 'Asset', minWidth: 100 },
+    {
+      field: 'value',
+      flex: 1,
+      headerName: 'Value',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<AssetRow, boolean | undefined>) => (
+        // Use asset name as aria-label, lowercased for test queries
+        <span aria-label={params.row.name.toLowerCase()}>{params.value}</span>
+      ),
+    },
   ]
   return (
     <Box display="flex" maxWidth={400} width="100%">

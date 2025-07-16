@@ -74,6 +74,9 @@ Notably the label can be defined with `for` attribute of `<label>`:
 or `aria-labelledby` attribute of the element:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-labelledby
 
+or `aria-label` attribute of the element:
+  https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label
+  
 # Notes
 
 - Vitest is recommended for Vite + React projects.
