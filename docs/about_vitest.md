@@ -10,6 +10,8 @@
 - [Initial Vitest setup](#initial-vitest-setup)
   - [Configuration](#configuration)
   - [Example test file](#example-test-file)
+- [Troubleshooting](#troubleshooting)
+  - [TypeError: Unknown file extension ".css" for](#typeerror-unknown-file-extension-css-for)
 
 # Running tests
 
@@ -125,6 +127,27 @@ describe('App', () => {
     // userEvent.click(screen.getByRole('button', { name: /add agents/i }))
     // expect(await screen.findByText(/success/i)).toBeInTheDocument()
   })
+})
+```
+
+# Troubleshooting
+
+## TypeError: Unknown file extension ".css" for
+
+- https://stackoverflow.com/questions/79592526/testing-error-after-upgrading-mui-x-data-grid-to-v8-1-0-unknown-file-extensio
+- https://vitest.dev/config/#server-deps-inline
+
+Solution: add the following to `web/vitest.config.ts`:
+
+```ts
+export default defineConfig({
+  test: {
+    server: {
+      deps: {
+        inline: ['@mui/x-data-grid'],
+      },
+    },
+  },
 })
 ```
 

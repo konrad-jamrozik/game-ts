@@ -1,31 +1,28 @@
-import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
+import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
 export function GameStateDisplay(): React.JSX.Element {
   const { turn, agents, money } = useGameStateContext()
+  const columns: GridColDef[] = [
+    { field: 'turn', flex: 1, headerName: 'Turn', minWidth: 80 },
+    { field: 'agents', flex: 1, headerName: 'Agents', minWidth: 80 },
+    { field: 'money', flex: 1, headerName: 'Money', minWidth: 80 },
+  ]
+  const rows = [{ agents, id: 0, money, turn }]
   return (
-    <Stack direction="row" alignItems="center" spacing={2}>
-      <Typography id="turn-label" variant="body1">
-        Turn
-      </Typography>
-      <Typography variant="h6" component="span" aria-label="turn" aria-labelledby="turn-label">
-        {turn}
-      </Typography>
-
-      <Typography id="agents-label" variant="body1">
-        Agents
-      </Typography>
-      <Typography variant="h6" component="span" aria-label="agents" aria-labelledby="agents-label">
-        {agents}
-      </Typography>
-
-      <Typography id="money-label" variant="body1">
-        Money
-      </Typography>
-      <Typography variant="h6" component="span" aria-label="money" aria-labelledby="money-label">
-        {money}
-      </Typography>
-    </Stack>
+    <div style={{ display: 'flex', maxWidth: 400, width: '100%' }}>
+      <DataGrid
+        rows={rows}
+        columns={columns}
+        hideFooter
+        disableColumnMenu
+        disableRowSelectionOnClick
+        sx={{
+          '& .MuiDataGrid-cell': { fontWeight: 600 },
+          '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
+        }}
+        aria-label="Game state display"
+      />
+    </div>
   )
 }

@@ -18,6 +18,12 @@ export default defineConfig({
     // https://testing-library.com/docs/react-testing-library/setup#using-without-jest
     environment: 'jsdom',
     globals: true,
+    server: {
+      deps: {
+        // Refer to docs/about_vitest.md troubleshooting section for more details.
+        inline: ['@mui/x-data-grid'],
+      },
+    },
     setupFiles: './test/setupTests.ts',
     testTimeout: 30_000,
   },
