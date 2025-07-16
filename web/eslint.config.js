@@ -167,6 +167,12 @@ export default plugTypescriptEslint.config([
       // Needed e.g. when initializing React contexts.
       // https://eslint.org/docs/latest/rules/no-undefined
       'no-undefined': 'off',
+      // Too cumbersome to always fix, plus sometimes I prefer semantic sorting.
+      // https://eslint.org/docs/latest/rules/sort-keys
+      'sort-keys': 'off',
+      // I like ternaries
+      // https://eslint.org/docs/latest/rules/no-ternary
+      'no-ternary': 'off',
 
       // [ts-eslint] configs
       // --------------------

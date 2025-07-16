@@ -1,16 +1,20 @@
+import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef } from '@mui/x-data-grid'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
 export function GameStateDisplay(): React.JSX.Element {
   const { turn, agents, money } = useGameStateContext()
   const columns: GridColDef[] = [
-    { field: 'turn', flex: 1, headerName: 'Turn', minWidth: 80 },
-    { field: 'agents', flex: 1, headerName: 'Agents', minWidth: 80 },
-    { field: 'money', flex: 1, headerName: 'Money', minWidth: 80 },
+    { field: 'asset', flex: 1, headerName: 'Asset', minWidth: 100 },
+    { field: 'value', flex: 1, headerName: 'Value', minWidth: 100 },
   ]
-  const rows = [{ agents, id: 0, money, turn }]
+  const rows = [
+    { asset: 'Turn', id: 0, value: turn },
+    { asset: 'Agents', id: 1, value: agents },
+    { asset: 'Money', id: 2, value: money },
+  ]
   return (
-    <div style={{ display: 'flex', maxWidth: 400, width: '100%' }}>
+    <Box display="flex" maxWidth={400} width="100%">
       <DataGrid
         rows={rows}
         columns={columns}
@@ -23,6 +27,6 @@ export function GameStateDisplay(): React.JSX.Element {
         }}
         aria-label="Game state display"
       />
-    </div>
+    </Box>
   )
 }
