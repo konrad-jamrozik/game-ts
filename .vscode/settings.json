@@ -97,5 +97,6 @@
         "🚧kja",
         "🚧KJA",
     ],
-    "todo-tree.highlights.enabled": true,    
+    "todo-tree.highlights.enabled": true,
+    "editor.codeLens": false,
 }
