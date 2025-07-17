@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
-export interface AssetRow {
+export type AssetRow = {
   name: 'Money' | 'Agents' | 'Turn'
   value: number
 }

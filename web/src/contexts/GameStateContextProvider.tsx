@@ -8,7 +8,7 @@ export function useGameStateContext(): GameState {
   return ctx
 }
 
-interface GameProviderProps {
+type GameProviderProps = {
   readonly children: ReactNode
 }
 

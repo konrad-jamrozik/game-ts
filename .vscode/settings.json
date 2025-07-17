@@ -21,7 +21,6 @@
     "[typescriptreact]": {
         "editor.defaultFormatter": "esbenp.prettier-vscode"
     },
-
     "editor.formatOnPaste": false,
     "editor.formatOnType": false,
     "editor.formatOnSave": true,

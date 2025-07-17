@@ -208,6 +208,10 @@ export default plugTypescriptEslint.config([
       // at the bottom of this file.
       // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
+      // I prefer types over interfaces
+      // See also relevant section in docs/about_react.md
+      // https://typescript-eslint.io/rules/consistent-type-definitions/
+      '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
 
       // React configs
       // --------------------
