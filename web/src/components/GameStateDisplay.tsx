@@ -8,11 +8,11 @@ export type AssetRow = {
 }
 
 export function GameStateDisplay(): React.JSX.Element {
-  const { turn, agents, money } = useGameStateContext()
+  const { state } = useGameStateContext()
   const rows = [
-    { name: 'Turn', id: 0, value: turn },
-    { name: 'Agents', id: 1, value: agents },
-    { name: 'Money', id: 2, value: money },
+    { name: 'Turn', id: 0, value: state.turn },
+    { name: 'Agents', id: 1, value: state.agents },
+    { name: 'Money', id: 2, value: state.money },
   ]
   const columns: GridColDef[] = [
     { field: 'name', flex: 1, headerName: 'Asset', minWidth: 100 },

@@ -1,9 +1,14 @@
-import { type ReactNode, use, createContext } from 'react'
-import { useGameState, type GameState } from '../model/GameState'
+import { type ReactNode, use, createContext, useMemo } from 'react'
+import { useGameState, type GameState, type GameStateAction } from '../model/GameState'
 
-export const GameStateContext = createContext<GameState>(undefined!)
+type GameStateContextType = {
+  state: GameState
+  dispatch: React.Dispatch<GameStateAction>
+}
 
-export function useGameStateContext(): GameState {
+export const GameStateContext = createContext<GameStateContextType>(undefined!)
+
+export function useGameStateContext(): GameStateContextType {
   const ctx = use(GameStateContext)
   return ctx
 }
@@ -13,6 +18,7 @@ type GameProviderProps = {
 }
 
 export function GameStateContextProvider(props: GameProviderProps): React.JSX.Element {
-  const gameState: GameState = useGameState()
-  return <GameStateContext value={gameState}>{props.children}</GameStateContext>
+  const [state, dispatch] = useGameState()
+  const value = useMemo(() => ({ state, dispatch }), [state, dispatch])
+  return <GameStateContext value={value}>{props.children}</GameStateContext>
 }

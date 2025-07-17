@@ -1,34 +1,46 @@
-/* eslint-disable @typescript-eslint/max-params */
-import { useState } from 'react'
+import { useReducer } from 'react'
 
-export class GameState {
-  public turn: number
-  public setTurn: React.Dispatch<React.SetStateAction<number>>
-  public agents: number
-  public setAgents: React.Dispatch<React.SetStateAction<number>>
-  public money: number
-  public setMoney: React.Dispatch<React.SetStateAction<number>>
+export type GameState = {
+  turn: number
+  agents: number
+  money: number
+}
 
-  public constructor(
-    turn: number,
-    setTurn: React.Dispatch<React.SetStateAction<number>>,
-    agents: number,
-    setAgents: React.Dispatch<React.SetStateAction<number>>,
-    money: number,
-    setMoney: React.Dispatch<React.SetStateAction<number>>,
-  ) {
-    this.turn = turn
-    this.setTurn = setTurn
-    this.agents = agents
-    this.setAgents = setAgents
-    this.money = money
-    this.setMoney = setMoney
+export type GameStateAction =
+  | { type: 'setTurn'; payload: number }
+  | { type: 'setAgents'; payload: number }
+  | { type: 'setMoney'; payload: number }
+  | { type: 'reset' }
+
+function gameStateReducer(state: GameState, action: GameStateAction): GameState {
+  switch (action.type) {
+    case 'setTurn': {
+      return {
+        ...state,
+        turn: action.payload,
+      }
+    }
+    case 'setAgents': {
+      return {
+        ...state,
+        agents: action.payload,
+      }
+    }
+    case 'setMoney': {
+      return {
+        ...state,
+        money: action.payload,
+      }
+    }
+    case 'reset': {
+      return { turn: 0, agents: 0, money: 100 }
+    }
+    default: {
+      return state
+    }
   }
 }
 
-export function useGameState(): GameState {
-  const [turn, setTurn] = useState(0)
-  const [agents, setAgents] = useState(0)
-  const [money, setMoney] = useState(100)
-  return new GameState(turn, setTurn, agents, setAgents, money, setMoney)
+export function useGameState(): [GameState, React.Dispatch<GameStateAction>] {
+  return useReducer(gameStateReducer, { turn: 0, agents: 0, money: 100 })
 }

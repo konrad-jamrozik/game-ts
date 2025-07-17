@@ -9,7 +9,7 @@ import { GameStateDisplay } from './GameStateDisplay'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
-  const { setAgents } = useGameStateContext()
+  const { state, dispatch } = useGameStateContext()
 
   return (
     <Fragment>
@@ -25,7 +25,7 @@ function App(): React.JSX.Element {
       <div className="card">
         {/* Game controls */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button variant="contained" onClick={() => setAgents((prevAgents) => prevAgents + 1)}>
+          <Button variant="contained" onClick={() => dispatch({ type: 'setAgents', payload: state.agents + 1 })}>
             hire agents
           </Button>
         </Stack>

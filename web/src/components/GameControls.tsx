@@ -4,22 +4,34 @@ import * as React from 'react'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
 
 function GameControls(): React.JSX.Element {
-  const { setTurn, setAgents, setMoney } = useGameStateContext()
+  const { state, dispatch } = useGameStateContext()
 
   function handleAdvanceTurn(): void {
-    setTurn((prevTurn) => prevTurn + 1)
+    dispatch({ type: 'setTurn', payload: state.turn + 1 })
   }
 
   function handleResetGame(): void {
-    setTurn(0)
-    setAgents(0)
-    setMoney(100)
+    dispatch({ type: 'reset' })
+  }
+
+  function handleResetTurn(): void {
+    dispatch({ type: 'setTurn', payload: 0 })
   }
 
   return (
     <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
       <Button variant="contained" onClick={handleAdvanceTurn}>
         advance turn
+      </Button>
+      <Button
+        variant="contained"
+        onClick={handleResetTurn}
+        sx={{
+          backgroundColor: (theme) => theme.palette.error.dark,
+          '&:hover': { backgroundColor: (theme) => theme.palette.error.main },
+        }}
+      >
+        Reset Turn
       </Button>
       <Button
         variant="contained"
