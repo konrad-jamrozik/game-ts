@@ -2,11 +2,15 @@
 
 # Initial Redux Toolkit setup
 
+## Setup package
+
 From https://redux-toolkit.js.org/tutorials/quick-start
 
 ```powershell
 npm install @reduxjs/toolkit react-redux
 ```
+
+## Setup eslint
 
 There is no plugin for eslint to configure. Notably, I did not use
 https://github.com/DianaSuvorova/eslint-plugin-react-redux#readme
@@ -15,6 +19,18 @@ as it appears to be outdated:
 
 - It has rules for `connect` which are [pre-hooks][connect].
 - The README only mentions legacy eslint config, not flat config.
+
+## Setup Redux devtools
+
+Install in Chrome, per:
+https://github.com/reduxjs/redux-devtools/tree/main/extension#installation
+
+Then use it in Dev tools. That's it!
+
+## Setup Typescript
+
+🚧KJA WIP Next, set it up to work with TypeScript per:
+https://redux-toolkit.js.org/tutorials/typescript
 
 # Important docs from research
 

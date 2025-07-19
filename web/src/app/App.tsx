@@ -5,6 +5,7 @@ import reactLogo from '../assets/react.svg'
 import GameControls from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
 import { useGameStateContext } from '../contexts/GameStateContextProvider'
+import { Counter } from '../features/counter/Counter'
 import './App.css'
 import viteLogo from '/vite.svg'
 
@@ -22,6 +23,7 @@ function App(): React.JSX.Element {
         </a>
       </div>
       <h1>Vite + React</h1>
+      <Counter />
       <div className="card">
         {/* Game controls */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
