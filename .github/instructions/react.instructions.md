@@ -23,7 +23,7 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Keep components small and focused. Extract logic to custom hooks when reusable.
 - For guidance how to type React components, refer to `docs/about_react.md`.
 - Use `props` and TypeScript interfaces for component contracts.
-- For styles, prefer CSS modules or MUI's styling solutions. Avoid global styles except in `index.css`.
+- For styles, prefer CSS modules or MUI's styling solutions. Avoid global styles except in `main.css`.
 
 ## Testing & Verification
 

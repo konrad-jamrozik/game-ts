@@ -48,3 +48,11 @@ The only way I found to list the built-in tools is to do the following:
 - Open Copilot Chat window.
 - In bottom right, select the "Tools /Wrench and SCrewdriver" icon with tooltip of "Configure tools...".
 - This will display the list of tools in the top-center search bar.
+
+# See also
+
+Copilot setup steps
+https://docs.github.com/en/enterprise-cloud@latest/copilot/how-tos/agents/copilot-coding-agent/customizing-the-development-environment-for-copilot-coding-agent
+
+Example of Copilot instructions file
+https://docs.github.com/en/copilot/how-tos/agents/copilot-coding-agent/best-practices-for-using-copilot-to-work-on-tasks#adding-custom-instructions-to-your-repository

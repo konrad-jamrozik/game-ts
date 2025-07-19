@@ -13,7 +13,7 @@ https://github.com/DianaSuvorova/eslint-plugin-react-redux#readme
 
 as it appears to be outdated:
 
-- It has rules for `connect` which are pre-hooks.
+- It has rules for `connect` which are [pre-hooks][connect].
 - The README only mentions legacy eslint config, not flat config.
 
 # Important docs from research
@@ -49,3 +49,5 @@ Shorter version: https://chatgpt.com/c/6878bf81-8c0c-8011-b9e9-3bc725236982
 
 For built-in react's useReducer see:
 https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/hooks/#usereducer
+
+[connect]: https://react-redux.js.org/api/connect

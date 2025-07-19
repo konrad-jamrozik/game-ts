@@ -1,9 +1,9 @@
 import { CssBaseline, ThemeProvider } from '@mui/material'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import App from './components/App.tsx'
+import App from './app/App.tsx'
 import { GameStateContextProvider } from './contexts/GameStateContextProvider.tsx'
-import './index.css'
+import './main.css'
 import theme from './theme'
 
 const rootElement = document.querySelector('#root')
@@ -22,3 +22,4 @@ if (rootElement) {
 } else {
   console.error('Could not find #root element! Ensure that index.html has an element with id="root"')
 }
+

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { describe, test, expect } from 'vitest'
-import App from '../src/components/App'
+import App from '../src/app/App'
 import { GameStateContextProvider } from '../src/contexts/GameStateContextProvider'
 
 describe(App, () => {
