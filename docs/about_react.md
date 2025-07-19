@@ -16,22 +16,6 @@ And configured eslint plugin. See:
 - [About ESLint](about_eslint.md#initial-eslint-config-setup).
 - https://react.dev/learn/react-compiler#something-is-not-working-after-compilation
 
-# Initial Redux Toolkit setup
-
-From https://redux-toolkit.js.org/tutorials/quick-start
-
-```powershell
-npm install @reduxjs/toolkit react-redux
-```
-
-There is no plugin for eslint to configure. Notably, I did not use
-https://github.com/DianaSuvorova/eslint-plugin-react-redux#readme
-
-as it appears to be outdated:
-
-- It has rules for `connect` which are pre-hooks.
-- The README only mentions legacy eslint config, not flat config.
-
 # Typing React - Typescript & React Cheatsheet
 
 Main documentation are those two articles in React Typescript Cheatsheet:
