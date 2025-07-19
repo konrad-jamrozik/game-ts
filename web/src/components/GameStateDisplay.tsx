@@ -1,6 +1,7 @@
 import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
-import { useGameStateContext } from '../contexts/GameStateContextProvider'
+import { useSelector } from 'react-redux'
+import type { RootState } from '../app/store'
 
 export type AssetRow = {
   name: 'Money' | 'Agents' | 'Turn'
@@ -8,11 +9,11 @@ export type AssetRow = {
 }
 
 export function GameStateDisplay(): React.JSX.Element {
-  const { state } = useGameStateContext()
+  const gameState = useSelector((state: RootState) => state.gameState)
   const rows = [
-    { name: 'Turn', id: 0, value: state.turn },
-    { name: 'Agents', id: 1, value: state.agents },
-    { name: 'Money', id: 2, value: state.money },
+    { name: 'Turn', id: 0, value: gameState.turn },
+    { name: 'Agents', id: 1, value: gameState.agents },
+    { name: 'Money', id: 2, value: gameState.money },
   ]
   const columns: GridColDef[] = [
     { field: 'name', flex: 1, headerName: 'Asset', minWidth: 100 },

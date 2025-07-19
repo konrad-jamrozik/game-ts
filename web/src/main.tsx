@@ -4,7 +4,6 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './app/App.tsx'
 import { store } from './app/store'
-import { GameStateContextProvider } from './contexts/GameStateContextProvider.tsx'
 import './main.css'
 import theme from './theme'
 
@@ -14,11 +13,9 @@ if (rootElement) {
     <StrictMode>
       <ThemeProvider theme={theme}>
         <CssBaseline>
-          <GameStateContextProvider>
-            <Provider store={store}>
-              <App />
-            </Provider>
-          </GameStateContextProvider>
+          <Provider store={store}>
+            <App />
+          </Provider>
         </CssBaseline>
       </ThemeProvider>
     </StrictMode>,
@@ -26,4 +23,3 @@ if (rootElement) {
 } else {
   console.error('Could not find #root element! Ensure that index.html has an element with id="root"')
 }
-

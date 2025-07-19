@@ -1,17 +1,18 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { describe, test, expect } from 'vitest'
+import { Provider } from 'react-redux'
+import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
-import { GameStateContextProvider } from '../src/contexts/GameStateContextProvider'
+import { store } from '../src/app/store'
 
 describe(App, () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
     expect.hasAssertions()
 
     render(
-      <GameStateContextProvider>
+      <Provider store={store}>
         <App />
-      </GameStateContextProvider>,
+      </Provider>,
     )
     // Check initial value using label association
     const agentsValue = screen.getByLabelText(/agents/iu)
@@ -29,9 +30,9 @@ describe(App, () => {
     expect.hasAssertions()
 
     render(
-      <GameStateContextProvider>
+      <Provider store={store}>
         <App />
-      </GameStateContextProvider>,
+      </Provider>,
     )
     // Check initial turn value
     const turnValue = screen.getByLabelText(/turn/iu)
@@ -49,9 +50,9 @@ describe(App, () => {
     expect.hasAssertions()
 
     render(
-      <GameStateContextProvider>
+      <Provider store={store}>
         <App />
-      </GameStateContextProvider>,
+      </Provider>,
     )
     // Click the 'Reset game' button
     await userEvent.click(screen.getByRole('button', { name: /reset game/iu }))

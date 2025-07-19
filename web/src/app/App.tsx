@@ -1,16 +1,20 @@
+// ...existing code...
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Fragment } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import type { RootState } from '../app/store'
 import reactLogo from '../assets/react.svg'
-import GameControls from '../components/GameControls'
+import { GameControls } from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
-import { useGameStateContext } from '../contexts/GameStateContextProvider'
 import { Counter } from '../features/counter/Counter'
+import { setAgents } from '../model/gameStateSlice'
 import './App.css'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
-  const { state, dispatch } = useGameStateContext()
+  const dispatch = useDispatch()
+  const agents = useSelector((state: RootState) => state.gameState.agents)
 
   return (
     <Fragment>
@@ -27,7 +31,7 @@ function App(): React.JSX.Element {
       <div className="card">
         {/* Game controls */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
-          <Button variant="contained" onClick={() => dispatch({ type: 'setAgents', payload: state.agents + 1 })}>
+          <Button variant="contained" onClick={() => dispatch(setAgents(agents + 1))}>
             hire agents
           </Button>
         </Stack>

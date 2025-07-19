@@ -1,21 +1,24 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useGameStateContext } from '../contexts/GameStateContextProvider'
+import { useDispatch, useSelector } from 'react-redux'
+import type { RootState } from '../app/store'
+import { setTurn, reset } from '../model/gameStateSlice'
 
-function GameControls(): React.JSX.Element {
-  const { state, dispatch } = useGameStateContext()
+export function GameControls(): React.JSX.Element {
+  const dispatch = useDispatch()
+  const turn = useSelector((state: RootState) => state.gameState.turn)
 
   function handleAdvanceTurn(): void {
-    dispatch({ type: 'setTurn', payload: state.turn + 1 })
+    dispatch(setTurn(turn + 1))
   }
 
   function handleResetGame(): void {
-    dispatch({ type: 'reset' })
+    dispatch(reset())
   }
 
   function handleResetTurn(): void {
-    dispatch({ type: 'setTurn', payload: 0 })
+    dispatch(setTurn(0))
   }
 
   return (
@@ -46,5 +49,3 @@ function GameControls(): React.JSX.Element {
     </Stack>
   )
 }
-
-export default GameControls

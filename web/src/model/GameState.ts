@@ -41,6 +41,6 @@ function gameStateReducer(state: GameState, action: GameStateAction): GameState 
   }
 }
 
-export function useGameState(): [GameState, React.Dispatch<GameStateAction>] {
+export function useGameStateLegacy(): [GameState, React.Dispatch<GameStateAction>] {
   return useReducer(gameStateReducer, { turn: 0, agents: 0, money: 100 })
 }
