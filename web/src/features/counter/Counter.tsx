@@ -2,7 +2,7 @@ import Button from '@mui/material/Button'
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { RootState } from '../../app/store'
-import { decrement, increment } from './counterSlice'
+import { decrement, incrementByAmount } from './counterSlice'
 
 export function Counter(): React.JSX.Element {
   const count = useSelector((state: RootState) => state.counter.value)
@@ -11,7 +11,7 @@ export function Counter(): React.JSX.Element {
   return (
     <div>
       <div>
-        <Button aria-label="Increment value" onClick={() => dispatch(increment())}>
+        <Button aria-label="Increment value" onClick={() => dispatch(incrementByAmount(1))}>
           Increment
         </Button>
         <span>{count}</span>

@@ -30,9 +30,18 @@ Then use it in Dev tools. That's it!
 ## Setup Typescript
 
 🚧KJA WIP Next, set it up to work with TypeScript per:
-https://redux-toolkit.js.org/tutorials/typescript
 
-# Important docs from research
+- https://redux-toolkit.js.org/tutorials/typescript
+- https://redux.js.org/usage/usage-with-typescript
+- Notably eslint setup: https://redux.js.org/usage/usage-with-typescript#use-typed-hooks-in-components
+
+# Docs
+
+- https://redux-toolkit.js.org/introduction/getting-started
+- https://redux.js.org/introduction/getting-started
+- https://react-redux.js.org/introduction/getting-started
+
+# Research
 
 Probably want to use Redux Toolkit (RTK), instead of React simple useReducer.
 
