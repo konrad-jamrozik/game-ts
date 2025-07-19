@@ -24,9 +24,13 @@ From https://redux-toolkit.js.org/tutorials/quick-start
 npm install @reduxjs/toolkit react-redux
 ```
 
-And configured eslint plugin. See:
+There is no plugin for eslint to configure. Notably, I did not use
+https://github.com/DianaSuvorova/eslint-plugin-react-redux#readme
 
-- [About ESLint](about_eslint.md#initial-eslint-config-setup).
+as it appears to be outdated:
+
+- It has rules for `connect` which are pre-hooks.
+- The README only mentions legacy eslint config, not flat config.
 
 # Typing React - Typescript & React Cheatsheet
 

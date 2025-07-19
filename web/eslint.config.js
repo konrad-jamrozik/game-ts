@@ -23,7 +23,6 @@ import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
-import plugReactRedux from 'eslint-plugin-react-redux'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist']),
@@ -34,8 +33,6 @@ export default plugTypescriptEslint.config([
       // Note: the plugin [eslint-plugin-tsdoc] must be imported as a plugin,
       // not via extends, because of its definition.
       tsdoc: plugTsdoc,
-      // [eslint-plugin-react-redux]
-      reactRedux: plugReactRedux,
     },
     extends: [
       // [eslint configs]
@@ -78,8 +75,6 @@ export default plugTypescriptEslint.config([
       // [eslint-plugin-react-compiler]
       // See also: docs/about_react.md#initial-react-19-compiler-setup
       plugReactCompiler.configs.recommended,
-      // [eslint-plugin-react-redux]
-      plugReactRedux.configs.recommended,
 
       // Imports
       // --------------------
