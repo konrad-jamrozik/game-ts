@@ -16,6 +16,14 @@ And configured eslint plugin. See:
 - [About ESLint](about_eslint.md#initial-eslint-config-setup).
 - https://react.dev/learn/react-compiler#something-is-not-working-after-compilation
 
+# Initial Redux Toolkit setup
+
+From https://redux-toolkit.js.org/tutorials/quick-start
+
+```powershell
+npm install @reduxjs/toolkit react-redux
+```
+
 # Typing React - Typescript & React Cheatsheet
 
 Main documentation are those two articles in React Typescript Cheatsheet:

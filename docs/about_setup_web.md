@@ -40,6 +40,7 @@ Setup steps executed:
 11. Add debugging configs (`launch.json`) and docs. See [About Debugging](about_debugging.md).
 12. Add VS Code Build and Test tasks in [`tasks.json`](../.vscode/tasks.json) file.
 13. Add React compiler. See [About React](about_react.md).
+14. Add Redux Toolkit. See [About React](about_react.md).
 
 # nvm-windows, Node.js and npm configuration
 
