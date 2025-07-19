@@ -27,13 +27,17 @@ https://github.com/reduxjs/redux-devtools/tree/main/extension#installation
 
 Then use it in Dev tools. That's it!
 
-## Setup Typescript
+## Setup TypeScript, testing best practices
 
 🚧KJA WIP Next, set it up to work with TypeScript per:
 
 - https://redux-toolkit.js.org/tutorials/typescript
-- https://redux.js.org/usage/usage-with-typescript
-- Notably eslint setup: https://redux.js.org/usage/usage-with-typescript#use-typed-hooks-in-components
+
+- https://redux.js.org/usage/#code-quality
+  - https://redux.js.org/usage/writing-tests
+    - Note: the Redux DevTools Chrome extensions has a feature to generate tests snippet from current state.
+  - https://redux.js.org/usage/usage-with-typescript
+    - Notably eslint setup: https://redux.js.org/usage/usage-with-typescript#use-typed-hooks-in-components
 
 # Docs
 
