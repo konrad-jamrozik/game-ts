@@ -110,7 +110,9 @@ npm install --save-dev eslint-plugin-testing-library
 npm install --save-dev eslint-plugin-jest-dom
 # See also about_react.md#setup-react-19-compiler
 # https://www.npmjs.com/package/eslint-plugin-react-compiler
-npm install --save-dev eslint-plugin-react-compiler 
+npm install --save-dev eslint-plugin-react-compiler
+# https://github.com/DianaSuvorova/eslint-plugin-react-redux#readme
+npm install --save-dev eslint-plugin-react-redux
 ```
 
 Note: a lot of the packages were already installed by the [create-vite react-ts] template.

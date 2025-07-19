@@ -24,6 +24,10 @@ From https://redux-toolkit.js.org/tutorials/quick-start
 npm install @reduxjs/toolkit react-redux
 ```
 
+And configured eslint plugin. See:
+
+- [About ESLint](about_eslint.md#initial-eslint-config-setup).
+
 # Typing React - Typescript & React Cheatsheet
 
 Main documentation are those two articles in React Typescript Cheatsheet:
