@@ -58,6 +58,11 @@ npx @modelcontextprotocol/inspector npx -y @mui/mcp@latest
 And then [per this FAQ](https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-there-are-errors-in-connection),
 in the inspector page, set the `Command` to `npx`, `Args` to `-y @mui/mcp@latest`, and then click `Connect`.
 
+# What sets the `<html>` element background
+
+`<CssBaseline>` sets it to `theme.palette.background.default` per:
+https://mui.com/material-ui/react-css-baseline/
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector

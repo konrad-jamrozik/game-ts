@@ -10,8 +10,6 @@ export type AssetRow = {
 export function GameStateDisplay(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.present.gameState)
   const rows = [
-    { name: 'Turn', id: 1, value: gameState.turn },
-    { name: 'Actions count', id: 0, value: gameState.actionsCount },
     { name: 'Agents', id: 2, value: gameState.agents },
     { name: 'Money', id: 3, value: gameState.money },
   ]
@@ -36,10 +34,11 @@ export function GameStateDisplay(): React.JSX.Element {
         hideFooter
         disableColumnMenu
         disableRowSelectionOnClick
-        sx={{
+        sx={(theme) => ({
+          bgcolor: theme.palette.background.default,
           '& .MuiDataGrid-cell': { fontWeight: 100 },
           '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
-        }}
+        })}
         aria-label="Game state display"
       />
     </Box>
