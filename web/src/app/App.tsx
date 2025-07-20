@@ -33,7 +33,7 @@ function App(): React.JSX.Element {
             hire agent
           </Button>
           <Button variant="contained" onClick={() => dispatch(setMoney(100))}>
-            set money to 100
+            set money to 200
           </Button>
         </Stack>
         {/* Game controls (advance/reset) */}

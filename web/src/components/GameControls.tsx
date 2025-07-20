@@ -33,6 +33,24 @@ export function GameControls(): React.JSX.Element {
         <Button variant="contained" onClick={handleAdvanceTurn}>
           advance turn
         </Button>
+      </Stack>
+      <Stack direction="row" spacing={2}>
+        <Button
+          variant="outlined"
+          onClick={() => dispatch(ActionCreators.undo())}
+          disabled={!useAppSelector((state) => state.past.length)}
+        >
+          Undo
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => dispatch(ActionCreators.redo())}
+          disabled={!useAppSelector((state) => state.future.length)}
+        >
+          Redo
+        </Button>
+      </Stack>
+      <Stack direction="row" spacing={2}>
         <Button
           variant="contained"
           onClick={handleResetTurn}
@@ -52,22 +70,6 @@ export function GameControls(): React.JSX.Element {
           }}
         >
           reset game
-        </Button>
-      </Stack>
-      <Stack direction="row" spacing={2}>
-        <Button
-          variant="outlined"
-          onClick={() => dispatch(ActionCreators.undo())}
-          disabled={!useAppSelector((state) => state.past.length)}
-        >
-          Undo
-        </Button>
-        <Button
-          variant="outlined"
-          onClick={() => dispatch(ActionCreators.redo())}
-          disabled={!useAppSelector((state) => state.future.length)}
-        >
-          Redo
         </Button>
       </Stack>
     </Stack>

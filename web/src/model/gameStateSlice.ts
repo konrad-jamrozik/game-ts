@@ -43,10 +43,7 @@ const gameStateSlice = createSlice({
       state.money = action.payload
     },
     reset(state) {
-      state.actionsCount = 0
-      state.turn = 0
-      state.agents = 0
-      state.money = 0
+      Object.assign(state, initialState)
     },
   },
 })

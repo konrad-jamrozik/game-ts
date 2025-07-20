@@ -15,6 +15,8 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 
 ## Coding conventions
 
+- Follow ESLint rules from `web/.eslintrc.js` and Prettier rules from `web/.prettierrc.js`.
+- Always use TypeScript types, never interfaces, unless it won't compile otherwise.
 - Follow linting and formatting rules (see `docs/about_eslint.md` and `docs/about_prettier.md`).
 - All React code should follow modern best practices (function components, hooks, strict typing).
 - Always verify any changes to React .tsx files by running appropriate Vitest tests.
