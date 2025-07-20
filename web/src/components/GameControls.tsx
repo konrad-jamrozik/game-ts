@@ -1,13 +1,12 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import type { RootState } from '../app/store'
-import { setTurn, reset } from '../model/gameStateSlice'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { reset, setTurn } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
-  const dispatch = useDispatch()
-  const turn = useSelector((state: RootState) => state.gameState.turn)
+  const dispatch = useAppDispatch()
+  const turn = useAppSelector((state) => state.gameState.turn)
 
   function handleAdvanceTurn(): void {
     dispatch(setTurn(turn + 1))

@@ -2,8 +2,7 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Fragment } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import type { RootState } from '../app/store'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import reactLogo from '../assets/react.svg'
 import { GameControls } from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
@@ -13,8 +12,8 @@ import './App.css'
 import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
-  const dispatch = useDispatch()
-  const agents = useSelector((state: RootState) => state.gameState.agents)
+  const dispatch = useAppDispatch()
+  const agents = useAppSelector((state) => state.gameState.agents)
 
   return (
     <Fragment>

@@ -1,11 +1,10 @@
 import Button from '@mui/material/Button'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import type { RootState } from '../../app/store'
 import { decrement, incrementByAmount } from './counterSlice'
 
 export function Counter(): React.JSX.Element {
-  const count = useAppSelector((state: RootState) => state.counter.value)
+  const count = useAppSelector((state) => state.counter.value)
   const dispatch = useAppDispatch()
 
   return (

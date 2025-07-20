@@ -1,7 +1,6 @@
 import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
-import { useSelector } from 'react-redux'
-import type { RootState } from '../app/store'
+import { useAppSelector } from '../app/hooks'
 
 export type AssetRow = {
   name: 'Money' | 'Agents' | 'Turn'
@@ -9,7 +8,7 @@ export type AssetRow = {
 }
 
 export function GameStateDisplay(): React.JSX.Element {
-  const gameState = useSelector((state: RootState) => state.gameState)
+  const gameState = useAppSelector((state) => state.gameState)
   const rows = [
     { name: 'Turn', id: 0, value: gameState.turn },
     { name: 'Agents', id: 1, value: gameState.agents },
