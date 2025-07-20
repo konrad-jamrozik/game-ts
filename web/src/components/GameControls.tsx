@@ -57,6 +57,7 @@ export function GameControls(): React.JSX.Element {
             >
               Redo
             </Button>
+            <LabeledValue label="Actions" value={gameState.actionsCount} />
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button
