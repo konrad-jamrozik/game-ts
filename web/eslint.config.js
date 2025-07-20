@@ -147,6 +147,8 @@ export default plugTypescriptEslint.config([
       // console is used for debugging
       // https://eslint.org/docs/latest/rules/no-console
       'no-console': 'off',
+      // https://eslint.org/docs/latest/rules/max-statements
+      'max-statements': ['error', { max: 20 }],
       // https://eslint.org/docs/latest/rules/func-style
       'func-style': [
         'error',
