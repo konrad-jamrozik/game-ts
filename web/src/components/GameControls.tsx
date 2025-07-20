@@ -15,6 +15,10 @@ export function GameControls(): React.JSX.Element {
   }
 
   function handleResetGame(): void {
+    // 🚧KJA avoid double dispatch:
+    // https://redux.js.org/style-guide/#avoid-dispatching-many-actions-sequentially
+    // But note one cannot dispatch from reducer:
+    // https://redux.js.org/api/store#dispatchaction
     dispatch(reset())
     dispatch(ActionCreators.clearHistory())
   }
