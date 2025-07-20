@@ -20,7 +20,7 @@ describe(App, () => {
     expect(agentsValue).toHaveTextContent('0')
 
     // Click the button
-    await userEvent.click(screen.getByRole('button', { name: /hire agents/iu }))
+    await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
 
     // Check updated value
     expect(agentsValue).toHaveTextContent('1')
