@@ -66,9 +66,22 @@ Then use it in Dev tools. That's it!
 
 - https://redux.js.org/tutorials/essentials/part-4-using-data#using-selectors-effectively
 
-## Performance
+# Performance
 
 - https://redux.js.org/tutorials/essentials/part-6-performance-normalization#improving-render-performance
+
+## Double dispatch and avoiding rerenders
+
+In React 18+ calling `dispatch` multiple times in a row will still result in one render,
+per this note:
+https://react-redux.js.org/api/batch
+
+See also:
+
+- https://redux.js.org/style-guide/#avoid-dispatching-many-actions-sequentially
+- Cannot call dispatch from reducer:
+https://redux.js.org/api/store#dispatchaction
+- https://redux.js.org/usage/writing-logic-thunks
 
 # Research
 

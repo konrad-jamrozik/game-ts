@@ -3,8 +3,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { resetGameThunk } from '../app/thunks'
-import { advanceTurn } from '../model/gameStateSlice'
+import { advanceTurn, reset } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -16,8 +15,8 @@ export function GameControls(): React.JSX.Element {
   }
 
   function handleResetGame(): void {
-    // Uses thunk to avoid manual double dispatch
-    resetGameThunk(dispatch)
+    dispatch(reset())
+    dispatch(ActionCreators.clearHistory())
   }
 
   function handleResetTurn(): void {
