@@ -1,12 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export type GameState = {
+  actionsCount: number
   turn: number
   agents: number
   money: number
 }
 
 const initialState: GameState = {
+  actionsCount: 0,
   turn: 0,
   agents: 0,
   money: 100,
@@ -16,16 +18,18 @@ const gameStateSlice = createSlice({
   name: 'gameState',
   initialState,
   reducers: {
-    setTurn(state, action: PayloadAction<number>) {
-      state.turn = action.payload
+    advanceTurn(state) {
+      state.turn += 1
     },
-    setAgents(state, action: PayloadAction<number>) {
-      state.agents = action.payload
+    hireAgent(state) {
+      state.agents += 1
+      state.actionsCount += 1
     },
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
     },
     reset(state) {
+      state.actionsCount = 0
       state.turn = 0
       state.agents = 0
       state.money = 100
@@ -33,5 +37,5 @@ const gameStateSlice = createSlice({
   },
 })
 
-export const { setTurn, setAgents, setMoney, reset } = gameStateSlice.actions
+export const { advanceTurn, hireAgent, setMoney, reset } = gameStateSlice.actions
 export default gameStateSlice.reducer

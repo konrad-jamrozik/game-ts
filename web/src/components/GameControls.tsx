@@ -3,14 +3,13 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { reset, setTurn } from '../model/gameStateSlice'
+import { reset, advanceTurn } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const turn = useAppSelector((state) => state.present.gameState.turn)
 
   function handleAdvanceTurn(): void {
-    dispatch(setTurn(turn + 1))
+    dispatch(advanceTurn())
   }
 
   function handleResetGame(): void {
@@ -18,7 +17,7 @@ export function GameControls(): React.JSX.Element {
   }
 
   function handleResetTurn(): void {
-    dispatch(setTurn(0))
+    // dispatch(advanceTurn(0))
   }
 
   return (

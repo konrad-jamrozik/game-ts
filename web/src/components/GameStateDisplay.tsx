@@ -10,9 +10,10 @@ export type AssetRow = {
 export function GameStateDisplay(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.present.gameState)
   const rows = [
-    { name: 'Turn', id: 0, value: gameState.turn },
-    { name: 'Agents', id: 1, value: gameState.agents },
-    { name: 'Money', id: 2, value: gameState.money },
+    { name: 'Turn', id: 1, value: gameState.turn },
+    { name: 'Actions count', id: 0, value: gameState.actionsCount },
+    { name: 'Agents', id: 2, value: gameState.agents },
+    { name: 'Money', id: 3, value: gameState.money },
   ]
   const columns: GridColDef[] = [
     { field: 'name', flex: 1, headerName: 'Asset', minWidth: 100 },
@@ -36,7 +37,7 @@ export function GameStateDisplay(): React.JSX.Element {
         disableColumnMenu
         disableRowSelectionOnClick
         sx={{
-          '& .MuiDataGrid-cell': { fontWeight: 600 },
+          '& .MuiDataGrid-cell': { fontWeight: 100 },
           '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
         }}
         aria-label="Game state display"
