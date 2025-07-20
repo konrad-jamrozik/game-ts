@@ -48,6 +48,12 @@ Then use it in Dev tools. That's it!
 - https://react-redux.js.org/introduction/getting-started
 - https://github.com/reduxjs/redux-templates/tree/master/packages/vite-template-redux
 
+- Mentions of React Profiler:
+  https://redux.js.org/tutorials/essentials/part-6-performance-normalization#investigating-the-posts-list
+
+- useSelector subscribes
+  https://react-redux.js.org/api/hooks#useselector
+
 # Caveats
 
 ## Randomness goes into action creators, not reducers. Use `prepare` callback
