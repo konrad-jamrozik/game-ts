@@ -32,7 +32,7 @@ function App(): React.JSX.Element {
           <Button variant="contained" onClick={() => dispatch(hireAgent())}>
             hire agent
           </Button>
-          <Button variant="contained" onClick={() => dispatch(setMoney(100))}>
+          <Button variant="contained" onClick={() => dispatch(setMoney(200))}>
             set money to 200
           </Button>
         </Stack>

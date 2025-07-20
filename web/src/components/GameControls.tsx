@@ -36,14 +36,14 @@ export function GameControls(): React.JSX.Element {
       </Stack>
       <Stack direction="row" spacing={2}>
         <Button
-          variant="outlined"
+          variant="contained"
           onClick={() => dispatch(ActionCreators.undo())}
           disabled={!useAppSelector((state) => state.past.length)}
         >
           Undo
         </Button>
         <Button
-          variant="outlined"
+          variant="contained"
           onClick={() => dispatch(ActionCreators.redo())}
           disabled={!useAppSelector((state) => state.future.length)}
         >
