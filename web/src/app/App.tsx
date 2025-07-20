@@ -2,6 +2,7 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import { Fragment } from 'react'
+import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import reactLogo from '../assets/react.svg'
 import { GameControls } from '../components/GameControls'
@@ -13,7 +14,7 @@ import viteLogo from '/vite.svg'
 
 function App(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const agents = useAppSelector((state) => state.gameState.agents)
+  const agents = useAppSelector((state) => state.present.gameState.agents)
 
   return (
     <Fragment>
@@ -27,6 +28,22 @@ function App(): React.JSX.Element {
       </div>
       <h1>Vite + React</h1>
       <Counter />
+      <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
+        <Button
+          variant="outlined"
+          onClick={() => dispatch(ActionCreators.undo())}
+          disabled={!useAppSelector((state) => state.past.length)}
+        >
+          Undo
+        </Button>
+        <Button
+          variant="outlined"
+          onClick={() => dispatch(ActionCreators.redo())}
+          disabled={!useAppSelector((state) => state.future.length)}
+        >
+          Redo
+        </Button>
+      </Stack>
       <div className="card">
         {/* Game controls */}
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>

@@ -8,7 +8,7 @@ export type AssetRow = {
 }
 
 export function GameStateDisplay(): React.JSX.Element {
-  const gameState = useAppSelector((state) => state.gameState)
+  const gameState = useAppSelector((state) => state.present.gameState)
   const rows = [
     { name: 'Turn', id: 0, value: gameState.turn },
     { name: 'Agents', id: 1, value: gameState.agents },

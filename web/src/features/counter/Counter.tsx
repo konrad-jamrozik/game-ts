@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { decrement, incrementByAmount } from './counterSlice'
 
 export function Counter(): React.JSX.Element {
-  const count = useAppSelector((state) => state.counter.value)
+  const count = useAppSelector((state) => state.present.counter.value)
   const dispatch = useAppDispatch()
 
   return (

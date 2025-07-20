@@ -6,7 +6,7 @@ import { reset, setTurn } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const turn = useAppSelector((state) => state.gameState.turn)
+  const turn = useAppSelector((state) => state.present.gameState.turn)
 
   function handleAdvanceTurn(): void {
     dispatch(setTurn(turn + 1))
