@@ -21,6 +21,7 @@ const gameStateSlice = createSlice({
     advanceTurn: {
       // 🚧KJA Dedup this prepare be using something like "withPlayerAction" https://chatgpt.com/c/687c730e-12d4-8011-96fc-be2be1ef5e94
       // Also style guide says many reducers should work with same player action: https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
+      // See https://redux-toolkit.js.org/usage/usage-with-typescript#wrapping-createslice
       reducer(state) {
         state.turn += 1
         state.actionsCount = 0
