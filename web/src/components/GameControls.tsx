@@ -7,10 +7,11 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { advanceTurn, reset } from '../model/gameStateSlice'
+import { LabeledValue } from './LabeledValue'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  // const gameStatePast = useAppSelector((state) => state.present.gameState)
+  const gameState = useAppSelector((state) => state.present.gameState)
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
@@ -39,6 +40,7 @@ export function GameControls(): React.JSX.Element {
             <Button variant="contained" onClick={handleAdvanceTurn}>
               advance turn
             </Button>
+            <LabeledValue label="Turn" value={gameState.turn} />
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button
