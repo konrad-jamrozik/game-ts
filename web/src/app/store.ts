@@ -9,10 +9,26 @@ const combinedReducer = combineReducers({
   gameState: gameStateReducer,
 })
 
+function isPlayerAction(action: unknown): action is { meta: { playerAction: boolean } } {
+  return (
+    typeof action === 'object' &&
+    action !== null &&
+    'meta' in action &&
+    typeof action.meta === 'object' &&
+    action.meta !== null &&
+    'playerAction' in action.meta
+  )
+}
+
 export const store = configureStore({
+  // https://github.com/omnidan/redux-undo
   reducer: undoable(combinedReducer, {
     // You can pass options to undoable here
-    limit: 10, // Example: limit the history to 10 actions
+    limit: 100, // Up to 100 player actions can be undone/redone
+    // 🚧KJA potential problem with isPlayerAction undo filter:
+    // when player action is dispatched, it may result in bunch of events happening after it.
+    // The game state should be persisted *AFTER* all those events are processed, not *BEFORE*.
+    filter: (action) => isPlayerAction(action) && action.meta.playerAction,
   }),
 })
 

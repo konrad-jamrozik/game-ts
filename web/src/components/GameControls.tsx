@@ -7,17 +7,22 @@ import { reset, advanceTurn } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
+  // const gameStatePast = useAppSelector((state) => state.present.gameState)
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
+    dispatch(ActionCreators.clearHistory())
   }
 
   function handleResetGame(): void {
     dispatch(reset())
+    dispatch(ActionCreators.clearHistory())
   }
 
   function handleResetTurn(): void {
-    // dispatch(advanceTurn(0))
+    // The game state with index 0 is the beginning of the current turn.
+    dispatch(ActionCreators.jumpToPast(0))
+    dispatch(ActionCreators.clearHistory())
   }
 
   return (

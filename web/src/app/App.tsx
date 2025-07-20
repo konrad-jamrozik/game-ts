@@ -7,7 +7,7 @@ import reactLogo from '../assets/react.svg'
 import { GameControls } from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
 import { Counter } from '../features/counter/Counter'
-import { hireAgent } from '../model/gameStateSlice'
+import { hireAgent, setMoney } from '../model/gameStateSlice'
 import './App.css'
 import viteLogo from '/vite.svg'
 
@@ -31,6 +31,9 @@ function App(): React.JSX.Element {
         <Stack direction="row" spacing={2} sx={{ mb: 2 }}>
           <Button variant="contained" onClick={() => dispatch(hireAgent())}>
             hire agent
+          </Button>
+          <Button variant="contained" onClick={() => dispatch(setMoney(100))}>
+            set money to 100
           </Button>
         </Stack>
         {/* Game controls (advance/reset) */}

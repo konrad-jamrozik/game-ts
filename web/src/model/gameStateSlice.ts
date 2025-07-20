@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { ActionCreators } from 'redux-undo'
 
 export type GameState = {
   actionsCount: number
@@ -18,12 +19,23 @@ const gameStateSlice = createSlice({
   name: 'gameState',
   initialState,
   reducers: {
-    advanceTurn(state) {
-      state.turn += 1
+    advanceTurn: {
+      reducer(state) {
+        state.turn += 1
+        state.actionsCount = 0
+      },
+      prepare() {
+        return { payload: undefined, meta: { playerAction: true } }
+      },
     },
-    hireAgent(state) {
-      state.agents += 1
-      state.actionsCount += 1
+    hireAgent: {
+      reducer(state) {
+        state.agents += 1
+        state.actionsCount += 1
+      },
+      prepare() {
+        return { payload: undefined, meta: { playerAction: true } }
+      },
     },
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
@@ -32,7 +44,7 @@ const gameStateSlice = createSlice({
       state.actionsCount = 0
       state.turn = 0
       state.agents = 0
-      state.money = 100
+      state.money = 0
     },
   },
 })
