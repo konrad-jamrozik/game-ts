@@ -229,6 +229,15 @@ export default plugTypescriptEslint.config([
           alphabetize: { order: 'asc', orderImportKind: 'asc' },
         },
       ],
+      // https://redux.js.org/usage/usage-with-typescript#use-typed-hooks-in-components
+      '@typescript-eslint/no-restricted-imports': [
+        'error',
+        {
+          name: 'react-redux',
+          importNames: ['useSelector', 'useDispatch'],
+          message: 'Use typed hooks `useAppDispatch` and `useAppSelector` instead.',
+        },
+      ],
       // Note: per the performance note of typescript-eslint:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import
       // Following rules should also be disabled, if performance suffers:

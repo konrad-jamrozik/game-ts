@@ -44,6 +44,7 @@ Then use it in Dev tools. That's it!
 - https://redux-toolkit.js.org/introduction/getting-started
 - https://redux.js.org/introduction/getting-started
 - https://react-redux.js.org/introduction/getting-started
+- https://github.com/reduxjs/redux-templates/tree/master/packages/vite-template-redux
 
 # Research
 
