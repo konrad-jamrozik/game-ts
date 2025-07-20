@@ -1,3 +1,4 @@
+import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
@@ -5,15 +6,25 @@ import * as React from 'react'
 type LabeledValueProps = {
   label: string
   value: React.ReactNode
+  width?: number | string
 }
 
-export function LabeledValue({ label, value }: LabeledValueProps): React.JSX.Element {
+export function LabeledValue({ label, value, width }: LabeledValueProps): React.JSX.Element {
   return (
-    <Stack direction="row" spacing={1} alignItems="center">
-      <Typography variant="body1">{label}:</Typography>
-      <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
-        {value}
-      </Typography>
-    </Stack>
+    <Paper
+      sx={{
+        backgroundColor: (theme) => theme.palette.grey[900],
+        color: (theme) => theme.palette.common.white,
+        padding: 1,
+        width,
+      }}
+    >
+      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+        <Typography variant="body1">{label}:</Typography>
+        <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
+          {value}
+        </Typography>
+      </Stack>
+    </Paper>
   )
 }
