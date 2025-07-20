@@ -16,10 +16,11 @@ The web project is composed of following core technologies: TypeScript + Vite + 
 
 It is using the following technologies, alphabetically:
 
+- IndexedDB with Dexie.js
 - MUI (Material-UI)
 - Node.js
-- nvm-windows
 - npm
+- nvm-windows
 - React
 - Redux Toolkit (RTK)
 - TypeScript
