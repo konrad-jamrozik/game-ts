@@ -3,7 +3,8 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { reset, advanceTurn } from '../model/gameStateSlice'
+import { resetGameThunk } from '../app/thunks'
+import { advanceTurn } from '../model/gameStateSlice'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -15,16 +16,14 @@ export function GameControls(): React.JSX.Element {
   }
 
   function handleResetGame(): void {
-    // 🚧KJA avoid double dispatch:
-    // https://redux.js.org/style-guide/#avoid-dispatching-many-actions-sequentially
-    // But note one cannot dispatch from reducer:
-    // https://redux.js.org/api/store#dispatchaction
-    dispatch(reset())
-    dispatch(ActionCreators.clearHistory())
+    // Uses thunk to avoid manual double dispatch
+    resetGameThunk(dispatch)
   }
 
   function handleResetTurn(): void {
     // The game state with index 0 is the beginning of the current turn.
+    // 🚧KJA turn reset won't work correctly if there were more than 'limit' player actions
+    // as defined in store.ts
     dispatch(ActionCreators.jumpToPast(0))
     dispatch(ActionCreators.clearHistory())
   }
