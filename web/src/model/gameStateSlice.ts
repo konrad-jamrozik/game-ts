@@ -1,5 +1,4 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { ActionCreators } from 'redux-undo'
 
 export type GameState = {
   actionsCount: number
