@@ -49,3 +49,22 @@ https://react-typescript-cheatsheet.netlify.app/docs/basic/getting-started/basic
 > as this allows a consumer to extend them via declaration merging if some definitions are missing.
 
 > consider using type for your React Component Props and State, for consistency and because it is more constrained.
+
+# How to log React render and commit
+
+E.g.
+
+``` typescript
+
+function LogEvents(props) {
+  useLayoutEffect(() => {
+    console.log("Commit");
+  });
+  console.log("Render");
+  return null;
+}
+```
+
+from https://codesandbox.io/p/sandbox/spring-water-929i6
+from https://github.com/reactwg/react-18/discussions/21
+from https://react-redux.js.org/api/batch#references
