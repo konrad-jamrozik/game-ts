@@ -11,7 +11,7 @@ if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
       <ThemeProvider theme={theme}>
-        <CssBaseline>
+        <CssBaseline enableColorScheme>
           <Provider store={store}>
             <App />
           </Provider>
