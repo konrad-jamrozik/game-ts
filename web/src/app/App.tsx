@@ -1,3 +1,4 @@
+import Grid from '@mui/material/Grid'
 import { Fragment } from 'react'
 import { GameControls } from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
@@ -8,9 +9,21 @@ function App(): React.JSX.Element {
   return (
     <Fragment>
       <div className="card">
-        <PlayerActions />
-        <GameControls />
-        <GameStateDisplay />
+        <Grid container spacing={2}>
+          <Grid size={6}>
+            <Grid container spacing={2} direction="column">
+              <Grid>
+                <GameControls />
+              </Grid>
+              <Grid>
+                <PlayerActions />
+              </Grid>
+            </Grid>
+          </Grid>
+          <Grid size={6}>
+            <GameStateDisplay />
+          </Grid>
+        </Grid>
       </div>
     </Fragment>
   )
