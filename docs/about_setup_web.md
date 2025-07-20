@@ -21,6 +21,7 @@ It is using the following technologies, alphabetically:
 - nvm-windows
 - npm
 - React
+- Redux Toolkit (RTK)
 - TypeScript
 - Vite
 - Vitest

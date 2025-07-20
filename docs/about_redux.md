@@ -39,12 +39,30 @@ Then use it in Dev tools. That's it!
   - https://redux.js.org/usage/usage-with-typescript
     - Notably eslint setup: https://redux.js.org/usage/usage-with-typescript#use-typed-hooks-in-components
 
+- https://redux.js.org/usage/deriving-data-selectors#balance-selector-usage
+
 # Docs
 
 - https://redux-toolkit.js.org/introduction/getting-started
 - https://redux.js.org/introduction/getting-started
 - https://react-redux.js.org/introduction/getting-started
 - https://github.com/reduxjs/redux-templates/tree/master/packages/vite-template-redux
+
+# Caveats
+
+## Randomness goes into action creators, not reducers. Use `prepare` callback
+
+- https://redux.js.org/tutorials/essentials/part-4-using-data#preparing-action-payloads
+- https://redux-toolkit.js.org/api/createSlice#customizing-generated-action-creators
+- https://redux-toolkit.js.org/api/createAction#using-prepare-callbacks-to-customize-action-contents
+
+## Using selectors effectively
+
+- https://redux.js.org/tutorials/essentials/part-4-using-data#using-selectors-effectively
+
+## Performance
+
+- https://redux.js.org/tutorials/essentials/part-6-performance-normalization#improving-render-performance
 
 # Research
 
