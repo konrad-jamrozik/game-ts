@@ -8,23 +8,21 @@ import './App.css'
 function App(): React.JSX.Element {
   return (
     <Fragment>
-      <div className="card">
-        <Grid container spacing={2}>
-          <Grid size={6}>
-            <Grid container spacing={2} direction="column">
-              <Grid>
-                <GameControls />
-              </Grid>
-              <Grid>
-                <PlayerActions />
-              </Grid>
+      <Grid container justifyContent={'center'} spacing={2} bgcolor={'#30303052'}>
+        <Grid>
+          <Grid container spacing={2} direction="column">
+            <Grid>
+              <GameControls />
+            </Grid>
+            <Grid>
+              <PlayerActions />
             </Grid>
           </Grid>
-          <Grid size={6}>
-            <GameStateDisplay />
-          </Grid>
         </Grid>
-      </div>
+        <Grid>
+          <GameStateDisplay />
+        </Grid>
+      </Grid>
     </Fragment>
   )
 }

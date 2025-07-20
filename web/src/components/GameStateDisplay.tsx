@@ -29,7 +29,7 @@ export function GameStateDisplay(): React.JSX.Element {
     },
   ]
   return (
-    <Box display="flex" maxWidth={400} width="100%">
+    <Box display="flex" minWidth={200}>
       <DataGrid
         rows={rows}
         columns={columns}
