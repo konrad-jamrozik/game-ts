@@ -3,6 +3,7 @@ import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { store } from '../src/app/store'
 import { EventLog } from '../src/components/EventLog'
+import { clearEvents } from '../src/model/eventsSlice'
 import { reset } from '../src/model/gameStateSlice'
 
 function renderEventLog(): void {
@@ -17,6 +18,7 @@ describe(EventLog, () => {
   beforeEach(() => {
     // Reset the store before each test
     store.dispatch(reset())
+    store.dispatch(clearEvents())
   })
 
   test('displays "No events yet" when there are no events', () => {

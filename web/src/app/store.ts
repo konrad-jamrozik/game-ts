@@ -3,7 +3,9 @@ import { debounce } from 'radash'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import counterReducer from '../features/counter/counterSlice'
+import eventsReducer from '../model/eventsSlice'
 import gameStateReducer from '../model/gameStateSlice'
+import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
 
 const combinedReducer = combineReducers({
@@ -23,7 +25,7 @@ function isPlayerAction(action: unknown): action is { meta: { playerAction: bool
 }
 
 // undoable is from https://github.com/omnidan/redux-undo
-const rootReducer = undoable(combinedReducer, {
+const undoableReducer = undoable(combinedReducer, {
   // You can pass options to undoable here
   limit: 100, // Up to 100 player actions can be undone/redone
   // 🚧KJA problem with isPlayerAction undo filter:
@@ -34,12 +36,19 @@ const rootReducer = undoable(combinedReducer, {
   filter: (action) => isPlayerAction(action) && action.meta.playerAction,
 })
 
+// Combine undoable and non-undoable reducers
+const rootReducer = combineReducers({
+  undoable: undoableReducer,
+  events: eventsReducer, // Events are not wrapped in undoable
+})
+
 export type RootReducerState = ReturnType<typeof rootReducer>
 
 const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
 
 export const store = configureStore({
   reducer: rootReducer,
+  middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(eventsMiddleware()),
   ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
 })
 
@@ -52,7 +61,7 @@ store.subscribe(() => {
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = ReturnType<typeof store.getState>
+export type RootState = RootReducerState
 // Inferred type: e.g. {posts: PostsState, comments: CommentsState, users: UsersState}
 
 export type AppDispatch = typeof store.dispatch

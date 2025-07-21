@@ -7,10 +7,10 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import type { GameEvent } from '../model/gameStateSlice'
+import type { GameEvent } from '../model/eventsSlice'
 
 export function EventLog(): React.JSX.Element {
-  const events = useAppSelector((state) => state.present.gameState.events)
+  const events = useAppSelector((state) => state.events.events)
 
   return (
     <Card>

@@ -11,7 +11,7 @@ import { LabeledValue } from './LabeledValue'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.present.gameState)
+  const gameState = useAppSelector((state) => state.undoable.present.gameState)
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
@@ -52,14 +52,14 @@ export function GameControls(): React.JSX.Element {
               <Button
                 variant="contained"
                 onClick={() => dispatch(ActionCreators.undo())}
-                disabled={!useAppSelector((state) => state.past.length)}
+                disabled={!useAppSelector((state) => state.undoable.past.length)}
               >
                 Undo
               </Button>
               <Button
                 variant="contained"
                 onClick={() => dispatch(ActionCreators.redo())}
-                disabled={!useAppSelector((state) => state.future.length)}
+                disabled={!useAppSelector((state) => state.undoable.future.length)}
               >
                 Redo
               </Button>
