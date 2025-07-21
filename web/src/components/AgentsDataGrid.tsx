@@ -1,10 +1,4 @@
-import {
-  createRowSelectionManager,
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridRowId,
-  type GridRowSelectionModel,
-} from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import type { Agent } from '../model/gameStateSlice'
 import { setAgentSelection, type SerializableGridRowSelectionModel } from '../model/selectionSlice'
@@ -48,17 +42,38 @@ export function AgentsDataGrid(): React.JSX.Element {
   // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     console.log('Row selection changed:', newSelectionModel)
-    // 🚧KJA BUG this is serializing row IDs, not agent IDs.
-    // 🚧KJA this is converting GridRowSelectionModel to SerializableGridSelectionModel. Encapsulate.
-    const ids: Set<GridRowId> = newSelectionModel.ids
-    const serializableIds: (string | number)[] = [...ids]
-    const model: SerializableGridRowSelectionModel = { type: newSelectionModel.type, ids: serializableIds }
+    // Convert row IDs to agent IDs
+    const rowIds: Set<GridRowId> = newSelectionModel.ids
+    const agentIds: string[] = []
+
+    for (const rowId of rowIds) {
+      // Find the agent by rowId (rowId is index + 1, so we need index)
+      const agentIndex = Number(rowId) - 1
+      const agent = rows[agentIndex]
+      if (agent) {
+        agentIds.push(agent.id)
+      }
+    }
+
+    const model: SerializableGridRowSelectionModel = {
+      type: newSelectionModel.type,
+      ids: agentIds,
+    }
     dispatch(setAgentSelection(model))
   }
 
-  // 🚧KJA this is converting SerializableGridSelectionModel to GridRowSelectionModel. Encapsulate.
-  const idsSet = new Set<GridRowId>(agentsRowSelectionModel.ids)
-  // https://github.com/mui/mui-x/blob/de2de2e133267e61a030b9b4c53a4fe3c4af7a40/packages/x-data-grid/src/models/gridRowSelectionManager.ts#L51
+  // Convert agent IDs from state back to row IDs for DataGrid
+  const rowIds: GridRowId[] = []
+  for (const agentId of agentsRowSelectionModel.ids) {
+    // Find the row that contains this agent ID
+    const rowIndex = rows.findIndex((row) => row.id === agentId)
+    if (rowIndex !== -1) {
+      // rowId is index + 1
+      rowIds.push(rowIndex + 1)
+    }
+  }
+
+  const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: agentsRowSelectionModel.type, ids: idsSet }
 
   return (
