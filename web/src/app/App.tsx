@@ -25,13 +25,14 @@ function App(): React.JSX.Element {
             </Grid>
           </Grid>
         </Grid>
+
+        <Grid>
+          <AgentsDataGrid />
+        </Grid>
         <Grid>
           <Grid container spacing={2} direction="column">
             <Grid>
               <AssetsDataGrid />
-            </Grid>
-            <Grid>
-              <AgentsDataGrid />
             </Grid>
             <Grid>
               <BalanceSheetDataGrid />
