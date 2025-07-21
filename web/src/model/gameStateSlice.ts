@@ -48,6 +48,17 @@ const gameStateSlice = createSlice({
         return { payload: undefined, meta: { playerAction: true } }
       },
     },
+    sackAgents: {
+      reducer(state) {
+        if (state.agents.length > 0) {
+          state.agents.pop() // Remove the last hired agent
+          state.actionsCount += 1
+        }
+      },
+      prepare() {
+        return { payload: undefined, meta: { playerAction: true } }
+      },
+    },
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
     },
@@ -57,5 +68,5 @@ const gameStateSlice = createSlice({
   },
 })
 
-export const { advanceTurn, hireAgent, setMoney, reset } = gameStateSlice.actions
+export const { advanceTurn, hireAgent, sackAgents, setMoney, reset } = gameStateSlice.actions
 export default gameStateSlice.reducer
