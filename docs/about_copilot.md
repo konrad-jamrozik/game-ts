@@ -57,6 +57,9 @@ https://docs.github.com/en/copilot/get-started/plans-for-github-copilot#models
 Subject to multipliers:
 https://docs.github.com/en/copilot/concepts/copilot-billing/understanding-and-managing-requests-in-copilot#model-multipliers
 
+Compare with much worse Cursor pricing:
+https://docs.cursor.com/account/pricing
+
 # See also
 
 Copilot setup steps
