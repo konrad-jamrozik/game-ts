@@ -10,6 +10,7 @@ export type GameState = {
   turn: number
   agents: Agent[]
   money: number
+  nextAgentId: number
 }
 
 const initialState: GameState = {
@@ -17,6 +18,7 @@ const initialState: GameState = {
   turn: 1,
   agents: [],
   money: 100,
+  nextAgentId: 0,
 }
 
 const gameStateSlice = createSlice({
@@ -39,10 +41,11 @@ const gameStateSlice = createSlice({
     hireAgent: {
       reducer(state) {
         const newAgent: Agent = {
-          id: `agent-${state.agents.length.toString().padStart(3, '0')}`,
+          id: `agent-${state.nextAgentId.toString().padStart(3, '0')}`,
           turnHired: state.turn,
         }
         state.agents.push(newAgent)
+        state.nextAgentId += 1
         state.actionsCount += 1
       },
       prepare() {
