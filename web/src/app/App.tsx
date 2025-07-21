@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid'
 import { Fragment } from 'react'
 import { AgentsDataGrid } from '../components/AgentsDataGrid'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
+import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { PlayerActions } from '../components/PlayerActions'
@@ -31,6 +32,9 @@ function App(): React.JSX.Element {
             </Grid>
             <Grid>
               <AgentsDataGrid />
+            </Grid>
+            <Grid>
+              <BalanceSheetDataGrid />
             </Grid>
           </Grid>
         </Grid>
