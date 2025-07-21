@@ -14,7 +14,7 @@ export function PlayerActions(): React.JSX.Element {
     <Card>
       <CardHeader title="Player Actions" />
       <CardContent>
-        <Stack direction="row" spacing={2}>
+        <Stack direction="row">
           <Button variant="contained" onClick={() => dispatch(hireAgent())}>
             Hire Agent
           </Button>
