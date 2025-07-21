@@ -64,6 +64,10 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
     styleOverrides: {
       root: {
         backgroundColor: theme.palette.background.cardContents,
+        ...theme.unstable_sx({
+          // https://stackoverflow.com/a/71251997/986533
+          '&:last-child': { paddingBottom: 2 },
+        }),
       },
     },
   },

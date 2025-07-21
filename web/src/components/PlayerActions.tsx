@@ -16,7 +16,7 @@ export function PlayerActions(): React.JSX.Element {
       <CardContent>
         <Stack direction="row" spacing={2}>
           <Button variant="contained" onClick={() => dispatch(hireAgent())}>
-            hire agent
+            Hire Agent
           </Button>
         </Stack>
       </CardContent>
