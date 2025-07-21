@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { hireAgent, sackAgents, assignAgentsToContracting } from '../model/gameStateSlice'
+import { hireAgent, sackAgents, assignAgentsToContracting, recallAgents } from '../model/gameStateSlice'
 import { clearAgentSelection } from '../model/selectionSlice'
 
 export function PlayerActions(): React.JSX.Element {
@@ -15,6 +15,7 @@ export function PlayerActions(): React.JSX.Element {
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
   const [showAlert, setShowAlert] = React.useState(false)
+  const [alertMessage, setAlertMessage] = React.useState('')
 
   const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.id === id))
 
@@ -24,6 +25,7 @@ export function PlayerActions(): React.JSX.Element {
     const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
 
     if (nonAvailableAgents.length > 0) {
+      setAlertMessage('This action can be done only on available agents!')
       setShowAlert(true)
       return
     }
@@ -39,11 +41,28 @@ export function PlayerActions(): React.JSX.Element {
     const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
 
     if (nonAvailableAgents.length > 0) {
+      setAlertMessage('This action can be done only on available agents!')
       setShowAlert(true)
       return
     }
 
     dispatch(assignAgentsToContracting(selectedAgentIds))
+    dispatch(clearAgentSelection())
+    setShowAlert(false) // Hide alert on successful action
+  }
+
+  function handleRecallAgents(): void {
+    // Check if all selected agents are in "Away" state
+    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
+    const nonAwayAgents = selectedAgents.filter((agent) => agent.state !== 'Away')
+
+    if (nonAwayAgents.length > 0) {
+      setAlertMessage('This action can be done only on away agents!')
+      setShowAlert(true)
+      return
+    }
+
+    dispatch(recallAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
     setShowAlert(false) // Hide alert on successful action
   }
@@ -68,6 +87,11 @@ export function PlayerActions(): React.JSX.Element {
               Sack {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
             </Button>
           </Stack>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
+              Recall {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
+            </Button>
+          </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
             Assign {selectedAgentIds.length} to contracting
           </Button>
@@ -77,7 +101,7 @@ export function PlayerActions(): React.JSX.Element {
               onClose={() => setShowAlert(false)}
               sx={{ textAlign: 'center', alignItems: 'center' }}
             >
-              This action can be done only on available agents!
+              {alertMessage}
             </Alert>
           </Collapse>
         </Stack>

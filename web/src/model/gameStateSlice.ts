@@ -89,6 +89,21 @@ const gameStateSlice = createSlice({
         return { payload: agentIds, meta: { playerAction: true } }
       },
     },
+    recallAgents: {
+      reducer(state, action: PayloadAction<string[]>) {
+        const agentIdsToRecall = action.payload
+        for (const agent of state.agents) {
+          if (agentIdsToRecall.includes(agent.id)) {
+            agent.assignment = 'Standby'
+            agent.state = 'InTransit'
+          }
+        }
+        state.actionsCount += 1
+      },
+      prepare(agentIds: string[]) {
+        return { payload: agentIds, meta: { playerAction: true } }
+      },
+    },
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
     },
@@ -98,5 +113,6 @@ const gameStateSlice = createSlice({
   },
 })
 
-export const { advanceTurn, hireAgent, sackAgents, assignAgentsToContracting, setMoney, reset } = gameStateSlice.actions
+export const { advanceTurn, hireAgent, sackAgents, assignAgentsToContracting, recallAgents, setMoney, reset } =
+  gameStateSlice.actions
 export default gameStateSlice.reducer

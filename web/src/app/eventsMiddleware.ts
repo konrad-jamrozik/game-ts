@@ -1,7 +1,14 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
 import { addEvent } from '../model/eventsSlice'
-import { advanceTurn, hireAgent, reset, sackAgents, assignAgentsToContracting } from '../model/gameStateSlice'
+import {
+  advanceTurn,
+  hireAgent,
+  reset,
+  sackAgents,
+  assignAgentsToContracting,
+  recallAgents,
+} from '../model/gameStateSlice'
 import type { RootState } from './store'
 
 // Type guard for action
@@ -56,6 +63,17 @@ export function eventsMiddleware(): Middleware<object, RootState> {
       store.dispatch(
         addEvent({
           message: `Assigned ${agentCount} agent${agentCount > 1 ? 's' : ''} to contracting`,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+      // eslint-disable-next-line unicorn/prefer-regexp-test
+    } else if (recallAgents.match(action)) {
+      const agentIds = action.payload
+      const agentCount = agentIds.length
+      store.dispatch(
+        addEvent({
+          message: `Recalled ${agentCount} agent${agentCount > 1 ? 's' : ''}`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),
