@@ -63,6 +63,28 @@ in the inspector page, set the `Command` to `npx`, `Args` to `-y @mui/mcp@latest
 `<CssBaseline>` sets it to `theme.palette.background.default` per:
 https://mui.com/material-ui/react-css-baseline/
 
+# Theme dark mode confusion
+
+There appear to be two separate dark modes!
+
+First:
+`<ThemeProvider theme={theme} defaultMode="dark">`
+`<ThemeProvider theme={theme} defaultMode="light">`
+
+Second, secret one, by forcing palette to be dark:
+https://mui.com/material-ui/customization/dark-mode/#dark-mode-only
+
+``` typescript
+const darkTheme = createTheme({
+  palette: {
+    mode: 'dark',
+  },
+});
+```
+
+The second secret one actually changes the button styling to the one as shown to be dark in the default theme viewer:
+https://mui.com/material-ui/customization/default-theme/
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
