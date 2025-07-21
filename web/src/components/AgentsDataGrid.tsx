@@ -58,6 +58,7 @@ export function AgentsDataGrid(): React.JSX.Element {
               bgcolor: theme.palette.background.default,
               '& .MuiDataGrid-cell': { fontWeight: 100 },
               '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
+              maxHeight: '80vh',
             })}
             aria-label="personnel-table"
           />
