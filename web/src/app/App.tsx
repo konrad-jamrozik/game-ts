@@ -1,8 +1,8 @@
 import Grid from '@mui/material/Grid'
 import { Fragment } from 'react'
+import { AssetsDataGrid } from '../components/AssetsDataGrid'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
-import { GameStateDisplay } from '../components/GameStateDisplay'
 import { PlayerActions } from '../components/PlayerActions'
 import './App.css'
 
@@ -24,7 +24,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
         <Grid>
-          <GameStateDisplay />
+          <AssetsDataGrid />
         </Grid>
       </Grid>
     </Fragment>

@@ -102,5 +102,11 @@
     ],
     "todo-tree.highlights.enabled": true,
     "editor.codeLens": false,
-    "chat.tools.autoApprove": true,
+    "github.copilot.chat.agent.terminal.allowList": {
+        "npm run build": true,
+        "npm run test": true,
+        "npm run lint": true,
+        "npm run dev": true,
+        "cd web": true,
+    },
 }
