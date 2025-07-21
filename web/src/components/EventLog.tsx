@@ -11,8 +11,6 @@ import type { GameEvent } from '../model/gameStateSlice'
 
 export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.present.gameState.events)
-  const turn = useAppSelector((state) => state.present.gameState.turn)
-  const actionsCount = useAppSelector((state) => state.present.gameState.actionsCount)
 
   return (
     <Card>
@@ -28,7 +26,7 @@ export function EventLog(): React.JSX.Element {
               <ListItem key={event.id} disablePadding>
                 <ListItemText
                   primary={event.message}
-                  secondary={`T ${turn} / A ${actionsCount}`}
+                  secondary={`T ${event.turn} / A ${event.actionsCount}`}
                   sx={{
                     display: 'flex',
                     justifyContent: 'space-between',

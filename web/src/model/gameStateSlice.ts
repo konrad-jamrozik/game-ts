@@ -4,6 +4,8 @@ export type GameEvent = {
   id: number
   message: string
   timestamp: number
+  turn: number
+  actionsCount: number
 }
 
 export type GameState = {
@@ -26,11 +28,13 @@ const initialState: GameState = {
 
 const MAX_EVENTS = 10
 
-function addEvent(state: GameState, message: string): void {
+function addEvent(state: GameState, message: string, options?: { turn?: number; actionsCount?: number }): void {
   const event: GameEvent = {
     id: state.nextEventId,
     message,
     timestamp: Date.now(),
+    turn: options?.turn ?? state.turn,
+    actionsCount: options?.actionsCount ?? state.actionsCount,
   }
   state.events.unshift(event)
   state.nextEventId += 1
@@ -50,9 +54,11 @@ const gameStateSlice = createSlice({
       // Also style guide says many reducers should work with same player action: https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
       // See https://redux-toolkit.js.org/usage/usage-with-typescript#wrapping-createslice
       reducer(state) {
+        const previousTurn = state.turn
+        const previousActionsCount = state.actionsCount
         state.turn += 1
         state.actionsCount = 0
-        addEvent(state, `Turn ${state.turn} started`)
+        addEvent(state, `Turn ${state.turn} started`, { turn: previousTurn, actionsCount: previousActionsCount })
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }
