@@ -12,7 +12,7 @@ export function PlayerActions(): React.JSX.Element {
 
   return (
     <Card>
-      <CardHeader title="Player actions" />
+      <CardHeader title="Player Actions" />
       <CardContent>
         <Stack direction="row" spacing={2}>
           <Button variant="contained" onClick={() => dispatch(hireAgent())}>

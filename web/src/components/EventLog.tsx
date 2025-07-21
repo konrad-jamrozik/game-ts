@@ -11,6 +11,8 @@ import type { GameEvent } from '../model/gameStateSlice'
 
 export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.present.gameState.events)
+  const turn = useAppSelector((state) => state.present.gameState.turn)
+  const actionsCount = useAppSelector((state) => state.present.gameState.actionsCount)
 
   return (
     <Card>
@@ -24,7 +26,7 @@ export function EventLog(): React.JSX.Element {
           <List dense>
             {events.map((event: GameEvent) => (
               <ListItem key={event.id} disablePadding>
-                <ListItemText primary={event.message} secondary={new Date(event.timestamp).toLocaleTimeString()} />
+                <ListItemText primary={event.message} secondary={`T ${turn} / A ${actionsCount}`} />
               </ListItem>
             ))}
           </List>

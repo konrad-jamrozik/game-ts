@@ -17,7 +17,7 @@ export type GameState = {
 
 const initialState: GameState = {
   actionsCount: 0,
-  turn: 0,
+  turn: 1,
   agents: 0,
   money: 100,
   events: [],
