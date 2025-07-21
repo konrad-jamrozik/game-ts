@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting'
+export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'Away'
 
 export type Agent = {
   id: string
@@ -37,10 +37,10 @@ const gameStateSlice = createSlice({
       reducer(state) {
         state.turn += 1
         state.actionsCount = 0
-        // Change all InTransit agents to Available
+        // Handle InTransit agents based on their assignment
         for (const agent of state.agents) {
           if (agent.state === 'InTransit') {
-            agent.state = 'Available'
+            agent.state = agent.assignment === 'Contracting' ? 'Away' : 'Available'
           }
         }
       },
@@ -74,6 +74,21 @@ const gameStateSlice = createSlice({
         return { payload: agentIds, meta: { playerAction: true } }
       },
     },
+    assignAgentsToContracting: {
+      reducer(state, action: PayloadAction<string[]>) {
+        const agentIdsToAssign = action.payload
+        for (const agent of state.agents) {
+          if (agentIdsToAssign.includes(agent.id)) {
+            agent.assignment = 'Contracting'
+            agent.state = 'InTransit'
+          }
+        }
+        state.actionsCount += 1
+      },
+      prepare(agentIds: string[]) {
+        return { payload: agentIds, meta: { playerAction: true } }
+      },
+    },
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
     },
@@ -83,5 +98,5 @@ const gameStateSlice = createSlice({
   },
 })
 
-export const { advanceTurn, hireAgent, sackAgents, setMoney, reset } = gameStateSlice.actions
+export const { advanceTurn, hireAgent, sackAgents, assignAgentsToContracting, setMoney, reset } = gameStateSlice.actions
 export default gameStateSlice.reducer
