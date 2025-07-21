@@ -1,5 +1,4 @@
 import Alert from '@mui/material/Alert'
-import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -31,6 +30,7 @@ export function PlayerActions(): React.JSX.Element {
 
     dispatch(sackAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
+    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleAssignToContracting(): void {
@@ -45,24 +45,23 @@ export function PlayerActions(): React.JSX.Element {
 
     dispatch(assignAgentsToContracting(selectedAgentIds))
     dispatch(clearAgentSelection())
+    setShowAlert(false) // Hide alert on successful action
   }
 
   return (
-    <Card sx={{ width: 340 }}>
+    <Card sx={{ width: 380 }}>
       <CardHeader title="Player Actions" />
       <CardContent>
         <Stack direction="column" spacing={2}>
-          <Collapse in={showAlert}>
-            <Alert
-              severity="error"
-              onClose={() => setShowAlert(false)}
-              sx={{ textAlign: 'center', alignItems: 'center' }}
-            >
-              This action can be done only on available agents!
-            </Alert>
-          </Collapse>
           <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={() => dispatch(hireAgent())} fullWidth>
+            <Button
+              variant="contained"
+              onClick={() => {
+                dispatch(hireAgent())
+                setShowAlert(false) // Hide alert on successful action
+              }}
+              fullWidth
+            >
               Hire Agent
             </Button>
             <Button variant="contained" onClick={handleSackAgents} disabled={selectedAgentIds.length === 0} fullWidth>
@@ -72,6 +71,15 @@ export function PlayerActions(): React.JSX.Element {
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
             Assign {selectedAgentIds.length} to contracting
           </Button>
+          <Collapse in={showAlert}>
+            <Alert
+              severity="error"
+              onClose={() => setShowAlert(false)}
+              sx={{ textAlign: 'center', alignItems: 'center' }}
+            >
+              This action can be done only on available agents!
+            </Alert>
+          </Collapse>
         </Stack>
       </CardContent>
     </Card>

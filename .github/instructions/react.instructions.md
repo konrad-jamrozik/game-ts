@@ -16,4 +16,5 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Always use TypeScript types, never interfaces, unless it won't compile otherwise.
 - Always use function declarations instead of function expressions if possible.
 - Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
+- Every time a new reducer is added to `web/src/model/gameStateSlice.ts`, remember to add appropriate handler to `web/src/app/eventsMiddleware.ts`.
 - Prefer `<Fragment>` over `<>`.
