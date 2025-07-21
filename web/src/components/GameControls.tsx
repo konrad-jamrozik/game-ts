@@ -6,6 +6,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { wipeStorage } from '../app/persist'
 import { advanceTurn, reset } from '../model/gameStateSlice'
 import { LabeledValue } from './LabeledValue'
 
@@ -29,6 +30,18 @@ export function GameControls(): React.JSX.Element {
     // as defined in store.ts
     dispatch(ActionCreators.jumpToPast(0))
     dispatch(ActionCreators.clearHistory())
+  }
+
+  function handleWipeStorageClick(): void {
+    wipeStorage()
+      .then(() => {
+        // After wiping storage, reset the game state
+        dispatch(reset())
+        dispatch(ActionCreators.clearHistory())
+      })
+      .catch((error: unknown) => {
+        console.error('Failed to wipe storage:', error)
+      })
   }
 
   const labelWidthPx = 110
@@ -86,6 +99,18 @@ export function GameControls(): React.JSX.Element {
               }}
             >
               reset game
+            </Button>
+          </Stack>
+          <Stack direction="row" sx={{ paddingTop: 1 }} justifyContent="center">
+            <Button
+              variant="contained"
+              onClick={handleWipeStorageClick}
+              sx={{
+                backgroundColor: (theme) => theme.palette.error.dark,
+                '&:hover': { backgroundColor: (theme) => theme.palette.error.main },
+              }}
+            >
+              Wipe Storage
             </Button>
           </Stack>
         </Stack>

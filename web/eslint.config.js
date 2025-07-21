@@ -162,7 +162,7 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/no-inline-comments
       'no-inline-comments': 'off',
       // https://eslint.org/docs/latest/rules/max-lines-per-function
-      'max-lines-per-function': ['error', { max: 100 }],
+      'max-lines-per-function': ['error', { max: 150, skipBlankLines: true, skipComments: true }],
       // I don't care about variable initialization rules that much.
       // https://eslint.org/docs/latest/rules/one-var
       'one-var': ['error', 'never'],

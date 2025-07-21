@@ -65,3 +65,15 @@ export async function saveStateToDexie(state: RootState): Promise<void> {
     console.error('Failed to save state to Dexie', error)
   }
 }
+
+/**
+ * Wipe the entire IndexedDB database
+ */
+export async function wipeStorage(): Promise<void> {
+  try {
+    await db.delete()
+    console.log('IndexedDB database wiped successfully')
+  } catch (error) {
+    console.error('Failed to wipe IndexedDB database', error)
+  }
+}
