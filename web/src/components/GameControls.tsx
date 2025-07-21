@@ -66,7 +66,7 @@ export function GameControls(): React.JSX.Element {
             </Stack>
             <LabeledValue label="Actions" value={gameState.actionsCount} width={labelWidthPx} />
           </Stack>
-          <Stack direction="row">
+          <Stack direction="row" sx={{ paddingTop: 2 }} justifyContent="space-between">
             <Button
               variant="contained"
               onClick={handleResetTurn}
