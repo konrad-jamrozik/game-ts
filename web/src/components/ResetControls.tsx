@@ -50,8 +50,10 @@ export function ResetControls(): React.JSX.Element {
     dispatch(setResetControlsExpanded(isExpanded))
   }
 
+  // The disableGutters in Accordion prevents the heading text from slightly moving down vertically
+  // https://stackoverflow.com/questions/66816785/how-to-remove-accordion-gap-when-expanded
   return (
-    <Accordion expanded={expanded} onChange={handleAccordionChange}>
+    <Accordion expanded={expanded} onChange={handleAccordionChange} disableGutters>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="reset-controls-content"
