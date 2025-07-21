@@ -37,13 +37,13 @@ describe(App, () => {
     // Check initial turn value
     const turnValue = screen.getByLabelText(/turn/iu)
 
-    expect(turnValue).toHaveTextContent('0')
+    expect(turnValue).toHaveTextContent('1')
 
     // Click the advance turn button
     await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
     // Check updated turn value
-    expect(turnValue).toHaveTextContent('1')
+    expect(turnValue).toHaveTextContent('2')
   })
 
   test("Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset", async () => {
@@ -58,7 +58,7 @@ describe(App, () => {
     await userEvent.click(screen.getByRole('button', { name: /reset game/iu }))
 
     // Assert that now the game turn, agents count and money are reset to initial values.
-    expect(screen.getByLabelText(/turn/iu)).toHaveTextContent('0')
+    expect(screen.getByLabelText(/turn/iu)).toHaveTextContent('1')
     expect(screen.getByLabelText(/agents/iu)).toHaveTextContent('0')
     expect(screen.getByLabelText(/money/iu)).toHaveTextContent('100')
   })
