@@ -47,12 +47,19 @@ export function AgentsDataGrid(): React.JSX.Element {
 
   // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
+    console.log('Row selection changed:', newSelectionModel)
+    // 🚧KJA BUG this is serializing row IDs, not agent IDs.
     // 🚧KJA this is converting GridRowSelectionModel to SerializableGridSelectionModel. Encapsulate.
     const ids: Set<GridRowId> = newSelectionModel.ids
     const serializableIds: (string | number)[] = [...ids]
     const model: SerializableGridRowSelectionModel = { type: newSelectionModel.type, ids: serializableIds }
     dispatch(setAgentSelection(model))
   }
+
+  // 🚧KJA this is converting SerializableGridSelectionModel to GridRowSelectionModel. Encapsulate.
+  const idsSet = new Set<GridRowId>(agentsRowSelectionModel.ids)
+  // https://github.com/mui/mui-x/blob/de2de2e133267e61a030b9b4c53a4fe3c4af7a40/packages/x-data-grid/src/models/gridRowSelectionManager.ts#L51
+  const model: GridRowSelectionModel = { type: agentsRowSelectionModel.type, ids: idsSet }
 
   return (
     <DataGridCard
@@ -62,7 +69,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       getRowId={(row: AgentRow) => row.rowId}
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
-      rowSelectionModel={agentsRowSelectionModel}
+      rowSelectionModel={model}
     />
   )
 }
