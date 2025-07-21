@@ -7,6 +7,7 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
+import { clearEvents } from '../model/eventsSlice'
 import { advanceTurn, reset } from '../model/gameStateSlice'
 import { LabeledValue } from './LabeledValue'
 
@@ -35,7 +36,9 @@ export function GameControls(): React.JSX.Element {
   function handleWipeStorageClick(): void {
     wipeStorage()
       .then(() => {
-        // After wiping storage, reset the game state
+        // Clear events first, then reset the game state
+        // This ensures the events middleware can create a "Game reset" event
+        dispatch(clearEvents())
         dispatch(reset())
         dispatch(ActionCreators.clearHistory())
       })
