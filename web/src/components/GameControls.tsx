@@ -38,20 +38,17 @@ export function GameControls(): React.JSX.Element {
         minWidth: 350,
       }}
     >
-      <CardHeader
-        title="Game controls"
-        sx={(theme) => ({ paddingY: 1, bgcolor: theme.palette.background.cardHeader })}
-      />
+      <CardHeader title="Game controls" />
       <CardContent>
-        <Stack spacing={2}>
-          <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
+        <Stack>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Button variant="contained" onClick={handleAdvanceTurn}>
               advance turn
             </Button>
             <LabeledValue label="Turn" value={gameState.turn} width={labelWidthPx} />
           </Stack>
-          <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
-            <Stack direction="row" spacing={2}>
+          <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack direction="row">
               <Button
                 variant="contained"
                 onClick={() => dispatch(ActionCreators.undo())}
@@ -69,7 +66,7 @@ export function GameControls(): React.JSX.Element {
             </Stack>
             <LabeledValue label="Actions" value={gameState.actionsCount} width={labelWidthPx} />
           </Stack>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row">
             <Button
               variant="contained"
               onClick={handleResetTurn}

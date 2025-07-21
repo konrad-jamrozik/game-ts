@@ -17,7 +17,7 @@ export function LabeledValue({ label, value, width }: LabeledValueProps): React.
         width,
       }}
     >
-      <Stack direction="row" spacing={1} alignItems="center" justifyContent="space-between">
+      <Stack direction="row" alignItems="center" justifyContent="space-between">
         <Typography variant="body1">{label}:</Typography>
         <Typography variant="body1" sx={{ fontWeight: 'bold' }}>
           {value}
