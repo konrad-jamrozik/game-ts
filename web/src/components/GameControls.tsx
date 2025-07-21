@@ -30,7 +30,8 @@ export function GameControls(): React.JSX.Element {
       <CardContent>
         <Stack>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Button variant="contained" onClick={handleAdvanceTurn}>
+            {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
+            <Button variant="contained" onClick={handleAdvanceTurn} sx={{ width: 156.86 }}>
               advance turn
             </Button>
             <LabeledValue label="Turn" value={gameState.turn} width={labelWidthPx} />
