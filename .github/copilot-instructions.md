@@ -84,6 +84,7 @@ This project uses following technologies:
 ### State management files
 
 - `web/src/app/store.ts`: Redux toolkit store setup.
+- `web/src/app/persist.ts`: Redux store persistence setup using IndexedDB with Dexie.js.
 - `web/src/app/hooks.ts`: Custom hooks for accessing the Redux store.
 - `web/src/model/*slice.ts`: Redux slices for game state management.
 
@@ -95,8 +96,8 @@ This project uses following technologies:
 
 ## MCP servers
 
-- Use mui-mcp server for MUI questions.
-- Use context7 MCP server for documentation of used libraries or frameworks.
+- Use `mui-mcp` MCP server for MUI questions.
+- Use `context7` MCP server for documentation of used libraries or frameworks.
 
 ---
 For any unclear or missing conventions, check the `docs/` directory or ask for clarification.
