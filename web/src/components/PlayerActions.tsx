@@ -29,15 +29,17 @@ export function PlayerActions(): React.JSX.Element {
     <Card>
       <CardHeader title="Player Actions" />
       <CardContent>
-        <Stack direction="row" spacing={2}>
-          <Button variant="contained" onClick={() => dispatch(hireAgent())}>
-            Hire Agent
-          </Button>
-          <Button variant="contained" onClick={handleSackAgents} disabled={selectedAgentIds.length === 0}>
-            Sack {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
-          </Button>
+        <Stack direction="column" spacing={2}>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" onClick={() => dispatch(hireAgent())} fullWidth>
+              Hire Agent
+            </Button>
+            <Button variant="contained" onClick={handleSackAgents} disabled={selectedAgentIds.length === 0} fullWidth>
+              Sack {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
+            </Button>
+          </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
-            Assign to contracting
+            Assign {selectedAgentIds.length} to contracting
           </Button>
         </Stack>
       </CardContent>
