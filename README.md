@@ -4,9 +4,9 @@
 
 This repository contains personal code of Konrad Jamrozik, written for his game prototype.
 
-# Sources overview
+# Project overview
 
-Main sources are in the [`web/src`](web/src) directory, with tests in the [`web/tests`](web/tests) directory.
+The project sources, architecture, conventions and architecture are detailed in [`.github/copilot-instructions.md](.github/copilot-instructions.md).
 
 # License
 

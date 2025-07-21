@@ -14,18 +14,7 @@ This doc describes how the web project as set up, which is a substep of the over
 
 The web project is composed of following core technologies: TypeScript + Vite + React.
 
-It is using the following technologies, alphabetically:
-
-- IndexedDB with Dexie.js
-- MUI (Material-UI)
-- Node.js
-- npm
-- nvm-windows
-- React
-- Redux Toolkit (RTK)
-- TypeScript
-- Vite
-- Vitest
+It is using the technologies as listed in [`.github/copilot-instructions.md`](/.github/copilot-instructions.md).
 
 Setup steps executed:
 

@@ -77,7 +77,6 @@ This project uses following technologies:
 - `docs/`: 
 - `.github/workflows/web_gh_pages_CICD.yml`: Main CI/CD workflow. Runs lint, format check, tests, build, and deploy.
 
-
 ### Theme and styling files
 
 - `web/src/theme.tsx`: MUI theme configuration, styling the components.
