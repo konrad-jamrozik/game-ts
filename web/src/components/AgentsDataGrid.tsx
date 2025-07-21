@@ -1,10 +1,7 @@
-import Box from '@mui/material/Box'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
-import { DataGrid, type GridColDef, type GridRenderCellParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import type { Agent } from '../model/gameStateSlice'
+import { DataGridCard } from './DataGridCard'
 
 export type AgentRow = Agent & {
   // Adding an incremental row id for DataGrid (required by MUI DataGrid)
@@ -39,31 +36,13 @@ export function AgentsDataGrid(): React.JSX.Element {
     },
   ]
 
-  const colsMinWidth = columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)
   return (
-    <Card>
-      <CardHeader title="Agents" />
-      <CardContent>
-        <Box minWidth={colsMinWidth}>
-          <DataGrid
-            rows={rows}
-            columns={columns}
-            getRowId={(row: AgentRow) => row.rowId}
-            hideFooter
-            disableColumnMenu
-            disableRowSelectionOnClick
-            columnHeaderHeight={40}
-            rowHeight={30}
-            sx={(theme) => ({
-              bgcolor: theme.palette.background.default,
-              '& .MuiDataGrid-cell': { fontWeight: 100 },
-              '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
-              maxHeight: '80vh',
-            })}
-            aria-label="personnel-table"
-          />
-        </Box>
-      </CardContent>
-    </Card>
+    <DataGridCard
+      title="Agents"
+      rows={rows}
+      columns={columns}
+      getRowId={(row: AgentRow) => row.rowId}
+      ariaLabel="personnel-table"
+    />
   )
 }
