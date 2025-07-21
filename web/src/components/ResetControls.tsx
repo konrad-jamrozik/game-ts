@@ -10,8 +10,18 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
-import { clearEvents } from '../model/eventsSlice'
 import { reset } from '../model/gameStateSlice'
+
+function handleWipeStorageClick(): void {
+  wipeStorage()
+    .then(() => {
+      // Reload the page to let initialization logic handle empty storage
+      globalThis.location.reload()
+    })
+    .catch((error: unknown) => {
+      console.error('Failed to wipe storage:', error)
+    })
+}
 
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -27,20 +37,6 @@ export function ResetControls(): React.JSX.Element {
     // as defined in store.ts
     dispatch(ActionCreators.jumpToPast(0))
     dispatch(ActionCreators.clearHistory())
-  }
-
-  function handleWipeStorageClick(): void {
-    wipeStorage()
-      .then(() => {
-        // Clear events first, then reset the game state
-        // This ensures the events middleware can create a "Game reset" event
-        dispatch(clearEvents())
-        dispatch(reset())
-        dispatch(ActionCreators.clearHistory())
-      })
-      .catch((error: unknown) => {
-        console.error('Failed to wipe storage:', error)
-      })
   }
 
   const destructiveButtonSx = {
@@ -69,7 +65,7 @@ export function ResetControls(): React.JSX.Element {
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Button variant="contained" onClick={handleWipeStorageClick} sx={destructiveButtonSx}>
-              Wipe Storage
+              Wipe Storage & Reload
             </Button>
           </Stack>
         </Stack>
