@@ -13,12 +13,14 @@ export function PlayerActions(): React.JSX.Element {
   const agentsRowSelectionModel = useAppSelector((state) => state.selection.agents)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
 
-  // 🚧KJA this is converting SerializableGridSelectionModel to GridRowSelectionModel. Encapsulate.
-  const idsSet = new Set<GridRowId>(agentsRowSelectionModel.ids)
-  const model: GridRowSelectionModel = { type: agentsRowSelectionModel.type, ids: idsSet }
-  // https://github.com/mui/mui-x/blob/de2de2e133267e61a030b9b4c53a4fe3c4af7a40/packages/x-data-grid/src/models/gridRowSelectionManager.ts#L51
-  const selectionMgr = createRowSelectionManager(model)
-  const selectedAgentIds = agents.map((agent) => agent.id).filter((id) => selectionMgr.has(id))
+  // 🚧KJA this is reimplementing createRowSelectionManager because actual implementation is bused. Encapsulate.
+  // See https://chatgpt.com/c/687e00be-c7f0-8011-8484-75a11e10c298
+  const selectedAgentIds = agents
+    .map((agent) => agent.id)
+    .filter((id) => {
+      const include = agentsRowSelectionModel.type === 'include'
+      return include ? agentsRowSelectionModel.ids.includes(id) : !agentsRowSelectionModel.ids.includes(id)
+    })
 
   function handleSackAgents(): void {
     dispatch(sackAgents(selectedAgentIds))
