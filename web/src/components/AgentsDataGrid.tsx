@@ -11,7 +11,8 @@ import { setAgentSelection } from '../model/selectionSlice'
 import { DataGridCard } from './DataGridCard'
 
 export type AgentRow = Agent & {
-  // Adding an incremental row id for DataGrid (required by MUI DataGrid)
+  // row id for DataGrid (required by MUI DataGrid)
+  // https://mui.com/x/react-data-grid/row-definition/
   rowId: number
 }
 
@@ -23,7 +24,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Transform agents array to include rowId for DataGrid
   const rows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
-    rowId: index + 1,
+    rowId: index,
   }))
 
   const columns: GridColDef[] = [
@@ -45,21 +46,19 @@ export function AgentsDataGrid(): React.JSX.Element {
     },
   ]
 
-  // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
-    // Convert row IDs to agent IDs
-    const rowIds: Set<GridRowId> = newSelectionModel.ids
     const agentIds: string[] = []
     const mgr = createRowSelectionManager(newSelectionModel)
 
-    // TODO correctly handle here the case when selection model is 'exclude'
+    const existingRowIds = rows.map((row) => row.rowId)
+    const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
 
-    for (const rowId of rowIds) {
-      // Find the agent by rowId (rowId is index + 1, so we need index)
-      const agentIndex = Number(rowId) - 1
-      const agent = rows[agentIndex]
+    for (const rowId of includedRowIds) {
+      const agent = rows[rowId]
       if (agent) {
         agentIds.push(agent.id)
+      } else {
+        throw new Error(`Agent not found for rowId: ${rowId}`)
       }
     }
 
@@ -73,7 +72,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     const rowIndex = rows.findIndex((row) => row.id === agentId)
     if (rowIndex !== -1) {
       // rowId is index + 1
-      rowIds.push(rowIndex + 1)
+      rowIds.push(rowIndex)
     }
   }
 
