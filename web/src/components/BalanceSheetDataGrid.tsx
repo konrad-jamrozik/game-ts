@@ -29,5 +29,5 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
       ),
     },
   ]
-  return <DataGridCard title="Balance Sheet" rows={rows} columns={columns} ariaLabel="Balance Sheet" />
+  return <DataGridCard title="Balance Sheet" rows={rows} columns={columns} />
 }

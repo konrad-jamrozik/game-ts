@@ -21,9 +21,9 @@ export function AssetsDataGrid(): React.JSX.Element {
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<AssetRow, boolean | undefined>) => (
         // Use asset name as aria-label, lowercased for test queries
-        <span aria-label={params.row.name.toLowerCase()}>{params.value}</span>
+        <span aria-label={`${params.row.name.toLowerCase()}-row`}>{params.value}</span>
       ),
     },
   ]
-  return <DataGridCard title="Assets" rows={rows} columns={columns} ariaLabel="Game state display" />
+  return <DataGridCard title="Assets" rows={rows} columns={columns} />
 }

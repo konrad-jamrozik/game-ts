@@ -8,16 +8,9 @@ type DataGridCardProps = {
   title: string
   rows: readonly unknown[]
   columns: GridColDef[]
-  ariaLabel: string
 } & Omit<DataGridProps, 'rows' | 'columns'>
 
-export function DataGridCard({
-  title,
-  rows,
-  columns,
-  ariaLabel,
-  ...dataGridProps
-}: DataGridCardProps): React.JSX.Element {
+export function DataGridCard({ title, rows, columns, ...dataGridProps }: DataGridCardProps): React.JSX.Element {
   const colsMinWidth = columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)
 
   return (
@@ -39,7 +32,7 @@ export function DataGridCard({
               '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
               maxHeight: '80vh',
             })}
-            aria-label={ariaLabel}
+            aria-label={title}
             {...dataGridProps}
           />
         </Box>

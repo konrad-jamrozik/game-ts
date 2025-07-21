@@ -16,7 +16,7 @@ describe(App, () => {
       </Provider>,
     )
     // Check initial value using label association
-    const agentsValue = screen.getByLabelText(/agents/iu)
+    const agentsValue = screen.getByLabelText(/agents-row/iu)
 
     expect(agentsValue).toHaveTextContent('0')
 

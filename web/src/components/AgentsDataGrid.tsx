@@ -36,13 +36,5 @@ export function AgentsDataGrid(): React.JSX.Element {
     },
   ]
 
-  return (
-    <DataGridCard
-      title="Agents"
-      rows={rows}
-      columns={columns}
-      getRowId={(row: AgentRow) => row.rowId}
-      ariaLabel="personnel-table"
-    />
-  )
+  return <DataGridCard title="Agents" rows={rows} columns={columns} getRowId={(row: AgentRow) => row.rowId} />
 }
