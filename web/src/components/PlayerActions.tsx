@@ -19,6 +19,15 @@ export function PlayerActions(): React.JSX.Element {
   const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.id === id))
 
   function handleSackAgents(): void {
+    // Check if all selected agents are in "Available" state
+    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
+    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+
+    if (nonAvailableAgents.length > 0) {
+      setShowAlert(true)
+      return
+    }
+
     dispatch(sackAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
   }
