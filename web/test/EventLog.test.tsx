@@ -41,4 +41,26 @@ describe(EventLog, () => {
     expect(screen.getAllByText('Agent hired')).toHaveLength(1)
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
   })
+
+  test('shows "New game started" event when store initializes without persisted state', async () => {
+    expect.hasAssertions()
+
+    const { addEvent } = await import('../src/model/eventsSlice')
+    const state = store.getState()
+    const { gameState } = state.undoable.present
+
+    // Manually add the "New game started" event to simulate store initialization
+    store.dispatch(
+      addEvent({
+        message: 'New game started',
+        turn: gameState.turn,
+        actionsCount: gameState.actionsCount,
+      }),
+    )
+
+    renderEventLog()
+
+    expect(screen.getByText('New game started')).toBeInTheDocument()
+    expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
+  })
 })

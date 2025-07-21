@@ -52,6 +52,22 @@ export const store = configureStore({
   ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
 })
 
+// If no persisted state was loaded, add a "New game started" event
+if (!maybePersistedState) {
+  // Import addEvent dynamically to avoid circular dependency
+  const { addEvent } = await import('../model/eventsSlice')
+  const state = store.getState()
+  const { gameState } = state.undoable.present
+
+  store.dispatch(
+    addEvent({
+      message: 'New game started',
+      turn: gameState.turn,
+      actionsCount: gameState.actionsCount,
+    }),
+  )
+}
+
 const debouncedSave = debounce({ delay: 1000 }, async () => {
   await saveStateToDexie(store.getState())
 })
