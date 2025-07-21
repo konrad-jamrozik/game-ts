@@ -51,7 +51,7 @@ The only way I found to list the built-in tools is to do the following:
 
 # Premium requests
 
-Copilot Pro has 300 per months, and extra cost 0.04 / request, so 300 is 12 USD.
+Copilot Pro has 300 per month, and extra cost 0.04 / request, so 300 is 12 USD.
 https://docs.github.com/en/copilot/get-started/plans-for-github-copilot#models
 
 Subject to multipliers:

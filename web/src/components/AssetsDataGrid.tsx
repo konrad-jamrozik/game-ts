@@ -14,10 +14,9 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Money', id: 3, value: gameState.money },
   ]
   const columns: GridColDef[] = [
-    { field: 'name', flex: 1, headerName: 'Asset', minWidth: 100 },
+    { field: 'name', headerName: 'Asset', minWidth: 120 },
     {
       field: 'value',
-      flex: 1,
       headerName: 'Value',
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<AssetRow, boolean | undefined>) => (
@@ -27,7 +26,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     },
   ]
   return (
-    <Box display="flex" minWidth={200}>
+    <Box display="flex" minWidth={columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)}>
       <DataGrid
         rows={rows}
         columns={columns}

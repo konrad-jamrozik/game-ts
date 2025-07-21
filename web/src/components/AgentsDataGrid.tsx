@@ -20,7 +20,6 @@ export function AgentsDataGrid(): React.JSX.Element {
   const columns: GridColDef[] = [
     {
       field: 'id',
-      flex: 1,
       headerName: 'ID',
       minWidth: 120,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
@@ -29,8 +28,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     },
     {
       field: 'turnHired',
-      flex: 1,
-      headerName: 'Hired',
+      headerName: 'T. hired',
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label="hired-on-value">{params.value}</span>
@@ -39,7 +37,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   ]
 
   return (
-    <Box display="flex" minWidth={250}>
+    <Box display="flex" minWidth={columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)}>
       <DataGrid
         rows={rows}
         columns={columns}

@@ -38,7 +38,7 @@ const gameStateSlice = createSlice({
     hireAgent: {
       reducer(state) {
         const newAgent: Agent = {
-          id: `agent-${state.agents.length + 1}`,
+          id: `agent-${state.agents.length.toString().padStart(3, '0')}`,
           turnHired: state.turn,
         }
         state.agents.push(newAgent)
