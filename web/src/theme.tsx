@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { red } from '@mui/material/colors'
-import { createTheme, type ColorSystemOptions } from '@mui/material/styles'
+import {
+  createTheme,
+  type ColorSystemOptions,
+  type Components,
+  type CssVarsTheme,
+  type Theme,
+} from '@mui/material/styles'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -42,32 +48,32 @@ let theme = createTheme({
   },
 })
 
-// https://mui.com/material-ui/customization/theming/#createtheme-options-args-theme
-theme = createTheme(theme, {
-  components: {
-    MuiCardHeader: {
-      styleOverrides: {
-        root: {
-          backgroundColor: theme.palette.background.cardHeader,
-          ...theme.unstable_sx({
-            paddingY: 1,
-          }),
-        },
-      },
-    },
-    MuiCardContent: {
-      styleOverrides: {
-        root: {
-          backgroundColor: theme.palette.background.cardContents,
-        },
-      },
-    },
-    MuiStack: {
-      defaultProps: {
-        spacing: 2,
+const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme> = {
+  MuiCardHeader: {
+    styleOverrides: {
+      root: {
+        backgroundColor: theme.palette.background.cardHeader,
+        ...theme.unstable_sx({
+          paddingY: 1,
+        }),
       },
     },
   },
-})
+  MuiCardContent: {
+    styleOverrides: {
+      root: {
+        backgroundColor: theme.palette.background.cardContents,
+      },
+    },
+  },
+  MuiStack: {
+    defaultProps: {
+      spacing: 1,
+    },
+  },
+}
+
+// https://mui.com/material-ui/customization/theming/#createtheme-options-args-theme
+theme = createTheme(theme, { components })
 
 export default theme
