@@ -22,3 +22,8 @@ Other options I tried but didn't work:
    not with the VS Code background linting.
 
 [1]: https://github.com/DavidAnson/vscode-markdownlint#markdownlintlintworkspaceglobs
+
+# GitHub conventional commits
+
+- https://gist.github.com/qoomon/5dfcdf8eec66a051ecd85625518cfd13#types
+- https://www.conventionalcommits.org/en/v1.0.0/
