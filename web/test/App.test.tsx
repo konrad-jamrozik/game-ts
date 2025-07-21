@@ -4,7 +4,6 @@ import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
 import { store } from '../src/app/store'
-import { ResetControls } from '../src/components/ResetControls'
 import { setResetControlsExpanded } from '../src/model/settingsSlice'
 
 describe(App, () => {
@@ -56,9 +55,12 @@ describe(App, () => {
 
     render(
       <Provider store={store}>
-        <ResetControls />
+        <App />
       </Provider>,
     )
+
+    // First, click "Advance turn" to ensure the game state is "in progress"
+    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
     // Verify the button is accessible when expanded=true
     const resetButton = screen.getByRole('button', { name: /reset game/iu })
@@ -68,8 +70,9 @@ describe(App, () => {
     // Click the 'Reset game' button
     await userEvent.click(resetButton)
 
-    // Since this is just testing ResetControls in isolation, we verify the action was dispatched
-    // by checking that the button is still present (no error was thrown)
-    expect(resetButton).toBeInTheDocument()
+    // Verify the game state was reset by checking the turn is back to 1
+    const turnValue = screen.getByLabelText(/turn/iu)
+
+    expect(turnValue).toHaveTextContent('1')
   })
 })
