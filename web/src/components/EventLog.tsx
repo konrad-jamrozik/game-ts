@@ -26,7 +26,24 @@ export function EventLog(): React.JSX.Element {
           <List dense>
             {events.map((event: GameEvent) => (
               <ListItem key={event.id} disablePadding>
-                <ListItemText primary={event.message} secondary={`T ${turn} / A ${actionsCount}`} />
+                <ListItemText
+                  primary={event.message}
+                  secondary={`T ${turn} / A ${actionsCount}`}
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                  }}
+                  slotProps={{
+                    primary: {
+                      component: 'span',
+                    },
+                    secondary: {
+                      component: 'span',
+                      sx: { marginLeft: 2, flexShrink: 0 },
+                    },
+                  }}
+                />
               </ListItem>
             ))}
           </List>
