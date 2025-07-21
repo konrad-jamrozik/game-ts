@@ -53,6 +53,7 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
     styleOverrides: {
       root: {
         backgroundColor: theme.palette.background.cardHeader,
+        // https://mui.com/material-ui/customization/theme-components/#the-sx-syntax-experimental
         ...theme.unstable_sx({
           paddingY: 1,
         }),
