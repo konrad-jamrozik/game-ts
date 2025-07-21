@@ -37,6 +37,9 @@ dist/
 # Coverage
 coverage/
 
+# ESLint cache
+.eslintcache
+
 # Misc
 *.tgz
 *.lock
