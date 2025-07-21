@@ -83,6 +83,12 @@ See also:
 https://redux.js.org/api/store#dispatchaction
 - https://redux.js.org/usage/writing-logic-thunks
 
+# Handling "game event" logging actions
+
+Claude 4 implemented it using Redux Middleware, which appears to be exactly
+the right use case, as the official doc uses Logging as a use case for middleware:
+https://redux.js.org/understanding/history-and-design/middleware
+
 # Research
 
 Probably want to use Redux Toolkit (RTK), instead of React simple useReducer.
