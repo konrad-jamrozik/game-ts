@@ -52,6 +52,14 @@ export function AgentsDataGrid(): React.JSX.Element {
         <span aria-label={`agents-row-state-${params.id}`}>{params.value}</span>
       ),
     },
+    {
+      field: 'assignment',
+      headerName: 'Assignment',
+      minWidth: 120,
+      renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
+        <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
+      ),
+    },
   ]
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {

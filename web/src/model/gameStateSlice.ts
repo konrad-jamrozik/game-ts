@@ -6,6 +6,7 @@ export type Agent = {
   id: string
   turnHired: number
   state: AgentState
+  assignment: string
 }
 
 export type GameState = {
@@ -53,6 +54,7 @@ const gameStateSlice = createSlice({
           id: `agent-${state.nextAgentId.toString().padStart(3, '0')}`,
           turnHired: state.turn,
           state: 'InTransit',
+          assignment: 'Standby',
         }
         state.agents.push(newAgent)
         state.nextAgentId += 1
