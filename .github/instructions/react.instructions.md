@@ -20,6 +20,7 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Always use function declarations instead of function expressions if possible.
 - Follow linting and formatting rules (see `docs/about_eslint.md` and `docs/about_prettier.md`).
 - Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
+- Prefer `<Fragment>` over `<>`.
 - All React code should follow modern best practices (function components, hooks, strict typing).
 - Always verify any changes to React .tsx files by running appropriate Vitest tests.
 - Prefer named exports for components and hooks.
