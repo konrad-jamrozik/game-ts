@@ -1,33 +1,22 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
-export type SerializableGridRowSelectionModel = {
-  type: 'include' | 'exclude'
-  ids: (string | number)[]
-}
-
 export type SelectionState = {
-  agents: SerializableGridRowSelectionModel
+  agents: string[]
 }
 
 const initialState: SelectionState = {
-  agents: {
-    ids: [],
-    type: 'include',
-  },
+  agents: [],
 }
 
 const selectionSlice = createSlice({
   name: 'selection',
   initialState,
   reducers: {
-    setAgentSelection(state, action: PayloadAction<SerializableGridRowSelectionModel>) {
+    setAgentSelection(state, action: PayloadAction<string[]>) {
       state.agents = action.payload
     },
     clearAgentSelection(state) {
-      state.agents = {
-        ids: [],
-        type: 'include',
-      }
+      state.agents = []
     },
   },
 })

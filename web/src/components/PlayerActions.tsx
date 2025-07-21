@@ -10,22 +10,15 @@ import { clearAgentSelection } from '../model/selectionSlice'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const agentsRowSelectionModel = useAppSelector((state) => state.selection.agents)
+  const agentSelection = useAppSelector((state) => state.selection.agents)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
-  console.log('rendering PlayerActions')
 
-  // Since agentsRowSelectionModel now contains agent IDs, we can use them directly
-  const selectedAgentIds = agentsRowSelectionModel.ids.filter(
-    (id): id is string => typeof id === 'string' && agents.some((agent) => agent.id === id),
-  )
+  const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.id === id))
 
   function handleSackAgents(): void {
     dispatch(sackAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
   }
-
-  console.log('agents:', agents)
-  console.log('selectedAgentIds:', selectedAgentIds)
 
   return (
     <Card>

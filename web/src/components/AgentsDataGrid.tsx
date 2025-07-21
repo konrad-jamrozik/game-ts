@@ -1,7 +1,13 @@
-import type { GridColDef, GridRenderCellParams, GridRowId, GridRowSelectionModel } from '@mui/x-data-grid'
+import {
+  createRowSelectionManager,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridRowId,
+  type GridRowSelectionModel,
+} from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import type { Agent } from '../model/gameStateSlice'
-import { setAgentSelection, type SerializableGridRowSelectionModel } from '../model/selectionSlice'
+import { setAgentSelection } from '../model/selectionSlice'
 import { DataGridCard } from './DataGridCard'
 
 export type AgentRow = Agent & {
@@ -12,7 +18,7 @@ export type AgentRow = Agent & {
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const agentsRowSelectionModel = useAppSelector((state) => state.selection.agents)
+  const agentSelection = useAppSelector((state) => state.selection.agents)
 
   // Transform agents array to include rowId for DataGrid
   const rows: AgentRow[] = gameState.agents.map((agent, index) => ({
@@ -41,10 +47,12 @@ export function AgentsDataGrid(): React.JSX.Element {
 
   // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
-    console.log('Row selection changed:', newSelectionModel)
     // Convert row IDs to agent IDs
     const rowIds: Set<GridRowId> = newSelectionModel.ids
     const agentIds: string[] = []
+    const mgr = createRowSelectionManager(newSelectionModel)
+
+    // TODO correctly handle here the case when selection model is 'exclude'
 
     for (const rowId of rowIds) {
       // Find the agent by rowId (rowId is index + 1, so we need index)
@@ -55,16 +63,12 @@ export function AgentsDataGrid(): React.JSX.Element {
       }
     }
 
-    const model: SerializableGridRowSelectionModel = {
-      type: newSelectionModel.type,
-      ids: agentIds,
-    }
-    dispatch(setAgentSelection(model))
+    dispatch(setAgentSelection(agentIds))
   }
 
   // Convert agent IDs from state back to row IDs for DataGrid
   const rowIds: GridRowId[] = []
-  for (const agentId of agentsRowSelectionModel.ids) {
+  for (const agentId of agentSelection) {
     // Find the row that contains this agent ID
     const rowIndex = rows.findIndex((row) => row.id === agentId)
     if (rowIndex !== -1) {
@@ -74,7 +78,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   }
 
   const idsSet = new Set<GridRowId>(rowIds)
-  const model: GridRowSelectionModel = { type: agentsRowSelectionModel.type, ids: idsSet }
+  const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
   return (
     <DataGridCard
