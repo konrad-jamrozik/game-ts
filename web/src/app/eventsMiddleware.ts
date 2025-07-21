@@ -15,10 +15,22 @@ export function eventsMiddleware(): Middleware<object, RootState> {
     // Dispatch events based on the action
     // eslint-disable-next-line unicorn/prefer-regexp-test
     if (advanceTurn.match(action)) {
-      store.dispatch(addEvent(`Turn ${gameState.turn} started`, gameState.turn - 1, gameState.actionsCount))
+      store.dispatch(
+        addEvent({
+          message: `Turn ${gameState.turn} started`,
+          turn: gameState.turn - 1,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
       // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (hireAgent.match(action)) {
-      store.dispatch(addEvent('Agent hired', gameState.turn, gameState.actionsCount))
+      store.dispatch(
+        addEvent({
+          message: 'Agent hired',
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
     }
 
     return result
