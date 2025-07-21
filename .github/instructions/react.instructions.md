@@ -17,6 +17,7 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 
 - Follow ESLint rules from `web/.eslintrc.js` and Prettier rules from `web/.prettierrc.js`.
 - Always use TypeScript types, never interfaces, unless it won't compile otherwise.
+- Always use function declarations instead of function expressions if possible.
 - Follow linting and formatting rules (see `docs/about_eslint.md` and `docs/about_prettier.md`).
 - Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
 - All React code should follow modern best practices (function components, hooks, strict typing).

@@ -365,6 +365,10 @@ export default plugTypescriptEslint.config([
       // Details here: https://stackoverflow.com/a/78494069/986533
       // https://github.com/testing-library/eslint-plugin-testing-library/blob/main/docs/rules/no-manual-cleanup.md
       'testing-library/no-manual-cleanup': 'off',
+
+      // Describe blocks in tests can be long and contain many test cases
+      // https://eslint.org/docs/latest/rules/max-lines-per-function
+      'max-lines-per-function': 'off',
     },
   },
 ])

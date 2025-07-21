@@ -38,6 +38,7 @@
 - **CI/CD:** All pushes to `main` trigger lint, format, test, build, and deploy to GitHub Pages.
 
 ## Integration Points & External Dependencies
+
 - **MUI (Material UI):** Used for UI components. MCP server is configured for AI assistance.
 - **React:** All UI is built with React and TypeScript. For React-specific conventions, see `docs/about_react.md` and `.github/instructions/react.instructions.md`.
 - **Radash:** Utility library, see `docs/about_radash_lodash.md`.

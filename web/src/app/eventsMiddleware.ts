@@ -4,6 +4,12 @@ import { addEvent } from '../model/eventsSlice'
 import { advanceTurn, hireAgent, reset } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
+// Type guard for action
+// Redux actions are defined by having "type" property of type "string".
+function hasType(obj: unknown): obj is { type: string } {
+  return typeof obj === 'object' && obj !== null && 'type' in obj && typeof (obj as { type: unknown }).type === 'string'
+}
+
 export function eventsMiddleware(): Middleware<object, RootState> {
   return (store) => (next) => (action) => {
     // Call the next middleware/reducer first to update the state
@@ -12,10 +18,6 @@ export function eventsMiddleware(): Middleware<object, RootState> {
     // Get the updated state
     const state = store.getState()
     const { gameState } = state.undoable.present
-
-    // Type guard for action
-    const hasType = (obj: unknown): obj is { type: string } => 
-      typeof obj === 'object' && obj !== null && 'type' in obj && typeof (obj as { type: unknown }).type === 'string'
 
     // Dispatch events based on the action
     // eslint-disable-next-line unicorn/prefer-regexp-test
