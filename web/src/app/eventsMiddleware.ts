@@ -1,6 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
+import { ActionCreators } from 'redux-undo'
 import { addEvent } from '../model/eventsSlice'
-import { advanceTurn, hireAgent } from '../model/gameStateSlice'
+import { advanceTurn, hireAgent, reset } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
 export function eventsMiddleware(): Middleware<object, RootState> {
@@ -11,6 +12,10 @@ export function eventsMiddleware(): Middleware<object, RootState> {
     // Get the updated state
     const state = store.getState()
     const { gameState } = state.undoable.present
+
+    // Type guard for action
+    const hasType = (obj: unknown): obj is { type: string } => 
+      typeof obj === 'object' && obj !== null && 'type' in obj && typeof (obj as { type: unknown }).type === 'string'
 
     // Dispatch events based on the action
     // eslint-disable-next-line unicorn/prefer-regexp-test
@@ -27,6 +32,39 @@ export function eventsMiddleware(): Middleware<object, RootState> {
       store.dispatch(
         addEvent({
           message: 'Agent hired',
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+      // eslint-disable-next-line unicorn/prefer-regexp-test
+    } else if (reset.match(action)) {
+      store.dispatch(
+        addEvent({
+          message: 'Game reset',
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+    } else if (hasType(action) && ActionCreators.undo().type === action.type) {
+      store.dispatch(
+        addEvent({
+          message: 'Action undone',
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+    } else if (hasType(action) && ActionCreators.redo().type === action.type) {
+      store.dispatch(
+        addEvent({
+          message: 'Action redone',
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+    } else if (hasType(action) && ActionCreators.jumpToPast(0).type === action.type) {
+      store.dispatch(
+        addEvent({
+          message: 'Turn reset',
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),
