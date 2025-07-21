@@ -10,7 +10,7 @@ export type AssetRow = {
 export function GameStateDisplay(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const rows = [
-    { name: 'Agents', id: 2, value: gameState.agents },
+    { name: 'Agents', id: 2, value: gameState.agents.length },
     { name: 'Money', id: 3, value: gameState.money },
   ]
   const columns: GridColDef[] = [

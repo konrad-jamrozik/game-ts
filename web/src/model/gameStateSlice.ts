@@ -1,16 +1,21 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
+export type Agent = {
+  id: string
+  turnHired: number
+}
+
 export type GameState = {
   actionsCount: number
   turn: number
-  agents: number
+  agents: Agent[]
   money: number
 }
 
 const initialState: GameState = {
   actionsCount: 0,
   turn: 1,
-  agents: 0,
+  agents: [],
   money: 100,
 }
 
@@ -32,7 +37,11 @@ const gameStateSlice = createSlice({
     },
     hireAgent: {
       reducer(state) {
-        state.agents += 1
+        const newAgent: Agent = {
+          id: `agent-${state.agents.length + 1}`,
+          turnHired: state.turn,
+        }
+        state.agents.push(newAgent)
         state.actionsCount += 1
       },
       prepare() {
