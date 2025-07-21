@@ -13,6 +13,8 @@ type DataGridCardProps = {
 export function DataGridCard({ title, rows, columns, ...dataGridProps }: DataGridCardProps): React.JSX.Element {
   const colsMinWidth = columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)
 
+  // If I want less padding:
+  // <CardContent sx={{ padding: 1, margin: 0, '&:last-child': { paddingBottom: 1 } }}>
   return (
     <Card>
       <CardHeader title={title} />

@@ -15,7 +15,7 @@ export function EventLog(): React.JSX.Element {
   return (
     <Card
       sx={{
-        minWidth: 200,
+        minWidth: 300,
       }}
     >
       <CardHeader title="Event Log" />

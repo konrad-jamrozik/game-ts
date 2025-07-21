@@ -48,22 +48,17 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   return (
-    <Card>
+    <Card sx={{ width: 340 }}>
       <CardHeader title="Player Actions" />
       <CardContent>
         <Stack direction="column" spacing={2}>
           <Collapse in={showAlert}>
-            <Alert severity="error" onClose={() => setShowAlert(false)}>
-              <Box
-                sx={{
-                  maxWidth: '200px',
-                  wordBreak: 'break-word',
-                  whiteSpace: 'normal',
-                  overflowWrap: 'break-word',
-                }}
-              >
-                This action can be done only on available agents!
-              </Box>
+            <Alert
+              severity="error"
+              onClose={() => setShowAlert(false)}
+              sx={{ textAlign: 'center', alignItems: 'center' }}
+            >
+              This action can be done only on available agents!
             </Alert>
           </Collapse>
           <Stack direction="row" spacing={2}>

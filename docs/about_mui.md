@@ -112,7 +112,8 @@ This can be solved in wrapping the text in `<Box>` e.g.:
   <Alert severity="error" onClose={() => setShowAlert(false)}>
     <Box
       sx={{
-        maxWidth: '200px',
+        minWidth: 0,
+        maxWidth: '100%',
         wordBreak: 'break-word',
         whiteSpace: 'normal',
         overflowWrap: 'break-word',
