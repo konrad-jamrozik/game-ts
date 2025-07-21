@@ -1,16 +1,15 @@
+import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
-import { Fragment } from 'react'
 import { AgentsDataGrid } from '../components/AgentsDataGrid'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
 import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { PlayerActions } from '../components/PlayerActions'
-import './App.css'
 
 function App(): React.JSX.Element {
   return (
-    <Fragment>
+    <Container maxWidth={false} sx={{ padding: 0 }}>
       <Grid container justifyContent={'center'} spacing={2} padding={2} bgcolor={'#30303052'}>
         <Grid>
           <EventLog />
@@ -40,7 +39,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
       </Grid>
-    </Fragment>
+    </Container>
   )
 }
 
