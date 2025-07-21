@@ -18,19 +18,19 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Follow ESLint rules from `web/.eslintrc.js` and Prettier rules from `web/.prettierrc.js`.
 - Always use TypeScript types, never interfaces, unless it won't compile otherwise.
 - Follow linting and formatting rules (see `docs/about_eslint.md` and `docs/about_prettier.md`).
+- Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
 - All React code should follow modern best practices (function components, hooks, strict typing).
 - Always verify any changes to React .tsx files by running appropriate Vitest tests.
 - Prefer named exports for components and hooks.
-- Use `useState`, `useEffect`, and other React hooks for state and side effects.
 - Keep components small and focused. Extract logic to custom hooks when reusable.
 - For guidance how to type React components, refer to `docs/about_react.md`.
-- Use `props` and TypeScript interfaces for component contracts.
+- Use `props` and TypeScript types for component contracts.
 - For styles, prefer CSS modules or MUI's styling solutions. Avoid global styles except in `main.css`.
 
 ## Testing & Verification
 
-- For testing, use Vitest and React Testing Library (see `docs/about_vitest.md`).
-The test file name is typically ${fileBasenameNoExtension}.test.tsx.
+- Always verify any changes to React .tsx files by running appropriate Vitest tests.
+Their file name is typically ${fileBasenameNoExtension}.test.tsx.
 - Use `.tsx` for components with JSX, `.ts` for logic-only files.
 
 ## Documentation & References
