@@ -1,37 +1,41 @@
 import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
-import { describe, expect, it, beforeEach } from 'vitest'
-import { store } from '../app/store'
-import { reset } from '../model/gameStateSlice'
-import { EventLog } from './EventLog'
+import { beforeEach, describe, expect, test } from 'vitest'
+import { store } from '../src/app/store'
+import { EventLog } from '../src/components/EventLog'
+import { reset } from '../src/model/gameStateSlice'
 
 function renderEventLog(): void {
   render(
     <Provider store={store}>
       <EventLog />
-    </Provider>
+    </Provider>,
   )
 }
 
-describe('EventLog', () => {
+describe(EventLog, () => {
   beforeEach(() => {
     // Reset the store before each test
     store.dispatch(reset())
   })
 
-  it('displays "No events yet" when there are no events', () => {
-    renderEventLog()
+  test('displays "No events yet" when there are no events', () => {
+    expect.hasAssertions()
     
+    renderEventLog()
+
     expect(screen.getByText('Event Log')).toBeInTheDocument()
     expect(screen.getByText('No events yet')).toBeInTheDocument()
   })
 
-  it('displays events when they exist in the state', async () => {
-    const { hireAgent } = await import('../model/gameStateSlice')
+  test('displays events when they exist in the state', async () => {
+    expect.hasAssertions()
+    
+    const { hireAgent } = await import('../src/model/gameStateSlice')
     store.dispatch(hireAgent())
-    
+
     renderEventLog()
-    
+
     expect(screen.getAllByText('Agent hired')).toHaveLength(1)
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
   })
