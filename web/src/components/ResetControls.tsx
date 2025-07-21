@@ -1,5 +1,10 @@
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Accordion from '@mui/material/Accordion'
+import AccordionDetails from '@mui/material/AccordionDetails'
+import AccordionSummary from '@mui/material/AccordionSummary'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import type { Theme } from '@mui/material/styles'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
@@ -7,7 +12,6 @@ import { useAppDispatch } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
 import { clearEvents } from '../model/eventsSlice'
 import { reset } from '../model/gameStateSlice'
-import { Fragment } from 'react'
 
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -45,20 +49,31 @@ export function ResetControls(): React.JSX.Element {
   }
 
   return (
-    <Fragment>
-      <Stack direction="row" sx={{ paddingTop: 2 }} justifyContent="space-between">
-        <Button variant="contained" onClick={handleResetTurn} sx={destructiveButtonSx}>
-          Reset Turn
-        </Button>
-        <Button variant="contained" onClick={handleResetGame} sx={destructiveButtonSx}>
-          reset game
-        </Button>
-      </Stack>
-      <Stack direction="row" sx={{ paddingTop: 1 }} justifyContent="center">
-        <Button variant="contained" onClick={handleWipeStorageClick} sx={destructiveButtonSx}>
-          Wipe Storage
-        </Button>
-      </Stack>
-    </Fragment>
+    <Accordion>
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="reset-controls-content"
+        id="reset-controls-header"
+      >
+        <Typography component="span">Reset controls</Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Stack>
+          <Stack direction="row" sx={{ paddingBottom: 1 }} justifyContent="space-between">
+            <Button variant="contained" onClick={handleResetTurn} sx={destructiveButtonSx}>
+              Reset Turn
+            </Button>
+            <Button variant="contained" onClick={handleResetGame} sx={destructiveButtonSx}>
+              reset game
+            </Button>
+          </Stack>
+          <Stack direction="row" justifyContent="center">
+            <Button variant="contained" onClick={handleWipeStorageClick} sx={destructiveButtonSx}>
+              Wipe Storage
+            </Button>
+          </Stack>
+        </Stack>
+      </AccordionDetails>
+    </Accordion>
   )
 }

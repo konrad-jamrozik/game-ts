@@ -54,7 +54,9 @@ export function GameControls(): React.JSX.Element {
             </Stack>
             <LabeledValue label="Actions" value={gameState.actionsCount} width={labelWidthPx} />
           </Stack>
-          <ResetControls />
+          <Stack sx={{ paddingTop: 1 }}>
+            <ResetControls />
+          </Stack>
         </Stack>
       </CardContent>
     </Card>
