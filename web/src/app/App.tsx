@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Grid'
 import { Fragment } from 'react'
+import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { GameStateDisplay } from '../components/GameStateDisplay'
 import { PlayerActions } from '../components/PlayerActions'
@@ -16,6 +17,9 @@ function App(): React.JSX.Element {
             </Grid>
             <Grid>
               <PlayerActions />
+            </Grid>
+            <Grid>
+              <EventLog />
             </Grid>
           </Grid>
         </Grid>
