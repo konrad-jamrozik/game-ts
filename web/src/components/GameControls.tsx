@@ -23,7 +23,7 @@ export function GameControls(): React.JSX.Element {
   return (
     <Card
       sx={{
-        minWidth: 350,
+        minWidth: 200,
       }}
     >
       <CardHeader title="Game Controls" />

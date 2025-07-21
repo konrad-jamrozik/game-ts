@@ -98,6 +98,32 @@ I think the weird secret behavior is explained by this:
 
 From the same page.
 
+# Forcing line break in Alert
+
+Per:
+https://mui.com/material-ui/react-alert/
+
+> The Alert component wraps around its content, and stretches to fill its enclosing container.
+
+This can be solved in wrapping the text in `<Box>` e.g.:
+
+```typescript
+<Collapse in={showAlert}>
+  <Alert severity="error" onClose={() => setShowAlert(false)}>
+    <Box
+      sx={{
+        maxWidth: '200px',
+        wordBreak: 'break-word',
+        whiteSpace: 'normal',
+        overflowWrap: 'break-word',
+      }}
+    >
+      This action can be done only on available agents!
+    </Box>
+  </Alert>
+</Collapse>
+```
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector

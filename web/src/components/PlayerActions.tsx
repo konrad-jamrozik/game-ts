@@ -1,4 +1,5 @@
 import Alert from '@mui/material/Alert'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
@@ -53,7 +54,16 @@ export function PlayerActions(): React.JSX.Element {
         <Stack direction="column" spacing={2}>
           <Collapse in={showAlert}>
             <Alert severity="error" onClose={() => setShowAlert(false)}>
-              This action can be done only on available agents!
+              <Box
+                sx={{
+                  maxWidth: '200px',
+                  wordBreak: 'break-word',
+                  whiteSpace: 'normal',
+                  overflowWrap: 'break-word',
+                }}
+              >
+                This action can be done only on available agents!
+              </Box>
             </Alert>
           </Collapse>
           <Stack direction="row" spacing={2}>

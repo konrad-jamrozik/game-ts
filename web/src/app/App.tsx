@@ -24,7 +24,6 @@ function App(): React.JSX.Element {
             </Grid>
           </Grid>
         </Grid>
-
         <Grid>
           <AgentsDataGrid />
         </Grid>
