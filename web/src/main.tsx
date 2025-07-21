@@ -10,7 +10,7 @@ const rootElement = document.querySelector('#root')
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider theme={theme} defaultMode="dark">
         <CssBaseline enableColorScheme>
           <Provider store={store}>
             <App />

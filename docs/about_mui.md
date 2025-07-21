@@ -85,6 +85,13 @@ const darkTheme = createTheme({
 The second secret one actually changes the button styling to the one as shown to be dark in the default theme viewer:
 https://mui.com/material-ui/customization/default-theme/
 
+I think the weird secret behavior is explained by this:
+
+> Setting the dark mode this way only works if you are using the default palette. If you have a custom palette,
+> make sure that you have the correct values based on the mode. The next section explains how to do this.
+
+From the same page.
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector

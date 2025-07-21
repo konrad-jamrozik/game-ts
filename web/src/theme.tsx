@@ -28,7 +28,7 @@ const colorSystemOptions: ColorSystemOptions = {
       default: '#212121',
       paper: '#282828ff',
       cardHeader: '#343434ff',
-      cardContents: 'rgba(67, 67, 67, 1)',
+      cardContents: '#434343ff',
     },
   },
 }
