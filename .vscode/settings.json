@@ -47,6 +47,7 @@
         "Dexie",
         "docsmsft",
         "EACCES",
+        "indexeddb",
         "Jamrozik",
         "modelcontextprotocol",
         "radash",
@@ -101,4 +102,5 @@
     ],
     "todo-tree.highlights.enabled": true,
     "editor.codeLens": false,
+    "chat.tools.autoApprove": true,
 }
