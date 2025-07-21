@@ -11,15 +11,15 @@ function App(): React.JSX.Element {
     <Fragment>
       <Grid container justifyContent={'center'} spacing={2} padding={2} bgcolor={'#30303052'}>
         <Grid>
+          <EventLog />
+        </Grid>
+        <Grid>
           <Grid container spacing={2} direction="column">
             <Grid>
               <GameControls />
             </Grid>
             <Grid>
               <PlayerActions />
-            </Grid>
-            <Grid>
-              <EventLog />
             </Grid>
           </Grid>
         </Grid>

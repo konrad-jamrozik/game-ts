@@ -13,7 +13,11 @@ export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
 
   return (
-    <Card>
+    <Card
+      sx={{
+        minWidth: 200,
+      }}
+    >
       <CardHeader title="Event Log" />
       <CardContent>
         {events.length === 0 ? (
