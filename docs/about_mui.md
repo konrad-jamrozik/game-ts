@@ -63,6 +63,12 @@ in the inspector page, set the `Command` to `npx`, `Args` to `-y @mui/mcp@latest
 `<CssBaseline>` sets it to `theme.palette.background.default` per:
 https://mui.com/material-ui/react-css-baseline/
 
+# Selection model confusion
+
+https://mui.com/x/migration/migration-data-grid-v7/#selection
+https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
+https://mui.com/x/react-data-grid/row-selection/#apiref
+
 # Theme dark mode confusion
 
 There appear to be two separate dark modes!

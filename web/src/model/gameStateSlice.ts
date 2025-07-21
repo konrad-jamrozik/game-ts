@@ -24,9 +24,10 @@ const gameStateSlice = createSlice({
   initialState,
   reducers: {
     advanceTurn: {
-      // 🚧KJA Dedup this prepare be using something like "withPlayerAction" https://chatgpt.com/c/687c730e-12d4-8011-96fc-be2be1ef5e94
+      // 🚧KJA Dedup this "prepare" be using something like "withPlayerAction" https://chatgpt.com/c/687c730e-12d4-8011-96fc-be2be1ef5e94
       // Also style guide says many reducers should work with same player action: https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
       // See https://redux-toolkit.js.org/usage/usage-with-typescript#wrapping-createslice
+      // See https://redux.js.org/understanding/history-and-design/middleware
       reducer(state) {
         state.turn += 1
         state.actionsCount = 0
@@ -49,14 +50,13 @@ const gameStateSlice = createSlice({
       },
     },
     sackAgents: {
-      reducer(state) {
-        if (state.agents.length > 0) {
-          state.agents.pop() // Remove the last hired agent
-          state.actionsCount += 1
-        }
+      reducer(state, action: PayloadAction<string[]>) {
+        const agentIdsToSack = action.payload
+        state.agents = state.agents.filter((agent) => !agentIdsToSack.includes(agent.id))
+        state.actionsCount += 1
       },
-      prepare() {
-        return { payload: undefined, meta: { playerAction: true } }
+      prepare(agentIds: string[]) {
+        return { payload: agentIds, meta: { playerAction: true } }
       },
     },
     setMoney(state, action: PayloadAction<number>) {

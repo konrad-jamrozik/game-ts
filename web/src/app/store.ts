@@ -5,6 +5,7 @@ import undoable from 'redux-undo'
 import counterReducer from '../features/counter/counterSlice'
 import eventsReducer from '../model/eventsSlice'
 import gameStateReducer from '../model/gameStateSlice'
+import selectionReducer from '../model/selectionSlice'
 import settingsReducer from '../model/settingsSlice'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
   undoable: undoableReducer,
   events: eventsReducer, // Events are not wrapped in undoable
   settings: settingsReducer, // Settings are not wrapped in undoable
+  selection: selectionReducer, // Selection state is not wrapped in undoable
 })
 
 export type RootReducerState = ReturnType<typeof rootReducer>

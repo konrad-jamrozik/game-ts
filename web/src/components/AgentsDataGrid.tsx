@@ -1,6 +1,13 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
-import { useAppSelector } from '../app/hooks'
+import {
+  createRowSelectionManager,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridRowId,
+  type GridRowSelectionModel,
+} from '@mui/x-data-grid'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import type { Agent } from '../model/gameStateSlice'
+import { setAgentSelection, type SerializableGridRowSelectionModel } from '../model/selectionSlice'
 import { DataGridCard } from './DataGridCard'
 
 export type AgentRow = Agent & {
@@ -9,7 +16,9 @@ export type AgentRow = Agent & {
 }
 
 export function AgentsDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const agentsRowSelectionModel = useAppSelector((state) => state.selection.agents)
 
   // Transform agents array to include rowId for DataGrid
   const rows: AgentRow[] = gameState.agents.map((agent, index) => ({
@@ -36,5 +45,24 @@ export function AgentsDataGrid(): React.JSX.Element {
     },
   ]
 
-  return <DataGridCard title="Agents" rows={rows} columns={columns} getRowId={(row: AgentRow) => row.rowId} />
+  // https://mui.com/x/react-data-grid/row-selection/#controlled-row-selection
+  function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
+    // 🚧KJA this is converting GridRowSelectionModel to SerializableGridSelectionModel. Encapsulate.
+    const ids: Set<GridRowId> = newSelectionModel.ids
+    const serializableIds: (string | number)[] = [...ids]
+    const model: SerializableGridRowSelectionModel = { type: newSelectionModel.type, ids: serializableIds }
+    dispatch(setAgentSelection(model))
+  }
+
+  return (
+    <DataGridCard
+      title="Agents"
+      rows={rows}
+      columns={columns}
+      getRowId={(row: AgentRow) => row.rowId}
+      checkboxSelection
+      onRowSelectionModelChange={handleRowSelectionChange}
+      rowSelectionModel={agentsRowSelectionModel}
+    />
+  )
 }
