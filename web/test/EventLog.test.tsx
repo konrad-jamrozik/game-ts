@@ -21,7 +21,7 @@ describe(EventLog, () => {
 
   test('displays "No events yet" when there are no events', () => {
     expect.hasAssertions()
-    
+
     renderEventLog()
 
     expect(screen.getByText('Event Log')).toBeInTheDocument()
@@ -30,7 +30,7 @@ describe(EventLog, () => {
 
   test('displays events when they exist in the state', async () => {
     expect.hasAssertions()
-    
+
     const { hireAgent } = await import('../src/model/gameStateSlice')
     store.dispatch(hireAgent())
 
