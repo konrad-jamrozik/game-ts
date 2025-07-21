@@ -107,6 +107,7 @@
         "npm run test": true,
         "npm run lint": true,
         "npm run dev": true,
+        "npm test": true,
         "cd web": true,
     },
 }
