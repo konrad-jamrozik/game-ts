@@ -23,7 +23,11 @@ function handleWipeStorageClick(): void {
     })
 }
 
-export function ResetControls(): React.JSX.Element {
+type ResetControlsProps = {
+  expanded?: boolean
+}
+
+export function ResetControls({ expanded = false }: ResetControlsProps): React.JSX.Element {
   const dispatch = useAppDispatch()
 
   function handleResetGame(): void {
@@ -45,7 +49,7 @@ export function ResetControls(): React.JSX.Element {
   }
 
   return (
-    <Accordion>
+    <Accordion defaultExpanded={expanded}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="reset-controls-content"

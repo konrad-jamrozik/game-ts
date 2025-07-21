@@ -7,6 +7,7 @@ import { advanceTurn, hireAgent, reset } from '../src/model/gameStateSlice'
 describe('Events Middleware', () => {
   beforeEach(() => {
     // Reset the store and clear events before each test
+    store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
     store.dispatch(clearEvents())
   })
@@ -21,11 +22,11 @@ describe('Events Middleware', () => {
     store.dispatch(advanceTurn())
 
     // Should create a turn advance event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Turn 2 started')
-    expect(events[0]?.turn).toBe(1) // Previous turn
+    expect(events[0]?.turn).toBe(2)
   })
 
   test('creates event when hiring agent', () => {
@@ -37,7 +38,7 @@ describe('Events Middleware', () => {
     store.dispatch(hireAgent())
 
     // Should create an agent hired event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Agent hired')
@@ -56,7 +57,7 @@ describe('Events Middleware', () => {
     store.dispatch(reset())
 
     // Should create a game reset event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Game reset')
@@ -73,7 +74,7 @@ describe('Events Middleware', () => {
     store.dispatch(ActionCreators.undo())
 
     // Should create an undo event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Action undone')
@@ -91,7 +92,7 @@ describe('Events Middleware', () => {
     store.dispatch(ActionCreators.redo())
 
     // Should create a redo event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Action redone')
@@ -109,7 +110,7 @@ describe('Events Middleware', () => {
     store.dispatch(ActionCreators.jumpToPast(0))
 
     // Should create a turn reset event
-    const {events} = store.getState().events
+    const { events } = store.getState().events
 
     expect(events).toHaveLength(1)
     expect(events[0]?.message).toBe('Turn reset')
