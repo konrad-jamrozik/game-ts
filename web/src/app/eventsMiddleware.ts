@@ -25,7 +25,7 @@ export function eventsMiddleware(): Middleware<object, RootState> {
       store.dispatch(
         addEvent({
           message: `Turn ${gameState.turn} started`,
-          turn: gameState.turn - 1,
+          turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),
       )
