@@ -13,8 +13,6 @@ export function LabeledValue({ label, value, width }: LabeledValueProps): React.
   return (
     <Paper
       sx={{
-        backgroundColor: (theme) => theme.palette.grey[900],
-        color: (theme) => theme.palette.common.white,
         padding: 1,
         width,
       }}

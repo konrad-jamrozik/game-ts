@@ -34,6 +34,8 @@ export function GameStateDisplay(): React.JSX.Element {
         hideFooter
         disableColumnMenu
         disableRowSelectionOnClick
+        columnHeaderHeight={40}
+        rowHeight={30}
         sx={(theme) => ({
           bgcolor: theme.palette.background.default,
           '& .MuiDataGrid-cell': { fontWeight: 100 },

@@ -38,7 +38,10 @@ export function GameControls(): React.JSX.Element {
         minWidth: 350,
       }}
     >
-      <CardHeader title="Game controls" />
+      <CardHeader
+        title="Game controls"
+        sx={(theme) => ({ paddingY: 1, bgcolor: theme.palette.background.cardHeader })}
+      />
       <CardContent>
         <Stack spacing={2}>
           <Stack direction="row" spacing={2} justifyContent="space-between" alignItems="center">
