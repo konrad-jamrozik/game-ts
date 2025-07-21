@@ -1,8 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
+export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting'
+
 export type Agent = {
   id: string
   turnHired: number
+  state: AgentState
 }
 
 export type GameState = {
@@ -33,6 +36,12 @@ const gameStateSlice = createSlice({
       reducer(state) {
         state.turn += 1
         state.actionsCount = 0
+        // Change all InTransit agents to Available
+        for (const agent of state.agents) {
+          if (agent.state === 'InTransit') {
+            agent.state = 'Available'
+          }
+        }
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }
@@ -43,6 +52,7 @@ const gameStateSlice = createSlice({
         const newAgent: Agent = {
           id: `agent-${state.nextAgentId.toString().padStart(3, '0')}`,
           turnHired: state.turn,
+          state: 'InTransit',
         }
         state.agents.push(newAgent)
         state.nextAgentId += 1
