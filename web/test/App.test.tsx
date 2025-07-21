@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
 import { store } from '../src/app/store'
 import { ResetControls } from '../src/components/ResetControls'
+import { setResetControlsExpanded } from '../src/model/settingsSlice'
 
 describe(App, () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
@@ -50,9 +51,12 @@ describe(App, () => {
   test("Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset", async () => {
     expect.hasAssertions()
 
+    // Set the reset controls to be expanded in the store
+    store.dispatch(setResetControlsExpanded(true))
+
     render(
       <Provider store={store}>
-        <ResetControls expanded={true} />
+        <ResetControls />
       </Provider>,
     )
 

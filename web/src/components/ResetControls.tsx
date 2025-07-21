@@ -8,9 +8,10 @@ import Typography from '@mui/material/Typography'
 import type { Theme } from '@mui/material/styles'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
-import { useAppDispatch } from '../app/hooks'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
 import { reset } from '../model/gameStateSlice'
+import { setResetControlsExpanded } from '../model/settingsSlice'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -23,12 +24,9 @@ function handleWipeStorageClick(): void {
     })
 }
 
-type ResetControlsProps = {
-  expanded?: boolean
-}
-
-export function ResetControls({ expanded = false }: ResetControlsProps): React.JSX.Element {
+export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
+  const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
 
   function handleResetGame(): void {
     dispatch(reset())
@@ -48,8 +46,12 @@ export function ResetControls({ expanded = false }: ResetControlsProps): React.J
     '&:hover': { backgroundColor: (theme: Theme): string => theme.palette.error.main },
   }
 
+  function handleAccordionChange(_event: React.SyntheticEvent, isExpanded: boolean): void {
+    dispatch(setResetControlsExpanded(isExpanded))
+  }
+
   return (
-    <Accordion defaultExpanded={expanded}>
+    <Accordion expanded={expanded} onChange={handleAccordionChange}>
       <AccordionSummary
         expandIcon={<ExpandMoreIcon />}
         aria-controls="reset-controls-content"
