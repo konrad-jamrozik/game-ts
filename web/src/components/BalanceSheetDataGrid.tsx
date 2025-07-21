@@ -25,7 +25,7 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<BalanceSheetRow, boolean | undefined>) => (
         // Use item name as aria-label, lowercased for test queries
-        <span aria-label={params.row.name.toLowerCase().replace(' ', '-')}>{params.value}</span>
+        <span aria-label={`balance-sheet-row-${params.row.name.toLowerCase().replace(' ', '-')}`}>{params.value}</span>
       ),
     },
   ]

@@ -33,7 +33,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       headerName: 'ID',
       minWidth: 120,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-        <span aria-label="agent-id-value">{params.value}</span>
+        <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
       ),
     },
     {
@@ -41,7 +41,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       headerName: 'T. hired',
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label="hired-on-value">{params.value}</span>
+        <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
       ),
     },
     {
@@ -49,7 +49,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       headerName: 'State',
       minWidth: 120,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-        <span aria-label="agent-state-value">{params.value}</span>
+        <span aria-label={`agents-row-state-${params.id}`}>{params.value}</span>
       ),
     },
   ]
