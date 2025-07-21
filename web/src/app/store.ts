@@ -70,7 +70,7 @@ if (!maybePersistedState) {
   )
 }
 
-const debouncedSave = debounce({ delay: 1000 }, async () => {
+const debouncedSave = debounce({ delay: 300 }, async () => {
   await saveStateToDexie(store.getState())
 })
 
