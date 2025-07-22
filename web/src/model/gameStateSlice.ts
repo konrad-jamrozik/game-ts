@@ -1,6 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import initialAssets from '../ruleset/initialAssets'
 import type { GameState, Agent } from './model'
+import { getMoneyProjected } from './modelDerived'
 
 const initialState: GameState = {
   turn: 1,
@@ -27,6 +28,7 @@ const gameStateSlice = createSlice({
             agent.state = agent.assignment === 'Contracting' ? 'Away' : 'Available'
           }
         }
+        state.money = getMoneyProjected(state)
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }

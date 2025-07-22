@@ -1,23 +1,26 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
-import { AGENT_UPKEEP_COST } from '../ruleset/constants'
+import { getAgentUpkeep, getContractedIncome, getMoneyDiff, getMoneyProjected } from '../model/modelDerived'
 import { DataGridCard } from './DataGridCard'
 
 export type BalanceSheetRow = {
-  name: 'Money' | 'Funding' | 'Generated' | 'Agent upkeep' | 'Diff' | 'Projected'
+  name: 'Money' | 'Funding' | 'Contracted' | 'Agent upkeep' | 'Diff' | 'Projected'
   value: number
 }
 
 export function BalanceSheetDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const agentUpkeep = gameState.agents.length * AGENT_UPKEEP_COST
+  const contracted = getContractedIncome(gameState)
+  const agentUpkeep = getAgentUpkeep(gameState)
+  const diff = getMoneyDiff(gameState)
+  const projected = getMoneyProjected(gameState)
   const rows = [
     { name: 'Money', id: 1, value: gameState.money },
     { name: 'Funding', id: 2, value: gameState.funding },
-    { name: 'Generated', id: 3, value: 0 },
+    { name: 'Contracted', id: 3, value: contracted },
     { name: 'Agent upkeep', id: 4, value: agentUpkeep },
-    { name: 'Diff', id: 5, value: 0 },
-    { name: 'Projected', id: 6, value: 0 },
+    { name: 'Diff', id: 5, value: diff },
+    { name: 'Projected', id: 6, value: projected },
   ]
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Item', minWidth: 120 },
@@ -26,7 +29,6 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
       headerName: 'Value',
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<BalanceSheetRow, boolean | undefined>) => (
-        // Use item name as aria-label, lowercased for test queries
         <span aria-label={`balance-sheet-row-${params.row.name.toLowerCase().replace(' ', '-')}`}>{params.value}</span>
       ),
     },
