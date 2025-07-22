@@ -36,7 +36,7 @@ describe(App, () => {
       </Provider>,
     )
     // Check initial turn value
-    const turnValue = screen.getByLabelText(/turn/iu)
+    const turnValue = screen.getByLabelText(/label-turn/iu)
 
     expect(turnValue).toHaveTextContent('1')
 
