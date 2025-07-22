@@ -34,7 +34,7 @@ export function GameControls(): React.JSX.Element {
             <Button variant="contained" onClick={handleAdvanceTurn} sx={{ width: 156.86 }}>
               advance turn
             </Button>
-            <LabeledValue label="label-turn" value={gameState.turn} width={labelWidthPx} />
+            <LabeledValue label="Turn" value={gameState.turn} width={labelWidthPx} />
           </Stack>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack direction="row">
@@ -53,7 +53,7 @@ export function GameControls(): React.JSX.Element {
                 Redo
               </Button>
             </Stack>
-            <LabeledValue label="label-actions" value={gameState.actionsCount} width={labelWidthPx} />
+            <LabeledValue label="Actions" value={gameState.actionsCount} width={labelWidthPx} />
           </Stack>
           <Stack sx={{ paddingTop: 1 }}>
             <ResetControls />

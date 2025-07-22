@@ -18,10 +18,10 @@ export function LabeledValue({ label, value, width }: LabeledValueProps): React.
       }}
     >
       <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Typography variant="body1" id={`labeled-value-${label}`}>
+        <Typography variant="body1" id={`label-${label}`}>
           {label}:
         </Typography>
-        <Typography variant="body1" aria-labelledby={`labeled-value-${label}`} sx={{ fontWeight: 'bold' }}>
+        <Typography variant="body1" aria-labelledby={`label-${label}`} sx={{ fontWeight: 'bold' }}>
           {value}
         </Typography>
       </Stack>
