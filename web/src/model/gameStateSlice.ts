@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { AGENT_HIRE_COST } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
 import type { GameState, Agent } from './model'
 import { getMoneyProjected } from './modelDerived'
@@ -29,6 +30,7 @@ const gameStateSlice = createSlice({
           }
         }
         state.money = getMoneyProjected(state)
+        state.hireCost = 0
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }
@@ -45,6 +47,7 @@ const gameStateSlice = createSlice({
         state.agents.push(newAgent)
         state.nextAgentId += 1
         state.actionsCount += 1
+        state.hireCost += AGENT_HIRE_COST
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }

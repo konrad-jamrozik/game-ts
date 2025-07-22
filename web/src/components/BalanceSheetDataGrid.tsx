@@ -4,7 +4,7 @@ import { getAgentUpkeep, getContractedIncome, getMoneyDiff, getMoneyProjected } 
 import { DataGridCard } from './DataGridCard'
 
 export type BalanceSheetRow = {
-  name: 'Money' | 'Funding' | 'Contracted' | 'Agent upkeep' | 'Diff' | 'Projected'
+  name: 'Money' | 'Funding' | 'Contracted' | 'Agent upkeep' | 'Hire cost' | 'Diff' | 'Projected'
   value: number
 }
 
@@ -19,8 +19,9 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
     { name: 'Funding', id: 2, value: gameState.funding },
     { name: 'Contracted', id: 3, value: contracted },
     { name: 'Agent upkeep', id: 4, value: agentUpkeep },
-    { name: 'Diff', id: 5, value: diff },
-    { name: 'Projected', id: 6, value: projected },
+    { name: 'Hire cost', id: 5, value: gameState.hireCost },
+    { name: 'Diff', id: 6, value: diff },
+    { name: 'Projected', id: 7, value: projected },
   ]
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Item', minWidth: 120 },

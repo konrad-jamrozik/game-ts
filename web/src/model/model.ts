@@ -13,5 +13,6 @@ export type GameState = {
   agents: Agent[]
   money: number
   funding: number
+  hireCost: number
   nextAgentId: number
 }
