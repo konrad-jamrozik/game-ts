@@ -1,5 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
+import { AGENT_UPKEEP_COST } from '../ruleset/constants'
 import { DataGridCard } from './DataGridCard'
 
 export type BalanceSheetRow = {
@@ -9,11 +10,12 @@ export type BalanceSheetRow = {
 
 export function BalanceSheetDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const agentUpkeep = gameState.agents.length * AGENT_UPKEEP_COST
   const rows = [
     { name: 'Money', id: 1, value: gameState.money },
-    { name: 'Funding', id: 2, value: 0 },
+    { name: 'Funding', id: 2, value: gameState.funding },
     { name: 'Generated', id: 3, value: 0 },
-    { name: 'Agent upkeep', id: 4, value: 0 },
+    { name: 'Agent upkeep', id: 4, value: agentUpkeep },
     { name: 'Diff', id: 5, value: 0 },
     { name: 'Projected', id: 6, value: 0 },
   ]

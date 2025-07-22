@@ -30,7 +30,7 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 **CI/CD**:  CI/CD is set up to deploy to GitHub Pages on every push to `main`. 
   All pushes to `main` trigger lint, format, test, build, and deploy to GitHub Pages.
 
-## Developer Workflows
+## Build tasks
 
 All of the below commands to be run from the `web/` directory.
 
