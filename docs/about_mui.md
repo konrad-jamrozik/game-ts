@@ -125,6 +125,10 @@ This can be solved in wrapping the text in `<Box>` e.g.:
 </Collapse>
 ```
 
+# Unexpected MUI Grid width expansion upon component wrap
+
+https://chatgpt.com/c/687f3164-f170-8011-94a5-5e95acd3ccfa
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
