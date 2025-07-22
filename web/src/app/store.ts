@@ -46,9 +46,7 @@ const rootReducer = combineReducers({
   selection: selectionReducer, // Selection state is not wrapped in undoable
 })
 
-export type RootReducerState = ReturnType<typeof rootReducer>
-
-const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
+const maybePersistedState: RootState | undefined = await loadPersistedState()
 
 export const store = configureStore({
   reducer: rootReducer,
@@ -81,7 +79,15 @@ store.subscribe(() => {
 })
 
 // Infer the `RootState` and `AppDispatch` types from the store itself
-export type RootState = RootReducerState
+// Using rootReducer for type source to avoid circular dependency that would otherwise be caused by
+//                configureStore
+// --depends_on-> loadPersistedState
+// --depends_on-> RootState
+// --depends_on-> ReturnType<typeof store>
+// --depends_on-> configureStore
+// See also:
+// https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
+export type RootState = ReturnType<typeof rootReducer>
 // Inferred type: e.g. {posts: PostsState, comments: CommentsState, users: UsersState}
 
 export type AppDispatch = typeof store.dispatch

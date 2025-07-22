@@ -1,6 +1,6 @@
 // src/store/persist.ts
 import Dexie from 'dexie'
-import type { RootReducerState, RootState } from './store'
+import type { RootState } from './store'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'
@@ -29,7 +29,7 @@ const db = new GameDexie()
 /**
  * Load persisted state from IndexedDB and apply migrations if needed
  */
-export async function loadPersistedState(): Promise<RootReducerState | undefined> {
+export async function loadPersistedState(): Promise<RootState | undefined> {
   try {
     const record = await db.game.get(STORE_KEY)
     if (!record) {

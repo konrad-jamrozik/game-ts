@@ -17,7 +17,9 @@ function hasType(obj: unknown): obj is { type: string } {
   return typeof obj === 'object' && obj !== null && 'type' in obj && typeof (obj as { type: unknown }).type === 'string'
 }
 
-export function eventsMiddleware(): Middleware<object, RootState> {
+// eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export function eventsMiddleware(): Middleware<{}, RootState> {
   return (store) => (next) => (action) => {
     // Call the next middleware/reducer first to update the state
     const result = next(action)
