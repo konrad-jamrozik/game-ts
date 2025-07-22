@@ -1,14 +1,14 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { 
-  AGENT_HIRE_COST, 
-  AGENT_INITIAL_SKILL, 
+import {
+  AGENT_HIRE_COST,
+  AGENT_INITIAL_SKILL,
   AGENT_INITIAL_EXHAUSTION,
   AGENT_EXHAUSTION_INCREASE_PER_TURN,
-  AGENT_EXHAUSTION_RECOVERY_PER_TURN 
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
 } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
 import type { GameState, Agent } from './model'
-import { getMoneyProjected } from './modelDerived'
+import { getMoneyNewBalance } from './modelDerived'
 
 const initialState: GameState = {
   turn: 1,
@@ -34,7 +34,7 @@ const gameStateSlice = createSlice({
           if (agent.state === 'InTransit') {
             agent.state = agent.assignment === 'Contracting' ? 'OnAssignment' : 'Available'
           }
-          
+
           // Update exhaustion based on agent state and assignment
           if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
             agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
@@ -42,7 +42,7 @@ const gameStateSlice = createSlice({
             agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
           }
         }
-        state.money = getMoneyProjected(state)
+        state.money = getMoneyNewBalance(state)
         state.hireCost = 0
       },
       prepare() {

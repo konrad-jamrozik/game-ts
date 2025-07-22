@@ -16,6 +16,6 @@ export function getMoneyDiff(gameState: GameState): number {
   return gameState.funding + getContractedIncome(gameState) - getAgentUpkeep(gameState) - gameState.hireCost
 }
 
-export function getMoneyProjected(gameState: GameState): number {
+export function getMoneyNewBalance(gameState: GameState): number {
   return gameState.money + getMoneyDiff(gameState)
 }
