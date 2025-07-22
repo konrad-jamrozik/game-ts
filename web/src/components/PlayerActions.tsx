@@ -9,6 +9,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { hireAgent, sackAgents, assignAgentsToContracting, recallAgents } from '../model/gameStateSlice'
 import { clearAgentSelection } from '../model/selectionSlice'
+import { destructiveButtonSx } from '../styling/styleUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -83,13 +84,21 @@ export function PlayerActions(): React.JSX.Element {
             >
               Hire Agent
             </Button>
-            <Button variant="contained" onClick={handleSackAgents} disabled={selectedAgentIds.length === 0} fullWidth>
-              Sack {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
+            <Button
+              variant="contained"
+              onClick={handleSackAgents}
+              disabled={selectedAgentIds.length === 0}
+              sx={destructiveButtonSx}
+              fullWidth
+            >
+              Sack {selectedAgentIds.length} Agent
+              {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
             </Button>
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
-              Recall {selectedAgentIds.length} Agent{selectedAgentIds.length > 1 ? 's' : ''}
+              Recall {selectedAgentIds.length} Agent
+              {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
             </Button>
           </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>

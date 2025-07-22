@@ -79,7 +79,7 @@ This project uses following technologies:
 
 ### Theme and styling files
 
-- `web/src/theme.tsx`: MUI theme configuration, styling the components.
+- `web/src/styling/theme.tsx`: MUI theme configuration, styling the components.
 
 ### State management files
 

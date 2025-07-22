@@ -5,13 +5,13 @@ import AccordionSummary from '@mui/material/AccordionSummary'
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type { Theme } from '@mui/material/styles'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
 import { reset } from '../model/gameStateSlice'
 import { setResetControlsExpanded } from '../model/settingsSlice'
+import { destructiveButtonSx } from '../styling/styleUtils'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -39,11 +39,6 @@ export function ResetControls(): React.JSX.Element {
     // as defined in store.ts
     dispatch(ActionCreators.jumpToPast(0))
     dispatch(ActionCreators.clearHistory())
-  }
-
-  const destructiveButtonSx = {
-    backgroundColor: (theme: Theme): string => theme.palette.error.dark,
-    '&:hover': { backgroundColor: (theme: Theme): string => theme.palette.error.main },
   }
 
   function handleAccordionChange(_event: React.SyntheticEvent, isExpanded: boolean): void {

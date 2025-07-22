@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './app/App.tsx'
 import { store } from './app/store'
-import theme from './theme'
+import theme from './styling/theme.tsx'
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
