@@ -6,7 +6,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import type { Agent } from '../model/gameStateSlice'
+import type { Agent } from '../model/model'
 import { setAgentSelection } from '../model/selectionSlice'
 import { DataGridCard } from './DataGridCard'
 

@@ -1,28 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-
-export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'Away'
-
-export type Agent = {
-  id: string
-  turnHired: number
-  state: AgentState
-  assignment: string
-}
-
-export type GameState = {
-  actionsCount: number
-  turn: number
-  agents: Agent[]
-  money: number
-  nextAgentId: number
-}
+import initialAssets from '../ruleset/initialAssets'
+import type { GameState, Agent } from './model'
 
 const initialState: GameState = {
-  actionsCount: 0,
   turn: 1,
-  agents: [],
-  money: 100,
+  actionsCount: 0,
   nextAgentId: 0,
+  ...initialAssets,
 }
 
 const gameStateSlice = createSlice({
@@ -107,12 +91,23 @@ const gameStateSlice = createSlice({
     setMoney(state, action: PayloadAction<number>) {
       state.money = action.payload
     },
+    setFunding(state, action: PayloadAction<number>) {
+      state.funding = action.payload
+    },
     reset(state) {
       Object.assign(state, initialState)
     },
   },
 })
 
-export const { advanceTurn, hireAgent, sackAgents, assignAgentsToContracting, recallAgents, setMoney, reset } =
-  gameStateSlice.actions
+export const {
+  advanceTurn,
+  hireAgent,
+  sackAgents,
+  assignAgentsToContracting,
+  recallAgents,
+  setMoney,
+  setFunding,
+  reset,
+} = gameStateSlice.actions
 export default gameStateSlice.reducer
