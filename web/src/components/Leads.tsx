@@ -39,25 +39,35 @@ export function Leads(): React.JSX.Element {
     { title: 'foo', intelCost: 50, description: 'lorem ipsum', expiresIn: 3 },
     { title: 'bar', intelCost: 80, description: 'dolor sit', expiresIn: 5 },
     { title: 'baz', intelCost: 120, description: 'consectetur foobar', expiresIn: 2 },
-    // { title: 'qux', intelCost: 70, description: 'sed do baz qux', expiresIn: 7 },
+    { title: 'qux', intelCost: 70, description: 'sed do baz qux', expiresIn: 7 },
   ]
+
+  // Group cards into pairs
+  const cardPairs: LeadCardProps[][] = []
+  for (let index = 0; index < cards.length; index += 2) {
+    cardPairs.push(cards.slice(index, index + 2))
+  }
 
   return (
     <Card>
       <CardHeader title="Leads" />
       <CardContent>
-        <Grid container spacing={2} sx={{ overflowX: 'auto', width: '100%' }}>
-          {cards.map((card) => (
-            <Grid size={6} key={card.title} sx={{ minWidth: 0 }}>
-              <LeadCard
-                title={card.title}
-                intelCost={card.intelCost}
-                description={card.description}
-                expiresIn={card.expiresIn}
-              />
+        <Stack spacing={2}>
+          {cardPairs.map((pair) => (
+            <Grid container spacing={2} key={pair.map((card) => card.title).join('-')}>
+              {pair.map((card) => (
+                <Grid size={6} key={card.title}>
+                  <LeadCard
+                    title={card.title}
+                    intelCost={card.intelCost}
+                    description={card.description}
+                    expiresIn={card.expiresIn}
+                  />
+                </Grid>
+              ))}
             </Grid>
           ))}
-        </Grid>
+        </Stack>
       </CardContent>
     </Card>
   )

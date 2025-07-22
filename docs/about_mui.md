@@ -129,6 +129,42 @@ This can be solved in wrapping the text in `<Box>` e.g.:
 
 https://chatgpt.com/c/687f3164-f170-8011-94a5-5e95acd3ccfa
 
+E.g. when I have:
+
+``` typescript
+<Grid container>
+  <Grid size={6}>card1</Grid>
+  <Grid size={6}>card2</Grid>
+</Grid>
+```
+
+then this works but then if I add
+
+``` typescript
+<Grid container>
+  <Grid size={6}>card1</Grid>
+  <Grid size={6}>card2</Grid>
+  <Grid size={6}>card3</Grid>
+</Grid>
+```
+
+or more, then the total width by size is 18 which is more than allowed 12, which is likely the culprit.
+
+To circumvent the problem, render in pairs:
+
+``` typescript
+<Grid container>
+  <Grid container>
+    <Grid size={6}>card1</Grid>
+    <Grid size={6}>card2</Grid>
+  </Grid>
+  <Grid container>
+    <Grid size={6}>card3</Grid>
+    <Grid size={6}>card4</Grid>
+  </Grid>
+</Grid>
+```
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
