@@ -53,12 +53,12 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleRecallAgents(): void {
-    // Check if all selected agents are in "Away" state
+    // Check if all selected agents are in "OnAssignment" state
     const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonAwayAgents = selectedAgents.filter((agent) => agent.state !== 'Away')
+    const nonOnAssignmentAgents = selectedAgents.filter((agent) => agent.state !== 'OnAssignment')
 
-    if (nonAwayAgents.length > 0) {
-      setAlertMessage('This action can be done only on away agents!')
+    if (nonOnAssignmentAgents.length > 0) {
+      setAlertMessage('This action can be done only on OnAssignment agents!')
       setShowAlert(true)
       return
     }

@@ -60,6 +60,22 @@ export function AgentsDataGrid(): React.JSX.Element {
         <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
       ),
     },
+    {
+      field: 'skill',
+      headerName: 'Skill',
+      minWidth: 80,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-skill-${params.id}`}>{params.value}</span>
+      ),
+    },
+    {
+      field: 'exhaustion',
+      headerName: 'Exhaustion',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>
+      ),
+    },
   ]
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {

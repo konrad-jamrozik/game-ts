@@ -1,10 +1,12 @@
-export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'Away'
+export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'OnAssignment'
 
 export type Agent = {
   id: string
   turnHired: number
   state: AgentState
   assignment: string
+  skill: number
+  exhaustion: number
 }
 
 export type GameState = {

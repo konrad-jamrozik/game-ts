@@ -1,5 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { AGENT_HIRE_COST } from '../ruleset/constants'
+import { 
+  AGENT_HIRE_COST, 
+  AGENT_INITIAL_SKILL, 
+  AGENT_INITIAL_EXHAUSTION,
+  AGENT_EXHAUSTION_INCREASE_PER_TURN,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN 
+} from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
 import type { GameState, Agent } from './model'
 import { getMoneyProjected } from './modelDerived'
@@ -23,10 +29,17 @@ const gameStateSlice = createSlice({
       reducer(state) {
         state.turn += 1
         state.actionsCount = 0
-        // Handle InTransit agents based on their assignment
+        // Handle InTransit agents based on their assignment and update exhaustion
         for (const agent of state.agents) {
           if (agent.state === 'InTransit') {
-            agent.state = agent.assignment === 'Contracting' ? 'Away' : 'Available'
+            agent.state = agent.assignment === 'Contracting' ? 'OnAssignment' : 'Available'
+          }
+          
+          // Update exhaustion based on agent state and assignment
+          if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
+            agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
+          } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
+            agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
           }
         }
         state.money = getMoneyProjected(state)
@@ -43,6 +56,8 @@ const gameStateSlice = createSlice({
           turnHired: state.turn,
           state: 'InTransit',
           assignment: 'Standby',
+          skill: AGENT_INITIAL_SKILL,
+          exhaustion: AGENT_INITIAL_EXHAUSTION,
         }
         state.agents.push(newAgent)
         state.nextAgentId += 1

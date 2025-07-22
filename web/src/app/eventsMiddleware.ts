@@ -62,7 +62,7 @@ export function eventsMiddleware(): Middleware<object, RootState> {
       const agentCount = agentIds.length
       store.dispatch(
         addEvent({
-          message: `Assigned ${agentCount} agent${agentCount > 1 ? 's' : ''} to contracting`,
+          message: `OnAssignment ${agentCount} agent${agentCount > 1 ? 's' : ''} to contracting`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),

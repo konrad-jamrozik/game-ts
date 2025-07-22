@@ -7,7 +7,7 @@ export function getAgentUpkeep(gameState: GameState): number {
 
 export function getContractedIncome(gameState: GameState): number {
   return (
-    gameState.agents.filter((agent) => agent.assignment === 'Contracting' && agent.state === 'Away').length *
+    gameState.agents.filter((agent) => agent.assignment === 'Contracting' && agent.state === 'OnAssignment').length *
     AGENT_CONTRACTING_INCOME
   )
 }
