@@ -31,15 +31,14 @@ const gameStateSlice = createSlice({
         state.actionsCount = 0
         // Handle InTransit agents based on their assignment and update exhaustion
         for (const agent of state.agents) {
-          if (agent.state === 'InTransit') {
-            agent.state = agent.assignment === 'Contracting' ? 'OnAssignment' : 'Available'
-          }
-
           // Update exhaustion based on agent state and assignment
           if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
             agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
           } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
             agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
+          }
+          if (agent.state === 'InTransit') {
+            agent.state = agent.assignment === 'Contracting' ? 'OnAssignment' : 'Available'
           }
         }
         state.money = getMoneyNewBalance(state)
