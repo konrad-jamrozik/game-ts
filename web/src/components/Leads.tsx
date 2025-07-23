@@ -5,6 +5,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
+import { LabeledValue } from './LabeledValue'
 
 type LeadCardProps = {
   title: string
@@ -19,19 +20,17 @@ function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): 
       <CardContent>
         <Stack>
           {/* minWidth={'max-content'} */}
-          <Typography variant="h4" component="div" gutterBottom>
+          <Typography variant="h5" component="div" gutterBottom>
             {title}
           </Typography>
           <Stack direction="row" justifyContent="space-between">
-            <Typography variant="h6" color="text.secondary">
-              {intelCost} intel
-            </Typography>
-            <Typography variant="h6" color="text.secondary">
-              Expires in {expiresIn}
-            </Typography>
+            <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
+            <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
           </Stack>
         </Stack>
-        <Typography variant="subtitle1">{description}</Typography>
+        <Typography sx={{ paddingTop: 1 }} variant="body1">
+          {description}
+        </Typography>
       </CardContent>
     </Card>
   )
@@ -46,7 +45,7 @@ export function Leads(): React.JSX.Element {
       description: longDescription,
       expiresIn: 3,
     },
-    { title: 'bar', intelCost: 80, description: 'dolor sit', expiresIn: 5 },
+    { title: 'bar', intelCost: 9999, description: 'dolor sit', expiresIn: 999 },
     { title: 'baz', intelCost: 120, description: 'consectetur foobar', expiresIn: 2 },
     { title: 'qux', intelCost: 70, description: 'sed do baz qux', expiresIn: 7 },
   ]
