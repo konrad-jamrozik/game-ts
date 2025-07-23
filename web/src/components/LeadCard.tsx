@@ -25,24 +25,14 @@ export function LeadCard({
   selected,
 }: LeadCardProps): React.JSX.Element {
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
+  const selectedSx = selected === true ? { boxShadow: selectedBoxShadow } : {}
   return (
     <Card>
       <CardActionArea onClick={onClick} data-active={selected === true ? '' : undefined}>
-        <CardHeader
-          title={title}
-          sx={{
-            ...(selected === true && {
-              boxShadow: selectedBoxShadow,
-            }),
-          }}
-        />
-        <CardContent
-          sx={{
-            ...(selected === true && {
-              boxShadow: selectedBoxShadow,
-            }),
-          }}
-        >
+        {/* Note: the sx={selectedSx} must be defined on CardHeader and CardContent, not CardActionArea,
+        to win over the styleOverrides in theme.tsx in specificity. */}
+        <CardHeader title={title} sx={selectedSx} />
+        <CardContent sx={selectedSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
