@@ -13,9 +13,9 @@ declare module '@mui/material/styles' {
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
   interface TypeBackground {
     cardHeader: string
-    cardContents: string
+    cardContent: string
     nestedCardHeader: string
-    nestedCardContents: string
+    nestedCardContent: string
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -36,10 +36,10 @@ const colorSystemOptions: ColorSystemOptions = {
     background: {
       default: '#212121',
       paper: '#282828ff',
-      cardContents: 'hsl(0, 0%, 25%)',
+      cardContent: 'hsl(0, 0%, 25%)',
       cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
       nestedCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
-      nestedCardContents: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      nestedCardContent: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
     },
   },
 }
@@ -61,9 +61,6 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
         // https://mui.com/material-ui/customization/theme-components/#the-sx-syntax-experimental
         ...theme.unstable_sx({
           paddingY: 1,
-          '[data-active] &': {
-            backgroundColor: 'inherit',
-          },
         }),
       },
     },
@@ -71,26 +68,10 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
   MuiCardContent: {
     styleOverrides: {
       root: {
-        backgroundColor: theme.palette.background.cardContents,
+        backgroundColor: theme.palette.background.cardContent,
         ...theme.unstable_sx({
           // https://stackoverflow.com/a/71251997/986533
           '&:last-child': { paddingBottom: 2 },
-          '& .MuiCardHeader-root': {
-            backgroundColor: theme.palette.background.nestedCardHeader,
-          },
-          '& .MuiCardContent-root': {
-            backgroundColor: theme.palette.background.nestedCardContents,
-          },
-          // Respect parent's data-active state
-          '[data-active] &': {
-            backgroundColor: 'inherit',
-            '& .MuiCardHeader-root': {
-              backgroundColor: 'inherit',
-            },
-            '& .MuiCardContent-root': {
-              backgroundColor: 'inherit',
-            },
-          },
         }),
       },
     },

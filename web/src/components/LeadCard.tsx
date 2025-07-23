@@ -33,15 +33,21 @@ export function LeadCard({
         sx={(theme) => ({
           height: '100%',
           '&[data-active]': {
-            bgcolor: 'green',
-            '&:hover': {
-              bgcolor: 'darkgreen',
-            },
+            bgcolor: 'green', //theme.palette.action.selected,
           },
         })}
       >
-        <CardHeader title={title} />
-        <CardContent>
+        <CardHeader
+          title={title}
+          sx={(theme) => ({
+            // backgroundColor: theme.palette.background.nestedCardHeader,
+          })}
+        />
+        <CardContent
+          sx={(theme) => ({
+            // backgroundColor: theme.palette.background.nestedCardContent,
+          })}
+        >
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
