@@ -34,7 +34,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column">
+          <Grid container spacing={2} direction="column" alignItems="center">
             <Grid>
               <AgentsDataGrid />
             </Grid>
@@ -44,7 +44,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column">
+          <Grid container spacing={2} direction="column" alignItems="center">
             <Grid>
               <AssetsDataGrid />
             </Grid>

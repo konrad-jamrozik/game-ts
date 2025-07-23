@@ -15,9 +15,9 @@ type LeadCardProps = {
 
 function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): React.JSX.Element {
   return (
-    <Card sx={{ width: 'min-content' }}>
+    <Card>
       <CardContent>
-        <Stack minWidth={'300px'}>
+        <Stack>
           {/* minWidth={'max-content'} */}
           <Typography variant="h4" component="div" gutterBottom>
             {title}
@@ -38,11 +38,12 @@ function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): 
 }
 
 export function Leads(): React.JSX.Element {
+  const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
   const cards: LeadCardProps[] = [
     {
       title: 'Example quite long title indeed',
       intelCost: 50,
-      description: 'lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum lorem ipsum',
+      description: longDescription,
       expiresIn: 3,
     },
     { title: 'bar', intelCost: 80, description: 'dolor sit', expiresIn: 5 },
@@ -57,7 +58,7 @@ export function Leads(): React.JSX.Element {
   }
 
   return (
-    <Card>
+    <Card sx={{ maxWidth: '800px' }}>
       <CardHeader title="Leads" />
       <CardContent>
         <Stack spacing={2}>
