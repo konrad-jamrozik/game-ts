@@ -14,6 +14,8 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     cardHeader: string
     cardContents: string
+    nestedCardHeader: string
+    nestedCardContents: string
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -30,11 +32,14 @@ const colorSystemOptions: ColorSystemOptions = {
     error: {
       main: red.A400,
     },
+    // https://colors.artyclick.com/color-shades-finder/?color=#404040
     background: {
       default: '#212121',
       paper: '#282828ff',
-      cardHeader: '#343434ff',
-      cardContents: '#434343ff',
+      cardContents: '#404040ff',
+      cardHeader: '#333333ff', // Two shades darker than #404040
+      nestedCardContents: '#535353', // One tint brighter than #404040
+      nestedCardHeader: '#333333ff',
     },
   },
 }
@@ -67,6 +72,12 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
         ...theme.unstable_sx({
           // https://stackoverflow.com/a/71251997/986533
           '&:last-child': { paddingBottom: 2 },
+          '& .MuiCardHeader-root': {
+            backgroundColor: theme.palette.background.nestedCardHeader,
+          },
+          '& .MuiCardContent-root': {
+            backgroundColor: theme.palette.background.nestedCardContents,
+          },
         }),
       },
     },

@@ -17,12 +17,13 @@ type LeadCardProps = {
 function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): React.JSX.Element {
   return (
     <Card>
+      <CardHeader title={title} />
       <CardContent>
         <Stack>
           {/* minWidth={'max-content'} */}
-          <Typography variant="h5" component="div" gutterBottom>
+          {/* <Typography variant="h5" component="div" gutterBottom>
             {title}
-          </Typography>
+          </Typography> */}
           <Stack direction="row" justifyContent="space-between">
             <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
             <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />

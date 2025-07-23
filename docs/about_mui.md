@@ -165,6 +165,13 @@ To circumvent the problem, render in pairs:
 </Grid>
 ```
 
+# Color palettes
+
+- https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
+- https://bareynol.github.io/mui-theme-creator/
+- https://colors.artyclick.com/color-names-dictionary/
+  e.g. https://colors.artyclick.com/color-shades-finder/?color=#404040
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
