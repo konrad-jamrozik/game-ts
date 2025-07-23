@@ -3,39 +3,8 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import { LabeledValue } from './LabeledValue'
-
-type LeadCardProps = {
-  title: string
-  intelCost: number
-  description: string
-  expiresIn: number
-}
-
-function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): React.JSX.Element {
-  return (
-    <Card>
-      <CardHeader title={title} />
-      <CardContent>
-        <Stack>
-          {/* minWidth={'max-content'} */}
-          {/* <Typography variant="h5" component="div" gutterBottom>
-            {title}
-          </Typography> */}
-          <Stack direction="row" justifyContent="space-between">
-            <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
-            <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
-          </Stack>
-        </Stack>
-        <Typography sx={{ paddingTop: 1.7 }} variant="body1">
-          {description}
-        </Typography>
-      </CardContent>
-    </Card>
-  )
-}
+import { LeadCard, type LeadCardProps } from './LeadCard'
 
 export function Leads(): React.JSX.Element {
   const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
