@@ -61,6 +61,9 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
         // https://mui.com/material-ui/customization/theme-components/#the-sx-syntax-experimental
         ...theme.unstable_sx({
           paddingY: 1,
+          '[data-active] &': {
+            backgroundColor: 'inherit',
+          },
         }),
       },
     },
@@ -77,6 +80,16 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
           },
           '& .MuiCardContent-root': {
             backgroundColor: theme.palette.background.nestedCardContents,
+          },
+          // Respect parent's data-active state
+          '[data-active] &': {
+            backgroundColor: 'inherit',
+            '& .MuiCardHeader-root': {
+              backgroundColor: 'inherit',
+            },
+            '& .MuiCardContent-root': {
+              backgroundColor: 'inherit',
+            },
           },
         }),
       },

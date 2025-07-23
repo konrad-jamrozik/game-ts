@@ -1,4 +1,5 @@
 import Card from '@mui/material/Card'
+import CardActionArea from '@mui/material/CardActionArea'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
@@ -11,23 +12,47 @@ export type LeadCardProps = {
   intelCost: number
   description: string
   expiresIn: number
+  onClick?: () => void
+  selected?: boolean
 }
 
-export function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): React.JSX.Element {
+export function LeadCard({
+  title,
+  intelCost,
+  description,
+  expiresIn,
+  onClick,
+  selected,
+}: LeadCardProps): React.JSX.Element {
+  console.log(`rendering LeadCard: ${title}. selected: ${selected}`)
   return (
     <Card>
-      <CardHeader title={title} />
-      <CardContent>
-        <Stack>
-          <Stack direction="row" justifyContent="space-between">
-            <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
-            <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
+      <CardActionArea
+        onClick={onClick}
+        data-active={selected === true ? '' : undefined}
+        sx={(theme) => ({
+          height: '100%',
+          '&[data-active]': {
+            bgcolor: 'green',
+            '&:hover': {
+              bgcolor: 'darkgreen',
+            },
+          },
+        })}
+      >
+        <CardHeader title={title} />
+        <CardContent>
+          <Stack>
+            <Stack direction="row" justifyContent="space-between">
+              <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
+              <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
+            </Stack>
           </Stack>
-        </Stack>
-        <Typography sx={{ paddingTop: 1.7 }} variant="body1">
-          {description}
-        </Typography>
-      </CardContent>
+          <Typography sx={{ paddingTop: 1.7 }} variant="body1">
+            {description}
+          </Typography>
+        </CardContent>
+      </CardActionArea>
     </Card>
   )
 }

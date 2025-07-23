@@ -7,6 +7,8 @@ import * as React from 'react'
 import { LeadCard, type LeadCardProps } from './LeadCard'
 
 export function Leads(): React.JSX.Element {
+  const [selectedCard, setSelectedCard] = React.useState<string>()
+
   const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
   const cards: LeadCardProps[] = [
     {
@@ -40,6 +42,11 @@ export function Leads(): React.JSX.Element {
                     intelCost={card.intelCost}
                     description={card.description}
                     expiresIn={card.expiresIn}
+                    onClick={() => {
+                      console.log(`clicked card: ${card.title}`)
+                      setSelectedCard(card.title)
+                    }}
+                    selected={selectedCard === card.title}
                   />
                 </Grid>
               ))}
