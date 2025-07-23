@@ -171,6 +171,7 @@ To circumvent the problem, render in pairs:
 - https://bareynol.github.io/mui-theme-creator/
 - https://colors.artyclick.com/color-names-dictionary/
   e.g. https://colors.artyclick.com/color-shades-finder/?color=#404040
+- https://meyerweb.com/eric/tools/color-blend
 
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions

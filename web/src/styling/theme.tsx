@@ -38,8 +38,8 @@ const colorSystemOptions: ColorSystemOptions = {
       paper: '#282828ff',
       cardContents: '#404040ff',
       cardHeader: '#333333ff', // Two shades darker than #404040
-      nestedCardContents: '#535353', // One tint brighter than #404040
-      nestedCardHeader: '#333333ff',
+      nestedCardHeader: '#2e3844', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      nestedCardContents: '#3a4450', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
     },
   },
 }
