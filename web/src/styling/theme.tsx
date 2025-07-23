@@ -36,10 +36,10 @@ const colorSystemOptions: ColorSystemOptions = {
     background: {
       default: '#212121',
       paper: '#282828ff',
-      cardContents: '#404040ff',
-      cardHeader: '#333333ff', // Two shades darker than #404040
-      nestedCardHeader: '#2e3844', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
-      nestedCardContents: '#3a4450', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      cardContents: 'hsl(0, 0%, 25%)',
+      cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
+      nestedCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      nestedCardContents: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
     },
   },
 }

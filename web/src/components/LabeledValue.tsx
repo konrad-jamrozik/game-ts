@@ -15,7 +15,7 @@ export function LabeledValue({ label, value, sx }: LabeledValueProps): React.JSX
   return (
     <Paper
       sx={{
-        padding: 1,
+        paddingY: 0.5,
         paddingX: 1.5,
         // eslint-disable-next-line @typescript-eslint/no-misused-spread
         ...resolvedSx,

@@ -29,7 +29,7 @@ function LeadCard({ title, intelCost, description, expiresIn }: LeadCardProps): 
             <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
           </Stack>
         </Stack>
-        <Typography sx={{ paddingTop: 1 }} variant="body1">
+        <Typography sx={{ paddingTop: 1.7 }} variant="body1">
           {description}
         </Typography>
       </CardContent>
