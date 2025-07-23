@@ -24,29 +24,24 @@ export function LeadCard({
   onClick,
   selected,
 }: LeadCardProps): React.JSX.Element {
-  console.log(`rendering LeadCard: ${title}. selected: ${selected}`)
+  const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   return (
     <Card>
-      <CardActionArea
-        onClick={onClick}
-        data-active={selected === true ? '' : undefined}
-        sx={(theme) => ({
-          height: '100%',
-          '&[data-active]': {
-            bgcolor: 'green', //theme.palette.action.selected,
-          },
-        })}
-      >
+      <CardActionArea onClick={onClick} data-active={selected === true ? '' : undefined}>
         <CardHeader
           title={title}
-          sx={(theme) => ({
-            // backgroundColor: theme.palette.background.nestedCardHeader,
-          })}
+          sx={{
+            ...(selected === true && {
+              boxShadow: selectedBoxShadow,
+            }),
+          }}
         />
         <CardContent
-          sx={(theme) => ({
-            // backgroundColor: theme.palette.background.nestedCardContent,
-          })}
+          sx={{
+            ...(selected === true && {
+              boxShadow: selectedBoxShadow,
+            }),
+          }}
         >
           <Stack>
             <Stack direction="row" justifyContent="space-between">

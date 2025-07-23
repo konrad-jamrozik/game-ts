@@ -43,7 +43,6 @@ export function Leads(): React.JSX.Element {
                     description={card.description}
                     expiresIn={card.expiresIn}
                     onClick={() => {
-                      console.log(`clicked card: ${card.title}`)
                       setSelectedCard(card.title)
                     }}
                     selected={selectedCard === card.title}

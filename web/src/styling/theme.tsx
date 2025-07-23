@@ -73,6 +73,12 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
           // https://stackoverflow.com/a/71251997/986533
           '&:last-child': { paddingBottom: 2 },
         }),
+        '& .MuiCardHeader-root': {
+          backgroundColor: theme.palette.background.nestedCardHeader,
+        },
+        '& .MuiCardContent-root': {
+          backgroundColor: theme.palette.background.nestedCardContent,
+        },
       },
     },
   },
