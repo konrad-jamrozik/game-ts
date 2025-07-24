@@ -14,6 +14,7 @@ const initialState: GameState = {
   turn: 1,
   actionsCount: 0,
   nextAgentId: 0,
+  hireCost: 50,
   ...initialAssets,
 }
 
