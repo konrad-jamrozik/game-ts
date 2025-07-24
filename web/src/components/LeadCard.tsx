@@ -11,7 +11,7 @@ export type LeadCardProps = {
   title: string
   intelCost: number
   description: string
-  expiresIn: number
+  expiresIn: number | 'never'
   onClick?: () => void
   selected?: boolean
 }
@@ -36,7 +36,11 @@ export function LeadCard({
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
-              <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
+              {expiresIn !== 'never' ? (
+                <LabeledValue label="Expires in" value={expiresIn} sx={{ width: 138 }} />
+              ) : (
+                <LabeledValue label="Does not expire" sx={{ width: 142 }} />
+              )}
             </Stack>
           </Stack>
           <Typography sx={{ paddingTop: 1.7 }} variant="body1">

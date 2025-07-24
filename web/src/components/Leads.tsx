@@ -12,10 +12,10 @@ export function Leads(): React.JSX.Element {
   const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
   const cards: LeadCardProps[] = [
     {
-      title: 'Example quite long title indeed',
+      title: 'Criminal organizations',
       intelCost: 50,
       description: longDescription,
-      expiresIn: 3,
+      expiresIn: 'never',
     },
     { title: 'bar', intelCost: 9999, description: 'dolor sit', expiresIn: 999 },
     { title: 'baz', intelCost: 120, description: 'consectetur foobar', expiresIn: 2 },
