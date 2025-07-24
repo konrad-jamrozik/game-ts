@@ -9,17 +9,33 @@ import { LeadCard, type LeadCardProps } from './LeadCard'
 export function Leads(): React.JSX.Element {
   const [selectedCard, setSelectedCard] = React.useState<string>()
 
-  const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
+  // const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
+  // TODO leads shouldn't expire often, and be repeatable. But "Operations" should expire relatively quickly.
   const cards: LeadCardProps[] = [
     {
       title: 'Criminal organizations',
       intelCost: 50,
-      description: longDescription,
+      description: 'Investigate notorious criminal organizations operating from the shadows.',
       expiresIn: 'never',
     },
-    { title: 'bar', intelCost: 9999, description: 'dolor sit', expiresIn: 999 },
-    { title: 'baz', intelCost: 120, description: 'consectetur foobar', expiresIn: 2 },
-    { title: 'qux', intelCost: 70, description: 'sed do baz qux', expiresIn: 7 },
+    {
+      title: 'Followers of Dagon member apprehension',
+      intelCost: 50,
+      description: 'Apprehend a member of the Followers of Dagon cult.',
+      expiresIn: 3,
+    },
+    {
+      title: 'Followers of Dagon safe house location',
+      intelCost: 50,
+      description: 'Locate Followers of Dagon safe house.',
+      expiresIn: 'never',
+    },
+    {
+      title: 'Followers of Dagon cult profile',
+      intelCost: 100,
+      description: 'Establish a basic profile about the Followers of Dagon cult.',
+      expiresIn: 'never',
+    },
   ]
 
   // Group cards into pairs
