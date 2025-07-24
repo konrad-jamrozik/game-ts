@@ -3,7 +3,7 @@ import { useAppSelector } from '../app/hooks'
 import { DataGridCard } from './DataGridCard'
 
 export type AssetRow = {
-  name: 'Money' | 'Agents' | 'Turn'
+  name: 'Money' | 'Agents' | 'Intel' | 'Turn'
   value: number
 }
 
@@ -12,6 +12,7 @@ export function AssetsDataGrid(): React.JSX.Element {
   const rows = [
     { name: 'Agents', id: 2, value: gameState.agents.length },
     { name: 'Money', id: 3, value: gameState.money },
+    { name: 'Intel', id: 4, value: gameState.intel },
   ]
   const columns: GridColDef[] = [
     { field: 'name', headerName: 'Asset', minWidth: 120 },

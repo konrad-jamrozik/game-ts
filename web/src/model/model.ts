@@ -14,6 +14,7 @@ export type GameState = {
   turn: number
   agents: Agent[]
   money: number
+  intel: number
   funding: number
   hireCost: number
   nextAgentId: number

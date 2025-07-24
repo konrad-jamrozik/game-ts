@@ -8,7 +8,7 @@ import {
 } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
 import type { GameState, Agent } from './model'
-import { getMoneyNewBalance } from './modelDerived'
+import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
 
 const initialState: GameState = {
   turn: 1,
@@ -32,16 +32,21 @@ const gameStateSlice = createSlice({
         // Handle InTransit agents based on their assignment and update exhaustion
         for (const agent of state.agents) {
           // Update exhaustion based on agent state and assignment
-          if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
+          if (
+            agent.state === 'OnAssignment' &&
+            (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')
+          ) {
             agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
           } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
             agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
           }
           if (agent.state === 'InTransit') {
-            agent.state = agent.assignment === 'Contracting' ? 'OnAssignment' : 'Available'
+            agent.state =
+              agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
           }
         }
         state.money = getMoneyNewBalance(state)
+        state.intel = getIntelNewBalance(state)
         state.hireCost = 0
       },
       prepare() {
@@ -92,6 +97,21 @@ const gameStateSlice = createSlice({
         return { payload: agentIds, meta: { playerAction: true } }
       },
     },
+    assignAgentsToEspionage: {
+      reducer(state, action: PayloadAction<string[]>) {
+        const agentIdsToAssign = action.payload
+        for (const agent of state.agents) {
+          if (agentIdsToAssign.includes(agent.id)) {
+            agent.assignment = 'Espionage'
+            agent.state = 'InTransit'
+          }
+        }
+        state.actionsCount += 1
+      },
+      prepare(agentIds: string[]) {
+        return { payload: agentIds, meta: { playerAction: true } }
+      },
+    },
     recallAgents: {
       reducer(state, action: PayloadAction<string[]>) {
         const agentIdsToRecall = action.payload
@@ -124,6 +144,7 @@ export const {
   hireAgent,
   sackAgents,
   assignAgentsToContracting,
+  assignAgentsToEspionage,
   recallAgents,
   setMoney,
   setFunding,

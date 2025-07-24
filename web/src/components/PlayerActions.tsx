@@ -7,7 +7,13 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { hireAgent, sackAgents, assignAgentsToContracting, recallAgents } from '../model/gameStateSlice'
+import {
+  hireAgent,
+  sackAgents,
+  assignAgentsToContracting,
+  assignAgentsToEspionage,
+  recallAgents,
+} from '../model/gameStateSlice'
 import { clearAgentSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
@@ -48,6 +54,22 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     dispatch(assignAgentsToContracting(selectedAgentIds))
+    dispatch(clearAgentSelection())
+    setShowAlert(false) // Hide alert on successful action
+  }
+
+  function handleAssignToEspionage(): void {
+    // Check if all selected agents are in "Available" state
+    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
+    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+
+    if (nonAvailableAgents.length > 0) {
+      setAlertMessage('This action can be done only on available agents!')
+      setShowAlert(true)
+      return
+    }
+
+    dispatch(assignAgentsToEspionage(selectedAgentIds))
     dispatch(clearAgentSelection())
     setShowAlert(false) // Hide alert on successful action
   }
@@ -103,6 +125,9 @@ export function PlayerActions(): React.JSX.Element {
           </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
             Assign {selectedAgentIds.length} to contracting
+          </Button>
+          <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
+            Assign {selectedAgentIds.length} to espionage
           </Button>
           <Collapse in={showAlert}>
             <Alert
