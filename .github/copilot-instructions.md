@@ -23,25 +23,25 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 
 ## Key aspects and conventions of the project
 
-**Sources**: The main web app is in `web/` and uses React, TypeScript, Vite, MUI (Material UI), and Radash.
+**Sources**: The main web app sources is in `web/`. See Tech Stack below for details.
 
 **Language**: TypeScript is used throughout the project. Uses project references and modern ES2024 features.
 
 **CI/CD**:  CI/CD is set up to deploy to GitHub Pages on every push to `main`. 
   All pushes to `main` trigger lint, format, test, build, and deploy to GitHub Pages.
 
-## Build tasks
+## Verification of work and build tasks
 
-All of the below commands to be run from the `web/` directory.
+Run all of the below commands from the `web/` directory to verify your work:
 
-- **Install dependencies:** `npm clean-install` (see CI)
-- **Run dev server:** `npm run dev`
-- **Build:** `npm run build`
-- **Lint:** `npm run lint:cached` (strict, type-aware)
-- **Fix Lint:** `npm run lint:fix`
-- **Format:** `npm run format` (uses Prettier, standalone)
-- **Fix Format:** `npm run format:fix`
-- **Test:** `npm run test` (Vitest)
+- To check for obvious errors, run `npm run build`.
+- To check for code formatting issues, run `npm run format`.
+- To fix code formatting issues, run `npm run format:fix`.
+- To check for code style issues, run `npm run lint:cached`.
+- To fix code style issues, run `npm run lint:fix`.
+- To verify that unit tests pass, run `npm run test`.
+- To run the development server, run `npm run dev`.
+- To install dependencies, run `npm install`.
 
 ## Tech stack
 
