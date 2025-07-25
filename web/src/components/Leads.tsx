@@ -10,30 +10,36 @@ export function Leads(): React.JSX.Element {
   const [selectedCard, setSelectedCard] = React.useState<string>()
 
   // const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
-  // TODO leads shouldn't expire often, and be repeatable. But "Operations" should expire relatively quickly.
+  // 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
   const cards: LeadCardProps[] = [
     {
       title: 'Criminal organizations',
-      intelCost: 50,
+      intelCost: 20,
       description: 'Investigate notorious criminal organizations operating from the shadows.',
       expiresIn: 'never',
     },
     {
-      title: 'Followers of Dagon member apprehension',
-      intelCost: 50,
-      description: 'Apprehend a member of the Followers of Dagon cult.',
-      expiresIn: 3,
-    },
-    {
-      title: 'Followers of Dagon safe house location',
-      intelCost: 50,
-      description: 'Locate Followers of Dagon safe house.',
+      title: 'Red Dawn member apprehension',
+      intelCost: 20,
+      description: 'Apprehend a member of the Red Dawn cult.',
       expiresIn: 'never',
     },
     {
-      title: 'Followers of Dagon cult profile',
-      intelCost: 100,
-      description: 'Establish a basic profile about the Followers of Dagon cult.',
+      title: 'Red Dawn member interrogation',
+      intelCost: 0,
+      description: 'Interrogate a captured member of the Red Dawn cult.',
+      expiresIn: 'never',
+    },
+    {
+      title: 'Red Dawn cult profile',
+      intelCost: 50,
+      description: 'Establish a basic profile about the Red Dawn cult.',
+      expiresIn: 'never',
+    },
+    {
+      title: 'Red Dawn safe house location',
+      intelCost: 30,
+      description: 'Locate Red Dawn safe house.',
       expiresIn: 'never',
     },
   ]
