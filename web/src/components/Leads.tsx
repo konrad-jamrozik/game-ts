@@ -11,6 +11,7 @@ import { LeadCard, type LeadCardProps } from './LeadCard'
 export function Leads(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLead = useAppSelector((state) => state.selection.selectedLead)
+  const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
 
   // const longDescription = Array.from({ length: 10 }).fill('lorem ipsum').join(' ')
   // 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
@@ -74,9 +75,12 @@ export function Leads(): React.JSX.Element {
                     description={card.description}
                     expiresIn={card.expiresIn}
                     onClick={() => {
-                      dispatch(setLeadSelection(card.id))
+                      if (!investigatedLeads.includes(card.id)) {
+                        dispatch(setLeadSelection(card.id))
+                      }
                     }}
                     selected={selectedLead === card.id}
+                    disabled={investigatedLeads.includes(card.id)}
                   />
                 </Grid>
               ))}

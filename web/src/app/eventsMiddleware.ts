@@ -7,7 +7,9 @@ import {
   reset,
   sackAgents,
   assignAgentsToContracting,
+  assignAgentsToEspionage,
   recallAgents,
+  investigateLead,
 } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
@@ -20,6 +22,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
+  // eslint-disable-next-line max-statements
   return (store) => (next) => (action) => {
     // Call the next middleware/reducer first to update the state
     const result = next(action)
@@ -70,12 +73,33 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
         }),
       )
       // eslint-disable-next-line unicorn/prefer-regexp-test
+    } else if (assignAgentsToEspionage.match(action)) {
+      const agentIds = action.payload
+      const agentCount = agentIds.length
+      store.dispatch(
+        addEvent({
+          message: `OnAssignment ${agentCount} agent${agentCount > 1 ? 's' : ''} to espionage`,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+      // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
       store.dispatch(
         addEvent({
           message: `Recalled ${agentCount} agent${agentCount > 1 ? 's' : ''}`,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+      // eslint-disable-next-line unicorn/prefer-regexp-test
+    } else if (investigateLead.match(action)) {
+      const leadId = action.payload
+      store.dispatch(
+        addEvent({
+          message: `Investigated lead: ${leadId}`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),

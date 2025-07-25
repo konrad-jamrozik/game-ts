@@ -15,6 +15,7 @@ export type LeadCardProps = {
   expiresIn: number | 'never'
   onClick?: () => void
   selected?: boolean
+  disabled?: boolean
 }
 
 export function LeadCard({
@@ -24,16 +25,24 @@ export function LeadCard({
   expiresIn,
   onClick,
   selected,
+  disabled,
 }: LeadCardProps): React.JSX.Element {
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   const selectedSx = selected === true ? { boxShadow: selectedBoxShadow } : {}
+  const disabledSx = disabled === true ? { opacity: 0.5, filter: 'grayscale(0.7)' } : {}
+  const combinedSx = { ...selectedSx, ...disabledSx }
+
   return (
-    <Card>
-      <CardActionArea onClick={onClick} data-active={selected === true ? '' : undefined}>
-        {/* Note: the sx={selectedSx} must be defined on CardHeader and CardContent, not CardActionArea,
+    <Card sx={disabledSx}>
+      <CardActionArea
+        onClick={disabled === true ? undefined : onClick}
+        disabled={disabled === true}
+        data-active={selected === true ? '' : undefined}
+      >
+        {/* Note: the sx={combinedSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win over the styleOverrides in theme.tsx in specificity. */}
-        <CardHeader title={title} sx={selectedSx} />
-        <CardContent sx={selectedSx}>
+        <CardHeader title={title} sx={combinedSx} />
+        <CardContent sx={combinedSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={intelCost} sx={{ width: 140 }} />
