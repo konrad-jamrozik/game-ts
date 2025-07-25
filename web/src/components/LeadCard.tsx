@@ -8,6 +8,7 @@ import * as React from 'react'
 import { LabeledValue } from './LabeledValue'
 
 export type LeadCardProps = {
+  id: string
   title: string
   intelCost: number
   description: string

@@ -137,6 +137,18 @@ const gameStateSlice = createSlice({
     reset(state) {
       Object.assign(state, initialState)
     },
+    investigateLead: {
+      reducer(state, action: PayloadAction<string>) {
+        const leadId = action.payload
+        if (!state.investigatedLeads.includes(leadId)) {
+          state.investigatedLeads.push(leadId)
+        }
+        state.actionsCount += 1
+      },
+      prepare(leadId: string) {
+        return { payload: leadId, meta: { playerAction: true } }
+      },
+    },
   },
 })
 
@@ -150,5 +162,6 @@ export const {
   setMoney,
   setFunding,
   reset,
+  investigateLead,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

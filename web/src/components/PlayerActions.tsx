@@ -13,14 +13,17 @@ import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
   recallAgents,
+  investigateLead,
 } from '../model/gameStateSlice'
-import { clearAgentSelection } from '../model/selectionSlice'
+import { clearAgentSelection, clearLeadSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
+  const selectedLead = useAppSelector((state) => state.selection.selectedLead)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
+  const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
 
@@ -90,6 +93,25 @@ export function PlayerActions(): React.JSX.Element {
     setShowAlert(false) // Hide alert on successful action
   }
 
+  function handleInvestigateLead(): void {
+    if (selectedLead === undefined) {
+      setAlertMessage('No lead selected!')
+      setShowAlert(true)
+      return
+    }
+
+    // Check if the lead is already investigated
+    if (gameState.investigatedLeads.includes(selectedLead)) {
+      setAlertMessage('This lead has already been investigated!')
+      setShowAlert(true)
+      return
+    }
+
+    dispatch(investigateLead(selectedLead))
+    dispatch(clearLeadSelection())
+    setShowAlert(false) // Hide alert on successful action
+  }
+
   return (
     <Card sx={{ width: 380 }}>
       <CardHeader title="Player Actions" />
@@ -128,6 +150,9 @@ export function PlayerActions(): React.JSX.Element {
           </Button>
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
             Assign {selectedAgentIds.length} to espionage
+          </Button>
+          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLead === undefined}>
+            Investigate lead
           </Button>
           <Collapse in={showAlert}>
             <Alert
