@@ -9,6 +9,11 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Use `web/src/App.tsx` as the main entry point for the app.
 - Refer to `.github/copilot-instructions.md` for general project setup, architecture, dependencies, and conventions.
 
+## Feature implementation & Code Completeness
+
+- Every time you add a new reducer that has `meta: { playerAction: true }` in `prepare`, 
+  for example to `web/src/model/gameStateSlice.ts`, also add relevant event to  `web/src/app/eventsMiddleware.ts`.
+
 ## Coding conventions
 
 - Follow ESLint rules from `web/.eslintrc.js` 
@@ -16,5 +21,4 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 - Always use TypeScript types, never interfaces, unless it won't compile otherwise.
 - Always use function declarations instead of function expressions if possible.
 - Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
-- Every time a new reducer is added to `web/src/model/gameStateSlice.ts`, remember to add appropriate handler to `web/src/app/eventsMiddleware.ts`.
 - Prefer `<Fragment>` over `<>`.
