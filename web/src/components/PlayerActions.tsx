@@ -7,13 +7,14 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { getLeadIntelCost } from '../collections/leadCards'
 import {
-  hireAgent,
-  sackAgents,
   assignAgentsToContracting,
   assignAgentsToEspionage,
-  recallAgents,
+  hireAgent,
   investigateLead,
+  recallAgents,
+  sackAgents,
 } from '../model/gameStateSlice'
 import { clearAgentSelection, clearLeadSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
@@ -108,17 +109,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Find the selected lead to get its intel cost
-    // We need to look up the lead data from Leads component
-    // For now, we'll create a mapping of lead IDs to intel costs
-    const leadIntelCosts: Record<string, number> = {
-      'criminal-orgs': 20,
-      'red-dawn-apprehend': 20,
-      'red-dawn-interrogate': 0,
-      'red-dawn-profile': 50,
-      'red-dawn-safehouse': 30,
-    }
-
-    const intelCost = leadIntelCosts[selectedLead] ?? 0
+    const intelCost = getLeadIntelCost(selectedLead)
 
     // Check if player has enough intel
     if (gameState.intel < intelCost) {
