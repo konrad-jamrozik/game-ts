@@ -4,6 +4,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import type { SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { LabeledValue } from './LabeledValue'
 
@@ -28,9 +29,9 @@ export function LeadCard({
   disabled,
 }: LeadCardProps): React.JSX.Element {
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
-  const selectedSx = selected === true ? { boxShadow: selectedBoxShadow } : {}
-  const disabledSx = disabled === true ? { opacity: 0.5, filter: 'grayscale(0.7)' } : {}
-  const combinedSx = { ...selectedSx, ...disabledSx }
+  const selectedSx: SxProps = selected === true ? { boxShadow: selectedBoxShadow } : {}
+  const disabledSx: SxProps = disabled === true ? { opacity: 0.5 } : {}
+  const combinedSx: SxProps = { ...selectedSx, ...disabledSx }
 
   return (
     <Card sx={disabledSx}>
@@ -40,7 +41,7 @@ export function LeadCard({
         data-active={selected === true ? '' : undefined}
       >
         {/* Note: the sx={combinedSx} must be defined on CardHeader and CardContent, not CardActionArea,
-        to win over the styleOverrides in theme.tsx in specificity. */}
+        to win in specificity over the styleOverrides in theme.tsx. */}
         <CardHeader title={title} sx={combinedSx} />
         <CardContent sx={combinedSx}>
           <Stack>
