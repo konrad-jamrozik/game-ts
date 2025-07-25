@@ -53,10 +53,30 @@ export function Leads(): React.JSX.Element {
     },
   ]
 
+  // Sort cards: non-investigated first, then investigated in reverse order (first investigated last)
+  const sortedCards = [...cards].sort((cardA, cardB) => {
+    const aInvestigated = investigatedLeads.includes(cardA.id)
+    const bInvestigated = investigatedLeads.includes(cardB.id)
+
+    // If both are investigated or both are not investigated, maintain original order
+    if (aInvestigated === bInvestigated) {
+      if (aInvestigated) {
+        // Both investigated: reverse investigation order (first investigated comes last)
+        const aIndex = investigatedLeads.indexOf(cardA.id)
+        const bIndex = investigatedLeads.indexOf(cardB.id)
+        return bIndex - aIndex // Reverse order
+      }
+      return 0 // Both not investigated, maintain original order
+    }
+
+    // Not investigated cards come before investigated cards
+    return aInvestigated ? 1 : -1
+  })
+
   // Group cards into pairs
   const cardPairs: LeadCardProps[][] = []
-  for (let index = 0; index < cards.length; index += 2) {
-    cardPairs.push(cards.slice(index, index + 2))
+  for (let index = 0; index < sortedCards.length; index += 2) {
+    cardPairs.push(sortedCards.slice(index, index + 2))
   }
 
   return (
