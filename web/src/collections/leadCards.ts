@@ -3,35 +3,35 @@ import type { LeadCardProps } from '../components/LeadCard'
 // 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
 export const leadCards: LeadCardProps[] = [
   {
-    id: 'criminal-orgs',
+    id: 'lead-criminal-orgs',
     title: 'Criminal organizations',
     intelCost: 20,
     description: 'Investigate notorious criminal organizations operating from the shadows.',
     expiresIn: 'never',
   },
   {
-    id: 'red-dawn-apprehend',
+    id: 'lead-red-dawn-apprehend',
     title: 'Red Dawn member apprehension',
     intelCost: 20,
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 'never',
   },
   {
-    id: 'red-dawn-interrogate',
+    id: 'lead-red-dawn-interrogate',
     title: 'Red Dawn member interrogation',
     intelCost: 0,
     description: 'Interrogate a captured member of the Red Dawn cult.',
     expiresIn: 'never',
   },
   {
-    id: 'red-dawn-profile',
+    id: 'lead-red-dawn-profile',
     title: 'Red Dawn cult profile',
     intelCost: 50,
     description: 'Establish a basic profile about the Red Dawn cult.',
     expiresIn: 'never',
   },
   {
-    id: 'red-dawn-safehouse',
+    id: 'lead-red-dawn-safehouse',
     title: 'Red Dawn safe house location',
     intelCost: 30,
     description: 'Locate Red Dawn safe house.',
