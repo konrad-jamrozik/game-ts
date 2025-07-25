@@ -1,7 +1,8 @@
 import type { LeadCardProps } from '../components/LeadCard'
 
 // 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
-export const leadCards: LeadCardProps[] = [
+// 🚧KJA decouple "LeadCardProps" from "Lead" - a new model to be introduces.
+export const leads: LeadCardProps[] = [
   {
     id: 'lead-criminal-orgs',
     title: 'Criminal organizations',
@@ -41,6 +42,6 @@ export const leadCards: LeadCardProps[] = [
 
 // Helper function to get intel cost by lead ID
 export function getLeadIntelCost(leadId: string): number {
-  const lead = leadCards.find((card) => card.id === leadId)
+  const lead = leads.find((card) => card.id === leadId)
   return lead?.intelCost ?? 0
 }

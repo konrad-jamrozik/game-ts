@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getLeadIntelCost } from '../collections/leadCards'
+import { getLeadIntelCost } from '../collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,

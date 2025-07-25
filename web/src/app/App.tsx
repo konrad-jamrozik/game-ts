@@ -5,7 +5,7 @@ import { AssetsDataGrid } from '../components/AssetsDataGrid'
 import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
-import { Leads } from '../components/Leads'
+import { LeadCards } from '../components/LeadCards'
 import { PlayerActions } from '../components/PlayerActions'
 
 function App(): React.JSX.Element {
@@ -39,7 +39,7 @@ function App(): React.JSX.Element {
               <AgentsDataGrid />
             </Grid>
             <Grid>
-              <Leads />
+              <LeadCards />
             </Grid>
           </Grid>
         </Grid>
