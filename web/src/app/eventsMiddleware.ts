@@ -96,10 +96,10 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       )
       // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (investigateLead.match(action)) {
-      const leadId = action.payload
+      const { leadId, intelCost } = action.payload
       store.dispatch(
         addEvent({
-          message: `Investigated lead: ${leadId}`,
+          message: `Investigated lead: ${leadId} (cost: ${intelCost} intel)`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),

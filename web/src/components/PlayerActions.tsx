@@ -107,7 +107,27 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    dispatch(investigateLead(selectedLead))
+    // Find the selected lead to get its intel cost
+    // We need to look up the lead data from Leads component
+    // For now, we'll create a mapping of lead IDs to intel costs
+    const leadIntelCosts: Record<string, number> = {
+      'criminal-orgs': 20,
+      'red-dawn-apprehend': 20,
+      'red-dawn-interrogate': 0,
+      'red-dawn-profile': 50,
+      'red-dawn-safehouse': 30,
+    }
+
+    const intelCost = leadIntelCosts[selectedLead] ?? 0
+
+    // Check if player has enough intel
+    if (gameState.intel < intelCost) {
+      setAlertMessage('Not enough intel')
+      setShowAlert(true)
+      return
+    }
+
+    dispatch(investigateLead(selectedLead, intelCost))
     dispatch(clearLeadSelection())
     setShowAlert(false) // Hide alert on successful action
   }
