@@ -10,11 +10,10 @@ import type { Lead } from '../model/model'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
-  const selectedLead = useAppSelector((state) => state.selection.selectedLead)
   const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
 
   // Sort cards: non-investigated first, then investigated in reverse order (first investigated last)
-  const sortedCards = [...leads].sort((cardA, cardB) => {
+  const sortedLeads = [...leads].sort((cardA, cardB) => {
     const aInvestigated = investigatedLeads.includes(cardA.id)
     const bInvestigated = investigatedLeads.includes(cardB.id)
 
@@ -34,9 +33,9 @@ export function LeadCards(): React.JSX.Element {
   })
 
   // Group cards into pairs
-  const cardPairs: Lead[][] = []
-  for (let index = 0; index < sortedCards.length; index += 2) {
-    cardPairs.push(sortedCards.slice(index, index + 2))
+  const leadPairs: Lead[][] = []
+  for (let index = 0; index < sortedLeads.length; index += 2) {
+    leadPairs.push(sortedLeads.slice(index, index + 2))
   }
 
   return (
@@ -44,15 +43,11 @@ export function LeadCards(): React.JSX.Element {
       <CardHeader title="Leads" />
       <CardContent>
         <Stack spacing={2}>
-          {cardPairs.map((pair) => (
-            <Grid container spacing={2} key={pair.map((card) => card.title).join('-')}>
-              {pair.map((card) => (
-                <Grid size={6} key={card.title}>
-                  <LeadCard
-                    {...card}
-                    selected={selectedLead === card.id}
-                    disabled={investigatedLeads.includes(card.id)}
-                  />
+          {leadPairs.map((pair) => (
+            <Grid container spacing={2} key={pair.map((lead) => lead.id).join('-')}>
+              {pair.map((lead) => (
+                <Grid size={6} key={lead.id}>
+                  <LeadCard {...lead} />
                 </Grid>
               ))}
             </Grid>
