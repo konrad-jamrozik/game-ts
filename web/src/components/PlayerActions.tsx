@@ -7,7 +7,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getLeadIntelCost } from '../collections/leads'
+import { getLeadById } from '../collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -109,7 +109,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Find the selected lead to get its intel cost
-    const intelCost = getLeadIntelCost(selectedLead)
+    const { intelCost } = getLeadById(selectedLead)
 
     // Check if player has enough intel
     if (gameState.intel < intelCost) {

@@ -1,4 +1,5 @@
 import type { Lead } from '../model/model'
+import { assertDefined } from '../utils/assert'
 
 // 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
 export const leads: Lead[] = [
@@ -39,8 +40,8 @@ export const leads: Lead[] = [
   },
 ]
 
-// Helper function to get intel cost by lead ID
-export function getLeadIntelCost(leadId: string): number {
-  const lead = leads.find((item) => item.id === leadId)
-  return lead?.intelCost ?? 0
+export function getLeadById(leadId: string): Lead {
+  const foundLead = leads.find((lead) => lead.id === leadId)
+  assertDefined(foundLead, `Lead with id ${leadId} not found`)
+  return foundLead
 }
