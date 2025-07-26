@@ -9,6 +9,14 @@ export type Agent = {
   exhaustion: number
 }
 
+export type Lead = {
+  id: string
+  title: string
+  intelCost: number
+  description: string
+  expiresIn: number | 'never'
+}
+
 export type GameState = {
   actionsCount: number
   turn: number

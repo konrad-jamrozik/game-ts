@@ -6,14 +6,10 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import type { SxProps } from '@mui/material/styles'
 import * as React from 'react'
+import type { Lead } from '../model/model'
 import { LabeledValue } from './LabeledValue'
 
-export type LeadCardProps = {
-  id: string
-  title: string
-  intelCost: number
-  description: string
-  expiresIn: number | 'never'
+export type LeadCardProps = Lead & {
   onClick?: () => void
   selected?: boolean
   disabled?: boolean

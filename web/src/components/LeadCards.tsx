@@ -6,8 +6,9 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { leads } from '../collections/leads'
+import type { Lead } from '../model/model'
 import { setLeadSelection } from '../model/selectionSlice'
-import { LeadCard, type LeadCardProps } from './LeadCard'
+import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -35,7 +36,7 @@ export function LeadCards(): React.JSX.Element {
   })
 
   // Group cards into pairs
-  const cardPairs: LeadCardProps[][] = []
+  const cardPairs: Lead[][] = []
   for (let index = 0; index < sortedCards.length; index += 2) {
     cardPairs.push(sortedCards.slice(index, index + 2))
   }
