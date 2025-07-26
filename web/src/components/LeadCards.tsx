@@ -6,36 +6,33 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { leads } from '../collections/leads'
-import type { Lead } from '../model/model'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
   const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
 
-  // Sort cards: non-investigated first, then investigated in reverse order (first investigated last)
-  const sortedLeads = [...leads].sort((cardA, cardB) => {
-    const aInvestigated = investigatedLeads.includes(cardA.id)
-    const bInvestigated = investigatedLeads.includes(cardB.id)
+  // Sort lead IDs: non-investigated first, then investigated in reverse order (first investigated last)
+  const sortedLeadIds = leads
+    .map((lead) => lead.id)
+    .sort((idA, idB) => {
+      const aInvestigated = investigatedLeads.includes(idA)
+      const bInvestigated = investigatedLeads.includes(idB)
 
-    // If both are investigated or both are not investigated, maintain original order
-    if (aInvestigated === bInvestigated) {
-      if (aInvestigated) {
-        // Both investigated: reverse investigation order (first investigated comes last)
-        const aIndex = investigatedLeads.indexOf(cardA.id)
-        const bIndex = investigatedLeads.indexOf(cardB.id)
-        return bIndex - aIndex // Reverse order
+      if (aInvestigated === bInvestigated) {
+        if (aInvestigated) {
+          const aIndex = investigatedLeads.indexOf(idA)
+          const bIndex = investigatedLeads.indexOf(idB)
+          return bIndex - aIndex
+        }
+        return 0
       }
-      return 0 // Both not investigated, maintain original order
-    }
+      return aInvestigated ? 1 : -1
+    })
 
-    // Not investigated cards come before investigated cards
-    return aInvestigated ? 1 : -1
-  })
-
-  // Group cards into pairs
-  const leadPairs: Lead[][] = []
-  for (let index = 0; index < sortedLeads.length; index += 2) {
-    leadPairs.push(sortedLeads.slice(index, index + 2))
+  // Group lead IDs into pairs
+  const leadIdPairs: string[][] = []
+  for (let index = 0; index < sortedLeadIds.length; index += 2) {
+    leadIdPairs.push(sortedLeadIds.slice(index, index + 2))
   }
 
   return (
@@ -43,11 +40,11 @@ export function LeadCards(): React.JSX.Element {
       <CardHeader title="Leads" />
       <CardContent>
         <Stack spacing={2}>
-          {leadPairs.map((pair) => (
-            <Grid container spacing={2} key={pair.map((lead) => lead.id).join('-')}>
-              {pair.map((lead) => (
-                <Grid size={6} key={lead.id}>
-                  <LeadCard {...lead} />
+          {leadIdPairs.map((pair) => (
+            <Grid container spacing={2} key={pair.join('-')}>
+              {pair.map((leadId) => (
+                <Grid size={6} key={leadId}>
+                  <LeadCard leadId={leadId} />
                 </Grid>
               ))}
             </Grid>

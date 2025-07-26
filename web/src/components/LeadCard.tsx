@@ -7,16 +7,17 @@ import Typography from '@mui/material/Typography'
 import type { SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import type { Lead } from '../model/model'
+import { getLeadById } from '../collections/leads'
 import { setLeadSelection } from '../model/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
-export type LeadCardProps = Lead
+export type LeadCardProps = { leadId: string }
 
-export function LeadCard(lead: LeadCardProps): React.JSX.Element {
+export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLead = useAppSelector((state) => state.selection.selectedLead)
   const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
+  const lead = getLeadById(leadId)
 
   const selected = selectedLead === lead.id
   const disabled = investigatedLeads.includes(lead.id)
