@@ -15,6 +15,7 @@ export type Lead = {
   intelCost: number
   description: string
   expiresIn: number | 'never'
+  dependsOn: string[]
 }
 
 export type GameState = {

@@ -9,20 +9,23 @@ export const leads: Lead[] = [
     intelCost: 20,
     description: 'Investigate notorious criminal organizations operating from the shadows.',
     expiresIn: 'never',
+    dependsOn: [],
   },
   {
-    id: 'lead-red-dawn-apprehend',
+    id: 'lead-red-dawn-apprehension',
     title: 'Red Dawn member apprehension',
     intelCost: 20,
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 'never',
+    dependsOn: ['lead-criminal-orgs'],
   },
   {
-    id: 'lead-red-dawn-interrogate',
+    id: 'lead-red-dawn-interrogation',
     title: 'Red Dawn member interrogation',
     intelCost: 0,
     description: 'Interrogate a captured member of the Red Dawn cult.',
     expiresIn: 'never',
+    dependsOn: ['lead-red-dawn-apprehension'],
   },
   {
     id: 'lead-red-dawn-profile',
@@ -30,6 +33,7 @@ export const leads: Lead[] = [
     intelCost: 50,
     description: 'Establish a basic profile about the Red Dawn cult.',
     expiresIn: 'never',
+    dependsOn: ['lead-red-dawn-interrogation'],
   },
   {
     id: 'lead-red-dawn-safehouse',
@@ -37,6 +41,7 @@ export const leads: Lead[] = [
     intelCost: 30,
     description: 'Locate Red Dawn safe house.',
     expiresIn: 'never',
+    dependsOn: ['lead-red-dawn-interrogation'],
   },
 ]
 
