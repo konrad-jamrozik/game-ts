@@ -52,6 +52,13 @@ export function LeadCards(): React.JSX.Element {
                   <LeadCard leadId={leadId} />
                 </Grid>
               ))}
+              {pair.length === 1 && pair[0] !== undefined && (
+                <Grid size={6} key={`${pair[0]}-invisible`}>
+                  <div style={{ visibility: 'hidden', pointerEvents: 'none' }}>
+                    <LeadCard leadId={pair[0]} />
+                  </div>
+                </Grid>
+              )}
             </Grid>
           ))}
         </Stack>
