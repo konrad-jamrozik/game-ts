@@ -49,12 +49,7 @@ export function LeadCards(): React.JSX.Element {
               {pair.map((card) => (
                 <Grid size={6} key={card.title}>
                   <LeadCard
-                    id={card.id}
-                    title={card.title}
-                    intelCost={card.intelCost}
-                    description={card.description}
-                    expiresIn={card.expiresIn}
-                    dependsOn={card.dependsOn}
+                    {...card}
                     selected={selectedLead === card.id}
                     disabled={investigatedLeads.includes(card.id)}
                   />
