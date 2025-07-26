@@ -9,19 +9,19 @@ import { leads } from '../collections/leads'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
-  const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
+  const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
 
   // Sort lead IDs: non-investigated first, then investigated in reverse order (first investigated last)
   const sortedLeadIds = leads
     .map((lead) => lead.id)
     .sort((idA, idB) => {
-      const aInvestigated = investigatedLeads.includes(idA)
-      const bInvestigated = investigatedLeads.includes(idB)
+      const aInvestigated = investigatedLeadIds.includes(idA)
+      const bInvestigated = investigatedLeadIds.includes(idB)
 
       if (aInvestigated === bInvestigated) {
         if (aInvestigated) {
-          const aIndex = investigatedLeads.indexOf(idA)
-          const bIndex = investigatedLeads.indexOf(idB)
+          const aIndex = investigatedLeadIds.indexOf(idA)
+          const bIndex = investigatedLeadIds.indexOf(idB)
           return bIndex - aIndex
         }
         return 0

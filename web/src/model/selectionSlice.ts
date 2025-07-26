@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 
 export type SelectionState = {
   agents: string[]
-  selectedLead?: string
+  selectedLeadId?: string
 }
 
 const initialState: SelectionState = {
@@ -20,10 +20,10 @@ const selectionSlice = createSlice({
       state.agents = []
     },
     setLeadSelection(state, action: PayloadAction<string>) {
-      state.selectedLead = action.payload
+      state.selectedLeadId = action.payload
     },
     clearLeadSelection(state) {
-      delete state.selectedLead
+      delete state.selectedLeadId
     },
   },
 })

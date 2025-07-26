@@ -22,7 +22,7 @@ import { destructiveButtonSx } from '../styling/styleUtils'
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const selectedLead = useAppSelector((state) => state.selection.selectedLead)
+  const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
@@ -95,21 +95,21 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleInvestigateLead(): void {
-    if (selectedLead === undefined) {
+    if (selectedLeadId === undefined) {
       setAlertMessage('No lead selected!')
       setShowAlert(true)
       return
     }
 
     // Check if the lead is already investigated
-    if (gameState.investigatedLeads.includes(selectedLead)) {
+    if (gameState.investigatedLeadIds.includes(selectedLeadId)) {
       setAlertMessage('This lead has already been investigated!')
       setShowAlert(true)
       return
     }
 
     // Find the selected lead to get its intel cost
-    const { intelCost } = getLeadById(selectedLead)
+    const { intelCost } = getLeadById(selectedLeadId)
 
     // Check if player has enough intel
     if (gameState.intel < intelCost) {
@@ -118,7 +118,7 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    dispatch(investigateLead(selectedLead, intelCost))
+    dispatch(investigateLead(selectedLeadId, intelCost))
     dispatch(clearLeadSelection())
     setShowAlert(false) // Hide alert on successful action
   }
@@ -162,7 +162,7 @@ export function PlayerActions(): React.JSX.Element {
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
             Assign {selectedAgentIds.length} to espionage
           </Button>
-          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLead === undefined}>
+          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead
           </Button>
           <Collapse in={showAlert}>

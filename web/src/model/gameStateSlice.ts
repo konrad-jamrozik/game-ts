@@ -140,8 +140,8 @@ const gameStateSlice = createSlice({
     investigateLead: {
       reducer(state, action: PayloadAction<{ leadId: string; intelCost: number }>) {
         const { leadId, intelCost } = action.payload
-        if (!state.investigatedLeads.includes(leadId)) {
-          state.investigatedLeads.push(leadId)
+        if (!state.investigatedLeadIds.includes(leadId)) {
+          state.investigatedLeadIds.push(leadId)
           state.intel -= intelCost
         }
         state.actionsCount += 1

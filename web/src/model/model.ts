@@ -27,5 +27,5 @@ export type GameState = {
   funding: number
   hireCost: number
   nextAgentId: number
-  investigatedLeads: string[]
+  investigatedLeadIds: string[]
 }

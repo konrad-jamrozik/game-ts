@@ -15,12 +15,12 @@ export type LeadCardProps = { leadId: string }
 
 export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const selectedLead = useAppSelector((state) => state.selection.selectedLead)
-  const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
+  const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
+  const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
   const lead = getLeadById(leadId)
 
-  const selected = selectedLead === lead.id
-  const disabled = investigatedLeads.includes(lead.id)
+  const selected = selectedLeadId === lead.id
+  const disabled = investigatedLeadIds.includes(lead.id)
 
   function handleClick(): void {
     if (!disabled) {
