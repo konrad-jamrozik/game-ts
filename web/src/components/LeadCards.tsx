@@ -12,12 +12,12 @@ export function LeadCards(): React.JSX.Element {
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
 
   // Filter out leads that have unmet dependencies
-  const availableLeads = leads.filter((lead) =>
+  const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every((dependencyId) => investigatedLeadIds.includes(dependencyId)),
   )
 
   // Sort lead IDs: non-investigated first, then investigated in reverse order (first investigated last)
-  const sortedLeadIds = availableLeads
+  const sortedLeadIds = discoveredLeads
     .map((lead) => lead.id)
     .sort((idA, idB) => {
       const aInvestigated = investigatedLeadIds.includes(idA)
@@ -40,8 +40,9 @@ export function LeadCards(): React.JSX.Element {
     leadIdPairs.push(sortedLeadIds.slice(index, index + 2))
   }
 
+  const maxWidth = '800px'
   return (
-    <Card sx={{ maxWidth: '800px' }}>
+    <Card sx={{ maxWidth }}>
       <CardHeader title="Leads" />
       <CardContent>
         <Stack spacing={2}>
@@ -52,9 +53,9 @@ export function LeadCards(): React.JSX.Element {
                   <LeadCard leadId={leadId} />
                 </Grid>
               ))}
-              {/* If there's an odd number of leads, add an invisible filler grid item 
+              {/* If there was only ever one discovered lead, add an invisible filler grid item 
               to prevent the width of the singular LeadCard from being too small. */}
-              {pair.length === 1 && <Grid size={1} minWidth="200px" key={'invisible-filler'}></Grid>}
+              {discoveredLeads.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
             </Grid>
           ))}
         </Stack>
