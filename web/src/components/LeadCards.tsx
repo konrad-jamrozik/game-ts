@@ -46,19 +46,15 @@ export function LeadCards(): React.JSX.Element {
       <CardContent>
         <Stack spacing={2}>
           {leadIdPairs.map((pair) => (
-            <Grid container spacing={2} key={pair.join('-')}>
+            <Grid container spacing={2} columns={2} key={pair.join('-')}>
               {pair.map((leadId) => (
-                <Grid size={6} key={leadId}>
+                <Grid size={1} key={leadId}>
                   <LeadCard leadId={leadId} />
                 </Grid>
               ))}
-              {pair.length === 1 && pair[0] !== undefined && (
-                <Grid size={6} key={`${pair[0]}-invisible`}>
-                  <div style={{ visibility: 'hidden', pointerEvents: 'none' }}>
-                    <LeadCard leadId={pair[0]} />
-                  </div>
-                </Grid>
-              )}
+              {/* If there's an odd number of leads, add an invisible filler grid item 
+              to prevent the width of the singular LeadCard from being too small. */}
+              {pair.length === 1 && <Grid size={1} minWidth="200px" key={'invisible-filler'}></Grid>}
             </Grid>
           ))}
         </Stack>
