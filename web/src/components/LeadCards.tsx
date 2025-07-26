@@ -11,8 +11,13 @@ import { LeadCard } from './LeadCard'
 export function LeadCards(): React.JSX.Element {
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
 
+  // Filter out leads that have unmet dependencies
+  const availableLeads = leads.filter((lead) =>
+    lead.dependsOn.every((dependencyId) => investigatedLeadIds.includes(dependencyId)),
+  )
+
   // Sort lead IDs: non-investigated first, then investigated in reverse order (first investigated last)
-  const sortedLeadIds = leads
+  const sortedLeadIds = availableLeads
     .map((lead) => lead.id)
     .sort((idA, idB) => {
       const aInvestigated = investigatedLeadIds.includes(idA)
