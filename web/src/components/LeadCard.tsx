@@ -6,24 +6,34 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import type { SxProps } from '@mui/material/styles'
 import * as React from 'react'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import type { Lead } from '../model/model'
+import { setLeadSelection } from '../model/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
 export type LeadCardProps = Lead & {
-  onClick?: () => void
   selected?: boolean
   disabled?: boolean
 }
 
 export function LeadCard({
+  id,
   title,
   intelCost,
   description,
   expiresIn,
-  onClick,
   selected,
   disabled,
 }: LeadCardProps): React.JSX.Element {
+  const dispatch = useAppDispatch()
+  const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
+
+  function handleClick(): void {
+    if (!investigatedLeads.includes(id)) {
+      dispatch(setLeadSelection(id))
+    }
+  }
+
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   const selectedSx: SxProps = selected === true ? { boxShadow: selectedBoxShadow } : {}
   const disabledSx: SxProps = disabled === true ? { opacity: 0.5 } : {}
@@ -32,7 +42,7 @@ export function LeadCard({
   return (
     <Card sx={disabledSx}>
       <CardActionArea
-        onClick={disabled === true ? undefined : onClick}
+        onClick={disabled === true ? undefined : handleClick}
         disabled={disabled === true}
         data-active={selected === true ? '' : undefined}
       >

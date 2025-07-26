@@ -4,14 +4,12 @@ import CardHeader from '@mui/material/CardHeader'
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { useAppSelector } from '../app/hooks'
 import { leads } from '../collections/leads'
 import type { Lead } from '../model/model'
-import { setLeadSelection } from '../model/selectionSlice'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
-  const dispatch = useAppDispatch()
   const selectedLead = useAppSelector((state) => state.selection.selectedLead)
   const investigatedLeads = useAppSelector((state) => state.undoable.present.gameState.investigatedLeads)
 
@@ -56,11 +54,7 @@ export function LeadCards(): React.JSX.Element {
                     intelCost={card.intelCost}
                     description={card.description}
                     expiresIn={card.expiresIn}
-                    onClick={() => {
-                      if (!investigatedLeads.includes(card.id)) {
-                        dispatch(setLeadSelection(card.id))
-                      }
-                    }}
+                    dependsOn={card.dependsOn}
                     selected={selectedLead === card.id}
                     disabled={investigatedLeads.includes(card.id)}
                   />
