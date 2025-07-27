@@ -10,10 +10,18 @@ import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
+  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+
+  // Get mission IDs that have successful mission sites
+  const successfulMissionIds = new Set(
+    missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
+  )
 
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>
-    lead.dependsOn.every((dependencyId) => investigatedLeadIds.includes(dependencyId)),
+    lead.dependsOn.every(
+      (dependencyId) => investigatedLeadIds.includes(dependencyId) || successfulMissionIds.has(dependencyId),
+    ),
   )
 
   // Sort lead IDs: non-investigated first, then investigated in reverse order (first investigated last)

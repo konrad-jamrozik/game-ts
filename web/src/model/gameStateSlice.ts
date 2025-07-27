@@ -7,13 +7,14 @@ import {
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
 } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
-import type { GameState, Agent } from './model'
+import type { GameState, Agent, MissionSite } from './model'
 import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
 
 const initialState: GameState = {
   turn: 1,
   actionsCount: 0,
   nextAgentId: 0,
+  nextMissionSiteId: 0,
   hireCost: 50,
   ...initialAssets,
 }
@@ -46,7 +47,7 @@ const gameStateSlice = createSlice({
           if (agent.state === 'InTransit') {
             if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
               agent.state = 'OnAssignment'
-            } else if (agent.assignment.startsWith('mission-')) {
+            } else if (agent.assignment.startsWith('mission-site-')) {
               agent.state = 'OnMission'
             } else {
               agent.state = 'Available'
@@ -55,6 +56,14 @@ const gameStateSlice = createSlice({
             // Agents on mission return to standby after one turn
             agent.state = 'InTransit'
             agent.assignment = 'Standby'
+          }
+        }
+
+        // Update mission site states
+        for (const missionSite of state.missionSites) {
+          if (missionSite.state === 'Active') {
+            // Check if mission site should be marked as successful or failed
+            missionSite.state = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
           }
         }
         state.money = getMoneyNewBalance(state)
@@ -164,15 +173,27 @@ const gameStateSlice = createSlice({
     deployAgentsToMission: {
       reducer(state, action: PayloadAction<{ missionId: string; agentIds: string[] }>) {
         const { missionId, agentIds } = action.payload
+
+        // Create a new mission site
+        const missionSiteId = `mission-site-${state.nextMissionSiteId.toString().padStart(3, '0')}`
+        const newMissionSite: MissionSite = {
+          id: missionSiteId,
+          missionId,
+          agentIds: [...agentIds],
+          state: 'Active',
+        }
+
+        state.missionSites.push(newMissionSite)
+        state.nextMissionSiteId += 1
+
+        // Assign agents to the mission site
         for (const agent of state.agents) {
           if (agentIds.includes(agent.id)) {
-            agent.assignment = missionId
+            agent.assignment = missionSiteId
             agent.state = 'InTransit'
           }
         }
-        if (!state.deployedMissionIds.includes(missionId)) {
-          state.deployedMissionIds.push(missionId)
-        }
+
         state.actionsCount += 1
       },
       prepare(missionId: string, agentIds: string[]) {

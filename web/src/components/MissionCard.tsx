@@ -16,11 +16,11 @@ export type MissionCardProps = { missionId: string }
 export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
-  const deployedMissionIds = useAppSelector((state) => state.undoable.present.gameState.deployedMissionIds)
+  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
   const mission = getMissionById(missionId)
 
   const selected = selectedMissionId === mission.id
-  const disabled = deployedMissionIds.includes(mission.id)
+  const disabled = missionSites.some((site) => site.missionId === mission.id && site.state === 'Active')
 
   function handleClick(): void {
     if (!disabled) {

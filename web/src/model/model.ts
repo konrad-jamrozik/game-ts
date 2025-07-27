@@ -33,6 +33,15 @@ export type Mission = {
   dependsOn: string[]
 }
 
+export type MissionSiteState = 'Active' | 'Successful' | 'Failed'
+
+export type MissionSite = {
+  id: string
+  missionId: string
+  agentIds: string[]
+  state: MissionSiteState
+}
+
 export type GameState = {
   actionsCount: number
   turn: number
@@ -42,6 +51,7 @@ export type GameState = {
   funding: number
   hireCost: number
   nextAgentId: number
+  nextMissionSiteId: number
   investigatedLeadIds: string[]
-  deployedMissionIds: string[]
+  missionSites: MissionSite[]
 }

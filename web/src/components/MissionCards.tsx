@@ -10,24 +10,34 @@ import { MissionCard } from './MissionCard'
 
 export function MissionCards(): React.JSX.Element {
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
-  const deployedMissionIds = useAppSelector((state) => state.undoable.present.gameState.deployedMissionIds)
+  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+
+  // Get mission IDs that have active mission sites
+  const activeMissionIds = missionSites.filter((site) => site.state === 'Active').map((site) => site.missionId)
+
+  // Get mission IDs that have successful mission sites
+  const successfulMissionIds = new Set(
+    missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
+  )
 
   // Filter out missions that have unmet dependencies
   const discoveredMissions = missions.filter((mission) =>
-    mission.dependsOn.every((dependencyId) => investigatedLeadIds.includes(dependencyId)),
+    mission.dependsOn.every(
+      (dependencyId) => investigatedLeadIds.includes(dependencyId) || successfulMissionIds.has(dependencyId),
+    ),
   )
 
   // Sort mission IDs: non-deployed first, then deployed in reverse order (first deployed last)
   const sortedMissionIds = discoveredMissions
     .map((mission) => mission.id)
     .sort((idA, idB) => {
-      const aDeployed = deployedMissionIds.includes(idA)
-      const bDeployed = deployedMissionIds.includes(idB)
+      const aDeployed = activeMissionIds.includes(idA)
+      const bDeployed = activeMissionIds.includes(idB)
 
       if (aDeployed === bDeployed) {
         if (aDeployed) {
-          const aIndex = deployedMissionIds.indexOf(idA)
-          const bIndex = deployedMissionIds.indexOf(idB)
+          const aIndex = activeMissionIds.indexOf(idA)
+          const bIndex = activeMissionIds.indexOf(idB)
           return bIndex - aIndex
         }
         return 0
