@@ -110,11 +110,11 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (deployAgentsToMission.match(action)) {
       const { missionSiteId, agentIds } = action.payload
       const agentCount = agentIds.length
-      
+
       // Find the mission site to get the mission info for logging
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
       const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
-      
+
       store.dispatch(
         addEvent({
           message: `Deployed ${agentCount} agent${agentCount > 1 ? 's' : ''} to mission: ${missionTitle}`,

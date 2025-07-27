@@ -15,11 +15,11 @@ export function MissionCards(): React.JSX.Element {
     const stateOrder = { Active: 0, Deployed: 1, Successful: 2, Failed: 3 }
     const aOrder = stateOrder[siteA.state]
     const bOrder = stateOrder[siteB.state]
-    
+
     if (aOrder !== bOrder) {
       return aOrder - bOrder
     }
-    
+
     // Within the same state, sort by ID (newest first)
     return siteB.id.localeCompare(siteA.id)
   })

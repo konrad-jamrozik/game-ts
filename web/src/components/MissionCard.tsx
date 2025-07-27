@@ -18,16 +18,17 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
   const theme = useTheme()
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
-  
+
   const missionSite = missionSites.find((site) => site.id === missionSiteId)
   if (!missionSite) {
     return <div>Mission site not found</div>
   }
-  
+
   const mission = getMissionById(missionSite.missionId)
 
   const selected = selectedMissionId === missionSite.id
-  const disabled = missionSite.state === 'Deployed' || missionSite.state === 'Successful' || missionSite.state === 'Failed'
+  const disabled =
+    missionSite.state === 'Deployed' || missionSite.state === 'Successful' || missionSite.state === 'Failed'
 
   function handleClick(): void {
     if (!disabled && missionSite) {
