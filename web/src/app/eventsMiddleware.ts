@@ -10,6 +10,7 @@ import {
   assignAgentsToEspionage,
   recallAgents,
   investigateLead,
+  deployAgentsToMission,
 } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
@@ -22,7 +23,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line max-statements
+  // eslint-disable-next-line max-statements, complexity
   return (store) => (next) => (action) => {
     // Call the next middleware/reducer first to update the state
     const result = next(action)
@@ -100,6 +101,17 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       store.dispatch(
         addEvent({
           message: `Investigated lead: ${leadId} (cost: ${intelCost} intel)`,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
+      // eslint-disable-next-line unicorn/prefer-regexp-test
+    } else if (deployAgentsToMission.match(action)) {
+      const { missionId, agentIds } = action.payload
+      const agentCount = agentIds.length
+      store.dispatch(
+        addEvent({
+          message: `Deployed ${agentCount} agent${agentCount > 1 ? 's' : ''} to mission: ${missionId}`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),

@@ -28,7 +28,7 @@ export const leads: Lead[] = [
     description: 'Interrogate a captured member of the Red Dawn cult.',
     expiresIn: 'never',
     dependsOn: ['mission-apprehend-red-dawn'],
-    repeatable: true,
+    repeatable: false,
   },
   {
     id: 'lead-red-dawn-profile',
