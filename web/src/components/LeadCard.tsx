@@ -11,17 +11,21 @@ import { getLeadById } from '../collections/leads'
 import { setLeadSelection } from '../model/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
-export type LeadCardProps = { leadId: string }
+export type LeadCardProps = {
+  leadId: string
+  displayMode?: 'normal' | 'repeated'
+}
 
-export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
+export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
+  const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const lead = getLeadById(leadId)
 
-  const selected = selectedLeadId === lead.id
-  const disabled = !lead.repeatable && investigatedLeadIds.includes(lead.id)
+  const selected = selectedLeadId === lead.id && displayMode === 'normal'
+  const disabled = displayMode === 'repeated' || (!lead.repeatable && investigatedLeadIds.includes(lead.id))
 
   function handleClick(): void {
     if (!disabled) {
@@ -57,9 +61,14 @@ export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
                 <LabeledValue label="Does not expire" sx={{ width: 142 }} />
               )}
             </Stack>
-            {lead.repeatable && (
+            {displayMode === 'normal' && lead.repeatable && !investigatedLeadIds.includes(lead.id) && (
               <Stack direction="row" sx={{ paddingTop: 0.5 }}>
                 <LabeledValue label="Repeatable" />
+              </Stack>
+            )}
+            {displayMode === 'repeated' && (
+              <Stack direction="row" sx={{ paddingTop: 0.5 }}>
+                <LabeledValue label="Repeated" value={leadInvestigationCounts[leadId] ?? 0} />
               </Stack>
             )}
           </Stack>
