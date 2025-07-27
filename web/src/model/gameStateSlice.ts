@@ -38,12 +38,23 @@ const gameStateSlice = createSlice({
             (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')
           ) {
             agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
+          } else if (agent.state === 'OnMission') {
+            agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
           } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
             agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
           }
           if (agent.state === 'InTransit') {
-            agent.state =
-              agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
+            if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
+              agent.state = 'OnAssignment'
+            } else if (agent.assignment.startsWith('Mission ')) {
+              agent.state = 'OnMission'
+            } else {
+              agent.state = 'Available'
+            }
+          } else if (agent.state === 'OnMission') {
+            // Agents on mission return to standby after one turn
+            agent.state = 'InTransit'
+            agent.assignment = 'Standby'
           }
         }
         state.money = getMoneyNewBalance(state)
@@ -150,6 +161,24 @@ const gameStateSlice = createSlice({
         return { payload: { leadId, intelCost }, meta: { playerAction: true } }
       },
     },
+    deployAgentsToMission: {
+      reducer(state, action: PayloadAction<{ missionId: string; agentIds: string[] }>) {
+        const { missionId, agentIds } = action.payload
+        for (const agent of state.agents) {
+          if (agentIds.includes(agent.id)) {
+            agent.assignment = `Mission ${missionId}`
+            agent.state = 'InTransit'
+          }
+        }
+        if (!state.deployedMissionIds.includes(missionId)) {
+          state.deployedMissionIds.push(missionId)
+        }
+        state.actionsCount += 1
+      },
+      prepare(missionId: string, agentIds: string[]) {
+        return { payload: { missionId, agentIds }, meta: { playerAction: true } }
+      },
+    },
   },
 })
 
@@ -164,5 +193,6 @@ export const {
   setFunding,
   reset,
   investigateLead,
+  deployAgentsToMission,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

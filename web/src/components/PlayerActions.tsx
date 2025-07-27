@@ -11,18 +11,20 @@ import { getLeadById } from '../collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
+  deployAgentsToMission,
   hireAgent,
   investigateLead,
   recallAgents,
   sackAgents,
 } from '../model/gameStateSlice'
-import { clearAgentSelection, clearLeadSelection } from '../model/selectionSlice'
+import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
+  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
@@ -123,6 +125,42 @@ export function PlayerActions(): React.JSX.Element {
     setShowAlert(false) // Hide alert on successful action
   }
 
+  function handleDeployAgents(): void {
+    if (selectedMissionId === undefined) {
+      setAlertMessage('No mission selected!')
+      setShowAlert(true)
+      return
+    }
+
+    // Check if all selected agents are in "Available" state
+    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
+    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+
+    if (nonAvailableAgents.length > 0) {
+      setAlertMessage('This action can be done only on available agents!')
+      setShowAlert(true)
+      return
+    }
+
+    if (selectedAgentIds.length === 0) {
+      setAlertMessage('No agents selected!')
+      setShowAlert(true)
+      return
+    }
+
+    // Check if the mission is already deployed
+    if (gameState.deployedMissionIds.includes(selectedMissionId)) {
+      setAlertMessage('This mission has already been deployed!')
+      setShowAlert(true)
+      return
+    }
+
+    dispatch(deployAgentsToMission(selectedMissionId, selectedAgentIds))
+    dispatch(clearAgentSelection())
+    dispatch(clearMissionSelection())
+    setShowAlert(false) // Hide alert on successful action
+  }
+
   return (
     <Card sx={{ width: 380 }}>
       <CardHeader title="Player Actions" />
@@ -164,6 +202,9 @@ export function PlayerActions(): React.JSX.Element {
           </Button>
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead
+          </Button>
+          <Button variant="contained" onClick={handleDeployAgents} disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}>
+            Deploy agents
           </Button>
           <Collapse in={showAlert}>
             <Alert

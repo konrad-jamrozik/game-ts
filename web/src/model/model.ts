@@ -1,4 +1,4 @@
-export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'OnAssignment'
+export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'OnAssignment' | 'OnMission'
 
 export type Agent = {
   id: string
@@ -18,6 +18,14 @@ export type Lead = {
   dependsOn: string[]
 }
 
+export type Mission = {
+  id: string
+  title: string
+  description: string
+  expiresIn: number | 'never'
+  dependsOn: string[]
+}
+
 export type GameState = {
   actionsCount: number
   turn: number
@@ -28,4 +36,5 @@ export type GameState = {
   hireCost: number
   nextAgentId: number
   investigatedLeadIds: string[]
+  deployedMissionIds: string[]
 }

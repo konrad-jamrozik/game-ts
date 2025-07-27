@@ -3,6 +3,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 export type SelectionState = {
   agents: string[]
   selectedLeadId?: string
+  selectedMissionId?: string
 }
 
 const initialState: SelectionState = {
@@ -25,8 +26,14 @@ const selectionSlice = createSlice({
     clearLeadSelection(state) {
       delete state.selectedLeadId
     },
+    setMissionSelection(state, action: PayloadAction<string>) {
+      state.selectedMissionId = action.payload
+    },
+    clearMissionSelection(state) {
+      delete state.selectedMissionId
+    },
   },
 })
 
-export const { setAgentSelection, clearAgentSelection, setLeadSelection, clearLeadSelection } = selectionSlice.actions
+export const { setAgentSelection, clearAgentSelection, setLeadSelection, clearLeadSelection, setMissionSelection, clearMissionSelection } = selectionSlice.actions
 export default selectionSlice.reducer
