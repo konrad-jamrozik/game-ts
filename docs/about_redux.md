@@ -29,8 +29,6 @@ Then use it in Dev tools. That's it!
 
 ## Setup TypeScript, testing best practices
 
-🚧KJA WIP Next, set it up to work with TypeScript per:
-
 - https://redux-toolkit.js.org/tutorials/typescript
 
 - https://redux.js.org/usage/#code-quality

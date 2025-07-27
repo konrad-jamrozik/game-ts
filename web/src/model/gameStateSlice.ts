@@ -155,10 +155,17 @@ const gameStateSlice = createSlice({
     investigateLead: {
       reducer(state, action: PayloadAction<{ leadId: string; intelCost: number }>) {
         const { leadId, intelCost } = action.payload
+
+        // Add to investigatedLeadIds if not already there (for all leads)
         if (!state.investigatedLeadIds.includes(leadId)) {
           state.investigatedLeadIds.push(leadId)
-          state.intel -= intelCost
         }
+
+        // Track investigation count for all leads
+        const currentCount = state.leadInvestigationCounts[leadId] ?? 0
+        state.leadInvestigationCounts[leadId] = currentCount + 1
+
+        state.intel -= intelCost
         state.actionsCount += 1
       },
       prepare(leadId: string, intelCost: number) {

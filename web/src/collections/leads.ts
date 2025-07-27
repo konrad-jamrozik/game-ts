@@ -10,6 +10,7 @@ export const leads: Lead[] = [
     description: 'Investigate notorious criminal organizations operating from the shadows.',
     expiresIn: 'never',
     dependsOn: [],
+    repeatable: false,
   },
   {
     id: 'lead-red-dawn-apprehension',
@@ -18,6 +19,7 @@ export const leads: Lead[] = [
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 'never',
     dependsOn: ['lead-criminal-orgs'],
+    repeatable: true,
   },
   {
     id: 'lead-red-dawn-interrogation',
@@ -26,6 +28,7 @@ export const leads: Lead[] = [
     description: 'Interrogate a captured member of the Red Dawn cult.',
     expiresIn: 'never',
     dependsOn: ['mission-apprehend-red-dawn'],
+    repeatable: true,
   },
   {
     id: 'lead-red-dawn-profile',
@@ -34,6 +37,7 @@ export const leads: Lead[] = [
     description: 'Establish a basic profile about the Red Dawn cult.',
     expiresIn: 'never',
     dependsOn: ['lead-red-dawn-interrogation'],
+    repeatable: false,
   },
   {
     id: 'lead-red-dawn-safehouse',
@@ -42,6 +46,7 @@ export const leads: Lead[] = [
     description: 'Locate Red Dawn safe house.',
     expiresIn: 'never',
     dependsOn: ['lead-red-dawn-interrogation'],
+    repeatable: true,
   },
 ]
 

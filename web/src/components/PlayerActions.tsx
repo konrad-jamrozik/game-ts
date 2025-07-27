@@ -104,24 +104,24 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Check if the lead is already investigated
-    if (gameState.investigatedLeadIds.includes(selectedLeadId)) {
+    // Find the selected lead to get its properties
+    const lead = getLeadById(selectedLeadId)
+
+    // Check if the lead is already investigated and is not repeatable
+    if (!lead.repeatable && gameState.investigatedLeadIds.includes(selectedLeadId)) {
       setAlertMessage('This lead has already been investigated!')
       setShowAlert(true)
       return
     }
 
-    // Find the selected lead to get its intel cost
-    const { intelCost } = getLeadById(selectedLeadId)
-
     // Check if player has enough intel
-    if (gameState.intel < intelCost) {
+    if (gameState.intel < lead.intelCost) {
       setAlertMessage('Not enough intel')
       setShowAlert(true)
       return
     }
 
-    dispatch(investigateLead(selectedLeadId, intelCost))
+    dispatch(investigateLead(selectedLeadId, lead.intelCost))
     dispatch(clearLeadSelection())
     setShowAlert(false) // Hide alert on successful action
   }

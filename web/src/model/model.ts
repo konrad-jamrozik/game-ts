@@ -23,6 +23,7 @@ export type Lead = {
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
+  repeatable: boolean
 }
 
 export type Mission = {
@@ -53,5 +54,6 @@ export type GameState = {
   nextAgentId: number
   nextMissionSiteId: number
   investigatedLeadIds: string[]
+  leadInvestigationCounts: Record<string, number>
   missionSites: MissionSite[]
 }

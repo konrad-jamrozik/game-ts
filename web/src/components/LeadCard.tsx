@@ -21,7 +21,7 @@ export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
   const lead = getLeadById(leadId)
 
   const selected = selectedLeadId === lead.id
-  const disabled = investigatedLeadIds.includes(lead.id)
+  const disabled = !lead.repeatable && investigatedLeadIds.includes(lead.id)
 
   function handleClick(): void {
     if (!disabled) {
@@ -57,6 +57,11 @@ export function LeadCard({ leadId }: LeadCardProps): React.JSX.Element {
                 <LabeledValue label="Does not expire" sx={{ width: 142 }} />
               )}
             </Stack>
+            {lead.repeatable && (
+              <Stack direction="row" sx={{ paddingTop: 0.5 }}>
+                <LabeledValue label="Repeatable" />
+              </Stack>
+            )}
           </Stack>
           <Typography sx={{ paddingTop: 1.7 }} variant="body1">
             {lead.description}
