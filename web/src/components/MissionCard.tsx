@@ -11,21 +11,27 @@ import { getMissionById } from '../collections/missions'
 import { setMissionSelection } from '../model/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
-export type MissionCardProps = { missionId: string }
+export type MissionCardProps = { missionSiteId: string }
 
-export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element {
+export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
-  const mission = getMissionById(missionId)
+  
+  const missionSite = missionSites.find((site) => site.id === missionSiteId)
+  if (!missionSite) {
+    return <div>Mission site not found</div>
+  }
+  
+  const mission = getMissionById(missionSite.missionId)
 
-  const selected = selectedMissionId === mission.id
-  const disabled = missionSites.some((site) => site.missionId === mission.id && site.state === 'Deployed')
+  const selected = selectedMissionId === missionSite.id
+  const disabled = missionSite.state === 'Deployed' || missionSite.state === 'Successful' || missionSite.state === 'Failed'
 
   function handleClick(): void {
-    if (!disabled) {
-      dispatch(setMissionSelection(mission.id))
+    if (!disabled && missionSite) {
+      dispatch(setMissionSelection(missionSite.id))
     }
   }
 
@@ -50,6 +56,7 @@ export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element 
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
+              <LabeledValue label="Status" value={missionSite.state} sx={{ width: 100 }} />
               {mission.expiresIn !== 'never' ? (
                 <LabeledValue label="Expires in" value={mission.expiresIn} sx={{ width: 138 }} />
               ) : (

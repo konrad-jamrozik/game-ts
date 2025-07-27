@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import { missions } from '../collections/missions'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_SKILL,
@@ -165,6 +166,20 @@ const gameStateSlice = createSlice({
         const currentCount = state.leadInvestigationCounts[leadId] ?? 0
         state.leadInvestigationCounts[leadId] = currentCount + 1
 
+        // Find missions that depend on this lead and create mission sites for them
+        const dependentMissions = missions.filter((mission) => mission.dependsOn.includes(leadId))
+        for (const mission of dependentMissions) {
+          const missionSiteId = `mission-site-${state.nextMissionSiteId.toString().padStart(3, '0')}`
+          const newMissionSite: MissionSite = {
+            id: missionSiteId,
+            missionId: mission.id,
+            agentIds: [],
+            state: 'Active',
+          }
+          state.missionSites.push(newMissionSite)
+          state.nextMissionSiteId += 1
+        }
+
         state.intel -= intelCost
         state.actionsCount += 1
       },
@@ -173,33 +188,28 @@ const gameStateSlice = createSlice({
       },
     },
     deployAgentsToMission: {
-      reducer(state, action: PayloadAction<{ missionId: string; agentIds: string[] }>) {
-        const { missionId, agentIds } = action.payload
+      reducer(state, action: PayloadAction<{ missionSiteId: string; agentIds: string[] }>) {
+        const { missionSiteId, agentIds } = action.payload
 
-        // Create a new mission site
-        const missionSiteId = `mission-site-${state.nextMissionSiteId.toString().padStart(3, '0')}`
-        const newMissionSite: MissionSite = {
-          id: missionSiteId,
-          missionId,
-          agentIds: [...agentIds],
-          state: 'Deployed',
-        }
+        // Find the mission site and update it
+        const missionSite = state.missionSites.find((site) => site.id === missionSiteId)
+        if (missionSite) {
+          missionSite.agentIds = [...agentIds]
+          missionSite.state = 'Deployed'
 
-        state.missionSites.push(newMissionSite)
-        state.nextMissionSiteId += 1
-
-        // Assign agents to the mission site
-        for (const agent of state.agents) {
-          if (agentIds.includes(agent.id)) {
-            agent.assignment = missionSiteId
-            agent.state = 'OnMission'
+          // Assign agents to the mission site
+          for (const agent of state.agents) {
+            if (agentIds.includes(agent.id)) {
+              agent.assignment = missionSiteId
+              agent.state = 'OnMission'
+            }
           }
         }
 
         state.actionsCount += 1
       },
-      prepare(missionId: string, agentIds: string[]) {
-        return { payload: { missionId, agentIds }, meta: { playerAction: true } }
+      prepare(missionSiteId: string, agentIds: string[]) {
+        return { payload: { missionSiteId, agentIds }, meta: { playerAction: true } }
       },
     },
   },

@@ -150,9 +150,10 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Check if the mission already has an active mission site
-    if (gameState.missionSites.some((site) => site.missionId === selectedMissionId && site.state === 'Deployed')) {
-      setAlertMessage('This mission has already been deployed!')
+    // Check if the selected mission site is already deployed or completed
+    const selectedMissionSite = gameState.missionSites.find((site) => site.id === selectedMissionId)
+    if (selectedMissionSite && selectedMissionSite.state !== 'Active') {
+      setAlertMessage('This mission site is not available for deployment!')
       setShowAlert(true)
       return
     }

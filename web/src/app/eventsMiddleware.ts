@@ -1,5 +1,6 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
+import { getMissionById } from '../collections/missions'
 import { addEvent } from '../model/eventsSlice'
 import {
   advanceTurn,
@@ -107,11 +108,16 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       )
       // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (deployAgentsToMission.match(action)) {
-      const { missionId, agentIds } = action.payload
+      const { missionSiteId, agentIds } = action.payload
       const agentCount = agentIds.length
+      
+      // Find the mission site to get the mission info for logging
+      const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
+      const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
+      
       store.dispatch(
         addEvent({
-          message: `Deployed ${agentCount} agent${agentCount > 1 ? 's' : ''} to mission: ${missionId}`,
+          message: `Deployed ${agentCount} agent${agentCount > 1 ? 's' : ''} to mission: ${missionTitle}`,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),
