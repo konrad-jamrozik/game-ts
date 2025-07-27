@@ -46,7 +46,7 @@ const gameStateSlice = createSlice({
           if (agent.state === 'InTransit') {
             if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
               agent.state = 'OnAssignment'
-            } else if (agent.assignment.startsWith('Mission ')) {
+            } else if (agent.assignment.startsWith('mission-')) {
               agent.state = 'OnMission'
             } else {
               agent.state = 'Available'
@@ -166,7 +166,7 @@ const gameStateSlice = createSlice({
         const { missionId, agentIds } = action.payload
         for (const agent of state.agents) {
           if (agentIds.includes(agent.id)) {
-            agent.assignment = `Mission ${missionId}`
+            agent.assignment = missionId
             agent.state = 'InTransit'
           }
         }

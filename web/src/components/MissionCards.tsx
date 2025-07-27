@@ -45,7 +45,7 @@ export function MissionCards(): React.JSX.Element {
   return (
     <Card sx={{ maxWidth }}>
       <CardHeader title="Missions" />
-      <CardContent>
+      <CardContent sx={{ minWidth: missionIdPairs.length === 0 ? maxWidth : undefined }}>
         <Stack spacing={2}>
           {missionIdPairs.map((pair) => (
             <Grid container spacing={2} columns={2} key={pair.join('-')}>
