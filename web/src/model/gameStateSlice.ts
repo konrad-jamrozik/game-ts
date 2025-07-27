@@ -45,13 +45,8 @@ const gameStateSlice = createSlice({
             agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
           }
           if (agent.state === 'InTransit') {
-            if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
-              agent.state = 'OnAssignment'
-            } else if (agent.assignment.startsWith('mission-site-')) {
-              agent.state = 'OnMission'
-            } else {
-              agent.state = 'Available'
-            }
+            agent.state =
+              agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
           } else if (agent.state === 'OnMission') {
             // Agents on mission return to standby after one turn
             agent.state = 'InTransit'
@@ -190,7 +185,7 @@ const gameStateSlice = createSlice({
         for (const agent of state.agents) {
           if (agentIds.includes(agent.id)) {
             agent.assignment = missionSiteId
-            agent.state = 'InTransit'
+            agent.state = 'OnMission'
           }
         }
 

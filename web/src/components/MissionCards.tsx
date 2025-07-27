@@ -20,6 +20,10 @@ export function MissionCards(): React.JSX.Element {
     missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
   )
 
+  // 🚧KJA mission should be available when a lead for it has been investigated,
+  // and the mission hasn't yet been launched. Notably, the same mission may be repeated,
+  // by repeating the lead investigation for it.
+
   // Filter out missions that have unmet dependencies
   const discoveredMissions = missions.filter((mission) =>
     mission.dependsOn.every(
