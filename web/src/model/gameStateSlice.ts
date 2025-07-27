@@ -56,7 +56,7 @@ const gameStateSlice = createSlice({
 
         // Update mission site states
         for (const missionSite of state.missionSites) {
-          if (missionSite.state === 'Active') {
+          if (missionSite.state === 'Deployed') {
             // Check if mission site should be marked as successful or failed
             missionSite.state = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
           }
@@ -182,7 +182,7 @@ const gameStateSlice = createSlice({
           id: missionSiteId,
           missionId,
           agentIds: [...agentIds],
-          state: 'Active',
+          state: 'Deployed',
         }
 
         state.missionSites.push(newMissionSite)

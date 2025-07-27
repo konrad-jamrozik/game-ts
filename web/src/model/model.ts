@@ -34,7 +34,7 @@ export type Mission = {
   dependsOn: string[]
 }
 
-export type MissionSiteState = 'Active' | 'Successful' | 'Failed'
+export type MissionSiteState = 'Deployed' | 'Successful' | 'Failed'
 
 export type MissionSite = {
   id: string

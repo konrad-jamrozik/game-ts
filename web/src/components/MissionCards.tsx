@@ -13,7 +13,7 @@ export function MissionCards(): React.JSX.Element {
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   // Get mission IDs that have active mission sites
-  const activeMissionIds = missionSites.filter((site) => site.state === 'Active').map((site) => site.missionId)
+  const activeMissionIds = missionSites.filter((site) => site.state === 'Deployed').map((site) => site.missionId)
 
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(

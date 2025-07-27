@@ -21,7 +21,7 @@ export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element 
   const mission = getMissionById(missionId)
 
   const selected = selectedMissionId === mission.id
-  const disabled = missionSites.some((site) => site.missionId === mission.id && site.state === 'Active')
+  const disabled = missionSites.some((site) => site.missionId === mission.id && site.state === 'Deployed')
 
   function handleClick(): void {
     if (!disabled) {
