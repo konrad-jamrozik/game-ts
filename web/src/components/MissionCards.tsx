@@ -23,6 +23,15 @@ export function MissionCards(): React.JSX.Element {
   // 🚧KJA mission should be available when a lead for it has been investigated,
   // and the mission hasn't yet been launched. Notably, the same mission may be repeated,
   // by repeating the lead investigation for it.
+  //
+  // So overall:
+  // repeatable lead for mission:
+  // - invisible if requirements not met, enabled otherwise
+  // repeatable mission:
+  // - invisible if lead for it was not investigated
+  // - a new enabled instance spawns when lead for it is investigated
+  // - given instance becomes disabled when it is launched or expires. The disabled card shows status: expired or mission site result.
+  // 🚧KJA the above requires three concepts: mission template, mission instance, and mission site. Rename "missions" to "missionTemplates".
 
   // Filter out missions that have unmet dependencies
   const discoveredMissions = missions.filter((mission) =>
