@@ -10,6 +10,7 @@ import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
 import { reset } from '../model/gameStateSlice'
+import { clearAllSelection } from '../model/selectionSlice'
 import { setResetControlsExpanded } from '../model/settingsSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
@@ -30,6 +31,7 @@ export function ResetControls(): React.JSX.Element {
 
   function handleResetGame(): void {
     dispatch(reset())
+    dispatch(clearAllSelection())
     dispatch(ActionCreators.clearHistory())
   }
 

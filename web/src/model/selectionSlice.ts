@@ -32,6 +32,11 @@ const selectionSlice = createSlice({
     clearMissionSelection(state) {
       delete state.selectedMissionId
     },
+    clearAllSelection(state) {
+      state.agents = []
+      delete state.selectedLeadId
+      delete state.selectedMissionId
+    },
   },
 })
 
@@ -42,5 +47,6 @@ export const {
   clearLeadSelection,
   setMissionSelection,
   clearMissionSelection,
+  clearAllSelection,
 } = selectionSlice.actions
 export default selectionSlice.reducer

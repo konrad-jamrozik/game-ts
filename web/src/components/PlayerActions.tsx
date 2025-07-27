@@ -210,7 +210,8 @@ export function PlayerActions(): React.JSX.Element {
             onClick={handleDeployAgents}
             disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy agents
+            Deploy {selectedAgentIds.length} Agent
+            {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
           </Button>
           <Collapse in={showAlert}>
             <Alert
