@@ -111,5 +111,9 @@
         "npm test": true,
         "cd web": true,
         "/cd .*web/": true,
+        "/Set-Location.*web/": true,
+        "/Set-Location.*web.*npm run test/": true,
+        "/Set-Location.*web.*npm run build/": true,
+        "/Set-Location.*web.*npm run format.*npm run lint/": true,
     },
 }
