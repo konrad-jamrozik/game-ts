@@ -35,5 +35,12 @@ const selectionSlice = createSlice({
   },
 })
 
-export const { setAgentSelection, clearAgentSelection, setLeadSelection, clearLeadSelection, setMissionSelection, clearMissionSelection } = selectionSlice.actions
+export const {
+  setAgentSelection,
+  clearAgentSelection,
+  setLeadSelection,
+  clearLeadSelection,
+  setMissionSelection,
+  clearMissionSelection,
+} = selectionSlice.actions
 export default selectionSlice.reducer

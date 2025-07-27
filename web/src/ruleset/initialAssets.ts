@@ -1,6 +1,9 @@
 import type { GameState } from '../model/model'
 
-const initialAssets: Pick<GameState, 'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'deployedMissionIds'> = {
+const initialAssets: Pick<
+  GameState,
+  'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'deployedMissionIds'
+> = {
   agents: [],
   money: 500,
   intel: 0,

@@ -56,7 +56,7 @@ export function MissionCards(): React.JSX.Element {
               ))}
               {/* If there was only ever one discovered mission, add an invisible filler grid item 
               to prevent the width of the singular MissionCard from being too small. */}
-              {discoveredMissions.length === 1 && <Grid size={1} sx={{ flexGrow: 1 }} key={'invisible-filler'}></Grid>}
+              {discoveredMissions.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
             </Grid>
           ))}
         </Stack>

@@ -20,6 +20,7 @@ import {
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
+// eslint-disable-next-line max-lines-per-function
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
@@ -125,6 +126,7 @@ export function PlayerActions(): React.JSX.Element {
     setShowAlert(false) // Hide alert on successful action
   }
 
+  // eslint-disable-next-line max-statements
   function handleDeployAgents(): void {
     if (selectedMissionId === undefined) {
       setAlertMessage('No mission selected!')
@@ -203,7 +205,11 @@ export function PlayerActions(): React.JSX.Element {
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead
           </Button>
-          <Button variant="contained" onClick={handleDeployAgents} disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}>
+          <Button
+            variant="contained"
+            onClick={handleDeployAgents}
+            disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}
+          >
             Deploy agents
           </Button>
           <Collapse in={showAlert}>

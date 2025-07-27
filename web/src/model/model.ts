@@ -1,4 +1,11 @@
-export type AgentState = 'Available' | 'Training' | 'InTransit' | 'Recovering' | 'Contracting' | 'OnAssignment' | 'OnMission'
+export type AgentState =
+  | 'Available'
+  | 'Training'
+  | 'InTransit'
+  | 'Recovering'
+  | 'Contracting'
+  | 'OnAssignment'
+  | 'OnMission'
 
 export type Agent = {
   id: string
