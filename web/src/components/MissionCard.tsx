@@ -4,7 +4,7 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import type { SxProps } from '@mui/material/styles'
+import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../collections/missions'
@@ -15,6 +15,7 @@ export type MissionCardProps = { missionId: string }
 
 export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
+  const theme = useTheme()
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
   const mission = getMissionById(missionId)
@@ -31,7 +32,10 @@ export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element 
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   const selectedSx: SxProps = selected ? { boxShadow: selectedBoxShadow } : {}
   const disabledSx: SxProps = disabled ? { opacity: 0.5 } : {}
-  const combinedSx: SxProps = { ...selectedSx, ...disabledSx }
+  const missionCardHeaderSx: SxProps = { backgroundColor: theme.palette.background.missionCardHeader }
+  const missionCardContentSx: SxProps = { backgroundColor: theme.palette.background.missionCardContent }
+  const combinedHeaderSx: SxProps = { ...selectedSx, ...disabledSx, ...missionCardHeaderSx }
+  const combinedContentSx: SxProps = { ...selectedSx, ...disabledSx, ...missionCardContentSx }
 
   return (
     <Card sx={disabledSx}>
@@ -40,10 +44,10 @@ export function MissionCard({ missionId }: MissionCardProps): React.JSX.Element 
         disabled={disabled}
         data-active={selected ? '' : undefined}
       >
-        {/* Note: the sx={combinedSx} must be defined on CardHeader and CardContent, not CardActionArea,
+        {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win in specificity over the styleOverrides in theme.tsx. */}
-        <CardHeader title={mission.title} sx={combinedSx} />
-        <CardContent sx={combinedSx}>
+        <CardHeader title={mission.title} sx={combinedHeaderSx} />
+        <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               {mission.expiresIn !== 'never' ? (

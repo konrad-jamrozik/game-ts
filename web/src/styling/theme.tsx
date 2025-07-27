@@ -14,8 +14,10 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     cardHeader: string
     cardContent: string
-    nestedCardHeader: string
-    nestedCardContent: string
+    leadCardHeader: string
+    leadCardContent: string
+    missionCardHeader: string
+    missionCardContent: string
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -38,8 +40,10 @@ const colorSystemOptions: ColorSystemOptions = {
       paper: '#282828ff',
       cardContent: 'hsl(0, 0%, 25%)',
       cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
-      nestedCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
-      nestedCardContent: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      leadCardContent: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
+      missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
     },
   },
 }
@@ -73,12 +77,6 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
           // https://stackoverflow.com/a/71251997/986533
           '&:last-child': { paddingBottom: 2 },
         }),
-        '& .MuiCardHeader-root': {
-          backgroundColor: theme.palette.background.nestedCardHeader,
-        },
-        '& .MuiCardContent-root': {
-          backgroundColor: theme.palette.background.nestedCardContent,
-        },
       },
     },
   },
