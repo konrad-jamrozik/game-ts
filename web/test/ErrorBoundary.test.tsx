@@ -4,7 +4,7 @@ import { ErrorBoundary } from '../src/components/ErrorBoundary'
 
 // Mock the wipeStorage function - must be defined outside to avoid hoisting issues
 vi.mock('../src/app/persist', () => ({
-  wipeStorage: vi.fn(async () => {
+  wipeStorage: vi.fn<() => Promise<void>>(async (): Promise<void> => {
     // Mock implementation that returns void
   }),
 }))
