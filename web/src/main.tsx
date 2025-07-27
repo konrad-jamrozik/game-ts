@@ -4,19 +4,34 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './app/App.tsx'
 import { store } from './app/store'
+import { ErrorBoundary } from './components/ErrorBoundary'
 import theme from './styling/theme.tsx'
+
+// Global error handler for unhandled promise rejections
+globalThis.addEventListener('unhandledrejection', (event) => {
+  console.error('Unhandled promise rejection:', event.reason)
+  // Force a React error boundary to catch this
+  throw new Error(`Unhandled Promise Rejection: ${String(event.reason)}`)
+})
+
+// Global error handler for uncaught errors
+globalThis.addEventListener('error', (event) => {
+  console.error('Uncaught error:', event.error)
+})
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
   createRoot(rootElement).render(
     <StrictMode>
-      <ThemeProvider theme={theme} defaultMode="dark">
-        <CssBaseline enableColorScheme>
-          <Provider store={store}>
-            <App />
-          </Provider>
-        </CssBaseline>
-      </ThemeProvider>
+      <ErrorBoundary>
+        <ThemeProvider theme={theme} defaultMode="dark">
+          <CssBaseline enableColorScheme>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </CssBaseline>
+        </ThemeProvider>
+      </ErrorBoundary>
     </StrictMode>,
   )
 } else {
