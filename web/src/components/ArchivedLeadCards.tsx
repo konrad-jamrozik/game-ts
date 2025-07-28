@@ -77,6 +77,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
     cardEntryPairs.push(archivedCardEntries.slice(index, index + 2))
   }
 
+  // 🚧 KJA fix "Archived*Cards" layouts the same I did it with *Cards layouts.
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
