@@ -29,7 +29,12 @@ function formatAgentCount(count: number): string {
 }
 
 function formatMissionSiteTarget(selectedMissionSiteId: string | undefined): string {
-  return selectedMissionSiteId !== undefined ? ` to ${selectedMissionSiteId}` : ''
+  if (selectedMissionSiteId === undefined) {
+    return ' on mission ?'
+  }
+  // Remove "-site-" from the id before displaying
+  const displayId = selectedMissionSiteId.replaceAll('-site-', ' ')
+  return ` on ${displayId}`
 }
 
 export function PlayerActions(): React.JSX.Element {
