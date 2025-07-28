@@ -1,7 +1,11 @@
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
+import Collapse from '@mui/material/Collapse'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
@@ -9,8 +13,13 @@ import { leads } from '../collections/leads'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
+  const [expanded, setExpanded] = React.useState(true)
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+
+  function handleExpandClick(): void {
+    setExpanded(!expanded)
+  }
 
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(
@@ -45,28 +54,39 @@ export function LeadCards(): React.JSX.Element {
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
-      <CardHeader title="Leads" />
-      <CardContent>
-        <Stack spacing={2}>
-          {cardEntryPairs.map((pair) => (
-            <Grid
-              container
-              spacing={2}
-              columns={2}
-              key={pair.map((entry) => `${entry.leadId}-${entry.displayMode}`).join('-')}
-            >
-              {pair.map((entry) => (
-                <Grid size={1} key={`${entry.leadId}-${entry.displayMode}`}>
-                  <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
-                </Grid>
-              ))}
-              {/* If there was only ever one discovered lead, add an invisible filler grid item 
-              to prevent the width of the singular LeadCard from being too small. */}
-              {cardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
-            </Grid>
-          ))}
-        </Stack>
-      </CardContent>
+      <CardHeader
+        sx={{ minWidth: cardEntryPairs.length === 0 || !expanded ? maxWidth : undefined }}
+        avatar={
+          <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+            {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+        }
+        title={`Leads (${cardEntries.length})`}
+        slotProps={{ title: { variant: 'h5' } }}
+      />
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Stack spacing={2}>
+            {cardEntryPairs.map((pair) => (
+              <Grid
+                container
+                spacing={2}
+                columns={2}
+                key={pair.map((entry) => `${entry.leadId}-${entry.displayMode}`).join('-')}
+              >
+                {pair.map((entry) => (
+                  <Grid size={1} key={`${entry.leadId}-${entry.displayMode}`}>
+                    <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
+                  </Grid>
+                ))}
+                {/* If there was only ever one discovered lead, add an invisible filler grid item 
+                to prevent the width of the singular LeadCard from being too small. */}
+                {cardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
+              </Grid>
+            ))}
+          </Stack>
+        </CardContent>
+      </Collapse>
     </Card>
   )
 }
