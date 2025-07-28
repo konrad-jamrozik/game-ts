@@ -57,12 +57,13 @@ export function ArchivedMissionCards(): React.JSX.Element {
     <Card sx={{ maxWidth }}>
       <CardHeader
         sx={{ minWidth: missionSiteIdPairs.length === 0 || !expanded ? maxWidth : undefined }}
-        title="Archived Missions"
-        action={
+        avatar={
           <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         }
+        title="Archived Missions"
+        slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>

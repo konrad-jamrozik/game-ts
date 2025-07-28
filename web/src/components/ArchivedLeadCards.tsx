@@ -74,12 +74,13 @@ export function ArchivedLeadCards(): React.JSX.Element {
     <Card sx={{ maxWidth }}>
       <CardHeader
         sx={{ minWidth: cardEntryPairs.length === 0 || !expanded ? maxWidth : undefined }}
-        title="Archived Leads"
-        action={
+        avatar={
           <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         }
+        title="Archived Leads"
+        slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
