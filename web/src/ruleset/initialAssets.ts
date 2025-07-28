@@ -13,6 +13,11 @@ const initialAssets: Pick<
   missionSites: [],
 }
 
-const debugInitialAssets = { ...initialAssets, intel: 500 }
+const debugInitialAssets = {
+  ...initialAssets,
+  intel: 500,
+  investigatedLeadIds: ['lead-red-dawn-profile'],
+  leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
+}
 
 export default debugInitialAssets
