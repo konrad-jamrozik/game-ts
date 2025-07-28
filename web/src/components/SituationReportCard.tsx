@@ -10,10 +10,12 @@ import { StyledDataGrid } from './StyledDataGrid'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions, investigatedLeadIds } = gameState
+  const { factions, investigatedLeadIds } = gameState
 
-  // Calculate panic as percentage out of 10 with 1 decimal place
-  const panicPercentage = `${((panic / 10) * 100).toFixed(1)}%`
+  // Calculate panic as percentage based on sum of all faction threat levels
+  // 100% panic = 10,000, so divide by 100 to get percentage
+  const totalThreatLevel = factions.reduce((sum, faction) => sum + faction.threatLevel, 0)
+  const panicPercentage = `${(totalThreatLevel / 100).toFixed(1)}%`
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 80 },

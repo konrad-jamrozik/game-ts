@@ -19,7 +19,7 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.clearHistory())
   }
 
-  const isGameOver = gameState.panic >= 10
+  const isGameOver = gameState.panic >= 10_000 // 100% panic = 10,000
 
   const labelWidthPx = 110
   return (

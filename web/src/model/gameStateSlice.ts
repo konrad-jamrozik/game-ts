@@ -22,7 +22,8 @@ const initialState: GameState = {
     {
       id: 'faction-red-dawn',
       name: 'Red Dawn',
-      threatLevel: 0,
+      threatLevel: 100,
+      threatIncrement: 5,
       suppressionLevel: 0,
       discoveryPrerequisite: ['lead-red-dawn-profile'],
     },
@@ -84,7 +85,15 @@ const gameStateSlice = createSlice({
         state.money = getMoneyNewBalance(state)
         state.intel = getIntelNewBalance(state)
         state.hireCost = 0
-        state.panic += 1
+        
+        // Increment faction threat levels
+        for (const faction of state.factions) {
+          faction.threatLevel += faction.threatIncrement
+        }
+        
+        // Update panic based on sum of all faction threat levels
+        const totalThreatLevel = state.factions.reduce((sum, faction) => sum + faction.threatLevel, 0)
+        state.panic = totalThreatLevel
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }

@@ -48,6 +48,7 @@ export type Faction = {
   id: string
   name: string
   threatLevel: number
+  threatIncrement: number
   suppressionLevel: number
   discoveryPrerequisite: string[]
 }
