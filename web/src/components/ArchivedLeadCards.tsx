@@ -8,8 +8,36 @@ import { useAppSelector } from '../app/hooks'
 import { leads } from '../collections/leads'
 import { LeadCard } from './LeadCard'
 
-export function LeadCards(): React.JSX.Element {
+type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
+
+function getArchivedCardEntries(
+  discoveredLeads: typeof leads,
+  investigatedLeadIds: string[],
+  leadInvestigationCounts: Record<string, number>,
+): CardEntry[] {
+  const archivedCardEntries: CardEntry[] = []
+
+  // Add disabled normal cards (non-repeatable leads that have been investigated)
+  for (const lead of discoveredLeads) {
+    const isDisabled = !lead.repeatable && investigatedLeadIds.includes(lead.id)
+    if (isDisabled) {
+      archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
+    }
+  }
+
+  // Add repeated cards for repeatable leads that have been investigated
+  for (const lead of discoveredLeads) {
+    if (lead.repeatable && investigatedLeadIds.includes(lead.id) && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
+      archivedCardEntries.push({ leadId: lead.id, displayMode: 'repeated' })
+    }
+  }
+
+  return archivedCardEntries
+}
+
+export function ArchivedLeadCards(): React.JSX.Element {
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
+  const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   // Get mission IDs that have successful mission sites
@@ -24,28 +52,23 @@ export function LeadCards(): React.JSX.Element {
     ),
   )
 
-  // Create card entries: only enabled normal cards for repeatable leads
-  type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
-  const cardEntries: CardEntry[] = []
+  const archivedCardEntries = getArchivedCardEntries(discoveredLeads, investigatedLeadIds, leadInvestigationCounts)
 
-  // Add normal cards for all discovered leads that are enabled (not disabled)
-  for (const lead of discoveredLeads) {
-    const isEnabled = lead.repeatable || !investigatedLeadIds.includes(lead.id)
-    if (isEnabled) {
-      cardEntries.push({ leadId: lead.id, displayMode: 'normal' })
-    }
+  // Don't render anything if there are no archived leads
+  if (archivedCardEntries.length === 0) {
+    return <></>
   }
 
   // Group card entries into pairs
   const cardEntryPairs: CardEntry[][] = []
-  for (let index = 0; index < cardEntries.length; index += 2) {
-    cardEntryPairs.push(cardEntries.slice(index, index + 2))
+  for (let index = 0; index < archivedCardEntries.length; index += 2) {
+    cardEntryPairs.push(archivedCardEntries.slice(index, index + 2))
   }
 
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
-      <CardHeader title="Leads" />
+      <CardHeader title="Archived Leads" />
       <CardContent>
         <Stack spacing={2}>
           {cardEntryPairs.map((pair) => (
@@ -60,9 +83,9 @@ export function LeadCards(): React.JSX.Element {
                   <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
                 </Grid>
               ))}
-              {/* If there was only ever one discovered lead, add an invisible filler grid item 
+              {/* If there was only ever one archived lead, add an invisible filler grid item 
               to prevent the width of the singular LeadCard from being too small. */}
-              {cardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
+              {archivedCardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
             </Grid>
           ))}
         </Stack>

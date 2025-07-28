@@ -35,7 +35,7 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
 
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   const selectedSx: SxProps = selected ? { boxShadow: selectedBoxShadow } : {}
-  const disabledSx: SxProps = disabled ? { opacity: 0.5 } : {}
+  const disabledSx: SxProps = disabled ? { opacity: 0.8 } : {}
   const leadCardHeaderSx: SxProps = { backgroundColor: theme.palette.background.leadCardHeader }
   const leadCardContentSx: SxProps = { backgroundColor: theme.palette.background.leadCardContent }
   const combinedHeaderSx: SxProps = { ...selectedSx, ...disabledSx, ...leadCardHeaderSx }

@@ -1,6 +1,7 @@
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
 import { AgentsDataGrid } from '../components/AgentsDataGrid'
+import { ArchivedLeadCards } from '../components/ArchivedLeadCards'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
 import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { EventLog } from '../components/EventLog'
@@ -41,6 +42,9 @@ function App(): React.JSX.Element {
             </Grid>
             <Grid>
               <LeadCards />
+            </Grid>
+            <Grid>
+              <ArchivedLeadCards />
             </Grid>
             <Grid>
               <MissionCards />
