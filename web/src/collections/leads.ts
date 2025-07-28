@@ -1,7 +1,6 @@
 import type { Lead } from '../model/model'
 import { assertDefined } from '../utils/assert'
 
-// 🚧KJA leads shouldn't expire often, and be repeatable. But "Missions" should expire relatively quickly.
 export const leads: Lead[] = [
   {
     id: 'lead-criminal-orgs',

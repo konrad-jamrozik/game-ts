@@ -37,7 +37,7 @@ export function ResetControls(): React.JSX.Element {
 
   function handleResetTurn(): void {
     // The game state with index 0 is the beginning of the current turn.
-    // 🚧KJA turn reset won't work correctly if there were more than 'limit' player actions
+    // 🚧KJA 2 turn reset won't work correctly if there were more than 'limit' player actions
     // as defined in store.ts
     dispatch(ActionCreators.jumpToPast(0))
     dispatch(ActionCreators.clearHistory())

@@ -30,7 +30,7 @@ function isPlayerAction(action: unknown): action is { meta: { playerAction: bool
 const undoableReducer = undoable(combinedReducer, {
   // You can pass options to undoable here
   limit: 100, // Up to 100 player actions can be undone/redone
-  // 🚧KJA problem with isPlayerAction undo filter:
+  // 🚧KJA 2 problem with isPlayerAction undo filter:
   // when player action is dispatched, it may result in bunch of events happening after it.
   // The game state should be persisted *AFTER* all those events are processed, not *BEFORE*.
   // Perhaps instead need to group actions together to always start with player action:
