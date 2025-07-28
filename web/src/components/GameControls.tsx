@@ -36,16 +36,18 @@ export function GameControls(): React.JSX.Element {
             <Button
               variant="contained"
               onClick={handleAdvanceTurn}
-              sx={{
+              sx={(theme) => ({
                 width: 156.86,
                 ...(isGameOver && {
-                  backgroundColor: 'error.main',
-                  '&:hover': { backgroundColor: 'error.dark' },
+                  '&.Mui-disabled': {
+                    backgroundColor: theme.palette.error.dark,
+                    color: theme.palette.error.contrastText,
+                  },
                 }),
-              }}
+              })}
               disabled={isGameOver}
             >
-              {isGameOver ? 'Game Over' : 'advance turn'}
+              {isGameOver ? 'game over' : 'advance turn'}
             </Button>
             <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
           </Stack>
