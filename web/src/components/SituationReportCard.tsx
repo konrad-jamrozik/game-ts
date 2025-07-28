@@ -1,9 +1,7 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
+import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { LabeledValue } from './LabeledValue'
+import { DataGridCard } from './DataGridCard'
 
 export function SituationReportCard(): React.JSX.Element {
   const panic = useAppSelector((state) => state.undoable.present.gameState.panic)
@@ -11,12 +9,12 @@ export function SituationReportCard(): React.JSX.Element {
   // Calculate panic as percentage out of 10 with 1 decimal place
   const panicPercentage = `${((panic / 10) * 100).toFixed(1)}%`
 
-  return (
-    <Card sx={{ width: 220 }}>
-      <CardHeader title="Situation Report" />
-      <CardContent>
-        <LabeledValue label="Panic" value={panicPercentage} sx={{ width: 120 }} />
-      </CardContent>
-    </Card>
-  )
+  const columns: GridColDef[] = [
+    { field: 'metric', headerName: 'Metric', minWidth: 80 },
+    { field: 'value', headerName: 'Value', minWidth: 80 },
+  ]
+
+  const rows = [{ id: 1, metric: 'Panic', value: panicPercentage }]
+
+  return <DataGridCard title="Situation Report" rows={rows} columns={columns} />
 }
