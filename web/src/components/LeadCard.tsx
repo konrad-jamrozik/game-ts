@@ -61,7 +61,7 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
                 <LabeledValue label="Does not expire" sx={{ width: 142 }} />
               )}
             </Stack>
-            {displayMode === 'normal' && lead.repeatable && !investigatedLeadIds.includes(lead.id) && (
+            {displayMode === 'normal' && lead.repeatable && (
               <Stack direction="row" sx={{ paddingTop: 0.5 }}>
                 <LabeledValue label="Repeatable" />
               </Stack>
