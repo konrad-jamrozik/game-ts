@@ -44,6 +44,13 @@ export type MissionSite = {
   expiresIn: number | 'never'
 }
 
+export type Faction = {
+  id: string
+  name: string
+  threatLevel: number
+  suppressionLevel: number
+}
+
 export type GameState = {
   actionsCount: number
   turn: number
@@ -58,4 +65,5 @@ export type GameState = {
   leadInvestigationCounts: Record<string, number>
   missionSites: MissionSite[]
   panic: number
+  factions: Faction[]
 }

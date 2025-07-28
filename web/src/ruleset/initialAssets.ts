@@ -2,7 +2,14 @@ import type { GameState } from '../model/model'
 
 const initialAssets: Pick<
   GameState,
-  'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'leadInvestigationCounts' | 'missionSites'
+  | 'agents'
+  | 'money'
+  | 'intel'
+  | 'funding'
+  | 'investigatedLeadIds'
+  | 'leadInvestigationCounts'
+  | 'missionSites'
+  | 'factions'
 > = {
   agents: [],
   money: 500,
@@ -11,6 +18,14 @@ const initialAssets: Pick<
   investigatedLeadIds: [],
   leadInvestigationCounts: {},
   missionSites: [],
+  factions: [
+    {
+      id: 'faction-red-dawn',
+      name: 'Red Dawn',
+      threatLevel: 0,
+      suppressionLevel: 0,
+    },
+  ],
 }
 
 const debugInitialAssets = { ...initialAssets, intel: 500 }
