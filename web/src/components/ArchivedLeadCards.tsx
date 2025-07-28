@@ -1,7 +1,11 @@
+import ExpandLessIcon from '@mui/icons-material/ExpandLess'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
+import Collapse from '@mui/material/Collapse'
 import Grid from '@mui/material/Grid'
+import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
@@ -36,9 +40,14 @@ function getArchivedCardEntries(
 }
 
 export function ArchivedLeadCards(): React.JSX.Element {
+  const [expanded, setExpanded] = React.useState(false)
   const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+
+  function handleExpandClick(): void {
+    setExpanded(!expanded)
+  }
 
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(
@@ -63,28 +72,40 @@ export function ArchivedLeadCards(): React.JSX.Element {
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
-      <CardHeader title="Archived Leads" />
-      <CardContent sx={{ minWidth: cardEntryPairs.length === 0 ? maxWidth : undefined }}>
-        <Stack spacing={2}>
-          {cardEntryPairs.map((pair) => (
-            <Grid
-              container
-              spacing={2}
-              columns={2}
-              key={pair.map((entry) => `${entry.leadId}-${entry.displayMode}`).join('-')}
-            >
-              {pair.map((entry) => (
-                <Grid size={1} key={`${entry.leadId}-${entry.displayMode}`}>
-                  <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
-                </Grid>
-              ))}
-              {/* If there was only ever one archived lead, add an invisible filler grid item 
-              to prevent the width of the singular LeadCard from being too small. */}
-              {archivedCardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
-            </Grid>
-          ))}
-        </Stack>
-      </CardContent>
+      <CardHeader
+        sx={{ minWidth: cardEntryPairs.length === 0 || !expanded ? maxWidth : undefined }}
+        title="Archived Leads"
+        action={
+          <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+            {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+          </IconButton>
+        }
+      />
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <CardContent>
+          <Stack spacing={2}>
+            {cardEntryPairs.map((pair) => (
+              <Grid
+                container
+                spacing={2}
+                columns={2}
+                key={pair.map((entry) => `${entry.leadId}-${entry.displayMode}`).join('-')}
+              >
+                {pair.map((entry) => (
+                  <Grid size={1} key={`${entry.leadId}-${entry.displayMode}`}>
+                    <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
+                  </Grid>
+                ))}
+                {/* If there was only ever one archived lead, add an invisible filler grid item 
+                to prevent the width of the singular LeadCard from being too small. */}
+                {archivedCardEntries.length === 1 && (
+                  <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>
+                )}
+              </Grid>
+            ))}
+          </Stack>
+        </CardContent>
+      </Collapse>
     </Card>
   )
 }
