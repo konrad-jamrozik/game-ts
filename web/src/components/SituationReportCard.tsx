@@ -1,8 +1,11 @@
+import Card from '@mui/material/Card'
+import CardContent from '@mui/material/CardContent'
+import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { DataGridCard } from './DataGridCard'
+import { StyledDataGrid } from './StyledDataGrid'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -28,9 +31,16 @@ export function SituationReportCard(): React.JSX.Element {
     : []
 
   return (
-    <Stack spacing={2}>
-      <DataGridCard title="Situation Report" rows={panicRows} columns={columns} />
-      {redDawnFaction && <DataGridCard title={`${redDawnFaction.name} Report`} rows={redDawnRows} columns={columns} />}
-    </Stack>
+    <Card>
+      <CardHeader title="Situation Report" />
+      <CardContent>
+        <Stack spacing={2}>
+          <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
+          {redDawnFaction && (
+            <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
+          )}
+        </Stack>
+      </CardContent>
+    </Card>
   )
 }
