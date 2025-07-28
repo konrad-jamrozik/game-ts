@@ -49,6 +49,7 @@ export type Faction = {
   name: string
   threatLevel: number
   suppressionLevel: number
+  discoveryPrerequisite: string[]
 }
 
 export type GameState = {

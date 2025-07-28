@@ -24,6 +24,7 @@ const initialState: GameState = {
       name: 'Red Dawn',
       threatLevel: 0,
       suppressionLevel: 0,
+      discoveryPrerequisite: ['lead-red-dawn-profile'],
     },
   ],
   ...initialAssets,

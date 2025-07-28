@@ -10,7 +10,7 @@ import { StyledDataGrid } from './StyledDataGrid'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions } = gameState
+  const { panic, factions, investigatedLeadIds } = gameState
 
   // Calculate panic as percentage out of 10 with 1 decimal place
   const panicPercentage = `${((panic / 10) * 100).toFixed(1)}%`
@@ -22,14 +22,19 @@ export function SituationReportCard(): React.JSX.Element {
 
   const panicRows = [{ id: 1, metric: 'Panic', value: panicPercentage }]
 
-  // Get Red Dawn faction data
+  // Get Red Dawn faction data and check if it's discovered
   const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
-  const redDawnRows = redDawnFaction
-    ? [
-        { id: 1, metric: 'Threat lvl', value: redDawnFaction.threatLevel },
-        { id: 2, metric: 'Suppr. lvl', value: `${((redDawnFaction.suppressionLevel / 100) * 100).toFixed(1)}%` },
-      ]
-    : []
+  const isRedDawnDiscovered = redDawnFaction
+    ? redDawnFaction.discoveryPrerequisite.every((leadId) => investigatedLeadIds.includes(leadId))
+    : false
+
+  const redDawnRows =
+    redDawnFaction && isRedDawnDiscovered
+      ? [
+          { id: 1, metric: 'Threat lvl', value: redDawnFaction.threatLevel },
+          { id: 2, metric: 'Suppr. lvl', value: `${((redDawnFaction.suppressionLevel / 100) * 100).toFixed(1)}%` },
+        ]
+      : []
 
   return (
     <Card>
@@ -37,7 +42,7 @@ export function SituationReportCard(): React.JSX.Element {
       <CardContent>
         <Stack spacing={2}>
           <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
-          {redDawnFaction && (
+          {redDawnFaction && isRedDawnDiscovered && (
             <>
               <Typography variant="h5">{redDawnFaction.name} faction</Typography>
               <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
