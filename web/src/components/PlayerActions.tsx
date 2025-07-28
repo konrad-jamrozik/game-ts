@@ -28,6 +28,10 @@ function formatAgentCount(count: number): string {
   return `${count} ${pluralizeAgent(count)}`
 }
 
+function formatMissionSiteTarget(selectedMissionSiteId: string | undefined): string {
+  return selectedMissionSiteId !== undefined ? ` to ${selectedMissionSiteId}` : ''
+}
+
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
@@ -207,15 +211,16 @@ export function PlayerActions(): React.JSX.Element {
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
             Assign {formatAgentCount(selectedAgentIds.length)} to espionage
           </Button>
-          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
-            Investigate lead
-          </Button>
           <Button
             variant="contained"
             onClick={handleDeployAgents}
             disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy {formatAgentCount(selectedAgentIds.length)} to {selectedMissionSiteId}
+            Deploy {formatAgentCount(selectedAgentIds.length)}
+            {formatMissionSiteTarget(selectedMissionSiteId)}
+          </Button>
+          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
+            Investigate lead
           </Button>
           <Collapse in={showAlert}>
             <Alert
