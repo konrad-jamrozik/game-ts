@@ -174,6 +174,13 @@ To circumvent the problem, render in pairs:
 - https://meyerweb.com/eric/tools/color-blend
 - https://m2.material.io/inline-tools/color/
 
+# Padding of last child
+
+``` typescript
+// If I want less padding:
+<CardContent sx={{ padding: 1, margin: 0, '&:last-child': { paddingBottom: 1 } }}>
+```
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
