@@ -7,7 +7,7 @@ export const missions: Mission[] = [
     title: 'Apprehend Red Dawn member',
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 3,
-    dependsOn: ['lead-red-dawn-apprehension'],
+    dependsOn: ['lead-red-dawn-location'],
   },
   {
     id: 'mission-raid-red-dawn-safehouse',

@@ -12,10 +12,10 @@ export const leads: Lead[] = [
     repeatable: false,
   },
   {
-    id: 'lead-red-dawn-apprehension',
-    title: 'Red Dawn member apprehension',
+    id: 'lead-red-dawn-location',
+    title: 'Red Dawn member location',
     intelCost: 20,
-    description: 'Apprehend a member of the Red Dawn cult.',
+    description: 'Locate a member of the Red Dawn cult.',
     expiresIn: 'never',
     dependsOn: ['lead-criminal-orgs'],
     repeatable: true,
