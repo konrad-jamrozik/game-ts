@@ -60,7 +60,7 @@ export function ArchivedMissionCards(): React.JSX.Element {
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         }
-        title="Archived Missions"
+        title={`Archived Missions (${sortedArchivedMissionSites.length})`}
         slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>

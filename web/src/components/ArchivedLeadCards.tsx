@@ -79,7 +79,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         }
-        title="Archived Leads"
+        title={`Archived Leads (${archivedCardEntries.length})`}
         slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
