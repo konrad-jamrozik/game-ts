@@ -18,6 +18,14 @@ const initialState: GameState = {
   nextMissionSiteId: 0,
   hireCost: 50,
   panic: 0,
+  factions: [
+    {
+      id: 'faction-red-dawn',
+      name: 'Red Dawn',
+      threatLevel: 0,
+      suppressionLevel: 0,
+    },
+  ],
   ...initialAssets,
 }
 

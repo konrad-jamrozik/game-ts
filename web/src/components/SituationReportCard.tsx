@@ -23,7 +23,7 @@ export function SituationReportCard(): React.JSX.Element {
   const redDawnRows = redDawnFaction
     ? [
         { id: 1, metric: 'Threat lvl', value: redDawnFaction.threatLevel },
-        { id: 2, metric: 'Suppr. lvl', value: redDawnFaction.suppressionLevel },
+        { id: 2, metric: 'Suppr. lvl', value: `${((redDawnFaction.suppressionLevel / 100) * 100).toFixed(1)}%` },
       ]
     : []
 
