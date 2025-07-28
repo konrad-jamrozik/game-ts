@@ -32,9 +32,9 @@ export function MissionCards(): React.JSX.Element {
     return siteB.id.localeCompare(siteA.id)
   })
 
-  const maxWidth = '800px'
+  const widthVal = '800px'
   return (
-    <Card sx={{ maxWidth }}>
+    <Card sx={{ width: widthVal }}>
       <CardHeader
         avatar={
           <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
@@ -45,19 +45,19 @@ export function MissionCards(): React.JSX.Element {
         slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
+        <CardContent sx={{ padding: 1 }}>
           <Stack
             direction="row"
-            spacing={2}
+            spacing={0}
             sx={{
               flexWrap: 'wrap',
               '& > *': {
-                flex: '0 0 calc(50% - 8px)', // 50% width minus half the spacing
+                flexBasis: 'calc(50%)',
               },
             }}
           >
             {sortedActiveMissionSites.map((site) => (
-              <Box key={site.id}>
+              <Box key={site.id} sx={{ padding: 1 }}>
                 <MissionCard missionSiteId={site.id} />
               </Box>
             ))}
