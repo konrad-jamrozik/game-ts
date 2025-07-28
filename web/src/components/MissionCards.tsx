@@ -1,10 +1,10 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
-import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
@@ -32,12 +32,6 @@ export function MissionCards(): React.JSX.Element {
     return siteB.id.localeCompare(siteA.id)
   })
 
-  // Group mission site IDs into pairs
-  const missionSiteIdPairs: string[][] = []
-  for (let index = 0; index < sortedActiveMissionSites.length; index += 2) {
-    missionSiteIdPairs.push(sortedActiveMissionSites.slice(index, index + 2).map((site) => site.id))
-  }
-
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
@@ -52,15 +46,20 @@ export function MissionCards(): React.JSX.Element {
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Stack spacing={2}>
-            {missionSiteIdPairs.map((pair) => (
-              <Grid container spacing={2} columns={2} key={pair.join('-')}>
-                {pair.map((missionSiteId) => (
-                  <Grid size={1} key={missionSiteId}>
-                    <MissionCard missionSiteId={missionSiteId} />
-                  </Grid>
-                ))}
-              </Grid>
+          <Stack
+            direction="row"
+            spacing={2}
+            sx={{
+              flexWrap: 'wrap',
+              '& > *': {
+                flex: '0 0 calc(50% - 8px)', // 50% width minus half the spacing
+              },
+            }}
+          >
+            {sortedActiveMissionSites.map((site) => (
+              <Box key={site.id}>
+                <MissionCard missionSiteId={site.id} />
+              </Box>
             ))}
           </Stack>
         </CardContent>

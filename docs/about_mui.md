@@ -165,6 +165,52 @@ To circumvent the problem, render in pairs:
 </Grid>
 ```
 
+But this is suboptimal solution. See [Avoid using Grid](#avoid-using-grid) for better solution.
+
+# Avoid using Grid
+
+It has broken behaviors, most notably when the component grids do not cover all columns.
+I observed that if only 6 out of 12 of the default columns are occupied, very weird things happen,
+like adding more horizontal text gradually expanding the width, or height being incorrectly calculated
+to be too large if text wrapped once, but not if it wrapped 0 or twice.
+
+Instead, use Stack, Box, and flexbox props.
+
+For example, instead of:
+
+``` typescript
+<Grid container spacing={2}>
+  {cardEntries.map((entry) => (
+    <Grid size={6} key={`${entry.leadId}-${entry.displayMode}`}>
+      <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
+    </Grid>
+  ))}
+</Grid>
+```
+
+use:
+
+``` typescript
+<Stack
+  direction="row"
+  spacing={2}
+  sx={{
+    flexWrap: 'wrap',
+    '& > *': {
+      flex: '0 0 calc(50% - 8px)', // 50% width minus half the spacing
+    },
+  }}
+>
+  {cardEntries.map((entry) => (
+    <Box key={`${entry.leadId}-${entry.displayMode}`}>
+      <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
+    </Box>
+  ))}
+</Stack>
+```
+
+The original version would have major layout issues in case of odd number of `cardEntries`.
+
 # Color palettes
 
 - https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
