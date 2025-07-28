@@ -27,14 +27,14 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
   const mission = getMissionById(missionSite.missionId)
 
   const selected = selectedMissionId === missionSite.id
-  const disabled = missionSite.state === 'Successful' || missionSite.state === 'Failed'
   const isDeployed = missionSite.state === 'Deployed'
+  const disabled = missionSite.state === 'Successful' || missionSite.state === 'Failed' || isDeployed
 
   // Remove the "mission-site-" prefix from the ID for display
   const displayId = missionSite.id.replace(/^mission-site-/u, '')
 
   function handleClick(): void {
-    if (!disabled && !isDeployed && missionSite) {
+    if (!disabled && missionSite) {
       dispatch(setMissionSelection(missionSite.id))
     }
   }
@@ -50,8 +50,8 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
   return (
     <Card sx={disabledSx}>
       <CardActionArea
-        onClick={disabled || isDeployed ? undefined : handleClick}
-        disabled={disabled || isDeployed}
+        onClick={disabled ? undefined : handleClick}
+        disabled={disabled}
         data-active={selected ? '' : undefined}
       >
         {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,

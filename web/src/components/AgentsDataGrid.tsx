@@ -55,7 +55,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'assignment',
       headerName: 'Assignment',
-      minWidth: 120,
+      minWidth: 140,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
       ),
