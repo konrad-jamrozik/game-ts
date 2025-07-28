@@ -32,7 +32,7 @@ export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
-  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
+  const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
@@ -134,7 +134,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleDeployAgents(): void {
-    if (selectedMissionId === undefined) {
+    if (selectedMissionSiteId === undefined) {
       setAlertMessage('No mission selected!')
       setShowAlert(true)
       return
@@ -157,14 +157,14 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Check if the selected mission site is already deployed or completed
-    const selectedMissionSite = gameState.missionSites.find((site) => site.id === selectedMissionId)
+    const selectedMissionSite = gameState.missionSites.find((site) => site.id === selectedMissionSiteId)
     if (selectedMissionSite && selectedMissionSite.state !== 'Active') {
       setAlertMessage('This mission site is not available for deployment!')
       setShowAlert(true)
       return
     }
 
-    dispatch(deployAgentsToMission(selectedMissionId, selectedAgentIds))
+    dispatch(deployAgentsToMission(selectedMissionSiteId, selectedAgentIds))
     dispatch(clearAgentSelection())
     dispatch(clearMissionSelection())
     setShowAlert(false) // Hide alert on successful action
@@ -213,9 +213,9 @@ export function PlayerActions(): React.JSX.Element {
           <Button
             variant="contained"
             onClick={handleDeployAgents}
-            disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}
+            disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy {formatAgentCount(selectedAgentIds.length)}
+            Deploy {formatAgentCount(selectedAgentIds.length)} to {selectedMissionSiteId}
           </Button>
           <Collapse in={showAlert}>
             <Alert

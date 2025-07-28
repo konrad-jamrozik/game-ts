@@ -8,7 +8,7 @@ import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../collections/missions'
-import { setMissionSelection } from '../model/selectionSlice'
+import { setMissionSiteSelection } from '../model/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
 export type MissionCardProps = { missionSiteId: string }
@@ -16,7 +16,7 @@ export type MissionCardProps = { missionSiteId: string }
 export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useTheme()
-  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
+  const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   const missionSite = missionSites.find((site) => site.id === missionSiteId)
@@ -26,7 +26,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   const mission = getMissionById(missionSite.missionId)
 
-  const selected = selectedMissionId === missionSite.id
+  const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'
   const disabled = missionSite.state === 'Successful' || missionSite.state === 'Failed' || isDeployed
 
@@ -35,7 +35,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   function handleClick(): void {
     if (!disabled && missionSite) {
-      dispatch(setMissionSelection(missionSite.id))
+      dispatch(setMissionSiteSelection(missionSite.id))
     }
   }
 
