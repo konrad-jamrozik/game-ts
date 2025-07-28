@@ -17,6 +17,7 @@ const initialState: GameState = {
   nextAgentId: 0,
   nextMissionSiteId: 0,
   hireCost: 50,
+  panic: 0,
   ...initialAssets,
 }
 
@@ -74,6 +75,7 @@ const gameStateSlice = createSlice({
         state.money = getMoneyNewBalance(state)
         state.intel = getIntelNewBalance(state)
         state.hireCost = 0
+        state.panic += 1
       },
       prepare() {
         return { payload: undefined, meta: { playerAction: true } }

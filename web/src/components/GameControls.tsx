@@ -19,6 +19,8 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.clearHistory())
   }
 
+  const isGameOver = gameState.panic >= 10
+
   const labelWidthPx = 110
   return (
     <Card
@@ -31,8 +33,19 @@ export function GameControls(): React.JSX.Element {
         <Stack>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
-            <Button variant="contained" onClick={handleAdvanceTurn} sx={{ width: 156.86 }}>
-              advance turn
+            <Button
+              variant="contained"
+              onClick={handleAdvanceTurn}
+              sx={{
+                width: 156.86,
+                ...(isGameOver && {
+                  backgroundColor: 'error.main',
+                  '&:hover': { backgroundColor: 'error.dark' },
+                }),
+              }}
+              disabled={isGameOver}
+            >
+              {isGameOver ? 'Game Over' : 'advance turn'}
             </Button>
             <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
           </Stack>

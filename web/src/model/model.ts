@@ -57,4 +57,5 @@ export type GameState = {
   investigatedLeadIds: string[]
   leadInvestigationCounts: Record<string, number>
   missionSites: MissionSite[]
+  panic: number
 }

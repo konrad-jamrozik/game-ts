@@ -11,6 +11,7 @@ import { GameControls } from '../components/GameControls'
 import { LeadCards } from '../components/LeadCards'
 import { MissionCards } from '../components/MissionCards'
 import { PlayerActions } from '../components/PlayerActions'
+import { SituationReportCard } from '../components/SituationReportCard'
 
 function App(): React.JSX.Element {
   return (
@@ -45,6 +46,7 @@ function App(): React.JSX.Element {
           <Stack spacing={2}>
             <AssetsDataGrid />
             <BalanceSheetDataGrid />
+            <SituationReportCard />
           </Stack>
         </Grid>
       </Grid>
