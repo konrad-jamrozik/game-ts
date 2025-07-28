@@ -18,18 +18,8 @@ function getArchivedMissionSites(missionSites: MissionSite[]): MissionSite[] {
 }
 
 function sortArchivedMissionSites(archivedMissionSites: MissionSite[]): MissionSite[] {
-  return [...archivedMissionSites].sort((siteA, siteB) => {
-    const stateOrder: Record<string, number> = { Deployed: 0, Successful: 1, Failed: 2 }
-    const aOrder = stateOrder[siteA.state] ?? 999
-    const bOrder = stateOrder[siteB.state] ?? 999
-
-    if (aOrder !== bOrder) {
-      return aOrder - bOrder
-    }
-
-    // Within the same state, sort by ID (newest first)
-    return siteB.id.localeCompare(siteA.id)
-  })
+  // Sort by ID in descending order (newest first)
+  return [...archivedMissionSites].sort((siteA, siteB) => siteB.id.localeCompare(siteA.id))
 }
 
 export function ArchivedMissionCards(): React.JSX.Element {

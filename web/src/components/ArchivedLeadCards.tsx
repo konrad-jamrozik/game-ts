@@ -36,6 +36,14 @@ function getArchivedCardEntries(
     }
   }
 
+  // Sort by investigation order: first investigated being last (reverse order)
+  archivedCardEntries.sort((entryA, entryB) => {
+    const indexA = investigatedLeadIds.indexOf(entryA.leadId)
+    const indexB = investigatedLeadIds.indexOf(entryB.leadId)
+    // Reverse order: later investigations come first
+    return indexB - indexA
+  })
+
   return archivedCardEntries
 }
 
