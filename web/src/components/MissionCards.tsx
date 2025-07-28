@@ -51,7 +51,7 @@ export function MissionCards(): React.JSX.Element {
         slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent sx={{ minWidth: missionSiteIdPairs.length === 0 ? maxWidth : undefined }}>
+        <CardContent>
           <Stack spacing={2}>
             {missionSiteIdPairs.map((pair) => (
               <Grid container spacing={2} columns={2} key={pair.join('-')}>
@@ -60,11 +60,6 @@ export function MissionCards(): React.JSX.Element {
                     <MissionCard missionSiteId={missionSiteId} />
                   </Grid>
                 ))}
-                {/* If there was only ever one mission site, add an invisible filler grid item 
-                to prevent the width of the singular MissionCard from being too small. */}
-                {sortedActiveMissionSites.length === 1 && (
-                  <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>
-                )}
               </Grid>
             ))}
           </Stack>

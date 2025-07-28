@@ -6,7 +6,6 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import Grid from '@mui/material/Grid'
 import IconButton from '@mui/material/IconButton'
-import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { leads } from '../collections/leads'
@@ -45,12 +44,6 @@ export function LeadCards(): React.JSX.Element {
     }
   }
 
-  // Group card entries into pairs
-  const cardEntryPairs: CardEntry[][] = []
-  for (let index = 0; index < cardEntries.length; index += 2) {
-    cardEntryPairs.push(cardEntries.slice(index, index + 2))
-  }
-
   const maxWidth = '800px'
   return (
     <Card sx={{ maxWidth }}>
@@ -65,25 +58,13 @@ export function LeadCards(): React.JSX.Element {
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent>
-          <Stack spacing={2}>
-            {cardEntryPairs.map((pair) => (
-              <Grid
-                container
-                spacing={2}
-                columns={2}
-                key={pair.map((entry) => `${entry.leadId}-${entry.displayMode}`).join('-')}
-              >
-                {pair.map((entry) => (
-                  <Grid size={1} key={`${entry.leadId}-${entry.displayMode}`}>
-                    <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
-                  </Grid>
-                ))}
-                {/* If there was only ever one discovered lead, add an invisible filler grid item 
-                to prevent the width of the singular LeadCard from being too small. */}
-                {cardEntries.length === 1 && <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>}
+          <Grid container spacing={2}>
+            {cardEntries.map((entry) => (
+              <Grid size={6} key={`${entry.leadId}-${entry.displayMode}`}>
+                <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
               </Grid>
             ))}
-          </Stack>
+          </Grid>
         </CardContent>
       </Collapse>
     </Card>

@@ -62,11 +62,6 @@ export function ArchivedMissionCards(): React.JSX.Element {
                     <MissionCard missionSiteId={missionSiteId} />
                   </Grid>
                 ))}
-                {/* If there was only ever one archived mission site, add an invisible filler grid item 
-                to prevent the width of the singular MissionCard from being too small. */}
-                {sortedArchivedMissionSites.length === 1 && (
-                  <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>
-                )}
               </Grid>
             ))}
           </Stack>

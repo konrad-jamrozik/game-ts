@@ -104,11 +104,6 @@ export function ArchivedLeadCards(): React.JSX.Element {
                     <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
                   </Grid>
                 ))}
-                {/* If there was only ever one archived lead, add an invisible filler grid item 
-                to prevent the width of the singular LeadCard from being too small. */}
-                {archivedCardEntries.length === 1 && (
-                  <Grid size={1} minWidth={maxWidth} key={'invisible-filler'}></Grid>
-                )}
               </Grid>
             ))}
           </Stack>
