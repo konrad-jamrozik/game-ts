@@ -13,10 +13,8 @@ import type { MissionSite } from '../model/model'
 import { MissionCard } from './MissionCard'
 
 function getArchivedMissionSites(missionSites: MissionSite[]): MissionSite[] {
-  // Filter mission sites that are archived (disabled)
-  return missionSites.filter(
-    (site) => site.state === 'Deployed' || site.state === 'Successful' || site.state === 'Failed',
-  )
+  // Filter mission sites that are archived (disabled) - excluding Deployed which should stay in main view
+  return missionSites.filter((site) => site.state === 'Successful' || site.state === 'Failed')
 }
 
 function sortArchivedMissionSites(archivedMissionSites: MissionSite[]): MissionSite[] {

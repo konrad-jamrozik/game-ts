@@ -10,11 +10,18 @@ import { MissionCard } from './MissionCard'
 export function MissionCards(): React.JSX.Element {
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
-  // Filter to only show active mission sites (not archived)
-  const activeMissionSites = missionSites.filter((site) => site.state === 'Active')
+  // Filter to only show active and deployed mission sites (not archived)
+  const activeMissionSites = missionSites.filter((site) => site.state === 'Active' || site.state === 'Deployed')
 
-  // Sort active mission sites by ID (newest first)
-  const sortedActiveMissionSites = [...activeMissionSites].sort((siteA, siteB) => siteB.id.localeCompare(siteA.id))
+  // Sort active and deployed mission sites: Active first, then Deployed, within each group by ID (newest first)
+  const sortedActiveMissionSites = [...activeMissionSites].sort((siteA, siteB) => {
+    // First sort by state: Active missions come before Deployed
+    if (siteA.state !== siteB.state) {
+      return siteA.state === 'Active' ? -1 : 1
+    }
+    // Within same state, sort by ID (newest first)
+    return siteB.id.localeCompare(siteA.id)
+  })
 
   // Group mission site IDs into pairs
   const missionSiteIdPairs: string[][] = []
