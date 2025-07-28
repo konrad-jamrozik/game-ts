@@ -20,7 +20,14 @@ import {
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 
-// eslint-disable-next-line max-lines-per-function
+function pluralizeAgent(count: number): string {
+  return `agent${count === 0 || count > 1 ? 's' : ''}`
+}
+
+function formatAgentCount(count: number): string {
+  return `${count} ${pluralizeAgent(count)}`
+}
+
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
@@ -126,7 +133,6 @@ export function PlayerActions(): React.JSX.Element {
     setShowAlert(false) // Hide alert on successful action
   }
 
-  // eslint-disable-next-line max-statements
   function handleDeployAgents(): void {
     if (selectedMissionId === undefined) {
       setAlertMessage('No mission selected!')
@@ -187,21 +193,19 @@ export function PlayerActions(): React.JSX.Element {
               sx={destructiveButtonSx}
               fullWidth
             >
-              Sack {selectedAgentIds.length} Agent
-              {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
+              Sack {formatAgentCount(selectedAgentIds.length)}
             </Button>
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
-              Recall {selectedAgentIds.length} Agent
-              {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
+              Recall {formatAgentCount(selectedAgentIds.length)}
             </Button>
           </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
-            Assign {selectedAgentIds.length} to contracting
+            Assign {formatAgentCount(selectedAgentIds.length)} to contracting
           </Button>
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
-            Assign {selectedAgentIds.length} to espionage
+            Assign {formatAgentCount(selectedAgentIds.length)} to espionage
           </Button>
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead
@@ -211,8 +215,7 @@ export function PlayerActions(): React.JSX.Element {
             onClick={handleDeployAgents}
             disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy {selectedAgentIds.length} Agent
-            {selectedAgentIds.length === 0 || selectedAgentIds.length > 1 ? 's' : ''}
+            Deploy {formatAgentCount(selectedAgentIds.length)}
           </Button>
           <Collapse in={showAlert}>
             <Alert

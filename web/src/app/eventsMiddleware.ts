@@ -24,7 +24,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line max-statements, complexity
+  // eslint-disable-next-line complexity
   return (store) => (next) => (action) => {
     // Call the next middleware/reducer first to update the state
     const result = next(action)
