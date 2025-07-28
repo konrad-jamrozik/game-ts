@@ -22,6 +22,7 @@ function App(): React.JSX.Element {
         padding={2}
         bgcolor={'#30303052'}
         flexWrap={'wrap'}
+        alignItems="stretch"
       >
         <Grid>
           <Grid container spacing={2} direction="column" alignItems="center">
@@ -37,7 +38,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column" alignItems="center">
+          <Grid container spacing={2} direction="column">
             <Grid>
               <AgentsDataGrid />
             </Grid>
@@ -56,7 +57,7 @@ function App(): React.JSX.Element {
           </Grid>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column" alignItems="center">
+          <Grid container spacing={2} direction="column">
             <Grid>
               <AssetsDataGrid />
             </Grid>

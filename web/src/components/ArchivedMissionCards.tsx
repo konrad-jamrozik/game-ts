@@ -44,7 +44,6 @@ export function ArchivedMissionCards(): React.JSX.Element {
   return (
     <Card sx={{ maxWidth }}>
       <CardHeader
-        sx={{ minWidth: missionSiteIdPairs.length === 0 || !expanded ? maxWidth : undefined }}
         avatar={
           <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}

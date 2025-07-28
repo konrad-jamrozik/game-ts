@@ -55,7 +55,6 @@ export function LeadCards(): React.JSX.Element {
   return (
     <Card sx={{ maxWidth }}>
       <CardHeader
-        sx={{ minWidth: cardEntryPairs.length === 0 || !expanded ? maxWidth : undefined }}
         avatar={
           <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
