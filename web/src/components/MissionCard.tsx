@@ -41,7 +41,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   const selectedBoxShadow = 'inset 0 0 0 1000px hsla(0, 100%, 100%, 0.08)'
   const selectedSx: SxProps = selected ? { boxShadow: selectedBoxShadow } : {}
-  const disabledSx: SxProps = disabled ? { opacity: 0.5 } : {}
+  const disabledSx: SxProps = disabled ? { opacity: 0.8 } : {}
   const missionCardHeaderSx: SxProps = { backgroundColor: theme.palette.background.missionCardHeader }
   const missionCardContentSx: SxProps = { backgroundColor: theme.palette.background.missionCardContent }
   const combinedHeaderSx: SxProps = { ...selectedSx, ...disabledSx, ...missionCardHeaderSx }

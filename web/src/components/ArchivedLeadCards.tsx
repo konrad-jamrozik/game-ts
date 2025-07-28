@@ -54,11 +54,6 @@ export function ArchivedLeadCards(): React.JSX.Element {
 
   const archivedCardEntries = getArchivedCardEntries(discoveredLeads, investigatedLeadIds, leadInvestigationCounts)
 
-  // Don't render anything if there are no archived leads
-  if (archivedCardEntries.length === 0) {
-    return <></>
-  }
-
   // Group card entries into pairs
   const cardEntryPairs: CardEntry[][] = []
   for (let index = 0; index < archivedCardEntries.length; index += 2) {
@@ -69,7 +64,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
   return (
     <Card sx={{ maxWidth }}>
       <CardHeader title="Archived Leads" />
-      <CardContent>
+      <CardContent sx={{ minWidth: cardEntryPairs.length === 0 ? maxWidth : undefined }}>
         <Stack spacing={2}>
           {cardEntryPairs.map((pair) => (
             <Grid
