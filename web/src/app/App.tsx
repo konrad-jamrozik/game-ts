@@ -1,5 +1,6 @@
 import Container from '@mui/material/Container'
 import Grid from '@mui/material/Grid'
+import Stack from '@mui/material/Stack'
 import { AgentsDataGrid } from '../components/AgentsDataGrid'
 import { ArchivedLeadCards } from '../components/ArchivedLeadCards'
 import { ArchivedMissionCards } from '../components/ArchivedMissionCards'
@@ -25,46 +26,26 @@ function App(): React.JSX.Element {
         alignItems="stretch"
       >
         <Grid>
-          <Grid container spacing={2} direction="column" alignItems="center">
-            <Grid>
-              <GameControls />
-            </Grid>
-            <Grid>
-              <PlayerActions />
-            </Grid>
-            <Grid alignSelf={'stretch'}>
-              <EventLog />
-            </Grid>
-          </Grid>
+          <Stack spacing={2} alignItems="center">
+            <GameControls />
+            <PlayerActions />
+            <EventLog />
+          </Stack>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column">
-            <Grid>
-              <AgentsDataGrid />
-            </Grid>
-            <Grid>
-              <MissionCards />
-            </Grid>
-            <Grid>
-              <LeadCards />
-            </Grid>
-            <Grid>
-              <ArchivedMissionCards />
-            </Grid>
-            <Grid>
-              <ArchivedLeadCards />
-            </Grid>
-          </Grid>
+          <Stack spacing={2}>
+            <AgentsDataGrid />
+            <MissionCards />
+            <LeadCards />
+            <ArchivedMissionCards />
+            <ArchivedLeadCards />
+          </Stack>
         </Grid>
         <Grid>
-          <Grid container spacing={2} direction="column">
-            <Grid>
-              <AssetsDataGrid />
-            </Grid>
-            <Grid>
-              <BalanceSheetDataGrid />
-            </Grid>
-          </Grid>
+          <Stack spacing={2}>
+            <AssetsDataGrid />
+            <BalanceSheetDataGrid />
+          </Stack>
         </Grid>
       </Grid>
     </Container>
