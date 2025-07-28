@@ -30,6 +30,9 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
   const disabled =
     missionSite.state === 'Deployed' || missionSite.state === 'Successful' || missionSite.state === 'Failed'
 
+  // Remove the "mission-site-" prefix from the ID for display
+  const displayId = missionSite.id.replace(/^mission-site-/u, '')
+
   function handleClick(): void {
     if (!disabled && missionSite) {
       dispatch(setMissionSelection(missionSite.id))
@@ -57,11 +60,17 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
-              <LabeledValue label="Status" value={missionSite.state} sx={{ width: 100 }} />
-              {mission.expiresIn !== 'never' ? (
-                <LabeledValue label="Expires in" value={mission.expiresIn} sx={{ width: 138 }} />
+              <LabeledValue label="ID" value={displayId} sx={{ width: 100 }} />
+              {missionSite.state === 'Active' ? (
+                // For active mission sites, only show expiration info
+                mission.expiresIn !== 'never' ? (
+                  <LabeledValue label="Expires in" value={mission.expiresIn} sx={{ width: 138 }} />
+                ) : (
+                  <LabeledValue label="Does not expire" sx={{ width: 142 }} />
+                )
               ) : (
-                <LabeledValue label="Does not expire" sx={{ width: 142 }} />
+                // For non-active mission sites, only show status
+                <LabeledValue label="Status" value={missionSite.state} sx={{ width: 180 }} />
               )}
             </Stack>
           </Stack>
