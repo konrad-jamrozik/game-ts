@@ -28,7 +28,11 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'
-  const disabled = missionSite.state === 'Successful' || missionSite.state === 'Failed' || isDeployed
+  const disabled =
+    missionSite.state === 'Successful' ||
+    missionSite.state === 'Failed' ||
+    missionSite.state === 'Expired' ||
+    isDeployed
 
   // Remove the "mission-site-" prefix from the ID for display
   const displayId = missionSite.id.replace(/^mission-site-/u, '')
@@ -63,8 +67,8 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
               <LabeledValue label="ID" value={displayId} sx={{ width: 100 }} />
               {missionSite.state === 'Active' ? (
                 // For active mission sites, only show expiration info
-                mission.expiresIn !== 'never' ? (
-                  <LabeledValue label="Expires in" value={mission.expiresIn} sx={{ width: 138 }} />
+                missionSite.expiresIn !== 'never' ? (
+                  <LabeledValue label="Expires in" value={missionSite.expiresIn} sx={{ width: 138 }} />
                 ) : (
                   <LabeledValue label="Does not expire" sx={{ width: 142 }} />
                 )

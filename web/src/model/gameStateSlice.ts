@@ -60,6 +60,15 @@ const gameStateSlice = createSlice({
           if (missionSite.state === 'Deployed') {
             // Check if mission site should be marked as successful or failed
             missionSite.state = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
+          } else if (missionSite.state === 'Active') {
+            // Handle mission site expiration countdown
+            // eslint-disable-next-line unicorn/no-lonely-if
+            if (missionSite.expiresIn !== 'never') {
+              missionSite.expiresIn -= 1
+              if (missionSite.expiresIn <= 0) {
+                missionSite.state = 'Expired'
+              }
+            }
           }
         }
         state.money = getMoneyNewBalance(state)
@@ -175,6 +184,7 @@ const gameStateSlice = createSlice({
             missionId: mission.id,
             agentIds: [],
             state: 'Active',
+            expiresIn: mission.expiresIn,
           }
           state.missionSites.push(newMissionSite)
           state.nextMissionSiteId += 1

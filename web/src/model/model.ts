@@ -34,13 +34,14 @@ export type Mission = {
   dependsOn: string[]
 }
 
-export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed'
+export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
 
 export type MissionSite = {
   id: string
   missionId: string
   agentIds: string[]
   state: MissionSiteState
+  expiresIn: number | 'never'
 }
 
 export type GameState = {
