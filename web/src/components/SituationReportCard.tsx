@@ -2,6 +2,7 @@ import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
@@ -37,7 +38,10 @@ export function SituationReportCard(): React.JSX.Element {
         <Stack spacing={2}>
           <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
           {redDawnFaction && (
-            <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
+            <>
+              <Typography variant="h5">{redDawnFaction.name} faction</Typography>
+              <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
+            </>
           )}
         </Stack>
       </CardContent>
