@@ -1,8 +1,9 @@
+import { factions } from '../collections/factions'
 import type { GameState } from '../model/model'
 
 const initialAssets: Pick<
   GameState,
-  'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'leadInvestigationCounts' | 'missionSites'
+  'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'leadInvestigationCounts'
 > = {
   agents: [],
   money: 500,
@@ -10,7 +11,6 @@ const initialAssets: Pick<
   funding: 20,
   investigatedLeadIds: [],
   leadInvestigationCounts: {},
-  missionSites: [],
 }
 
 const debugInitialAssets = {
@@ -20,4 +20,16 @@ const debugInitialAssets = {
   leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
 }
 
-export default debugInitialAssets
+const initialState: GameState = {
+  turn: 1,
+  actionsCount: 0,
+  nextAgentId: 0,
+  nextMissionSiteId: 0,
+  hireCost: 50,
+  panic: 0,
+  factions,
+  missionSites: [],
+  ...debugInitialAssets,
+}
+
+export default initialState

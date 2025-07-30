@@ -1,29 +1,9 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missions } from '../collections/missions'
 import { AGENT_HIRE_COST, AGENT_INITIAL_SKILL, AGENT_INITIAL_EXHAUSTION } from '../ruleset/constants'
-import initialAssets from '../ruleset/initialAssets'
+import initialState from '../ruleset/initialState'
 import advanceTurnImpl from './advanceTurnImpl'
-import type { GameState, Agent, MissionSite } from './model'
-
-const initialState: GameState = {
-  turn: 1,
-  actionsCount: 0,
-  nextAgentId: 0,
-  nextMissionSiteId: 0,
-  hireCost: 50,
-  panic: 0,
-  factions: [
-    {
-      id: 'faction-red-dawn',
-      name: 'Red Dawn',
-      threatLevel: 100,
-      threatIncrement: 5,
-      suppression: 0,
-      discoveryPrerequisite: ['lead-red-dawn-profile'],
-    },
-  ],
-  ...initialAssets,
-}
+import type { Agent, MissionSite } from './model'
 
 // 🚧KJA 2 Dedup the "prepare" be using something like "withPlayerAction" https://chatgpt.com/c/687c730e-12d4-8011-96fc-be2be1ef5e94
 // Also style guide says many reducers should work with same player action: https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
