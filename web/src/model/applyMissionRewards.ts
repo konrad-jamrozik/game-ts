@@ -26,7 +26,7 @@ export function applyMissionRewards(state: GameState, rewards: MissionRewards): 
           targetFaction.threatLevel = Math.max(0, targetFaction.threatLevel - factionReward.threatReduction)
         }
         if (factionReward.suppression !== undefined) {
-          targetFaction.suppressionLevel += factionReward.suppression
+          targetFaction.suppression += factionReward.suppression
         }
       }
     }

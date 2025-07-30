@@ -25,7 +25,7 @@ const initialState: GameState = {
       name: 'Red Dawn',
       threatLevel: 100,
       threatIncrement: 5,
-      suppressionLevel: 0,
+      suppression: 0,
       discoveryPrerequisite: ['lead-red-dawn-profile'],
     },
   ],
@@ -97,7 +97,7 @@ const gameStateSlice = createSlice({
 
         // Increase panic by the sum of (threat level - suppression level) for all factions
         const totalPanicIncrease = state.factions.reduce(
-          (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppressionLevel),
+          (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppression),
           0,
         )
         state.panic += totalPanicIncrease

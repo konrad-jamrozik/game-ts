@@ -66,7 +66,7 @@ export type Faction = {
   name: string
   threatLevel: number
   threatIncrement: number
-  suppressionLevel: number
+  suppression: number
   discoveryPrerequisite: string[]
 }
 

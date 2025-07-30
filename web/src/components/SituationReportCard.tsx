@@ -39,7 +39,7 @@ export function SituationReportCard(): React.JSX.Element {
             metric: 'Threat increase',
             value: `${(redDawnFaction.threatIncrement / 100).toFixed(2)}%`,
           },
-          { id: 3, metric: 'Suppression', value: `${(redDawnFaction.suppressionLevel / 100).toFixed(2)}%` },
+          { id: 3, metric: 'Suppression', value: `${(redDawnFaction.suppression / 100).toFixed(2)}%` },
           {
             id: 4,
             metric: 'Suppr. decay',
@@ -48,7 +48,7 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 5,
             metric: 'Panic increase',
-            value: `${(Math.max(0, redDawnFaction.threatLevel - redDawnFaction.suppressionLevel) / 100).toFixed(2)}%`,
+            value: `${(Math.max(0, redDawnFaction.threatLevel - redDawnFaction.suppression) / 100).toFixed(2)}%`,
           },
         ]
       : []
