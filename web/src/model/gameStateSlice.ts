@@ -95,9 +95,12 @@ const gameStateSlice = createSlice({
         state.intel = getIntelNewBalance(state)
         state.hireCost = 0
 
-        // Increase panic by the sum of all faction threat levels
-        const totalThreatLevel = state.factions.reduce((sum, faction) => sum + faction.threatLevel, 0)
-        state.panic += totalThreatLevel
+        // Increase panic by the sum of (threat level - suppression level) for all factions
+        const totalPanicIncrease = state.factions.reduce(
+          (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppressionLevel),
+          0,
+        )
+        state.panic += totalPanicIncrease
 
         // Increment faction threat levels
         for (const faction of state.factions) {

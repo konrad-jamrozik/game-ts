@@ -1,5 +1,3 @@
-import type { MissionCardProps } from '../components/MissionCard'
-
 export type AgentState =
   | 'Available'
   | 'Training'

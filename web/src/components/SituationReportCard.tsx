@@ -7,6 +7,7 @@ import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { StyledDataGrid } from './StyledDataGrid'
+import { SUPPRESSION_DECAY_PCT } from '../ruleset/constants'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -17,7 +18,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPercentage = `${(panic / 100).toFixed(2)}%`
 
   const columns: GridColDef[] = [
-    { field: 'metric', headerName: 'Metric', minWidth: 80 },
+    { field: 'metric', headerName: 'Metric', minWidth: 120 },
     { field: 'value', headerName: 'Value', minWidth: 80 },
   ]
 
@@ -32,8 +33,23 @@ export function SituationReportCard(): React.JSX.Element {
   const redDawnRows =
     redDawnFaction && isRedDawnDiscovered
       ? [
-          { id: 1, metric: 'Threat lvl', value: `${(redDawnFaction.threatLevel / 100).toFixed(2)}%` },
-          { id: 2, metric: 'Suppr. lvl', value: `${((redDawnFaction.suppressionLevel / 100) * 100).toFixed(2)}%` },
+          { id: 1, metric: 'Threat level', value: `${(redDawnFaction.threatLevel / 100).toFixed(2)}%` },
+          {
+            id: 2,
+            metric: 'Threat increase',
+            value: `${(redDawnFaction.threatIncrement / 100).toFixed(2)}%`,
+          },
+          { id: 3, metric: 'Suppression', value: `${(redDawnFaction.suppressionLevel / 100).toFixed(2)}%` },
+          {
+            id: 4,
+            metric: 'Suppr. decay',
+            value: `${SUPPRESSION_DECAY_PCT.toFixed(0)}%`,
+          },
+          {
+            id: 5,
+            metric: 'Panic increase',
+            value: `${(Math.max(0, redDawnFaction.threatLevel - redDawnFaction.suppressionLevel) / 100).toFixed(2)}%`,
+          },
         ]
       : []
 
