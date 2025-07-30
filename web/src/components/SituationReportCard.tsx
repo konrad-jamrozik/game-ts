@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography'
 import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { StyledDataGrid } from './StyledDataGrid'
 import { SUPPRESSION_DECAY_PCT } from '../ruleset/constants'
+import { StyledDataGrid } from './StyledDataGrid'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -30,6 +30,7 @@ export function SituationReportCard(): React.JSX.Element {
     ? redDawnFaction.discoveryPrerequisite.every((leadId) => investigatedLeadIds.includes(leadId))
     : false
 
+  // 🚧KJA these formulas should be deduped in modelDerived.ts
   const redDawnRows =
     redDawnFaction && isRedDawnDiscovered
       ? [
