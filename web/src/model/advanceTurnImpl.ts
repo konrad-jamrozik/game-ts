@@ -30,6 +30,26 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
   }
 }
 
+function updateFactionsAndPanic(state: GameState): void {
+  // Increase panic by the sum of (threat level - suppression) for all factions
+  // This uses current suppression values, exactly as displayed in SituationReportCard
+  const totalPanicIncrease = state.factions.reduce(
+    (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppression),
+    0,
+  )
+  state.panic += totalPanicIncrease
+
+  // Apply suppression decay AFTER panic calculation
+  for (const faction of state.factions) {
+    faction.suppression = Math.floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
+  }
+
+  // Increment faction threat levels
+  for (const faction of state.factions) {
+    faction.threatLevel += faction.threatIncrement
+  }
+}
+
 function updateMissionSites(state: GameState): void {
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
@@ -53,26 +73,6 @@ function updateMissionSites(state: GameState): void {
         }
       }
     }
-  }
-}
-
-function updateFactionsAndPanic(state: GameState): void {
-  // Increase panic by the sum of (threat level - suppression) for all factions
-  // This uses current suppression values, exactly as displayed in SituationReportCard
-  const totalPanicIncrease = state.factions.reduce(
-    (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppression),
-    0,
-  )
-  state.panic += totalPanicIncrease
-
-  // Apply suppression decay AFTER panic calculation
-  for (const faction of state.factions) {
-    faction.suppression = Math.floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
-  }
-
-  // Increment faction threat levels
-  for (const faction of state.factions) {
-    faction.threatLevel += faction.threatIncrement
   }
 }
 
