@@ -38,7 +38,7 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 2,
             metric: 'Threat increase',
-            value: `${(redDawnFaction.threatIncrement / 100).toFixed(2)}%`,
+            value: `${(redDawnFaction.threatIncrease / 100).toFixed(2)}%`,
           },
           { id: 3, metric: 'Suppression', value: `${(redDawnFaction.suppression / 100).toFixed(2)}%` },
           {

@@ -11,11 +11,11 @@ export const missions: Mission[] = [
     rewards: {
       money: 0,
       intel: 10,
-      panicReduction: 10,
+      panicReduction: 5,
       factionRewards: new Set([
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 10,
+          threatReduction: 1,
           suppression: 10,
         },
       ]),
@@ -35,7 +35,7 @@ export const missions: Mission[] = [
       factionRewards: new Set([
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 40,
+          threatReduction: 5,
           suppression: 40,
         },
       ]),

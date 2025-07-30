@@ -46,7 +46,7 @@ function updateFactionsAndPanic(state: GameState): void {
 
   // Increment faction threat levels
   for (const faction of state.factions) {
-    faction.threatLevel += faction.threatIncrement
+    faction.threatLevel += faction.threatIncrease
   }
 }
 
