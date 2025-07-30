@@ -24,8 +24,12 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line complexity
+  // eslint-disable-next-line complexity, max-statements
   return (store) => (next) => (action) => {
+    // Get the state before the action for comparison
+    const previousState = store.getState()
+    const previousGameState = previousState.undoable.present.gameState
+
     // Call the next middleware/reducer first to update the state
     const result = next(action)
 
@@ -43,6 +47,65 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
           actionsCount: gameState.actionsCount,
         }),
       )
+
+      // Check for newly successful missions and log their rewards
+      const previouslySuccessfulMissionIds = new Set(
+        previousGameState.missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
+      )
+
+      const newlySuccessfulMissions = gameState.missionSites
+        .filter((site) => site.state === 'Successful' && !previouslySuccessfulMissionIds.has(site.missionId))
+        .map((site) => getMissionById(site.missionId))
+
+      // 🚧 KJA consolidate these into one event "mission completion" and make it new type of event, not player action event.
+      for (const mission of newlySuccessfulMissions) {
+        store.dispatch(
+          addEvent({
+            message: `Mission "${mission.title}" completed successfully!`,
+            turn: gameState.turn,
+            actionsCount: gameState.actionsCount,
+          }),
+        )
+
+        // Log individual rewards
+        const { rewards } = mission
+        if (rewards.money !== undefined) {
+          store.dispatch(
+            addEvent({
+              message: `Received $${rewards.money} from mission completion`,
+              turn: gameState.turn,
+              actionsCount: gameState.actionsCount,
+            }),
+          )
+        }
+        if (rewards.intel !== undefined) {
+          store.dispatch(
+            addEvent({
+              message: `Gained ${rewards.intel} intel from mission completion`,
+              turn: gameState.turn,
+              actionsCount: gameState.actionsCount,
+            }),
+          )
+        }
+        if (rewards.funding !== undefined) {
+          store.dispatch(
+            addEvent({
+              message: `Received ${rewards.funding} funding from mission completion`,
+              turn: gameState.turn,
+              actionsCount: gameState.actionsCount,
+            }),
+          )
+        }
+        if (rewards.panicReduction !== undefined) {
+          store.dispatch(
+            addEvent({
+              message: `Panic reduced by ${rewards.panicReduction} from mission completion`,
+              turn: gameState.turn,
+              actionsCount: gameState.actionsCount,
+            }),
+          )
+        }
+      }
       // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (hireAgent.match(action)) {
       store.dispatch(

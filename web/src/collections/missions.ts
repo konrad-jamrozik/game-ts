@@ -8,6 +8,18 @@ export const missions: Mission[] = [
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 3,
     dependsOn: ['lead-red-dawn-location'],
+    rewards: {
+      money: 0,
+      intel: 10,
+      panicReduction: 10,
+      factionRewards: new Set([
+        {
+          factionId: 'faction-red-dawn',
+          threatReduction: 10,
+          suppression: 10,
+        },
+      ]),
+    },
   },
   {
     id: 'mission-raid-red-dawn-safehouse',
@@ -15,6 +27,19 @@ export const missions: Mission[] = [
     description: 'Raid a Red Dawn cult safehouse.',
     expiresIn: 8,
     dependsOn: ['lead-red-dawn-safehouse'],
+    rewards: {
+      money: 120,
+      intel: 40,
+      funding: 0,
+      panicReduction: 20,
+      factionRewards: new Set([
+        {
+          factionId: 'faction-red-dawn',
+          threatReduction: 40,
+          suppression: 40,
+        },
+      ]),
+    },
   },
   //   {
   //     id: 'mission-surveillance',

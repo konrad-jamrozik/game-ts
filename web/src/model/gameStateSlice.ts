@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { missions } from '../collections/missions'
+import { missions, getMissionById } from '../collections/missions'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_SKILL,
@@ -8,6 +8,7 @@ import {
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
 } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
+import { applyMissionRewards } from './missionRewards'
 import type { GameState, Agent, MissionSite } from './model'
 import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
 
@@ -66,11 +67,19 @@ const gameStateSlice = createSlice({
           }
         }
 
-        // Update mission site states
+        // Update mission site states and apply rewards for successful missions
         for (const missionSite of state.missionSites) {
           if (missionSite.state === 'Deployed') {
             // Check if mission site should be marked as successful or failed
-            missionSite.state = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
+            const newState = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
+
+            // If mission becomes successful, apply rewards
+            if (newState === 'Successful') {
+              const mission = getMissionById(missionSite.missionId)
+              applyMissionRewards(state, mission.rewards)
+            }
+
+            missionSite.state = newState
           } else if (missionSite.state === 'Active') {
             // Handle mission site expiration countdown
             // eslint-disable-next-line unicorn/no-lonely-if

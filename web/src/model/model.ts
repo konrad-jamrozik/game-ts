@@ -1,3 +1,5 @@
+import type { MissionCardProps } from '../components/MissionCard'
+
 export type AgentState =
   | 'Available'
   | 'Training'
@@ -26,12 +28,29 @@ export type Lead = {
   repeatable: boolean
 }
 
+export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
+
+export type FactionRewards = {
+  factionId: FactionId
+  threatReduction?: number
+  suppression?: number
+}
+
+export type MissionRewards = {
+  money?: number
+  intel?: number
+  funding?: number
+  panicReduction?: number
+  factionRewards?: Set<FactionRewards>
+}
+
 export type Mission = {
   id: string
   title: string
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
+  rewards: MissionRewards
 }
 
 export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
@@ -45,7 +64,7 @@ export type MissionSite = {
 }
 
 export type Faction = {
-  id: string
+  id: FactionId
   name: string
   threatLevel: number
   threatIncrement: number
