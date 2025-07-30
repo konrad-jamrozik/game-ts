@@ -58,13 +58,14 @@ function updateMissionSites(state: GameState): void {
 
 function updateFactionsAndPanic(state: GameState): void {
   // Increase panic by the sum of (threat level - suppression) for all factions
+  // This uses current suppression values, exactly as displayed in SituationReportCard
   const totalPanicIncrease = state.factions.reduce(
     (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppression),
     0,
   )
   state.panic += totalPanicIncrease
 
-  // Apply suppression decay
+  // Apply suppression decay AFTER panic calculation
   for (const faction of state.factions) {
     faction.suppression = Math.floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
   }
@@ -82,14 +83,14 @@ export default function advanceTurnImpl(state: GameState): void {
   // Update agent states and exhaustion
   updateAgentStatesAndExhaustion(state)
 
-  // Update mission sites and apply rewards
+  // Update factions and panic (uses current suppression, then applies decay)
+  updateFactionsAndPanic(state)
+
+  // Update mission sites and apply rewards (including new suppression after decay)
   updateMissionSites(state)
 
   // Update money, intel, and hire cost
   state.money = getMoneyNewBalance(state)
   state.intel = getIntelNewBalance(state)
   state.hireCost = 0
-
-  // Update factions and panic
-  updateFactionsAndPanic(state)
 }
