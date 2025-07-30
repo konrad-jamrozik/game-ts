@@ -57,7 +57,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
         .filter((site) => site.state === 'Successful' && !previouslySuccessfulMissionIds.has(site.missionId))
         .map((site) => getMissionById(site.missionId))
 
-      // 🚧 KJA consolidate these into one event "mission completion" and make it new type of event, not player action event.
+      // 🚧KJA consolidate these into one event "mission completion" and make it new type of event, not player action event.
       for (const mission of newlySuccessfulMissions) {
         store.dispatch(
           addEvent({

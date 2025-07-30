@@ -1,6 +1,5 @@
 import type { GameState, MissionRewards } from './model'
 
-// 🚧 KJA rename file to applyMissionRewards
 // Helper function to apply mission rewards to game state
 export function applyMissionRewards(state: GameState, rewards: MissionRewards): void {
   // Apply basic rewards
@@ -21,7 +20,7 @@ export function applyMissionRewards(state: GameState, rewards: MissionRewards): 
   if (rewards.factionRewards) {
     for (const factionReward of rewards.factionRewards) {
       const targetFaction = state.factions.find((faction) => faction.id === factionReward.factionId)
-      // 🚧 KJA throw assertion error if faction not found. Probs capture in relevant "getFaction" function.
+      // 🚧KJA throw assertion error if faction not found. Probs capture in relevant "getFaction" function.
       if (targetFaction) {
         if (factionReward.threatReduction !== undefined) {
           targetFaction.threatLevel = Math.max(0, targetFaction.threatLevel - factionReward.threatReduction)

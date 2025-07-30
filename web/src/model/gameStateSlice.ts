@@ -8,7 +8,7 @@ import {
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
 } from '../ruleset/constants'
 import initialAssets from '../ruleset/initialAssets'
-import { applyMissionRewards } from './missionRewards'
+import { applyMissionRewards } from './applyMissionRewards'
 import type { GameState, Agent, MissionSite } from './model'
 import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
 
