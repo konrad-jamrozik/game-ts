@@ -1,6 +1,7 @@
 import type { Agent } from './model'
 
-// KJA better names for *Service classes. Like agentLogic? In parallel to model. Note I also have modelDerived.ts
+// KJA domain classes instead of *Service classes. E.g. Agent or Agents.
+//  Note I also have modelDerived.ts. Note I will have to rename existing "type Agent" to e.g. "type AgentType".
 /**
  * Domain service for agent-related operations and validations
  */
