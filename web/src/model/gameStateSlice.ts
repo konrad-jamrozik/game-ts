@@ -1,6 +1,11 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missions } from '../collections/missions'
-import { AGENT_HIRE_COST, AGENT_INITIAL_SKILL, AGENT_INITIAL_EXHAUSTION } from '../ruleset/constants'
+import {
+  AGENT_HIRE_COST,
+  AGENT_INITIAL_SKILL,
+  AGENT_INITIAL_EXHAUSTION,
+  AGENT_INITIAL_HIT_POINTS,
+} from '../ruleset/constants'
 import initialState from '../ruleset/initialState'
 import advanceTurnImpl from './advanceTurnImpl'
 import type { Agent, MissionSite } from './model'
@@ -30,6 +35,10 @@ const gameStateSlice = createSlice({
           assignment: 'Standby',
           skill: AGENT_INITIAL_SKILL,
           exhaustion: AGENT_INITIAL_EXHAUSTION,
+          hitPoints: AGENT_INITIAL_HIT_POINTS,
+          maxHitPoints: AGENT_INITIAL_HIT_POINTS,
+          recoveryTurnsRemaining: 0,
+          missionsSurvived: 0,
         }
         state.agents.push(newAgent)
         state.nextAgentId += 1
@@ -127,6 +136,11 @@ const gameStateSlice = createSlice({
             agentIds: [],
             state: 'Active',
             expiresIn: mission.expiresIn,
+            objectives: mission.objectives.map((objective) => ({
+              id: objective.id,
+              difficulty: objective.difficulty, // KJA ideally this is not copied, just retrieved by reference to mission
+              fulfilled: false,
+            })),
           }
           state.missionSites.push(newMissionSite)
           state.nextMissionSiteId += 1

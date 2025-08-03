@@ -59,6 +59,7 @@ export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' |
 
 export type MissionSiteObjective = {
   id: string
+  difficulty: number
   fulfilled: boolean
 }
 

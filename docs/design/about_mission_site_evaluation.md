@@ -53,6 +53,8 @@ Every agent that lost any hit points must spend 1 turn in recovery for each 2% o
 For example, an agent with 30 hit points total that lost 7 hit points has lost 23.(3)% of their hit points, and as such
 they must spend 12 turns in recovery (11.(6) rounded up to 12).
 
+While agent is recovering lost hit points, they continue to recover from exhaustion as normal.
+
 Any agent that survived gains skill points, depending on how many missions they survived.
 If this is their `Nth` mission they survived, they gain number of skill points equal to `MISSION_SURVIVAL_SKILL_REWARD[N-1]`.
 If `N` is greater than number of elements in `MISSION_SURVIVAL_SKILL_REWARD`, they gain the skill points equal to
@@ -71,3 +73,9 @@ for given agent and objective.
 for `Hit points lost roll` of given agent.
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
+
+# KJA TODOs for misison site evaluation
+
+- reduce exhaustion with recovery
+- restore hit points as agent recovers
+- log to console details of agent rolls during mission site evaluation

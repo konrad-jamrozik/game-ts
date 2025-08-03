@@ -8,6 +8,11 @@ export const missions: Mission[] = [
     description: 'Apprehend a member of the Red Dawn cult.',
     expiresIn: 3,
     dependsOn: ['lead-red-dawn-location'],
+    objectives: [
+      { id: 'locate-target', difficulty: 20 },
+      { id: 'apprehend-target', difficulty: 30 },
+    ],
+    difficulty: 30,
     rewards: {
       money: 0,
       intel: 10,
@@ -27,6 +32,12 @@ export const missions: Mission[] = [
     description: 'Raid a Red Dawn cult safehouse.',
     expiresIn: 8,
     dependsOn: ['lead-red-dawn-safehouse'],
+    objectives: [
+      { id: 'breach-perimeter', difficulty: 20 },
+      { id: 'secure-evidence', difficulty: 30 },
+      { id: 'neutralize-resistance', difficulty: 50 },
+    ],
+    difficulty: 50,
     rewards: {
       money: 120,
       intel: 40,

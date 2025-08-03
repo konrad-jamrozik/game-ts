@@ -76,6 +76,34 @@ export function AgentsDataGrid(): React.JSX.Element {
         <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>
       ),
     },
+    {
+      field: 'hitPoints',
+      headerName: 'HP',
+      minWidth: 80,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-hit-points-${params.id}`}>
+          {params.value}/{params.row.maxHitPoints}
+        </span>
+      ),
+    },
+    {
+      field: 'recoveryTurnsRemaining',
+      headerName: 'Recovery',
+      minWidth: 90,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-recovery-${params.id}`}>
+          {(params.value ?? 0) > 0 ? `${params.value} turns` : '-'}
+        </span>
+      ),
+    },
+    {
+      field: 'missionsSurvived',
+      headerName: 'Missions',
+      minWidth: 90,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-missions-survived-${params.id}`}>{params.value}</span>
+      ),
+    },
   ]
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {

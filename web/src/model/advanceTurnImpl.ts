@@ -1,30 +1,40 @@
-import { getMissionById } from '../collections/missions'
 import {
   AGENT_EXHAUSTION_INCREASE_PER_TURN,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   SUPPRESSION_DECAY_PCT,
 } from '../ruleset/constants'
-import { applyMissionRewards } from './applyMissionRewards'
+import { evaluateMissionSite } from './missionSiteEvaluation'
 import type { GameState } from './model'
 import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
 
 // Helper functions for turn advancement
 function updateAgentStatesAndExhaustion(state: GameState): void {
   for (const agent of state.agents) {
+    // Handle recovery countdown
+    if (agent.state === 'Recovering') {
+      if (agent.recoveryTurnsRemaining > 0) {
+        agent.recoveryTurnsRemaining -= 1
+      }
+      if (agent.recoveryTurnsRemaining <= 0) {
+        agent.state = 'Available'
+        agent.assignment = 'Standby'
+      }
+    }
+
     // Update exhaustion based on agent state and assignment
     if (agent.state === 'OnAssignment' && (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')) {
-      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
-    } else if (agent.state === 'OnMission') {
-      // 🚧KJA move this to mission site evaluation function
       agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
     } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
       agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
     }
+
+    // Handle state transitions
     if (agent.state === 'InTransit') {
       agent.state =
         agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
     } else if (agent.state === 'OnMission') {
-      // Agents on mission return to standby after one turn
+      // Mission evaluation will handle these agents, so we just set them to transit for now
+      // The actual mission evaluation will set their proper state
       agent.state = 'InTransit'
       agent.assignment = 'Standby'
     }
@@ -54,16 +64,8 @@ function updateFactionsAndPanic(state: GameState): void {
 function updateMissionSites(state: GameState): void {
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      // Check if mission site should be marked as successful or failed
-      const newState = missionSite.agentIds.length >= 2 ? 'Successful' : 'Failed'
-
-      // If mission becomes successful, apply rewards
-      if (newState === 'Successful') {
-        const mission = getMissionById(missionSite.missionId)
-        applyMissionRewards(state, mission.rewards)
-      }
-
-      missionSite.state = newState
+      // Use the proper mission site evaluation system
+      evaluateMissionSite(state, missionSite)
     } else if (missionSite.state === 'Active') {
       // Handle mission site expiration countdown
       // eslint-disable-next-line unicorn/no-lonely-if

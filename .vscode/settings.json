@@ -102,6 +102,9 @@
     "todo-tree.general.tags": [
         "🚧kja",
         "🚧KJA",
+        "kja",
+        "KJA",
+        
     ],
     "todo-tree.highlights.enabled": true,
     "editor.codeLens": false,
