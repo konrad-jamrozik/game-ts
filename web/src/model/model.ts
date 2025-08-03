@@ -1,12 +1,4 @@
-export type AgentState =
-  | 'Available'
-  | 'Training'
-  | 'InTransit'
-  | 'Recovering'
-  | 'Contracting'
-  | 'OnAssignment'
-  | 'OnMission'
-  | 'Terminated'
+export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignment' | 'OnMission' | 'Terminated'
 
 export type Agent = {
   id: string
@@ -15,6 +7,10 @@ export type Agent = {
   assignment: string
   skill: number
   exhaustion: number
+  hitPoints: number
+  maxHitPoints: number
+  recoveryTurnsRemaining: number
+  missionsSurvived: number
 }
 
 export type Lead = {
@@ -43,16 +39,28 @@ export type MissionRewards = {
   factionRewards?: Set<FactionRewards>
 }
 
+export type MissionObjective = {
+  id: string
+  difficulty: number
+}
+
 export type Mission = {
   id: string
   title: string
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
+  objectives: MissionObjective[]
+  difficulty: number
   rewards: MissionRewards
 }
 
 export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
+
+export type MissionSiteObjective = {
+  id: string
+  fulfilled: boolean
+}
 
 export type MissionSite = {
   id: string
@@ -60,6 +68,7 @@ export type MissionSite = {
   agentIds: string[]
   state: MissionSiteState
   expiresIn: number | 'never'
+  objectives: MissionSiteObjective[]
 }
 
 export type Faction = {
