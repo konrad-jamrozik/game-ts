@@ -6,6 +6,7 @@ export type AgentState =
   | 'Contracting'
   | 'OnAssignment'
   | 'OnMission'
+  | 'Terminated'
 
 export type Agent = {
   id: string

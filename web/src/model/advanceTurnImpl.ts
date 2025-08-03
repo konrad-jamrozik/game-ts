@@ -15,6 +15,7 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
     if (agent.state === 'OnAssignment' && (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')) {
       agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
     } else if (agent.state === 'OnMission') {
+      // 🚧KJA move this to mission site evaluation function
       agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
     } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
       agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
