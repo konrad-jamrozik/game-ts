@@ -3,7 +3,7 @@ import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } fro
 import { applyMissionRewards } from './applyMissionRewards'
 import type { Agent, GameState, MissionSite } from './model'
 
-// KJA mission site evaluation -> updateDeployedMissionSite
+// KJA mission-site, mission site evaluation -> updateDeployedMissionSite
 /**
  * Calculates the roll threshold: 100 - skill + difficulty
  */
@@ -60,7 +60,7 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
     // Check if agent is terminated
-    // KJA this happen in applyAgentResults, but the exhaustion based on terminated agents should still be computed correctly
+    // KJA mission-site this happen in applyAgentResults, but the exhaustion based on terminated agents should still be computed correctly
     if (agent.hitPoints <= 0) {
       agent.state = 'Terminated'
       agent.assignment = 'Terminated'
@@ -102,12 +102,12 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
     agent.missionsSurvived += 1
     const survivalIndex = Math.min(agent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_REWARD.length - 1)
     const skillReward = MISSION_SURVIVAL_SKILL_REWARD[survivalIndex]
-    // KJA this check should not be necessary
+    // KJA mission-site, this check should not be necessary
     if (skillReward !== undefined) {
       agent.skill += skillReward
     }
 
-    // KJA, no, agent first must be in transit, always, and then recover
+    // KJA mission-site, no, agent first must be in transit, always, and then recover
     // Set agent state if not recovering
     if (agent.state !== 'Recovering') {
       agent.state = 'InTransit'

@@ -50,6 +50,7 @@ export function sortActiveMissionSites(missionSites: MissionSite[]): MissionSite
 /**
  * Checks if a mission site is available for deployment
  */
+// KJA actually use this function
 export function canDeployToMissionSite(missionSite: MissionSite): boolean {
   return missionSite.state === 'Active'
 }
@@ -57,6 +58,7 @@ export function canDeployToMissionSite(missionSite: MissionSite): boolean {
 /**
  * Formats mission site display ID by removing prefixes
  */
+// KJA actually use this function
 export function formatMissionSiteDisplayId(missionSiteId: string): string {
   return missionSiteId.replace(/^mission-site-/u, '')
 }

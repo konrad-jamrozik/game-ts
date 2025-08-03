@@ -74,7 +74,7 @@ for `Hit points lost roll` of given agent.
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
 
-# KJA TODOs for misison site evaluation
+# KJA mission-site TODOs for mission site evaluation
 
 - reduce exhaustion with recovery
 - restore hit points as agent recovers

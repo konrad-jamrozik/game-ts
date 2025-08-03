@@ -34,6 +34,7 @@ export function calculateDamage(roll: number, threshold: number): number {
 /**
  * Performs a skill check against difficulty
  */
+// KJA actually use this function
 export function performSkillCheck(
   skill: number,
   difficulty: number,
@@ -59,6 +60,7 @@ export function performSkillCheck(
 /**
  * Calculates recovery time based on hit points lost
  */
+// KJA actually use this function
 export function calculateRecoveryTime(hitPointsLost: number, maxHitPoints: number): number {
   if (hitPointsLost <= 0) {
     return 0
@@ -71,6 +73,7 @@ export function calculateRecoveryTime(hitPointsLost: number, maxHitPoints: numbe
 /**
  * Determines if an agent is terminated based on hit points
  */
+// KJA actually use this function
 export function isAgentTerminated(currentHitPoints: number): boolean {
   return currentHitPoints <= 0
 }

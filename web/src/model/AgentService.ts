@@ -1,5 +1,6 @@
 import type { Agent } from './model'
 
+// KJA better names for *Service classes. Like agentLogic? In parallel to model. Note I also have modelDerived.ts
 /**
  * Domain service for agent-related operations and validations
  */
@@ -43,6 +44,7 @@ export function validateAvailableAgents(
 /**
  * Gets agents by their IDs
  */
+// KJA actually use this function
 export function getAgentsByIds(agents: Agent[], agentIds: string[]): Agent[] {
   return agents.filter((agent) => agentIds.includes(agent.id))
 }
@@ -50,6 +52,7 @@ export function getAgentsByIds(agents: Agent[], agentIds: string[]): Agent[] {
 /**
  * Checks if agent can be assigned to a specific task
  */
+// KJA actually use this function. Make it delegate to validateAvailableAgents
 export function canAssignAgent(agent: Agent, taskType: 'Contracting' | 'Espionage' | 'Mission'): boolean {
   if (agent.state === 'Terminated') {
     return false

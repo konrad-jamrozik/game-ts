@@ -138,7 +138,7 @@ const gameStateSlice = createSlice({
             expiresIn: mission.expiresIn,
             objectives: mission.objectives.map((objective) => ({
               id: objective.id,
-              difficulty: objective.difficulty, // KJA ideally this is not copied, just retrieved by reference to mission
+              difficulty: objective.difficulty, // KJA mission-site ideally this is not copied, just retrieved by reference to mission
               fulfilled: false,
             })),
           }

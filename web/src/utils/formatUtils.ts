@@ -12,6 +12,7 @@ export function formatAsPercentage(value: number, decimals = 2): string {
 /**
  * Formats panic value as percentage (panic is stored as value * 100)
  */
+// KJA actually use this function
 export function formatPanicPercentage(panic: number): string {
   return formatAsPercentage(panic, 2)
 }
@@ -19,6 +20,7 @@ export function formatPanicPercentage(panic: number): string {
 /**
  * Formats faction threat/suppression values as percentages
  */
+// KJA actually use this function
 export function formatFactionPercentage(value: number): string {
   return formatAsPercentage(value, 2)
 }
@@ -26,6 +28,7 @@ export function formatFactionPercentage(value: number): string {
 /**
  * Formats suppression decay percentage
  */
+// KJA actually use this function
 export function formatSuppressionDecayPercentage(decayPercent: number): string {
   return `${decayPercent}% per turn`
 }
@@ -33,11 +36,10 @@ export function formatSuppressionDecayPercentage(decayPercent: number): string {
 /**
  * Formats display ID by removing common prefixes
  */
+// KJA actually use this function
 export function formatDisplayId(id: string, prefix = 'mission-site-'): string {
   return id.replace(new RegExp(`^${prefix}`, 'u'), '')
 }
-
-
 
 /**
  * Formats mission site target for display (removes '-site-' patterns)

@@ -24,6 +24,7 @@ export function createGameEvent(message: string, context: GameContext): Omit<Gam
 /**
  * Creates a mission completion event
  */
+// KJA actually use this function
 export function createMissionCompletionEvent(
   missionTitle: string,
   context: GameContext,
@@ -34,6 +35,7 @@ export function createMissionCompletionEvent(
 /**
  * Creates a reward event
  */
+// KJA actually use this function
 export function createRewardEvent(
   rewardType: 'Money' | 'Intel' | 'Funding' | 'Panic Reduction',
   amount: number,
@@ -60,6 +62,7 @@ type AgentActionConfig = {
 /**
  * Creates an agent action event
  */
+// KJA actually use this function
 export function createAgentActionEvent(
   config: AgentActionConfig,
   context: GameContext,
