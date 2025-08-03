@@ -1,0 +1,81 @@
+import type { Agent } from './model'
+
+/**
+ * Domain service for agent-related operations and validations
+ */
+
+/**
+ * Validates that all selected agents are in "Available" state
+ */
+export function validateAvailableAgents(
+  agents: Agent[],
+  selectedAgentIds: string[],
+): {
+  isValid: boolean
+  errorMessage?: string
+  nonAvailableAgents: Agent[]
+} {
+  if (selectedAgentIds.length === 0) {
+    return {
+      isValid: false,
+      errorMessage: 'No agents selected!',
+      nonAvailableAgents: [],
+    }
+  }
+
+  const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
+  const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+
+  if (nonAvailableAgents.length > 0) {
+    return {
+      isValid: false,
+      errorMessage: 'This action can be done only on available agents!',
+      nonAvailableAgents,
+    }
+  }
+
+  return {
+    isValid: true,
+    nonAvailableAgents: [],
+  }
+}
+
+/**
+ * Gets agents by their IDs
+ */
+export function getAgentsByIds(agents: Agent[], agentIds: string[]): Agent[] {
+  return agents.filter((agent) => agentIds.includes(agent.id))
+}
+
+/**
+ * Checks if agent can be assigned to a specific task
+ */
+export function canAssignAgent(agent: Agent, taskType: 'Contracting' | 'Espionage' | 'Mission'): boolean {
+  if (agent.state === 'Terminated') {
+    return false
+  }
+  if (agent.state === 'Recovering') {
+    return false
+  }
+
+  switch (taskType) {
+    case 'Contracting':
+    case 'Espionage': {
+      return agent.state === 'Available'
+    }
+    case 'Mission': {
+      return agent.state === 'Available'
+    }
+    default: {
+      return false
+    }
+  }
+}
+
+/**
+ * Formats agent count with proper pluralization
+ */
+export function formatAgentCount(count: number): string {
+  const plural = count === 0 || count > 1 ? 's' : ''
+  return `${count} agent${plural}`
+}
