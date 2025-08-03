@@ -37,13 +37,7 @@ export function formatDisplayId(id: string, prefix = 'mission-site-'): string {
   return id.replace(new RegExp(`^${prefix}`, 'u'), '')
 }
 
-/**
- * Formats agent count with proper pluralization
- */
-export function formatAgentCount(count: number): string {
-  const plural = count === 0 || count > 1 ? 's' : ''
-  return `${count} agent${plural}`
-}
+
 
 /**
  * Formats mission site target for display (removes '-site-' patterns)
@@ -53,5 +47,5 @@ export function formatMissionTarget(missionSiteId: string): string {
     return 'mission ?'
   }
   const displayId = missionSiteId.replaceAll('-site-', ' ')
-  return displayId
+  return ` on ${displayId}`
 }

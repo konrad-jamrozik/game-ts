@@ -8,6 +8,8 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
+import { formatAgentCount, validateAvailableAgents } from '../model/AgentService'
+import { validateMissionSiteDeployment } from '../model/MissionSiteService'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -19,23 +21,7 @@ import {
 } from '../model/gameStateSlice'
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
-
-function pluralizeAgent(count: number): string {
-  return `agent${count === 0 || count > 1 ? 's' : ''}`
-}
-
-function formatAgentCount(count: number): string {
-  return `${count} ${pluralizeAgent(count)}`
-}
-
-function formatMissionSiteTarget(selectedMissionSiteId: string | undefined): string {
-  if (selectedMissionSiteId === undefined) {
-    return ' on mission ?'
-  }
-  // Remove "-site-" from the id before displaying
-  const displayId = selectedMissionSiteId.replaceAll('-site-', ' ')
-  return ` on ${displayId}`
-}
+import { formatMissionTarget } from '../utils/formatUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -50,12 +36,11 @@ export function PlayerActions(): React.JSX.Element {
   const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.id === id))
 
   function handleSackAgents(): void {
-    // Check if all selected agents are in "Available" state
-    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+    // Validate that all selected agents are available
+    const validation = validateAvailableAgents(agents, selectedAgentIds)
 
-    if (nonAvailableAgents.length > 0) {
-      setAlertMessage('This action can be done only on available agents!')
+    if (!validation.isValid) {
+      setAlertMessage(validation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -66,12 +51,11 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleAssignToContracting(): void {
-    // Check if all selected agents are in "Available" state
-    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+    // Validate that all selected agents are available
+    const validation = validateAvailableAgents(agents, selectedAgentIds)
 
-    if (nonAvailableAgents.length > 0) {
-      setAlertMessage('This action can be done only on available agents!')
+    if (!validation.isValid) {
+      setAlertMessage(validation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -82,12 +66,11 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleAssignToEspionage(): void {
-    // Check if all selected agents are in "Available" state
-    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
+    // Validate that all selected agents are available
+    const validation = validateAvailableAgents(agents, selectedAgentIds)
 
-    if (nonAvailableAgents.length > 0) {
-      setAlertMessage('This action can be done only on available agents!')
+    if (!validation.isValid) {
+      setAlertMessage(validation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -99,6 +82,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleRecallAgents(): void {
     // Check if all selected agents are in "OnAssignment" state
+    // KJA need analogous func to validateAvailableAgents but for OnAssignment
     const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
     const nonOnAssignmentAgents = selectedAgents.filter((agent) => agent.state !== 'OnAssignment')
 
@@ -149,26 +133,19 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Check if all selected agents are in "Available" state
-    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
-
-    if (nonAvailableAgents.length > 0) {
-      setAlertMessage('This action can be done only on available agents!')
+    // Validate agents are available
+    const agentValidation = validateAvailableAgents(agents, selectedAgentIds)
+    if (!agentValidation.isValid) {
+      setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
 
-    if (selectedAgentIds.length === 0) {
-      setAlertMessage('No agents selected!')
-      setShowAlert(true)
-      return
-    }
-
-    // Check if the selected mission site is already deployed or completed
+    // Validate mission site is available for deployment
     const selectedMissionSite = gameState.missionSites.find((site) => site.id === selectedMissionSiteId)
-    if (selectedMissionSite && selectedMissionSite.state !== 'Active') {
-      setAlertMessage('This mission site is not available for deployment!')
+    const missionValidation = validateMissionSiteDeployment(selectedMissionSite)
+    if (!missionValidation.isValid) {
+      setAlertMessage(missionValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -222,7 +199,7 @@ export function PlayerActions(): React.JSX.Element {
             disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
           >
             Deploy {formatAgentCount(selectedAgentIds.length)}
-            {formatMissionSiteTarget(selectedMissionSiteId)}
+            {formatMissionTarget(selectedMissionSiteId ?? '')}
           </Button>
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead

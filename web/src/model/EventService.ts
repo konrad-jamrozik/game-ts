@@ -1,3 +1,4 @@
+import { formatAgentCount } from './AgentService'
 import type { GameEvent } from './eventsSlice'
 
 /**
@@ -71,23 +72,19 @@ export function createAgentActionEvent(
     }
     case 'sacked': {
       const count = agentCount ?? 1
-      const plural = count === 1 ? '' : 's'
-      return createGameEvent(`${count} agent${plural} sacked`, context)
+      return createGameEvent(`${formatAgentCount(count)} sacked`, context)
     }
     case 'assigned': {
       const count = agentCount ?? 1
-      const plural = count === 1 ? '' : 's'
-      return createGameEvent(`${count} agent${plural} assigned to ${target ?? 'assignment'}`, context)
+      return createGameEvent(`${formatAgentCount(count)} assigned to ${target ?? 'assignment'}`, context)
     }
     case 'recalled': {
       const count = agentCount ?? 1
-      const plural = count === 1 ? '' : 's'
-      return createGameEvent(`${count} agent${plural} recalled from assignment`, context)
+      return createGameEvent(`${formatAgentCount(count)} recalled from assignment`, context)
     }
     case 'deployed': {
       const count = agentCount ?? 1
-      const plural = count === 1 ? '' : 's'
-      return createGameEvent(`${count} agent${plural} deployed to ${target ?? 'mission'}`, context)
+      return createGameEvent(`${formatAgentCount(count)} deployed to ${target ?? 'mission'}`, context)
     }
     default: {
       // This should never happen with proper TypeScript usage, but satisfies exhaustiveness

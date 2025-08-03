@@ -73,7 +73,7 @@ export function canAssignAgent(agent: Agent, taskType: 'Contracting' | 'Espionag
 }
 
 /**
- * Formats agent count with proper pluralization
+ * Formats agent count with proper pluralization // KJA move formatAgentCount back to formatUtils
  */
 export function formatAgentCount(count: number): string {
   const plural = count === 0 || count > 1 ? 's' : ''
