@@ -7,6 +7,14 @@ import type { Agent } from './model'
  */
 
 /**
+ * Calculates the effective skill of an agent, accounting for exhaustion.
+ * effective_skill = floor(skill * (1 - exhaustion / 100))
+ */
+export function getEffectiveSkill(agent: Agent): number {
+  return Math.floor(agent.skill * (1 - agent.exhaustion / 100))
+}
+
+/**
  * Validates that all selected agents are in "Available" state
  */
 export function validateAvailableAgents(

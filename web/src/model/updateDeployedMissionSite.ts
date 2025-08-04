@@ -1,5 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
+import { getEffectiveSkill } from './AgentService'
 import { applyMissionRewards } from './applyMissionRewards'
 import type { Agent, GameState, MissionSite } from './model'
 
@@ -38,7 +39,8 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     const [targetObjective] = unfulfilledObjectives
     if (targetObjective) {
       const objectiveRoll = rollDie()
-      const objectiveThreshold = calculateRollThreshold(agent.skill, targetObjective.difficulty)
+      const effectiveSkill = getEffectiveSkill(agent)
+      const objectiveThreshold = calculateRollThreshold(effectiveSkill, targetObjective.difficulty)
 
       if (objectiveRoll > objectiveThreshold) {
         // Mark objective as fulfilled
@@ -52,7 +54,8 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
 
   // Hit points lost roll
   const hitPointsLostRoll = rollDie()
-  const hitPointsThreshold = calculateRollThreshold(agent.skill, missionDifficulty)
+  const effectiveSkill = getEffectiveSkill(agent)
+  const hitPointsThreshold = calculateRollThreshold(effectiveSkill, missionDifficulty)
 
   if (hitPointsLostRoll < hitPointsThreshold) {
     hitPointsLost = hitPointsThreshold - hitPointsLostRoll
@@ -129,8 +132,10 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
     .map((agentId) => state.agents.find((agent) => agent.id === agentId))
     .filter((agent): agent is Agent => agent !== undefined)
 
-  // Sort agents by skill (lowest to highest) for rolling order
-  const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.skill - agentB.skill)
+  // Sort agents by effective skill (lowest to highest) for rolling order
+  const sortedAgents = [...deployedAgents].sort(
+    (agentA, agentB) => getEffectiveSkill(agentA) - getEffectiveSkill(agentB),
+  )
 
   // Track terminated agents for exhaustion penalty
   let terminatedAgentCount = 0

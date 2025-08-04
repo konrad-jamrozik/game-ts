@@ -1,22 +1,33 @@
 import type { GameState } from '../model/model'
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
+import { getEffectiveSkill } from './AgentService'
 
 export function getAgentUpkeep(gameState: GameState): number {
   return gameState.agents.length * AGENT_UPKEEP_COST
 }
 
 export function getContractedIncome(gameState: GameState): number {
-  return (
-    gameState.agents.filter((agent) => agent.assignment === 'Contracting' && agent.state === 'OnAssignment').length *
-    AGENT_CONTRACTING_INCOME
+  const contractingAgents = gameState.agents.filter(
+    (agent) => agent.assignment === 'Contracting' && agent.state === 'OnAssignment',
   )
+  let total = 0
+  for (const agent of contractingAgents) {
+    const effectiveSkill = getEffectiveSkill(agent)
+    total += Math.floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
+  }
+  return total
 }
 
 export function getEspionageIntel(gameState: GameState): number {
-  return (
-    gameState.agents.filter((agent) => agent.assignment === 'Espionage' && agent.state === 'OnAssignment').length *
-    AGENT_ESPIONAGE_INTEL
+  const espionageAgents = gameState.agents.filter(
+    (agent) => agent.assignment === 'Espionage' && agent.state === 'OnAssignment',
   )
+  let total = 0
+  for (const agent of espionageAgents) {
+    const effectiveSkill = getEffectiveSkill(agent)
+    total += Math.floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+  }
+  return total
 }
 
 export function getMoneyDiff(gameState: GameState): number {
