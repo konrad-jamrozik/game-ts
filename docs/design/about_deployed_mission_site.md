@@ -8,7 +8,7 @@ Upon turn advancement, the following happens with a deployed mission site:
 
 - Each agent deployed to the mission site makes two rolls: `mission objective` and `hit points lost` roll.
   See [Agent rolls](#agent-rolls).
-- For each agent, the result of their respective rolls are applied to them. See [Agent results](#agent-results).
+- For each agent, the result of their respective rolls are applied to them. See [Agent update](#agent-update).
 - The mission site state changes to `Successful` if all objectives are fulfilled, or `Failed` otherwise.
 - If the mission site is `Successful`, the mission rewards are applied.
 
@@ -77,8 +77,7 @@ Depending on the agent update as part of the mission site update, the agent will
 
 `difficulty` is provided by the roll context: e.g. mission site difficulty, or objective difficulty.
 
-`effective_skill` is equal to agent `skill` reduced by percentage equal to agent `exhaustion`, rounded down.
-That is, `effective_skill = floor(skill * (1 - exhaustion / 100))`.
+`effective_skill` is defined in [About agents / effective skill](about_agents.md#effective-skill).
 
 **Objective difficulty**: The difficulty of given objective, used to compute `roll threshold` for `Mission objective roll`
 for given agent and objective.

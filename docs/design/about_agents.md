@@ -40,6 +40,45 @@ as described in [about_deployed_mission_site.md](about_deployed_mission_site.md)
 Upon deployed mission site update, a deployed agent state and assignment are updated, as described in
 [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
+# Agent skill
+
+Agent skill affects performance on missions and assignments. Agents start with `AGENT_INITIAL_SKILL`.
+
+Agents gain skill points when they survive missions.
+Refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+## Effective skill
+
+Agent `skill` is used to compute `effective_skill`. `effective_skill` is equal to agent `skill` reduced by
+percentage equal to agent `exhaustion`, rounded down.
+That is, `effective_skill = floor(skill * (1 - exhaustion / 100))`.
+
+For example, an agent with `skill` of 116 and `exhaustion` of 15 will have `effective_skill` of `floor(116 * 85%) = 98`.
+
+## Skill effects
+
+Skill affects:
+
+- Agent's rolls in deployed mission sites, see [about_deployed_mission_site.md](about_deployed_mission_site.md)
+- Agent performance on assignments, such as `Contracting` and `Espionage`.
+
+# Agent exhaustion
+
+Agent exhaustion is a measure of how fatigued an agent is, which affects their performance on missions and assignments.
+
+Agent exhaustion has following effects:
+
+- Reduces agent effective skill during rolls in deployed mission site update. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Reduces agent effective skill during assignments: KJA TODO: document how
+
+Agent exhaustion changes as follows:
+
+- Increases by `AGENT_EXHAUSTION_INCREASE_PER_TURN` when turn is advanced
+  while they are on `Contracting` or `Espionage` assignments.
+- Increases upon deployed mission site update, see [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Decreases by `AGENT_EXHAUSTION_RECOVERY_PER_TURN`
+  when turn is advanced while they are in `Available` or `Recovering` state.
+
 # Contracting and espionage assignments
 
 Only agents in `Available` state can be assigned to `Contracting` or `Espionage` missions.
@@ -49,43 +88,16 @@ to `InTransit`.
 
 When turn is advanced while agent is in `OnAssignment` state:
 
-KJA TODO add here effective skill.
+- If agent is in `Contracting` assignment, they earn `floor(AGENT_CONTRACTING_INCOME * effective_skill / 100)`.
+- If agent is in `Espionage` assignment, they gather `floor(AGENT_ESPIONAGE_INTEL * effective_skill / 100)` intel.
+- Agent suffers exhaustion. See [Agent exhaustion](#agent-exhaustion) for details.
 
-- if agent is in `Contracting` assignment, they earn `AGENT_CONTRACTING_INCOME`.
-- if agent is in `Espionage` assignment, they gather `AGENT_ESPIONAGE_INTEL` intel.
-- agent suffers exhaustion. See [Agent exhaustion](#agent-exhaustion) for details.
+For definition of `effective_skill`, see [effective skill section](#effective-skill).
+
+## Recalling agents from assignments
 
 Any agent on `Contracting` or `Espionage` assignment can be recalled.
 This changes their state to `InTransit` and assignment to `Standby`.
-
-# Agent skill
-
-Agent skill affects performance on missions and assignments. Agents start with `AGENT_INITIAL_SKILL`.
-
-Agents gain skill points when they survive missions.
-Refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
-
-## Skill effects
-
-Skill affects:
-
-- agent's rolls in deployed mission sites, see [about_deployed_mission_site.md](about_deployed_mission_site.md)
-- agent performance on assignments, such as `Contracting` and `Espionage`.
-
-# Agent exhaustion
-
-Agent exhaustion is a measure of how fatigued an agent is, which affects their performance on missions and assignments.
-
-Agent exhaustion has following effects:
-
-- reduces agent effective skill during rolls in deployed mission site update. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
-- reduces agent effective skill during assignments: KJA TODO: document how
-
-Agent exhaustion changes as follows:
-
-- increases by `AGENT_EXHAUSTION_INCREASE_PER_TURN` when they are on `Contracting` or `Espionage` assignments.
-- increases as upon deployed mission site update, see [about_deployed_mission_site.md](about_deployed_mission_site.md).
-- decreased by `AGENT_EXHAUSTION_RECOVERY_PER_TURN` when they are in `Available` or `Recovering` state.
 
 # Agent lost hit points and recovery
 
