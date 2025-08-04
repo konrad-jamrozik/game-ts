@@ -12,7 +12,7 @@ Upon turn advancement, the following happens with a deployed mission site:
 - The mission site state changes to `Successful` if all objectives are fulfilled, or `Failed` otherwise.
 - If the mission site is `Successful`, the mission rewards are applied.
 
-## Agent rolls
+# Agent rolls
 
 Each agent deployed to the mission site makes two rolls, in this order:
 
@@ -24,14 +24,14 @@ Agents roll in order of lowest skill to highest skill, against the lowest diffic
 If by the time given agent `Mission objective roll` is supposed to happen all objectives have been already fulfilled,
 then the roll is skipped and instead only the `Hit points lost roll` is made for that agent.
 
-### Mission objectives roll
+## Mission objectives roll
 
 If an agent rolls above `roll threshold` for given objective, the objective is marked as fulfilled.
 
 For example, an agent with skill 100 rolling against objective with difficulty 30 must roll 31 or above to
 fulfill the objective. As such, they have a 70% chance of fulfilling the objective.
 
-### Hit points lost roll
+## Hit points lost roll
 
 Next, the agent rolls for hit points lost. The `roll threshold` is computed against mission site difficulty.
 
@@ -43,24 +43,33 @@ If the agent loses all their hit points, they are terminated.
 Note that agent can fulfill an objective even if they are terminated, because the `Hit points lost roll`
 happens after the `Mission objective roll`.
 
-## Agent results
+# Agent update
 
-All surviving agents deployed to mission suffer `AGENT_EXHAUSTION_RECOVERY_PER_TURN` exhaustion.
-In addition, they suffer an extra `AGENT_EXHAUSTION_RECOVERY_PER_TURN` exhaustion for each terminated agent.
+## Agent exhaustion update
 
-Every agent that lost any hit points must spend 1 turn in recovery for each 2% of total hit points lost, rounded up.
+All surviving agents deployed to mission site suffer `AGENT_EXHAUSTION_RECOVERY_PER_TURN`
+exhaustion upon deployed mission site update.
+In addition, they suffer `AGENT_EXHAUSTION_RECOVERY_PER_TURN` exhaustion for each agent terminated during the mission.
 
-For example, an agent with 30 hit points total that lost 7 hit points has lost 23.(3)% of their hit points, and as such
-they must spend 12 turns in recovery (11.(6) rounded up to 12).
-
-While agent is recovering lost hit points, they continue to recover from exhaustion as normal.
+## Agent skill update
 
 Any agent that survived gains skill points, depending on how many missions they survived.
 If this is their `Nth` mission they survived, they gain number of skill points equal to `MISSION_SURVIVAL_SKILL_REWARD[N-1]`.
 If `N` is greater than number of elements in `MISSION_SURVIVAL_SKILL_REWARD`, they gain the skill points equal to
 the last element in that list.
 
-## Definitions
+## Agent state and assignment update
+
+Depending on the agent update as part of the mission site update, the agent will be updated as follows:
+
+- If agent survived the mission with no hit points lost:
+  - Their state is set to `InTransit` and assignment set to `Standby`.
+- If agent survived the mission with hit points lost:
+  - Their state is set to `InTransit` and assignment set to `Recovery`.
+- If agent was terminated during the mission:
+  - Their state is set to `Terminated` and assignment set to `N/A`.
+
+# Definitions
 
 **Roll**: A random number between 1 and 100, inclusive.
 

@@ -2,7 +2,111 @@
 
 This document explains the ruleset governing agents in the game.
 
-# Agent attributes
+# Agent states and assignments
+
+`Assignment` denotes current agent orders / activity, while `State` denotes what is currently happening with the agent.
+
+## Agents in transit
+
+When an agent is first hired their state is `InTransit` and their assignment is `Standby`.
+
+When an agent is assigned to a mission site, `Contracting` or `Espionage`, their state changes
+to `InTransit`.
+
+If an agent is in `InTransit` state, upon turn advancement their state will change to state
+as dictated by the assignment:
+
+- `Standby` assignment → `Available` state
+- `Contracting` assignment → `OnAssignment` state
+- `mission-site-id` assignment → `OnMission` state
+- `Espionage` assignment → `OnAssignment` state
+- `Recovery` assignment → `Recovery` state
+
+## Agent deployment to a mission site
+
+When agents are deployed to a mission site:
+
+1. Their state becomes `OnMission`
+2. Their assignment becomes the mission site ID
+3. During turn advancement, they participate in deployed mission update as described in [about_deployed_mission_site.md](about_deployed_mission_site.md).
+4. After mission completion, their state becomes `InTransit` and assignment becomes `Standby`.
+
+## Agent update on deployed mission site update
+
+Upon deployed mission site update, a deployed agent state and assignment are updated, as described in
+[about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+# Agent skill
+
+Agent skill affects performance on missions and assignments. Agents start with `AGENT_INITIAL_SKILL`.
+
+Agents gain skill points when they survive missions.
+Refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+## Skill effects
+
+Skill affects:
+
+- agent's rolls in deployed mission sites, see [about_deployed_mission_site.md](about_deployed_mission_site.md)
+- agent performance on assignments, such as `Contracting` and `Espionage`.
+
+# Agent exhaustion
+
+Exhaustion affects agent skill. It increases by turns spent on assignments or by deployment to mission sites.
+It recovers by `AGENT_EXHAUSTION_RECOVERY_PER_TURN` when agent is in `Available` or `Recovering` state.
+
+Agent exhaustion increases while they are on `Contracting` or `Espionage` assignments by `AGENT_EXHAUSTION_INCREASE_PER_TURN`.
+
+Moreover agents deployed to mission sites gain exhaustion based on mission outcome: refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+# Agent lost hit points and recovery
+
+Agents have hit points representing their health and survivability.
+
+Agent can lose hit points as a result of deployed mission site update: see [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+If agent loses all hit points, they are terminated.
+
+Every agent that lost any hit points must spend 1 turn in recovery for each 2% of total hit points lost, rounded up.
+
+For example, an agent with 30 hit points total that lost 7 hit points has lost 23.(3)% of their hit points, and as such
+they must spend 12 turns in recovery (11.(6) rounded up to 12).
+
+Agent counts as having spent turn in recovery if their state was `Recovering` during turn advancement.
+
+Agent restores lost hit points every turn while they are in `Recovering` state.
+
+The hit point amount restored is restored linearly based on the percentage of hit points lost,
+taking the amount of turns as described above. Agent reaches full hit points only when all recovery turns have passed.
+During recovery, the agent hit points restored so far are rounded down to nearest integer.
+
+For example, an agent that lost 7 hit points out of total 30 hit points, must spend 12 turns in recovery.
+As such, every turn they restore 7 / 12 = 0.583(3) hit points, rounded down. Hence:
+
+| Turn in Recovery | Hit Points Restored | Before rounding |
+|------------------|--------------------|------------------|
+| 0                | 0                  | 0                |
+| 1                | 0                  | 0.583(3)         |
+| 2                | 1                  | 1.166(6)         |
+| 3                | 1                  | 1.75             |
+| 4                | 2                  | 2.333(3)         |
+| 5                | 2                  | 2.916(6)         |
+| 6                | 3                  | 3.5              |
+| 7                | 4                  | 4.083(3)         |
+| 8                | 4                  | 4.666(6)         |
+| 9                | 5                  | 5.25             |
+| 10               | 5                  | 5.833(3)         |
+| 11               | 6                  | 6.416(6)         |
+| 12               | 7                  | 7                |
+
+When a turn is advanced when agent was in recovery and they had `recoveryTurnsRemaining` equal to 1, they will
+end up with:
+
+- `hitPoints` equal to `maxHitPoints`,
+- assignment changed from `Recovery` to `Standby`,
+- and state changed from `Recovering` to `Available`.
+
+# Reference: agent attributes
 
 **id** - Unique identifier for the agent.
 
@@ -24,21 +128,25 @@ This document explains the ruleset governing agents in the game.
 
 **assignment** - The current assignment of the agent.
 
-# Agent states and assignments
+# Reference: agent states
 
-`Assignment` denotes agent orders while `State` denotes what is currently happening with the agent.
+- **Available** - Agent is ready for assignment and not doing anything.
+- **InTransit** - Agent is transiting to their assignment.
+- **Recovering** - Agent is recovering from lost hit points and cannot be assigned.
+- **OnAssignment** - Agent is actively working on contracting or espionage assignments.
+- **OnMission** - Agent is deployed to a mission site.
+- **Terminated** - Agent has died, was sacked, or otherwise lost.
 
-When an agent is first hired their `State` is `InTransit` and their `Assignment` is `Standby`.
+# Reference: agent assignments
 
-# Agent assignments
+Agent assignments represent the orders given to agents:
 
-# Agent deployment to a mission site
-
-# Agent skill
-
-# Agent exhaustion
-
-# Agent hit points and recovery
+- **Standby** - Agent is waiting for orders and recovering from exhaustion, if any (default assignment).
+- **Contracting** - Agent is earning money through contracts.
+- **Espionage** - Agent is gathering intelligence.
+- **Recovery** - Agent is recovering from lost hit points.
+- **N/A** - Agent has no assignment because they have been terminated.
+- **mission-site-id** - Agent is deployed to a specific mission site (where `mission-site-id` is its ID)
 
 # TODOs
 
