@@ -6,12 +6,15 @@ This document explains the ruleset governing agents in the game.
 
 `Assignment` denotes current agent orders / activity, while `State` denotes what is currently happening with the agent.
 
-## Agents in transit
+# Agent hiring and sacking
+
+Agent costs `AGENT_HIRE_COST` to hire.
 
 When an agent is first hired their state is `InTransit` and their assignment is `Standby`.
 
-When an agent is assigned to a mission site, `Contracting` or `Espionage`, their state changes
-to `InTransit`.
+When an agent is sacked, their state becomes `Terminated` and assignment becomes `N/A`.
+
+# Agents in transit
 
 If an agent is in `InTransit` state, upon turn advancement their state will change to state
 as dictated by the assignment:
@@ -20,21 +23,40 @@ as dictated by the assignment:
 - `Contracting` assignment → `OnAssignment` state
 - `mission-site-id` assignment → `OnMission` state
 - `Espionage` assignment → `OnAssignment` state
-- `Recovery` assignment → `Recovery` state
+- `Recovery` assignment → `Recovering` state
 
-## Agent deployment to a mission site
+# Agent deployment to a mission site
 
-When agents are deployed to a mission site:
+Only agents in `Available` state can be deployed to a mission site.
 
-1. Their state becomes `OnMission`
-2. Their assignment becomes the mission site ID
-3. During turn advancement, they participate in deployed mission update as described in [about_deployed_mission_site.md](about_deployed_mission_site.md).
-4. After mission completion, their state becomes `InTransit` and assignment becomes `Standby`.
+When an agent is deployed to a mission site, their state changes from `InTransit` to `OnMission`
+and their assignment becomes the mission site ID.
 
-## Agent update on deployed mission site update
+Furthermore, during turn advancement, an agent deployed to a mission site participates in deployed mission site update,
+as described in [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+# Agent update on deployed mission site update
 
 Upon deployed mission site update, a deployed agent state and assignment are updated, as described in
 [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
+# Contracting and espionage assignments
+
+Only agents in `Available` state can be assigned to `Contracting` or `Espionage` missions.
+
+When an agent is assigned to `Contracting` or `Espionage`, their state changes
+to `InTransit`.
+
+When turn is advanced while agent is in `OnAssignment` state:
+
+KJA TODO add here effective skill.
+
+- if agent is in `Contracting` assignment, they earn `AGENT_CONTRACTING_INCOME`.
+- if agent is in `Espionage` assignment, they gather `AGENT_ESPIONAGE_INTEL` intel.
+- agent suffers exhaustion. See [Agent exhaustion](#agent-exhaustion) for details.
+
+Any agent on `Contracting` or `Espionage` assignment can be recalled.
+This changes their state to `InTransit` and assignment to `Standby`.
 
 # Agent skill
 
@@ -52,12 +74,18 @@ Skill affects:
 
 # Agent exhaustion
 
-Exhaustion affects agent skill. It increases by turns spent on assignments or by deployment to mission sites.
-It recovers by `AGENT_EXHAUSTION_RECOVERY_PER_TURN` when agent is in `Available` or `Recovering` state.
+Agent exhaustion is a measure of how fatigued an agent is, which affects their performance on missions and assignments.
 
-Agent exhaustion increases while they are on `Contracting` or `Espionage` assignments by `AGENT_EXHAUSTION_INCREASE_PER_TURN`.
+Agent exhaustion has following effects:
 
-Moreover agents deployed to mission sites gain exhaustion based on mission outcome: refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- reduces agent effective skill during rolls in deployed mission site update. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- reduces agent effective skill during assignments: KJA TODO: document how
+
+Agent exhaustion changes as follows:
+
+- increases by `AGENT_EXHAUSTION_INCREASE_PER_TURN` when they are on `Contracting` or `Espionage` assignments.
+- increases as upon deployed mission site update, see [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- decreased by `AGENT_EXHAUSTION_RECOVERY_PER_TURN` when they are in `Available` or `Recovering` state.
 
 # Agent lost hit points and recovery
 

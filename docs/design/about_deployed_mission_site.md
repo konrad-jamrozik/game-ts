@@ -73,7 +73,12 @@ Depending on the agent update as part of the mission site update, the agent will
 
 **Roll**: A random number between 1 and 100, inclusive.
 
-**Roll threshold**: Equal to `100 - skill + difficulty`.
+**Roll threshold**: Equal to `100 - effective_skill + difficulty` where:
+
+`difficulty` is provided by the roll context: e.g. mission site difficulty, or objective difficulty.
+
+`effective_skill` is equal to agent `skill` reduced by percentage equal to agent `exhaustion`, rounded down.
+That is, `effective_skill = floor(skill * (1 - exhaustion / 100))`.
 
 **Objective difficulty**: The difficulty of given objective, used to compute `roll threshold` for `Mission objective roll`
 for given agent and objective.
