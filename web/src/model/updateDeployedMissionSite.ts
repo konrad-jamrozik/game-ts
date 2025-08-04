@@ -92,7 +92,7 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
     if (hitPointsLost > 0) {
       const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
       const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
-      agent.recoveryTurnsRemaining = Math.max(agent.recoveryTurnsRemaining, recoveryTurns)
+      agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
       agent.state = 'Recovering'
       agent.assignment = 'Recovery'
     }

@@ -12,10 +12,10 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
   for (const agent of state.agents) {
     // Handle recovery countdown
     if (agent.state === 'Recovering') {
-      if (agent.recoveryTurnsRemaining > 0) {
-        agent.recoveryTurnsRemaining -= 1
+      if (agent.recoveryTurns > 0) {
+        agent.recoveryTurns -= 1
       }
-      if (agent.recoveryTurnsRemaining <= 0) {
+      if (agent.recoveryTurns <= 0) {
         agent.state = 'Available'
         agent.assignment = 'Standby'
       }

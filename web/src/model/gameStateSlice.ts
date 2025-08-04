@@ -37,7 +37,7 @@ const gameStateSlice = createSlice({
           exhaustion: AGENT_INITIAL_EXHAUSTION,
           hitPoints: AGENT_INITIAL_HIT_POINTS,
           maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-          recoveryTurnsRemaining: 0,
+          recoveryTurns: 0,
           missionsSurvived: 0,
         }
         state.agents.push(newAgent)

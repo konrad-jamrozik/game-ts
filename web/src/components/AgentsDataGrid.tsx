@@ -87,7 +87,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       ),
     },
     {
-      field: 'recoveryTurnsRemaining',
+      field: 'recoveryTurns',
       headerName: 'Recovery',
       minWidth: 90,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (

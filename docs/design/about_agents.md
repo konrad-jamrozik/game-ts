@@ -139,7 +139,7 @@ As such, every turn they restore 7 / 12 = 0.583(3) hit points, rounded down. Hen
 | 11               | 6                  | 6.416(6)         |
 | 12               | 7                  | 7                |
 
-When a turn is advanced when agent was in recovery and they had `recoveryTurnsRemaining` equal to 1, they will
+When a turn is advanced when agent was in recovery and they had `recoveryTurns` equal to 1, they will
 end up with:
 
 - `hitPoints` equal to `maxHitPoints`,
@@ -160,7 +160,7 @@ end up with:
 
 **hitPoints** - The agent's current hit points.
 
-**recoveryTurnsRemaining** - The number of turns the agent needs to fully recover from lost hit points.
+**recoveryTurns** - The number of turns the agent needs to fully recover from lost hit points.
 
 **missionsSurvived** - The number of missions the agent has survived.
 
@@ -187,7 +187,3 @@ Agent assignments represent the orders given to agents:
 - **Recovery** - Agent is recovering from lost hit points.
 - **N/A** - Agent has no assignment because they have been terminated.
 - **mission-site-id** - Agent is deployed to a specific mission site (where `mission-site-id` is its ID)
-
-# TODOs
-
-KJA rename to "recoveryTurnsRemaining" to "RecoveryTurns".
