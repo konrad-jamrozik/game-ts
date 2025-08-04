@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { evaluateMissionSite } from '../src/model/missionSiteEvaluation'
 import type { Agent, GameState, MissionSite } from '../src/model/model'
+import { updateDeployedMissionSite } from '../src/model/updateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../src/ruleset/constants'
 
-describe('missionSiteEvaluation', () => {
-  test('should evaluate a mission site with successful objective completion', () => {
+describe('deployedMissionSiteUpdate', () => {
+  test('update a deployed mission site with successful objective completion', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
@@ -55,8 +55,8 @@ describe('missionSiteEvaluation', () => {
     Math.random = (): number => 0.95 // Return high values to ensure successful rolls
 
     try {
-      // Evaluate the mission site
-      evaluateMissionSite(gameState, testMissionSite)
+      // Update the mission site
+      updateDeployedMissionSite(gameState, testMissionSite)
 
       // Verify mission site is successful
       expect(testMissionSite.state).toBe('Successful')
@@ -78,7 +78,7 @@ describe('missionSiteEvaluation', () => {
     }
   })
 
-  test('should handle agent termination correctly', () => {
+  test('handle agent termination correctly', () => {
     // Create a test agent with low skill and hit points
     const testAgent: Agent = {
       id: 'agent-001',
@@ -128,7 +128,7 @@ describe('missionSiteEvaluation', () => {
     }
 
     try {
-      evaluateMissionSite(gameState, testMissionSite)
+      updateDeployedMissionSite(gameState, testMissionSite)
 
       // Verify agent was terminated (hit points should be 0)
       expect(testAgent.hitPoints).toBe(0)

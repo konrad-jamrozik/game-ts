@@ -20,7 +20,7 @@ function ErrorThrowingComponent({ shouldError }: { shouldError: boolean }): Reac
 const describeName = 'ErrorBoundary'
 
 describe(describeName, () => {
-  test('should render children when no error occurs', () => {
+  test('render children when no error occurs', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={false} />
@@ -30,7 +30,7 @@ describe(describeName, () => {
     expect(screen.getByText('No error')).toBeInTheDocument()
   })
 
-  test('should render error UI with Wipe IndexedDB button when error occurs', () => {
+  test('render error UI with Wipe IndexedDB button when error occurs', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={true} />
@@ -44,7 +44,7 @@ describe(describeName, () => {
     expect(screen.getByRole('button', { name: 'Wipe IndexedDB' })).toBeInTheDocument()
   })
 
-  test('should have clickable Wipe IndexedDB button', () => {
+  test('have clickable Wipe IndexedDB button', () => {
     expect.hasAssertions()
 
     render(

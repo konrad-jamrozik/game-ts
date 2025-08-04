@@ -10,7 +10,7 @@ describe('settingsSlice', () => {
     areResetControlsExpanded: false,
   }
 
-  test('should return the initial state', () => {
+  test('return the initial state', () => {
     expect.hasAssertions()
 
     const result = settingsReducer(undefined, { type: '' })

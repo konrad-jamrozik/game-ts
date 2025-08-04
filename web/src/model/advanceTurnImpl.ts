@@ -3,9 +3,9 @@ import {
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   SUPPRESSION_DECAY_PCT,
 } from '../ruleset/constants'
-import { evaluateMissionSite } from './missionSiteEvaluation'
 import type { GameState } from './model'
-import { getMoneyNewBalance, getIntelNewBalance } from './modelDerived'
+import { getIntelNewBalance, getMoneyNewBalance } from './modelDerived'
+import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 
 // Helper functions for turn advancement
 function updateAgentStatesAndExhaustion(state: GameState): void {
@@ -33,8 +33,8 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
       agent.state =
         agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
     } else if (agent.state === 'OnMission') {
-      // Mission evaluation will handle these agents, so we just set them to transit for now
-      // The actual mission evaluation will set their proper state
+      // Deployed mission site update will handle these agents, so we just set them to transit for now
+      // The actual deployed mission site update will set their proper state
       agent.state = 'InTransit'
       agent.assignment = 'Standby'
     }
@@ -64,8 +64,7 @@ function updateFactionsAndPanic(state: GameState): void {
 function updateMissionSites(state: GameState): void {
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      // Use the proper mission site evaluation system
-      evaluateMissionSite(state, missionSite)
+      updateDeployedMissionSite(state, missionSite)
     } else if (missionSite.state === 'Active') {
       // Handle mission site expiration countdown
       // eslint-disable-next-line unicorn/no-lonely-if

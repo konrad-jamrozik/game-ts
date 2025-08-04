@@ -3,7 +3,6 @@ import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } fro
 import { applyMissionRewards } from './applyMissionRewards'
 import type { Agent, GameState, MissionSite } from './model'
 
-// KJA mission-site, mission site evaluation -> updateDeployedMissionSite
 /**
  * Calculates the roll threshold: 100 - skill + difficulty
  */
@@ -72,7 +71,7 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
 }
 
 /**
- * Applies the results to agents after mission evaluation.
+ * Applies the results to agents after deployed mission site update.
  */
 function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void {
   for (const agent of agents) {
@@ -117,10 +116,10 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
 }
 
 /**
- * Evaluates a deployed mission site according to the mission site evaluation rules.
+ * Updates a deployed mission site according to about_deployed_mission_site.md.
  * This includes agent rolls, objective completion, damage calculation, and rewards.
  */
-export function evaluateMissionSite(state: GameState, missionSite: MissionSite): void {
+export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): void {
   // Get the mission to access its difficulty
   const mission = getMissionById(missionSite.missionId)
 

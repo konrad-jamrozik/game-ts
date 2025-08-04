@@ -1,6 +1,6 @@
-# About mission site evaluation
+# About deployed mission site
 
-This document explains how a deployed mission site is evaluated upon turn advancement.
+This document explains how a deployed mission site is updated upon turn advancement.
 
 Refer to [Definitions](#definitions) for definitions of terms used in this document.
 
@@ -74,9 +74,9 @@ for `Hit points lost roll` of given agent.
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
 
-# KJA mission-site TODOs for mission site evaluation
+# KJA mission-site TODOs for deployed mission site update
 
 - reduce exhaustion with recovery
 - restore hit points as agent recovers
-- log to console details of agent rolls during mission site evaluation
+- log to console details of agent rolls during deployed mission site update
 - update doc exhaustion should reduce skill by percentage. 15 exhaustion = 15% skill reduction

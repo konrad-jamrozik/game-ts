@@ -1,5 +1,5 @@
 /**
- * Combat and dice rolling utilities for mission evaluation
+ * Combat and dice rolling utilities for deployed mission site update.
  */
 
 /**
