@@ -106,6 +106,13 @@ export default function advanceTurnImpl(state: GameState): void {
   state.turn += 1
   state.actionsCount = 0
 
+  // Update money, intel, and hire cost
+  state.money = getMoneyNewBalance(state)
+  state.intel = getIntelNewBalance(state)
+
+  // KJA This must be reviewed and potentially split: exhaustion computation must happen AFTER mission site computation,
+  // but some things may need to happen before.
+  //
   // Update agent states and exhaustion
   updateAgentStatesAndExhaustion(state)
 
@@ -115,8 +122,5 @@ export default function advanceTurnImpl(state: GameState): void {
   // Update mission sites and apply rewards (including new suppression after decay)
   updateMissionSites(state)
 
-  // Update money, intel, and hire cost
-  state.money = getMoneyNewBalance(state)
-  state.intel = getIntelNewBalance(state)
   state.hireCost = 0
 }
