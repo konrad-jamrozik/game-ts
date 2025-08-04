@@ -64,10 +64,11 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
     // Check if agent is terminated
-    // KJA mission-site this happen in applyAgentResults, but the exhaustion based on terminated agents should still be computed correctly
+    // KJA mission-site this should happen in applyAgentResults,
+    // but even with such refactor I must ensure the exhaustion of other agents based on the count of terminated agents should still be computed correctly
     if (agent.hitPoints <= 0) {
       agent.state = 'Terminated'
-      agent.assignment = 'Terminated'
+      agent.assignment = 'N/A'
       terminated = true
     }
   }
@@ -95,12 +96,16 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
     // Calculate recovery time if agent lost hit points
     const hitPointsLost = agent.maxHitPoints - agent.hitPoints
     if (hitPointsLost > 0) {
+      // KJA handle here terminated - see todo in the place where it is currently terminated (in processAgentRolls)
       const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
       const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
       agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
       agent.hitPointsLostBeforeRecovery = hitPointsLost
-      agent.state = 'Recovering'
+      agent.state = 'InTransit'
       agent.assignment = 'Recovery'
+    } else {
+      agent.state = 'InTransit'
+      agent.assignment = 'Standby'
     }
 
     // Award skill points for mission survival
@@ -110,13 +115,6 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
     // KJA mission-site, this check should not be necessary
     if (skillReward !== undefined) {
       agent.skill += skillReward
-    }
-
-    // KJA mission-site, no, agent first must be in transit, always, and then recover
-    // Set agent state if not recovering
-    if (agent.state !== 'Recovering') {
-      agent.state = 'InTransit'
-      agent.assignment = 'Standby'
     }
   }
 }

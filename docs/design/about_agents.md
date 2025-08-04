@@ -198,3 +198,7 @@ Agent assignments represent the orders given to agents:
 - **Recovery** - Agent is recovering from lost hit points.
 - **N/A** - Agent has no assignment because they have been terminated.
 - **mission-site-id** - Agent is deployed to a specific mission site (where `mission-site-id` is its ID)
+
+# KJA todos for agents
+
+- sacking agent should terminate them

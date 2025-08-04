@@ -48,14 +48,19 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
     // Update exhaustion based on agent state and assignment
     if (agent.state === 'OnAssignment' && (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')) {
       agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
-    } else if (agent.state === 'Available' && agent.assignment === 'Standby') {
+    } else if ((agent.state === 'Available' && agent.assignment === 'Standby') || agent.state === 'Recovering') {
       agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
     }
 
     // Handle state transitions
     if (agent.state === 'InTransit') {
-      agent.state =
-        agent.assignment === 'Contracting' || agent.assignment === 'Espionage' ? 'OnAssignment' : 'Available'
+      if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
+        agent.state = 'OnAssignment'
+      } else if (agent.assignment === 'Recovery') {
+        agent.state = 'Recovering'
+      } else {
+        agent.state = 'Available'
+      }
     } else if (agent.state === 'OnMission') {
       // Deployed mission site update will handle these agents, so we just set them to transit for now
       // The actual deployed mission site update will set their proper state

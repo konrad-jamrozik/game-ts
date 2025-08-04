@@ -135,7 +135,7 @@ describe('deployedMissionSiteUpdate', () => {
       // Verify agent was terminated (hit points should be 0)
       expect(testAgent.hitPoints).toBe(0)
       expect(testAgent.state).toBe('Terminated')
-      expect(testAgent.assignment).toBe('Terminated')
+      expect(testAgent.assignment).toBe('N/A')
     } finally {
       Math.random = originalRandom
     }
