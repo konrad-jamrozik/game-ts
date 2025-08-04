@@ -55,9 +55,8 @@ describe(getEffectiveSkill, () => {
       assignment: 'Standby',
     }
 
-    // effective_skill = floor(100 * (1 - 80/100)) = floor(100 * 0.2) = floor(19.999999999999996) = 19
-    // Note: Due to floating point precision, 100 * (1 - 80/100) equals 19.999999999999996, not exactly 20
-    expect(getEffectiveSkill(agent)).toBe(19)
+    // effective_skill = floor(100 * (1 - 80/100)) = floor(100 * 0.2) = floor(20) = 20
+    expect(getEffectiveSkill(agent)).toBe(20)
   })
 
   test('should handle 100% exhaustion correctly', () => {

@@ -1,3 +1,4 @@
+import { floor } from '../utils/mathUtils'
 import type { Agent } from './model'
 
 // KJA domain classes instead of *Service classes. E.g. Agent or Agents.
@@ -11,7 +12,8 @@ import type { Agent } from './model'
  * effective_skill = floor(skill * (1 - exhaustion / 100))
  */
 export function getEffectiveSkill(agent: Agent): number {
-  return Math.floor(agent.skill * (1 - agent.exhaustion / 100))
+  const result = agent.skill * (1 - agent.exhaustion / 100)
+  return floor(result)
 }
 
 /**

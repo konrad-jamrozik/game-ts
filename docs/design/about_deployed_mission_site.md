@@ -91,4 +91,3 @@ for `Hit points lost roll` of given agent.
 
 - reduce exhaustion with recovery
 - log to console details of agent rolls during deployed mission site update
-- update doc exhaustion should reduce skill by percentage. 15 exhaustion = 15% skill reduction

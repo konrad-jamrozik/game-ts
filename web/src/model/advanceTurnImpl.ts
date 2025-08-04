@@ -4,6 +4,7 @@ import {
   SUPPRESSION_DECAY_PCT,
 } from '../ruleset/constants'
 import { assertEqual } from '../utils/assert'
+import { floor } from '../utils/mathUtils'
 import type { GameState } from './model'
 import { getIntelNewBalance, getMoneyNewBalance } from './modelDerived'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
@@ -25,7 +26,7 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
 
         // Calculate cumulative hit points to restore based on linear progression
         const hitPointsPerTurn = originalHitPointsLost / totalRecoveryTurns
-        const totalHitPointsToRestoreSoFar = Math.floor(hitPointsPerTurn * turnsCompletedSoFar)
+        const totalHitPointsToRestoreSoFar = floor(hitPointsPerTurn * turnsCompletedSoFar)
 
         // Set current hit points based on cumulative restoration
         agent.hitPoints = agent.maxHitPoints - originalHitPointsLost + totalHitPointsToRestoreSoFar
@@ -75,7 +76,7 @@ function updateFactionsAndPanic(state: GameState): void {
 
   // Apply suppression decay AFTER panic calculation
   for (const faction of state.factions) {
-    faction.suppression = Math.floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
+    faction.suppression = floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
   }
 
   // Increment faction threat levels

@@ -6,6 +6,8 @@
  * Rolls a die (1-100 inclusive)
  */
 export function rollDie(): number {
+  // Note: here we are OK using Math.floor, because Math.random() will never return 1, so there
+  // is no concern of floating point imprecision.
   return Math.floor(Math.random() * 100) + 1
 }
 
