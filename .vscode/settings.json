@@ -107,7 +107,7 @@
         
     ],
     "todo-tree.highlights.enabled": true,
-    "editor.codeLens": true,
+    "editor.codeLens": false,
     "github.copilot.chat.agent.terminal.allowList": {
         "npm run build": true,
         "npm run test": true,

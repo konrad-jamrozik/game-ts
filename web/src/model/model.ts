@@ -3,14 +3,14 @@ export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignmen
 export type Agent = {
   id: string
   turnHired: number
-  state: AgentState
-  assignment: string
   skill: number
   exhaustion: number
   hitPoints: number
   maxHitPoints: number
   recoveryTurnsRemaining: number
   missionsSurvived: number
+  state: AgentState
+  assignment: string
 }
 
 export type Lead = {
