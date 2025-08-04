@@ -90,6 +90,5 @@ for `Hit points lost roll` of given agent.
 # KJA mission-site TODOs for deployed mission site update
 
 - reduce exhaustion with recovery
-- restore hit points as agent recovers
 - log to console details of agent rolls during deployed mission site update
 - update doc exhaustion should reduce skill by percentage. 15 exhaustion = 15% skill reduction

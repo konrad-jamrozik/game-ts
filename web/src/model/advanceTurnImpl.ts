@@ -3,6 +3,7 @@ import {
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   SUPPRESSION_DECAY_PCT,
 } from '../ruleset/constants'
+import { assertEqual } from '../utils/assert'
 import type { GameState } from './model'
 import { getIntelNewBalance, getMoneyNewBalance } from './modelDerived'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
@@ -10,12 +11,34 @@ import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 // Helper functions for turn advancement
 function updateAgentStatesAndExhaustion(state: GameState): void {
   for (const agent of state.agents) {
-    // Handle recovery countdown
+    // Handle recovery countdown and hit point restoration
     if (agent.state === 'Recovering') {
       if (agent.recoveryTurns > 0) {
         agent.recoveryTurns -= 1
+
+        // Calculate total recovery turns originally needed
+        const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
+        const totalRecoveryTurns = Math.ceil(((originalHitPointsLost / agent.maxHitPoints) * 100) / 2)
+
+        // Calculate which turn of recovery we just completed
+        const turnsCompletedSoFar = totalRecoveryTurns - agent.recoveryTurns
+
+        // Calculate cumulative hit points to restore based on linear progression
+        const hitPointsPerTurn = originalHitPointsLost / totalRecoveryTurns
+        const totalHitPointsToRestoreSoFar = Math.floor(hitPointsPerTurn * turnsCompletedSoFar)
+
+        // Set current hit points based on cumulative restoration
+        agent.hitPoints = agent.maxHitPoints - originalHitPointsLost + totalHitPointsToRestoreSoFar
       }
+
       if (agent.recoveryTurns <= 0) {
+        assertEqual(
+          agent.hitPoints,
+          agent.maxHitPoints,
+          'Agent hit points should be fully restored on recovery completion',
+        )
+        // Reset recovery state
+        agent.hitPointsLostBeforeRecovery = 0
         agent.state = 'Available'
         agent.assignment = 'Standby'
       }

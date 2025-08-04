@@ -14,6 +14,12 @@ When an agent is first hired their state is `InTransit` and their assignment is 
 
 When an agent is sacked, their state becomes `Terminated` and assignment becomes `N/A`.
 
+Only agents in `Available` state can be sacked.
+
+# Agent upkeep
+
+Each non-terminated agent costs `AGENT_UPKEEP_COST` upkeep per turn.
+
 # Agents in transit
 
 If an agent is in `InTransit` state, upon turn advancement their state will change to state
@@ -66,6 +72,8 @@ Skill affects:
 
 Agent exhaustion is a measure of how fatigued an agent is, which affects their performance on missions and assignments.
 
+Each agent starts with `AGENT_INITIAL_EXHAUSTION`.
+
 Agent exhaustion has following effects:
 
 - Reduces agent effective skill during rolls in deployed mission site update. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
@@ -101,7 +109,7 @@ This changes their state to `InTransit` and assignment to `Standby`.
 
 # Agent lost hit points and recovery
 
-Agents have hit points representing their health and survivability.
+Agents have hit points representing their health and survivability. Each agent starts with `AGENT_INITIAL_HIT_POINTS`.
 
 Agent can lose hit points as a result of deployed mission site update: see [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
@@ -161,6 +169,9 @@ end up with:
 **hitPoints** - The agent's current hit points.
 
 **recoveryTurns** - The number of turns the agent needs to fully recover from lost hit points.
+
+**hitPointsLostBeforeRecovery** - The number of hit points the agent lost before starting recovery
+(used for calculating linear restoration).
 
 **missionsSurvived** - The number of missions the agent has survived.
 

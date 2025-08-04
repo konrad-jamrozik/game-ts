@@ -8,6 +8,7 @@ export type Agent = {
   hitPoints: number
   maxHitPoints: number
   recoveryTurns: number
+  hitPointsLostBeforeRecovery: number
   missionsSurvived: number
   state: AgentState
   assignment: string

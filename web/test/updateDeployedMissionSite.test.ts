@@ -16,6 +16,7 @@ describe('deployedMissionSiteUpdate', () => {
       hitPoints: AGENT_INITIAL_HIT_POINTS,
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
+      hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
     }
 
@@ -90,6 +91,7 @@ describe('deployedMissionSiteUpdate', () => {
       hitPoints: 1, // Very low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
+      hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
     }
 
