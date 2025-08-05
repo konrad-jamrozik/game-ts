@@ -8,11 +8,14 @@ import type { Agent } from './model'
  */
 
 /**
- * Calculates the effective skill of an agent, accounting for exhaustion.
- * effective_skill = floor(skill * (1 - exhaustion / 100))
+ * Calculates the effective skill of an agent. Refer to about_agents.md for details.
  */
 export function getEffectiveSkill(agent: Agent): number {
-  const result = agent.skill * (1 - agent.exhaustion / 100)
+  const hitPointsLost = agent.maxHitPoints - agent.hitPoints
+  const hitPointsReduction = agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0
+  const exhaustionReduction = agent.exhaustion / 100
+
+  const result = agent.skill * (1 - hitPointsReduction) * (1 - exhaustionReduction)
   return floor(result)
 }
 

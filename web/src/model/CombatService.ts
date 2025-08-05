@@ -51,10 +51,9 @@ export function performSkillCheck(
   damage?: number
 } {
   const roll = rollDie()
-  const threshold = calculateRollThreshold(skill, difficulty)
+  const [threshold] = calculateRollThreshold(skill, difficulty)
   const successful = isRollSuccessful(roll, threshold)
   const damage = successful ? 0 : calculateDamage(roll, threshold)
-
   return {
     roll,
     threshold,

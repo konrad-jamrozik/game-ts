@@ -6,6 +6,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { getEffectiveSkill } from '../model/AgentService'
 import type { Agent } from '../model/model'
 import { setAgentSelection } from '../model/selectionSlice'
 import { DataGridCard } from './DataGridCard'
@@ -63,10 +64,17 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'skill',
       headerName: 'Skill',
-      minWidth: 80,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-skill-${params.id}`}>{params.value}</span>
-      ),
+      minWidth: 145,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
+        const effectiveSkill = getEffectiveSkill(params.row)
+        const baselineSkill = params.value ?? 0
+        const percentage = baselineSkill > 0 ? ((effectiveSkill / baselineSkill) * 100).toFixed(1) : '0.0'
+        return (
+          <span aria-label={`agents-row-skill-${params.id}`}>
+            {effectiveSkill} / {baselineSkill} ({percentage}%)
+          </span>
+        )
+      },
     },
     {
       field: 'exhaustion',

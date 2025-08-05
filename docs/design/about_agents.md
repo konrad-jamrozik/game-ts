@@ -55,11 +55,26 @@ Refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
 ## Effective skill
 
-Agent `skill` is used to compute `effective_skill`. `effective_skill` is equal to agent `skill` reduced by
-percentage equal to agent `exhaustion`, rounded down.
-That is, `effective_skill = floor(skill * (1 - exhaustion / 100))`.
+Agent `skill` is used to compute `effective_skill`. `effective_skill` is equal to agent `skill` reduced by:
 
-For example, an agent with `skill` of 116 and `exhaustion` of 15 will have `effective_skill` of `floor(116 * 85%) = 98`.
+- Percentage equal to percentage of `hitPointsLost`, rounded down.
+- Then again by percentage equal to agent `exhaustion`, rounded down.
+
+That is, `effective_skill = floor(skill * (1 - (hitPointsLost / hitPoints)) * (1 - exhaustion / 100))`.
+
+For example:
+
+``` text
+skill = 100, hit points lost = 7 out of 30, exhaustion = 0
+effective_skill = floor(100 * (1 - (7 / 30))) = floor(100 * 0.76(6)) = 76
+
+skill = 116, exhaustion = 15
+effective_skill = floor(116 * 85%) = 98
+
+skill = 150, hit points lost = 7 out of 30, exhaustion = 15
+effective_skill = floor(150 * (1 - (7 / 30)) * (1 - 15 / 100))
+= floor(150 * 0.76(6) * 0.85) = floor(150 * 0.651(6)) = floor(97.75) = 97
+```
 
 ## Skill effects
 
