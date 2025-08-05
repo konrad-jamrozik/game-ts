@@ -12,6 +12,8 @@ Upon turn advancement, the following happens with a deployed mission site:
 - The mission site state changes to `Successful` if all objectives are fulfilled, or `Failed` otherwise.
 - If the mission site is `Successful`, the mission rewards are applied.
 
+For details refer to sections below.
+
 # Agent rolls
 
 Each agent deployed to the mission site makes two rolls, in this order:
@@ -43,6 +45,13 @@ If the agent loses all their hit points, they are terminated.
 Note that agent can fulfill an objective even if they are terminated, because the `Hit points lost roll`
 happens after the `Mission objective roll`.
 
+# Mission site state update and awards
+
+If all objectives are fulfilled, the mission site state is set to `Successful`.
+If any objective is not fulfilled, the mission site state is set to `Failed`.
+
+If mission site state is `Successful`, the mission site awards are awarded to the player.
+
 # Agent update
 
 ## Agent exhaustion update
@@ -69,6 +78,11 @@ Depending on the agent update as part of the mission site update, the agent will
 - If agent was terminated during the mission:
   - Their state is set to `Terminated` and assignment set to `N/A`.
 
+# Implementation details
+
+The file [about_turn_advancement.md](about_turn_advancement.md) describes, among other things,
+in which order the updates to deployed mission sites and agents deployed on them are implemented.
+
 # Definitions
 
 **Roll**: A random number between 1 and 100, inclusive.
@@ -86,8 +100,3 @@ for given agent and objective.
 for `Hit points lost roll` of given agent.
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
-
-# KJA mission-site TODOs for deployed mission site update
-
-- reduce exhaustion with recovery
-- log to console details of agent rolls during deployed mission site update
