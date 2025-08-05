@@ -122,7 +122,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'missionsSurvived',
       headerName: 'Missions',
-      minWidth: 90,
+      width: 90,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-missions-survived-${params.id}`}>{params.value}</span>
       ),
@@ -130,7 +130,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'turnHired',
       headerName: 'T. hired',
-      minWidth: 100,
+      width: 100,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
       ),
