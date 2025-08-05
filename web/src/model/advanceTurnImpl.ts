@@ -1,19 +1,40 @@
 import {
+  AGENT_CONTRACTING_INCOME,
+  AGENT_ESPIONAGE_INTEL,
   AGENT_EXHAUSTION_INCREASE_PER_TURN,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   SUPPRESSION_DECAY_PCT,
 } from '../ruleset/constants'
 import { assertEqual } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
+import { getEffectiveSkill } from './AgentService'
 import type { GameState } from './model'
-import { getIntelNewBalance, getMoneyNewBalance } from './modelDerived'
+import { getAgentUpkeep } from './modelDerived'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 
 // Helper functions for turn advancement
-function updateAgentStatesAndExhaustion(state: GameState): void {
+
+/**
+ * Updates agents in Available state - apply exhaustion recovery
+ */
+function updateAvailableAgents(state: GameState): void {
   for (const agent of state.agents) {
-    // Handle recovery countdown and hit point restoration
+    if (agent.state === 'Available' && agent.assignment === 'Standby') {
+      agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
+    }
+  }
+}
+
+/**
+ * Updates agents in Recovering state - apply hit point restoration and exhaustion recovery
+ */
+function updateRecoveringAgents(state: GameState): void {
+  for (const agent of state.agents) {
     if (agent.state === 'Recovering') {
+      // Apply exhaustion recovery
+      agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
+
+      // Handle recovery countdown and hit point restoration
       if (agent.recoveryTurns > 0) {
         agent.recoveryTurns -= 1
 
@@ -44,15 +65,14 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
         agent.assignment = 'Standby'
       }
     }
+  }
+}
 
-    // Update exhaustion based on agent state and assignment
-    if (agent.state === 'OnAssignment' && (agent.assignment === 'Contracting' || agent.assignment === 'Espionage')) {
-      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
-    } else if ((agent.state === 'Available' && agent.assignment === 'Standby') || agent.state === 'Recovering') {
-      agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
-    }
-
-    // Handle state transitions
+/**
+ * Updates agents in InTransit state - apply state transitions
+ */
+function updateInTransitAgents(state: GameState): void {
+  for (const agent of state.agents) {
     if (agent.state === 'InTransit') {
       if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
         agent.state = 'OnAssignment'
@@ -61,16 +81,111 @@ function updateAgentStatesAndExhaustion(state: GameState): void {
       } else {
         agent.state = 'Available'
       }
-    } else if (agent.state === 'OnMission') {
-      // Deployed mission site update will handle these agents, so we just set them to transit for now
-      // The actual deployed mission site update will set their proper state
-      agent.state = 'InTransit'
-      agent.assignment = 'Standby'
     }
   }
 }
 
-function updateFactionsAndPanic(state: GameState): void {
+/**
+ * Updates agents on Contracting assignment - earn money and apply exhaustion
+ */
+function updateContractingAgents(state: GameState): { moneyEarned: number } {
+  let moneyEarned = 0
+
+  for (const agent of state.agents) {
+    if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
+      // Earn money based on effective skill
+      const effectiveSkill = getEffectiveSkill(agent)
+      const income = floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
+      moneyEarned += income
+
+      // Apply exhaustion
+      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
+    }
+  }
+
+  return { moneyEarned }
+}
+
+/**
+ * Updates agents on Espionage assignment - gather intel and apply exhaustion
+ */
+function updateEspionageAgents(state: GameState): { intelGathered: number } {
+  let intelGathered = 0
+
+  for (const agent of state.agents) {
+    if (agent.state === 'OnAssignment' && agent.assignment === 'Espionage') {
+      // Gather intel based on effective skill
+      const effectiveSkill = getEffectiveSkill(agent)
+      const intel = floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      intelGathered += intel
+
+      // Apply exhaustion
+      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
+    }
+  }
+
+  return { intelGathered }
+}
+
+/**
+ * Updates active non-deployed mission sites - apply expiration countdown
+ */
+function updateActiveMissionSites(state: GameState): void {
+  for (const missionSite of state.missionSites) {
+    if (missionSite.state === 'Active' && missionSite.expiresIn !== 'never') {
+      missionSite.expiresIn -= 1
+      if (missionSite.expiresIn <= 0) {
+        missionSite.state = 'Expired'
+      }
+    }
+  }
+}
+
+/**
+ * Updates deployed mission sites and their agents
+ */
+function updateDeployedMissionSites(state: GameState): void {
+  for (const missionSite of state.missionSites) {
+    if (missionSite.state === 'Deployed') {
+      updateDeployedMissionSite(state, missionSite)
+    }
+  }
+}
+
+/**
+ * Updates player assets based on the results of agent assignments and mission rewards
+ */
+function updatePlayerAssets(state: GameState, moneyEarned: number, intelGathered: number): void {
+  // Add money earned by contracting agents
+  state.money += moneyEarned
+
+  // Add intel gathered by espionage agents
+  state.intel += intelGathered
+
+  // Add funding income
+  state.money += state.funding
+
+  // KJA this is broken - currently it makes player keep upkeep for terminated agents,
+  // but it should not. HOWEVER, agents terminated in given turn should still be paid for.
+  // Subtract agent upkeep costs
+  const agentUpkeep = getAgentUpkeep(state)
+  state.money -= agentUpkeep
+
+  // Subtract hire cost
+  state.money -= state.hireCost
+
+  // Reset hire cost
+  state.hireCost = 0
+
+  // KJA change the mission rewards application so it is instead applied in appropriate stages,
+  // not in updateDeployedMissionSite
+  // Mission rewards are already applied in updateDeployedMissionSite
+}
+
+/**
+ * Updates panic based on faction threat levels and suppression
+ */
+function updatePanic(state: GameState): void {
   // Increase panic by the sum of (threat level - suppression) for all factions
   // This uses current suppression values, exactly as displayed in SituationReportCard
   const totalPanicIncrease = state.factions.reduce(
@@ -79,53 +194,61 @@ function updateFactionsAndPanic(state: GameState): void {
   )
   state.panic += totalPanicIncrease
 
-  // Apply suppression decay AFTER panic calculation
+  // KJA change the mission rewards application so it is instead applied in appropriate stages,
+  // not in updateDeployedMissionSite
+  // Mission site rewards may have already reduced panic via applyMissionRewards
+}
+
+/**
+ * Updates factions - apply threat level increases and suppression decay
+ */
+function updateFactions(state: GameState): void {
   for (const faction of state.factions) {
+    // Increment faction threat levels
+    faction.threatLevel += faction.threatIncrease
+
+    // Apply suppression decay AFTER panic calculation and threat increase
     faction.suppression = floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
   }
 
-  // Increment faction threat levels
-  for (const faction of state.factions) {
-    faction.threatLevel += faction.threatIncrease
-  }
-}
-
-function updateMissionSites(state: GameState): void {
-  for (const missionSite of state.missionSites) {
-    if (missionSite.state === 'Deployed') {
-      updateDeployedMissionSite(state, missionSite)
-    } else if (missionSite.state === 'Active') {
-      // Handle mission site expiration countdown
-      // eslint-disable-next-line unicorn/no-lonely-if
-      if (missionSite.expiresIn !== 'never') {
-        missionSite.expiresIn -= 1
-        if (missionSite.expiresIn <= 0) {
-          missionSite.state = 'Expired'
-        }
-      }
-    }
-  }
+  // KJA change the mission rewards application so it is instead applied in appropriate stages,
+  // not in updateDeployedMissionSite
+  // Mission site rewards may have already applied faction suppression/threat changes via applyMissionRewards
 }
 
 export default function advanceTurnImpl(state: GameState): void {
   state.turn += 1
   state.actionsCount = 0
 
-  // Update money, intel, and hire cost
-  state.money = getMoneyNewBalance(state)
-  state.intel = getIntelNewBalance(state)
+  // Follow the order specified in about_turn_advancement.md:
 
-  // KJA This must be reviewed and potentially split: exhaustion computation must happen AFTER mission site computation,
-  // but some things may need to happen before.
-  //
-  // Update agent states and exhaustion
-  updateAgentStatesAndExhaustion(state)
+  // 1. Update all agents in Available state
+  updateAvailableAgents(state)
 
-  // Update factions and panic (uses current suppression, then applies decay)
-  updateFactionsAndPanic(state)
+  // 2. Update all agents in Recovering state
+  updateRecoveringAgents(state)
 
-  // Update mission sites and apply rewards (including new suppression after decay)
-  updateMissionSites(state)
+  // 3. Update all agents in InTransit state
+  updateInTransitAgents(state)
 
-  state.hireCost = 0
+  // 4. Update agents on Contracting assignment
+  const contractingResults = updateContractingAgents(state)
+
+  // 5. Update agents on Espionage assignment
+  const espionageResults = updateEspionageAgents(state)
+
+  // 6. Update active non-deployed mission sites
+  updateActiveMissionSites(state)
+
+  // 7. Update deployed mission sites (and agents deployed to them)
+  updateDeployedMissionSites(state)
+
+  // 8. Update player assets based on the results of the previous steps
+  updatePlayerAssets(state, contractingResults.moneyEarned, espionageResults.intelGathered)
+
+  // 9. Update panic based on the results of the previous steps
+  updatePanic(state)
+
+  // 10. Update factions based on the results of the previous steps
+  updateFactions(state)
 }
