@@ -124,7 +124,7 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
 }
 
 /**
- * Updates a deployed mission site according to about_deployed_mission_site.md.
+ * Updates a deployed mission site according to about_deployed_mission_sites.md.
  * This includes agent rolls, objective completion, damage calculation, and rewards.
  */
 export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): void {

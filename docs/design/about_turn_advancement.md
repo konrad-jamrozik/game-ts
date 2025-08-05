@@ -47,7 +47,7 @@ Apply mission site expiration progress and expire mission sites that have expire
 
 Update all deployed mission sites, including all agents deployed to them.
 
-Here we describe the implementation order, while full details are available in [about_deployed_mission_site.md](about_deployed_mission_site.md).
+Here we describe the implementation order, while full details are available in [about_deployed_mission_sites.md](about_deployed_mission_sites.md).
 
 For each deployed mission site:
 

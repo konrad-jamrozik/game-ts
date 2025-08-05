@@ -1,4 +1,4 @@
-# About deployed mission site
+# About deployed mission sites
 
 This document explains how a deployed mission site is updated upon turn advancement.
 
