@@ -4,7 +4,8 @@ import { floor } from '../utils/mathUtils'
 import { getEffectiveSkill } from './AgentService'
 
 export function getAgentUpkeep(gameState: GameState): number {
-  return gameState.agents.length * AGENT_UPKEEP_COST
+  const nonTerminatedAgents = gameState.agents.filter((agent) => agent.state !== 'Terminated')
+  return nonTerminatedAgents.length * AGENT_UPKEEP_COST
 }
 
 export function getContractedIncome(gameState: GameState): number {

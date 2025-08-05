@@ -8,11 +8,10 @@ import {
 import { assertEqual } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
 import { getEffectiveSkill } from './AgentService'
-import type { GameState } from './model'
+import { applyMissionRewards } from './applyMissionRewards'
+import type { GameState, MissionRewards } from './model'
 import { getAgentUpkeep } from './modelDerived'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
-
-// Helper functions for turn advancement
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
@@ -143,31 +142,42 @@ function updateActiveMissionSites(state: GameState): void {
 
 /**
  * Updates deployed mission sites and their agents
+ * Returns collected mission rewards to be applied later
  */
-function updateDeployedMissionSites(state: GameState): void {
+function updateDeployedMissionSites(state: GameState): MissionRewards[] {
+  const missionRewards: MissionRewards[] = []
+
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      updateDeployedMissionSite(state, missionSite)
+      const rewards = updateDeployedMissionSite(state, missionSite)
+      if (rewards) {
+        missionRewards.push(rewards)
+      }
     }
   }
+
+  return missionRewards
 }
 
 /**
  * Updates player assets based on the results of agent assignments and mission rewards
  */
-function updatePlayerAssets(state: GameState, moneyEarned: number, intelGathered: number): void {
+function updatePlayerAssets(
+  state: GameState,
+  income: { moneyEarned: number; intelGathered: number; missionRewards: MissionRewards[] },
+): void {
   // Add money earned by contracting agents
-  state.money += moneyEarned
+  state.money += income.moneyEarned
 
   // Add intel gathered by espionage agents
-  state.intel += intelGathered
+  state.intel += income.intelGathered
 
   // Add funding income
   state.money += state.funding
 
-  // KJA this is broken - currently it makes player keep upkeep for terminated agents,
-  // but it should not. HOWEVER, agents terminated in given turn should still be paid for.
   // Subtract agent upkeep costs
+  // KJA this will INCORRECTLY not include agents that have been terminated this turn in deployed mission sites.
+  // Player MUST pay upkeep for all agents that were non-terminated at turns start.
   const agentUpkeep = getAgentUpkeep(state)
   state.money -= agentUpkeep
 
@@ -177,13 +187,14 @@ function updatePlayerAssets(state: GameState, moneyEarned: number, intelGathered
   // Reset hire cost
   state.hireCost = 0
 
-  // KJA change the mission rewards application so it is instead applied in appropriate stages,
-  // not in updateDeployedMissionSite
-  // Mission rewards are already applied in updateDeployedMissionSite
+  // Apply mission rewards for money, intel, and funding
+  for (const rewards of income.missionRewards) {
+    applyMissionRewards(state, rewards)
+  }
 }
 
 /**
- * Updates panic based on faction threat levels and suppression
+ * Updates panic based on faction threat levels and suppression, but excludes panic reduction from mission rewards
  */
 function updatePanic(state: GameState): void {
   // Increase panic by the sum of (threat level - suppression) for all factions
@@ -194,13 +205,12 @@ function updatePanic(state: GameState): void {
   )
   state.panic += totalPanicIncrease
 
-  // KJA change the mission rewards application so it is instead applied in appropriate stages,
-  // not in updateDeployedMissionSite
-  // Mission site rewards may have already reduced panic via applyMissionRewards
+  // KJA update panic reduction rewards here, not in updatePlayerAssets
+  // Panic reduction from mission rewards is applied in updatePlayerAssets
 }
 
 /**
- * Updates factions - apply threat level increases and suppression decay
+ * Updates factions - apply threat level increases and suppression decay, but excludes faction rewards from missions
  */
 function updateFactions(state: GameState): void {
   for (const faction of state.factions) {
@@ -211,9 +221,8 @@ function updateFactions(state: GameState): void {
     faction.suppression = floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
   }
 
-  // KJA change the mission rewards application so it is instead applied in appropriate stages,
-  // not in updateDeployedMissionSite
-  // Mission site rewards may have already applied faction suppression/threat changes via applyMissionRewards
+  // KJA update faction rewards here, not in updatePlayerAssets
+  // Faction threat reductions and suppression increases from mission rewards are applied in updatePlayerAssets
 }
 
 export default function advanceTurnImpl(state: GameState): void {
@@ -241,10 +250,14 @@ export default function advanceTurnImpl(state: GameState): void {
   updateActiveMissionSites(state)
 
   // 7. Update deployed mission sites (and agents deployed to them)
-  updateDeployedMissionSites(state)
+  const missionRewards = updateDeployedMissionSites(state)
 
   // 8. Update player assets based on the results of the previous steps
-  updatePlayerAssets(state, contractingResults.moneyEarned, espionageResults.intelGathered)
+  updatePlayerAssets(state, {
+    moneyEarned: contractingResults.moneyEarned,
+    intelGathered: espionageResults.intelGathered,
+    missionRewards,
+  })
 
   // 9. Update panic based on the results of the previous steps
   updatePanic(state)

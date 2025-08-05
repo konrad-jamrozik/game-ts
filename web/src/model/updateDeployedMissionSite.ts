@@ -2,9 +2,9 @@ import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
 import { getEffectiveSkill } from './AgentService'
 import { calculateRollThreshold, rollDie } from './CombatService'
-import { applyMissionRewards } from './applyMissionRewards'
-import type { Agent, GameState, MissionSite } from './model'
+import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 
+// KJA should be named AgentHitPointsLostRollResult
 type AgentRollResult = {
   hitPointsLost: number
   terminated: boolean
@@ -62,12 +62,9 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     hitPointsLost = hitPointsThreshold - hitPointsLostRoll
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
-    // Check if agent is terminated
-    // KJA mission-site this should happen in applyAgentResults,
-    // but even with such refactor I must ensure the exhaustion of other agents based on the count of terminated agents should still be computed correctly
+    // KJA get rid of this terminated nonsense here
+    // Check if agent should be terminated (moved to applyAgentResults)
     if (agent.hitPoints <= 0) {
-      agent.state = 'Terminated'
-      agent.assignment = 'N/A'
       terminated = true
     }
   }
@@ -85,40 +82,39 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
  */
 function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void {
   for (const agent of agents) {
-    // Skip terminated agents for most effects
-    if (agent.state === 'Terminated') {
-      // eslint-disable-next-line no-continue
-      continue
-    }
-
-    // All surviving agents suffer exhaustion
-    agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
-
-    // Additional exhaustion for each terminated agent
-    agent.exhaustion += terminatedAgentCount * AGENT_EXHAUSTION_RECOVERY_PER_TURN
-
-    // Calculate recovery time if agent lost hit points
-    const hitPointsLost = agent.maxHitPoints - agent.hitPoints
-    if (hitPointsLost > 0) {
-      // KJA handle here terminated - see todo in the place where it is currently terminated (in processAgentRolls)
-      const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
-      const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
-      agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
-      agent.hitPointsLostBeforeRecovery = hitPointsLost
-      agent.state = 'InTransit'
-      agent.assignment = 'Recovery'
+    // Handle agent termination first
+    if (agent.hitPoints <= 0) {
+      agent.state = 'Terminated'
+      agent.assignment = 'N/A'
     } else {
-      agent.state = 'InTransit'
-      agent.assignment = 'Standby'
-    }
+      // All surviving agents suffer exhaustion
+      agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
-    // Award skill points for mission survival
-    agent.missionsSurvived += 1
-    const survivalIndex = Math.min(agent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_REWARD.length - 1)
-    const skillReward = MISSION_SURVIVAL_SKILL_REWARD[survivalIndex]
-    // KJA mission-site, this check should not be necessary
-    if (skillReward !== undefined) {
-      agent.skill += skillReward
+      // Additional exhaustion for each terminated agent
+      agent.exhaustion += terminatedAgentCount * AGENT_EXHAUSTION_RECOVERY_PER_TURN
+
+      // Calculate recovery time if agent lost hit points
+      // KJA hitPointsLost was already available in AgentRollResult
+      const hitPointsLost = agent.maxHitPoints - agent.hitPoints
+      if (hitPointsLost > 0) {
+        const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
+        const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
+        agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
+        agent.hitPointsLostBeforeRecovery = hitPointsLost
+        agent.state = 'InTransit'
+        agent.assignment = 'Recovery'
+      } else {
+        agent.state = 'InTransit'
+        agent.assignment = 'Standby'
+      }
+
+      // Award skill points for mission survival
+      agent.missionsSurvived += 1
+      const survivalIndex = Math.min(agent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_REWARD.length - 1)
+      const skillReward = MISSION_SURVIVAL_SKILL_REWARD[survivalIndex]
+      if (skillReward !== undefined) {
+        agent.skill += skillReward
+      }
     }
   }
 }
@@ -126,8 +122,9 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
 /**
  * Updates a deployed mission site according to about_deployed_mission_sites.md.
  * This includes agent rolls, objective completion, damage calculation, and rewards.
+ * Returns the mission rewards to be applied later in the turn advancement process.
  */
-export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): void {
+export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
   // Get the mission to access its difficulty
   const mission = getMissionById(missionSite.missionId)
 
@@ -160,8 +157,10 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   const allObjectivesFulfilled = missionSite.objectives.every((objective) => objective.fulfilled)
   missionSite.state = allObjectivesFulfilled ? 'Successful' : 'Failed'
 
-  // Apply mission rewards if successful
+  // Return mission rewards to be applied later, don't apply them immediately
   if (missionSite.state === 'Successful') {
-    applyMissionRewards(state, mission.rewards)
+    return mission.rewards
   }
+
+  return undefined
 }
