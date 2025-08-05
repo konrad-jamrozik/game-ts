@@ -54,11 +54,12 @@ For each deployed mission site:
 1. Roll for objective fulfillment for each objective in appropriate order.
 2. Roll for hit points lost for each agent deployed to the mission site.
 3. Terminate agents that lost all their hit points.
-4. Award "survived mission count" increase and skill points to agents that survived the mission.
-5. Apply agent exhaustion increases.
-6. Update agent state and assignment based on their final state (no hit points lost, hit points lost, or terminated).
-7. Update mission site state depending on if its objectives were fulfilled or not.
-8. If mission was fulfilled, return the mission site rewards to be later used to update player assets.
+4. For agents that survived:
+   1. Apply agent exhaustion increases.
+   2. Award "survived mission count" increase and appropriate skill points.
+   3. Update agent state and assignment based on their final state (whether lost hit points or not).
+5. Update mission site state depending on if its objectives were fulfilled or not.
+6. If mission was fulfilled, return the mission site rewards to be later used to update player assets.
 
 # Updating Player Assets
 
