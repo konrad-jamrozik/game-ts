@@ -38,14 +38,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       ),
     },
     {
-      field: 'turnHired',
-      headerName: 'T. hired',
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
       field: 'state',
       headerName: 'State',
       minWidth: 120,
@@ -64,15 +56,27 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'skill',
       headerName: 'Skill',
-      minWidth: 145,
+      minWidth: 155,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = getEffectiveSkill(params.row)
         const baselineSkill = params.value ?? 0
         const percentage = baselineSkill > 0 ? ((effectiveSkill / baselineSkill) * 100).toFixed(1) : '0.0'
         return (
-          <span aria-label={`agents-row-skill-${params.id}`}>
-            {effectiveSkill} / {baselineSkill} ({percentage}%)
-          </span>
+          <div
+            aria-label={`agents-row-skill-${params.id}`}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '3ch 1ch 3ch 8ch',
+              gap: '5px',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <span style={{ textAlign: 'right' }}>{effectiveSkill}</span>
+            <span style={{ textAlign: 'center' }}>/</span>
+            <span style={{ textAlign: 'right' }}>{baselineSkill}</span>
+            <span style={{ textAlign: 'right' }}>({percentage}%)</span>
+          </div>
         )
       },
     },
@@ -89,9 +93,20 @@ export function AgentsDataGrid(): React.JSX.Element {
       headerName: 'HP',
       minWidth: 80,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-hit-points-${params.id}`}>
-          {params.value}/{params.row.maxHitPoints}
-        </span>
+        <div
+          aria-label={`agents-row-hit-points-${params.id}`}
+          style={{
+            display: 'grid',
+            gridTemplateColumns: '2ch 1ch 2ch',
+            gap: '2px',
+            alignItems: 'center',
+            width: '100%',
+          }}
+        >
+          <span style={{ textAlign: 'right' }}>{params.value}</span>
+          <span style={{ textAlign: 'center' }}>/</span>
+          <span style={{ textAlign: 'right' }}>{params.row.maxHitPoints}</span>
+        </div>
       ),
     },
     {
@@ -110,6 +125,14 @@ export function AgentsDataGrid(): React.JSX.Element {
       minWidth: 90,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-missions-survived-${params.id}`}>{params.value}</span>
+      ),
+    },
+    {
+      field: 'turnHired',
+      headerName: 'T. hired',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
       ),
     },
   ]
