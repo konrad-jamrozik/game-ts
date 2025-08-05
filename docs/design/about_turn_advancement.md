@@ -4,6 +4,8 @@ When a turn is advanced, a series of updates of game state are performed, result
 
 On a high level, the update logic consists of following steps:
 
+- Update turn and actions counter
+- Retain state that must be used for later steps updates before it is modified by other steps.
 - Update all agents in `Available` state.
 - Update all agents in `Recovering` state.
 - Update all agents in `InTransit` state.
@@ -16,6 +18,19 @@ On a high level, the update logic consists of following steps:
 - Update factions, also based on the results of the previous steps.
 
 Below each step is described in detail.
+
+# Updating turn and actions counter
+
+Increment the turn counter and reset the actions counter.
+
+# Retaining state
+
+Retain the state that must be used for later steps updates before it is modified by other steps.
+
+For example, agent upkeep, because later on deployed mission sites updates can terminate agents.
+
+If upkeep would be applied after the agents have been terminated, that would be incorrect, because
+upkeep must be paid for all non-terminated agents at the start of the turns.
 
 # Updating agents in `Available` state
 
