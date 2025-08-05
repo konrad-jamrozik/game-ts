@@ -1,24 +1,9 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
 import { getEffectiveSkill } from './AgentService'
+import { calculateRollThreshold, rollDie } from './CombatService'
 import { applyMissionRewards } from './applyMissionRewards'
 import type { Agent, GameState, MissionSite } from './model'
-
-/**
- * Calculates the roll threshold: 100 - skill + difficulty
- */
-function calculateRollThreshold(skill: number, difficulty: number): number {
-  return 100 - skill + difficulty
-}
-
-/**
- * Rolls a die (1-100 inclusive)
- */
-function rollDie(): number {
-  // Note: here we are OK using Math.floor, because Math.random() will never return 1, so there
-  // is no concern of floating point imprecision.
-  return Math.floor(Math.random() * 100) + 1
-}
 
 type AgentRollResult = {
   hitPointsLost: number
@@ -42,23 +27,37 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     if (targetObjective) {
       const objectiveRoll = rollDie()
       const effectiveSkill = getEffectiveSkill(agent)
-      const objectiveThreshold = calculateRollThreshold(effectiveSkill, targetObjective.difficulty)
+      const [objectiveThreshold, objectiveThresholdFormula] = calculateRollThreshold(
+        effectiveSkill,
+        targetObjective.difficulty,
+      )
 
+      // eslint-disable-next-line @typescript-eslint/init-declarations
+      let objectiveRollResultMsg: string
       if (objectiveRoll > objectiveThreshold) {
+        objectiveRollResultMsg = 'fulfilled'
         // Mark objective as fulfilled
         const objectiveInSite = missionSite.objectives.find((objective) => objective.id === targetObjective.id)
         if (objectiveInSite) {
           objectiveInSite.fulfilled = true
         }
+      } else {
+        objectiveRollResultMsg = 'failed'
       }
+
+      console.log(
+        `Agent '${agent.id}' ${objectiveRollResultMsg} objective '${targetObjective.id}': ` +
+          `rolled ${objectiveRoll} against threshold ${objectiveThresholdFormula}.`,
+      )
     }
   }
 
   // Hit points lost roll
   const hitPointsLostRoll = rollDie()
   const effectiveSkill = getEffectiveSkill(agent)
-  const hitPointsThreshold = calculateRollThreshold(effectiveSkill, missionDifficulty)
+  const [hitPointsThreshold, hitPointsThresholdFormula] = calculateRollThreshold(effectiveSkill, missionDifficulty)
 
+  const prevHitPoints = agent.hitPoints
   if (hitPointsLostRoll < hitPointsThreshold) {
     hitPointsLost = hitPointsThreshold - hitPointsLostRoll
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
@@ -72,6 +71,11 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
       terminated = true
     }
   }
+
+  console.log(
+    `Agent '${agent.id}' lost ${hitPointsLost} hit points. (${prevHitPoints} -> ${agent.hitPoints}). ` +
+      `rolled ${hitPointsLostRoll} against threshold ${hitPointsThresholdFormula}.`,
+  )
 
   return { hitPointsLost, terminated }
 }

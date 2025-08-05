@@ -8,14 +8,18 @@
 export function rollDie(): number {
   // Note: here we are OK using Math.floor, because Math.random() will never return 1, so there
   // is no concern of floating point imprecision.
-  return Math.floor(Math.random() * 100) + 1
+  const roll = Math.floor(Math.random() * 100) + 1
+  return roll
 }
 
 /**
  * Calculates the roll threshold: 100 - skill + difficulty
+ * Returns a tuple: [threshold, formula string]
  */
-export function calculateRollThreshold(skill: number, difficulty: number): number {
-  return 100 - skill + difficulty
+export function calculateRollThreshold(skill: number, difficulty: number): [number, string] {
+  const threshold = 100 - skill + difficulty
+  const formula = `${threshold} = 100 - skill (${skill}) + difficulty (${difficulty}) `
+  return [threshold, formula]
 }
 
 /**
