@@ -35,19 +35,19 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
       // eslint-disable-next-line @typescript-eslint/init-declarations
       let objectiveRollResultMsg: string
       if (objectiveRoll > objectiveThreshold) {
-        objectiveRollResultMsg = 'fulfilled'
+        objectiveRollResultMsg = 'fulfilled (> threshold)'
         // Mark objective as fulfilled
         const objectiveInSite = missionSite.objectives.find((objective) => objective.id === targetObjective.id)
         if (objectiveInSite) {
           objectiveInSite.fulfilled = true
         }
       } else {
-        objectiveRollResultMsg = 'failed'
+        objectiveRollResultMsg = 'failed (<= threshold)'
       }
 
       console.log(
         `Agent '${agent.id}' ${objectiveRollResultMsg} objective '${targetObjective.id}': ` +
-          `rolled ${objectiveRoll} against threshold ${objectiveThresholdFormula}.`,
+          `rolled ${objectiveRoll} against threshold of ${objectiveThresholdFormula}.`,
       )
     }
   }
@@ -74,7 +74,7 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
 
   console.log(
     `Agent '${agent.id}' lost ${hitPointsLost} hit points. (${prevHitPoints} -> ${agent.hitPoints}). ` +
-      `rolled ${hitPointsLostRoll} against threshold ${hitPointsThresholdFormula}.`,
+      `rolled ${hitPointsLostRoll} against "no damage" threshold of ${hitPointsThresholdFormula}.`,
   )
 
   return { hitPointsLost, terminated }
