@@ -198,8 +198,7 @@ export function PlayerActions(): React.JSX.Element {
             onClick={handleDeployAgents}
             disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy {formatAgentCount(selectedAgentIds.length)}
-            {formatMissionTarget(selectedMissionSiteId ?? '')}
+            Deploy {formatAgentCount(selectedAgentIds.length)} on {formatMissionTarget(selectedMissionSiteId ?? '')}
           </Button>
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead

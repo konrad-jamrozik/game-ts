@@ -27,8 +27,8 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
     { name: 'Contracted', id: 3, value: contracted },
     { name: 'Agent upkeep', id: 4, value: agentUpkeep },
     { name: 'Hire cost', id: 5, value: gameState.hireCost },
-    { name: 'Diff', id: 6, value: diff },
-    { name: 'New balance', id: 7, value: newBalance },
+    { name: '$ Diff', id: 6, value: diff },
+    { name: 'New $ balance', id: 7, value: newBalance },
     { name: 'Intel diff', id: 8, value: intelDiff },
   ]
   const columns: GridColDef[] = [

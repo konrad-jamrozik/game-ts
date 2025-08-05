@@ -56,7 +56,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     {
       field: 'skill',
       headerName: 'Skill',
-      minWidth: 155,
+      minWidth: 140,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = getEffectiveSkill(params.row)
         const baselineSkill = params.value ?? 0
@@ -66,7 +66,7 @@ export function AgentsDataGrid(): React.JSX.Element {
             aria-label={`agents-row-skill-${params.id}`}
             style={{
               display: 'grid',
-              gridTemplateColumns: '3ch 1ch 3ch 8ch',
+              gridTemplateColumns: '3ch 1ch 3ch 7ch',
               gap: '5px',
               alignItems: 'center',
               width: '100%',
