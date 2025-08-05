@@ -4,18 +4,26 @@ import { getEffectiveSkill } from './AgentService'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 
-// KJA should be named AgentHitPointsLostRollResult
-type AgentRollResult = {
+type AgentHitPointsLostRollResult = {
   hitPointsLost: number
-  terminated: boolean
+  allHitPointsLost: boolean
+}
+
+type AgentWithRollResult = {
+  agent: Agent
+  rollResult: AgentHitPointsLostRollResult
 }
 
 /**
  * Processes both rolls for a single agent: mission objective roll and hit points lost roll.
  */
-function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDifficulty: number): AgentRollResult {
+function processAgentRolls(
+  agent: Agent,
+  missionSite: MissionSite,
+  missionDifficulty: number,
+): AgentHitPointsLostRollResult {
   let hitPointsLost = 0
-  let terminated = false
+  let allHitPointsLost = false
 
   // Mission objective roll - only if there are unfulfilled objectives
   const unfulfilledObjectives = missionSite.objectives
@@ -62,10 +70,9 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
     hitPointsLost = hitPointsThreshold - hitPointsLostRoll
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
-    // KJA get rid of this terminated nonsense here
-    // Check if agent should be terminated (moved to applyAgentResults)
+    // Check if agent lost all hit points
     if (agent.hitPoints <= 0) {
-      terminated = true
+      allHitPointsLost = true
     }
   }
 
@@ -74,14 +81,14 @@ function processAgentRolls(agent: Agent, missionSite: MissionSite, missionDiffic
       `rolled ${hitPointsLostRoll} against "no damage" threshold of ${hitPointsThresholdFormula}.`,
   )
 
-  return { hitPointsLost, terminated }
+  return { hitPointsLost, allHitPointsLost }
 }
 
 /**
  * Applies the results to agents after deployed mission site update.
  */
-function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void {
-  for (const agent of agents) {
+function applyAgentResults(agentsWithResults: AgentWithRollResult[], terminatedAgentCount: number): void {
+  for (const { agent, rollResult } of agentsWithResults) {
     // Handle agent termination first
     if (agent.hitPoints <= 0) {
       agent.state = 'Terminated'
@@ -93,9 +100,8 @@ function applyAgentResults(agents: Agent[], terminatedAgentCount: number): void 
       // Additional exhaustion for each terminated agent
       agent.exhaustion += terminatedAgentCount * AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
-      // Calculate recovery time if agent lost hit points
-      // KJA hitPointsLost was already available in AgentRollResult
-      const hitPointsLost = agent.maxHitPoints - agent.hitPoints
+      // Calculate recovery time if agent lost hit points - reusing the data from roll results
+      const { hitPointsLost } = rollResult
       if (hitPointsLost > 0) {
         const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
         const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
@@ -138,20 +144,26 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
     (agentA, agentB) => getEffectiveSkill(agentA) - getEffectiveSkill(agentB),
   )
 
-  // Track terminated agents for exhaustion penalty
+  // Track terminated agents for exhaustion penalty and collect results
   let terminatedAgentCount = 0
+  const agentsWithResults: AgentWithRollResult[] = []
 
   // Process each agent's rolls
   for (const agent of sortedAgents) {
     const agentRollResult = processAgentRolls(agent, missionSite, mission.difficulty)
 
-    if (agentRollResult.terminated) {
+    agentsWithResults.push({
+      agent,
+      rollResult: agentRollResult,
+    })
+
+    if (agentRollResult.allHitPointsLost) {
       terminatedAgentCount += 1
     }
   }
 
-  // Apply agent results for all surviving agents
-  applyAgentResults(deployedAgents, terminatedAgentCount)
+  // Apply agent results for all agents
+  applyAgentResults(agentsWithResults, terminatedAgentCount)
 
   // Determine mission site outcome
   const allObjectivesFulfilled = missionSite.objectives.every((objective) => objective.fulfilled)
