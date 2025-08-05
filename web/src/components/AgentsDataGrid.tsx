@@ -179,6 +179,14 @@ export function AgentsDataGrid(): React.JSX.Element {
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
+      initialState={{
+        columns: {
+          columnVisibilityModel: {
+            missionsSurvived: false,
+            turnHired: false,
+          },
+        },
+      }}
     />
   )
 }
