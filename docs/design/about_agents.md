@@ -12,7 +12,8 @@ Agent costs `AGENT_HIRE_COST` to hire.
 
 When an agent is first hired their state is `InTransit` and their assignment is `Standby`.
 
-When an agent is sacked, their state becomes `Terminated` and assignment becomes `N/A`.
+When an agent is sacked, their state becomes `Terminated` and assignment becomes `Sacked`.
+Sacked agents retain full hit points (their `hitPoints` equals `maxHitPoints`).
 
 Only agents in `Available` state can be sacked.
 
@@ -128,7 +129,8 @@ Agents have hit points representing their health and survivability. Each agent s
 
 Agent can lose hit points as a result of deployed mission site update: see [about_deployed_mission_sites.md](about_deployed_mission_sites.md).
 
-If agent loses all hit points, they are terminated.
+If an agent loses all hit points, they are terminated and their assignment becomes `KIA`.
+KIA agents always have 0 hit points.
 
 Every agent that lost any hit points must spend 1 turn in recovery for each 2% of total hit points lost, rounded up.
 
@@ -211,10 +213,6 @@ Agent assignments represent the orders given to agents:
 - **Contracting** - Agent is earning money through contracts.
 - **Espionage** - Agent is gathering intelligence.
 - **Recovery** - Agent is recovering from lost hit points.
-- **N/A** - Agent has no assignment because they have been terminated.
+- **Sacked** - Agent has been sacked by the player.
+- **KIA** - Agent was killed in action (terminated due to mission damage).
 - **mission-site-id** - Agent is deployed to a specific mission site (where `mission-site-id` is its ID)
-
-# KJA todos for agents
-
-- sacking agent should terminate them
-- add "terminated" checkbox to agent data grid which will make it display the terminated agents

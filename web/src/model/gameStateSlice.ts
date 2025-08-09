@@ -53,7 +53,12 @@ const gameStateSlice = createSlice({
     sackAgents: {
       reducer(state, action: PayloadAction<string[]>) {
         const agentIdsToSack = action.payload
-        state.agents = state.agents.filter((agent) => !agentIdsToSack.includes(agent.id))
+        for (const agent of state.agents) {
+          if (agentIdsToSack.includes(agent.id)) {
+            agent.state = 'Terminated'
+            agent.assignment = 'Sacked'
+          }
+        }
         state.actionsCount += 1
       },
       prepare(agentIds: string[]) {

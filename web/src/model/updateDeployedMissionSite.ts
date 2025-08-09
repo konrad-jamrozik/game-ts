@@ -70,7 +70,7 @@ function processAgentRolls(
 
     if (agent.hitPoints <= 0) {
       agent.state = 'Terminated'
-      agent.assignment = 'N/A'
+      agent.assignment = 'KIA'
     }
   } else {
     hitPointsLost = 0

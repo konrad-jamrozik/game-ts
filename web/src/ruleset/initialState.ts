@@ -150,7 +150,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
       id: 'agent-008',
       turnHired: 1,
       state: 'Terminated',
-      assignment: 'Standby',
+      assignment: 'KIA',
       skill: 70,
       exhaustion: 0,
       hitPoints: 0,

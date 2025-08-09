@@ -19,7 +19,27 @@ function validateBasicStats(agent: Agent): void {
 
 function validateTermination(agent: Agent): void {
   if (agent.state === 'Terminated') {
-    assertEqual(agent.hitPoints, 0, `Terminated agent ${agent.id} must have 0 hit points`)
+    assertOneOf(
+      agent.assignment,
+      ['Sacked', 'KIA'],
+      `Terminated agent ${agent.id} must have assignment of Sacked or KIA (got ${agent.assignment})`,
+    )
+    if (agent.assignment === 'KIA') {
+      assertEqual(agent.hitPoints, 0, `KIA agent ${agent.id} must have 0 hit points`)
+    }
+    if (agent.assignment === 'Sacked') {
+      assertEqual(
+        agent.hitPoints,
+        agent.maxHitPoints,
+        `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
+      )
+      assertEqual(agent.recoveryTurns, 0, `Sacked agent ${agent.id} must have no recovery turns`)
+      assertEqual(
+        agent.hitPointsLostBeforeRecovery,
+        0,
+        `Sacked agent ${agent.id} must have no hitPointsLostBeforeRecovery`,
+      )
+    }
   }
   if (agent.hitPoints === 0) {
     assertEqual(agent.state, 'Terminated', `Agent ${agent.id} with 0 hit points must be Terminated`)
