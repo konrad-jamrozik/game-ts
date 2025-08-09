@@ -15,6 +15,16 @@ import {
 } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
+// This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
+// [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
+// [2] https://redux-toolkit.js.org/api/createAction?utm_source=chatgpt.com#actioncreatormatch
+/* eslint-disable unicorn/prefer-regexp-test */
+
+// KJA move to utils: pluralize
+function pluralize(word: string, count: number): string {
+  return `${word}${count === 1 ? '' : 's'}`
+}
+
 // Type guard for action
 // Redux actions are defined by having "type" property of type "string".
 function hasType(obj: unknown): obj is { type: string } {
@@ -37,16 +47,14 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     const state = store.getState()
     const { gameState } = state.undoable.present
 
+    // Single helper to post an event using current turn/actionsCount
+    function postEvent(message: string): void {
+      store.dispatch(addEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
+    }
+
     // Dispatch events based on the action
-    // eslint-disable-next-line unicorn/prefer-regexp-test
     if (advanceTurn.match(action)) {
-      store.dispatch(
-        addEvent({
-          message: `Turn ${gameState.turn} started`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
+      postEvent(`Turn ${gameState.turn} started`)
 
       // Check for newly successful missions and log their rewards
       const previouslySuccessfulMissionIds = new Set(
@@ -59,117 +67,44 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       // 🚧KJA consolidate these into one event "mission completion" and make it new type of event, not player action event.
       for (const mission of newlySuccessfulMissions) {
-        store.dispatch(
-          addEvent({
-            message: `Mission "${mission.title}" completed successfully!`,
-            turn: gameState.turn,
-            actionsCount: gameState.actionsCount,
-          }),
-        )
+        postEvent(`Mission "${mission.title}" completed successfully!`)
 
         // Log individual rewards
         const { rewards } = mission
         if (rewards.money !== undefined) {
-          store.dispatch(
-            addEvent({
-              message: `Received $${rewards.money} from mission completion`,
-              turn: gameState.turn,
-              actionsCount: gameState.actionsCount,
-            }),
-          )
+          postEvent(`Received $${rewards.money} from mission completion`)
         }
         if (rewards.intel !== undefined) {
-          store.dispatch(
-            addEvent({
-              message: `Gained ${rewards.intel} intel from mission completion`,
-              turn: gameState.turn,
-              actionsCount: gameState.actionsCount,
-            }),
-          )
+          postEvent(`Gained ${rewards.intel} intel from mission completion`)
         }
         if (rewards.funding !== undefined) {
-          store.dispatch(
-            addEvent({
-              message: `Received ${rewards.funding} funding from mission completion`,
-              turn: gameState.turn,
-              actionsCount: gameState.actionsCount,
-            }),
-          )
+          postEvent(`Received ${rewards.funding} funding from mission completion`)
         }
         if (rewards.panicReduction !== undefined) {
-          store.dispatch(
-            addEvent({
-              message: `Panic reduced by ${rewards.panicReduction} from mission completion`,
-              turn: gameState.turn,
-              actionsCount: gameState.actionsCount,
-            }),
-          )
+          postEvent(`Panic reduced by ${rewards.panicReduction} from mission completion`)
         }
       }
-      // eslint-disable-next-line unicorn/prefer-regexp-test
     } else if (hireAgent.match(action)) {
-      store.dispatch(
-        addEvent({
-          message: 'Agent hired',
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent('Agent hired')
     } else if (sackAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      store.dispatch(
-        addEvent({
-          message: `Sacked ${agentCount} agent${agentCount > 1 ? 's' : ''}`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`Sacked ${agentCount} ${pluralize('agent', agentCount)}`)
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      store.dispatch(
-        addEvent({
-          message: `OnAssignment ${agentCount} agent${agentCount > 1 ? 's' : ''} to contracting`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to contracting`)
     } else if (assignAgentsToEspionage.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      store.dispatch(
-        addEvent({
-          message: `OnAssignment ${agentCount} agent${agentCount > 1 ? 's' : ''} to espionage`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to espionage`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      store.dispatch(
-        addEvent({
-          message: `Recalled ${agentCount} agent${agentCount > 1 ? 's' : ''}`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`Recalled ${agentCount} ${pluralize('agent', agentCount)}`)
     } else if (investigateLead.match(action)) {
       const { leadId, intelCost } = action.payload
-      store.dispatch(
-        addEvent({
-          message: `Investigated lead: ${leadId} (cost: ${intelCost} intel)`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`Investigated lead: ${leadId} (cost: ${intelCost} intel)`)
     } else if (deployAgentsToMission.match(action)) {
       const { missionSiteId, agentIds } = action.payload
       const agentCount = agentIds.length
@@ -178,46 +113,15 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
       const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
 
-      store.dispatch(
-        addEvent({
-          message: `Deployed ${agentCount} agent${agentCount > 1 ? 's' : ''} to mission: ${missionTitle}`,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-      // eslint-disable-next-line unicorn/prefer-regexp-test
+      postEvent(`Deployed ${agentCount} ${pluralize('agent', agentCount)} to mission: ${missionTitle}`)
     } else if (reset.match(action)) {
-      store.dispatch(
-        addEvent({
-          message: 'Game reset',
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
+      postEvent('Game reset')
     } else if (hasType(action) && ActionCreators.undo().type === action.type) {
-      store.dispatch(
-        addEvent({
-          message: 'Action undone',
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
+      postEvent('Action undone')
     } else if (hasType(action) && ActionCreators.redo().type === action.type) {
-      store.dispatch(
-        addEvent({
-          message: 'Action redone',
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
+      postEvent('Action redone')
     } else if (hasType(action) && ActionCreators.jumpToPast(0).type === action.type) {
-      store.dispatch(
-        addEvent({
-          message: 'Turn reset',
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
+      postEvent('Turn reset')
     }
 
     return result
