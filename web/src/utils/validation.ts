@@ -5,31 +5,28 @@ import { assertDefined, assertEqual, assertOneOf } from './assert'
  * Validates invariants for a single agent within the context of a given game state.
  * Throws an Error if an invariant is violated.
  */
-export function validateAgentInvariants(agent: Agent, state: GameState): void {
-  // hit points are within [0, max]
+function validateBasicStats(agent: Agent): void {
   if (agent.hitPoints < 0 || agent.hitPoints > agent.maxHitPoints) {
     throw new Error(`Agent ${agent.id} has invalid hit points: ${agent.hitPoints}/${agent.maxHitPoints}`)
   }
-
-  // exhaustion is not negative
   if (agent.exhaustion < 0) {
     throw new Error(`Agent ${agent.id} has negative exhaustion: ${agent.exhaustion}`)
   }
-
-  // skill is non-negative
   if (agent.skill < 0) {
     throw new Error(`Agent ${agent.id} has negative skill: ${agent.skill}`)
   }
+}
 
-  // Terminated agents must have 0 HP; 0 HP implies Terminated
+function validateTermination(agent: Agent): void {
   if (agent.state === 'Terminated') {
     assertEqual(agent.hitPoints, 0, `Terminated agent ${agent.id} must have 0 hit points`)
   }
   if (agent.hitPoints === 0) {
     assertEqual(agent.state, 'Terminated', `Agent ${agent.id} with 0 hit points must be Terminated`)
   }
+}
 
-  // If missing HP (< max), agent must be assigned to Recovery
+function validateInjuryAndAssignment(agent: Agent): void {
   if (agent.hitPoints < agent.maxHitPoints && agent.hitPoints > 0) {
     assertEqual(
       agent.assignment,
@@ -37,8 +34,9 @@ export function validateAgentInvariants(agent: Agent, state: GameState): void {
       `Agent ${agent.id} is injured (${agent.hitPoints}/${agent.maxHitPoints}) and must be on Recovery assignment`,
     )
   }
+}
 
-  // If assignment is Recovery, state should reflect recovering or in-transit to recovery
+function validateRecoveryStateConsistency(agent: Agent): void {
   if (agent.assignment === 'Recovery') {
     assertOneOf(
       agent.state,
@@ -46,11 +44,69 @@ export function validateAgentInvariants(agent: Agent, state: GameState): void {
       `Agent ${agent.id} on Recovery must be in Recovering or InTransit state, got ${agent.state}`,
     )
   }
+}
 
-  // If on a mission-site assignment, the mission site must exist in state
-  if (agent.assignment.startsWith('mission-site-')) {
-    const missionSiteId = agent.assignment
-    const site = state.missionSites.find((s) => s.id === missionSiteId)
-    assertDefined(site, `Agent ${agent.id} is assigned to ${missionSiteId}, but the mission site does not exist`)
+function validateRecoveryMath(agent: Agent): void {
+  const lostHitPoints = agent.maxHitPoints - agent.hitPoints
+  if (!(agent.assignment === 'Recovery' || agent.state === 'Recovering')) {
+    return
   }
+  if (lostHitPoints <= 0) {
+    return
+  }
+
+  const expectedTotalRecoveryTurns = Math.ceil(((agent.hitPointsLostBeforeRecovery / agent.maxHitPoints) * 100) / 2)
+
+  // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
+  if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
+    const expectedImmediateLost = lostHitPoints
+    assertEqual(
+      agent.hitPointsLostBeforeRecovery,
+      expectedImmediateLost,
+      `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${expectedImmediateLost} at start of recovery`,
+    )
+    const expectedImmediateRecoveryTurns = Math.ceil(((expectedImmediateLost / agent.maxHitPoints) * 100) / 2)
+    assertEqual(
+      agent.recoveryTurns,
+      expectedImmediateRecoveryTurns,
+      `Agent ${agent.id} should set recoveryTurns=${expectedImmediateRecoveryTurns} at start of recovery`,
+    )
+    return
+  }
+
+  if (agent.state === 'Recovering') {
+    if (agent.recoveryTurns <= 0 || agent.recoveryTurns > expectedTotalRecoveryTurns) {
+      throw new Error(
+        `Agent ${agent.id} has invalid recoveryTurns=${agent.recoveryTurns} (expected 1..${expectedTotalRecoveryTurns})`,
+      )
+    }
+
+    const turnsCompleted = expectedTotalRecoveryTurns - agent.recoveryTurns
+    const hitPointsPerTurn = agent.hitPointsLostBeforeRecovery / expectedTotalRecoveryTurns
+    const restoredSoFar = Math.floor(hitPointsPerTurn * turnsCompleted)
+    const expectedHitPoints = agent.maxHitPoints - agent.hitPointsLostBeforeRecovery + restoredSoFar
+    assertEqual(
+      agent.hitPoints,
+      expectedHitPoints,
+      `Agent ${agent.id} recovering HP mismatch: expected ${expectedHitPoints}, got ${agent.hitPoints}`,
+    )
+  }
+}
+
+function validateMissionAssignment(agent: Agent, state: GameState): void {
+  if (!agent.assignment.startsWith('mission-site-')) {
+    return
+  }
+  const missionSiteId = agent.assignment
+  const site = state.missionSites.find((missionSite) => missionSite.id === missionSiteId)
+  assertDefined(site, `Agent ${agent.id} is assigned to ${missionSiteId}, but the mission site does not exist`)
+}
+
+export function validateAgentInvariants(agent: Agent, state: GameState): void {
+  validateBasicStats(agent)
+  validateTermination(agent)
+  validateInjuryAndAssignment(agent)
+  validateRecoveryStateConsistency(agent)
+  validateRecoveryMath(agent)
+  validateMissionAssignment(agent, state)
 }
