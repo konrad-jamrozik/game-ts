@@ -7,6 +7,7 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { advanceTurn } from '../model/gameStateSlice'
+import { destructiveButtonSx } from '../styling/styleUtils'
 import { LabeledValue } from './LabeledValue'
 import { ResetControls } from './ResetControls'
 
@@ -65,7 +66,12 @@ export function GameControls(): React.JSX.Element {
           </Stack>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack direction="row">
-              <Button variant="contained" onClick={handleUndo} disabled={!canUndo}>
+              <Button
+                variant="contained"
+                onClick={handleUndo}
+                disabled={!canUndo}
+                sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
+              >
                 Undo
               </Button>
               <Button variant="contained" onClick={() => dispatch(ActionCreators.redo())} disabled={!canRedo}>
