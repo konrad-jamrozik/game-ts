@@ -6,7 +6,7 @@ import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
 } from '../ruleset/constants'
-import initialState from '../ruleset/initialState'
+import initialState, { makeInitialState } from '../ruleset/initialState'
 import advanceTurnImpl from './advanceTurnImpl'
 import type { Agent, MissionSite } from './model'
 
@@ -111,8 +111,10 @@ const gameStateSlice = createSlice({
     setFunding(state, action: PayloadAction<number>) {
       state.funding = action.payload
     },
-    reset(state) {
-      Object.assign(state, initialState)
+    reset(state, action: PayloadAction<{ debug?: boolean } | undefined>) {
+      const stateAfterReset = makeInitialState({ debug: action.payload?.debug === true })
+
+      Object.assign(state, stateAfterReset)
     },
     investigateLead: {
       reducer(state, action: PayloadAction<{ leadId: string; intelCost: number }>) {

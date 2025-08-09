@@ -29,8 +29,9 @@ export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
 
-  function handleResetGame(): void {
-    dispatch(reset())
+  function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
+    const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
+    dispatch(reset(useDebug ? { debug: true } : undefined))
     dispatch(clearAllSelection())
     dispatch(ActionCreators.clearHistory())
   }
@@ -64,7 +65,12 @@ export function ResetControls(): React.JSX.Element {
             <Button variant="contained" onClick={handleResetTurn} sx={destructiveButtonSx}>
               Reset Turn
             </Button>
-            <Button variant="contained" onClick={handleResetGame} sx={destructiveButtonSx}>
+            <Button
+              variant="contained"
+              onClick={handleResetGame}
+              sx={destructiveButtonSx}
+              title="Ctrl+Click to reset with debug assets"
+            >
               reset game
             </Button>
           </Stack>
