@@ -12,3 +12,13 @@ export function assertEqual<T>(left: T, right: T, errMsg = 'Values must be equal
     throw new Error(errMsg)
   }
 }
+
+export function assertOneOf<T>(
+  value: T,
+  validValues: readonly T[],
+  errMsg = 'Value must be one of the valid options',
+): asserts value is T & NonNullable<T> {
+  if (!validValues.includes(value)) {
+    throw new Error(errMsg)
+  }
+}

@@ -1,5 +1,5 @@
 import type { Agent, GameState } from '../model/model'
-import { assertDefined, assertEqual } from './assert'
+import { assertDefined, assertEqual, assertOneOf } from './assert'
 
 /**
  * Validates invariants for a single agent within the context of a given game state.
@@ -40,9 +40,11 @@ export function validateAgentInvariants(agent: Agent, state: GameState): void {
 
   // If assignment is Recovery, state should reflect recovering or in-transit to recovery
   if (agent.assignment === 'Recovery') {
-    if (!(agent.state === 'Recovering' || agent.state === 'InTransit')) {
-      throw new Error(`Agent ${agent.id} on Recovery must be in Recovering or InTransit state, got ${agent.state}`)
-    }
+    assertOneOf(
+      agent.state,
+      ['Recovering', 'InTransit'],
+      `Agent ${agent.id} on Recovery must be in Recovering or InTransit state, got ${agent.state}`,
+    )
   }
 
   // If on a mission-site assignment, the mission site must exist in state
