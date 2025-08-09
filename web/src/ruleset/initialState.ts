@@ -1,5 +1,6 @@
 import { factions } from '../collections/factions'
 import type { Agent, GameState } from '../model/model'
+import { validateAgentInvariants } from '../utils/validation'
 
 const initialAssets: Pick<
   GameState,
@@ -71,7 +72,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
       id: 'agent-002',
       turnHired: 1,
       state: 'InTransit',
-      assignment: 'Standby',
+      assignment: 'Recovery',
       skill: 80,
       exhaustion: 20,
       hitPoints: 28,
@@ -113,7 +114,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
       assignment: 'Espionage',
       skill: 120,
       exhaustion: 12,
-      hitPoints: 29,
+      hitPoints: 30,
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
@@ -139,7 +140,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
       assignment: 'mission-site-000',
       skill: 95,
       exhaustion: 15,
-      hitPoints: 24,
+      hitPoints: 30,
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
@@ -161,8 +162,8 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     {
       id: 'agent-009',
       turnHired: 1,
-      state: 'Available',
-      assignment: 'Standby',
+      state: 'InTransit',
+      assignment: 'Recovery',
       skill: 30,
       exhaustion: 25,
       hitPoints: 18,
@@ -175,6 +176,27 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
 
   stateBase.agents = debugAgents
   stateBase.nextAgentId = debugAgents.length
+  // Ensure there is a mission site referenced by any OnMission agent
+  const missionSiteExists = stateBase.missionSites.some((missionSite) => missionSite.id === 'mission-site-000')
+  if (!missionSiteExists) {
+    stateBase.missionSites.push({
+      id: 'mission-site-000',
+      missionId: 'mission-apprehend-red-dawn',
+      agentIds: ['agent-007'],
+      state: 'Deployed',
+      expiresIn: 3,
+      objectives: [
+        { id: 'locate-target', difficulty: 20, fulfilled: false },
+        { id: 'apprehend-target', difficulty: 30, fulfilled: false },
+      ],
+    })
+  }
+
+  // Validate all debug agents satisfy invariants
+  for (const agent of stateBase.agents) {
+    validateAgentInvariants(agent, stateBase)
+  }
+
   return stateBase
 }
 
