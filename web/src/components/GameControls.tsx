@@ -13,10 +13,22 @@ import { ResetControls } from './ResetControls'
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const undoable = useAppSelector((state) => state.undoable)
+  const canUndo = undoable.past.length > 0
+  const canRedo = undoable.future.length > 0
+  const currentTurn = undoable.present.gameState.turn
+  const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
+  const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
-    dispatch(ActionCreators.clearHistory())
+  }
+
+  function handleUndo(): void {
+    dispatch(ActionCreators.undo())
+    if (willCrossTurnBoundaryOnNextUndo) {
+      dispatch(ActionCreators.clearHistory())
+    }
   }
 
   const isGameOver = gameState.panic >= 10_000 // 100% panic = 10,000
@@ -53,18 +65,10 @@ export function GameControls(): React.JSX.Element {
           </Stack>
           <Stack direction="row" justifyContent="space-between" alignItems="center">
             <Stack direction="row">
-              <Button
-                variant="contained"
-                onClick={() => dispatch(ActionCreators.undo())}
-                disabled={!useAppSelector((state) => state.undoable.past.length)}
-              >
+              <Button variant="contained" onClick={handleUndo} disabled={!canUndo}>
                 Undo
               </Button>
-              <Button
-                variant="contained"
-                onClick={() => dispatch(ActionCreators.redo())}
-                disabled={!useAppSelector((state) => state.undoable.future.length)}
-              >
+              <Button variant="contained" onClick={() => dispatch(ActionCreators.redo())} disabled={!canRedo}>
                 Redo
               </Button>
             </Stack>
