@@ -1,10 +1,15 @@
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import {
   createRowSelectionManager,
   type GridColDef,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowSelectionModel,
+  type GridSlotsComponentsProps,
+  Toolbar,
 } from '@mui/x-data-grid'
+import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getEffectiveSkill } from '../model/AgentService'
 import type { Agent } from '../model/model'
@@ -17,16 +22,54 @@ export type AgentRow = Agent & {
   rowId: number
 }
 
+// Allow passing custom props to the DataGrid toolbar slot
+declare module '@mui/x-data-grid' {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
+  interface ToolbarPropsOverrides {
+    showOnlyTerminated: boolean
+    onToggleTerminated?: (checked: boolean) => void
+  }
+}
+
+function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+  const { showOnlyTerminated, onToggleTerminated } = props
+  return (
+    <Toolbar>
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showOnlyTerminated}
+            onChange={(event) => onToggleTerminated?.(event.target.checked)}
+            slotProps={{ input: { 'aria-label': 'toggle-terminated-filter' } }}
+            size="small"
+          />
+        }
+        label="terminated"
+      />
+    </Toolbar>
+  )
+}
+
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
+  const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
 
   // Transform agents array to include rowId for DataGrid
-  const rows: AgentRow[] = gameState.agents.map((agent, index) => ({
+  const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
     rowId: index,
   }))
+
+  // Apply filtering based on checkbox
+  const rows: AgentRow[] = React.useMemo(
+    () =>
+      showOnlyTerminated
+        ? allRows.filter((agent) => agent.state === 'Terminated')
+        : allRows.filter((agent) => agent.state !== 'Terminated'),
+    [allRows, showOnlyTerminated],
+  )
 
   const columns: GridColDef[] = [
     {
@@ -187,6 +230,14 @@ export function AgentsDataGrid(): React.JSX.Element {
           },
         },
       }}
+      slots={{ toolbar: AgentsToolbar }}
+      slotProps={{
+        toolbar: {
+          showOnlyTerminated,
+          onToggleTerminated: setShowOnlyTerminated,
+        },
+      }}
+      showToolbar
     />
   )
 }
