@@ -217,3 +217,4 @@ Agent assignments represent the orders given to agents:
 # KJA todos for agents
 
 - sacking agent should terminate them
+- add "terminated" checkbox to agent data grid which will make it display the terminated agents
