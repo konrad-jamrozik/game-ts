@@ -1,7 +1,9 @@
 ---
+description: Any changes requiring working with React.
 globs: web/src/**/*.ts,web/src/**/*.tsx
 alwaysApply: false
 ---
+
 # Copilot Instructions for React in game-ts
 
 ## Project React Usage

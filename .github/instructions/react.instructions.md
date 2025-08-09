@@ -1,6 +1,7 @@
 ---
 applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 ---
+
 # Copilot Instructions for React in game-ts
 
 ## Project React Usage
@@ -16,7 +17,7 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 
 ## Coding conventions
 
-- Follow ESLint rules from `web/.eslintrc.js` 
+- Follow ESLint rules from `web/.eslintrc.js`
 - Follow Prettier rules from `web/prettier.config.js`.
 - Always use TypeScript types, never interfaces, unless it won't compile otherwise.
 - Always use function declarations instead of function expressions if possible.
