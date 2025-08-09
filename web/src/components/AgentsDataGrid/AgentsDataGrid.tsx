@@ -1,53 +1,22 @@
-import Checkbox from '@mui/material/Checkbox'
-import FormControlLabel from '@mui/material/FormControlLabel'
 import {
   createRowSelectionManager,
   type GridColDef,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowSelectionModel,
-  type GridSlotsComponentsProps,
-  Toolbar,
 } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getEffectiveSkill } from '../model/AgentService'
-import type { Agent } from '../model/model'
-import { setAgentSelection } from '../model/selectionSlice'
-import { DataGridCard } from './DataGridCard'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { getEffectiveSkill } from '../../model/AgentService'
+import type { Agent } from '../../model/model'
+import { setAgentSelection } from '../../model/selectionSlice'
+import { DataGridCard } from '../DataGridCard'
+import { AgentsToolbar } from './AgentsToolbar'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
   // https://mui.com/x/react-data-grid/row-definition/
   rowId: number
-}
-
-// Allow passing custom props to the DataGrid toolbar slot
-declare module '@mui/x-data-grid' {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
-  interface ToolbarPropsOverrides {
-    showOnlyTerminated: boolean
-    onToggleTerminated?: (checked: boolean) => void
-  }
-}
-
-function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
-  const { showOnlyTerminated, onToggleTerminated } = props
-  return (
-    <Toolbar>
-      <FormControlLabel
-        control={
-          <Checkbox
-            checked={showOnlyTerminated}
-            onChange={(event) => onToggleTerminated?.(event.target.checked)}
-            slotProps={{ input: { 'aria-label': 'toggle-terminated-filter' } }}
-            size="small"
-          />
-        }
-        label="terminated"
-      />
-    </Toolbar>
-  )
 }
 
 export function AgentsDataGrid(): React.JSX.Element {

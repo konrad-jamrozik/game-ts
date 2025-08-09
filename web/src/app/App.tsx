@@ -1,6 +1,6 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import { AgentsDataGrid } from '../components/AgentsDataGrid'
+import { AgentsDataGrid } from '../components/AgentsDataGrid/AgentsDataGrid'
 import { ArchivedLeadCards } from '../components/ArchivedLeadCards'
 import { ArchivedMissionCards } from '../components/ArchivedMissionCards'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
