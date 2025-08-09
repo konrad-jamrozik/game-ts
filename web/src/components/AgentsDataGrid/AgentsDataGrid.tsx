@@ -157,9 +157,10 @@ export function AgentsDataGrid(): React.JSX.Element {
     const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
 
     for (const rowId of includedRowIds) {
-      const agent = rows[rowId]
-      if (agent) {
-        agentIds.push(agent.id)
+      // Find the visible row whose stable rowId matches the selected id
+      const row = rows.find((rowItem) => rowItem.rowId === rowId)
+      if (row) {
+        agentIds.push(row.id)
       } else {
         throw new Error(`Agent not found for rowId: ${rowId}`)
       }
@@ -171,11 +172,11 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Convert agent IDs from state back to row IDs for DataGrid
   const rowIds: GridRowId[] = []
   for (const agentId of agentSelection) {
-    // Find the row that contains this agent ID
-    const rowIndex = rows.findIndex((row) => row.id === agentId)
-    if (rowIndex !== -1) {
-      // rowId is index + 1
-      rowIds.push(rowIndex)
+    // Find the visible row that contains this agent ID
+    const row = rows.find((rowCandidate) => rowCandidate.id === agentId)
+    if (row) {
+      // Use the stable rowId provided to DataGrid via getRowId
+      rowIds.push(row.rowId)
     }
   }
 
