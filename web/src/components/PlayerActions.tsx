@@ -8,8 +8,6 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
-import { createAgentsView } from '../model/views/AgentsView'
-import { formatAgentCount } from '../utils/formatUtils'
 import { validateMissionSiteDeployment } from '../model/MissionSiteService'
 import {
   assignAgentsToContracting,
@@ -21,8 +19,9 @@ import {
   sackAgents,
 } from '../model/gameStateSlice'
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
+import { createAgentsView } from '../model/views/AgentsView'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { formatMissionTarget } from '../utils/formatUtils'
+import { formatAgentCount, formatMissionTarget } from '../utils/formatUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -30,6 +29,7 @@ export function PlayerActions(): React.JSX.Element {
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
+  const agentsView = createAgentsView(agents)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
@@ -38,10 +38,10 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleSackAgents(): void {
     // Validate that all selected agents are available
-    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
+    const validationResult = agentsView.validateAvailable(selectedAgentIds)
 
-    if (!validation.isValid) {
-      setAlertMessage(validation.errorMessage ?? 'Unknown error')
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -53,10 +53,10 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToContracting(): void {
     // Validate that all selected agents are available
-    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
+    const validationResult = agentsView.validateAvailable(selectedAgentIds)
 
-    if (!validation.isValid) {
-      setAlertMessage(validation.errorMessage ?? 'Unknown error')
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -68,10 +68,10 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToEspionage(): void {
     // Validate that all selected agents are available
-    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
+    const validationResult = agentsView.validateAvailable(selectedAgentIds)
 
-    if (!validation.isValid) {
-      setAlertMessage(validation.errorMessage ?? 'Unknown error')
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }
@@ -135,7 +135,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agents are available
-    const agentValidation = createAgentsView(agents).validateAvailable(selectedAgentIds)
+    const agentValidation = agentsView.validateAvailable(selectedAgentIds)
     if (!agentValidation.isValid) {
       setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)

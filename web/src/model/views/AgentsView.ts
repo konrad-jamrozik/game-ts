@@ -1,38 +1,65 @@
-import { group } from 'radash'
 import { floor } from '../../utils/mathUtils'
 import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
 import type { Agent } from '../model'
+import { createAgentView, type AgentView } from './AgentView'
 
-export type AgentsView = Readonly<{
-  getTerminated(): Agent[]
-  inTransit(): Agent[]
-  deployedOnMissionSite(missionSiteId: string): Agent[]
+export type AgentsView = AgentView[] & {
+  getTerminated(): AgentsView
+  inTransit(): AgentsView
+  deployedOnMissionSite(missionSiteId: string): AgentsView
   validateAvailable(selectedAgentIds: string[]): {
     isValid: boolean
     errorMessage?: string
     nonAvailableAgents: Agent[]
   }
   validateInvariants(): void
-  toArray(): readonly Agent[]
-}>
+}
 
 export function createAgentsView(agents: Agent[]): AgentsView {
-  // Precompute indexes/caches *once* for this instance, e.g.
-  const byAssignment = group(agents, (agent) => agent.assignment)
+  const agentViews: AgentView[] = agents.map((agent) => createAgentView(agent))
 
-  const view: AgentsView = {
-    getTerminated: () => agents.filter((agent) => agent.state === 'Terminated'),
-    inTransit: () => agents.filter((agent) => agent.state === 'InTransit'),
-    deployedOnMissionSite: (missionSiteId: string) => {
-      const candidates = byAssignment[missionSiteId] ?? []
-      return candidates.filter((agent) => agent.state === 'OnMission')
-    },
-    validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents, selectedAgentIds),
-    validateInvariants: () => agents.forEach((agent) => validateAgentLocalInvariants(agent)),
-    toArray: () => agents,
+  // Map view -> underlying agent for internal predicates that require raw state
+  const viewToAgent = new WeakMap<AgentView, Agent>()
+  agents.forEach((agent, agentIndex) => {
+    const correspondingAgentView = agentViews[agentIndex]
+    if (correspondingAgentView !== undefined) {
+      viewToAgent.set(correspondingAgentView, agent)
+    }
+  })
+
+  function fromAgentViewArray(views: AgentView[]): AgentsView {
+    // Create an array-like instance and augment with chainable helpers
+    const agentViewArray: AgentView[] = [...views]
+    const augmented = Object.assign(agentViewArray, {
+      getTerminated: (): AgentsView =>
+        fromAgentViewArray(agentViewArray.filter((agentView) => agentView.isTerminated())),
+      inTransit: (): AgentsView => fromAgentViewArray(agentViewArray.filter((agentView) => agentView.isInTransit())),
+      deployedOnMissionSite: (missionSiteId: string): AgentsView =>
+        fromAgentViewArray(
+          agentViewArray.filter((agentView) => {
+            const underlyingAgent = viewToAgent.get(agentView)
+            return (
+              underlyingAgent !== undefined &&
+              underlyingAgent.assignment === missionSiteId &&
+              underlyingAgent.state === 'OnMission'
+            )
+          }),
+        ),
+      validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents, selectedAgentIds),
+      validateInvariants: (): void => {
+        agentViewArray.forEach((agentView) => {
+          const underlyingAgent = viewToAgent.get(agentView)
+          if (underlyingAgent !== undefined) {
+            validateAgentLocalInvariants(underlyingAgent)
+          }
+        })
+      },
+    })
+
+    return augmented
   }
 
-  return Object.freeze(view)
+  return fromAgentViewArray(agentViews)
 }
 
 // Calculates the effective skill of an agent. Refer to about_agents.md for details.

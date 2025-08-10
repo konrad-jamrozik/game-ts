@@ -2,14 +2,14 @@ import { floor } from '../../utils/mathUtils'
 import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
 import type { Agent } from '../model'
 
-export type AgentView = Readonly<{
+export type AgentView = {
   isTerminated(): boolean
   isInTransit(): boolean
   isDeployedOnMissionSite(missionSiteId: string): boolean
   effectiveSkill(): number
   isAvailable(): boolean
   validateInvariants(): void
-}>
+}
 
 export function createAgentView(agent: Agent): AgentView {
   const view: AgentView = {
