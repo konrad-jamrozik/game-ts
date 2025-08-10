@@ -1,5 +1,6 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
+import type { SxProps, Theme } from '@mui/material'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
@@ -11,10 +12,10 @@ type ExpandableCardProps = {
   title: string
   children: React.ReactNode
   defaultExpanded?: boolean
-  sx?: Record<string, unknown> // KJA should be SxProps
+  sx?: SxProps<Theme>
 }
 
-const defaultSx = {}
+const defaultSx: SxProps<Theme> = {}
 
 /**
  * Reusable expandable card component that encapsulates the expand/collapse logic
