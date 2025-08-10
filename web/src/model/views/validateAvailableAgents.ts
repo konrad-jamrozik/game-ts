@@ -6,43 +6,28 @@ export type ValidateAvailableAgentsResult = Readonly<{
   errorMessage?: string
   nonAvailableAgents: readonly Agent[]
 }>
-function newValidateAvailableAgentsResult(result: {
-  isValid: boolean
-  errorMessage?: string
-  nonAvailableAgents: readonly Agent[]
-}): ValidateAvailableAgentsResult {
-  return Object.freeze(result) as ValidateAvailableAgentsResult
-}
+
 export function validateAvailableAgents(
   agentsView: AgentsView,
   selectedAgentIds: string[],
-): Readonly<{
-  isValid: boolean
-  errorMessage?: string
-  nonAvailableAgents: readonly Agent[]
-}> {
+): ValidateAvailableAgentsResult {
   const selectedViews = agentsView.withIds(selectedAgentIds)
 
+  let isValid = true
+  let errorMessage: string | undefined = undefined
+  let nonAvailableAgents: readonly Agent[] = []
+
   if (selectedViews.length === 0) {
-    return newValidateAvailableAgentsResult({
-      isValid: false,
-      errorMessage: 'No agents selected!',
-      nonAvailableAgents: [] as readonly Agent[],
-    })
+    isValid = false
+    errorMessage = 'No agents selected!'
+  } else {
+    const unavailable = selectedViews.notAvailable().toArray()
+    if (unavailable.length > 0) {
+      isValid = false
+      errorMessage = 'This action can be done only on available agents!'
+      nonAvailableAgents = unavailable
+    }
   }
 
-  const nonAvailableAgents = selectedViews.notAvailable().toArray()
-
-  if (nonAvailableAgents.length > 0) {
-    return newValidateAvailableAgentsResult({
-      isValid: false,
-      errorMessage: 'This action can be done only on available agents!',
-      nonAvailableAgents,
-    })
-  }
-
-  return newValidateAvailableAgentsResult({
-    isValid: true,
-    nonAvailableAgents: [] as readonly Agent[],
-  })
+  return { isValid, ...(errorMessage !== undefined ? { errorMessage } : {}), nonAvailableAgents }
 }

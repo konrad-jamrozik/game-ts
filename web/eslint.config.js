@@ -178,6 +178,19 @@ export default plugTypescriptEslint.config([
       // Omitting curly braces is sometimes more readable.
       // https://eslint.org/docs/latest/rules/curly
       curly: 'off',
+      // By default the "no-undef-init" forbids this:
+      //
+      //   let errorMessage: string | undefined = undefined
+      //
+      // And "init-declarations" forbids this:
+      //
+      //   let errorMessage: string | undefined
+      //
+      // which is just silly.
+      // So fixing here the setup to allow undefined init.
+      // https://eslint.org/docs/latest/rules/no-undef-init
+      // https://typescript-eslint.io/rules/init-declarations/
+      'no-undef-init': 'off',
 
       // [ts-eslint] configs
       // --------------------
@@ -253,6 +266,7 @@ export default plugTypescriptEslint.config([
           message: 'Use typed hooks `useAppDispatch` and `useAppSelector` instead.',
         },
       ],
+
       // Note: per the performance note of typescript-eslint:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import
       // Following rules should also be disabled, if performance suffers:
