@@ -1,4 +1,4 @@
-import { formatAgentCount } from './AgentService'
+import { formatAgentCount } from '../utils/formatUtils'
 import type { TextEvent } from './eventsSlice'
 
 /**

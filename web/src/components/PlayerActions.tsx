@@ -8,7 +8,8 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
-import { formatAgentCount, validateAvailableAgents } from '../model/AgentService'
+import { validateAvailableAgents } from '../model/AgentService'
+import { formatAgentCount } from '../utils/formatUtils'
 import { validateMissionSiteDeployment } from '../model/MissionSiteService'
 import {
   assignAgentsToContracting,

@@ -1,6 +1,4 @@
-/**
- * Utility functions for consistent formatting across the application
- */
+import pluralize from 'pluralize'
 
 /**
  * Formats a value as a percentage with specified decimal places
@@ -50,4 +48,8 @@ export function formatMissionTarget(missionSiteId: string): string {
   }
   const displayId = missionSiteId.replaceAll('-site-', ' ')
   return ` on ${displayId}`
+}
+
+export function formatAgentCount(count: number): string {
+  return `${count} ${pluralize('agent', count)}`
 }
