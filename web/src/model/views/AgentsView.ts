@@ -70,7 +70,7 @@ export function agsV(agents: Agent[]): AgentsView {
           }
         })
       },
-      // KJA use toArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
+      // KJA use toAgentArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
       toAgentArray: (): Agent[] =>
         argAgentViewArray.map((agentView) => {
           const agent = viewToAgent.get(agentView)

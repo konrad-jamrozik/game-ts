@@ -30,7 +30,7 @@ export function SituationReportCard(): React.JSX.Element {
     ? redDawnFaction.discoveryPrerequisite.every((leadId) => investigatedLeadIds.includes(leadId))
     : false
 
-  // 🚧KJA these formulas should be deduped in modelDerived.ts
+  // 🚧KJA these formulas should be deduped in appropriate view files.
   const redDawnRows =
     redDawnFaction && isRedDawnDiscovered
       ? [
