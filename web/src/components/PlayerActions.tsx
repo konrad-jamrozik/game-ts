@@ -121,7 +121,7 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    dispatch(investigateLead(selectedLeadId, lead.intelCost))
+    dispatch(investigateLead({ leadId: selectedLeadId, intelCost: lead.intelCost }))
     dispatch(clearLeadSelection())
     setShowAlert(false) // Hide alert on successful action
   }
@@ -150,7 +150,7 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    dispatch(deployAgentsToMission(selectedMissionSiteId, selectedAgentIds))
+    dispatch(deployAgentsToMission({ missionSiteId: selectedMissionSiteId, agentIds: selectedAgentIds }))
     dispatch(clearAgentSelection())
     dispatch(clearMissionSelection())
     setShowAlert(false) // Hide alert on successful action

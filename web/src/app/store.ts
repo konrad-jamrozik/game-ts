@@ -3,7 +3,7 @@ import { debounce } from 'radash'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import eventsReducer from '../model/eventsSlice'
-import gameStateReducer from '../model/gameStateSlice'
+import gameStateReducer, { advanceTurn } from '../model/gameStateSlice'
 import selectionReducer from '../model/selectionSlice'
 import settingsReducer from '../model/settingsSlice'
 import { eventsMiddleware } from './eventsMiddleware'
@@ -32,12 +32,12 @@ const undoableReducer = undoable(combinedReducer, {
   // +1 because the current state, which is starting point, must be also accounted for.
   limit: UNDO_LIMIT + 1,
   // Note: because of this filter, we are going to take a snapshot of game state immediately
-  // after each player action, including turn advancement.
+  // after each player action, and after turn advancement.
   // This means that no other events can happen after these events, otherwise they won't
   // be included in the snapshot.
   // If this is needed, possible solution is to group actions together to always start with player action:
   // https://github.com/omnidan/redux-undo#custom-groupby-function
-  filter: (action) => isPlayerAction(action),
+  filter: (action) => isPlayerAction(action) || advanceTurn.match(action),
 })
 
 // Combine undoable and non-undoable reducers
