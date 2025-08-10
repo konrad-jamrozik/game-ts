@@ -1,17 +1,18 @@
 import type { Middleware } from '@reduxjs/toolkit'
+import * as pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../collections/missions'
 import { addEvent } from '../model/eventsSlice'
 import {
   advanceTurn,
-  hireAgent,
-  reset,
-  sackAgents,
   assignAgentsToContracting,
   assignAgentsToEspionage,
-  recallAgents,
-  investigateLead,
   deployAgentsToMission,
+  hireAgent,
+  investigateLead,
+  recallAgents,
+  reset,
+  sackAgents,
 } from '../model/gameStateSlice'
 import type { RootState } from './store'
 
@@ -19,11 +20,6 @@ import type { RootState } from './store'
 // [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
 // [2] https://redux-toolkit.js.org/api/createAction?utm_source=chatgpt.com#actioncreatormatch
 /* eslint-disable unicorn/prefer-regexp-test */
-
-// KJA move to utils: pluralize
-function pluralize(word: string, count: number): string {
-  return `${word}${count === 1 ? '' : 's'}`
-}
 
 // Type guard for action
 // Redux actions are defined by having "type" property of type "string".
