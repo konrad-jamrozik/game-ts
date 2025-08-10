@@ -19,7 +19,9 @@ export function GameControls(): React.JSX.Element {
   const canRedo = undoable.future.length > 0
   const currentTurn = undoable.present.gameState.turn
   const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
+  const nextEntryTurn = canRedo ? undoable.future.at(0)?.gameState.turn : undefined
   const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
+  const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
@@ -27,9 +29,6 @@ export function GameControls(): React.JSX.Element {
 
   function handleUndo(): void {
     dispatch(ActionCreators.undo())
-    if (willCrossTurnBoundaryOnNextUndo) {
-      dispatch(ActionCreators.clearHistory())
-    }
   }
 
   const isGameOver = gameState.panic >= 10_000 // 100% panic = 10,000
@@ -74,7 +73,12 @@ export function GameControls(): React.JSX.Element {
               >
                 Undo
               </Button>
-              <Button variant="contained" onClick={() => dispatch(ActionCreators.redo())} disabled={!canRedo}>
+              <Button
+                variant="contained"
+                onClick={() => dispatch(ActionCreators.redo())}
+                disabled={!canRedo}
+                sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
+              >
                 Redo
               </Button>
             </Stack>

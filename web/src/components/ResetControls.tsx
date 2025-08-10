@@ -54,10 +54,6 @@ export function ResetControls(): React.JSX.Element {
           actionsCount: 0,
         }),
       )
-
-      // KJA it should still be possible to undo the turn.
-      // Make the reset irreversible by clearing undo/redo history
-      dispatch(ActionCreators.clearHistory())
     }
   }
 
