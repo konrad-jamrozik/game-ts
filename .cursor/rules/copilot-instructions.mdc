@@ -107,5 +107,17 @@ This project uses following technologies:
 - Use `mui-mcp` MCP server for MUI questions.
 - Use `context7` MCP server for documentation of used libraries or frameworks.
 
+## Shell substitutions
+
+Because the project uses PowerShell, use the following shell substitutions:
+
+- `cat` -> `Write-Output`
+- `ls` -> `Get-ChildItem`
+- `pwd` -> `Get-Location`
+- `cd` -> `Set-Location`
+- `mkdir` -> `New-Item`
+- `rm` -> `Remove-Item`
+- `cp` -> `Copy-Item`
+
 ---
 For any unclear or missing conventions, check the `docs/` directory or ask for clarification.
