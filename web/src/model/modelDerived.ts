@@ -1,7 +1,7 @@
 import type { GameState, MissionSite } from '../model/model'
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
 import { floor } from '../utils/mathUtils'
-import { getEffectiveSkill } from './views/AgentViews'
+import { getEffectiveSkill } from './views/AgentsView'
 
 export function getAgentUpkeep(gameState: GameState): number {
   const nonTerminatedAgents = gameState.agents.filter((agent) => agent.state !== 'Terminated')

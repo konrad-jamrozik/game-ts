@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getEffectiveSkill } from '../src/model/views/AgentViews'
+import { getEffectiveSkill } from '../src/model/views/AgentsView'
 import type { Agent } from '../src/model/model'
 
 describe(getEffectiveSkill, () => {

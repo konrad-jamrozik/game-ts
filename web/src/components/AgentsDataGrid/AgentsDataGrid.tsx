@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getEffectiveSkill } from '../../model/views/AgentViews'
+import { getEffectiveSkill } from '../../model/views/AgentsView'
 import type { Agent } from '../../model/model'
 import { setAgentSelection } from '../../model/selectionSlice'
 import { DataGridCard } from '../DataGridCard'

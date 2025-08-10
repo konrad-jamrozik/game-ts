@@ -1,6 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
-import { getEffectiveSkill } from './views/AgentViews'
+import { getEffectiveSkill } from './views/AgentsView'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 

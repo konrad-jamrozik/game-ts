@@ -6,7 +6,7 @@ import {
 } from '../ruleset/constants'
 import { assertEqual } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
-import { getEffectiveSkill } from './views/AgentViews'
+import { getEffectiveSkill } from './views/AgentsView'
 import type { GameState } from './model'
 
 /**

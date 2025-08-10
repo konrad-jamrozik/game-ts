@@ -7,7 +7,6 @@ export type AgentsView = Readonly<{
   getTerminated(): Agent[]
   inTransit(): Agent[]
   deployedOnMissionSite(missionSiteId: string): Agent[]
-  getEffectiveSkill(agent: Agent): number
   validateAvailable(selectedAgentIds: string[]): {
     isValid: boolean
     errorMessage?: string
@@ -17,21 +16,20 @@ export type AgentsView = Readonly<{
   toArray(): readonly Agent[]
 }>
 
-export function createAgentsView(src: readonly Agent[]): AgentsView {
+export function createAgentsView(agents: readonly Agent[]): AgentsView {
   // Precompute indexes/caches *once* for this instance, e.g.
-  const byAssignment = group(src, (agent) => agent.assignment)
+  const byAssignment = group(agents, (agent) => agent.assignment)
 
   const view: AgentsView = {
-    getTerminated: () => src.filter((agent) => agent.state === 'Terminated'),
-    inTransit: () => src.filter((agent) => agent.state === 'InTransit'),
+    getTerminated: () => agents.filter((agent) => agent.state === 'Terminated'),
+    inTransit: () => agents.filter((agent) => agent.state === 'InTransit'),
     deployedOnMissionSite: (missionSiteId: string) => {
       const candidates = byAssignment[missionSiteId] ?? []
       return candidates.filter((agent) => agent.state === 'OnMission')
     },
-    getEffectiveSkill: (agent: Agent): number => getEffectiveSkill(agent),
-    validateAvailable: (selectedAgentIds: string[]) => validateAvailable(src as Agent[], selectedAgentIds),
-    validateInvariants: () => src.forEach((agent) => validateAgentLocalInvariants(agent)),
-    toArray: () => src,
+    validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents as Agent[], selectedAgentIds),
+    validateInvariants: () => agents.forEach((agent) => validateAgentLocalInvariants(agent)),
+    toArray: () => agents,
   }
 
   return Object.freeze(view)
