@@ -9,6 +9,7 @@ export type AgentView = Readonly<{
   effectiveSkill(): number
   isAvailable(): boolean
   validateInvariants(): void
+  agent(): Agent
 }>
 
 export function agV(agent: Agent): AgentView {
@@ -19,6 +20,7 @@ export function agV(agent: Agent): AgentView {
     effectiveSkill: () => effectiveSkill(agent),
     isAvailable: () => agent.state === 'Available',
     validateInvariants: () => validateAgentLocalInvariants(agent),
+    agent: () => agent,
   }
 
   return Object.freeze(agentView)

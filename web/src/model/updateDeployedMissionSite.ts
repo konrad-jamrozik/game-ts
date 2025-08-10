@@ -2,7 +2,8 @@ import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
-import { agV } from './views/AgentView'
+import { agsV } from './views/AgentsView'
+import type { AgentView } from './views/AgentView'
 
 type AgentHitPointsLostRollResult = {
   hitPointsLost: number
@@ -17,7 +18,7 @@ type AgentWithHitPointsLostInfo = {
  * Processes both rolls for a single agent: mission objective roll and hit points lost roll.
  */
 function processAgentRolls(
-  agent: Agent,
+  agentView: AgentView,
   missionSite: MissionSite,
   missionDifficulty: number,
 ): AgentHitPointsLostRollResult {
@@ -26,11 +27,13 @@ function processAgentRolls(
     .filter((objective) => !objective.fulfilled)
     .sort((objectiveA, objectiveB) => objectiveA.difficulty - objectiveB.difficulty) // Sort by difficulty (lowest first)
 
+  const agent = agentView.agent()
+
   if (unfulfilledObjectives.length > 0) {
     const [targetObjective] = unfulfilledObjectives
     if (targetObjective) {
       const objectiveRoll = rollDie()
-      const effectiveSkill = agV(agent).effectiveSkill()
+      const effectiveSkill = agentView.effectiveSkill()
       const [objectiveThreshold, objectiveThresholdFormula] = calculateRollThreshold(
         effectiveSkill,
         targetObjective.difficulty,
@@ -58,7 +61,7 @@ function processAgentRolls(
 
   // Hit points lost roll
   const hitPointsLostRoll = rollDie()
-  const effectiveSkill = agV(agent).effectiveSkill()
+  const effectiveSkill = agentView.effectiveSkill()
   const [hitPointsThreshold, hitPointsThresholdFormula] = calculateRollThreshold(effectiveSkill, missionDifficulty)
 
   // eslint-disable-next-line @typescript-eslint/init-declarations
@@ -129,14 +132,10 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   const mission = getMissionById(missionSite.missionId)
 
   // Get agents deployed to this mission site
-  const deployedAgents = missionSite.agentIds
-    .map((agentId) => state.agents.find((agent) => agent.id === agentId))
-    .filter((agent): agent is Agent => agent !== undefined)
+  const deployedAgents = agsV(state.agents).withIds(missionSite.agentIds)
 
   // Sort agents by effective skill (lowest to highest) for rolling order
-  const sortedAgents = [...deployedAgents].sort(
-    (agentA, agentB) => agV(agentA).effectiveSkill() - agV(agentB).effectiveSkill(),
-  )
+  const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
 
   const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []
 
@@ -145,7 +144,7 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
     const { hitPointsLost } = processAgentRolls(agent, missionSite, mission.difficulty)
 
     agentsWithHitPointsLost.push({
-      agent,
+      agent: agent.agent(),
       hitPointsLost,
     })
   }

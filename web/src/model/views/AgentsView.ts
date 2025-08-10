@@ -1,6 +1,7 @@
 import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
 import type { Agent } from '../model'
 import { agV, type AgentView } from './AgentView'
+import { validateAvailableAgents, type ValidateAvailableAgentsResult } from './validateAvailableAgents'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
 export type AgentsView = readonly AgentView[] &
@@ -10,12 +11,9 @@ export type AgentsView = readonly AgentView[] &
     getTerminated(): AgentsView
     inTransit(): AgentsView
     deployedOnMissionSite(missionSiteId: string): AgentsView
-    validateAvailable(selectedAgentIds: string[]): Readonly<{
-      isValid: boolean
-      errorMessage?: string
-      nonAvailableAgents: readonly Agent[]
-    }>
+    validateAvailable(selectedAgentIds: string[]): ValidateAvailableAgentsResult
     validateInvariants(): void
+    toArray(): Agent[]
   }>
 
 export function agsV(agents: Agent[]): AgentsView {
@@ -47,7 +45,7 @@ export function agsV(agents: Agent[]): AgentsView {
   function toAgentsView(views: AgentView[]): AgentsView {
     // Create an array-like instance and augment with chainable helpers
     const agentViewArray: AgentView[] = [...views]
-    const agentsView = Object.assign(agentViewArray, {
+    const impl = {
       withIds: (ids: readonly string[]): AgentsView =>
         toAgentsView(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
       notAvailable: (): AgentsView => toAgentsView(agentViewArray.filter((agent) => !agent.isAvailable())),
@@ -64,47 +62,8 @@ export function agsV(agents: Agent[]): AgentsView {
             )
           }),
         ),
-      validateAvailable: (selectedAgentIds: string[]) => {
-        const selectedViews = agentsView.withIds(selectedAgentIds)
-
-        if (selectedViews.length === 0) {
-          return Object.freeze({
-            isValid: false,
-            errorMessage: 'No agents selected!',
-            nonAvailableAgents: [] as Agent[],
-          }) as Readonly<{
-            isValid: boolean
-            errorMessage?: string
-            nonAvailableAgents: readonly Agent[]
-          }>
-        }
-
-        const nonAvailableAgents = selectedViews
-          .notAvailable()
-          .map((agentView) => viewToAgent.get(agentView))
-          .filter((agent): agent is Agent => agent !== undefined)
-
-        if (nonAvailableAgents.length > 0) {
-          return Object.freeze({
-            isValid: false,
-            errorMessage: 'This action can be done only on available agents!',
-            nonAvailableAgents,
-          }) as Readonly<{
-            isValid: boolean
-            errorMessage?: string
-            nonAvailableAgents: readonly Agent[]
-          }>
-        }
-
-        return Object.freeze({
-          isValid: true,
-          nonAvailableAgents: [] as Agent[],
-        }) as Readonly<{
-          isValid: boolean
-          errorMessage?: string
-          nonAvailableAgents: readonly Agent[]
-        }>
-      },
+      validateAvailable: (selectedAgentIds: string[]): ValidateAvailableAgentsResult =>
+        validateAvailableAgents(agentsView, selectedAgentIds),
       validateInvariants: (): void => {
         agentViewArray.forEach((agentView) => {
           const underlyingAgent = viewToAgent.get(agentView)
@@ -113,7 +72,17 @@ export function agsV(agents: Agent[]): AgentsView {
           }
         })
       },
-    })
+      // KJA use toArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
+      toArray: (): Agent[] =>
+        agentViewArray.map((agentView) => {
+          const agent = viewToAgent.get(agentView)
+          if (agent === undefined) {
+            throw new Error(`Agent not found for view: ${JSON.stringify(agentView)}`)
+          }
+          return agent
+        }),
+    }
+    const agentsView = Object.assign(agentViewArray, impl)
 
     return Object.freeze(agentsView)
   }
