@@ -2,7 +2,7 @@ import type { Middleware } from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../collections/missions'
-import { addMissionCompletedEvent, addTextEvent } from '../model/eventsSlice'
+import { addMissionCompletedEvent, addTextEvent, clearEvents } from '../model/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -146,13 +146,14 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       postTextEvent(`Deployed ${agentCount} ${pluralize('agent', agentCount)} to mission: ${missionTitle}`)
     } else if (reset.match(action)) {
-      postTextEvent('Game reset')
+      // Clear all events on full game reset
+      store.dispatch(clearEvents())
     } else if (hasType(action) && ActionCreators.undo().type === action.type) {
-      postTextEvent('Action undone')
+      // Do not create events for undo
     } else if (hasType(action) && ActionCreators.redo().type === action.type) {
-      postTextEvent('Action redone')
+      // Do not create events for redo
     } else if (hasType(action) && ActionCreators.jumpToPast(0).type === action.type) {
-      postTextEvent('Turn reset')
+      // Do not create events for reset turn
     }
 
     return result

@@ -31,7 +31,7 @@ export type EventsState = {
   nextEventId: number
 }
 
-const initialState: EventsState = {
+const initialEventsState: EventsState = {
   events: [],
   nextEventId: 1,
 }
@@ -40,7 +40,7 @@ const MAX_EVENTS = 10
 
 const eventsSlice = createSlice({
   name: 'events',
-  initialState,
+  initialState: initialEventsState,
   reducers: {
     addTextEvent(state, action: PayloadAction<{ message: string; turn: number; actionsCount: number }>) {
       const event: TextEvent = {
@@ -94,11 +94,26 @@ const eventsSlice = createSlice({
         state.events.splice(MAX_EVENTS)
       }
     },
+    // Permanently remove any events that occur after the specified timeline pointer
+    // Events strictly after (turn, actionsCount) are dropped. Events at the same
+    // (turn, actionsCount) or earlier are preserved.
+    truncateEventsTo(
+      state,
+      action: PayloadAction<{
+        turn: number
+        actionsCount: number
+      }>,
+    ) {
+      const { turn, actionsCount } = action.payload
+      state.events = state.events.filter(
+        (event) => event.turn < turn || (event.turn === turn && event.actionsCount <= actionsCount),
+      )
+    },
     clearEvents(state) {
       state.events = []
     },
   },
 })
 
-export const { addTextEvent, addMissionCompletedEvent, clearEvents } = eventsSlice.actions
+export const { addTextEvent, addMissionCompletedEvent, truncateEventsTo, clearEvents } = eventsSlice.actions
 export default eventsSlice.reducer

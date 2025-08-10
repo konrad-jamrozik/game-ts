@@ -1,5 +1,5 @@
 import { formatAgentCount } from './AgentService'
-import type { GameEvent } from './eventsSlice'
+import type { TextEvent } from './eventsSlice'
 
 /**
  * Service for creating game events with consistent patterns
@@ -13,8 +13,9 @@ type GameContext = {
 /**
  * Creates a game event with the current game state context
  */
-export function createGameEvent(message: string, context: GameContext): Omit<GameEvent, 'id' | 'timestamp'> {
+export function createGameEvent(message: string, context: GameContext): Omit<TextEvent, 'id' | 'timestamp'> {
   return {
+    type: 'Text',
     message,
     turn: context.turn,
     actionsCount: context.actionsCount,
@@ -28,7 +29,7 @@ export function createGameEvent(message: string, context: GameContext): Omit<Gam
 export function createMissionCompletionEvent(
   missionTitle: string,
   context: GameContext,
-): Omit<GameEvent, 'id' | 'timestamp'> {
+): Omit<TextEvent, 'id' | 'timestamp'> {
   return createGameEvent(`Mission "${missionTitle}" completed successfully!`, context)
 }
 
@@ -40,7 +41,7 @@ export function createRewardEvent(
   rewardType: 'Money' | 'Intel' | 'Funding' | 'Panic Reduction',
   amount: number,
   context: GameContext,
-): Omit<GameEvent, 'id' | 'timestamp'> {
+): Omit<TextEvent, 'id' | 'timestamp'> {
   const messages = {
     Money: `Received $${amount} from mission completion`,
     Intel: `Gained ${amount} intel from mission completion`,
@@ -66,7 +67,7 @@ type AgentActionConfig = {
 export function createAgentActionEvent(
   config: AgentActionConfig,
   context: GameContext,
-): Omit<GameEvent, 'id' | 'timestamp'> {
+): Omit<TextEvent, 'id' | 'timestamp'> {
   const { action, agentCount, target } = config
 
   switch (action) {

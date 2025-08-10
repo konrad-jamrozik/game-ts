@@ -23,10 +23,12 @@ describe('Events Middleware', () => {
 
     // Should create a turn advance event
     const { events } = store.getState().events
+    const [first] = events
 
     expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Turn 2 started')
-    expect(events[0]?.turn).toBe(2)
+    expect(first?.type).toBe('Text')
+    expect(first && first.type === 'Text' ? first.message : undefined).toBe('Turn 2 started')
+    expect(first?.turn).toBe(2)
   })
 
   test('creates event when hiring agent', () => {
@@ -39,13 +41,15 @@ describe('Events Middleware', () => {
 
     // Should create an agent hired event
     const { events } = store.getState().events
+    const [first] = events
 
     expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Agent hired')
-    expect(events[0]?.turn).toBe(1)
+    expect(first?.type).toBe('Text')
+    expect(first && first.type === 'Text' ? first.message : undefined).toBe('Agent hired')
+    expect(first?.turn).toBe(1)
   })
 
-  test('creates event when resetting game', () => {
+  test('does not create event when resetting game and clears events', () => {
     expect.hasAssertions()
 
     // First make some changes
@@ -56,14 +60,13 @@ describe('Events Middleware', () => {
     // Reset game
     store.dispatch(reset())
 
-    // Should create a game reset event
+    // Should not create a game reset event; events are cleared
     const { events } = store.getState().events
 
-    expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Game reset')
+    expect(events).toHaveLength(0)
   })
 
-  test('creates event when undoing action', () => {
+  test('does not create event when undoing action', () => {
     expect.hasAssertions()
 
     // First perform an undoable action
@@ -73,14 +76,13 @@ describe('Events Middleware', () => {
     // Undo the action
     store.dispatch(ActionCreators.undo())
 
-    // Should create an undo event
+    // Should not create an undo event
     const { events } = store.getState().events
 
-    expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Action undone')
+    expect(events).toHaveLength(0)
   })
 
-  test('creates event when redoing action', () => {
+  test('does not create event when redoing action', () => {
     expect.hasAssertions()
 
     // First perform an action, then undo it
@@ -91,14 +93,13 @@ describe('Events Middleware', () => {
     // Redo the action
     store.dispatch(ActionCreators.redo())
 
-    // Should create a redo event
+    // Should not create a redo event
     const { events } = store.getState().events
 
-    expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Action redone')
+    expect(events).toHaveLength(0)
   })
 
-  test('creates event when resetting turn', () => {
+  test('does not create event when resetting turn', () => {
     expect.hasAssertions()
 
     // First make some actions in the current turn
@@ -109,10 +110,9 @@ describe('Events Middleware', () => {
     // Reset turn (jump to past index 0)
     store.dispatch(ActionCreators.jumpToPast(0))
 
-    // Should create a turn reset event
+    // Should not create a turn reset event
     const { events } = store.getState().events
 
-    expect(events).toHaveLength(1)
-    expect(events[0]?.message).toBe('Turn reset')
+    expect(events).toHaveLength(0)
   })
 })

@@ -10,6 +10,7 @@ import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
 import type { RootState } from '../app/store'
+import { truncateEventsTo } from '../model/eventsSlice'
 import { reset } from '../model/gameStateSlice'
 import { clearAllSelection } from '../model/selectionSlice'
 import { setResetControlsExpanded } from '../model/settingsSlice'
@@ -30,6 +31,7 @@ export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
   const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
+  const currentTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.turn)
   const availableUndoSteps = useAppSelector((state: RootState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
 
@@ -42,7 +44,20 @@ export function ResetControls(): React.JSX.Element {
 
   function handleResetTurn(): void {
     if (canResetTurn) {
+      // Move state back to the start of the current turn
       dispatch(ActionCreators.jump(-actionsThisTurn))
+
+      // Permanently drop any events that occurred after the start-of-turn pointer
+      dispatch(
+        truncateEventsTo({
+          turn: currentTurn,
+          actionsCount: 0,
+        }),
+      )
+
+      // KJA it should still be possible to undo the turn.
+      // Make the reset irreversible by clearing undo/redo history
+      dispatch(ActionCreators.clearHistory())
     }
   }
 

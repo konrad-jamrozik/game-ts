@@ -35,6 +35,16 @@ function renderPrimaryListItemText(event: GameEvent): string {
 
 export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
+  const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)
+  const currentActionsCount = useAppSelector((state) => state.undoable.present.gameState.actionsCount)
+
+  // Hide events that are currently undone (beyond the undo pointer)
+  // and also hide any legacy undo/redo/reset text events that may exist in persisted state
+  const visibleEvents = events.filter((event) => {
+    const notUndone =
+      event.turn < currentTurn || (event.turn === currentTurn && event.actionsCount <= currentActionsCount)
+    return notUndone
+  })
 
   return (
     <Card
@@ -45,13 +55,13 @@ export function EventLog(): React.JSX.Element {
     >
       <CardHeader title="Event Log" />
       <CardContent>
-        {events.length === 0 ? (
+        {visibleEvents.length === 0 ? (
           <Typography variant="body2" color="text.secondary">
             No events yet
           </Typography>
         ) : (
           <List dense>
-            {events.map((event: GameEvent) => (
+            {visibleEvents.map((event: GameEvent) => (
               <ListItem key={event.id} disablePadding>
                 <ListItemText
                   primary={renderPrimaryListItemText(event)}
