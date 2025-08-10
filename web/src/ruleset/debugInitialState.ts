@@ -1,6 +1,6 @@
-import { factions } from '../collections/factions'
 import type { Agent, GameState } from '../model/model'
 import { validateAgentInvariants } from '../utils/validation'
+import { baseGameState } from './initialState'
 
 export const debugInitialAssets: Pick<
   GameState,
@@ -16,14 +16,7 @@ export const debugInitialAssets: Pick<
 
 export function makeDebugInitialState(): GameState {
   const stateBase: GameState = {
-    turn: 1,
-    actionsCount: 0,
-    nextAgentId: 0,
-    nextMissionSiteId: 0,
-    hireCost: 50,
-    panic: 0,
-    factions,
-    missionSites: [],
+    ...baseGameState,
     ...debugInitialAssets,
   }
 
