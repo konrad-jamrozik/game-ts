@@ -1,4 +1,4 @@
-import Grid from '@mui/material/Grid'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
@@ -12,12 +12,6 @@ export function ArchivedMissionCards(): React.JSX.Element {
   const archivedMissionSites = getArchivedMissionSites(missionSites)
   const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
 
-  // Group mission site IDs into pairs
-  const missionSiteIdPairs: string[][] = []
-  for (let index = 0; index < sortedArchivedMissionSites.length; index += 2) {
-    missionSiteIdPairs.push(sortedArchivedMissionSites.slice(index, index + 2).map((site) => site.id))
-  }
-
   const maxWidth = '800px'
   return (
     <ExpandableCard
@@ -25,15 +19,20 @@ export function ArchivedMissionCards(): React.JSX.Element {
       defaultExpanded={false}
       sx={{ maxWidth }}
     >
-      <Stack spacing={2}>
-        {missionSiteIdPairs.map((pair) => (
-          <Grid container spacing={2} columns={2} key={pair.join('-')}>
-            {pair.map((missionSiteId) => (
-              <Grid size={1} key={missionSiteId}>
-                <MissionCard missionSiteId={missionSiteId} />
-              </Grid>
-            ))}
-          </Grid>
+      <Stack
+        direction="row"
+        spacing={0}
+        sx={{
+          flexWrap: 'wrap',
+          '& > *': {
+            flexBasis: 'calc(50%)',
+          },
+        }}
+      >
+        {sortedArchivedMissionSites.map((site) => (
+          <Box key={site.id}>
+            <MissionCard missionSiteId={site.id} />
+          </Box>
         ))}
       </Stack>
     </ExpandableCard>
