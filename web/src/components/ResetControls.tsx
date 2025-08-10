@@ -9,7 +9,7 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { wipeStorage } from '../app/persist'
-import { type RootState, UNDO_LIMIT } from '../app/store'
+import type { RootState } from '../app/store'
 import { reset } from '../model/gameStateSlice'
 import { clearAllSelection } from '../model/selectionSlice'
 import { setResetControlsExpanded } from '../model/settingsSlice'
@@ -29,8 +29,9 @@ function handleWipeStorageClick(): void {
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
-  const undoLength = useAppSelector((state: RootState) => state.undoable.past.length)
   const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
+  const availableUndoSteps = useAppSelector((state: RootState) => state.undoable.past.length)
+  const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
 
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
@@ -40,9 +41,9 @@ export function ResetControls(): React.JSX.Element {
   }
 
   function handleResetTurn(): void {
-    // Jump back by the number of player actions taken this turn to reach the turn start
-    dispatch(ActionCreators.jump(-actionsThisTurn))
-    dispatch(ActionCreators.clearHistory())
+    if (canResetTurn) {
+      dispatch(ActionCreators.jump(-actionsThisTurn))
+    }
   }
 
   function handleAccordionChange(_event: React.SyntheticEvent, isExpanded: boolean): void {
@@ -67,14 +68,8 @@ export function ResetControls(): React.JSX.Element {
               variant="contained"
               onClick={handleResetTurn}
               sx={destructiveButtonSx}
-              disabled={actionsThisTurn > undoLength || actionsThisTurn > UNDO_LIMIT}
-              title={
-                actionsThisTurn > UNDO_LIMIT
-                  ? `Turn reset disabled: more than ${UNDO_LIMIT} actions this turn`
-                  : actionsThisTurn > undoLength
-                    ? 'Turn reset disabled: not enough history to undo to turn start'
-                    : undefined
-              }
+              disabled={!canResetTurn}
+              title={!canResetTurn ? 'No prior state at start of this turn' : undefined}
             >
               Reset Turn
             </Button>
