@@ -7,6 +7,7 @@ import {
   AGENT_INITIAL_HIT_POINTS,
 } from '../ruleset/constants'
 import initialState, { makeInitialState } from '../ruleset/initialState'
+import { withPlayerAction, withPlayerActionPayload } from './actionHelpers'
 import advanceTurnImpl from './advanceTurnImpl'
 import type { Agent, MissionSite } from './model'
 
@@ -23,7 +24,7 @@ const gameStateSlice = createSlice({
         advanceTurnImpl(state)
       },
       prepare() {
-        return { payload: undefined, meta: { playerAction: true } }
+        return withPlayerAction()
       },
     },
     hireAgent: {
@@ -50,7 +51,7 @@ const gameStateSlice = createSlice({
         state.hireCost += AGENT_HIRE_COST
       },
       prepare() {
-        return { payload: undefined, meta: { playerAction: true } }
+        return withPlayerAction()
       },
     },
     sackAgents: {
@@ -65,7 +66,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(agentIds: string[]) {
-        return { payload: agentIds, meta: { playerAction: true } }
+        return withPlayerActionPayload(agentIds)
       },
     },
     assignAgentsToContracting: {
@@ -80,7 +81,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(agentIds: string[]) {
-        return { payload: agentIds, meta: { playerAction: true } }
+        return withPlayerActionPayload(agentIds)
       },
     },
     assignAgentsToEspionage: {
@@ -95,7 +96,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(agentIds: string[]) {
-        return { payload: agentIds, meta: { playerAction: true } }
+        return withPlayerActionPayload(agentIds)
       },
     },
     recallAgents: {
@@ -110,7 +111,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(agentIds: string[]) {
-        return { payload: agentIds, meta: { playerAction: true } }
+        return withPlayerActionPayload(agentIds)
       },
     },
     setMoney(state, action: PayloadAction<number>) {
@@ -162,7 +163,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(leadId: string, intelCost: number) {
-        return { payload: { leadId, intelCost }, meta: { playerAction: true } }
+        return withPlayerActionPayload({ leadId, intelCost })
       },
     },
     deployAgentsToMission: {
@@ -187,7 +188,7 @@ const gameStateSlice = createSlice({
         state.actionsCount += 1
       },
       prepare(missionSiteId: string, agentIds: string[]) {
-        return { payload: { missionSiteId, agentIds }, meta: { playerAction: true } }
+        return withPlayerActionPayload({ missionSiteId, agentIds })
       },
     },
   },
