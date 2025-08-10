@@ -74,6 +74,9 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       )
     }
 
+    // KJA if the action isPlayerAction() or advanceTurn, then
+    // truncateEventsTo should be called with the current turn and actionsCount
+
     // Dispatch events based on the action
     if (advanceTurn.match(action)) {
       postTextEvent(`Turn ${gameState.turn} started`)

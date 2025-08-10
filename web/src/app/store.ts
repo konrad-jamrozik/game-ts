@@ -4,6 +4,7 @@ import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import eventsReducer from '../model/eventsSlice'
 import gameStateReducer, { advanceTurn } from '../model/gameStateSlice'
+import isPlayerAction from '../model/isPlayerAction'
 import selectionReducer from '../model/selectionSlice'
 import settingsReducer from '../model/settingsSlice'
 import { eventsMiddleware } from './eventsMiddleware'
@@ -14,17 +15,6 @@ export const UNDO_LIMIT = 100
 const combinedReducer = combineReducers({
   gameState: gameStateReducer,
 })
-
-function isPlayerAction(action: unknown): action is { meta: { playerAction: boolean } } {
-  return (
-    typeof action === 'object' &&
-    action !== null &&
-    'meta' in action &&
-    typeof action.meta === 'object' &&
-    action.meta !== null &&
-    'playerAction' in action.meta
-  )
-}
 
 // undoable is from https://github.com/omnidan/redux-undo
 const undoableReducer = undoable(combinedReducer, {
