@@ -219,7 +219,7 @@ export default plugTypescriptEslint.config([
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       // I prefer method signature style.
       // https://typescript-eslint.io/rules/method-signature-style/
-      '@typescript-eslint/method-signature-style': 'method',
+      '@typescript-eslint/method-signature-style': ['error', 'method'],
 
       // React configs
       // --------------------
