@@ -119,5 +119,7 @@ Because the project uses PowerShell, use the following shell substitutions:
 - `rm` -> `Remove-Item`
 - `cp` -> `Copy-Item`
 
+Note that piping into `cat` like `| cat` is not going to work. You must use `Write-Output` instead of `cat`.
+
 ---
 For any unclear or missing conventions, check the `docs/` directory or ask for clarification.
