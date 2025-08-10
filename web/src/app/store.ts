@@ -2,7 +2,6 @@ import { configureStore } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
-import counterReducer from '../features/counter/counterSlice'
 import eventsReducer from '../model/eventsSlice'
 import gameStateReducer from '../model/gameStateSlice'
 import selectionReducer from '../model/selectionSlice'
@@ -13,7 +12,6 @@ import { loadPersistedState, saveStateToDexie } from './persist'
 export const UNDO_LIMIT = 100
 
 const combinedReducer = combineReducers({
-  counter: counterReducer,
   gameState: gameStateReducer,
 })
 
@@ -30,8 +28,9 @@ function isPlayerAction(action: unknown): action is { meta: { playerAction: bool
 
 // undoable is from https://github.com/omnidan/redux-undo
 const undoableReducer = undoable(combinedReducer, {
-  // You can pass options to undoable here
-  limit: UNDO_LIMIT + 1, // Up to UNDO_LIMIT player actions can be undone/redone
+  // Up to UNDO_LIMIT player actions can be undone/redone.
+  // +1 because the current state, which is starting point, must be also accounted for.
+  limit: UNDO_LIMIT + 1,
   // Note: because of this filter, we are going to take a snapshot of game state immediately
   // after each player action, including turn advancement.
   // This means that no other events can happen after these events, otherwise they won't
