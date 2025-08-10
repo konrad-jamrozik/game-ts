@@ -220,6 +220,10 @@ export default plugTypescriptEslint.config([
       // I prefer method signature style.
       // https://typescript-eslint.io/rules/method-signature-style/
       '@typescript-eslint/method-signature-style': ['error', 'method'],
+      // I prefer for the code to flow top-down, so naturally functions
+      // will be used before they are defined.
+      // https://typescript-eslint.io/rules/no-use-before-define/
+      '@typescript-eslint/no-use-before-define': 'off',
 
       // React configs
       // --------------------
@@ -227,9 +231,11 @@ export default plugTypescriptEslint.config([
 
       // Imports
       // --------------------
+      // Keeping this rule off by default, only periodically setting to 'error',
+      // as it is a constant drag to fix it and there is no comprehensive "fix on save" fix.
       // https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md
       'import-x/order': [
-        'error',
+        'off',
         {
           // options: https://github.com/un-ts/eslint-plugin-import-x/blob/master/docs/rules/order.md#options
           warnOnUnassignedImports: true,
@@ -299,6 +305,9 @@ export default plugTypescriptEslint.config([
       // I like abbreviations
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prevent-abbreviations.md
       'unicorn/prevent-abbreviations': 'off',
+      // Sometimes the code is significantly more concise with forEach.
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-for-each.md
+      'unicorn/no-array-for-each': 'off',
     },
   },
   {
