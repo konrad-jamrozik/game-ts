@@ -1,23 +1,14 @@
 import type { Agent, GameState } from '../model/model'
-import { validateAgentInvariants } from '../utils/validation'
-import { baseGameState } from './initialState'
 
-export const debugInitialAssets: Pick<
-  GameState,
-  'agents' | 'money' | 'intel' | 'funding' | 'investigatedLeadIds' | 'leadInvestigationCounts'
-> = {
-  agents: [],
-  money: 500,
-  intel: 500,
-  funding: 20,
-  investigatedLeadIds: ['lead-red-dawn-profile'],
-  leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
-}
-
-export function makeDebugInitialState(): GameState {
-  const stateBase: GameState = {
-    ...baseGameState,
-    ...debugInitialAssets,
+// Return only the overrides that should replace values in the normal initial state
+export function makeDebugInitialOverrides(): Partial<GameState> {
+  const stateBase: Partial<GameState> = {
+    agents: [],
+    money: 500,
+    intel: 500,
+    funding: 20,
+    investigatedLeadIds: ['lead-red-dawn-profile'],
+    leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
   }
 
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
@@ -157,24 +148,22 @@ export function makeDebugInitialState(): GameState {
   stateBase.agents = debugAgents
   stateBase.nextAgentId = debugAgents.length
   // Ensure there is a mission site referenced by any OnMission agent
-  const missionSiteExists = stateBase.missionSites.some((missionSite) => missionSite.id === 'mission-site-000')
+  const missionSiteExists = (stateBase.missionSites ?? []).some((missionSite) => missionSite.id === 'mission-site-000')
   if (!missionSiteExists) {
-    stateBase.missionSites.push({
-      id: 'mission-site-000',
-      missionId: 'mission-apprehend-red-dawn',
-      agentIds: ['agent-007'],
-      state: 'Deployed',
-      expiresIn: 3,
-      objectives: [
-        { id: 'locate-target', difficulty: 20, fulfilled: false },
-        { id: 'apprehend-target', difficulty: 30, fulfilled: false },
-      ],
-    })
-  }
-
-  // Validate all debug agents satisfy invariants
-  for (const agent of stateBase.agents) {
-    validateAgentInvariants(agent, stateBase)
+    stateBase.missionSites = [
+      ...(stateBase.missionSites ?? []),
+      {
+        id: 'mission-site-000',
+        missionId: 'mission-apprehend-red-dawn',
+        agentIds: ['agent-007'],
+        state: 'Deployed',
+        expiresIn: 3,
+        objectives: [
+          { id: 'locate-target', difficulty: 20, fulfilled: false },
+          { id: 'apprehend-target', difficulty: 30, fulfilled: false },
+        ],
+      },
+    ]
   }
 
   return stateBase
