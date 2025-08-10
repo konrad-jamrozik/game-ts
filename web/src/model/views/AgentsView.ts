@@ -1,7 +1,7 @@
-import type { Agent } from '../model'
-import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
-import { floor } from '../../utils/mathUtils'
 import { group } from 'radash'
+import { floor } from '../../utils/mathUtils'
+import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
+import type { Agent } from '../model'
 
 export type AgentsView = Readonly<{
   getTerminated(): Agent[]
@@ -16,7 +16,7 @@ export type AgentsView = Readonly<{
   toArray(): readonly Agent[]
 }>
 
-export function createAgentsView(agents: readonly Agent[]): AgentsView {
+export function createAgentsView(agents: Agent[]): AgentsView {
   // Precompute indexes/caches *once* for this instance, e.g.
   const byAssignment = group(agents, (agent) => agent.assignment)
 
@@ -27,7 +27,7 @@ export function createAgentsView(agents: readonly Agent[]): AgentsView {
       const candidates = byAssignment[missionSiteId] ?? []
       return candidates.filter((agent) => agent.state === 'OnMission')
     },
-    validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents as Agent[], selectedAgentIds),
+    validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents, selectedAgentIds),
     validateInvariants: () => agents.forEach((agent) => validateAgentLocalInvariants(agent)),
     toArray: () => agents,
   }
