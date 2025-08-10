@@ -85,12 +85,12 @@ export type Faction = {
 export type GameState = {
   actionsCount: number
   turn: number
-  agents: Agent[]
   money: number
   intel: number
   funding: number
   hireCost: number
   nextAgentId: number
+  agents: Agent[]
   nextMissionSiteId: number
   investigatedLeadIds: string[]
   leadInvestigationCounts: Record<string, number>
