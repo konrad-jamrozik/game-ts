@@ -14,7 +14,7 @@ import {
   reset,
   sackAgents,
 } from '../model/gameStateSlice'
-import type { MissionRewards } from '../model/model'
+import type { Agent, MissionRewards, MissionSite, MissionSiteState } from '../model/model'
 import { isMissionSiteConcluded } from '../model/modelDerived'
 import type { RootState } from './store'
 
@@ -49,9 +49,28 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       store.dispatch(addTextEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
     }
 
-    function postMissionCompletedEvent(missionTitle: string, rewards: MissionRewards): void {
+    // eslint-disable-next-line @typescript-eslint/max-params
+    function postMissionCompletedEvent(
+      missionTitle: string,
+      rewards: MissionRewards,
+      missionSiteId: string,
+      finalState: MissionSiteState,
+      agentsLost: number,
+      agentsWounded: number,
+      agentsUnscathed: number,
+    ): void {
       store.dispatch(
-        addMissionCompletedEvent({ missionTitle, rewards, turn: gameState.turn, actionsCount: gameState.actionsCount }),
+        addMissionCompletedEvent({
+          missionTitle,
+          rewards,
+          missionSiteId,
+          finalState,
+          agentsLost,
+          agentsWounded,
+          agentsUnscathed,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
       )
     }
 
@@ -59,17 +78,42 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     if (advanceTurn.match(action)) {
       postTextEvent(`Turn ${gameState.turn} started`)
 
-      // Check for newly successful missions and log a consolidated mission completion event
+      // Check for newly concluded mission sites and log mission completion event with details
       const previouslyConcludedMissionSiteIds = new Set(
-        previousGameState.missionSites.filter((site) => isMissionSiteConcluded(site)).map((site) => site.missionId),
+        previousGameState.missionSites
+          .filter((site: MissionSite) => isMissionSiteConcluded(site))
+          .map((site) => site.id),
       )
 
-      const newlyConcludedMissionSites = gameState.missionSites
-        .filter((site) => isMissionSiteConcluded(site) && !previouslyConcludedMissionSiteIds.has(site.missionId))
-        .map((site) => getMissionById(site.missionId))
+      const newlyConcludedMissionSites = gameState.missionSites.filter(
+        (site: MissionSite) => isMissionSiteConcluded(site) && !previouslyConcludedMissionSiteIds.has(site.id),
+      )
 
-      for (const mission of newlyConcludedMissionSites) {
-        postMissionCompletedEvent(mission.title, mission.rewards)
+      for (const missionSite of newlyConcludedMissionSites) {
+        const mission = getMissionById(missionSite.missionId)
+
+        // Compute agent outcome counts for this mission site
+        const deployedAgents: Agent[] = missionSite.agentIds
+          .map((agentId: string) => gameState.agents.find((agent: Agent) => agent.id === agentId))
+          .filter((agent): agent is Agent => agent !== undefined)
+
+        const agentsLost = deployedAgents.filter((agent: Agent) => agent.state === 'Terminated').length
+        const agentsWounded = deployedAgents.filter(
+          (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns > 0,
+        ).length
+        const agentsUnscathed = deployedAgents.filter(
+          (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns === 0,
+        ).length
+
+        postMissionCompletedEvent(
+          mission.title,
+          mission.rewards,
+          missionSite.id,
+          missionSite.state,
+          agentsLost,
+          agentsWounded,
+          agentsUnscathed,
+        )
       }
     } else if (hireAgent.match(action)) {
       postTextEvent('Agent hired')

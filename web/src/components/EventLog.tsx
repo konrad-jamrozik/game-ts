@@ -26,9 +26,11 @@ function renderPrimaryListItemText(event: GameEvent): string {
   }
   assertEqual(event.type, 'MissionCompleted')
   const rewardsSummary = formatMissionRewards(event)
-  return rewardsSummary
+  const details = `id=${event.missionSiteId}, state=${event.finalState}, lost=${event.agentsLost}, wounded=${event.agentsWounded}, unscathed=${event.agentsUnscathed}`
+  const base = rewardsSummary
     ? `Mission "${event.missionTitle}" completed: ${rewardsSummary}`
     : `Mission "${event.missionTitle}" completed`
+  return `${base} [${details}]`
 }
 
 export function EventLog(): React.JSX.Element {
