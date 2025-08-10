@@ -37,7 +37,7 @@ export type MissionRewards = {
   intel?: number
   funding?: number
   panicReduction?: number
-  factionRewards?: Set<FactionRewards>
+  factionRewards?: FactionRewards[]
 }
 
 export type MissionObjective = {

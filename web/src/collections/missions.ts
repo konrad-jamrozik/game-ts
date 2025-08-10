@@ -17,13 +17,13 @@ export const missions: Mission[] = [
       money: 0,
       intel: 10,
       panicReduction: 5,
-      factionRewards: new Set([
+      factionRewards: [
         {
           factionId: 'faction-red-dawn',
           threatReduction: 1,
           suppression: 10,
         },
-      ]),
+      ],
     },
   },
   {
@@ -43,13 +43,13 @@ export const missions: Mission[] = [
       intel: 40,
       funding: 0,
       panicReduction: 20,
-      factionRewards: new Set([
+      factionRewards: [
         {
           factionId: 'faction-red-dawn',
           threatReduction: 5,
           suppression: 40,
         },
-      ]),
+      ],
     },
   },
   //   {
