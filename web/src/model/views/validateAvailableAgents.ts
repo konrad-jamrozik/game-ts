@@ -21,7 +21,7 @@ export function validateAvailableAgents(
     isValid = false
     errorMessage = 'No agents selected!'
   } else {
-    const unavailable = selectedViews.notAvailable().toArray()
+    const unavailable = selectedViews.notAvailable().toAgentArray()
     if (unavailable.length > 0) {
       isValid = false
       errorMessage = 'This action can be done only on available agents!'

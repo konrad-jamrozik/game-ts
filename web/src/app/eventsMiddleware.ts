@@ -17,6 +17,7 @@ import {
 import isPlayerAction from '../model/isPlayerAction'
 import type { Agent, MissionRewards, MissionSite, MissionSiteState } from '../model/model'
 import { isMissionSiteConcluded } from '../model/modelDerived'
+import { agsV } from '../model/views/AgentsView'
 import type { RootState } from './store'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
@@ -99,11 +100,8 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       for (const missionSite of newlyConcludedMissionSites) {
         const mission = getMissionById(missionSite.missionId)
-
         // Compute agent outcome counts for this mission site
-        const deployedAgents: Agent[] = missionSite.agentIds
-          .map((agentId: string) => gameState.agents.find((agent: Agent) => agent.id === agentId))
-          .filter((agent): agent is Agent => agent !== undefined)
+        const deployedAgents = agsV(gameState.agents).deployedOnMissionSite(missionSite.id).toAgentArray()
 
         const agentsLost = deployedAgents.filter((agent: Agent) => agent.state === 'Terminated').length
         const agentsWounded = deployedAgents.filter(
