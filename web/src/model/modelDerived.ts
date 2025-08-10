@@ -1,7 +1,7 @@
 import type { GameState, MissionSite } from '../model/model'
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
 import { floor } from '../utils/mathUtils'
-import { getEffectiveSkill } from './views/AgentsView'
+import { agV } from './views/AgentView'
 
 export function getAgentUpkeep(gameState: GameState): number {
   const nonTerminatedAgents = gameState.agents.filter((agent) => agent.state !== 'Terminated')
@@ -14,7 +14,7 @@ export function getContractedIncome(gameState: GameState): number {
   )
   let total = 0
   for (const agent of contractingAgents) {
-    const effectiveSkill = getEffectiveSkill(agent)
+    const effectiveSkill = agV(agent).effectiveSkill()
     total += floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
   }
   return total
@@ -26,7 +26,7 @@ export function getEspionageIntel(gameState: GameState): number {
   )
   let total = 0
   for (const agent of espionageAgents) {
-    const effectiveSkill = getEffectiveSkill(agent)
+    const effectiveSkill = agV(agent).effectiveSkill()
     total += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
   }
   return total

@@ -1,8 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { getEffectiveSkill } from '../src/model/views/AgentsView'
 import type { Agent } from '../src/model/model'
+import { agV } from '../src/model/views/AgentView'
 
-describe(getEffectiveSkill, () => {
+// KJA this test is superbly verbose. Dedup it and same with other tests.
+describe('effectiveSkill', () => {
   test('calculate effective skill correctly with no exhaustion and no hit points lost', () => {
     const agent: Agent = {
       id: 'test-agent',
@@ -19,7 +20,7 @@ describe(getEffectiveSkill, () => {
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 0/100)) = floor(100 * 1 * 1) = 100
-    expect(getEffectiveSkill(agent)).toBe(100)
+    expect(agV(agent).effectiveSkill()).toBe(100)
   })
 
   test('calculate effective skill correctly with exhaustion only', () => {
@@ -38,7 +39,7 @@ describe(getEffectiveSkill, () => {
     }
 
     // effective_skill = floor(116 * (1 - 0/30) * (1 - 15/100)) = floor(116 * 1 * 0.85) = floor(98.6) = 98
-    expect(getEffectiveSkill(agent)).toBe(98)
+    expect(agV(agent).effectiveSkill()).toBe(98)
   })
 
   test('calculate effective skill correctly with hit points lost only', () => {
@@ -58,7 +59,7 @@ describe(getEffectiveSkill, () => {
 
     // hit points lost = 30 - 23 = 7
     // effective_skill = floor(100 * (1 - 7/30) * (1 - 0/100)) = floor(100 * 0.76666... * 1) = floor(76.666...) = 76
-    expect(getEffectiveSkill(agent)).toBe(76)
+    expect(agV(agent).effectiveSkill()).toBe(76)
   })
 
   test('calculate effective skill correctly with both exhaustion and hit points lost', () => {
@@ -78,7 +79,7 @@ describe(getEffectiveSkill, () => {
 
     // hit points lost = 30 - 23 = 7
     // effective_skill = floor(150 * (1 - 7/30) * (1 - 15/100)) = floor(150 * 0.76666... * 0.85) = floor(97.75) = 97
-    expect(getEffectiveSkill(agent)).toBe(97)
+    expect(agV(agent).effectiveSkill()).toBe(97)
   })
 
   test('handle high exhaustion correctly', () => {
@@ -97,7 +98,7 @@ describe(getEffectiveSkill, () => {
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 80/100)) = floor(100 * 1 * 0.2) = floor(20) = 20
-    expect(getEffectiveSkill(agent)).toBe(20)
+    expect(agV(agent).effectiveSkill()).toBe(20)
   })
 
   test('handle 100% exhaustion correctly', () => {
@@ -116,7 +117,7 @@ describe(getEffectiveSkill, () => {
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 100/100)) = floor(100 * 1 * 0) = floor(0) = 0
-    expect(getEffectiveSkill(agent)).toBe(0)
+    expect(agV(agent).effectiveSkill()).toBe(0)
   })
 
   test('handle zero hit points correctly', () => {
@@ -136,7 +137,7 @@ describe(getEffectiveSkill, () => {
 
     // hit points lost = 30 - 0 = 30
     // effective_skill = floor(100 * (1 - 30/30) * (1 - 0/100)) = floor(100 * 0 * 1) = floor(0) = 0
-    expect(getEffectiveSkill(agent)).toBe(0)
+    expect(agV(agent).effectiveSkill()).toBe(0)
   })
 
   test('handle zero max hit points correctly', () => {
@@ -155,6 +156,6 @@ describe(getEffectiveSkill, () => {
     }
 
     // effective_skill = floor(100 * (1 - 0) * (1 - 0/100)) = floor(100 * 1 * 1) = floor(100) = 100
-    expect(getEffectiveSkill(agent)).toBe(100)
+    expect(agV(agent).effectiveSkill()).toBe(100)
   })
 })

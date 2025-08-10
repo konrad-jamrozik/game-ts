@@ -1,8 +1,8 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
-import { getEffectiveSkill } from './views/AgentsView'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
+import { agV } from './views/AgentView'
 
 type AgentHitPointsLostRollResult = {
   hitPointsLost: number
@@ -30,7 +30,7 @@ function processAgentRolls(
     const [targetObjective] = unfulfilledObjectives
     if (targetObjective) {
       const objectiveRoll = rollDie()
-      const effectiveSkill = getEffectiveSkill(agent)
+      const effectiveSkill = agV(agent).effectiveSkill()
       const [objectiveThreshold, objectiveThresholdFormula] = calculateRollThreshold(
         effectiveSkill,
         targetObjective.difficulty,
@@ -58,7 +58,7 @@ function processAgentRolls(
 
   // Hit points lost roll
   const hitPointsLostRoll = rollDie()
-  const effectiveSkill = getEffectiveSkill(agent)
+  const effectiveSkill = agV(agent).effectiveSkill()
   const [hitPointsThreshold, hitPointsThresholdFormula] = calculateRollThreshold(effectiveSkill, missionDifficulty)
 
   // eslint-disable-next-line @typescript-eslint/init-declarations
@@ -135,7 +135,7 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
 
   // Sort agents by effective skill (lowest to highest) for rolling order
   const sortedAgents = [...deployedAgents].sort(
-    (agentA, agentB) => getEffectiveSkill(agentA) - getEffectiveSkill(agentB),
+    (agentA, agentB) => agV(agentA).effectiveSkill() - agV(agentB).effectiveSkill(),
   )
 
   const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []

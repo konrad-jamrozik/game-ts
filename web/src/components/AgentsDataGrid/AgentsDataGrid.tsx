@@ -7,11 +7,11 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import { getEffectiveSkill } from '../../model/views/AgentsView'
 import type { Agent } from '../../model/model'
 import { setAgentSelection } from '../../model/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
+import { agV } from '../../model/views/AgentView'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -70,7 +70,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       headerName: 'Skill',
       minWidth: 140,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
-        const effectiveSkill = getEffectiveSkill(params.row)
+        const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? 0
         const percentage = baselineSkill > 0 ? ((effectiveSkill / baselineSkill) * 100).toFixed(1) : '0.0'
         return (

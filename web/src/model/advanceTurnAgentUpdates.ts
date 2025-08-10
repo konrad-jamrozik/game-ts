@@ -6,8 +6,8 @@ import {
 } from '../ruleset/constants'
 import { assertEqual } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
-import { getEffectiveSkill } from './views/AgentsView'
 import type { GameState } from './model'
+import { agV } from './views/AgentView'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
@@ -89,7 +89,7 @@ export function updateContractingAgents(state: GameState): { moneyEarned: number
   for (const agent of state.agents) {
     if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
       // Earn money based on effective skill
-      const effectiveSkill = getEffectiveSkill(agent)
+      const effectiveSkill = agV(agent).effectiveSkill()
       const income = floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
       moneyEarned += income
 
@@ -110,7 +110,7 @@ export function updateEspionageAgents(state: GameState): { intelGathered: number
   for (const agent of state.agents) {
     if (agent.state === 'OnAssignment' && agent.assignment === 'Espionage') {
       // Gather intel based on effective skill
-      const effectiveSkill = getEffectiveSkill(agent)
+      const effectiveSkill = agV(agent).effectiveSkill()
       const intel = floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
       intelGathered += intel
 

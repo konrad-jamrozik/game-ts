@@ -1,8 +1,8 @@
-import { floor } from '../../utils/mathUtils'
 import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
 import type { Agent } from '../model'
-import { createAgentView, type AgentView } from './AgentView'
+import { agV, type AgentView } from './AgentView'
 
+// Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
 export type AgentsView = readonly AgentView[] &
   Readonly<{
     getTerminated(): AgentsView
@@ -16,8 +16,8 @@ export type AgentsView = readonly AgentView[] &
     validateInvariants(): void
   }>
 
-export function createAgentsView(agents: Agent[]): AgentsView {
-  const agentViews: AgentView[] = agents.map((agent) => createAgentView(agent))
+export function agsV(agents: Agent[]): AgentsView {
+  const agentViews: AgentView[] = agents.map((agent) => agV(agent))
 
   // Map view -> underlying agent for internal predicates that require raw state
   const viewToAgent = new WeakMap<AgentView, Agent>()
@@ -61,16 +61,6 @@ export function createAgentsView(agents: Agent[]): AgentsView {
   }
 
   return fromAgentViewArray(agentViews)
-}
-
-// Calculates the effective skill of an agent. Refer to about_agents.md for details.
-export function getEffectiveSkill(agent: Agent): number {
-  const hitPointsLost = agent.maxHitPoints - agent.hitPoints
-  const hitPointsReduction = agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0
-  const exhaustionReduction = agent.exhaustion / 100
-
-  const result = agent.skill * (1 - hitPointsReduction) * (1 - exhaustionReduction)
-  return floor(result)
 }
 
 // Validates that all selected agents are in "Available" state

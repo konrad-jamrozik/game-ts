@@ -19,7 +19,7 @@ import {
   sackAgents,
 } from '../model/gameStateSlice'
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
-import { createAgentsView } from '../model/views/AgentsView'
+import { agsV } from '../model/views/AgentsView'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { formatAgentCount, formatMissionTarget } from '../utils/formatUtils'
 
@@ -29,7 +29,7 @@ export function PlayerActions(): React.JSX.Element {
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
   const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
-  const agentsView = createAgentsView(agents)
+  const agentsView = agsV(agents)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')

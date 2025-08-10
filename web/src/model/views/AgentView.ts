@@ -11,7 +11,7 @@ export type AgentView = Readonly<{
   validateInvariants(): void
 }>
 
-export function createAgentView(agent: Agent): AgentView {
+export function agV(agent: Agent): AgentView {
   const view: AgentView = {
     isTerminated: () => agent.state === 'Terminated',
     isInTransit: () => agent.state === 'InTransit',
