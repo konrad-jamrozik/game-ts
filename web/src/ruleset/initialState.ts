@@ -13,9 +13,6 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     // Situation
     panic: 0,
     factions,
-    // Counters
-    nextAgentId: 0,
-    nextMissionSiteId: 0,
     // Assets
     money: 500,
     intel: 0,

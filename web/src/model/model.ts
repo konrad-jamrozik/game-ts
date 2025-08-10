@@ -89,9 +89,6 @@ export type GameState = {
   // Situation
   panic: number
   factions: Faction[]
-  // Counters
-  nextAgentId: number
-  nextMissionSiteId: number
   // Assets
   money: number
   intel: number

@@ -1,5 +1,5 @@
 import type { Middleware } from '@reduxjs/toolkit'
-import * as pluralize from 'pluralize'
+import pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../collections/missions'
 import { addEvent } from '../model/eventsSlice'

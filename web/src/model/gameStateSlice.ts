@@ -7,6 +7,7 @@ import {
   AGENT_INITIAL_HIT_POINTS,
 } from '../ruleset/constants'
 import initialState, { makeInitialState } from '../ruleset/initialState'
+import { assertEqual } from '../utils/assert'
 import advanceTurnImpl from './advanceTurnImpl'
 import type { Agent, MissionSite } from './model'
 
@@ -28,8 +29,12 @@ const gameStateSlice = createSlice({
     },
     hireAgent: {
       reducer(state) {
+        // Invariant: next agent numeric id is always the current number of agents
+        const nextAgentNumericId = state.agents.length
+        const newAgentId = `agent-${nextAgentNumericId.toString().padStart(3, '0')}`
+
         const newAgent: Agent = {
-          id: `agent-${state.nextAgentId.toString().padStart(3, '0')}`,
+          id: newAgentId,
           turnHired: state.turn,
           state: 'InTransit',
           assignment: 'Standby',
@@ -42,7 +47,6 @@ const gameStateSlice = createSlice({
           missionsSurvived: 0,
         }
         state.agents.push(newAgent)
-        state.nextAgentId += 1
         state.actionsCount += 1
         state.hireCost += AGENT_HIRE_COST
       },
@@ -137,7 +141,9 @@ const gameStateSlice = createSlice({
         // Find missions that depend on this lead and create mission sites for them
         const dependentMissions = missions.filter((mission) => mission.dependsOn.includes(leadId))
         for (const mission of dependentMissions) {
-          const missionSiteId = `mission-site-${state.nextMissionSiteId.toString().padStart(3, '0')}`
+          // Invariant: next mission site numeric id is always the current number of mission sites
+          const nextMissionNumericId = state.missionSites.length
+          const missionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
           const newMissionSite: MissionSite = {
             id: missionSiteId,
             missionId: mission.id,
@@ -151,7 +157,6 @@ const gameStateSlice = createSlice({
             })),
           }
           state.missionSites.push(newMissionSite)
-          state.nextMissionSiteId += 1
         }
 
         state.intel -= intelCost

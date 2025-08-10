@@ -146,7 +146,6 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   ]
 
   stateBase.agents = debugAgents
-  stateBase.nextAgentId = debugAgents.length
   // Ensure there is a mission site referenced by any OnMission agent
   const missionSiteExists = (stateBase.missionSites ?? []).some((missionSite) => missionSite.id === 'mission-site-000')
   if (!missionSiteExists) {
