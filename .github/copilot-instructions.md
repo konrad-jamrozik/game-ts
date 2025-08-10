@@ -1,4 +1,4 @@
-# Copilot Instructions for game-ts
+# Copilot and Cursor Instructions for game-ts
 
 ## Project Overview
 
@@ -27,7 +27,7 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 
 **Language**: TypeScript is used throughout the project. Uses project references and modern ES2024 features.
 
-**CI/CD**:  CI/CD is set up to deploy to GitHub Pages on every push to `main`. 
+**CI/CD**:  CI/CD is set up to deploy to GitHub Pages on every push to `main`.
   All pushes to `main` trigger lint, format, test, build, and deploy to GitHub Pages.
 
 ## Verification of work and build tasks
@@ -70,11 +70,11 @@ This project uses following technologies:
 
 - `web/package.json` for all scripts and dependencies.
 - `web/vite.config.ts`: Vite config. Note the `base: '/game-ts/'` for GitHub Pages.
-- `web/tsconfig.*.json`: TypeScript config. 
+- `web/tsconfig.*.json`: TypeScript config.
 - `web/eslint.config.js`: ESLint linter config.
 - `web/prettier.config.js`: "Prettier" formatter config.
 - `web/vitest.config.ts`: Vitest config for unit tests. Test setup in `src/setupTests.ts`.
-- `docs/`: 
+- `docs/`:
 - `.github/workflows/web_gh_pages_CICD.yml`: Main CI/CD workflow. Runs lint, format check, tests, build, and deploy.
 
 ### Theme and styling files
