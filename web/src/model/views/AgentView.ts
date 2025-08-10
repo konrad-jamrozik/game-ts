@@ -12,7 +12,7 @@ export type AgentView = Readonly<{
 }>
 
 export function agV(agent: Agent): AgentView {
-  const view: AgentView = {
+  const agentView: AgentView = {
     isTerminated: () => agent.state === 'Terminated',
     isInTransit: () => agent.state === 'InTransit',
     isDeployedOnMissionSite: (missionSiteId: string) => agent.assignment === missionSiteId,
@@ -21,7 +21,7 @@ export function agV(agent: Agent): AgentView {
     validateInvariants: () => validateAgentLocalInvariants(agent),
   }
 
-  return Object.freeze(view)
+  return Object.freeze(agentView)
 }
 
 // Calculates the effective skill of an agent. Refer to about_agents.md for details.

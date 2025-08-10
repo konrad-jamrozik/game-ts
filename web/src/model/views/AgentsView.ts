@@ -5,6 +5,8 @@ import { agV, type AgentView } from './AgentView'
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
 export type AgentsView = readonly AgentView[] &
   Readonly<{
+    withIds(ids: readonly string[]): AgentsView
+    notAvailable(): AgentsView
     getTerminated(): AgentsView
     inTransit(): AgentsView
     deployedOnMissionSite(missionSiteId: string): AgentsView
@@ -33,10 +35,22 @@ export function agsV(agents: Agent[]): AgentsView {
     }
   })
 
+  // Quick lookup from Agent id -> AgentView
+  const agentIdToView = new Map<string, AgentView>()
+  agents.forEach((agent, index) => {
+    const view = agentViews[index]
+    if (view !== undefined) {
+      agentIdToView.set(agent.id, view)
+    }
+  })
+
   function toAgentsView(views: AgentView[]): AgentsView {
     // Create an array-like instance and augment with chainable helpers
     const agentViewArray: AgentView[] = [...views]
-    const augmented = Object.assign(agentViewArray, {
+    const agentsView = Object.assign(agentViewArray, {
+      withIds: (ids: readonly string[]): AgentsView =>
+        toAgentsView(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
+      notAvailable: (): AgentsView => toAgentsView(agentViewArray.filter((agent) => !agent.isAvailable())),
       getTerminated: (): AgentsView => toAgentsView(agentViewArray.filter((agentView) => agentView.isTerminated())),
       inTransit: (): AgentsView => toAgentsView(agentViewArray.filter((agentView) => agentView.isInTransit())),
       deployedOnMissionSite: (missionSiteId: string): AgentsView =>
@@ -50,7 +64,47 @@ export function agsV(agents: Agent[]): AgentsView {
             )
           }),
         ),
-      validateAvailable: (selectedAgentIds: string[]) => Object.freeze(validateAvailable(agents, selectedAgentIds)),
+      validateAvailable: (selectedAgentIds: string[]) => {
+        const selectedViews = agentsView.withIds(selectedAgentIds)
+
+        if (selectedViews.length === 0) {
+          return Object.freeze({
+            isValid: false,
+            errorMessage: 'No agents selected!',
+            nonAvailableAgents: [] as Agent[],
+          }) as Readonly<{
+            isValid: boolean
+            errorMessage?: string
+            nonAvailableAgents: readonly Agent[]
+          }>
+        }
+
+        const nonAvailableAgents = selectedViews
+          .notAvailable()
+          .map((agentView) => viewToAgent.get(agentView))
+          .filter((agent): agent is Agent => agent !== undefined)
+
+        if (nonAvailableAgents.length > 0) {
+          return Object.freeze({
+            isValid: false,
+            errorMessage: 'This action can be done only on available agents!',
+            nonAvailableAgents,
+          }) as Readonly<{
+            isValid: boolean
+            errorMessage?: string
+            nonAvailableAgents: readonly Agent[]
+          }>
+        }
+
+        return Object.freeze({
+          isValid: true,
+          nonAvailableAgents: [] as Agent[],
+        }) as Readonly<{
+          isValid: boolean
+          errorMessage?: string
+          nonAvailableAgents: readonly Agent[]
+        }>
+      },
       validateInvariants: (): void => {
         agentViewArray.forEach((agentView) => {
           const underlyingAgent = viewToAgent.get(agentView)
@@ -61,42 +115,20 @@ export function agsV(agents: Agent[]): AgentsView {
       },
     })
 
-    return Object.freeze(augmented) as AgentsView
+    return Object.freeze(agentsView)
   }
 
   return toAgentsView(agentViews)
 }
 
-// Validates that all selected agents are in "Available" state
-export function validateAvailable(
-  agents: Agent[],
-  selectedAgentIds: string[],
-): {
-  isValid: boolean
-  errorMessage?: string
-  nonAvailableAgents: Agent[]
-} {
-  if (selectedAgentIds.length === 0) {
-    return {
-      isValid: false,
-      errorMessage: 'No agents selected!',
-      nonAvailableAgents: [],
-    }
-  }
-
-  const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-  const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
-
-  if (nonAvailableAgents.length > 0) {
-    return {
-      isValid: false,
-      errorMessage: 'This action can be done only on available agents!',
-      nonAvailableAgents,
-    }
-  }
-
-  return {
-    isValid: true,
-    nonAvailableAgents: [],
-  }
-}
+// KJA implement memoized selector for AgentsView:
+//
+// const selectAgentsArray = (state: RootState) => state.undoable.present.gameState.agents
+//
+// export const selectAgentsView: (state: RootState) => AgentsView = createSelector(
+//   [selectAgentsArray],
+//   (agents) => agsV(agents)
+// )
+//
+// See 4) Memoized selector that returns the wrapper
+// In https://chatgpt.com/c/68983db9-3fac-832d-ba85-3b9aaaa807d5
