@@ -217,9 +217,10 @@ export default plugTypescriptEslint.config([
       // See also relevant section in docs/about_react.md
       // https://typescript-eslint.io/rules/consistent-type-definitions/
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
-      // I prefer method signature style.
+      // Sometimes I prefer method signature style (e.g. AgentsView), and sometimes
+      // I prefer function style, e.g. for overrides, e.g. asPlayerAction.
       // https://typescript-eslint.io/rules/method-signature-style/
-      '@typescript-eslint/method-signature-style': ['error', 'method'],
+      '@typescript-eslint/method-signature-style': 'off',
       // I prefer for the code to flow top-down, so naturally functions
       // will be used before they are defined.
       // https://typescript-eslint.io/rules/no-use-before-define/
