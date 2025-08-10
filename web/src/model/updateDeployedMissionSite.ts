@@ -1,6 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
-import { getEffectiveSkill } from './AgentService'
+import { getEffectiveSkill } from './views/AgentViews'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 
@@ -8,7 +8,7 @@ type AgentHitPointsLostRollResult = {
   hitPointsLost: number
 }
 
-type AgentWithHitPointsLost = {
+type AgentWithHitPointsLostInfo = {
   agent: Agent
   hitPointsLost: number
 }
@@ -84,7 +84,7 @@ function processAgentRolls(
   return { hitPointsLost }
 }
 
-function updateDeployedSurvivingAgents(agentsWithResults: AgentWithHitPointsLost[]): void {
+function updateDeployedSurvivingAgents(agentsWithResults: AgentWithHitPointsLostInfo[]): void {
   const terminatedAgentCount = agentsWithResults.filter(({ agent }) => agent.state === 'Terminated').length
 
   for (const { agent, hitPointsLost } of agentsWithResults) {
@@ -138,7 +138,7 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
     (agentA, agentB) => getEffectiveSkill(agentA) - getEffectiveSkill(agentB),
   )
 
-  const agentsWithHitPointsLost: AgentWithHitPointsLost[] = []
+  const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []
 
   // Process each agent's rolls
   for (const agent of sortedAgents) {

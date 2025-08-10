@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
-import { validateAvailableAgents } from '../model/AgentService'
+import { createAgentsView } from '../model/views/AgentViews'
 import { formatAgentCount } from '../utils/formatUtils'
 import { validateMissionSiteDeployment } from '../model/MissionSiteService'
 import {
@@ -38,7 +38,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleSackAgents(): void {
     // Validate that all selected agents are available
-    const validation = validateAvailableAgents(agents, selectedAgentIds)
+    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
 
     if (!validation.isValid) {
       setAlertMessage(validation.errorMessage ?? 'Unknown error')
@@ -53,7 +53,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToContracting(): void {
     // Validate that all selected agents are available
-    const validation = validateAvailableAgents(agents, selectedAgentIds)
+    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
 
     if (!validation.isValid) {
       setAlertMessage(validation.errorMessage ?? 'Unknown error')
@@ -68,7 +68,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToEspionage(): void {
     // Validate that all selected agents are available
-    const validation = validateAvailableAgents(agents, selectedAgentIds)
+    const validation = createAgentsView(agents).validateAvailable(selectedAgentIds)
 
     if (!validation.isValid) {
       setAlertMessage(validation.errorMessage ?? 'Unknown error')
@@ -135,7 +135,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agents are available
-    const agentValidation = validateAvailableAgents(agents, selectedAgentIds)
+    const agentValidation = createAgentsView(agents).validateAvailable(selectedAgentIds)
     if (!agentValidation.isValid) {
       setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)

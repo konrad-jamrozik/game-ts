@@ -1,4 +1,3 @@
-import { floor } from '../utils/mathUtils'
 import type { Agent } from './model'
 
 // KJA domain classes instead of *Service classes. E.g. Agent or Agents.
@@ -8,52 +7,8 @@ import type { Agent } from './model'
  */
 
 /**
- * Calculates the effective skill of an agent. Refer to about_agents.md for details.
+ * Note: Functions previously in this file have been moved to `utils/agentsUtils.ts`.
  */
-export function getEffectiveSkill(agent: Agent): number {
-  const hitPointsLost = agent.maxHitPoints - agent.hitPoints
-  const hitPointsReduction = agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0
-  const exhaustionReduction = agent.exhaustion / 100
-
-  const result = agent.skill * (1 - hitPointsReduction) * (1 - exhaustionReduction)
-  return floor(result)
-}
-
-/**
- * Validates that all selected agents are in "Available" state
- */
-export function validateAvailableAgents(
-  agents: Agent[],
-  selectedAgentIds: string[],
-): {
-  isValid: boolean
-  errorMessage?: string
-  nonAvailableAgents: Agent[]
-} {
-  if (selectedAgentIds.length === 0) {
-    return {
-      isValid: false,
-      errorMessage: 'No agents selected!',
-      nonAvailableAgents: [],
-    }
-  }
-
-  const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-  const nonAvailableAgents = selectedAgents.filter((agent) => agent.state !== 'Available')
-
-  if (nonAvailableAgents.length > 0) {
-    return {
-      isValid: false,
-      errorMessage: 'This action can be done only on available agents!',
-      nonAvailableAgents,
-    }
-  }
-
-  return {
-    isValid: true,
-    nonAvailableAgents: [],
-  }
-}
 
 /**
  * Gets agents by their IDs
