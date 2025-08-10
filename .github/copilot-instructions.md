@@ -7,6 +7,7 @@ This repository is a personal game prototype by Konrad Jamrozik.
 The game is a purely client-side web app, using:
 
 - TypeScript as the language
+- PowerShell as the shell / terminal
 - Vite as the build system
 - React as the UI framework
 - Redux Toolkit for state management
@@ -24,6 +25,8 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 ## Key aspects and conventions of the project
 
 **Sources**: The main web app sources is in `web/`. See Tech Stack below for details.
+
+**Shell**: PowerShell is used throughout the project. Use it for all shell / terminal commands.
 
 **Language**: TypeScript is used throughout the project. Uses project references and modern ES2024 features.
 
@@ -48,6 +51,7 @@ Run all of the below commands from the `web/` directory to verify your work:
 This project uses following technologies:
 
 - GitHub pages
+- PowerShell
 - IndexedDB with Dexie.js
 - MUI (Material-UI)
 - Node.js

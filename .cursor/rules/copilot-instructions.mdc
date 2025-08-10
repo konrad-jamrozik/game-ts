@@ -55,6 +55,7 @@ Run all of the below commands from the `web/` directory to verify your work:
 This project uses following technologies:
 
 - GitHub pages
+- PowerShell
 - IndexedDB with Dexie.js
 - MUI (Material-UI)
 - Node.js
