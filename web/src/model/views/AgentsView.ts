@@ -3,17 +3,18 @@ import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariant
 import type { Agent } from '../model'
 import { createAgentView, type AgentView } from './AgentView'
 
-export type AgentsView = AgentView[] & {
-  getTerminated(): AgentsView
-  inTransit(): AgentsView
-  deployedOnMissionSite(missionSiteId: string): AgentsView
-  validateAvailable(selectedAgentIds: string[]): {
-    isValid: boolean
-    errorMessage?: string
-    nonAvailableAgents: Agent[]
-  }
-  validateInvariants(): void
-}
+export type AgentsView = readonly AgentView[] &
+  Readonly<{
+    getTerminated(): AgentsView
+    inTransit(): AgentsView
+    deployedOnMissionSite(missionSiteId: string): AgentsView
+    validateAvailable(selectedAgentIds: string[]): Readonly<{
+      isValid: boolean
+      errorMessage?: string
+      nonAvailableAgents: readonly Agent[]
+    }>
+    validateInvariants(): void
+  }>
 
 export function createAgentsView(agents: Agent[]): AgentsView {
   const agentViews: AgentView[] = agents.map((agent) => createAgentView(agent))
@@ -45,7 +46,7 @@ export function createAgentsView(agents: Agent[]): AgentsView {
             )
           }),
         ),
-      validateAvailable: (selectedAgentIds: string[]) => validateAvailable(agents, selectedAgentIds),
+      validateAvailable: (selectedAgentIds: string[]) => Object.freeze(validateAvailable(agents, selectedAgentIds)),
       validateInvariants: (): void => {
         agentViewArray.forEach((agentView) => {
           const underlyingAgent = viewToAgent.get(agentView)
@@ -56,7 +57,7 @@ export function createAgentsView(agents: Agent[]): AgentsView {
       },
     })
 
-    return augmented
+    return Object.freeze(augmented) as AgentsView
   }
 
   return fromAgentViewArray(agentViews)
