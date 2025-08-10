@@ -7,7 +7,6 @@ import {
   AGENT_INITIAL_HIT_POINTS,
 } from '../ruleset/constants'
 import initialState, { makeInitialState } from '../ruleset/initialState'
-import { assertEqual } from '../utils/assert'
 import advanceTurnImpl from './advanceTurnImpl'
 import type { Agent, MissionSite } from './model'
 

@@ -32,12 +32,13 @@ function isPlayerAction(action: unknown): action is { meta: { playerAction: bool
 const undoableReducer = undoable(combinedReducer, {
   // You can pass options to undoable here
   limit: UNDO_LIMIT + 1, // Up to UNDO_LIMIT player actions can be undone/redone
-  // 🚧KJA 2 problem with isPlayerAction undo filter:
-  // when player action is dispatched, it may result in bunch of events happening after it.
-  // The game state should be persisted *AFTER* all those events are processed, not *BEFORE*.
-  // Perhaps instead need to group actions together to always start with player action:
+  // Note: because of this filter, we are going to take a snapshot of game state immediately
+  // after each player action, including turn advancement.
+  // This means that no other events can happen after these events, otherwise they won't
+  // be included in the snapshot.
+  // If this is needed, possible solution is to group actions together to always start with player action:
   // https://github.com/omnidan/redux-undo#custom-groupby-function
-  filter: (action) => isPlayerAction(action) && action.meta.playerAction,
+  filter: (action) => isPlayerAction(action),
 })
 
 // Combine undoable and non-undoable reducers
