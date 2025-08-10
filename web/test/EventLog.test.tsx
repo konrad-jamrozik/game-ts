@@ -45,7 +45,7 @@ describe(EventLog, () => {
   test('shows "New game started" event when store initializes without persisted state', async () => {
     expect.hasAssertions()
 
-    const { addEvent } = await import('../src/model/eventsSlice')
+    const { addTextEvent: addEvent } = await import('../src/model/eventsSlice')
     const state = store.getState()
     const { gameState } = state.undoable.present
 

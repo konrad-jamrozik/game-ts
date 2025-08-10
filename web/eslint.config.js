@@ -175,6 +175,9 @@ export default plugTypescriptEslint.config([
       // I like ternaries
       // https://eslint.org/docs/latest/rules/no-ternary
       'no-ternary': 'off',
+      // Omitting curly braces is sometimes more readable.
+      // https://eslint.org/docs/latest/rules/curly
+      curly: 'off',
 
       // [ts-eslint] configs
       // --------------------

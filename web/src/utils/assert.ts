@@ -22,3 +22,7 @@ export function assertOneOf<T>(
     throw new Error(errMsg)
   }
 }
+
+export function assertUnreachable(value: never): never {
+  throw new Error(`Unreachable code reached. Received: ${JSON.stringify(value)}`)
+}

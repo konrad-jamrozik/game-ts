@@ -57,7 +57,7 @@ export const store = configureStore({
 // If no persisted state was loaded, add a "New game started" event
 if (!maybePersistedState) {
   // Import addEvent dynamically to avoid circular dependency
-  const { addEvent } = await import('../model/eventsSlice')
+  const { addTextEvent: addEvent } = await import('../model/eventsSlice')
   const state = store.getState()
   const { gameState } = state.undoable.present
 

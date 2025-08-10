@@ -2,7 +2,7 @@ import type { Middleware } from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../collections/missions'
-import { addEvent } from '../model/eventsSlice'
+import { addMissionCompletedEvent, addTextEvent } from '../model/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -14,6 +14,7 @@ import {
   reset,
   sackAgents,
 } from '../model/gameStateSlice'
+import type { MissionRewards } from '../model/model'
 import type { RootState } from './store'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
@@ -30,7 +31,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line complexity, max-statements
+  // eslint-disable-next-line max-statements
   return (store) => (next) => (action) => {
     // Get the state before the action for comparison
     const previousState = store.getState()
@@ -43,16 +44,21 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     const state = store.getState()
     const { gameState } = state.undoable.present
 
-    // Single helper to post an event using current turn/actionsCount
-    function postEvent(message: string): void {
-      store.dispatch(addEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
+    function postTextEvent(message: string): void {
+      store.dispatch(addTextEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
+    }
+
+    function postMissionCompletedEvent(missionTitle: string, rewards: MissionRewards): void {
+      store.dispatch(
+        addMissionCompletedEvent({ missionTitle, rewards, turn: gameState.turn, actionsCount: gameState.actionsCount }),
+      )
     }
 
     // Dispatch events based on the action
     if (advanceTurn.match(action)) {
-      postEvent(`Turn ${gameState.turn} started`)
+      postTextEvent(`Turn ${gameState.turn} started`)
 
-      // Check for newly successful missions and log their rewards
+      // Check for newly successful missions and log a consolidated mission completion event
       const previouslySuccessfulMissionIds = new Set(
         previousGameState.missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
       )
@@ -61,46 +67,30 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
         .filter((site) => site.state === 'Successful' && !previouslySuccessfulMissionIds.has(site.missionId))
         .map((site) => getMissionById(site.missionId))
 
-      // 🚧KJA consolidate these into one event "mission completion" and make it new type of event, not player action event.
       for (const mission of newlySuccessfulMissions) {
-        postEvent(`Mission "${mission.title}" completed successfully!`)
-
-        // Log individual rewards
-        const { rewards } = mission
-        if (rewards.money !== undefined) {
-          postEvent(`Received $${rewards.money} from mission completion`)
-        }
-        if (rewards.intel !== undefined) {
-          postEvent(`Gained ${rewards.intel} intel from mission completion`)
-        }
-        if (rewards.funding !== undefined) {
-          postEvent(`Received ${rewards.funding} funding from mission completion`)
-        }
-        if (rewards.panicReduction !== undefined) {
-          postEvent(`Panic reduced by ${rewards.panicReduction} from mission completion`)
-        }
+        postMissionCompletedEvent(mission.title, mission.rewards)
       }
     } else if (hireAgent.match(action)) {
-      postEvent('Agent hired')
+      postTextEvent('Agent hired')
     } else if (sackAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postEvent(`Sacked ${agentCount} ${pluralize('agent', agentCount)}`)
+      postTextEvent(`Sacked ${agentCount} ${pluralize('agent', agentCount)}`)
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to contracting`)
+      postTextEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to contracting`)
     } else if (assignAgentsToEspionage.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to espionage`)
+      postTextEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to espionage`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postEvent(`Recalled ${agentCount} ${pluralize('agent', agentCount)}`)
+      postTextEvent(`Recalled ${agentCount} ${pluralize('agent', agentCount)}`)
     } else if (investigateLead.match(action)) {
       const { leadId, intelCost } = action.payload
-      postEvent(`Investigated lead: ${leadId} (cost: ${intelCost} intel)`)
+      postTextEvent(`Investigated lead: ${leadId} (cost: ${intelCost} intel)`)
     } else if (deployAgentsToMission.match(action)) {
       const { missionSiteId, agentIds } = action.payload
       const agentCount = agentIds.length
@@ -109,15 +99,15 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
       const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
 
-      postEvent(`Deployed ${agentCount} ${pluralize('agent', agentCount)} to mission: ${missionTitle}`)
+      postTextEvent(`Deployed ${agentCount} ${pluralize('agent', agentCount)} to mission: ${missionTitle}`)
     } else if (reset.match(action)) {
-      postEvent('Game reset')
+      postTextEvent('Game reset')
     } else if (hasType(action) && ActionCreators.undo().type === action.type) {
-      postEvent('Action undone')
+      postTextEvent('Action undone')
     } else if (hasType(action) && ActionCreators.redo().type === action.type) {
-      postEvent('Action redone')
+      postTextEvent('Action redone')
     } else if (hasType(action) && ActionCreators.jumpToPast(0).type === action.type) {
-      postEvent('Turn reset')
+      postTextEvent('Turn reset')
     }
 
     return result
