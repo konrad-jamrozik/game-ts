@@ -10,6 +10,8 @@ import settingsReducer from '../model/settingsSlice'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
 
+export const UNDO_LIMIT = 100
+
 const combinedReducer = combineReducers({
   counter: counterReducer,
   gameState: gameStateReducer,
@@ -29,7 +31,7 @@ function isPlayerAction(action: unknown): action is { meta: { playerAction: bool
 // undoable is from https://github.com/omnidan/redux-undo
 const undoableReducer = undoable(combinedReducer, {
   // You can pass options to undoable here
-  limit: 100, // Up to 100 player actions can be undone/redone
+  limit: UNDO_LIMIT, // Up to UNDO_LIMIT player actions can be undone/redone
   // 🚧KJA 2 problem with isPlayerAction undo filter:
   // when player action is dispatched, it may result in bunch of events happening after it.
   // The game state should be persisted *AFTER* all those events are processed, not *BEFORE*.
