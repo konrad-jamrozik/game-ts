@@ -19,6 +19,11 @@ export type AgentsView = readonly AgentView[] &
 export function agsV(agents: Agent[]): AgentsView {
   const agentViews: AgentView[] = agents.map((agent) => agV(agent))
 
+  // KJA this viewToAgent map should not be necessary. It is here right now
+  // because there is some logic applied directly to Agent, extracted from AgentView.
+  // But instead, there should be a function called on AgentView, and AgentView should
+  // use its internal/private Agent reference to do the work.
+  // ---
   // Map view -> underlying agent for internal predicates that require raw state
   const viewToAgent = new WeakMap<AgentView, Agent>()
   agents.forEach((agent, agentIndex) => {
@@ -28,15 +33,14 @@ export function agsV(agents: Agent[]): AgentsView {
     }
   })
 
-  function fromAgentViewArray(views: AgentView[]): AgentsView {
+  function toAgentsView(views: AgentView[]): AgentsView {
     // Create an array-like instance and augment with chainable helpers
     const agentViewArray: AgentView[] = [...views]
     const augmented = Object.assign(agentViewArray, {
-      getTerminated: (): AgentsView =>
-        fromAgentViewArray(agentViewArray.filter((agentView) => agentView.isTerminated())),
-      inTransit: (): AgentsView => fromAgentViewArray(agentViewArray.filter((agentView) => agentView.isInTransit())),
+      getTerminated: (): AgentsView => toAgentsView(agentViewArray.filter((agentView) => agentView.isTerminated())),
+      inTransit: (): AgentsView => toAgentsView(agentViewArray.filter((agentView) => agentView.isInTransit())),
       deployedOnMissionSite: (missionSiteId: string): AgentsView =>
-        fromAgentViewArray(
+        toAgentsView(
           agentViewArray.filter((agentView) => {
             const underlyingAgent = viewToAgent.get(agentView)
             return (
@@ -60,7 +64,7 @@ export function agsV(agents: Agent[]): AgentsView {
     return Object.freeze(augmented) as AgentsView
   }
 
-  return fromAgentViewArray(agentViews)
+  return toAgentsView(agentViews)
 }
 
 // Validates that all selected agents are in "Available" state
