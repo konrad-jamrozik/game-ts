@@ -1,6 +1,6 @@
 import { factions } from '../collections/factions'
 import type { GameState } from '../model/model'
-import { validateAgentInvariants } from '../utils/validation'
+import { validateAgentInvariants } from '../utils/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
 
 export function makeInitialState(options?: { debug?: boolean }): GameState {
@@ -32,9 +32,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     gameState = { ...gameState, ...debugOverrides }
   }
 
-  for (const agent of gameState.agents) {
-    validateAgentInvariants(agent, gameState)
-  }
+  gameState.agents.forEach((agent) => validateAgentInvariants(agent, gameState))
 
   return gameState
 }

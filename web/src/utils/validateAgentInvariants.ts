@@ -5,7 +5,7 @@ import { assertDefined, assertEqual, assertOneOf } from './assert'
  * Validates invariants for a single agent within the context of a given game state.
  * Throws an Error if an invariant is violated.
  */
-function validateBasicStats(agent: Agent): void {
+function validateBasicStatRanges(agent: Agent): void {
   if (agent.hitPoints < 0 || agent.hitPoints > agent.maxHitPoints) {
     throw new Error(`Agent ${agent.id} has invalid hit points: ${agent.hitPoints}/${agent.maxHitPoints}`)
   }
@@ -14,6 +14,15 @@ function validateBasicStats(agent: Agent): void {
   }
   if (agent.skill < 0) {
     throw new Error(`Agent ${agent.id} has negative skill: ${agent.skill}`)
+  }
+  if (agent.hitPointsLostBeforeRecovery < 0) {
+    throw new Error(`Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${agent.hitPointsLostBeforeRecovery}`)
+  }
+  if (agent.recoveryTurns < 0) {
+    throw new Error(`Agent ${agent.id} has negative recoveryTurns: ${agent.recoveryTurns}`)
+  }
+  if (agent.maxHitPoints <= 0) {
+    throw new Error(`Agent ${agent.id} has non-positive maxHitPoints: ${agent.maxHitPoints}`)
   }
 }
 
@@ -122,11 +131,15 @@ function validateMissionAssignment(agent: Agent, state: GameState): void {
   assertDefined(site, `Agent ${agent.id} is assigned to ${missionSiteId}, but the mission site does not exist`)
 }
 
-export function validateAgentInvariants(agent: Agent, state: GameState): void {
-  validateBasicStats(agent)
+export function validateAgentLocalInvariants(agent: Agent): void {
+  validateBasicStatRanges(agent)
   validateTermination(agent)
   validateInjuryAndAssignment(agent)
   validateRecoveryStateConsistency(agent)
   validateRecoveryMath(agent)
+}
+
+export function validateAgentInvariants(agent: Agent, state: GameState): void {
+  validateAgentLocalInvariants(agent)
   validateMissionAssignment(agent, state)
 }
