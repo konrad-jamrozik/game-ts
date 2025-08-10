@@ -15,6 +15,7 @@ import {
   sackAgents,
 } from '../model/gameStateSlice'
 import type { MissionRewards } from '../model/model'
+import { isMissionSiteConcluded } from '../model/modelDerived'
 import type { RootState } from './store'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
@@ -59,15 +60,15 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       postTextEvent(`Turn ${gameState.turn} started`)
 
       // Check for newly successful missions and log a consolidated mission completion event
-      const previouslySuccessfulMissionIds = new Set(
-        previousGameState.missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
+      const previouslyConcludedMissionSiteIds = new Set(
+        previousGameState.missionSites.filter((site) => isMissionSiteConcluded(site)).map((site) => site.missionId),
       )
 
-      const newlySuccessfulMissions = gameState.missionSites
-        .filter((site) => site.state === 'Successful' && !previouslySuccessfulMissionIds.has(site.missionId))
+      const newlyConcludedMissionSites = gameState.missionSites
+        .filter((site) => isMissionSiteConcluded(site) && !previouslyConcludedMissionSiteIds.has(site.missionId))
         .map((site) => getMissionById(site.missionId))
 
-      for (const mission of newlySuccessfulMissions) {
+      for (const mission of newlyConcludedMissionSites) {
         postMissionCompletedEvent(mission.title, mission.rewards)
       }
     } else if (hireAgent.match(action)) {

@@ -1,4 +1,4 @@
-import type { GameState } from '../model/model'
+import type { GameState, MissionSite } from '../model/model'
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
 import { floor } from '../utils/mathUtils'
 import { getEffectiveSkill } from './AgentService'
@@ -46,4 +46,8 @@ export function getMoneyNewBalance(gameState: GameState): number {
 
 export function getIntelNewBalance(gameState: GameState): number {
   return gameState.intel + getIntelDiff(gameState)
+}
+
+export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
+  return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
 }
