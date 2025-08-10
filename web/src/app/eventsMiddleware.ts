@@ -2,7 +2,7 @@ import type { Middleware } from '@reduxjs/toolkit'
 import pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../collections/missions'
-import { addMissionCompletedEvent, addTextEvent, clearEvents } from '../model/eventsSlice'
+import { addMissionCompletedEvent, addTextEvent, clearEvents, truncateEventsTo } from '../model/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -14,6 +14,7 @@ import {
   reset,
   sackAgents,
 } from '../model/gameStateSlice'
+import isPlayerAction from '../model/isPlayerAction'
 import type { Agent, MissionRewards, MissionSite, MissionSiteState } from '../model/model'
 import { isMissionSiteConcluded } from '../model/modelDerived'
 import type { RootState } from './store'
@@ -37,6 +38,13 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     // Get the state before the action for comparison
     const previousState = store.getState()
     const previousGameState = previousState.undoable.present.gameState
+
+    // Before we apply any player action or turn advancement,
+    // truncate any events that occurred after it.
+    // This ensures the event log remains consistent with the undo/redo timeline.
+    if (isPlayerAction(action) || advanceTurn.match(action)) {
+      store.dispatch(truncateEventsTo({ turn: previousGameState.turn, actionsCount: previousGameState.actionsCount }))
+    }
 
     // Call the next middleware/reducer first to update the state
     const result = next(action)
@@ -73,9 +81,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
         }),
       )
     }
-
-    // KJA if the action isPlayerAction() or advanceTurn, then
-    // truncateEventsTo should be called with the current turn and actionsCount
 
     // Dispatch events based on the action
     if (advanceTurn.match(action)) {
