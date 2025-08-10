@@ -83,18 +83,24 @@ export type Faction = {
 }
 
 export type GameState = {
-  actionsCount: number
+  // Session
   turn: number
+  actionsCount: number
+  // Situation
+  panic: number
+  factions: Faction[]
+  // Counters
+  nextAgentId: number
+  nextMissionSiteId: number
+  // Assets
   money: number
   intel: number
   funding: number
   hireCost: number
-  nextAgentId: number
   agents: Agent[]
-  nextMissionSiteId: number
+  // Leads
   investigatedLeadIds: string[]
   leadInvestigationCounts: Record<string, number>
+  // Mission sites
   missionSites: MissionSite[]
-  panic: number
-  factions: Faction[]
 }

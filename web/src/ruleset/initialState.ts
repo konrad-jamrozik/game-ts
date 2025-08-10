@@ -7,20 +7,26 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
 
   const normalGameState: GameState = {
+    // Session
     turn: 1,
     actionsCount: 0,
-    nextAgentId: 0,
-    nextMissionSiteId: 0,
-    hireCost: 50,
+    // Situation
     panic: 0,
     factions,
-    missionSites: [],
-    agents: [],
+    // Counters
+    nextAgentId: 0,
+    nextMissionSiteId: 0,
+    // Assets
     money: 500,
     intel: 0,
     funding: 20,
+    hireCost: 50,
+    agents: [],
+    // Leads
     investigatedLeadIds: [],
     leadInvestigationCounts: {},
+    // Mission sites
+    missionSites: [],
   }
 
   let gameState: GameState = normalGameState
