@@ -4,22 +4,10 @@ import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
-export type AgentsView = readonly AgentView[] &
-  Readonly<{
-    withIds(ids: readonly string[]): AgentsView
-    notAvailable(): AgentsView
-    notOnAssignment(): AgentsView
-    getTerminated(): AgentsView
-    inTransit(): AgentsView
-    deployedOnMissionSite(missionSiteId: string): AgentsView
-    validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
-    validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
-    validateInvariants(): void
-    toAgentArray(): Agent[]
-  }>
+export type AgentsView = readonly AgentView[] & AgentsViewMethods
 
 export function agsV(agents: Agent[]): AgentsView {
-  const allAgentsViewArray: AgentView[] = agents.map((agent) => agV(agent))
+  const allAgentViewArr: AgentView[] = agents.map((agent) => agV(agent))
 
   // KJA this viewToAgent map should not be necessary. It is here right now
   // because there is some logic applied directly to Agent, extracted from AgentView.
@@ -29,7 +17,7 @@ export function agsV(agents: Agent[]): AgentsView {
   // Map view -> underlying agent for internal predicates that require raw state
   const viewToAgent = new WeakMap<AgentView, Agent>()
   agents.forEach((agent, agentIndex) => {
-    const correspondingAgentView = allAgentsViewArray[agentIndex]
+    const correspondingAgentView = allAgentViewArr[agentIndex]
     if (correspondingAgentView !== undefined) {
       viewToAgent.set(correspondingAgentView, agent)
     }
@@ -38,61 +26,88 @@ export function agsV(agents: Agent[]): AgentsView {
   // Quick lookup from Agent id -> AgentView
   const agentIdToView = new Map<string, AgentView>()
   agents.forEach((agent, index) => {
-    const view = allAgentsViewArray[index]
+    const view = allAgentViewArr[index]
     if (view !== undefined) {
       agentIdToView.set(agent.id, view)
     }
   })
 
-  function toAgentsView(argAgentViewArray: AgentView[]): AgentsView {
-    const impl = {
-      withIds: (ids: readonly string[]): AgentsView =>
-        toAgentsView(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
-      notAvailable: (): AgentsView => toAgentsView(argAgentViewArray.filter((agent) => !agent.isAvailable())),
-      notOnAssignment: (): AgentsView => toAgentsView(argAgentViewArray.filter((agent) => !agent.isOnAssignment())),
-      getTerminated: (): AgentsView => toAgentsView(argAgentViewArray.filter((agentView) => agentView.isTerminated())),
-      inTransit: (): AgentsView => toAgentsView(argAgentViewArray.filter((agentView) => agentView.isInTransit())),
-      deployedOnMissionSite: (missionSiteId: string): AgentsView =>
-        toAgentsView(
-          argAgentViewArray.filter((agentView) => {
-            const underlyingAgent = viewToAgent.get(agentView)
-            return (
-              underlyingAgent !== undefined &&
-              underlyingAgent.assignment === missionSiteId &&
-              underlyingAgent.state === 'OnMission'
-            )
-          }),
-        ),
-      validateAvailable: (selectedAgentIds: string[]): ValidateAgentsResult =>
-        validateAvailableAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
-      validateOnAssignment: (selectedAgentIds: string[]): ValidateAgentsResult =>
-        validateOnAssignmentAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
-      validateInvariants: (): void => {
-        argAgentViewArray.forEach((agentView) => {
-          const underlyingAgent = viewToAgent.get(agentView)
-          if (underlyingAgent !== undefined) {
-            validateAgentLocalInvariants(underlyingAgent)
-          }
-        })
-      },
-      // KJA use toAgentArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
-      toAgentArray: (): Agent[] =>
-        argAgentViewArray.map((agentView) => {
-          const agent = viewToAgent.get(agentView)
-          if (agent === undefined) {
-            throw new Error(`Agent not found for view: ${JSON.stringify(agentView)}`)
-          }
-          return agent
-        }),
-    }
-    const agentsView: AgentsView = Object.assign([...argAgentViewArray], impl)
+  function toAgentsView(agentViewArr: AgentView[]): AgentsView {
+    const agentsViewMethods: AgentsViewMethods = getAgentsViewMethods(
+      agentViewArr,
+      agentIdToView,
+      viewToAgent,
+      toAgentsView,
+    )
+    const agentsView: AgentsView = Object.assign([...agentViewArr], agentsViewMethods)
 
     return Object.freeze(agentsView)
   }
 
-  return toAgentsView(allAgentsViewArray)
+  return toAgentsView(allAgentViewArr)
 }
 
+type AgentsViewMethods = Readonly<{
+  withIds(ids: readonly string[]): AgentsView
+  notAvailable(): AgentsView
+  notOnAssignment(): AgentsView
+  getTerminated(): AgentsView
+  inTransit(): AgentsView
+  deployedOnMissionSite(missionSiteId: string): AgentsView
+  validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
+  validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
+  validateInvariants(): void
+  toAgentArray(): Agent[]
+}>
+
+function getAgentsViewMethods(
+  agentViewArr: AgentView[],
+  agentIdToView: Map<string, AgentView>,
+  viewToAgent: WeakMap<AgentView, Agent>,
+  toAgentsView: (agentViewArray: AgentView[]) => AgentsView,
+): AgentsViewMethods {
+  const methods: AgentsViewMethods = {
+    withIds: (ids: readonly string[]): AgentsView =>
+      toAgentsView(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
+    notAvailable: (): AgentsView => toAgentsView(agentViewArr.filter((agent) => !agent.isAvailable())),
+    notOnAssignment: (): AgentsView => toAgentsView(agentViewArr.filter((agent) => !agent.isOnAssignment())),
+    getTerminated: (): AgentsView => toAgentsView(agentViewArr.filter((agentView) => agentView.isTerminated())),
+    inTransit: (): AgentsView => toAgentsView(agentViewArr.filter((agentView) => agentView.isInTransit())),
+    deployedOnMissionSite: (missionSiteId: string): AgentsView =>
+      toAgentsView(
+        agentViewArr.filter((agentView) => {
+          const underlyingAgent = viewToAgent.get(agentView)
+          return (
+            underlyingAgent !== undefined &&
+            underlyingAgent.assignment === missionSiteId &&
+            underlyingAgent.state === 'OnMission'
+          )
+        }),
+      ),
+    validateAvailable: (selectedAgentIds: string[]): ValidateAgentsResult =>
+      validateAvailableAgents(toAgentsView(agentViewArr), selectedAgentIds),
+    validateOnAssignment: (selectedAgentIds: string[]): ValidateAgentsResult =>
+      validateOnAssignmentAgents(toAgentsView(agentViewArr), selectedAgentIds),
+    validateInvariants: (): void => {
+      agentViewArr.forEach((agentView) => {
+        const underlyingAgent = viewToAgent.get(agentView)
+        if (underlyingAgent !== undefined) {
+          validateAgentLocalInvariants(underlyingAgent)
+        }
+      })
+    },
+    // KJA use toAgentArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
+    toAgentArray: (): Agent[] =>
+      agentViewArr.map((agentView) => {
+        const agent = viewToAgent.get(agentView)
+        if (agent === undefined) {
+          throw new Error(`Agent not found for view: ${JSON.stringify(agentView)}`)
+        }
+        return agent
+      }),
+  }
+  return methods
+}
 // KJA implement memoized selector for AgentsView:
 //
 // const selectAgentsArray = (state: RootState) => state.undoable.present.gameState.agents
