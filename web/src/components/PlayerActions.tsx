@@ -83,12 +83,9 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleRecallAgents(): void {
     // Check if all selected agents are in "OnAssignment" state
-    // KJA need analogous func to validateAvailableAgents but for OnAssignment
-    const selectedAgents = agents.filter((agent) => selectedAgentIds.includes(agent.id))
-    const nonOnAssignmentAgents = selectedAgents.filter((agent) => agent.state !== 'OnAssignment')
-
-    if (nonOnAssignmentAgents.length > 0) {
-      setAlertMessage('This action can be done only on OnAssignment agents!')
+    const validationResult = agentsView.validateOnAssignment(selectedAgentIds)
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
       return
     }

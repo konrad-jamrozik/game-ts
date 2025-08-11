@@ -2,16 +2,19 @@ import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariant
 import type { Agent } from '../model'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, type ValidateAvailableAgentsResult } from './validateAvailableAgents'
+import { validateOnAssignmentAgents, type ValidateOnAssignmentAgentsResult } from './validateOnAssignmentAgents'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
 export type AgentsView = readonly AgentView[] &
   Readonly<{
     withIds(ids: readonly string[]): AgentsView
     notAvailable(): AgentsView
+    notOnAssignment(): AgentsView
     getTerminated(): AgentsView
     inTransit(): AgentsView
     deployedOnMissionSite(missionSiteId: string): AgentsView
     validateAvailable(selectedAgentIds: string[]): ValidateAvailableAgentsResult
+    validateOnAssignment(selectedAgentIds: string[]): ValidateOnAssignmentAgentsResult
     validateInvariants(): void
     toAgentArray(): Agent[]
   }>
@@ -47,6 +50,7 @@ export function agsV(agents: Agent[]): AgentsView {
       withIds: (ids: readonly string[]): AgentsView =>
         toAgentsView(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
       notAvailable: (): AgentsView => toAgentsView(argAgentViewArray.filter((agent) => !agent.isAvailable())),
+      notOnAssignment: (): AgentsView => toAgentsView(argAgentViewArray.filter((agent) => !agent.isOnAssignment())),
       getTerminated: (): AgentsView => toAgentsView(argAgentViewArray.filter((agentView) => agentView.isTerminated())),
       inTransit: (): AgentsView => toAgentsView(argAgentViewArray.filter((agentView) => agentView.isInTransit())),
       deployedOnMissionSite: (missionSiteId: string): AgentsView =>
@@ -62,6 +66,8 @@ export function agsV(agents: Agent[]): AgentsView {
         ),
       validateAvailable: (selectedAgentIds: string[]): ValidateAvailableAgentsResult =>
         validateAvailableAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
+      validateOnAssignment: (selectedAgentIds: string[]): ValidateOnAssignmentAgentsResult =>
+        validateOnAssignmentAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
       validateInvariants: (): void => {
         argAgentViewArray.forEach((agentView) => {
           const underlyingAgent = viewToAgent.get(agentView)

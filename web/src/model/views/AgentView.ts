@@ -8,6 +8,7 @@ export type AgentView = Readonly<{
   isDeployedOnMissionSite(missionSiteId: string): boolean
   effectiveSkill(): number
   isAvailable(): boolean
+  isOnAssignment(): boolean
   validateInvariants(): void
   agent(): Agent
 }>
@@ -19,6 +20,7 @@ export function agV(agent: Agent): AgentView {
     isDeployedOnMissionSite: (missionSiteId: string) => agent.assignment === missionSiteId,
     effectiveSkill: () => effectiveSkill(agent),
     isAvailable: () => agent.state === 'Available',
+    isOnAssignment: () => agent.state === 'OnAssignment',
     validateInvariants: () => validateAgentLocalInvariants(agent),
     agent: () => agent,
   }
