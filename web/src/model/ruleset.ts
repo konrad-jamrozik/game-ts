@@ -1,6 +1,7 @@
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
 import { floor } from '../utils/mathUtils'
-import type { AgentsView } from './views/AgentsView'
+import type { GameState, MissionSite } from './model'
+import { agsV, type AgentsView } from './views/AgentsView'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST
@@ -24,4 +25,24 @@ export function getEspionageIntel(agents: AgentsView): number {
     total += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
   }
   return total
+}
+export function getMoneyDiff(gameState: GameState): number {
+  const agents = agsV(gameState.agents)
+  return gameState.funding + agents.contractingIncome() - agents.agentUpkeep() - gameState.hireCost
+}
+
+export function getIntelDiff(gameState: GameState): number {
+  return agsV(gameState.agents).espionageIntel()
+}
+
+export function getMoneyNewBalance(gameState: GameState): number {
+  return gameState.money + getMoneyDiff(gameState)
+}
+
+export function getIntelNewBalance(gameState: GameState): number {
+  return gameState.intel + getIntelDiff(gameState)
+}
+
+export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
+  return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
 }

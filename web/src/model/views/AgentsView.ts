@@ -84,7 +84,7 @@ function getAgentsViewMethods(
   }
   return methods
 }
-// KJA implement memoized selector for AgentsView. Then use it instead of the many invocations of agsV or agV.
+// KJA implement memoized selector for AgentsView. Then augment gameState with it (so it has AgentsView instead of just Agent[]) and use it instead of the many invocations of agsV or agV.
 //
 // const selectAgentsArray = (state: RootState) => state.undoable.present.gameState.agents
 //

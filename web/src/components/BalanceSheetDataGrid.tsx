@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
-import { getMoneyDiff, getMoneyNewBalance, getIntelDiff } from '../model/modelDerived'
+import { getMoneyDiff, getMoneyNewBalance, getIntelDiff } from '../model/ruleset'
 import { agsV } from '../model/views/AgentsView'
 import { DataGridCard } from './DataGridCard'
 

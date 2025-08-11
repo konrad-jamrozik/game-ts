@@ -16,7 +16,7 @@ import {
 } from '../model/gameStateSlice'
 import isPlayerAction from '../model/isPlayerAction'
 import type { Agent, MissionRewards, MissionSite, MissionSiteState } from '../model/model'
-import { isMissionSiteConcluded } from '../model/modelDerived'
+import { isMissionSiteConcluded } from '../model/ruleset'
 import { agsV } from '../model/views/AgentsView'
 import type { RootState } from './store'
 

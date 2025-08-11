@@ -1,6 +1,6 @@
 import type { Agent } from './model'
 
-// 🚧 KJA migrate all service classes to the Agent(s)View model. Note I also have modelDerived.ts.
+// 🚧 KJA migrate all service classes to the Agent(s)View model.
 
 /**
  * Gets agents by their IDs
