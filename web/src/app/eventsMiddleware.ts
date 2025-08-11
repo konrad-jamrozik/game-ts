@@ -58,7 +58,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       store.dispatch(addTextEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
     }
 
-    // eslint-disable-next-line @typescript-eslint/max-params
     function postMissionCompletedEvent(
       missionTitle: string,
       rewards: MissionRewards,
