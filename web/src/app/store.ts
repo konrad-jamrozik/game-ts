@@ -27,6 +27,8 @@ const undoableReducer = undoable(combinedReducer, {
   // be included in the snapshot.
   // If this is needed, possible solution is to group actions together to always start with player action:
   // https://github.com/omnidan/redux-undo#custom-groupby-function
+  // Also ChatGPT-5 advice which appears to be solid:
+  // https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/6899963d-0c10-8328-88e5-047f2ee93d88
   filter: (action) => isPlayerAction(action) || advanceTurn.match(action),
 })
 
