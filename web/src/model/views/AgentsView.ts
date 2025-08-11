@@ -9,36 +9,11 @@ export type AgentsView = readonly AgentView[] & AgentsViewMethods
 export function agsV(agents: Agent[]): AgentsView {
   const allAgentViewArr: AgentView[] = agents.map((agent) => agV(agent))
 
-  // KJA this viewToAgent map should not be necessary. It is here right now
-  // because there is some logic applied directly to Agent, extracted from AgentView.
-  // But instead, there should be a function called on AgentView, and AgentView should
-  // use its internal/private Agent reference to do the work.
-  // ---
-  // Map view -> underlying agent for internal predicates that require raw state
-  const viewToAgent = new WeakMap<AgentView, Agent>()
-  agents.forEach((agent, agentIndex) => {
-    const correspondingAgentView = allAgentViewArr[agentIndex]
-    if (correspondingAgentView !== undefined) {
-      viewToAgent.set(correspondingAgentView, agent)
-    }
-  })
-
   // Quick lookup from Agent id -> AgentView
-  const agentIdToView = new Map<string, AgentView>()
-  agents.forEach((agent, index) => {
-    const view = allAgentViewArr[index]
-    if (view !== undefined) {
-      agentIdToView.set(agent.id, view)
-    }
-  })
+  const agentIdToView = buildAgentIdToView(agents, allAgentViewArr)
 
   function toAgentsView(agentViewArr: AgentView[]): AgentsView {
-    const agentsViewMethods: AgentsViewMethods = getAgentsViewMethods(
-      agentViewArr,
-      agentIdToView,
-      viewToAgent,
-      toAgentsView,
-    )
+    const agentsViewMethods: AgentsViewMethods = getAgentsViewMethods(agentViewArr, agentIdToView, toAgentsView)
     const agentsView: AgentsView = Object.assign([...agentViewArr], agentsViewMethods)
 
     return Object.freeze(agentsView)
@@ -63,7 +38,6 @@ type AgentsViewMethods = Readonly<{
 function getAgentsViewMethods(
   agentViewArr: AgentView[],
   agentIdToView: Map<string, AgentView>,
-  viewToAgent: WeakMap<AgentView, Agent>,
   toAgentsView: (agentViewArray: AgentView[]) => AgentsView,
 ): AgentsViewMethods {
   const methods: AgentsViewMethods = {
@@ -76,12 +50,8 @@ function getAgentsViewMethods(
     deployedOnMissionSite: (missionSiteId: string): AgentsView =>
       toAgentsView(
         agentViewArr.filter((agentView) => {
-          const underlyingAgent = viewToAgent.get(agentView)
-          return (
-            underlyingAgent !== undefined &&
-            underlyingAgent.assignment === missionSiteId &&
-            underlyingAgent.state === 'OnMission'
-          )
+          const underlyingAgent = agentView.agent()
+          return underlyingAgent.assignment === missionSiteId && underlyingAgent.state === 'OnMission'
         }),
       ),
     validateAvailable: (selectedAgentIds: string[]): ValidateAgentsResult =>
@@ -90,21 +60,12 @@ function getAgentsViewMethods(
       validateOnAssignmentAgents(toAgentsView(agentViewArr), selectedAgentIds),
     validateInvariants: (): void => {
       agentViewArr.forEach((agentView) => {
-        const underlyingAgent = viewToAgent.get(agentView)
-        if (underlyingAgent !== undefined) {
-          validateAgentLocalInvariants(underlyingAgent)
-        }
+        const underlyingAgent = agentView.agent()
+        validateAgentLocalInvariants(underlyingAgent)
       })
     },
     // KJA use toAgentArray everywhere where applicable. Search for "agent is Agent => agent !== undefined"
-    toAgentArray: (): Agent[] =>
-      agentViewArr.map((agentView) => {
-        const agent = viewToAgent.get(agentView)
-        if (agent === undefined) {
-          throw new Error(`Agent not found for view: ${JSON.stringify(agentView)}`)
-        }
-        return agent
-      }),
+    toAgentArray: (): Agent[] => agentViewArr.map((agentView) => agentView.agent()),
   }
   return methods
 }
@@ -119,3 +80,14 @@ function getAgentsViewMethods(
 //
 // See 4) Memoized selector that returns the wrapper
 // In https://chatgpt.com/c/68983db9-3fac-832d-ba85-3b9aaaa807d5
+
+function buildAgentIdToView(agents: Agent[], agentViews: AgentView[]): Map<string, AgentView> {
+  const map = new Map<string, AgentView>()
+  agents.forEach((agent, index) => {
+    const view = agentViews[index]
+    if (view !== undefined) {
+      map.set(agent.id, view)
+    }
+  })
+  return map
+}
