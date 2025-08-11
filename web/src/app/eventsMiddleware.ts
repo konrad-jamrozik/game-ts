@@ -47,7 +47,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       store.dispatch(truncateEventsTo({ turn: previousGameState.turn, actionsCount: previousGameState.actionsCount }))
     }
 
-    // Call the next middleware/reducer first to update the state
+    // Call the next middleware/reducer to update the state
     const result = next(action)
 
     // Get the updated state
