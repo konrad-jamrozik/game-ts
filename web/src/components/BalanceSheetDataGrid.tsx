@@ -1,12 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
-import {
-  getAgentUpkeep,
-  getContractedIncome,
-  getMoneyDiff,
-  getMoneyNewBalance,
-  getIntelDiff,
-} from '../model/modelDerived'
+import { getMoneyDiff, getMoneyNewBalance, getIntelDiff } from '../model/modelDerived'
+import { agsV } from '../model/views/AgentsView'
 import { DataGridCard } from './DataGridCard'
 
 export type BalanceSheetRow = {
@@ -16,8 +11,9 @@ export type BalanceSheetRow = {
 
 export function BalanceSheetDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const contracted = getContractedIncome(gameState)
-  const agentUpkeep = getAgentUpkeep(gameState)
+  const agents = agsV(gameState.agents)
+  const contracted = agents.contractingIncome()
+  const agentUpkeep = agents.agentUpkeep()
   const diff = getMoneyDiff(gameState)
   const newBalance = getMoneyNewBalance(gameState)
   const intelDiff = getIntelDiff(gameState)

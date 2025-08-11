@@ -9,6 +9,7 @@ import {
 } from './advanceTurnAgentUpdates'
 import type { GameState, MissionRewards, Faction, FactionRewards } from './model'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
+import { agsV } from './views/AgentsView'
 
 /**
  * Updates active non-deployed mission sites - apply expiration countdown
@@ -146,7 +147,7 @@ export default function advanceTurnImpl(state: GameState): void {
   state.actionsCount = 0
 
   // Calculate agent upkeep at the start of the turn, before any agents can be terminated
-  const agentUpkeep = getAgentUpkeep(state)
+  const agentUpkeep = agsV(state.agents).agentUpkeep()
 
   // Follow the order specified in about_turn_advancement.md:
 

@@ -9,6 +9,8 @@ export type AgentView = Readonly<{
   effectiveSkill(): number
   isAvailable(): boolean
   isOnAssignment(): boolean
+  isOnContractingAssignment(): boolean
+  isOnEspionageAssignment(): boolean
   validateInvariants(): void
   agent(): Agent
 }>
@@ -21,6 +23,8 @@ export function agV(agent: Agent): AgentView {
     effectiveSkill: () => effectiveSkill(agent),
     isAvailable: () => agent.state === 'Available',
     isOnAssignment: () => agent.state === 'OnAssignment',
+    isOnContractingAssignment: () => agV(agent).isOnAssignment() && agent.assignment === 'Contracting',
+    isOnEspionageAssignment: () => agV(agent).isOnAssignment() && agent.assignment === 'Espionage',
     validateInvariants: () => validateAgentLocalInvariants(agent),
     agent: () => agent,
   }

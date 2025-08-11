@@ -1,11 +1,11 @@
 import type { GameState, MissionSite } from '../model/model'
-import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
+import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL } from '../ruleset/constants'
 import { floor } from '../utils/mathUtils'
 import { agV } from './views/AgentView'
+import { agsV } from './views/AgentsView'
 
 export function getAgentUpkeep(gameState: GameState): number {
-  const nonTerminatedAgents = gameState.agents.filter((agent) => agent.state !== 'Terminated')
-  return nonTerminatedAgents.length * AGENT_UPKEEP_COST
+  return agsV(gameState.agents).agentUpkeep()
 }
 
 export function getContractedIncome(gameState: GameState): number {
@@ -33,11 +33,12 @@ export function getEspionageIntel(gameState: GameState): number {
 }
 
 export function getMoneyDiff(gameState: GameState): number {
-  return gameState.funding + getContractedIncome(gameState) - getAgentUpkeep(gameState) - gameState.hireCost
+  const agents = agsV(gameState.agents)
+  return gameState.funding + agents.contractingIncome() - agents.agentUpkeep() - gameState.hireCost
 }
 
 export function getIntelDiff(gameState: GameState): number {
-  return getEspionageIntel(gameState)
+  return agsV(gameState.agents).espionageIntel()
 }
 
 export function getMoneyNewBalance(gameState: GameState): number {
