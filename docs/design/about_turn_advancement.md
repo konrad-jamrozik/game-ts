@@ -8,9 +8,9 @@ On a high level, the update logic consists of following steps:
 - Retain state that must be used for later steps updates before it is modified by other steps.
 - Update all agents in `Available` state.
 - Update all agents in `Recovering` state.
-- Update all agents in `InTransit` state.
 - Update all agents in `OnAssignment` state and `Contracting` assignment.
 - Update all agents in `OnAssignment` state and `Espionage` assignment.
+- Update all agents in `InTransit` state.
 - Update all active non-deployed mission sites.
 - Update all deployed mission sites, thus also updating all agents deployed to them.
 - Update player assets based on the results of the previous steps.
@@ -40,10 +40,6 @@ Apply exhaustion recovery.
 
 Apply lost hit points and exhaustion recovery.
 
-## Updating Agents in `InTransit` state
-
-Apply appropriate state and assignment updates.
-
 ## Updating Agents on `Contracting` assignment
 
 Compute money earned to be later used to update player assets.
@@ -53,6 +49,10 @@ Then apply exhaustion increase.
 
 Compute intel earned to be later used to update player assets.
 Then apply exhaustion increase.
+
+## Updating Agents in `InTransit` state
+
+Apply appropriate state and assignment updates.
 
 ## Updating active non-deployed mission sites
 

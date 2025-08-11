@@ -8,7 +8,6 @@ import {
   updateEspionageAgents,
 } from './advanceTurnAgentUpdates'
 import type { GameState, MissionRewards, Faction, FactionRewards } from './model'
-import { getAgentUpkeep } from './modelDerived'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 
 /**
@@ -157,14 +156,14 @@ export default function advanceTurnImpl(state: GameState): void {
   // 2. Update all agents in Recovering state
   updateRecoveringAgents(state)
 
-  // 3. Update all agents in InTransit state
-  updateInTransitAgents(state)
-
-  // 4. Update agents on Contracting assignment
+  // 3. Update agents on Contracting assignment
   const contractingResults = updateContractingAgents(state)
 
-  // 5. Update agents on Espionage assignment
+  // 4. Update agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
+
+  // 5. Update all agents in InTransit state
+  updateInTransitAgents(state)
 
   // 6. Update active non-deployed mission sites
   updateActiveMissionSites(state)
