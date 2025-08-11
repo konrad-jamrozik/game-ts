@@ -238,6 +238,9 @@ export default plugTypescriptEslint.config([
       // will be used before they are defined.
       // https://typescript-eslint.io/rules/no-use-before-define/
       '@typescript-eslint/no-use-before-define': 'off',
+      // Allow up to 8 parameters in a function.
+      // https://typescript-eslint.io/rules/max-params/
+      '@typescript-eslint/max-params': ['error', { max: 8 }],
 
       // React configs
       // --------------------

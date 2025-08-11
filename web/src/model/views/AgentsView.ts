@@ -1,8 +1,7 @@
 import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
 import type { Agent } from '../model'
 import { agV, type AgentView } from './AgentView'
-import { validateAvailableAgents, type ValidateAvailableAgentsResult } from './validateAvailableAgents'
-import { validateOnAssignmentAgents, type ValidateOnAssignmentAgentsResult } from './validateOnAssignmentAgents'
+import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent, and current Agent to AgentModel
 export type AgentsView = readonly AgentView[] &
@@ -13,8 +12,8 @@ export type AgentsView = readonly AgentView[] &
     getTerminated(): AgentsView
     inTransit(): AgentsView
     deployedOnMissionSite(missionSiteId: string): AgentsView
-    validateAvailable(selectedAgentIds: string[]): ValidateAvailableAgentsResult
-    validateOnAssignment(selectedAgentIds: string[]): ValidateOnAssignmentAgentsResult
+    validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
+    validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
     validateInvariants(): void
     toAgentArray(): Agent[]
   }>
@@ -64,9 +63,9 @@ export function agsV(agents: Agent[]): AgentsView {
             )
           }),
         ),
-      validateAvailable: (selectedAgentIds: string[]): ValidateAvailableAgentsResult =>
+      validateAvailable: (selectedAgentIds: string[]): ValidateAgentsResult =>
         validateAvailableAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
-      validateOnAssignment: (selectedAgentIds: string[]): ValidateOnAssignmentAgentsResult =>
+      validateOnAssignment: (selectedAgentIds: string[]): ValidateAgentsResult =>
         validateOnAssignmentAgents(toAgentsView(argAgentViewArray), selectedAgentIds),
       validateInvariants: (): void => {
         argAgentViewArray.forEach((agentView) => {
