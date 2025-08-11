@@ -7,10 +7,8 @@ import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgent
 export type AgentsView = readonly AgentView[] & AgentsViewMethods
 
 export function agsV(agents: Agent[]): AgentsView {
-  const allAgentViewArr: AgentView[] = agents.map((agent) => agV(agent))
-
-  // Quick lookup from Agent id -> AgentView
-  const agentIdToView = buildAgentIdToView(agents, allAgentViewArr)
+  const agentIdToView = new Map(agents.map((agent) => [agent.id, agV(agent)]))
+  const allAgentViewArr = [...agentIdToView.values()]
 
   function toAgentsView(agentViewArr: AgentView[]): AgentsView {
     const agentsViewMethods: AgentsViewMethods = getAgentsViewMethods(agentViewArr, agentIdToView, toAgentsView)
@@ -80,14 +78,3 @@ function getAgentsViewMethods(
 //
 // See 4) Memoized selector that returns the wrapper
 // In https://chatgpt.com/c/68983db9-3fac-832d-ba85-3b9aaaa807d5
-
-function buildAgentIdToView(agents: Agent[], agentViews: AgentView[]): Map<string, AgentView> {
-  const map = new Map<string, AgentView>()
-  agents.forEach((agent, index) => {
-    const view = agentViews[index]
-    if (view !== undefined) {
-      map.set(agent.id, view)
-    }
-  })
-  return map
-}
