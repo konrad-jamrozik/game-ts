@@ -103,7 +103,6 @@ export function updateContractingAgents(state: GameState): { moneyEarned: number
 
 /**
  * Updates agents on Espionage assignment - gather intel and apply exhaustion
- * # KJA need to give some grace period to exhaustion impact on skill and/or increase intel gathered. Right now on 2nd turn there is 20% reduction in intel gathered, from 5 to 4.
  */
 export function updateEspionageAgents(state: GameState): { intelGathered: number } {
   let intelGathered = 0
