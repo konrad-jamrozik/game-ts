@@ -28,7 +28,7 @@ describe('deployedMissionSiteUpdate', () => {
       state: 'Deployed',
       expiresIn: 3,
       objectives: [
-        { id: 'locate-target', difficulty: 20, fulfilled: false },
+        { id: 'locate-target', fulfilled: false },
         // Only one objective so a single agent can complete the mission
       ],
     }
@@ -98,7 +98,7 @@ describe('deployedMissionSiteUpdate', () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      objectives: [{ id: 'locate-target', difficulty: 20, fulfilled: false }],
+      objectives: [{ id: 'locate-target', fulfilled: false }],
     }
 
     const gameState: GameState = {

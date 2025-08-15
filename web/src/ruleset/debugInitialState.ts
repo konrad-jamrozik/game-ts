@@ -192,8 +192,8 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       state: 'Deployed',
       expiresIn: 3,
       objectives: [
-        { id: 'locate-target', difficulty: 20, fulfilled: false },
-        { id: 'apprehend-target', difficulty: 30, fulfilled: false },
+        { id: 'locate-target', fulfilled: false },
+        { id: 'apprehend-target', fulfilled: false },
       ],
     },
     {
@@ -203,8 +203,8 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       state: 'Active',
       expiresIn: 3,
       objectives: [
-        { id: 'locate-target', difficulty: 20, fulfilled: false },
-        { id: 'apprehend-target', difficulty: 30, fulfilled: false },
+        { id: 'locate-target', fulfilled: false },
+        { id: 'apprehend-target', fulfilled: false },
       ],
     },
   ]

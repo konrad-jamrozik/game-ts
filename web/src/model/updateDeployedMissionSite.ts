@@ -1,4 +1,4 @@
-import { getMissionById } from '../collections/missions'
+import { getMissionById, getObjectiveDifficulty } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
 import { calculateRollThreshold, rollDie } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
@@ -25,7 +25,11 @@ function processAgentRolls(
   // Mission objective roll - only if there are unfulfilled objectives
   const unfulfilledObjectives = missionSite.objectives
     .filter((objective) => !objective.fulfilled)
-    .sort((objectiveA, objectiveB) => objectiveA.difficulty - objectiveB.difficulty) // Sort by difficulty (lowest first)
+    .sort((objectiveA, objectiveB) => {
+      const difficultyA = getObjectiveDifficulty(missionSite.missionId, objectiveA.id)
+      const difficultyB = getObjectiveDifficulty(missionSite.missionId, objectiveB.id)
+      return difficultyA - difficultyB // Sort by difficulty (lowest first)
+    })
 
   const agent = agentView.agent()
 
@@ -34,9 +38,10 @@ function processAgentRolls(
     if (targetObjective) {
       const objectiveRoll = rollDie()
       const effectiveSkill = agentView.effectiveSkill()
+      const objectiveDifficulty = getObjectiveDifficulty(missionSite.missionId, targetObjective.id)
       const [objectiveThreshold, objectiveThresholdFormula] = calculateRollThreshold(
         effectiveSkill,
-        targetObjective.difficulty,
+        objectiveDifficulty,
       )
 
       // eslint-disable-next-line @typescript-eslint/init-declarations

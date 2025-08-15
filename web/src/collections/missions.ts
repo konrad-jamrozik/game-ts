@@ -87,3 +87,10 @@ export function getMissionById(missionId: string): Mission {
   assertDefined(foundMission, `Mission with id ${missionId} not found`)
   return foundMission
 }
+
+export function getObjectiveDifficulty(missionId: string, objectiveId: string): number {
+  const mission = getMissionById(missionId)
+  const objective = mission.objectives.find((obj) => obj.id === objectiveId)
+  assertDefined(objective, `Objective with id ${objectiveId} not found in mission ${missionId}`)
+  return objective.difficulty
+}
