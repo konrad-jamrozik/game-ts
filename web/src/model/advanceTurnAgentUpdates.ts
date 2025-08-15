@@ -90,6 +90,7 @@ export function updateContractingAgents(state: GameState): { moneyEarned: number
     if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
       // Earn money based on effective skill
       const effectiveSkill = agV(agent).effectiveSkill()
+      // KJA move this function and similar  like it to ruleset.ts
       const income = floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
       moneyEarned += income
 
