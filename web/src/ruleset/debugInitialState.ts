@@ -1,6 +1,6 @@
 import type { Agent, GameState } from '../model/model'
 
-function buildDebugAgents(): { agents: Agent[]; onMissionAgentIds: string[] } {
+function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAgentIds: string[] } {
   let agentCounter = 0
   function nextId(): string {
     const id = agentCounter.toString().padStart(3, '0')
@@ -118,7 +118,7 @@ function buildDebugAgents(): { agents: Agent[]; onMissionAgentIds: string[] } {
     makeAgent({
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-000',
+      assignment: missionSiteId,
       skill: 95,
       exhaustion: 15,
       hitPoints: 30,
@@ -154,7 +154,7 @@ function buildDebugAgents(): { agents: Agent[]; onMissionAgentIds: string[] } {
     makeAgent({
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-000',
+      assignment: missionSiteId,
       skill: 85,
       exhaustion: 7,
       hitPoints: 30,
@@ -179,13 +179,15 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
   }
 
+  const missionSiteId = 'mission-site-000'
+
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
-  const { agents: debugAgents, onMissionAgentIds } = buildDebugAgents()
+  const { agents: debugAgents, onMissionAgentIds } = buildDebugAgents(missionSiteId)
 
   stateBase.agents = debugAgents
   stateBase.missionSites = [
     {
-      id: 'mission-site-000',
+      id: missionSiteId,
       missionId: 'mission-apprehend-red-dawn',
       agentIds: onMissionAgentIds,
       state: 'Deployed',
