@@ -25,8 +25,8 @@ function renderPrimaryListItemText(event: GameEvent): string {
     return event.message
   }
   assertEqual(event.type, 'MissionCompleted')
-  // KJA rewardSummary should be displayed only if the mission was completed successfully. Also, exhaustion must be given as %, not integer.
-  const rewardsSummary = formatMissionRewards(event)
+  const showRewards = event.finalState === 'Successful'
+  const rewardsSummary = showRewards ? formatMissionRewards(event) : ''
   const details = `id=${event.missionSiteId}, state=${event.finalState}, lost=${event.agentsLost}, wounded=${event.agentsWounded}, unscathed=${event.agentsUnscathed}`
   const base = rewardsSummary
     ? `Mission "${event.missionTitle}" completed: ${rewardsSummary}`
