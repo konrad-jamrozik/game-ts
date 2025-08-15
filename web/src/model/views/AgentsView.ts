@@ -36,6 +36,7 @@ type AgentsViewMethods = Readonly<{
   agentUpkeep(): number
   contractingIncome(): number
   espionageIntel(): number
+  applyExhaustion(exhaustion: number): void
   deployedOnMissionSite(missionSiteId: string): AgentsView
   validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
   validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
@@ -63,6 +64,11 @@ function getAgentsViewMethods(
     agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),
+    applyExhaustion: (exhaustion: number): void => {
+      agVArr.forEach((agentView) => {
+        agentView.agent().exhaustion = Math.max(0, agentView.agent().exhaustion + exhaustion)
+      })
+    },
     deployedOnMissionSite: (missionSiteId: string): AgentsView =>
       toAgsV(
         agVArr.filter((agentView) => {

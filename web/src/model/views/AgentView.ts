@@ -35,10 +35,10 @@ export function agV(agent: Agent): AgentView {
 // Calculates the effective skill of an agent. Refer to about_agents.md for details.
 function effectiveSkill(agent: Agent): number {
   const hitPointsLost = agent.maxHitPoints - agent.hitPoints
-  const hitPointsReduction = agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0
+  const hitPointsReduction = Math.max(1 - (agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0), 0)
   // First 5 points of exhaustion have no impact
-  const exhaustionReduction = Math.max(agent.exhaustion - 5, 0) / 100
+  const exhaustionReduction = Math.max(1 - Math.max(agent.exhaustion - 5, 0) / 100, 0)
 
-  const result = agent.skill * (1 - hitPointsReduction) * (1 - exhaustionReduction)
+  const result = agent.skill * hitPointsReduction * exhaustionReduction
   return floor(result)
 }

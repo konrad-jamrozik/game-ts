@@ -1,23 +1,15 @@
-import {
-  AGENT_CONTRACTING_INCOME,
-  AGENT_ESPIONAGE_INTEL,
-  AGENT_EXHAUSTION_INCREASE_PER_TURN,
-  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
-} from '../ruleset/constants'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN, AGENT_EXHAUSTION_RECOVERY_PER_TURN } from '../ruleset/constants'
 import { assertEqual } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
 import type { GameState } from './model'
-import { agV } from './views/AgentView'
+import { agsV } from './views/AgentsView'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
  */
 export function updateAvailableAgents(state: GameState): void {
-  for (const agent of state.agents) {
-    if (agent.state === 'Available' && agent.assignment === 'Standby') {
-      agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
-    }
-  }
+  const agents = agsV(state.agents)
+  agents.available().applyExhaustion(-AGENT_EXHAUSTION_RECOVERY_PER_TURN)
 }
 
 /**
@@ -63,9 +55,20 @@ export function updateRecoveringAgents(state: GameState): void {
   }
 }
 
-/**
- * Updates agents in InTransit state - apply state transitions
- */
+export function updateContractingAgents(state: GameState): { moneyEarned: number } {
+  const agents = agsV(state.agents)
+  const moneyEarned = agents.contractingIncome()
+  agents.onContractingAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  return { moneyEarned }
+}
+
+export function updateEspionageAgents(state: GameState): { intelGathered: number } {
+  const agents = agsV(state.agents)
+  const intelGathered = agents.espionageIntel()
+  agents.onEspionageAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  return { intelGathered }
+}
+
 export function updateInTransitAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'InTransit') {
@@ -78,47 +81,4 @@ export function updateInTransitAgents(state: GameState): void {
       }
     }
   }
-}
-
-/**
- * Updates agents on Contracting assignment - earn money and apply exhaustion
- */
-export function updateContractingAgents(state: GameState): { moneyEarned: number } {
-  let moneyEarned = 0
-
-  for (const agent of state.agents) {
-    if (agent.state === 'OnAssignment' && agent.assignment === 'Contracting') {
-      // Earn money based on effective skill
-      const effectiveSkill = agV(agent).effectiveSkill()
-      // KJA move this function and similar  like it to ruleset.ts
-      const income = floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
-      moneyEarned += income
-
-      // Apply exhaustion
-      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
-    }
-  }
-
-  return { moneyEarned }
-}
-
-/**
- * Updates agents on Espionage assignment - gather intel and apply exhaustion
- */
-export function updateEspionageAgents(state: GameState): { intelGathered: number } {
-  let intelGathered = 0
-
-  for (const agent of state.agents) {
-    if (agent.state === 'OnAssignment' && agent.assignment === 'Espionage') {
-      // Gather intel based on effective skill
-      const effectiveSkill = agV(agent).effectiveSkill()
-      const intel = floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
-      intelGathered += intel
-
-      // Apply exhaustion
-      agent.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_TURN
-    }
-  }
-
-  return { intelGathered }
 }

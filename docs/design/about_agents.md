@@ -66,8 +66,8 @@ That is:
 ``` text
 effective_skill = floor(skill * hit_points_lost_reduction * exhaustion_reduction)
 where:  
-hit_points_lost_reduction = (1 - (hitPointsLost / hitPoints))
-exhaustion_reduction = (1 - max((exhaustion-5),0) / 100)  # First 5 points of exhaustion have no impact
+hit_points_lost_reduction = max(1 - (hitPointsLost / hitPoints), 0)
+exhaustion_reduction = max(1 - max((exhaustion-5),0) / 100, 0)  # First 5 points of exhaustion have no impact
 ```
 
 For example:
