@@ -15,9 +15,8 @@ import {
   sackAgents,
 } from '../model/gameStateSlice'
 import isPlayerAction from '../model/isPlayerAction'
-import type { Agent, MissionRewards, MissionSite, MissionSiteState } from '../model/model'
+import type { MissionRewards, MissionSite, MissionSiteState } from '../model/model'
 import { isMissionSiteConcluded } from '../model/ruleset'
-import { agsV } from '../model/views/AgentsView'
 import type { RootState } from './store'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
@@ -34,7 +33,6 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line max-statements
   return (store) => (next) => (action) => {
     // Get the state before the action for comparison
     const previousState = store.getState()
@@ -63,9 +61,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       rewards: MissionRewards,
       missionSiteId: string,
       finalState: MissionSiteState,
-      agentsLost: number,
-      agentsWounded: number,
-      agentsUnscathed: number,
     ): void {
       store.dispatch(
         addMissionCompletedEvent({
@@ -73,9 +68,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
           rewards,
           missionSiteId,
           finalState,
-          agentsLost,
-          agentsWounded,
-          agentsUnscathed,
           turn: gameState.turn,
           actionsCount: gameState.actionsCount,
         }),
@@ -99,26 +91,25 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       for (const missionSite of newlyConcludedMissionSites) {
         const mission = getMissionById(missionSite.missionId)
+
+        // KJA FUTURE currently cannot display agents results for mission sites as by the time
+        // deployed mission site update is done, this information is not available in the state anywhere.
+        // Instead, when "advanceTurn" is called, it should produce "turnAdvancementReport" that will contain all
+        // interesting information. advanceTurnImpl will write it out to dedicated GameState property.
+        // Then it will be rendered by the turn advancement log component (to be implemented).
+
         // Compute agent outcome counts for this mission site
-        const deployedAgents = agsV(gameState.agents).deployedOnMissionSite(missionSite.id).toAgentArray()
+        // const deployedAgents = agsV(gameState.agents).deployedOnMissionSite(missionSite.id).toAgentArray()
 
-        const agentsLost = deployedAgents.filter((agent: Agent) => agent.state === 'Terminated').length
-        const agentsWounded = deployedAgents.filter(
-          (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns > 0,
-        ).length
-        const agentsUnscathed = deployedAgents.filter(
-          (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns === 0,
-        ).length
+        // const agentsLost = deployedAgents.filter((agent: Agent) => agent.state === 'Terminated').length
+        // const agentsWounded = deployedAgents.filter(
+        //   (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns > 0,
+        // ).length
+        // const agentsUnscathed = deployedAgents.filter(
+        //   (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns === 0,
+        // ).length
 
-        postMissionCompletedEvent(
-          mission.title,
-          mission.rewards,
-          missionSite.id,
-          missionSite.state,
-          agentsLost,
-          agentsWounded,
-          agentsUnscathed,
-        )
+        postMissionCompletedEvent(mission.title, mission.rewards, missionSite.id, missionSite.state)
       }
     } else if (hireAgent.match(action)) {
       postTextEvent('Agent hired')

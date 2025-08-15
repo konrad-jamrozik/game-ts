@@ -154,7 +154,6 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
     })
   }
 
-  // Apply agent results for all agents
   updateDeployedSurvivingAgents(agentsWithHitPointsLost)
 
   // Determine mission site outcome

@@ -19,9 +19,6 @@ export type MissionCompletedEvent = BaseEventFields & {
   rewards: MissionRewards
   missionSiteId: string
   finalState: MissionSiteState
-  agentsLost: number
-  agentsWounded: number
-  agentsUnscathed: number
 }
 
 export type GameEvent = TextEvent | MissionCompletedEvent
@@ -68,9 +65,6 @@ const eventsSlice = createSlice({
         rewards: MissionRewards
         missionSiteId: string
         finalState: MissionSiteState
-        agentsLost: number
-        agentsWounded: number
-        agentsUnscathed: number
       }>,
     ) {
       const event: MissionCompletedEvent = {
@@ -80,9 +74,6 @@ const eventsSlice = createSlice({
         rewards: action.payload.rewards,
         missionSiteId: action.payload.missionSiteId,
         finalState: action.payload.finalState,
-        agentsLost: action.payload.agentsLost,
-        agentsWounded: action.payload.agentsWounded,
-        agentsUnscathed: action.payload.agentsUnscathed,
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
