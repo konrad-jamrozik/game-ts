@@ -30,7 +30,7 @@ export function ArchivedMissionCards(): React.JSX.Element {
         }}
       >
         {sortedArchivedMissionSites.map((site) => (
-          <Box key={site.id}>
+          <Box key={site.id} sx={{ padding: 1 }}>
             <MissionCard missionSiteId={site.id} />
           </Box>
         ))}

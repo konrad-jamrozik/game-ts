@@ -20,12 +20,14 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const dispatch = useAppDispatch()
   const theme = useTheme()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
-  const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const lead = getLeadById(leadId)
 
+  // KJA LATER instead of the idiom "leadInvestigationCounts[lead.id] ?? 0" and getLeadById(leadId)
+  // there should be LeadsView akin to AgentsView, that has functions withId and isInvestigated()
+
   const selected = selectedLeadId === lead.id && displayMode === 'normal'
-  const disabled = displayMode === 'repeated' || (!lead.repeatable && investigatedLeadIds.includes(lead.id))
+  const disabled = displayMode === 'repeated' || (!lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0)
 
   function handleClick(): void {
     if (!disabled) {

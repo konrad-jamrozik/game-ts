@@ -16,14 +16,13 @@ type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
 
 function getArchivedCardEntries(
   discoveredLeads: typeof leads,
-  investigatedLeadIds: string[],
   leadInvestigationCounts: Record<string, number>,
 ): CardEntry[] {
   const archivedCardEntries: CardEntry[] = []
 
   // Add disabled normal cards (non-repeatable leads that have been investigated)
   for (const lead of discoveredLeads) {
-    const isDisabled = !lead.repeatable && investigatedLeadIds.includes(lead.id)
+    const isDisabled = !lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0
     if (isDisabled) {
       archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
     }
@@ -31,25 +30,19 @@ function getArchivedCardEntries(
 
   // Add repeated cards for repeatable leads that have been investigated
   for (const lead of discoveredLeads) {
-    if (lead.repeatable && investigatedLeadIds.includes(lead.id) && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
+    if (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
       archivedCardEntries.push({ leadId: lead.id, displayMode: 'repeated' })
     }
   }
 
-  // Sort by investigation order: first investigated being last (reverse order)
-  archivedCardEntries.sort((entryA, entryB) => {
-    const indexA = investigatedLeadIds.indexOf(entryA.leadId)
-    const indexB = investigatedLeadIds.indexOf(entryB.leadId)
-    // Reverse order: later investigations come first
-    return indexB - indexA
-  })
+  // Sort by lead ID for consistent ordering
+  archivedCardEntries.sort((entryA, entryB) => entryA.leadId.localeCompare(entryB.leadId))
 
   return archivedCardEntries
 }
 
 export function ArchivedLeadCards(): React.JSX.Element {
   const [expanded, setExpanded] = React.useState(false)
-  const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
@@ -65,11 +58,11 @@ export function ArchivedLeadCards(): React.JSX.Element {
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => investigatedLeadIds.includes(dependencyId) || successfulMissionIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || successfulMissionIds.has(dependencyId),
     ),
   )
 
-  const archivedCardEntries = getArchivedCardEntries(discoveredLeads, investigatedLeadIds, leadInvestigationCounts)
+  const archivedCardEntries = getArchivedCardEntries(discoveredLeads, leadInvestigationCounts)
 
   const maxWidth = '800px'
   return (
@@ -87,7 +80,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
         <CardContent>
           <Stack
             direction="row"
-            spacing={2}
+            spacing={0}
             sx={{
               flexWrap: 'wrap',
               '& > *': {
@@ -96,7 +89,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
             }}
           >
             {archivedCardEntries.map((entry) => (
-              <Box key={`${entry.leadId}-${entry.displayMode}`}>
+              <Box key={`${entry.leadId}-${entry.displayMode}`} sx={{ padding: 1 }}>
                 <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
               </Box>
             ))}

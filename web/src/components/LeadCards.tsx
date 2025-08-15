@@ -14,7 +14,7 @@ import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {
   const [expanded, setExpanded] = React.useState(true)
-  const investigatedLeadIds = useAppSelector((state) => state.undoable.present.gameState.investigatedLeadIds)
+  const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   function handleExpandClick(): void {
@@ -29,7 +29,7 @@ export function LeadCards(): React.JSX.Element {
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => investigatedLeadIds.includes(dependencyId) || successfulMissionIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || successfulMissionIds.has(dependencyId),
     ),
   )
 
@@ -39,7 +39,7 @@ export function LeadCards(): React.JSX.Element {
 
   // Add normal cards for all discovered leads that are enabled (not disabled)
   for (const lead of discoveredLeads) {
-    const isEnabled = lead.repeatable || !investigatedLeadIds.includes(lead.id)
+    const isEnabled = lead.repeatable || (leadInvestigationCounts[lead.id] ?? 0) === 0
     if (isEnabled) {
       cardEntries.push({ leadId: lead.id, displayMode: 'normal' })
     }
@@ -61,7 +61,7 @@ export function LeadCards(): React.JSX.Element {
         <CardContent>
           <Stack
             direction="row"
-            spacing={2}
+            spacing={0}
             sx={{
               flexWrap: 'wrap',
               '& > *': {
@@ -70,7 +70,7 @@ export function LeadCards(): React.JSX.Element {
             }}
           >
             {cardEntries.map((entry) => (
-              <Box key={`${entry.leadId}-${entry.displayMode}`}>
+              <Box key={`${entry.leadId}-${entry.displayMode}`} sx={{ padding: 1 }}>
                 <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
               </Box>
             ))}
