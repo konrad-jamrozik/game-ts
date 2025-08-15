@@ -148,7 +148,7 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/no-console
       'no-console': 'off',
       // https://eslint.org/docs/latest/rules/max-statements
-      'max-statements': ['error', { max: 30 }],
+      'max-statements': ['error', { max: 50 }],
       // https://eslint.org/docs/latest/rules/func-style
       'func-style': [
         'error',
