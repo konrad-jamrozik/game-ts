@@ -175,7 +175,6 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     money: 500,
     intel: 500,
     funding: 20,
-    investigatedLeadIds: ['lead-red-dawn-profile'],
     leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
   }
 

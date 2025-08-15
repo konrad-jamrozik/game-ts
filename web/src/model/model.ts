@@ -95,8 +95,7 @@ export type GameState = {
   funding: number
   hireCost: number
   agents: Agent[]
-  // Leads // KJA merge investigatedLeadIds with leadInvestigationCounts
-  investigatedLeadIds: string[]
+  // Leads
   leadInvestigationCounts: Record<string, number>
   // Mission sites
   missionSites: MissionSite[]

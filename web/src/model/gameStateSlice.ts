@@ -91,11 +91,6 @@ const gameStateSlice = createSlice({
     investigateLead: asPlayerAction<{ leadId: string; intelCost: number }>((state, action) => {
       const { leadId, intelCost } = action.payload
 
-      // Add to investigatedLeadIds if not already there (for all leads)
-      if (!state.investigatedLeadIds.includes(leadId)) {
-        state.investigatedLeadIds.push(leadId)
-      }
-
       // Track investigation count for all leads
       const currentCount = state.leadInvestigationCounts[leadId] ?? 0
       state.leadInvestigationCounts[leadId] = currentCount + 1

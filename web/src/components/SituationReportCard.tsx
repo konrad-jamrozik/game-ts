@@ -11,7 +11,7 @@ import { StyledDataGrid } from './StyledDataGrid'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions, investigatedLeadIds } = gameState
+  const { panic, factions, leadInvestigationCounts } = gameState
 
   // Calculate panic as percentage from accumulated panic value
   // 100% panic = 10,000, so divide by 100 to get percentage with 2 decimal places
@@ -27,7 +27,7 @@ export function SituationReportCard(): React.JSX.Element {
   // Get Red Dawn faction data and check if it's discovered
   const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
   const isRedDawnDiscovered = redDawnFaction
-    ? redDawnFaction.discoveryPrerequisite.every((leadId) => investigatedLeadIds.includes(leadId))
+    ? redDawnFaction.discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
     : false
 
   // 🚧KJA these formulas should be deduped in appropriate ruleset.ts files.

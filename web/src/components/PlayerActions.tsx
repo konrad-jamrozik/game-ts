@@ -106,7 +106,7 @@ export function PlayerActions(): React.JSX.Element {
     const lead = getLeadById(selectedLeadId)
 
     // Check if the lead is already investigated and is not repeatable
-    if (!lead.repeatable && gameState.investigatedLeadIds.includes(selectedLeadId)) {
+    if (!lead.repeatable && (gameState.leadInvestigationCounts[selectedLeadId] ?? 0) > 0) {
       setAlertMessage('This lead has already been investigated!')
       setShowAlert(true)
       return
