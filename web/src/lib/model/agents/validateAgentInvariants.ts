@@ -1,6 +1,19 @@
 import type { Agent, GameState } from '../model'
 import { assertDefined, assertEqual, assertOneOf } from '../../utils/assert'
 
+export function validateAgentInvariants(agent: Agent, state: GameState): void {
+  validateAgentLocalInvariants(agent)
+  validateMissionAssignment(agent, state)
+}
+
+export function validateAgentLocalInvariants(agent: Agent): void {
+  validateBasicStatRanges(agent)
+  validateTermination(agent)
+  validateInjuryAndAssignment(agent)
+  validateRecoveryStateConsistency(agent)
+  validateRecoveryMath(agent)
+}
+
 /**
  * Validates invariants for a single agent within the context of a given game state.
  * Throws an Error if an invariant is violated.
@@ -129,17 +142,4 @@ function validateMissionAssignment(agent: Agent, state: GameState): void {
   const missionSiteId = agent.assignment
   const site = state.missionSites.find((missionSite) => missionSite.id === missionSiteId)
   assertDefined(site, `Agent ${agent.id} is assigned to ${missionSiteId}, but the mission site does not exist`)
-}
-
-export function validateAgentLocalInvariants(agent: Agent): void {
-  validateBasicStatRanges(agent)
-  validateTermination(agent)
-  validateInjuryAndAssignment(agent)
-  validateRecoveryStateConsistency(agent)
-  validateRecoveryMath(agent)
-}
-
-export function validateAgentInvariants(agent: Agent, state: GameState): void {
-  validateAgentLocalInvariants(agent)
-  validateMissionAssignment(agent, state)
 }

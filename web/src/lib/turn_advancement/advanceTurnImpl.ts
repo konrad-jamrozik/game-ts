@@ -10,6 +10,56 @@ import {
 import type { GameState, MissionRewards, Faction, FactionRewards } from '../model/model'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
+import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
+
+export default function advanceTurnImpl(state: GameState): void {
+  validateGameStateInvariants(state)
+
+  state.turn += 1
+  state.actionsCount = 0
+
+  // Calculate agent upkeep at the start of the turn, before any agents can be terminated
+  const agentUpkeep = agsV(state.agents).agentUpkeep()
+
+  // Follow the order specified in about_turn_advancement.md:
+
+  // 1. Update all agents in Available state
+  updateAvailableAgents(state)
+
+  // 2. Update all agents in Recovering state
+  updateRecoveringAgents(state)
+
+  // 3. Update agents on Contracting assignment
+  const contractingResults = updateContractingAgents(state)
+
+  // 4. Update agents on Espionage assignment
+  const espionageResults = updateEspionageAgents(state)
+
+  // 5. Update all agents in InTransit state
+  updateInTransitAgents(state)
+
+  // 6. Update active non-deployed mission sites
+  updateActiveMissionSites(state)
+
+  // 7. Update deployed mission sites (and agents deployed to them)
+  const missionRewards = updateDeployedMissionSites(state)
+
+  // 8. Update player assets based on the results of the previous steps
+  updatePlayerAssets(state, {
+    agentUpkeep,
+    moneyEarned: contractingResults.moneyEarned,
+    intelGathered: espionageResults.intelGathered,
+    missionRewards,
+  })
+
+  // 9. Update panic based on the results of the previous steps
+  updatePanic(state, missionRewards)
+
+  // 10. Update factions based on the results of the previous steps
+  updateFactions(state, missionRewards)
+
+  validateGameStateInvariants(state)
+}
 
 /**
  * Updates active non-deployed mission sites - apply expiration countdown
@@ -140,49 +190,4 @@ function updateFactions(state: GameState, missionRewards: MissionRewards[]): voi
       }
     }
   }
-}
-
-export default function advanceTurnImpl(state: GameState): void {
-  state.turn += 1
-  state.actionsCount = 0
-
-  // Calculate agent upkeep at the start of the turn, before any agents can be terminated
-  const agentUpkeep = agsV(state.agents).agentUpkeep()
-
-  // Follow the order specified in about_turn_advancement.md:
-
-  // 1. Update all agents in Available state
-  updateAvailableAgents(state)
-
-  // 2. Update all agents in Recovering state
-  updateRecoveringAgents(state)
-
-  // 3. Update agents on Contracting assignment
-  const contractingResults = updateContractingAgents(state)
-
-  // 4. Update agents on Espionage assignment
-  const espionageResults = updateEspionageAgents(state)
-
-  // 5. Update all agents in InTransit state
-  updateInTransitAgents(state)
-
-  // 6. Update active non-deployed mission sites
-  updateActiveMissionSites(state)
-
-  // 7. Update deployed mission sites (and agents deployed to them)
-  const missionRewards = updateDeployedMissionSites(state)
-
-  // 8. Update player assets based on the results of the previous steps
-  updatePlayerAssets(state, {
-    agentUpkeep,
-    moneyEarned: contractingResults.moneyEarned,
-    intelGathered: espionageResults.intelGathered,
-    missionRewards,
-  })
-
-  // 9. Update panic based on the results of the previous steps
-  updatePanic(state, missionRewards)
-
-  // 10. Update factions based on the results of the previous steps
-  updateFactions(state, missionRewards)
 }
