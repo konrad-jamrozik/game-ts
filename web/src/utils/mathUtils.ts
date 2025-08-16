@@ -6,6 +6,5 @@
  */
 export function floor(value: number): number {
   // Add a small tolerance (1e-10) to handle floating point precision issues before flooring
-  // KJA do I need floor equivalent for ceil?
   return Math.floor(value + 1e-10)
 }

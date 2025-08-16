@@ -99,13 +99,6 @@
     "todo-tree.filtering.excludeGlobs": [
         "**/*.d.ts"
     ],
-    "todo-tree.general.tags": [
-        "🚧kja",
-        "🚧KJA",
-        "kja",
-        "KJA",
-        
-    ],
     "todo-tree.highlights.enabled": true,
     "editor.codeLens": false,
     "github.copilot.chat.agent.thinkingTool": true,

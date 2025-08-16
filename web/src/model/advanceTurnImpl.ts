@@ -133,7 +133,7 @@ function updateFactions(state: GameState, missionRewards: MissionRewards[]): voi
     if (rewards.factionRewards) {
       for (const factionReward of rewards.factionRewards) {
         const targetFaction = state.factions.find((faction) => faction.id === factionReward.factionId)
-        // 🚧KJA throw assertion error if faction not found. But actually move it to "validateGameState" to be invoked on each turn advancement before and after.
+        // KJA throw assertion error if faction not found. But actually move it to "validateGameState" to be invoked on each turn advancement before and after.
         if (targetFaction) {
           applyFactionReward(targetFaction, factionReward)
         }

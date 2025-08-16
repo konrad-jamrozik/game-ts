@@ -1,6 +1,6 @@
 import type { MissionSite, MissionSiteState } from './model'
 
-// KJA LATERmigrate MissionSiteUtils to MissionSitesView
+// KJA LATER migrate MissionSiteUtils to MissionSitesView
 
 /**
  * Filters mission sites by their state
