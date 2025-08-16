@@ -42,7 +42,7 @@ export default plugTypescriptEslint.config([
 
       // [ts-eslint] configs
       // --------------------
-      // Configured to [all] [all src] config, ins spite of  warning on conflicts.
+      // Configured to [all] [all src] config, in spite of warning on conflicts.
       // This is because it is missing the strictest configs, as recommended by [ts-eslint recommended configs],
       // are missing some critical rules, like explicit-function-return-type.
       // See also [linting with type information].
@@ -241,6 +241,16 @@ export default plugTypescriptEslint.config([
       // Allow up to 8 parameters in a function.
       // https://typescript-eslint.io/rules/max-params/
       '@typescript-eslint/max-params': ['error', { max: 8 }],
+      // I am allowing IIFEs to allow defining reusable values in ternary operations, e.g.:
+      //
+      //   const result =
+      //     condition
+      //     ? (() => { // <- this is the IIFE required for foo
+      //       const foo = some_value_that_will_be_reused_in_return_value
+      //       return { a: foo, b: foo, c: ... }
+      //
+      // https://typescript-eslint.io/rules/explicit-function-return-type/
+      '@typescript-eslint/explicit-function-return-type': ['error', { allowIIFEs: true }],
 
       // React configs
       // --------------------

@@ -3,8 +3,12 @@ import pluralize from 'pluralize'
 /**
  * Formats a value as a percentage with specified decimal places
  */
-export function formatAsPercentage(value: number, decimals = 2): string {
-  return `${(value / 100).toFixed(decimals)}%`
+export function fmtPctDiv100(value: number, decimals = 2): string {
+  return fmtPct(value, decimals, 100)
+}
+
+export function fmtPct(value: number, decimals = 0, div = 1): string {
+  return `${(value / div).toFixed(decimals)}%`
 }
 
 /**
@@ -12,7 +16,7 @@ export function formatAsPercentage(value: number, decimals = 2): string {
  */
 // KJA actually use this function
 export function formatPanicPercentage(panic: number): string {
-  return formatAsPercentage(panic, 2)
+  return fmtPctDiv100(panic, 2)
 }
 
 /**
@@ -20,7 +24,7 @@ export function formatPanicPercentage(panic: number): string {
  */
 // KJA actually use this function
 export function formatFactionPercentage(value: number): string {
-  return formatAsPercentage(value, 2)
+  return fmtPctDiv100(value, 2)
 }
 
 /**
