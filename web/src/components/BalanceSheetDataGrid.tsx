@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyDiff, getMoneyNewBalance, getIntelDiff } from '../lib/model/ruleset/ruleset'
-import { selectAgentsView } from '../lib/model/agents/AgentsView'
+import { selectAgentsView } from '../lib/selectors/selectors'
 import { DataGridCard } from './DataGridCard'
 
 export type BalanceSheetRow = {
