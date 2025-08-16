@@ -2,6 +2,7 @@ import { getMissionById, getObjectiveDifficulty } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
 import { newRoll } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
+import { getRecoveryTurns } from './ruleset'
 import { agsV } from './views/AgentsView'
 import type { AgentView } from './views/AgentView'
 
@@ -145,9 +146,8 @@ function updateDeployedSurvivingAgents(damageInfo: AgentWithDamageInfo[]): void 
 
       // Calculate recovery time if agent lost hit points
       if (damage > 0) {
-        const hitPointsLostPercentage = Math.min((damage / agent.maxHitPoints) * 100, 100)
-        const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
-        agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
+        // KJA LATER the recovery logic should be rolled up into AgentsView
+        agent.recoveryTurns = getRecoveryTurns(damage, agent.maxHitPoints)
         agent.hitPointsLostBeforeRecovery = damage
         agent.state = 'InTransit'
         agent.assignment = 'Recovery'

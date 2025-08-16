@@ -47,7 +47,7 @@ export function newRoll(skill: number, difficulty: number): Roll {
 /**
  * Rolls a die (integer 1-100, inclusive)
  */
-export function rollDie(): number {
+function rollDie(): number {
   // Note: here we are OK using Math.floor instead of my floor, because Math.random() will never return 1, so there
   // is no concern of floating point imprecision.
   const roll = Math.floor(Math.random() * 100) + 1
@@ -58,21 +58,8 @@ export function rollDie(): number {
  * Calculates the roll threshold: 100 - skill + difficulty
  * Returns a tuple: [threshold, formula string]
  */
-export function calculateRollThreshold(skill: number, difficulty: number): [number, string] {
+function calculateRollThreshold(skill: number, difficulty: number): [number, string] {
   const threshold = 100 - skill + difficulty
   const formula = `${threshold} = 100 - skill (${skill}) + difficulty (${difficulty}) `
   return [threshold, formula]
-}
-
-/**
- * Calculates recovery time based on hit points lost
- */
-// KJA actually use this function
-export function calculateRecoveryTime(hitPointsLost: number, maxHitPoints: number): number {
-  if (hitPointsLost <= 0) {
-    return 0
-  }
-
-  const hitPointsLostPercentage = (hitPointsLost / maxHitPoints) * 100
-  return Math.ceil(hitPointsLostPercentage / 2)
 }

@@ -46,3 +46,9 @@ export function getIntelNewBalance(gameState: GameState): number {
 export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
   return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
 }
+
+export function getRecoveryTurns(damage: number, hitPoints: number): number {
+  const hitPointsLostPercentage = Math.min((damage / hitPoints) * 100, 100)
+  const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
+  return recoveryTurns
+}
