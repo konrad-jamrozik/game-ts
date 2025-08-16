@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
-import { agsV } from '../lib/model/agents/AgentsView'
+import { selectAgentsView } from '../lib/selectors/selectors'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -28,13 +28,12 @@ export function PlayerActions(): React.JSX.Element {
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
-  const agents = useAppSelector((state) => state.undoable.present.gameState.agents)
-  const agentsView = agsV(agents)
+  const agentsView = useAppSelector(selectAgentsView)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
 
-  const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.id === id))
+  const selectedAgentIds = agentSelection.filter((id) => agentsView.some((agent) => agent.agent().id === id))
 
   function handleSackAgents(): void {
     // Validate that all selected agents are available
