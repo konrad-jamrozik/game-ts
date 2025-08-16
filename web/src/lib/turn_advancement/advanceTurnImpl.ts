@@ -1,5 +1,5 @@
-import { SUPPRESSION_DECAY_PCT } from '../lib/ruleset/constants'
-import { floor } from '../lib/utils/mathUtils'
+import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
+import { floor } from '../utils/mathUtils'
 import {
   updateAvailableAgents,
   updateRecoveringAgents,
@@ -7,9 +7,9 @@ import {
   updateContractingAgents,
   updateEspionageAgents,
 } from './advanceTurnAgentUpdates'
-import type { GameState, MissionRewards, Faction, FactionRewards } from '../lib/model'
+import type { GameState, MissionRewards, Faction, FactionRewards } from '../model/model'
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
-import { agsV } from '../lib/agents/AgentsView'
+import { agsV } from '../model/agents/AgentsView'
 
 /**
  * Updates active non-deployed mission sites - apply expiration countdown

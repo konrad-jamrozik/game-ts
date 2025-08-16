@@ -1,15 +1,15 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import { missions } from '../../collections/missions'
+import { missions } from '../collections/missions'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
-} from '../lib/ruleset/constants'
-import initialState, { makeInitialState } from '../lib/ruleset/initialState'
+} from '../model/ruleset/constants'
+import initialState, { makeInitialState } from '../model/ruleset/initialState'
 import advanceTurnImpl from '../turn_advancement/advanceTurnImpl'
 import asPlayerAction from './asPlayerAction'
-import type { Agent, MissionSite } from '../lib/model'
+import type { Agent, MissionSite } from '../model/model'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action

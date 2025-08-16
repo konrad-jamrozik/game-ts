@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import type { Agent, GameState, MissionSite } from '../src/model/lib/model'
-import { updateDeployedMissionSite } from '../src/model/turn_advancement/updateDeployedMissionSite'
+import type { Agent, GameState, MissionSite } from '../src/model/model'
+import { updateDeployedMissionSite } from '../src/lib/turn_advancement/updateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../src/model/lib/ruleset/constants'
 
 describe('deployedMissionSiteUpdate', () => {

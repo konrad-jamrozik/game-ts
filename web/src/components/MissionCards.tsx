@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { getActiveMissionSites, sortActiveMissionSites } from '../model/lib/utils/MissionSiteUtils'
+import { getActiveMissionSites, sortActiveMissionSites } from '../lib/utils/MissionSiteUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { MissionCard } from './MissionCard'
 

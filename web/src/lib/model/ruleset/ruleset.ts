@@ -1,5 +1,5 @@
 import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from './constants'
-import { floor } from '../utils/mathUtils'
+import { floor } from '../../utils/mathUtils'
 import type { GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 

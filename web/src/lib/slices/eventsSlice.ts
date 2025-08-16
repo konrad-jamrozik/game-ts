@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { MissionRewards, MissionSiteState } from '../lib/model'
+import type { MissionRewards, MissionSiteState } from '../model/model'
 
 export type BaseEventFields = {
   id: number

@@ -1,8 +1,8 @@
 import { ActionCreators } from 'redux-undo'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { store } from '../src/app/store'
-import { clearEvents } from '../src/model/slices/eventsSlice'
-import { advanceTurn, hireAgent, reset } from '../src/model/slices/gameStateSlice'
+import { clearEvents } from '../src/lib/slices/eventsSlice'
+import { advanceTurn, hireAgent, reset } from '../src/lib/slices/gameStateSlice'
 
 describe('Events Middleware', () => {
   beforeEach(() => {

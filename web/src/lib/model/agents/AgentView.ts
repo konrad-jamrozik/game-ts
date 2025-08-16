@@ -1,4 +1,4 @@
-import { floor } from '../utils/mathUtils'
+import { floor } from '../../utils/mathUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model'
 

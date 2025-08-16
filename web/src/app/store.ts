@@ -2,11 +2,11 @@ import { configureStore } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
-import eventsReducer from '../model/slices/eventsSlice'
-import gameStateReducer, { advanceTurn } from '../model/slices/gameStateSlice'
-import isPlayerAction from '../model/slices/isPlayerAction'
-import selectionReducer from '../model/slices/selectionSlice'
-import settingsReducer from '../model/slices/settingsSlice'
+import eventsReducer from '../lib/slices/eventsSlice'
+import gameStateReducer, { advanceTurn } from '../lib/slices/gameStateSlice'
+import isPlayerAction from '../lib/slices/isPlayerAction'
+import selectionReducer from '../lib/slices/selectionSlice'
+import settingsReducer from '../lib/slices/settingsSlice'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
 
@@ -51,7 +51,7 @@ export const store = configureStore({
 // If no persisted state was loaded, add a "New game started" event
 if (!maybePersistedState) {
   // Import addEvent dynamically to avoid circular dependency
-  const { addTextEvent: addEvent } = await import('../model/slices/eventsSlice')
+  const { addTextEvent: addEvent } = await import('../lib/slices/eventsSlice')
   const state = store.getState()
   const { gameState } = state.undoable.present
 

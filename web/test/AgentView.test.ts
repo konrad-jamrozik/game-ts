@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import type { Agent } from '../src/model/lib/model'
+import type { Agent } from '../src/model/model'
 import { agV } from '../src/model/lib/agents/AgentView'
 
 // KJA LATER this test is superbly verbose. Dedup it and same with other tests.

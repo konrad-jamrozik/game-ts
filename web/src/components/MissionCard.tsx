@@ -7,9 +7,9 @@ import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getMissionById } from '../collections/missions'
-import { setMissionSiteSelection } from '../model/slices/selectionSlice'
-import { fmtNoPrefix } from '../model/lib/utils/formatUtils'
+import { getMissionById } from '../lib/collections/missions'
+import { setMissionSiteSelection } from '../lib/slices/selectionSlice'
+import { fmtNoPrefix } from '../lib/utils/formatUtils'
 import { LabeledValue } from './LabeledValue'
 
 export type MissionCardProps = { missionSiteId: string }

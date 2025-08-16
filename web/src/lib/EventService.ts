@@ -1,4 +1,4 @@
-import { fmtAgentCount } from './lib/utils/formatUtils'
+import { fmtAgentCount } from './utils/formatUtils'
 import type { TextEvent } from './slices/eventsSlice'
 
 /**

@@ -7,11 +7,11 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import type { Agent } from '../../model/lib/model'
-import { setAgentSelection } from '../../model/slices/selectionSlice'
+import type { Agent } from '../../lib/model/model'
+import { setAgentSelection } from '../../lib/slices/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
-import { agV } from '../../model/lib/agents/AgentView'
+import { agV } from '../../lib/model/agents/AgentView'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)

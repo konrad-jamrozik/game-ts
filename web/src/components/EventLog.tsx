@@ -7,8 +7,8 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import type { GameEvent } from '../model/slices/eventsSlice'
-import { assertEqual } from '../model/lib/utils/assert'
+import type { GameEvent } from '../lib/slices/eventsSlice'
+import { assertEqual } from '../lib/utils/assert'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event

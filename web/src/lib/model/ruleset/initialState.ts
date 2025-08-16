@@ -1,4 +1,4 @@
-import { factions } from '../../../collections/factions'
+import { factions } from '../../collections/factions'
 import type { GameState } from '../model'
 import { validateAgentInvariants } from '../agents/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'

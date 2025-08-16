@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { leads } from '../collections/leads'
+import { leads } from '../lib/collections/leads'
 import { LeadCard } from './LeadCard'
 
 type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }

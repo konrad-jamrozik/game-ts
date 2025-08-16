@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
 import { store } from '../src/app/store'
-import { setResetControlsExpanded } from '../src/model/slices/settingsSlice'
+import { setResetControlsExpanded } from '../src/lib/slices/settingsSlice'
 
 describe(App, () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {

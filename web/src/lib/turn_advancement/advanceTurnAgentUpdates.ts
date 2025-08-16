@@ -1,8 +1,8 @@
-import { AGENT_EXHAUSTION_INCREASE_PER_TURN, AGENT_EXHAUSTION_RECOVERY_PER_TURN } from '../lib/ruleset/constants'
-import { assertEqual } from '../lib/utils/assert'
-import { floor } from '../lib/utils/mathUtils'
-import type { GameState } from '../lib/model'
-import { agsV } from '../lib/agents/AgentsView'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN, AGENT_EXHAUSTION_RECOVERY_PER_TURN } from '../model/ruleset/constants'
+import { assertEqual } from '../utils/assert'
+import { floor } from '../utils/mathUtils'
+import type { GameState } from '../model/model'
+import { agsV } from '../model/agents/AgentsView'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
