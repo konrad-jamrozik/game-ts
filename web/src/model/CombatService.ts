@@ -26,8 +26,8 @@ export function newRoll(skill: number, difficulty: number): Roll {
   const belowThreshold = Math.max(threshold - roll, 0)
   const aboveThresholdChancePct = Math.min(Math.max(100 - threshold, 0), 100)
   const atOrAboveThresholdChancePct = Math.min(Math.max(101 - threshold, 0), 100)
-  const isAboveThresholdMsg = isAboveThreshold ? 'success (> threshold)' : 'failure (<= threshold)'
-  const isAtOrAboveThresholdMsg = isAtOrAboveThreshold ? 'success (>= threshold)' : 'failure (< threshold)'
+  const isAboveThresholdMsg = isAboveThreshold ? '✅ success (> threshold)' : '❌ failure (<= threshold)'
+  const isAtOrAboveThresholdMsg = isAtOrAboveThreshold ? '✅ success (>= threshold)' : '❌ failure (< threshold)'
   return {
     skill,
     difficulty,

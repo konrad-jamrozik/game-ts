@@ -88,8 +88,8 @@ function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): v
       }
 
       console.log(
-        `Agent '${agent.id}' ${roll.isAboveThresholdMsg} objective '${targetObjective.id}': ` +
-          `rolled ${roll.roll} against threshold of ${roll.threshold} ` +
+        `🎯 Agent '${agent.id}' roll on objective '${targetObjective.id}': ${roll.isAboveThresholdMsg}. ` +
+          `Rolled ${roll.roll} against threshold of ${roll.threshold} ` +
           `(had ${roll.aboveThresholdChancePct}% chance of success)`,
       )
     }
@@ -116,13 +116,14 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
   }
 
   const damageHitPointsPctMsg = `${((damage / prevHitPoints) * 100).toFixed(2)}%`
+  const damageIcon = damage > 0 ? '🩸 ' : ''
   const kiaMsg = agent.state === 'Terminated' ? ' KIA 💀. Sustained' : 'sustained'
 
   const chanceOfNoDamage = roll.atOrAboveThresholdChancePct
   const chanceOfKIA = roll.threshold - prevHitPoints
 
   console.log(
-    `Agent '${agent.id}' ${kiaMsg} ${damage}, amounting to ${damageHitPointsPctMsg} of their hit points. ` +
+    `💥 Agent '${agent.id}' ${kiaMsg} ${damageIcon}${damage} damage, amounting to ${damageHitPointsPctMsg} of their hit points. ` +
       `(${prevHitPoints} -> ${agent.hitPoints}). ` +
       `Rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}. ` +
       `(had ${chanceOfNoDamage}% chance of no damage, ${chanceOfKIA}% chance of KIA)`,
