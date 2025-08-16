@@ -28,7 +28,7 @@ describe('effectiveSkill', () => {
       id: 'test-agent',
       turnHired: 1,
       skill: 116,
-      exhaustion: 15,
+      exhaustion: 20,
       hitPoints: 30,
       maxHitPoints: 30,
       recoveryTurns: 0,
@@ -67,7 +67,7 @@ describe('effectiveSkill', () => {
       id: 'test-agent',
       turnHired: 1,
       skill: 150,
-      exhaustion: 15,
+      exhaustion: 20,
       hitPoints: 23,
       maxHitPoints: 30,
       recoveryTurns: 0,
@@ -87,7 +87,7 @@ describe('effectiveSkill', () => {
       id: 'test-agent',
       turnHired: 1,
       skill: 100,
-      exhaustion: 80,
+      exhaustion: 85,
       hitPoints: 30,
       maxHitPoints: 30,
       recoveryTurns: 0,
@@ -116,8 +116,8 @@ describe('effectiveSkill', () => {
       assignment: 'Standby',
     }
 
-    // effective_skill = floor(100 * (1 - 0/30) * (1 - 100/100)) = floor(100 * 1 * 0) = floor(0) = 0
-    expect(agV(agent).effectiveSkill()).toBe(0)
+    // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 0.95) = floor(5) = 5
+    expect(agV(agent).effectiveSkill()).toBe(5)
   })
 
   test('handle zero hit points correctly', () => {
