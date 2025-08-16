@@ -84,7 +84,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
             sx={{
               flexWrap: 'wrap',
               '& > *': {
-                flex: '0 0 calc(50% - 8px)', // 50% width minus half the spacing
+                flex: '0 0 calc(50%)',
               },
             }}
           >
