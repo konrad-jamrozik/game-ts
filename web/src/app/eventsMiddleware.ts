@@ -1,5 +1,4 @@
 import type { Middleware } from '@reduxjs/toolkit'
-import pluralize from 'pluralize'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../lib/collections/missions'
 import { addMissionCompletedEvent, addTextEvent, clearEvents, truncateEventsTo } from '../lib/slices/eventsSlice'
@@ -18,6 +17,7 @@ import isPlayerAction from '../lib/slices/isPlayerAction'
 import type { MissionRewards, MissionSite, MissionSiteState } from '../lib/model/model'
 import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'
+import { fmtAgentCount } from '../lib/utils/formatUtils'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
 // [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
@@ -116,20 +116,19 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (sackAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      // KJA use here fmtAgentCount
-      postTextEvent(`Sacked ${agentCount} ${pluralize('agent', agentCount)}`)
+      postTextEvent(`Sacked ${fmtAgentCount(agentCount)}`)
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to contracting`)
+      postTextEvent(`OnAssignment ${fmtAgentCount(agentCount)} to contracting`)
     } else if (assignAgentsToEspionage.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`OnAssignment ${agentCount} ${pluralize('agent', agentCount)} to espionage`)
+      postTextEvent(`OnAssignment ${fmtAgentCount(agentCount)} to espionage`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Recalled ${agentCount} ${pluralize('agent', agentCount)}`)
+      postTextEvent(`Recalled ${fmtAgentCount(agentCount)}`)
     } else if (investigateLead.match(action)) {
       const { leadId, intelCost } = action.payload
       postTextEvent(`Investigated lead: ${leadId} (cost: ${intelCost} intel)`)
@@ -141,7 +140,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
       const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
 
-      postTextEvent(`Deployed ${agentCount} ${pluralize('agent', agentCount)} to mission: ${missionTitle}`)
+      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionTitle}`)
     } else if (reset.match(action)) {
       // Clear all events on full game reset
       store.dispatch(clearEvents())
