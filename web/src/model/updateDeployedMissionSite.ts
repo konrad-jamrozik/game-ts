@@ -15,13 +15,9 @@ type AgentWithHitPointsLostInfo = {
 }
 
 /**
- * Processes both rolls for a single agent: mission objective roll and hit points lost roll.
+ * Processes objective rolls for a single agent. Mutates the mission site to mark objectives as fulfilled.
  */
-function processAgentRolls(
-  agentView: AgentView,
-  missionSite: MissionSite,
-  missionDifficulty: number,
-): AgentHitPointsLostRollResult {
+function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): void {
   // Mission objective roll - only if there are unfulfilled objectives
   const unfulfilledObjectives = missionSite.objectives
     .filter((objective) => !objective.fulfilled)
@@ -63,6 +59,13 @@ function processAgentRolls(
       )
     }
   }
+}
+
+/**
+ * Processes hit points lost roll for a single agent. Mutates the agent's state and hit points.
+ */
+function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: number): AgentHitPointsLostRollResult {
+  const agent = agentView.agent()
 
   // Hit points lost roll
   const hitPointsLostRoll = rollDie()
@@ -139,6 +142,7 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   // Get agents deployed to this mission site
   const deployedAgents = agsV(state.agents).withIds(missionSite.agentIds)
 
+  // KJA sorting should be AgentsView function
   // Sort agents by effective skill (lowest to highest) for rolling order
   const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
 
@@ -146,7 +150,8 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
 
   // Process each agent's rolls
   for (const agent of sortedAgents) {
-    const { hitPointsLost } = processAgentRolls(agent, missionSite, mission.difficulty)
+    processObjectiveRoll(agent, missionSite)
+    const { hitPointsLost } = processHitPointsLostRoll(agent, mission.difficulty)
 
     agentsWithHitPointsLost.push({
       agent: agent.agent(),
