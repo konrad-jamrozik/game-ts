@@ -28,7 +28,7 @@ export function getEspionageIntel(agents: AgentsView): number {
 }
 export function getMoneyDiff(gameState: GameState): number {
   const agents = agsV(gameState.agents)
-  return gameState.funding + agents.contractingIncome() - agents.agentUpkeep() - gameState.hireCost
+  return gameState.funding + agents.contractingIncome() - agents.agentUpkeep() - gameState.currentTurnTotalHireCost
 }
 
 export function getIntelDiff(gameState: GameState): number {

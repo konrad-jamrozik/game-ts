@@ -112,10 +112,10 @@ function updatePlayerAssets(
   state.money += state.funding
 
   // Subtract hire cost
-  state.money -= state.hireCost
+  state.money -= state.currentTurnTotalHireCost
 
   // Reset hire cost
-  state.hireCost = 0
+  state.currentTurnTotalHireCost = 0
 
   // Add intel gathered by espionage agents
   state.intel += income.intelGathered

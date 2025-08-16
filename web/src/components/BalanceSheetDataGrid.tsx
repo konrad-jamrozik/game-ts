@@ -1,8 +1,8 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyDiff, getMoneyNewBalance, getIntelDiff } from '../lib/model/ruleset/ruleset'
-import { selectAgentsView } from '../lib/selectors/selectors'
 import { DataGridCard } from './DataGridCard'
+import { agsV } from '../lib/model/agents/AgentsView'
 
 export type BalanceSheetRow = {
   name: 'Money' | 'Funding' | 'Contracted' | 'Agent upkeep' | 'Hire cost' | 'Diff' | 'NewBalance' | 'Intel diff'
@@ -11,7 +11,7 @@ export type BalanceSheetRow = {
 
 export function BalanceSheetDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const agents = useAppSelector(selectAgentsView)
+  const agents = agsV(gameState.agents)
   const contracted = agents.contractingIncome()
   const agentUpkeep = agents.agentUpkeep()
   const diff = getMoneyDiff(gameState)
@@ -22,7 +22,7 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
     { name: 'Funding', id: 2, value: gameState.funding },
     { name: 'Contracted', id: 3, value: contracted },
     { name: 'Agent upkeep', id: 4, value: agentUpkeep },
-    { name: 'Hire cost', id: 5, value: gameState.hireCost },
+    { name: 'Hire cost', id: 5, value: gameState.currentTurnTotalHireCost },
     { name: '$ Diff', id: 6, value: diff },
     { name: 'New $ balance', id: 7, value: newBalance },
     { name: 'Intel diff', id: 8, value: intelDiff },

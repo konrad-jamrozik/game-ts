@@ -8,7 +8,6 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
-import { selectAgentsView } from '../lib/selectors/selectors'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -22,22 +21,24 @@ import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '
 import { fmtAgentCount, fmtMissionTarget } from '../lib/utils/formatUtils'
 import { validateMissionSiteDeployment } from '../lib/utils/MissionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
+import { agsV } from '../lib/model/agents/AgentsView'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
-  const agentsView = useAppSelector(selectAgentsView)
+
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const agents = agsV(gameState.agents)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
 
-  const selectedAgentIds = agentSelection.filter((id) => agentsView.some((agent) => agent.agent().id === id))
+  const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.agent().id === id))
 
   function handleSackAgents(): void {
     // Validate that all selected agents are available
-    const validationResult = agentsView.validateAvailable(selectedAgentIds)
+    const validationResult = agents.validateAvailable(selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -52,7 +53,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToContracting(): void {
     // Validate that all selected agents are available
-    const validationResult = agentsView.validateAvailable(selectedAgentIds)
+    const validationResult = agents.validateAvailable(selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -67,7 +68,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToEspionage(): void {
     // Validate that all selected agents are available
-    const validationResult = agentsView.validateAvailable(selectedAgentIds)
+    const validationResult = agents.validateAvailable(selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -82,7 +83,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleRecallAgents(): void {
     // Check if all selected agents are in "OnAssignment" state
-    const validationResult = agentsView.validateOnAssignment(selectedAgentIds)
+    const validationResult = agents.validateOnAssignment(selectedAgentIds)
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
@@ -131,7 +132,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agents are available
-    const agentValidation = agentsView.validateAvailable(selectedAgentIds)
+    const agentValidation = agents.validateAvailable(selectedAgentIds)
     if (!agentValidation.isValid) {
       setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)

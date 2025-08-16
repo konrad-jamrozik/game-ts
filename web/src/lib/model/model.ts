@@ -81,6 +81,7 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
+// KJA LATER hierarchize the game state per the comments and use more fine-grained selectors.
 export type GameState = {
   // Session
   turn: number
@@ -92,8 +93,9 @@ export type GameState = {
   money: number
   intel: number
   funding: number
-  hireCost: number
   agents: Agent[]
+  // Liabilities
+  currentTurnTotalHireCost: number
   // Leads
   leadInvestigationCounts: Record<string, number>
   // Mission sites

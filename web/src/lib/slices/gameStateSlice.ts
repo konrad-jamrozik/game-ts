@@ -38,7 +38,7 @@ const gameStateSlice = createSlice({
         missionsSurvived: 0,
       }
       state.agents.push(newAgent)
-      state.hireCost += AGENT_HIRE_COST
+      state.currentTurnTotalHireCost += AGENT_HIRE_COST
     }),
     sackAgents: asPlayerAction<string[]>((state, action) => {
       const agentIdsToSack = action.payload
