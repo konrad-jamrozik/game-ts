@@ -11,6 +11,7 @@ import type { GameState, MissionRewards, Faction, FactionRewards } from '../mode
 import { updateDeployedMissionSite } from './updateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
+import { assertDefined } from '../utils/assert'
 
 export default function advanceTurnImpl(state: GameState): void {
   validateGameStateInvariants(state)
@@ -183,10 +184,8 @@ function updateFactions(state: GameState, missionRewards: MissionRewards[]): voi
     if (rewards.factionRewards) {
       for (const factionReward of rewards.factionRewards) {
         const targetFaction = state.factions.find((faction) => faction.id === factionReward.factionId)
-        // KJA throw assertion error if faction not found. But actually move it to "validateGameState" to be invoked on each turn advancement before and after.
-        if (targetFaction) {
-          applyFactionReward(targetFaction, factionReward)
-        }
+        assertDefined(targetFaction)
+        applyFactionReward(targetFaction, factionReward)
       }
     }
   }

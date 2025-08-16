@@ -28,7 +28,6 @@ export function SituationReportCard(): React.JSX.Element {
 
   // Get Red Dawn faction data and check if it's discovered
   const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
-  // KJA LATER move this assertDefined inside augmented FactionsView find. Basically .net .Single()
   assertDefined(redDawnFaction, 'Red Dawn faction should be defined')
   const isRedDawnDiscovered = redDawnFaction.discoveryPrerequisite.every(
     (leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0,

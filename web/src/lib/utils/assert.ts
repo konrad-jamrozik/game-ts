@@ -1,3 +1,5 @@
+// KJA LATER all cases of use of this should be allowed only inside domain model collections like AgentsView.
+// In case of finding single item, it will basically become .net .Single()
 export function assertDefined<T>(
   value: T,
   errMsg = 'Value must be defined (not null or undefined)',
