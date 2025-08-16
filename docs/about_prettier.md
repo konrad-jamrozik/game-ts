@@ -25,6 +25,11 @@ Specifically:
 Prettier talks about this in [ESLint (and other linters)].  
 ESLint talks about this in [Suggested usage - Prettier] and [Performance - eslint-plugin-prettier].
 
+# Troubleshooting
+
+If Prettier doesn't want final new line but VS Code is inserting it while formatting on save, add to `settings.json`:
+`"files.trimFinalNewlines": true,`
+
 [prettier]: https://prettier.io/
 [react prettier]: https://react.dev/learn/editor-setup#formatting
 [eslint-plugin-prettier]: https://www.npmjs.com/package/eslint-plugin-prettier
