@@ -5,13 +5,13 @@ import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 import { agsV } from './views/AgentsView'
 import type { AgentView } from './views/AgentView'
 
-type AgentHitPointsLostRollResult = {
-  hitPointsLost: number
+type AgentDamage = {
+  damage: number
 }
 
-type AgentWithHitPointsLostInfo = {
+type AgentWithDamageInfo = {
   agent: Agent
-  hitPointsLost: number
+  damage: number
 }
 
 /**
@@ -30,20 +30,20 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   // Sort agents by effective skill (lowest to highest) for rolling order
   const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
 
-  const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []
+  const damageInfo: AgentWithDamageInfo[] = []
 
   // Process each agent's rolls
   for (const agent of sortedAgents) {
     processObjectiveRoll(agent, missionSite)
-    const { hitPointsLost } = processHitPointsLostRoll(agent, mission.difficulty)
+    const { damage } = processDamageRoll(agent, mission.difficulty)
 
-    agentsWithHitPointsLost.push({
+    damageInfo.push({
       agent: agent.agent(),
-      hitPointsLost,
+      damage,
     })
   }
 
-  updateDeployedSurvivingAgents(agentsWithHitPointsLost)
+  updateDeployedSurvivingAgents(damageInfo)
 
   // Determine mission site outcome
   const allObjectivesFulfilled = missionSite.objectives.every((objective) => objective.fulfilled)
@@ -99,7 +99,7 @@ function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): v
 /**
  * Processes hit points lost roll for a single agent. Mutates the agent's state and hit points.
  */
-function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: number): AgentHitPointsLostRollResult {
+function processDamageRoll(agentView: AgentView, missionDifficulty: number): AgentDamage {
   const agent = agentView.agent()
 
   // Hit points lost roll
@@ -129,13 +129,13 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
       `(had ${chanceOfNoDamage}% chance of no damage, ${chanceOfKIA}% chance of KIA)`,
   )
 
-  return { hitPointsLost: damage }
+  return { damage }
 }
 
-function updateDeployedSurvivingAgents(agentsWithHitPointsLost: AgentWithHitPointsLostInfo[]): void {
-  const terminatedAgentCount = agentsWithHitPointsLost.filter(({ agent }) => agent.state === 'Terminated').length
+function updateDeployedSurvivingAgents(damageInfo: AgentWithDamageInfo[]): void {
+  const terminatedAgentCount = damageInfo.filter(({ agent }) => agent.state === 'Terminated').length
 
-  for (const { agent, hitPointsLost } of agentsWithHitPointsLost) {
+  for (const { agent, damage } of damageInfo) {
     if (agent.state !== 'Terminated') {
       // All surviving agents suffer exhaustion
       agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
@@ -144,11 +144,11 @@ function updateDeployedSurvivingAgents(agentsWithHitPointsLost: AgentWithHitPoin
       agent.exhaustion += terminatedAgentCount * AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
       // Calculate recovery time if agent lost hit points
-      if (hitPointsLost > 0) {
-        const hitPointsLostPercentage = (hitPointsLost / agent.maxHitPoints) * 100
+      if (damage > 0) {
+        const hitPointsLostPercentage = Math.min((damage / agent.maxHitPoints) * 100, 100)
         const recoveryTurns = Math.ceil(hitPointsLostPercentage / 2)
         agent.recoveryTurns = Math.max(agent.recoveryTurns, recoveryTurns)
-        agent.hitPointsLostBeforeRecovery = hitPointsLost
+        agent.hitPointsLostBeforeRecovery = damage
         agent.state = 'InTransit'
         agent.assignment = 'Recovery'
       } else {
