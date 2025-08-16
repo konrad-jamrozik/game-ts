@@ -1,8 +1,6 @@
 import type { MissionSite, MissionSiteState } from './model'
 
-/**
- * Domain service for mission site operations and filtering
- */
+// KJA LATERmigrate MissionSiteUtils to MissionSitesView
 
 /**
  * Filters mission sites by their state
@@ -45,22 +43,6 @@ export function sortActiveMissionSites(missionSites: MissionSite[]): MissionSite
     // Within same state, sort by ID (newest first)
     return siteB.id.localeCompare(siteA.id)
   })
-}
-
-/**
- * Checks if a mission site is available for deployment
- */
-// KJA actually use this function
-export function canDeployToMissionSite(missionSite: MissionSite): boolean {
-  return missionSite.state === 'Active'
-}
-
-/**
- * Formats mission site display ID by removing prefixes
- */
-// KJA actually use this function
-export function formatMissionSiteDisplayId(missionSiteId: string): string {
-  return missionSiteId.replace(/^mission-site-/u, '')
 }
 
 /**
