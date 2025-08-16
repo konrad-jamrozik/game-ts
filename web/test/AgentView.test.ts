@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { Agent } from '../src/lib/model/model'
 import { agV } from '../src/lib/model/agents/AgentView'
 
-// KJA LATER this test is superbly verbose. Dedup it and same with other tests.
+// KJA FUTURE this test is superbly verbose. Dedup it and same with other tests.
 describe('effectiveSkill', () => {
   test('calculate effective skill correctly with no exhaustion and no hit points lost', () => {
     const agent: Agent = {
