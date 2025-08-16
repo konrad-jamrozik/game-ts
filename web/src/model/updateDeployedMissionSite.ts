@@ -1,6 +1,6 @@
 import { getMissionById, getObjectiveDifficulty } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
-import { newRoll } from './CombatService'
+import { newRoll } from './Roll'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 import { getRecoveryTurns } from './ruleset'
 import { agsV } from './views/AgentsView'
