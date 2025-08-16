@@ -57,9 +57,6 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   return undefined
 }
 
-/**
- * Processes objective rolls for a single agent. Mutates the mission site to mark objectives as fulfilled.
- */
 function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): void {
   // Mission objective roll - only if there are unfulfilled objectives
   const unfulfilledObjectives = missionSite.objectives
@@ -96,13 +93,9 @@ function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): v
   }
 }
 
-/**
- * Processes hit points lost roll for a single agent. Mutates the agent's state and hit points.
- */
 function processDamageRoll(agentView: AgentView, missionDifficulty: number): AgentDamage {
   const agent = agentView.agent()
 
-  // Hit points lost roll
   const effectiveSkill = agentView.effectiveSkill()
   const roll = newRoll(effectiveSkill, missionDifficulty)
 
