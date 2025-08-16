@@ -1,6 +1,6 @@
 import { getMissionById, getObjectiveDifficulty } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
-import { calculateRollThreshold, rollDie } from './CombatService'
+import { newRoll } from './CombatService'
 import type { Agent, GameState, MissionRewards, MissionSite } from './model'
 import { agsV } from './views/AgentsView'
 import type { AgentView } from './views/AgentView'
@@ -75,30 +75,21 @@ function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): v
   if (unfulfilledObjectives.length > 0) {
     const [targetObjective] = unfulfilledObjectives
     if (targetObjective) {
-      const objectiveRoll = rollDie()
       const effectiveSkill = agentView.effectiveSkill()
       const objectiveDifficulty = getObjectiveDifficulty(missionSite.missionId, targetObjective.id)
-      const [objectiveThreshold, objectiveThresholdFormula] = calculateRollThreshold(
-        effectiveSkill,
-        objectiveDifficulty,
-      )
+      const roll = newRoll(effectiveSkill, objectiveDifficulty)
 
-      // eslint-disable-next-line @typescript-eslint/init-declarations
-      let objectiveRollResultMsg: string
-      if (objectiveRoll > objectiveThreshold) {
-        objectiveRollResultMsg = 'fulfilled (> threshold)'
+      if (roll.isAboveThreshold) {
         // Mark objective as fulfilled
         const objectiveInSite = missionSite.objectives.find((objective) => objective.id === targetObjective.id)
         if (objectiveInSite) {
           objectiveInSite.fulfilled = true
         }
-      } else {
-        objectiveRollResultMsg = 'failed (<= threshold)'
       }
 
       console.log(
-        `Agent '${agent.id}' ${objectiveRollResultMsg} objective '${targetObjective.id}': ` +
-          `rolled ${objectiveRoll} against threshold of ${objectiveThresholdFormula}.`,
+        `Agent '${agent.id}' ${roll.isAboveThresholdMsg} objective '${targetObjective.id}': ` +
+          `rolled ${roll.roll} against threshold of ${roll.threshold}.`,
       )
     }
   }
@@ -111,28 +102,27 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
   const agent = agentView.agent()
 
   // Hit points lost roll
-  const hitPointsLostRoll = rollDie()
   const effectiveSkill = agentView.effectiveSkill()
-  const [hitPointsThreshold, hitPointsThresholdFormula] = calculateRollThreshold(effectiveSkill, missionDifficulty)
+  const roll = newRoll(effectiveSkill, missionDifficulty)
 
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let hitPointsLost: number
   const prevHitPoints = agent.hitPoints
-  if (hitPointsLostRoll < hitPointsThreshold) {
-    hitPointsLost = hitPointsThreshold - hitPointsLostRoll
+  if (roll.isAtThresholdOrAbove) {
+    hitPointsLost = 0
+  } else {
+    hitPointsLost = roll.belowThreshold
     agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
     if (agent.hitPoints <= 0) {
       agent.state = 'Terminated'
       agent.assignment = 'KIA'
     }
-  } else {
-    hitPointsLost = 0
   }
 
   console.log(
     `Agent '${agent.id}' lost ${hitPointsLost} hit points. (${prevHitPoints} -> ${agent.hitPoints}). ` +
-      `rolled ${hitPointsLostRoll} against "no damage" threshold of ${hitPointsThresholdFormula}.`,
+      `rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}.`,
   )
 
   return { hitPointsLost }
@@ -172,3 +162,4 @@ function updateDeployedSurvivingAgents(agentsWithHitPointsLost: AgentWithHitPoin
     }
   }
 }
+
