@@ -2,6 +2,42 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
+export type Roll = Readonly<{
+  skill: number
+  difficulty: number
+  roll: number
+  threshold: number
+  isAboveThreshold: boolean
+  isAtThresholdOrAbove: boolean
+  aboveThreshold: number
+  belowThreshold: number
+  isAboveThresholdMsg: string
+  isAtThresholdOrAboveMsg: string
+}>
+
+export function newRoll(skill: number, difficulty: number): Roll {
+  const roll = rollDie()
+  const [threshold] = calculateRollThreshold(skill, difficulty)
+  const isAboveThreshold = roll > threshold
+  const isAtThresholdOrAbove = roll >= threshold
+  const aboveThreshold = roll - threshold
+  const belowThreshold = threshold - roll
+  const isAboveThresholdMsg = isAboveThreshold ? 'success (> threshold)' : 'failed (<= threshold)'
+  const isAtThresholdOrAboveMsg = isAtThresholdOrAbove ? 'success (>= threshold)' : 'failed (< threshold)'
+  return {
+    skill,
+    difficulty,
+    roll,
+    threshold,
+    isAboveThreshold,
+    isAtThresholdOrAbove,
+    aboveThreshold,
+    belowThreshold,
+    isAboveThresholdMsg,
+    isAtThresholdOrAboveMsg,
+  }
+}
+
 /**
  * Rolls a die (1-100 inclusive)
  */
