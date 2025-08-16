@@ -89,7 +89,8 @@ function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): v
 
       console.log(
         `Agent '${agent.id}' ${roll.isAboveThresholdMsg} objective '${targetObjective.id}': ` +
-          `rolled ${roll.roll} against threshold of ${roll.threshold}.`,
+          `rolled ${roll.roll} against threshold of ${roll.threshold} ` +
+          `(had ${roll.aboveThresholdChancePct}% chance of success)`,
       )
     }
   }
@@ -105,24 +106,22 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
   const effectiveSkill = agentView.effectiveSkill()
   const roll = newRoll(effectiveSkill, missionDifficulty)
 
-  // eslint-disable-next-line @typescript-eslint/init-declarations
-  let hitPointsLost: number
   const prevHitPoints = agent.hitPoints
-  if (roll.isAtThresholdOrAbove) {
-    hitPointsLost = 0
-  } else {
-    hitPointsLost = roll.belowThreshold
-    agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
+  const hitPointsLost = roll.belowThreshold
+  agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
 
-    if (agent.hitPoints <= 0) {
-      agent.state = 'Terminated'
-      agent.assignment = 'KIA'
-    }
+  if (agent.hitPoints <= 0) {
+    agent.state = 'Terminated'
+    agent.assignment = 'KIA'
   }
+
+  const chanceOfNoHitPointsLost = roll.atOrAboveThresholdChancePct
+  const chanceOfAllHitPointsLost = roll.threshold - prevHitPoints
 
   console.log(
     `Agent '${agent.id}' lost ${hitPointsLost} hit points. (${prevHitPoints} -> ${agent.hitPoints}). ` +
-      `rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}.`,
+      `rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}. ` +
+      `(had ${chanceOfNoHitPointsLost}% chance of no damage, ${chanceOfAllHitPointsLost}% chance of KIA)`,
   )
 
   return { hitPointsLost }

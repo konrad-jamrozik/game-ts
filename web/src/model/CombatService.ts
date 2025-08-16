@@ -8,33 +8,39 @@ export type Roll = Readonly<{
   roll: number
   threshold: number
   isAboveThreshold: boolean
-  isAtThresholdOrAbove: boolean
+  isAtOrAboveThreshold: boolean
   aboveThreshold: number
   belowThreshold: number
+  aboveThresholdChancePct: number
+  atOrAboveThresholdChancePct: number
   isAboveThresholdMsg: string
-  isAtThresholdOrAboveMsg: string
+  isAtOrAboveThresholdMsg: string
 }>
 
 export function newRoll(skill: number, difficulty: number): Roll {
   const roll = rollDie()
   const [threshold] = calculateRollThreshold(skill, difficulty)
   const isAboveThreshold = roll > threshold
-  const isAtThresholdOrAbove = roll >= threshold
-  const aboveThreshold = roll - threshold
-  const belowThreshold = threshold - roll
-  const isAboveThresholdMsg = isAboveThreshold ? 'success (> threshold)' : 'failed (<= threshold)'
-  const isAtThresholdOrAboveMsg = isAtThresholdOrAbove ? 'success (>= threshold)' : 'failed (< threshold)'
+  const isAtOrAboveThreshold = roll >= threshold
+  const aboveThreshold = Math.max(roll - threshold, 0)
+  const belowThreshold = Math.max(threshold - roll, 0)
+  const aboveThresholdChancePct = Math.min(Math.max(100 - threshold, 0), 100)
+  const atOrAboveThresholdChancePct = Math.min(Math.max(101 - threshold, 0), 100)
+  const isAboveThresholdMsg = isAboveThreshold ? 'success (> threshold)' : 'failure (<= threshold)'
+  const isAtOrAboveThresholdMsg = isAtOrAboveThreshold ? 'success (>= threshold)' : 'failure (< threshold)'
   return {
     skill,
     difficulty,
     roll,
     threshold,
     isAboveThreshold,
-    isAtThresholdOrAbove,
+    isAtOrAboveThreshold,
     aboveThreshold,
     belowThreshold,
+    aboveThresholdChancePct,
+    atOrAboveThresholdChancePct,
     isAboveThresholdMsg,
-    isAtThresholdOrAboveMsg,
+    isAtOrAboveThresholdMsg,
   }
 }
 
