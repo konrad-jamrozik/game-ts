@@ -1,7 +1,7 @@
-import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from '../ruleset/constants'
+import { AGENT_CONTRACTING_INCOME, AGENT_ESPIONAGE_INTEL, AGENT_UPKEEP_COST } from './constants'
 import { floor } from '../utils/mathUtils'
-import type { GameState, MissionSite } from './model'
-import { agsV, type AgentsView } from './views/AgentsView'
+import type { GameState, MissionSite } from '../model'
+import { agsV, type AgentsView } from '../agents/AgentsView'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST

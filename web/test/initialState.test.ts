@@ -1,5 +1,5 @@
 import { describe, test, expect } from 'vitest'
-import { makeInitialState } from '../src/ruleset/initialState'
+import { makeInitialState } from '../src/model/lib/ruleset/initialState'
 
 describe(makeInitialState, () => {
   test('debug initial state passes agent invariant validation', () => {

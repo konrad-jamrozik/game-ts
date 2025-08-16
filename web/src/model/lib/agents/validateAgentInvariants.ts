@@ -1,5 +1,5 @@
-import type { Agent, GameState } from '../model/model'
-import { assertDefined, assertEqual, assertOneOf } from './assert'
+import type { Agent, GameState } from '../model'
+import { assertDefined, assertEqual, assertOneOf } from '../utils/assert'
 
 /**
  * Validates invariants for a single agent within the context of a given game state.

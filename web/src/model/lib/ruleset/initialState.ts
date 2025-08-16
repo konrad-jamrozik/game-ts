@@ -1,6 +1,6 @@
-import { factions } from '../collections/factions'
-import type { GameState } from '../model/model'
-import { validateAgentInvariants } from '../utils/validateAgentInvariants'
+import { factions } from '../../../collections/factions'
+import type { GameState } from '../model'
+import { validateAgentInvariants } from '../agents/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
 
 export function makeInitialState(options?: { debug?: boolean }): GameState {

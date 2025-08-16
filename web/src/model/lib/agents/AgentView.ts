@@ -1,5 +1,5 @@
-import { floor } from '../../utils/mathUtils'
-import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
+import { floor } from '../utils/mathUtils'
+import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model'
 
 export type AgentView = Readonly<{

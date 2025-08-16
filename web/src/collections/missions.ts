@@ -1,5 +1,5 @@
-import type { Mission } from '../model/model'
-import { assertDefined } from '../utils/assert'
+import type { Mission } from '../model/lib/model'
+import { assertDefined } from '../model/lib/utils/assert'
 
 export const missions: Mission[] = [
   {

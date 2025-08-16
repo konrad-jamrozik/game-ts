@@ -1,4 +1,4 @@
-import type { MissionSite, MissionSiteState } from './model'
+import type { MissionSite, MissionSiteState } from '../model'
 
 // KJA LATER migrate MissionSiteUtils to MissionSitesView
 

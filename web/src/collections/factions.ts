@@ -1,4 +1,4 @@
-import type { Faction } from '../model/model'
+import type { Faction } from '../model/lib/model'
 
 export const factions: Faction[] = [
   {

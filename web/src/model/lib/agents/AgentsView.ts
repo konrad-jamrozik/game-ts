@@ -1,6 +1,6 @@
-import { validateAgentLocalInvariants } from '../../utils/validateAgentInvariants'
+import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model'
-import { getAgentUpkeep, getContractingIncome, getEspionageIntel } from '../ruleset'
+import { getAgentUpkeep, getContractingIncome, getEspionageIntel } from '../ruleset/ruleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 

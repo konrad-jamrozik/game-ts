@@ -1,5 +1,5 @@
-import { fmtAgentCount } from '../utils/formatUtils'
-import type { TextEvent } from './eventsSlice'
+import { fmtAgentCount } from './lib/utils/formatUtils'
+import type { TextEvent } from './slices/eventsSlice'
 
 /**
  * Service for creating game events with consistent patterns

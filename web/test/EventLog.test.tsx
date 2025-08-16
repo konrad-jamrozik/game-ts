@@ -3,8 +3,8 @@ import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { store } from '../src/app/store'
 import { EventLog } from '../src/components/EventLog'
-import { clearEvents } from '../src/model/eventsSlice'
-import { reset } from '../src/model/gameStateSlice'
+import { clearEvents } from '../src/model/slices/eventsSlice'
+import { reset } from '../src/model/slices/gameStateSlice'
 
 function renderEventLog(): void {
   render(
@@ -33,7 +33,7 @@ describe(EventLog, () => {
   test('displays events when they exist in the state', async () => {
     expect.hasAssertions()
 
-    const { hireAgent } = await import('../src/model/gameStateSlice')
+    const { hireAgent } = await import('../src/model/slices/gameStateSlice')
     store.dispatch(hireAgent())
 
     renderEventLog()
@@ -45,7 +45,7 @@ describe(EventLog, () => {
   test('shows "New game started" event when store initializes without persisted state', async () => {
     expect.hasAssertions()
 
-    const { addTextEvent: addEvent } = await import('../src/model/eventsSlice')
+    const { addTextEvent: addEvent } = await import('../src/model/slices/eventsSlice')
     const state = store.getState()
     const { gameState } = state.undoable.present
 

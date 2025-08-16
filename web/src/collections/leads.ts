@@ -1,5 +1,5 @@
-import type { Lead } from '../model/model'
-import { assertDefined } from '../utils/assert'
+import type { Lead } from '../model/lib/model'
+import { assertDefined } from '../model/lib/utils/assert'
 
 export const leads: Lead[] = [
   {

@@ -1,5 +1,5 @@
 import type { CaseReducer, PayloadAction } from '@reduxjs/toolkit'
-import type { GameState } from './model'
+import type { GameState } from '../lib/model'
 
 export type PlayerActionResult<T = undefined> = {
   payload: T

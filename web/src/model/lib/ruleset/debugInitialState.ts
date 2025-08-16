@@ -1,4 +1,4 @@
-import type { Agent, GameState } from '../model/model'
+import type { Agent, GameState } from '../model'
 
 function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAgentIds: string[] } {
   let agentCounter = 0

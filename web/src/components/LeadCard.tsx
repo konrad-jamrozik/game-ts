@@ -8,7 +8,7 @@ import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
-import { setLeadSelection } from '../model/selectionSlice'
+import { setLeadSelection } from '../model/slices/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
 export type LeadCardProps = {

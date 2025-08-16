@@ -8,7 +8,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../collections/leads'
-import { validateMissionSiteDeployment } from '../model/MissionSiteUtils'
+import { validateMissionSiteDeployment } from '../model/lib/utils/MissionSiteUtils'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -17,11 +17,11 @@ import {
   investigateLead,
   recallAgents,
   sackAgents,
-} from '../model/gameStateSlice'
-import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
-import { agsV } from '../model/views/AgentsView'
+} from '../model/slices/gameStateSlice'
+import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/slices/selectionSlice'
+import { agsV } from '../model/lib/agents/AgentsView'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { fmtAgentCount, fmtMissionTarget } from '../utils/formatUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../model/lib/utils/formatUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()

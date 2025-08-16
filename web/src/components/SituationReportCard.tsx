@@ -6,10 +6,10 @@ import Typography from '@mui/material/Typography'
 import type { GridColDef } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { SUPPRESSION_DECAY_PCT } from '../ruleset/constants'
+import { SUPPRESSION_DECAY_PCT } from '../model/lib/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPctDiv100, fmtPct } from '../utils/formatUtils'
-import { assertDefined } from '../utils/assert'
+import { fmtPctDiv100, fmtPct } from '../model/lib/utils/formatUtils'
+import { assertDefined } from '../model/lib/utils/assert'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)

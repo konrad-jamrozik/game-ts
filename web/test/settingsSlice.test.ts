@@ -3,7 +3,7 @@ import settingsReducer, {
   setResetControlsExpanded,
   toggleResetControlsExpanded,
   type SettingsState,
-} from '../src/model/settingsSlice'
+} from '../src/model/slices/settingsSlice'
 
 describe('settingsSlice', () => {
   const initialState: SettingsState = {

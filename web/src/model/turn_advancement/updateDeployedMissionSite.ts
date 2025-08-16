@@ -1,10 +1,10 @@
-import { getMissionById, getObjectiveDifficulty } from '../collections/missions'
-import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../ruleset/constants'
+import { getMissionById, getObjectiveDifficulty } from '../../collections/missions'
+import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../lib/ruleset/constants'
 import { newRoll } from './Roll'
-import type { Agent, GameState, MissionRewards, MissionSite } from './model'
-import { getRecoveryTurns } from './ruleset'
-import { agsV } from './views/AgentsView'
-import type { AgentView } from './views/AgentView'
+import type { Agent, GameState, MissionRewards, MissionSite } from '../lib/model'
+import { getRecoveryTurns } from '../lib/ruleset/ruleset'
+import { agsV } from '../lib/agents/AgentsView'
+import type { AgentView } from '../lib/agents/AgentView'
 
 type AgentDamage = {
   damage: number
