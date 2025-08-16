@@ -15,6 +15,49 @@ type AgentWithHitPointsLostInfo = {
 }
 
 /**
+ * Updates a deployed mission site according to about_deployed_mission_sites.md.
+ * This includes agent rolls, objective completion, damage calculation, and rewards.
+ * Returns the mission rewards to be applied later in the turn advancement process.
+ */
+export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
+  // Get the mission to access its difficulty
+  const mission = getMissionById(missionSite.missionId)
+
+  // Get agents deployed to this mission site
+  const deployedAgents = agsV(state.agents).withIds(missionSite.agentIds)
+
+  // KJA sorting should be AgentsView function
+  // Sort agents by effective skill (lowest to highest) for rolling order
+  const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
+
+  const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []
+
+  // Process each agent's rolls
+  for (const agent of sortedAgents) {
+    processObjectiveRoll(agent, missionSite)
+    const { hitPointsLost } = processHitPointsLostRoll(agent, mission.difficulty)
+
+    agentsWithHitPointsLost.push({
+      agent: agent.agent(),
+      hitPointsLost,
+    })
+  }
+
+  updateDeployedSurvivingAgents(agentsWithHitPointsLost)
+
+  // Determine mission site outcome
+  const allObjectivesFulfilled = missionSite.objectives.every((objective) => objective.fulfilled)
+  missionSite.state = allObjectivesFulfilled ? 'Successful' : 'Failed'
+
+  // Return mission rewards to be applied later, don't apply them immediately
+  if (missionSite.state === 'Successful') {
+    return mission.rewards
+  }
+
+  return undefined
+}
+
+/**
  * Processes objective rolls for a single agent. Mutates the mission site to mark objectives as fulfilled.
  */
 function processObjectiveRoll(agentView: AgentView, missionSite: MissionSite): void {
@@ -95,10 +138,10 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
   return { hitPointsLost }
 }
 
-function updateDeployedSurvivingAgents(agentsWithResults: AgentWithHitPointsLostInfo[]): void {
-  const terminatedAgentCount = agentsWithResults.filter(({ agent }) => agent.state === 'Terminated').length
+function updateDeployedSurvivingAgents(agentsWithHitPointsLost: AgentWithHitPointsLostInfo[]): void {
+  const terminatedAgentCount = agentsWithHitPointsLost.filter(({ agent }) => agent.state === 'Terminated').length
 
-  for (const { agent, hitPointsLost } of agentsWithResults) {
+  for (const { agent, hitPointsLost } of agentsWithHitPointsLost) {
     if (agent.state !== 'Terminated') {
       // All surviving agents suffer exhaustion
       agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
@@ -128,47 +171,4 @@ function updateDeployedSurvivingAgents(agentsWithResults: AgentWithHitPointsLost
       }
     }
   }
-}
-
-/**
- * Updates a deployed mission site according to about_deployed_mission_sites.md.
- * This includes agent rolls, objective completion, damage calculation, and rewards.
- * Returns the mission rewards to be applied later in the turn advancement process.
- */
-export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
-  // Get the mission to access its difficulty
-  const mission = getMissionById(missionSite.missionId)
-
-  // Get agents deployed to this mission site
-  const deployedAgents = agsV(state.agents).withIds(missionSite.agentIds)
-
-  // KJA sorting should be AgentsView function
-  // Sort agents by effective skill (lowest to highest) for rolling order
-  const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
-
-  const agentsWithHitPointsLost: AgentWithHitPointsLostInfo[] = []
-
-  // Process each agent's rolls
-  for (const agent of sortedAgents) {
-    processObjectiveRoll(agent, missionSite)
-    const { hitPointsLost } = processHitPointsLostRoll(agent, mission.difficulty)
-
-    agentsWithHitPointsLost.push({
-      agent: agent.agent(),
-      hitPointsLost,
-    })
-  }
-
-  updateDeployedSurvivingAgents(agentsWithHitPointsLost)
-
-  // Determine mission site outcome
-  const allObjectivesFulfilled = missionSite.objectives.every((objective) => objective.fulfilled)
-  missionSite.state = allObjectivesFulfilled ? 'Successful' : 'Failed'
-
-  // Return mission rewards to be applied later, don't apply them immediately
-  if (missionSite.state === 'Successful') {
-    return mission.rewards
-  }
-
-  return undefined
 }
