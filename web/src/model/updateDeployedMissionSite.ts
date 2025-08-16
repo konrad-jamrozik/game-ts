@@ -107,24 +107,28 @@ function processHitPointsLostRoll(agentView: AgentView, missionDifficulty: numbe
   const roll = newRoll(effectiveSkill, missionDifficulty)
 
   const prevHitPoints = agent.hitPoints
-  const hitPointsLost = roll.belowThreshold
-  agent.hitPoints = Math.max(0, agent.hitPoints - hitPointsLost)
+  const damage = roll.belowThreshold
+  agent.hitPoints = Math.max(0, agent.hitPoints - damage)
 
   if (agent.hitPoints <= 0) {
     agent.state = 'Terminated'
     agent.assignment = 'KIA'
   }
 
-  const chanceOfNoHitPointsLost = roll.atOrAboveThresholdChancePct
-  const chanceOfAllHitPointsLost = roll.threshold - prevHitPoints
+  const damageHitPointsPctMsg = `${((damage / prevHitPoints) * 100).toFixed(2)}%`
+  const kiaMsg = agent.state === 'Terminated' ? ' KIA 💀. Sustained' : 'sustained'
+
+  const chanceOfNoDamage = roll.atOrAboveThresholdChancePct
+  const chanceOfKIA = roll.threshold - prevHitPoints
 
   console.log(
-    `Agent '${agent.id}' lost ${hitPointsLost} hit points. (${prevHitPoints} -> ${agent.hitPoints}). ` +
-      `rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}. ` +
-      `(had ${chanceOfNoHitPointsLost}% chance of no damage, ${chanceOfAllHitPointsLost}% chance of KIA)`,
+    `Agent '${agent.id}' ${kiaMsg} ${damage}, amounting to ${damageHitPointsPctMsg} of their hit points. ` +
+      `(${prevHitPoints} -> ${agent.hitPoints}). ` +
+      `Rolled ${roll.roll} against "no damage" threshold of ${roll.threshold}. ` +
+      `(had ${chanceOfNoDamage}% chance of no damage, ${chanceOfKIA}% chance of KIA)`,
   )
 
-  return { hitPointsLost }
+  return { hitPointsLost: damage }
 }
 
 function updateDeployedSurvivingAgents(agentsWithHitPointsLost: AgentWithHitPointsLostInfo[]): void {
