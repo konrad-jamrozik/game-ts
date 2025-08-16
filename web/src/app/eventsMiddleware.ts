@@ -116,6 +116,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (sackAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
+      // KJA use here fmtAgentCount
       postTextEvent(`Sacked ${agentCount} ${pluralize('agent', agentCount)}`)
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload

@@ -21,7 +21,6 @@ const gameStateSlice = createSlice({
   reducers: {
     advanceTurn: (state) => advanceTurnImpl(state),
     hireAgent: asPlayerAction((state) => {
-      // Invariant: next agent numeric id is always the current number of agents
       const nextAgentNumericId = state.agents.length
       const newAgentId = `agent-${nextAgentNumericId.toString().padStart(3, '0')}`
 
