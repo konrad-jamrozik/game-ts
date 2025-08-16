@@ -9,6 +9,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../collections/missions'
 import { setMissionSiteSelection } from '../model/selectionSlice'
+import { fmtNoPrefix } from '../utils/formatUtils'
 import { LabeledValue } from './LabeledValue'
 
 export type MissionCardProps = { missionSiteId: string }
@@ -35,7 +36,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
     isDeployed
 
   // Remove the "mission-site-" prefix from the ID for display
-  const displayId = missionSite.id.replace(/^mission-site-/u, '')
+  const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
 
   function handleClick(): void {
     if (!disabled && missionSite) {

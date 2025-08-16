@@ -21,7 +21,7 @@ import {
 import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../model/selectionSlice'
 import { agsV } from '../model/views/AgentsView'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { formatAgentCount, formatMissionTarget } from '../utils/formatUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../utils/formatUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -177,26 +177,26 @@ export function PlayerActions(): React.JSX.Element {
               sx={destructiveButtonSx}
               fullWidth
             >
-              Sack {formatAgentCount(selectedAgentIds.length)}
+              Sack {fmtAgentCount(selectedAgentIds.length)}
             </Button>
           </Stack>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
-              Recall {formatAgentCount(selectedAgentIds.length)}
+              Recall {fmtAgentCount(selectedAgentIds.length)}
             </Button>
           </Stack>
           <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
-            Assign {formatAgentCount(selectedAgentIds.length)} to contracting
+            Assign {fmtAgentCount(selectedAgentIds.length)} to contracting
           </Button>
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
-            Assign {formatAgentCount(selectedAgentIds.length)} to espionage
+            Assign {fmtAgentCount(selectedAgentIds.length)} to espionage
           </Button>
           <Button
             variant="contained"
             onClick={handleDeployAgents}
             disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
           >
-            Deploy {formatAgentCount(selectedAgentIds.length)} on {formatMissionTarget(selectedMissionSiteId ?? '')}
+            Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionSiteId ?? '')}
           </Button>
           <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
             Investigate lead

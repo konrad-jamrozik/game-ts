@@ -12,41 +12,16 @@ export function fmtPct(value: number, decimals = 0, div = 1): string {
 }
 
 /**
- * Formats panic value as percentage (panic is stored as value * 100)
+ * Formats string by removing common prefixes
  */
-// KJA actually use this function
-export function formatPanicPercentage(panic: number): string {
-  return fmtPctDiv100(panic, 2)
-}
-
-/**
- * Formats faction threat/suppression values as percentages
- */
-// KJA actually use this function
-export function formatFactionPercentage(value: number): string {
-  return fmtPctDiv100(value, 2)
-}
-
-/**
- * Formats suppression decay percentage
- */
-// KJA actually use this function
-export function formatSuppressionDecayPercentage(decayPercent: number): string {
-  return `${decayPercent}% per turn`
-}
-
-/**
- * Formats display ID by removing common prefixes
- */
-// KJA actually use this function
-export function formatDisplayId(id: string, prefix = 'mission-site-'): string {
+export function fmtNoPrefix(id: string, prefix: string): string {
   return id.replace(new RegExp(`^${prefix}`, 'u'), '')
 }
 
 /**
  * Formats mission site target for display (removes '-site-' patterns)
  */
-export function formatMissionTarget(missionSiteId: string): string {
+export function fmtMissionTarget(missionSiteId: string): string {
   if (!missionSiteId) {
     return 'mission ?'
   }
@@ -54,6 +29,6 @@ export function formatMissionTarget(missionSiteId: string): string {
   return ` on ${displayId}`
 }
 
-export function formatAgentCount(count: number): string {
+export function fmtAgentCount(count: number): string {
   return `${count} ${pluralize('agent', count)}`
 }
