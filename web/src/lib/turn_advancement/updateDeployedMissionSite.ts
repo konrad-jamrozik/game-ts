@@ -117,7 +117,7 @@ function processDamageRoll(agentView: AgentView, missionDifficulty: number): Age
 
   const damageHitPointsPctMsg = `${((damage / prevHitPoints) * 100).toFixed(2)}%`
   const damageIcon = damage > 0 ? '🩸 ' : ''
-  const kiaMsg = agent.state === 'Terminated' ? ' KIA 💀. Sustained' : 'sustained'
+  const kiaMsg = agent.state === 'Terminated' ? 'KIA 💀. Sustained' : 'sustained'
 
   const chanceOfNoDamage = roll.atOrAboveThresholdChancePct
   const chanceOfKIA = Math.min(Math.max(roll.threshold - prevHitPoints, 0), 0)
