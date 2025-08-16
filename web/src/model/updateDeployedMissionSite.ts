@@ -166,4 +166,3 @@ function updateDeployedSurvivingAgents(damageInfo: AgentWithDamageInfo[]): void 
     }
   }
 }
-
