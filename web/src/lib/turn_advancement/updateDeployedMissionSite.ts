@@ -27,9 +27,8 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   // Get agents deployed to this mission site
   const deployedAgents = agsV(state.agents).withIds(missionSite.agentIds)
 
-  // KJA sorting should be AgentsView function
   // Sort agents by effective skill (lowest to highest) for rolling order
-  const sortedAgents = [...deployedAgents].sort((agentA, agentB) => agentA.effectiveSkill() - agentB.effectiveSkill())
+  const sortedAgents = deployedAgents.sortedByEffectiveSkill()
 
   const damageInfo: AgentWithDamageInfo[] = []
 

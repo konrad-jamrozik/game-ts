@@ -33,6 +33,7 @@ type AgentsViewMethods = Readonly<{
   terminated(): AgentsView
   notTerminated(): AgentsView
   inTransit(): AgentsView
+  sortedByEffectiveSkill(): AgentsView
   agentUpkeep(): number
   contractingIncome(): number
   espionageIntel(): number
@@ -61,6 +62,8 @@ function getAgentsViewMethods(
     terminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isTerminated())),
     notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
+    sortedByEffectiveSkill: (): AgentsView =>
+      toAgsV(agVArr.sort((ag1, ag2) => ag1.effectiveSkill() - ag2.effectiveSkill())),
     agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),
