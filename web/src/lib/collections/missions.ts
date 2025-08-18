@@ -52,7 +52,7 @@ export const missions: Mission[] = [
       ],
     },
   },
-  // KJA add missions and leads up to HQ raid to defeat a faction.
+  // KJA LATER add missions and leads up to HQ raid to defeat a faction.
   // KJA implement "GAME WON" state of "advance turn" in GameControls, similar to "GAME OVER"
   //   {
   //     id: 'mission-surveillance',
