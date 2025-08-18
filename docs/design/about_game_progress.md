@@ -13,16 +13,34 @@ The game is won when all enemy factions are destroyed.
 
 The table below shows leads and missions player must complete to defeat given faction.
 
-| Item | Type | Depends on |
-|-|-|-|
-| Criminal organizations | Lead | Nothing |
-| Apprehend cult member | Mission | Criminal organizations |
-| Interrogate cult member | Lead | Apprehend cult member |
-| Raid cult safehouse | Mission | Interrogate cult member |
-| Interrogate cult handler | Lead | Raid cult safehouse |
-| Raid cult outpost | Mission | Interrogate cult handler |
-| Interrogate cult lieutenant | Lead | Raid cult outpost |
-| Raid cult base of operations | Mission | Interrogate cult lieutenant |
-| Interrogate cult commander | Lead | Raid cult base of operations |
-| Raid cult HQ | Mission | Interrogate cult commander |
-| Interrogate cult leader | Lead | Raid cult HQ |
+| Item                          | Type    | Depends on                  |
+|-------------------------------|---------|-----------------------------|
+| Criminal organizations        | Lead    | Nothing                     |
+| Apprehend cult member         | Mission | Criminal organizations      |
+| Interrogate cult member       | Lead    | Apprehend cult member       |
+| Raid cult safehouse           | Mission | Interrogate cult member     |
+| Interrogate cult handler      | Lead    | Raid cult safehouse         |
+| Raid cult outpost             | Mission | Interrogate cult handler    |
+| Interrogate cult lieutenant   | Lead    | Raid cult outpost           |
+| Raid cult base of operations  | Mission | Interrogate cult lieutenant |
+| Interrogate cult commander    | Lead    | Raid cult base of operations|
+| Raid cult HQ                  | Mission | Interrogate cult commander  |
+| Interrogate cult leader       | Lead    | Raid cult HQ                |
+
+The table below shows some of the details of missions.
+
+`Difficulty` - Total difficulty of the mission (sum of objectives).
+`Objectives` - Difficulty of the mission objectives, separated by slashes.
+`Money` - Money reward.
+`Intel` - Intel reward.
+`PanicR` - Panic reduction. 100 = 1%.
+`ThreatR` - Threat reduction of given faction. 100 = 1%.
+`Suppr` - Suppression of given faction. 100 = 1%.
+
+| Mission                      | Difficulty | Objectives      | Money | Intel | PanicR | ThreatR | Suppr |
+|------------------------------|:----------:|:---------------:|:-----:|:-----:|:------:|:-------:|:-----:|
+| Apprehend cult member        |     30     | 20 / 30         |   0   |  10   |   5    |    1    |  10   |
+| Raid cult safehouse          |     50     | 20 / 30 / 50    | 120   |  40   |  20    |    5    |  40   |
+| Raid cult outpost            |     70     |                 |       |       |        |         |       |
+| Raid cult base of operations |     90     |                 |       |       |        |         |       |
+| Raid cult HQ                 |    120     |                 |       |       |        |         |       |
