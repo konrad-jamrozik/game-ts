@@ -90,6 +90,16 @@ where:
 - `A` is the attacker's contested value, typically `effective skill`.
 - The probability is computed with precision of 2 decimal places, rounded down.
 
+Note: the formula is a Bradley–Terry form with exponent `k=2`. It can be also expressed as:
+`P(success) = A^k / (A^k + D^k)`.
+
+Thus you can think about a "duel" as a following pair:
+
+``` text
+P(agent_attack_success) = agent_skill^2 / (agent_skill^2 + enemy_skill^2)
+P(enemy_attack_success) = enemy_skill^2 / (enemy_skill^2 + agent_skill^2)
+```
+
 Example values for `P(success)` for varying attacker effective skill `Att` and defender effective skill `D=100`
 
 | Att   | P(success) |
@@ -100,15 +110,13 @@ Example values for `P(success)` for varying attacker effective skill `Att` and d
 | 130   | 62.83%     |
 | 140   | 66.22%     |
 | 150   | 69.23%     |
+| 160   | 71.96%     |
 | 170   | 74.41%     |
 | 180   | 76.60%     |
 | 190   | 78.53%     |
 | 200   | 80.00%     |
 | 250   | 85.86%     |
 | 300   | 90.00%     |
-
-Note: the formula is a Bradley–Terry form with exponent `k=2`. It can be also expressed as:
-`P(success) = A^k / (A^k + D^k)`
 
 # Range roll
 

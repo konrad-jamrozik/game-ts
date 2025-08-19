@@ -47,59 +47,6 @@ The table below shows some of the details of missions.
 
 # KJA LATER idea for mission evaluations: enemy units
 
-Attack formula, using Bradley–Terry form:
-
-``` text
-P(attack_succeeds) = attacker_skill^k / (attacker_skill^k + defender_skill^k) = 1 / (1 + (defender_skill / attacker_skill)^k)
-k = 2
-```
-
-Assuming defender skill is 100, for k=2 the table below shows the attack formula for different attacker skills:
-
-| Attacker skill | P(attack_succeeds) | Difference |
-|:--------------:|:------------------:|:----------:|
-| 100            | 50.00%             | —          |
-| 110            | 54.75%             | +4.75%     |
-| 120            | 59.02%             | +4.27%     |
-| 130            | 62.83%             | +3.81%     |
-| 140            | 66.22%             | +3.39%     |
-| 150            | 69.23%             | +3.01%     |
-| 160            | 71.96%             | +2.73%     |
-| 170            | 74.41%             | +2.45%     |
-| 180            | 76.60%             | +2.19%     |
-| 190            | 78.53%             | +1.93%     |
-| 200            | 80.00%             | +1.47%     |
-| 210            | 81.57%             | +1.57%     |
-| 220            | 82.86%             | +1.29%     |
-| 230            | 83.94%             | +1.08%     |
-| 240            | 84.91%             | +0.97%     |
-| 250            | 85.86%             | +0.95%     |
-| 260            | 86.79%             | +0.93%     |
-| 270            | 87.70%             | +0.91%     |
-| 280            | 88.60%             | +0.90%     |
-| 290            | 89.48%             | +0.88%     |
-| 300            | 90.00%             | +0.52%     |
-| 310            | 90.61%             | +0.61%     |
-| 320            | 91.21%             | +0.60%     |
-| 330            | 91.78%             | +0.57%     |
-| 340            | 92.33%             | +0.55%     |
-| 350            | 92.86%             | +0.53%     |
-| 360            | 93.37%             | +0.51%     |
-| 370            | 93.86%             | +0.49%     |
-| 380            | 94.34%             | +0.48%     |
-| 390            | 94.80%             | +0.46%     |
-| 400            | 94.12%             | +0.68%     |
-| 410            | 95.16%             | +1.04%     |
-| 420            | 95.45%             | +0.29%     |
-| 430            | 95.72%             | +0.27%     |
-| 440            | 95.97%             | +0.25%     |
-| 450            | 96.21%             | +0.24%     |
-| 460            | 96.43%             | +0.22%     |
-| 470            | 96.65%             | +0.22%     |
-| 480            | 96.85%             | +0.20%     |
-| 490            | 97.04%             | +0.19%     |
-| 500            | 97.22%             | +0.18%     |
-
 All weapon damage is +- 50%, rounded outside / to expand the damage range.
 
 Agent weapon damage: 10 (5-15)
@@ -124,41 +71,3 @@ import math
 d=7;(math.floor(0.5*d), math.ceil(1.5*d))
 ag=100;en=30;(en/(ag+en), ag/(ag+en))
 ```
-
-Idea: Ditch the idea of mission difficulty and objectives and instead have enemy units, with stats:
-
-- Offensive skill, which is the no-damage threshold against which agents are rolling to avoid taking damage.
-  So 30 offensive skill means an agent with skill 100 needs to roll at least 30 to take no damage.
-- Defensive skill, which is the no-damage threshold against which the enemy unit is rolling to avoid taking damage.
-  So 30 defensive skill means an agent with skill 100 must roll at least 31 to deal any damage.
-- Hit points. As hit points are depleted, the skill drops in proportion, same as for agents.
-
-Idea:
-
-After few rounds of combat, player can decide if to keep or going or withdraw.
-Before player decision is researched and implementing, this should be done automatically,
-depending on if next round has reasonable chance of success, and/or enough agents are still in action.
-E.g. after going through all player agents once, withdraw if 50% of more agents are KIA or lost more than 20%
-of original (i.e. at mission start) effective skill.
-If not withdrawing, go through all player agents again. Repeat.
-
-Each 1on1 agent-enemy round should increase exhaustion, and thus also impacting effective skill.
-
-Idea: symmetric logic agent - enemy unit.
-
-Ideally, the logic should be symmetric, so that if agent has skill 100, and enemy unit has skill 100,
-then it means they are both evenly matched.
-
-E.g. agent skill 100 vs enemy defensive skill 80 means that agent has 100/180 55.5% chance of damaging enemy.
-And if enemy has 30 defensive skill, then agent has 100/130 76.9% chance of damaging enemy.
-
-Basically:
-
-Agent attacks enemy, effective skill formula: Agent / (Agent + Enemy)
-Enemy attacks agent, effective skill formula: Enemy / (Agent + Enemy)
-
-Now what about damage?
-
-Similar as hit points, need to introduce weapons. Weapons simply have damage range, rolled uniformly from.
-
-E.g. agents can start with weapons with damage 10-30.
