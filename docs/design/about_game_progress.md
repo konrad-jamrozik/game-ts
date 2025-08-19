@@ -47,6 +47,23 @@ The table below shows some of the details of missions.
 
 # KJA LATER idea for mission evaluations: enemy units
 
+Attack formula, using Bradley–Terry form:
+
+``` text
+P(attack_succeeds) = attacker_skill^k / (attacker_skill^k + defender_skill^k) = 1 / (1 + (defender_skill / attacker_skill)^k)
+k = 2
+```
+
+Assuming defender skill is 100, for k=2 the table below shows the attack formula for different attacker skills:
+
+| Attacker skill | P(attack_succeeds) | Difference |
+|----------------|--------------------|------------|
+| 100            | 50%                |            |
+| 200            | 80%                | 30%        |
+| 300            | 90%                | 10%        |
+| 400            | 94.12%             | 4.12%      |
+| 500            | 96.15%             | 2.03%      |
+
 All weapon damage is +- 50%, rounded outside / to expand the damage range.
 
 Agent weapon damage: 10 (5-15)
