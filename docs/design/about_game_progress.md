@@ -69,5 +69,5 @@ Python interactive:
 ``` python
 import math
 d=7;(math.floor(0.5*d), math.ceil(1.5*d))
-ag=100;en=30;(en/(ag+en), ag/(ag+en))
+a=100;d=60;(1/(1+(d/a)**2), 1/(1+(a/d)**2))
 ```
