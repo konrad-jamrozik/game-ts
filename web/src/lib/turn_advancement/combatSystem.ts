@@ -15,6 +15,7 @@ export type CombatParticipant = {
   type: 'agent' | 'enemy'
   skill: number
   effectiveSkill: number
+  initialEffectiveSkill: number
   hitPoints: number
   maxHitPoints: number
   weapon: Weapon
@@ -82,12 +83,12 @@ function shouldBattleEnd(agents: CombatParticipant[], enemies: CombatParticipant
 }
 
 function shouldRetreat(agents: CombatParticipant[]): boolean {
-  const totalOriginalSkill = agents.reduce((sum, agent) => sum + agent.skill, 0)
+  const totalOriginalEffectiveSkill = agents.reduce((sum, agent) => sum + agent.initialEffectiveSkill, 0)
   const totalCurrentEffectiveSkill = agents
     .filter((agent) => !agent.isTerminated)
     .reduce((sum, agent) => sum + agent.effectiveSkill, 0)
 
-  return totalCurrentEffectiveSkill < totalOriginalSkill * 0.5
+  return totalCurrentEffectiveSkill < totalOriginalEffectiveSkill * 0.5
 }
 
 function executeCombatRound(agents: CombatParticipant[], enemies: CombatParticipant[]): void {

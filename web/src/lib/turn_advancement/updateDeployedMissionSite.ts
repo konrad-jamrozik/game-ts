@@ -43,11 +43,13 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
 function prepareAgentParticipants(agentViews: AgentsView): CombatParticipant[] {
   return agentViews.map((agentView) => {
     const agent = agentView.agent()
+    const initialEffectiveSkill = agentView.effectiveSkill()
     return {
       id: agent.id,
       type: 'agent' as const,
       skill: agent.skill,
-      effectiveSkill: agentView.effectiveSkill(),
+      effectiveSkill: initialEffectiveSkill,
+      initialEffectiveSkill,
       hitPoints: agent.hitPoints,
       maxHitPoints: agent.maxHitPoints,
       weapon: agent.weapon,
@@ -65,6 +67,7 @@ function prepareEnemyParticipants(enemyUnits: EnemyUnit[]): CombatParticipant[] 
     skill: enemy.skill,
     // Enemy effective skill is simply skill, as they are assumed to have no debuffs like exhaustion or damage.
     effectiveSkill: enemy.skill,
+    initialEffectiveSkill: enemy.skill,
     hitPoints: enemy.hitPoints,
     maxHitPoints: enemy.maxHitPoints,
     weapon: enemy.weapon,
