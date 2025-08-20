@@ -34,6 +34,14 @@ export function conductMissionSiteBattle(
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
 
+  // KJA nicer combat logs: remove duplicate "agent agent-007", distinguish agent and enemy phase, also including icons
+  // show roll results and threshold percentages
+  // show total effective skill and unit counts at the start of each round. For agents and enemies.
+  // and also how much % of the initial total effective skill is left and how much was lost.
+  // same for hit points
+  // for weapon roll show what % of range was it (50 - 150 %)
+  // KJA LATER: show this in a data grid as it happens.
+
   // Battle continues until one side is eliminated or agents retreat
   while (!shouldBattleEnd(agents, enemies)) {
     rounds += 1
