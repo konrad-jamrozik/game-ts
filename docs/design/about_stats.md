@@ -51,6 +51,19 @@ The table below shows some of the details of missions.
 | Raid cult base of operations |       10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |   200 |    60 |     30 |       7 |    60 |
 | Raid cult HQ                 |              20 Sl, 6 El |       4 Lt, 2 Cm, 1 HC |   250 |    70 |     35 |       8 |    70 |
 
+# Leads
+
+| Item                            | Intel cost | Repeatable |
+|---------------------------------|:----------:|:----------:|
+| Criminal organizations          |         20 |      false |
+| Locate cult member              |         20 |       true |
+| Interrogate cult member         |         10 |      false |
+| Cult profile                    |         50 |      false |
+| Interrogate cult handler        |         20 |      false |
+| Interrogate cult lieutenant     |         40 |      false |
+| Interrogate cult commander      |         80 |      false |
+| Interrogate cult high commander |        160 |      false |
+
 # Python interactive
 
 ``` python

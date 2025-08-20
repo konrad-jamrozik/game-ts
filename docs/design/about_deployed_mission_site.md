@@ -196,26 +196,3 @@ in which order the updates to deployed mission sites and agents deployed on them
 `effective_skill` is defined in [About agents / effective skill](about_agents.md#effective-skill).
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
-
-KJA NEXT this doc was updated, but the implementation and other docs haven't.
-Pending changes:
-
-- remove the following:
-  - mission site difficulty
-  - objectives
-  - the current, "threshold roll"
-  
-- implement everything described in this doc
-  - mission site battle
-  - combat rounds
-  - contest roll
-  - range roll
-  - weapons and ranges
-  - enemies on missions
-  - new skill points gain
-  
-- properly document what is in about_game_progress.md scratchpad section:
-  - weapons
-  - their damage range 0.5-1.5
-  - agent starting weapon
-  - enemies and their stats

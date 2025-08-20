@@ -13,16 +13,32 @@ The game is won when all enemy factions are destroyed.
 
 The table below shows leads and missions player must complete to defeat given faction.
 
+| Item                            | Type    | Depends on                  |
+|---------------------------------|---------|-----------------------------|
+| Criminal organizations          | Lead    | Nothing                     |
+| Locate cult member              | Lead    | Criminal organizations      |
+| Apprehend cult member           | Mission | Locate cult member          |
+| Interrogate cult member         | Lead    | Apprehend cult member       |
+| Raid cult safehouse             | Mission | Interrogate cult member     |
+| Interrogate cult handler        | Lead    | Raid cult safehouse         |
+| Raid cult outpost               | Mission | Interrogate cult handler    |
+| Interrogate cult lieutenant     | Lead    | Raid cult outpost           |
+| Raid cult base of operations    | Mission | Interrogate cult lieutenant |
+| Interrogate cult commander      | Lead    | Raid cult base of operations|
+| Raid cult HQ                    | Mission | Interrogate cult commander  |
+| Interrogate cult high commander | Lead    | Raid cult HQ                |
+
+# Other leads
+
 | Item                          | Type    | Depends on                  |
 |-------------------------------|---------|-----------------------------|
-| Criminal organizations        | Lead    | Nothing                     |
-| Apprehend cult member         | Mission | Criminal organizations      |
-| Interrogate cult member       | Lead    | Apprehend cult member       |
-| Raid cult safehouse           | Mission | Interrogate cult member     |
-| Interrogate cult handler      | Lead    | Raid cult safehouse         |
-| Raid cult outpost             | Mission | Interrogate cult handler    |
-| Interrogate cult lieutenant   | Lead    | Raid cult outpost           |
-| Raid cult base of operations  | Mission | Interrogate cult lieutenant |
-| Interrogate cult commander    | Lead    | Raid cult base of operations|
-| Raid cult HQ                  | Mission | Interrogate cult commander  |
-| Interrogate cult leader       | Lead    | Raid cult HQ                |
+| Cult profile                  | Lead    | Interrogate cult member     |
+
+The "Cult profile" lead makes the information about the cult available to the player.
+Specifically:
+
+- Threat level
+- Threat increase
+- Suppression
+- Suppression decay
+- Panic increase
