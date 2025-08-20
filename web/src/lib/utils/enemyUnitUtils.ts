@@ -2,35 +2,16 @@ import { ENEMY_UNIT_STATS } from '../model/ruleset/constants'
 import type { EnemyUnit, EnemyUnitType } from '../model/model'
 import { createWeapon } from './weaponUtils'
 
-let enemyUnitIdCounter = 0
-
-/**
- * Creates an enemy unit of the specified type
- */
-export function createEnemyUnit(type: EnemyUnitType): EnemyUnit {
-  const stats = ENEMY_UNIT_STATS[type]
-  if (!stats) {
-    throw new Error(`Unknown enemy unit type: ${type}`)
-  }
-
-  const id = `enemy-${type.toLowerCase()}-${enemyUnitIdCounter++}`
-
-  return {
-    id,
-    type,
-    skill: stats.skill,
-    hitPoints: stats.hp,
-    maxHitPoints: stats.hp,
-    weapon: createWeapon(stats.damage),
-    isOfficer: stats.isOfficer,
-  }
-}
+let idCounter = 0
 
 /**
  * Creates multiple enemy units from a specification string
  * Example: "2 Initiate, 1 Operative" creates 2 Initiates and 1 Operative
  */
 export function createEnemyUnitsFromSpec(spec: string): EnemyUnit[] {
+  // Reset enemy unit ID counter for each mission site
+  idCounter = 1
+
   const units: EnemyUnit[] = []
   const parts = spec.split(',').map((p) => p.trim())
 
@@ -41,10 +22,33 @@ export function createEnemyUnitsFromSpec(spec: string): EnemyUnit[] {
       const type = match[2] as EnemyUnitType
 
       for (let i = 0; i < count; i++) {
-        units.push(createEnemyUnit(type))
+        units.push(createEnemyUnit(type, idCounter))
+        idCounter += 1
       }
     }
   }
 
   return units
+}
+
+/**
+ * Creates an enemy unit of the specified type
+ */
+function createEnemyUnit(type: EnemyUnitType, idCounter: number): EnemyUnit {
+  const stats = ENEMY_UNIT_STATS[type]
+  if (!stats) {
+    throw new Error(`Unknown enemy unit type: ${type}`)
+  }
+
+  const id = `enemy-${type.toLowerCase()}-${idCounter}`
+
+  return {
+    id,
+    type,
+    skill: stats.skill,
+    hitPoints: stats.hp,
+    maxHitPoints: stats.hp,
+    weapon: createWeapon(stats.damage),
+    isOfficer: stats.isOfficer,
+  }
 }

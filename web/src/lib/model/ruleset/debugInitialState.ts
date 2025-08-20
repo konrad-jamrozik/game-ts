@@ -1,6 +1,7 @@
 import type { Agent, GameState } from '../model'
 import { createWeapon } from '../../utils/weaponUtils'
 import { createEnemyUnitsFromSpec } from '../../utils/enemyUnitUtils'
+import { getMissionById } from '../../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
 function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAgentIds: string[] } {
@@ -191,22 +192,23 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   const { agents: debugAgents, onMissionAgentIds } = buildDebugAgents(missionSiteId)
 
   stateBase.agents = debugAgents
+  const mission = getMissionById('mission-apprehend-red-dawn')
   stateBase.missionSites = [
     {
       id: missionSiteId,
       missionId: 'mission-apprehend-red-dawn',
       agentIds: onMissionAgentIds,
       state: 'Deployed',
-      expiresIn: 3,
-      enemyUnits: createEnemyUnitsFromSpec('2 Initiate, 1 Operative'),
+      expiresIn: mission.expiresIn,
+      enemyUnits: createEnemyUnitsFromSpec(mission.enemyUnitsSpec),
     },
     {
       id: 'mission-site-001',
       missionId: 'mission-apprehend-red-dawn',
       agentIds: [],
       state: 'Active',
-      expiresIn: 3,
-      enemyUnits: createEnemyUnitsFromSpec('2 Initiate, 1 Operative'),
+      expiresIn: mission.expiresIn,
+      enemyUnits: createEnemyUnitsFromSpec(mission.enemyUnitsSpec),
     },
   ]
 

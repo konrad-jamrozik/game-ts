@@ -73,7 +73,7 @@ export type Mission = {
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
-  enemyUnits: EnemyUnit[]
+  enemyUnitsSpec: string
   rewards: MissionRewards
 }
 
