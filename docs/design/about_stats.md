@@ -43,13 +43,13 @@ The table below shows some of the details of missions.
 `ThreatR` - Threat reduction of given faction. 100 = 1%.
 `Suppr` - Suppression of given faction. 100 = 1%.
 
-| Mission                      | Troops                   | Officers               | Money | Intel | PanicR | ThreatR | Suppr |
-|------------------------------|--------------------------|------------------------|:-----:|:-----:|:------:|:-------:|:-----:|
-| Apprehend cult member        | 2 In,  1 Op              |                        |     0 |    10 |      5 |       1 |    10 |
-| Raid cult safehouse          | 4 In,  3 Op              | 1 Hn                   |   120 |    40 |     20 |       5 |    40 |
-| Raid cult outpost            | 4 In,  6 Op,  4 Sl       | 2 Hn, 1 Lt             |   150 |    50 |     40 |      20 |    50 |
-| Raid cult base of operations |       10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |   200 |    60 |     30 |       7 |    60 |
-| Raid cult HQ                 |              20 Sl, 6 El |       4 Lt, 2 Cm, 1 HC |   250 |    70 |     35 |       8 |    70 |
+| Mission                      | Troops                   | Officers               | Money | Intel | PanicR  | ThreatR  | Suppr   |
+|------------------------------|--------------------------|------------------------|:-----:|:-----:|:-------:|:--------:|:-------:|
+| Apprehend cult member        | 2 In,  1 Op              |                        |    10 |    10 |  0.05 % |   0.01 % |   0.1 % |
+| Raid cult safehouse          | 4 In,  3 Op              | 1 Hn                   |   100 |    30 |  0.2  % |   0.1  % |  10   % |
+| Raid cult outpost            | 4 In,  6 Op,  4 Sl       | 2 Hn, 1 Lt             |   200 |    60 |  1    % |   2    % |  50   % |
+| Raid cult base of operations |       10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |   300 |   100 |  5    % |  10    % | 100   % |
+| Raid cult HQ                 |              20 Sl, 6 El |       4 Lt, 2 Cm, 1 HC |  1000 |   300 | 20    % | 100    % | 100   % |
 
 # Leads
 

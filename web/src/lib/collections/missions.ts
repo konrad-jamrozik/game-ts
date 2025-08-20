@@ -10,7 +10,7 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-location'],
     enemyUnitsSpec: '2 Initiate, 1 Operative',
     rewards: {
-      money: 0,
+      money: 10,
       intel: 10,
       panicReduction: 5,
       factionRewards: [
@@ -30,15 +30,14 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-safehouse'],
     enemyUnitsSpec: '4 Initiate, 3 Operative, 1 Handler',
     rewards: {
-      money: 120,
-      intel: 40,
-      funding: 0,
+      money: 100,
+      intel: 30,
       panicReduction: 20,
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 5,
-          suppression: 40,
+          threatReduction: 10,
+          suppression: 1000,
         },
       ],
     },
@@ -51,14 +50,14 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-outpost'],
     enemyUnitsSpec: '4 Initiate, 6 Operative, 4 Soldier, 2 Handler, 1 Lieutenant',
     rewards: {
-      money: 150,
-      intel: 50,
-      panicReduction: 40,
+      money: 200,
+      intel: 60,
+      panicReduction: 100,
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 20,
-          suppression: 50,
+          threatReduction: 200,
+          suppression: 5000,
         },
       ],
     },
@@ -71,14 +70,14 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-base'],
     enemyUnitsSpec: '10 Operative, 10 Soldier, 2 Elite, 4 Handler, 2 Lieutenant, 1 Commander',
     rewards: {
-      money: 200,
-      intel: 60,
-      panicReduction: 30,
+      money: 300,
+      intel: 100,
+      panicReduction: 500,
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 7,
-          suppression: 60,
+          threatReduction: 1000,
+          suppression: 10_000,
         },
       ],
     },
@@ -91,14 +90,14 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-hq'],
     enemyUnitsSpec: '20 Soldier, 6 Elite, 4 Lieutenant, 2 Commander, 1 HighCommander',
     rewards: {
-      money: 250,
-      intel: 70,
-      panicReduction: 35,
+      money: 1000,
+      intel: 300,
+      panicReduction: 2000,
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 8,
-          suppression: 70,
+          threatReduction: 10_000,
+          suppression: 10_000,
         },
       ],
     },
