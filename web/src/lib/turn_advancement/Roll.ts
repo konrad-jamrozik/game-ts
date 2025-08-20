@@ -2,10 +2,14 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
+import { toPrecisionRoundingDown } from '../utils/mathUtils'
+import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
+
 export type ContestRoll = {
   attackerValue: number
   defenderValue: number
-  successProbability: number
+  successProbabilityPct: number
+  failureProbabilityPct: number
   roll: number
   success: boolean
 }
@@ -17,42 +21,61 @@ export type RangeRoll = {
 }
 
 /**
- * Performs a contest roll using Bradley-Terry formula with exponent k=2
- * P(success) = A^2 / (A^2 + D^2)
- * // KJA update this formula to be: P(success) = 1 / (1+(D/A)^2)
- * @param attackerValue The attacker's contested value (typically effective skill)
- * @param defenderValue The defender's contested value (typically effective skill)
+ * Performs a contest roll using the Bradley-Terry formula with exponent k=2:
+ * P(success) = 1 / (1 + (D/A)^2)
+ * P(failure) = 1 - P(success)
+ * Higher rolls are better - success occurs when roll > P(failure)
+ *
+ * @example
+ * contestRoll(100, 100) -> 50    % chance of success
+ * contestRoll(100, 150) -> 30.76 % chance of success
+ * contestRoll(150, 100) -> 69.23 % chance of success
+ * For more examples refer to docs/design/about_deployed_mission_site.md
+ *
+ * @param attackerValue - The attacker's contested value (typically effective skill)
+ * @param defenderValue - The defender's contested value (typically effective skill)
  * @returns The contest roll result
  */
-export function contestRoll(attackerValue: number, defenderValue: number): ContestRoll {
-  // Calculate success probability using Bradley-Terry formula
-  const attackerSquared = attackerValue * attackerValue
-  const defenderSquared = defenderValue * defenderValue
-  const successProbability = attackerSquared / (attackerSquared + defenderSquared)
+export function rollContest(attackerValue: number, defenderValue: number): ContestRoll {
+  const ratioSquared = (defenderValue / attackerValue) ** 2
+  const successProbability = 1 / (1 + ratioSquared)
+  const successInt = toPrecisionRoundingDown(successProbability, CONTEST_ROLL_PRECISION)
+  const failureInt = CONTEST_ROLL_PRECISION - successInt
 
-  // Round to 2 decimal places as specified
-  const roundedProbability = Math.floor(successProbability * 100) / 100
+  const roll = roll1to(CONTEST_ROLL_PRECISION)
 
-  // Roll a random number between 0 and 1
-  const roll = Math.random()
-  const success = roll < roundedProbability
+  // Higher rolls are better - success when roll > P(failure)
+  const success = roll > failureInt
+
+  // Express the values as percentages:
+  const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
+  const failureProbabilityPct = failureInt / (CONTEST_ROLL_PRECISION / 100)
+  const rollPct = roll / (CONTEST_ROLL_PRECISION / 100)
 
   return {
     attackerValue,
     defenderValue,
-    successProbability: roundedProbability,
-    roll,
+    successProbabilityPct,
+    failureProbabilityPct,
+    roll: rollPct,
     success,
   }
 }
 
 /**
+ * Rolls a die (integer 1-precision, inclusive)
+ */
+function roll1to(precision: number): number {
+  return rollRange(1, precision).roll
+}
+
+/**
  * Performs a range roll, selecting a random value from the given range (inclusive)
- * @param min Minimum value (inclusive)
- * @param max Maximum value (inclusive)
+ * @param min - Minimum value (inclusive)
+ * @param max - Maximum value (inclusive)
  * @returns The range roll result
  */
-export function rangeRoll(min: number, max: number): RangeRoll {
+export function rollRange(min: number, max: number): RangeRoll {
   const range = max - min + 1
   const roll = Math.floor(Math.random() * range) + min
 

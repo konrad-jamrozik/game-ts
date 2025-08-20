@@ -88,7 +88,7 @@ where:
 
 - `D` is the defender's contested value, typically `effective skill`.
 - `A` is the attacker's contested value, typically `effective skill`.
-- The probability is computed with precision of 2 decimal places, rounded down.
+- The probability is computed with precision of 4 decimal places, rounded down.
 
 Note: the formula is a Bradley–Terry form with exponent `k=2`. It can be also expressed as:
 `P(success) = A^k / (A^k + D^k)`.

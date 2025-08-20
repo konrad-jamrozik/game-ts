@@ -305,7 +305,8 @@ export default plugTypescriptEslint.config([
 
       // Miscellaneous - TSDoc
       // --------------------
-      'tsdoc/syntax': 'error', // [eslint-plugin-tsdoc]
+      // Turned off because it complains about escaping < > in comments, lol.
+      'tsdoc/syntax': 'off', // [eslint-plugin-tsdoc]
 
       // Miscellaneous - Unicorn
       // --------------------

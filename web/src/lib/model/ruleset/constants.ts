@@ -29,6 +29,9 @@ export const WEAPON_DAMAGE_RANGE_FACTOR = 0.5
 // Agent weapon stats
 export const AGENT_INITIAL_WEAPON_DAMAGE = 10
 
+// Precision of 0.01%
+export const CONTEST_ROLL_PRECISION = 10_000
+
 // Enemy unit stats // KJA move enemy unit stats to collections, beside leads etc.
 export const ENEMY_UNIT_STATS: Record<string, { skill: number; hp: number; damage: number; isOfficer: boolean }> = {
   Initiate: { skill: 40, hp: 20, damage: 8, isOfficer: false },

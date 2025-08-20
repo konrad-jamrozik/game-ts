@@ -6,7 +6,7 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
 } from '../model/ruleset/constants'
-import { contestRoll } from './Roll'
+import { rollContest } from './Roll'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import type { Weapon } from '../model/model'
 
@@ -142,7 +142,7 @@ function selectTarget(potentialTargets: CombatParticipant[]): CombatParticipant 
 
 function executeAttack(attacker: CombatParticipant, defender: CombatParticipant): void {
   // Contest roll
-  const contestResult = contestRoll(attacker.effectiveSkill, defender.effectiveSkill)
+  const contestResult = rollContest(attacker.effectiveSkill, defender.effectiveSkill)
 
   // Apply exhaustion
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
