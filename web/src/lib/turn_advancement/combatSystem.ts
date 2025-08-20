@@ -41,7 +41,6 @@ export function conductMissionSiteBattle(agents: CombatParticipant[], enemies: C
     rounds += 1
     console.log(`\n⚔️ Combat Round ${rounds}`)
 
-    // Execute combat round
     executeCombatRound(agents, enemies)
 
     // Check for retreat condition

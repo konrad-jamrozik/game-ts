@@ -43,7 +43,7 @@ Otherwise, next combat round is started.
 The agent mission commander orders a retreat of the agents if the following is true:
 
 - All the agents taken together have lost more than 50% of their original effective skill,
-  as it has been on the start of the mission.
+  as it has been at the start of the mission.
 
 # Combat round
 
@@ -174,6 +174,10 @@ Furthermore:
 - A failed attack skill roll against an enemy gives `AGENT_FAILED_ATTACK_SKILL_REWARD` skill points.
 - A successful defense skill roll against an attack gives `AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD` skill points.
 - A failed defense skill roll against an attack gives `AGENT_FAILED_DEFENSE_SKILL_REWARD` skill points.
+
+Skill points are awarded to given surviving agent at the end of the deployed mission site update.
+This means their skill points do not change during the mission site battle, and as such do not influence the
+the contest rolls and combat rounds outcomes.
 
 ## Agent state and assignment update
 
