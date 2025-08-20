@@ -18,6 +18,7 @@ reflect the new design:
 - Mission site difficulty
 - Mission site objectives
 - The current type of roll, "threshold roll"
+- Any other removals based on the new design.
   
 ## Things to implement
 
@@ -41,3 +42,5 @@ Following code and associated documentation must be implemented/added:
 - Game progression
   - Lead dependencies on missions
   - Mission dependency on lead interrogations
+
+- Any other changes based on the new design.
