@@ -1,4 +1,7 @@
 import type { Agent, GameState } from '../model'
+import { createWeapon } from '../../utils/weaponUtils'
+import { createEnemyUnitsFromSpec } from '../../utils/enemyUnitUtils'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
 function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAgentIds: string[] } {
   let agentCounter = 0
@@ -9,9 +12,13 @@ function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAg
   }
 
   const onMissionAgentIds: string[] = []
-  function makeAgent(agent: Omit<Agent, 'id'>): Agent {
+  function makeAgent(agent: Omit<Agent, 'id' | 'weapon'>): Agent {
     const id = `agent-${nextId()}`
-    const built: Agent = { id, ...agent }
+    const built: Agent = {
+      id,
+      ...agent,
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
+    }
     if (built.state === 'OnMission' && built.assignment.startsWith('mission-site-')) {
       onMissionAgentIds.push(built.id)
     }
@@ -191,21 +198,15 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: 3,
-      objectives: [
-        { id: 'locate-target', fulfilled: false },
-        { id: 'apprehend-target', fulfilled: false },
-      ],
+      enemyUnits: createEnemyUnitsFromSpec('2 Initiate, 1 Operative'),
     },
     {
       id: 'mission-site-001',
       missionId: 'mission-apprehend-red-dawn',
-      agentIds: onMissionAgentIds,
+      agentIds: [],
       state: 'Active',
       expiresIn: 3,
-      objectives: [
-        { id: 'locate-target', fulfilled: false },
-        { id: 'apprehend-target', fulfilled: false },
-      ],
+      enemyUnits: createEnemyUnitsFromSpec('2 Initiate, 1 Operative'),
     },
   ]
 

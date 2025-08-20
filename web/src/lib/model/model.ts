@@ -1,5 +1,11 @@
 export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignment' | 'OnMission' | 'Terminated'
 
+export type Weapon = {
+  damage: number
+  minDamage: number
+  maxDamage: number
+}
+
 export type Agent = {
   id: string
   turnHired: number
@@ -12,6 +18,7 @@ export type Agent = {
   missionsSurvived: number
   state: AgentState
   assignment: string
+  weapon: Weapon
 }
 
 export type Lead = {
@@ -40,9 +47,24 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type MissionObjective = {
+export type EnemyUnitType =
+  | 'Initiate'
+  | 'Operative'
+  | 'Handler'
+  | 'Soldier'
+  | 'Lieutenant'
+  | 'Elite'
+  | 'Commander'
+  | 'HighCommander'
+
+export type EnemyUnit = {
   id: string
-  difficulty: number
+  type: EnemyUnitType
+  skill: number
+  hitPoints: number
+  maxHitPoints: number
+  weapon: Weapon
+  isOfficer: boolean
 }
 
 export type Mission = {
@@ -51,17 +73,11 @@ export type Mission = {
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
-  objectives: MissionObjective[]
-  difficulty: number
+  enemyUnits: EnemyUnit[]
   rewards: MissionRewards
 }
 
 export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
-
-export type MissionSiteObjective = {
-  id: string
-  fulfilled: boolean
-}
 
 export type MissionSite = {
   id: string
@@ -69,7 +85,7 @@ export type MissionSite = {
   agentIds: string[]
   state: MissionSiteState
   expiresIn: number | 'never'
-  objectives: MissionSiteObjective[]
+  enemyUnits: EnemyUnit[] // Enemy units present at the mission site
 }
 
 export type Faction = {

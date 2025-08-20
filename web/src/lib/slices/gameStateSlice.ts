@@ -1,10 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missions } from '../collections/missions'
+import { createWeapon } from '../utils/weaponUtils'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
+  AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../model/ruleset/constants'
 import initialState, { makeInitialState } from '../model/ruleset/initialState'
 import advanceTurnImpl from '../turn_advancement/advanceTurnImpl'
@@ -36,6 +38,7 @@ const gameStateSlice = createSlice({
         recoveryTurns: 0,
         hitPointsLostBeforeRecovery: 0,
         missionsSurvived: 0,
+        weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
       }
       state.agents.push(newAgent)
       state.currentTurnTotalHireCost += AGENT_HIRE_COST
@@ -106,10 +109,7 @@ const gameStateSlice = createSlice({
           agentIds: [],
           state: 'Active',
           expiresIn: mission.expiresIn,
-          objectives: mission.objectives.map((objective) => ({
-            id: objective.id,
-            fulfilled: false,
-          })),
+          enemyUnits: [...mission.enemyUnits], // Copy enemy units from mission definition
         }
         state.missionSites.push(newMissionSite)
       }

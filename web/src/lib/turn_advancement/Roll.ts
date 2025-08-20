@@ -2,64 +2,63 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-export type Roll = Readonly<{
-  skill: number
-  difficulty: number
+export type ContestRoll = {
+  attackerValue: number
+  defenderValue: number
+  successProbability: number
   roll: number
-  threshold: number
-  isAboveThreshold: boolean
-  isAtOrAboveThreshold: boolean
-  aboveThreshold: number
-  belowThreshold: number
-  aboveThresholdChancePct: number
-  atOrAboveThresholdChancePct: number
-  isAboveThresholdMsg: string
-  isAtOrAboveThresholdMsg: string
-}>
+  success: boolean
+}
 
-export function newRoll(skill: number, difficulty: number): Roll {
-  const roll = rollDie()
-  const [threshold] = calculateRollThreshold(skill, difficulty)
-  const isAboveThreshold = roll > threshold
-  const isAtOrAboveThreshold = roll >= threshold
-  const aboveThreshold = Math.max(roll - threshold, 0)
-  const belowThreshold = Math.max(threshold - roll, 0)
-  const aboveThresholdChancePct = Math.min(Math.max(100 - threshold, 0), 100)
-  const atOrAboveThresholdChancePct = Math.min(Math.max(101 - threshold, 0), 100)
-  const isAboveThresholdMsg = isAboveThreshold ? '✅ success (> threshold)' : '❌ failure (<= threshold)'
-  const isAtOrAboveThresholdMsg = isAtOrAboveThreshold ? '✅ success (>= threshold)' : '❌ failure (< threshold)'
+export type RangeRoll = {
+  min: number
+  max: number
+  roll: number
+}
+
+/**
+ * Performs a contest roll using Bradley-Terry formula with exponent k=2
+ * P(success) = A^2 / (A^2 + D^2)
+ * // KJA update this formula to be: P(success) = 1 / (1+(D/A)^2)
+ * @param attackerValue The attacker's contested value (typically effective skill)
+ * @param defenderValue The defender's contested value (typically effective skill)
+ * @returns The contest roll result
+ */
+export function contestRoll(attackerValue: number, defenderValue: number): ContestRoll {
+  // Calculate success probability using Bradley-Terry formula
+  const attackerSquared = attackerValue * attackerValue
+  const defenderSquared = defenderValue * defenderValue
+  const successProbability = attackerSquared / (attackerSquared + defenderSquared)
+
+  // Round to 2 decimal places as specified
+  const roundedProbability = Math.floor(successProbability * 100) / 100
+
+  // Roll a random number between 0 and 1
+  const roll = Math.random()
+  const success = roll < roundedProbability
+
   return {
-    skill,
-    difficulty,
+    attackerValue,
+    defenderValue,
+    successProbability: roundedProbability,
     roll,
-    threshold,
-    isAboveThreshold,
-    isAtOrAboveThreshold,
-    aboveThreshold,
-    belowThreshold,
-    aboveThresholdChancePct,
-    atOrAboveThresholdChancePct,
-    isAboveThresholdMsg,
-    isAtOrAboveThresholdMsg,
+    success,
   }
 }
 
 /**
- * Rolls a die (integer 1-100, inclusive)
+ * Performs a range roll, selecting a random value from the given range (inclusive)
+ * @param min Minimum value (inclusive)
+ * @param max Maximum value (inclusive)
+ * @returns The range roll result
  */
-function rollDie(): number {
-  // Note: here we are OK using Math.floor instead of my floor, because Math.random() will never return 1, so there
-  // is no concern of floating point imprecision.
-  const roll = Math.floor(Math.random() * 100) + 1
-  return roll
-}
+export function rangeRoll(min: number, max: number): RangeRoll {
+  const range = max - min + 1
+  const roll = Math.floor(Math.random() * range) + min
 
-/**
- * Calculates the roll threshold: 100 - skill + difficulty
- * Returns a tuple: [threshold, formula string]
- */
-function calculateRollThreshold(skill: number, difficulty: number): [number, string] {
-  const threshold = 100 - skill + difficulty
-  const formula = `${threshold} = 100 - skill (${skill}) + difficulty (${difficulty}) `
-  return [threshold, formula]
+  return {
+    min,
+    max,
+    roll,
+  }
 }

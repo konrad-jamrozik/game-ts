@@ -1,36 +1,36 @@
 import { describe, expect, test } from 'vitest'
 import type { Agent, GameState, MissionSite } from '../src/lib/model/model'
 import { updateDeployedMissionSite } from '../src/lib/turn_advancement/updateDeployedMissionSite'
-import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../src/lib/model/ruleset/constants'
+import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../src/lib/model/ruleset/constants'
+import { createWeapon } from '../src/lib/utils/weaponUtils'
+import { createEnemyUnitsFromSpec } from '../src/lib/utils/enemyUnitUtils'
 
 describe('deployedMissionSiteUpdate', () => {
-  test('update a deployed mission site with successful objective completion', () => {
+  test('update a deployed mission site with successful combat', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: 150, // High skill to ensure success
+      skill: 200, // High skill to ensure success
       exhaustion: 0,
       hitPoints: AGENT_INITIAL_HIT_POINTS,
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
-    // Create a test mission site with just one objective to ensure success
+    // Create a test mission site with weak enemies
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
       missionId: 'mission-apprehend-red-dawn',
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      objectives: [
-        { id: 'locate-target', fulfilled: false },
-        // Only one objective so a single agent can complete the mission
-      ],
+      enemyUnits: createEnemyUnitsFromSpec('1 Initiate'), // Single weak enemy
     }
 
     // Create a minimal game state
@@ -48,9 +48,9 @@ describe('deployedMissionSiteUpdate', () => {
       factions: [],
     }
 
-    // Mock Math.random to return consistent values
+    // Mock Math.random to return consistent values for success
     const originalRandom = Math.random
-    Math.random = (): number => 0.95 // Return high values to ensure successful rolls
+    Math.random = (): number => 0.1 // Low values for successful contest rolls
 
     try {
       // Update the mission site
@@ -59,17 +59,16 @@ describe('deployedMissionSiteUpdate', () => {
       // Verify mission site is successful
       expect(testMissionSite.state).toBe('Successful')
 
-      // Verify at least one objective was fulfilled (with high skill and good rolls, should succeed)
-      const fulfilledObjectives = testMissionSite.objectives.filter((objective) => objective.fulfilled)
-
-      expect(fulfilledObjectives.length).toBeGreaterThan(0)
-
       // Verify agent gained experience
       expect(testAgent.missionsSurvived).toBe(1)
-      expect(testAgent.skill).toBeGreaterThan(AGENT_INITIAL_SKILL)
+      expect(testAgent.skill).toBeGreaterThan(200)
 
-      // Verify agent gained exhaustion
+      // Verify agent gained exhaustion from combat
       expect(testAgent.exhaustion).toBeGreaterThan(0)
+
+      // Verify agent survived
+      expect(testAgent.state).toBe('InTransit')
+      expect(testAgent.assignment).toBe('Standby')
     } finally {
       // Restore Math.random
       Math.random = originalRandom
@@ -85,11 +84,12 @@ describe('deployedMissionSiteUpdate', () => {
       assignment: 'mission-site-001',
       skill: 50, // Low skill
       exhaustion: 0,
-      hitPoints: 1, // Very low hit points
+      hitPoints: 10, // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const testMissionSite: MissionSite = {
@@ -98,7 +98,7 @@ describe('deployedMissionSiteUpdate', () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      objectives: [{ id: 'locate-target', fulfilled: false }],
+      enemyUnits: createEnemyUnitsFromSpec('2 Soldier'), // Strong enemies
     }
 
     const gameState: GameState = {
@@ -115,23 +115,96 @@ describe('deployedMissionSiteUpdate', () => {
       factions: [],
     }
 
-    // Mock Math.random to return low values for hit points roll
+    // Mock Math.random to ensure agent loses combat
     const originalRandom = Math.random
     let callCount = 0
     Math.random = (): number => {
       callCount += 1
-      return callCount === 1 ? 0.5 : 0.01 // Moderate roll for objective, very low for hit points
+      // Agent fails attacks, enemies succeed
+      if (callCount % 2 === 1) {
+        return 0.9 // High value = agent fails contest rolls
+      } else {
+        return 0.8 // High damage rolls for enemies
+      }
     }
 
     try {
       updateDeployedMissionSite(gameState, testMissionSite)
 
-      // Verify agent was terminated (hit points should be 0)
+      // Verify agent was terminated
       expect(testAgent.hitPoints).toBe(0)
       expect(testAgent.state).toBe('Terminated')
       expect(testAgent.assignment).toBe('KIA')
+
+      // Mission should fail since agent was terminated
+      expect(testMissionSite.state).toBe('Failed')
     } finally {
       Math.random = originalRandom
     }
+  })
+
+  test('handle mission failure with all agents terminated', () => {
+    // Create agents with low skill and HP to ensure they get terminated
+    const agent1: Agent = {
+      id: 'agent-001',
+      turnHired: 1,
+      state: 'OnMission',
+      assignment: 'mission-site-001',
+      skill: 60,
+      exhaustion: 0,
+      hitPoints: 20,
+      maxHitPoints: 20,
+      recoveryTurns: 0,
+      hitPointsLostBeforeRecovery: 0,
+      missionsSurvived: 0,
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    }
+
+    const agent2: Agent = {
+      id: 'agent-002',
+      turnHired: 1,
+      state: 'OnMission',
+      assignment: 'mission-site-001',
+      skill: 50,
+      exhaustion: 0,
+      hitPoints: 15,
+      maxHitPoints: 15,
+      recoveryTurns: 0,
+      hitPointsLostBeforeRecovery: 0,
+      missionsSurvived: 0,
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    }
+
+    const testMissionSite: MissionSite = {
+      id: 'mission-site-001',
+      missionId: 'mission-apprehend-red-dawn',
+      agentIds: ['agent-001', 'agent-002'],
+      state: 'Deployed',
+      expiresIn: 3,
+      enemyUnits: createEnemyUnitsFromSpec('3 Soldier, 2 Elite'), // Strong enemies
+    }
+
+    const gameState: GameState = {
+      actionsCount: 0,
+      turn: 1,
+      agents: [agent1, agent2],
+      money: 100,
+      intel: 50,
+      funding: 20,
+      currentTurnTotalHireCost: 0,
+      leadInvestigationCounts: {},
+      missionSites: [testMissionSite],
+      panic: 0,
+      factions: [],
+    }
+
+    updateDeployedMissionSite(gameState, testMissionSite)
+
+    // Mission should fail
+    expect(testMissionSite.state).toBe('Failed')
+
+    // All agents should be terminated
+    const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'Terminated')
+    expect(terminatedAgents.length).toBe(2)
   })
 })

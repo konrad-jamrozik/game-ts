@@ -1,6 +1,8 @@
 import { describe, expect, test } from 'vitest'
 import type { Agent } from '../src/lib/model/model'
 import { agV } from '../src/lib/model/agents/AgentView'
+import { createWeapon } from '../src/lib/utils/weaponUtils'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../src/lib/model/ruleset/constants'
 
 // KJA FUTURE this test is superbly verbose. Dedup it and same with other tests.
 describe('effectiveSkill', () => {
@@ -17,6 +19,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 0/100)) = floor(100 * 1 * 1) = 100
@@ -36,6 +39,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // effective_skill = floor(116 * (1 - 0/30) * (1 - 15/100)) = floor(116 * 1 * 0.85) = floor(98.6) = 98
@@ -55,6 +59,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // hit points lost = 30 - 23 = 7
@@ -75,6 +80,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // hit points lost = 30 - 23 = 7
@@ -95,6 +101,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 80/100)) = floor(100 * 1 * 0.2) = floor(20) = 20
@@ -114,6 +121,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 0.95) = floor(5) = 5
@@ -133,6 +141,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // hit points lost = 30 - 0 = 30
@@ -153,6 +162,7 @@ describe('effectiveSkill', () => {
       missionsSurvived: 0,
       state: 'Available',
       assignment: 'Standby',
+      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // effective_skill = floor(100 * (1 - 0) * (1 - 0/100)) = floor(100 * 1 * 1) = floor(100) = 100
