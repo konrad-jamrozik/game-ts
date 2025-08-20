@@ -1,6 +1,8 @@
 import type { Lead } from '../model/model'
 import { assertDefined } from '../utils/assert'
 
+// KJA it must be possible to repeat other missions besides apprehending cult members.
+
 export const leads: Lead[] = [
   // Starting lead
   {
