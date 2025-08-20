@@ -89,6 +89,10 @@ function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[]): boolean
 }
 
 function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: EnemyUnit[]): void {
+  // Track attack counts per target for fair distribution
+  const enemyAttackCounts = new Map<string, number>()
+  const agentAttackCounts = new Map<string, number>()
+
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   activeAgents.sort((agentA, agentB) => {
@@ -100,10 +104,13 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   for (const agent of activeAgents) {
     // Skip if terminated during this round
     if (agent.hitPoints > 0) {
-      const target = selectTarget(enemies.filter((enemy) => enemy.hitPoints > 0))
+      const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+      const target = selectTargetWithFairDistribution(activeEnemies, enemyAttackCounts)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
         executeAttack(agent, attackerStats, target)
+        // Increment attack count for this enemy
+        enemyAttackCounts.set(target.id, (enemyAttackCounts.get(target.id) ?? 0) + 1)
       }
     }
   }
@@ -118,20 +125,34 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   for (const enemy of activeEnemies) {
     // Skip if terminated during this round
     if (enemy.hitPoints > 0) {
-      const target = selectTarget(agents.filter((agent) => agent.hitPoints > 0))
+      const currentActiveAgents = agents.filter((agent) => agent.hitPoints > 0)
+      const target = selectTargetWithFairDistribution(currentActiveAgents, agentAttackCounts)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
         executeAttack(enemy, undefined, target, defenderStats)
+        // Increment attack count for this agent
+        agentAttackCounts.set(target.id, (agentAttackCounts.get(target.id) ?? 0) + 1)
       }
     }
   }
 }
 
-function selectTarget<T extends Agent | EnemyUnit>(potentialTargets: T[]): T | undefined {
+function selectTargetWithFairDistribution<T extends Agent | EnemyUnit>(
+  potentialTargets: T[],
+  attackCounts: Map<string, number>,
+): T | undefined {
   if (potentialTargets.length === 0) return undefined
 
-  // Target the unit with lowest effective skill
-  const sorted = [...potentialTargets].sort((targetA, targetB) => {
+  // Find minimum attack count among all potential targets
+  const minAttackCount = Math.min(...potentialTargets.map((target) => attackCounts.get(target.id) ?? 0))
+
+  // Filter to targets with minimum attack count
+  const leastAttackedTargets = potentialTargets.filter(
+    (target) => (attackCounts.get(target.id) ?? 0) === minAttackCount,
+  )
+
+  // Among least attacked targets, select the one with lowest effective skill
+  const sorted = [...leastAttackedTargets].sort((targetA, targetB) => {
     const skillA = 'exhaustion' in targetA ? agV(targetA).effectiveSkill() : targetA.skill
     const skillB = 'exhaustion' in targetB ? agV(targetB).effectiveSkill() : targetB.skill
     if (skillA === skillB) return targetA.id.localeCompare(targetB.id)
