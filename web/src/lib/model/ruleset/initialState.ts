@@ -17,7 +17,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     money: 500,
     intel: 0,
     funding: 20,
-    currentTurnTotalHireCost: 50,
+    currentTurnTotalHireCost: 0,
     agents: [],
     // Leads
     leadInvestigationCounts: {},
