@@ -236,7 +236,7 @@ function executeAttack(
     } else {
       const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
       console.log(
-        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} HP, ${hpPercentage}% remaining)`,
+        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
       )
     }
 
