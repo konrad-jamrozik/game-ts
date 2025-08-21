@@ -39,13 +39,13 @@ export function createEnemyUnitsFromSpec(spec: string): EnemyUnit[] {
   for (const part of parts) {
     const match = /^(?<count>\d+)\s+(?<type>.+)$/u.exec(part)
     if (
-      match?.groups?.count !== undefined &&
-      match.groups.count !== '' &&
-      match.groups.type !== undefined &&
-      match.groups.type !== '' &&
-      isValidEnemyUnitType(match.groups.type)
+      match?.groups?.['count'] !== undefined &&
+      match.groups['count'] !== '' &&
+      match.groups['type'] !== undefined &&
+      match.groups['type'] !== '' &&
+      isValidEnemyUnitType(match.groups['type'])
     ) {
-      const count = Number.parseInt(match.groups.count, 10)
+      const count = Number.parseInt(match.groups['count'], 10)
       const { type } = match.groups
 
       for (let index = 0; index < count; index += 1) {

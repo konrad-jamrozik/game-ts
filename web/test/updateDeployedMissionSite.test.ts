@@ -121,8 +121,10 @@ describe('deployedMissionSiteUpdate', () => {
     Math.random = (): number => {
       callCount += 1
       // Agent fails attacks, enemies succeed
+      // eslint-disable-next-line unicorn/prefer-ternary
       if (callCount % 2 === 1) {
         return 0.9 // High value = agent fails contest rolls
+        // eslint-disable-next-line no-else-return
       } else {
         return 0.8 // High damage rolls for enemies
       }
@@ -205,6 +207,7 @@ describe('deployedMissionSiteUpdate', () => {
 
     // All agents should be terminated
     const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'Terminated')
-    expect(terminatedAgents.length).toBe(2)
+
+    expect(terminatedAgents).toHaveLength(2)
   })
 })

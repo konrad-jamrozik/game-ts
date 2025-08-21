@@ -413,6 +413,9 @@ export default plugTypescriptEslint.config([
       // Describe blocks in tests can be long and contain many test cases
       // https://eslint.org/docs/latest/rules/max-lines-per-function
       'max-lines-per-function': 'off',
+
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md
+      'vitest/max-expects': ['error', { max: 10 }],
     },
   },
 ])
