@@ -3,7 +3,9 @@
     "allow": [
       "Bash(npm run lint:*)",
       "Bash(npx tsc:*)",
-      "Bash(npm run test:*)"
+      "Bash(npm run test:*)",
+      "Bash(npx eslint:*)",
+      "WebFetch(domain:docs.anthropic.com)"
     ],
     "deny": [],
     "ask": []

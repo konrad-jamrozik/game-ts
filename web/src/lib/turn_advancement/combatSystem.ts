@@ -10,6 +10,12 @@ import { rollContest } from './Roll'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import type { Agent, EnemyUnit } from '../model/model'
 import { agV } from '../model/agents/AgentView'
+import { enemyUnitEffectiveSkill } from '../utils/enemyUnitUtils'
+
+// KJA move to better place
+function isAgent(unit: Agent | EnemyUnit): unit is Agent {
+  return 'turnHired' in unit
+}
 
 export type AgentCombatStats = {
   id: string
@@ -37,7 +43,7 @@ export function conductMissionSiteBattle(
   // Calculate initial totals for percentage tracking
   const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + enemyUnitEffectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Battle continues until one side is eliminated or agents retreat
@@ -174,8 +180,8 @@ function selectTargetWithFairDistribution<T extends Agent | EnemyUnit>(
 
   // Among least attacked targets, select the one with lowest effective skill
   const sorted = [...leastAttackedTargets].sort((targetA, targetB) => {
-    const skillA = 'exhaustion' in targetA ? agV(targetA).effectiveSkill() : targetA.skill
-    const skillB = 'exhaustion' in targetB ? agV(targetB).effectiveSkill() : targetB.skill
+    const skillA = isAgent(targetA) ? agV(targetA).effectiveSkill() : enemyUnitEffectiveSkill(targetA)
+    const skillB = isAgent(targetB) ? agV(targetB).effectiveSkill() : enemyUnitEffectiveSkill(targetB)
     if (skillA === skillB) return targetA.id.localeCompare(targetB.id)
     return skillA - skillB
   })
@@ -190,19 +196,17 @@ function executeAttack(
   defenderStats?: AgentCombatStats,
 ): void {
   // Calculate effective skills
-  const attackerEffectiveSkill = 'exhaustion' in attacker ? agV(attacker).effectiveSkill() : attacker.skill
-  const defenderEffectiveSkill = 'exhaustion' in defender ? agV(defender).effectiveSkill() : defender.skill
+  const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : enemyUnitEffectiveSkill(attacker)
+  const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : enemyUnitEffectiveSkill(defender)
 
   // Contest roll
   const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill)
 
-  // Apply exhaustion to attacker immediately
-  if ('exhaustion' in attacker) {
-    attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
-  }
+  // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
+  attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
 
-  const attackerIcon = 'exhaustion' in attacker ? '👤' : '💀'
-  const defenderIcon = 'exhaustion' in defender ? '👤' : '💀'
+  const attackerIcon = isAgent(attacker) ? '👤' : '💀'
+  const defenderIcon = isAgent(defender) ? '👤' : '💀'
   const attackerName = attacker.id
   const defenderName = defender.id
 
@@ -237,8 +241,8 @@ function executeAttack(
       )
     }
 
-    // Apply defender exhaustion only if not terminated
-    if (defender.hitPoints > 0 && 'exhaustion' in defender) {
+    // Apply defender exhaustion only if not terminated (both agents and enemies)
+    if (defender.hitPoints > 0) {
       defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
   } else {
@@ -254,10 +258,8 @@ function executeAttack(
       defenderStats.skillGained += AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD
     }
 
-    // Apply defender exhaustion
-    if ('exhaustion' in defender) {
-      defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
-    }
+    // Apply defender exhaustion (both agents and enemies)
+    defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
   }
 }
 
@@ -282,7 +284,7 @@ function showRoundStatus(
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + enemyUnitEffectiveSkill(enemy), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
   const enemySkillPercentage = Math.round((currentEnemySkill / initialEnemySkill) * 100)
   const enemyHpPercentage = Math.round((currentEnemyHitPoints / initialEnemyHitPoints) * 100)
