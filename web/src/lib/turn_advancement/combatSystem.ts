@@ -242,7 +242,7 @@ function executeAttack(
 
     if (defender.hitPoints <= 0) {
       console.log(
-        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill})with ${damage} (${damagePct}) damage ${rollInfo}`,
+        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollInfo}`,
       )
     } else {
       const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
