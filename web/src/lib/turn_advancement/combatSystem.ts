@@ -34,18 +34,18 @@ export function conductMissionSiteBattle(
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
 
-  // KJA nicer combat logs: remove duplicate "agent agent-007", distinguish agent and enemy phase, also including icons
-  // show roll results and threshold percentages
-  // show total effective skill and unit counts at the start of each round. For agents and enemies.
-  // and also how much % of the initial total effective skill is left and how much was lost.
-  // same for hit points
-  // for weapon roll show what % of range was it (50 - 150 %)
-  // KJA LATER: show this in a data grid as it happens.
+  // Calculate initial totals for percentage tracking
+  const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
+  const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
+  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+  const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Battle continues until one side is eliminated or agents retreat
   while (!shouldBattleEnd(agents, enemies)) {
     rounds += 1
-    console.log(`\n⚔️ Combat Round ${rounds}`)
+    
+    // Show round status with detailed statistics
+    showRoundStatus(rounds, agents, enemies, agentStats, initialAgentEffectiveSkill, initialAgentHitPoints, initialEnemySkill, initialEnemyHitPoints)
 
     executeCombatRound(agents, agentStats, enemies)
 
@@ -101,6 +101,8 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
+  console.log('\n🔸 Agent Attack Phase')
+  
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   activeAgents.sort((agentA, agentB) => {
@@ -123,6 +125,8 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
     }
   }
 
+  console.log('\n🔹 Enemy Attack Phase')
+  
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   activeEnemies.sort((enemyA, enemyB) => {
@@ -188,9 +192,17 @@ function executeAttack(
     attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
   }
 
+  const attackerIcon = 'exhaustion' in attacker ? '👤' : '💀'
+  const defenderIcon = 'exhaustion' in defender ? '👤' : '💀'
+  const attackerName = attacker.id
+  const defenderName = defender.id
+
   if (contestResult.success) {
     // Successful attack - roll damage
     const damage = rollWeaponDamage(attacker.weapon)
+    const damagePercentage = ((damage - attacker.weapon.minDamage) / (attacker.weapon.maxDamage - attacker.weapon.minDamage)) * 100
+    const damageRange = `${Math.round(50 + damagePercentage)}%`
+    
     defender.hitPoints = Math.max(0, defender.hitPoints - damage)
 
     // Update skill gains (postponed)
@@ -201,15 +213,15 @@ function executeAttack(
       defenderStats.skillGained += AGENT_FAILED_DEFENSE_SKILL_REWARD
     }
 
-    // Check if defender is terminated
-    const attackerType = 'exhaustion' in attacker ? 'agent' : 'enemy'
-    const defenderType = 'exhaustion' in defender ? 'agent' : 'enemy'
-
+    // Detailed success log
+    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.successProbabilityPct.toFixed(1)}% threshold]`
+    
     if (defender.hitPoints <= 0) {
-      console.log(`💀 ${attackerType} ${attacker.id} terminates ${defenderType} ${defender.id} with ${damage} damage!`)
+      console.log(`💀 ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} damage ${rollInfo} (weapon: ${damageRange})`)
     } else {
+      const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
       console.log(
-        `🩸 ${attackerType} ${attacker.id} hits ${defenderType} ${defender.id} for ${damage} damage (${defender.hitPoints}/${defender.maxHitPoints} HP remaining)`,
+        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} HP, ${hpPercentage}% remaining, weapon: ${damageRange})`,
       )
     }
 
@@ -218,10 +230,9 @@ function executeAttack(
       defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
   } else {
-    // Failed attack
-    const attackerType = 'exhaustion' in attacker ? 'agent' : 'enemy'
-    const defenderType = 'exhaustion' in defender ? 'agent' : 'enemy'
-    console.log(`❌ ${attackerType} ${attacker.id} misses ${defenderType} ${defender.id}`)
+    // Failed attack - show roll details
+    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.successProbabilityPct.toFixed(1)}% threshold]`
+    console.log(`❌ ${attackerIcon} ${attackerName} misses ${defenderIcon} ${defenderName} ${rollInfo}`)
 
     // Update skill gains (postponed)
     if (attackerStats) {
@@ -236,4 +247,34 @@ function executeAttack(
       defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
   }
+}
+
+function showRoundStatus(
+  rounds: number,
+  agents: Agent[],
+  enemies: EnemyUnit[],
+  agentStats: AgentCombatStats[],
+  initialAgentEffectiveSkill: number,
+  initialAgentHitPoints: number,
+  initialEnemySkill: number,
+  initialEnemyHitPoints: number,
+): void {
+  console.log(`\n⚔️ Combat Round ${rounds}`)
+  
+  // Current agent statistics
+  const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const currentAgentEffectiveSkill = activeAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
+  const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
+  const agentSkillPercentage = Math.round((currentAgentEffectiveSkill / initialAgentEffectiveSkill) * 100)
+  const agentHpPercentage = Math.round((currentAgentHitPoints / initialAgentHitPoints) * 100)
+  
+  // Current enemy statistics
+  const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+  const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
+  const enemySkillPercentage = Math.round((currentEnemySkill / initialEnemySkill) * 100)
+  const enemyHpPercentage = Math.round((currentEnemyHitPoints / initialEnemyHitPoints) * 100)
+  
+  console.log(`👥 Agents: ${activeAgents.length} units, ${Math.round(currentAgentEffectiveSkill)} total skill (${agentSkillPercentage}%), ${currentAgentHitPoints} HP (${agentHpPercentage}%)`)
+  console.log(`💀 Enemies: ${activeEnemies.length} units, ${Math.round(currentEnemySkill)} total skill (${enemySkillPercentage}%), ${currentEnemyHitPoints} HP (${enemyHpPercentage}%)`)
 }
