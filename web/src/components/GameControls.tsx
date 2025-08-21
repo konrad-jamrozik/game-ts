@@ -31,6 +31,7 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.undo())
   }
 
+  // KJA negative money should also cause game over.
   const isGameOver = gameState.panic >= 10_000 // 100% panic = 10,000
 
   const labelWidthPx = 110

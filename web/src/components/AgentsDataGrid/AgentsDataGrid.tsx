@@ -66,6 +66,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       ),
     },
     {
+      // KJA fix sorting of skill to sort by actual effective skill not baseline skill.
       field: 'skill',
       headerName: 'Skill',
       minWidth: 140,

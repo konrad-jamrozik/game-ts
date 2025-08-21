@@ -21,7 +21,7 @@ export const leads: Lead[] = [
     title: 'Locate cult member',
     description: 'Track down a Red Dawn cult member for apprehension.',
     intelCost: 20,
-    expiresIn: 10,
+    expiresIn: 10, // KJA this countdown is not actually implemented yet.
     dependsOn: ['lead-criminal-orgs'],
     repeatable: true,
   },
