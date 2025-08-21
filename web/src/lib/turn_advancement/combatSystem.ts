@@ -115,7 +115,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
-  console.log('\n🟢🗡️ Agent Attack Phase')
+  console.log('\n👤🗡️ Agent Attack Phase')
 
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
@@ -139,7 +139,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
     }
   }
 
-  console.log('\n🟤🗡️ Enemy Attack Phase')
+  console.log('\n👺🗡️ Enemy Attack Phase')
 
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
@@ -204,8 +204,8 @@ function executeAttack(
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
 
-  const attackerIcon = isAgent(attacker) ? '👤' : '💀'
-  const defenderIcon = isAgent(defender) ? '👤' : '💀'
+  const attackerIcon = isAgent(attacker) ? '👤' : '👺'
+  const defenderIcon = isAgent(defender) ? '👤' : '👺'
   const attackerName = attacker.id
   const defenderName = defender.id
 
@@ -231,7 +231,7 @@ function executeAttack(
 
     if (defender.hitPoints <= 0) {
       console.log(
-        `💀 ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} damage ${rollInfo} (weapon: ${damageRange})`,
+        `☠️ ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} damage ${rollInfo} (weapon: ${damageRange})`,
       )
     } else {
       const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
@@ -247,7 +247,7 @@ function executeAttack(
   } else {
     // Failed attack - show roll details
     const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.successProbabilityPct.toFixed(1)}% threshold]`
-    console.log(`❌ ${attackerIcon} ${attackerName} misses ${defenderIcon} ${defenderName} ${rollInfo}`)
+    console.log(`➖ ${attackerIcon} ${attackerName} misses ${defenderIcon} ${defenderName} ${rollInfo}`)
 
     // Update skill gains (postponed)
     if (attackerStats) {
