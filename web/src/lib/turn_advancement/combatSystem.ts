@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import {
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   AGENT_FAILED_ATTACK_SKILL_REWARD,
@@ -36,7 +37,7 @@ export function conductMissionSiteBattle(
   agentStats: AgentCombatStats[],
   enemies: EnemyUnit[],
 ): CombatReport {
-  let rounds = 0
+  let roundIdx = 1
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
 
@@ -46,13 +47,25 @@ export function conductMissionSiteBattle(
   const initialEnemySkill = enemies.reduce((sum, enemy) => sum + enemyUnitEffectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
+  // Show round status with detailed statistics
+  showRoundStatus(
+    roundIdx,
+    agents,
+    enemies,
+    initialAgentEffectiveSkill,
+    initialAgentHitPoints,
+    initialEnemySkill,
+    initialEnemyHitPoints,
+  )
   // Battle continues until one side is eliminated or agents retreat
   while (!shouldBattleEnd(agents, enemies)) {
-    rounds += 1
+    roundIdx += 1
+
+    executeCombatRound(agents, agentStats, enemies)
 
     // Show round status with detailed statistics
     showRoundStatus(
-      rounds,
+      roundIdx,
       agents,
       enemies,
       initialAgentEffectiveSkill,
@@ -60,8 +73,6 @@ export function conductMissionSiteBattle(
       initialEnemySkill,
       initialEnemyHitPoints,
     )
-
-    executeCombatRound(agents, agentStats, enemies)
 
     // Check for retreat condition
     if (shouldRetreat(agents, agentStats)) {
@@ -82,12 +93,12 @@ export function conductMissionSiteBattle(
     }
   })
 
-  console.log(`\n📊 Battle concluded after ${rounds} rounds`)
+  console.log(`\n📊 Battle concluded after ${roundIdx} rounds`)
   console.log(`   Agent casualties: ${agentsCasualties}`)
   console.log(`   Enemy casualties: ${enemiesCasualties}`)
 
   return {
-    rounds,
+    rounds: roundIdx,
     agentsCasualties,
     enemiesCasualties,
     retreated,
@@ -115,7 +126,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
-  console.log('\n👤🗡️ Agent Attack Phase')
+  console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
@@ -139,7 +150,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
     }
   }
 
-  console.log('\n👺🗡️ Enemy Attack Phase')
+  console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
 
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
@@ -271,7 +282,7 @@ function showRoundStatus(
   initialEnemySkill: number,
   initialEnemyHitPoints: number,
 ): void {
-  console.log(`\n⚔️ Combat Round ${rounds}`)
+  console.log(`\n========== ⚔️ Combat Round ${rounds} ==========`)
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
