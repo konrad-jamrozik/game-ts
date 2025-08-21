@@ -1,6 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { DataGridCard } from './DataGridCard'
+import { agsV } from '../lib/model/agents/AgentsView'
 
 export type AssetRow = {
   name: 'Money' | 'Agents' | 'Intel' | 'Turn'
@@ -9,8 +10,9 @@ export type AssetRow = {
 
 export function AssetsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const agentsView = agsV(gameState.agents)
   const rows = [
-    { name: 'Agents', id: 2, value: gameState.agents.length },
+    { name: 'Agents', id: 2, value: agentsView.notTerminated().length },
     { name: 'Money', id: 3, value: gameState.money },
     { name: 'Intel', id: 4, value: gameState.intel },
   ]

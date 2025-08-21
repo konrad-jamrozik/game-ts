@@ -5,14 +5,14 @@ import { DataGridCard } from './DataGridCard'
 import { agsV } from '../lib/model/agents/AgentsView'
 
 export type BalanceSheetRow = {
-  name: 'Money' | 'Funding' | 'Contracted' | 'Agent upkeep' | 'Hire cost' | 'Diff' | 'NewBalance' | 'Intel diff'
+  name: 'Money' | 'Funding' | 'Contracting' | 'Agent upkeep' | 'Hire cost' | 'Diff' | 'NewBalance' | 'Intel diff'
   value: number
 }
 
 export function BalanceSheetDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const agents = agsV(gameState.agents)
-  const contracted = agents.contractingIncome()
+  const contracting = agents.contractingIncome()
   const agentUpkeep = agents.agentUpkeep()
   const diff = getMoneyDiff(gameState)
   const newBalance = getMoneyNewBalance(gameState)
@@ -20,7 +20,7 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
   const rows = [
     { name: 'Money', id: 1, value: gameState.money },
     { name: 'Funding', id: 2, value: gameState.funding },
-    { name: 'Contracted', id: 3, value: contracted },
+    { name: 'Contracting', id: 3, value: contracting },
     { name: 'Agent upkeep', id: 4, value: agentUpkeep },
     { name: 'Hire cost', id: 5, value: gameState.currentTurnTotalHireCost },
     { name: '$ Diff', id: 6, value: diff },
