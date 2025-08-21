@@ -212,9 +212,9 @@ function executeAttack(
   if (contestResult.success) {
     // Successful attack - roll damage
     const damage = rollWeaponDamage(attacker.weapon)
-    const damagePercentage =
+    const damageRangePct =
       ((damage - attacker.weapon.minDamage) / (attacker.weapon.maxDamage - attacker.weapon.minDamage)) * 100
-    const damageRange = `${Math.round(50 + damagePercentage)}%`
+    const damagePct = `${Math.round(50 + damageRangePct)}%`
 
     defender.hitPoints = Math.max(0, defender.hitPoints - damage)
 
@@ -227,16 +227,16 @@ function executeAttack(
     }
 
     // Detailed success log
-    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.successProbabilityPct.toFixed(1)}% threshold]`
+    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.failureProbabilityPct.toFixed(1)}% threshold]`
 
     if (defender.hitPoints <= 0) {
       console.log(
-        `☠️ ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} damage ${rollInfo} (weapon: ${damageRange})`,
+        `☠️ ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} (${damagePct}) damage ${rollInfo}`,
       )
     } else {
       const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
       console.log(
-        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} HP, ${hpPercentage}% remaining, weapon: ${damageRange})`,
+        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} HP, ${hpPercentage}% remaining)`,
       )
     }
 
@@ -246,7 +246,7 @@ function executeAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.successProbabilityPct.toFixed(1)}% threshold]`
+    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.failureProbabilityPct.toFixed(1)}% threshold]`
     console.log(`➖ ${attackerIcon} ${attackerName} misses ${defenderIcon} ${defenderName} ${rollInfo}`)
 
     // Update skill gains (postponed)
