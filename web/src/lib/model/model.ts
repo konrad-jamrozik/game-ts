@@ -57,7 +57,7 @@ export type EnemyUnitType =
   | 'Commander'
   | 'HighCommander'
 
-// KJA EnemyUnit also must have exhaustion, and it must influence effective skill during combat.
+// KJA EnemyUnit also must have exhaustion, and it must influence effective skill during combat, as described in about_deployed_mission_site.md
 export type EnemyUnit = {
   id: string
   type: EnemyUnitType

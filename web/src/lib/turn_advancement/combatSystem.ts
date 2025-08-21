@@ -134,7 +134,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
     }
   }
 
-  console.log('\n🔴🗡️ Enemy Attack Phase')
+  console.log('\n🟤🗡️ Enemy Attack Phase')
 
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
