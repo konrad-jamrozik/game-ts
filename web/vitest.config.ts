@@ -2,7 +2,6 @@ import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
 
 // https://vitejs.dev/config/
-// eslint-disable-next-line tsdoc/syntax
 /** @type {import('vite').UserConfig} */
 // https://vitest.dev/guide/#configuring-vitest
 export default defineConfig({
