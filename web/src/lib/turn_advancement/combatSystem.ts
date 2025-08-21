@@ -308,3 +308,7 @@ function showRoundStatus(
     `👺👺 Enemies: ${activeEnemies.length} units, ${Math.round(currentEnemySkill)} total skill (${enemySkillPercentage}%), ${currentEnemyHitPoints} HP (${enemyHpPercentage}%)`,
   )
 }
+
+// KJA idea for a table: columns are combat rounds, and rows are units. Each cell tells what interesting happened to that unit in that round.
+// E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
+// Cell background gradient may denote % of original effective skill.
