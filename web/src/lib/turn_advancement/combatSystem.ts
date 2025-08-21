@@ -242,12 +242,12 @@ function executeAttack(
 
     if (defender.hitPoints <= 0) {
       console.log(
-        `☠️ ${attackerIcon} ${attackerName} terminates ${defenderIcon} ${defenderName} with ${damage} (${damagePct}) damage ${rollInfo}`,
+        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill})with ${damage} (${damagePct}) damage ${rollInfo}`,
       )
     } else {
       const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
       console.log(
-        `🩸 ${attackerIcon} ${attackerName} hits ${defenderIcon} ${defenderName} for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
+        `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
       )
     }
 
@@ -258,7 +258,9 @@ function executeAttack(
   } else {
     // Failed attack - show roll details
     const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.failureProbabilityPct.toFixed(1)}% threshold]`
-    console.log(`➖ ${attackerIcon} ${attackerName} misses ${defenderIcon} ${defenderName} ${rollInfo}`)
+    console.log(
+      `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
+    )
 
     // Update skill gains (postponed)
     if (attackerStats) {
