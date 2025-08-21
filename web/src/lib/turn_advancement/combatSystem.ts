@@ -12,6 +12,7 @@ import { rollWeaponDamage } from '../utils/weaponUtils'
 import type { Agent, EnemyUnit } from '../model/model'
 import { agV } from '../model/agents/AgentView'
 import { enemyUnitEffectiveSkill } from '../utils/enemyUnitUtils'
+import { fmtPctDec2 } from '../utils/formatUtils'
 
 // KJA move to better place
 function isAgent(unit: Agent | EnemyUnit): unit is Agent {
@@ -238,7 +239,7 @@ function executeAttack(
     }
 
     // Detailed success log
-    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.failureProbabilityPct.toFixed(1)}% threshold]`
+    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
 
     if (defender.hitPoints <= 0) {
       console.log(
@@ -257,7 +258,7 @@ function executeAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollInfo = `[${contestResult.roll.toFixed(1)}% vs ${contestResult.failureProbabilityPct.toFixed(1)}% threshold]`
+    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
     console.log(
       `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
     )

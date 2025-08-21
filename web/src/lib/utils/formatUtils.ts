@@ -1,10 +1,15 @@
 import pluralize from 'pluralize'
 
-/**
- * Formats a value as a percentage with specified decimal places
- */
-export function fmtPctDiv100(value: number, decimals = 2): string {
+export function fmtPctDiv100Dec2(value: number): string {
+  return fmtPctDiv100(value, 2)
+}
+
+export function fmtPctDiv100(value: number, decimals: number): string {
   return fmtPct(value, decimals, 100)
+}
+
+export function fmtPctDec2(value: number): string {
+  return fmtPct(value, 2, 1)
 }
 
 export function fmtPct(value: number, decimals = 0, div = 1): string {

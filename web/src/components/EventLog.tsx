@@ -9,7 +9,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
 import { assertEqual } from '../lib/utils/assert'
-import { fmtPctDiv100 } from '../lib/utils/formatUtils'
+import { fmtPctDiv100Dec2 } from '../lib/utils/formatUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event
@@ -18,7 +18,7 @@ function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionComplete
   if (rewards.intel !== undefined) parts.push(`+${rewards.intel} intel`)
   if (rewards.funding !== undefined) parts.push(`+${rewards.funding} funding`)
   if (rewards.panicReduction !== undefined) {
-    parts.push(`-${fmtPctDiv100(rewards.panicReduction)}% panic`)
+    parts.push(`-${fmtPctDiv100Dec2(rewards.panicReduction)}% panic`)
   }
   return parts.join(', ')
 }
