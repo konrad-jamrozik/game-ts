@@ -5,9 +5,12 @@
       "Bash(npx tsc:*)",
       "Bash(npm run test:*)",
       "Bash(npx eslint:*)",
-      "WebFetch(domain:docs.anthropic.com)"
+      "WebFetch(domain:docs.anthropic.com)",
+      "Bash(claude mcp add:*)",
+      "Bash(claude mcp:*)"
     ],
     "deny": [],
     "ask": []
-  }
+  },
+  "outputStyle": "Explanatory"
 }

@@ -53,16 +53,32 @@ The table below shows some of the details of missions.
 
 # Leads
 
-| Item                            | Intel cost | Repeatable |
-|---------------------------------|:----------:|:----------:|
-| Criminal organizations          |         20 |      false |
-| Locate cult member              |         20 |       true |
-| Interrogate cult member         |         10 |      false |
-| Cult profile                    |         50 |      false |
-| Interrogate cult handler        |         20 |      false |
-| Interrogate cult lieutenant     |         40 |      false |
-| Interrogate cult commander      |         80 |      false |
-| Interrogate cult high commander |        160 |      false |
+The leads system follows a progression chain where completing missions unlocks new investigation opportunities.
+Some leads cost intel to pursue, while others are unlocked automatically after successful missions.
+
+## Intel-Based Leads
+
+| Item                             | Intel Cost | Repeatable | Dependencies                  |
+|----------------------------------|:----------:|:----------:|-------------------------------|
+| Criminal organizations           |     20     |   false    | Starting lead                 |
+| Locate cult member               |     20     |   true     | Criminal organizations        |
+| Interrogate cult member          |     10     |   false    | Apprehend cult member mission |
+| Cult profile                     |     50     |   false    | Interrogate cult member       |
+| Interrogate cult handler         |     20     |   false    | Raid safehouse mission        |
+| Interrogate cult lieutenant      |     40     |   false    | Raid outpost mission          |
+| Interrogate cult commander       |     80     |   false    | Raid base mission             |
+| Interrogate cult high commander  |    160     |   false    | Raid HQ mission               |
+
+## Mission-Unlocked Leads (0 Intel Cost)
+
+These leads become available automatically after completing prerequisite missions:
+
+| Item                         | Unlocked by Mission         | Description                              |
+|------------------------------|-----------------------------|------------------------------------------|
+| Raid cult safehouse          | Interrogate cult member     | Location revealed through interrogation  |
+| Raid cult outpost            | Interrogate cult handler    | Handler reveals outpost location         |
+| Raid cult base of operations | Interrogate cult lieutenant | Lieutenant reveals base location         |
+| Raid cult HQ                 | Interrogate cult commander  | Commander reveals HQ location            |
 
 # Python interactive
 
