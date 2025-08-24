@@ -56,10 +56,10 @@ The leads system follows a progression chain where completing missions unlocks n
 | Interrogate cult lieutenant     |     0      |   false    | Raid cult outpost mission     |
 | Interrogate cult commander      |     0      |   false    | Raid cult base mission        |
 | Interrogate cult high commander |     0      |   false    | Raid cult HQ mission          |
-| Raid cult safehouse             |            |            | Interrogate cult member       |
-| Raid cult outpost               |            |            | Interrogate cult handler      |
-| Raid cult base of operations    |            |            | Interrogate cult lieutenant   |
-| Raid cult HQ                    |            |            | Interrogate cult commander    |
+| Raid cult safehouse             |     0      |   false    | Interrogate cult member       |
+| Raid cult outpost               |     0      |   false    | Interrogate cult handler      |
+| Raid cult base of operations    |     0      |   false    | Interrogate cult lieutenant   |
+| Raid cult HQ                    |     0      |   false    | Interrogate cult commander    |
 
 # Dependency diagram
 
