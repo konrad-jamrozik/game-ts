@@ -1,5 +1,5 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
-import type { Agent } from '../model'
+import type { Agent, MissionSiteId } from '../model'
 import { getAgentUpkeep, getContractingIncome, getEspionageIntel } from '../ruleset/ruleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
@@ -38,7 +38,7 @@ type AgentsViewMethods = Readonly<{
   contractingIncome(): number
   espionageIntel(): number
   applyExhaustion(exhaustion: number): void
-  deployedOnMissionSite(missionSiteId: string): AgentsView
+  deployedOnMissionSite(missionSiteId: MissionSiteId): AgentsView
   validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
   validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
   validateInvariants(): void
@@ -72,7 +72,7 @@ function getAgentsViewMethods(
         agentView.agent().exhaustion = Math.max(0, agentView.agent().exhaustion + exhaustion)
       })
     },
-    deployedOnMissionSite: (missionSiteId: string): AgentsView =>
+    deployedOnMissionSite: (missionSiteId: MissionSiteId): AgentsView =>
       toAgsV(
         agVArr.filter((agentView) => {
           const agent = agentView.agent()

@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { MissionRewards, MissionSiteState } from '../model/model'
+import type { MissionRewards, MissionSiteState, MissionSiteId } from '../model/model'
 
 export type BaseEventFields = {
   id: number
@@ -17,7 +17,7 @@ export type MissionCompletedEvent = BaseEventFields & {
   type: 'MissionCompleted'
   missionTitle: string
   rewards: MissionRewards
-  missionSiteId: string
+  missionSiteId: MissionSiteId
   finalState: MissionSiteState
 }
 
@@ -63,7 +63,7 @@ const eventsSlice = createSlice({
         actionsCount: number
         missionTitle: string
         rewards: MissionRewards
-        missionSiteId: string
+        missionSiteId: MissionSiteId
         finalState: MissionSiteState
       }>,
     ) {

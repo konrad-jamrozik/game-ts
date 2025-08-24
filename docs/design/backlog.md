@@ -17,3 +17,9 @@ KJA backlog:
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
   of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
   // It is disabled in production builds, so you don't need to worry about that.
+- on npm run build
+  (!) Some chunks are larger than 500 kB after minification. Consider:
+  - Using dynamic import() to code-split the application
+  - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+  - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+  ✓ built in 6.66s

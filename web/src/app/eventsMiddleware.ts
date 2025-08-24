@@ -14,7 +14,7 @@ import {
   sackAgents,
 } from '../lib/slices/gameStateSlice'
 import isPlayerAction from '../lib/slices/isPlayerAction'
-import type { MissionRewards, MissionSite, MissionSiteState } from '../lib/model/model'
+import type { MissionRewards, MissionSite, MissionSiteState, MissionSiteId } from '../lib/model/model'
 import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'
 import { fmtAgentCount } from '../lib/utils/formatUtils'
@@ -59,7 +59,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     function postMissionCompletedEvent(
       missionTitle: string,
       rewards: MissionRewards,
-      missionSiteId: string,
+      missionSiteId: MissionSiteId,
       finalState: MissionSiteState,
     ): void {
       store.dispatch(

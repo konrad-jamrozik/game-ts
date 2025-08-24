@@ -156,20 +156,20 @@ For example, an agent that lost 7 hit points out of total 30 hit points, must sp
 As such, every turn they restore 7 / 12 = 0.583(3) hit points, rounded down. Hence:
 
 | Turn in Recovery | Hit Points Restored | Before rounding |
-|------------------|--------------------|------------------|
-| 0                | 0                  | 0                |
-| 1                | 0                  | 0.583(3)         |
-| 2                | 1                  | 1.166(6)         |
-| 3                | 1                  | 1.75             |
-| 4                | 2                  | 2.333(3)         |
-| 5                | 2                  | 2.916(6)         |
-| 6                | 3                  | 3.5              |
-| 7                | 4                  | 4.083(3)         |
-| 8                | 4                  | 4.666(6)         |
-| 9                | 5                  | 5.25             |
-| 10               | 5                  | 5.833(3)         |
-| 11               | 6                  | 6.416(6)         |
-| 12               | 7                  | 7                |
+| ---------------- | ------------------- | --------------- |
+| 0                | 0                   | 0               |
+| 1                | 0                   | 0.583(3)        |
+| 2                | 1                   | 1.166(6)        |
+| 3                | 1                   | 1.75            |
+| 4                | 2                   | 2.333(3)        |
+| 5                | 2                   | 2.916(6)        |
+| 6                | 3                   | 3.5             |
+| 7                | 4                   | 4.083(3)        |
+| 8                | 4                   | 4.666(6)        |
+| 9                | 5                   | 5.25            |
+| 10               | 5                   | 5.833(3)        |
+| 11               | 6                   | 6.416(6)        |
+| 12               | 7                   | 7               |
 
 When a turn is advanced when agent was in recovery and they had `recoveryTurns` equal to 1, they will
 end up with:

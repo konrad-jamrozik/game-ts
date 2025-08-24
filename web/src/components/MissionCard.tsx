@@ -10,9 +10,10 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../lib/collections/missions'
 import { setMissionSiteSelection } from '../lib/slices/selectionSlice'
 import { fmtNoPrefix } from '../lib/utils/formatUtils'
+import type { MissionSiteId } from '../lib/model/model'
 import { LabeledValue } from './LabeledValue'
 
-export type MissionCardProps = { missionSiteId: string }
+export type MissionCardProps = { missionSiteId: MissionSiteId }
 
 export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()

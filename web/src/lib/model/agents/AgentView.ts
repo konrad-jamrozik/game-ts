@@ -1,11 +1,11 @@
 import { effectiveSkill } from '../../utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
-import type { Agent } from '../model'
+import type { Agent, MissionSiteId } from '../model'
 
 export type AgentView = Readonly<{
   isTerminated(): boolean
   isInTransit(): boolean
-  isDeployedOnMissionSite(missionSiteId: string): boolean
+  isDeployedOnMissionSite(missionSiteId: MissionSiteId): boolean
   effectiveSkill(): number
   isAvailable(): boolean
   isOnAssignment(): boolean
@@ -19,7 +19,7 @@ export function agV(agent: Agent): AgentView {
   const agentView: AgentView = {
     isTerminated: () => agent.state === 'Terminated',
     isInTransit: () => agent.state === 'InTransit',
-    isDeployedOnMissionSite: (missionSiteId: string) => agent.assignment === missionSiteId,
+    isDeployedOnMissionSite: (missionSiteId: MissionSiteId) => agent.assignment === missionSiteId,
     effectiveSkill: () => effectiveSkill(agent),
     isAvailable: () => agent.state === 'Available',
     isOnAssignment: () => agent.state === 'OnAssignment',
@@ -31,4 +31,3 @@ export function agV(agent: Agent): AgentView {
 
   return Object.freeze(agentView)
 }
-
