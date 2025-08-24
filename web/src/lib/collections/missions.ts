@@ -10,8 +10,8 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-location'],
     enemyUnitsSpec: '2 Initiate, 1 Operative',
     rewards: {
-      money: 10,
-      intel: 10,
+      money: 5,
+      intel: 0,
       panicReduction: 5,
       factionRewards: [
         {
@@ -31,7 +31,7 @@ export const missions: Mission[] = [
     enemyUnitsSpec: '4 Initiate, 3 Operative, 1 Handler',
     rewards: {
       money: 100,
-      intel: 30,
+      intel: 10,
       panicReduction: 20,
       factionRewards: [
         {
@@ -50,8 +50,8 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-outpost'],
     enemyUnitsSpec: '4 Initiate, 6 Operative, 4 Soldier, 2 Handler, 1 Lieutenant',
     rewards: {
-      money: 200,
-      intel: 60,
+      money: 400,
+      intel: 20,
       panicReduction: 100,
       factionRewards: [
         {
@@ -70,8 +70,8 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-base'],
     enemyUnitsSpec: '10 Operative, 10 Soldier, 2 Elite, 4 Handler, 2 Lieutenant, 1 Commander',
     rewards: {
-      money: 300,
-      intel: 100,
+      money: 1000,
+      intel: 50,
       panicReduction: 500,
       factionRewards: [
         {
@@ -90,8 +90,8 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-hq'],
     enemyUnitsSpec: '20 Soldier, 6 Elite, 4 Lieutenant, 2 Commander, 1 HighCommander',
     rewards: {
-      money: 1000,
-      intel: 300,
+      money: 10000,
+      intel: 100,
       panicReduction: 2000,
       factionRewards: [
         {

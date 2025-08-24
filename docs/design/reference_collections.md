@@ -27,39 +27,42 @@ Newly hired agent has:
 
 The table below shows some of the details of missions.
 
-`Enemies` - What enemies are present on the mission.
-`Money` - Money reward.
-`Intel` - Intel reward.
-`PanicR` - Panic reduction. 100 = 1%.
-`ThreatR` - Threat reduction of given faction. 100 = 1%.
-`Suppr` - Suppression of given faction. 100 = 1%.
+| Mission                      | Exp | Troops                    | Officers               | MoneyR | IntelR | PanicR | ThreatR | SupprR |
+| ---------------------------- | --- | ------------------------- | ---------------------- | -----: | -----: | -----: | ------: | -----: |
+| Apprehend cult member        | 3   | 2 In,  1 Op               |                        |      5 |      0 | 0.05 % |  0.01 % |  0.1 % |
+| Raid cult safehouse          | 8   | 4 In,  3 Op               | 1 Hn                   |    100 |     10 |  0.2 % |   0.1 % |   10 % |
+| Raid cult outpost            | 10  | 4 In,  6 Op,  4 Sl        | 2 Hn, 1 Lt             |    400 |     20 |    1 % |     1 % |   50 % |
+| Raid cult base of operations | 12  | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  1,000 |     50 |    5 % |     5 % |  100 % |
+| Raid cult HQ                 | 15  | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC | 10,000 |    100 |   20 % |   100 % |  100 % |
 
-| Mission                      | Troops                    | Officers               | Money | Intel | PanicR | ThreatR | Suppr |
-| ---------------------------- | ------------------------- | ---------------------- | :---: | :---: | :----: | :-----: | :---: |
-| Apprehend cult member        | 2 In,  1 Op               |                        |  10   |  10   | 0.05 % | 0.01 %  | 0.1 % |
-| Raid cult safehouse          | 4 In,  3 Op               | 1 Hn                   |  100  |  30   | 0.2 %  |  0.1 %  | 10 %  |
-| Raid cult outpost            | 4 In,  6 Op,  4 Sl        | 2 Hn, 1 Lt             |  200  |  60   |  1 %   |   2 %   | 50 %  |
-| Raid cult base of operations | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  300  |  100  |  5 %   |  10 %   | 100 % |
-| Raid cult HQ                 | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC | 1000  |  300  |  20 %  |  100 %  | 100 % |
+Legend:
+`Exp` - In how many turns the mission expires.
+`Troops` - What troop-type enemies are present on the mission.
+`Officers` - What officer-type enemies are present on the mission.
+`MoneyR` - Money reward.
+`IntelR` - Intel reward.
+`PanicR` - Panic reduction. 1% = 100.
+`ThreatR` - Threat reduction of given faction. 1% = 100.
+`SupprR` - Suppression reward (increase) of given faction. 1% = 100.
 
 # Leads
 
 The leads system follows a progression chain where completing missions unlocks new investigation opportunities.
 
 | ID                              | Intel Cost | Repeatable |
-| ------------------------------- | :--------: | :--------: |
-| Criminal organizations          |     20     |   false    |
-| Locate cult member              |     20     |    true    |
-| Locate cult safehouse           |     0      |   false    |
-| Locate cult outpost             |     0      |   false    |
-| Locate cult base of operations  |     0      |   false    |
-| Locate cult HQ                  |     0      |   false    |
-| Interrogate cult member         |     0      |   false    |
-| Interrogate cult handler        |     0      |   false    |
-| Interrogate cult lieutenant     |     0      |   false    |
-| Interrogate cult commander      |     0      |   false    |
-| Interrogate cult high commander |     0      |   false    |
-| Cult profile                    |     50     |   false    |
+| ------------------------------- | ---------: | :--------: |
+| Criminal organizations          |         10 |   false    |
+| Cult profile                    |         50 |   false    |
+| Locate cult member              |         20 |    true    |
+| Locate cult safehouse           |         50 |    true    |
+| Locate cult outpost             |        100 |    true    |
+| Locate cult base of operations  |        200 |    true    |
+| Locate cult HQ                  |        500 |    true    |
+| Interrogate cult member         |          0 |   false    |
+| Interrogate cult handler        |          0 |   false    |
+| Interrogate cult lieutenant     |          0 |   false    |
+| Interrogate cult commander      |          0 |   false    |
+| Interrogate cult high commander |          0 |   false    |
 
 # Dependency diagram
 
