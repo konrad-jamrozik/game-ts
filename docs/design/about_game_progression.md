@@ -15,10 +15,11 @@ That lead is typically obtained by winning `Raid <faction name> HQ` mission.
 
 # Game loss conditions
 
-The player loses the game when any of the following conditions are met:
+The player loses the game when any of the following conditions are met, at
+the start of player turn, after turn evaluation has concluded:
 
-- The player money is negative at the start of the turn, after the turn has been fully evaluated.
-- The panic level is 100% or more at the start of the turn, after the turn has been fully evaluated.
+- The player money is negative.
+- The panic level is 100% or more.
 
 # Faction visibility
 
