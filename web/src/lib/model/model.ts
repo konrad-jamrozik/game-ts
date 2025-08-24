@@ -9,6 +9,25 @@ export type Actor = {
 
 export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignment' | 'OnMission' | 'Terminated'
 
+// Assignment types for agents
+export type ActivityId = 'Contracting' | 'Espionage'
+export type MissionSiteId = `mission-site-${string}`
+export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
+export type AgentAssignment = ActivityId | MissionSiteId | AgentAssignmentState
+
+// Type guard functions for agent assignments
+export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
+  return assignment === 'Contracting' || assignment === 'Espionage'
+}
+
+export function isMissionSiteAssignment(assignment: AgentAssignment): assignment is MissionSiteId {
+  return typeof assignment === 'string' && assignment.startsWith('mission-site-')
+}
+
+export function isAssignmentState(assignment: AgentAssignment): assignment is AgentAssignmentState {
+  return assignment === 'Standby' || assignment === 'Recovery' || assignment === 'Sacked' || assignment === 'KIA'
+}
+
 export type Weapon = {
   damage: number
   minDamage: number
@@ -21,7 +40,7 @@ export type Agent = Actor & {
   hitPointsLostBeforeRecovery: number
   missionsSurvived: number
   state: AgentState
-  assignment: string
+  assignment: AgentAssignment
 }
 
 export type Lead = {
@@ -81,7 +100,7 @@ export type Mission = {
 export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
 
 export type MissionSite = {
-  id: string
+  id: MissionSiteId
   missionId: string
   agentIds: string[]
   state: MissionSiteState

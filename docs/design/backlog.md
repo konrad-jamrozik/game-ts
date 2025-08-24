@@ -17,8 +17,3 @@ KJA backlog:
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
   of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
   // It is disabled in production builds, so you don't need to worry about that.
-- See if agent "assignment" string can be somehow typed to things like "typeof MissionSiteID | typeof ActivityId"
-  where "ActivityId" is "Contracting" | "Espionage"
-  and MissionSiteId is string of form mission-site-(some-id)
-  and then in code we can check: "if assignment type is really typeof MissionSiteID", then dereference appropriate
-  MissionSite value

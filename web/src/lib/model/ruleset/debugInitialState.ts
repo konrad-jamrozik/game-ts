@@ -1,10 +1,10 @@
-import type { Agent, GameState } from '../model'
+import type { Agent, GameState, MissionSiteId } from '../model'
 import { createWeapon } from '../../utils/weaponUtils'
 import { createEnemiesFromSpec } from '../../utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
-function buildDebugAgents(missionSiteId: string): { agents: Agent[]; onMissionAgentIds: string[] } {
+function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMissionAgentIds: string[] } {
   let agentCounter = 0
   function nextId(): string {
     const id = agentCounter.toString().padStart(3, '0')
@@ -186,7 +186,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
   }
 
-  const missionSiteId = 'mission-site-000'
+  const missionSiteId: MissionSiteId = 'mission-site-000'
 
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
   const { agents: debugAgents, onMissionAgentIds } = buildDebugAgents(missionSiteId)
@@ -203,7 +203,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       enemies: createEnemiesFromSpec(mission.enemyUnitsSpec),
     },
     {
-      id: 'mission-site-001',
+      id: 'mission-site-001' as MissionSiteId,
       missionId: 'mission-apprehend-red-dawn',
       agentIds: [],
       state: 'Active',

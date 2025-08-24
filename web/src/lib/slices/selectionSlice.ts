@@ -1,9 +1,10 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { MissionSiteId } from '../model/model'
 
 export type SelectionState = {
   agents: string[]
   selectedLeadId?: string
-  selectedMissionSiteId?: string
+  selectedMissionSiteId?: MissionSiteId
 }
 
 const initialState: SelectionState = {
@@ -26,7 +27,7 @@ const selectionSlice = createSlice({
     clearLeadSelection(state) {
       delete state.selectedLeadId
     },
-    setMissionSiteSelection(state, action: PayloadAction<string>) {
+    setMissionSiteSelection(state, action: PayloadAction<MissionSiteId>) {
       state.selectedMissionSiteId = action.payload
     },
     clearMissionSelection(state) {

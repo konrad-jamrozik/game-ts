@@ -12,7 +12,7 @@ import {
 import initialState, { makeInitialState } from '../model/ruleset/initialState'
 import advanceTurnImpl from '../turn_advancement/advanceTurnImpl'
 import asPlayerAction from './asPlayerAction'
-import type { Agent, MissionSite } from '../model/model'
+import type { Agent, MissionSite, MissionSiteId } from '../model/model'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
@@ -103,7 +103,7 @@ const gameStateSlice = createSlice({
       for (const mission of dependentMissions) {
         // Invariant: next mission site numeric id is always the current number of mission sites
         const nextMissionNumericId = state.missionSites.length
-        const missionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
+        const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
         const newMissionSite: MissionSite = {
           id: missionSiteId,
           missionId: mission.id,
@@ -117,7 +117,7 @@ const gameStateSlice = createSlice({
 
       state.intel -= intelCost
     }),
-    deployAgentsToMission: asPlayerAction<{ missionSiteId: string; agentIds: string[] }>((state, action) => {
+    deployAgentsToMission: asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>((state, action) => {
       const { missionSiteId, agentIds } = action.payload
 
       // Find the mission site and update it
