@@ -1,3 +1,12 @@
+export type Actor = {
+  id: string
+  skill: number
+  hitPoints: number
+  maxHitPoints: number
+  exhaustion: number
+  weapon: Weapon
+}
+
 export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignment' | 'OnMission' | 'Terminated'
 
 export type Weapon = {
@@ -6,19 +15,13 @@ export type Weapon = {
   maxDamage: number
 }
 
-export type Agent = {
-  id: string
+export type Agent = Actor & {
   turnHired: number
-  skill: number
-  exhaustion: number
-  hitPoints: number
-  maxHitPoints: number
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsSurvived: number
   state: AgentState
   assignment: string
-  weapon: Weapon
 }
 
 export type Lead = {
@@ -47,7 +50,7 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type EnemyUnitType =
+export type EnemyType =
   | 'Initiate'
   | 'Operative'
   | 'Handler'
@@ -57,14 +60,8 @@ export type EnemyUnitType =
   | 'Commander'
   | 'HighCommander'
 
-export type EnemyUnit = {
-  id: string
-  type: EnemyUnitType
-  skill: number
-  exhaustion: number
-  hitPoints: number
-  maxHitPoints: number
-  weapon: Weapon
+export type Enemy = Actor & {
+  type: EnemyType
   isOfficer: boolean
 }
 
@@ -86,7 +83,7 @@ export type MissionSite = {
   agentIds: string[]
   state: MissionSiteState
   expiresIn: number | 'never'
-  enemyUnits: EnemyUnit[] // Enemy units present at the mission site
+  enemies: Enemy[] // Enemies present at the mission site
 }
 
 export type Faction = {

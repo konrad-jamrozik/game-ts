@@ -1,4 +1,4 @@
-import { floor } from '../../utils/mathUtils'
+import { effectiveSkill } from '../../utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model'
 
@@ -32,13 +32,3 @@ export function agV(agent: Agent): AgentView {
   return Object.freeze(agentView)
 }
 
-// Calculates the effective skill of an agent. Refer to about_agents.md for details.
-function effectiveSkill(agent: Agent): number {
-  const hitPointsLost = agent.maxHitPoints - agent.hitPoints
-  const hitPointsReduction = Math.max(1 - (agent.maxHitPoints > 0 ? hitPointsLost / agent.maxHitPoints : 0), 0)
-  // First 5 points of exhaustion have no impact
-  const exhaustionReduction = Math.max(1 - Math.max(agent.exhaustion - 5, 0) / 100, 0)
-
-  const result = agent.skill * hitPointsReduction * exhaustionReduction
-  return floor(result)
-}

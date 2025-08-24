@@ -1,4 +1,4 @@
-export const ENEMY_UNIT_STATS: Record<string, { skill: number; hp: number; damage: number; isOfficer: boolean }> = {
+export const ENEMY_STATS: Record<string, { skill: number; hp: number; damage: number; isOfficer: boolean }> = {
   Initiate: { skill: 40, hp: 20, damage: 8, isOfficer: false },
   Operative: { skill: 60, hp: 20, damage: 10, isOfficer: false },
   Handler: { skill: 70, hp: 20, damage: 10, isOfficer: true },

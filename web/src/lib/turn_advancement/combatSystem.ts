@@ -9,12 +9,12 @@ import {
 } from '../model/ruleset/constants'
 import { rollContest } from './Roll'
 import { rollWeaponDamage } from '../utils/weaponUtils'
-import type { Agent, EnemyUnit } from '../model/model'
+import type { Agent, Enemy } from '../model/model'
 import { agV } from '../model/agents/AgentView'
-import { enemyUnitEffectiveSkill } from '../utils/enemyUnitUtils'
+import { effectiveSkill } from '../utils/actorUtils'
 import { fmtPctDec2 } from '../utils/formatUtils'
 
-function isAgent(unit: Agent | EnemyUnit): unit is Agent {
+function isAgent(unit: Agent | Enemy): unit is Agent {
   return 'turnHired' in unit
 }
 
@@ -35,7 +35,7 @@ export type CombatReport = {
 export function conductMissionSiteBattle(
   agents: Agent[],
   agentStats: AgentCombatStats[],
-  enemies: EnemyUnit[],
+  enemies: Enemy[],
 ): CombatReport {
   let roundIdx = 1
   let retreated = false
@@ -44,7 +44,7 @@ export function conductMissionSiteBattle(
   // Calculate initial totals for percentage tracking
   const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + enemyUnitEffectiveSkill(enemy), 0)
+  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Show round status with detailed statistics
@@ -106,7 +106,7 @@ export function conductMissionSiteBattle(
   }
 }
 
-function shouldBattleEnd(agents: Agent[], enemies: EnemyUnit[]): boolean {
+function shouldBattleEnd(agents: Agent[], enemies: Enemy[]): boolean {
   const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
   const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
   return allAgentsTerminated || allEnemiesTerminated
@@ -121,7 +121,7 @@ function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[]): boolean
   return totalCurrentEffectiveSkill < totalOriginalEffectiveSkill * 0.5
 }
 
-function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: EnemyUnit[]): void {
+function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
   // Track attack counts per target for fair distribution
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
@@ -174,7 +174,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
   }
 }
 
-function selectTargetWithFairDistribution<T extends Agent | EnemyUnit>(
+function selectTargetWithFairDistribution<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
 ): T | undefined {
@@ -190,8 +190,8 @@ function selectTargetWithFairDistribution<T extends Agent | EnemyUnit>(
 
   // Among least attacked targets, select the one with lowest effective skill
   const sorted = [...leastAttackedTargets].sort((targetA, targetB) => {
-    const skillA = isAgent(targetA) ? agV(targetA).effectiveSkill() : enemyUnitEffectiveSkill(targetA)
-    const skillB = isAgent(targetB) ? agV(targetB).effectiveSkill() : enemyUnitEffectiveSkill(targetB)
+    const skillA = isAgent(targetA) ? agV(targetA).effectiveSkill() : effectiveSkill(targetA)
+    const skillB = isAgent(targetB) ? agV(targetB).effectiveSkill() : effectiveSkill(targetB)
     if (skillA === skillB) return targetA.id.localeCompare(targetB.id)
     return skillA - skillB
   })
@@ -200,14 +200,14 @@ function selectTargetWithFairDistribution<T extends Agent | EnemyUnit>(
 }
 
 function executeAttack(
-  attacker: Agent | EnemyUnit,
+  attacker: Agent | Enemy,
   attackerStats: AgentCombatStats | undefined,
-  defender: Agent | EnemyUnit,
+  defender: Agent | Enemy,
   defenderStats?: AgentCombatStats,
 ): void {
   // Calculate effective skills
-  const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : enemyUnitEffectiveSkill(attacker)
-  const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : enemyUnitEffectiveSkill(defender)
+  const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
+  const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : effectiveSkill(defender)
 
   // Contest roll
   const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill)
@@ -278,7 +278,7 @@ function executeAttack(
 function showRoundStatus(
   rounds: number,
   agents: Agent[],
-  enemies: EnemyUnit[],
+  enemies: Enemy[],
   initialAgentEffectiveSkill: number,
   initialAgentHitPoints: number,
   initialEnemySkill: number,
@@ -295,7 +295,7 @@ function showRoundStatus(
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + enemyUnitEffectiveSkill(enemy), 0)
+  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
   const enemySkillPercentage = Math.round((currentEnemySkill / initialEnemySkill) * 100)
   const enemyHpPercentage = Math.round((currentEnemyHitPoints / initialEnemyHitPoints) * 100)

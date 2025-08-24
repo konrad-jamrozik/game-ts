@@ -22,13 +22,13 @@ export function updateDeployedMissionSite(state: GameState, missionSite: Mission
   const agentStats = prepareAgentCombatStats(deployedAgentViews)
 
   // Conduct mission site battle
-  const combatReport = conductMissionSiteBattle(deployedAgents, agentStats, missionSite.enemyUnits)
+  const combatReport = conductMissionSiteBattle(deployedAgents, agentStats, missionSite.enemies)
 
   // Update agents based on combat results
   updateAgentsAfterCombat(state, deployedAgents, agentStats, combatReport)
 
   // Determine mission site outcome
-  const allEnemiesNeutralized = missionSite.enemyUnits.every((enemy) => enemy.hitPoints <= 0)
+  const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
 
   missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
 

@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missions } from '../collections/missions'
 import { createWeapon } from '../utils/weaponUtils'
-import { createEnemyUnitsFromSpec } from '../utils/enemyUnitUtils'
+import { createEnemiesFromSpec } from '../utils/enemyUtils'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
@@ -110,7 +110,7 @@ const gameStateSlice = createSlice({
           agentIds: [],
           state: 'Active',
           expiresIn: mission.expiresIn,
-          enemyUnits: createEnemyUnitsFromSpec(mission.enemyUnitsSpec), // Create enemy units from spec
+          enemies: createEnemiesFromSpec(mission.enemyUnitsSpec), // Create enemies from spec
         }
         state.missionSites.push(newMissionSite)
       }
