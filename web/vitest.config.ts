@@ -13,6 +13,13 @@ export default defineConfig({
     coverage: {
       include: ['src/**/*.ts', 'src/**/*.tsx'],
     },
+    include: ['test/**/*.test.ts', 'test/**/*.test.tsx'],
+    // With exclude: ['test/App.test.tsx']:
+    //   1.33s (transform 385ms, setup 763ms, collect 1.97s, tests 125ms, environment 3.23s, prepare 691ms)
+    // Without exclude: ['test/App.test.tsx']:
+    //   9.93s (transform 1.72s, setup 936ms, collect 9.60s, tests 1.49s, environment 3.83s, prepare 894ms)
+    // Conditionally exclude App.test.tsx based on RUN_ALL_TESTS environment variable
+    exclude: process.env['RUN_ALL_TESTS'] !== undefined ? [] : ['test/App.test.tsx'],
     // https://github.com/jsdom/jsdom
     // https://testing-library.com/docs/react-testing-library/setup#using-without-jest
     environment: 'jsdom',
