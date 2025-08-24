@@ -131,8 +131,7 @@ export type GameState = {
   agents: Agent[]
   // Liabilities
   currentTurnTotalHireCost: number
-  // Leads
+  // Archive
   leadInvestigationCounts: Record<string, number>
-  // Mission sites
   missionSites: MissionSite[]
 }
