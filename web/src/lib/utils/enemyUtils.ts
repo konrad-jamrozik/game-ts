@@ -1,24 +1,10 @@
 import { ENEMY_STATS } from '../collections/enemyUnits'
-import type { Enemy, EnemyType } from '../model/model'
+import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
 import { createWeapon } from './weaponUtils'
 
 let idCounter = 0
 
-// KJA 2 dedup with EnemyType in model.ts. See https://stackoverflow.com/questions/78739104/how-can-i-avoid-duplicating-key-in-value-and-duplicating-type-and-const-definit
-// I know that for simple string union types I can deduplicate type and const like this:
-//   export const NameVal = ['foo', 'bar']
-//   export type NameType = (typeof NameVal)[number]
-
-const VALID_ENEMY_TYPES = new Set([
-  'Initiate',
-  'Operative',
-  'Handler',
-  'Soldier',
-  'Lieutenant',
-  'Elite',
-  'Commander',
-  'HighCommander',
-])
+const VALID_ENEMY_TYPES = new Set<string>(ENEMY_TYPES)
 
 function isValidEnemyType(type: string): type is EnemyType {
   return VALID_ENEMY_TYPES.has(type)

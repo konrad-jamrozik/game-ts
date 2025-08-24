@@ -50,15 +50,18 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type EnemyType =
-  | 'Initiate'
-  | 'Operative'
-  | 'Handler'
-  | 'Soldier'
-  | 'Lieutenant'
-  | 'Elite'
-  | 'Commander'
-  | 'HighCommander'
+export const ENEMY_TYPES = [
+  'Initiate',
+  'Operative',
+  'Handler',
+  'Soldier',
+  'Lieutenant',
+  'Elite',
+  'Commander',
+  'HighCommander',
+] as const
+
+export type EnemyType = (typeof ENEMY_TYPES)[number]
 
 export type Enemy = Actor & {
   type: EnemyType
