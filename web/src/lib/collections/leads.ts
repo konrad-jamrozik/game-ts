@@ -37,7 +37,7 @@ export const leads: Lead[] = [
   },
   {
     id: 'lead-red-dawn-safehouse',
-    title: 'Raid cult safehouse',
+    title: 'Locate cult safehouse',
     description: 'Location of a Red Dawn safehouse has been revealed.',
     intelCost: 0,
     expiresIn: 'never',
@@ -55,7 +55,7 @@ export const leads: Lead[] = [
   },
   {
     id: 'lead-red-dawn-outpost',
-    title: 'Raid cult outpost',
+    title: 'Locate cult outpost',
     description: 'Location of a Red Dawn outpost has been revealed.',
     intelCost: 0,
     expiresIn: 'never',
@@ -73,7 +73,7 @@ export const leads: Lead[] = [
   },
   {
     id: 'lead-red-dawn-base',
-    title: 'Raid cult base of operations',
+    title: 'Locate cult base of operations',
     description: 'Location of the Red Dawn base has been revealed.',
     intelCost: 0,
     expiresIn: 'never',
@@ -91,7 +91,7 @@ export const leads: Lead[] = [
   },
   {
     id: 'lead-red-dawn-hq',
-    title: 'Raid cult HQ',
+    title: 'Locate cult HQ',
     description: 'Location of the Red Dawn headquarters has been revealed.',
     intelCost: 0,
     expiresIn: 'never',

@@ -50,10 +50,10 @@ The leads system follows a progression chain where completing missions unlocks n
 | ------------------------------- | :--------: | :--------: |
 | Criminal organizations          |     20     |   false    |
 | Locate cult member              |     20     |    true    |
-| Raid cult safehouse             |     0      |   false    |
-| Raid cult outpost               |     0      |   false    |
-| Raid cult base of operations    |     0      |   false    |
-| Raid cult HQ                    |     0      |   false    |
+| Locate cult safehouse           |     0      |   false    |
+| Locate cult outpost             |     0      |   false    |
+| Locate cult base of operations  |     0      |   false    |
+| Locate cult HQ                  |     0      |   false    |
 | Interrogate cult member         |     0      |   false    |
 | Interrogate cult handler        |     0      |   false    |
 | Interrogate cult lieutenant     |     0      |   false    |
@@ -84,9 +84,13 @@ graph TD;
         CrimOrganz[Criminal organizations]
         LocatMembr[Locate cult member]
         IntrgMembr[Interrogate cult member]
+        LocatSafhse[Locate cult safehouse]
         IntrgHndlr[Interrogate cult handler]
+        LocatOutpst[Locate cult outpost]
         IntrgLietn[Interrogate cult lieutenant]
+        LocatBaseop[Locate cult base of operations]
         IntrgCmndr[Interrogate cult commander]
+        LocatHeadqr[Locate cult HQ]
         IntrgHiCmd[Interrogate cult high commander]
         CultProfil[Cult profile]
     end
@@ -94,14 +98,18 @@ graph TD;
     CrimOrganz --> LocatMembr
     LocatMembr --> AppreMembr
     AppreMembr --> IntrgMembr
-    IntrgMembr --> RaidSafhse
+    IntrgMembr --> LocatSafhse
     IntrgMembr --> CultProfil
+    LocatSafhse --> RaidSafhse
     RaidSafhse --> IntrgHndlr
-    IntrgHndlr --> RaidOutpst
+    IntrgHndlr --> LocatOutpst
+    LocatOutpst --> RaidOutpst
     RaidOutpst --> IntrgLietn
-    IntrgLietn --> RaidBaseop
+    IntrgLietn --> LocatBaseop
+    LocatBaseop --> RaidBaseop
     RaidBaseop --> IntrgCmndr
-    IntrgCmndr --> RaidHeadqr
+    IntrgCmndr --> LocatHeadqr
+    LocatHeadqr --> RaidHeadqr
     RaidHeadqr --> IntrgHiCmd
 ```
 <!-- cspell:enable -->
