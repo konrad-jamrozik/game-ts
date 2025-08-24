@@ -156,35 +156,6 @@ recommended models, and clarification questions.
    - Event system
 3. Update AI instructions (CLAUDE.md) to reference new docs
 
-## Testing
-
-### 1. Remove Redundant Tests
-
-**Task**: Identify and remove duplicate tests
-**Confidence**: 80%
-**Recommended Model**: Sonnet
-**Estimated Time**: 20-30 minutes (AI), 2 hours (human)
-**Plan**:
-1. Analyze test coverage reports
-2. Identify tests with overlapping coverage
-3. Remove redundant tests while maintaining coverage
-4. Verify no regression in coverage
-
-### (✅ DONE) 2. Testing Domain Model
-
-**Task**: Create testing utilities to reduce boilerplate
-**Confidence**: 85%
-**Recommended Model**: Opus
-**Estimated Time**: 30-45 minutes (AI), 3 hours (human)
-**Plan**:
-1. Create Fixture types for each domain model (e.g., `agentsFixture`, `leadsFixture`)
-2. Implement fixture methods like `agentsFixture.new(...)` for building test objects
-3. Enable fixture composition (fixtures can use other fixtures)
-4. Create deduplicated graph of fixtures for domain model
-5. Consider faker.js for realistic test data generation
-6. Keep test data sets small for performance
-7. Refactor verbose tests like `agentView.test.ts` using fixtures
-
 ## Performance Optimization
 
 ### 1. ImmutableStateInvariantMiddleware Warning
