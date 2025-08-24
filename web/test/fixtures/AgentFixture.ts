@@ -148,37 +148,30 @@ export const AgentFixture = (() => {
       return Array.from({ length: count }, () => this.new(overrides))
     },
 
-    // Placeholder team method - will be replaced with overloaded version
-    team(_size: number): Agent[] {
-      return [] // Placeholder implementation
+    team1(): [Agent] {
+      return [this.elite()]
+    },
+
+    team2(): [Agent, Agent] {
+      return [this.elite(), this.veteran()]
+    },
+
+    team3(): [Agent, Agent, Agent] {
+      return [this.elite(), this.veteran(), this.default()]
+    },
+
+    team4(): [Agent, Agent, Agent, Agent] {
+      return [this.elite(), this.veteran(), this.default(), this.rookie()]
+    },
+
+    team5(): [Agent, Agent, Agent, Agent, Agent] {
+      return [this.elite(), this.veteran(), this.default(), this.rookie(), this.default()]
+    },
+
+    team6(): [Agent, Agent, Agent, Agent, Agent, Agent] {
+      return [this.elite(), this.veteran(), this.default(), this.rookie(), this.default(), this.default()]
     },
   }
-
-  // Function with overloads for team method
-  function team(size: 1): [Agent]
-  function team(size: 2): [Agent, Agent]
-  function team(size: 3): [Agent, Agent, Agent]
-  function team(size: 4): [Agent, Agent, Agent, Agent]
-  function team(size: 5): [Agent, Agent, Agent, Agent, Agent]
-  function team(size: 6): [Agent, Agent, Agent, Agent, Agent, Agent]
-  function team(size?: number): Agent[]
-  function team(size = 4): Agent[] {
-    const baseTeam = [agentFixture.elite(), agentFixture.veteran(), agentFixture.default(), agentFixture.rookie()]
-
-    if (size <= 4) {
-      return baseTeam.slice(0, size)
-    }
-
-    // For larger teams, add more default agents
-    const teamArray = [...baseTeam]
-    while (teamArray.length < size) {
-      teamArray.push(agentFixture.default())
-    }
-    return teamArray
-  }
-
-  // Assign the overloaded function to the object
-  agentFixture.team = team
 
   return agentFixture
 })()

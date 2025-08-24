@@ -17,7 +17,7 @@ export const GameStateFixture = {
       money: 1000,
       intel: 100,
       funding: 50,
-      agents: AgentFixture.team(4),
+      agents: AgentFixture.team4(),
       // Liabilities
       currentTurnTotalHireCost: 0,
       // Archive

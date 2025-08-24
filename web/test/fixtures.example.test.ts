@@ -8,6 +8,7 @@ import {
   FactionFixture,
   resetAllFixtures,
 } from './fixtures'
+import { assertDefined } from '../src/lib/utils/assert'
 
 describe('Fixture Usage Examples', () => {
   beforeEach(() => {
@@ -33,7 +34,7 @@ describe('Fixture Usage Examples', () => {
     })
 
     test('create agent teams', () => {
-      const team = AgentFixture.team(3)
+      const team = AgentFixture.team3()
 
       expect(team).toHaveLength(3)
       expect(team[0].skill).toBeGreaterThan(team[2].skill) // Elite > Rookie
@@ -74,7 +75,7 @@ describe('Fixture Usage Examples', () => {
       const midGame = GameStateFixture.midGame()
       const customState = GameStateFixture.new({
         ...midGame,
-        agents: AgentFixture.team(6),
+        agents: AgentFixture.team6(),
         missionSites: [MissionSiteFixture.deployed(['agent-1', 'agent-2']), MissionSiteFixture.active()],
       })
 
@@ -103,6 +104,7 @@ describe('Fixture Usage Examples', () => {
       const easy = MissionSiteFixture.new({
         enemies: EnemyFixture.squad(['Initiate', 'Initiate', 'Operative']),
       })
+      assertDefined(easy.enemies[0])
 
       expect(easy.enemies).toHaveLength(3)
       expect(easy.enemies[0].type).toBe('Initiate')
@@ -170,10 +172,12 @@ describe('Fixture Usage Examples', () => {
       expect(deployedAgents).toHaveLength(2)
 
       const [activeMission] = gameState.missionSites
+      assertDefined(activeMission)
 
       expect(activeMission.enemies.some((enemy) => enemy.isOfficer)).toBe(true)
 
       const [highThreatFaction] = gameState.factions
+      assertDefined(highThreatFaction)
 
       expect(highThreatFaction.threatLevel).toBeGreaterThanOrEqual(80)
     })
