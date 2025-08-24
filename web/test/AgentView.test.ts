@@ -4,7 +4,6 @@ import { agV } from '../src/lib/model/agents/AgentView'
 import { createWeapon } from '../src/lib/utils/weaponUtils'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../src/lib/model/ruleset/constants'
 
-// KJA FUTURE this test is superbly verbose. Dedup it and same with other tests.
 describe('effectiveSkill', () => {
   test('calculate effective skill correctly with no exhaustion and no hit points lost', () => {
     const agent: Agent = {

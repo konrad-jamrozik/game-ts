@@ -2,16 +2,42 @@
 
 KJA backlog:
 
-- Address all outstanding TODOS: search for `KJA` in the codebase
+- Address all outstanding TODOs: search for `KJA` in the codebase
+
+## Naming
+
 - introduce terminology of "turn evaluation" and "mission site evaluation". Replace existing terminology as appropriate.
   E.g. `advanceTurnImpl` -> `evalTurn`. or `updateDeployedMissionSite` -> `evalMission`.
-- Add a reference doc listing critical code components, like `evalTurn`
-- Update the AI instructions to reference the new docs.
+w docs.
+
+## Features
+
 - Implement lead expiration logic, or remove the property
-- for mission evaluation, idea for a table: columns are combat rounds, and rows are units. Each cell tells what
-  interesting happened to that unit in that round.
-  E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
-  Cell background gradient may denote % of original effective skill.
+
+## Domain model
+
+- instead of the idiom "leadInvestigationCounts[lead.id] ?? 0" and getLeadById(leadId)
+  there should be LeadsView akin to AgentsView, that has functions withId and isInvestigated()
+- hierarchize the game state per the comments and use more fine-grained selectors.
+  `export type GameState = {`
+- migrate MissionSiteUtils to MissionSitesView
+- all cases of usage of `assertDefined should be allowed only inside domain model collections like AgentsView.
+  Because all other places should not return undefined, so no need to use it.
+  In case of finding single item, it will basically become dotnet .Single()
+
+## Docs
+
+- Add a reference doc listing critical code components, like `evalTurn`
+- Update the AI instructions to reference the new docs
+
+## Tests
+
+- Remove redundant tests to speed up test suite
+- Introduce testing domain model to deduplicate tests and remove boilerplate.
+  E.g. `agentView.test.ts` and `describe('effectiveSkill', () => {` is superbly verbose.
+
+## Perf
+
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
@@ -23,3 +49,10 @@ KJA backlog:
   - Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
   - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
   ✓ built in 6.66s
+
+## UI ideas
+
+- for mission evaluation, idea for a table: columns are combat rounds, and rows are units. Each cell tells what
+  interesting happened to that unit in that round.
+  E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
+  Cell background gradient may denote % of original effective skill.

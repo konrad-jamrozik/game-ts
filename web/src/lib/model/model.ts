@@ -117,7 +117,6 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
-// KJA LATER hierarchize the game state per the comments and use more fine-grained selectors.
 export type GameState = {
   // Session
   turn: number
