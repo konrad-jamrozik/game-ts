@@ -102,23 +102,16 @@ P(enemy_attack_success) = enemy_skill^2 / (enemy_skill^2 + agent_skill^2)
 
 Example values for `P(success)` for varying attacker effective skill `Att` and defender effective skill `D=100`
 
-| Att   | P(success) |
-|:-----:|:----------:|
-| 100   | 50.00%     |
-| 110   | 54.75%     |
-| 120   | 59.02%     |
-| 130   | 62.83%     |
-| 140   | 66.22%     |
-| 150   | 69.23%     |
-| 160   | 71.91%     |
-| 170   | 74.29%     |
-| 180   | 76.42%     |
-| 190   | 78.31%     |
-| 200   | 80.00%     |
-| 250   | 86.21%     |
-| 300   | 90.00%     |
-| 400   | 94.12%     |
-| 500   | 96.15%     |
+| Att | P(success) | Att  | P(success) |
+| :-: | :--------: | :--: | :--------: |
+| 100 |   50.00%   | 180  |   76.42%   |
+| 110 |   54.75%   | 190  |   78.31%   |
+| 120 |   59.02%   | 200  |   80.00%   |
+| 130 |   62.83%   | 250  |   86.21%   |
+| 140 |   66.22%   | 300  |   90.00%   |
+| 150 |   69.23%   | 400  |   94.12%   |
+| 160 |   71.91%   | 500  |   96.15%   |
+| 170 |   74.29%   | 1000 |   99.00%   |
 
 # Range roll
 
@@ -127,7 +120,7 @@ Typically used do roll for `damage` using a `weapon` as the range provider.
 
 For example a `range` of 5-15 means there are 11 possible values, each being rolled with probability 1/11.
 
-# Weapon damage
+# Weapon damage roll
 
 All weapon damage is +- 50%, rounded outside / to expand the damage range.
 
@@ -209,3 +202,11 @@ in which order the updates to deployed mission sites and agents deployed on them
 `effective_skill` is defined in [About agents / effective skill](about_agents.md#effective-skill).
 
 **Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
+
+# Python interactive
+
+``` python
+import math
+d=7;(math.floor(0.5*d), math.ceil(1.5*d))
+a=150;d=100;(1/(1+(d/a)**2), 1/(1+(a/d)**2))
+```

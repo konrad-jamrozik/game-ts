@@ -2,15 +2,6 @@
 
 This document lists table with core game collections like leads, missions, enemy units, etc.
 
-# Weapons stats
-
-All weapon damage is +- 50%, rounded outside / to expand the damage range.
-
-For an example:
-
-- A 7 damage weapon has damage range of 3-11.
-- A 10 damage weapon has damage range of 5-15.
-
 # Baseline agent stats
 
 Newly hired agent has:
@@ -114,11 +105,3 @@ graph TD;
     RaidHeadqr --> IntrgHiCmd
 ```
 <!-- cspell:enable -->
-
-# Python interactive
-
-``` python
-import math
-d=7;(math.floor(0.5*d), math.ceil(1.5*d))
-a=100;d=60;(1/(1+(d/a)**2), 1/(1+(a/d)**2))
-```
