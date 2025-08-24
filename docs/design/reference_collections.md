@@ -46,20 +46,20 @@ The table below shows some of the details of missions.
 
 The leads system follows a progression chain where completing missions unlocks new investigation opportunities.
 
-| Item                            | Intel Cost | Repeatable | Dependencies                  |
-| ------------------------------- | :--------: | :--------: | ----------------------------- |
-| Criminal organizations          |     20     |   false    | Starting lead                 |
-| Locate cult member              |     20     |    true    | Criminal organizations        |
-| Interrogate cult member         |     0      |   false    | Apprehend cult member mission |
-| Cult profile                    |     50     |   false    | Interrogate cult member       |
-| Interrogate cult handler        |     0      |   false    | Raid cult safehouse mission   |
-| Interrogate cult lieutenant     |     0      |   false    | Raid cult outpost mission     |
-| Interrogate cult commander      |     0      |   false    | Raid cult base mission        |
-| Interrogate cult high commander |     0      |   false    | Raid cult HQ mission          |
-| Raid cult safehouse             |     0      |   false    | Interrogate cult member       |
-| Raid cult outpost               |     0      |   false    | Interrogate cult handler      |
-| Raid cult base of operations    |     0      |   false    | Interrogate cult lieutenant   |
-| Raid cult HQ                    |     0      |   false    | Interrogate cult commander    |
+| ID                              | Intel Cost | Repeatable |
+| ------------------------------- | :--------: | :--------: |
+| Criminal organizations          |     20     |   false    |
+| Locate cult member              |     20     |    true    |
+| Raid cult safehouse             |     0      |   false    |
+| Raid cult outpost               |     0      |   false    |
+| Raid cult base of operations    |     0      |   false    |
+| Raid cult HQ                    |     0      |   false    |
+| Interrogate cult member         |     0      |   false    |
+| Interrogate cult handler        |     0      |   false    |
+| Interrogate cult lieutenant     |     0      |   false    |
+| Interrogate cult commander      |     0      |   false    |
+| Interrogate cult high commander |     0      |   false    |
+| Cult profile                    |     50     |   false    |
 
 # Dependency diagram
 
