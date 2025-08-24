@@ -5,7 +5,7 @@ import { floor } from './mathUtils'
 
 let idCounter = 0
 
-// KJA dedup with EnemyUnitType in model.ts. See https://stackoverflow.com/questions/78739104/how-can-i-avoid-duplicating-key-in-value-and-duplicating-type-and-const-definit
+// KJA 2 dedup with EnemyUnitType in model.ts. See https://stackoverflow.com/questions/78739104/how-can-i-avoid-duplicating-key-in-value-and-duplicating-type-and-const-definit
 // I know that for simple string union types I can deduplicate type and const like this:
 //   export const NameVal = ['foo', 'bar']
 //   export type NameType = (typeof NameVal)[number]
@@ -85,7 +85,7 @@ function createEnemyUnit(type: EnemyUnitType, currentIdCounter: number): EnemyUn
  * Calculates the effective skill of an enemy unit based on hit points lost and exhaustion
  * Uses the same formula as agents - refer to about_agents.md for details
  */
-// KJA dedup with agentView.ts effectiveSkill
+// KJA 2 dedup with agentView.ts effectiveSkill
 export function enemyUnitEffectiveSkill(enemy: EnemyUnit): number {
   const hitPointsLost = enemy.maxHitPoints - enemy.hitPoints
   const hitPointsReduction = Math.max(1 - (enemy.maxHitPoints > 0 ? hitPointsLost / enemy.maxHitPoints : 0), 0)

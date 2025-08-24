@@ -19,11 +19,6 @@ import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'
 import { fmtAgentCount } from '../lib/utils/formatUtils'
 
-// KJA performance clue from dev console:
-// eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
-// If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
-// It is disabled in production builds, so you don't need to worry about that.
-
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
 // [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
 // [2] https://redux-toolkit.js.org/api/createAction?utm_source=chatgpt.com#actioncreatormatch

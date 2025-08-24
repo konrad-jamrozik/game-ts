@@ -17,7 +17,7 @@ export function createWeapon(baseDamage: number): Weapon {
 
 /**
  * Rolls damage for a weapon, returning a value between minDamage and maxDamage (inclusive)
- * // KJA rollWeaponDamage should use rangeRoll() function
+ * // KJA 1 rollWeaponDamage should use rangeRoll() function
  */
 export function rollWeaponDamage(weapon: Weapon): number {
   const range = weapon.maxDamage - weapon.minDamage + 1
