@@ -1,5 +1,6 @@
 import { WEAPON_DAMAGE_RANGE_FACTOR } from '../model/ruleset/constants'
 import type { Weapon } from '../model/model'
+import { rollRange } from '../turn_advancement/Roll'
 
 /**
  * Creates a weapon with damage range calculated as +/- 50% of base damage
@@ -17,10 +18,7 @@ export function createWeapon(baseDamage: number): Weapon {
 
 /**
  * Rolls damage for a weapon, returning a value between minDamage and maxDamage (inclusive)
- * // KJA 1 rollWeaponDamage should use rangeRoll() function
  */
 export function rollWeaponDamage(weapon: Weapon): number {
-  const range = weapon.maxDamage - weapon.minDamage + 1
-  const roll = Math.floor(Math.random() * range) + weapon.minDamage
-  return roll
+  return rollRange(weapon.minDamage, weapon.maxDamage).roll
 }

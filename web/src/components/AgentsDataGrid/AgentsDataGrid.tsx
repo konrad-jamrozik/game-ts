@@ -1,9 +1,11 @@
 import {
   createRowSelectionManager,
   type GridColDef,
+  type GridComparatorFn,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowSelectionModel,
+  type GridSortCellParams,
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
@@ -12,6 +14,7 @@ import { setAgentSelection } from '../../lib/slices/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { agV } from '../../lib/model/agents/AgentView'
+import { assertDefined } from '../../lib/utils/assert'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -66,10 +69,30 @@ export function AgentsDataGrid(): React.JSX.Element {
       ),
     },
     {
-      // KJA 1 fix sorting of skill to sort by actual effective skill not baseline skill.
       field: 'skill',
       headerName: 'Skill',
       minWidth: 140,
+      sortComparator: (
+        _v1: string,
+        _v2: string,
+        param1: GridSortCellParams<string>,
+        param2: GridSortCellParams<string>,
+      ): number => {
+        // Sort by effective skill instead of baseline skill
+        // Find the rows from our typed rows array using the row IDs
+        const row1 = rows.find((row) => row.rowId === param1.id)
+        const row2 = rows.find((row) => row.rowId === param2.id)
+
+        assertDefined(row1, `Row not found for id: ${param1.id}`)
+        assertDefined(row2, `Row not found for id: ${param2.id}`)
+
+        const effectiveSkill1 = agV(row1).effectiveSkill()
+        const effectiveSkill2 = agV(row2).effectiveSkill()
+
+        // KJA if effective skill equal, sort by skill. If equal, sort by agent ID.
+
+        return effectiveSkill1 - effectiveSkill2
+      },
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? 0

@@ -90,7 +90,7 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-hq'],
     enemyUnitsSpec: '20 Soldier, 6 Elite, 4 Lieutenant, 2 Commander, 1 HighCommander',
     rewards: {
-      money: 10000,
+      money: 10_000,
       intel: 100,
       panicReduction: 2000,
       factionRewards: [

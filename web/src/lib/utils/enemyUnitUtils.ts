@@ -1,4 +1,4 @@
-import { ENEMY_UNIT_STATS } from '../model/ruleset/constants'
+import { ENEMY_UNIT_STATS } from '../collections/enemyUnits'
 import type { EnemyUnit, EnemyUnitType } from '../model/model'
 import { createWeapon } from './weaponUtils'
 import { floor } from './mathUtils'
