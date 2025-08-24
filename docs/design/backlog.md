@@ -16,7 +16,7 @@ w docs.
 
 ## Domain model
 
-- instead of the idiom "leadInvestigationCounts[lead.id] ?? 0" and getLeadById(leadId)
+- instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
   there should be LeadsView akin to AgentsView, that has functions withId and isInvestigated()
 - hierarchize the game state per the comments and use more fine-grained selectors.
   `export type GameState = {`
