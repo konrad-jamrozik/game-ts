@@ -75,12 +75,9 @@ describe('Fixture Usage Examples', () => {
       const customState = GameStateFixture.new({
         ...midGame,
         agents: AgentFixture.team(6),
-        missionSites: [
-          MissionSiteFixture.deployed(['agent-1', 'agent-2']),
-          MissionSiteFixture.active(),
-        ],
+        missionSites: [MissionSiteFixture.deployed(['agent-1', 'agent-2']), MissionSiteFixture.active()],
       })
-      
+
       expect(customState.turn).toBe(20)
       expect(customState.agents).toHaveLength(6)
       expect(customState.missionSites).toHaveLength(2)
@@ -95,7 +92,7 @@ describe('Fixture Usage Examples', () => {
         intel: wealthy.intel,
         funding: wealthy.funding,
       })
-      
+
       expect(wealthyCrisis.panic).toBeGreaterThanOrEqual(90)
       expect(wealthyCrisis.money).toBe(50_000)
     })
@@ -112,16 +109,16 @@ describe('Fixture Usage Examples', () => {
 
       const hard = MissionSiteFixture.withEliteEnemies()
 
-      expect(hard.enemies.some(enemy => enemy.type === 'Commander')).toBe(true)
+      expect(hard.enemies.some((enemy) => enemy.type === 'Commander')).toBe(true)
     })
 
     test('create enemy forces for testing combat', () => {
       const mixedForce = EnemyFixture.mixedForce(10)
 
       expect(mixedForce).toHaveLength(10)
-      
-      const initiates = mixedForce.filter(enemy => enemy.type === 'Initiate')
-      const elites = mixedForce.filter(enemy => enemy.type === 'Elite')
+
+      const initiates = mixedForce.filter((enemy) => enemy.type === 'Initiate')
+      const elites = mixedForce.filter((enemy) => enemy.type === 'Elite')
 
       expect(initiates.length).toBeLessThan(elites.length + 5) // Balanced distribution
     })
@@ -168,14 +165,14 @@ describe('Fixture Usage Examples', () => {
       })
 
       // Verify complex state
-      const deployedAgents = gameState.agents.filter(agent => agent.state === 'OnMission')
+      const deployedAgents = gameState.agents.filter((agent) => agent.state === 'OnMission')
 
       expect(deployedAgents).toHaveLength(2)
-      
+
       const [activeMission] = gameState.missionSites
 
-      expect(activeMission.enemies.some(enemy => enemy.isOfficer)).toBe(true)
-      
+      expect(activeMission.enemies.some((enemy) => enemy.isOfficer)).toBe(true)
+
       const [highThreatFaction] = gameState.factions
 
       expect(highThreatFaction.threatLevel).toBeGreaterThanOrEqual(80)
@@ -185,22 +182,22 @@ describe('Fixture Usage Examples', () => {
   describe('Test Data Generation', () => {
     test('generate multiple unique entities', () => {
       const agents = AgentFixture.many(10)
-      const uniqueIds = new Set(agents.map(agent => agent.id))
+      const uniqueIds = new Set(agents.map((agent) => agent.id))
 
       expect(uniqueIds.size).toBe(10) // All IDs are unique
 
       const leads = LeadFixture.many(5, { intelCost: 20 })
 
-      expect(leads.every(lead => lead.intelCost === 20)).toBe(true)
+      expect(leads.every((lead) => lead.intelCost === 20)).toBe(true)
     })
 
     test('reset counters for test isolation', () => {
       const agent1 = AgentFixture.default()
 
       expect(agent1.id).toBe('agent-1')
-      
+
       resetAllFixtures()
-      
+
       const agent2 = AgentFixture.default()
 
       expect(agent2.id).toBe('agent-1') // Counter reset
