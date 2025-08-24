@@ -19,7 +19,7 @@ export default defineConfig({
     globals: true,
     server: {
       deps: {
-        // Refer to docs/about_vitest.md troubleshooting section for more details.
+        // Refer to docs/setup/about_vitest.md troubleshooting section for more details.
         inline: ['@mui/x-data-grid'],
       },
     },

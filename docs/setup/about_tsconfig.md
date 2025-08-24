@@ -16,7 +16,7 @@ See [Compiling TypeScript] and [tsc CLI options].
 This section describes how I initially set up values of the `tsconfig*.json` files in the `web` project.
 
 The `tsconfig*.json` files in the `web` project were initially generated with a Vite template
-(see [about-vite.md](about_vite.md)), and then adjusted by me to fit the needs of the project.
+(see [about_vite.md](about_vite.md)), and then adjusted by me to fit the needs of the project.
 
 The vite-generated tsconfig files were structured as follows upon generation by Vite:
 

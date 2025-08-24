@@ -72,7 +72,7 @@ Error: Could not find config file.
 This section describes how I initially configured `eslint` in the `web` project.
 
 The `eslint.config.js` file in the `web` project was  initially generated with a Vite template
-(see [about-vite.md](about_vite.md)), and then adjusted by me to fit the needs of the project.
+(see [about_vite.md](about_vite.md)), and then adjusted by me to fit the needs of the project.
 
 Note that the README generated with the [create-vite react-ts] template
 mentions instructions how to update the config, which I took into account when

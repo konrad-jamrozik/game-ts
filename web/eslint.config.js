@@ -1,5 +1,5 @@
 /**
- * See docs/about_eslint.md for context on this file.
+ * See docs/setup/about_eslint.md for context on this file.
  * Future work: add more plugins from https://github.com/dustinspecker/awesome-eslint
  * Candidates:
  * - sonarjs,
@@ -73,7 +73,7 @@ export default plugTypescriptEslint.config([
       // but only one is enabled. See [recommended-type-checked src].
       plugReact.configs['recommended-type-checked'],
       // [eslint-plugin-react-compiler]
-      // See also: docs/about_react.md#initial-react-19-compiler-setup
+      // See also: docs/setup/about_react.md#initial-react-19-compiler-setup
       plugReactCompiler.configs.recommended,
 
       // Imports
@@ -91,7 +91,7 @@ export default plugTypescriptEslint.config([
 
       // Formatting
       // --------------------
-      // In case of issues with formatting / Prettier, see docs/about_prettier.md,
+      // In case of issues with formatting / Prettier, see docs/setup/about_prettier.md,
       // which explains how to use https://github.com/prettier/eslint-config-prettier
       // to disable eslint formatting rules that conflict with Prettier.
 
@@ -227,7 +227,7 @@ export default plugTypescriptEslint.config([
       // https://typescript-eslint.io/rules/prefer-readonly-parameter-types/
       '@typescript-eslint/prefer-readonly-parameter-types': 'off',
       // I prefer types over interfaces
-      // See also relevant section in docs/about_react.md
+      // See also relevant section in docs/setup/about_react.md
       // https://typescript-eslint.io/rules/consistent-type-definitions/
       '@typescript-eslint/consistent-type-definitions': ['error', 'type'],
       // Sometimes I prefer method signature style (e.g. AgentsView), and sometimes
@@ -297,7 +297,7 @@ export default plugTypescriptEslint.config([
       //
       // import/extensions - a bit unclear
       //
-      // Use the ESLint config inspector to verify these rules usage (see docs/about_eslint.md).
+      // Use the ESLint config inspector to verify these rules usage (see docs/setup/about_eslint.md).
 
       // Formatting
       // --------------------
