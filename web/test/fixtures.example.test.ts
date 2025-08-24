@@ -129,6 +129,9 @@ describe('Fixture Usage Examples', () => {
   describe('Lead Campaign Fixtures', () => {
     test('create lead dependency chains', () => {
       const campaign = LeadFixture.campaign(3)
+      assertDefined(campaign[0])
+      assertDefined(campaign[1])
+      assertDefined(campaign[2])
 
       expect(campaign).toHaveLength(3)
       expect(campaign[0].dependsOn).toHaveLength(0)
