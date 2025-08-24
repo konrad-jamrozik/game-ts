@@ -1,7 +1,6 @@
 import {
   createRowSelectionManager,
   type GridColDef,
-  type GridComparatorFn,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowSelectionModel,
@@ -89,9 +88,20 @@ export function AgentsDataGrid(): React.JSX.Element {
         const effectiveSkill1 = agV(row1).effectiveSkill()
         const effectiveSkill2 = agV(row2).effectiveSkill()
 
-        // KJA if effective skill equal, sort by skill. If equal, sort by agent ID.
+        // Primary sort: effective skill
+        if (effectiveSkill1 !== effectiveSkill2) {
+          return effectiveSkill1 - effectiveSkill2
+        }
 
-        return effectiveSkill1 - effectiveSkill2
+        // Secondary sort: baseline skill (if effective skills are equal)
+        const baselineSkill1 = row1.skill
+        const baselineSkill2 = row2.skill
+        if (baselineSkill1 !== baselineSkill2) {
+          return baselineSkill1 - baselineSkill2
+        }
+
+        // Tertiary sort: agent ID (for stable sorting)
+        return row1.id.localeCompare(row2.id)
       },
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
