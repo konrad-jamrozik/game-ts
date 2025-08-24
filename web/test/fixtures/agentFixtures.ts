@@ -4,16 +4,17 @@ import { WeaponFixture } from './weaponFixtures'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 import { createWeapon } from '../../src/lib/utils/weaponUtils'
 
-export class AgentFixture {
-  private static idCounter = 0
+let agentIdCounter = 0
 
-  static resetIdCounter(): void {
-    this.idCounter = 0
-  }
+export const AgentFixture = {
+  resetIdCounter(): void {
+    agentIdCounter = 0
+  },
 
-  static default(): Agent {
+  default(): Agent {
+    agentIdCounter += 1
     return {
-      id: `agent-${++this.idCounter}`,
+      id: `agent-${agentIdCounter}`,
       turnHired: 1,
       skill: 100,
       exhaustion: 0,
@@ -26,16 +27,16 @@ export class AgentFixture {
       assignment: 'Standby',
       weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
-  }
+  },
 
-  static new(overrides?: Partial<Agent>): Agent {
+  new(overrides?: Partial<Agent>): Agent {
     return {
       ...this.default(),
       ...overrides,
     }
-  }
+  },
 
-  static random(): Agent {
+  random(): Agent {
     const maxHitPoints = faker.number.int({ min: 20, max: 40 })
     const hitPoints = faker.number.int({ min: 0, max: maxHitPoints })
     
@@ -51,21 +52,21 @@ export class AgentFixture {
       missionsSurvived: faker.number.int({ min: 0, max: 10 }),
       weapon: WeaponFixture.random(),
     })
-  }
+  },
 
-  static withState(state: AgentState, assignment?: AgentAssignment): Agent {
+  withState(state: AgentState, assignment?: AgentAssignment): Agent {
     const validAssignment = assignment ?? (state === 'Recovering' ? 'Recovery' : 'Standby')
     return this.new({
       state,
       assignment: validAssignment,
     })
-  }
+  },
 
-  static available(): Agent {
+  available(): Agent {
     return this.withState('Available', 'Standby')
-  }
+  },
 
-  static recovering(recoveryTurns = 3): Agent {
+  recovering(recoveryTurns = 3): Agent {
     return this.new({
       state: 'Recovering',
       assignment: 'Recovery',
@@ -74,79 +75,79 @@ export class AgentFixture {
       maxHitPoints: 30,
       hitPointsLostBeforeRecovery: 15,
     })
-  }
+  },
 
-  static onMission(missionSiteId = 'mission-site-test'): Agent {
+  onMission(missionSiteId = 'mission-site-test'): Agent {
     return this.new({
       state: 'OnMission',
-      assignment: missionSiteId as `mission-site-${string}`,
+      assignment: `mission-site-${missionSiteId.replace('mission-site-', '')}`,
     })
-  }
+  },
 
-  static onAssignment(activity: 'Contracting' | 'Espionage' = 'Contracting'): Agent {
+  onAssignment(activity: 'Contracting' | 'Espionage' = 'Contracting'): Agent {
     return this.new({
       state: 'OnAssignment',
       assignment: activity,
     })
-  }
+  },
 
-  static inTransit(): Agent {
+  inTransit(): Agent {
     return this.new({
       state: 'InTransit',
       assignment: 'Standby',
     })
-  }
+  },
 
-  static terminated(): Agent {
+  terminated(): Agent {
     return this.new({
       state: 'Terminated',
       assignment: 'KIA',
       hitPoints: 0,
     })
-  }
+  },
 
-  static wounded(hitPointsLost = 10): Agent {
+  wounded(hitPointsLost = 10): Agent {
     const maxHitPoints = 30
     return this.new({
       hitPoints: Math.max(0, maxHitPoints - hitPointsLost),
       maxHitPoints,
     })
-  }
+  },
 
-  static exhausted(exhaustion = 50): Agent {
+  exhausted(exhaustion = 50): Agent {
     return this.new({
       exhaustion,
     })
-  }
+  },
 
-  static veteran(missionsSurvived = 5): Agent {
+  veteran(missionsSurvived = 5): Agent {
     return this.new({
       missionsSurvived,
       skill: 120,
     })
-  }
+  },
 
-  static rookie(): Agent {
+  rookie(): Agent {
     return this.new({
       skill: 60,
       missionsSurvived: 0,
       turnHired: 1,
     })
-  }
+  },
 
-  static elite(): Agent {
+  elite(): Agent {
     return this.new({
       skill: 150,
       missionsSurvived: 10,
       weapon: WeaponFixture.powerful(),
     })
-  }
+  },
 
-  static many(count: number, overrides?: Partial<Agent>): Agent[] {
+  many(count: number, overrides?: Partial<Agent>): Agent[] {
     return Array.from({ length: count }, () => this.new(overrides))
-  }
+  },
 
-  static team(size = 4): Agent[] {
+  team(size = 4): Agent[] {
     const baseTeam = [
       this.elite(),
       this.veteran(),
@@ -164,5 +165,5 @@ export class AgentFixture {
       team.push(this.default())
     }
     return team
-  }
+  },
 }

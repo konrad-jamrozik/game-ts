@@ -112,7 +112,7 @@ describe('Fixture Usage Examples', () => {
 
       const hard = MissionSiteFixture.withEliteEnemies()
 
-      expect(hard.enemies.some(e => e.type === 'Commander')).toBe(true)
+      expect(hard.enemies.some(enemy => enemy.type === 'Commander')).toBe(true)
     })
 
     test('create enemy forces for testing combat', () => {
@@ -120,8 +120,8 @@ describe('Fixture Usage Examples', () => {
 
       expect(mixedForce).toHaveLength(10)
       
-      const initiates = mixedForce.filter(e => e.type === 'Initiate')
-      const elites = mixedForce.filter(e => e.type === 'Elite')
+      const initiates = mixedForce.filter(enemy => enemy.type === 'Initiate')
+      const elites = mixedForce.filter(enemy => enemy.type === 'Elite')
 
       expect(initiates.length).toBeLessThan(elites.length + 5) // Balanced distribution
     })
@@ -168,15 +168,15 @@ describe('Fixture Usage Examples', () => {
       })
 
       // Verify complex state
-      const deployedAgents = gameState.agents.filter(a => a.state === 'OnMission')
+      const deployedAgents = gameState.agents.filter(agent => agent.state === 'OnMission')
 
       expect(deployedAgents).toHaveLength(2)
       
-      const activeMission = gameState.missionSites[0]
+      const [activeMission] = gameState.missionSites
 
-      expect(activeMission.enemies.some(e => e.isOfficer)).toBe(true)
+      expect(activeMission.enemies.some(enemy => enemy.isOfficer)).toBe(true)
       
-      const highThreatFaction = gameState.factions[0]
+      const [highThreatFaction] = gameState.factions
 
       expect(highThreatFaction.threatLevel).toBeGreaterThanOrEqual(80)
     })
@@ -185,13 +185,13 @@ describe('Fixture Usage Examples', () => {
   describe('Test Data Generation', () => {
     test('generate multiple unique entities', () => {
       const agents = AgentFixture.many(10)
-      const uniqueIds = new Set(agents.map(a => a.id))
+      const uniqueIds = new Set(agents.map(agent => agent.id))
 
       expect(uniqueIds.size).toBe(10) // All IDs are unique
 
       const leads = LeadFixture.many(5, { intelCost: 20 })
 
-      expect(leads.every(l => l.intelCost === 20)).toBe(true)
+      expect(leads.every(lead => lead.intelCost === 20)).toBe(true)
     })
 
     test('reset counters for test isolation', () => {

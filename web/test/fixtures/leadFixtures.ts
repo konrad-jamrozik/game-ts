@@ -1,16 +1,17 @@
 import { faker } from '@faker-js/faker'
 import type { Lead } from '../../src/lib/model/model'
 
-export class LeadFixture {
-  private static idCounter = 0
+let leadIdCounter = 0
 
-  static resetIdCounter(): void {
-    this.idCounter = 0
-  }
+export const LeadFixture = {
+  resetIdCounter(): void {
+    leadIdCounter = 0
+  },
 
-  static default(): Lead {
+  default(): Lead {
+    leadIdCounter += 1
     return {
-      id: `lead-${++this.idCounter}`,
+      id: `lead-${leadIdCounter}`,
       title: 'Test Lead',
       intelCost: 10,
       description: 'A test lead for investigation',
@@ -18,16 +19,16 @@ export class LeadFixture {
       dependsOn: [],
       repeatable: false,
     }
-  }
+  },
 
-  static new(overrides?: Partial<Lead>): Lead {
+  new(overrides?: Partial<Lead>): Lead {
     return {
       ...this.default(),
       ...overrides,
     }
-  }
+  },
 
-  static random(): Lead {
+  random(): Lead {
     return this.new({
       id: faker.string.uuid(),
       title: `${faker.company.name()  } Operation`,
@@ -37,57 +38,57 @@ export class LeadFixture {
       dependsOn: faker.helpers.arrayElements(['lead-1', 'lead-2', 'lead-3'], { min: 0, max: 2 }),
       repeatable: faker.datatype.boolean(),
     })
-  }
+  },
 
-  static expiring(turnsLeft = 3): Lead {
+  expiring(turnsLeft = 3): Lead {
     return this.new({
       expiresIn: turnsLeft,
     })
-  }
+  },
 
-  static expensive(intelCost = 50): Lead {
+  expensive(intelCost = 50): Lead {
     return this.new({
       intelCost,
       title: 'High Value Target',
     })
-  }
+  },
 
-  static cheap(): Lead {
+  cheap(): Lead {
     return this.new({
       intelCost: 5,
       title: 'Low Priority Lead',
     })
-  }
+  },
 
-  static repeatable(): Lead {
+  repeatable(): Lead {
     return this.new({
       repeatable: true,
       title: 'Recurring Operation',
     })
-  }
+  },
 
-  static withDependencies(...dependsOn: string[]): Lead {
+  withDependencies(...dependsOn: string[]): Lead {
     return this.new({
       dependsOn,
       title: 'Dependent Lead',
     })
-  }
+  },
 
-  static campaign(chainLength = 3): Lead[] {
+  campaign(chainLength = 3): Lead[] {
     const leads: Lead[] = []
-    for (let i = 0; i < chainLength; i++) {
+    for (let index = 0; index < chainLength; index += 1) {
       leads.push(
         this.new({
-          id: `campaign-lead-${i + 1}`,
-          title: `Campaign Part ${i + 1}`,
-          dependsOn: i > 0 ? [`campaign-lead-${i}`] : [],
+          id: `campaign-lead-${index + 1}`,
+          title: `Campaign Part ${index + 1}`,
+          dependsOn: index > 0 ? [`campaign-lead-${index}`] : [],
         })
       )
     }
     return leads
-  }
+  },
 
-  static many(count: number, overrides?: Partial<Lead>): Lead[] {
+  many(count: number, overrides?: Partial<Lead>): Lead[] {
     return Array.from({ length: count }, () => this.new(overrides))
-  }
+  },
 }

@@ -120,8 +120,8 @@ export const FactionFixture = {
     const factions = this.all()
     const result: Faction[] = []
     
-    for (let i = 0; i < count; i++) {
-      const base = factions[i % factions.length]
+    for (let index = 0; index < count; index += 1) {
+      const base = factions[index % factions.length]
       result.push(this.new({ ...base, ...overrides }))
     }
     

@@ -1,15 +1,14 @@
 import { faker } from '@faker-js/faker'
-import type { Mission, MissionSite, MissionSiteState, MissionRewards, FactionId } from '../../src/lib/model/model'
-import { EnemyFixture } from './enemyFixtures'
+import type { Mission, MissionRewards, FactionId } from '../../src/lib/model/model'
 
-export class MissionFixture {
-  private static idCounter = 0
+let missionIdCounter = 0
 
-  static resetIdCounter(): void {
-    this.idCounter = 0
-  }
+export const MissionFixture = {
+  resetIdCounter(): void {
+    missionIdCounter = 0
+  },
 
-  static defaultRewards(): MissionRewards {
+  defaultRewards(): MissionRewards {
     return {
       money: 100,
       intel: 10,
@@ -17,11 +16,12 @@ export class MissionFixture {
       panicReduction: 0,
       factionRewards: [],
     }
-  }
+  },
 
-  static default(): Mission {
+  default(): Mission {
+    missionIdCounter += 1
     return {
-      id: `mission-${++this.idCounter}`,
+      id: `mission-${missionIdCounter}`,
       title: 'Test Mission',
       description: 'A test mission for testing',
       expiresIn: 'never',
@@ -29,16 +29,16 @@ export class MissionFixture {
       enemyUnitsSpec: '2 Soldier, 1 Lieutenant',
       rewards: this.defaultRewards(),
     }
-  }
+  },
 
-  static new(overrides?: Partial<Mission>): Mission {
+  new(overrides?: Partial<Mission>): Mission {
     return {
       ...this.default(),
       ...overrides,
     }
-  }
+  },
 
-  static random(): Mission {
+  random(): Mission {
     const factionIds: FactionId[] = ['faction-red-dawn', 'faction-black-lotus', 'faction-exalt', 'faction-followers-of-dagon']
     
     return this.new({
@@ -67,18 +67,18 @@ export class MissionFixture {
           : [],
       },
     })
-  }
+  },
 
-  static withRewards(rewards: Partial<MissionRewards>): Mission {
+  withRewards(rewards: Partial<MissionRewards>): Mission {
     return this.new({
       rewards: {
         ...this.defaultRewards(),
         ...rewards,
       },
     })
-  }
+  },
 
-  static highValue(): Mission {
+  highValue(): Mission {
     return this.new({
       title: 'High Value Target',
       enemyUnitsSpec: '1 Commander, 2 Elite, 4 Soldier',
@@ -94,9 +94,9 @@ export class MissionFixture {
         }],
       },
     })
-  }
+  },
 
-  static easy(): Mission {
+  easy(): Mission {
     return this.new({
       title: 'Routine Patrol',
       enemyUnitsSpec: '2 Initiate, 1 Operative',
@@ -108,23 +108,23 @@ export class MissionFixture {
         factionRewards: [],
       },
     })
-  }
+  },
 
-  static expiring(turnsLeft = 3): Mission {
+  expiring(turnsLeft = 3): Mission {
     return this.new({
       expiresIn: turnsLeft,
       title: 'Time Sensitive Operation',
     })
-  }
+  },
 
-  static withDependencies(...dependsOn: string[]): Mission {
+  withDependencies(...dependsOn: string[]): Mission {
     return this.new({
       dependsOn,
       title: 'Dependent Mission',
     })
-  }
+  },
 
-  static againstFaction(factionId: FactionId): Mission {
+  againstFaction(factionId: FactionId): Mission {
     return this.new({
       title: `Strike Against ${factionId}`,
       rewards: {
@@ -136,98 +136,9 @@ export class MissionFixture {
         }],
       },
     })
-  }
+  },
 
-  static many(count: number, overrides?: Partial<Mission>): Mission[] {
+  many(count: number, overrides?: Partial<Mission>): Mission[] {
     return Array.from({ length: count }, () => this.new(overrides))
-  }
-}
-
-export class MissionSiteFixture {
-  private static idCounter = 0
-
-  static resetIdCounter(): void {
-    this.idCounter = 0
-  }
-
-  static default(): MissionSite {
-    return {
-      id: `mission-site-${++this.idCounter}`,
-      missionId: 'mission-1',
-      agentIds: [],
-      state: 'Active',
-      expiresIn: 'never',
-      enemies: EnemyFixture.squad(),
-    }
-  }
-
-  static new(overrides?: Partial<MissionSite>): MissionSite {
-    return {
-      ...this.default(),
-      ...overrides,
-    }
-  }
-
-  static withState(state: MissionSiteState): MissionSite {
-    return this.new({ state })
-  }
-
-  static active(): MissionSite {
-    return this.withState('Active')
-  }
-
-  static deployed(agentIds: string[] = ['agent-1', 'agent-2']): MissionSite {
-    return this.new({
-      state: 'Deployed',
-      agentIds,
-    })
-  }
-
-  static successful(): MissionSite {
-    return this.new({
-      state: 'Successful',
-      enemies: [], // All enemies defeated
-    })
-  }
-
-  static failed(): MissionSite {
-    return this.new({
-      state: 'Failed',
-      agentIds: [], // All agents lost
-    })
-  }
-
-  static expired(): MissionSite {
-    return this.new({
-      state: 'Expired',
-    })
-  }
-
-  static withEnemies(enemyCount = 4): MissionSite {
-    return this.new({
-      enemies: EnemyFixture.many(enemyCount),
-    })
-  }
-
-  static withEliteEnemies(): MissionSite {
-    return this.new({
-      enemies: EnemyFixture.eliteSquad(),
-    })
-  }
-
-  static expiring(turnsLeft = 2): MissionSite {
-    return this.new({
-      expiresIn: turnsLeft,
-    })
-  }
-
-  static forMission(missionId: string): MissionSite {
-    return this.new({
-      missionId,
-    })
-  }
-
-  static many(count: number, overrides?: Partial<MissionSite>): MissionSite[] {
-    return Array.from({ length: count }, () => this.new(overrides))
-  }
+  },
 }

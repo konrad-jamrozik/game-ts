@@ -1,18 +1,18 @@
 import { faker } from '@faker-js/faker'
-import type { Enemy, EnemyType } from '../../src/lib/model/model'
+import { ENEMY_TYPES, type Enemy, type EnemyType } from '../../src/lib/model/model'
 import { WeaponFixture } from './weaponFixtures'
-import { ENEMY_TYPES } from '../../src/lib/model/model'
 
-export class EnemyFixture {
-  private static idCounter = 0
+let enemyIdCounter = 0
 
-  static resetIdCounter(): void {
-    this.idCounter = 0
-  }
+export const EnemyFixture = {
+  resetIdCounter(): void {
+    enemyIdCounter = 0
+  },
 
-  static default(): Enemy {
+  default(): Enemy {
+    enemyIdCounter += 1
     return {
-      id: `enemy-${++this.idCounter}`,
+      id: `enemy-${enemyIdCounter}`,
       type: 'Soldier',
       skill: 50,
       hitPoints: 20,
@@ -21,16 +21,16 @@ export class EnemyFixture {
       weapon: WeaponFixture.default(),
       isOfficer: false,
     }
-  }
+  },
 
-  static new(overrides?: Partial<Enemy>): Enemy {
+  new(overrides?: Partial<Enemy>): Enemy {
     return {
       ...this.default(),
       ...overrides,
     }
-  }
+  },
 
-  static random(): Enemy {
+  random(): Enemy {
     const maxHitPoints = faker.number.int({ min: 10, max: 40 })
     const type = faker.helpers.arrayElement(ENEMY_TYPES)
     
@@ -44,9 +44,9 @@ export class EnemyFixture {
       weapon: WeaponFixture.random(),
       isOfficer: ['Lieutenant', 'Elite', 'Commander', 'HighCommander'].includes(type),
     })
-  }
+  },
 
-  static ofType(type: EnemyType): Enemy {
+  ofType(type: EnemyType): Enemy {
     const skillByType: Record<EnemyType, number> = {
       Initiate: 30,
       Operative: 40,
@@ -79,67 +79,71 @@ export class EnemyFixture {
       isOfficer,
       weapon: isOfficer ? WeaponFixture.powerful() : WeaponFixture.default(),
     })
-  }
+  },
 
-  static initiate(): Enemy {
+  initiate(): Enemy {
     return this.ofType('Initiate')
-  }
+  },
 
-  static soldier(): Enemy {
+  soldier(): Enemy {
     return this.ofType('Soldier')
-  }
+  },
 
-  static lieutenant(): Enemy {
+  lieutenant(): Enemy {
     return this.ofType('Lieutenant')
-  }
+  },
 
-  static elite(): Enemy {
+  elite(): Enemy {
     return this.ofType('Elite')
-  }
+  },
 
-  static commander(): Enemy {
+  commander(): Enemy {
     return this.ofType('Commander')
-  }
+  },
 
-  static highCommander(): Enemy {
+  highCommander(): Enemy {
     return this.ofType('HighCommander')
-  }
+  },
 
-  static wounded(hitPointsLost = 10): Enemy {
+  wounded(hitPointsLost = 10): Enemy {
     const enemy = this.default()
     return this.new({
       ...enemy,
       hitPoints: Math.max(1, enemy.maxHitPoints - hitPointsLost),
     })
-  }
+  },
 
-  static squad(types?: EnemyType[]): Enemy[] {
+  squad(types?: EnemyType[]): Enemy[] {
     const defaultSquad: EnemyType[] = ['Lieutenant', 'Soldier', 'Soldier', 'Operative']
     const squadTypes = types ?? defaultSquad
     return squadTypes.map(type => this.ofType(type))
-  }
+  },
 
-  static eliteSquad(): Enemy[] {
+  eliteSquad(): Enemy[] {
     return this.squad(['Commander', 'Elite', 'Elite', 'Lieutenant'])
-  }
+  },
 
-  static many(count: number, overrides?: Partial<Enemy>): Enemy[] {
+  many(count: number, overrides?: Partial<Enemy>): Enemy[] {
     return Array.from({ length: count }, () => this.new(overrides))
-  }
+  },
 
-  static mixedForce(size = 6): Enemy[] {
+  mixedForce(size = 6): Enemy[] {
     const force: Enemy[] = []
-    const distribution = {
+    const distribution: Record<EnemyType, number> = {
       Initiate: Math.floor(size * 0.2),
       Operative: Math.floor(size * 0.2),
+      Handler: 0,
       Soldier: Math.floor(size * 0.3),
       Lieutenant: Math.floor(size * 0.2),
       Elite: Math.floor(size * 0.1),
+      Commander: 0,
+      HighCommander: 0,
     }
 
-    for (const [type, count] of Object.entries(distribution)) {
-      for (let i = 0; i < count; i++) {
-        force.push(this.ofType(type as EnemyType))
+    for (const type of ENEMY_TYPES) {
+      const count = distribution[type]
+      for (let index = 0; index < count; index += 1) {
+        force.push(this.ofType(type))
       }
     }
 
@@ -148,5 +152,5 @@ export class EnemyFixture {
     }
 
     return force.slice(0, size)
-  }
+  },
 }

@@ -2,7 +2,8 @@
 import { AgentFixture } from './agentFixtures'
 import { LeadFixture } from './leadFixtures'
 import { EnemyFixture } from './enemyFixtures'
-import { MissionFixture, MissionSiteFixture } from './missionFixtures'
+import { MissionFixture } from './missionFixtures'
+import { MissionSiteFixture } from './missionSiteFixtures'
 
 
 
@@ -22,4 +23,5 @@ export {GameStateFixture} from './gameStateFixtures'
 export {AgentFixture} from './agentFixtures'
 export {LeadFixture} from './leadFixtures'
 export {EnemyFixture} from './enemyFixtures'
-export {MissionFixture, MissionSiteFixture} from './missionFixtures'
+export { MissionFixture } from './missionFixtures'
+export { MissionSiteFixture } from './missionSiteFixtures'

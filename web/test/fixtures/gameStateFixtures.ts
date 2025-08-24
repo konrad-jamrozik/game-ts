@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker'
 import type { GameState } from '../../src/lib/model/model'
 import { AgentFixture } from './agentFixtures'
 import { FactionFixture } from './factionFixtures'
-import { MissionSiteFixture } from './missionFixtures'
+import { MissionSiteFixture } from './missionSiteFixtures'
 
-export class GameStateFixture {
-  static default(): GameState {
+export const GameStateFixture = {
+  default(): GameState {
     return {
       // Session
       turn: 1,
@@ -24,16 +24,16 @@ export class GameStateFixture {
       leadInvestigationCounts: {},
       missionSites: [],
     }
-  }
+  },
 
-  static new(overrides?: Partial<GameState>): GameState {
+  new(overrides?: Partial<GameState>): GameState {
     return {
       ...this.default(),
       ...overrides,
     }
-  }
+  },
 
-  static random(): GameState {
+  random(): GameState {
     return this.new({
       turn: faker.number.int({ min: 1, max: 100 }),
       actionsCount: faker.number.int({ min: 0, max: 10 }),
@@ -46,9 +46,9 @@ export class GameStateFixture {
       leadInvestigationCounts: this.randomInvestigationCounts(),
       missionSites: MissionSiteFixture.many(faker.number.int({ min: 0, max: 5 })),
     })
-  }
+  },
 
-  static empty(): GameState {
+  empty(): GameState {
     return this.new({
       agents: [],
       missionSites: [],
@@ -56,9 +56,9 @@ export class GameStateFixture {
       intel: 0,
       funding: 0,
     })
-  }
+  },
 
-  static midGame(): GameState {
+  midGame(): GameState {
     return this.new({
       turn: 20,
       actionsCount: 45,
@@ -90,9 +90,9 @@ export class GameStateFixture {
         MissionSiteFixture.deployed(['agent-1', 'agent-2']),
       ],
     })
-  }
+  },
 
-  static lateGame(): GameState {
+  lateGame(): GameState {
     return this.new({
       turn: 50,
       actionsCount: 150,
@@ -130,9 +130,9 @@ export class GameStateFixture {
         MissionSiteFixture.successful(),
       ],
     })
-  }
+  },
 
-  static crisis(): GameState {
+  crisis(): GameState {
     return this.new({
       panic: 90,
       money: 100,
@@ -151,63 +151,63 @@ export class GameStateFixture {
         FactionFixture.withThreat(70),
       ],
     })
-  }
+  },
 
-  static wealthy(): GameState {
+  wealthy(): GameState {
     return this.new({
       money: 50_000,
       intel: 1000,
       funding: 500,
     })
-  }
+  },
 
-  static withAgents(...agents: ReturnType<typeof AgentFixture.new>[]): GameState {
+  withAgents(...agents: ReturnType<typeof AgentFixture.new>[]): GameState {
     return this.new({
       agents,
     })
-  }
+  },
 
-  static withMissions(...missionSites: ReturnType<typeof MissionSiteFixture.new>[]): GameState {
+  withMissions(...missionSites: ReturnType<typeof MissionSiteFixture.new>[]): GameState {
     return this.new({
       missionSites,
     })
-  }
+  },
 
-  static withFactions(...factions: ReturnType<typeof FactionFixture.new>[]): GameState {
+  withFactions(...factions: ReturnType<typeof FactionFixture.new>[]): GameState {
     return this.new({
       factions,
     })
-  }
+  },
 
-  static atTurn(turn: number): GameState {
+  atTurn(turn: number): GameState {
     return this.new({
       turn,
       actionsCount: turn * 2,
     })
-  }
+  },
 
-  static withPanic(panic: number): GameState {
+  withPanic(panic: number): GameState {
     return this.new({
       panic,
     })
-  }
+  },
 
-  static withResources(money: number, intel: number, funding = 50): GameState {
+  withResources(money: number, intel: number, funding = 50): GameState {
     return this.new({
       money,
       intel,
       funding,
     })
-  }
+  },
 
-  private static randomInvestigationCounts(): Record<string, number> {
+  randomInvestigationCounts(): Record<string, number> {
     const counts: Record<string, number> = {}
     const leadCount = faker.number.int({ min: 0, max: 10 })
     
-    for (let i = 0; i < leadCount; i++) {
-      counts[`lead-${i + 1}`] = faker.number.int({ min: 1, max: 5 })
+    for (let index = 0; index < leadCount; index += 1) {
+      counts[`lead-${index + 1}`] = faker.number.int({ min: 1, max: 5 })
     }
     
     return counts
-  }
+  },
 }
