@@ -7,7 +7,7 @@ import { createWeapon } from '../../src/lib/utils/weaponUtils'
 export const AgentFixture = (() => {
   let agentIdCounter = 0
 
-  return {
+  const agentFixture = {
     resetIdCounter(): void {
       agentIdCounter = 0
     },
@@ -148,19 +148,37 @@ export const AgentFixture = (() => {
       return Array.from({ length: count }, () => this.new(overrides))
     },
 
-    team(size = 4): Agent[] {
-      const baseTeam = [this.elite(), this.veteran(), this.default(), this.rookie()]
-
-      if (size <= 4) {
-        return baseTeam.slice(0, size)
-      }
-
-      // For larger teams, add more default agents
-      const team = [...baseTeam]
-      while (team.length < size) {
-        team.push(this.default())
-      }
-      return team
+    // Placeholder team method - will be replaced with overloaded version
+    team(_size: number): Agent[] {
+      return [] // Placeholder implementation
     },
   }
+
+  // Function with overloads for team method
+  function team(size: 1): [Agent]
+  function team(size: 2): [Agent, Agent]
+  function team(size: 3): [Agent, Agent, Agent]
+  function team(size: 4): [Agent, Agent, Agent, Agent]
+  function team(size: 5): [Agent, Agent, Agent, Agent, Agent]
+  function team(size: 6): [Agent, Agent, Agent, Agent, Agent, Agent]
+  function team(size?: number): Agent[]
+  function team(size = 4): Agent[] {
+    const baseTeam = [agentFixture.elite(), agentFixture.veteran(), agentFixture.default(), agentFixture.rookie()]
+
+    if (size <= 4) {
+      return baseTeam.slice(0, size)
+    }
+
+    // For larger teams, add more default agents
+    const teamArray = [...baseTeam]
+    while (teamArray.length < size) {
+      teamArray.push(agentFixture.default())
+    }
+    return teamArray
+  }
+
+  // Assign the overloaded function to the object
+  agentFixture.team = team
+
+  return agentFixture
 })()

@@ -280,6 +280,13 @@ export default plugTypescriptEslint.config([
         },
       ],
 
+      // https://typescript-eslint.io/rules/no-unused-vars/
+      // Do not error on variables that start with an underscore.
+      // Sometimes needed in advanced cases, e.g. defining placeholder function
+      // that just returns, but has to have right parameters as it will be replaced with
+      // an overloaded function that uses them.
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+
       // Note: per the performance note of typescript-eslint:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import
       // Following rules should also be disabled, if performance suffers:
