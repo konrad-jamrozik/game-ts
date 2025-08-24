@@ -114,4 +114,5 @@
     "github.copilot.chat.languageContext.inline.typescript.enabled": true,
     "github.copilot.chat.languageContext.typescript.enabled": true,
     "files.trimFinalNewlines": true,
+    "markdown-preview-enhanced.enableExtendedTableSyntax": true,
 }

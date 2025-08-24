@@ -18,19 +18,22 @@ Run all commands from the `web/` directory:
 
 ## Architecture Overview
 
-This is a turn-based strategy game built as a client-side React app where players manage agents, investigate leads, and complete missions against various factions.
+This is a turn-based strategy game built as a client-side React app where players manage agents, investigate leads,
+and complete missions against various factions.
 
 ### Core Game Concepts
 
 **Game State Structure**:
 - **Session**: Turn counter and action tracking
-- **Assets**: Money, intel, funding, and agents 
+- **Assets**: Money, intel, funding, and agents
 - **Situation**: Panic level and faction threat tracking
 - **Operations**: Leads investigation and mission sites
 
-**Agent Lifecycle**: Agents progress through states (Available → InTransit → OnAssignment/OnMission → Recovering → Available) and can be assigned to Contracting (earn money), Espionage (gather intel), or missions.
+**Agent Lifecycle**: Agents progress through states (Available → InTransit → OnAssignment/OnMission → Recovering → Available)
+and can be assigned to Contracting (earn money), Espionage (gather intel), or missions.
 
-**Turn Advancement**: Complex multi-step process in `advanceTurnImpl.ts` that updates agent states, processes assignments, resolves mission combat, applies rewards, and updates faction threat levels.
+**Turn Advancement**: Complex multi-step process in `advanceTurnImpl.ts` that updates agent states, processes assignments,
+resolves mission combat, applies rewards, and updates faction threat levels.
 
 ### State Management
 

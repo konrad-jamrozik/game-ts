@@ -43,6 +43,12 @@
   // would break the compact list spacing.
   "MD031": false,
 
+  // MD032 - Lists should be surrounded by blank lines
+  // https://github.com/DavidAnson/markdownlint/blob/v0.38.0/doc/md032.md
+  //
+  // Nobody ever remembers to add blank lines to lists.
+  "MD032": false,
+
   // MD034 - Inline HTML
   // https://github.com/DavidAnson/markdownlint/blob/main/doc/md033.md
   //
