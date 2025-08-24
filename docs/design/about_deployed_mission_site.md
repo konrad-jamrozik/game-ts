@@ -127,6 +127,15 @@ Typically used do roll for `damage` using a `weapon` as the range provider.
 
 For example a `range` of 5-15 means there are 11 possible values, each being rolled with probability 1/11.
 
+# Weapon damage
+
+All weapon damage is +- 50%, rounded outside / to expand the damage range.
+
+For an example:
+
+- A 7 damage weapon has damage range of 3-11.
+- A 10 damage weapon has damage range of 5-15.
+
 # Mission site result and awards
 
 The mission site result is determined by the reason the `mission site battle` concluded:
