@@ -1,13 +1,8 @@
-
-import { AgentFixture } from './agentFixtures'
-import { LeadFixture } from './leadFixtures'
-import { EnemyFixture } from './enemyFixtures'
-import { MissionFixture } from './missionFixtures'
-import { MissionSiteFixture } from './missionSiteFixtures'
-
-
-
-
+import { AgentFixture } from './AgentFixture'
+import { LeadFixture } from './LeadFixture'
+import { EnemyFixture } from './EnemyFixture'
+import { MissionFixture } from './MissionFixture'
+import { MissionSiteFixture } from './MissionSiteFixture'
 
 // Utility function to reset all ID counters for test isolation
 export function resetAllFixtures(): void {
@@ -17,11 +12,11 @@ export function resetAllFixtures(): void {
   MissionFixture.resetIdCounter()
   MissionSiteFixture.resetIdCounter()
 }
-export {WeaponFixture} from './weaponFixtures'
-export {FactionFixture} from './factionFixtures'
-export {GameStateFixture} from './gameStateFixtures'
-export {AgentFixture} from './agentFixtures'
-export {LeadFixture} from './leadFixtures'
-export {EnemyFixture} from './enemyFixtures'
-export { MissionFixture } from './missionFixtures'
-export { MissionSiteFixture } from './missionSiteFixtures'
+export { WeaponFixture } from './WeaponFixture'
+export { FactionFixture } from './FactionFixture'
+export { GameStateFixture } from './GameStateFixture'
+export { AgentFixture } from './AgentFixture'
+export { LeadFixture } from './LeadFixture'
+export { EnemyFixture } from './EnemyFixture'
+export { MissionFixture } from './MissionFixture'
+export { MissionSiteFixture } from './MissionSiteFixture'

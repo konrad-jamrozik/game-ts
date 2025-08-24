@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../../src/lib/model/model'
-import { WeaponFixture } from './weaponFixtures'
+import { WeaponFixture } from './WeaponFixture'
 
 let enemyIdCounter = 0
 
@@ -33,7 +33,7 @@ export const EnemyFixture = {
   random(): Enemy {
     const maxHitPoints = faker.number.int({ min: 10, max: 40 })
     const type = faker.helpers.arrayElement(ENEMY_TYPES)
-    
+
     return this.new({
       id: faker.string.uuid(),
       type,
@@ -116,7 +116,7 @@ export const EnemyFixture = {
   squad(types?: EnemyType[]): Enemy[] {
     const defaultSquad: EnemyType[] = ['Lieutenant', 'Soldier', 'Soldier', 'Operative']
     const squadTypes = types ?? defaultSquad
-    return squadTypes.map(type => this.ofType(type))
+    return squadTypes.map((type) => this.ofType(type))
   },
 
   eliteSquad(): Enemy[] {

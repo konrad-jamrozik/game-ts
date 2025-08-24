@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 import type { GameState } from '../../src/lib/model/model'
-import { AgentFixture } from './agentFixtures'
-import { FactionFixture } from './factionFixtures'
-import { MissionSiteFixture } from './missionSiteFixtures'
+import { AgentFixture } from './AgentFixture'
+import { FactionFixture } from './FactionFixture'
+import { MissionSiteFixture } from './MissionSiteFixture'
 
 export const GameStateFixture = {
   default(): GameState {
@@ -85,10 +85,7 @@ export const GameStateFixture = {
         'lead-2': 1,
         'lead-3': 3,
       },
-      missionSites: [
-        MissionSiteFixture.active(),
-        MissionSiteFixture.deployed(['agent-1', 'agent-2']),
-      ],
+      missionSites: [MissionSiteFixture.active(), MissionSiteFixture.deployed(['agent-1', 'agent-2'])],
     })
   },
 
@@ -138,12 +135,7 @@ export const GameStateFixture = {
       money: 100,
       intel: 10,
       funding: 10,
-      agents: [
-        AgentFixture.wounded(15),
-        AgentFixture.exhausted(80),
-        AgentFixture.recovering(4),
-        AgentFixture.rookie(),
-      ],
+      agents: [AgentFixture.wounded(15), AgentFixture.exhausted(80), AgentFixture.recovering(4), AgentFixture.rookie()],
       factions: [
         FactionFixture.highThreat(),
         FactionFixture.highThreat(),
@@ -203,11 +195,11 @@ export const GameStateFixture = {
   randomInvestigationCounts(): Record<string, number> {
     const counts: Record<string, number> = {}
     const leadCount = faker.number.int({ min: 0, max: 10 })
-    
+
     for (let index = 0; index < leadCount; index += 1) {
       counts[`lead-${index + 1}`] = faker.number.int({ min: 1, max: 5 })
     }
-    
+
     return counts
   },
 }

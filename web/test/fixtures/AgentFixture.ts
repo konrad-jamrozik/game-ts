@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
-import { WeaponFixture } from './weaponFixtures'
+import { WeaponFixture } from './WeaponFixture'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 import { createWeapon } from '../../src/lib/utils/weaponUtils'
 
@@ -39,7 +39,7 @@ export const AgentFixture = {
   random(): Agent {
     const maxHitPoints = faker.number.int({ min: 20, max: 40 })
     const hitPoints = faker.number.int({ min: 0, max: maxHitPoints })
-    
+
     return this.new({
       id: faker.string.uuid(),
       turnHired: faker.number.int({ min: 1, max: 100 }),
@@ -148,17 +148,12 @@ export const AgentFixture = {
   },
 
   team(size = 4): Agent[] {
-    const baseTeam = [
-      this.elite(),
-      this.veteran(),
-      this.default(),
-      this.rookie(),
-    ]
-    
+    const baseTeam = [this.elite(), this.veteran(), this.default(), this.rookie()]
+
     if (size <= 4) {
       return baseTeam.slice(0, size)
     }
-    
+
     // For larger teams, add more default agents
     const team = [...baseTeam]
     while (team.length < size) {

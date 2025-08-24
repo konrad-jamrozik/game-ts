@@ -1,5 +1,5 @@
 import type { MissionSite, MissionSiteState } from '../../src/lib/model/model'
-import { EnemyFixture } from './enemyFixtures'
+import { EnemyFixture } from './EnemyFixture'
 
 let missionSiteIdCounter = 0
 

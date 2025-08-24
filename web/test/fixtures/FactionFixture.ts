@@ -1,5 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Faction, FactionId } from '../../src/lib/model/model'
+import { assertDefined } from '../../src/lib/utils/assert'
 
 export const FactionFixture = {
   default(): Faction {
@@ -21,13 +22,23 @@ export const FactionFixture = {
   },
 
   random(): Faction {
-    const factionIds: FactionId[] = ['faction-red-dawn', 'faction-black-lotus', 'faction-exalt', 'faction-followers-of-dagon']
+    const factionIds: FactionId[] = [
+      'faction-red-dawn',
+      'faction-black-lotus',
+      'faction-exalt',
+      'faction-followers-of-dagon',
+    ]
     const factionNames = ['Red Dawn', 'Black Lotus', 'EXALT', 'Followers of Dagon']
-    const index = faker.number.int({ min: 0, max: 3 })
-    
+    const index = faker.number.int({ min: 0, max: factionIds.length - 1 })
+    const factionId = factionIds[index]
+    assertDefined(factionId, 'Faction ID is undefined')
+
+    const factionName = factionNames[index]
+    assertDefined(factionName, 'Faction name is undefined')
+
     return this.new({
-      id: factionIds[index],
-      name: factionNames[index],
+      id: factionId,
+      name: factionName,
       threatLevel: faker.number.int({ min: 0, max: 100 }),
       threatIncrease: faker.number.int({ min: 1, max: 5 }),
       suppression: faker.number.int({ min: 0, max: 50 }),
@@ -108,23 +119,18 @@ export const FactionFixture = {
   },
 
   all(): Faction[] {
-    return [
-      this.redDawn(),
-      this.blackLotus(),
-      this.exalt(),
-      this.followersOfDagon(),
-    ]
+    return [this.redDawn(), this.blackLotus(), this.exalt(), this.followersOfDagon()]
   },
 
   many(count: number, overrides?: Partial<Faction>): Faction[] {
     const factions = this.all()
     const result: Faction[] = []
-    
+
     for (let index = 0; index < count; index += 1) {
       const base = factions[index % factions.length]
       result.push(this.new({ ...base, ...overrides }))
     }
-    
+
     return result
   },
-};
+}
