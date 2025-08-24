@@ -6,9 +6,6 @@ export type Weapon = {
   maxDamage: number
 }
 
-// KJA 2 see if "assignment" can be somehow typed to things like "typeof MissionSiteID | typeof ActivityId" where "ActivityId" is "Contracting" | "Espionage"
-// and MissionSiteId is string of form mission-site-<some-id>
-// and then in code we can check: "if assignment type is really typeof MissionSiteID", then dereference appropriate MissionSite value
 export type Agent = {
   id: string
   turnHired: number

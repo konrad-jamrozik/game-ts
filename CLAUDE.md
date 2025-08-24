@@ -16,6 +16,21 @@ Run all commands from the `web/` directory:
 - **Dev server**: `npm run dev` - Start development server
 - **Full check**: `npm run check` - Run format, lint, and tests together
 
+## Code Quality Requirements
+
+**CRITICAL**: Before completing any task that modifies code, you MUST ensure that `npm run lint:cached` passes without errors.
+This is a mandatory requirement for all code changes.
+
+### Workflow for Code Changes
+
+1. Make your code changes
+2. Run `npm run lint:cached` from the `web/` directory
+3. If linting fails, fix all issues using `npm run lint:fix` or manual corrections
+4. Verify that `npm run lint:cached` passes before considering the task complete
+5. Never commit or consider a task finished while linting errors remain
+
+This ensures code quality and consistency across the entire codebase.
+
 ## Architecture Overview
 
 This is a turn-based strategy game built as a client-side React app where players manage agents, investigate leads,
