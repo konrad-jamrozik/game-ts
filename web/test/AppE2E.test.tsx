@@ -148,16 +148,18 @@ describe('AppE2E', () => {
 
     // === WHEN: Reset game ===
 
-    // Expand reset controls
-    store.dispatch(setResetControlsExpanded(true))
+    const resetControlsButton = screen.getByRole('button', { name: /reset controls/iu })
+    await userEvent.click(resetControlsButton)
 
     // Wait for the reset controls to be visible and find the reset game button
-    const resetButtons = await screen.findAllByRole('button')
-    const resetGameButton = resetButtons.find((button) => button.textContent?.toLowerCase().includes('reset'))
+    const buttons = await screen.findAllByRole('button')
+    const resetGameButton = buttons.find((button) => button.textContent?.toLowerCase().includes('reset game'))
 
     expect(resetGameButton).toBeDefined()
     if (resetGameButton) {
       await userEvent.click(resetGameButton)
+    } else {
+      throw new Error('Reset game button not found')
     }
 
     // === THEN: Game resets to turn 1 ===
@@ -166,14 +168,14 @@ describe('AppE2E', () => {
     expect(resetTurnValue).toHaveTextContent('1')
 
     // Should have no missions or archived missions
-    expect(screen.queryByText(/archived missions/iu)).not.toBeInTheDocument()
+    expect(screen.queryByText(/archived missions \(0\)/iu)).toBeInTheDocument()
 
     // Should have only "Criminal organizations" lead
     const finalCriminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
     expect(finalCriminalOrgsLeads.length).toBeGreaterThan(0)
 
     // Should have no archived leads
-    expect(screen.queryByText(/archived leads/iu)).not.toBeInTheDocument()
+    expect(screen.queryByText(/archived leads \(0\)/iu)).toBeInTheDocument()
 
     // Should have no agents (reset to initial state, not debug state)
     expect(screen.queryByText(/agent-000/iu)).not.toBeInTheDocument()
