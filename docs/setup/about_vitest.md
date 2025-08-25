@@ -77,6 +77,10 @@ or `aria-labelledby` attribute of the element:
 or `aria-label` attribute of the element:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label
   
+## Vitest builtin/native UI selectors (locators)
+
+E.g. `getByRole`: https://vitest.dev/guide/browser/locators.html#getbyrole
+
 # Notes
 
 - Vitest is recommended for Vite + React projects.
