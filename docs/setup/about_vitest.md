@@ -125,7 +125,7 @@ Then add appropriate `test` scripts to your `package.json`.
 
 Add [`web/vitest.config.ts`](/web/vitest.config.ts).
 
-Create `test/utils/setupTests.ts`:
+Create `test/utils/setupReactTests.ts`:
 
 ```ts
 import '@testing-library/jest-dom'
@@ -174,6 +174,10 @@ describe(App, () => {
 
 takes:
 `Duration  752ms (transform 25ms, setup 89ms, collect 0ms, tests 0ms, environment 328ms, prepare 73ms)`
+
+`collect` is explained in Vitest docs [here](https://vitest.dev/guide/profiling-test-performance.html):
+
+> Collect: Time spent for collecting all tests in the test files. This includes the time it took to import all file dependencies.
 
 # Troubleshooting
 

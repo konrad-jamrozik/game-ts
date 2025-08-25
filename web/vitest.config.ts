@@ -22,7 +22,7 @@ export default defineConfig({
           exclude: ['test/**/*.test.tsx'],
           environment: 'node',
           globals: true,
-          setupFiles: './test/utils/setupTests.ts',
+          setupFiles: [],
           testTimeout: 30_000,
         },
       },
@@ -34,7 +34,7 @@ export default defineConfig({
           exclude: includeSlow ? [] : ['test/**/App.test.tsx'],
           environment: 'jsdom',
           globals: true,
-          setupFiles: './test/utils/setupTests.ts',
+          setupFiles: './test/utils/setupReactTests.ts',
           testTimeout: 30_000,
           server: {
             deps: {
