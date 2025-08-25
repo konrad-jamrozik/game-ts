@@ -25,6 +25,7 @@
     "test:watch": "vitest --watch",
     "test:ui": "vitest --ui --api.port=6174",
     "test:cov": "vitest --coverage",
+    "test:uicov": "vitest --ui --coverage.enabled=true",
     "check": "npm run format && npm run lint:cached && npm run test"
   },
   "dependencies": {
