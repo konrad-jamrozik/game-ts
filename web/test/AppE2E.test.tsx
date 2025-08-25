@@ -10,6 +10,7 @@ import { store } from '../src/app/store'
 import { reset } from '../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../src/lib/slices/settingsSlice'
+import { assertDefined } from '../src/lib/utils/assert'
 
 describe('AppE2E', () => {
   beforeEach(() => {
@@ -82,27 +83,27 @@ describe('AppE2E', () => {
     // Select mission - find mission cards and click on one containing "001"
     const missionCardButtons = screen.getAllByRole('button')
     const mission001Card = missionCardButtons.find((button) => button.textContent?.includes('001'))
+
     expect(mission001Card).toBeDefined()
-    if (mission001Card) {
-      await userEvent.click(mission001Card)
-    }
+
+    assertDefined(mission001Card)
+
+    await userEvent.click(mission001Card)
 
     // Select agents using DataGrid checkboxes - find checkboxes in agent rows
     const checkboxes = screen.getAllByRole('checkbox')
     // We need to find the checkboxes for agents 000, 001, 002
     // Look for checkboxes that are in rows containing these agent IDs
-    const agentCheckboxes = checkboxes.filter((checkbox, index) => {
+    const agentCheckboxes = checkboxes.filter((checkbox) => {
       // Get the parent row and check if it contains agent-000, agent-001, or agent-002
       const rowElement = checkbox.closest('[role="row"]')
       if (!rowElement) return false
-      const rowText = rowElement.textContent || ''
+      const rowText = rowElement.textContent ?? ''
       return rowText.includes('agent-000') || rowText.includes('agent-001') || rowText.includes('agent-002')
     })
 
     // Click the first 3 agent checkboxes we found
-    for (let i = 0; i < Math.min(3, agentCheckboxes.length); i++) {
-      await userEvent.click(agentCheckboxes[i])
-    }
+    await Promise.all(agentCheckboxes.slice(0, 3).map(async (checkbox) => userEvent.click(checkbox)))
 
     // Click "Deploy" button (text will be something like "Deploy 3 agents on mission-site-001")
     await userEvent.click(screen.getByRole('button', { name: /deploy/iu }))
@@ -110,6 +111,7 @@ describe('AppE2E', () => {
     // === THEN: Mission shows "Status: Deployed" ===
 
     const deployedElements = screen.getAllByText(/deployed/iu)
+
     expect(deployedElements.length).toBeGreaterThan(0)
 
     // === WHEN: Hire agents until money goes negative ===
@@ -122,7 +124,7 @@ describe('AppE2E', () => {
 
       // Check balance after hiring
       const balanceElement = screen.getByLabelText(/new.*balance/iu)
-      const balanceText = balanceElement.textContent || '0'
+      const balanceText = balanceElement.textContent ?? '0'
 
       // If balance shows negative (contains '-'), we're done
       if (balanceText.includes('-')) {
@@ -132,7 +134,8 @@ describe('AppE2E', () => {
 
     // Verify balance sheet shows negative value
     const negativeBalance = screen.getByLabelText(/new.*balance/iu)
-    expect(negativeBalance.textContent).toMatch(/-/)
+
+    expect(negativeBalance).toHaveTextContent(/-/iu)
 
     // === WHEN: Advance turn ===
 
@@ -141,6 +144,7 @@ describe('AppE2E', () => {
     // === THEN: Game over state ===
 
     const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
+
     expect(turnValueAfterGameOver).toHaveTextContent('3')
 
     // Should show disabled "Game over" button instead of "Advance turn"
@@ -156,15 +160,15 @@ describe('AppE2E', () => {
     const resetGameButton = buttons.find((button) => button.textContent?.toLowerCase().includes('reset game'))
 
     expect(resetGameButton).toBeDefined()
-    if (resetGameButton) {
-      await userEvent.click(resetGameButton)
-    } else {
-      throw new Error('Reset game button not found')
-    }
+
+    assertDefined(resetGameButton)
+
+    await userEvent.click(resetGameButton)
 
     // === THEN: Game resets to turn 1 ===
 
     const resetTurnValue = screen.getByLabelText(/turn/iu)
+
     expect(resetTurnValue).toHaveTextContent('1')
 
     // Should have no missions or archived missions
