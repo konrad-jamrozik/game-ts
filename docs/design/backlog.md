@@ -32,11 +32,10 @@ w docs.
 
 ## Tests
 
-- Remove redundant tests to speed up test suite
-- Introduce testing domain model to deduplicate tests and remove boilerplate.
-  E.g. `agentView.test.ts` and `describe('effectiveSkill', () => {` is superbly verbose.
+- Refactor the E2E test. Introduce supporting abstractions.
+- Remove redundant tests to speed up test suite: do it by first updating about_test_suites.md and then deriving code.
 
-## Perf
+## Performance
 
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
