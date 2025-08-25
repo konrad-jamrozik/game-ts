@@ -48,7 +48,6 @@ export type Lead = {
   title: string
   intelCost: number
   description: string
-  expiresIn: number | 'never'
   dependsOn: string[]
   repeatable: boolean
 }

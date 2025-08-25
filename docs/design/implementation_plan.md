@@ -8,14 +8,13 @@ recommended models, and clarification questions.
 ## Key Decisions Made
 
 1. **Mission Results Storage**: Store like events (single instance, not copied)
-2. **File Naming**: Rename files to match function names
-3. **Lead Expiration**: Implement with no warnings, permanent removal
-4. **State Hierarchy**: Session/Situation/Assets/Liabilities/Archive structure
-5. **Save Compatibility**: No backward compatibility required
-6. **Error Handling**: Fail fast with assertions, add error boundary
-7. **Test Fixtures**: Use Fixture pattern instead of builders/factories
-8. **Bundle Strategy**: Load everything at once, no lazy loading
-9. **Mission UI**: New supplementary component, stored in state
+1. **File Naming**: Rename files to match function names
+1. **State Hierarchy**: Session/Situation/Assets/Liabilities/Archive structure
+1. **Save Compatibility**: No backward compatibility required
+1. **Error Handling**: Fail fast with assertions, add error boundary
+1. **Test Fixtures**: Use Fixture pattern instead of builders/factories
+1. **Bundle Strategy**: Load everything at once, no lazy loading
+1. **Mission UI**: New supplementary component, stored in state
 
 ## Outstanding KJA TODOs
 
@@ -35,20 +34,6 @@ recommended models, and clarification questions.
 6. Ensure results persist across sessions
 
 ## Features
-
-### Lead Expiration Logic
-
-**Task**: Implement lead expiration logic
-**Confidence**: 60% - Complex feature with game balance implications
-**Recommended Model**: Opus
-**Estimated Time**: 45-60 minutes (AI), 3-4 hours (human)
-**Plan**:
-1. Add expiration turn counter to Lead type
-2. Implement expiration check during turn evaluation
-3. Remove expired leads from available pool (gone forever)
-4. No UI warnings or indicators before expiration
-5. Update lead generation to set appropriate expiration values
-6. Note: Leads may reappear later based on conditions (future feature)
 
 ## Domain Model Improvements
 
