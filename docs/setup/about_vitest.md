@@ -150,6 +150,31 @@ describe('App', () => {
 })
 ```
 
+# Performance bottlenecks
+
+This is slow `import App from '../src/app/App'`
+
+A file like this:
+
+``` ts
+import App from '../src/app/App'
+describe(App, () => {
+})
+```
+
+takes:
+`Duration  8.83s (transform 1.50s, setup 97ms, collect 8.09s, tests 3ms, environment 330ms, prepare 70ms)`
+
+But a file like this:
+``` ts
+// import App from '../src/app/App'
+describe(App, () => {
+})
+```
+
+takes:
+`Duration  752ms (transform 25ms, setup 89ms, collect 0ms, tests 0ms, environment 328ms, prepare 73ms)`
+
 # Troubleshooting
 
 ## TypeError: Unknown file extension ".css" for
