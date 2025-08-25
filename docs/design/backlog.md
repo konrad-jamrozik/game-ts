@@ -5,14 +5,6 @@ KJA backlog:
 - Execute the `implementation_plan.md`
 - Address all outstanding TODOs: search for `KJA` in the codebase
 
-## Naming
-
-- introduce terminology of "turn evaluation" and "mission site evaluation". Replace existing terminology as appropriate.
-  E.g. `advanceTurnImpl` -> `evalTurn`. or `evaluateDeployedMissionSite` -> `evalMission`.
-w docs.
-
-## Features
-
 - Implement lead expiration logic, or remove the property
 
 ## Domain model
@@ -33,8 +25,8 @@ w docs.
 
 ## Tests
 
-- Refactor the E2E test. Introduce supporting abstractions.
-- Remove redundant tests to speed up test suite: do it by first updating about_test_suites.md and then deriving code.
+- Remove redundant tests to speed up test suite: see todo in about_test_suites.md
+- In tests, need a helper that does both `expect(X).toDefined() and assertDefined(X)`
 
 ## Performance
 

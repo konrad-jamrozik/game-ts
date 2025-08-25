@@ -4,6 +4,11 @@ This file specifies the unit and component test suites for the project.
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
+🚧KJA update test suite:
+- remove most of the tests, leaving 1 or 2 per category just as a reference
+- come up with robust "evaluate turn" and "evaluate deployed mission site" tests
+- one to about three tests per player action
+
 ## Component Tests
 
 ### GameControls.test.tsx
