@@ -31,11 +31,29 @@ export default defineConfig({
         test: {
           name: 'react',
           include: ['test/**/*.test.tsx'],
-          exclude: includeSlow ? [] : ['test/**/App.test.tsx'],
+          exclude: includeSlow ? ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'] : [],
           environment: 'jsdom',
           globals: true,
           setupFiles: './test/utils/setupReactTests.ts',
           testTimeout: 30_000,
+          server: {
+            deps: {
+              // Refer to docs/setup/about_vitest.md troubleshooting section for more details.
+              inline: ['@mui/x-data-grid'],
+            },
+          },
+        },
+      },
+      {
+        extends: true, // Inherit plugins from root config
+        test: {
+          name: 'e2e',
+          include: ['test/**/*E2E.test.tsx'],
+          exclude: includeSlow ? ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'] : [],
+          environment: 'jsdom',
+          globals: true,
+          setupFiles: './test/utils/setupReactTests.ts',
+          testTimeout: 60_000, // Longer timeout for E2E tests
           server: {
             deps: {
               // Refer to docs/setup/about_vitest.md troubleshooting section for more details.
