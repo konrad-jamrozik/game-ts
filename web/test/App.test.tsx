@@ -5,9 +5,10 @@ import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
 import { store } from '../src/app/store'
 import { setResetControlsExpanded } from '../src/lib/slices/settingsSlice'
+import { includeSlow } from './testUtils'
 
 describe(App, () => {
-  test.skipIf(process.env['RUN_ALL_TESTS'] !== 'true')(
+  test.runIf(includeSlow)(
     "When 'hire agents' button is pressed, agents counter is incremented from 0 to 1",
     async () => {
       expect.hasAssertions()
@@ -30,30 +31,27 @@ describe(App, () => {
     },
   )
 
-  test.skipIf(process.env['RUN_ALL_TESTS'] !== 'true')(
-    "When 'advance turn' button is clicked, the turn advances",
-    async () => {
-      expect.hasAssertions()
+  test.runIf(includeSlow)("When 'advance turn' button is clicked, the turn advances", async () => {
+    expect.hasAssertions()
 
-      render(
-        <Provider store={store}>
-          <App />
-        </Provider>,
-      )
-      // Check initial turn value
-      const turnValue = screen.getByLabelText(/Turn:/iu)
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    )
+    // Check initial turn value
+    const turnValue = screen.getByLabelText(/Turn:/iu)
 
-      expect(turnValue).toHaveTextContent('1')
+    expect(turnValue).toHaveTextContent('1')
 
-      // Click the advance turn button
-      await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+    // Click the advance turn button
+    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
-      // Check updated turn value
-      expect(turnValue).toHaveTextContent('2')
-    },
-  )
+    // Check updated turn value
+    expect(turnValue).toHaveTextContent('2')
+  })
 
-  test.skipIf(process.env['RUN_ALL_TESTS'] !== 'true')(
+  test.runIf(includeSlow)(
     "Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset",
     async () => {
       expect.hasAssertions()
