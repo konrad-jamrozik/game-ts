@@ -31,7 +31,7 @@ export default defineConfig({
         test: {
           name: 'react',
           include: ['test/**/*.test.tsx'],
-          exclude: includeSlow ? ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'] : [],
+          exclude: includeSlow ? [] : ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'],
           environment: 'jsdom',
           globals: true,
           setupFiles: './test/utils/setupReactTests.ts',
@@ -49,7 +49,7 @@ export default defineConfig({
         test: {
           name: 'e2e',
           include: ['test/**/*E2E.test.tsx'],
-          exclude: includeSlow ? ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'] : [],
+          exclude: includeSlow ? [] : ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'],
           environment: 'jsdom',
           globals: true,
           setupFiles: './test/utils/setupReactTests.ts',
