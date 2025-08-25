@@ -21,6 +21,17 @@ npm run test:ui
 
 See also the other variants in [`package.json`](../web/package.json).
 
+## Filtering tests
+
+Run only unit tests:
+`npm run test -- --project unit`
+
+Run both unit and react tests, but skip slow tests:
+`npm run test -- --project unit --project react`
+
+Run all tests, including slow tests:
+`$env:RUN_ALL_TESTS="true"; npm run test`
+
 # Vitest UI port configuration
 
 By default, Vitest UI tries to use port 51204 for its API server. On some systems, this port may be reserved or restricted,
@@ -80,6 +91,8 @@ or `aria-label` attribute of the element:
 ## Vitest builtin/native UI selectors (locators)
 
 E.g. `getByRole`: https://vitest.dev/guide/browser/locators.html#getbyrole
+
+Note: this is currently unused, but perhaps could could replace the selectors from `@testing-library/react`?
 
 # Notes
 
