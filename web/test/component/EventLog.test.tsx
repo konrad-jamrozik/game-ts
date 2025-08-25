@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { store } from '../src/app/store'
-import { EventLog } from '../src/components/EventLog'
-import { clearEvents } from '../src/lib/slices/eventsSlice'
-import { reset } from '../src/lib/slices/gameStateSlice'
+import { store } from '../../src/app/store'
+import { EventLog } from '../../src/components/EventLog'
+import { clearEvents } from '../../src/lib/slices/eventsSlice'
+import { reset } from '../../src/lib/slices/gameStateSlice'
 
 function renderEventLog(): void {
   render(
@@ -33,7 +33,7 @@ describe(EventLog, () => {
   test('displays events when they exist in the state', async () => {
     expect.hasAssertions()
 
-    const { hireAgent } = await import('../src/lib/slices/gameStateSlice')
+    const { hireAgent } = await import('../../src/lib/slices/gameStateSlice')
     store.dispatch(hireAgent())
 
     renderEventLog()
@@ -45,7 +45,7 @@ describe(EventLog, () => {
   test('shows "New game started" event when store initializes without persisted state', async () => {
     expect.hasAssertions()
 
-    const { addTextEvent: addEvent } = await import('../src/lib/slices/eventsSlice')
+    const { addTextEvent: addEvent } = await import('../../src/lib/slices/eventsSlice')
     const state = store.getState()
     const { gameState } = state.undoable.present
 

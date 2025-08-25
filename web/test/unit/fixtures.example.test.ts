@@ -7,8 +7,8 @@ import {
   LeadFixture,
   FactionFixture,
   resetAllFixtures,
-} from './fixtures'
-import { assertDefined } from '../src/lib/utils/assert'
+} from '../fixtures'
+import { assertDefined } from '../../src/lib/utils/assert'
 
 describe('Fixture Usage Examples', () => {
   beforeEach(() => {

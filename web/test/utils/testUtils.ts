@@ -18,5 +18,19 @@ const isVSCodeLike =
 /**
  * Helper function to determine if slow tests should be included.
  * Returns true if either RUN_ALL_TESTS or INCLUDE_SLOW_TESTS environment variable is set.
+ *
+ * ⚠️ CURRENTLY UNUSED, KEEPING HERE FOR REFERENCE
  */
+// Usage in vitest.config.ts:
+// ...
+//   exclude: includeSlow ? [] : ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'],
+// ...
+//
+// Usage in web_gh_pages_CICD.yml:
+// ...
+// - name: Run tests
+//   # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.
+//   run: |
+//     RUN_ALL_TESTS=1 npm run test -- --pool=forks --retry=1
+// ...
 export const includeSlow = runAllTests || includeSlowTest || isVSCodeLike

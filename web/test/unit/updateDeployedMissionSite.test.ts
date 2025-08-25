@@ -1,9 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import type { Agent, GameState, MissionSite } from '../src/lib/model/model'
-import { updateDeployedMissionSite } from '../src/lib/turn_advancement/updateDeployedMissionSite'
-import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../src/lib/model/ruleset/constants'
-import { createWeapon } from '../src/lib/utils/weaponUtils'
-import { createEnemiesFromSpec } from '../src/lib/utils/enemyUtils'
+import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
+import { updateDeployedMissionSite } from '../../src/lib/turn_advancement/updateDeployedMissionSite'
+import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
+import { createWeapon } from '../../src/lib/utils/weaponUtils'
+import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
 describe('deployedMissionSiteUpdate', () => {
   test('update a deployed mission site with successful combat', () => {

@@ -5,13 +5,13 @@ import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
-import App from '../src/app/App'
-import { store } from '../src/app/store'
-import { reset } from '../src/lib/slices/gameStateSlice'
-import { clearEvents } from '../src/lib/slices/eventsSlice'
-import { assertDefined } from '../src/lib/utils/assert'
+import App from '../../src/app/App'
+import { store } from '../../src/app/store'
+import { reset } from '../../src/lib/slices/gameStateSlice'
+import { clearEvents } from '../../src/lib/slices/eventsSlice'
+import { assertDefined } from '../../src/lib/utils/assert'
 
-describe('AppE2E', () => {
+describe('App', () => {
   beforeEach(() => {
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())

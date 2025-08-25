@@ -1,6 +1,5 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
-import { includeSlow } from './test/utils/testUtils'
 
 // https://vitejs.dev/config/
 /** @type {import('vite').UserConfig} */
@@ -18,8 +17,7 @@ export default defineConfig({
       {
         test: {
           name: 'unit',
-          include: ['test/**/*.test.ts'],
-          exclude: ['test/**/*.test.tsx'],
+          include: ['test/unit/*.test*'],
           environment: 'node',
           globals: true,
           setupFiles: [],
@@ -29,9 +27,8 @@ export default defineConfig({
       {
         extends: true, // Inherit plugins from root config
         test: {
-          name: 'react',
-          include: ['test/**/*.test.tsx'],
-          exclude: includeSlow ? [] : ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'],
+          name: 'component',
+          include: ['test/component/*.test*'],
           environment: 'jsdom',
           globals: true,
           setupFiles: './test/utils/setupReactTests.ts',
@@ -48,8 +45,7 @@ export default defineConfig({
         extends: true, // Inherit plugins from root config
         test: {
           name: 'e2e',
-          include: ['test/**/*E2E.test.tsx'],
-          exclude: includeSlow ? [] : ['test/**/App.test.tsx', 'test/**/*E2E.test.tsx'],
+          include: ['test/e2e/*.test*'],
           environment: 'jsdom',
           globals: true,
           setupFiles: './test/utils/setupReactTests.ts',

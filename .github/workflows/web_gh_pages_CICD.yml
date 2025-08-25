@@ -50,7 +50,7 @@ jobs:
       - name: Run tests
         # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.
         run: |
-          RUN_ALL_TESTS=1 npm run test -- --pool=forks --retry=1
+          npm run test:all
 
       - name: Build project
         run: |

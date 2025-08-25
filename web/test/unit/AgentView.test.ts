@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeEach } from 'vitest'
-import { agV } from '../src/lib/model/agents/AgentView'
-import { AgentFixture, resetAllFixtures } from './fixtures'
+import { agV } from '../../src/lib/model/agents/AgentView'
+import { AgentFixture, resetAllFixtures } from '../fixtures'
 
 describe('effectiveSkill', () => {
   beforeEach(() => {

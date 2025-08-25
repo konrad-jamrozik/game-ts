@@ -23,14 +23,25 @@ See also the other variants in [`package.json`](../web/package.json).
 
 ## Filtering tests
 
-Run only unit tests:
-`npm run test -- --project unit`
+Run unit and component tests:
+`npm run test`
 
-Run both unit and react tests, but skip slow tests:
-`npm run test -- --project unit --project react`
+Run specific test suites:
 
-Run all tests, including slow tests:
+```bash
+npm run test:unit
+npm run test:component
+npm run test:e2e
+```
+
+Run all tests:
+`npm run test:all`
+
+Run all tests, including slow tests (currently unused, keeping here for reference):
 `$env:RUN_ALL_TESTS="true"; npm run test`
+
+Note: it is possible to append `--project` via `npm run test`, e.g.:
+`npm run test:unit -- --project component` will run both `unit` and `component` tests.
 
 # Vitest UI port configuration
 
