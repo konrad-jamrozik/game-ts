@@ -12,7 +12,7 @@ On a high level, the update logic consists of following steps:
 - Update all agents in `OnAssignment` state and `Espionage` assignment.
 - Update all agents in `InTransit` state.
 - Update all active non-deployed mission sites.
-- Update all deployed mission sites, thus also updating all agents deployed to them.
+- Evaluate all deployed mission sites, thus also updating all agents deployed to them.
 - Update player assets based on the results of the previous steps.
 - Update panic, also based on the results of the previous steps.
 - Update factions, also based on the results of the previous steps.
@@ -58,9 +58,9 @@ Apply appropriate state and assignment updates.
 
 Apply mission site expiration progress and expire mission sites that have expired.
 
-## Updating Deployed Mission Sites
+## Evaluating Deployed Mission Sites
 
-Update all deployed mission sites, including all agents deployed to them.
+Evaluate all deployed mission sites, including all agents deployed to them.
 
 Here we describe the implementation order, while full details are available in [about_deployed_mission_site.md](about_deployed_mission_site.md).
 

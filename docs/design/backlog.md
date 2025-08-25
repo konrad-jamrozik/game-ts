@@ -8,7 +8,7 @@ KJA backlog:
 ## Naming
 
 - introduce terminology of "turn evaluation" and "mission site evaluation". Replace existing terminology as appropriate.
-  E.g. `advanceTurnImpl` -> `evalTurn`. or `updateDeployedMissionSite` -> `evalMission`.
+  E.g. `advanceTurnImpl` -> `evalTurn`. or `evaluateDeployedMissionSite` -> `evalMission`.
 w docs.
 
 ## Features

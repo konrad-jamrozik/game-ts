@@ -42,10 +42,10 @@ For how to run tests and more on vitest setup, see [About vitest](../setup/about
 
 - "debug initial state passes agent invariant validation"
 
-### updateDeployedMissionSite.test.ts
+### evaluateDeployedMissionSite.test.ts
 
 **deployedMissionSiteUpdate tests:**
-- "update a deployed mission site with successful combat"
+- "evaluate a deployed mission site with successful combat"
 - "handle agent termination correctly"
 - "handle mission failure with all agents terminated"
 

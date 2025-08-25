@@ -58,7 +58,7 @@ recommended models, and clarification questions.
 1. Search for all "turn" and "mission" evaluation related terms in codebase
 2. Create comprehensive mapping:
    - `advanceTurnImpl` → `evalTurn` (function and file)
-   - `updateDeployedMissionSite` → `evalMission` (function and file)
+   - `evaluateDeployedMissionSite` → `evalMission` (function and file)
 3. Rename both functions and files to maintain convention
 4. Update all imports, references, and documentation
 5. Ensure file names match single public function names
@@ -263,11 +263,11 @@ recommended models, and clarification questions.
 
 1. **LeadsView** (20-30 min) - Clean domain model pattern
 2. **Document agent skill reduction** (5-10 min) - Quick documentation fix
-3. **Testing fixtures** (30-45 min) - Improves all future testing
+3. ✅ DONE **Testing fixtures** (30-45 min) - Improves all future testing
 
 ### Phase 2: Core Refactoring (Medium Priority)  
 
-1. **Naming refactoring** (15-20 min) - evalTurn/evalMission
+1. **Naming refactoring** (15-20 min) - evalMission
 2. **State hierarchy** (45-60 min) - Session/Situation/Assets structure
 3. **MissionSitesView** (15-20 min) - Continue view pattern
 

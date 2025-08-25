@@ -39,12 +39,12 @@ Only agents in `Available` state can be deployed to a mission site.
 When an agent is deployed to a mission site, their state changes from `InTransit` to `OnMission`
 and their assignment becomes the mission site ID.
 
-Furthermore, during turn advancement, an agent deployed to a mission site participates in deployed mission site update,
+Furthermore, during turn advancement, an agent deployed to a mission site participates in deployed mission site evaluation,
 as described in [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
-# Agent update on deployed mission site update
+# Agent update on deployed mission site evaluation
 
-Upon deployed mission site update, a deployed agent state and assignment are updated, as described in
+Upon deployed mission site evaluation, a deployed agent state and assignment are updated, as described in
 [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
 # Agent skill
@@ -99,14 +99,14 @@ Each agent starts with `AGENT_INITIAL_EXHAUSTION`.
 
 Agent exhaustion has following effects:
 
-- Reduces agent effective skill during rolls in deployed mission site update. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Reduces agent effective skill during rolls in deployed mission site evaluation. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
 - Reduces agent effective skill during assignments: KJA TODO: document how
 
 Agent exhaustion changes as follows:
 
 - Increases by `AGENT_EXHAUSTION_INCREASE_PER_TURN` when turn is advanced
   while they are on `Contracting` or `Espionage` assignments.
-- Increases upon deployed mission site update, see [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Increases upon deployed mission site evaluation, see [about_deployed_mission_site.md](about_deployed_mission_site.md).
 - Decreases by `AGENT_EXHAUSTION_RECOVERY_PER_TURN`
   when turn is advanced while they are in `Available` or `Recovering` state.
 
@@ -134,7 +134,7 @@ This changes their state to `InTransit` and assignment to `Standby`.
 
 Agents have hit points representing their health and survivability. Each agent starts with `AGENT_INITIAL_HIT_POINTS`.
 
-Agent can lose hit points as a result of deployed mission site update: see [about_deployed_mission_site.md](about_deployed_mission_site.md).
+Agent can lose hit points as a result of deployed mission site evaluation: see [about_deployed_mission_site.md](about_deployed_mission_site.md).
 
 If an agent loses all hit points, they are terminated and their assignment becomes `KIA`.
 KIA agents always have 0 hit points.

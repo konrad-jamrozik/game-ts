@@ -1,12 +1,12 @@
 import { describe, expect, test } from 'vitest'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
-import { updateDeployedMissionSite } from '../../src/lib/turn_advancement/updateDeployedMissionSite'
+import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 import { createWeapon } from '../../src/lib/utils/weaponUtils'
 import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
-describe('deployedMissionSiteUpdate', () => {
-  test('update a deployed mission site with successful combat', () => {
+describe('deployedMissionSiteEvaluation', () => {
+  test('evaluate a deployed mission site with successful combat', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
@@ -53,8 +53,8 @@ describe('deployedMissionSiteUpdate', () => {
     Math.random = (): number => 0.1 // Low values for successful contest rolls
 
     try {
-      // Update the mission site
-      updateDeployedMissionSite(gameState, testMissionSite)
+      // Evaluate the mission site
+      evaluateDeployedMissionSite(gameState, testMissionSite)
 
       // Verify mission site is successful
       expect(testMissionSite.state).toBe('Successful')
@@ -131,7 +131,7 @@ describe('deployedMissionSiteUpdate', () => {
     }
 
     try {
-      updateDeployedMissionSite(gameState, testMissionSite)
+      evaluateDeployedMissionSite(gameState, testMissionSite)
 
       // Verify agent was terminated
       expect(testAgent.hitPoints).toBe(0)
@@ -200,7 +200,7 @@ describe('deployedMissionSiteUpdate', () => {
       factions: [],
     }
 
-    updateDeployedMissionSite(gameState, testMissionSite)
+    evaluateDeployedMissionSite(gameState, testMissionSite)
 
     // Mission should fail
     expect(testMissionSite.state).toBe('Failed')

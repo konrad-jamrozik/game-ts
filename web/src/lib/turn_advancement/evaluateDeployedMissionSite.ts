@@ -6,11 +6,11 @@ import { agsV, type AgentsView } from '../model/agents/AgentsView'
 import { conductMissionSiteBattle, type AgentCombatStats, type CombatReport } from './combatSystem'
 
 /**
- * Updates a deployed mission site according to about_deployed_mission_sites.md.
+ * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
  * This includes the mission site battle, agent updates, and rewards.
  * Returns the mission rewards to be applied later in the turn advancement process.
  */
-export function updateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
+export function evaluateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
   // Get the mission to access enemy units
   const mission = getMissionById(missionSite.missionId)
 

@@ -1,6 +1,6 @@
 # About deployed mission sites
 
-This document explains how a deployed mission site is updated upon turn advancement.
+This document explains how a deployed mission site is evaluated upon turn advancement.
 
 Refer to [Definitions](#definitions) for definitions of terms used in this document.
 
@@ -177,13 +177,13 @@ Furthermore:
 - A successful defense skill roll against an attack gives `AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD` skill points.
 - A failed defense skill roll against an attack gives `AGENT_FAILED_DEFENSE_SKILL_REWARD` skill points.
 
-Skill points are awarded to given surviving agent at the end of the deployed mission site update.
+Skill points are awarded to given surviving agent at the end of the deployed mission site evaluation.
 This means their skill points do not change during the mission site battle, and as such do not influence the
 the contest rolls and combat rounds outcomes.
 
 ## Agent state and assignment update
 
-Depending on the agent update as part of the mission site update, the agent will be updated as follows:
+Depending on the agent update as part of the mission site evaluation, the agent will be updated as follows:
 
 - If agent survived the mission with no hit points lost:
   - Their state is set to `InTransit` and assignment set to `Standby`.
@@ -195,7 +195,7 @@ Depending on the agent update as part of the mission site update, the agent will
 # Implementation details
 
 The file [about_turn_advancement.md](about_turn_advancement.md) describes, among other things,
-in which order the updates to deployed mission sites and agents deployed on them are implemented.
+in which order the evaluation of deployed mission sites and agents deployed on them are implemented.
 
 # Definitions
 

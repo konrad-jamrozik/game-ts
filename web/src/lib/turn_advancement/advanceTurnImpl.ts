@@ -8,7 +8,7 @@ import {
   updateEspionageAgents,
 } from './advanceTurnAgentUpdates'
 import type { GameState, MissionRewards, Faction, FactionRewards } from '../model/model'
-import { updateDeployedMissionSite } from './updateDeployedMissionSite'
+import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { assertDefined } from '../utils/assert'
@@ -42,8 +42,8 @@ export default function advanceTurnImpl(state: GameState): void {
   // 6. Update active non-deployed mission sites
   updateActiveMissionSites(state)
 
-  // 7. Update deployed mission sites (and agents deployed to them)
-  const missionRewards = updateDeployedMissionSites(state)
+  // 7. Evaluate deployed mission sites (and agents deployed to them)
+  const missionRewards = evaluateDeployedMissionSites(state)
 
   // 8. Update player assets based on the results of the previous steps
   updatePlayerAssets(state, {
@@ -77,15 +77,15 @@ function updateActiveMissionSites(state: GameState): void {
 }
 
 /**
- * Updates deployed mission sites and their agents
+ * Evaluates deployed mission sites and their agents
  * Returns collected mission rewards to be applied later
  */
-function updateDeployedMissionSites(state: GameState): MissionRewards[] {
+function evaluateDeployedMissionSites(state: GameState): MissionRewards[] {
   const missionRewards: MissionRewards[] = []
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      const rewards = updateDeployedMissionSite(state, missionSite)
+      const rewards = evaluateDeployedMissionSite(state, missionSite)
       if (rewards) {
         missionRewards.push(rewards)
       }
