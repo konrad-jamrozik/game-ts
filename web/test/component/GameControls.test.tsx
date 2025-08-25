@@ -2,17 +2,21 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
-import App from '../../src/app/App'
 import { store } from '../../src/app/store'
+import { AssetsDataGrid } from '../../src/components/AssetsDataGrid'
+import { GameControls } from '../../src/components/GameControls'
+import { PlayerActions } from '../../src/components/PlayerActions'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 
-describe(App, () => {
+describe(GameControls, () => {
   test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
     expect.hasAssertions()
 
     render(
       <Provider store={store}>
-        <App />
+        <GameControls />
+        <PlayerActions />
+        <AssetsDataGrid />
       </Provider>,
     )
     // Check initial value using label association
@@ -32,7 +36,7 @@ describe(App, () => {
 
     render(
       <Provider store={store}>
-        <App />
+        <GameControls />
       </Provider>,
     )
     // Check initial turn value
@@ -55,7 +59,7 @@ describe(App, () => {
 
     render(
       <Provider store={store}>
-        <App />
+        <GameControls />
       </Provider>,
     )
 

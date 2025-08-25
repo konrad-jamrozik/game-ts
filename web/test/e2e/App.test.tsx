@@ -11,7 +11,7 @@ import { reset } from '../../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 
-describe('App', () => {
+describe(App, () => {
   beforeEach(() => {
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
