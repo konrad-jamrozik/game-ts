@@ -3,7 +3,7 @@ import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } fro
 import type { GameState, MissionRewards, MissionSite, Agent } from '../model/model'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV, type AgentsView } from '../model/agents/AgentsView'
-import { conductMissionSiteBattle, type AgentCombatStats, type CombatReport } from './combatSystem'
+import { evaluateMissionSiteBattle as evaluateBattle, type AgentCombatStats, type CombatReport } from './evaluateBattle'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
@@ -18,13 +18,10 @@ export function evaluateDeployedMissionSite(state: GameState, missionSite: Missi
   const deployedAgentViews = agsV(state.agents).withIds(missionSite.agentIds)
   const deployedAgents = deployedAgentViews.map((agentView) => agentView.agent())
 
-  // Prepare combat stats
   const agentStats = prepareAgentCombatStats(deployedAgentViews)
 
-  // Conduct mission site battle
-  const combatReport = conductMissionSiteBattle(deployedAgents, agentStats, missionSite.enemies)
+  const combatReport = evaluateBattle(deployedAgents, agentStats, missionSite.enemies)
 
-  // Update agents based on combat results
   updateAgentsAfterCombat(state, deployedAgents, agentStats, combatReport)
 
   // Determine mission site outcome

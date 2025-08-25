@@ -7,7 +7,7 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
 } from '../model/ruleset/constants'
-import { rollContest } from './Roll'
+import { rollContest } from './rolls'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import type { Agent, Enemy } from '../model/model'
 import { agV } from '../model/agents/AgentView'
@@ -32,7 +32,7 @@ export type CombatReport = {
   agentSkillUpdates: Record<string, number>
 }
 
-export function conductMissionSiteBattle(
+export function evaluateMissionSiteBattle(
   agents: Agent[],
   agentStats: AgentCombatStats[],
   enemies: Enemy[],

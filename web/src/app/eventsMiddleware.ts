@@ -95,7 +95,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
         // KJA FUTURE currently cannot display agents results for mission sites as by the time
         // deployed mission site update is done, this information is not available in the state anywhere.
         // Instead, when "advanceTurn" is called, it should produce "turnAdvancementReport" that will contain all
-        // interesting information. advanceTurnImpl will write it out to dedicated GameState property.
+        // interesting information. evaluateTurn will write it out to dedicated GameState property.
         // Then it will be rendered by the turn advancement log component (to be implemented).
 
         // Compute agent outcome counts for this mission site

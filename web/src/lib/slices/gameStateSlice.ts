@@ -10,7 +10,7 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../model/ruleset/constants'
 import initialState, { makeInitialState } from '../model/ruleset/initialState'
-import advanceTurnImpl from '../turn_advancement/advanceTurnImpl'
+import evaluateTurn from '../turn_advancement/evaluateTurn'
 import asPlayerAction from './asPlayerAction'
 import type { Agent, MissionSite, MissionSiteId } from '../model/model'
 
@@ -22,7 +22,7 @@ const gameStateSlice = createSlice({
   name: 'gameState',
   initialState,
   reducers: {
-    advanceTurn: (state) => advanceTurnImpl(state),
+    advanceTurn: (state) => evaluateTurn(state),
     hireAgent: asPlayerAction((state) => {
       const nextAgentNumericId = state.agents.length
       const newAgentId = `agent-${nextAgentNumericId.toString().padStart(3, '0')}`

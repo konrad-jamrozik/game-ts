@@ -1,6 +1,6 @@
 import { WEAPON_DAMAGE_RANGE_FACTOR } from '../model/ruleset/constants'
 import type { Weapon } from '../model/model'
-import { rollRange } from '../turn_advancement/Roll'
+import { rollRange } from '../turn_advancement/rolls'
 
 /**
  * Creates a weapon with damage range calculated as +/- 50% of base damage

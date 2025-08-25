@@ -188,7 +188,7 @@ takes:
 
 Specifically, `AssetsDataGrid` appears to be slow, while `GameControls` and `PlayerActions` or `EventLog` is fast.
 
-`collect` is explained in Vitest docs [here](https://vitest.dev/guide/profiling-test-performance.html):
+`collect` is explained in Vitest docs [on performance profiling](https://vitest.dev/guide/profiling-test-performance.html):
 
 > Collect: Time spent for collecting all tests in the test files. This includes the time it took to import all file dependencies.
 

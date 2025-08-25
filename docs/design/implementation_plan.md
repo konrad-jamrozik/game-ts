@@ -46,23 +46,6 @@ recommended models, and clarification questions.
 5. Update events middleware to reference stored results
 6. Ensure results persist across sessions
 
-## Naming Refactoring
-
-### Turn/Mission Evaluation Terminology
-
-**Task**: Replace existing terminology with "turn evaluation" and "mission site evaluation"
-**Confidence**: 85% - Straightforward refactoring with some risk
-**Recommended Model**: Sonnet
-**Estimated Time**: 15-20 minutes (AI), 1-2 hours (human)
-**Plan**:
-1. Search for all "turn" and "mission" evaluation related terms in codebase
-2. Create comprehensive mapping:
-   - `advanceTurnImpl` → `evalTurn` (function and file)
-   - `evaluateDeployedMissionSite` → `evalMission` (function and file)
-3. Rename both functions and files to maintain convention
-4. Update all imports, references, and documentation
-5. Ensure file names match single public function names
-
 ## Features
 
 ### Lead Expiration Logic
@@ -267,7 +250,7 @@ recommended models, and clarification questions.
 
 ### Phase 2: Core Refactoring (Medium Priority)  
 
-1. **Naming refactoring** (15-20 min) - evalMission
+1. ✅ DONE **Naming refactoring** (15-20 min) - update -> evaluate
 2. **State hierarchy** (45-60 min) - Session/Situation/Assets structure
 3. **MissionSitesView** (15-20 min) - Continue view pattern
 

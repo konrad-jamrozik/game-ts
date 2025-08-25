@@ -6,14 +6,14 @@ import {
   updateInTransitAgents,
   updateContractingAgents,
   updateEspionageAgents,
-} from './advanceTurnAgentUpdates'
+} from './updateAgents'
 import type { GameState, MissionRewards, Faction, FactionRewards } from '../model/model'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { assertDefined } from '../utils/assert'
 
-export default function advanceTurnImpl(state: GameState): void {
+export default function evaluateTurn(state: GameState): void {
   validateGameStateInvariants(state)
 
   state.turn += 1

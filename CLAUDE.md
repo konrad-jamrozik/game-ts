@@ -47,8 +47,8 @@ and complete missions against various factions.
 **Agent Lifecycle**: Agents progress through states (Available → InTransit → OnAssignment/OnMission → Recovering → Available)
 and can be assigned to Contracting (earn money), Espionage (gather intel), or missions.
 
-**Turn Advancement**: Complex multi-step process in `advanceTurnImpl.ts` that updates agent states, processes assignments,
-resolves mission combat, applies rewards, and updates faction threat levels.
+**Turn Advancement**: Complex multi-step process in `evaluateTurn.ts` that updates agent states, processes assignments,
+evaluates mission site combat, applies rewards, and updates faction threat levels.
 
 ### State Management
 
