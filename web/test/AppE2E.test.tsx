@@ -104,10 +104,7 @@ describe('AppE2E', () => {
       // Find all grid rows
       const gridRows = screen.getAllByRole('row')
       // Find the row that contains this agent ID
-      const targetRow = gridRows.find((row) => {
-        const { textContent } = row
-        return textContent != null && textContent.includes(agentId)
-      })
+      const targetRow = gridRows.find((row) => row.textContent?.includes(agentId) ?? false)
       if (targetRow) {
         // Use within() to scope the checkbox query to this specific row
         const checkbox = within(targetRow).getByRole('checkbox')
@@ -131,11 +128,12 @@ describe('AppE2E', () => {
 
     // Keep hiring agents until balance becomes negative
     // Starting debug balance is 100, agent cost is 50, so need at least 3 hires
-    for (let hireCount = 0; hireCount < 5; hireCount += 1) {
-      // Limit iterations to prevent infinite loop
-      const hireButton = screen.getByRole('button', { name: /hire agent/iu })
-      await userEvent.click(hireButton)
-    }
+    await Promise.all(
+      Array.from({ length: 5 }).map(async () => {
+        const hireButton = screen.getByRole('button', { name: /hire agent/iu })
+        await userEvent.click(hireButton)
+      }),
+    )
 
     // Verify balance sheet shows negative value
     const negativeBalance = screen.getByLabelText(/new.*balance/iu)
