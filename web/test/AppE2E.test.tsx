@@ -1,6 +1,6 @@
 /* eslint-disable max-statements */
 /* eslint-disable vitest/max-expects */
-import { render, screen } from '@testing-library/react'
+import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test, beforeEach } from 'vitest'
@@ -95,17 +95,25 @@ describe('AppE2E', () => {
 
     await userEvent.click(mission001Card)
 
-    // Select agents using DataGrid checkboxes - find checkboxes in agent rows
-    const checkboxes = screen.getAllByRole('checkbox')
-    // We need to find the checkboxes for agents 000, 001, 002
-    // Look for checkboxes that are in rows containing these agent IDs
-    const agentCheckboxes = checkboxes.filter((checkbox) => {
-      // Get the parent row and check if it contains agent-000, agent-001, or agent-002
-      const rowElement = checkbox.closest('[role="row"]')
-      if (!rowElement) return false
-      const rowText = rowElement.textContent ?? ''
-      return rowText.includes('agent-000') || rowText.includes('agent-001') || rowText.includes('agent-002')
-    })
+    // Select agents using DataGrid checkboxes - find checkboxes for specific agents
+    // Use testing-library's within() to scope queries to specific rows
+    const agentCheckboxes: HTMLElement[] = []
+    const agentIds = ['agent-000', 'agent-001', 'agent-002']
+
+    for (const agentId of agentIds) {
+      // Find all grid rows
+      const gridRows = screen.getAllByRole('row')
+      // Find the row that contains this agent ID
+      const targetRow = gridRows.find((row) => {
+        const { textContent } = row
+        return textContent != null && textContent.includes(agentId)
+      })
+      if (targetRow) {
+        // Use within() to scope the checkbox query to this specific row
+        const checkbox = within(targetRow).getByRole('checkbox')
+        agentCheckboxes.push(checkbox)
+      }
+    }
 
     // Click the first 3 agent checkboxes we found
     await Promise.all(agentCheckboxes.slice(0, 3).map(async (checkbox) => userEvent.click(checkbox)))
@@ -123,18 +131,10 @@ describe('AppE2E', () => {
 
     // Keep hiring agents until balance becomes negative
     // Starting debug balance is 100, agent cost is 50, so need at least 3 hires
-    for (let i = 0; i < 5; i++) {
+    for (let hireCount = 0; hireCount < 5; hireCount += 1) {
       // Limit iterations to prevent infinite loop
-      await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
-
-      // Check balance after hiring
-      const balanceElement = screen.getByLabelText(/new.*balance/iu)
-      const balanceText = balanceElement.textContent ?? '0'
-
-      // If balance shows negative (contains '-'), we're done
-      if (balanceText.includes('-')) {
-        balanceIsNegative = true
-      }
+      const hireButton = screen.getByRole('button', { name: /hire agent/iu })
+      await userEvent.click(hireButton)
     }
 
     // Verify balance sheet shows negative value
