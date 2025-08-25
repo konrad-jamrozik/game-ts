@@ -100,7 +100,7 @@ Each agent starts with `AGENT_INITIAL_EXHAUSTION`.
 Agent exhaustion has following effects:
 
 - Reduces agent effective skill during rolls in deployed mission site evaluation. See [about_deployed_mission_site.md](about_deployed_mission_site.md).
-- Reduces agent effective skill during assignments: KJA TODO: document how
+- Reduces agent effective skill during assignments: See [Contracting and espionage assignments](#contracting-and-espionage-assignments).
 
 Agent exhaustion changes as follows:
 

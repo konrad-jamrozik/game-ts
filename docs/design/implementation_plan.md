@@ -19,18 +19,6 @@ recommended models, and clarification questions.
 
 ## Outstanding KJA TODOs
 
-### 1. Document agent skill reduction during assignments
-
-**Location**: `docs/design/about_agents.md:103`
-**Task**: Document how wounded agents have reduced effective skill during assignments
-**Confidence**: 95% - Documentation task, need to trace code
-**Recommended Model**: Sonnet
-**Estimated Time**: 5-10 minutes (AI), 30 minutes (human)
-**Plan**:
-1. Search for assignment-related skill calculations in the codebase
-2. Trace how wounded status affects skill calculations
-3. Update documentation with clear explanation
-
 ### 2. Display agent results for mission sites
 
 **Location**: `web/src/app/eventsMiddleware.ts:95`
@@ -245,7 +233,7 @@ recommended models, and clarification questions.
 ### Phase 1: Foundation (High Priority)
 
 1. **LeadsView** (20-30 min) - Clean domain model pattern
-2. **Document agent skill reduction** (5-10 min) - Quick documentation fix
+2. ✅ DONE **Document agent skill reduction** (5-10 min) - Quick documentation fix
 3. ✅ DONE **Testing fixtures** (30-45 min) - Improves all future testing
 
 ### Phase 2: Core Refactoring (Medium Priority)  
