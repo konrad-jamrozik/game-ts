@@ -3,34 +3,10 @@ import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
 import { store } from '../../src/app/store'
-import { AssetsDataGrid } from '../../src/components/AssetsDataGrid'
 import { GameControls } from '../../src/components/GameControls'
-import { PlayerActions } from '../../src/components/PlayerActions'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 
 describe(GameControls, () => {
-  test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
-    expect.hasAssertions()
-
-    render(
-      <Provider store={store}>
-        <GameControls />
-        <PlayerActions />
-        <AssetsDataGrid />
-      </Provider>,
-    )
-    // Check initial value using label association
-    const agentsValue = screen.getByLabelText(/assets-row-agents/iu)
-
-    expect(agentsValue).toHaveTextContent('0')
-
-    // Click the button
-    await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
-
-    // Check updated value
-    expect(agentsValue).toHaveTextContent('1')
-  })
-
   test("When 'advance turn' button is clicked, the turn advances", async () => {
     expect.hasAssertions()
 

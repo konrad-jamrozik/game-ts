@@ -2,6 +2,7 @@
 
 KJA backlog:
 
+- Execute the `implementation_plan.md`
 - Address all outstanding TODOs: search for `KJA` in the codebase
 
 ## Naming
