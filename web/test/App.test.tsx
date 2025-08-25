@@ -5,33 +5,29 @@ import { describe, expect, test } from 'vitest'
 import App from '../src/app/App'
 import { store } from '../src/app/store'
 import { setResetControlsExpanded } from '../src/lib/slices/settingsSlice'
-import { includeSlow } from './testUtils'
 
 describe(App, () => {
-  test.runIf(includeSlow)(
-    "When 'hire agents' button is pressed, agents counter is incremented from 0 to 1",
-    async () => {
-      expect.hasAssertions()
+  test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
+    expect.hasAssertions()
 
-      render(
-        <Provider store={store}>
-          <App />
-        </Provider>,
-      )
-      // Check initial value using label association
-      const agentsValue = screen.getByLabelText(/assets-row-agents/iu)
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    )
+    // Check initial value using label association
+    const agentsValue = screen.getByLabelText(/assets-row-agents/iu)
 
-      expect(agentsValue).toHaveTextContent('0')
+    expect(agentsValue).toHaveTextContent('0')
 
-      // Click the button
-      await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
+    // Click the button
+    await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
 
-      // Check updated value
-      expect(agentsValue).toHaveTextContent('1')
-    },
-  )
+    // Check updated value
+    expect(agentsValue).toHaveTextContent('1')
+  })
 
-  test.runIf(includeSlow)("When 'advance turn' button is clicked, the turn advances", async () => {
+  test("When 'advance turn' button is clicked, the turn advances", async () => {
     expect.hasAssertions()
 
     render(
@@ -51,35 +47,32 @@ describe(App, () => {
     expect(turnValue).toHaveTextContent('2')
   })
 
-  test.runIf(includeSlow)(
-    "Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset",
-    async () => {
-      expect.hasAssertions()
+  test("Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset", async () => {
+    expect.hasAssertions()
 
-      // Set the reset controls to be expanded in the store
-      store.dispatch(setResetControlsExpanded(true))
+    // Set the reset controls to be expanded in the store
+    store.dispatch(setResetControlsExpanded(true))
 
-      render(
-        <Provider store={store}>
-          <App />
-        </Provider>,
-      )
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>,
+    )
 
-      // First, click "Advance turn" to ensure the game state is "in progress"
-      await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+    // First, click "Advance turn" to ensure the game state is "in progress"
+    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
-      // Verify the button is accessible when expanded=true
-      const resetButton = screen.getByRole('button', { name: /reset game/iu })
+    // Verify the button is accessible when expanded=true
+    const resetButton = screen.getByRole('button', { name: /reset game/iu })
 
-      expect(resetButton).toBeInTheDocument()
+    expect(resetButton).toBeInTheDocument()
 
-      // Click the 'Reset game' button
-      await userEvent.click(resetButton)
+    // Click the 'Reset game' button
+    await userEvent.click(resetButton)
 
-      // Verify the game state was reset by checking the turn is back to 1
-      const turnValue = screen.getByLabelText(/turn/iu)
+    // Verify the game state was reset by checking the turn is back to 1
+    const turnValue = screen.getByLabelText(/turn/iu)
 
-      expect(turnValue).toHaveTextContent('1')
-    },
-  )
+    expect(turnValue).toHaveTextContent('1')
+  })
 })

@@ -125,7 +125,7 @@ Then add appropriate `test` scripts to your `package.json`.
 
 Add [`web/vitest.config.ts`](/web/vitest.config.ts).
 
-Create `test/setupTests.ts`:
+Create `test/utils/setupTests.ts`:
 
 ```ts
 import '@testing-library/jest-dom'

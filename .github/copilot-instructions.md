@@ -77,7 +77,7 @@ This project uses following technologies:
 - `web/tsconfig.*.json`: TypeScript config.
 - `web/eslint.config.js`: ESLint linter config.
 - `web/prettier.config.js`: "Prettier" formatter config.
-- `web/vitest.config.ts`: Vitest config for unit tests. Test setup in `src/setupTests.ts`.
+- `web/vitest.config.ts`: Vitest config for unit tests. Test setup in `src/utils/setupTests.ts`.
 - `docs/`:
 - `.github/workflows/web_gh_pages_CICD.yml`: Main CI/CD workflow. Runs lint, format check, tests, build, and deploy.
 

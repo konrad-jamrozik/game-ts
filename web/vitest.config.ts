@@ -1,5 +1,6 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vitest/config'
+import { includeSlow } from './test/utils/testUtils'
 
 // https://vitejs.dev/config/
 /** @type {import('vite').UserConfig} */
@@ -21,7 +22,7 @@ export default defineConfig({
           exclude: ['test/**/*.test.tsx'],
           environment: 'node',
           globals: true,
-          setupFiles: './test/setupTests.ts',
+          setupFiles: './test/utils/setupTests.ts',
           testTimeout: 30_000,
         },
       },
@@ -30,9 +31,10 @@ export default defineConfig({
         test: {
           name: 'react',
           include: ['test/**/*.test.tsx'],
+          exclude: includeSlow ? [] : ['test/**/App.test.tsx'],
           environment: 'jsdom',
           globals: true,
-          setupFiles: './test/setupTests.ts',
+          setupFiles: './test/utils/setupTests.ts',
           testTimeout: 30_000,
           server: {
             deps: {
