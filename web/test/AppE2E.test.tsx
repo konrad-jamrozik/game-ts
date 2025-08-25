@@ -9,7 +9,6 @@ import App from '../src/app/App'
 import { store } from '../src/app/store'
 import { reset } from '../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../src/lib/slices/eventsSlice'
-import { setResetControlsExpanded } from '../src/lib/slices/settingsSlice'
 import { assertDefined } from '../src/lib/utils/assert'
 
 describe('AppE2E', () => {
@@ -37,10 +36,12 @@ describe('AppE2E', () => {
 
     // Should have a lead "Criminal organizations"
     const criminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+
     expect(criminalOrgsLeads.length).toBeGreaterThan(0)
 
     // Should have mission with ID "000" (in deployed state) - look for exact mission ID
-    const missionElements = screen.getAllByText(/000/)
+    const missionElements = screen.getAllByText(/000/iu)
+
     expect(missionElements.length).toBeGreaterThan(0)
 
     // Should have agents with IDs "000", "001", "002" in Available state
@@ -50,6 +51,7 @@ describe('AppE2E', () => {
 
     // Should start in turn 1
     const initialTurnValue = screen.getByLabelText(/turn/iu)
+
     expect(initialTurnValue).toHaveTextContent('1')
 
     // === WHEN: Click "Advance turn" button ===
@@ -59,6 +61,7 @@ describe('AppE2E', () => {
     // === THEN: Mission evaluates and turn advances ===
 
     const turnValue = screen.getByLabelText(/turn/iu)
+
     expect(turnValue).toHaveTextContent('2')
 
     // Mission with ID "000" should now appear in "Archived missions"
@@ -69,6 +72,8 @@ describe('AppE2E', () => {
 
     // Find and click the Criminal organizations lead (use the first one, which should be the title)
     const clickableCriminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+
+    assertDefined(clickableCriminalOrgsLeads[0])
     await userEvent.click(clickableCriminalOrgsLeads[0])
 
     // Click "Investigate lead" button
@@ -82,7 +87,7 @@ describe('AppE2E', () => {
 
     // Select mission - find mission cards and click on one containing "001"
     const missionCardButtons = screen.getAllByRole('button')
-    const mission001Card = missionCardButtons.find((button) => button.textContent?.includes('001'))
+    const mission001Card = missionCardButtons.find((button) => button.textContent?.includes('001') ?? false)
 
     expect(mission001Card).toBeDefined()
 
@@ -128,7 +133,7 @@ describe('AppE2E', () => {
 
       // If balance shows negative (contains '-'), we're done
       if (balanceText.includes('-')) {
-        break
+        balanceIsNegative = true
       }
     }
 
@@ -157,7 +162,7 @@ describe('AppE2E', () => {
 
     // Wait for the reset controls to be visible and find the reset game button
     const buttons = await screen.findAllByRole('button')
-    const resetGameButton = buttons.find((button) => button.textContent?.toLowerCase().includes('reset game'))
+    const resetGameButton = buttons.find((button) => button.textContent?.toLowerCase().includes('reset game') ?? false)
 
     expect(resetGameButton).toBeDefined()
 
@@ -172,14 +177,15 @@ describe('AppE2E', () => {
     expect(resetTurnValue).toHaveTextContent('1')
 
     // Should have no missions or archived missions
-    expect(screen.queryByText(/archived missions \(0\)/iu)).toBeInTheDocument()
+    expect(screen.getByText(/archived missions \(0\)/iu)).toBeInTheDocument()
 
     // Should have only "Criminal organizations" lead
     const finalCriminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+
     expect(finalCriminalOrgsLeads.length).toBeGreaterThan(0)
 
     // Should have no archived leads
-    expect(screen.queryByText(/archived leads \(0\)/iu)).toBeInTheDocument()
+    expect(screen.getByText(/archived leads \(0\)/iu)).toBeInTheDocument()
 
     // Should have no agents (reset to initial state, not debug state)
     expect(screen.queryByText(/agent-000/iu)).not.toBeInTheDocument()
