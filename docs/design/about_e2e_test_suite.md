@@ -4,6 +4,8 @@ This file specifies the e2e test suite for the project.
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
+For other test suites, see [About test suites](./about_test_suites.md).
+
 ## E2E Tests
 
 ## App.test.tsx

@@ -32,11 +32,7 @@ export type CombatReport = {
   agentSkillUpdates: Record<string, number>
 }
 
-export function evaluateMissionSiteBattle(
-  agents: Agent[],
-  agentStats: AgentCombatStats[],
-  enemies: Enemy[],
-): CombatReport {
+export function evaluateBattle(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): CombatReport {
   let roundIdx = 1
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}

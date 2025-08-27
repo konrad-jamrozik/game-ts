@@ -3,7 +3,7 @@ import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } fro
 import type { GameState, MissionRewards, MissionSite, Agent } from '../model/model'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV, type AgentsView } from '../model/agents/AgentsView'
-import { evaluateMissionSiteBattle as evaluateBattle, type AgentCombatStats, type CombatReport } from './evaluateBattle'
+import { evaluateBattle, type AgentCombatStats, type CombatReport } from './evaluateBattle'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
