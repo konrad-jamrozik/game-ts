@@ -5,8 +5,8 @@ import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src
 import { createWeapon } from '../../src/lib/utils/weaponUtils'
 import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
-describe('deployedMissionSiteEvaluation', () => {
-  test('evaluate a deployed mission site with successful combat', () => {
+describe(evaluateDeployedMissionSite, () => {
+  test('evaluateDeployedMissionSite -> success', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
@@ -75,7 +75,7 @@ describe('deployedMissionSiteEvaluation', () => {
     }
   })
 
-  test('handle agent termination correctly', () => {
+  test('evaluateDeployedMissionSite -> agent KIA', () => {
     // Create a test agent with low skill and hit points
     const testAgent: Agent = {
       id: 'agent-001',
@@ -145,7 +145,7 @@ describe('deployedMissionSiteEvaluation', () => {
     }
   })
 
-  test('handle mission failure with all agents terminated', () => {
+  test('evaluateDeployedMissionSite -> failure: all agents terminated', () => {
     // Create agents with low skill and HP to ensure they get terminated
     const agent1: Agent = {
       id: 'agent-001',
