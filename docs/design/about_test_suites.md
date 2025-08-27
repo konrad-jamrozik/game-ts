@@ -4,10 +4,53 @@ This file specifies the unit and component test suites for the project.
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
-🚧KJA update test suite:
-- remove most of the tests, leaving 1 or 2 per category just as a reference
-- come up with robust "evaluate turn" and "evaluate deployed mission site" tests
-- one to about three tests per player action
+# Test suite design
+
+The test suite is designed to have the tests as described below.
+
+As appropriate tests use `debugInitialState` to arrange the game state, possibly modifying it further,
+e.g. by ensuring appropriate items are selected.
+
+## E2E tests
+
+E2E tests are tests that test the entire application, meaning they render the entire `App.tsx` component.
+
+There is one E2E test covering some core logic like "advance turn". For details, refer to [About E2E test suite](./about_e2e_test_suite.md).
+
+There are no other E2E tests
+
+## Component tests
+
+Tests that render the component and test it by interacting with it.
+
+One happy path test per component, rendering the component:
+
+- Test for "Advance turn" in `GameControls.tsx`.
+- Test for "Hire agent" in `PlayerActions.tsx`.
+
+There are no other component tests.
+
+## Unit tests
+
+Tests that directly test the logic, without depending on react or simulating it.
+
+Tests that directly test the logic behind `GameControls.tsx`:
+- Multiple tests for `evaluateBattle.ts`
+- Multiple tests for `evaluateTurn.ts`
+- Multiple tests for `evaluateDeployedMissionSite.ts`
+
+Tests that directly test the logic behind `PlayerActions.tsx`:
+- Few tests for each player action - basically all "asPlayerAction" entries in `gameStateSlice.ts`
+  - These tests primarily test the logic behind clicking the button on the `PlayerActions.tsx` component.
+  - At least one test for each button happy path, and at least one test resulting in alert.
+  - These tests arrange appropriate selection of agents, leads, missions, etc.
+
+There are no other unit tests.
+
+# List of tests
+
+TODO: this list of tests needs an update once the plan above is implemented. This means appropriate
+obsolete tests should be removed.
 
 ## Component Tests
 
