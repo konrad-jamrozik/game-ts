@@ -1,6 +1,7 @@
 # About test suite
 
-This file s- [About test suite](#about-test-suite)
+This file specifies the unit and component test suites for the project.
+
 - [About test suite](#about-test-suite)
 - [Test suite design](#test-suite-design)
   - [E2E tests design](#e2e-tests-design)
@@ -33,7 +34,8 @@ e.g. by ensuring appropriate items are selected.
 
 E2E tests are tests that test the entire application, meaning they render the entire `App.tsx` component.
 
-There is one E2E test covering some core logic like "advance turn". For details, refer to [About E2E test suite](./about_e2e_test_suite.md).
+(🚧 needs review) There is one E2E test covering some core logic like "advance turn".
+For details, refer to [About E2E test suite](./about_e2e_test_suite.md).
 
 There are no other E2E tests.
 
@@ -47,11 +49,12 @@ One happy path test per component, rendering the component:
   - Tests for `Advance turn` button.
   - Tests for `Restart game` button.
 
-- Tests that test exercising  `PlayerActions.tsx`:
+- (🚧 stub) Tests for `PlayerActions.tsx`:
   - For each player action:
     - One happy path test
     - One test resulting in alert
   - Note: these tests arrange appropriate selection of agents, leads, missions, etc.
+  - Currently only `hire agent` happy path is implemented.
 
 - Tests for `EventLog.tsx`.
 
@@ -64,9 +67,9 @@ There are no other component tests.
 Tests that directly test the logic, without depending on react or simulating it.
 
 Tests that test directly the function powering the `GameControls.tsx` component:
-- Tests for `evaluateTurn.ts`
-- Tests for `evaluateDeployedMissionSite.ts`, which is invoked from `evaluateTurn.ts`
-- Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
+- (🚧 stub) Tests for `evaluateTurn.ts`
+- (🚧 needs review) Tests for `evaluateDeployedMissionSite.ts`, which is invoked from `evaluateTurn.ts`
+- (🚧 stub) Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
 
 Tests that verify correctness of select ruleset:
 
