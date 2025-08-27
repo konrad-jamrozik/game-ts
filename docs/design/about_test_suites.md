@@ -1,6 +1,24 @@
 # About test suite
 
-This file specifies the unit and component test suites for the project.
+This file s- [About test suite](#about-test-suite)
+- [About test suite](#about-test-suite)
+- [Test suite design](#test-suite-design)
+  - [E2E tests design](#e2e-tests-design)
+  - [Component tests design](#component-tests-design)
+  - [Unit tests design](#unit-tests-design)
+- [Test reference](#test-reference)
+  - [E2E tests](#e2e-tests)
+    - [`web/test/e2e/App.test.tsx`](#webteste2eapptesttsx)
+  - [Component tests](#component-tests)
+    - [`web/test/component/ErrorBoundary.test.tsx`](#webtestcomponenterrorboundarytesttsx)
+    - [`web/test/component/EventLog.test.tsx`](#webtestcomponenteventlogtesttsx)
+    - [`web/test/component/GameControls.test.tsx`](#webtestcomponentgamecontrolstesttsx)
+    - [`web/test/component/PlayerActions.test.tsx`](#webtestcomponentplayeractionstesttsx)
+  - [Unit tests](#unit-tests)
+    - [`web/test/unit/effectiveSkill.test.ts`](#webtestuniteffectiveskilltestts)
+    - [`web/test/unit/evaluateBattle.test.ts`](#webtestunitevaluatebattletestts)
+    - [`web/test/unit/evaluateDeployedMissionSite.test.ts`](#webtestunitevaluatedeployedmissionsitetestts)
+    - [`web/test/unit/evaluateTurn.test.ts`](#webtestunitevaluateturntestts)
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
