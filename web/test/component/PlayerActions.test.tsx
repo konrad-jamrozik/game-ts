@@ -6,7 +6,7 @@ import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 
 describe(PlayerActions, () => {
-  test("When 'hire agents' button is pressed, agents counter is incremented from 0 to 1", async () => {
+  test("When 'hire agent' button is pressed, agents counter is incremented from 0 to 1", async () => {
     expect.hasAssertions()
 
     render(

@@ -25,8 +25,11 @@ Tests that render the component and test it by interacting with it.
 
 One happy path test per component, rendering the component:
 
-- Test for "Advance turn" in `GameControls.tsx`.
-- Test for "Hire agent" in `PlayerActions.tsx`.
+- Test to show "Advance turn" in `GameControls.tsx` works.
+- Test to show "Restart game" in `GameControls.tsx` works.
+- Test to show "Hire agent" in `PlayerActions.tsx` works.
+- Test to show an event appears in the `EventLog.tsx`.
+- Tess to show that `ErrorBoundary` works.
 
 There are no other component tests.
 
@@ -45,6 +48,13 @@ Tests that directly test the logic behind `PlayerActions.tsx`:
   - At least one test for each button happy path, and at least one test resulting in alert.
   - These tests arrange appropriate selection of agents, leads, missions, etc.
 
+Tests that verify correctness of the following examples in documentation:
+
+- Tests for effective skill examples documented in `Effective skill` section of [about_agents.md](about_agents.md).
+- Tests for hit points recovery examples documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md).
+- Tests for contest rolls examples documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Tests for weapon damage rolls examples documented in `Range roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
+
 There are no other unit tests.
 
 # List of tests
@@ -56,7 +66,7 @@ obsolete tests should be removed.
 
 ### GameControls.test.tsx
 
-- "When 'hire agents' button is pressed, agents counter is incremented from 0 to 1"
+- "When 'hire agent' button is pressed, agents counter is incremented from 0 to 1"
 - "When 'advance turn' button is clicked, the turn advances"
 - "Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset"
 
