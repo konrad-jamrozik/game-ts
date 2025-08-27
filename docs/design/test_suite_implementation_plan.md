@@ -101,45 +101,45 @@ Tests for weapon damage rolls examples documented in `Range roll` section of [ab
 
 #### `web/test/unit/playerActions.test.ts`
 
-Tests for each `asPlayerAction` entry from `gameStateSlice.ts`:
+Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions total):
 
 **hireAgent tests:**
 - `should create new agent with correct initial values`
 - `should assign sequential agent IDs`
 - `should increase currentTurnTotalHireCost by AGENT_HIRE_COST`
-- `should display alert when money insufficient for hiring` (if applicable)
+- `should not allow hiring when money insufficient` (if applicable)
 
 **sackAgents tests:**
 - `should set agent state to Terminated and assignment to Sacked`
 - `should handle multiple agents being sacked`
-- `should display alert when no agents selected` (if applicable)
+- `should handle empty agent selection` (if applicable)
 
 **assignAgentsToContracting tests:**
 - `should set agent assignment to Contracting and state to InTransit`
 - `should handle multiple agent assignment`
-- `should display alert when no agents selected` (if applicable)
+- `should handle empty agent selection` (if applicable)
 
 **assignAgentsToEspionage tests:**
 - `should set agent assignment to Espionage and state to InTransit`
 - `should handle multiple agent assignment`
-- `should display alert when no agents selected` (if applicable)
+- `should handle empty agent selection` (if applicable)
 
 **recallAgents tests:**
-- `should recall agents from their assignments to Available state`
+- `should set agent assignment to Standby and state to InTransit`
 - `should handle multiple agent recall`
-- `should display alert when no agents selected` (if applicable)
+- `should handle empty agent selection` (if applicable)
 
 **investigateLead tests:**
 - `should increment lead investigation count`
 - `should deduct intel cost from state`
 - `should create mission sites for dependent missions`
-- `should display alert when insufficient intel` (if applicable)
+- `should not allow investigation when insufficient intel` (if applicable)
 
 **deployAgentsToMission tests:**
 - `should assign agents to mission site and set their state to OnMission`
 - `should set mission site state to Deployed`
 - `should update mission site agent IDs list`
-- `should display alert when no agents or mission selected` (if applicable)
+- `should handle invalid mission site or empty agent selection` (if applicable)
 
 ## Implementation Notes
 
@@ -192,7 +192,7 @@ Tests for each `asPlayerAction` entry from `gameStateSlice.ts`:
 
 - **E2E Tests:** 1
 - **Component Tests:** 5 (already exist)
-- **Unit Tests:** ~45 (15 existing + ~6 battle + ~7 turn + ~14 player actions + ~9 documentation examples)
+- **Unit Tests:** ~50 (15 existing + ~6 battle + ~7 turn + ~28 player actions + ~9 documentation examples)
 
 This comprehensive approach ensures complete coverage of the core game logic while verifying that
 documentation examples remain accurate and functional.

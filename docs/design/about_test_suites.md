@@ -66,9 +66,12 @@ obsolete tests should be removed.
 
 ### GameControls.test.tsx
 
-- "When 'hire agent' button is pressed, agents counter is incremented from 0 to 1"
 - "When 'advance turn' button is clicked, the turn advances"
 - "Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset"
+
+### PlayerActions.test.tsx
+
+- "When 'hire agent' button is pressed, agents counter is incremented from 0 to 1"
 
 ### ErrorBoundary.test.tsx
 
