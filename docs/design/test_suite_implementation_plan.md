@@ -56,46 +56,46 @@ The goal is to implement a focused test suite that contains only the tests speci
 #### `web/test/unit/evaluateBattle.test.ts`
 
 Multiple tests for battle evaluation logic:
-- `should handle agent vs enemy combat with successful agent attacks`
-- `should handle agent termination when hit points reach zero`
-- `should handle enemy elimination and loot distribution`
-- `should handle multiple agents vs multiple enemies combat`
-- `should apply exhaustion after combat completion`
-- `should handle combat with officers present`
+- `handle agent vs enemy combat with successful agent attacks`
+- `handle agent termination when hit points reach zero`
+- `handle enemy elimination and loot distribution`
+- `handle multiple agents vs multiple enemies combat`
+- `apply exhaustion after combat completion`
+- `handle combat with officers present`
 
 #### `web/test/unit/evaluateTurn.test.ts`
 
 Multiple tests for turn advancement logic:
-- `should advance turn counter and reset action counter`
-- `should process all deployed mission sites`
-- `should handle mission site expiration`
-- `should process agent recovery and exhaustion reduction`
-- `should calculate and deduct agent costs from money`
-- `should handle game over condition when money becomes negative`
-- `should update panic levels based on failed missions`
+- `advance turn counter and reset action counter`
+- `process all deployed mission sites`
+- `handle mission site expiration`
+- `process agent recovery and exhaustion reduction`
+- `calculate and deduct agent costs from money`
+- `handle game over condition when money becomes negative`
+- `update panic levels based on failed missions`
 
 ### Unit Tests for Documentation Examples
 
 #### `web/test/unit/agentRecovery.test.ts`
 
 Tests for hit points recovery examples documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md):
-- `should recover hit points correctly according to documentation examples`
-- `should handle recovery turns countdown properly`
-- `should reset recovery process when fully healed`
+- `recover hit points correctly according to documentation examples`
+- `handle recovery turns countdown properly`
+- `reset recovery process when fully healed`
 
 #### `web/test/unit/contestRolls.test.ts`
 
 Tests for contest rolls examples documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md):
-- `should execute contest rolls correctly according to documentation examples`
-- `should handle tie situations in contest rolls`
-- `should apply skill modifiers correctly in contests`
+- `execute contest rolls correctly according to documentation examples`
+- `handle tie situations in contest rolls`
+- `apply skill modifiers correctly in contests`
 
 #### `web/test/unit/weaponDamageRolls.test.ts`
 
 Tests for weapon damage rolls examples documented in `Range roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md):
-- `should calculate weapon damage ranges correctly according to documentation examples`
-- `should handle different weapon types and damage calculations`
-- `should apply damage modifiers correctly`
+- `calculate weapon damage ranges correctly according to documentation examples`
+- `handle different weapon types and damage calculations`
+- `apply damage modifiers correctly`
 
 ### Unit Tests for Player Actions
 
@@ -104,42 +104,32 @@ Tests for weapon damage rolls examples documented in `Range roll` section of [ab
 Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions total):
 
 **hireAgent tests:**
-- `should create new agent with correct initial values`
-- `should assign sequential agent IDs`
-- `should increase currentTurnTotalHireCost by AGENT_HIRE_COST`
-- `should not allow hiring when money insufficient` (if applicable)
+- `create new agent with correct initial values`
+- `alert on insufficient money`
 
 **sackAgents tests:**
-- `should set agent state to Terminated and assignment to Sacked`
-- `should handle multiple agents being sacked`
-- `should handle empty agent selection` (if applicable)
+- `sack agents`
+- `alert on selection of agents in invalid state`
 
 **assignAgentsToContracting tests:**
-- `should set agent assignment to Contracting and state to InTransit`
-- `should handle multiple agent assignment`
-- `should handle empty agent selection` (if applicable)
+- `assign agents to contracting`
+- `alert on selection of agents in invalid state`
 
 **assignAgentsToEspionage tests:**
-- `should set agent assignment to Espionage and state to InTransit`
-- `should handle multiple agent assignment`
-- `should handle empty agent selection` (if applicable)
+- `assign agents to espionage`
+- `alert on selection of agents in invalid state`
 
 **recallAgents tests:**
-- `should set agent assignment to Standby and state to InTransit`
-- `should handle multiple agent recall`
-- `should handle empty agent selection` (if applicable)
+- `recall agents`
+- `alert on selection of agents in invalid state`
 
 **investigateLead tests:**
-- `should increment lead investigation count`
-- `should deduct intel cost from state`
-- `should create mission sites for dependent missions`
-- `should not allow investigation when insufficient intel` (if applicable)
+- `investigate lead and create mission site for dependent mission`
+- `alert on insufficient intel`
 
 **deployAgentsToMission tests:**
-- `should assign agents to mission site and set their state to OnMission`
-- `should set mission site state to Deployed`
-- `should update mission site agent IDs list`
-- `should handle invalid mission site or empty agent selection` (if applicable)
+- `deploy agents to active missions site`
+- `alert on selection of agents in invalid state`
 
 ## Implementation Notes
 
@@ -154,7 +144,7 @@ Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions
 
 - Test files should match the module being tested (e.g., `evaluateBattle.test.ts` for `evaluateBattle.ts`)
 - Test descriptions should be clear and specify the expected behavior
-- Follow existing patterns: `should [expected behavior] when [condition]`
+- Follow existing patterns: `[expected behavior] when [condition]`
 
 ### Dependencies and Fixtures
 
@@ -187,12 +177,6 @@ Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions
 - `web/test/unit/agentRecovery.test.ts`
 - `web/test/unit/contestRolls.test.ts`
 - `web/test/unit/weaponDamageRolls.test.ts`
-
-## Expected Test Count After Implementation
-
-- **E2E Tests:** 1
-- **Component Tests:** 5 (already exist)
-- **Unit Tests:** ~50 (15 existing + ~6 battle + ~7 turn + ~28 player actions + ~9 documentation examples)
 
 This comprehensive approach ensures complete coverage of the core game logic while verifying that
 documentation examples remain accurate and functional.

@@ -25,11 +25,19 @@ Tests that render the component and test it by interacting with it.
 
 One happy path test per component, rendering the component:
 
-- Test to show "Advance turn" in `GameControls.tsx` works.
-- Test to show "Restart game" in `GameControls.tsx` works.
-- Test to show "Hire agent" in `PlayerActions.tsx` works.
+- Tests for `GameControls.tsx`:
+  - Test to show "Advance turn" works.
+  - Test to show "Restart game" works.
+
 - Test to show an event appears in the `EventLog.tsx`.
-- Tess to show that `ErrorBoundary` works.
+
+- Test to show that `ErrorBoundary` works.
+
+- Tests that directly test the logic behind `PlayerActions.tsx`:
+  - Few tests for each player action - basically all "asPlayerAction" entries in `gameStateSlice.ts`
+    - These tests primarily test the logic behind clicking the button on the `PlayerActions.tsx` component.
+    - At least one test for each button happy path, and at least one test resulting in alert.
+    - These tests arrange appropriate selection of agents, leads, missions, etc.
 
 There are no other component tests.
 
@@ -41,12 +49,6 @@ Tests that directly test the logic behind `GameControls.tsx`:
 - Multiple tests for `evaluateBattle.ts`
 - Multiple tests for `evaluateTurn.ts`
 - Multiple tests for `evaluateDeployedMissionSite.ts`
-
-Tests that directly test the logic behind `PlayerActions.tsx`:
-- Few tests for each player action - basically all "asPlayerAction" entries in `gameStateSlice.ts`
-  - These tests primarily test the logic behind clicking the button on the `PlayerActions.tsx` component.
-  - At least one test for each button happy path, and at least one test resulting in alert.
-  - These tests arrange appropriate selection of agents, leads, missions, etc.
 
 Tests that verify correctness of the following examples in documentation:
 
