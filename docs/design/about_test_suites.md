@@ -9,17 +9,17 @@ This file specifies the unit and component test suites for the project.
   - [Unit tests design](#unit-tests-design)
 - [Test reference](#test-reference)
   - [E2E tests](#e2e-tests)
-    - [`web/test/e2e/App.test.tsx`](#webteste2eapptesttsx)
+    - [`e2e/App.test.tsx`](#e2eapptesttsx)
   - [Component tests](#component-tests)
-    - [`web/test/component/ErrorBoundary.test.tsx`](#webtestcomponenterrorboundarytesttsx)
-    - [`web/test/component/EventLog.test.tsx`](#webtestcomponenteventlogtesttsx)
-    - [`web/test/component/GameControls.test.tsx`](#webtestcomponentgamecontrolstesttsx)
-    - [`web/test/component/PlayerActions.test.tsx`](#webtestcomponentplayeractionstesttsx)
+    - [`component/ErrorBoundary.test.tsx`](#componenterrorboundarytesttsx)
+    - [`component/EventLog.test.tsx`](#componenteventlogtesttsx)
+    - [`component/GameControls.test.tsx`](#componentgamecontrolstesttsx)
+    - [`component/PlayerActions.test.tsx`](#componentplayeractionstesttsx)
   - [Unit tests](#unit-tests)
-    - [`web/test/unit/effectiveSkill.test.ts`](#webtestuniteffectiveskilltestts)
-    - [`web/test/unit/evaluateBattle.test.ts`](#webtestunitevaluatebattletestts)
-    - [`web/test/unit/evaluateDeployedMissionSite.test.ts`](#webtestunitevaluatedeployedmissionsitetestts)
-    - [`web/test/unit/evaluateTurn.test.ts`](#webtestunitevaluateturntestts)
+    - [`unit/effectiveSkill.test.ts`](#uniteffectiveskilltestts)
+    - [`unit/evaluateBattle.test.ts`](#unitevaluatebattletestts)
+    - [`unit/evaluateDeployedMissionSite.test.ts`](#unitevaluatedeployedmissionsitetestts)
+    - [`unit/evaluateTurn.test.ts`](#unitevaluateturntestts)
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
@@ -95,29 +95,29 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ## E2E tests
 
-### `web/test/e2e/App.test.tsx`
+### `e2e/App.test.tsx`
 
 - Execute subset of core logic and verify the game does not crash
 
 ## Component tests
 
-### `web/test/component/ErrorBoundary.test.tsx`
+### `component/ErrorBoundary.test.tsx`
 
 - ErrorBoundary -> happy path (no error)
 - ErrorBoundary -> error
 
-### `web/test/component/EventLog.test.tsx`
+### `component/EventLog.test.tsx`
 
 - EventLog -> happy path: no events
 - EventLog -> happy path: events
 - EventLog -> happy path: new game started
 
-### `web/test/component/GameControls.test.tsx`
+### `component/GameControls.test.tsx`
 
 - click 'advance turn' button -> happy path
 - click 'restart game' button -> happy path
 
-### `web/test/component/PlayerActions.test.tsx`
+### `component/PlayerActions.test.tsx`
 
 - click 'hire agent' button -> happy path
 - _(TODO)_ click 'hire agent' button -> alert: insufficient money
@@ -136,7 +136,7 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ## Unit tests
 
-### `web/test/unit/effectiveSkill.test.ts`
+### `unit/effectiveSkill.test.ts`
 
 - effective skill: no exhaustion, no hit points lost
 - effective skill: exhaustion only
@@ -148,18 +148,18 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 - effective skill: zero hit points
 - effective skill: zero max hit points
 
-### `web/test/unit/evaluateBattle.test.ts`
+### `unit/evaluateBattle.test.ts`
 
 - _(TODO)_ evaluateBattle -> happy path: player won
 - _(TODO)_ evaluateBattle -> happy path: player lost
 
-### `web/test/unit/evaluateDeployedMissionSite.test.ts`
+### `unit/evaluateDeployedMissionSite.test.ts`
 
 - evaluateDeployedMissionSite -> success
 - evaluateDeployedMissionSite -> agent KIA
 - evaluateDeployedMissionSite -> failure: all agents terminated
 
-### `web/test/unit/evaluateTurn.test.ts`
+### `unit/evaluateTurn.test.ts`
 
 - _(TODO)_ evaluateTurn -> happy path
 - _(TODO)_ evaluateTurn -> happy path: player lost
