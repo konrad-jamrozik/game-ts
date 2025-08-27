@@ -6,7 +6,7 @@ import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 
 describe(PlayerActions, () => {
-  test("When 'hire agent' button is pressed, agents counter is incremented from 0 to 1", async () => {
+  test("click 'hire agent' button -> happy path", async () => {
     expect.hasAssertions()
 
     render(
@@ -28,4 +28,37 @@ describe(PlayerActions, () => {
 
     expect(updatedAgents).toHaveLength(1)
   })
+
+  // Additional hireAgent tests
+  test.todo("click 'hire agent' button -> alert: insufficient money")
+
+  // sackAgents tests
+  test.todo("click 'sack agents' button -> happy path")
+
+  test.todo("click 'sack agents' button -> alert: agents in invalid states")
+
+  // assignAgentsToContracting tests
+  test.todo("click 'assign agents to contracting' button -> happy path")
+
+  test.todo("click 'assign agents to contracting' button -> alert: agents in invalid states")
+
+  // assignAgentsToEspionage tests
+  test.todo("click 'assign agents to espionage' button -> happy path")
+
+  test.todo("click 'assign agents to espionage' button -> alert: agents in invalid states")
+
+  // recallAgents tests
+  test.todo("click 'recall agents' button -> happy path")
+
+  test.todo("click 'recall agents' button -> alert: agents in invalid states")
+
+  // investigateLead tests
+  test.todo("click 'investigate lead' button -> happy path")
+
+  test.todo("click 'investigate lead' button -> alert: insufficient intel")
+
+  // deployAgentsToMission tests
+  test.todo("click 'deploy agents to active mission site' button -> happy path")
+
+  test.todo("click 'deploy agents to active mission site' button -> alert: agents in invalid states")
 })
