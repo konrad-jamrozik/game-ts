@@ -17,7 +17,7 @@ E2E tests are tests that test the entire application, meaning they render the en
 
 There is one E2E test covering some core logic like "advance turn". For details, refer to [About E2E test suite](./about_e2e_test_suite.md).
 
-There are no other E2E tests
+There are no other E2E tests.
 
 ## Component tests design
 
@@ -35,9 +35,9 @@ One happy path test per component, rendering the component:
     - One test resulting in alert
   - Note: these tests arrange appropriate selection of agents, leads, missions, etc.
 
-- Tests for  `EventLog.tsx`.
+- Tests for `EventLog.tsx`.
 
-- Tests for  `ErrorBoundary`.
+- Tests for `ErrorBoundary.tsx`.
 
 There are no other component tests.
 
@@ -70,4 +70,75 @@ There are no other unit tests.
 
 # Test reference
 
-TODO: list here all test names, grouped by type (e2e, component, unit), and by file name.
+All tests are in `web/test/`. Below are all test names grouped by type (e2e, component, unit) and by file name:
+
+## E2E tests
+
+### `web/test/e2e/App.test.tsx`
+
+- Execute subset of core logic and verify the game does not crash
+
+## Component tests
+
+### `web/test/component/ErrorBoundary.test.tsx`
+
+- ErrorBoundary -> happy path (no error)
+- ErrorBoundary -> error
+
+### `web/test/component/EventLog.test.tsx`
+
+- EventLog -> happy path: no events
+- EventLog -> happy path: events
+- EventLog -> happy path: new game started
+
+### `web/test/component/GameControls.test.tsx`
+
+- click 'advance turn' button -> happy path
+- click 'restart game' button -> happy path
+
+### `web/test/component/PlayerActions.test.tsx`
+
+- click 'hire agent' button -> happy path
+- _(TODO)_ click 'hire agent' button -> alert: insufficient money
+- _(TODO)_ click 'sack agents' button -> happy path
+- _(TODO)_ click 'sack agents' button -> alert: agents in invalid states
+- _(TODO)_ click 'assign agents to contracting' button -> happy path
+- _(TODO)_ click 'assign agents to contracting' button -> alert: agents in invalid states
+- _(TODO)_ click 'assign agents to espionage' button -> happy path
+- _(TODO)_ click 'assign agents to espionage' button -> alert: agents in invalid states
+- _(TODO)_ click 'recall agents' button -> happy path
+- _(TODO)_ click 'recall agents' button -> alert: agents in invalid states
+- _(TODO)_ click 'investigate lead' button -> happy path
+- _(TODO)_ click 'investigate lead' button -> alert: insufficient intel
+- _(TODO)_ click 'deploy agents to active mission site' button -> happy path
+- _(TODO)_ click 'deploy agents to active mission site' button -> alert: agents in invalid states
+
+## Unit tests
+
+### `web/test/unit/effectiveSkill.test.ts`
+
+- effective skill: no exhaustion, no hit points lost
+- effective skill: exhaustion only
+- effective skill: hit points lost only
+- effective skill: exhaustion and hit points lost
+- effective skill: high exhaustion
+- effective skill: 100% exhaustion
+- effective skill: 105% exhaustion
+- effective skill: zero hit points
+- effective skill: zero max hit points
+
+### `web/test/unit/evaluateBattle.test.ts`
+
+- _(TODO)_ evaluateBattle -> happy path: player won
+- _(TODO)_ evaluateBattle -> happy path: player lost
+
+### `web/test/unit/evaluateDeployedMissionSite.test.ts`
+
+- evaluateDeployedMissionSite -> success
+- evaluateDeployedMissionSite -> agent KIA
+- evaluateDeployedMissionSite -> failure: all agents terminated
+
+### `web/test/unit/evaluateTurn.test.ts`
+
+- _(TODO)_ evaluateTurn -> happy path
+- _(TODO)_ evaluateTurn -> happy path: player lost
