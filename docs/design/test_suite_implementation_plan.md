@@ -6,8 +6,8 @@ This document outlines the implementation plan to align the current test suite w
 
 The goal is to implement a focused test suite that contains only the tests specified in the "Test suite design" section:
 - 1 E2E test (already exists)
-- 5 Component tests (already exist)
-- Unit tests for turn advancement logic, player actions, and documentation examples (partially exists)
+- Component tests for GameControls, EventLog, ErrorBoundary, and PlayerActions (some exist, PlayerActions needs expansion)
+- Unit tests for turn advancement logic and documentation examples (partially exists, some tests need removal)
 
 ## Current vs. Target State
 
@@ -24,7 +24,8 @@ The goal is to implement a focused test suite that contains only the tests speci
   - **Keep:** `When 'advance turn' button is clicked, the turn advances`
   - **Keep:** `Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset`
 - `web/test/component/PlayerActions.test.tsx`:
-  - **Keep:** `When 'hire agent' button is pressed, agents counter is incremented from 0 to 1`
+  - **UPDATE:** `When 'hire agent' button is pressed, agents counter is incremented from 0 to 1`
+    to `When 'Hire agent' button is clicked, hire agent`
 - `web/test/component/EventLog.test.tsx`:
   - **Keep all tests:** Event display functionality
 - `web/test/component/ErrorBoundary.test.tsx`:
@@ -36,18 +37,18 @@ The goal is to implement a focused test suite that contains only the tests speci
   - **Keep all 3 tests:** deployment evaluation, agent termination, mission failure
 - `web/test/unit/AgentView.test.ts`:
   - **Keep all tests:** effective skill calculation examples from documentation
-- `web/test/unit/eventsMiddleware.test.ts`:
-  - **Keep all tests:** events middleware functionality
-- `web/test/unit/settingsSlice.test.ts`:
-  - **Keep all tests:** settings slice functionality
-- `web/test/unit/fixtures.example.test.ts`:
-  - **Keep all tests:** fixture usage examples
-- `web/test/unit/initialState.test.ts`:
-  - **Keep all tests:** initial state validation
 
 ### ❌ Tests To Remove (Not in Design Specification)
 
-**No tests need to be removed** - all existing tests are now part of the design specification.
+The following tests are not mentioned in the "Test suite design" section of `about_test_suites.md` and should be removed:
+
+- `web/test/unit/eventsMiddleware.test.ts`: events middleware functionality tests
+- `web/test/unit/settingsSlice.test.ts`: settings slice functionality tests  
+- `web/test/unit/fixtures.example.test.ts`: fixture usage examples tests
+- `web/test/unit/initialState.test.ts`: initial state validation tests
+
+These tests appear in the outdated "List of tests" section but are excluded from the authoritative "Test suite design"
+specification, which explicitly states "There are no other unit tests."
 
 ## ➕ Tests To Add (Missing from Current Implementation)
 
@@ -56,80 +57,72 @@ The goal is to implement a focused test suite that contains only the tests speci
 #### `web/test/unit/evaluateBattle.test.ts`
 
 Multiple tests for battle evaluation logic:
-- `handle agent vs enemy combat with successful agent attacks`
-- `handle agent termination when hit points reach zero`
-- `handle enemy elimination and loot distribution`
-- `handle multiple agents vs multiple enemies combat`
-- `apply exhaustion after combat completion`
-- `handle combat with officers present`
+- `Given battle that player will win, when the battle is evaluated, result is correct`
+- `Given battle that player will lose, when the battle is evaluated, result is correct`
 
 #### `web/test/unit/evaluateTurn.test.ts`
 
 Multiple tests for turn advancement logic:
-- `advance turn counter and reset action counter`
-- `process all deployed mission sites`
-- `handle mission site expiration`
-- `process agent recovery and exhaustion reduction`
-- `calculate and deduct agent costs from money`
-- `handle game over condition when money becomes negative`
-- `update panic levels based on failed missions`
+- `when turn advances, result is correct`
+- `Given game state where player is about to lose, when turn advances, player loses the game`
 
 ### Unit Tests for Documentation Examples
 
 #### `web/test/unit/agentRecovery.test.ts`
 
 Tests for hit points recovery examples documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md):
-- `recover hit points correctly according to documentation examples`
-- `handle recovery turns countdown properly`
-- `reset recovery process when fully healed`
+- `documentation example: recover hit points correctly`
+- `documentation example: handle recovery turns countdown properly`
+- `documentation example: reset recovery process when fully healed`
 
 #### `web/test/unit/contestRolls.test.ts`
 
 Tests for contest rolls examples documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md):
-- `execute contest rolls correctly according to documentation examples`
-- `handle tie situations in contest rolls`
-- `apply skill modifiers correctly in contests`
+- `documentation example: execute contest rolls correctly`
+- `documentation example: handle tie situations in contest rolls`
+- `documentation example: apply skill modifiers correctly in contests`
 
 #### `web/test/unit/weaponDamageRolls.test.ts`
 
 Tests for weapon damage rolls examples documented in `Range roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md):
-- `calculate weapon damage ranges correctly according to documentation examples`
-- `handle different weapon types and damage calculations`
-- `apply damage modifiers correctly`
+- `documentation example: calculate weapon damage ranges correctly`
+- `documentation example: handle different weapon types and damage calculations`
+- `documentation example: apply damage modifiers correctly`
 
-### Unit Tests for Player Actions
+### Component Tests for Player Actions
 
-#### `web/test/unit/playerActions.test.ts`
+#### `web/test/component/PlayerActions.test.tsx` (Additional Tests)
 
-Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions total):
+Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions total).
+These tests primarily test the logic behind clicking the button on the `PlayerActions.tsx` component:
 
 **hireAgent tests:**
-- `create new agent with correct initial values`
-- `alert on insufficient money`
+- `given player has sufficient money, when 'hire agent' button is clicked, result is correct`
+- `given player has insufficient money, when 'hire agent' button is clicked, alert is shown`
 
 **sackAgents tests:**
-- `sack agents`
-- `alert on selection of agents in invalid state`
+- `given selection of agents in valid states, when 'sack agents' button is clicked, result is correct`
+- `given selection of agents in invalid states, when 'sack agents' button is clicked, alert is shown`
 
 **assignAgentsToContracting tests:**
-- `assign agents to contracting`
-- `alert on selection of agents in invalid state`
+- `given selection of agents in valid states, when 'assign agents to contracting' button is clicked, result is correct`
+- `given selection of agents in invalid states, when 'assign agents to contracting' button is clicked, alert is shown`
 
 **assignAgentsToEspionage tests:**
-- `assign agents to espionage`
-- `alert on selection of agents in invalid state`
+- `given selection of agents in valid states, when 'assign agents to espionage' button is clicked, result is correct`
+- `given selection of agents in invalid states, when 'assign agents to espionage' button is clicked, alert is shown`
 
 **recallAgents tests:**
-- `recall agents`
-- `alert on selection of agents in invalid state`
+- `given selection of agents in valid states, when 'recall agents' button is clicked, result is correct`
+- `given selection of agents in invalid states, when 'recall agents' button is clicked, alert is shown`
 
 **investigateLead tests:**
-- `investigate lead and create mission site for dependent mission`
-- `alert on insufficient intel`
+- `given sufficient intel and selection of lead in valid state, when 'investigate lead' button is clicked, result is correct`
+- `given insufficient intel and selection of lead in valid state, when 'investigate lead' button is clicked, alert is shown`
 
 **deployAgentsToMission tests:**
-- `deploy agents to active missions site`
-- `alert on selection of agents in invalid state`
+- `given selection of agents in valid states, when 'deploy agents to active mission site' button is clicked, result is correct`
+- `given selection of agents in invalid states, when 'deploy agents to active mission site' button is clicked, alert is shown`
 
 ## Implementation Notes
 
@@ -148,7 +141,7 @@ Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions
 
 ### Dependencies and Fixtures
 
-- Player action tests should use appropriate fixtures and state arrangements
+- Component tests (including player action tests) should use appropriate fixtures and state arrangements
 - Tests should be isolated and not depend on other tests
 - Use `beforeEach` to reset state when needed
 
@@ -163,20 +156,22 @@ Tests for each `asPlayerAction` entry from `gameStateSlice.ts` (7 player actions
 
 ### Files to Delete
 
-**None** - all existing tests are part of the design specification.
-
-### Files to Modify
-
-**None** - all existing tests should remain as-is.
+- `web/test/unit/eventsMiddleware.test.ts`
+- `web/test/unit/settingsSlice.test.ts`
+- `web/test/unit/fixtures.example.test.ts`
+- `web/test/unit/initialState.test.ts`
 
 ### Files to Create
 
 - `web/test/unit/evaluateBattle.test.ts`
 - `web/test/unit/evaluateTurn.test.ts`
-- `web/test/unit/playerActions.test.ts`
 - `web/test/unit/agentRecovery.test.ts`
 - `web/test/unit/contestRolls.test.ts`
 - `web/test/unit/weaponDamageRolls.test.ts`
+
+### Files to Modify
+
+- `web/test/component/PlayerActions.test.tsx` - Add additional player action tests with alert scenarios
 
 This comprehensive approach ensures complete coverage of the core game logic while verifying that
 documentation examples remain accurate and functional.
