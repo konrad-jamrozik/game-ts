@@ -7,7 +7,7 @@ import { GameControls } from '../../src/components/GameControls'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 
 describe(GameControls, () => {
-  test("When 'advance turn' button is clicked, the turn advances", async () => {
+  test("click 'advance turn' button -> happy path", async () => {
     expect.hasAssertions()
 
     render(
@@ -27,7 +27,7 @@ describe(GameControls, () => {
     expect(turnValue).toHaveTextContent('2')
   })
 
-  test("Given an in-progress game state, when the 'restart game' button is clicked, the game state is reset", async () => {
+  test("click 'restart game' button -> happy path", async () => {
     expect.hasAssertions()
 
     // Set the reset controls to be expanded in the store

@@ -17,10 +17,8 @@ function ErrorThrowingComponent({ shouldError }: { shouldError: boolean }): Reac
   return <div>No error</div>
 }
 
-const describeName = 'ErrorBoundary'
-
-describe(describeName, () => {
-  test('render children when no error occurs', () => {
+describe(ErrorBoundary, () => {
+  test('ErrorBoundary -> happy path (no error)', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={false} />
@@ -30,7 +28,7 @@ describe(describeName, () => {
     expect(screen.getByText('No error')).toBeInTheDocument()
   })
 
-  test('render error UI with Wipe IndexedDB button when error occurs', () => {
+  test('ErrorBoundary -> error', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={true} />
@@ -41,17 +39,6 @@ describe(describeName, () => {
     expect(
       screen.getByText('An unexpected error occurred. You can try wiping the stored data to recover.'),
     ).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: 'Wipe IndexedDB' })).toBeInTheDocument()
-  })
-
-  test('have clickable Wipe IndexedDB button', () => {
-    expect.hasAssertions()
-
-    render(
-      <ErrorBoundary>
-        <ErrorThrowingComponent shouldError={true} />
-      </ErrorBoundary>,
-    )
 
     const wipeButton = screen.getByRole('button', { name: 'Wipe IndexedDB' })
 

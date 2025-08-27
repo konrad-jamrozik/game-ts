@@ -21,7 +21,7 @@ describe(EventLog, () => {
     store.dispatch(clearEvents())
   })
 
-  test('displays "No events yet" when there are no events', () => {
+  test('EventLog -> happy path: no events', () => {
     expect.hasAssertions()
 
     renderEventLog()
@@ -30,7 +30,7 @@ describe(EventLog, () => {
     expect(screen.getByText('No events yet')).toBeInTheDocument()
   })
 
-  test('displays events when they exist in the state', async () => {
+  test('EventLog -> happy path: events', async () => {
     expect.hasAssertions()
 
     const { hireAgent } = await import('../../src/lib/slices/gameStateSlice')
@@ -42,7 +42,7 @@ describe(EventLog, () => {
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
   })
 
-  test('shows "New game started" event when store initializes without persisted state', async () => {
+  test('EventLog -> happy path: new game started', async () => {
     expect.hasAssertions()
 
     const { addTextEvent: addEvent } = await import('../../src/lib/slices/eventsSlice')
