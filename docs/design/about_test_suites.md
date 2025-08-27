@@ -11,7 +11,7 @@ The test suite is designed to have the tests as described below.
 As appropriate tests use `debugInitialState` to arrange the game state, possibly modifying it further,
 e.g. by ensuring appropriate items are selected.
 
-## E2E tests
+## E2E tests design
 
 E2E tests are tests that test the entire application, meaning they render the entire `App.tsx` component.
 
@@ -19,42 +19,55 @@ There is one E2E test covering some core logic like "advance turn". For details,
 
 There are no other E2E tests
 
-## Component tests
+## Component tests design
 
 Tests that render the component and test it by interacting with it.
 
 One happy path test per component, rendering the component:
 
 - Tests for `GameControls.tsx`:
-  - Test to show "Advance turn" works.
-  - Test to show "Restart game" works.
+  - Tests for `Advance turn` button.
+  - Tests for `Restart game` button.
 
-- Test to show an event appears in the `EventLog.tsx`.
+- Tests that test exercising  `PlayerActions.tsx`:
+  - For each player action:
+    - One happy path test
+    - One test resulting in alert
+  - Note: these tests arrange appropriate selection of agents, leads, missions, etc.
 
-- Test to show that `ErrorBoundary` works.
+- Tests for  `EventLog.tsx`.
 
-- Tests that directly test the logic behind `PlayerActions.tsx`:
-  - Few tests for each player action - basically all "asPlayerAction" entries in `gameStateSlice.ts`
-    - These tests primarily test the logic behind clicking the button on the `PlayerActions.tsx` component.
-    - At least one test for each button happy path, and at least one test resulting in alert.
-    - These tests arrange appropriate selection of agents, leads, missions, etc.
+- Tests for  `ErrorBoundary`.
 
 There are no other component tests.
 
-## Unit tests
+## Unit tests design
 
 Tests that directly test the logic, without depending on react or simulating it.
 
-Tests that directly test the logic behind `GameControls.tsx`:
-- Multiple tests for `evaluateBattle.ts`
-- Multiple tests for `evaluateTurn.ts`
-- Multiple tests for `evaluateDeployedMissionSite.ts`
+Tests that test directly the function powering the `GameControls.tsx` component:
+- Tests for `evaluateTurn.ts`
+- Tests for `evaluateDeployedMissionSite.ts`, which is invoked from `evaluateTurn.ts`
+- Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
 
-Tests that verify correctness of the following examples in documentation:
+Tests that verify correctness of select ruleset:
 
-- Tests for effective skill examples documented in `Effective skill` section of [about_agents.md](about_agents.md).
-- Tests for hit points recovery examples documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md).
-- Tests for contest rolls examples documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
-- Tests for weapon damage rolls examples documented in `Range roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- Effective skill - documented in `Effective skill` section of [about_agents.md](about_agents.md).
+- (🚧 not implemented yet) agent recovery from lost hit points
+  - documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md).
+- (🚧 not implemented yet) contest roll
+  - documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- (🚧 not implemented yet) weapon damage roll
+  - documented in `Weapon damage roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
+- (🚧 not implemented yet) contracting and espionage output
+  - documented in `Contracting and espionage assignments` section of [about_agents.md](about_agents.md).
+- (🚧 not implemented yet) exhaustion
+  - documented in `Agent exhaustion` section of [about_agents.md](about_agents.md).
+- (🚧 not implemented yet) panic and supporting values: faction threat values and suppression
+  - not documented yet.
 
 There are no other unit tests.
+
+# Test reference
+
+TODO: list here all test names, grouped by type (e2e, component, unit), and by file name.
