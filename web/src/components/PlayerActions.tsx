@@ -22,6 +22,7 @@ import { fmtAgentCount, fmtMissionTarget } from '../lib/utils/formatUtils'
 import { validateMissionSiteDeployment } from '../lib/utils/MissionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { agsV } from '../lib/model/agents/AgentsView'
+import { getMoneyNewBalance } from '../lib/model/ruleset/ruleset'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -36,6 +37,23 @@ export function PlayerActions(): React.JSX.Element {
 
   const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.agent().id === id))
 
+  function handleHireAgent(): void {
+    // Note: the newBalance here is counted before subtracting the about-to-be-hired agent hiring cost.
+    // As such, if current balance is below AGENT_HIRE_COST, the alert will still be hired,
+    // the newBalance will become negative, and no more agents will be hireable.
+    // This is by design: player can get into projected negative balance, but once they are in it,
+    // they cannot hire any more agents.
+    const newBalance = getMoneyNewBalance(gameState)
+    if (newBalance <= 0) {
+      setAlertMessage('Insufficient funds')
+      setShowAlert(true)
+      return
+    }
+
+    setShowAlert(false) // Hide alert on successful action
+    dispatch(hireAgent())
+  }
+
   function handleSackAgents(): void {
     // Validate that all selected agents are available
     const validationResult = agents.validateAvailable(selectedAgentIds)
@@ -46,9 +64,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(sackAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleAssignToContracting(): void {
@@ -61,9 +79,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(assignAgentsToContracting(selectedAgentIds))
     dispatch(clearAgentSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleAssignToEspionage(): void {
@@ -76,9 +94,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(assignAgentsToEspionage(selectedAgentIds))
     dispatch(clearAgentSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleRecallAgents(): void {
@@ -90,9 +108,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(recallAgents(selectedAgentIds))
     dispatch(clearAgentSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleInvestigateLead(): void {
@@ -119,9 +137,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(investigateLead({ leadId: selectedLeadId, intelCost: lead.intelCost }))
     dispatch(clearLeadSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   function handleDeployAgents(): void {
@@ -148,10 +166,10 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    setShowAlert(false) // Hide alert on successful action
     dispatch(deployAgentsToMission({ missionSiteId: selectedMissionSiteId, agentIds: selectedAgentIds }))
     dispatch(clearAgentSelection())
     dispatch(clearMissionSelection())
-    setShowAlert(false) // Hide alert on successful action
   }
 
   return (
@@ -160,14 +178,7 @@ export function PlayerActions(): React.JSX.Element {
       <CardContent>
         <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
-            <Button
-              variant="contained"
-              onClick={() => {
-                dispatch(hireAgent())
-                setShowAlert(false) // Hide alert on successful action
-              }}
-              fullWidth
-            >
+            <Button variant="contained" onClick={handleHireAgent} fullWidth>
               Hire Agent
             </Button>
             <Button
@@ -206,6 +217,7 @@ export function PlayerActions(): React.JSX.Element {
               severity="error"
               onClose={() => setShowAlert(false)}
               sx={{ textAlign: 'center', alignItems: 'center' }}
+              aria-label="player-actions-alert"
             >
               {alertMessage}
             </Alert>

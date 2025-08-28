@@ -12,7 +12,7 @@ import {
 import initialState, { makeInitialState } from '../model/ruleset/initialState'
 import evaluateTurn from '../turn_advancement/evaluateTurn'
 import asPlayerAction from './asPlayerAction'
-import type { Agent, MissionSite, MissionSiteId } from '../model/model'
+import type { Agent, GameState, MissionSite, MissionSiteId } from '../model/model'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
@@ -80,14 +80,8 @@ const gameStateSlice = createSlice({
         }
       }
     }),
-    setMoney(state, action: PayloadAction<number>) {
-      state.money = action.payload
-    },
-    setFunding(state, action: PayloadAction<number>) {
-      state.funding = action.payload
-    },
-    reset(state, action: PayloadAction<{ debug?: boolean } | undefined>) {
-      const stateAfterReset = makeInitialState({ debug: action.payload?.debug === true })
+    reset(state, action: PayloadAction<{ debug?: boolean; customState?: GameState } | undefined>) {
+      const stateAfterReset = action.payload?.customState ?? makeInitialState({ debug: action.payload?.debug === true })
 
       Object.assign(state, stateAfterReset)
     },
@@ -145,8 +139,6 @@ export const {
   assignAgentsToContracting,
   assignAgentsToEspionage,
   recallAgents,
-  setMoney,
-  setFunding,
   reset,
   investigateLead,
   deployAgentsToMission,

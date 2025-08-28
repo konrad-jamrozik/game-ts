@@ -6,12 +6,25 @@ describe(PlayerActions, () => {
   test("click 'hire agent' button -> happy path", async () => {
     fix.renderPlayerActions()
     expect(fix.agentsView).toHaveLength(0)
+
     await fix.hireAgent() // Act
+
     expect(fix.agentsView).toHaveLength(1)
   })
 
   // Additional hireAgent tests
-  test.todo("click 'hire agent' button -> alert: insufficient money")
+  test("click 'hire agent' button -> alert: insufficient funds", async () => {
+    fix.setMoney(0)
+    fix.renderPlayerActions()
+
+    expect(fix.agentsView).toHaveLength(0)
+    fix.expectPlayerActionsAlert({ hidden: true })
+
+    await fix.hireAgent() // Act
+
+    expect(fix.agentsView).toHaveLength(0)
+    fix.expectPlayerActionsAlert('Insufficient funds')
+  })
 
   // sackAgents tests
   test.todo("click 'sack agents' button -> happy path")
