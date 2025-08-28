@@ -423,6 +423,23 @@ export default plugTypescriptEslint.config([
 
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md
       'vitest/max-expects': ['error', { max: 10 }],
+
+      // I use expect() in test utility methods to assert arranged assumptions, reuse assertions, etc.
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-standalone-expect.md
+      'vitest/no-standalone-expect': 'off',
+
+      // I use expect() interwoven with other code, so it is not always grouped, and it would result in a lot of
+      // extra empty lines.
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-expect-groups.md
+      'vitest/padding-around-expect-groups': 'off',
+
+      // Given "padding-around-expect-groups" is off, this rule also must be off, otherwise it would still trigger.
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/padding-around-all.md
+      'vitest/padding-around-all': 'off',
+
+      // It just adds extra lines and noise to otherwise sometimes very short (<= 5 lines tests).
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
+      'vitest/prefer-expect-assertions': 'off',
     },
   },
 ])

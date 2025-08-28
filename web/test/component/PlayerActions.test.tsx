@@ -1,32 +1,13 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
-import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
+import { fix } from './componentFixture'
 
 describe(PlayerActions, () => {
   test("click 'hire agent' button -> happy path", async () => {
-    expect.hasAssertions()
-
-    render(
-      <Provider store={store}>
-        <PlayerActions />
-      </Provider>,
-    )
-
-    // Check initial number of agents in store
-    const initialAgents = store.getState().undoable.present.gameState.agents
-
-    expect(initialAgents).toHaveLength(0)
-
-    // Click the button
-    await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
-
-    // Check updated number of agents in store
-    const updatedAgents = store.getState().undoable.present.gameState.agents
-
-    expect(updatedAgents).toHaveLength(1)
+    fix.renderPlayerActions()
+    expect(fix.agentsView).toHaveLength(0)
+    await fix.hireAgent() // Act
+    expect(fix.agentsView).toHaveLength(1)
   })
 
   // Additional hireAgent tests
