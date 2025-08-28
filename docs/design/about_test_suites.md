@@ -49,7 +49,7 @@ One happy path test per component, rendering the component:
   - Tests for `Advance turn` button.
   - Tests for `Restart game` button.
 
-- (🚧 stub) Tests for `PlayerActions.tsx`:
+- (🚧 needs review) Tests for `PlayerActions.tsx`:
   - For each player action:
     - One happy path test
     - One test resulting in alert
