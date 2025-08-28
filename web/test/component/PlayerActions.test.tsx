@@ -1,23 +1,29 @@
 import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { fix } from './componentFixture'
+import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
 
 describe(PlayerActions, () => {
   test("click 'hire agent' button -> happy path", async () => {
-    fix.renderPlayerActions()
     expect(fix.agentsView).toHaveLength(0)
 
+    fix.renderPlayerActions()
     await fix.hireAgent() // Act
 
     expect(fix.agentsView).toHaveLength(1)
   })
 
-  // Additional hireAgent tests
+  /**
+   * When projected new balance before hiring the agents is 0 or less,
+   * the agent cannot be hired.
+   *
+   */
   test("click 'hire agent' button -> alert: insufficient funds", async () => {
-    fix.setMoney(0)
-    fix.renderPlayerActions()
-
+    fix.setMoneyAndFunding(0)
+    expect(getMoneyNewBalance(fix.gameState)).toBe(0)
     expect(fix.agentsView).toHaveLength(0)
+
+    fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.hireAgent() // Act

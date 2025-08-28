@@ -20,9 +20,10 @@ export const fix = {
     store.dispatch(reset({ customState }))
   },
 
-  setMoney(amount: number): void {
+  setMoneyAndFunding(amount: number): void {
     const state = makeInitialState()
     state.money = amount
+    state.funding = amount
     fix.setInitialState(state)
   },
 
@@ -38,8 +39,12 @@ export const fix = {
     await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
   },
 
+  get gameState(): GameState {
+    return store.getState().undoable.present.gameState
+  },
+
   get agentsView(): AgentsView {
-    return agsV(store.getState().undoable.present.gameState.agents)
+    return agsV(fix.gameState.agents)
   },
 
   expectPlayerActionsAlert(message: string | { hidden: true }): void {
