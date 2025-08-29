@@ -60,6 +60,15 @@ https://docs.github.com/en/copilot/concepts/copilot-billing/understanding-and-ma
 Compare with much worse Cursor pricing:
 https://docs.cursor.com/account/pricing
 
+# Troubleshooting
+
+To avoid copilot asking too often to continue, configure:
+
+```
+Chat › Agent: Max Requests
+The maximum number of requests to allow Copilot to use per-turn in agent mode. When the limit is reached, Copilot will ask the user to confirm that it should continue.
+```
+
 # See also
 
 Copilot setup steps
