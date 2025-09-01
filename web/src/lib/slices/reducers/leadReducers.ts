@@ -1,6 +1,6 @@
 import type { GameState, MissionSite, MissionSiteId } from '../../model/model'
 import { missions } from '../../collections/missions'
-import { createEnemiesFromSpec } from '../../utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../utils/enemyUtils'
 import { asPlayerAction } from './asPlayerAction'
 
 export const investigateLead = asPlayerAction<{ leadId: string; intelCost: number }>((state: GameState, action) => {
@@ -22,7 +22,7 @@ export const investigateLead = asPlayerAction<{ leadId: string; intelCost: numbe
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: createEnemiesFromSpec(mission.enemyUnitsSpec), // Create enemies from spec
+      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec), // Create enemies from spec
     }
     state.missionSites.push(newMissionSite)
   }

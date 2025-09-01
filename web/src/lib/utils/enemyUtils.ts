@@ -14,7 +14,7 @@ function isValidEnemyType(type: string): type is EnemyType {
  * Creates multiple enemies from a specification string
  * Example: "2 Initiate, 1 Operative" creates 2 Initiates and 1 Operative
  */
-export function createEnemiesFromSpec(spec: string): Enemy[] {
+export function newEnemiesFromSpec(spec: string): Enemy[] {
   // Reset enemy ID counter for each mission site
   idCounter = 1
 
@@ -34,7 +34,7 @@ export function createEnemiesFromSpec(spec: string): Enemy[] {
       const { type } = match.groups
 
       for (let index = 0; index < count; index += 1) {
-        units.push(createEnemy(type, idCounter))
+        units.push(newEnemy(type, idCounter))
         idCounter += 1
       }
     }
@@ -46,7 +46,7 @@ export function createEnemiesFromSpec(spec: string): Enemy[] {
 /**
  * Creates an enemy of the specified type
  */
-function createEnemy(type: EnemyType, currentIdCounter: number): Enemy {
+function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
   const stats = ENEMY_STATS[type]
   if (!stats) {
     throw new Error(`Unknown enemy type: ${type}`)

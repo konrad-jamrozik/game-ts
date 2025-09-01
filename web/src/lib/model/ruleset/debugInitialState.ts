@@ -1,6 +1,6 @@
 import type { Agent, GameState, MissionSiteId } from '../model'
 import { newWeapon } from '../../utils/weaponUtils'
-import { createEnemiesFromSpec } from '../../utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
@@ -200,7 +200,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
-      enemies: createEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
     },
     {
       id: 'mission-site-001' as MissionSiteId,
@@ -208,7 +208,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: createEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
     },
   ]
 

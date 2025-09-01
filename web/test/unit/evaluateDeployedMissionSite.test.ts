@@ -3,7 +3,7 @@ import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
-import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
 describe(evaluateDeployedMissionSite, () => {
   test('evaluateDeployedMissionSite -> success', () => {
@@ -30,7 +30,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: createEnemiesFromSpec('1 Initiate'), // Single weak enemy
+      enemies: newEnemiesFromSpec('1 Initiate'), // Single weak enemy
     }
 
     // Create a minimal game state
@@ -98,7 +98,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: createEnemiesFromSpec('2 Soldier'), // Strong enemies
+      enemies: newEnemiesFromSpec('2 Soldier'), // Strong enemies
     }
 
     const gameState: GameState = {
@@ -183,7 +183,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: createEnemiesFromSpec('3 Soldier, 2 Elite'), // Strong enemies
+      enemies: newEnemiesFromSpec('3 Soldier, 2 Elite'), // Strong enemies
     }
 
     const gameState: GameState = {

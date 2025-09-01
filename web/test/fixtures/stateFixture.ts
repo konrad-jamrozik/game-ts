@@ -15,7 +15,7 @@ import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
-import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 import { agFix } from './agentFixture'
 
 export const st = {
@@ -49,7 +49,7 @@ export const st = {
   },
 
   newEnemyInitiate(): Enemy {
-    const [enemy] = createEnemiesFromSpec('1 Initiate')
+    const [enemy] = newEnemiesFromSpec('1 Initiate')
     assertDefined(enemy)
     return enemy
   },
