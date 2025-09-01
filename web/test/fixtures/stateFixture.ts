@@ -13,8 +13,8 @@ import {
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
-import { agFix } from './agFix'
-import { misStFix } from './misStFix'
+import { agFix } from './agentFixture'
+import { misStFix } from './missionSiteFixture'
 
 export const st = {
   get gameState(): GameState {

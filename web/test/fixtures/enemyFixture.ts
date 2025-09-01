@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../../src/lib/model/model'
-import { wpnFix } from './wpnFix'
+import { wpnFix } from './weaponFixture'
 
 export const enFix = (() => {
   let enemyIdCounter = 0

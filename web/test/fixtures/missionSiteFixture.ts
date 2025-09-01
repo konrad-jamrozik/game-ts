@@ -1,5 +1,5 @@
 import type { MissionSite, MissionSiteState } from '../../src/lib/model/model'
-import { enFix } from './enFix'
+import { enFix } from './enemyFixture'
 
 export const misStFix = (() => {
   let missionSiteIdCounter = 0

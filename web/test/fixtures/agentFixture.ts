@@ -1,6 +1,6 @@
 import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
-import { wpnFix } from './wpnFix'
+import { wpnFix } from './weaponFixture'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 
 // KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
