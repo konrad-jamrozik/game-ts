@@ -203,6 +203,16 @@ export const fix = {
     }
   },
 
+  expectAgentsDeployed(agentIds: string[], missionSiteId: MissionSiteId): void {
+    // Check each agent has OnMission state and correct assignment
+    agentIds.forEach((agentId) => {
+      fix.expectAgentState(agentId, 'OnMission')
+      fix.expectAgentAssignment(agentId, missionSiteId)
+    })
+    // Check mission site has all the agents
+    fix.expectAgentsOnMissionSite(missionSiteId, agentIds)
+  },
+
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
     return MissionSiteFixture.new({
       id: missionSiteId,

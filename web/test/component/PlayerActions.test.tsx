@@ -201,10 +201,7 @@ describe(PlayerActions, () => {
     await fix.deployAgents() // Act
 
     fix.expectAgentCount(1)
-    // KJA this should be fix.expectAgentOnMissionSite('agent-1', missionSiteId)
-    fix.expectAgentState('agent-1', 'OnMission')
-    fix.expectAgentAssignment('agent-1', missionSiteId)
-    fix.expectAgentsOnMissionSite(missionSiteId, ['agent-1'])
+    fix.expectAgentsDeployed(['agent-1'], missionSiteId)
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
