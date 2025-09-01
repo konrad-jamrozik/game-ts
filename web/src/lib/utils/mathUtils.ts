@@ -14,7 +14,7 @@ export function floor(value: number): number {
  *
  *
  * For example:
- * toPrecisionRoundingDown(0.1278, 100)     ->   12
+ * toPrecisionRoundingDown(0.1278,     100) ->   12
  * toPrecisionRoundingDown(0.12348, 10_000) -> 1234
  * toPrecisionRoundingDown(0.99999, 10_000) -> 9999
  *

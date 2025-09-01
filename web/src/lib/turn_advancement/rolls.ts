@@ -47,7 +47,7 @@ export function rollContest(attackerValue: number, defenderValue: number): Conte
   // Higher rolls are better: success when roll > P(failure)
   const success = roll > failureInt
 
-  // Express the values as percentages:
+  // Express the values as percentages with 0.01% precision
   const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
   const failureProbabilityPct = failureInt / (CONTEST_ROLL_PRECISION / 100)
   const rollPct = roll / (CONTEST_ROLL_PRECISION / 100)

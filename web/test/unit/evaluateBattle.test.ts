@@ -27,12 +27,6 @@ describe(evaluateBattle, () => {
 
     const report = evaluateBattle(agentsView, [enemy]) // Act
 
-    // KJA make this test have 1 player unit with super-weapon that kills enemy in one attack
-    // also force random roll to always roll 100.
-    // Then have a separate test where after 1st round enemy beats agent to 10% health
-    // which causes retreat.
-    // Have another skill where severely agent grinds out 110% exhausted enemy in 3 rounds.
-    // Note: enemy with 0 effective skill should not attack.
     const entries = Object.fromEntries(agentIds.map((id) => [id, expect.any(Number)]))
     expectReportToBe(report)({
       rounds: 2, // KJA should be 1 round
