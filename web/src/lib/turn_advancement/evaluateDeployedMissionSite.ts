@@ -4,6 +4,7 @@ import type { GameState, MissionRewards, MissionSite, Agent } from '../model/mod
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV, type AgentsView } from '../model/agents/AgentsView'
 import { evaluateBattle, type AgentCombatStats, type CombatReport } from './evaluateBattle'
+import { assertDefined } from '../utils/assert'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
@@ -53,10 +54,10 @@ function updateAgentsAfterCombat(
 ): void {
   deployedAgents.forEach((deployedAgent) => {
     const stateAgent = state.agents.find((agent) => agent.id === deployedAgent.id)
-    if (!stateAgent) return
+    assertDefined(stateAgent)
 
     const stats = agentStats.find((stat) => stat.id === deployedAgent.id)
-    if (!stats) return
+    assertDefined(stats)
 
     // hitPoints and exhaustion were already updated during combat on the deployed agent
     // Copy them to the state agent
