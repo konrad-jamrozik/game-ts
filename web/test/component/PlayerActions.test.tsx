@@ -11,8 +11,8 @@ describe(PlayerActions, () => {
 
   test("click 'hire agent' button -> happy path", async () => {
     expect(fix.agentsView).toHaveLength(0)
-
     fix.renderPlayerActions()
+
     await fix.hireAgent() // Act
 
     expect(fix.agentsView).toHaveLength(1)
@@ -27,7 +27,6 @@ describe(PlayerActions, () => {
     fix.setMoneyAndFunding(0)
     expect(getMoneyNewBalance(fix.gameState)).toBe(0)
     expect(fix.agentsView).toHaveLength(0)
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -42,8 +41,8 @@ describe(PlayerActions, () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
+
     await fix.sackAgents() // Act
 
     fix.expectAgentCount(1) // Agent is not removed from array, just terminated
@@ -55,7 +54,6 @@ describe(PlayerActions, () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -70,8 +68,8 @@ describe(PlayerActions, () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
+
     await fix.assignToContracting() // Act
 
     // Agent goes to InTransit state with Contracting assignment
@@ -84,7 +82,6 @@ describe(PlayerActions, () => {
     const onAssignmentAgent = fix.newAgentInEspionage(agentId)
     fix.setAgentsInState([onAssignmentAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -100,7 +97,6 @@ describe(PlayerActions, () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     await fix.assignToEspionage() // Act
 
@@ -114,7 +110,6 @@ describe(PlayerActions, () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -130,7 +125,6 @@ describe(PlayerActions, () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     await fix.recallAgents() // Act
 
@@ -144,7 +138,6 @@ describe(PlayerActions, () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
     fix.arrangeSelection({ agents: [agentId] })
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -173,7 +166,6 @@ describe(PlayerActions, () => {
     const leadId = 'lead-criminal-orgs'
     fix.setIntel(5) // Less than required (lead-criminal-orgs costs 10)
     fix.arrangeSelection({ lead: leadId })
-
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -191,9 +183,7 @@ describe(PlayerActions, () => {
       agents: [fix.newAgentInStandby(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
-
     fix.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
-
     fix.renderPlayerActions()
 
     await fix.deployAgents() // Act
@@ -208,16 +198,12 @@ describe(PlayerActions, () => {
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
     fix.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
-
     fix.renderPlayerActions()
-
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.deployAgents() // Act
 
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
-
-    // Assert assignment is unchanged
-    fix.expectAgentsOnAssignment([agentId], 'Contracting')
+    fix.expectAgentsOnAssignment([agentId], 'Contracting') // Unchanged
   })
 })
