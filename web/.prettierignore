@@ -1,0 +1,8 @@
+# Generated files and directories
+coverage/
+dist/
+node_modules/
+
+# Build artifacts
+*.min.js
+*.min.css
