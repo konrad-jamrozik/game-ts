@@ -2,7 +2,6 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { expect } from 'vitest'
-import { produce } from 'immer'
 import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
@@ -234,9 +233,7 @@ export const fix = {
   },
 
   buildAndSetInitialState(updates: Partial<GameState>): void {
-    const initialState = produce(makeInitialState(), (draft) => {
-      Object.assign(draft, updates)
-    })
+    const initialState = { ...makeInitialState(), ...updates }
     fix.setInitialState(initialState)
   },
 }
