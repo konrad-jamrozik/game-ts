@@ -46,8 +46,9 @@ export function evaluateAttack(
   if (contestResult.success) {
     // Successful attack - roll damage
     const damage = rollWeaponDamage(attacker.weapon)
+    const damageDenominator = attacker.weapon.maxDamage - attacker.weapon.minDamage
     const damageRangePct =
-      ((damage - attacker.weapon.minDamage) / (attacker.weapon.maxDamage - attacker.weapon.minDamage)) * 100
+      damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100
     const damagePct = `${Math.round(50 + damageRangePct)}%`
 
     defender.hitPoints = Math.max(0, defender.hitPoints - damage)

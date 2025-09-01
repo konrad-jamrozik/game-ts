@@ -10,10 +10,20 @@ export const wpnFix = {
     }
   },
 
-  new(overrides?: Partial<Weapon>): Weapon {
+  new(overrides?: Partial<Weapon> & { constDamage?: number }): Weapon {
+    const { constDamage, ...weaponOverrides } = overrides ?? {}
+
+    if (constDamage !== undefined) {
+      return {
+        damage: constDamage,
+        minDamage: constDamage,
+        maxDamage: constDamage,
+      }
+    }
+
     return {
       ...this.default(),
-      ...overrides,
+      ...weaponOverrides,
     }
   },
 }

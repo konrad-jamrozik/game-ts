@@ -2,6 +2,8 @@ import { describe, expect, test } from 'vitest'
 import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
 import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
+import { wpnFix } from '../fixtures/weaponFixture'
+import { agFix } from '../fixtures/agentFixture'
 
 describe(evaluateBattle, () => {
   test('evaluateBattle -> no enemies', () => {
@@ -20,14 +22,17 @@ describe(evaluateBattle, () => {
   })
 
   test('evaluateBattle -> player wins in 1 round', () => {
-    const agents = st.newAgents({ count: 5, skill: 500 })
-    const agentIds = agents.map((agent) => agent.id)
-    const agentsView = agsV(agents)
+    const agentId = 'agent-001'
+    const agent = agFix.new({
+      id: agentId,
+      weapon: wpnFix.new({ constDamage: 100 }),
+    })
+    const agentsView = agsV([agent])
     const enemy = st.newEnemyInitiate()
 
     const report = evaluateBattle(agentsView, [enemy]) // Act
 
-    const entries = Object.fromEntries(agentIds.map((id) => [id, expect.any(Number)]))
+    const entries = Object.fromEntries([agentId].map((id) => [id, expect.any(Number)]))
     expectReportToBe(report)({
       rounds: 2, // KJA should be 1 round
       agentCasualties: 0,
