@@ -1,9 +1,9 @@
 import { getMissionById } from '../collections/missions'
-import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_REWARD } from '../model/ruleset/constants'
+import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent } from '../model/model'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
-import { agsV, type AgentsView } from '../model/agents/AgentsView'
-import { evaluateBattle, type AgentCombatStats, type CombatReport } from './evaluateBattle'
+import { agsV } from '../model/agents/AgentsView'
+import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../utils/assert'
 
 /**
@@ -16,14 +16,12 @@ export function evaluateDeployedMissionSite(state: GameState, missionSite: Missi
   const mission = getMissionById(missionSite.missionId)
 
   // Get agents deployed to this mission site
-  const deployedAgentViews = agsV(state.agents).withIds(missionSite.agentIds)
-  const deployedAgents = deployedAgentViews.map((agentView) => agentView.agent())
+  const deployedAgentsView = agsV(state.agents).withIds(missionSite.agentIds)
+  const deployedAgents = deployedAgentsView.toAgentArray()
 
-  const agentStats = prepareAgentCombatStats(deployedAgentViews)
+  const battleReport = evaluateBattle(deployedAgentsView, missionSite.enemies)
 
-  const combatReport = evaluateBattle(deployedAgents, agentStats, missionSite.enemies)
-
-  updateAgentsAfterCombat(state, deployedAgents, agentStats, combatReport)
+  updateAgentsAfterBattle(deployedAgents, battleReport)
 
   // Determine mission site outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
@@ -38,74 +36,65 @@ export function evaluateDeployedMissionSite(state: GameState, missionSite: Missi
   return undefined
 }
 
-function prepareAgentCombatStats(agentViews: AgentsView): AgentCombatStats[] {
-  return agentViews.map((agentView) => ({
-    id: agentView.agent().id,
-    initialEffectiveSkill: agentView.effectiveSkill(),
-    skillGained: 0,
-  }))
-}
+function updateAgentsAfterBattle(deployedAgents: Agent[], battleReport: BattleReport): void {
+  deployedAgents.forEach((agent) => {
+    const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
+    assertDefined(battleSkillGain)
 
-function updateAgentsAfterCombat(
-  state: GameState,
-  deployedAgents: Agent[],
-  agentStats: AgentCombatStats[],
-  combatReport: CombatReport,
-): void {
-  deployedAgents.forEach((deployedAgent) => {
-    const stateAgent = state.agents.find((agent) => agent.id === deployedAgent.id)
-    assertDefined(stateAgent)
-
-    const stats = agentStats.find((stat) => stat.id === deployedAgent.id)
-    assertDefined(stats)
-
-    // hitPoints and exhaustion were already updated during combat on the deployed agent
-    // Copy them to the state agent
-    stateAgent.hitPoints = deployedAgent.hitPoints
-    stateAgent.exhaustion = deployedAgent.exhaustion
-
-    const isTerminated = deployedAgent.hitPoints <= 0
-
-    // Apply mission conclusion exhaustion
+    const isTerminated = agent.hitPoints <= 0
     if (!isTerminated) {
-      stateAgent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
-
-      // Additional exhaustion for each terminated agent
-      stateAgent.exhaustion += combatReport.agentsCasualties * AGENT_EXHAUSTION_RECOVERY_PER_TURN
-    }
-
-    // Update skill
-    if (!isTerminated) {
-      // Skill from combat (this was accumulated in stats during battle)
-      stateAgent.skill += stats.skillGained
-
-      // Skill from mission survival
-      stateAgent.missionsSurvived += 1
-      const survivalIndex = Math.min(stateAgent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_REWARD.length - 1)
-      const survivalSkillReward = MISSION_SURVIVAL_SKILL_REWARD[survivalIndex] ?? 0
-      stateAgent.skill += survivalSkillReward
-
-      console.log(
-        `📈 Agent ${stateAgent.id} gained ${stats.skillGained + survivalSkillReward} skill (${stats.skillGained} from combat, ${survivalSkillReward} from survival)`,
-      )
-    }
-
-    // Update state and assignment
-    if (isTerminated) {
-      stateAgent.state = 'Terminated'
-      stateAgent.assignment = 'KIA'
+      updateSurvivingAgent(agent, battleReport)
     } else {
-      stateAgent.state = 'InTransit'
-
-      // Check if agent took damage
-      const tookDamage = stateAgent.hitPoints < stateAgent.maxHitPoints
-      if (tookDamage) {
-        stateAgent.assignment = 'Recovery'
-        stateAgent.hitPointsLostBeforeRecovery = stateAgent.maxHitPoints - stateAgent.hitPoints
-        stateAgent.recoveryTurns = getRecoveryTurns(stateAgent.hitPointsLostBeforeRecovery, stateAgent.maxHitPoints)
-      } else {
-        stateAgent.assignment = 'Standby'
-      }
+      agent.state = 'Terminated'
+      agent.assignment = 'KIA'
     }
   })
+}
+
+function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): void {
+  // ----------------------------------------
+  // Update exhaustion
+  // ----------------------------------------
+
+  // Apply mission conclusion exhaustion
+  agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
+
+  // Additional exhaustion for each terminated agent
+  agent.exhaustion += battleReport.agentsCasualties * AGENT_EXHAUSTION_RECOVERY_PER_TURN
+
+  // ----------------------------------------
+  // Update skill
+  // ----------------------------------------
+
+  // Skill from battle combat
+  const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
+  assertDefined(battleSkillGain)
+  agent.skill += battleSkillGain
+
+  // Skill from mission survival
+  agent.missionsSurvived += 1
+  const survivalIndex = Math.min(agent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1)
+  const survivalSkillGain = MISSION_SURVIVAL_SKILL_GAIN[survivalIndex]
+  assertDefined(survivalSkillGain)
+  agent.skill += survivalSkillGain
+
+  console.log(
+    `📈 Agent ${agent.id} gained ${battleSkillGain + survivalSkillGain} skill (${battleSkillGain} from combat, ${survivalSkillGain} from survival)`,
+  )
+
+  // ----------------------------------------
+  // Update state and assignment
+  // ----------------------------------------
+
+  agent.state = 'InTransit'
+
+  // If agent took damage they need to recover
+  const tookDamage = agent.hitPoints < agent.maxHitPoints
+  if (tookDamage) {
+    agent.assignment = 'Recovery'
+    agent.hitPointsLostBeforeRecovery = agent.maxHitPoints - agent.hitPoints
+    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints)
+  } else {
+    agent.assignment = 'Standby'
+  }
 }

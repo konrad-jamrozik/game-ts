@@ -166,8 +166,8 @@ An agent gains skill points for the following reasons:
 - Attacking an enemy and being attacked by an enemy.
 
 Any agent that survived gains skill points, depending on how many missions they survived.
-If this is their `Nth` mission they survived, they gain number of skill points equal to `MISSION_SURVIVAL_SKILL_REWARD[N-1]`.
-If `N` is greater than number of elements in `MISSION_SURVIVAL_SKILL_REWARD`, they gain the skill points equal to
+If this is their `Nth` mission they survived, they gain number of skill points equal to `MISSION_SURVIVAL_SKILL_GAIN[N-1]`.
+If `N` is greater than number of elements in `MISSION_SURVIVAL_SKILL_GAIN`, they gain the skill points equal to
 the last element in that list.
 
 Furthermore:

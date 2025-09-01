@@ -13,6 +13,8 @@ import type { Agent, Enemy } from '../model/model'
 import { agV } from '../model/agents/AgentView'
 import { effectiveSkill } from '../utils/actorUtils'
 import { fmtPctDec2 } from '../utils/formatUtils'
+import type { AgentsView } from '../model/agents/AgentsView'
+import { assertDefined } from '../utils/assert'
 
 function isAgent(unit: Agent | Enemy): unit is Agent {
   return 'turnHired' in unit
@@ -24,7 +26,7 @@ export type AgentCombatStats = {
   skillGained: number
 }
 
-export type CombatReport = {
+export type BattleReport = {
   rounds: number
   agentsCasualties: number
   enemiesCasualties: number
@@ -32,7 +34,10 @@ export type CombatReport = {
   agentSkillUpdates: Record<string, number>
 }
 
-export function evaluateBattle(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): CombatReport {
+export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
+  const agents = agentsView.toAgentArray()
+  const agentStats = newAgentsCombatStats(agentsView)
+
   let roundIdx = 1
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
@@ -57,7 +62,7 @@ export function evaluateBattle(agents: Agent[], agentStats: AgentCombatStats[], 
   while (!shouldBattleEnd(agents, enemies)) {
     roundIdx += 1
 
-    executeCombatRound(agents, agentStats, enemies)
+    evaluateCombatRound(agents, agentStats, enemies)
 
     // Show round status with detailed statistics
     showRoundStatus(
@@ -102,6 +107,14 @@ export function evaluateBattle(agents: Agent[], agentStats: AgentCombatStats[], 
   }
 }
 
+function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
+  return agentViews.map((agentView) => ({
+    id: agentView.agent().id,
+    initialEffectiveSkill: agentView.effectiveSkill(),
+    skillGained: 0,
+  }))
+}
+
 function shouldBattleEnd(agents: Agent[], enemies: Enemy[]): boolean {
   const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
   const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
@@ -117,7 +130,7 @@ function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[]): boolean
   return totalCurrentEffectiveSkill < totalOriginalEffectiveSkill * 0.5
 }
 
-function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
+function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
   // Track attack counts per target for fair distribution
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
@@ -139,7 +152,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
       const target = selectTargetWithFairDistribution(activeEnemies, enemyAttackCounts)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
-        executeAttack(agent, attackerStats, target)
+        evaluateAttack(agent, attackerStats, target)
         // Increment attack count for this enemy
         enemyAttackCounts.set(target.id, (enemyAttackCounts.get(target.id) ?? 0) + 1)
       }
@@ -162,7 +175,7 @@ function executeCombatRound(agents: Agent[], agentStats: AgentCombatStats[], ene
       const target = selectTargetWithFairDistribution(currentActiveAgents, agentAttackCounts)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
-        executeAttack(enemy, undefined, target, defenderStats)
+        evaluateAttack(enemy, undefined, target, defenderStats)
         // Increment attack count for this agent
         agentAttackCounts.set(target.id, (agentAttackCounts.get(target.id) ?? 0) + 1)
       }
@@ -195,7 +208,7 @@ function selectTargetWithFairDistribution<T extends Agent | Enemy>(
   return sorted[0]
 }
 
-function executeAttack(
+function evaluateAttack(
   attacker: Agent | Enemy,
   attackerStats: AgentCombatStats | undefined,
   defender: Agent | Enemy,
@@ -204,6 +217,14 @@ function executeAttack(
   // Calculate effective skills
   const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
   const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : effectiveSkill(defender)
+
+  if (isAgent(attacker)) {
+    assertDefined(attackerStats)
+  }
+
+  if (isAgent(defender)) {
+    assertDefined(defenderStats)
+  }
 
   // Contest roll
   const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill)
@@ -225,7 +246,7 @@ function executeAttack(
 
     defender.hitPoints = Math.max(0, defender.hitPoints - damage)
 
-    // Update skill gains (postponed)
+    // Update skill gains from battle combat
     if (attackerStats) {
       attackerStats.skillGained += AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD
     }
@@ -247,7 +268,7 @@ function executeAttack(
       )
     }
 
-    // Apply defender exhaustion only if not terminated (both agents and enemies)
+    // Apply defender exhaustion only if not terminated
     if (defender.hitPoints > 0) {
       defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
