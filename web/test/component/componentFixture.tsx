@@ -165,6 +165,10 @@ export const fix = {
     expect(fix.agentsView).toHaveLength(expectedCount)
   },
 
+  expectTerminatedAgentCount(expectedCount: number): void {
+    expect(fix.agentsView.terminated()).toHaveLength(expectedCount)
+  },
+
   expectAgentState(agentId: string, expectedState: Agent['state']): void {
     const agent = fix.gameState.agents.find((ag) => ag.id === agentId)
     expect(agent).toBeDefined()

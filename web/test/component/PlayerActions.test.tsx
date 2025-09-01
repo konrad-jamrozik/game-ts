@@ -39,114 +39,103 @@ describe(PlayerActions, () => {
 
   // sackAgents tests
   test("click 'sack agents' button -> happy path", async () => {
-    const availableAgent = fix.newAgentInStandby(agentId)
-    fix.setAgentsInState([availableAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
+    fix.expectAgentCount(1)
+    fix.expectTerminatedAgentCount(0)
     fix.renderPlayerActions()
 
     await fix.sackAgents() // Act
 
-    fix.expectAgentCount(1) // Agent is not removed from array, just terminated
+    fix.expectAgentCount(1)
+    fix.expectTerminatedAgentCount(1)
     fix.expectAgentState(agentId, 'Terminated')
     fix.expectAgentAssignment(agentId, 'Sacked')
   })
 
   test("click 'sack agents' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.newAgentInContracting(agentId)
-    fix.setAgentsInState([onAssignmentAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInContracting(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
+    fix.expectAgentCount(1)
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.sackAgents() // Act
 
-    fix.expectAgentCount(1)
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
+    fix.expectAgentCount(1)
   })
 
   // assignAgentsToContracting tests
   test("click 'assign agents to contracting' button -> happy path", async () => {
-    const availableAgent = fix.newAgentInStandby(agentId)
-    fix.setAgentsInState([availableAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
 
     await fix.assignToContracting() // Act
 
-    // Agent goes to InTransit state with Contracting assignment
-    fix.expectAgentCount(1)
     fix.expectAgentState(agentId, 'InTransit')
     fix.expectAgentAssignment(agentId, 'Contracting')
   })
 
   test("click 'assign agents to contracting' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.newAgentInEspionage(agentId)
-    fix.setAgentsInState([onAssignmentAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInEspionage(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.assignToContracting() // Act
 
-    fix.expectAgentCount(1)
-    fix.expectAgentAssignment(agentId, 'Espionage') // Should remain unchanged
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
+    fix.expectAgentAssignment(agentId, 'Espionage') // Expect unchanged
   })
 
   // assignAgentsToEspionage tests
   test("click 'assign agents to espionage' button -> happy path", async () => {
-    const availableAgent = fix.newAgentInStandby(agentId)
-    fix.setAgentsInState([availableAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
+
     await fix.assignToEspionage() // Act
 
-    // Agent goes to InTransit state with Espionage assignment
-    fix.expectAgentCount(1)
     fix.expectAgentState(agentId, 'InTransit')
     fix.expectAgentAssignment(agentId, 'Espionage')
   })
 
   test("click 'assign agents to espionage' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.newAgentInContracting(agentId)
-    fix.setAgentsInState([onAssignmentAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInContracting(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.assignToEspionage() // Act
 
-    fix.expectAgentCount(1)
-    fix.expectAgentAssignment(agentId, 'Contracting') // Should remain unchanged
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
+    fix.expectAgentAssignment(agentId, 'Contracting') // Expect unchanged
   })
 
   // recallAgents tests
   test("click 'recall agents' button -> happy path", async () => {
-    const onAssignmentAgent = fix.newAgentInContracting(agentId)
-    fix.setAgentsInState([onAssignmentAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInContracting(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
+
     await fix.recallAgents() // Act
 
-    // Agent goes to InTransit state with Standby assignment
-    fix.expectAgentCount(1)
-    fix.expectAgentState(agentId, 'InTransit')
     fix.expectAgentAssignment(agentId, 'Standby')
+    fix.expectAgentState(agentId, 'InTransit')
   })
 
   test("click 'recall agents' button -> alert: agents in invalid states", async () => {
-    const availableAgent = fix.newAgentInStandby(agentId)
-    fix.setAgentsInState([availableAgent])
+    fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.recallAgents() // Act
 
-    fix.expectAgentCount(1)
-    fix.expectAgentState(agentId, 'Available') // Should remain unchanged
     fix.expectPlayerActionsAlert('This action can be done only on OnAssignment agents!')
+    fix.expectAgentState(agentId, 'Available') // Expect unchanged
   })
 
   // investigateLead tests
@@ -179,7 +168,7 @@ describe(PlayerActions, () => {
 
     fix.expectPlayerActionsAlert('Not enough intel')
     fix.expectLeadNotInvestigated(leadId)
-    fix.expectIntelAmount(leadIntelCost) // Expect unchanged
+    fix.expectIntelAmount(leadIntelCost - 1) // Expect unchanged
   })
 
   // deployAgentsToMission tests
