@@ -26,7 +26,7 @@ KJA backlog:
 ## Tests
 
 - Address all 🚧 TODOS, except "not implemented yet", in [about_test_suites.md](about_test_suites.md)
-- In tests, need a helper that does both `expect(X).toDefined() and assertDefined(X)`
+- In tests, need a helper that does both `expect(X).toDefined()` and `assertDefined(X)`
 
 ## Performance
 

@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { expect } from 'vitest'
+import { produce } from 'immer'
 import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
@@ -11,6 +12,7 @@ import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { AgentFixture } from '../fixtures/AgentFixture'
+import { MissionSiteFixture } from '../fixtures/MissionSiteFixture'
 
 export const fix = {
   setDebugInitialState(): void {
@@ -61,7 +63,7 @@ export const fix = {
   },
 
   // Agent creation and manipulation helpers
-  createAvailableAgent(id = 'agent-1'): Agent {
+  newAgent(id: string): Agent {
     return AgentFixture.new({ id, state: 'Available', assignment: 'Standby' })
   },
 
@@ -199,5 +201,23 @@ export const fix = {
       expect(missionSite.agentIds).toStrictEqual(expect.arrayContaining(agentIds))
       expect(missionSite.agentIds).toHaveLength(agentIds.length)
     }
+  },
+
+  newMissionSite(missionSiteId: MissionSiteId): MissionSite {
+    return MissionSiteFixture.new({
+      id: missionSiteId,
+      missionId: 'mission-apprehend-red-dawn',
+      agentIds: [],
+      state: 'Active',
+      expiresIn: 3,
+      enemies: [],
+    })
+  },
+
+  buildAndSetInitialState(updates: Partial<GameState>): void {
+    const initialState = produce(makeInitialState(), (draft) => {
+      Object.assign(draft, updates)
+    })
+    fix.setInitialState(initialState)
   },
 }
