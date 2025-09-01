@@ -3,7 +3,7 @@
 // to have beforeEach outside of describe blocks.
 /* eslint-disable vitest/require-top-level-describe */
 import { beforeEach } from 'vitest'
-import { resetAllFixtures } from '../fixtures'
+import { resetAllFixtures } from '../fixtures/resetAllFixtures'
 
 beforeEach(() => {
   resetAllFixtures()
