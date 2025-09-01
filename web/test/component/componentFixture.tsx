@@ -200,6 +200,10 @@ export const fix = {
     expect(fix.gameState.intel).toBe(expectedAmount)
   },
 
+  expectLeadNotInvestigated(leadId: string): void {
+    fix.expectLeadInvestigated(leadId, 0)
+  },
+
   expectLeadInvestigated(leadId: string, times = 1): void {
     expect(fix.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
   },

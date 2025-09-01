@@ -164,16 +164,18 @@ describe(PlayerActions, () => {
 
   test("click 'investigate lead' button -> alert: insufficient intel", async () => {
     const leadId = 'lead-criminal-orgs'
-    fix.setIntel(5) // Less than required (lead-criminal-orgs costs 10)
+    fix.arrangeGameState({
+      intel: 5, // Less than required to investigate lead-criminal-orgs, which costs 10
+    })
     fix.arrangeSelection({ lead: leadId })
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.investigateLead() // Act
 
-    fix.expectIntelAmount(5) // Should remain unchanged
-    fix.expectLeadInvestigated(leadId, 0) // Should not be investigated
     fix.expectPlayerActionsAlert('Not enough intel')
+    fix.expectIntelAmount(5) // Expect unchanged
+    fix.expectLeadNotInvestigated(leadId)
   })
 
   // deployAgentsToMission tests
@@ -204,6 +206,6 @@ describe(PlayerActions, () => {
     await fix.deployAgents() // Act
 
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
-    fix.expectAgentsOnAssignment([agentId], 'Contracting') // Unchanged
+    fix.expectAgentsOnAssignment([agentId], 'Contracting') // Expect unchanged
   })
 })
