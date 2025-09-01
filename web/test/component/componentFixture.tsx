@@ -31,10 +31,7 @@ export const fix = {
   },
 
   setMoneyAndFunding(amount: number): void {
-    const state = makeInitialState()
-    state.money = amount
-    state.funding = amount
-    fix.setInitialState(state)
+    fix.buildAndSetInitialState({ money: amount, funding: amount })
   },
 
   renderPlayerActions(): void {
@@ -92,20 +89,14 @@ export const fix = {
   },
 
   setAgentsInState(agents: Agent[]): void {
-    const state = makeInitialState()
-    state.agents = agents
-    fix.setInitialState(state)
+    fix.buildAndSetInitialState({ agents })
   },
 
   setIntel(amount: number): void {
-    const state = makeInitialState()
-    state.intel = amount
-    fix.setInitialState(state)
+    fix.buildAndSetInitialState({ intel: amount })
   },
 
   setMissionSiteAndIntel(missionSiteId: MissionSiteId, intel = 100): void {
-    const state = makeInitialState()
-    state.intel = intel
     const missionSite: MissionSite = {
       id: missionSiteId,
       missionId: 'mission-apprehend-red-dawn',
@@ -114,8 +105,7 @@ export const fix = {
       expiresIn: 3,
       enemies: [],
     }
-    state.missionSites = [missionSite]
-    fix.setInitialState(state)
+    fix.buildAndSetInitialState({ intel, missionSites: [missionSite] })
   },
 
   // Selection helpers
