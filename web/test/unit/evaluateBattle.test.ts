@@ -15,7 +15,7 @@ describe(evaluateBattle, () => {
       agentCasualties: 0,
       enemyCasualties: 0,
       retreated: false,
-      agentSkillUpdates: { 'agent-001': 0 },
+      agentSkillUpdates: { agentId: 0 },
     })
   })
 
@@ -30,7 +30,7 @@ describe(evaluateBattle, () => {
       agentCasualties: 0,
       enemyCasualties: 0,
       retreated: false,
-      agentSkillUpdates: { 'agent-001': 0 },
+      agentSkillUpdates: { agentId: 0 },
     })
   })
 

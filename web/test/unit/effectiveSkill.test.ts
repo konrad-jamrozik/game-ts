@@ -1,12 +1,8 @@
-import { describe, expect, test, beforeEach } from 'vitest'
-import { AgentFixture, resetAllFixtures } from '../fixtures'
+import { describe, expect, test } from 'vitest'
+import { AgentFixture } from '../fixtures'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
 
 describe(effectiveSkill, () => {
-  beforeEach(() => {
-    resetAllFixtures()
-  })
-
   test('effective skill: no exhaustion, no hit points lost', () => {
     const agent = AgentFixture.default()
 
