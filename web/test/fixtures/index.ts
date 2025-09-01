@@ -4,5 +4,3 @@ import { agFix } from './agentFixture'
 export function resetAllFixtures(): void {
   agFix.resetIdCounter()
 }
-export { wpnFix as WeaponFixture } from './weaponFixture'
-export { agFix as AgentFixture } from './agentFixture'

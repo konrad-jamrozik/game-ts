@@ -1,7 +1,6 @@
-import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
+import type { Agent } from '../../src/lib/model/model'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 
-// KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
 export const agFix = (() => {
   let agentIdCounter = 0
 
@@ -21,55 +20,10 @@ export const agFix = (() => {
         ...overrides,
       }
     },
-    withState(state: AgentState, assignment?: AgentAssignment): Agent {
-      const validAssignment = assignment ?? (state === 'Recovering' ? 'Recovery' : 'Standby')
-      return this.new({
-        state,
-        assignment: validAssignment,
-      })
-    },
 
-    available(): Agent {
-      return this.withState('Available', 'Standby')
-    },
-
-    recovering(recoveryTurns = 3): Agent {
+    exhausted(exhaustion = 50): Agent {
       return this.new({
-        state: 'Recovering',
-        assignment: 'Recovery',
-        recoveryTurns,
-        hitPoints: 15,
-        maxHitPoints: 30,
-        hitPointsLostBeforeRecovery: 15,
-      })
-    },
-
-    onMission(missionSiteId = 'mission-site-test'): Agent {
-      return this.new({
-        state: 'OnMission',
-        assignment: `mission-site-${missionSiteId.replace('mission-site-', '')}`,
-      })
-    },
-
-    onAssignment(activity: 'Contracting' | 'Espionage' = 'Contracting'): Agent {
-      return this.new({
-        state: 'OnAssignment',
-        assignment: activity,
-      })
-    },
-
-    inTransit(): Agent {
-      return this.new({
-        state: 'InTransit',
-        assignment: 'Standby',
-      })
-    },
-
-    terminated(): Agent {
-      return this.new({
-        state: 'Terminated',
-        assignment: 'KIA',
-        hitPoints: 0,
+        exhaustion,
       })
     },
 
@@ -79,62 +33,6 @@ export const agFix = (() => {
         hitPoints: Math.max(0, maxHitPoints - hitPointsLost),
         maxHitPoints,
       })
-    },
-
-    exhausted(exhaustion = 50): Agent {
-      return this.new({
-        exhaustion,
-      })
-    },
-
-    veteran(missionsSurvived = 5): Agent {
-      return this.new({
-        missionsSurvived,
-        skill: 120,
-      })
-    },
-
-    rookie(): Agent {
-      return this.new({
-        skill: 60,
-        missionsSurvived: 0,
-        turnHired: 1,
-      })
-    },
-
-    elite(): Agent {
-      return this.new({
-        skill: 150,
-        missionsSurvived: 10,
-      })
-    },
-
-    many(count: number, overrides?: Partial<Agent>): Agent[] {
-      return Array.from({ length: count }, () => this.new(overrides))
-    },
-
-    team1(): [Agent] {
-      return [this.elite()]
-    },
-
-    team2(): [Agent, Agent] {
-      return [this.elite(), this.veteran()]
-    },
-
-    team3(): [Agent, Agent, Agent] {
-      return [this.elite(), this.veteran(), this.default()]
-    },
-
-    team4(): [Agent, Agent, Agent, Agent] {
-      return [this.elite(), this.veteran(), this.default(), this.rookie()]
-    },
-
-    team5(): [Agent, Agent, Agent, Agent, Agent] {
-      return [this.elite(), this.veteran(), this.default(), this.rookie(), this.default()]
-    },
-
-    team6(): [Agent, Agent, Agent, Agent, Agent, Agent] {
-      return [this.elite(), this.veteran(), this.default(), this.rookie(), this.default(), this.default()]
     },
   }
 
