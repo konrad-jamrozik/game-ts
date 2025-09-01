@@ -16,7 +16,6 @@ export const LeadFixture = (() => {
         title: 'Test Lead',
         intelCost: 10,
         description: 'A test lead for investigation',
-        expiresIn: 'never',
         dependsOn: [],
         repeatable: false,
       }
@@ -35,15 +34,8 @@ export const LeadFixture = (() => {
         title: `${faker.company.name()} Operation`,
         intelCost: faker.number.int({ min: 5, max: 50 }),
         description: faker.lorem.sentence(),
-        expiresIn: faker.helpers.arrayElement(['never', 3, 5, 10] as const),
         dependsOn: faker.helpers.arrayElements(['lead-1', 'lead-2', 'lead-3'], { min: 0, max: 2 }),
         repeatable: faker.datatype.boolean(),
-      })
-    },
-
-    expiring(turnsLeft = 3): Lead {
-      return this.new({
-        expiresIn: turnsLeft,
       })
     },
 

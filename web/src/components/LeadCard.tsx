@@ -54,11 +54,6 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={lead.intelCost} sx={{ width: 140 }} />
-              {lead.expiresIn !== 'never' ? (
-                <LabeledValue label="Expires in" value={lead.expiresIn} sx={{ width: 138 }} />
-              ) : (
-                <LabeledValue label="Does not expire" sx={{ width: 142 }} />
-              )}
             </Stack>
             {displayMode === 'normal' && lead.repeatable && (
               <Stack direction="row" sx={{ paddingTop: 0.5 }}>
