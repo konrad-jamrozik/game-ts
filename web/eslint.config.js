@@ -25,7 +25,7 @@ import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
 
 export default plugTypescriptEslint.config([
-  globalIgnores(['dist']),
+  globalIgnores(['dist', 'coverage']),
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
