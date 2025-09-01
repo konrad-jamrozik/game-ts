@@ -12,7 +12,6 @@ import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtPctDec2 } from '../utils/formatUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
-import { type AgentCombatStats, isAgent } from './evaluateBattle'
 import { rollContest } from './rolls'
 
 export function evaluateAttack(
@@ -97,4 +96,14 @@ export function evaluateAttack(
     // Apply defender exhaustion (both agents and enemies)
     defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
   }
+}
+
+export function isAgent(unit: Agent | Enemy): unit is Agent {
+  return 'turnHired' in unit
+}
+
+export type AgentCombatStats = {
+  id: string
+  initialEffectiveSkill: number
+  skillGained: number
 }

@@ -1,9 +1,9 @@
 /* eslint-disable max-lines */
-import type { Agent, Enemy } from '../model/model'
-import { agV } from '../model/agents/AgentView'
-import { effectiveSkill } from '../utils/actorUtils'
 import type { AgentsView } from '../model/agents/AgentsView'
-import { evaluateAttack } from './evaluateAttack'
+import { agV } from '../model/agents/AgentView'
+import type { Agent, Enemy } from '../model/model'
+import { effectiveSkill } from '../utils/actorUtils'
+import { type AgentCombatStats, evaluateAttack, isAgent } from './evaluateAttack'
 
 export type BattleReport = {
   rounds: number
@@ -82,16 +82,6 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     retreated,
     agentSkillUpdates,
   }
-}
-
-export function isAgent(unit: Agent | Enemy): unit is Agent {
-  return 'turnHired' in unit
-}
-
-export type AgentCombatStats = {
-  id: string
-  initialEffectiveSkill: number
-  skillGained: number
 }
 
 function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
