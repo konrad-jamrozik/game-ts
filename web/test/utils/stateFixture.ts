@@ -10,18 +10,12 @@ import type {
   MissionSiteId,
 } from '../../src/lib/model/model'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
-import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { AgentFixture } from '../fixtures/AgentFixture'
 import { MissionSiteFixture } from '../fixtures/MissionSiteFixture'
 
 export const st = {
-  setDebugInitialState(): void {
-    store.dispatch(reset({ debug: true }))
-    store.dispatch(clearEvents()) // Clear the reset event
-  },
-
   get gameState(): GameState {
     return store.getState().undoable.present.gameState
   },
@@ -30,7 +24,6 @@ export const st = {
     return agsV(st.gameState.agents)
   },
 
-  // Agent creation and manipulation helpers
   newAgentInStandby(id: string): Agent {
     return st.newAgent(id, 'Standby')
   },
@@ -43,34 +36,10 @@ export const st = {
     return st.newAgent(id, 'Espionage')
   },
 
-  createOnMissionAgent(id = 'agent-4', missionSiteId: MissionSiteId = 'mission-site-1' as MissionSiteId): Agent {
-    return AgentFixture.new({ id, state: 'OnMission', assignment: missionSiteId })
-  },
-
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState = assignment === 'Contracting' || assignment === 'Espionage' ? 'OnAssignment' : 'Available'
 
     return AgentFixture.new({ id, state, assignment })
-  },
-
-  setAgentsInState(agents: Agent[]): void {
-    st.arrangeGameState({ agents })
-  },
-
-  setIntel(amount: number): void {
-    st.arrangeGameState({ intel: amount })
-  },
-
-  setMissionSiteAndIntel(missionSiteId: MissionSiteId, intel = 100): void {
-    const missionSite: MissionSite = {
-      id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn',
-      agentIds: [],
-      state: 'Active',
-      expiresIn: 3,
-      enemies: [],
-    }
-    st.arrangeGameState({ intel, missionSites: [missionSite] })
   },
 
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
@@ -89,7 +58,6 @@ export const st = {
     store.dispatch(reset({ customState }))
   },
 
-  // Selection helpers
   arrangeSelection(options: { agents?: string[]; lead?: string; missionSite?: MissionSiteId }): void {
     if (options.agents) {
       store.dispatch(setAgentSelection(options.agents))
@@ -102,7 +70,22 @@ export const st = {
     }
   },
 
-  // State check helpers
+  expectIntelAmount(expectedAmount: number): void {
+    expect(st.gameState.intel).toBe(expectedAmount)
+  },
+
+  expectLeadInvestigatedOnce(leadId: string): void {
+    st.expectLeadInvestigated(leadId, 1)
+  },
+
+  expectLeadNotInvestigated(leadId: string): void {
+    st.expectLeadInvestigated(leadId, 0)
+  },
+
+  expectLeadInvestigated(leadId: string, times = 1): void {
+    expect(st.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
+  },
+
   expectAgentCount(expectedCount: number): void {
     expect(st.agentsView).toHaveLength(expectedCount)
   },
@@ -142,20 +125,13 @@ export const st = {
     expect(availableAgents).toHaveLength(count)
   },
 
-  expectIntelAmount(expectedAmount: number): void {
-    expect(st.gameState.intel).toBe(expectedAmount)
-  },
-
-  expectLeadInvestigatedOnce(leadId: string): void {
-    st.expectLeadInvestigated(leadId, 1)
-  },
-
-  expectLeadNotInvestigated(leadId: string): void {
-    st.expectLeadInvestigated(leadId, 0)
-  },
-
-  expectLeadInvestigated(leadId: string, times = 1): void {
-    expect(st.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
+  expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
+    agentIds.forEach((agentId) => {
+      st.expectAgentAssignment(agentId, assignment)
+      if (assignment === 'Contracting' || assignment === 'Espionage') {
+        st.expectAgentState(agentId, 'OnAssignment')
+      }
+    })
   },
 
   expectAgentsOnMissionSite(missionSiteId: MissionSiteId, agentIds: string[]): void {
@@ -175,14 +151,5 @@ export const st = {
     })
     // Check mission site has all the agents
     st.expectAgentsOnMissionSite(missionSiteId, agentIds)
-  },
-
-  expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
-    agentIds.forEach((agentId) => {
-      st.expectAgentAssignment(agentId, assignment)
-      if (assignment === 'Contracting' || assignment === 'Espionage') {
-        st.expectAgentState(agentId, 'OnAssignment')
-      }
-    })
   },
 }
