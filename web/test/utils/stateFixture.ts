@@ -16,6 +16,7 @@ import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '..
 import { AgentFixture } from '../fixtures/AgentFixture'
 import { MissionSiteFixture } from '../fixtures/MissionSiteFixture'
 
+// KJA move state to fixtures dir
 export const st = {
   get gameState(): GameState {
     return store.getState().undoable.present.gameState

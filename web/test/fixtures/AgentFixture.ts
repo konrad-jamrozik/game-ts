@@ -4,6 +4,7 @@ import { WeaponFixture } from './WeaponFixture'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 import { createWeapon } from '../../src/lib/utils/weaponUtils'
 
+// KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
 export const AgentFixture = (() => {
   let agentIdCounter = 0
 
@@ -12,6 +13,7 @@ export const AgentFixture = (() => {
       agentIdCounter = 0
     },
 
+    // KJA default agent fixture should reuse the logic that instantiates hired agents.
     default(): Agent {
       agentIdCounter += 1
       return {

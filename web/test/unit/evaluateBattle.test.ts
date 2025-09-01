@@ -4,13 +4,9 @@ import { st } from '../utils/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
 
 describe(evaluateBattle, () => {
-  test.todo('evaluateBattle -> happy path: player won')
-
-  test.todo('evaluateBattle -> happy path: player lost')
-
   test('evaluateBattle -> no enemies', () => {
     const agentId = 'agent-001'
-    const agents = agsV([st.newAgentInStandby(agentId)])
+    const agents = agsV([st.newAgent(agentId)])
 
     const report = evaluateBattle(agents, []) // Act
 
@@ -22,6 +18,25 @@ describe(evaluateBattle, () => {
       agentSkillUpdates: {},
     })
   })
+
+  test('evaluateBattle -> player won', () => {
+    const agentId = 'agent-001'
+    const agents = agsV([st.newAgent(agentId)])
+
+    const report = evaluateBattle(agents, []) // Act
+
+    expectReportToBe(report)({
+      rounds: 1,
+      agentCasualties: 0,
+      enemyCasualties: 0,
+      retreated: false,
+      agentSkillUpdates: {},
+    })
+  })
+
+  test.todo('evaluateBattle -> happy path: player won')
+
+  test.todo('evaluateBattle -> happy path: player lost')
 })
 
 /**

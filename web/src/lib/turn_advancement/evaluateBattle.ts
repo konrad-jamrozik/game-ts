@@ -79,9 +79,7 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   // Collect skill updates
   agentStats.forEach((stats) => {
-    if (stats.skillGained > 0) {
-      agentSkillUpdates[stats.id] = stats.skillGained
-    }
+    agentSkillUpdates[stats.id] = stats.skillGained
   })
 
   console.log(`\n📊 Battle concluded after ${roundIdx} rounds`)
