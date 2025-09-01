@@ -1,5 +1,5 @@
 import type { GameState, MissionSiteId } from '../../model/model'
-import asPlayerAction from '../asPlayerAction'
+import { asPlayerAction } from './asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>(
   (state: GameState, action) => {

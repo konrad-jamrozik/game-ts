@@ -1,5 +1,5 @@
 import type { Agent, GameState, MissionSiteId } from '../model'
-import { createWeapon } from '../../utils/weaponUtils'
+import { newWeapon } from '../../utils/weaponUtils'
 import { createEnemiesFromSpec } from '../../utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
@@ -18,7 +18,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
     const built: Agent = {
       id,
       ...agent,
-      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
     }
     if (built.state === 'OnMission' && built.assignment.startsWith('mission-site-')) {
       onMissionAgentIds.push(built.id)

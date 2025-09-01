@@ -1,7 +1,7 @@
 import type { GameState, MissionSite, MissionSiteId } from '../../model/model'
 import { missions } from '../../collections/missions'
 import { createEnemiesFromSpec } from '../../utils/enemyUtils'
-import asPlayerAction from '../asPlayerAction'
+import { asPlayerAction } from './asPlayerAction'
 
 export const investigateLead = asPlayerAction<{ leadId: string; intelCost: number }>((state: GameState, action) => {
   const { leadId, intelCost } = action.payload

@@ -13,7 +13,7 @@ import {
   reset,
   sackAgents,
 } from '../lib/slices/gameStateSlice'
-import isPlayerAction from '../lib/slices/isPlayerAction'
+import { isPlayerAction } from '../lib/slices/reducers/asPlayerAction'
 import type { MissionRewards, MissionSite, MissionSiteState, MissionSiteId } from '../lib/model/model'
 import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'

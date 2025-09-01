@@ -1,7 +1,13 @@
-import type { GameState } from '../../model/model'
-import { AGENT_HIRE_COST } from '../../model/ruleset/constants'
-import asPlayerAction from '../asPlayerAction'
-import { newHiredAgent } from '../reducerUtils'
+import type { Agent, GameState } from '../../model/model'
+import {
+  AGENT_HIRE_COST,
+  AGENT_INITIAL_EXHAUSTION,
+  AGENT_INITIAL_HIT_POINTS,
+  AGENT_INITIAL_SKILL,
+  AGENT_INITIAL_WEAPON_DAMAGE,
+} from '../../model/ruleset/constants'
+import { newWeapon } from '../../utils/weaponUtils'
+import { asPlayerAction } from './asPlayerAction'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
@@ -51,3 +57,23 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
     }
   }
 })
+
+/**
+ * Creates a new hired agent with the standard initial values used in the hiring process.
+ */
+export function newHiredAgent(id: string, turnHired: number): Agent {
+  return {
+    id,
+    turnHired,
+    state: 'InTransit',
+    assignment: 'Standby',
+    skill: AGENT_INITIAL_SKILL,
+    exhaustion: AGENT_INITIAL_EXHAUSTION,
+    hitPoints: AGENT_INITIAL_HIT_POINTS,
+    maxHitPoints: AGENT_INITIAL_HIT_POINTS,
+    recoveryTurns: 0,
+    hitPointsLostBeforeRecovery: 0,
+    missionsSurvived: 0,
+    weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+  }
+}

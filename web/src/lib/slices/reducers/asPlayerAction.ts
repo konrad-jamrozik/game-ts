@@ -1,20 +1,20 @@
 import type { CaseReducer, PayloadAction } from '@reduxjs/toolkit'
-import type { GameState } from '../model/model'
+import type { GameState } from '../../model/model'
 
 export type PlayerActionResult<T = undefined> = {
   payload: T
   meta: { playerAction: boolean }
 }
 
-function asPlayerAction(reducer: CaseReducer<GameState, PayloadAction<undefined>>): {
+export function asPlayerAction(reducer: CaseReducer<GameState, PayloadAction<undefined>>): {
   reducer: typeof reducer
   prepare: () => PlayerActionResult
 }
-function asPlayerAction<TPayload>(reducer: CaseReducer<GameState, PayloadAction<TPayload>>): {
+export function asPlayerAction<TPayload>(reducer: CaseReducer<GameState, PayloadAction<TPayload>>): {
   reducer: typeof reducer
   prepare: (payload: TPayload) => PlayerActionResult<TPayload>
 }
-function asPlayerAction<TPayload>(reducer: CaseReducer<GameState, PayloadAction<TPayload>>): {
+export function asPlayerAction<TPayload>(reducer: CaseReducer<GameState, PayloadAction<TPayload>>): {
   reducer: typeof reducer
   prepare: (...args: [] | [TPayload]) => PlayerActionResult | PlayerActionResult<TPayload>
 } {
@@ -30,4 +30,13 @@ function asPlayerAction<TPayload>(reducer: CaseReducer<GameState, PayloadAction<
   }
 }
 
-export default asPlayerAction
+export function isPlayerAction(action: unknown): action is { meta: { playerAction: boolean } } {
+  return (
+    typeof action === 'object' &&
+    action !== null &&
+    'meta' in action &&
+    typeof action.meta === 'object' &&
+    action.meta !== null &&
+    'playerAction' in action.meta
+  )
+}

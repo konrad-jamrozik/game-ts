@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
-import { createWeapon } from '../../src/lib/utils/weaponUtils'
+import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
 describe(evaluateDeployedMissionSite, () => {
@@ -20,7 +20,7 @@ describe(evaluateDeployedMissionSite, () => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
-      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // Create a test mission site with weak enemies
@@ -89,7 +89,7 @@ describe(evaluateDeployedMissionSite, () => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
-      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const testMissionSite: MissionSite = {
@@ -159,7 +159,7 @@ describe(evaluateDeployedMissionSite, () => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
-      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const agent2: Agent = {
@@ -174,7 +174,7 @@ describe(evaluateDeployedMissionSite, () => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsSurvived: 0,
-      weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const testMissionSite: MissionSite = {

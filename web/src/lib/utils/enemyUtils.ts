@@ -1,6 +1,6 @@
 import { ENEMY_STATS } from '../collections/enemyUnits'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
-import { createWeapon } from './weaponUtils'
+import { newWeapon } from './weaponUtils'
 
 let idCounter = 0
 
@@ -61,7 +61,7 @@ function createEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     exhaustion: 0, // Enemies start with 0 exhaustion
     hitPoints: stats.hp,
     maxHitPoints: stats.hp,
-    weapon: createWeapon(stats.damage),
+    weapon: newWeapon(stats.damage),
     isOfficer: stats.isOfficer,
   }
 }

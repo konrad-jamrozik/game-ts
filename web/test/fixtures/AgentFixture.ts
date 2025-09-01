@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
 import { WeaponFixture } from './WeaponFixture'
-import { newHiredAgent } from '../../src/lib/slices/reducerUtils'
+import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 
 // KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
 export const AgentFixture = (() => {
