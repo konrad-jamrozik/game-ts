@@ -187,7 +187,7 @@ describe(PlayerActions, () => {
   // deployAgentsToMission tests
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
     const missionSiteId = 'mission-site-1' as const
-    fix.buildAndSetInitialState({
+    fix.arrangeGameState({
       agents: [fix.newAgentInStandby(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
@@ -196,15 +196,15 @@ describe(PlayerActions, () => {
     fix.selectMissionSite(missionSiteId)
 
     fix.renderPlayerActions()
+
     await fix.deployAgents() // Act
 
-    fix.expectAgentCount(1)
     fix.expectAgentsDeployed([agentId], missionSiteId)
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
     const missionSiteId = 'mission-site-1' as const
-    fix.buildAndSetInitialState({
+    fix.arrangeGameState({
       agents: [fix.newAgentInContracting(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
@@ -212,13 +212,14 @@ describe(PlayerActions, () => {
     fix.selectMissionSite(missionSiteId)
 
     fix.renderPlayerActions()
+
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.deployAgents() // Act
 
-    fix.expectAgentCount(1)
-    fix.expectAgentState(agentId, 'OnAssignment') // Should remain unchanged
-    fix.expectAgentAssignment(agentId, 'Contracting') // Should remain unchanged
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
+
+    // Assert assignment is unchanged
+    fix.expectAgentsOnAssignment([agentId], 'Contracting')
   })
 })

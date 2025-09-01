@@ -26,12 +26,8 @@ export const fix = {
     store.dispatch(clearEvents()) // Clear the reset event
   },
 
-  setInitialState(customState: GameState): void {
-    store.dispatch(reset({ customState }))
-  },
-
   setMoneyAndFunding(amount: number): void {
-    fix.buildAndSetInitialState({ money: amount, funding: amount })
+    fix.arrangeGameState({ money: amount, funding: amount })
   },
 
   renderPlayerActions(): void {
@@ -89,11 +85,11 @@ export const fix = {
   },
 
   setAgentsInState(agents: Agent[]): void {
-    fix.buildAndSetInitialState({ agents })
+    fix.arrangeGameState({ agents })
   },
 
   setIntel(amount: number): void {
-    fix.buildAndSetInitialState({ intel: amount })
+    fix.arrangeGameState({ intel: amount })
   },
 
   setMissionSiteAndIntel(missionSiteId: MissionSiteId, intel = 100): void {
@@ -105,7 +101,23 @@ export const fix = {
       expiresIn: 3,
       enemies: [],
     }
-    fix.buildAndSetInitialState({ intel, missionSites: [missionSite] })
+    fix.arrangeGameState({ intel, missionSites: [missionSite] })
+  },
+
+  newMissionSite(missionSiteId: MissionSiteId): MissionSite {
+    return MissionSiteFixture.new({
+      id: missionSiteId,
+      missionId: 'mission-apprehend-red-dawn',
+      agentIds: [],
+      state: 'Active',
+      expiresIn: 3,
+      enemies: [],
+    })
+  },
+
+  arrangeGameState(updates: Partial<GameState>): void {
+    const customState = { ...makeInitialState(), ...updates }
+    store.dispatch(reset({ customState }))
   },
 
   // Selection helpers
@@ -211,19 +223,12 @@ export const fix = {
     fix.expectAgentsOnMissionSite(missionSiteId, agentIds)
   },
 
-  newMissionSite(missionSiteId: MissionSiteId): MissionSite {
-    return MissionSiteFixture.new({
-      id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn',
-      agentIds: [],
-      state: 'Active',
-      expiresIn: 3,
-      enemies: [],
+  expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
+    agentIds.forEach((agentId) => {
+      fix.expectAgentAssignment(agentId, assignment)
+      if (assignment === 'Contracting' || assignment === 'Espionage') {
+        fix.expectAgentState(agentId, 'OnAssignment')
+      }
     })
-  },
-
-  buildAndSetInitialState(updates: Partial<GameState>): void {
-    const initialState = { ...makeInitialState(), ...updates }
-    fix.setInitialState(initialState)
   },
 }
