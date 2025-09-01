@@ -1,4 +1,3 @@
-/* eslint-disable max-lines */
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'

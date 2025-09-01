@@ -19,7 +19,7 @@ describe(evaluateBattle, () => {
     })
   })
 
-  test.skip('evaluateBattle -> player won', () => {
+  test.todo('evaluateBattle -> player won', () => {
     const agentId = 'agent-001'
     const agents = agsV([st.newAgent(agentId)])
 
