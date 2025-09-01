@@ -1,6 +1,4 @@
-import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
-import { wpnFix } from './weaponFixture'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 
 // KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
@@ -23,25 +21,6 @@ export const agFix = (() => {
         ...overrides,
       }
     },
-
-    random(): Agent {
-      const maxHitPoints = faker.number.int({ min: 20, max: 40 })
-      const hitPoints = faker.number.int({ min: 0, max: maxHitPoints })
-
-      return this.new({
-        id: faker.string.uuid(),
-        turnHired: faker.number.int({ min: 1, max: 100 }),
-        skill: faker.number.int({ min: 50, max: 150 }),
-        exhaustion: faker.number.int({ min: 0, max: 100 }),
-        hitPoints,
-        maxHitPoints,
-        recoveryTurns: faker.number.int({ min: 0, max: 5 }),
-        hitPointsLostBeforeRecovery: faker.number.int({ min: 0, max: maxHitPoints }),
-        missionsSurvived: faker.number.int({ min: 0, max: 10 }),
-        weapon: wpnFix.random(),
-      })
-    },
-
     withState(state: AgentState, assignment?: AgentAssignment): Agent {
       const validAssignment = assignment ?? (state === 'Recovering' ? 'Recovery' : 'Standby')
       return this.new({
@@ -127,7 +106,6 @@ export const agFix = (() => {
       return this.new({
         skill: 150,
         missionsSurvived: 10,
-        weapon: wpnFix.powerful(),
       })
     },
 

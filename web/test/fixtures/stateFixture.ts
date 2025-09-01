@@ -14,7 +14,6 @@ import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { agFix } from './agentFixture'
-import { misStFix } from './missionSiteFixture'
 
 export const st = {
   get gameState(): GameState {
@@ -37,14 +36,14 @@ export const st = {
   },
 
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
-    return misStFix.new({
+    return {
       id: missionSiteId,
       missionId: 'mission-apprehend-red-dawn',
       agentIds: [],
       state: 'Active',
       expiresIn: 3,
       enemies: [],
-    })
+    }
   },
 
   arrangeGameState(updates: Partial<GameState>): void {
