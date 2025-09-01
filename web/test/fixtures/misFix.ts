@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import type { Mission, MissionRewards, FactionId } from '../../src/lib/model/model'
 
-export const MissionFixture = (() => {
+export const misFix = (() => {
   let missionIdCounter = 0
 
   return {

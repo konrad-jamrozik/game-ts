@@ -13,8 +13,8 @@ import {
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
-import { AgentFixture } from './AgentFixture'
-import { MissionSiteFixture } from './MissionSiteFixture'
+import { agFix } from './agFix'
+import { misStFix } from './misStFix'
 
 export const st = {
   get gameState(): GameState {
@@ -33,11 +33,11 @@ export const st = {
 
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState = isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
-    return AgentFixture.new({ id, state, assignment })
+    return agFix.new({ id, state, assignment })
   },
 
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
-    return MissionSiteFixture.new({
+    return misStFix.new({
       id: missionSiteId,
       missionId: 'mission-apprehend-red-dawn',
       agentIds: [],

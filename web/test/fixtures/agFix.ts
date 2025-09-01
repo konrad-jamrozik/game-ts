@@ -1,10 +1,10 @@
 import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
-import { WeaponFixture } from './WeaponFixture'
+import { wpnFix } from './wpnFix'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 
 // KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
-export const AgentFixture = (() => {
+export const agFix = (() => {
   let agentIdCounter = 0
 
   const agentFixture = {
@@ -12,7 +12,6 @@ export const AgentFixture = (() => {
       agentIdCounter = 0
     },
 
-    // KJA default agent fixture should reuse the logic that instantiates hired agents.
     default(): Agent {
       agentIdCounter += 1
       return newHiredAgent(`agent-${agentIdCounter}`, 1)
@@ -39,7 +38,7 @@ export const AgentFixture = (() => {
         recoveryTurns: faker.number.int({ min: 0, max: 5 }),
         hitPointsLostBeforeRecovery: faker.number.int({ min: 0, max: maxHitPoints }),
         missionsSurvived: faker.number.int({ min: 0, max: 10 }),
-        weapon: WeaponFixture.random(),
+        weapon: wpnFix.random(),
       })
     },
 
@@ -128,7 +127,7 @@ export const AgentFixture = (() => {
       return this.new({
         skill: 150,
         missionsSurvived: 10,
-        weapon: WeaponFixture.powerful(),
+        weapon: wpnFix.powerful(),
       })
     },
 

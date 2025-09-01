@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import type { Faction, FactionId } from '../../src/lib/model/model'
 import { assertDefined } from '../../src/lib/utils/assert'
 
-export const FactionFixture = {
+export const facFix = {
   default(): Faction {
     return {
       id: 'faction-red-dawn',

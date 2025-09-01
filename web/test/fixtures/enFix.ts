@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../../src/lib/model/model'
-import { WeaponFixture } from './WeaponFixture'
+import { wpnFix } from './wpnFix'
 
-export const EnemyFixture = (() => {
+export const enFix = (() => {
   let enemyIdCounter = 0
 
   return {
@@ -19,7 +19,7 @@ export const EnemyFixture = (() => {
         hitPoints: 20,
         maxHitPoints: 20,
         exhaustion: 0,
-        weapon: WeaponFixture.default(),
+        weapon: wpnFix.default(),
         isOfficer: false,
       }
     },
@@ -42,7 +42,7 @@ export const EnemyFixture = (() => {
         hitPoints: faker.number.int({ min: 1, max: maxHitPoints }),
         maxHitPoints,
         exhaustion: faker.number.int({ min: 0, max: 50 }),
-        weapon: WeaponFixture.random(),
+        weapon: wpnFix.random(),
         isOfficer: ['Lieutenant', 'Elite', 'Commander', 'HighCommander'].includes(type),
       })
     },
@@ -78,7 +78,7 @@ export const EnemyFixture = (() => {
         hitPoints: hpByType[type],
         maxHitPoints: hpByType[type],
         isOfficer,
-        weapon: isOfficer ? WeaponFixture.powerful() : WeaponFixture.default(),
+        weapon: isOfficer ? wpnFix.powerful() : wpnFix.default(),
       })
     },
 

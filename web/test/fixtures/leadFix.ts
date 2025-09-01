@@ -1,7 +1,7 @@
 import { faker } from '@faker-js/faker'
 import type { Lead } from '../../src/lib/model/model'
 
-export const LeadFixture = (() => {
+export const leadFix = (() => {
   let leadIdCounter = 0
 
   return {

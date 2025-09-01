@@ -2,7 +2,7 @@ import { faker } from '@faker-js/faker'
 import type { Weapon } from '../../src/lib/model/model'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
 
-export const WeaponFixture = {
+export const wpnFix = {
   default(): Weapon {
     return {
       damage: AGENT_INITIAL_WEAPON_DAMAGE,

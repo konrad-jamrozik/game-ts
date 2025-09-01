@@ -1,8 +1,8 @@
 import { faker } from '@faker-js/faker'
 import type { GameState } from '../../src/lib/model/model'
-import { AgentFixture } from './AgentFixture'
-import { FactionFixture } from './FactionFixture'
-import { MissionSiteFixture } from './MissionSiteFixture'
+import { agFix } from './agFix'
+import { facFix } from './facFix'
+import { misStFix } from './misStFix'
 
 export const GameStateFixture = {
   default(): GameState {
@@ -12,12 +12,12 @@ export const GameStateFixture = {
       actionsCount: 0,
       // Situation
       panic: 0,
-      factions: FactionFixture.all(),
+      factions: facFix.all(),
       // Assets
       money: 1000,
       intel: 100,
       funding: 50,
-      agents: AgentFixture.team4(),
+      agents: agFix.team4(),
       // Liabilities
       currentTurnTotalHireCost: 0,
       // Archive
@@ -41,10 +41,10 @@ export const GameStateFixture = {
       money: faker.number.int({ min: 0, max: 10_000 }),
       intel: faker.number.int({ min: 0, max: 500 }),
       funding: faker.number.int({ min: 0, max: 200 }),
-      agents: AgentFixture.many(faker.number.int({ min: 1, max: 8 })),
+      agents: agFix.many(faker.number.int({ min: 1, max: 8 })),
       currentTurnTotalHireCost: faker.number.int({ min: 0, max: 500 }),
       leadInvestigationCounts: this.randomInvestigationCounts(),
-      missionSites: MissionSiteFixture.many(faker.number.int({ min: 0, max: 5 })),
+      missionSites: misStFix.many(faker.number.int({ min: 0, max: 5 })),
     })
   },
 
@@ -66,26 +66,14 @@ export const GameStateFixture = {
       money: 3000,
       intel: 250,
       funding: 100,
-      agents: [
-        AgentFixture.elite(),
-        AgentFixture.veteran(),
-        AgentFixture.veteran(3),
-        AgentFixture.default(),
-        AgentFixture.rookie(),
-        AgentFixture.recovering(2),
-      ],
-      factions: [
-        FactionFixture.withThreat(45),
-        FactionFixture.withThreat(30),
-        FactionFixture.suppressed(),
-        FactionFixture.lowThreat(),
-      ],
+      agents: [agFix.elite(), agFix.veteran(), agFix.veteran(3), agFix.default(), agFix.rookie(), agFix.recovering(2)],
+      factions: [facFix.withThreat(45), facFix.withThreat(30), facFix.suppressed(), facFix.lowThreat()],
       leadInvestigationCounts: {
         'lead-1': 2,
         'lead-2': 1,
         'lead-3': 3,
       },
-      missionSites: [MissionSiteFixture.active(), MissionSiteFixture.deployed(['agent-1', 'agent-2'])],
+      missionSites: [misStFix.active(), misStFix.deployed(['agent-1', 'agent-2'])],
     })
   },
 
@@ -98,21 +86,16 @@ export const GameStateFixture = {
       intel: 500,
       funding: 200,
       agents: [
-        AgentFixture.elite(),
-        AgentFixture.elite(),
-        AgentFixture.veteran(8),
-        AgentFixture.veteran(6),
-        AgentFixture.veteran(5),
-        AgentFixture.veteran(4),
-        AgentFixture.default(),
-        AgentFixture.recovering(1),
+        agFix.elite(),
+        agFix.elite(),
+        agFix.veteran(8),
+        agFix.veteran(6),
+        agFix.veteran(5),
+        agFix.veteran(4),
+        agFix.default(),
+        agFix.recovering(1),
       ],
-      factions: [
-        FactionFixture.highThreat(),
-        FactionFixture.withThreat(65),
-        FactionFixture.withThreat(50),
-        FactionFixture.suppressed(),
-      ],
+      factions: [facFix.highThreat(), facFix.withThreat(65), facFix.withThreat(50), facFix.suppressed()],
       leadInvestigationCounts: {
         'lead-1': 5,
         'lead-2': 4,
@@ -121,10 +104,10 @@ export const GameStateFixture = {
         'lead-5': 1,
       },
       missionSites: [
-        MissionSiteFixture.active(),
-        MissionSiteFixture.active(),
-        MissionSiteFixture.deployed(['agent-1', 'agent-2', 'agent-3']),
-        MissionSiteFixture.successful(),
+        misStFix.active(),
+        misStFix.active(),
+        misStFix.deployed(['agent-1', 'agent-2', 'agent-3']),
+        misStFix.successful(),
       ],
     })
   },
@@ -135,13 +118,8 @@ export const GameStateFixture = {
       money: 100,
       intel: 10,
       funding: 10,
-      agents: [AgentFixture.wounded(15), AgentFixture.exhausted(80), AgentFixture.recovering(4), AgentFixture.rookie()],
-      factions: [
-        FactionFixture.highThreat(),
-        FactionFixture.highThreat(),
-        FactionFixture.withThreat(75),
-        FactionFixture.withThreat(70),
-      ],
+      agents: [agFix.wounded(15), agFix.exhausted(80), agFix.recovering(4), agFix.rookie()],
+      factions: [facFix.highThreat(), facFix.highThreat(), facFix.withThreat(75), facFix.withThreat(70)],
     })
   },
 
@@ -153,19 +131,19 @@ export const GameStateFixture = {
     })
   },
 
-  withAgents(...agents: ReturnType<typeof AgentFixture.new>[]): GameState {
+  withAgents(...agents: ReturnType<typeof agFix.new>[]): GameState {
     return this.new({
       agents,
     })
   },
 
-  withMissions(...missionSites: ReturnType<typeof MissionSiteFixture.new>[]): GameState {
+  withMissions(...missionSites: ReturnType<typeof misStFix.new>[]): GameState {
     return this.new({
       missionSites,
     })
   },
 
-  withFactions(...factions: ReturnType<typeof FactionFixture.new>[]): GameState {
+  withFactions(...factions: ReturnType<typeof facFix.new>[]): GameState {
     return this.new({
       factions,
     })

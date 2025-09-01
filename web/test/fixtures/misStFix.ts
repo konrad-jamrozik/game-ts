@@ -1,7 +1,7 @@
 import type { MissionSite, MissionSiteState } from '../../src/lib/model/model'
-import { EnemyFixture } from './EnemyFixture'
+import { enFix } from './enFix'
 
-export const MissionSiteFixture = (() => {
+export const misStFix = (() => {
   let missionSiteIdCounter = 0
 
   return {
@@ -17,7 +17,7 @@ export const MissionSiteFixture = (() => {
         agentIds: [],
         state: 'Active',
         expiresIn: 'never',
-        enemies: EnemyFixture.squad(),
+        enemies: enFix.squad(),
       }
     },
 
@@ -65,13 +65,13 @@ export const MissionSiteFixture = (() => {
 
     withEnemies(enemyCount = 4): MissionSite {
       return this.new({
-        enemies: EnemyFixture.many(enemyCount),
+        enemies: enFix.many(enemyCount),
       })
     },
 
     withEliteEnemies(): MissionSite {
       return this.new({
-        enemies: EnemyFixture.eliteSquad(),
+        enemies: enFix.eliteSquad(),
       })
     },
 
