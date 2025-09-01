@@ -70,26 +70,26 @@ export const fix = {
   },
 
   // Agent creation and manipulation helpers
-  newAgent(id: string): Agent {
-    return fix.newAgent2(id, 'Standby')
+  newAgentInStandby(id: string): Agent {
+    return fix.newAgent(id, 'Standby')
   },
 
-  newAgent2(id: string, assignment: AgentAssignment = 'Standby'): Agent {
-    const state: AgentState = assignment === 'Contracting' || assignment === 'Espionage' ? 'OnAssignment' : 'Available'
-
-    return AgentFixture.new({ id, state, assignment })
+  newAgentInContracting(id: string): Agent {
+    return fix.newAgent(id, 'Contracting')
   },
 
-  newOnAssignmentAgent(id: string, assignment: AgentAssignment = 'Contracting'): Agent {
-    return fix.newAgent2(id, assignment)
-  },
-
-  createOnEspionageAgent(id = 'agent-3'): Agent {
-    return AgentFixture.new({ id, state: 'OnAssignment', assignment: 'Espionage' })
+  newAgentInEspionage(id = 'agent-3'): Agent {
+    return fix.newAgent(id, 'Espionage')
   },
 
   createOnMissionAgent(id = 'agent-4', missionSiteId: MissionSiteId = 'mission-site-1' as MissionSiteId): Agent {
     return AgentFixture.new({ id, state: 'OnMission', assignment: missionSiteId })
+  },
+
+  newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
+    const state: AgentState = assignment === 'Contracting' || assignment === 'Espionage' ? 'OnAssignment' : 'Available'
+
+    return AgentFixture.new({ id, state, assignment })
   },
 
   setAgentsInState(agents: Agent[]): void {
