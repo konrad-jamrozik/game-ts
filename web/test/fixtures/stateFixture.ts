@@ -13,10 +13,9 @@ import {
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
-import { AgentFixture } from '../fixtures/AgentFixture'
-import { MissionSiteFixture } from '../fixtures/MissionSiteFixture'
+import { AgentFixture } from './AgentFixture'
+import { MissionSiteFixture } from './MissionSiteFixture'
 
-// KJA move state to fixtures dir
 export const st = {
   get gameState(): GameState {
     return store.getState().undoable.present.gameState

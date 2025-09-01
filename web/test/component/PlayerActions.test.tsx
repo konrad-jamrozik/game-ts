@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
-import { st } from '../utils/stateFixture'
-import { ui } from './uiFixture'
+import { st } from '../fixtures/stateFixture'
+import { ui } from '../fixtures/uiFixture'
 import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
 import { getLeadById } from '../../src/lib/collections/leads'
 

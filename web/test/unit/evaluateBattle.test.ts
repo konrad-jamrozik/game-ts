@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
-import { st } from '../utils/stateFixture'
+import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
 
 describe(evaluateBattle, () => {

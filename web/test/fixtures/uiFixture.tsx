@@ -5,7 +5,6 @@ import { expect } from 'vitest'
 import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 
-// KJA move ui to fixtures dir
 export const ui = {
   renderPlayerActions(): void {
     render(
