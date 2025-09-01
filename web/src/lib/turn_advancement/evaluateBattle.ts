@@ -16,20 +16,10 @@ import { fmtPctDec2 } from '../utils/formatUtils'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { assertDefined } from '../utils/assert'
 
-function isAgent(unit: Agent | Enemy): unit is Agent {
-  return 'turnHired' in unit
-}
-
-export type AgentCombatStats = {
-  id: string
-  initialEffectiveSkill: number
-  skillGained: number
-}
-
 export type BattleReport = {
   rounds: number
-  agentsCasualties: number
-  enemiesCasualties: number
+  agentCasualties: number
+  enemyCasualties: number
   retreated: boolean
   agentSkillUpdates: Record<string, number>
 }
@@ -100,11 +90,21 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   return {
     rounds: roundIdx,
-    agentsCasualties,
-    enemiesCasualties,
+    agentCasualties: agentsCasualties,
+    enemyCasualties: enemiesCasualties,
     retreated,
     agentSkillUpdates,
   }
+}
+
+function isAgent(unit: Agent | Enemy): unit is Agent {
+  return 'turnHired' in unit
+}
+
+type AgentCombatStats = {
+  id: string
+  initialEffectiveSkill: number
+  skillGained: number
 }
 
 function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {

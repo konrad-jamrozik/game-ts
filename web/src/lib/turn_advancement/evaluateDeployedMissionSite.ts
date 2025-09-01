@@ -23,9 +23,8 @@ export function evaluateDeployedMissionSite(state: GameState, missionSite: Missi
 
   updateAgentsAfterBattle(deployedAgents, battleReport)
 
-  // Determine mission site outcome
+  // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
-
   missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
 
   // Return mission rewards to be applied later, don't apply them immediately
@@ -60,7 +59,7 @@ function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): void {
   agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
   // Additional exhaustion for each terminated agent
-  agent.exhaustion += battleReport.agentsCasualties * AGENT_EXHAUSTION_RECOVERY_PER_TURN
+  agent.exhaustion += battleReport.agentCasualties * AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
   // ----------------------------------------
   // Update skill
