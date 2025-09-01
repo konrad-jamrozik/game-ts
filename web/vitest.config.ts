@@ -20,7 +20,7 @@ export default defineConfig({
           include: ['test/unit/*.test*'],
           environment: 'node',
           globals: true,
-          setupFiles: ['./test/utils/setupReactTests.ts'],
+          setupFiles: ['./test/utils/setupAllTests.ts'],
           testTimeout: 30_000,
         },
       },
@@ -48,7 +48,7 @@ export default defineConfig({
           include: ['test/e2e/*.test*'],
           environment: 'jsdom',
           globals: true,
-          setupFiles: './test/utils/setupAllTests.ts',
+          setupFiles: ['./test/utils/setupAllTests.ts', './test/utils/setupReactTests.ts'],
           testTimeout: 60_000, // Longer timeout for E2E tests
           server: {
             deps: {
