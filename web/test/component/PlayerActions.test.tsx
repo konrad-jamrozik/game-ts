@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { fix } from './componentFixture'
 import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
+import { getLeadById } from '../../src/lib/collections/leads'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1' as const
@@ -151,21 +152,24 @@ describe(PlayerActions, () => {
   // investigateLead tests
   test("click 'investigate lead' button -> happy path", async () => {
     const leadId = 'lead-criminal-orgs'
-    const leadIntelCost = 10
-    fix.setIntel(20)
+    const leadIntelCost = getLeadById(leadId).intelCost
+    fix.arrangeGameState({
+      intel: leadIntelCost,
+    })
     fix.arrangeSelection({ lead: leadId })
 
     fix.renderPlayerActions()
     await fix.investigateLead() // Act
 
-    fix.expectIntelAmount(20 - leadIntelCost)
-    fix.expectLeadInvestigated(leadId, 1)
+    fix.expectLeadInvestigatedOnce(leadId)
+    fix.expectIntelAmount(10 - leadIntelCost)
   })
 
   test("click 'investigate lead' button -> alert: insufficient intel", async () => {
     const leadId = 'lead-criminal-orgs'
+    const leadIntelCost = getLeadById(leadId).intelCost
     fix.arrangeGameState({
-      intel: 5, // Less than required to investigate lead-criminal-orgs, which costs 10
+      intel: leadIntelCost - 1,
     })
     fix.arrangeSelection({ lead: leadId })
     fix.renderPlayerActions()
@@ -174,8 +178,8 @@ describe(PlayerActions, () => {
     await fix.investigateLead() // Act
 
     fix.expectPlayerActionsAlert('Not enough intel')
-    fix.expectIntelAmount(5) // Expect unchanged
     fix.expectLeadNotInvestigated(leadId)
+    fix.expectIntelAmount(leadIntelCost) // Expect unchanged
   })
 
   // deployAgentsToMission tests
