@@ -1,13 +1,14 @@
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
 import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
-import type {
-  Agent,
-  AgentAssignment,
-  AgentState,
-  GameState,
-  MissionSite,
-  MissionSiteId,
+import {
+  isActivityAssignment,
+  type Agent,
+  type AgentAssignment,
+  type AgentState,
+  type GameState,
+  type MissionSite,
+  type MissionSiteId,
 } from '../../src/lib/model/model'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
@@ -24,21 +25,14 @@ export const st = {
     return agsV(st.gameState.agents)
   },
 
-  newAgentInStandby(id: string): Agent {
-    return st.newAgent(id, 'Standby')
-  },
+  newAgentInStandby: (id: string): Agent => st.newAgent(id, 'Standby'),
 
-  newAgentInContracting(id: string): Agent {
-    return st.newAgent(id, 'Contracting')
-  },
+  newAgentInContracting: (id: string): Agent => st.newAgent(id, 'Contracting'),
 
-  newAgentInEspionage(id = 'agent-3'): Agent {
-    return st.newAgent(id, 'Espionage')
-  },
+  newAgentInEspionage: (id: string): Agent => st.newAgent(id, 'Espionage'),
 
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
-    const state: AgentState = assignment === 'Contracting' || assignment === 'Espionage' ? 'OnAssignment' : 'Available'
-
+    const state: AgentState = isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
     return AgentFixture.new({ id, state, assignment })
   },
 
@@ -128,7 +122,7 @@ export const st = {
   expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
     agentIds.forEach((agentId) => {
       st.expectAgentAssignment(agentId, assignment)
-      if (assignment === 'Contracting' || assignment === 'Espionage') {
+      if (isActivityAssignment(assignment)) {
         st.expectAgentState(agentId, 'OnAssignment')
       }
     })
