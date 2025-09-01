@@ -41,7 +41,7 @@ describe(PlayerActions, () => {
   test("click 'sack agents' button -> happy path", async () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     await fix.sackAgents() // Act
@@ -54,7 +54,7 @@ describe(PlayerActions, () => {
   test("click 'sack agents' button -> alert: agents in invalid states", async () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
@@ -69,7 +69,7 @@ describe(PlayerActions, () => {
   test("click 'assign agents to contracting' button -> happy path", async () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     await fix.assignToContracting() // Act
@@ -83,7 +83,7 @@ describe(PlayerActions, () => {
   test("click 'assign agents to contracting' button -> alert: agents in invalid states", async () => {
     const onAssignmentAgent = fix.newAgentInEspionage(agentId)
     fix.setAgentsInState([onAssignmentAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
@@ -99,7 +99,7 @@ describe(PlayerActions, () => {
   test("click 'assign agents to espionage' button -> happy path", async () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     await fix.assignToEspionage() // Act
@@ -113,7 +113,7 @@ describe(PlayerActions, () => {
   test("click 'assign agents to espionage' button -> alert: agents in invalid states", async () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
@@ -129,7 +129,7 @@ describe(PlayerActions, () => {
   test("click 'recall agents' button -> happy path", async () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
     fix.setAgentsInState([onAssignmentAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     await fix.recallAgents() // Act
@@ -143,7 +143,7 @@ describe(PlayerActions, () => {
   test("click 'recall agents' button -> alert: agents in invalid states", async () => {
     const availableAgent = fix.newAgentInStandby(agentId)
     fix.setAgentsInState([availableAgent])
-    fix.selectAgents([agentId])
+    fix.arrangeSelection({ agents: [agentId] })
 
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
@@ -160,7 +160,7 @@ describe(PlayerActions, () => {
     const leadId = 'lead-criminal-orgs'
     const leadIntelCost = 10
     fix.setIntel(20)
-    fix.selectLead(leadId)
+    fix.arrangeSelection({ lead: leadId })
 
     fix.renderPlayerActions()
     await fix.investigateLead() // Act
@@ -172,7 +172,7 @@ describe(PlayerActions, () => {
   test("click 'investigate lead' button -> alert: insufficient intel", async () => {
     const leadId = 'lead-criminal-orgs'
     fix.setIntel(5) // Less than required (lead-criminal-orgs costs 10)
-    fix.selectLead(leadId)
+    fix.arrangeSelection({ lead: leadId })
 
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
@@ -192,8 +192,7 @@ describe(PlayerActions, () => {
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
 
-    fix.selectAgents([agentId])
-    fix.selectMissionSite(missionSiteId)
+    fix.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
 
     fix.renderPlayerActions()
 
@@ -208,8 +207,7 @@ describe(PlayerActions, () => {
       agents: [fix.newAgentInContracting(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
     })
-    fix.selectAgents([agentId])
-    fix.selectMissionSite(missionSiteId)
+    fix.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
 
     fix.renderPlayerActions()
 

@@ -121,16 +121,16 @@ export const fix = {
   },
 
   // Selection helpers
-  selectAgents(agentIds: string[]): void {
-    store.dispatch(setAgentSelection(agentIds))
-  },
-
-  selectLead(leadId: string): void {
-    store.dispatch(setLeadSelection(leadId))
-  },
-
-  selectMissionSite(missionSiteId: MissionSiteId): void {
-    store.dispatch(setMissionSiteSelection(missionSiteId))
+  arrangeSelection(options: { agents?: string[]; lead?: string; missionSite?: MissionSiteId }): void {
+    if (options.agents) {
+      store.dispatch(setAgentSelection(options.agents))
+    }
+    if (options.lead !== undefined) {
+      store.dispatch(setLeadSelection(options.lead))
+    }
+    if (options.missionSite !== undefined) {
+      store.dispatch(setMissionSiteSelection(options.missionSite))
+    }
   },
 
   // Button click helpers
