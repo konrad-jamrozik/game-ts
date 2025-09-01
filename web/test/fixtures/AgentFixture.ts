@@ -1,8 +1,7 @@
 import { faker } from '@faker-js/faker'
 import type { Agent, AgentState, AgentAssignment } from '../../src/lib/model/model'
 import { WeaponFixture } from './WeaponFixture'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
-import { createWeapon } from '../../src/lib/utils/weaponUtils'
+import { newHiredAgent } from '../../src/lib/slices/reducerUtils'
 
 // KJA fixtures should not be capitalized. So AgentFixture -> agentFixture.
 export const AgentFixture = (() => {
@@ -16,20 +15,7 @@ export const AgentFixture = (() => {
     // KJA default agent fixture should reuse the logic that instantiates hired agents.
     default(): Agent {
       agentIdCounter += 1
-      return {
-        id: `agent-${agentIdCounter}`,
-        turnHired: 1,
-        skill: 100,
-        exhaustion: 0,
-        hitPoints: 30,
-        maxHitPoints: 30,
-        recoveryTurns: 0,
-        hitPointsLostBeforeRecovery: 0,
-        missionsSurvived: 0,
-        state: 'Available',
-        assignment: 'Standby',
-        weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
-      }
+      return newHiredAgent(`agent-${agentIdCounter}`, 1)
     },
 
     new(overrides?: Partial<Agent>): Agent {

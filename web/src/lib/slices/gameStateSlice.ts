@@ -1,18 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { missions } from '../collections/missions'
-import { createWeapon } from '../utils/weaponUtils'
 import { createEnemiesFromSpec } from '../utils/enemyUtils'
-import {
-  AGENT_HIRE_COST,
-  AGENT_INITIAL_EXHAUSTION,
-  AGENT_INITIAL_HIT_POINTS,
-  AGENT_INITIAL_SKILL,
-  AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../model/ruleset/constants'
+import { AGENT_HIRE_COST } from '../model/ruleset/constants'
 import initialState, { makeInitialState } from '../model/ruleset/initialState'
 import evaluateTurn from '../turn_advancement/evaluateTurn'
 import asPlayerAction from './asPlayerAction'
-import type { Agent, GameState, MissionSite, MissionSiteId } from '../model/model'
+import type { GameState, MissionSite, MissionSiteId } from '../model/model'
+import { newHiredAgent } from './reducerUtils'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
@@ -27,20 +21,7 @@ const gameStateSlice = createSlice({
       const nextAgentNumericId = state.agents.length
       const newAgentId = `agent-${nextAgentNumericId.toString().padStart(3, '0')}`
 
-      const newAgent: Agent = {
-        id: newAgentId,
-        turnHired: state.turn,
-        state: 'InTransit',
-        assignment: 'Standby',
-        skill: AGENT_INITIAL_SKILL,
-        exhaustion: AGENT_INITIAL_EXHAUSTION,
-        hitPoints: AGENT_INITIAL_HIT_POINTS,
-        maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-        recoveryTurns: 0,
-        hitPointsLostBeforeRecovery: 0,
-        missionsSurvived: 0,
-        weapon: createWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
-      }
+      const newAgent = newHiredAgent(newAgentId, state.turn)
       state.agents.push(newAgent)
       state.currentTurnTotalHireCost += AGENT_HIRE_COST
     }),
