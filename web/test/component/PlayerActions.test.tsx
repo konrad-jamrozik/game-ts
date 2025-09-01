@@ -1,6 +1,3 @@
-/* eslint-disable vitest/expect-expect */
-// Note: This file uses helper functions in componentFixture.tsx that contain the actual expect() calls
-
 import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { fix } from './componentFixture'
@@ -11,33 +8,28 @@ describe(PlayerActions, () => {
   const agentId = 'agent-1' as const
 
   test("click 'hire agent' button -> happy path", async () => {
-    expect(fix.agentsView).toHaveLength(0)
+    fix.expectAgentCount(0)
     fix.renderPlayerActions()
 
     await fix.hireAgent() // Act
 
-    expect(fix.agentsView).toHaveLength(1)
+    fix.expectAgentCount(1)
+    fix.expectTerminatedAgentCount(0)
   })
 
-  /**
-   * When projected new balance before hiring the agents is 0 or less,
-   * the agent cannot be hired.
-   *
-   */
   test("click 'hire agent' button -> alert: insufficient funds", async () => {
-    fix.setMoneyAndFunding(0)
+    fix.arrangeGameState({ money: 0, funding: 0 })
     expect(getMoneyNewBalance(fix.gameState)).toBe(0)
-    expect(fix.agentsView).toHaveLength(0)
+    fix.expectAgentCount(0)
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
     await fix.hireAgent() // Act
 
-    expect(fix.agentsView).toHaveLength(0)
     fix.expectPlayerActionsAlert('Insufficient funds')
+    fix.expectAgentCount(0)
   })
 
-  // sackAgents tests
   test("click 'sack agents' button -> happy path", async () => {
     fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
@@ -57,6 +49,7 @@ describe(PlayerActions, () => {
     fix.arrangeGameState({ agents: [fix.newAgentInContracting(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
     fix.expectAgentCount(1)
+    fix.expectTerminatedAgentCount(0)
     fix.renderPlayerActions()
     fix.expectPlayerActionsAlert({ hidden: true })
 
@@ -64,9 +57,9 @@ describe(PlayerActions, () => {
 
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
     fix.expectAgentCount(1)
+    fix.expectTerminatedAgentCount(0)
   })
 
-  // assignAgentsToContracting tests
   test("click 'assign agents to contracting' button -> happy path", async () => {
     fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
@@ -90,7 +83,6 @@ describe(PlayerActions, () => {
     fix.expectAgentAssignment(agentId, 'Espionage') // Expect unchanged
   })
 
-  // assignAgentsToEspionage tests
   test("click 'assign agents to espionage' button -> happy path", async () => {
     fix.arrangeGameState({ agents: [fix.newAgentInStandby(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
@@ -114,7 +106,6 @@ describe(PlayerActions, () => {
     fix.expectAgentAssignment(agentId, 'Contracting') // Expect unchanged
   })
 
-  // recallAgents tests
   test("click 'recall agents' button -> happy path", async () => {
     fix.arrangeGameState({ agents: [fix.newAgentInContracting(agentId)] })
     fix.arrangeSelection({ agents: [agentId] })
@@ -138,7 +129,6 @@ describe(PlayerActions, () => {
     fix.expectAgentState(agentId, 'Available') // Expect unchanged
   })
 
-  // investigateLead tests
   test("click 'investigate lead' button -> happy path", async () => {
     const leadId = 'lead-criminal-orgs'
     const leadIntelCost = getLeadById(leadId).intelCost
@@ -171,7 +161,6 @@ describe(PlayerActions, () => {
     fix.expectIntelAmount(leadIntelCost - 1) // Expect unchanged
   })
 
-  // deployAgentsToMission tests
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
     const missionSiteId = 'mission-site-1' as const
     fix.arrangeGameState({

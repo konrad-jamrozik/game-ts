@@ -26,10 +26,6 @@ export const fix = {
     store.dispatch(clearEvents()) // Clear the reset event
   },
 
-  setMoneyAndFunding(amount: number): void {
-    fix.arrangeGameState({ money: amount, funding: amount })
-  },
-
   renderPlayerActions(): void {
     render(
       <Provider store={store}>

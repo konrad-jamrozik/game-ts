@@ -440,6 +440,11 @@ export default plugTypescriptEslint.config([
       // It just adds extra lines and noise to otherwise sometimes very short (<= 5 lines tests).
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
       'vitest/prefer-expect-assertions': 'off',
+
+      // Tests that do not contain expect() calls are allowed, because tests call test utils that
+      // invoke expect() in turn.
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md
+      'vitest/expect-expect': 'off',
     },
   },
 ])
