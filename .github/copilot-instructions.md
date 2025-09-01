@@ -37,6 +37,7 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 
 Run all of the below commands from the `web/` directory to verify your work:
 
+- To do thorough check of all validations, run `npm run check`.
 - To check for obvious errors, run `npm run build`.
 - To check for code formatting issues, run `npm run format`.
 - To fix code formatting issues, run `npm run format:fix`.
