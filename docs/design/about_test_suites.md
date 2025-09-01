@@ -49,12 +49,11 @@ One happy path test per component, rendering the component:
   - Tests for `Advance turn` button.
   - Tests for `Restart game` button.
 
-- (🚧 needs review) Tests for `PlayerActions.tsx`:
+- Tests for `PlayerActions.tsx`:
   - For each player action:
     - One happy path test
     - One test resulting in alert
-  - Note: these tests arrange appropriate selection of agents, leads, missions, etc.
-  - Currently only `hire agent` happy path is implemented.
+  - Note: these tests arrange appropriate selection of agents, leads, mission sites, etc.
 
 - Tests for `EventLog.tsx`.
 
@@ -120,19 +119,19 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 ### `component/PlayerActions.test.tsx`
 
 - click 'hire agent' button -> happy path
-- _(TODO)_ click 'hire agent' button -> alert: insufficient money
-- _(TODO)_ click 'sack agents' button -> happy path
-- _(TODO)_ click 'sack agents' button -> alert: agents in invalid states
-- _(TODO)_ click 'assign agents to contracting' button -> happy path
-- _(TODO)_ click 'assign agents to contracting' button -> alert: agents in invalid states
-- _(TODO)_ click 'assign agents to espionage' button -> happy path
-- _(TODO)_ click 'assign agents to espionage' button -> alert: agents in invalid states
-- _(TODO)_ click 'recall agents' button -> happy path
-- _(TODO)_ click 'recall agents' button -> alert: agents in invalid states
-- _(TODO)_ click 'investigate lead' button -> happy path
-- _(TODO)_ click 'investigate lead' button -> alert: insufficient intel
-- _(TODO)_ click 'deploy agents to active mission site' button -> happy path
-- _(TODO)_ click 'deploy agents to active mission site' button -> alert: agents in invalid states
+- click 'hire agent' button -> alert: insufficient funds
+- click 'sack agents' button -> happy path
+- click 'sack agents' button -> alert: agents in invalid states
+- click 'assign agents to contracting' button -> happy path
+- click 'assign agents to contracting' button -> alert: agents in invalid states
+- click 'assign agents to espionage' button -> happy path
+- click 'assign agents to espionage' button -> alert: agents in invalid states
+- click 'recall agents' button -> happy path
+- click 'recall agents' button -> alert: agents in invalid states
+- click 'investigate lead' button -> happy path
+- click 'investigate lead' button -> alert: insufficient intel
+- click 'deploy agents to active mission site' button -> happy path
+- click 'deploy agents to active mission site' button -> alert: agents in invalid states
 
 ## Unit tests
 

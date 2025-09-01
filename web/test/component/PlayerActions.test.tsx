@@ -27,7 +27,7 @@ describe(PlayerActions, () => {
     await fix.hireAgent() // Act
 
     fix.expectPlayerActionsAlert('Insufficient funds')
-    fix.expectAgentCount(0)
+    fix.expectAgentCount(0) // Expect unchanged
   })
 
   test("click 'sack agents' button -> happy path", async () => {
@@ -57,7 +57,7 @@ describe(PlayerActions, () => {
 
     fix.expectPlayerActionsAlert('This action can be done only on available agents!')
     fix.expectAgentCount(1)
-    fix.expectTerminatedAgentCount(0)
+    fix.expectTerminatedAgentCount(0) // Expect unchanged
   })
 
   test("click 'assign agents to contracting' button -> happy path", async () => {
