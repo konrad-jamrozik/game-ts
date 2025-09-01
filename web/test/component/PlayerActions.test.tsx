@@ -52,7 +52,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'sack agents' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.createOnAssignmentAgent('agent-1', 'Contracting')
+    const onAssignmentAgent = fix.newOnAssignmentAgent('agent-1', 'Contracting')
     fix.setAgentsInState([onAssignmentAgent])
     fix.selectAgents(['agent-1'])
 
@@ -81,7 +81,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'assign agents to contracting' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.createOnAssignmentAgent('agent-1', 'Espionage')
+    const onAssignmentAgent = fix.newOnAssignmentAgent('agent-1', 'Espionage')
     fix.setAgentsInState([onAssignmentAgent])
     fix.selectAgents(['agent-1'])
 
@@ -111,7 +111,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'assign agents to espionage' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.createOnAssignmentAgent('agent-1', 'Contracting')
+    const onAssignmentAgent = fix.newOnAssignmentAgent('agent-1', 'Contracting')
     fix.setAgentsInState([onAssignmentAgent])
     fix.selectAgents(['agent-1'])
 
@@ -127,7 +127,7 @@ describe(PlayerActions, () => {
 
   // recallAgents tests
   test("click 'recall agents' button -> happy path", async () => {
-    const onAssignmentAgent = fix.createOnAssignmentAgent('agent-1', 'Contracting')
+    const onAssignmentAgent = fix.newOnAssignmentAgent('agent-1', 'Contracting')
     fix.setAgentsInState([onAssignmentAgent])
     fix.selectAgents(['agent-1'])
 
@@ -186,26 +186,28 @@ describe(PlayerActions, () => {
 
   // deployAgentsToMission tests
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
+    const agentId = 'agent-1' as const
     const missionSiteId = 'mission-site-1' as const
 
     fix.buildAndSetInitialState({
-      agents: [fix.newAgent('agent-1')],
+      agents: [fix.newAgent(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
       intel: 100,
     })
 
-    fix.selectAgents(['agent-1'])
+    fix.selectAgents([agentId])
     fix.selectMissionSite(missionSiteId)
 
     fix.renderPlayerActions()
     await fix.deployAgents() // Act
 
     fix.expectAgentCount(1)
-    fix.expectAgentsDeployed(['agent-1'], missionSiteId)
+    fix.expectAgentsDeployed([agentId], missionSiteId)
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.createOnAssignmentAgent('agent-1', 'Contracting')
+    const agentId = 'agent-1' as const
+    const onAssignmentAgent = fix.newOnAssignmentAgent(agentId, 'Contracting')
     const missionSiteId = 'mission-site-1' as const
 
     const initialState = makeInitialState()

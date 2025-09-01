@@ -6,7 +6,14 @@ import { produce } from 'immer'
 import { store } from '../../src/app/store'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
-import type { Agent, GameState, MissionSite, MissionSiteId } from '../../src/lib/model/model'
+import type {
+  Agent,
+  AgentAssignment,
+  AgentState,
+  GameState,
+  MissionSite,
+  MissionSiteId,
+} from '../../src/lib/model/model'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { reset } from '../../src/lib/slices/gameStateSlice'
@@ -64,15 +71,17 @@ export const fix = {
 
   // Agent creation and manipulation helpers
   newAgent(id: string): Agent {
-    return AgentFixture.new({ id, state: 'Available', assignment: 'Standby' })
+    return fix.newAgent2(id, 'Standby')
   },
 
-  createOnAssignmentAgent(id = 'agent-2', assignment = 'Contracting'): Agent {
-    return AgentFixture.new({
-      id,
-      state: 'OnAssignment',
-      assignment: assignment === 'Contracting' || assignment === 'Espionage' ? assignment : 'Contracting',
-    })
+  newAgent2(id: string, assignment: AgentAssignment = 'Standby'): Agent {
+    const state: AgentState = assignment === 'Contracting' || assignment === 'Espionage' ? 'OnAssignment' : 'Available'
+
+    return AgentFixture.new({ id, state, assignment })
+  },
+
+  newOnAssignmentAgent(id: string, assignment: AgentAssignment = 'Contracting'): Agent {
+    return fix.newAgent2(id, assignment)
   },
 
   createOnEspionageAgent(id = 'agent-3'): Agent {
