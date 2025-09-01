@@ -6,6 +6,7 @@ import {
   type Agent,
   type AgentAssignment,
   type AgentState,
+  type Enemy,
   type GameState,
   type MissionSite,
   type MissionSiteId,
@@ -13,6 +14,8 @@ import {
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
+import { assertDefined } from '../../src/lib/utils/assert'
+import { createEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 import { agFix } from './agentFixture'
 
 export const st = {
@@ -33,6 +36,22 @@ export const st = {
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState = isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
     return agFix.new({ id, state, assignment })
+  },
+
+  newAgents(options: { count?: number; skill?: number } = {}): Agent[] {
+    const { count = 3, skill } = options
+    const agents: Agent[] = []
+    for (let index = 0; index < count; index += 1) {
+      const agent = agFix.new(skill !== undefined ? { skill } : {})
+      agents.push(agent)
+    }
+    return agents
+  },
+
+  newEnemyInitiate(): Enemy {
+    const [enemy] = createEnemiesFromSpec('1 Initiate')
+    assertDefined(enemy)
+    return enemy
   },
 
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {

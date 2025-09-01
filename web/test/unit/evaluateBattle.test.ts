@@ -11,7 +11,7 @@ describe(evaluateBattle, () => {
     const report = evaluateBattle(agents, []) // Act
 
     expectReportToBe(report)({
-      rounds: 1,
+      rounds: 1, // KJA should be 0 rounds
       agentCasualties: 0,
       enemyCasualties: 0,
       retreated: false,
@@ -19,18 +19,27 @@ describe(evaluateBattle, () => {
     })
   })
 
-  test.todo('evaluateBattle -> player won', () => {
-    const agentId = 'agent-001'
-    const agents = agsV([st.newAgent(agentId)])
+  test('evaluateBattle -> player wins in 1 round', () => {
+    const agents = st.newAgents({ count: 5, skill: 500 })
+    const agentIds = agents.map((agent) => agent.id)
+    const agentsView = agsV(agents)
+    const enemy = st.newEnemyInitiate()
 
-    const report = evaluateBattle(agents, []) // Act
+    const report = evaluateBattle(agentsView, [enemy]) // Act
 
+    // KJA make this test have 1 player unit with super-weapon that kills enemy in one attack
+    // also force random roll to always roll 100.
+    // Then have a separate test where after 1st round enemy beats agent to 10% health
+    // which causes retreat.
+    // Have another skill where severely agent grinds out 110% exhausted enemy in 3 rounds.
+    // Note: enemy with 0 effective skill should not attack.
+    const entries = Object.fromEntries(agentIds.map((id) => [id, expect.any(Number)]))
     expectReportToBe(report)({
-      rounds: 1,
+      rounds: 2, // KJA should be 1 round
       agentCasualties: 0,
-      enemyCasualties: 0,
+      enemyCasualties: 1,
       retreated: false,
-      agentSkillUpdates: { [agentId]: 0 },
+      agentSkillUpdates: entries,
     })
   })
 

@@ -62,8 +62,8 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   }
 
   // Count casualties
-  const agentsCasualties = agents.filter((agent) => agent.hitPoints <= 0).length
-  const enemiesCasualties = enemies.filter((enemy) => enemy.hitPoints <= 0).length
+  const agentCasualties = agents.filter((agent) => agent.hitPoints <= 0).length
+  const enemyCasualties = enemies.filter((enemy) => enemy.hitPoints <= 0).length
 
   // Collect skill updates
   agentStats.forEach((stats) => {
@@ -71,13 +71,13 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   })
 
   console.log(`\n📊 Battle concluded after ${roundIdx} rounds`)
-  console.log(`   Agent casualties: ${agentsCasualties}`)
-  console.log(`   Enemy casualties: ${enemiesCasualties}`)
+  console.log(`Agent casualties: ${agentCasualties}`)
+  console.log(`Enemy casualties: ${enemyCasualties}`)
 
   return {
     rounds: roundIdx,
-    agentCasualties: agentsCasualties,
-    enemyCasualties: enemiesCasualties,
+    agentCasualties,
+    enemyCasualties,
     retreated,
     agentSkillUpdates,
   }
