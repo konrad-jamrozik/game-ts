@@ -1,9 +1,5 @@
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-import { Provider } from 'react-redux'
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
-import { PlayerActions } from '../../src/components/PlayerActions'
 import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
 import type {
   Agent,
@@ -20,22 +16,10 @@ import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '..
 import { AgentFixture } from '../fixtures/AgentFixture'
 import { MissionSiteFixture } from '../fixtures/MissionSiteFixture'
 
-export const fix = {
+export const st = {
   setDebugInitialState(): void {
     store.dispatch(reset({ debug: true }))
     store.dispatch(clearEvents()) // Clear the reset event
-  },
-
-  renderPlayerActions(): void {
-    render(
-      <Provider store={store}>
-        <PlayerActions />
-      </Provider>,
-    )
-  },
-  async hireAgent(): Promise<void> {
-    // Click the button
-    await userEvent.click(screen.getByRole('button', { name: /hire agent/iu }))
   },
 
   get gameState(): GameState {
@@ -43,31 +27,20 @@ export const fix = {
   },
 
   get agentsView(): AgentsView {
-    return agsV(fix.gameState.agents)
-  },
-
-  expectPlayerActionsAlert(message: string | { hidden: true }): void {
-    const alert = screen.queryByRole('alert', { name: 'player-actions-alert' })
-    if (typeof message === 'object' && 'hidden' in message) {
-      expect(alert).not.toBeInTheDocument()
-    } else {
-      expect(alert).toBeInTheDocument()
-      expect(alert).toBeVisible()
-      expect(alert).toHaveTextContent(message)
-    }
+    return agsV(st.gameState.agents)
   },
 
   // Agent creation and manipulation helpers
   newAgentInStandby(id: string): Agent {
-    return fix.newAgent(id, 'Standby')
+    return st.newAgent(id, 'Standby')
   },
 
   newAgentInContracting(id: string): Agent {
-    return fix.newAgent(id, 'Contracting')
+    return st.newAgent(id, 'Contracting')
   },
 
   newAgentInEspionage(id = 'agent-3'): Agent {
-    return fix.newAgent(id, 'Espionage')
+    return st.newAgent(id, 'Espionage')
   },
 
   createOnMissionAgent(id = 'agent-4', missionSiteId: MissionSiteId = 'mission-site-1' as MissionSiteId): Agent {
@@ -81,11 +54,11 @@ export const fix = {
   },
 
   setAgentsInState(agents: Agent[]): void {
-    fix.arrangeGameState({ agents })
+    st.arrangeGameState({ agents })
   },
 
   setIntel(amount: number): void {
-    fix.arrangeGameState({ intel: amount })
+    st.arrangeGameState({ intel: amount })
   },
 
   setMissionSiteAndIntel(missionSiteId: MissionSiteId, intel = 100): void {
@@ -97,7 +70,7 @@ export const fix = {
       expiresIn: 3,
       enemies: [],
     }
-    fix.arrangeGameState({ intel, missionSites: [missionSite] })
+    st.arrangeGameState({ intel, missionSites: [missionSite] })
   },
 
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
@@ -129,44 +102,17 @@ export const fix = {
     }
   },
 
-  // Button click helpers
-  async sackAgents(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /sack.*agent/iu }))
-  },
-
-  async assignToContracting(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /assign.*to contracting/iu }))
-  },
-
-  async assignToEspionage(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /assign.*to espionage/iu }))
-  },
-
-  async recallAgents(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /recall.*agent/iu }))
-  },
-
-  async investigateLead(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /investigate lead/iu }))
-  },
-
-  async deployAgents(): Promise<void> {
-    // First try to find the button - it might be disabled if selection state isn't proper
-    const deployButton = screen.getByRole('button', { name: /deploy.*on/iu })
-    await userEvent.click(deployButton)
-  },
-
   // State check helpers
   expectAgentCount(expectedCount: number): void {
-    expect(fix.agentsView).toHaveLength(expectedCount)
+    expect(st.agentsView).toHaveLength(expectedCount)
   },
 
   expectTerminatedAgentCount(expectedCount: number): void {
-    expect(fix.agentsView.terminated()).toHaveLength(expectedCount)
+    expect(st.agentsView.terminated()).toHaveLength(expectedCount)
   },
 
   expectAgentState(agentId: string, expectedState: Agent['state']): void {
-    const agent = fix.gameState.agents.find((ag) => ag.id === agentId)
+    const agent = st.gameState.agents.find((ag) => ag.id === agentId)
     expect(agent).toBeDefined()
     if (agent) {
       expect(agent.state).toBe(expectedState)
@@ -174,7 +120,7 @@ export const fix = {
   },
 
   expectAgentAssignment(agentId: string, expectedAssignment: Agent['assignment']): void {
-    const agent = fix.gameState.agents.find((ag) => ag.id === agentId)
+    const agent = st.gameState.agents.find((ag) => ag.id === agentId)
     expect(agent).toBeDefined()
     if (agent) {
       expect(agent.assignment).toBe(expectedAssignment)
@@ -182,38 +128,38 @@ export const fix = {
   },
 
   expectAgentsOnContracting(count: number): void {
-    const contractingAgents = fix.agentsView.onContractingAssignment()
+    const contractingAgents = st.agentsView.onContractingAssignment()
     expect(contractingAgents).toHaveLength(count)
   },
 
   expectAgentsOnEspionage(count: number): void {
-    const espionageAgents = fix.agentsView.onEspionageAssignment()
+    const espionageAgents = st.agentsView.onEspionageAssignment()
     expect(espionageAgents).toHaveLength(count)
   },
 
   expectAgentsAvailable(count: number): void {
-    const availableAgents = fix.agentsView.available()
+    const availableAgents = st.agentsView.available()
     expect(availableAgents).toHaveLength(count)
   },
 
   expectIntelAmount(expectedAmount: number): void {
-    expect(fix.gameState.intel).toBe(expectedAmount)
+    expect(st.gameState.intel).toBe(expectedAmount)
   },
 
   expectLeadInvestigatedOnce(leadId: string): void {
-    fix.expectLeadInvestigated(leadId, 1)
+    st.expectLeadInvestigated(leadId, 1)
   },
 
   expectLeadNotInvestigated(leadId: string): void {
-    fix.expectLeadInvestigated(leadId, 0)
+    st.expectLeadInvestigated(leadId, 0)
   },
 
   expectLeadInvestigated(leadId: string, times = 1): void {
-    expect(fix.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
+    expect(st.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
   },
 
   expectAgentsOnMissionSite(missionSiteId: MissionSiteId, agentIds: string[]): void {
-    const missionSite = fix.gameState.missionSites.find((ms) => ms.id === missionSiteId)
+    const missionSite = st.gameState.missionSites.find((ms) => ms.id === missionSiteId)
     expect(missionSite).toBeDefined()
     if (missionSite) {
       expect(missionSite.agentIds).toStrictEqual(expect.arrayContaining(agentIds))
@@ -224,18 +170,18 @@ export const fix = {
   expectAgentsDeployed(agentIds: string[], missionSiteId: MissionSiteId): void {
     // Check each agent has OnMission state and correct assignment
     agentIds.forEach((agentId) => {
-      fix.expectAgentState(agentId, 'OnMission')
-      fix.expectAgentAssignment(agentId, missionSiteId)
+      st.expectAgentState(agentId, 'OnMission')
+      st.expectAgentAssignment(agentId, missionSiteId)
     })
     // Check mission site has all the agents
-    fix.expectAgentsOnMissionSite(missionSiteId, agentIds)
+    st.expectAgentsOnMissionSite(missionSiteId, agentIds)
   },
 
   expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
     agentIds.forEach((agentId) => {
-      fix.expectAgentAssignment(agentId, assignment)
+      st.expectAgentAssignment(agentId, assignment)
       if (assignment === 'Contracting' || assignment === 'Espionage') {
-        fix.expectAgentState(agentId, 'OnAssignment')
+        st.expectAgentState(agentId, 'OnAssignment')
       }
     })
   },
