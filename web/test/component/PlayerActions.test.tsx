@@ -5,8 +5,6 @@ import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { fix } from './componentFixture'
 import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
-import type { MissionSite } from '../../src/lib/model/model'
-import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1' as const
@@ -192,7 +190,6 @@ describe(PlayerActions, () => {
     fix.buildAndSetInitialState({
       agents: [fix.newAgentInStandby(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
-      intel: 100,
     })
 
     fix.selectAgents([agentId])
@@ -206,21 +203,10 @@ describe(PlayerActions, () => {
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
-    const onAssignmentAgent = fix.newAgentInContracting(agentId)
-
-    const initialState = makeInitialState()
-    initialState.agents = [onAssignmentAgent]
-    initialState.intel = 100
-    const missionSite: MissionSite = {
-      id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn',
-      agentIds: [],
-      state: 'Active',
-      expiresIn: 3,
-      enemies: [],
-    }
-    initialState.missionSites = [missionSite]
-    fix.setInitialState(initialState)
+    fix.buildAndSetInitialState({
+      agents: [fix.newAgentInContracting(agentId)],
+      missionSites: [fix.newMissionSite(missionSiteId)],
+    })
     fix.selectAgents([agentId])
     fix.selectMissionSite(missionSiteId)
 
