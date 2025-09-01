@@ -1,20 +1,9 @@
 /* eslint-disable max-lines */
-import {
-  AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
-  AGENT_FAILED_ATTACK_SKILL_REWARD,
-  AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
-  AGENT_FAILED_DEFENSE_SKILL_REWARD,
-  AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
-  AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
-} from '../model/ruleset/constants'
-import { rollContest } from './rolls'
-import { rollWeaponDamage } from '../utils/weaponUtils'
 import type { Agent, Enemy } from '../model/model'
 import { agV } from '../model/agents/AgentView'
 import { effectiveSkill } from '../utils/actorUtils'
-import { fmtPctDec2 } from '../utils/formatUtils'
 import type { AgentsView } from '../model/agents/AgentsView'
-import { assertDefined } from '../utils/assert'
+import { evaluateAttack } from './evaluateAttack'
 
 export type BattleReport = {
   rounds: number
@@ -95,11 +84,11 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   }
 }
 
-function isAgent(unit: Agent | Enemy): unit is Agent {
+export function isAgent(unit: Agent | Enemy): unit is Agent {
   return 'turnHired' in unit
 }
 
-type AgentCombatStats = {
+export type AgentCombatStats = {
   id: string
   initialEffectiveSkill: number
   skillGained: number
@@ -204,90 +193,6 @@ function selectTargetWithFairDistribution<T extends Agent | Enemy>(
   })
 
   return sorted[0]
-}
-
-function evaluateAttack(
-  attacker: Agent | Enemy,
-  attackerStats: AgentCombatStats | undefined,
-  defender: Agent | Enemy,
-  defenderStats?: AgentCombatStats,
-): void {
-  // Calculate effective skills
-  const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
-  const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : effectiveSkill(defender)
-
-  if (isAgent(attacker)) {
-    assertDefined(attackerStats)
-  }
-
-  if (isAgent(defender)) {
-    assertDefined(defenderStats)
-  }
-
-  // Contest roll
-  const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill)
-
-  // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
-  attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
-
-  const attackerIcon = isAgent(attacker) ? '👤' : '👺'
-  const defenderIcon = isAgent(defender) ? '👤' : '👺'
-  const attackerName = attacker.id
-  const defenderName = defender.id
-
-  if (contestResult.success) {
-    // Successful attack - roll damage
-    const damage = rollWeaponDamage(attacker.weapon)
-    const damageRangePct =
-      ((damage - attacker.weapon.minDamage) / (attacker.weapon.maxDamage - attacker.weapon.minDamage)) * 100
-    const damagePct = `${Math.round(50 + damageRangePct)}%`
-
-    defender.hitPoints = Math.max(0, defender.hitPoints - damage)
-
-    // Update skill gains from battle combat
-    if (attackerStats) {
-      attackerStats.skillGained += AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD
-    }
-    if (defenderStats) {
-      defenderStats.skillGained += AGENT_FAILED_DEFENSE_SKILL_REWARD
-    }
-
-    // Detailed success log
-    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
-
-    if (defender.hitPoints <= 0) {
-      console.log(
-        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollInfo}`,
-      )
-    } else {
-      const hpPercentage = Math.round((defender.hitPoints / defender.maxHitPoints) * 100)
-      console.log(
-        `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
-      )
-    }
-
-    // Apply defender exhaustion only if not terminated
-    if (defender.hitPoints > 0) {
-      defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
-    }
-  } else {
-    // Failed attack - show roll details
-    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
-    console.log(
-      `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
-    )
-
-    // Update skill gains (postponed)
-    if (attackerStats) {
-      attackerStats.skillGained += AGENT_FAILED_ATTACK_SKILL_REWARD
-    }
-    if (defenderStats) {
-      defenderStats.skillGained += AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD
-    }
-
-    // Apply defender exhaustion (both agents and enemies)
-    defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
-  }
 }
 
 function showRoundStatus(
