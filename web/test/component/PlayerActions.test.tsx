@@ -10,6 +10,7 @@ import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1' as const
+  const missionSiteId = 'mission-site-1' as const
 
   test("click 'hire agent' button -> happy path", async () => {
     expect(fix.agentsView).toHaveLength(0)
@@ -188,8 +189,6 @@ describe(PlayerActions, () => {
 
   // deployAgentsToMission tests
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
-    const missionSiteId = 'mission-site-1' as const
-
     fix.buildAndSetInitialState({
       agents: [fix.newAgentInStandby(agentId)],
       missionSites: [fix.newMissionSite(missionSiteId)],
@@ -208,7 +207,6 @@ describe(PlayerActions, () => {
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
     const onAssignmentAgent = fix.newAgentInContracting(agentId)
-    const missionSiteId = 'mission-site-1' as const
 
     const initialState = makeInitialState()
     initialState.agents = [onAssignmentAgent]
