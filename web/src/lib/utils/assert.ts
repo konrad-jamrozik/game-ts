@@ -19,6 +19,17 @@ export function assertNotZero<T>(value: T, errMsg = 'Value must not be zero'): a
   }
 }
 
+export function assertInRange(
+  value: number,
+  min: number,
+  max: number,
+  errMsg = 'Value must be between min and max',
+): asserts value is number {
+  if (value < min || value > max) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertOneOf<T>(
   value: T,
   validValues: readonly T[],
