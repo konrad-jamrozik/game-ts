@@ -1,5 +1,9 @@
 # Turn Advancement Report - Implementation Plan
 
+TODO: update this plan to clarify that when implementing this plan, the only changes to test files that can be made is to
+fix existing tests to pass. Notably, to update the expected input arguments or return types, so that typing passes.
+No new tests or expectations in existing tests should be added.
+
 ## Overview
 
 This document outlines the detailed implementation plan for the "Turn Advancement Report" feature, which will provide a
