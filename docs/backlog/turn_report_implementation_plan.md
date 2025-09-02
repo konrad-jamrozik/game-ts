@@ -86,16 +86,16 @@ type PanicReport = {
 }
 
 type PanicBreakdown = {
-  factionContributions: Array<{
+  factionContributions: {
     factionId: string;
     factionName: string;
     contribution: number;
-  }>;
-  missionReductions: Array<{
+  }[];
+  missionReductions: {
     missionSiteId: string;
     missionTitle: string;
     reduction: number;
-  }>;
+  }[];
 }
 
 // Faction tracking
@@ -111,12 +111,12 @@ type FactionReport = {
 
 type FactionDetails = {
   baseIncrease: number;
-  missionImpacts: Array<{
+  missionImpacts: {
     missionSiteId: string;
     missionTitle: string;
     threatReduction?: number;
     suppressionAdded?: number;
-  }>;
+  }[];
   suppressionDecay: number;
 }
 
@@ -163,14 +163,14 @@ type AttackReport = {
 }
 
 type RoundSummary = {
-  actors: Array<{
+  actors: {
     id: string;
     name: string;
     type: 'agent' | 'enemy';
     effectiveSkillPercent: number;
     hitPointsPercent: number;
     isTerminated: boolean;
-  }>;
+  }[];
 }
 
 // Agent mission performance
@@ -218,15 +218,7 @@ type EnemyMissionReport = {
 - Track detailed breakdown of intel changes
 - Update `evaluateTurn` to build and return initial `TurnReport`
 
-#### Phase 1.2: Unit Tests
-
-- **File**: `web/test/unit/evaluateTurn.test.ts`
-- Test asset report generation with various scenarios
-- Test money breakdown calculations
-- Test intel breakdown calculations
-- Verify report structure correctness
-
-#### Phase 1.3: UI Component
+#### Phase 1.2: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (new)
 - Create basic TreeView structure
@@ -247,15 +239,7 @@ type EnemyMissionReport = {
 - Track mission impacts on factions
 - Include suppression decay calculations
 
-#### Phase 2.2: Unit Tests
-
-- **File**: `web/test/unit/evaluateTurn.test.ts`
-- Test panic report generation
-- Test faction report generation
-- Test suppression decay calculations
-- Test mission reward application to factions
-
-#### Phase 2.3: UI Component
+#### Phase 2.2: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
 - Add Panic node with expandable breakdown
@@ -275,15 +259,7 @@ type EnemyMissionReport = {
 - Include mission rewards in report
 - Calculate agent and enemy casualties
 
-#### Phase 3.2: Unit Tests
-
-- **File**: `web/test/unit/evaluateDeployedMissionSite.test.ts` (new)
-- Test mission site report generation
-- Test different mission outcomes
-- Test reward tracking
-- Test casualty counting
-
-#### Phase 3.3: UI Component
+#### Phase 3.2: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
 - Add Mission Sites node
@@ -307,16 +283,7 @@ type EnemyMissionReport = {
 - Track agent and enemy performance metrics
 - Build `AgentMissionReport` and `EnemyMissionReport`
 
-#### Phase 4.2: Unit Tests
-
-- **File**: `web/test/unit/evaluateBattle.test.ts` (new)
-- Test battle report generation
-- Test combat round tracking
-- Test attack report details
-- Test agent/enemy performance tracking
-- Test skill point calculations
-
-#### Phase 4.3: UI Component
+#### Phase 4.2: UI Component
 
 - **Files**:
   - `web/src/components/TurnReport/TurnReportTree.tsx`
@@ -420,10 +387,10 @@ Following is forbidden:
 
 ## Migration Plan
 
-1. **Phase 1**: Implement report generation alongside existing functionality
-2. **Phase 2**: Add UI component and integrate with events system
-3. **Phase 3**: Remove deprecated event posting (`postMissionCompletedEvent`)
-4. **Phase 4**: Optimize and refine based on user feedback
+1. **Step 1**: Implement report generation alongside existing functionality
+2. **Step 2**: Add UI component and integrate with events system
+3. **Step 3**: Remove deprecated event posting (`postMissionCompletedEvent`)
+4. **Step 4**: Optimize and refine based on user feedback
 
 ## Performance Considerations
 
@@ -501,4 +468,5 @@ Implement milestone 1 phases 1.1 and 1.2 of the @docs/backlog/turn_report_implem
 Remember to:
 - Follow the "Testing Strategy" outlined in this plan.
 - Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
+  - However, ignore and do not address any eslint warnings about too many lines in a function, file, or anywhere else.
 - Edit this document by marking with "✅" sections that you have completed.

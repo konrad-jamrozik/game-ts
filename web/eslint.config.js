@@ -191,6 +191,10 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/no-undef-init
       // https://typescript-eslint.io/rules/init-declarations/
       'no-undef-init': 'off',
+      // I am OK with such warning comments.
+      // AI Agents sometimes leave them and I want them to stay.
+      // https://eslint.org/docs/latest/rules/no-warning-comments
+      'no-warning-comments': 'off',
 
       // [ts-eslint] configs
       // --------------------
@@ -440,7 +444,6 @@ export default plugTypescriptEslint.config([
       // It just adds extra lines and noise to otherwise sometimes very short (<= 5 lines tests).
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
       'vitest/prefer-expect-assertions': 'off',
-
       // Tests that do not contain expect() calls are allowed, because tests call test utils that
       // invoke expect() in turn.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md
