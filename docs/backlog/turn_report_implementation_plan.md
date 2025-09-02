@@ -409,19 +409,14 @@ The UI will follow a split-panel design with TreeView navigation and scrollable 
 
 ### Testing Strategy
 
-**Implementation Constraint**: When implementing this plan, the only changes to existing test files that can be made
-are to fix existing tests to pass. Specifically, update expected input arguments or return types so that typing
-passes. No new tests or expectations in existing tests should be added.
+The only changes to existing test files that can be made while implementing this plan are to fix existing tests to pass.
 
-1. **Unit Tests**:
-   - Test each report generation function independently
-   - Verify report structure matches interfaces
-   - Test edge cases (no missions, no agents, etc.)
+Specifically, the tests can be updated to fix typing errors, like bad signature.
 
-2. **Integration Tests**:
-   - Test full turn evaluation with report generation
-   - Verify report composition and nesting
-   - Test UI component with sample reports
+Following is forbidden:
+- Adding any expectations to existing tests.
+- Adding any new tests.
+- Implementing any test stubs.
 
 ## Migration Plan
 
@@ -473,7 +468,7 @@ passes. No new tests or expectations in existing tests should be added.
 ## Timeline Estimate
 
 - **Milestone 1**: 2-3 days
-- **Milestone 2**: 2-3 days  
+- **Milestone 2**: 2-3 days
 - **Milestone 3**: 2-3 days
 - **Milestone 4**: 3-4 days
 - **Testing & Polish**: 2-3 days
@@ -486,9 +481,9 @@ This implementation plan is designed to be iterative and testable at each milest
 value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without
 major refactoring.
 
-# Prompt: Implementation plan update
+# Prompt: Update the plan
 
-> Apply the "Prompt: Implementation plan update" prompt from @docs/backlog/turn_report_implementation_plan.md
+> Apply the "Prompt: Update the plan" prompt from @docs/backlog/turn_report_implementation_plan.md
 
 Review the @docs\backlog\turn_report_implementation_plan.md. Find all "Answer" and "TODO" entries, if any.
 They are given by me.
@@ -497,12 +492,13 @@ When making your edits, ensure the line width never crosses 120 line characters,
 warnings on he file.
 Keep all the "Prompt:*" sections.
 
-# Prompt: Implement milestone 1
+# Prompt: Implement the plan
 
-> Apply the "Prompt: Implement milestone 1" prompt from @docs/backlog/turn_report_implementation_plan.md
+> Apply the "Prompt: Implement the plan" prompt from @docs/backlog/turn_report_implementation_plan.md
 
-Implement milestone 1 phases 1.1, 1.2 and 1.3 of the @docs/backlog/turn_report_implementation_plan.md.
+Implement milestone 1 phases 1.1 and 1.2 of the @docs/backlog/turn_report_implementation_plan.md.
 
-Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
-
-Finally, mark with "✅" sections in this document that you have completed.
+Remember to:
+- Follow the "Testing Strategy" outlined in this plan.
+- Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
+- Mark with "✅" sections in this document that you have completed.
