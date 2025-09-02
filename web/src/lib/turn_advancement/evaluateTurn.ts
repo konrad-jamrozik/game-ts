@@ -7,16 +7,17 @@ import {
   updateContractingAgents,
   updateEspionageAgents,
 } from './updateAgents'
-import type {
-  GameState,
-  MissionRewards,
-  Faction,
-  FactionRewards,
-  AssetsReport,
-  ValueChange,
-  MoneyBreakdown,
-  IntelBreakdown,
-  TurnReport,
+import {
+  type GameState,
+  type MissionRewards,
+  type Faction,
+  type FactionRewards,
+  type AssetsReport,
+  type ValueChange,
+  type MoneyBreakdown,
+  type IntelBreakdown,
+  type TurnReport,
+  newValueChange,
 } from '../model/model'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
@@ -168,20 +169,8 @@ function updatePlayerAssets(
     }
   }
 
-  // KJA delta should be automatically derived.
-  // Create money value change
-  const moneyChange: ValueChange = {
-    previous: previousMoney,
-    current: state.money,
-    delta: state.money - previousMoney,
-  }
-
-  // Create intel value change
-  const intelChange: ValueChange = {
-    previous: previousIntel,
-    current: state.intel,
-    delta: state.intel - previousIntel,
-  }
+  const moneyChange = newValueChange(previousMoney, state.money)
+  const intelChange = newValueChange(previousIntel, state.intel)
 
   // Create detailed breakdowns
   const moneyDetails: MoneyBreakdown = {

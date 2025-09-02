@@ -126,7 +126,17 @@ export type BaseReport = {
 export type ValueChange = {
   previous: number
   current: number
-  delta: number
+  readonly delta: number
+}
+
+export function newValueChange(previous: number, current: number): ValueChange {
+  return {
+    previous,
+    current,
+    get delta(): number {
+      return this.current - this.previous
+    },
+  }
 }
 
 export type MoneyBreakdown = {
