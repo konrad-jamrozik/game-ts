@@ -1,6 +1,7 @@
 # Turn advancement report prompt
 
-Write for me a detailed implementation plan that you will follow to implement "turn advancement log" feature.
+Write for me a detailed implementation plan, in `turn_report_implementation_plan.md` file, that you will follow to
+implement the "turn advancement report" feature.
 If you have any questions, include them in your plan, I will answer them.
 
 Below follows description of the feature to implement.
