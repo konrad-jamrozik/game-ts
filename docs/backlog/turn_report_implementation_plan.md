@@ -9,7 +9,7 @@
   - [Implementation Work Plan](#implementation-work-plan)
     - [Milestone 1: Display Basic Turn Stats](#milestone-1-display-basic-turn-stats)
       - [✅ Phase 1.1: Backend Logic](#-phase-11-backend-logic)
-      - [Phase 1.2: UI Component](#phase-12-ui-component)
+      - [✅ Phase 1.2: UI Component](#-phase-12-ui-component)
     - [Milestone 2: Display Factions Stats](#milestone-2-display-factions-stats)
       - [Phase 2.1: Backend Logic](#phase-21-backend-logic)
       - [Phase 2.2: UI Component](#phase-22-ui-component)
@@ -223,13 +223,13 @@ type EnemyMissionReport = {
 - ✅ **File**: `web/src/lib/slices/eventsSlice.ts`
 - ✅ Add `addTurnAdvancementEvent` reducer to record turn advancement events without duplicating report data
 
-#### Phase 1.2: UI Component
+#### ✅ Phase 1.2: UI Component
 
-- **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (new)
-- Create basic TreeView structure
-- Implement Assets node with Money and Intel sub-nodes
-- Display change values in "previous → current (±delta)" format
-- Add expandable details for calculation breakdowns
+- ✅ **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (new)
+- ✅ Create basic TreeView structure
+- ✅ Implement Assets node with Money and Intel sub-nodes
+- ✅ Display change values in "previous → current (±delta)" format
+- ✅ Add expandable details for calculation breakdowns
 
 ### Milestone 2: Display Factions Stats
 
