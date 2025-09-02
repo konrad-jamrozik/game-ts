@@ -140,7 +140,8 @@ Split the implementation plan into following milestones. Each milestone should b
 
 Phase 1: The backend logic that produces appropriate report object which, among others,
 Phase 2: A set of unit tests that verify the report is produced correctly.
-         These tests will be in already existing files: `evaluateBattle.test.ts`, `evaluateDeployedMissionSite.test.ts`, `evaluateTurn.test.ts`.
+         These tests will be in already existing files:
+         `evaluateBattle.test.ts`, `evaluateDeployedMissionSite.test.ts`, `evaluateTurn.test.ts` etc.
 Phase 3: appropriate logic in the tree view react UI component to display the report.
 
 ## Implementation milestones
@@ -153,7 +154,7 @@ In this milestone everything need to display the following in the tree view reac
   - Money
   - Intel
 
-should be implemented.
+should be implemented, following the three-phase approach.
 
 ### Milestone 2: Display factions stats
 
@@ -170,7 +171,7 @@ In this milestone everything need to display the following in the tree view reac
   - Faction 3
     - ...
 
-should be implemented.
+should be implemented, following the three-phase approach.
 
 ### Milestone 3: Display basic mission site stats
 
@@ -181,7 +182,7 @@ In this milestone everything need to display the following in the tree view reac
   - Mission site 2
   - Mission site 3
 
-should be implemented.
+should be implemented, following the three-phase approach.
 
 ### Milestone 4: Display detailed mission site stats
 
@@ -197,4 +198,4 @@ In this milestone everything need to display the following in the tree view reac
   - Mission site 3
     - ...
 
-should be implemented.
+should be implemented, following the three-phase approach.
