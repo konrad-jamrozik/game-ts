@@ -487,3 +487,9 @@ interface EnemyMissionReport {
 This implementation plan is designed to be iterative and testable at each milestone. Each milestone delivers visible
 value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without major
 refactoring.
+
+# Pending prompt
+
+ Review the @docs\backlog\turn_report_implementation_plan.md. I added "Answer" and "// TODO" entries.
+ Delete them and update the plan based on them. If you have any more follow-up questions, ask me.
+ Also delete this "pending prompt" entry.
