@@ -10,7 +10,8 @@
       "Bash(claude mcp:*)",
       "Bash(grep:*)",
       "Bash(sed:*)",
-      "mcp__mui-mcp__useMuiDocs"
+      "mcp__mui-mcp__useMuiDocs",
+      "Bash(awk:*)"
     ],
     "deny": [],
     "ask": []

@@ -332,8 +332,8 @@ type EnemyMissionReport = {
 
 ### Backend Modifications
 
-1. **Function Return Types**: Each evaluating function will be modified to return both its side effects (state mutations)
-   and a report object.
+1. **Function Return Types**: Each evaluating function will be modified to return both its side effects
+   (state mutations) and a report object.
 
 2. **Report Composition**: Reports will be composed hierarchically, with child reports embedded in parent reports.
 
@@ -341,42 +341,58 @@ type EnemyMissionReport = {
 
 ### UI Component Structure
 
+The UI will follow a split-panel design with TreeView navigation and scrollable details:
+
 ```typescript
-// Main component structure
-<TurnReportTree report={turnReport}>
-  <TreeItem nodeId="assets" label="Assets">
-    <TreeItem nodeId="assets-money" label={MoneyDisplay} />
-    <TreeItem nodeId="assets-intel" label={IntelDisplay} />
-  </TreeItem>
-  
-  <TreeItem nodeId="panic" label={PanicDisplay}>
-    {/* Expandable panic breakdown */}
-  </TreeItem>
-  
-  <TreeItem nodeId="factions" label="Factions">
-    {factions.map(faction => (
-      <TreeItem key={faction.id} nodeId={`faction-${faction.id}`}>
-        {/* Faction details */}
+// Modal with split panel layout
+<TurnReportModal>
+  <SplitPanel>
+    {/* Left Panel: TreeView Navigation (all nodes collapsed by default) */}
+    <TurnReportTree report={turnReport} defaultExpanded={[]}>
+      <TreeItem nodeId="assets" label="Assets">
+        <TreeItem nodeId="assets-money" label={MoneyDisplay} />
+        <TreeItem nodeId="assets-intel" label={IntelDisplay} />
       </TreeItem>
-    ))}
-  </TreeItem>
-  
-  <TreeItem nodeId="missions" label="Mission Sites">
-    {missionSites.map(site => (
-      <TreeItem key={site.id} nodeId={`mission-${site.id}`}>
-        <TreeItem nodeId={`mission-${site.id}-agents`} label="Agents">
-          {/* Agent details */}
-        </TreeItem>
-        <TreeItem nodeId={`mission-${site.id}-enemies`} label="Enemies">
-          {/* Enemy details */}
-        </TreeItem>
-        <TreeItem nodeId={`mission-${site.id}-rounds`} label="Combat Rounds">
-          <CombatRoundGrid rounds={site.battle.combatRounds} />
-        </TreeItem>
+      
+      <TreeItem nodeId="panic" label={PanicDisplay}>
+        {/* Expandable panic breakdown */}
       </TreeItem>
-    ))}
-  </TreeItem>
-</TurnReportTree>
+      
+      <TreeItem nodeId="factions" label="Factions">
+        {factions.map(faction => (
+          <TreeItem key={faction.id} nodeId={`faction-${faction.id}`}>
+            {/* Faction details */}
+          </TreeItem>
+        ))}
+      </TreeItem>
+      
+      <TreeItem nodeId="missions" label="Mission Sites">
+        {missionSites.map(site => (
+          <TreeItem key={site.id} nodeId={`mission-${site.id}`}>
+            <TreeItem nodeId={`mission-${site.id}-agents`} label="Agents">
+              {/* Agent details */}
+            </TreeItem>
+            <TreeItem nodeId={`mission-${site.id}-enemies`} label="Enemies">
+              {/* Enemy details */}
+            </TreeItem>
+            <TreeItem nodeId={`mission-${site.id}-rounds`} label="Combat Rounds">
+              <CombatRoundGrid rounds={site.battle.combatRounds} />
+            </TreeItem>
+          </TreeItem>
+        ))}
+      </TreeItem>
+    </TurnReportTree>
+    
+    {/* Right Panel: Scrollable Details View */}
+    <DetailsPanel>
+      {/* All report sections rendered in continuous scrollable view */}
+      <AssetsDetails data={report.assets} />
+      <PanicDetails data={report.panic} />
+      <FactionsDetails data={report.factions} />
+      <MissionSitesDetails data={report.missionSites} />
+    </DetailsPanel>
+  </SplitPanel>
+</TurnReportModal>
 ```
 
 ### State Management
@@ -414,7 +430,7 @@ type EnemyMissionReport = {
 
 1. **Report Size**: Monitor report object size, especially for long battles
 2. **UI Rendering**: Use React.memo for TreeItem components to prevent unnecessary re-renders
-3. **Memory Management**: Consider limiting stored reports to last N turns
+3. **Memory Management**: Handled automatically by existing `UNDO_LIMIT` in `store.ts`
 
 ## Future Enhancements
 
@@ -424,36 +440,22 @@ type EnemyMissionReport = {
 4. **Report Search**: Search within report for specific agents, enemies, or events
 5. **Visual Analytics**: Add charts for damage distribution, skill gains, etc.
 
-## Open Design Decisions
+## UI Design Specifications
 
-1. **Report Persistence Strategy**: How many turn reports to keep in memory/storage
+1. **TreeView Layout**: The modal will use a split-panel design similar to GitHub's PR review interface:
+   - Left panel: TreeView navigation with all nodes collapsed by default
+   - Right panel: Scrollable details view showing all collapsible blocks in continuous manner
+   - Reference implementation: MUI TreeView GitHub Example (https://mui.com/x/react-tree-view/)
 
-Answer: this is already handled by `UNDO_LIMIT` in `store.ts`.
+2. **Report Persistence**: Reports are automatically managed by the existing `UNDO_LIMIT` in `store.ts`,
+   ensuring memory usage stays within acceptable bounds.
 
-1. **Real-time Updates**: Whether to show report building during turn evaluation
+3. **Performance Optimizations**:
+   - No real-time updates during turn evaluation (report generated only after completion)
+   - No accessibility features required in initial implementation
+   - No mobile responsiveness required in initial implementation
 
-Answer: no real-time updates needed.
-
-1. **Accessibility**: Keyboard navigation and screen reader support for TreeView
-
-Answer: no accessibility needed.
-
-1. **Mobile Responsiveness**: How to display complex tree on smaller screens
-
-Answer: no mobile responsiveness needed.
-
-1. **TreeView Expansion State**: Should the TreeView start fully collapsed (user expands what they want to see) or
-   with certain sections pre-expanded (e.g., always show Assets and Panic at top level)?
-
-Answer: All components should be collapsed by default. However, the right-side panel of the modal with the tree view,
-i.e. the panel showing the details, should list all the collapsible blocks one after another, so they can be scrolled through
-at once in continuous manner, similar to how the "GitHub Example" at this URL works: https://mui.com/x/react-tree-view/.
-Or in general, same as GitHub UI for PR review works.
-
-1. **Report Export Format**: For future enhancement, would you prefer JSON export for data analysis or formatted
-   text/markdown for human readability?
-
-Answer: no need to worry about any kind of export for now.
+4. **Future Export Functionality**: Report export features are deferred to future enhancements.
 
 ## Success Criteria
 
@@ -462,7 +464,7 @@ Answer: no need to worry about any kind of export for now.
 3. UI provides intuitive drill-down into turn details
 4. Performance impact is negligible (< 100ms added to turn evaluation)
 5. Code is well-tested with > 80% coverage for new functions
-6. Component is accessible and responsive
+6. UI follows GitHub-style split panel design for optimal usability
 
 ## Timeline Estimate
 
