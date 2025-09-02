@@ -89,9 +89,18 @@ export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElem
   }
 
   return (
-    <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600 }}>
+    <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600, bgcolor: 'background.paper', borderRadius: 1 }}>
       {/* Left Panel - Tree Navigation */}
-      <Box sx={{ width: 250, mr: 2, borderRight: '1px solid', borderColor: 'divider', pr: 2 }}>
+      <Box
+        sx={{
+          width: 250,
+          mr: 2,
+          borderRight: '1px solid',
+          borderColor: 'divider',
+          pr: 2,
+          bgcolor: 'background.default',
+        }}
+      >
         <SimpleTreeView defaultExpandedItems={['assets']}>
           <TreeItem itemId="assets" label={<Typography variant="h6">Assets</Typography>}>
             <TreeItem

@@ -36,12 +36,12 @@ const colorSystemOptions: ColorSystemOptions = {
     },
     // https://colors.artyclick.com/color-shades-finder/?color=#404040
     background: {
-      default: '#212121',
-      paper: '#282828ff',
-      cardContent: 'hsl(0, 0%, 25%)',
+      default: 'hsl(0,0%,12.9%)',
+      paper: 'hsl(0, 0%, 16%)',
+      cardContent: 'hsl(0, 0.00%, 25.10%)',
       cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
       leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
-      leadCardContent: 'hsl(213, 16%, 27%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      leadCardContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
       missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
       missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
     },
