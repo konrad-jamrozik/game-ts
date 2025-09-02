@@ -217,6 +217,10 @@ type EnemyMissionReport = {
 - Track detailed breakdown of money changes
 - Track detailed breakdown of intel changes
 - Update `evaluateTurn` to build and return initial `TurnReport`
+- **File**: `web/src/app/eventsMiddleware.ts`
+- Update the `advanceTurn` event matcher to capture the TurnReport and trigger `addTurnAdvancementEvent`
+- **File**: `web/src/lib/slices/eventsSlice.ts`
+- Add `addTurnAdvancementEvent` reducer to store TurnReport objects in the events state
 
 #### Phase 1.2: UI Component
 
@@ -463,7 +467,7 @@ Keep all the "Prompt:*" sections.
 
 > Apply the "Prompt: Implement the plan" prompt from @docs/backlog/turn_report_implementation_plan.md
 
-Implement milestone 1 phases 1.1 and 1.2 of the @docs/backlog/turn_report_implementation_plan.md.
+Implement milestone 1 phases 1.1  of the @docs/backlog/turn_report_implementation_plan.md.
 
 Remember to:
 - Follow the "Testing Strategy" outlined in this plan.
