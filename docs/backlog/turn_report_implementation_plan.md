@@ -482,13 +482,21 @@ This implementation plan is designed to be iterative and testable at each milest
 value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without
 major refactoring.
 
-# Pending prompt
+# Prompt: Implementation plan update
 
-> Apply the "Pending prompt" from @docs\backlog\turn_report_implementation_plan.md
+> Apply the "Prompt: Implementation plan update" prompt from @docs/backlog/turn_report_implementation_plan.md
 
 Review the @docs\backlog\turn_report_implementation_plan.md. Find all "Answer" and "TODO" entries, if any.
 They are given by me.
 Incorporate them into this document and delete the Answers and TODOs.
 When making your edits, ensure the line width never crosses 120 line characters, and that there are no markdown lint
 warnings on he file.
-Keep this "pending prompt" entry.
+Keep all the "Prompt:*" sections.
+
+# Prompt: Implement milestone 1
+
+> Apply the "Prompt: Implement milestone 1" prompt from @docs/backlog/turn_report_implementation_plan.md
+
+Implement milestone 1 phases 1.1, 1.2 and 1.3 of the @docs/backlog/turn_report_implementation_plan.md.
+
+Once done, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
