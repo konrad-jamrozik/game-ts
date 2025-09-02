@@ -4,7 +4,8 @@ import { makeInitialState } from '../../model/ruleset/initialState'
 import evaluateTurn from '../../turn_advancement/evaluateTurn'
 
 export function advanceTurn(state: GameState): void {
-  return evaluateTurn(state)
+  const turnReport = evaluateTurn(state)
+  state.turnStartReport = turnReport
 }
 
 export function reset(

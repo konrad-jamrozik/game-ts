@@ -27,6 +27,10 @@ function renderPrimaryListItemText(event: GameEvent): string {
   if (event.type === 'Text') {
     return event.message
   }
+  if (event.type === 'TurnAdvancement') {
+    // TODO: In future phases, this will be clickable to open turn report modal
+    return `Turn ${event.turn} Report Available`
+  }
   assertEqual(event.type, 'MissionCompleted')
   const successful = event.finalState === 'Successful'
   const rewardsSummary = successful ? formatMissionRewards(event) : ''

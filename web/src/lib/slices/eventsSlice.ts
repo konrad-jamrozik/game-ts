@@ -21,7 +21,11 @@ export type MissionCompletedEvent = BaseEventFields & {
   finalState: MissionSiteState
 }
 
-export type GameEvent = TextEvent | MissionCompletedEvent
+export type TurnAdvancementEvent = BaseEventFields & {
+  type: 'TurnAdvancement'
+}
+
+export type GameEvent = TextEvent | MissionCompletedEvent | TurnAdvancementEvent
 
 export type EventsState = {
   events: GameEvent[]
@@ -85,6 +89,27 @@ const eventsSlice = createSlice({
         state.events.splice(MAX_EVENTS)
       }
     },
+    addTurnAdvancementEvent(
+      state,
+      action: PayloadAction<{
+        turn: number
+        actionsCount: number
+      }>,
+    ) {
+      const event: TurnAdvancementEvent = {
+        id: state.nextEventId,
+        type: 'TurnAdvancement',
+        timestamp: Date.now(),
+        turn: action.payload.turn,
+        actionsCount: action.payload.actionsCount,
+      }
+      state.events.unshift(event)
+      state.nextEventId += 1
+
+      if (state.events.length > MAX_EVENTS) {
+        state.events.splice(MAX_EVENTS)
+      }
+    },
     // Permanently remove any events that occur after the specified timeline pointer
     // Events strictly after (turn, actionsCount) are dropped. Events at the same
     // (turn, actionsCount) or earlier are preserved.
@@ -106,5 +131,6 @@ const eventsSlice = createSlice({
   },
 })
 
-export const { addTextEvent, addMissionCompletedEvent, truncateEventsTo, clearEvents } = eventsSlice.actions
+export const { addTextEvent, addMissionCompletedEvent, addTurnAdvancementEvent, truncateEventsTo, clearEvents } =
+  eventsSlice.actions
 export default eventsSlice.reducer

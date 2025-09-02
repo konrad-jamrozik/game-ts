@@ -7,16 +7,29 @@ import {
   updateContractingAgents,
   updateEspionageAgents,
 } from './updateAgents'
-import type { GameState, MissionRewards, Faction, FactionRewards } from '../model/model'
+import type {
+  GameState,
+  MissionRewards,
+  Faction,
+  FactionRewards,
+  AssetsReport,
+  ValueChange,
+  MoneyBreakdown,
+  IntelBreakdown,
+  TurnReport,
+} from '../model/model'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { assertDefined } from '../utils/assert'
 
-export default function evaluateTurn(state: GameState): void {
+export default function evaluateTurn(state: GameState): TurnReport {
   validateGameStateInvariants(state)
 
-  state.turn += 1
+  const timestamp = Date.now()
+  const turn = state.turn + 1
+
+  state.turn = turn
   state.actionsCount = 0
 
   // Calculate agent upkeep at the start of the turn, before any agents can be terminated
@@ -46,7 +59,7 @@ export default function evaluateTurn(state: GameState): void {
   const missionRewards = evaluateDeployedMissionSites(state)
 
   // 8. Update player assets based on the results of the previous steps
-  updatePlayerAssets(state, {
+  const assetsReport = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
     intelGathered: espionageResults.intelGathered,
@@ -60,6 +73,15 @@ export default function evaluateTurn(state: GameState): void {
   updateFactions(state, missionRewards)
 
   validateGameStateInvariants(state)
+
+  // Build and return TurnReport
+  const turnReport: TurnReport = {
+    timestamp,
+    turn,
+    assets: assetsReport,
+  }
+
+  return turnReport
 }
 
 /**
@@ -97,11 +119,20 @@ function evaluateDeployedMissionSites(state: GameState): MissionRewards[] {
 
 /**
  * Updates player assets based on the results of agent assignments and mission rewards
+ * Returns detailed AssetsReport tracking all changes
  */
 function updatePlayerAssets(
   state: GameState,
   income: { agentUpkeep: number; moneyEarned: number; intelGathered: number; missionRewards: MissionRewards[] },
-): void {
+): AssetsReport {
+  // Capture previous values
+  const previousMoney = state.money
+  const previousIntel = state.intel
+
+  // Track mission reward amounts for breakdown
+  let missionMoneyRewards = 0
+  let missionIntelRewards = 0
+
   // Subtract agent upkeep costs (calculated at turn start before any agents were terminated)
   state.money -= income.agentUpkeep
 
@@ -115,6 +146,7 @@ function updatePlayerAssets(
   state.money -= state.currentTurnTotalHireCost
 
   // Reset hire cost
+  const hireCosts = state.currentTurnTotalHireCost
   state.currentTurnTotalHireCost = 0
 
   // Add intel gathered by espionage agents
@@ -125,13 +157,51 @@ function updatePlayerAssets(
   for (const rewards of income.missionRewards) {
     if (rewards.money !== undefined) {
       state.money += rewards.money
+      missionMoneyRewards += rewards.money
     }
     if (rewards.intel !== undefined) {
       state.intel += rewards.intel
+      missionIntelRewards += rewards.intel
     }
     if (rewards.funding !== undefined) {
       state.funding += rewards.funding
     }
+  }
+
+  // KJA delta should be automatically derived.
+  // Create money value change
+  const moneyChange: ValueChange = {
+    previous: previousMoney,
+    current: state.money,
+    delta: state.money - previousMoney,
+  }
+
+  // Create intel value change
+  const intelChange: ValueChange = {
+    previous: previousIntel,
+    current: state.intel,
+    delta: state.intel - previousIntel,
+  }
+
+  // Create detailed breakdowns
+  const moneyDetails: MoneyBreakdown = {
+    agentUpkeep: -income.agentUpkeep,
+    contractingEarnings: income.moneyEarned,
+    fundingIncome: state.funding,
+    hireCosts: -hireCosts,
+    missionRewards: missionMoneyRewards,
+  }
+
+  const intelDetails: IntelBreakdown = {
+    espionageGathered: income.intelGathered,
+    missionRewards: missionIntelRewards,
+  }
+
+  return {
+    money: moneyChange,
+    intel: intelChange,
+    moneyDetails,
+    intelDetails,
   }
 }
 

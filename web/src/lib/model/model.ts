@@ -116,6 +116,47 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
+// Turn Report Types for Turn Advancement Report feature
+
+export type BaseReport = {
+  timestamp: number
+  turn: number
+}
+
+export type ValueChange = {
+  previous: number
+  current: number
+  delta: number
+}
+
+export type MoneyBreakdown = {
+  agentUpkeep: number
+  contractingEarnings: number
+  fundingIncome: number
+  hireCosts: number
+  missionRewards: number
+}
+
+export type IntelBreakdown = {
+  espionageGathered: number
+  missionRewards: number
+}
+
+export type AssetsReport = {
+  money: ValueChange
+  intel: ValueChange
+  moneyDetails: MoneyBreakdown
+  intelDetails: IntelBreakdown
+}
+
+export type TurnReport = BaseReport & {
+  assets: AssetsReport
+  // Additional fields will be added in later milestones:
+  // panic: PanicReport;
+  // factions: FactionReport[];
+  // missionSites: DeployedMissionSiteReport[];
+}
+
 export type GameState = {
   // Session
   turn: number
@@ -133,4 +174,6 @@ export type GameState = {
   // Archive
   leadInvestigationCounts: Record<string, number>
   missionSites: MissionSite[]
+  // TurnReport of turn advancement from previous to current turn.
+  turnStartReport?: TurnReport
 }

@@ -28,10 +28,13 @@ Based on project requirements, the following design decisions have been made:
 
 3. **Console Logging**: Existing combat console.log statements will be retained for debugging purposes.
 
-4. **Report Persistence**: TurnReports will be persisted in the `eventsSlice`. The `advanceTurn` matcher
-   in `eventsMiddleware.ts` will trigger an `addTurnAdvancementEvent` reducer to store reports.
+4. **Report Persistence**: TurnReports are persisted automatically via the game state's undo/redo system.
+   The `advanceTurn` matcher in `eventsMiddleware.ts` will trigger an `addTurnAdvancementEvent` to record the occurrence
+   of turn advancement without duplicating data.
 
-5. **UI Display**: Turn Reports will open as a modal dialog when clicking on "Turn X started" entries in the event log.
+5. **Turn Reports in GameState**: Complete TurnReports are stored in `GameState.turnStartReport`
+
+6. **UI Display**: Turn Reports will open as a modal dialog when clicking on "Turn X started" entries in the event log.
 
 ## Data Model Design
 
@@ -210,17 +213,17 @@ type EnemyMissionReport = {
 
 **Objective**: Implement asset tracking and display in TreeView
 
-#### Phase 1.1: Backend Logic
+#### ✅ Phase 1.1: Backend Logic
 
-- **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
-- Modify `updatePlayerAssets` to return `AssetsReport`
-- Track detailed breakdown of money changes
-- Track detailed breakdown of intel changes
-- Update `evaluateTurn` to build and return initial `TurnReport`
-- **File**: `web/src/app/eventsMiddleware.ts`
-- Update the `advanceTurn` event matcher to capture the TurnReport and trigger `addTurnAdvancementEvent`
-- **File**: `web/src/lib/slices/eventsSlice.ts`
-- Add `addTurnAdvancementEvent` reducer to store TurnReport objects in the events state
+- ✅ **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
+- ✅ Modify `updatePlayerAssets` to return `AssetsReport`
+- ✅ Track detailed breakdown of money changes
+- ✅ Track detailed breakdown of intel changes
+- ✅ Update `evaluateTurn` to build and return initial `TurnReport`
+- ✅ **File**: `web/src/app/eventsMiddleware.ts`
+- ✅ Update the `advanceTurn` event matcher to capture the TurnReport from `turnStartReport` and trigger `addTurnAdvancementEvent`
+- ✅ **File**: `web/src/lib/slices/eventsSlice.ts`
+- ✅ Add `addTurnAdvancementEvent` reducer to record turn advancement events without duplicating report data
 
 #### Phase 1.2: UI Component
 
@@ -308,7 +311,9 @@ type EnemyMissionReport = {
 
 2. **Report Composition**: Reports will be composed hierarchically, with child reports embedded in parent reports.
 
-3. **Backward Compatibility**: During transition, maintain existing functionality while adding report generation.
+3. **Temporary Storage**: The complete `TurnReport` is temporarily stored in `GameState.turnStartReport` for middleware access to trigger event logging.
+
+4. **Backward Compatibility**: During transition, maintain existing functionality while adding report generation.
 
 ### UI Component Structure
 
@@ -369,13 +374,15 @@ The UI will follow a split-panel design with TreeView navigation and scrollable 
 ### State Management
 
 1. **Redux Integration**:
-   - Store TurnReport in `eventsSlice` via `addTurnAdvancementEvent` reducer
-   - Reports persist across turns for historical viewing
-   - Access reports through event log entries
+   - TurnReports are automatically persisted via the game state's undo/redo system
+   - Complete `TurnReport` is temporarily stored in `GameState.turnStartReport` during turn advancement
+   - Events record when turn advancement occurred without duplicating report data
+   - Access complete reports from game state history when displaying UI
 
 2. **Event System Integration**:
    - Remove `postMissionCompletedEvent` and `addMissionCompletedEvent`
    - Use turn report as single source of truth for turn events
+   - `addTurnAdvancementEvent` creates lightweight markers in event log
    - Integrate with existing `advanceTurn` event matcher
 
 ### Testing Strategy
@@ -473,4 +480,4 @@ Remember to:
 - Follow the "Testing Strategy" outlined in this plan.
 - Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
   - However, ignore and do not address any eslint warnings about too many lines in a function, file, or anywhere else.
-- Edit this document by marking with "✅" sections that you have completed.
+- Edit this document by prefixing with "✅" sections that you have completed.

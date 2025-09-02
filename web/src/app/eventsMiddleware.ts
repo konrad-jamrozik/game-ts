@@ -1,7 +1,13 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../lib/collections/missions'
-import { addMissionCompletedEvent, addTextEvent, clearEvents, truncateEventsTo } from '../lib/slices/eventsSlice'
+import {
+  addMissionCompletedEvent,
+  addTextEvent,
+  addTurnAdvancementEvent,
+  clearEvents,
+  truncateEventsTo,
+} from '../lib/slices/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -18,6 +24,7 @@ import type { MissionRewards, MissionSite, MissionSiteState, MissionSiteId } fro
 import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'
 import { fmtAgentCount } from '../lib/utils/formatUtils'
+import { assertDefined } from '../lib/utils/assert'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
 // [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
@@ -76,7 +83,14 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
     // Dispatch events based on the action
     if (advanceTurn.match(action)) {
-      postTextEvent(`Turn ${gameState.turn} started`)
+      assertDefined(gameState.turnStartReport)
+      // Record turn advancement event (report data is available in game state)
+      store.dispatch(
+        addTurnAdvancementEvent({
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+        }),
+      )
 
       // Check for newly concluded mission sites and log mission completion event with details
       const previouslyConcludedMissionSiteIds = new Set(
