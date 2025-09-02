@@ -86,11 +86,13 @@ In each `Mission sites / Mission site X / Agents` entry:
 
 - Details of what happened to each agent deployed to the mission site.
   - How many hit points they lost and how much exhaustion they gained, and how long they will need to recover.
-  - How many skill points they gained, with breakdown for what: successful/failed attacks and defenses, and from mission survival.
+  - How many skill points they gained, with breakdown for what: successful/failed attacks and defenses,
+    and from mission survival.
   - What they did each round: details of attacks and defenses. Full information, including:
     - Who was the target/attacker
     - What was the roll and threshold
-    - And so on. Basically what is currently logged to console for given agent in `evaluateCombatRound` and `showRoundStatus` functions.
+    - And so on. Basically what is currently logged to console for given agent in `evaluateCombatRound` and `showRoundStatus`
+      functions.
   
 In each `Mission sites / Mission site X / Enemies` entry:
 
