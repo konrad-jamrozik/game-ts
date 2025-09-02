@@ -2,38 +2,30 @@ import { describe, expect, test } from 'vitest'
 import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
 import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { wpnFix } from '../fixtures/weaponFixture'
 import { agFix } from '../fixtures/agentFixture'
 import { rand } from '../../src/lib/utils/rand'
+import { AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD } from '../../src/lib/model/ruleset/constants'
 
 describe(evaluateBattle, () => {
-  test('evaluateBattle -> player wins in 1 round', () => {
-    const agentId = 'agent-001'
-    const agent = agFix.new({
-      id: agentId,
-      weapon: wpnFix.new({ constDamage: 100 }),
-    })
-    const agentsView = agsV([agent])
+  test('1 agent defeat 1 enemy in 1 round', () => {
+    rand.set('agent_attack_roll', 1)
+    const agent = agFix.withSuperWeapon()
     const enemy = st.newEnemyInitiate()
 
-    // Set up controllable random to make agent always roll max (success)
-    rand.set('agent_attack_roll', 1)
+    const report = evaluateBattle(agsV([agent]), [enemy]) // Act
 
-    const report = evaluateBattle(agentsView, [enemy]) // Act
-
-    const entries = Object.fromEntries([agentId].map((id) => [id, expect.any(Number)]))
     expectReportToBe(report)({
       rounds: 1,
       agentCasualties: 0,
       enemyCasualties: 1,
       retreated: false,
-      agentSkillUpdates: entries,
+      agentSkillUpdates: { [agent.id]: AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD },
     })
   })
 
-  test.todo('evaluateBattle -> happy path: player won')
+  test.todo('happy path: player won')
 
-  test.todo('evaluateBattle -> happy path: player lost')
+  test.todo('happy path: player lost')
 })
 
 /**

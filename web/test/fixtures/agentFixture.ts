@@ -1,5 +1,6 @@
 import type { Agent } from '../../src/lib/model/model'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
+import { wpnFix } from './weaponFixture'
 
 export const agFix = (() => {
   let agentIdCounter = 0
@@ -12,6 +13,12 @@ export const agFix = (() => {
     default(): Agent {
       agentIdCounter += 1
       return newHiredAgent(`agent-${agentIdCounter}`, 1)
+    },
+
+    withSuperWeapon(): Agent {
+      return this.new({
+        weapon: wpnFix.new({ constDamage: 100 }),
+      })
     },
 
     new(overrides?: Partial<Agent>): Agent {
