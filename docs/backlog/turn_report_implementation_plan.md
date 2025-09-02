@@ -74,7 +74,7 @@ Based on project requirements, the following design decisions have been made:
 
 ### Core Report Types
 
-For implemented report types, refer to [web/src/lib/model/reportModel.ts](web/src/lib/model/reportModel.ts)
+For implemented report types, refer to [web/src/lib/model/reportModel.ts](/web/src/lib/model/reportModel.ts)
 
 Pending extensions:
 
@@ -472,9 +472,10 @@ Keep all the "Prompt:*" sections.
 
 > Apply the "Prompt: Implement the plan" prompt from @docs/backlog/turn_report_implementation_plan.md
 
-Implement milestone 1 phases 1.1  of the @docs/backlog/turn_report_implementation_plan.md.
+Implement milestone 1 phase 1.2 of the @docs/backlog/turn_report_implementation_plan.md.
 
 Remember to:
+- Leverage the mui-mcp MCP server to help you with MUI questions.
 - Follow the "Testing Strategy" outlined in this plan.
 - Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
   - However, ignore and do not address any eslint warnings about too many lines in a function, file, or anywhere else.
