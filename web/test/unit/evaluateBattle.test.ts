@@ -4,6 +4,7 @@ import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
 import { wpnFix } from '../fixtures/weaponFixture'
 import { agFix } from '../fixtures/agentFixture'
+import { rand } from '../../src/lib/utils/controllableRandom'
 
 describe(evaluateBattle, () => {
   test('evaluateBattle -> player wins in 1 round', () => {
@@ -14,6 +15,9 @@ describe(evaluateBattle, () => {
     })
     const agentsView = agsV([agent])
     const enemy = st.newEnemyInitiate()
+
+    // Set up controllable random to make agent always roll max (success)
+    rand.set('agent_attack_roll', 1)
 
     const report = evaluateBattle(agentsView, [enemy]) // Act
 

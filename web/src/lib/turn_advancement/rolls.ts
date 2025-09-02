@@ -4,6 +4,7 @@
 
 import { toPrecisionRoundingDown } from '../utils/mathUtils'
 import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
+import { rand } from '../utils/controllableRandom'
 
 export type ContestRoll = {
   attackerValue: number
@@ -34,15 +35,16 @@ export type RangeRoll = {
  *
  * @param attackerValue - The attacker's contested value (typically effective skill)
  * @param defenderValue - The defender's contested value (typically effective skill)
+ * @param label - Optional label for controllable random in tests
  * @returns The contest roll result
  */
-export function rollContest(attackerValue: number, defenderValue: number): ContestRoll {
+export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRoll {
   const ratioSquared = (defenderValue / attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
   const successInt = toPrecisionRoundingDown(successProbability, CONTEST_ROLL_PRECISION)
   const failureInt = CONTEST_ROLL_PRECISION - successInt
 
-  const roll = roll1to(CONTEST_ROLL_PRECISION)
+  const roll = roll1to(CONTEST_ROLL_PRECISION, label)
 
   // Higher rolls are better: success when roll > P(failure)
   const success = roll > failureInt
@@ -65,19 +67,20 @@ export function rollContest(attackerValue: number, defenderValue: number): Conte
 /**
  * Rolls a die (integer 1-precision, inclusive)
  */
-function roll1to(precision: number): number {
-  return rollRange(1, precision).roll
+function roll1to(precision: number, label?: string): number {
+  return rollRange(1, precision, label).roll
 }
 
 /**
  * Performs a range roll, selecting a random value from the given range (inclusive)
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)
+ * @param label - Optional label for controllable random in tests
  * @returns The range roll result
  */
-export function rollRange(min: number, max: number): RangeRoll {
+export function rollRange(min: number, max: number, label?: string): RangeRoll {
   const range = max - min + 1
-  const roll = Math.floor(Math.random() * range) + min
+  const roll = Math.floor(rand.get(label) * range) + min
 
   return {
     min,

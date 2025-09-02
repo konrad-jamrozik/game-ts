@@ -20,6 +20,7 @@ export function evaluateAttack(
   attackerStats: AgentCombatStats | undefined,
   defender: Agent | Enemy,
   defenderStats?: AgentCombatStats,
+  label?: string,
 ): void {
   // Calculate effective skills
   const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
@@ -34,7 +35,7 @@ export function evaluateAttack(
   }
 
   // Contest roll
-  const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill)
+  const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill, label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
@@ -46,7 +47,7 @@ export function evaluateAttack(
 
   if (contestResult.success) {
     // Successful attack - roll damage
-    const damage = rollWeaponDamage(attacker.weapon)
+    const damage = rollWeaponDamage(attacker.weapon, label)
     const damageDenominator = attacker.weapon.maxDamage - attacker.weapon.minDamage
     const damageRangePct =
       damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100

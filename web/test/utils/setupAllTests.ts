@@ -4,7 +4,9 @@
 /* eslint-disable vitest/require-top-level-describe */
 import { beforeEach } from 'vitest'
 import { resetAllFixtures } from '../fixtures/resetAllFixtures'
+import { rand } from '../../src/lib/utils/controllableRandom'
 
 beforeEach(() => {
   resetAllFixtures()
+  rand.reset()
 })
