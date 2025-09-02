@@ -22,31 +22,52 @@ Before implementation begins, the following questions need answers:
    - Create test files in a `__tests__` directory next to source files?
    - Use a different testing approach?
 
-2. **Event Middleware**: The `eventsMiddleware.ts` currently posts events for missions. Should we:
+Answer: the tests are there. See e.g. `web/test/unit/evaluateTurn.test.ts`
+
+1. **Event Middleware**: The `eventsMiddleware.ts` currently posts events for missions. Should we:
    - Completely remove the `postMissionCompletedEvent` functionality?
    - Keep it for backwards compatibility during transition?
    - How should the new TurnReport integrate with the existing events system?
+  
+Answer:
+- delete `postMissionCompletedEvent`. This means that `addMissionCompletedEvent` from `eventsSlice.ts`
+should be removed, too.
+- TurnReport integration with `eventsMiddleware.ts` should be done via the already-existing `advanceTurn` event matcher.
+I.e. the `advanceTurn` action should return the TurnReport object that is included in the appropriate event.
+- The event log UI component that renders "Turn X started" should now make the entry clickable, opening the turn report.
 
-3. **Console Logging**: Currently, combat details are logged to console. Should we:
+1. **Console Logging**: Currently, combat details are logged to console. Should we:
    - Remove console.log statements once the UI is implemented?
    - Keep them for debugging purposes?
    - Make console logging configurable?
+  
+Answer: keep them for debugging purposes.
 
-4. **Report Persistence**: Should the TurnReport:
+1. **Report Persistence**: Should the TurnReport:
    - Be stored in Redux state for the current turn only?
    - Be persisted across multiple turns for historical viewing?
    - Have a maximum number of stored reports to manage memory?
 
-5. **UI Integration**: Where should the Turn Report component be displayed:
+Answer: yes, it should be persisted, in the `eventsReducer` slice. Basically the `advanceTurn: advanceTurnReducer,`
+should be matched against the `advanceTurn` matcher in `eventsMiddleware.ts` and then as a result it should
+run `addTurnAdvancementEvent` reducer, to be added to `eventsSlice`.
+
+1. **UI Integration**: Where should the Turn Report component be displayed:
    - As a modal/dialog that opens after turn advancement?
    - As a permanent panel in the UI?
    - As a tab in an existing component?
+
+Answer: as a modal. As mentioned above, the model will be openable by clicking on appropriate "Turn X started" event in
+the event log.
 
 ## Data Model Design
 
 ### Core Report Types
 
 ```typescript
+
+// TODO: replace all `interface` with `type` in the following code.
+
 // Base report interface
 interface BaseReport {
   timestamp: number;
@@ -68,6 +89,8 @@ interface AssetsReport {
   moneyDetails: MoneyBreakdown;
   intelDetails: IntelBreakdown;
 }
+
+// TODO: rename AssetChange to ValueChange
 
 interface AssetChange {
   previous: number;
@@ -163,7 +186,6 @@ interface AttackReport {
   targetId: string;
   targetName: string;
   targetType: 'agent' | 'enemy';
-  attackType: 'offensive' | 'defensive';
   roll: number;
   threshold: number;
   success: boolean;
@@ -220,7 +242,7 @@ interface EnemyMissionReport {
 
 **Objective**: Implement asset tracking and display in TreeView
 
-#### Phase 1: Backend Logic
+#### Phase 1.1: Backend Logic
 
 - **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
 - Modify `updatePlayerAssets` to return `AssetsReport`
@@ -228,7 +250,7 @@ interface EnemyMissionReport {
 - Track detailed breakdown of intel changes
 - Update `evaluateTurn` to build and return initial `TurnReport`
 
-#### Phase 2: Unit Tests
+#### Phase 1.2: Unit Tests
 
 - **File**: `web/src/lib/turn_advancement/__tests__/evaluateTurn.test.ts` (new)
 - Test asset report generation with various scenarios
@@ -236,7 +258,7 @@ interface EnemyMissionReport {
 - Test intel breakdown calculations
 - Verify report structure correctness
 
-#### Phase 3: UI Component
+#### Phase 1.3: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (new)
 - Create basic TreeView structure
@@ -248,7 +270,7 @@ interface EnemyMissionReport {
 
 **Objective**: Implement panic and faction tracking
 
-#### Phase 1: Backend Logic
+#### Phase 2.1: Backend Logic
 
 - **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
 - Modify `updatePanic` to return `PanicReport`
@@ -257,7 +279,7 @@ interface EnemyMissionReport {
 - Track mission impacts on factions
 - Include suppression decay calculations
 
-#### Phase 2: Unit Tests
+#### Phase 2.2: Unit Tests
 
 - **File**: `web/src/lib/turn_advancement/__tests__/evaluateTurn.test.ts`
 - Test panic report generation
@@ -265,7 +287,7 @@ interface EnemyMissionReport {
 - Test suppression decay calculations
 - Test mission reward application to factions
 
-#### Phase 3: UI Component
+#### Phase 2.3: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
 - Add Panic node with expandable breakdown
@@ -277,7 +299,7 @@ interface EnemyMissionReport {
 
 **Objective**: Implement mission site result tracking
 
-#### Phase 1: Backend Logic
+#### Phase 3.1: Backend Logic
 
 - **File**: `web/src/lib/turn_advancement/evaluateDeployedMissionSite.ts`
 - Create and return `DeployedMissionSiteReport`
@@ -285,7 +307,7 @@ interface EnemyMissionReport {
 - Include mission rewards in report
 - Calculate agent and enemy casualties
 
-#### Phase 2: Unit Tests
+#### Phase 3.2: Unit Tests
 
 - **File**: `web/src/lib/turn_advancement/__tests__/evaluateDeployedMissionSite.test.ts` (new)
 - Test mission site report generation
@@ -293,7 +315,7 @@ interface EnemyMissionReport {
 - Test reward tracking
 - Test casualty counting
 
-#### Phase 3: UI Component
+#### Phase 3.3: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
 - Add Mission Sites node
@@ -306,7 +328,7 @@ interface EnemyMissionReport {
 
 **Objective**: Implement detailed combat tracking
 
-#### Phase 1: Backend Logic
+#### Phase 4.1: Backend Logic
 
 - **Files**:
   - `web/src/lib/turn_advancement/evaluateBattle.ts`
@@ -317,7 +339,7 @@ interface EnemyMissionReport {
 - Track agent and enemy performance metrics
 - Build `AgentMissionReport` and `EnemyMissionReport`
 
-#### Phase 2: Unit Tests
+#### Phase 4.2: Unit Tests
 
 - **File**: `web/src/lib/turn_advancement/__tests__/evaluateBattle.test.ts` (new)
 - Test battle report generation
@@ -326,7 +348,7 @@ interface EnemyMissionReport {
 - Test agent/enemy performance tracking
 - Test skill point calculations
 
-#### Phase 3: UI Component
+#### Phase 4.3: UI Component
 
 - **Files**:
   - `web/src/components/TurnReport/TurnReportTree.tsx`
@@ -342,7 +364,8 @@ interface EnemyMissionReport {
 
 ### Backend Modifications
 
-1. **Function Return Types**: Each evaluating function will be modified to return both its side effects (state mutations) and a report object.
+1. **Function Return Types**: Each evaluating function will be modified to return both its side effects (state mutations)
+   and a report object.
 
 2. **Report Composition**: Reports will be composed hierarchically, with child reports embedded in parent reports.
 
