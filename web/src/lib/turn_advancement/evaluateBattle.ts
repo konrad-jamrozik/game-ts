@@ -76,9 +76,8 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     true,
   )
 
-  console.log(`\n📊 Battle concluded after ${roundIdx} rounds`)
-  console.log(`Agent casualties: ${agentCasualties}`)
-  console.log(`Enemy casualties: ${enemyCasualties}`)
+  console.log(`Agent casualties: ${agentCasualties} / ${agents.length}`)
+  console.log(`Enemy casualties: ${enemyCasualties} / ${enemies.length}`)
 
   return {
     rounds: roundIdx,
@@ -202,7 +201,7 @@ function showRoundStatus(
 ): void {
   if (battleConcluded) {
     const roundsStr = pluralize('round', rounds)
-    console.log(`\n========== ⚔️ Battle Concluded after ${rounds} ${roundsStr} ==========`)
+    console.log(`\n========== 📊 Battle Concluded after ${rounds} ${roundsStr} ==========`)
   } else {
     console.log(`\n========== ⚔️ Combat Round ${rounds} ==========`)
   }
