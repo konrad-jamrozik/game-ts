@@ -41,13 +41,8 @@ export type RangeRoll = {
 export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRoll {
   const ratioSquared = (defenderValue / attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
-  const successInt = toPrecisionRoundingDown(successProbability, CONTEST_ROLL_PRECISION)
-  const failureInt = CONTEST_ROLL_PRECISION - successInt
 
-  const roll = roll1to(CONTEST_ROLL_PRECISION, label)
-
-  // Higher rolls are better: success when roll > P(failure)
-  const success = roll > failureInt
+  const [success, failureInt, successInt, roll] = rollAgainstProbability(successProbability, label)
 
   // Express the values as percentages with 0.01% precision
   const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
@@ -64,10 +59,26 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   }
 }
 
+export function rollAgainstProbability(probability: number, label?: string): [boolean, number, number, number] {
+  const [failureInt, successInt] = getSuccessAndFailureInts(probability)
+  const roll = roll1to(CONTEST_ROLL_PRECISION, label)
+
+  // Higher rolls are better: success when roll > P(failure)
+  const success = roll > failureInt
+
+  return [success, failureInt, successInt, roll]
+}
+
+export function getSuccessAndFailureInts(successProbability: number): [number, number] {
+  const successInt = toPrecisionRoundingDown(successProbability, CONTEST_ROLL_PRECISION)
+  const failureInt = CONTEST_ROLL_PRECISION - successInt
+  return [failureInt, successInt]
+}
+
 /**
  * Rolls a die (integer 1-precision, inclusive)
  */
-function roll1to(precision: number, label?: string): number {
+export function roll1to(precision: number, label?: string): number {
   return rollRange(1, precision, label).roll
 }
 
@@ -80,7 +91,8 @@ function roll1to(precision: number, label?: string): number {
  */
 export function rollRange(min: number, max: number, label?: string): RangeRoll {
   const range = max - min + 1
-  const roll = Math.floor(rand.get(label) * range) + min
+  const randResult = rand.get(label)
+  const roll = Math.floor(randResult * range) + min
 
   return {
     min,
