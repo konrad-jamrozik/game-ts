@@ -4,12 +4,16 @@ import CardHeader from '@mui/material/CardHeader'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
+import ListItemButton from '@mui/material/ListItemButton'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
 import { assertEqual } from '../lib/utils/assert'
 import { fmtPctDiv100Dec2 } from '../lib/utils/formatUtils'
+import { TurnReportModal } from './TurnReport/TurnReportModal'
+import { useTurnReportHistory } from './TurnReport/useTurnReportHistory'
+import type { TurnReport } from '../lib/model/reportModel'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event
@@ -28,7 +32,6 @@ function renderPrimaryListItemText(event: GameEvent): string {
     return event.message
   }
   if (event.type === 'TurnAdvancement') {
-    // TODO: In future phases, this will be clickable to open turn report modal
     return `Turn ${event.turn} Report Available`
   }
   assertEqual(event.type, 'MissionCompleted')
@@ -43,6 +46,10 @@ export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
   const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)
   const currentActionsCount = useAppSelector((state) => state.undoable.present.gameState.actionsCount)
+  const { getTurnReport } = useTurnReportHistory()
+
+  const [modalOpen, setModalOpen] = React.useState(false)
+  const [selectedTurnReport, setSelectedTurnReport] = React.useState<TurnReport | undefined>()
 
   // Hide events that are currently undone (beyond the undo pointer)
   // and also hide any legacy undo/redo/reset text events that may exist in persisted state
@@ -52,46 +59,95 @@ export function EventLog(): React.JSX.Element {
     return notUndone
   })
 
+  function handleTurnAdvancementClick(turn: number): void {
+    const turnReport = getTurnReport(turn)
+    if (turnReport) {
+      setSelectedTurnReport(turnReport)
+      setModalOpen(true)
+    }
+  }
+
+  function handleModalClose(): void {
+    setModalOpen(false)
+    setSelectedTurnReport(undefined)
+  }
+
   return (
-    <Card
-      sx={{
-        minWidth: 300,
-        maxWidth: 380,
-      }}
-    >
-      <CardHeader title="Event Log" />
-      <CardContent>
-        {visibleEvents.length === 0 ? (
-          <Typography variant="body2" color="text.secondary">
-            No events yet
-          </Typography>
-        ) : (
-          <List dense>
-            {visibleEvents.map((event: GameEvent) => (
-              <ListItem key={event.id} disablePadding>
-                <ListItemText
-                  primary={renderPrimaryListItemText(event)}
-                  secondary={`T ${event.turn} / A ${event.actionsCount}`}
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'space-between',
-                    alignItems: 'center',
-                  }}
-                  slotProps={{
-                    primary: {
-                      component: 'span',
-                    },
-                    secondary: {
-                      component: 'span',
-                      sx: { marginLeft: 2, flexShrink: 0 },
-                    },
-                  }}
-                />
-              </ListItem>
-            ))}
-          </List>
-        )}
-      </CardContent>
-    </Card>
+    <React.Fragment>
+      <Card
+        sx={{
+          minWidth: 300,
+          maxWidth: 380,
+        }}
+      >
+        <CardHeader title="Event Log" />
+        <CardContent>
+          {visibleEvents.length === 0 ? (
+            <Typography variant="body2" color="text.secondary">
+              No events yet
+            </Typography>
+          ) : (
+            <List dense>
+              {visibleEvents.map((event: GameEvent) => {
+                const isClickableTurnReport = event.type === 'TurnAdvancement'
+
+                if (isClickableTurnReport) {
+                  return (
+                    <ListItem key={event.id} disablePadding>
+                      <ListItemButton onClick={() => handleTurnAdvancementClick(event.turn)}>
+                        <ListItemText
+                          primary={renderPrimaryListItemText(event)}
+                          secondary={`T ${event.turn} / A ${event.actionsCount}`}
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'center',
+                          }}
+                          slotProps={{
+                            primary: {
+                              component: 'span',
+                            },
+                            secondary: {
+                              component: 'span',
+                              sx: { marginLeft: 2, flexShrink: 0 },
+                            },
+                          }}
+                        />
+                      </ListItemButton>
+                    </ListItem>
+                  )
+                }
+
+                return (
+                  <ListItem key={event.id} disablePadding>
+                    <ListItemText
+                      primary={renderPrimaryListItemText(event)}
+                      secondary={`T ${event.turn} / A ${event.actionsCount}`}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        px: 2,
+                      }}
+                      slotProps={{
+                        primary: {
+                          component: 'span',
+                        },
+                        secondary: {
+                          component: 'span',
+                          sx: { marginLeft: 2, flexShrink: 0 },
+                        },
+                      }}
+                    />
+                  </ListItem>
+                )
+              })}
+            </List>
+          )}
+        </CardContent>
+      </Card>
+
+      <TurnReportModal open={modalOpen} onClose={handleModalClose} turnReport={selectedTurnReport} />
+    </React.Fragment>
   )
 }

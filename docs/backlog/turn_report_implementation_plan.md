@@ -7,7 +7,7 @@
   - [Data Model Design](#data-model-design)
     - [Core Report Types](#core-report-types)
   - [Implementation Work Plan](#implementation-work-plan)
-    - [Milestone 1: Display Basic Turn Stats](#milestone-1-display-basic-turn-stats)
+    - [✅ Milestone 1: Display Basic Turn Stats](#-milestone-1-display-basic-turn-stats)
       - [✅ Phase 1.1: Backend Logic](#-phase-11-backend-logic)
       - [✅ Phase 1.2: UI Component](#-phase-12-ui-component)
     - [Milestone 2: Display Factions Stats](#milestone-2-display-factions-stats)
@@ -207,9 +207,9 @@ type EnemyMissionReport = {
 
 ## Implementation Work Plan
 
-### Milestone 1: Display Basic Turn Stats
+### ✅ Milestone 1: Display Basic Turn Stats
 
-**Objective**: Implement asset tracking and display in TreeView
+**Objective**: Implement asset tracking and display in model TreeView stub and hook it up.
 
 #### ✅ Phase 1.1: Backend Logic
 
@@ -230,6 +230,13 @@ type EnemyMissionReport = {
 - ✅ Implement Assets node with Money and Intel sub-nodes
 - ✅ Display change values in "previous → current (±delta)" format
 - ✅ Add expandable details for calculation breakdowns
+- ✅ **File**: `web/src/components/TurnReport/TurnReportModal.tsx` (new)
+- ✅ Create modal dialog wrapper using MUI Dialog components
+- ✅ **File**: `web/src/components/TurnReport/useTurnReportHistory.tsx` (new)
+- ✅ Create hook to access historical turn reports from undo system
+- ✅ **File**: `web/src/components/EventLog.tsx` (modified)
+- ✅ Make TurnAdvancement events clickable to open turn report modal
+- ✅ Integrate TurnReportModal with event log interactions
 
 ### Milestone 2: Display Factions Stats
 
