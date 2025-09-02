@@ -76,6 +76,17 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
  */
 export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElement {
   const { assets } = report
+  const [expandedAccordion, setExpandedAccordion] = React.useState<string | false>(false)
+
+  function handleTreeItemClick(accordionId: string): void {
+    setExpandedAccordion(expandedAccordion === accordionId ? false : accordionId)
+  }
+
+  function handleAccordionChange(accordionId: string) {
+    return (_event: React.SyntheticEvent, isExpanded: boolean): void => {
+      setExpandedAccordion(isExpanded ? accordionId : false)
+    }
+  }
 
   return (
     <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600 }}>
@@ -83,15 +94,37 @@ export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElem
       <Box sx={{ width: 250, mr: 2, borderRight: '1px solid', borderColor: 'divider', pr: 2 }}>
         <SimpleTreeView defaultExpandedItems={['assets']}>
           <TreeItem itemId="assets" label={<Typography variant="h6">Assets</Typography>}>
-            <TreeItem itemId="assets-money" label={<Typography variant="body1">Money</Typography>} />
-            <TreeItem itemId="assets-intel" label={<Typography variant="body1">Intel</Typography>} />
+            <TreeItem
+              itemId="assets-money"
+              label={
+                <Typography
+                  variant="body1"
+                  sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
+                  onClick={() => handleTreeItemClick('money')}
+                >
+                  Money
+                </Typography>
+              }
+            />
+            <TreeItem
+              itemId="assets-intel"
+              label={
+                <Typography
+                  variant="body1"
+                  sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
+                  onClick={() => handleTreeItemClick('intel')}
+                >
+                  Intel
+                </Typography>
+              }
+            />
           </TreeItem>
         </SimpleTreeView>
       </Box>
 
       {/* Right Panel - Collapsible Details */}
       <Box sx={{ flex: 1 }}>
-        <Accordion>
+        <Accordion expanded={expandedAccordion === 'money'} onChange={handleAccordionChange('money')}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="money-content" id="money-header">
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <Typography variant="h6" sx={{ mr: 2 }}>
@@ -111,7 +144,7 @@ export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElem
           </AccordionDetails>
         </Accordion>
 
-        <Accordion>
+        <Accordion expanded={expandedAccordion === 'intel'} onChange={handleAccordionChange('intel')}>
           <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="intel-content" id="intel-header">
             <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
               <Typography variant="h6" sx={{ mr: 2 }}>
