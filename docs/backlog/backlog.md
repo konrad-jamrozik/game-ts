@@ -48,16 +48,3 @@ KJA backlog:
   interesting happened to that unit in that round.
   E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
   Cell background gradient may denote % of original effective skill.
-
-## Next big feature
-
-Implement "turn advancement log" - a table that shows what happened to each unit in each turn.
-
-This has to pull information from:
-
-- `evaluateTurn`
-- `evaluateDeployedMissionSite`
-- `evaluateBattle`
-- `evaluateCombatRound`
-- `evaluateAttack`
--  
