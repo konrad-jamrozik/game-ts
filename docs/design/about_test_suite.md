@@ -1,6 +1,6 @@
 # About test suite
 
-This file specifies the unit and component test suites for the project.
+This file specifies the unit and component test suite for the project.
 
 - [About test suite](#about-test-suite)
 - [Test suite design](#test-suite-design)
@@ -35,7 +35,7 @@ e.g. by ensuring appropriate items are selected.
 E2E tests are tests that test the entire application, meaning they render the entire `App.tsx` component.
 
 (🚧 needs review) There is one E2E test covering some core logic like "advance turn".
-For details, refer to [About E2E test suite](./about_e2e_test_suite.md).
+For details, refer to [About E2E test suite](./about_e2e_tests.md).
 
 There are no other E2E tests.
 

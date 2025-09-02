@@ -7,7 +7,7 @@ import { rand } from '../../src/lib/utils/rand'
 import { AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD } from '../../src/lib/model/ruleset/constants'
 
 describe(evaluateBattle, () => {
-  test('1 agent defeat 1 enemy in 1 round', () => {
+  test('1 agent defeats 1 enemy in 1 attack', () => {
     rand.set('agent_attack_roll', 1)
     const agent = agFix.withSuperWeapon()
     const enemy = st.newEnemyInitiate()

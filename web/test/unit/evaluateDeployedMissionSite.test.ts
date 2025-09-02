@@ -6,7 +6,7 @@ import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
 describe(evaluateDeployedMissionSite, () => {
-  test('evaluateDeployedMissionSite -> success', () => {
+  test('success', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
@@ -75,7 +75,7 @@ describe(evaluateDeployedMissionSite, () => {
     }
   })
 
-  test('evaluateDeployedMissionSite -> agent KIA', () => {
+  test('agent KIA', () => {
     // Create a test agent with low skill and hit points
     const testAgent: Agent = {
       id: 'agent-001',
@@ -145,7 +145,7 @@ describe(evaluateDeployedMissionSite, () => {
     }
   })
 
-  test('evaluateDeployedMissionSite -> failure: all agents terminated', () => {
+  test('failure: all agents terminated', () => {
     // Create agents with low skill and HP to ensure they get terminated
     const agent1: Agent = {
       id: 'agent-001',

@@ -26,7 +26,7 @@ See also the other variants in [`package.json`](../web/package.json).
 Run unit and component tests:
 `npm run test`
 
-Run specific test suites:
+Run tests of specific type (vitest test projects):
 
 ```bash
 npm run test:unit

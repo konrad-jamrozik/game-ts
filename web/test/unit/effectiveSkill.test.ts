@@ -3,14 +3,14 @@ import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
 
 describe(effectiveSkill, () => {
-  test('effective skill: no exhaustion, no hit points lost', () => {
+  test('no exhaustion, no hit points lost', () => {
     const agent = agFix.default()
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 0/100)) = floor(100 * 1 * 1) = 100
     expect(effectiveSkill(agent)).toBe(100)
   })
 
-  test('effective skill: exhaustion only', () => {
+  test('exhaustion only', () => {
     const agent = agFix.new({
       skill: 116,
       exhaustion: 20,
@@ -20,7 +20,7 @@ describe(effectiveSkill, () => {
     expect(effectiveSkill(agent)).toBe(98)
   })
 
-  test('effective skill: hit points lost only', () => {
+  test('hit points lost only', () => {
     const agent = agFix.wounded(7) // Creates agent with 7 HP lost (23/30 HP)
 
     // hit points lost = 30 - 23 = 7
@@ -28,7 +28,7 @@ describe(effectiveSkill, () => {
     expect(effectiveSkill(agent)).toBe(76)
   })
 
-  test('effective skill: exhaustion and hit points lost', () => {
+  test('exhaustion and hit points lost', () => {
     const agent = agFix.new({
       skill: 150,
       exhaustion: 20,
@@ -41,28 +41,28 @@ describe(effectiveSkill, () => {
     expect(effectiveSkill(agent)).toBe(97)
   })
 
-  test('effective skill: high exhaustion', () => {
+  test('high exhaustion', () => {
     const agent = agFix.exhausted(85)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 80/100)) = floor(100 * 1 * 0.2) = floor(20) = 20
     expect(effectiveSkill(agent)).toBe(20)
   })
 
-  test('effective skill: 100% exhaustion', () => {
+  test('100% exhaustion', () => {
     const agent = agFix.exhausted(100)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 0.95) = floor(5) = 5
     expect(effectiveSkill(agent)).toBe(5)
   })
 
-  test('effective skill: 105% exhaustion', () => {
+  test('105% exhaustion', () => {
     const agent = agFix.exhausted(105)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 1) = floor(0) = 0
     expect(effectiveSkill(agent)).toBe(0)
   })
 
-  test('effective skill: zero hit points', () => {
+  test('zero hit points', () => {
     const agent = agFix.new({
       hitPoints: 0,
       maxHitPoints: 30,
@@ -73,7 +73,7 @@ describe(effectiveSkill, () => {
     expect(effectiveSkill(agent)).toBe(0)
   })
 
-  test('effective skill: zero max hit points', () => {
+  test('zero max hit points', () => {
     const agent = agFix.new({
       hitPoints: 0,
       maxHitPoints: 0,

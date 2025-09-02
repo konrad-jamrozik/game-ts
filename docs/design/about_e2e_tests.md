@@ -1,10 +1,10 @@
-# About test suite
+# About e2e tests
 
-This file specifies the e2e test suite for the project.
+This file specifies the e2e tests for the project.
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
-For other test suites, see [About test suites](./about_test_suites.md).
+For the full test suite design, see [About test suite](./about_test_suite.md).
 
 ## E2E Tests
 

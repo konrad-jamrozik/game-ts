@@ -21,7 +21,7 @@ describe(EventLog, () => {
     store.dispatch(clearEvents())
   })
 
-  test('EventLog -> happy path: no events', () => {
+  test('happy path: no events', () => {
     expect.hasAssertions()
 
     renderEventLog()
@@ -30,7 +30,7 @@ describe(EventLog, () => {
     expect(screen.getByText('No events yet')).toBeInTheDocument()
   })
 
-  test('EventLog -> happy path: events', async () => {
+  test('happy path: events', async () => {
     expect.hasAssertions()
 
     const { hireAgent } = await import('../../src/lib/slices/gameStateSlice')
@@ -42,7 +42,7 @@ describe(EventLog, () => {
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
   })
 
-  test('EventLog -> happy path: new game started', async () => {
+  test('happy path: new game started', async () => {
     expect.hasAssertions()
 
     const { addTextEvent: addEvent } = await import('../../src/lib/slices/eventsSlice')

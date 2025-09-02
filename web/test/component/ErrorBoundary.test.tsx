@@ -18,7 +18,7 @@ function ErrorThrowingComponent({ shouldError }: { shouldError: boolean }): Reac
 }
 
 describe(ErrorBoundary, () => {
-  test('ErrorBoundary -> happy path (no error)', () => {
+  test('happy path (no error)', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={false} />
@@ -28,7 +28,7 @@ describe(ErrorBoundary, () => {
     expect(screen.getByText('No error')).toBeInTheDocument()
   })
 
-  test('ErrorBoundary -> error', () => {
+  test('error', () => {
     render(
       <ErrorBoundary>
         <ErrorThrowingComponent shouldError={true} />
