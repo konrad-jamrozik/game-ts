@@ -1,5 +1,6 @@
 import * as React from 'react'
-import { Box, Typography, Chip } from '@mui/material'
+import { Box, Typography, Chip, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView'
 import { TreeItem } from '@mui/x-tree-view/TreeItem'
 import type { TurnReport, ValueChange, MoneyBreakdown, IntelBreakdown } from '../../lib/model/reportModel'
@@ -71,65 +72,65 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
 }
 
 /**
- * TreeView component for displaying turn advancement reports
+ * TreeView component for displaying turn advancement reports in split-panel layout
  */
 export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElement {
   const { assets } = report
 
   return (
-    <Box sx={{ minHeight: 200, minWidth: 300 }}>
-      <SimpleTreeView>
-        <TreeItem
-          itemId="assets"
-          label={
-            <Box sx={{ display: 'flex', alignItems: 'center' }}>
-              <Typography variant="h6">Assets</Typography>
-            </Box>
-          }
-        >
-          <TreeItem
-            itemId="assets-money"
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="body1">Money: {formatValueChange(assets.money)}</Typography>
-                {formatDelta(assets.money.delta)}
-              </Box>
-            }
-          >
-            <TreeItem
-              itemId="assets-money-details"
-              label={
-                <Typography variant="body2" color="text.secondary">
-                  Breakdown:
-                </Typography>
-              }
-            >
-              {formatMoneyBreakdown(assets.moneyDetails)}
-            </TreeItem>
+    <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600 }}>
+      {/* Left Panel - Tree Navigation */}
+      <Box sx={{ width: 250, mr: 2, borderRight: '1px solid', borderColor: 'divider', pr: 2 }}>
+        <SimpleTreeView defaultExpandedItems={['assets']}>
+          <TreeItem itemId="assets" label={<Typography variant="h6">Assets</Typography>}>
+            <TreeItem itemId="assets-money" label={<Typography variant="body1">Money</Typography>} />
+            <TreeItem itemId="assets-intel" label={<Typography variant="body1">Intel</Typography>} />
           </TreeItem>
+        </SimpleTreeView>
+      </Box>
 
-          <TreeItem
-            itemId="assets-intel"
-            label={
-              <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                <Typography variant="body1">Intel: {formatValueChange(assets.intel)}</Typography>
-                {formatDelta(assets.intel.delta)}
-              </Box>
-            }
-          >
-            <TreeItem
-              itemId="assets-intel-details"
-              label={
-                <Typography variant="body2" color="text.secondary">
-                  Breakdown:
-                </Typography>
-              }
-            >
-              {formatIntelBreakdown(assets.intelDetails)}
-            </TreeItem>
-          </TreeItem>
-        </TreeItem>
-      </SimpleTreeView>
+      {/* Right Panel - Collapsible Details */}
+      <Box sx={{ flex: 1 }}>
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="money-content" id="money-header">
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Typography variant="h6" sx={{ mr: 2 }}>
+                Money
+              </Typography>
+              <Typography variant="body1" sx={{ mr: 1 }}>
+                {formatValueChange(assets.money)}
+              </Typography>
+              {formatDelta(assets.money.delta)}
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Breakdown:
+            </Typography>
+            {formatMoneyBreakdown(assets.moneyDetails)}
+          </AccordionDetails>
+        </Accordion>
+
+        <Accordion>
+          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="intel-content" id="intel-header">
+            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+              <Typography variant="h6" sx={{ mr: 2 }}>
+                Intel
+              </Typography>
+              <Typography variant="body1" sx={{ mr: 1 }}>
+                {formatValueChange(assets.intel)}
+              </Typography>
+              {formatDelta(assets.intel.delta)}
+            </Box>
+          </AccordionSummary>
+          <AccordionDetails>
+            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+              Breakdown:
+            </Typography>
+            {formatIntelBreakdown(assets.intelDetails)}
+          </AccordionDetails>
+        </Accordion>
+      </Box>
     </Box>
   )
 }

@@ -225,11 +225,11 @@ type EnemyMissionReport = {
 
 #### ✅ Phase 1.2: UI Component
 
-- ✅ **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (new)
-- ✅ Create basic TreeView structure
-- ✅ Implement Assets node with Money and Intel sub-nodes
-- ✅ Display change values in "previous → current (±delta)" format
-- ✅ Add expandable details for calculation breakdowns
+- ✅ **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (modified)
+- ✅ Create split-panel layout with left tree navigation and right collapsible details
+- ✅ Implement simplified Assets node with Money and Intel sub-nodes (no stats in tree)
+- ✅ Display change values in "previous → current (±delta)" format in right panel accordions
+- ✅ Add expandable Accordion details for calculation breakdowns
 - ✅ **File**: `web/src/components/TurnReport/TurnReportModal.tsx` (new)
 - ✅ Create modal dialog wrapper using MUI Dialog components
 - ✅ **File**: `web/src/components/TurnReport/useTurnReportHistory.tsx` (new)
