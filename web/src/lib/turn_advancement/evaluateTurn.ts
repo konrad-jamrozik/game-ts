@@ -1,27 +1,24 @@
-import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
-import { floor } from '../utils/mathUtils'
-import {
-  updateAvailableAgents,
-  updateRecoveringAgents,
-  updateInTransitAgents,
-  updateContractingAgents,
-  updateEspionageAgents,
-} from './updateAgents'
-import {
-  type GameState,
-  type MissionRewards,
-  type Faction,
-  type FactionRewards,
-  type AssetsReport,
-  type MoneyBreakdown,
-  type IntelBreakdown,
-  type TurnReport,
-  newValueChange,
-} from '../model/model'
-import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import { agsV } from '../model/agents/AgentsView'
+import type { Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
+import {
+  newValueChange,
+  type AssetsReport,
+  type IntelBreakdown,
+  type MoneyBreakdown,
+  type TurnReport,
+} from '../model/reportModel'
+import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { assertDefined } from '../utils/assert'
+import { floor } from '../utils/mathUtils'
+import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
+import {
+  updateAvailableAgents,
+  updateContractingAgents,
+  updateEspionageAgents,
+  updateInTransitAgents,
+  updateRecoveringAgents,
+} from './updateAgents'
 
 export default function evaluateTurn(state: GameState): TurnReport {
   validateGameStateInvariants(state)
