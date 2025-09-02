@@ -427,9 +427,33 @@ type EnemyMissionReport = {
 ## Open Design Decisions
 
 1. **Report Persistence Strategy**: How many turn reports to keep in memory/storage
-2. **Real-time Updates**: Whether to show report building during turn evaluation
-3. **Accessibility**: Keyboard navigation and screen reader support for TreeView
-4. **Mobile Responsiveness**: How to display complex tree on smaller screens
+
+Answer: this is already handled by `UNDO_LIMIT` in `store.ts`.
+
+1. **Real-time Updates**: Whether to show report building during turn evaluation
+
+Answer: no real-time updates needed.
+
+1. **Accessibility**: Keyboard navigation and screen reader support for TreeView
+
+Answer: no accessibility needed.
+
+1. **Mobile Responsiveness**: How to display complex tree on smaller screens
+
+Answer: no mobile responsiveness needed.
+
+1. **TreeView Expansion State**: Should the TreeView start fully collapsed (user expands what they want to see) or
+   with certain sections pre-expanded (e.g., always show Assets and Panic at top level)?
+
+Answer: All components should be collapsed by default. However, the right-side panel of the modal with the tree view,
+i.e. the panel showing the details, should list all the collapsible blocks one after another, so they can be scrolled through
+at once in continuous manner, similar to how the "GitHub Example" at this URL works: https://mui.com/x/react-tree-view/.
+Or in general, same as GitHub UI for PR review works.
+
+1. **Report Export Format**: For future enhancement, would you prefer JSON export for data analysis or formatted
+   text/markdown for human readability?
+
+Answer: no need to worry about any kind of export for now.
 
 ## Success Criteria
 
@@ -455,3 +479,14 @@ type EnemyMissionReport = {
 This implementation plan is designed to be iterative and testable at each milestone. Each milestone delivers visible
 value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without
 major refactoring.
+
+# Pending prompt
+
+> Apply the "Pending prompt" from @docs\backlog\turn_report_implementation_plan.md
+
+Review the @docs\backlog\turn_report_implementation_plan.md. Find all "Answer" and "TODO" entries, if any.
+They are given by me.
+Incorporate them into this document and delete the Answers and TODOs.
+When making your edits, ensure the line width never crosses 120 line characters, and that there are no markdown lint
+warnings on he file.
+Keep this "pending prompt" entry.
