@@ -66,6 +66,8 @@ export function rollAgainstProbability(probability: number, label?: string): [bo
   // Higher rolls are better: success when roll > P(failure)
   const success = roll > failureInt
 
+  // for debugging: console.log({ probability, roll, failureInt, success })
+
   return [success, failureInt, successInt, roll]
 }
 

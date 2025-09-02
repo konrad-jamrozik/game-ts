@@ -5,23 +5,30 @@ import { rand } from '../../src/lib/utils/controllableRandom'
 
 describe('rolls', () => {
   test('rollAgainstProbability', () => {
-    rand.set('test_label', 1)
+    // Note:
+    // Probability of 0 will cause the roll to always fail, Success = Roll > 10_000 -> impossible.
+    // Probability of 1 will cause the roll to always succeed. Failure = Roll <= 0 -> impossible.
+    //
+    // prettier-ignore
     const testCases: [number, number, boolean][] = [
-      [1, 0, false], // Roll max = 99.99% (10_000) against 0% probability -> fail
-      [1, 0.0001, true], // Roll max = 99.99% (10_000) against 0.01% probability -> success
-      [0.9999, 0.0001, true], // Roll 99.99% (10_000) against 0.01% probability -> success
-      [0.9998, 0.0001, false], // Roll 99.99% (9_999) against 0.01% probability -> fail
-      [0.9998, 0.0002, true], // Roll 99.99% (9_999) against 0.02% probability -> success
-      [1, 1, true], // Roll max (10_000) against 100% probability -> success
-      [0, 0, false], // Roll min (1) against 0% probability -> fail
-      [0.0002, 0.9998, true], // Roll 0.02% (3) against 99.98% probability -> success
-      [0.0001, 0.9998, false], // Roll 0.01% (2) against 99.98% probability -> fail
-      [0.0001, 0.9999, true], // Roll 0.01% (2) against 99.99% probability -> success
-      [0.0001, 1, true], // Roll 0.01% (2) against 100% probability -> success
-      [0, 0.9999, false], // Roll min (1) against 99.99% probability -> fail
-      [0, 1, true], // Roll min (1) against 100% probability -> success
+      [0,      0,      false ], // { probability: 0,       roll: 1,     failureInt: 10000, success: false }
+      [0,      1,      false ], // { probability: 0,       roll: 10000, failureInt: 10000, success: false }
+      [0.0001, 0.9998, false ], // { probability: 0.0001,  roll: 9999,  failureInt: 9999,  success: false }
+      [0.0001, 0.9999, true  ], // { probability: 0.0001,  roll: 10000, failureInt: 9999,  success: true  }
+      [0.0001, 1,      true  ], // { probability: 0.0001,  roll: 10000, failureInt: 9999,  success: true  }
+      [0.0002, 0.9997, false ], // { probability: 0.0002,  roll: 9998,  failureInt: 9998,  success: false }
+      [0.0002, 0.9998, true  ], // { probability: 0.0002,  roll: 9999,  failureInt: 9998,  success: true  }
+      [0.5,    0.4999, false ], // { probability: 0.5,     roll: 5000,  failureInt: 5000,  success: false }
+      [0.5,    0.5,    true  ], // { probability: 0.5,     roll: 5001,  failureInt: 5000,  success: true  }
+      [0.9998, 0.0001, false ], // { probability: 0.9998,  roll: 2,     failureInt: 2,     success: false }
+      [0.9998, 0.0002, true  ], // { probability: 0.9998,  roll: 3,     failureInt: 2,     success: true  }
+      [0.9999, 0,      false ], // { probability: 0.9999,  roll: 1,     failureInt: 1,     success: false }
+      [0.9999, 0.0001, true  ], // { probability: 0.9999,  roll: 2,     failureInt: 1,     success: true  }
+      [1,      0,      true  ], // { probability: 1,       roll: 1,     failureInt: 0,     success: true  }
+      [1,      0.0001, true  ], // { probability: 1,       roll: 2,     failureInt: 0,     success: true  }
+      [1,      1,      true  ], // { probability: 1,       roll: 10000, failureInt: 0,     success: true  }
     ]
-    testCases.forEach(([fixedRoll, probability, expectedSuccess]) => {
+    testCases.forEach(([probability, fixedRoll, expectedSuccess]) => {
       rand.set('test_label', fixedRoll)
       const [success] = rollAgainstProbability(probability, 'test_label')
       expect(success).toBe(expectedSuccess)
