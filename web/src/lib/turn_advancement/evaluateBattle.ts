@@ -1,7 +1,10 @@
+import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
 import { effectiveSkill } from '../utils/actorUtils'
+import { assertNotEmpty } from '../utils/assert'
+import { safeDivMult100Rounded } from '../utils/mathUtils'
 import { type AgentCombatStats, evaluateAttack, isAgent } from './evaluateAttack'
 
 export type BattleReport = {
@@ -14,9 +17,12 @@ export type BattleReport = {
 
 export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
   const agents = agentsView.toAgentArray()
+  assertNotEmpty(agents)
+  assertNotEmpty(enemies)
+
   const agentStats = newAgentsCombatStats(agentsView)
 
-  let roundIdx = 1
+  let roundIdx = 0
   let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
 
@@ -26,21 +32,8 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   const initialEnemySkill = enemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
-  // Show round status with detailed statistics
-  showRoundStatus(
-    roundIdx,
-    agents,
-    enemies,
-    initialAgentEffectiveSkill,
-    initialAgentHitPoints,
-    initialEnemySkill,
-    initialEnemyHitPoints,
-  )
-  // Battle continues until one side is eliminated or agents retreat
-  while (!shouldBattleEnd(agents, enemies)) {
+  do {
     roundIdx += 1
-
-    evaluateCombatRound(agents, agentStats, enemies)
 
     // Show round status with detailed statistics
     showRoundStatus(
@@ -52,6 +45,7 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
       initialEnemySkill,
       initialEnemyHitPoints,
     )
+    evaluateCombatRound(agents, agentStats, enemies)
 
     // Check for retreat condition
     if (shouldRetreat(agents, agentStats)) {
@@ -59,7 +53,8 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
       retreated = true
       break
     }
-  }
+    // Battle continues until one side is eliminated or agents retreat
+  } while (!shouldBattleEnd(agents, enemies))
 
   // Count casualties
   const agentCasualties = agents.filter((agent) => agent.hitPoints <= 0).length
@@ -69,6 +64,17 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   agentStats.forEach((stats) => {
     agentSkillUpdates[stats.id] = stats.skillGained
   })
+
+  showRoundStatus(
+    roundIdx,
+    agents,
+    enemies,
+    initialAgentEffectiveSkill,
+    initialAgentHitPoints,
+    initialEnemySkill,
+    initialEnemyHitPoints,
+    true,
+  )
 
   console.log(`\n📊 Battle concluded after ${roundIdx} rounds`)
   console.log(`Agent casualties: ${agentCasualties}`)
@@ -192,22 +198,28 @@ function showRoundStatus(
   initialAgentHitPoints: number,
   initialEnemySkill: number,
   initialEnemyHitPoints: number,
+  battleConcluded = false,
 ): void {
-  console.log(`\n========== ⚔️ Combat Round ${rounds} ==========`)
+  if (battleConcluded) {
+    const roundsStr = pluralize('round', rounds)
+    console.log(`\n========== ⚔️ Battle Concluded after ${rounds} ${roundsStr} ==========`)
+  } else {
+    console.log(`\n========== ⚔️ Combat Round ${rounds} ==========`)
+  }
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   const currentAgentEffectiveSkill = activeAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
-  const agentSkillPercentage = Math.round((currentAgentEffectiveSkill / initialAgentEffectiveSkill) * 100)
-  const agentHpPercentage = Math.round((currentAgentHitPoints / initialAgentHitPoints) * 100)
+  const agentSkillPercentage = safeDivMult100Rounded(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
+  const agentHpPercentage = safeDivMult100Rounded(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
-  const enemySkillPercentage = Math.round((currentEnemySkill / initialEnemySkill) * 100)
-  const enemyHpPercentage = Math.round((currentEnemyHitPoints / initialEnemyHitPoints) * 100)
+  const enemySkillPercentage = safeDivMult100Rounded(currentEnemySkill, initialEnemySkill)
+  const enemyHpPercentage = safeDivMult100Rounded(currentEnemyHitPoints, initialEnemyHitPoints)
 
   console.log(
     `👤👤 Agents: ${activeAgents.length} units, ${Math.round(currentAgentEffectiveSkill)} total skill (${agentSkillPercentage}%), ${currentAgentHitPoints} HP (${agentHpPercentage}%)`,

@@ -1,3 +1,5 @@
+import { assertNotZero } from './assert'
+
 /**
  * A floor that adds a small tolerance to handle floating point precision issues before flooring.
  *
@@ -24,4 +26,14 @@ export function floor(value: number): number {
  */
 export function toPrecisionRoundingDown(value: number, precision: number): number {
   return floor(value * precision)
+}
+
+export function safeDivMult100Rounded(nominator: number, denominator: number): number {
+  return Math.round(safeDiv(nominator, denominator) * 100)
+}
+
+// KJA use more
+export function safeDiv(nominator: number, denominator: number): number {
+  assertNotZero(denominator)
+  return nominator / denominator
 }

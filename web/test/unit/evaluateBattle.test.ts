@@ -6,21 +6,6 @@ import { wpnFix } from '../fixtures/weaponFixture'
 import { agFix } from '../fixtures/agentFixture'
 
 describe(evaluateBattle, () => {
-  test('evaluateBattle -> no enemies', () => {
-    const agentId = 'agent-001'
-    const agents = agsV([st.newAgent(agentId)])
-
-    const report = evaluateBattle(agents, []) // Act
-
-    expectReportToBe(report)({
-      rounds: 1, // KJA should be 0 rounds
-      agentCasualties: 0,
-      enemyCasualties: 0,
-      retreated: false,
-      agentSkillUpdates: { [agentId]: 0 },
-    })
-  })
-
   test('evaluateBattle -> player wins in 1 round', () => {
     const agentId = 'agent-001'
     const agent = agFix.new({
@@ -34,7 +19,7 @@ describe(evaluateBattle, () => {
 
     const entries = Object.fromEntries([agentId].map((id) => [id, expect.any(Number)]))
     expectReportToBe(report)({
-      rounds: 2, // KJA should be 1 round
+      rounds: 1,
       agentCasualties: 0,
       enemyCasualties: 1,
       retreated: false,

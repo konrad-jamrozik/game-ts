@@ -13,12 +13,24 @@ export function assertEqual<T>(left: T, right: T, errMsg = 'Values must be equal
   }
 }
 
+export function assertNotZero<T>(value: T, errMsg = 'Value must not be zero'): asserts value is T & NonNullable<T> {
+  if (value === 0) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertOneOf<T>(
   value: T,
   validValues: readonly T[],
   errMsg = 'Value must be one of the valid options',
 ): asserts value is T & NonNullable<T> {
   if (!validValues.includes(value)) {
+    throw new Error(errMsg)
+  }
+}
+
+export function assertNotEmpty<T>(value: T[], errMsg = 'Value must not be empty'): asserts value is T[] {
+  if (value.length === 0) {
     throw new Error(errMsg)
   }
 }
