@@ -12,7 +12,8 @@ applyTo: 'web/src/**/*.{js,jsx,ts,tsx}'
 
 ## Feature implementation & Code Completeness
 
-- Every time you add a new reducer that has `meta: { playerAction: true }` in `prepare`, for example to `web/src/model/gameStateSlice.ts`, also add relevant event to  `web/src/app/eventsMiddleware.ts`.
+- Every time you add a new reducer that has `meta: { playerAction: true }` in `prepare`, for example to
+  `web/src/model/gameStateSlice.ts`, also add relevant event to  `web/src/app/eventsMiddleware.ts`.
 - Every time you add a new player action, ensure it will show up in event log when executed.
 
 ## Coding conventions
