@@ -1,5 +1,6 @@
 import type { Agent, GameState } from '../model'
 import { assertDefined, assertEqual, assertOneOf } from '../../utils/assert'
+import { div } from '../../utils/mathUtils'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent)
@@ -97,7 +98,7 @@ function validateRecoveryMath(agent: Agent): void {
     return
   }
 
-  const expectedTotalRecoveryTurns = Math.ceil(((agent.hitPointsLostBeforeRecovery / agent.maxHitPoints) * 100) / 2)
+  const expectedTotalRecoveryTurns = Math.ceil((div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / 2)
 
   // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
   if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
@@ -107,7 +108,7 @@ function validateRecoveryMath(agent: Agent): void {
       expectedImmediateLost,
       `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${expectedImmediateLost} at start of recovery`,
     )
-    const expectedImmediateRecoveryTurns = Math.ceil(((expectedImmediateLost / agent.maxHitPoints) * 100) / 2)
+    const expectedImmediateRecoveryTurns = Math.ceil((div(expectedImmediateLost, agent.maxHitPoints) * 100) / 2)
     assertEqual(
       agent.recoveryTurns,
       expectedImmediateRecoveryTurns,
@@ -124,7 +125,7 @@ function validateRecoveryMath(agent: Agent): void {
     }
 
     const turnsCompleted = expectedTotalRecoveryTurns - agent.recoveryTurns
-    const hitPointsPerTurn = agent.hitPointsLostBeforeRecovery / expectedTotalRecoveryTurns
+    const hitPointsPerTurn = div(agent.hitPointsLostBeforeRecovery, expectedTotalRecoveryTurns)
     const restoredSoFar = Math.floor(hitPointsPerTurn * turnsCompleted)
     const expectedHitPoints = agent.maxHitPoints - agent.hitPointsLostBeforeRecovery + restoredSoFar
     assertEqual(

@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { toPrecisionRoundingDown } from '../utils/mathUtils'
+import { div, toPrecisionRoundingDown } from '../utils/mathUtils'
 import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
 import { rand } from '../utils/rand'
 
@@ -39,7 +39,7 @@ export type RangeRoll = {
  * @returns The contest roll result
  */
 export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRoll {
-  const ratioSquared = (defenderValue / attackerValue) ** 2
+  const ratioSquared = div(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
   const [success, failureInt, successInt, roll] = rollAgainstProbability(successProbability, label)

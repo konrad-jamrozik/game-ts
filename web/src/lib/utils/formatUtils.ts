@@ -1,5 +1,6 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
+import { div } from './mathUtils'
 
 export function fmtPctDiv100Dec2(value: number): string {
   return fmtPctDiv100(value, 2)
@@ -13,8 +14,8 @@ export function fmtPctDec2(value: number): string {
   return fmtPct(value, 2, 1)
 }
 
-export function fmtPct(value: number, decimals = 0, div = 1): string {
-  return `${(value / div).toFixed(decimals)}%`
+export function fmtPct(value: number, decimals = 0, denominator = 1): string {
+  return `${div(value, denominator).toFixed(decimals)}%`
 }
 
 /**

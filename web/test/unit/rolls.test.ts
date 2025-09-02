@@ -9,6 +9,7 @@ describe('rolls', () => {
     // Probability of 0 will cause the roll to always fail, Success = Roll > 10_000 -> impossible.
     // Probability of 1 will cause the roll to always succeed. Failure = Roll <= 0 -> impossible.
     //
+    // Note: probability of 1 in the test cases below is in fact 0.(9) - see rand.ts for details.
     // prettier-ignore
     const testCases: [number, number, boolean][] = [
       [0,      0,      false ], // { probability: 0,       roll: 1,     failureInt: 10000, success: false }

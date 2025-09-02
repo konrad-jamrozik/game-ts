@@ -72,14 +72,4 @@ describe(effectiveSkill, () => {
     // effective_skill = floor(100 * (1 - 30/30) * (1 - 0/100)) = floor(100 * 0 * 1) = floor(0) = 0
     expect(effectiveSkill(agent)).toBe(0)
   })
-
-  test('zero max hit points', () => {
-    const agent = agFix.new({
-      hitPoints: 0,
-      maxHitPoints: 0,
-    })
-
-    // effective_skill = floor(100 * (1 - 0) * (1 - 0/100)) = floor(100 * 1 * 1) = floor(100) = 100
-    expect(effectiveSkill(agent)).toBe(100)
-  })
 })

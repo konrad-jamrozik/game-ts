@@ -14,7 +14,6 @@ export function floor(value: number): number {
 /**
  * Rounds down given value to given precision, then returns it as integer.
  *
- *
  * For example:
  * toPrecisionRoundingDown(0.1278,     100) ->   12
  * toPrecisionRoundingDown(0.12348, 10_000) -> 1234
@@ -29,11 +28,10 @@ export function toPrecisionRoundingDown(value: number, precision: number): numbe
 }
 
 export function safeDivMult100Rounded(nominator: number, denominator: number): number {
-  return Math.round(safeDiv(nominator, denominator) * 100)
+  return Math.round(div(nominator, denominator) * 100)
 }
 
-// KJA use more
-export function safeDiv(nominator: number, denominator: number): number {
+export function div(nominator: number, denominator: number): number {
   assertNotZero(denominator)
   return nominator / denominator
 }

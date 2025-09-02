@@ -14,6 +14,7 @@ import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
+import { div } from '../../lib/utils/mathUtils'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -106,7 +107,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? 0
-        const percentage = baselineSkill > 0 ? ((effectiveSkill / baselineSkill) * 100).toFixed(1) : '0.0'
+        const percentage = baselineSkill > 0 ? (div(effectiveSkill, baselineSkill) * 100).toFixed(1) : '0.0'
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}
