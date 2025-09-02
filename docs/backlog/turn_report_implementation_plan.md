@@ -1,5 +1,39 @@
 # Turn Advancement Report - Implementation Plan
 
+- [Turn Advancement Report - Implementation Plan](#turn-advancement-report---implementation-plan)
+  - [Overview](#overview)
+  - [Architecture Summary](#architecture-summary)
+  - [Key Design Decisions](#key-design-decisions)
+  - [Data Model Design](#data-model-design)
+    - [Core Report Types](#core-report-types)
+  - [Implementation Work Plan](#implementation-work-plan)
+    - [Milestone 1: Display Basic Turn Stats](#milestone-1-display-basic-turn-stats)
+      - [✅ Phase 1.1: Backend Logic](#-phase-11-backend-logic)
+      - [Phase 1.2: UI Component](#phase-12-ui-component)
+    - [Milestone 2: Display Factions Stats](#milestone-2-display-factions-stats)
+      - [Phase 2.1: Backend Logic](#phase-21-backend-logic)
+      - [Phase 2.2: UI Component](#phase-22-ui-component)
+    - [Milestone 3: Display Basic Mission Site Stats](#milestone-3-display-basic-mission-site-stats)
+      - [Phase 3.1: Backend Logic](#phase-31-backend-logic)
+      - [Phase 3.2: UI Component](#phase-32-ui-component)
+    - [Milestone 4: Display Detailed Mission Site Stats](#milestone-4-display-detailed-mission-site-stats)
+      - [Phase 4.1: Backend Logic](#phase-41-backend-logic)
+      - [Phase 4.2: UI Component](#phase-42-ui-component)
+  - [Implementation Details](#implementation-details)
+    - [Backend Modifications](#backend-modifications)
+    - [UI Component Structure](#ui-component-structure)
+    - [State Management](#state-management)
+    - [Testing Strategy](#testing-strategy)
+  - [Migration Plan](#migration-plan)
+  - [Performance Considerations](#performance-considerations)
+  - [Future Enhancements](#future-enhancements)
+  - [UI Design Specifications](#ui-design-specifications)
+  - [Success Criteria](#success-criteria)
+  - [Timeline Estimate](#timeline-estimate)
+  - [Notes](#notes)
+- [Prompt: Update the plan](#prompt-update-the-plan)
+- [Prompt: Implement the plan](#prompt-implement-the-plan)
+
 ## Overview
 
 This document outlines the detailed implementation plan for the "Turn Advancement Report" feature, which will provide a
@@ -40,47 +74,11 @@ Based on project requirements, the following design decisions have been made:
 
 ### Core Report Types
 
+For implemented report types, refer to [web/src/lib/model/reportModel.ts](web/src/lib/model/reportModel.ts)
+
+Pending extensions:
+
 ```typescript
-// Base report type
-type BaseReport = {
-  timestamp: number;
-  turn: number;
-}
-
-// Main turn report
-type TurnReport = BaseReport & {
-  assets: AssetsReport;
-  panic: PanicReport;
-  factions: FactionReport[];
-  missionSites: DeployedMissionSiteReport[];
-}
-
-// Asset tracking
-type AssetsReport = {
-  money: ValueChange;
-  intel: ValueChange;
-  moneyDetails: MoneyBreakdown;
-  intelDetails: IntelBreakdown;
-}
-
-type ValueChange = {
-  previous: number;
-  current: number;
-  delta: number;
-}
-
-type MoneyBreakdown = {
-  agentUpkeep: number;
-  contractingEarnings: number;
-  fundingIncome: number;
-  hireCosts: number;
-  missionRewards: number;
-}
-
-type IntelBreakdown = {
-  espionageGathered: number;
-  missionRewards: number;
-}
 
 // Panic tracking
 type PanicReport = {
@@ -207,7 +205,7 @@ type EnemyMissionReport = {
 }
 ```
 
-## Implementation Milestones
+## Implementation Work Plan
 
 ### Milestone 1: Display Basic Turn Stats
 
@@ -311,7 +309,7 @@ type EnemyMissionReport = {
 
 2. **Report Composition**: Reports will be composed hierarchically, with child reports embedded in parent reports.
 
-3. **Temporary Storage**: The complete `TurnReport` is temporarily stored in `GameState.turnStartReport` for middleware access to trigger event logging.
+3. **TurnReport Storage**: The complete `TurnReport` is stored in `GameState.turnStartReport`.
 
 4. **Backward Compatibility**: During transition, maintain existing functionality while adding report generation.
 
