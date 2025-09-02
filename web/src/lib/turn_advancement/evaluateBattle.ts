@@ -2,6 +2,7 @@ import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
+import { RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
 import { divMult100Round } from '../utils/mathUtils'
@@ -22,8 +23,6 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   const agentStats = newAgentsCombatStats(agentsView)
 
-  let roundIdx = 0
-  let retreated = false
   const agentSkillUpdates: Record<string, number> = {}
 
   // Calculate initial totals for percentage tracking
@@ -32,6 +31,10 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   const initialEnemySkill = enemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
+  let roundIdx = 0
+  let retreated = false
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let battleEnded: boolean
   do {
     roundIdx += 1
 
@@ -47,15 +50,19 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     )
     evaluateCombatRound(agents, agentStats, enemies)
 
-    // Check for retreat condition
-    if (shouldRetreat(agents, agentStats)) {
-      console.log('🏃 Agent mission commander orders retreat!')
-      retreated = true
-      break
+    const sideWiped = isSideWiped(agents, enemies)
+    if (!sideWiped) {
+      retreated = shouldRetreat(agents, agentStats)
     }
-    // Battle continues until one side is eliminated or agents retreat
-  } while (!shouldBattleEnd(agents, enemies))
+    battleEnded = sideWiped || retreated
 
+    // Battle continues until one side is eliminated or agents retreat
+  } while (!battleEnded)
+
+  if (retreated) {
+    console.log('🏃 Agent mission commander orders retreat!')
+    retreated = true
+  }
   // Count casualties
   const agentCasualties = agents.filter((agent) => agent.hitPoints <= 0).length
   const enemyCasualties = enemies.filter((enemy) => enemy.hitPoints <= 0).length
@@ -96,19 +103,17 @@ function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
   }))
 }
 
-function shouldBattleEnd(agents: Agent[], enemies: Enemy[]): boolean {
+function isSideWiped(agents: Agent[], enemies: Enemy[]): boolean {
   const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
   const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
   return allAgentsTerminated || allEnemiesTerminated
 }
 
 function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[]): boolean {
+  const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
   const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
-  const totalCurrentEffectiveSkill = agents
-    .filter((agent) => agent.hitPoints > 0)
-    .reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
-
-  return totalCurrentEffectiveSkill < totalOriginalEffectiveSkill * 0.5
+  const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
+  return totalCurrentEffectiveSkill < totalOriginalEffectiveSkill * RETREAT_THRESHOLD
 }
 
 function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {

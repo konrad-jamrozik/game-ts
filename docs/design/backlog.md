@@ -14,7 +14,7 @@ KJA backlog:
 - hierarchize the game state per the comments and use more fine-grained selectors.
   `export type GameState = {`
 - migrate MissionSiteUtils to MissionSitesView
-- all cases of usage of `assertDefined should be allowed only inside domain model collections like AgentsView.
+- all cases of usage of `assertDefined` should be allowed only inside domain model collections like AgentsView.
   Because all other places should not return undefined, so no need to use it.
   In case of finding single item, it will basically become dotnet .Single()
 
@@ -48,3 +48,16 @@ KJA backlog:
   interesting happened to that unit in that round.
   E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
   Cell background gradient may denote % of original effective skill.
+
+## Next big feature
+
+Implement "turn advancement log" - a table that shows what happened to each unit in each turn.
+
+This has to pull information from:
+
+- `evaluateTurn`
+- `evaluateDeployedMissionSite`
+- `evaluateBattle`
+- `evaluateCombatRound`
+- `evaluateAttack`
+-  

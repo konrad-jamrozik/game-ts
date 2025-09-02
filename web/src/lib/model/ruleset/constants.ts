@@ -31,3 +31,5 @@ export const AGENT_INITIAL_WEAPON_DAMAGE = 10
 
 // Precision of 0.01%. 10_000 = 100%
 export const CONTEST_ROLL_PRECISION = 10_000
+
+export const RETREAT_THRESHOLD = 0.5

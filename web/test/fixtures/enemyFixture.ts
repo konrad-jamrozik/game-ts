@@ -1,0 +1,47 @@
+import type { Enemy } from '../../src/lib/model/model'
+import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
+import { wpnFix } from './weaponFixture'
+import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/model/ruleset/constants'
+import { assertDefined } from '../../src/lib/utils/assert'
+
+export const enFix = (() => {
+  let enemyIdCounter = 0
+
+  const enemyFixture = {
+    resetIdCounter(): void {
+      enemyIdCounter = 0
+    },
+
+    default(): Enemy {
+      // kja don't build from spec here to avoid relying on game counter
+      const [enemy] = newEnemiesFromSpec('1 Initiate')
+      assertDefined(enemy)
+      return enemy
+    },
+
+    withWeakWeapon(): Enemy {
+      const weakDamage = Math.floor(AGENT_INITIAL_HIT_POINTS / 4) // 30 / 4 = 7.5, floor to 7
+      return this.new({
+        weapon: wpnFix.new({ constDamage: weakDamage }),
+      })
+    },
+
+    withSuperWeapon(): Enemy {
+      return this.new({
+        weapon: wpnFix.new({ constDamage: 100 }),
+      })
+    },
+
+    new(overrides?: Partial<Enemy>): Enemy {
+      enemyIdCounter += 1
+      const baseEnemy = this.default()
+      return {
+        ...baseEnemy,
+        id: `enemy-${enemyIdCounter}`, // Override id to be unique
+        ...overrides,
+      }
+    },
+  }
+
+  return enemyFixture
+})()

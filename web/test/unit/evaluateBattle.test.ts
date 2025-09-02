@@ -3,8 +3,15 @@ import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancemen
 import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
 import { agFix } from '../fixtures/agentFixture'
+import { enFix } from '../fixtures/enemyFixture'
 import { rand } from '../../src/lib/utils/rand'
-import { AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD } from '../../src/lib/model/ruleset/constants'
+import {
+  AGENT_FAILED_ATTACK_SKILL_REWARD,
+  AGENT_FAILED_DEFENSE_SKILL_REWARD,
+  AGENT_INITIAL_HIT_POINTS,
+  AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
+  RETREAT_THRESHOLD,
+} from '../../src/lib/model/ruleset/constants'
 
 describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
@@ -23,9 +30,41 @@ describe(evaluateBattle, () => {
     })
   })
 
-  test.todo('happy path: player won')
+  test('1 enemy defeats 1 agent in 1 attack', () => {
+    rand.set('agent_attack_roll', 0)
+    rand.set('enemy_attack_roll', 1)
+    const agent = agFix.new()
+    const enemy = enFix.withSuperWeapon()
 
-  test.todo('happy path: player lost')
+    const report = evaluateBattle(agsV([agent]), [enemy]) // Act
+
+    expectReportToBe(report)({
+      rounds: 1,
+      agentCasualties: 1,
+      enemyCasualties: 0,
+      retreated: false,
+      agentSkillUpdates: { [agent.id]: AGENT_FAILED_ATTACK_SKILL_REWARD + AGENT_FAILED_DEFENSE_SKILL_REWARD },
+    })
+  })
+
+  test('1 enemy causes 1 agent to retreat', () => {
+    rand.set('enemy_attack_roll', 1)
+    rand.set('agent_attack_roll', 0)
+    const agent = agFix.new()
+    const enemy = enFix.withWeakWeapon()
+
+    const report = evaluateBattle(agsV([agent]), [enemy]) // Act
+
+    const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * RETREAT_THRESHOLD) / enemy.weapon.damage)
+    const expectedSkillUpdate = (AGENT_FAILED_ATTACK_SKILL_REWARD + AGENT_FAILED_DEFENSE_SKILL_REWARD) * expectedRounds
+    expectReportToBe(report)({
+      rounds: expectedRounds,
+      agentCasualties: 0,
+      enemyCasualties: 0,
+      retreated: true,
+      agentSkillUpdates: { [agent.id]: expectedSkillUpdate },
+    })
+  })
 })
 
 /**

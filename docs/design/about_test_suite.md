@@ -68,15 +68,15 @@ Tests that directly test the logic, without depending on react or simulating it.
 Tests that test directly the function powering the `GameControls.tsx` component:
 - (🚧 stub) Tests for `evaluateTurn.ts`
 - (🚧 needs review) Tests for `evaluateDeployedMissionSite.ts`, which is invoked from `evaluateTurn.ts`
-- (🚧 stub) Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
+- Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
 
 Tests that verify correctness of select ruleset:
 
 - Effective skill - documented in `Effective skill` section of [about_agents.md](about_agents.md).
+- contest roll
+  - documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
 - (🚧 not implemented yet) agent recovery from lost hit points
   - documented in `Agent lost hit points and recovery` section of [about_agents.md](about_agents.md).
-- (🚧 not implemented yet) contest roll
-  - documented in `Contest roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
 - (🚧 not implemented yet) weapon damage roll
   - documented in `Weapon damage roll` section of [about_deployed_mission_site.md](about_deployed_mission_site.md).
 - (🚧 not implemented yet) contracting and espionage output
@@ -135,30 +135,31 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ## Unit tests
 
-### `unit/effectiveSkill.test.ts`
+### `unit/evaluateTurn.test.ts`
 
-- effective skill: no exhaustion, no hit points lost
-- effective skill: exhaustion only
-- effective skill: hit points lost only
-- effective skill: exhaustion and hit points lost
-- effective skill: high exhaustion
-- effective skill: 100% exhaustion
-- effective skill: 105% exhaustion
-- effective skill: zero hit points
-- effective skill: zero max hit points
-
-### `unit/evaluateBattle.test.ts`
-
-- _(TODO)_ evaluateBattle -> happy path: player won
-- _(TODO)_ evaluateBattle -> happy path: player lost
+- _(TODO - write)_ happy path
+- _(TODO - write)_ happy path: player lost
 
 ### `unit/evaluateDeployedMissionSite.test.ts`
 
-- evaluateDeployedMissionSite -> success
-- evaluateDeployedMissionSite -> agent KIA
-- evaluateDeployedMissionSite -> failure: all agents terminated
+- _(TODO - review)_ success
+- _(TODO - review)_ agent KIA
+- _(TODO - review)_ failure: all agents terminated
 
-### `unit/evaluateTurn.test.ts`
+### `unit/evaluateBattle.test.ts`
 
-- _(TODO)_ evaluateTurn -> happy path
-- _(TODO)_ evaluateTurn -> happy path: player lost
+- 1 agent defeats 1 enemy in 1 attack
+- 1 enemy defeats 1 agent in 1 attack
+- 1 enemy causes 1 agent to retreat
+
+### `unit/effectiveSkill.test.ts`
+
+- no exhaustion, no hit points lost
+- exhaustion only
+- hit points lost only
+- exhaustion and hit points lost
+- high exhaustion
+- 100% exhaustion
+- 105% exhaustion
+- zero hit points
+- zero max hit points
