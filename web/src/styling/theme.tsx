@@ -58,6 +58,20 @@ let theme = createTheme({
 })
 
 const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme> = {
+  MuiDialogTitle: {
+    styleOverrides: {
+      root: {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
+  },
+  MuiDialogActions: {
+    styleOverrides: {
+      root: {
+        backgroundColor: theme.palette.background.paper,
+      },
+    },
+  },
   MuiCardHeader: {
     styleOverrides: {
       root: {

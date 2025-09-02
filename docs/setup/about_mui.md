@@ -211,14 +211,16 @@ use:
 
 The original version would have major layout issues in case of odd number of `cardEntries`.
 
+# Transparent dialog actions / Wrong Dialog background color
+
+Ultimately I have this problem because in `theme.tsx` I overrode `background: { paper: 'hsl(0, 0.00%, 16.10%)', }`.
+
+- https://stackoverflow.com/questions/75310979/mui-dialog-background-color
+  - from https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/68b6b148-3ae4-8324-975b-c9e6db75f01a
+
 # Color palettes
 
-- https://m2.material.io/design/color/the-color-system.html#tools-for-picking-colors
-- https://bareynol.github.io/mui-theme-creator/
-- https://colors.artyclick.com/color-names-dictionary/
-  e.g. https://colors.artyclick.com/color-shades-finder/?color=#404040
-- https://meyerweb.com/eric/tools/color-blend
-- https://m2.material.io/inline-tools/color/
+See OneNote `Color tools and palettes`.
 
 # Padding of last child
 
