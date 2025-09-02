@@ -46,7 +46,7 @@ export function newEnemiesFromSpec(spec: string): Enemy[] {
 /**
  * Creates an enemy of the specified type
  */
-function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
+export function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
   const stats = ENEMY_STATS[type]
   if (!stats) {
     throw new Error(`Unknown enemy type: ${type}`)

@@ -1,8 +1,7 @@
 import type { Enemy } from '../../src/lib/model/model'
-import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
+import { newEnemy } from '../../src/lib/utils/enemyUtils'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/model/ruleset/constants'
-import { assertDefined } from '../../src/lib/utils/assert'
 
 export const enFix = (() => {
   let enemyIdCounter = 0
@@ -13,9 +12,7 @@ export const enFix = (() => {
     },
 
     default(): Enemy {
-      // kja don't build from spec here to avoid relying on game counter
-      const [enemy] = newEnemiesFromSpec('1 Initiate')
-      assertDefined(enemy)
+      const enemy = newEnemy('Initiate', enemyIdCounter)
       return enemy
     },
 
