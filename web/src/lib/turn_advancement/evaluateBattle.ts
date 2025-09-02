@@ -4,7 +4,7 @@ import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
-import { safeDivMult100Rounded } from '../utils/mathUtils'
+import { divMult100Round } from '../utils/mathUtils'
 import { type AgentCombatStats, evaluateAttack, isAgent } from './evaluateAttack'
 
 export type BattleReport = {
@@ -210,15 +210,15 @@ function showRoundStatus(
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   const currentAgentEffectiveSkill = activeAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
-  const agentSkillPercentage = safeDivMult100Rounded(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
-  const agentHpPercentage = safeDivMult100Rounded(currentAgentHitPoints, initialAgentHitPoints)
+  const agentSkillPercentage = divMult100Round(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
+  const agentHpPercentage = divMult100Round(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
-  const enemySkillPercentage = safeDivMult100Rounded(currentEnemySkill, initialEnemySkill)
-  const enemyHpPercentage = safeDivMult100Rounded(currentEnemyHitPoints, initialEnemyHitPoints)
+  const enemySkillPercentage = divMult100Round(currentEnemySkill, initialEnemySkill)
+  const enemyHpPercentage = divMult100Round(currentEnemyHitPoints, initialEnemyHitPoints)
 
   console.log(
     `👤👤 Agents: ${activeAgents.length} units, ${Math.round(currentAgentEffectiveSkill)} total skill (${agentSkillPercentage}%), ${currentAgentHitPoints} HP (${agentHpPercentage}%)`,

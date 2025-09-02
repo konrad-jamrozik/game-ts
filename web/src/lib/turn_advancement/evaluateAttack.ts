@@ -11,7 +11,7 @@ import {
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtPctDec2 } from '../utils/formatUtils'
-import { safeDivMult100Rounded } from '../utils/mathUtils'
+import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
 
@@ -71,7 +71,7 @@ export function evaluateAttack(
         `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollInfo}`,
       )
     } else {
-      const hpPercentage = safeDivMult100Rounded(defender.hitPoints, defender.maxHitPoints)
+      const hpPercentage = divMult100Round(defender.hitPoints, defender.maxHitPoints)
       console.log(
         `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
       )

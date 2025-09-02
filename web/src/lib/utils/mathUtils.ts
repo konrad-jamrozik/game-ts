@@ -27,7 +27,7 @@ export function toPrecisionRoundingDown(value: number, precision: number): numbe
   return floor(value * precision)
 }
 
-export function safeDivMult100Rounded(nominator: number, denominator: number): number {
+export function divMult100Round(nominator: number, denominator: number): number {
   return Math.round(div(nominator, denominator) * 100)
 }
 
