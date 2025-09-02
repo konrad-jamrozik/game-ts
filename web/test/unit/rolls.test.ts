@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { CONTEST_ROLL_PRECISION } from '../../src/lib/model/ruleset/constants'
 import { getSuccessAndFailureInts, roll1to, rollAgainstProbability } from '../../src/lib/turn_advancement/rolls'
-import { rand } from '../../src/lib/utils/controllableRandom'
+import { rand } from '../../src/lib/utils/rand'
 
 describe('rolls', () => {
   test('rollAgainstProbability', () => {

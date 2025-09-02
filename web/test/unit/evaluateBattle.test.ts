@@ -4,7 +4,7 @@ import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
 import { wpnFix } from '../fixtures/weaponFixture'
 import { agFix } from '../fixtures/agentFixture'
-import { rand } from '../../src/lib/utils/controllableRandom'
+import { rand } from '../../src/lib/utils/rand'
 
 describe(evaluateBattle, () => {
   test('evaluateBattle -> player wins in 1 round', () => {

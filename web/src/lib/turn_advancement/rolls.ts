@@ -4,7 +4,7 @@
 
 import { toPrecisionRoundingDown } from '../utils/mathUtils'
 import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
-import { rand } from '../utils/controllableRandom'
+import { rand } from '../utils/rand'
 
 export type ContestRoll = {
   attackerValue: number
@@ -77,15 +77,12 @@ export function getSuccessAndFailureInts(successProbability: number): [number, n
   return [failureInt, successInt]
 }
 
-/**
- * Rolls a die (integer 1-precision, inclusive)
- */
 export function roll1to(precision: number, label?: string): number {
   return rollRange(1, precision, label).roll
 }
 
 /**
- * Performs a range roll, selecting a random value from the given range (inclusive)
+ * Performs a range roll, uniformly selecting a random value from the given (min, max) range, both inclusive.
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)
  * @param label - Optional label for controllable random in tests
