@@ -13,69 +13,39 @@ The implementation follows a three-layer architecture:
 2. **Data Model Layer**: TypeScript interfaces defining the report structure hierarchy
 3. **UI Layer**: React component using MUI TreeView to display the hierarchical report data
 
-## Questions for Clarification
+## Key Design Decisions
 
-Before implementation begins, the following questions need answers:
+Based on project requirements, the following design decisions have been made:
 
-1. **Test Framework**: The codebase doesn't appear to have existing test files. Should we:
-   - Set up Vitest testing infrastructure with the first tests?
-   - Create test files in a `__tests__` directory next to source files?
-   - Use a different testing approach?
+1. **Testing Infrastructure**: Tests are located in `web/test/unit/` directory. New test files will follow the
+   existing pattern (e.g., `web/test/unit/evaluateTurn.test.ts`).
 
-Answer: the tests are there. See e.g. `web/test/unit/evaluateTurn.test.ts`
+2. **Event System Integration**:
+   - Remove `postMissionCompletedEvent` functionality and `addMissionCompletedEvent` from `eventsSlice.ts`
+   - TurnReport will integrate via the existing `advanceTurn` event matcher in `eventsMiddleware.ts`
+   - The `advanceTurn` action will return the TurnReport object included in the event
+   - Event log entries "Turn X started" will be clickable to open the turn report modal
 
-1. **Event Middleware**: The `eventsMiddleware.ts` currently posts events for missions. Should we:
-   - Completely remove the `postMissionCompletedEvent` functionality?
-   - Keep it for backwards compatibility during transition?
-   - How should the new TurnReport integrate with the existing events system?
-  
-Answer:
-- delete `postMissionCompletedEvent`. This means that `addMissionCompletedEvent` from `eventsSlice.ts`
-should be removed, too.
-- TurnReport integration with `eventsMiddleware.ts` should be done via the already-existing `advanceTurn` event matcher.
-I.e. the `advanceTurn` action should return the TurnReport object that is included in the appropriate event.
-- The event log UI component that renders "Turn X started" should now make the entry clickable, opening the turn report.
+3. **Console Logging**: Existing combat console.log statements will be retained for debugging purposes.
 
-1. **Console Logging**: Currently, combat details are logged to console. Should we:
-   - Remove console.log statements once the UI is implemented?
-   - Keep them for debugging purposes?
-   - Make console logging configurable?
-  
-Answer: keep them for debugging purposes.
+4. **Report Persistence**: TurnReports will be persisted in the `eventsSlice`. The `advanceTurn` matcher
+   in `eventsMiddleware.ts` will trigger an `addTurnAdvancementEvent` reducer to store reports.
 
-1. **Report Persistence**: Should the TurnReport:
-   - Be stored in Redux state for the current turn only?
-   - Be persisted across multiple turns for historical viewing?
-   - Have a maximum number of stored reports to manage memory?
-
-Answer: yes, it should be persisted, in the `eventsReducer` slice. Basically the `advanceTurn: advanceTurnReducer,`
-should be matched against the `advanceTurn` matcher in `eventsMiddleware.ts` and then as a result it should
-run `addTurnAdvancementEvent` reducer, to be added to `eventsSlice`.
-
-1. **UI Integration**: Where should the Turn Report component be displayed:
-   - As a modal/dialog that opens after turn advancement?
-   - As a permanent panel in the UI?
-   - As a tab in an existing component?
-
-Answer: as a modal. As mentioned above, the model will be openable by clicking on appropriate "Turn X started" event in
-the event log.
+5. **UI Display**: Turn Reports will open as a modal dialog when clicking on "Turn X started" entries in the event log.
 
 ## Data Model Design
 
 ### Core Report Types
 
 ```typescript
-
-// TODO: replace all `interface` with `type` in the following code.
-
-// Base report interface
-interface BaseReport {
+// Base report type
+type BaseReport = {
   timestamp: number;
   turn: number;
 }
 
 // Main turn report
-interface TurnReport extends BaseReport {
+type TurnReport = BaseReport & {
   assets: AssetsReport;
   panic: PanicReport;
   factions: FactionReport[];
@@ -83,22 +53,20 @@ interface TurnReport extends BaseReport {
 }
 
 // Asset tracking
-interface AssetsReport {
-  money: AssetChange;
-  intel: AssetChange;
+type AssetsReport = {
+  money: ValueChange;
+  intel: ValueChange;
   moneyDetails: MoneyBreakdown;
   intelDetails: IntelBreakdown;
 }
 
-// TODO: rename AssetChange to ValueChange
-
-interface AssetChange {
+type ValueChange = {
   previous: number;
   current: number;
   delta: number;
 }
 
-interface MoneyBreakdown {
+type MoneyBreakdown = {
   agentUpkeep: number;
   contractingEarnings: number;
   fundingIncome: number;
@@ -106,18 +74,18 @@ interface MoneyBreakdown {
   missionRewards: number;
 }
 
-interface IntelBreakdown {
+type IntelBreakdown = {
   espionageGathered: number;
   missionRewards: number;
 }
 
 // Panic tracking
-interface PanicReport {
-  change: AssetChange;
+type PanicReport = {
+  change: ValueChange;
   breakdown: PanicBreakdown;
 }
 
-interface PanicBreakdown {
+type PanicBreakdown = {
   factionContributions: Array<{
     factionId: string;
     factionName: string;
@@ -131,17 +99,17 @@ interface PanicBreakdown {
 }
 
 // Faction tracking
-interface FactionReport {
+type FactionReport = {
   factionId: string;
   factionName: string;
   isDiscovered: boolean;
-  threatLevel: AssetChange;
-  threatIncrease: AssetChange;
-  suppression: AssetChange;
+  threatLevel: ValueChange;
+  threatIncrease: ValueChange;
+  suppression: ValueChange;
   details: FactionDetails;
 }
 
-interface FactionDetails {
+type FactionDetails = {
   baseIncrease: number;
   missionImpacts: Array<{
     missionSiteId: string;
@@ -153,7 +121,7 @@ interface FactionDetails {
 }
 
 // Mission site tracking
-interface DeployedMissionSiteReport {
+type DeployedMissionSiteReport = {
   missionSiteId: string;
   missionTitle: string;
   result: 'successful' | 'failed' | 'retreated';
@@ -164,7 +132,7 @@ interface DeployedMissionSiteReport {
 }
 
 // Battle tracking
-interface BattleReport {
+type BattleReport = {
   rounds: number;
   totalRounds: number;
   retreated: boolean;
@@ -173,13 +141,13 @@ interface BattleReport {
   combatRounds: CombatRoundReport[];
 }
 
-interface CombatRoundReport {
+type CombatRoundReport = {
   roundNumber: number;
   attacks: AttackReport[];
   roundSummary: RoundSummary;
 }
 
-interface AttackReport {
+type AttackReport = {
   attackerId: string;
   attackerName: string;
   attackerType: 'agent' | 'enemy';
@@ -194,7 +162,7 @@ interface AttackReport {
   skillGained: number;
 }
 
-interface RoundSummary {
+type RoundSummary = {
   actors: Array<{
     id: string;
     name: string;
@@ -206,7 +174,7 @@ interface RoundSummary {
 }
 
 // Agent mission performance
-interface AgentMissionReport {
+type AgentMissionReport = {
   agentId: string;
   agentName: string;
   startingHitPoints: number;
@@ -224,7 +192,7 @@ interface AgentMissionReport {
 }
 
 // Enemy mission performance
-interface EnemyMissionReport {
+type EnemyMissionReport = {
   enemyId: string;
   enemyName: string;
   enemyType: string;
@@ -252,7 +220,7 @@ interface EnemyMissionReport {
 
 #### Phase 1.2: Unit Tests
 
-- **File**: `web/src/lib/turn_advancement/__tests__/evaluateTurn.test.ts` (new)
+- **File**: `web/test/unit/evaluateTurn.test.ts`
 - Test asset report generation with various scenarios
 - Test money breakdown calculations
 - Test intel breakdown calculations
@@ -281,7 +249,7 @@ interface EnemyMissionReport {
 
 #### Phase 2.2: Unit Tests
 
-- **File**: `web/src/lib/turn_advancement/__tests__/evaluateTurn.test.ts`
+- **File**: `web/test/unit/evaluateTurn.test.ts`
 - Test panic report generation
 - Test faction report generation
 - Test suppression decay calculations
@@ -309,7 +277,7 @@ interface EnemyMissionReport {
 
 #### Phase 3.2: Unit Tests
 
-- **File**: `web/src/lib/turn_advancement/__tests__/evaluateDeployedMissionSite.test.ts` (new)
+- **File**: `web/test/unit/evaluateDeployedMissionSite.test.ts` (new)
 - Test mission site report generation
 - Test different mission outcomes
 - Test reward tracking
@@ -341,7 +309,7 @@ interface EnemyMissionReport {
 
 #### Phase 4.2: Unit Tests
 
-- **File**: `web/src/lib/turn_advancement/__tests__/evaluateBattle.test.ts` (new)
+- **File**: `web/test/unit/evaluateBattle.test.ts` (new)
 - Test battle report generation
 - Test combat round tracking
 - Test attack report details
@@ -414,13 +382,14 @@ interface EnemyMissionReport {
 ### State Management
 
 1. **Redux Integration**:
-   - Add `currentTurnReport?: TurnReport` to game state
-   - Create action to store turn report after evaluation
-   - Clear report when starting new turn
+   - Store TurnReport in `eventsSlice` via `addTurnAdvancementEvent` reducer
+   - Reports persist across turns for historical viewing
+   - Access reports through event log entries
 
 2. **Event System Integration**:
-   - Phase out `postMissionCompletedEvent` gradually
+   - Remove `postMissionCompletedEvent` and `addMissionCompletedEvent`
    - Use turn report as single source of truth for turn events
+   - Integrate with existing `advanceTurn` event matcher
 
 ### Testing Strategy
 
@@ -437,8 +406,8 @@ interface EnemyMissionReport {
 ## Migration Plan
 
 1. **Phase 1**: Implement report generation alongside existing functionality
-2. **Phase 2**: Add UI component and integrate with game state
-3. **Phase 3**: Remove console.log statements and deprecated event posting
+2. **Phase 2**: Add UI component and integrate with events system
+3. **Phase 3**: Remove deprecated event posting (`postMissionCompletedEvent`)
 4. **Phase 4**: Optimize and refine based on user feedback
 
 ## Performance Considerations
@@ -458,10 +427,9 @@ interface EnemyMissionReport {
 ## Open Design Decisions
 
 1. **Report Persistence Strategy**: How many turn reports to keep in memory/storage
-2. **UI Placement**: Where to display the report in the main game interface
-3. **Real-time Updates**: Whether to show report building during turn evaluation
-4. **Accessibility**: Keyboard navigation and screen reader support for TreeView
-5. **Mobile Responsiveness**: How to display complex tree on smaller screens
+2. **Real-time Updates**: Whether to show report building during turn evaluation
+3. **Accessibility**: Keyboard navigation and screen reader support for TreeView
+4. **Mobile Responsiveness**: How to display complex tree on smaller screens
 
 ## Success Criteria
 
@@ -485,11 +453,5 @@ interface EnemyMissionReport {
 ## Notes
 
 This implementation plan is designed to be iterative and testable at each milestone. Each milestone delivers visible
-value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without major
-refactoring.
-
-# Pending prompt
-
- Review the @docs\backlog\turn_report_implementation_plan.md. I added "Answer" and "// TODO" entries.
- Delete them and update the plan based on them. If you have any more follow-up questions, ask me.
- Also delete this "pending prompt" entry.
+value and can be demonstrated independently. The modular approach allows for adjustments based on feedback without
+major refactoring.
