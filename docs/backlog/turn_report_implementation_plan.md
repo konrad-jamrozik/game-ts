@@ -1,9 +1,5 @@
 # Turn Advancement Report - Implementation Plan
 
-TODO: update this plan to clarify that when implementing this plan, the only changes to test files that can be made is to
-fix existing tests to pass. Notably, to update the expected input arguments or return types, so that typing passes.
-No new tests or expectations in existing tests should be added.
-
 ## Overview
 
 This document outlines the detailed implementation plan for the "Turn Advancement Report" feature, which will provide a
@@ -413,6 +409,10 @@ The UI will follow a split-panel design with TreeView navigation and scrollable 
 
 ### Testing Strategy
 
+**Implementation Constraint**: When implementing this plan, the only changes to existing test files that can be made
+are to fix existing tests to pass. Specifically, update expected input arguments or return types so that typing
+passes. No new tests or expectations in existing tests should be added.
+
 1. **Unit Tests**:
    - Test each report generation function independently
    - Verify report structure matches interfaces
@@ -503,4 +503,6 @@ Keep all the "Prompt:*" sections.
 
 Implement milestone 1 phases 1.1, 1.2 and 1.3 of the @docs/backlog/turn_report_implementation_plan.md.
 
-Once done, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
+Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
+
+Finally, mark with "✅" sections in this document that you have completed.
