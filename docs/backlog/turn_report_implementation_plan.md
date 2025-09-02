@@ -501,4 +501,4 @@ Implement milestone 1 phases 1.1 and 1.2 of the @docs/backlog/turn_report_implem
 Remember to:
 - Follow the "Testing Strategy" outlined in this plan.
 - Once done with code changes, ensure that `npm run check` from the `web/` directory passes without errors or warnings.
-- Mark with "✅" sections in this document that you have completed.
+- Edit this document by marking with "✅" sections that you have completed.
