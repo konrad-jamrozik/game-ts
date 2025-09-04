@@ -11,6 +11,7 @@ import { LeadCards } from '../components/LeadCards'
 import { MissionCards } from '../components/MissionCards'
 import { PlayerActions } from '../components/PlayerActions'
 import { SituationReportCard } from '../components/SituationReportCard'
+import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
 
 function App(): React.JSX.Element {
   return (
@@ -34,6 +35,7 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
+          <TurnReportDisplay />
           <AgentsDataGrid />
           <MissionCards />
           <LeadCards />

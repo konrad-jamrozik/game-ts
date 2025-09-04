@@ -1,13 +1,8 @@
 import * as React from 'react'
 import { Box, Typography, Chip, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView'
-import { TreeItem } from '@mui/x-tree-view/TreeItem'
 import type { TurnReport, ValueChange, MoneyBreakdown, IntelBreakdown } from '../../lib/model/reportModel'
-
-type TurnReportTreeProps = {
-  report: TurnReport
-}
+import { useAppSelector } from '../../app/hooks'
 
 /**
  * Format a ValueChange as "previous → current (±delta)"
@@ -117,13 +112,16 @@ function ValueChangeAccordion({
 /**
  * TreeView component for displaying turn advancement reports in split-panel layout
  */
-export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElement {
-  const { assets } = report
+export function TurnReportDisplay(): React.ReactElement {
   const [expandedAccordion, setExpandedAccordion] = React.useState<string | false>(false)
+  const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
-  function handleTreeItemClick(accordionId: string): void {
-    setExpandedAccordion(expandedAccordion === accordionId ? false : accordionId)
+  console.log('TurnReportDisplay!')
+
+  if (!report) {
+    return <></>
   }
+  const { assets } = report
 
   function handleAccordionChange(accordionId: string) {
     return (_event: React.SyntheticEvent, isExpanded: boolean): void => {
@@ -133,48 +131,6 @@ export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElem
 
   return (
     <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600, bgcolor: 'background.paper', borderRadius: 1 }}>
-      {/* Left Panel - Tree Navigation */}
-      <Box
-        sx={{
-          width: 250,
-          mr: 2,
-          borderRight: '1px solid',
-          borderColor: 'divider',
-          pr: 2,
-          bgcolor: 'background.default',
-        }}
-      >
-        <SimpleTreeView defaultExpandedItems={['assets']}>
-          <TreeItem itemId="assets" label={<Typography variant="h6">Assets</Typography>}>
-            <TreeItem
-              itemId="assets-money"
-              label={
-                <Typography
-                  variant="body1"
-                  sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
-                  onClick={() => handleTreeItemClick('money')}
-                >
-                  Money
-                </Typography>
-              }
-            />
-            <TreeItem
-              itemId="assets-intel"
-              label={
-                <Typography
-                  variant="body1"
-                  sx={{ cursor: 'pointer', '&:hover': { color: 'primary.main' } }}
-                  onClick={() => handleTreeItemClick('intel')}
-                >
-                  Intel
-                </Typography>
-              }
-            />
-          </TreeItem>
-        </SimpleTreeView>
-      </Box>
-
-      {/* Right Panel - Collapsible Details */}
       <Box sx={{ flex: 1 }}>
         <ValueChangeAccordion
           id="money"
