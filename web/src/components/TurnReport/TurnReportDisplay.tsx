@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Box, Typography, Chip, Accordion, AccordionSummary, AccordionDetails } from '@mui/material'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import type { TurnReport, ValueChange, MoneyBreakdown, IntelBreakdown } from '../../lib/model/reportModel'
+import type { ValueChange, MoneyBreakdown, IntelBreakdown } from '../../lib/model/reportModel'
 import { useAppSelector } from '../../app/hooks'
 
 /**

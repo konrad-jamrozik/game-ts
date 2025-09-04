@@ -23,6 +23,8 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     leadInvestigationCounts: {},
     // Mission sites
     missionSites: [],
+    // Turn report
+    turnStartReport: undefined,
   }
 
   let gameState: GameState = normalGameState

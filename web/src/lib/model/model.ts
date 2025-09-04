@@ -136,5 +136,5 @@ export type GameState = {
   leadInvestigationCounts: Record<string, number>
   missionSites: MissionSite[]
   // TurnReport of turn advancement from previous to current turn.
-  turnStartReport?: TurnReport
+  turnStartReport?: TurnReport | undefined
 }
