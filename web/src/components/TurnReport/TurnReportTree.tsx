@@ -71,6 +71,49 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
   )
 }
 
+type ValueChangeAccordionProps = {
+  id: string
+  title: string
+  valueChange: ValueChange
+  breakdownContent: React.ReactNode
+  expanded: boolean
+  onChange: (event: React.SyntheticEvent, isExpanded: boolean) => void
+}
+
+/**
+ * Reusable accordion component for displaying value changes with breakdowns
+ */
+function ValueChangeAccordion({
+  id,
+  title,
+  valueChange,
+  breakdownContent,
+  expanded,
+  onChange,
+}: ValueChangeAccordionProps): React.ReactElement {
+  return (
+    <Accordion expanded={expanded} onChange={onChange}>
+      <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls={`${id}-content`} id={`${id}-header`}>
+        <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+          <Typography variant="h6" sx={{ mr: 2 }}>
+            {title}
+          </Typography>
+          <Typography variant="body1" sx={{ mr: 1 }}>
+            {formatValueChange(valueChange)}
+          </Typography>
+          {formatDelta(valueChange.delta)}
+        </Box>
+      </AccordionSummary>
+      <AccordionDetails>
+        <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+          Breakdown:
+        </Typography>
+        {breakdownContent}
+      </AccordionDetails>
+    </Accordion>
+  )
+}
+
 /**
  * TreeView component for displaying turn advancement reports in split-panel layout
  */
@@ -133,45 +176,23 @@ export function TurnReportTree({ report }: TurnReportTreeProps): React.ReactElem
 
       {/* Right Panel - Collapsible Details */}
       <Box sx={{ flex: 1 }}>
-        <Accordion expanded={expandedAccordion === 'money'} onChange={handleAccordionChange('money')}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="money-content" id="money-header">
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-              <Typography variant="h6" sx={{ mr: 2 }}>
-                Money
-              </Typography>
-              <Typography variant="body1" sx={{ mr: 1 }}>
-                {formatValueChange(assets.money)}
-              </Typography>
-              {formatDelta(assets.money.delta)}
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Breakdown:
-            </Typography>
-            {formatMoneyBreakdown(assets.moneyDetails)}
-          </AccordionDetails>
-        </Accordion>
+        <ValueChangeAccordion
+          id="money"
+          title="Money"
+          valueChange={assets.money}
+          breakdownContent={formatMoneyBreakdown(assets.moneyDetails)}
+          expanded={expandedAccordion === 'money'}
+          onChange={handleAccordionChange('money')}
+        />
 
-        <Accordion expanded={expandedAccordion === 'intel'} onChange={handleAccordionChange('intel')}>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />} aria-controls="intel-content" id="intel-header">
-            <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-              <Typography variant="h6" sx={{ mr: 2 }}>
-                Intel
-              </Typography>
-              <Typography variant="body1" sx={{ mr: 1 }}>
-                {formatValueChange(assets.intel)}
-              </Typography>
-              {formatDelta(assets.intel.delta)}
-            </Box>
-          </AccordionSummary>
-          <AccordionDetails>
-            <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-              Breakdown:
-            </Typography>
-            {formatIntelBreakdown(assets.intelDetails)}
-          </AccordionDetails>
-        </Accordion>
+        <ValueChangeAccordion
+          id="intel"
+          title="Intel"
+          valueChange={assets.intel}
+          breakdownContent={formatIntelBreakdown(assets.intelDetails)}
+          expanded={expandedAccordion === 'intel'}
+          onChange={handleAccordionChange('intel')}
+        />
       </Box>
     </Box>
   )
