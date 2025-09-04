@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close'
 import type { TurnReport } from '../../lib/model/reportModel'
 import { ExperimentalTurnReportTree } from './ExperimentalTurnReportTree'
 
-type TurnReportModalProps = {
+type ExperimentalTurnReportModalProps = {
   open: boolean
   onClose: () => void
   turnReport: TurnReport | undefined
@@ -13,7 +13,11 @@ type TurnReportModalProps = {
 /**
  * Modal dialog that displays a turn advancement report using the TurnReportTree component
  */
-export function TurnReportModal({ open, onClose, turnReport }: TurnReportModalProps): React.ReactElement {
+export function ExperimentalTurnReportModal({
+  open,
+  onClose,
+  turnReport,
+}: ExperimentalTurnReportModalProps): React.ReactElement {
   if (!turnReport) {
     return <></>
   }

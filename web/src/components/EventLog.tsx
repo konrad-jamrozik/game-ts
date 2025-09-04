@@ -11,7 +11,7 @@ import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
 import { assertEqual } from '../lib/utils/assert'
 import { fmtPctDiv100Dec2 } from '../lib/utils/formatUtils'
-import { TurnReportModal } from './TurnReport/TurnReportModal'
+import { ExperimentalTurnReportModal } from './TurnReport/ExperimentalTurnReportModal'
 import { useTurnReportHistory } from './TurnReport/useTurnReportHistory'
 import type { TurnReport } from '../lib/model/reportModel'
 
@@ -147,7 +147,7 @@ export function EventLog(): React.JSX.Element {
         </CardContent>
       </Card>
 
-      <TurnReportModal open={modalOpen} onClose={handleModalClose} turnReport={selectedTurnReport} />
+      <ExperimentalTurnReportModal open={modalOpen} onClose={handleModalClose} turnReport={selectedTurnReport} />
     </React.Fragment>
   )
 }
