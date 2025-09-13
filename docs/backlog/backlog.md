@@ -2,7 +2,8 @@
 
 KJA backlog:
 
-- Execute the `implementation_plan.md`
+- Execute the `misc_implementation_plan.md`
+- Execute the `turn_report_implementation_plan.md`
 - Address all outstanding TODOs: search for `KJA` in the codebase
 
 - Implement lead expiration logic, or remove the property
