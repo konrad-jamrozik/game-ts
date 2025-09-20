@@ -23,7 +23,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     leadInvestigationCounts: {},
     // Mission sites
     missionSites: [],
-    // Turn report
+    // Turn start report
     turnStartReport: undefined,
   }
 

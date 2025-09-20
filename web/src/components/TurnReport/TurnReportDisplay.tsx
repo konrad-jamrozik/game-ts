@@ -1,9 +1,8 @@
-import ExpandLessIcon from '@mui/icons-material/ExpandLess'
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Box, Card, CardContent, CardHeader, Collapse, IconButton, Typography } from '@mui/material'
+import { Box, Typography } from '@mui/material'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type { IntelBreakdown, MoneyBreakdown } from '../../lib/model/reportModel'
+import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeAccordion } from './ValueChangeAccordion'
 
 /**
@@ -55,7 +54,6 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
  * TreeView component for displaying turn advancement reports in split-panel layout
  */
 export function TurnReportDisplay(): React.ReactElement {
-  const [expanded, setExpanded] = React.useState(true)
   const [expandedAccordion, setExpandedAccordion] = React.useState<string | false>(false)
   const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
@@ -67,48 +65,31 @@ export function TurnReportDisplay(): React.ReactElement {
     }
   }
 
-  function handleExpandClick(): void {
-    setExpanded(!expanded)
-  }
-
   return (
-    <Card>
-      <CardHeader
-        avatar={
-          <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
-            {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
-          </IconButton>
-        }
-        title={`Turn Report`}
-        slotProps={{ title: { variant: 'h5' } }}
-      />
-      <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
-          {report && (
-            <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600, bgcolor: 'background.paper', borderRadius: 1 }}>
-              <Box sx={{ flex: 1 }}>
-                <ValueChangeAccordion
-                  id="money"
-                  title="Money"
-                  valueChange={report.assets.money}
-                  breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
-                  expanded={expandedAccordion === 'money'}
-                  onChange={handleAccordionChange('money')}
-                />
+    <ExpandableCard title="Turn Report" defaultExpanded={true}>
+      {report && (
+        <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600, bgcolor: 'background.paper', borderRadius: 1 }}>
+          <Box sx={{ flex: 1 }}>
+            <ValueChangeAccordion
+              id="money"
+              title="Money"
+              valueChange={report.assets.money}
+              breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
+              expanded={expandedAccordion === 'money'}
+              onChange={handleAccordionChange('money')}
+            />
 
-                <ValueChangeAccordion
-                  id="intel"
-                  title="Intel"
-                  valueChange={report.assets.intel}
-                  breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
-                  expanded={expandedAccordion === 'intel'}
-                  onChange={handleAccordionChange('intel')}
-                />
-              </Box>
-            </Box>
-          )}
-        </CardContent>
-      </Collapse>
-    </Card>
+            <ValueChangeAccordion
+              id="intel"
+              title="Intel"
+              valueChange={report.assets.intel}
+              breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
+              expanded={expandedAccordion === 'intel'}
+              onChange={handleAccordionChange('intel')}
+            />
+          </Box>
+        </Box>
+      )}
+    </ExpandableCard>
   )
 }
