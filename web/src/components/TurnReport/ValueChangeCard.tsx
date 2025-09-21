@@ -45,10 +45,11 @@ export function ValueChangeCard({
       field: 'value',
       headerName: 'Amount',
       width: 100,
-      renderCell: (params): string => {
+      renderCell: (params): React.ReactNode => {
         const value = typeof params.value === 'number' ? params.value : 0
+        const color = value > 0 ? 'success' : value < 0 ? 'error' : 'default'
         const sign = value >= 0 ? '+' : ''
-        return `${sign}${value}`
+        return <Chip label={`${sign}${value}`} color={color} sx={{ fontSize: '0.875rem' }} />
       },
     },
   ]
@@ -82,10 +83,15 @@ export function ValueChangeCard({
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={nestedCardContentSx}>
-          <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
-            Breakdown:
-          </Typography>
-          <StyledDataGrid rows={breakdownRows} columns={columns} />
+          <StyledDataGrid
+            rows={breakdownRows}
+            columns={columns}
+            sx={{
+              width: '100%',
+              maxWidth: '100%',
+              overflow: 'hidden',
+            }}
+          />
         </CardContent>
       </Collapse>
     </Card>
