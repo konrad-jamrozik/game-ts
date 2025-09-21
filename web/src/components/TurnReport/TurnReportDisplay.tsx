@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type { IntelBreakdown, MoneyBreakdown } from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
-import { ValueChangeAccordion } from './ValueChangeAccordion'
+import { ValueChangeCard } from './ValueChangeCard'
 
 /**
  * Format money breakdown details
@@ -76,7 +76,7 @@ export function TurnReportDisplay(): React.ReactElement {
             gap: 2, // This adds spacing between grid items (equivalent to 16px)
           }}
         >
-          <ValueChangeAccordion
+          <ValueChangeCard
             id="money"
             title="Money"
             valueChange={report.assets.money}
@@ -85,7 +85,7 @@ export function TurnReportDisplay(): React.ReactElement {
             onChange={handleAccordionChange('money')}
           />
 
-          <ValueChangeAccordion
+          <ValueChangeCard
             id="intel"
             title="Intel"
             valueChange={report.assets.intel}
