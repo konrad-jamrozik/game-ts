@@ -256,13 +256,13 @@ type EnemyMissionReport = {
 - ✅ **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
 - ✅ Add ValueChangeCard for PanicReport in column 1, row 2
 - ✅ Add ValueChangeCard for FactionReport for faction-red-dawn in column 2, row 2
+- ✅ Make TurnReportDisplay row heights independent of each other
 - Reverse colors (red/green) in ValueChangeCard for Panic
 - Shorten mission titles in ValueChangeCard for Panic
 - Display change in percentage in ValueChangeCard for Panic
 - Reverse colors (red/green) in ValueChangeCard for Red Dawn, except suppression
 - Shorten mission titles in ValueChangeCard for Red Dawn
 - Display change in percentage in ValueChangeCard for Red Dawn
-- Make TurnReportDisplay row heights independent of each other
 
 ### Milestone 3: Display Basic Mission Site Stats
 
