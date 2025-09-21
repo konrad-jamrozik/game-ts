@@ -332,7 +332,7 @@ function updateFactions(
       threatIncrease: newValueChange(previousThreatIncrease, faction.threatIncrease),
       suppression: newValueChange(previousSuppression, faction.suppression),
       details: {
-        baseIncrease: faction.threatIncrease,
+        baseThreatIncrease: faction.threatIncrease,
         missionImpacts,
         suppressionDecay,
       },

@@ -74,7 +74,7 @@ export type FactionReport = {
 }
 
 export type FactionDetails = {
-  baseIncrease: number
+  baseThreatIncrease: number
   missionImpacts: {
     missionSiteId: string
     missionTitle: string

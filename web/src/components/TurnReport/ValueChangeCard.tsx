@@ -6,11 +6,21 @@ import type { GridColDef } from '@mui/x-data-grid'
 import type { ValueChange } from '../../lib/model/reportModel'
 import theme from '../../styling/theme'
 import { StyledDataGrid } from '../StyledDataGrid'
+import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+
+/**
+ * Type guard for BreakdownRow
+ */
+function isBreakdownRow(obj: unknown): obj is BreakdownRow {
+  return obj !== null && typeof obj === 'object' && 'id' in obj && 'label' in obj && 'value' in obj
+}
 
 export type BreakdownRow = {
   id: string
   label: string
   value: number
+  /** Special flag to mark suppression-related items that should use normal color semantics */
+  isSuppressionType?: boolean
 }
 
 type ValueChangeCardProps = {
@@ -20,6 +30,12 @@ type ValueChangeCardProps = {
   breakdownRows: readonly BreakdownRow[]
   expanded: boolean
   onChange: (event: React.SyntheticEvent, isExpanded: boolean) => void
+  /** Reverse color semantics: increases are bad (red), decreases are good (green) */
+  reverseColors?: boolean
+  /** Show percentage change instead of absolute values */
+  showPercentage?: boolean
+  /** When showPercentage is true, show only percentage values (hide integer values) */
+  percentageOnly?: boolean
 }
 
 /**
@@ -32,6 +48,9 @@ export function ValueChangeCard({
   breakdownRows,
   expanded,
   onChange,
+  reverseColors = false,
+  showPercentage = false,
+  percentageOnly = false,
 }: ValueChangeCardProps): React.ReactElement {
   function handleExpandClick(event: React.SyntheticEvent): void {
     onChange(event, !expanded)
@@ -47,9 +66,16 @@ export function ValueChangeCard({
       flex: 1,
       renderCell: (params): React.ReactNode => {
         const value = typeof params.value === 'number' ? params.value : 0
-        const color = value > 0 ? 'success' : value < 0 ? 'error' : 'default'
+        const row = isBreakdownRow(params.row) ? params.row : undefined
+
+        // Apply color logic: suppression items use normal colors, others use reverseColors if specified
+        const shouldReverse = reverseColors && !(row?.isSuppressionType ?? false)
+        const color: 'success' | 'error' | 'default' =
+          value === 0 ? 'default' : shouldReverse ? (value > 0 ? 'error' : 'success') : value > 0 ? 'success' : 'error'
+
         const sign = value >= 0 ? '+' : ''
-        return <Chip label={`${sign}${value}`} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
+        const displayValue = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
+        return <Chip label={displayValue} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       },
     },
   ]
@@ -74,9 +100,10 @@ export function ValueChangeCard({
               {title}:
             </Typography>
             <Typography variant="h6" component="span">
-              {formatValueChange(valueChange)}
+              {formatValueChange(valueChange, showPercentage, percentageOnly)}
             </Typography>
-            {formatDelta(valueChange.delta)}
+            {!percentageOnly && formatDelta(valueChange.delta, reverseColors, showPercentage)}
+            {showPercentage && percentageOnly && formatPercentageDelta(valueChange, reverseColors)}
           </Box>
         }
         slotProps={{ title: { variant: 'h6' } }}
@@ -91,17 +118,40 @@ export function ValueChangeCard({
 }
 
 /**
- * Format a ValueChange as "previous → current (±delta)"
+ * Format a ValueChange as "previous → current"
  */
-function formatValueChange(change: ValueChange): string {
+function formatValueChange(change: ValueChange, showPercentage = false, percentageOnly = false): string {
+  if (showPercentage && percentageOnly) {
+    return `${fmtPctDiv100Dec2(change.previous)} → ${fmtPctDiv100Dec2(change.current)}`
+  }
   return `${change.previous} → ${change.current}`
 }
 
 /**
  * Format a delta value with appropriate styling
  */
-function formatDelta(delta: number): React.ReactNode {
-  const color = delta > 0 ? 'success' : delta < 0 ? 'error' : 'default'
+function formatDelta(delta: number, reverseColors = false, showPercentage = false): React.ReactNode {
+  const color: 'success' | 'error' | 'default' =
+    delta === 0 ? 'default' : reverseColors ? (delta > 0 ? 'error' : 'success') : delta > 0 ? 'success' : 'error'
   const sign = delta >= 0 ? '+' : ''
-  return <Chip label={`${sign}${delta}`} color={color} sx={{ fontSize: '1rem' }} />
+  const displayValue = showPercentage ? fmtPctDiv100Dec2(delta) : `${sign}${delta}`
+  return <Chip label={displayValue} color={color} sx={{ fontSize: '1rem' }} />
+}
+
+/**
+ * Format percentage delta for percentage-only mode
+ */
+function formatPercentageDelta(change: ValueChange, reverseColors = false): React.ReactNode {
+  const { delta } = change
+  if (delta === 0) return <Chip label="no change" color="default" sx={{ fontSize: '1rem' }} />
+
+  const color: 'success' | 'error' | 'default' = reverseColors
+    ? delta > 0
+      ? 'error'
+      : 'success'
+    : delta > 0
+      ? 'success'
+      : 'error'
+
+  return <Chip label={fmtPctDiv100Dec2(delta)} color={color} sx={{ fontSize: '1rem' }} />
 }

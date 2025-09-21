@@ -70,6 +70,9 @@ export function TurnReportDisplay(): React.ReactElement {
             breakdownRows={formatPanicBreakdown(report.panic.breakdown)}
             expanded={expandedCards.has('panic')}
             onChange={handleCardChange('panic')}
+            reverseColors={true}
+            showPercentage={true}
+            percentageOnly={true}
           />
 
           {redDawnFaction && (
@@ -80,12 +83,31 @@ export function TurnReportDisplay(): React.ReactElement {
               breakdownRows={formatFactionDetails(redDawnFaction.details)}
               expanded={expandedCards.has('red-dawn-threat')}
               onChange={handleCardChange('red-dawn-threat')}
+              reverseColors={true}
+              showPercentage={true}
+              percentageOnly={true}
             />
           )}
         </Box>
       )}
     </ExpandableCard>
   )
+}
+
+/**
+ * Shorten mission titles for display in breakdown tables
+ */
+function shortenMissionTitle(title: string): string {
+  // Remove common prefixes and make titles more concise
+  return title
+    .replaceAll(/^mission:\s*/giu, '')
+    .replaceAll(/^raid\s+/giu, '')
+    .replaceAll(/^apprehend\s+/giu, 'Capture ')
+    .replaceAll(/red dawn\s+/giu, 'RD ')
+    .replaceAll(/\s+safehouse$/giu, ' Safe')
+    .replaceAll(/\s+outpost$/giu, ' Out')
+    .replaceAll(/\s+base$/giu, ' Base')
+    .replaceAll(/\s+hq$/giu, ' HQ')
 }
 
 /**
@@ -133,7 +155,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
     if (mission.reduction !== 0) {
       rows.push({
         id: `mission-${mission.missionSiteId}`,
-        label: `${mission.missionTitle} Reduction`,
+        label: `${shortenMissionTitle(mission.missionTitle)} Reduction`,
         value: -mission.reduction,
       })
     }
@@ -148,12 +170,12 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
 function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
   const rows: BreakdownRow[] = []
 
-  // Add base increase
-  if (details.baseIncrease !== 0) {
+  // Add base threat increase
+  if (details.baseThreatIncrease !== 0) {
     rows.push({
-      id: 'baseIncrease',
-      label: 'Base Increase',
-      value: details.baseIncrease,
+      id: 'baseThreatIncrease',
+      label: 'Base Threat Increase',
+      value: details.baseThreatIncrease,
     })
   }
 
@@ -162,15 +184,16 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
     if (impact.threatReduction !== undefined && impact.threatReduction !== 0) {
       rows.push({
         id: `mission-threat-${impact.missionSiteId}`,
-        label: `${impact.missionTitle} Threat Reduction`,
-        value: -impact.threatReduction,
+        label: `${shortenMissionTitle(impact.missionTitle)} Threat Reduction`,
+        value: impact.threatReduction,
       })
     }
     if (impact.suppressionAdded !== undefined && impact.suppressionAdded !== 0) {
       rows.push({
         id: `mission-suppression-${impact.missionSiteId}`,
-        label: `${impact.missionTitle} Suppression`,
+        label: `${shortenMissionTitle(impact.missionTitle)} Suppression`,
         value: impact.suppressionAdded,
+        isSuppressionType: true,
       })
     }
   })
@@ -181,6 +204,7 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
       id: 'suppressionDecay',
       label: 'Suppression Decay',
       value: -details.suppressionDecay,
+      isSuppressionType: true,
     })
   }
 
