@@ -54,14 +54,22 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
  * TreeView component for displaying turn advancement reports in split-panel layout
  */
 export function TurnReportDisplay(): React.ReactElement {
-  const [expandedAccordion, setExpandedAccordion] = React.useState<string | false>(false)
+  const [expandedCards, setExpandedCards] = React.useState<Set<string>>(() => new Set())
   const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
   console.log('TurnReportDisplay!')
 
-  function handleAccordionChange(accordionId: string) {
+  function handleCardChange(cardId: string) {
     return (_event: React.SyntheticEvent, isExpanded: boolean): void => {
-      setExpandedAccordion(isExpanded ? accordionId : false)
+      setExpandedCards((prevExpanded) => {
+        const newExpanded = new Set(prevExpanded)
+        if (isExpanded) {
+          newExpanded.add(cardId)
+        } else {
+          newExpanded.delete(cardId)
+        }
+        return newExpanded
+      })
     }
   }
 
@@ -81,8 +89,8 @@ export function TurnReportDisplay(): React.ReactElement {
             title="Money"
             valueChange={report.assets.money}
             breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
-            expanded={expandedAccordion === 'money'}
-            onChange={handleAccordionChange('money')}
+            expanded={expandedCards.has('money')}
+            onChange={handleCardChange('money')}
           />
 
           <ValueChangeCard
@@ -90,8 +98,8 @@ export function TurnReportDisplay(): React.ReactElement {
             title="Intel"
             valueChange={report.assets.intel}
             breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
-            expanded={expandedAccordion === 'intel'}
-            onChange={handleAccordionChange('intel')}
+            expanded={expandedCards.has('intel')}
+            onChange={handleCardChange('intel')}
           />
         </Box>
       )}
