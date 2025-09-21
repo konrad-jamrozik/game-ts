@@ -242,22 +242,20 @@ type EnemyMissionReport = {
 
 **Objective**: Implement panic and faction tracking
 
-#### Phase 2.1: Backend Logic
+#### ✅ Phase 2.1: Backend Logic
 
-- **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
-- Modify `updatePanic` to return `PanicReport`
-- Modify `updateFactions` to return `FactionReport[]`
-- Track panic contributions by faction
-- Track mission impacts on factions
-- Include suppression decay calculations
+- ✅ **File**: `web/src/lib/turn_advancement/evaluateTurn.ts`
+- ✅ Modify `updatePanic` to return `PanicReport`
+- ✅ Modify `updateFactions` to return `FactionReport[]`
+- ✅ Track panic contributions by faction
+- ✅ Track mission impacts on factions
+- ✅ Include suppression decay calculations
 
 #### Phase 2.2: UI Component
 
 - **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
-- Add Panic node with expandable breakdown
-- Add Factions node with sub-nodes for each discovered faction
-- Display faction stats with change indicators
-- Show detailed mission impacts when expanded
+- Add ValueChangeCard for PanicReport in column 1, row 2
+- Add ValueChangeCard for FactionReport for faction-red-dawn in column 2, row 2
 
 ### Milestone 3: Display Basic Mission Site Stats
 

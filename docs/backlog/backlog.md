@@ -43,6 +43,11 @@ KJA backlog:
   - Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
   ✓ built in 6.66s
 
+## UI improvements
+
+- Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
+- Use Chips for Balance Sheet data grid, same as TurnsDisplay Report
+
 ## UI ideas
 
 - for mission evaluation, idea for a table: columns are combat rounds, and rows are units. Each cell tells what

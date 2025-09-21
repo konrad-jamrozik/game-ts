@@ -196,6 +196,14 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/no-warning-comments
       'no-warning-comments': 'off',
 
+      // Turned off to not interfere with AI agent. Default is 300.
+      // https://eslint.org/docs/latest/rules/max-lines
+      'max-lines': 'off',
+
+      // Turned off to not interfere with AI agent. Default is 4.
+      // https://eslint.org/docs/latest/rules/max-depth
+      'max-depth': 'off',
+
       // [ts-eslint] configs
       // --------------------
       // https://typescript-eslint.io/rules/no-magic-numbers/

@@ -1,15 +1,17 @@
 import { agsV } from '../model/agents/AgentsView'
+import { getMissionById } from '../collections/missions'
 import type { Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import {
   newValueChange,
   type AssetsReport,
+  type FactionReport,
   type IntelBreakdown,
   type MoneyBreakdown,
+  type PanicReport,
   type TurnReport,
 } from '../model/reportModel'
 import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { assertDefined } from '../utils/assert'
 import { floor } from '../utils/mathUtils'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
@@ -64,10 +66,10 @@ export default function evaluateTurn(state: GameState): TurnReport {
   })
 
   // 9. Update panic based on the results of the previous steps
-  updatePanic(state, missionRewards)
+  const panicReport = updatePanic(state, missionRewards)
 
   // 10. Update factions based on the results of the previous steps
-  updateFactions(state, missionRewards)
+  const factionsReport = updateFactions(state, missionRewards)
 
   validateGameStateInvariants(state)
 
@@ -76,6 +78,8 @@ export default function evaluateTurn(state: GameState): TurnReport {
     timestamp,
     turn,
     assets: assetsReport,
+    panic: panicReport,
+    factions: factionsReport,
   }
 
   return turnReport
@@ -97,16 +101,24 @@ function updateActiveMissionSites(state: GameState): void {
 
 /**
  * Evaluates deployed mission sites and their agents
- * Returns collected mission rewards to be applied later
+ * Returns collected mission rewards with site information to be applied later
  */
-function evaluateDeployedMissionSites(state: GameState): MissionRewards[] {
-  const missionRewards: MissionRewards[] = []
+function evaluateDeployedMissionSites(
+  state: GameState,
+): { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] {
+  const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] = []
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
       const rewards = evaluateDeployedMissionSite(state, missionSite)
       if (rewards) {
-        missionRewards.push(rewards)
+        // Get mission to access title
+        const mission = getMissionById(missionSite.missionId)
+        missionRewards.push({
+          rewards,
+          missionSiteId: missionSite.id,
+          missionTitle: mission.title,
+        })
       }
     }
   }
@@ -120,7 +132,12 @@ function evaluateDeployedMissionSites(state: GameState): MissionRewards[] {
  */
 function updatePlayerAssets(
   state: GameState,
-  income: { agentUpkeep: number; moneyEarned: number; intelGathered: number; missionRewards: MissionRewards[] },
+  income: {
+    agentUpkeep: number
+    moneyEarned: number
+    intelGathered: number
+    missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
+  },
 ): AssetsReport {
   // Capture previous values
   const previousMoney = state.money
@@ -151,7 +168,7 @@ function updatePlayerAssets(
 
   // Apply mission rewards for money, intel, and funding only
   // Panic and faction rewards are applied in their respective update functions
-  for (const rewards of income.missionRewards) {
+  for (const { rewards } of income.missionRewards) {
     if (rewards.money !== undefined) {
       state.money += rewards.money
       missionMoneyRewards += rewards.money
@@ -192,21 +209,47 @@ function updatePlayerAssets(
 
 /**
  * Updates panic based on faction threat levels and suppression, and applies panic reduction from mission rewards
+ * Returns detailed PanicReport tracking all changes
  */
-function updatePanic(state: GameState, missionRewards: MissionRewards[]): void {
+function updatePanic(
+  state: GameState,
+  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[],
+): PanicReport {
+  const previousPanic = state.panic
+
+  // Track faction contributions
+  const factionContributions = state.factions.map((faction) => {
+    const contribution = Math.max(0, faction.threatLevel - faction.suppression)
+    return {
+      factionId: faction.id,
+      factionName: faction.name,
+      contribution,
+    }
+  })
+
   // Increase panic by the sum of (threat level - suppression) for all factions
-  // This uses current suppression values, exactly as displayed in SituationReportCard
-  const totalPanicIncrease = state.factions.reduce(
-    (sum, faction) => sum + Math.max(0, faction.threatLevel - faction.suppression),
-    0,
-  )
+  const totalPanicIncrease = factionContributions.reduce((sum, faction) => sum + faction.contribution, 0)
   state.panic += totalPanicIncrease
 
-  // Apply panic reduction from mission rewards
-  for (const rewards of missionRewards) {
+  // Track mission reductions and apply them
+  const missionReductions = []
+  for (const { rewards, missionSiteId, missionTitle } of missionRewards) {
     if (rewards.panicReduction !== undefined) {
+      missionReductions.push({
+        missionSiteId,
+        missionTitle,
+        reduction: rewards.panicReduction,
+      })
       state.panic = Math.max(0, state.panic - rewards.panicReduction)
     }
+  }
+
+  return {
+    change: newValueChange(previousPanic, state.panic),
+    breakdown: {
+      factionContributions,
+      missionReductions,
+    },
   }
 }
 
@@ -224,24 +267,77 @@ function applyFactionReward(targetFaction: Faction, factionReward: FactionReward
 
 /**
  * Updates factions - apply threat level increases and suppression decay, and applies faction rewards from missions
+ * Returns detailed FactionReport[] tracking all changes
  */
-function updateFactions(state: GameState, missionRewards: MissionRewards[]): void {
+function updateFactions(
+  state: GameState,
+  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[],
+): FactionReport[] {
+  const factionReports: FactionReport[] = []
+
   for (const faction of state.factions) {
+    // Capture previous values
+    const previousThreatLevel = faction.threatLevel
+    const previousThreatIncrease = faction.threatIncrease
+    const previousSuppression = faction.suppression
+
     // Increment faction threat levels
     faction.threatLevel += faction.threatIncrease
 
     // Apply suppression decay AFTER panic calculation and threat increase
     faction.suppression = floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
-  }
+    const suppressionDecay = previousSuppression - faction.suppression
 
-  // Apply faction rewards from mission rewards
-  for (const rewards of missionRewards) {
-    if (rewards.factionRewards) {
-      for (const factionReward of rewards.factionRewards) {
-        const targetFaction = state.factions.find((faction) => faction.id === factionReward.factionId)
-        assertDefined(targetFaction)
-        applyFactionReward(targetFaction, factionReward)
+    // Track mission impacts on this faction
+    const missionImpacts = []
+    for (const { rewards, missionSiteId, missionTitle } of missionRewards) {
+      if (rewards.factionRewards) {
+        for (const factionReward of rewards.factionRewards) {
+          if (factionReward.factionId === faction.id) {
+            const impact: {
+              missionSiteId: string
+              missionTitle: string
+              threatReduction?: number
+              suppressionAdded?: number
+            } = {
+              missionSiteId,
+              missionTitle,
+            }
+
+            if (factionReward.threatReduction !== undefined) {
+              impact.threatReduction = factionReward.threatReduction
+            }
+            if (factionReward.suppression !== undefined) {
+              impact.suppressionAdded = factionReward.suppression
+            }
+
+            missionImpacts.push(impact)
+            applyFactionReward(faction, factionReward)
+          }
+        }
       }
     }
+
+    // Check if faction is discovered by verifying all discovery prerequisites are met
+    const isDiscovered = faction.discoveryPrerequisite.every(
+      (leadId) => (state.leadInvestigationCounts[leadId] ?? 0) > 0,
+    )
+
+    // Create faction report
+    factionReports.push({
+      factionId: faction.id,
+      factionName: faction.name,
+      isDiscovered,
+      threatLevel: newValueChange(previousThreatLevel, faction.threatLevel),
+      threatIncrease: newValueChange(previousThreatIncrease, faction.threatIncrease),
+      suppression: newValueChange(previousSuppression, faction.suppression),
+      details: {
+        baseIncrease: faction.threatIncrease,
+        missionImpacts,
+        suppressionDecay,
+      },
+    })
   }
+
+  return factionReports
 }

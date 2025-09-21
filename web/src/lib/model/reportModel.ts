@@ -1,5 +1,7 @@
 export type TurnReport = BaseReport & {
   assets: AssetsReport
+  panic: PanicReport
+  factions: FactionReport[]
 }
 
 export type BaseReport = {
@@ -41,4 +43,43 @@ export type MoneyBreakdown = {
 export type IntelBreakdown = {
   espionageGathered: number
   missionRewards: number
+}
+
+export type PanicReport = {
+  change: ValueChange
+  breakdown: PanicBreakdown
+}
+
+export type PanicBreakdown = {
+  factionContributions: {
+    factionId: string
+    factionName: string
+    contribution: number
+  }[]
+  missionReductions: {
+    missionSiteId: string
+    missionTitle: string
+    reduction: number
+  }[]
+}
+
+export type FactionReport = {
+  factionId: string
+  factionName: string
+  isDiscovered: boolean
+  threatLevel: ValueChange
+  threatIncrease: ValueChange
+  suppression: ValueChange
+  details: FactionDetails
+}
+
+export type FactionDetails = {
+  baseIncrease: number
+  missionImpacts: {
+    missionSiteId: string
+    missionTitle: string
+    threatReduction?: number
+    suppressionAdded?: number
+  }[]
+  suppressionDecay: number
 }
