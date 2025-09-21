@@ -29,7 +29,7 @@ function formatDelta(delta: number): React.ReactNode {
 /**
  * Format money breakdown details
  */
-function formatMoneyBreakdown(breakdown: MoneyBreakdown): React.ReactNode {
+function experimentalFormatMoneyBreakdown(breakdown: MoneyBreakdown): React.ReactNode {
   const items = [
     { id: 'agentUpkeep', label: 'Agent Upkeep', value: breakdown.agentUpkeep },
     { id: 'contractingEarnings', label: 'Contracting Earnings', value: breakdown.contractingEarnings },
@@ -53,7 +53,7 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): React.ReactNode {
 /**
  * Format intel breakdown details
  */
-function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
+function experimentalFormatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
   const items = [
     { id: 'espionageGathered', label: 'Espionage Gathered', value: breakdown.espionageGathered },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
@@ -149,7 +149,7 @@ export function ExperimentalTurnReportTree({ report }: ExperimentalTurnReportTre
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Breakdown:
             </Typography>
-            {formatMoneyBreakdown(assets.moneyDetails)}
+            {experimentalFormatMoneyBreakdown(assets.moneyDetails)}
           </AccordionDetails>
         </Accordion>
 
@@ -169,7 +169,7 @@ export function ExperimentalTurnReportTree({ report }: ExperimentalTurnReportTre
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Breakdown:
             </Typography>
-            {formatIntelBreakdown(assets.intelDetails)}
+            {experimentalFormatIntelBreakdown(assets.intelDetails)}
           </AccordionDetails>
         </Accordion>
       </Box>

@@ -1,53 +1,31 @@
-import { Box, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type { IntelBreakdown, MoneyBreakdown } from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
-import { ValueChangeCard } from './ValueChangeCard'
+import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 
 /**
  * Format money breakdown details
  */
-function formatMoneyBreakdown(breakdown: MoneyBreakdown): React.ReactNode {
-  const items = [
+function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
+  return [
     { id: 'agentUpkeep', label: 'Agent Upkeep', value: breakdown.agentUpkeep },
     { id: 'contractingEarnings', label: 'Contracting Earnings', value: breakdown.contractingEarnings },
     { id: 'fundingIncome', label: 'Funding Income', value: breakdown.fundingIncome },
     { id: 'hireCosts', label: 'Hire Costs', value: breakdown.hireCosts },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
   ].filter((item) => item.value !== 0)
-
-  return (
-    <Box sx={{ pl: 2 }}>
-      {items.map((item) => (
-        <Typography key={item.id} variant="body2" sx={{ mb: 0.5 }}>
-          {item.label}: {item.value >= 0 ? '+' : ''}
-          {item.value}
-        </Typography>
-      ))}
-    </Box>
-  )
 }
 
 /**
  * Format intel breakdown details
  */
-function formatIntelBreakdown(breakdown: IntelBreakdown): React.ReactNode {
-  const items = [
+function formatIntelBreakdown(breakdown: IntelBreakdown): BreakdownRow[] {
+  return [
     { id: 'espionageGathered', label: 'Espionage Gathered', value: breakdown.espionageGathered },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
   ].filter((item) => item.value !== 0)
-
-  return (
-    <Box sx={{ pl: 2 }}>
-      {items.map((item) => (
-        <Typography key={item.id} variant="body2" sx={{ mb: 0.5 }}>
-          {item.label}: {item.value >= 0 ? '+' : ''}
-          {item.value}
-        </Typography>
-      ))}
-    </Box>
-  )
 }
 
 /**
@@ -91,7 +69,7 @@ export function TurnReportDisplay(): React.ReactElement {
             id="money"
             title="Money"
             valueChange={report.assets.money}
-            breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
+            breakdownRows={formatMoneyBreakdown(report.assets.moneyDetails)}
             expanded={expandedCards.has('money')}
             onChange={handleCardChange('money')}
           />
@@ -100,7 +78,7 @@ export function TurnReportDisplay(): React.ReactElement {
             id="intel"
             title="Intel"
             valueChange={report.assets.intel}
-            breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
+            breakdownRows={formatIntelBreakdown(report.assets.intelDetails)}
             expanded={expandedCards.has('intel')}
             onChange={handleCardChange('intel')}
           />

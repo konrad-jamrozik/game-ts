@@ -2,14 +2,22 @@ import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Card, CardContent, CardHeader, Chip, Collapse, IconButton, Typography, type SxProps } from '@mui/material'
 import * as React from 'react'
+import type { GridColDef } from '@mui/x-data-grid'
 import type { ValueChange } from '../../lib/model/reportModel'
 import theme from '../../styling/theme'
+import { StyledDataGrid } from '../StyledDataGrid'
+
+export type BreakdownRow = {
+  id: string
+  label: string
+  value: number
+}
 
 type ValueChangeCardProps = {
   id: string
   title: string
   valueChange: ValueChange
-  breakdownContent: React.ReactNode
+  breakdownRows: readonly BreakdownRow[]
   expanded: boolean
   onChange: (event: React.SyntheticEvent, isExpanded: boolean) => void
 }
@@ -21,7 +29,7 @@ export function ValueChangeCard({
   id,
   title,
   valueChange,
-  breakdownContent,
+  breakdownRows,
   expanded,
   onChange,
 }: ValueChangeCardProps): React.ReactElement {
@@ -30,6 +38,20 @@ export function ValueChangeCard({
   }
 
   const nestedCardContentSx: SxProps = { backgroundColor: theme.palette.background.nestedCardContent }
+
+  const columns: GridColDef[] = [
+    { field: 'label', headerName: 'Item', flex: 1, minWidth: 150 },
+    {
+      field: 'value',
+      headerName: 'Amount',
+      width: 100,
+      renderCell: (params): string => {
+        const value = typeof params.value === 'number' ? params.value : 0
+        const sign = value >= 0 ? '+' : ''
+        return `${sign}${value}`
+      },
+    },
+  ]
 
   return (
     <Card>
@@ -63,7 +85,7 @@ export function ValueChangeCard({
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Breakdown:
           </Typography>
-          {breakdownContent}
+          <StyledDataGrid rows={breakdownRows} columns={columns} />
         </CardContent>
       </Collapse>
     </Card>
