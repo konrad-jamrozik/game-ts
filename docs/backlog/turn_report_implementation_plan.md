@@ -225,7 +225,7 @@ type EnemyMissionReport = {
 
 #### ✅ Phase 1.2: UI Component
 
-- ✅ **File**: `web/src/components/TurnReport/TurnReportTree.tsx` (modified)
+- ✅ **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx` (modified)
 - ✅ Create split-panel layout with left tree navigation and right collapsible details
 - ✅ Implement simplified Assets node with Money and Intel sub-nodes (no stats in tree)
 - ✅ Display change values in "previous → current (±delta)" format in right panel accordions
@@ -253,7 +253,7 @@ type EnemyMissionReport = {
 
 #### Phase 2.2: UI Component
 
-- **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
+- **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
 - Add Panic node with expandable breakdown
 - Add Factions node with sub-nodes for each discovered faction
 - Display faction stats with change indicators
@@ -273,7 +273,7 @@ type EnemyMissionReport = {
 
 #### Phase 3.2: UI Component
 
-- **File**: `web/src/components/TurnReport/TurnReportTree.tsx`
+- **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
 - Add Mission Sites node
 - Create sub-nodes for each deployed mission
 - Display success/failure status with appropriate icons
@@ -298,7 +298,7 @@ type EnemyMissionReport = {
 #### Phase 4.2: UI Component
 
 - **Files**:
-  - `web/src/components/TurnReport/TurnReportTree.tsx`
+  - `web/src/components/TurnReport/TurnReportDisplay.tsx`
   - `web/src/components/TurnReport/CombatRoundGrid.tsx` (new)
 - Add Agents sub-node under each mission site
 - Display detailed agent performance metrics
@@ -329,7 +329,7 @@ The UI will follow a split-panel design with TreeView navigation and scrollable 
 <TurnReportModal>
   <SplitPanel>
     {/* Left Panel: TreeView Navigation (all nodes collapsed by default) */}
-    <TurnReportTree report={turnReport} defaultExpanded={[]}>
+    <TurnReportDisplay report={turnReport} defaultExpanded={[]}>
       <TreeItem nodeId="assets" label="Assets">
         <TreeItem nodeId="assets-money" label={MoneyDisplay} />
         <TreeItem nodeId="assets-intel" label={IntelDisplay} />
@@ -362,7 +362,7 @@ The UI will follow a split-panel design with TreeView navigation and scrollable 
           </TreeItem>
         ))}
       </TreeItem>
-    </TurnReportTree>
+    </TurnReportDisplay>
     
     {/* Right Panel: Scrollable Details View */}
     <DetailsPanel>
