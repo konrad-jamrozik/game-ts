@@ -1,8 +1,9 @@
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import { Box, Card, CardContent, CardHeader, Chip, Collapse, IconButton, Typography } from '@mui/material'
+import { Box, Card, CardContent, CardHeader, Chip, Collapse, IconButton, Typography, type SxProps } from '@mui/material'
 import * as React from 'react'
 import type { ValueChange } from '../../lib/model/reportModel'
+import theme from '../../styling/theme'
 
 type ValueChangeCardProps = {
   id: string
@@ -27,6 +28,8 @@ export function ValueChangeCard({
   function handleExpandClick(event: React.SyntheticEvent): void {
     onChange(event, !expanded)
   }
+
+  const nestedCardContentSx: SxProps = { backgroundColor: theme.palette.background.nestedCardContent }
 
   return (
     <Card>
@@ -56,7 +59,7 @@ export function ValueChangeCard({
         slotProps={{ title: { variant: 'h6' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>
+        <CardContent sx={nestedCardContentSx}>
           <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
             Breakdown:
           </Typography>

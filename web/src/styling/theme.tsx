@@ -14,6 +14,7 @@ declare module '@mui/material/styles' {
   interface TypeBackground {
     cardHeader: string
     cardContent: string
+    nestedCardContent: string
     leadCardHeader: string
     leadCardContent: string
     missionCardHeader: string
@@ -38,8 +39,9 @@ const colorSystemOptions: ColorSystemOptions = {
     background: {
       default: 'hsl(0,0%,12.9%)',
       paper: 'hsl(0, 0%, 16%)',
-      cardContent: 'hsl(0, 0.00%, 25.10%)',
       cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
+      cardContent: 'hsl(0, 0.00%, 25.10%)',
+      nestedCardContent: 'hsl(0, 0.00%, 22.10%)',
       leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
       leadCardContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
       missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
