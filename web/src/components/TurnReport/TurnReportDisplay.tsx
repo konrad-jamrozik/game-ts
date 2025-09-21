@@ -59,7 +59,7 @@ export function TurnReportDisplay(): React.ReactElement {
             display: 'grid',
             gridTemplateColumns: '1fr 1fr',
             gridTemplateRows: '1fr',
-            gap: 2, // This adds spacing between grid items (equivalent to 16px)
+            gap: 2, // This adds spacing between grid items (2 is equivalent to 16px)
             // Thanks to this collapsed cards won't expand with empty space below them
             // when a sibling card on the same row is expanded.
             alignItems: 'start',

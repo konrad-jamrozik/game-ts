@@ -40,11 +40,11 @@ export function ValueChangeCard({
   const nestedCardContentSx: SxProps = { backgroundColor: theme.palette.background.nestedCardContent }
 
   const columns: GridColDef[] = [
-    { field: 'label', headerName: 'Item', flex: 1, minWidth: 150 },
+    { field: 'label', headerName: 'Item', flex: 1.3, headerAlign: 'right', align: 'right' },
     {
       field: 'value',
       headerName: 'Amount',
-      width: 100,
+      flex: 1,
       renderCell: (params): React.ReactNode => {
         const value = typeof params.value === 'number' ? params.value : 0
         const color = value > 0 ? 'success' : value < 0 ? 'error' : 'default'
