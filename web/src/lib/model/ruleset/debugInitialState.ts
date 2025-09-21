@@ -180,7 +180,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
 export function makeDebugInitialOverrides(): Partial<GameState> {
   const stateBase: Partial<GameState> = {
     agents: [],
-    money: 100,
+    money: 1000,
     intel: 500,
     funding: 20,
     leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
