@@ -70,7 +70,7 @@ export function TurnReportDisplay(): React.ReactElement {
             breakdownRows={formatPanicBreakdown(report.panic.breakdown)}
             expanded={expandedCards.has('panic')}
             onChange={handleCardChange('panic')}
-            reverseColors={true}
+            reverseMainColors={true}
             showPercentage={true}
             percentageOnly={true}
           />
@@ -78,12 +78,12 @@ export function TurnReportDisplay(): React.ReactElement {
           {redDawnFaction && (
             <ValueChangeCard
               id="red-dawn-threat"
-              title={`${redDawnFaction.factionName} Threat Level`}
+              title="RD Threat Lv."
               valueChange={redDawnFaction.threatLevel}
               breakdownRows={formatFactionDetails(redDawnFaction.details)}
               expanded={expandedCards.has('red-dawn-threat')}
               onChange={handleCardChange('red-dawn-threat')}
-              reverseColors={true}
+              reverseMainColors={true}
               showPercentage={true}
               percentageOnly={true}
             />
@@ -146,6 +146,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
         id: `faction-${faction.factionId}`,
         label: `${faction.factionName} Contribution`,
         value: faction.contribution,
+        reverseColor: true, // Panic increase is bad
       })
     }
   })
@@ -156,7 +157,8 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
       rows.push({
         id: `mission-${mission.missionSiteId}`,
         label: `${shortenMissionTitle(mission.missionTitle)} Reduction`,
-        value: -mission.reduction,
+        value: mission.reduction,
+        reverseColor: false, // Panic reduction is good (default)
       })
     }
   })
@@ -176,6 +178,7 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
       id: 'baseThreatIncrease',
       label: 'Base Threat Increase',
       value: details.baseThreatIncrease,
+      reverseColor: true, // Threat increase is bad
     })
   }
 
@@ -186,6 +189,7 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
         id: `mission-threat-${impact.missionSiteId}`,
         label: `${shortenMissionTitle(impact.missionTitle)} Threat Reduction`,
         value: impact.threatReduction,
+        reverseColor: false, // Threat reduction is good (default)
       })
     }
     if (impact.suppressionAdded !== undefined && impact.suppressionAdded !== 0) {
@@ -193,7 +197,7 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
         id: `mission-suppression-${impact.missionSiteId}`,
         label: `${shortenMissionTitle(impact.missionTitle)} Suppression`,
         value: impact.suppressionAdded,
-        isSuppressionType: true,
+        reverseColor: false, // Suppression increase is good (default)
       })
     }
   })
@@ -203,8 +207,8 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
     rows.push({
       id: 'suppressionDecay',
       label: 'Suppression Decay',
-      value: -details.suppressionDecay,
-      isSuppressionType: true,
+      value: details.suppressionDecay,
+      reverseColor: true, // Suppression decay is bad
     })
   }
 

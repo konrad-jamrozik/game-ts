@@ -19,8 +19,8 @@ export type BreakdownRow = {
   id: string
   label: string
   value: number
-  /** Special flag to mark suppression-related items that should use normal color semantics */
-  isSuppressionType?: boolean
+  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
+  reverseColor?: boolean
 }
 
 type ValueChangeCardProps = {
@@ -30,12 +30,12 @@ type ValueChangeCardProps = {
   breakdownRows: readonly BreakdownRow[]
   expanded: boolean
   onChange: (event: React.SyntheticEvent, isExpanded: boolean) => void
-  /** Reverse color semantics: increases are bad (red), decreases are good (green) */
-  reverseColors?: boolean
   /** Show percentage change instead of absolute values */
   showPercentage?: boolean
   /** When showPercentage is true, show only percentage values (hide integer values) */
   percentageOnly?: boolean
+  /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
+  reverseMainColors?: boolean
 }
 
 /**
@@ -48,9 +48,9 @@ export function ValueChangeCard({
   breakdownRows,
   expanded,
   onChange,
-  reverseColors = false,
   showPercentage = false,
   percentageOnly = false,
+  reverseMainColors = false,
 }: ValueChangeCardProps): React.ReactElement {
   function handleExpandClick(event: React.SyntheticEvent): void {
     onChange(event, !expanded)
@@ -68,8 +68,8 @@ export function ValueChangeCard({
         const value = typeof params.value === 'number' ? params.value : 0
         const row = isBreakdownRow(params.row) ? params.row : undefined
 
-        // Apply color logic: suppression items use normal colors, others use reverseColors if specified
-        const shouldReverse = reverseColors && !(row?.isSuppressionType ?? false)
+        // Apply color logic based on individual row's reverseColor property
+        const shouldReverse = row?.reverseColor ?? false
         const color: 'success' | 'error' | 'default' =
           value === 0 ? 'default' : shouldReverse ? (value > 0 ? 'error' : 'success') : value > 0 ? 'success' : 'error'
 
@@ -102,8 +102,8 @@ export function ValueChangeCard({
             <Typography variant="h6" component="span">
               {formatValueChange(valueChange, showPercentage, percentageOnly)}
             </Typography>
-            {!percentageOnly && formatDelta(valueChange.delta, reverseColors, showPercentage)}
-            {showPercentage && percentageOnly && formatPercentageDelta(valueChange, reverseColors)}
+            {!percentageOnly && formatDelta(valueChange.delta, reverseMainColors, showPercentage)}
+            {showPercentage && percentageOnly && formatPercentageDelta(valueChange, reverseMainColors)}
           </Box>
         }
         slotProps={{ title: { variant: 'h6' } }}
