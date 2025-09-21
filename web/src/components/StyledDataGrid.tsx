@@ -16,6 +16,7 @@ export function StyledDataGrid({ rows, columns, ...dataGridProps }: StyledDataGr
         columns={columns}
         hideFooter
         disableColumnMenu
+        disableColumnResize
         disableRowSelectionOnClick
         columnHeaderHeight={40}
         rowHeight={30}

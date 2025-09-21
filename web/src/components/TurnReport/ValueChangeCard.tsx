@@ -49,7 +49,7 @@ export function ValueChangeCard({
         const value = typeof params.value === 'number' ? params.value : 0
         const color = value > 0 ? 'success' : value < 0 ? 'error' : 'default'
         const sign = value >= 0 ? '+' : ''
-        return <Chip label={`${sign}${value}`} color={color} sx={{ fontSize: '0.875rem' }} />
+        return <Chip label={`${sign}${value}`} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       },
     },
   ]
@@ -83,15 +83,7 @@ export function ValueChangeCard({
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={nestedCardContentSx}>
-          <StyledDataGrid
-            rows={breakdownRows}
-            columns={columns}
-            sx={{
-              width: '100%',
-              maxWidth: '100%',
-              overflow: 'hidden',
-            }}
-          />
+          <StyledDataGrid rows={breakdownRows} columns={columns} />
         </CardContent>
       </Collapse>
     </Card>

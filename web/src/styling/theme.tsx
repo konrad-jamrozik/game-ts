@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { red } from '@mui/material/colors'
 import {
   createTheme,
   type ColorSystemOptions,
@@ -27,13 +26,15 @@ declare module '@mui/material/styles' {
   }
 }
 
+const defaultTheme = createTheme()
+
 const colorSystemOptions: ColorSystemOptions = {
   palette: {
     primary: {
-      main: '#556cd6',
+      main: defaultTheme.palette.primary.dark,
     },
     error: {
-      main: red.A400,
+      main: defaultTheme.palette.error.dark,
     },
     // https://colors.artyclick.com/color-shades-finder/?color=#404040
     background: {

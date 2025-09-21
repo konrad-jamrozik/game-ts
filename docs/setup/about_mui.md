@@ -222,6 +222,11 @@ Ultimately I have this problem because in `theme.tsx` I overrode `background: { 
 
 See OneNote `Color tools and palettes`.
 
+MUI color utils:
+
+- https://github.com/mui/material-ui/blob/master/packages/mui-material/src/styles/index.d.ts#L52-L67
+  - Linked from https://mui.com/material-ui/customization/palette/
+
 # Padding of last child
 
 ``` typescript
@@ -239,6 +244,8 @@ From Google AI when searching for `MUI accordion ::before`:
 > that creates the thin line or divider that appears above each Accordion element. This line is part of the default
 > styling for the MuiAccordion-root class. To modify or remove this line, you can target the ::before pseudo-element
 > within the MuiAccordion-root class using CSS or styled-components.
+
+But better yet: use `<Card>` with `<Collapse>` instead of `<Accordion>`.
 
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
