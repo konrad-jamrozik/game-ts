@@ -48,9 +48,9 @@ export function ValueChangeCard({
         title={
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
             <Typography variant="h6" component="span">
-              {title}
+              {title}:
             </Typography>
-            <Typography variant="body1" component="span">
+            <Typography variant="h6" component="span">
               {formatValueChange(valueChange)}
             </Typography>
             {formatDelta(valueChange.delta)}
@@ -74,8 +74,7 @@ export function ValueChangeCard({
  * Format a ValueChange as "previous → current (±delta)"
  */
 function formatValueChange(change: ValueChange): string {
-  const deltaSign = change.delta >= 0 ? '+' : ''
-  return `${change.previous} → ${change.current} (${deltaSign}${change.delta})`
+  return `${change.previous} → ${change.current}`
 }
 
 /**
@@ -84,5 +83,5 @@ function formatValueChange(change: ValueChange): string {
 function formatDelta(delta: number): React.ReactNode {
   const color = delta > 0 ? 'success' : delta < 0 ? 'error' : 'default'
   const sign = delta >= 0 ? '+' : ''
-  return <Chip label={`${sign}${delta}`} color={color} size="small" sx={{ fontSize: '0.75rem' }} />
+  return <Chip label={`${sign}${delta}`} color={color} sx={{ fontSize: '1rem' }} />
 }
