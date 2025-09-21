@@ -238,7 +238,7 @@ type EnemyMissionReport = {
 - ✅ Make TurnAdvancement events clickable to open turn report modal
 - ✅ Integrate TurnReportModal with event log interactions
 
-### Milestone 2: Display Factions Stats
+### ✅ Milestone 2: Display Factions Stats
 
 **Objective**: Implement panic and faction tracking
 
@@ -251,11 +251,18 @@ type EnemyMissionReport = {
 - ✅ Track mission impacts on factions
 - ✅ Include suppression decay calculations
 
-#### Phase 2.2: UI Component
+#### ✅ Phase 2.2: UI Component
 
-- **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
-- Add ValueChangeCard for PanicReport in column 1, row 2
-- Add ValueChangeCard for FactionReport for faction-red-dawn in column 2, row 2
+- ✅ **File**: `web/src/components/TurnReport/TurnReportDisplay.tsx`
+- ✅ Add ValueChangeCard for PanicReport in column 1, row 2
+- ✅ Add ValueChangeCard for FactionReport for faction-red-dawn in column 2, row 2
+- Reverse colors (red/green) in ValueChangeCard for Panic
+- Shorten mission titles in ValueChangeCard for Panic
+- Display change in percentage in ValueChangeCard for Panic
+- Reverse colors (red/green) in ValueChangeCard for Red Dawn, except suppression
+- Shorten mission titles in ValueChangeCard for Red Dawn
+- Display change in percentage in ValueChangeCard for Red Dawn
+- Make TurnReportDisplay row heights independent of each other
 
 ### Milestone 3: Display Basic Mission Site Stats
 

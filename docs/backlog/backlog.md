@@ -3,6 +3,12 @@
 KJA backlog:
 
 - Execute the `turn_report_implementation_plan.md`
+  - Will also need to add "Agents" to the report, that will include info like:
+  - Agents finished recovery
+  - Agents wounded
+  - Agents terminated
+  - Agents training gains
+  - Agents finished transit
 - Execute the `misc_implementation_plan.md`
 - Address all outstanding TODOs: search for `KJA` in the codebase
 
