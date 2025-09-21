@@ -229,6 +229,17 @@ See OneNote `Color tools and palettes`.
 <CardContent sx={{ padding: 1, margin: 0, '&:last-child': { paddingBottom: 1 } }}>
 ```
 
+# Remove the thin 1px ::before line before accordion elements
+
+https://stackoverflow.com/questions/63488140/how-can-i-remove-line-above-the-accordion-of-material-ui
+
+From Google AI when searching for `MUI accordion ::before`:
+
+> The ::before pseudo-element in the context of a Material-UI (MUI) Accordion component typically refers to the styling
+> that creates the thin line or divider that appears above each Accordion element. This line is part of the default
+> styling for the MuiAccordion-root class. To modify or remove this line, you can target the ::before pseudo-element
+> within the MuiAccordion-root class using CSS or styled-components.
+
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector

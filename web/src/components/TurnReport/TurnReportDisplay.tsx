@@ -68,26 +68,31 @@ export function TurnReportDisplay(): React.ReactElement {
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true}>
       {report && (
-        <Box sx={{ display: 'flex', minHeight: 400, minWidth: 600, bgcolor: 'background.paper', borderRadius: 1 }}>
-          <Box sx={{ flex: 1 }}>
-            <ValueChangeAccordion
-              id="money"
-              title="Money"
-              valueChange={report.assets.money}
-              breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
-              expanded={expandedAccordion === 'money'}
-              onChange={handleAccordionChange('money')}
-            />
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: '1fr 1fr',
+            gridTemplateRows: '1fr',
+            gap: 2, // This adds spacing between grid items (equivalent to 16px)
+          }}
+        >
+          <ValueChangeAccordion
+            id="money"
+            title="Money"
+            valueChange={report.assets.money}
+            breakdownContent={formatMoneyBreakdown(report.assets.moneyDetails)}
+            expanded={expandedAccordion === 'money'}
+            onChange={handleAccordionChange('money')}
+          />
 
-            <ValueChangeAccordion
-              id="intel"
-              title="Intel"
-              valueChange={report.assets.intel}
-              breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
-              expanded={expandedAccordion === 'intel'}
-              onChange={handleAccordionChange('intel')}
-            />
-          </Box>
+          <ValueChangeAccordion
+            id="intel"
+            title="Intel"
+            valueChange={report.assets.intel}
+            breakdownContent={formatIntelBreakdown(report.assets.intelDetails)}
+            expanded={expandedAccordion === 'intel'}
+            onChange={handleAccordionChange('intel')}
+          />
         </Box>
       )}
     </ExpandableCard>
