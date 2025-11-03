@@ -22,42 +22,46 @@ import {
   updateRecoveringAgents,
 } from './updateAgents'
 
+/**
+ * This function is documented by the about_turn_advancement.md document.
+ */
 export default function evaluateTurn(state: GameState): TurnReport {
   validateGameStateInvariants(state)
 
+  // The step and their numbers are taken from the documented describing this function.
+
+  // 1. Update turn and actions counter
+
   const timestamp = Date.now()
   const turn = state.turn + 1
-
   state.turn = turn
   state.actionsCount = 0
 
-  // Calculate agent upkeep at the start of the turn, before any agents can be terminated
+  // 2. Compute agent upkeep
   const agentUpkeep = agsV(state.agents).agentUpkeep()
 
-  // Follow the order specified in about_turn_advancement.md:
-
-  // 1. Update all agents in Available state
+  // 3. Update all agents in Available state
   updateAvailableAgents(state)
 
-  // 2. Update all agents in Recovering state
+  // 4. Update all agents in Recovering state
   updateRecoveringAgents(state)
 
-  // 3. Update agents on Contracting assignment
+  // 5. Update all agents on Contracting assignment
   const contractingResults = updateContractingAgents(state)
 
-  // 4. Update agents on Espionage assignment
+  // 6. Update all agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
 
-  // 5. Update all agents in InTransit state
+  // 7. Update all agents in InTransit state
   updateInTransitAgents(state)
 
-  // 6. Update active non-deployed mission sites
+  // 8. Update active non-deployed mission sites
   updateActiveMissionSites(state)
 
-  // 7. Evaluate deployed mission sites (and agents deployed to them)
+  // 9. Evaluate deployed mission sites (and agents deployed to them)
   const missionRewards = evaluateDeployedMissionSites(state)
 
-  // 8. Update player assets based on the results of the previous steps
+  // 10. Update player assets
   const assetsReport = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
@@ -65,10 +69,10 @@ export default function evaluateTurn(state: GameState): TurnReport {
     missionRewards,
   })
 
-  // 9. Update panic based on the results of the previous steps
+  // 11. Update panic
   const panicReport = updatePanic(state, missionRewards)
 
-  // 10. Update factions based on the results of the previous steps
+  // 12. Update factions
   const factionsReport = updateFactions(state, missionRewards)
 
   validateGameStateInvariants(state)
