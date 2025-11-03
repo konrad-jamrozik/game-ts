@@ -2,7 +2,7 @@
 
 When a turn is advanced, a series of updates of game state are performed, resulting in a a new game state.
 
-This document describes implementation of `evaluateTurn` function.
+This document describes implementation of `evaluateTurn` function, which is wrapped by the `advanceTurn` reducer.
 
 On a high level, the update logic consists of following steps:
 
