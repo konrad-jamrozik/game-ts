@@ -15,6 +15,7 @@ export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
 
+  // KJA panic must be documented in a better place. I need a document that explains panic and other faction stuff: about_factions.md
   // Calculate panic as percentage from accumulated panic value
   // 100% panic = 10,000, so divide by 100 to get percentage with 2 decimal places
   const panicPercentage = fmtPctDiv100Dec2(panic)
@@ -35,6 +36,7 @@ export function SituationReportCard(): React.JSX.Element {
   // Only calculate faction-specific data if Red Dawn is discovered
   const redDawnRows = isRedDawnDiscovered
     ? (() => {
+        // KJA .threatLevel - .suppression is duplicated with evaluateTurn.ts updatePanic function.
         const panicIncrease = Math.max(0, redDawnFaction.threatLevel - redDawnFaction.suppression)
         return [
           { id: 1, metric: 'Threat level', value: fmtPctDiv100Dec2(redDawnFaction.threatLevel) },

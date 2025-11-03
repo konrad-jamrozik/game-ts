@@ -2,6 +2,11 @@ import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
 import { div } from './mathUtils'
 
+/**
+ * @param value - The value to format
+ * @returns The value, divided by 100, formatted as percentage with 2 decimal places. 
+   For example, 12345 will be formatted as "123.45%"
+ */
 export function fmtPctDiv100Dec2(value: number): string {
   return fmtPctDiv100(value, 2)
 }
