@@ -15,9 +15,9 @@ On a high level, the update logic consists of following steps:
 7. Update all agents in `InTransit` state.
 8. Update all active non-deployed mission sites.
 9. Evaluate all deployed mission sites, thus also updating all agents deployed to them.
-10. Update player assets based on the results of the previous steps.
-11. Update panic, also based on the results of the previous steps.
-12. Update factions, also based on the results of the previous steps.
+10. Update player assets based on the results of previous steps.
+11. Update panic, based on the results of previous steps.
+12. Update factions, based on the results of previous steps.
 
 Below each step is described in detail.
 
@@ -65,6 +65,8 @@ Here we describe the implementation order, while full details are available in [
 
 For each deployed mission site:
 
+// KJA I think there is no more objective fulfillment roll.
+
 1. Roll for objective fulfillment for each objective in appropriate order.
 2. Roll for hit points lost for each agent deployed to the mission site.
 3. Terminate agents that lost all their hit points.
@@ -77,7 +79,7 @@ For each deployed mission site:
 
 # 10. Update player assets
 
-Update player assets based on the results of the previous steps. This includes:
+Update player assets based on the results of previous steps. This includes:
 
 - Adding money earned by agents on `Contracting` assignment.
 - Adding intel gathered by agents on `Espionage` assignment.
@@ -92,7 +94,7 @@ Then apply panic reduction reward from any `Successful` mission sites.
 
 # 12. Update factions
 
-Update factions, also based on the results of the previous steps. This includes, for each faction:
+Update factions, based on the results of previous steps. This includes, for each faction:
 
 - Increasing faction `threat level` by `threatIncrease` adjusted by `suppression`
 - Then decaying the `suppression`
