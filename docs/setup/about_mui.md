@@ -18,6 +18,10 @@ npm install @mui/x-data-grid
 # MUI X Charts
 # https://mui.com/x/react-charts/quickstart/#installation
 npm install @mui/x-charts
+
+# MUI TreeView
+# https://mui.com/x/react-tree-view/quickstart/
+npm install @mui/x-tree-view
 ```
 
 ## Setup MUI MCP server

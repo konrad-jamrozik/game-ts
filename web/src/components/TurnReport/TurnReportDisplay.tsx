@@ -6,6 +6,7 @@ import { useAppSelector } from '../../app/hooks'
 import type { IntelBreakdown, MoneyBreakdown, PanicBreakdown, FactionDetails } from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
+import ExampleTreeView from './ExampleTreeView'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -85,6 +86,8 @@ export function TurnReportDisplay(): React.ReactElement {
               </Box>
             </CardContent>
           </Card>
+
+          <ExampleTreeView />
 
           <ValueChangeCard
             id="intel"
