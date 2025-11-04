@@ -10,6 +10,7 @@ import { store } from '../../src/app/store'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
+import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 
 describe(App, () => {
   beforeEach(() => {
@@ -23,7 +24,8 @@ describe(App, () => {
     expect.hasAssertions()
 
     // Set up debug initial state
-    store.dispatch(reset({ debug: true }))
+    const debugState = makeInitialState({ debug: true })
+    store.dispatch(reset({ customState: { ...debugState, money: 100 } }))
     store.dispatch(clearEvents()) // Clear the reset event
 
     render(
