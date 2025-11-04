@@ -75,19 +75,21 @@ export function TurnReportDisplay(): React.ReactElement {
             percentageOnly={true}
           />
 
-          {redDawnFaction && (
-            <ValueChangeCard
-              id="red-dawn-threat"
-              title="RD Threat Lv."
-              valueChange={redDawnFaction.threatLevel}
-              breakdownRows={formatFactionDetails(redDawnFaction.details)}
-              expanded={expandedCards.has('red-dawn-threat')}
-              onChange={handleCardChange('red-dawn-threat')}
-              reverseMainColors={true}
-              showPercentage={true}
-              percentageOnly={true}
-            />
-          )}
+          <ExpandableCard title="Faction threat levels" defaultExpanded={true}>
+            {redDawnFaction && (
+              <ValueChangeCard
+                id="red-dawn-threat"
+                title="Red Dawn"
+                valueChange={redDawnFaction.threatLevel}
+                breakdownRows={formatFactionDetails(redDawnFaction.details)}
+                expanded={expandedCards.has('red-dawn-threat')}
+                onChange={handleCardChange('red-dawn-threat')}
+                reverseMainColors={true}
+                showPercentage={true}
+                percentageOnly={true}
+              />
+            )}
+          </ExpandableCard>
         </Box>
       )}
     </ExpandableCard>
