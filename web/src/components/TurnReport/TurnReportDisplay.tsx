@@ -1,5 +1,7 @@
-import { Box } from '@mui/material'
+import { Box, Card, CardContent, CardHeader, Chip, Typography } from '@mui/material'
 import * as React from 'react'
+import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
+import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useAppSelector } from '../../app/hooks'
 import type { IntelBreakdown, MoneyBreakdown, PanicBreakdown, FactionDetails } from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
@@ -31,6 +33,9 @@ export function TurnReportDisplay(): React.ReactElement {
   // Find Red Dawn faction for display
   const redDawnFaction = report?.factions.find((faction) => faction.factionId === 'faction-red-dawn')
 
+  // Format money breakdown for tree view
+  const moneyTreeData = report ? formatMoneyBreakdownAsTree(report.assets.money, report.assets.moneyDetails) : []
+
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true}>
       {report && (
@@ -53,6 +58,33 @@ export function TurnReportDisplay(): React.ReactElement {
             expanded={expandedCards.has('money')}
             onChange={handleCardChange('money')}
           />
+
+          {/* MUI Tree View version of Money breakdown */}
+          <Card>
+            <CardHeader
+              title={
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <Typography variant="h6" component="span">
+                    Money (Tree View):
+                  </Typography>
+                  <Typography variant="h6" component="span">
+                    {report.assets.money.previous} → {report.assets.money.current}
+                  </Typography>
+                  <Chip
+                    label={`${report.assets.money.delta >= 0 ? '+' : ''}${report.assets.money.delta}`}
+                    color={report.assets.money.delta >= 0 ? 'success' : 'error'}
+                    sx={{ fontSize: '1rem' }}
+                  />
+                </Box>
+              }
+              slotProps={{ title: { variant: 'h6' } }}
+            />
+            <CardContent>
+              <Box sx={{ minHeight: 220, width: '100%' }}>
+                <RichTreeView items={moneyTreeData} defaultExpandedItems={['money-root']} />
+              </Box>
+            </CardContent>
+          </Card>
 
           <ValueChangeCard
             id="intel"
@@ -215,4 +247,55 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
   }
 
   return rows
+}
+
+// KJA formatMoneyBreakdownAsTree is experimental
+/**
+ * Format money breakdown as tree structure for MUI Tree View
+ */
+function formatMoneyBreakdownAsTree(
+  valueChange: { previous: number; current: number; delta: number },
+  breakdown: MoneyBreakdown,
+): TreeViewBaseItem[] {
+  const children: TreeViewBaseItem[] = []
+
+  // Add breakdown items as children with their values
+  if (breakdown.agentUpkeep !== 0) {
+    children.push({
+      id: 'money-agent-upkeep',
+      label: `Agent Upkeep: ${breakdown.agentUpkeep >= 0 ? '+' : ''}${breakdown.agentUpkeep}`,
+    })
+  }
+  if (breakdown.contractingEarnings !== 0) {
+    children.push({
+      id: 'money-contracting',
+      label: `Contracting Earnings: ${breakdown.contractingEarnings >= 0 ? '+' : ''}${breakdown.contractingEarnings}`,
+    })
+  }
+  if (breakdown.fundingIncome !== 0) {
+    children.push({
+      id: 'money-funding',
+      label: `Funding Income: ${breakdown.fundingIncome >= 0 ? '+' : ''}${breakdown.fundingIncome}`,
+    })
+  }
+  if (breakdown.hireCosts !== 0) {
+    children.push({
+      id: 'money-hire',
+      label: `Hire Costs: ${breakdown.hireCosts >= 0 ? '+' : ''}${breakdown.hireCosts}`,
+    })
+  }
+  if (breakdown.missionRewards !== 0) {
+    children.push({
+      id: 'money-mission',
+      label: `Mission Rewards: ${breakdown.missionRewards >= 0 ? '+' : ''}${breakdown.missionRewards}`,
+    })
+  }
+
+  return [
+    {
+      id: 'money-root',
+      label: `Total Change: ${valueChange.delta >= 0 ? '+' : ''}${valueChange.delta}`,
+      children,
+    },
+  ]
 }
