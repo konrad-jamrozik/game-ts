@@ -197,12 +197,12 @@ use:
   sx={{
     flexWrap: 'wrap',
     '& > *': {
-      flex: '0 0 calc(50% - 8px)', // 50% width minus half the spacing
+      flex: '0 0 calc(50%)', // 50% width
     },
   }}
 >
   {cardEntries.map((entry) => (
-    <Box key={`${entry.leadId}-${entry.displayMode}`}>
+    <Box key={`${entry.leadId}-${entry.displayMode}`} sx={{ padding: 1 }}>
       <LeadCard leadId={entry.leadId} displayMode={entry.displayMode} />
     </Box>
   ))}
