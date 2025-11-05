@@ -59,6 +59,18 @@ export function TurnReportDisplay(): React.ReactElement {
             alignItems: 'start',
           }}
         >
+          {/*
+          In TurnDisplayReport the ExpandableCard with RichTreeView uses basic formatting. You must implement
+          formatting similar to the one used by renderCell in ValueChangeCard. That is:
+          each entry in the tree view will accepts params like showPercentage, percentageOnly and reverseMainColors,
+          and display appropriate Chip in the right color, similarly as the ValueChangeCard for money does it right now.
+          If you need help to figure out how to modify the RichTreeView, refer to ExampleTreeView. You will
+          need to introduce your own component, name it TreeViewWithChips.
+          */}
+          <ExpandableCard title="Assets" defaultExpanded={true}>
+            <RichTreeView items={moneyTreeData} defaultExpandedItems={['money-root']} />
+          </ExpandableCard>
+
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
           <ValueChangeCard
             id="money"
@@ -69,34 +81,9 @@ export function TurnReportDisplay(): React.ReactElement {
             onChange={handleCardChange('money')}
           />
 
-          {/* MUI Tree View version of Money breakdown */}
-          <Card>
-            <CardHeader
-              title={
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-                  <Typography variant="h6" component="span">
-                    Money (Tree View):
-                  </Typography>
-                  <Typography variant="h6" component="span">
-                    {report.assets.moneyChange.previous} → {report.assets.moneyChange.current}
-                  </Typography>
-                  <Chip
-                    label={`${report.assets.moneyChange.delta >= 0 ? '+' : ''}${report.assets.moneyChange.delta}`}
-                    color={report.assets.moneyChange.delta >= 0 ? 'success' : 'error'}
-                    sx={{ fontSize: '1rem' }}
-                  />
-                </Box>
-              }
-              slotProps={{ title: { variant: 'h6' } }}
-            />
-            <CardContent>
-              <Box sx={{ minHeight: 220, width: '100%' }}>
-                <RichTreeView items={moneyTreeData} defaultExpandedItems={['money-root']} />
-              </Box>
-            </CardContent>
-          </Card>
-
-          <ExampleTreeView />
+          <ExpandableCard title="Example Tree View" defaultExpanded={true}>
+            <ExampleTreeView />
+          </ExpandableCard>
 
           <ValueChangeCard
             id="intel"
