@@ -16,6 +16,16 @@ type TreeItemWithLabel = {
   secondaryLabel?: string
 }
 
+type CustomLabelProps = {
+  children: string
+  className: string
+  secondaryLabel: string
+}
+
+type CustomTreeItemProps = TreeItemProps & {
+  ref?: React.Ref<HTMLLIElement>
+}
+
 const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
   {
     id: 'grid',
@@ -68,27 +78,12 @@ const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
   },
 ]
 
-type CustomLabelProps = {
-  children: string
-  className: string
-  secondaryLabel: string
-}
-
-function CustomLabel({ children, className, secondaryLabel }: CustomLabelProps): React.ReactElement {
+export default function ExampleTreeView(): React.ReactElement {
   return (
-    <div className={className}>
-      <Typography>{children}</Typography>
-      {secondaryLabel && (
-        <Typography variant="caption" color="secondary">
-          {secondaryLabel}
-        </Typography>
-      )}
-    </div>
+    <Box sx={{ minHeight: 200, minWidth: 350 }}>
+      <RichTreeView defaultExpandedItems={['pickers']} items={MUI_X_PRODUCTS} slots={{ item: CustomTreeItem }} />
+    </Box>
   )
-}
-
-type CustomTreeItemProps = TreeItemProps & {
-  ref?: React.Ref<HTMLLIElement>
 }
 
 function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElement {
@@ -110,10 +105,15 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
   )
 }
 
-export default function ExampleTreeView(): React.ReactElement {
+function CustomLabel({ children, className, secondaryLabel }: CustomLabelProps): React.ReactElement {
   return (
-    <Box sx={{ minHeight: 200, minWidth: 350 }}>
-      <RichTreeView defaultExpandedItems={['pickers']} items={MUI_X_PRODUCTS} slots={{ item: CustomTreeItem }} />
-    </Box>
+    <div className={className}>
+      <Typography>{children}</Typography>
+      {secondaryLabel && (
+        <Typography variant="caption" color="secondary">
+          {secondaryLabel}
+        </Typography>
+      )}
+    </div>
   )
 }
