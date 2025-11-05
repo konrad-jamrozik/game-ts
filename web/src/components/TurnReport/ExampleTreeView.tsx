@@ -16,7 +16,7 @@ type TreeItemWithLabel = {
   secondaryLabel?: string
 }
 
-export const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
+const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
   {
     id: 'grid',
     label: 'Data Grid',
@@ -86,7 +86,12 @@ function CustomLabel({ children, className, secondaryLabel }: CustomLabelProps):
     </div>
   )
 }
-function CustomTreeItem(props: TreeItemProps, ref: React.Ref<HTMLLIElement>): React.ReactElement {
+
+type CustomTreeItemProps = TreeItemProps & {
+  ref?: React.Ref<HTMLLIElement>
+}
+
+function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!
 
