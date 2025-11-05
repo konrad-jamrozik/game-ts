@@ -16,14 +16,14 @@ type TreeItemWithLabel = {
   secondaryLabel?: string
 }
 
+type CustomTreeItemProps = TreeItemProps & {
+  ref?: React.Ref<HTMLLIElement>
+}
+
 type CustomLabelProps = {
   children: string
   className: string
   secondaryLabel: string
-}
-
-type CustomTreeItemProps = TreeItemProps & {
-  ref?: React.Ref<HTMLLIElement>
 }
 
 const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
