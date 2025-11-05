@@ -1,6 +1,5 @@
-import { Box, Card, CardContent, CardHeader, Chip, Typography } from '@mui/material'
+import { Box } from '@mui/material'
 import * as React from 'react'
-import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useAppSelector } from '../../app/hooks'
 import type {
@@ -13,6 +12,7 @@ import type {
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
+import { TreeViewWithChips, type TreeItemWithValue } from './TreeViewWithChips'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -59,16 +59,8 @@ export function TurnReportDisplay(): React.ReactElement {
             alignItems: 'start',
           }}
         >
-          {/*
-          In TurnDisplayReport the ExpandableCard with RichTreeView uses basic formatting. You must implement
-          formatting similar to the one used by renderCell in ValueChangeCard. That is:
-          each entry in the tree view will accepts params like showPercentage, percentageOnly and reverseMainColors,
-          and display appropriate Chip in the right color, similarly as the ValueChangeCard for money does it right now.
-          If you need help to figure out how to modify the RichTreeView, refer to ExampleTreeView. You will
-          need to introduce your own component, name it TreeViewWithChips.
-          */}
           <ExpandableCard title="Assets" defaultExpanded={true}>
-            <RichTreeView items={moneyTreeData} defaultExpandedItems={['money-root']} />
+            <TreeViewWithChips items={moneyTreeData} defaultExpandedItems={['money-summary']} />
           </ExpandableCard>
 
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
@@ -249,18 +241,29 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
 }
 
 /**
- * Format money breakdown as tree structure for MUI Tree View
+ * Format money breakdown as tree structure for MUI Tree View with chips
  */
-function formatMoneyBreakdownAsTree(valueChange: ValueChange, breakdown: MoneyBreakdown): TreeViewBaseItem[] {
-  const children: TreeViewBaseItem[] = formatMoneyBreakdown(breakdown).map((row) => ({
-    id: row.id,
-    label: `${row.label}: ${row.value > 0 ? '+' : ''}${row.value}`,
-  }))
+function formatMoneyBreakdownAsTree(
+  valueChange: ValueChange,
+  breakdown: MoneyBreakdown,
+): TreeViewBaseItem<TreeItemWithValue>[] {
+  const children: TreeViewBaseItem<TreeItemWithValue>[] = formatMoneyBreakdown(breakdown).map((row) => {
+    const item: TreeItemWithValue = {
+      id: row.id,
+      label: row.label,
+      value: row.value,
+    }
+    if (row.reverseColor !== undefined) {
+      item.reverseColor = row.reverseColor
+    }
+    return item
+  })
 
   return [
     {
       id: 'money-summary',
-      label: `Money: ${valueChange.previous} → ${valueChange.current} (${valueChange.delta > 0 ? '+' : ''}${valueChange.delta})`,
+      label: `Money: ${valueChange.previous} → ${valueChange.current}`,
+      value: valueChange.delta,
       children,
     },
   ]
