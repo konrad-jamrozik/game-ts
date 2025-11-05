@@ -51,6 +51,7 @@ export function TurnReportDisplay(): React.ReactElement {
             alignItems: 'start',
           }}
         >
+          {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
           <ValueChangeCard
             id="money"
             title="Money"
