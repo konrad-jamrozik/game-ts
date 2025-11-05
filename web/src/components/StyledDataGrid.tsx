@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
-import { DataGrid, type GridColDef, type DataGridProps } from '@mui/x-data-grid'
+import { DataGrid, type GridColDef, type DataGridProps, type GridRowModel } from '@mui/x-data-grid'
 
 type StyledDataGridProps = {
-  rows: readonly unknown[]
+  rows: readonly GridRowModel[]
   columns: GridColDef[]
 } & Omit<DataGridProps, 'rows' | 'columns'>
 

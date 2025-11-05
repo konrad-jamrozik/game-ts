@@ -10,10 +10,10 @@ export type BaseReport = {
 }
 
 export type AssetsReport = {
-  money: ValueChange
-  intel: ValueChange
-  moneyDetails: MoneyBreakdown
-  intelDetails: IntelBreakdown
+  moneyChange: ValueChange
+  intelChange: ValueChange
+  moneyBreakdown: MoneyBreakdown
+  intelBreakdown: IntelBreakdown
 }
 
 export type ValueChange = {

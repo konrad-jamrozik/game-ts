@@ -140,16 +140,16 @@ export function ExperimentalTurnReportTree({ report }: ExperimentalTurnReportTre
                 Money
               </Typography>
               <Typography variant="body1" sx={{ mr: 1 }}>
-                {formatValueChange(assets.money)}
+                {formatValueChange(assets.moneyChange)}
               </Typography>
-              {formatDelta(assets.money.delta)}
+              {formatDelta(assets.moneyChange.delta)}
             </Box>
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Breakdown:
             </Typography>
-            {experimentalFormatMoneyBreakdown(assets.moneyDetails)}
+            {experimentalFormatMoneyBreakdown(assets.moneyBreakdown)}
           </AccordionDetails>
         </Accordion>
 
@@ -160,16 +160,16 @@ export function ExperimentalTurnReportTree({ report }: ExperimentalTurnReportTre
                 Intel
               </Typography>
               <Typography variant="body1" sx={{ mr: 1 }}>
-                {formatValueChange(assets.intel)}
+                {formatValueChange(assets.intelChange)}
               </Typography>
-              {formatDelta(assets.intel.delta)}
+              {formatDelta(assets.intelChange.delta)}
             </Box>
           </AccordionSummary>
           <AccordionDetails>
             <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
               Breakdown:
             </Typography>
-            {experimentalFormatIntelBreakdown(assets.intelDetails)}
+            {experimentalFormatIntelBreakdown(assets.intelBreakdown)}
           </AccordionDetails>
         </Accordion>
       </Box>

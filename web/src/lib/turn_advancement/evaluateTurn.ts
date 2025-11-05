@@ -204,10 +204,10 @@ function updatePlayerAssets(
   }
 
   return {
-    money: moneyChange,
-    intel: intelChange,
-    moneyDetails,
-    intelDetails,
+    moneyChange: moneyChange,
+    intelChange: intelChange,
+    moneyBreakdown: moneyDetails,
+    intelBreakdown: intelDetails,
   }
 }
 

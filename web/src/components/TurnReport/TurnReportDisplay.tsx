@@ -3,7 +3,13 @@ import * as React from 'react'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useAppSelector } from '../../app/hooks'
-import type { IntelBreakdown, MoneyBreakdown, PanicBreakdown, FactionDetails } from '../../lib/model/reportModel'
+import type {
+  IntelBreakdown,
+  MoneyBreakdown,
+  PanicBreakdown,
+  FactionDetails,
+  ValueChange,
+} from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
@@ -35,7 +41,9 @@ export function TurnReportDisplay(): React.ReactElement {
   const redDawnFaction = report?.factions.find((faction) => faction.factionId === 'faction-red-dawn')
 
   // Format money breakdown for tree view
-  const moneyTreeData = report ? formatMoneyBreakdownAsTree(report.assets.money, report.assets.moneyDetails) : []
+  const moneyTreeData = report
+    ? formatMoneyBreakdownAsTree(report.assets.moneyChange, report.assets.moneyBreakdown)
+    : []
 
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true}>
@@ -55,8 +63,8 @@ export function TurnReportDisplay(): React.ReactElement {
           <ValueChangeCard
             id="money"
             title="Money"
-            valueChange={report.assets.money}
-            breakdownRows={formatMoneyBreakdown(report.assets.moneyDetails)}
+            valueChange={report.assets.moneyChange}
+            breakdownRows={formatMoneyBreakdown(report.assets.moneyBreakdown)}
             expanded={expandedCards.has('money')}
             onChange={handleCardChange('money')}
           />
@@ -70,11 +78,11 @@ export function TurnReportDisplay(): React.ReactElement {
                     Money (Tree View):
                   </Typography>
                   <Typography variant="h6" component="span">
-                    {report.assets.money.previous} → {report.assets.money.current}
+                    {report.assets.moneyChange.previous} → {report.assets.moneyChange.current}
                   </Typography>
                   <Chip
-                    label={`${report.assets.money.delta >= 0 ? '+' : ''}${report.assets.money.delta}`}
-                    color={report.assets.money.delta >= 0 ? 'success' : 'error'}
+                    label={`${report.assets.moneyChange.delta >= 0 ? '+' : ''}${report.assets.moneyChange.delta}`}
+                    color={report.assets.moneyChange.delta >= 0 ? 'success' : 'error'}
                     sx={{ fontSize: '1rem' }}
                   />
                 </Box>
@@ -93,8 +101,8 @@ export function TurnReportDisplay(): React.ReactElement {
           <ValueChangeCard
             id="intel"
             title="Intel"
-            valueChange={report.assets.intel}
-            breakdownRows={formatIntelBreakdown(report.assets.intelDetails)}
+            valueChange={report.assets.intelChange}
+            breakdownRows={formatIntelBreakdown(report.assets.intelBreakdown)}
             expanded={expandedCards.has('intel')}
             onChange={handleCardChange('intel')}
           />
@@ -158,7 +166,7 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
     { id: 'fundingIncome', label: 'Funding Income', value: breakdown.fundingIncome },
     { id: 'hireCosts', label: 'Hire Costs', value: breakdown.hireCosts },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
-  ].filter((item) => item.value !== 0)
+  ]
 }
 
 /**
@@ -168,7 +176,7 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): BreakdownRow[] {
   return [
     { id: 'espionageGathered', label: 'Espionage Gathered', value: breakdown.espionageGathered },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
-  ].filter((item) => item.value !== 0)
+  ]
 }
 
 /**
@@ -253,52 +261,19 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
   return rows
 }
 
-// KJA formatMoneyBreakdownAsTree is experimental
 /**
  * Format money breakdown as tree structure for MUI Tree View
  */
-function formatMoneyBreakdownAsTree(
-  valueChange: { previous: number; current: number; delta: number },
-  breakdown: MoneyBreakdown,
-): TreeViewBaseItem[] {
-  const children: TreeViewBaseItem[] = []
-
-  // Add breakdown items as children with their values
-  if (breakdown.agentUpkeep !== 0) {
-    children.push({
-      id: 'money-agent-upkeep',
-      label: `Agent Upkeep: ${breakdown.agentUpkeep >= 0 ? '+' : ''}${breakdown.agentUpkeep}`,
-    })
-  }
-  if (breakdown.contractingEarnings !== 0) {
-    children.push({
-      id: 'money-contracting',
-      label: `Contracting Earnings: ${breakdown.contractingEarnings >= 0 ? '+' : ''}${breakdown.contractingEarnings}`,
-    })
-  }
-  if (breakdown.fundingIncome !== 0) {
-    children.push({
-      id: 'money-funding',
-      label: `Funding Income: ${breakdown.fundingIncome >= 0 ? '+' : ''}${breakdown.fundingIncome}`,
-    })
-  }
-  if (breakdown.hireCosts !== 0) {
-    children.push({
-      id: 'money-hire',
-      label: `Hire Costs: ${breakdown.hireCosts >= 0 ? '+' : ''}${breakdown.hireCosts}`,
-    })
-  }
-  if (breakdown.missionRewards !== 0) {
-    children.push({
-      id: 'money-mission',
-      label: `Mission Rewards: ${breakdown.missionRewards >= 0 ? '+' : ''}${breakdown.missionRewards}`,
-    })
-  }
+function formatMoneyBreakdownAsTree(valueChange: ValueChange, breakdown: MoneyBreakdown): TreeViewBaseItem[] {
+  const children: TreeViewBaseItem[] = formatMoneyBreakdown(breakdown).map((row) => ({
+    id: row.id,
+    label: `${row.label}: ${row.value > 0 ? '+' : ''}${row.value}`,
+  }))
 
   return [
     {
-      id: 'money-root',
-      label: `Total Change: ${valueChange.delta >= 0 ? '+' : ''}${valueChange.delta}`,
+      id: 'money-summary',
+      label: `Money: ${valueChange.previous} → ${valueChange.current} (${valueChange.delta > 0 ? '+' : ''}${valueChange.delta})`,
       children,
     },
   ]
