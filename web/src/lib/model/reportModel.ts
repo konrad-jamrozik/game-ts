@@ -84,6 +84,7 @@ export type FactionReport = {
   details: FactionDetails
 }
 
+// KJA rename to FactionReport; rename current FactionReport to FactionsReport
 export type FactionDetails = {
   baseThreatIncrease: number
   missionImpacts: {

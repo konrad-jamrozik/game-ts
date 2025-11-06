@@ -218,8 +218,31 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
  * Format faction breakdown as tree structure for MUI Tree View with chips
  */
 function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatFactionDetails(faction.details).map(
-    (row) => {
+  // kja this should be part of FactionReport and formatFactionDetails
+  // Calculate panic increase: Math.max(0, threatLevel - suppression)
+  const previousPanicIncrease = Math.max(0, faction.threatLevel.previous - faction.suppression.previous)
+  const currentPanicIncrease = Math.max(0, faction.threatLevel.current - faction.suppression.current)
+  const panicIncreaseDelta = currentPanicIncrease - previousPanicIncrease
+
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+    // Add Panic increase entry
+    {
+      id: `faction-${faction.factionId}-panic-increase`,
+      label: `Panic increase: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
+      value: panicIncreaseDelta,
+      reverseColor: true, // Panic increase is bad
+      showPercentage: true,
+    },
+    // Add Suppression entry
+    {
+      id: `faction-${faction.factionId}-suppression`,
+      label: `Suppression: ${fmtPctDiv100Dec2(faction.suppression.previous)} → ${fmtPctDiv100Dec2(faction.suppression.current)}`,
+      value: faction.suppression.delta,
+      reverseColor: false, // Suppression increase is good (default)
+      showPercentage: true,
+    },
+    // Add breakdown details
+    ...formatFactionDetails(faction.details).map((row) => {
       const item: ValueChangeTreeItemModelProps = {
         id: `faction-${faction.factionId}-${row.id}`,
         label: row.label,
@@ -228,8 +251,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
         showPercentage: true,
       }
       return item
-    },
-  )
+    }),
+  ]
 
   return {
     id: faction.factionId,
