@@ -5,13 +5,13 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
-import type { GridColDef, DataGridProps } from '@mui/x-data-grid'
+import type { GridColDef, DataGridProps, GridRowModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { StyledDataGrid } from './StyledDataGrid'
 
 type DataGridCardProps = {
   title: string
-  rows: readonly unknown[]
+  rows: GridRowModel[]
   columns: GridColDef[]
 } & Omit<DataGridProps, 'rows' | 'columns'>
 
