@@ -14,7 +14,7 @@ import { assertDefined } from '../utils/assert'
 export function evaluateDeployedMissionSite(
   state: GameState,
   missionSite: MissionSite,
-): { rewards: MissionRewards | undefined; agentsWounded: number } {
+): { rewards: MissionRewards | undefined; agentsWounded: number; agentsUnscathed: number } {
   // Get the mission to access enemy units
   const mission = getMissionById(missionSite.missionId)
 
@@ -24,7 +24,7 @@ export function evaluateDeployedMissionSite(
 
   const battleReport = evaluateBattle(deployedAgentsView, missionSite.enemies)
 
-  const agentsWounded = updateAgentsAfterBattle(deployedAgents, battleReport)
+  const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(deployedAgents, battleReport)
 
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
@@ -33,11 +33,18 @@ export function evaluateDeployedMissionSite(
   // Return mission rewards to be applied later, don't apply them immediately
   const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
 
-  return { rewards, agentsWounded }
+  return { rewards, agentsWounded, agentsUnscathed }
 }
 
-function updateAgentsAfterBattle(deployedAgents: Agent[], battleReport: BattleReport): number {
+function updateAgentsAfterBattle(
+  deployedAgents: Agent[],
+  battleReport: BattleReport,
+): {
+  agentsWounded: number
+  agentsUnscathed: number
+} {
   let agentsWounded = 0
+  let agentsUnscathed = 0
   deployedAgents.forEach((agent) => {
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
@@ -47,13 +54,15 @@ function updateAgentsAfterBattle(deployedAgents: Agent[], battleReport: BattleRe
       const wasWounded = updateSurvivingAgent(agent, battleReport)
       if (wasWounded) {
         agentsWounded += 1
+      } else {
+        agentsUnscathed += 1
       }
     } else {
       agent.state = 'Terminated'
       agent.assignment = 'KIA'
     }
   })
-  return agentsWounded
+  return { agentsWounded, agentsUnscathed }
 }
 
 function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean {

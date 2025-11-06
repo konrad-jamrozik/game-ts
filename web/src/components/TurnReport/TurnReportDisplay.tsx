@@ -139,7 +139,7 @@ function formatIntelBreakdownAsTree(
  * Format agents breakdown as tree structure for MUI Tree View with chips
  */
 function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
-  const { total, available, inTransit, recovering, wounded, terminated } = agentsReport
+  const { total, available, inTransit, recovering, wounded, unscathed, terminated } = agentsReport
 
   const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
@@ -165,16 +165,24 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
       reverseColor: true,
     },
     {
+      id: 'agents-unscathed',
+      label: 'Unscathed',
+      value: unscathed.delta,
+      noPlusSign: true,
+    },
+    {
       id: 'agents-wounded',
       label: 'Wounded',
       value: wounded.delta,
       reverseColor: true,
+      noPlusSign: true,
     },
     {
       id: 'agents-terminated',
       label: 'Terminated',
       value: terminated.delta,
       reverseColor: true,
+      noPlusSign: true,
     },
   ]
 

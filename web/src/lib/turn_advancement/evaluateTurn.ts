@@ -66,6 +66,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   const missionResults = evaluateDeployedMissionSites(state)
   const missionRewards = missionResults.rewards
   const agentsWoundedFromMissions = missionResults.agentsWounded
+  const agentsUnscathedFromMissions = missionResults.agentsUnscathed
 
   // 10. Update player assets
   const assetsReportPartial = updatePlayerAssets(state, {
@@ -76,7 +77,12 @@ export default function evaluateTurn(state: GameState): TurnReport {
   })
 
   // 11. Get agents report
-  const agentsReport = getAgentsReport(state, previousAgentCounts, agentsWoundedFromMissions)
+  const agentsReport = getAgentsReport(
+    state,
+    previousAgentCounts,
+    agentsWoundedFromMissions,
+    agentsUnscathedFromMissions,
+  )
 
   // Combine assets and agents reports
   const assetsReport: AssetsReport = {
@@ -148,9 +154,11 @@ function updateActiveMissionSites(state: GameState): void {
 function evaluateDeployedMissionSites(state: GameState): {
   rewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
   agentsWounded: number
+  agentsUnscathed: number
 } {
   const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] = []
   let agentsWounded = 0
+  let agentsUnscathed = 0
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
@@ -165,10 +173,11 @@ function evaluateDeployedMissionSites(state: GameState): {
         })
       }
       agentsWounded += result.agentsWounded
+      agentsUnscathed += result.agentsUnscathed
     }
   }
 
-  return { rewards: missionRewards, agentsWounded }
+  return { rewards: missionRewards, agentsWounded, agentsUnscathed }
 }
 
 /**
@@ -267,6 +276,7 @@ function getAgentsReport(
     terminated: number
   },
   agentsWoundedFromMissions: number,
+  agentsUnscathedFromMissions: number,
 ): AgentsReport {
   // Capture agent counts after turn advancement
   const currentAgentCounts = getAgentCounts(state.agents)
@@ -278,6 +288,13 @@ function getAgentsReport(
   const previousWounded = 0
   const currentWounded = agentsWoundedFromMissions
 
+  // Calculate unscathed counts: unscathed should only increase from missions, not decrease
+  // Previous unscathed = 0 (we track delta only, reset each turn)
+  // Current unscathed = agents unscathed from missions this turn
+  // Delta = agents unscathed from missions this turn
+  const previousUnscathed = 0
+  const currentUnscathed = agentsUnscathedFromMissions
+
   return {
     total: newValueChange(previousAgentCounts.total, currentAgentCounts.total),
     available: newValueChange(previousAgentCounts.available, currentAgentCounts.available),
@@ -285,6 +302,7 @@ function getAgentsReport(
     standby: newValueChange(previousAgentCounts.standby, currentAgentCounts.standby),
     recovering: newValueChange(previousAgentCounts.recovering, currentAgentCounts.recovering),
     wounded: newValueChange(previousWounded, currentWounded),
+    unscathed: newValueChange(previousUnscathed, currentUnscathed),
     terminated: newValueChange(previousAgentCounts.terminated, currentAgentCounts.terminated),
   }
 }

@@ -19,6 +19,8 @@ export type ValueChangeTreeItemModelProps = {
   reverseMainColors?: boolean
   /** If true, always display as gray/default color regardless of value */
   noColor?: boolean
+  /** If true, never display "+" sign for positive values */
+  noPlusSign?: boolean
 }
 
 type ValueChangeLabelProps = {
@@ -29,6 +31,7 @@ type ValueChangeLabelProps = {
   showPercentage?: boolean
   reverseMainColors?: boolean
   noColor?: boolean
+  noPlusSign?: boolean
 }
 
 const defaultShowPercentage = false
@@ -77,6 +80,7 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
           showPercentage: item.showPercentage ?? defaultShowPercentage,
           reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
           noColor: item.noColor ?? false,
+          noPlusSign: item.noPlusSign ?? false,
         } as ValueChangeLabelProps,
       }}
     />
@@ -91,6 +95,7 @@ function ValueChangeLabel({
   showPercentage = false,
   reverseMainColors = false,
   noColor = false,
+  noPlusSign = false,
 }: ValueChangeLabelProps): React.ReactElement {
   // Determine color based on value and reverseColor setting
   const color: 'success' | 'error' | 'default' =
@@ -107,7 +112,7 @@ function ValueChangeLabel({
   // Format the value display
   let chipLabel: string | undefined = undefined
   if (value !== undefined) {
-    const sign = value > 0 ? '+' : ''
+    const sign = noPlusSign ? '' : value > 0 ? '+' : ''
     chipLabel = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
   }
 

@@ -53,6 +53,7 @@ export type AgentsReport = {
   standby: ValueChange
   recovering: ValueChange
   wounded: ValueChange
+  unscathed: ValueChange
   terminated: ValueChange
 }
 
