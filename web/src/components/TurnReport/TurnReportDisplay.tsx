@@ -13,36 +13,26 @@ import type {
 } from '../../lib/model/reportModel'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
-import ExampleTreeView from './ExampleTreeView'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
-import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
+import type { BreakdownRow } from './ValueChangeCard'
 
 /**
  * CSS Grid component for displaying turn advancement reports
  */
 export function TurnReportDisplay(): React.ReactElement {
-  const [expandedCards, setExpandedCards] = React.useState<Set<string>>(() => new Set())
   const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
   console.log('TurnReportDisplay!')
 
-  function handleCardChange(cardId: string) {
-    return (_event: React.SyntheticEvent, isExpanded: boolean): void => {
-      setExpandedCards((prevExpanded) => {
-        const newExpanded = new Set(prevExpanded)
-        if (isExpanded) {
-          newExpanded.add(cardId)
-        } else {
-          newExpanded.delete(cardId)
-        }
-        return newExpanded
-      })
-    }
-  }
-
-  // Find Red Dawn faction for display
-  const redDawnFaction = report?.factions.find((faction) => faction.factionId === 'faction-red-dawn')
-
+  const assetsDefaultExpandedItems: readonly string[] = [
+    //'money-summary',
+    // 'intel-summary'
+  ]
+  const situationReportDefaultExpandedItems: readonly string[] = [
+    //'panic-summary',
+    'factions-summary',
+    // 'faction-red-dawn',
+  ]
   // Format money and intel breakdowns for tree view
   const assetsTreeData = report
     ? [
@@ -69,86 +59,19 @@ export function TurnReportDisplay(): React.ReactElement {
           }}
         >
           <ExpandableCard title="Assets" defaultExpanded={true} nested={true}>
-            <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={['money-summary', 'intel-summary']} />
+            <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={assetsDefaultExpandedItems} />
           </ExpandableCard>
 
           <ExpandableCard title="Situation Report" defaultExpanded={true} nested={true}>
             <TurnReportTreeView
               items={situationReportTreeData}
-              defaultExpandedItems={['panic-summary', 'factions-summary', 'faction-red-dawn']}
+              defaultExpandedItems={situationReportDefaultExpandedItems}
             />
-          </ExpandableCard>
-
-          {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
-          <ValueChangeCard
-            id="money"
-            title="Money"
-            valueChange={report.assets.moneyChange}
-            breakdownRows={formatMoneyBreakdown(report.assets.moneyBreakdown)}
-            expanded={expandedCards.has('money')}
-            onChange={handleCardChange('money')}
-          />
-
-          <ExpandableCard title="Example Tree View" defaultExpanded={true}>
-            <ExampleTreeView />
-          </ExpandableCard>
-
-          <ValueChangeCard
-            id="intel"
-            title="Intel"
-            valueChange={report.assets.intelChange}
-            breakdownRows={formatIntelBreakdown(report.assets.intelBreakdown)}
-            expanded={expandedCards.has('intel')}
-            onChange={handleCardChange('intel')}
-          />
-
-          <ValueChangeCard
-            id="panic"
-            title="Panic"
-            valueChange={report.panic.change}
-            breakdownRows={formatPanicBreakdown(report.panic.breakdown)}
-            expanded={expandedCards.has('panic')}
-            onChange={handleCardChange('panic')}
-            reverseMainColors={true}
-            showPercentage={true}
-            percentageOnly={true}
-          />
-
-          <ExpandableCard title="Faction threat levels" defaultExpanded={true}>
-            {redDawnFaction && (
-              <ValueChangeCard
-                id="red-dawn-threat"
-                title="Red Dawn"
-                valueChange={redDawnFaction.threatLevel}
-                breakdownRows={formatFactionDetails(redDawnFaction.details)}
-                expanded={expandedCards.has('red-dawn-threat')}
-                onChange={handleCardChange('red-dawn-threat')}
-                reverseMainColors={true}
-                showPercentage={true}
-                percentageOnly={true}
-              />
-            )}
           </ExpandableCard>
         </Box>
       )}
     </ExpandableCard>
   )
-}
-
-/**
- * Shorten mission titles for display in breakdown tables
- */
-function shortenMissionTitle(title: string): string {
-  // Remove common prefixes and make titles more concise
-  return title
-    .replaceAll(/^mission:\s*/giu, '')
-    .replaceAll(/^raid\s+/giu, '')
-    .replaceAll(/^apprehend\s+/giu, 'Capture ')
-    .replaceAll(/red dawn\s+/giu, 'RD ')
-    .replaceAll(/\s+safehouse$/giu, ' Safe')
-    .replaceAll(/\s+outpost$/giu, ' Out')
-    .replaceAll(/\s+base$/giu, ' Base')
-    .replaceAll(/\s+hq$/giu, ' HQ')
 }
 
 /**
@@ -389,4 +312,20 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
   }
 
   return rows
+}
+
+/**
+ * Shorten mission titles for display in breakdown tables
+ */
+function shortenMissionTitle(title: string): string {
+  // Remove common prefixes and make titles more concise
+  return title
+    .replaceAll(/^mission:\s*/giu, '')
+    .replaceAll(/^raid\s+/giu, '')
+    .replaceAll(/^apprehend\s+/giu, 'Capture ')
+    .replaceAll(/red dawn\s+/giu, 'RD ')
+    .replaceAll(/\s+safehouse$/giu, ' Safe')
+    .replaceAll(/\s+outpost$/giu, ' Out')
+    .replaceAll(/\s+base$/giu, ' Base')
+    .replaceAll(/\s+hq$/giu, ' HQ')
 }
