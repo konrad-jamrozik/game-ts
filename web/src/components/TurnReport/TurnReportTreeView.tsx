@@ -42,10 +42,7 @@ type TreeViewForValueChangesProps = {
 /**
  * Custom TreeView component that displays chips in TreeItem labels.
  */
-export function TreeViewForValueChanges({
-  items,
-  defaultExpandedItems,
-}: TreeViewForValueChangesProps): React.ReactElement {
+export function TurnReportTreeView({ items, defaultExpandedItems }: TreeViewForValueChangesProps): React.ReactElement {
   return (
     <RichTreeView
       {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}

@@ -12,7 +12,7 @@ import type {
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
-import { TreeViewForValueChanges, type ValueChangeTreeItemModelProps } from './TreeViewForValueChanges'
+import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -60,7 +60,7 @@ export function TurnReportDisplay(): React.ReactElement {
           }}
         >
           <ExpandableCard title="Assets" defaultExpanded={true}>
-            <TreeViewForValueChanges items={moneyTreeData} defaultExpandedItems={['money-summary']} />
+            <TurnReportTreeView items={moneyTreeData} defaultExpandedItems={['money-summary']} />
           </ExpandableCard>
 
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
