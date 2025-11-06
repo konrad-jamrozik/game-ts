@@ -5,7 +5,7 @@ export type SettingsState = {
 }
 
 const initialState: SettingsState = {
-  areResetControlsExpanded: false,
+  areResetControlsExpanded: true,
 }
 
 const settingsSlice = createSlice({

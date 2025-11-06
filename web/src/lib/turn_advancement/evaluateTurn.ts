@@ -75,7 +75,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     missionRewards,
   })
 
-  // 11. Update agents
+  // 11. Get agents report
   const agentsReport = getAgentsReport(state, previousAgentCounts, agentsWoundedFromMissions)
 
   // Combine assets and agents reports

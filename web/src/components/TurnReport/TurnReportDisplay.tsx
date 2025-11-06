@@ -156,7 +156,7 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
       id: 'agents-in-transit',
       label: `In transit: ${inTransit.previous} → ${inTransit.current}`,
       value: inTransit.delta,
-      reverseColor: true,
+      noColor: true,
     },
     {
       id: 'agents-recovering',
