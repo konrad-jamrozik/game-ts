@@ -154,7 +154,6 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
     value: panicReport.change.delta,
     reverseMainColors: true,
     showPercentage: true,
-    percentageOnly: true,
     children: treeItems,
   }
 }
@@ -170,6 +169,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
         label: row.label,
         value: row.value,
         reverseColor: row.reverseColor ?? false,
+        showPercentage: true,
       }
       return item
     },
@@ -181,7 +181,6 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     value: faction.threatLevel.delta,
     reverseMainColors: true,
     showPercentage: true,
-    percentageOnly: true,
     children: treeItems,
   }
 }

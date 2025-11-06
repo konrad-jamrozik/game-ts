@@ -15,8 +15,6 @@ export type ValueChangeTreeItemModelProps = {
   reverseColor?: boolean
   /** Show percentage change instead of absolute values */
   showPercentage?: boolean
-  /** When showPercentage is true, show only percentage values (hide integer values) */
-  percentageOnly?: boolean
   /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseMainColors?: boolean
 }
@@ -27,12 +25,10 @@ type ValueChangeLabelProps = {
   value?: number
   reverseColor?: boolean
   showPercentage?: boolean
-  percentageOnly?: boolean
   reverseMainColors?: boolean
 }
 
 const defaultShowPercentage = false
-const defaultPercentageOnly = false
 const defaultReverseMainColors = false
 
 type TreeViewForValueChangesProps = {
@@ -76,7 +72,6 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
           value: item.value,
           reverseColor: item.reverseColor ?? false,
           showPercentage: item.showPercentage ?? defaultShowPercentage,
-          percentageOnly: item.percentageOnly ?? defaultPercentageOnly,
           reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
         } as ValueChangeLabelProps,
       }}
@@ -90,7 +85,6 @@ function ValueChangeLabel({
   value,
   reverseColor = false,
   showPercentage = false,
-  percentageOnly: _percentageOnly = false,
   reverseMainColors = false,
 }: ValueChangeLabelProps): React.ReactElement {
   // Determine color based on value and reverseColor setting
