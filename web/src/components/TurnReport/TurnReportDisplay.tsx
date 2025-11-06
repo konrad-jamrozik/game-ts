@@ -143,6 +143,7 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
         label: row.label,
         value: row.value,
         reverseColor: row.reverseColor ?? false,
+        showPercentage: true,
       }
       return item
     },
