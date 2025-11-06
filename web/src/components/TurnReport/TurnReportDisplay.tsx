@@ -6,13 +6,16 @@ import type {
   IntelBreakdown,
   MoneyBreakdown,
   PanicBreakdown,
+  PanicReport,
   FactionDetails,
+  FactionReport,
   ValueChange,
 } from '../../lib/model/reportModel'
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
+import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -48,6 +51,9 @@ export function TurnReportDisplay(): React.ReactElement {
       ]
     : []
 
+  // Format situation report (panic and factions) for tree view
+  const situationReportTreeData = report ? formatSituationReportAsTree(report.panic, report.factions) : []
+
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true}>
       {report && (
@@ -64,6 +70,13 @@ export function TurnReportDisplay(): React.ReactElement {
         >
           <ExpandableCard title="Assets" defaultExpanded={true}>
             <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={['money-summary', 'intel-summary']} />
+          </ExpandableCard>
+
+          <ExpandableCard title="Situation Report" defaultExpanded={true}>
+            <TurnReportTreeView
+              items={situationReportTreeData}
+              defaultExpandedItems={['panic-summary', 'factions-summary', 'faction-red-dawn']}
+            />
           </ExpandableCard>
 
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
@@ -192,6 +205,83 @@ function formatIntelBreakdownAsTree(
       label: `Intel: ${intelChange.previous} → ${intelChange.current}`,
       value: intelChange.delta,
       children: treeItems,
+    },
+  ]
+}
+
+/**
+ * Format panic breakdown as tree structure for MUI Tree View with chips
+ */
+function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(panicReport.breakdown).map(
+    (row) => {
+      const item: ValueChangeTreeItemModelProps = {
+        id: `panic-${row.id}`,
+        label: row.label,
+        value: row.value,
+        reverseColor: row.reverseColor ?? false,
+      }
+      return item
+    },
+  )
+
+  return {
+    id: 'panic-summary',
+    label: `Panic: ${fmtPctDiv100Dec2(panicReport.change.previous)} → ${fmtPctDiv100Dec2(panicReport.change.current)}`,
+    value: panicReport.change.delta,
+    reverseMainColors: true,
+    showPercentage: true,
+    percentageOnly: true,
+    children: treeItems,
+  }
+}
+
+/**
+ * Format faction breakdown as tree structure for MUI Tree View with chips
+ */
+function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatFactionDetails(faction.details).map(
+    (row) => {
+      const item: ValueChangeTreeItemModelProps = {
+        id: `faction-${faction.factionId}-${row.id}`,
+        label: row.label,
+        value: row.value,
+        reverseColor: row.reverseColor ?? false,
+      }
+      return item
+    },
+  )
+
+  return {
+    id: faction.factionId,
+    label: `${faction.factionName}: ${fmtPctDiv100Dec2(faction.threatLevel.previous)} → ${fmtPctDiv100Dec2(faction.threatLevel.current)}`,
+    value: faction.threatLevel.delta,
+    reverseMainColors: true,
+    showPercentage: true,
+    percentageOnly: true,
+    children: treeItems,
+  }
+}
+
+/**
+ * Format situation report (panic and factions) as tree structure for MUI Tree View
+ */
+function formatSituationReportAsTree(
+  panicReport: PanicReport,
+  factions: readonly FactionReport[],
+): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+  const panicTreeItem = formatPanicBreakdownAsTree(panicReport)
+
+  const factionTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = factions.map((faction) =>
+    formatFactionBreakdownAsTree(faction),
+  )
+
+  return [
+    panicTreeItem,
+    {
+      id: 'factions-summary',
+      label: 'Factions',
+      children: factionTreeItems,
     },
   ]
 }
