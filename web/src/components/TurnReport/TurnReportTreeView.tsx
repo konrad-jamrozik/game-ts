@@ -1,10 +1,11 @@
-import { Chip } from '@mui/material'
+import { Chip, Box } from '@mui/material'
 import * as React from 'react'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps } from '@mui/x-tree-view/TreeItem'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+import theme from '../../styling/theme'
 
 export type ValueChangeTreeItemModelProps = {
   id: string
@@ -44,11 +45,13 @@ type TreeViewForValueChangesProps = {
  */
 export function TurnReportTreeView({ items, defaultExpandedItems }: TreeViewForValueChangesProps): React.ReactElement {
   return (
-    <RichTreeView
-      {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
-      items={items}
-      slots={{ item: ValueChangeTreeItem }}
-    />
+    <Box sx={{ backgroundColor: theme.palette.background.paper }}>
+      <RichTreeView
+        {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
+        items={items}
+        slots={{ item: ValueChangeTreeItem }}
+      />
+    </Box>
   )
 }
 

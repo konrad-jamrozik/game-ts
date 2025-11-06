@@ -1,21 +1,21 @@
 import { Box } from '@mui/material'
-import * as React from 'react'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
+import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type {
+  FactionDetails,
+  FactionReport,
   IntelBreakdown,
   MoneyBreakdown,
   PanicBreakdown,
   PanicReport,
-  FactionDetails,
-  FactionReport,
   ValueChange,
 } from '../../lib/model/reportModel'
+import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
-import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
-import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -68,11 +68,11 @@ export function TurnReportDisplay(): React.ReactElement {
             alignItems: 'start',
           }}
         >
-          <ExpandableCard title="Assets" defaultExpanded={true}>
+          <ExpandableCard title="Assets" defaultExpanded={true} nested={true}>
             <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={['money-summary', 'intel-summary']} />
           </ExpandableCard>
 
-          <ExpandableCard title="Situation Report" defaultExpanded={true}>
+          <ExpandableCard title="Situation Report" defaultExpanded={true} nested={true}>
             <TurnReportTreeView
               items={situationReportTreeData}
               defaultExpandedItems={['panic-summary', 'factions-summary', 'faction-red-dawn']}

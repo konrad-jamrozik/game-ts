@@ -7,10 +7,12 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import { useState } from 'react'
+import theme from '../styling/theme'
 
 type ExpandableCardProps = {
   title: string
   children: React.ReactNode
+  nested?: boolean
   defaultExpanded?: boolean
   sx?: SxProps<Theme>
 }
@@ -23,10 +25,12 @@ const defaultSx: SxProps<Theme> = {}
 export function ExpandableCard({
   title,
   children,
+  nested = false,
   defaultExpanded = true,
   sx = defaultSx,
 }: ExpandableCardProps): React.JSX.Element {
   const [expanded, setExpanded] = useState(defaultExpanded)
+  const nestedCardContentSx: SxProps<Theme> = { backgroundColor: theme.palette.background.nestedCardContent }
 
   function handleExpandClick(): void {
     setExpanded(!expanded)
@@ -44,7 +48,7 @@ export function ExpandableCard({
         slotProps={{ title: { variant: 'h5' } }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent>{children}</CardContent>
+        <CardContent sx={nested ? nestedCardContentSx : defaultSx}>{children}</CardContent>
       </Collapse>
     </Card>
   )
