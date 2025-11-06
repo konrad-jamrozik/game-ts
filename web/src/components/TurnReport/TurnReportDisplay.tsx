@@ -50,7 +50,7 @@ export function TurnReportDisplay(): React.ReactElement {
         <Box
           sx={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
+            gridTemplateColumns: '1fr',
             gridTemplateRows: 'auto auto',
             gap: 2, // `gap` adds spacing between grid items (2 is equivalent to 16px)
             // Thanks to `alignItems: 'start'` each row will only take the space its content needs,
