@@ -12,7 +12,7 @@ import type {
 import { ExpandableCard } from '../ExpandableCard'
 import { ValueChangeCard, type BreakdownRow } from './ValueChangeCard'
 import ExampleTreeView from './ExampleTreeView'
-import { TreeViewWithChips, type TreeItemWithValue } from './TreeViewWithChips'
+import { TreeViewForValueChanges, type ValueChangeTreeItemModelProps } from './TreeViewForValueChanges'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -60,7 +60,7 @@ export function TurnReportDisplay(): React.ReactElement {
           }}
         >
           <ExpandableCard title="Assets" defaultExpanded={true}>
-            <TreeViewWithChips items={moneyTreeData} defaultExpandedItems={['money-summary']} />
+            <TreeViewForValueChanges items={moneyTreeData} defaultExpandedItems={['money-summary']} />
           </ExpandableCard>
 
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
@@ -141,16 +141,18 @@ function shortenMissionTitle(title: string): string {
 function formatMoneyBreakdownAsTree(
   moneyChange: ValueChange,
   moneyBreakdown: MoneyBreakdown,
-): TreeViewBaseItem<TreeItemWithValue>[] {
-  const treeItems: TreeViewBaseItem<TreeItemWithValue>[] = formatMoneyBreakdown(moneyBreakdown).map((row) => {
-    const item: TreeItemWithValue = {
-      id: row.id,
-      label: row.label,
-      value: row.value,
-      reverseColor: row.reverseColor ?? false,
-    }
-    return item
-  })
+): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatMoneyBreakdown(moneyBreakdown).map(
+    (row) => {
+      const item: ValueChangeTreeItemModelProps = {
+        id: row.id,
+        label: row.label,
+        value: row.value,
+        reverseColor: row.reverseColor ?? false,
+      }
+      return item
+    },
+  )
 
   return [
     {

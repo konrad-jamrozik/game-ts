@@ -6,12 +6,7 @@ import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 
-type TreeViewWithChipsProps = {
-  items: TreeViewBaseItem<TreeItemWithValue>[]
-  defaultExpandedItems?: readonly string[]
-}
-
-export type TreeItemWithValue = {
+export type ValueChangeTreeItemModelProps = {
   id: string
   label: string
   value?: number
@@ -25,11 +20,7 @@ export type TreeItemWithValue = {
   reverseMainColors?: boolean
 }
 
-type CustomTreeItemProps = TreeItemProps & {
-  ref?: React.Ref<HTMLLIElement>
-}
-
-type CustomLabelProps = {
+type ValueChangeLabelProps = {
   children: string
   className: string
   value?: number
@@ -43,50 +34,57 @@ const defaultShowPercentage = false
 const defaultPercentageOnly = false
 const defaultReverseMainColors = false
 
+type TreeViewForValueChangesProps = {
+  items: TreeViewBaseItem<ValueChangeTreeItemModelProps>[]
+  defaultExpandedItems?: readonly string[]
+}
+
 /**
- * Custom TreeView component that displays chips for values similar to ValueChangeCard
+ * Custom TreeView component that displays chips in TreeItem labels.
  */
-export function TreeViewWithChips({ items, defaultExpandedItems }: TreeViewWithChipsProps): React.ReactElement {
+export function TreeViewForValueChanges({
+  items,
+  defaultExpandedItems,
+}: TreeViewForValueChangesProps): React.ReactElement {
   return (
     <RichTreeView
       {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
       items={items}
-      slots={{ item: CustomTreeItem }}
+      slots={{ item: ValueChangeTreeItem }}
     />
   )
 }
 
-function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElement {
-  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const item = useTreeItemModel<TreeItemWithValue>(props.itemId)!
+type ValueChangeTreeItemProps = TreeItemProps & {
+  ref?: React.Ref<HTMLLIElement>
+}
 
-  const showPercentage = item.showPercentage ?? defaultShowPercentage
-  const percentageOnly = item.percentageOnly ?? defaultPercentageOnly
-  const reverseMainColors = item.reverseMainColors ?? defaultReverseMainColors
-  const reverseColor = item.reverseColor ?? false
+function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React.ReactElement {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const item = useTreeItemModel<ValueChangeTreeItemModelProps>(props.itemId)!
 
   return (
     <TreeItem
       {...props}
       ref={ref}
       slots={{
-        label: CustomLabel,
+        label: ValueChangeLabel,
       }}
       slotProps={{
         // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         label: {
           value: item.value,
-          reverseColor,
-          showPercentage,
-          percentageOnly,
-          reverseMainColors,
-        } as CustomLabelProps,
+          reverseColor: item.reverseColor ?? false,
+          showPercentage: item.showPercentage ?? defaultShowPercentage,
+          percentageOnly: item.percentageOnly ?? defaultPercentageOnly,
+          reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
+        } as ValueChangeLabelProps,
       }}
     />
   )
 }
 
-function CustomLabel({
+function ValueChangeLabel({
   children,
   className,
   value,
@@ -94,7 +92,7 @@ function CustomLabel({
   showPercentage = false,
   percentageOnly: _percentageOnly = false,
   reverseMainColors = false,
-}: CustomLabelProps): React.ReactElement {
+}: ValueChangeLabelProps): React.ReactElement {
   // Determine color based on value and reverseColor setting
   const color: 'success' | 'error' | 'default' =
     value === undefined || value === 0
