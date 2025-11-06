@@ -136,6 +136,33 @@ function shortenMissionTitle(title: string): string {
 }
 
 /**
+ * Format money breakdown as tree structure for MUI Tree View with chips
+ */
+function formatMoneyBreakdownAsTree(
+  moneyChange: ValueChange,
+  moneyBreakdown: MoneyBreakdown,
+): TreeViewBaseItem<TreeItemWithValue>[] {
+  const treeItems: TreeViewBaseItem<TreeItemWithValue>[] = formatMoneyBreakdown(moneyBreakdown).map((row) => {
+    const item: TreeItemWithValue = {
+      id: row.id,
+      label: row.label,
+      value: row.value,
+      reverseColor: row.reverseColor ?? false,
+    }
+    return item
+  })
+
+  return [
+    {
+      id: 'money-summary',
+      label: `Money: ${moneyChange.previous} → ${moneyChange.current}`,
+      value: moneyChange.delta,
+      children: treeItems,
+    },
+  ]
+}
+
+/**
  * Format money breakdown details
  */
 function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
@@ -238,33 +265,4 @@ function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
   }
 
   return rows
-}
-
-/**
- * Format money breakdown as tree structure for MUI Tree View with chips
- */
-function formatMoneyBreakdownAsTree(
-  valueChange: ValueChange,
-  breakdown: MoneyBreakdown,
-): TreeViewBaseItem<TreeItemWithValue>[] {
-  const children: TreeViewBaseItem<TreeItemWithValue>[] = formatMoneyBreakdown(breakdown).map((row) => {
-    const item: TreeItemWithValue = {
-      id: row.id,
-      label: row.label,
-      value: row.value,
-    }
-    if (row.reverseColor !== undefined) {
-      item.reverseColor = row.reverseColor
-    }
-    return item
-  })
-
-  return [
-    {
-      id: 'money-summary',
-      label: `Money: ${valueChange.previous} → ${valueChange.current}`,
-      value: valueChange.delta,
-      children,
-    },
-  ]
 }

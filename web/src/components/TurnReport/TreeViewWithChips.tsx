@@ -6,6 +6,17 @@ import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 
+type TreeViewWithChipsProps = {
+  items: TreeViewBaseItem<TreeItemWithValue>[]
+  defaultExpandedItems?: readonly string[]
+  /** Default showPercentage for all items */
+  defaultShowPercentage?: boolean
+  /** Default percentageOnly for all items */
+  defaultPercentageOnly?: boolean
+  /** Default reverseMainColors for all items */
+  defaultReverseMainColors?: boolean
+}
+
 export type TreeItemWithValue = {
   id: string
   label: string
@@ -18,17 +29,6 @@ export type TreeItemWithValue = {
   percentageOnly?: boolean
   /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseMainColors?: boolean
-}
-
-type TreeViewWithChipsProps = {
-  items: TreeViewBaseItem<TreeItemWithValue>[]
-  defaultExpandedItems?: readonly string[]
-  /** Default showPercentage for all items */
-  defaultShowPercentage?: boolean
-  /** Default percentageOnly for all items */
-  defaultPercentageOnly?: boolean
-  /** Default reverseMainColors for all items */
-  defaultReverseMainColors?: boolean
 }
 
 type CustomTreeItemProps = TreeItemProps & {
@@ -139,7 +139,7 @@ function CustomLabel({
   // Format the value display
   let chipLabel: string | undefined
   if (value !== undefined) {
-    const sign = value >= 0 ? '+' : ''
+    const sign = value > 0 ? '+' : ''
     chipLabel = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
   }
 
