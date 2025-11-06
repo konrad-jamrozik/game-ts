@@ -40,9 +40,12 @@ export function TurnReportDisplay(): React.ReactElement {
   // Find Red Dawn faction for display
   const redDawnFaction = report?.factions.find((faction) => faction.factionId === 'faction-red-dawn')
 
-  // Format money breakdown for tree view
-  const moneyTreeData = report
-    ? formatMoneyBreakdownAsTree(report.assets.moneyChange, report.assets.moneyBreakdown)
+  // Format money and intel breakdowns for tree view
+  const assetsTreeData = report
+    ? [
+        ...formatMoneyBreakdownAsTree(report.assets.moneyChange, report.assets.moneyBreakdown),
+        ...formatIntelBreakdownAsTree(report.assets.intelChange, report.assets.intelBreakdown),
+      ]
     : []
 
   return (
@@ -60,7 +63,7 @@ export function TurnReportDisplay(): React.ReactElement {
           }}
         >
           <ExpandableCard title="Assets" defaultExpanded={true}>
-            <TurnReportTreeView items={moneyTreeData} defaultExpandedItems={['money-summary']} />
+            <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={['money-summary', 'intel-summary']} />
           </ExpandableCard>
 
           {/* KJA have 4 cards: Summary, Assets, Balance Sheet, Situation Report. Each of them will have appropriate tree view. */}
@@ -165,15 +168,44 @@ function formatMoneyBreakdownAsTree(
 }
 
 /**
+ * Format intel breakdown as tree structure for MUI Tree View with chips
+ */
+function formatIntelBreakdownAsTree(
+  intelChange: ValueChange,
+  intelBreakdown: IntelBreakdown,
+): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatIntelBreakdown(intelBreakdown).map(
+    (row) => {
+      const item: ValueChangeTreeItemModelProps = {
+        id: `intel-${row.id}`,
+        label: row.label,
+        value: row.value,
+        reverseColor: row.reverseColor ?? false,
+      }
+      return item
+    },
+  )
+
+  return [
+    {
+      id: 'intel-summary',
+      label: `Intel: ${intelChange.previous} → ${intelChange.current}`,
+      value: intelChange.delta,
+      children: treeItems,
+    },
+  ]
+}
+
+/**
  * Format money breakdown details
  */
 function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
   return [
-    { id: 'agentUpkeep', label: 'Agent Upkeep', value: breakdown.agentUpkeep },
-    { id: 'contractingEarnings', label: 'Contracting Earnings', value: breakdown.contractingEarnings },
     { id: 'fundingIncome', label: 'Funding Income', value: breakdown.fundingIncome },
-    { id: 'hireCosts', label: 'Hire Costs', value: breakdown.hireCosts },
+    { id: 'contractingEarnings', label: 'Contracting Earnings', value: breakdown.contractingEarnings },
     { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
+    { id: 'agentUpkeep', label: 'Agent Upkeep', value: breakdown.agentUpkeep },
+    { id: 'hireCosts', label: 'Hire Costs', value: breakdown.hireCosts },
   ]
 }
 
