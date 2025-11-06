@@ -158,6 +158,12 @@ describe(App, () => {
     // === WHEN: Reset game ===
 
     const resetControlsButton = screen.getByRole('button', { name: /reset controls/iu })
+
+    // KJA this double click is to hide and show reset buttons. Instead, default value should be changed to hide them.
+    // First click to hide
+    await userEvent.click(resetControlsButton)
+
+    // Second click to show
     await userEvent.click(resetControlsButton)
 
     // Wait for the reset controls to be visible and find the reset game button
