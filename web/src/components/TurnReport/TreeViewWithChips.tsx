@@ -9,12 +9,6 @@ import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 type TreeViewWithChipsProps = {
   items: TreeViewBaseItem<TreeItemWithValue>[]
   defaultExpandedItems?: readonly string[]
-  /** Default showPercentage for all items */
-  defaultShowPercentage?: boolean
-  /** Default percentageOnly for all items */
-  defaultPercentageOnly?: boolean
-  /** Default reverseMainColors for all items */
-  defaultReverseMainColors?: boolean
 }
 
 export type TreeItemWithValue = {
@@ -45,53 +39,30 @@ type CustomLabelProps = {
   reverseMainColors?: boolean
 }
 
-type TreeViewDefaultsContextType = {
-  defaultShowPercentage: boolean
-  defaultPercentageOnly: boolean
-  defaultReverseMainColors: boolean
-}
-
-const TreeViewDefaultsContext = React.createContext<TreeViewDefaultsContextType>({
-  defaultShowPercentage: false,
-  defaultPercentageOnly: false,
-  defaultReverseMainColors: false,
-})
+const defaultShowPercentage = false
+const defaultPercentageOnly = false
+const defaultReverseMainColors = false
 
 /**
  * Custom TreeView component that displays chips for values similar to ValueChangeCard
  */
-export function TreeViewWithChips({
-  items,
-  defaultExpandedItems,
-  defaultShowPercentage = false,
-  defaultPercentageOnly = false,
-  defaultReverseMainColors = false,
-}: TreeViewWithChipsProps): React.ReactElement {
+export function TreeViewWithChips({ items, defaultExpandedItems }: TreeViewWithChipsProps): React.ReactElement {
   return (
-    <TreeViewDefaultsContext.Provider
-      value={{
-        defaultShowPercentage,
-        defaultPercentageOnly,
-        defaultReverseMainColors,
-      }}
-    >
-      <RichTreeView
-        {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
-        items={items}
-        slots={{ item: CustomTreeItem }}
-      />
-    </TreeViewDefaultsContext.Provider>
+    <RichTreeView
+      {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
+      items={items}
+      slots={{ item: CustomTreeItem }}
+    />
   )
 }
 
 function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<TreeItemWithValue>(props.itemId)!
-  const defaults = React.useContext(TreeViewDefaultsContext)
 
-  const showPercentage = item.showPercentage ?? defaults.defaultShowPercentage
-  const percentageOnly = item.percentageOnly ?? defaults.defaultPercentageOnly
-  const reverseMainColors = item.reverseMainColors ?? defaults.defaultReverseMainColors
+  const showPercentage = item.showPercentage ?? defaultShowPercentage
+  const percentageOnly = item.percentageOnly ?? defaultPercentageOnly
+  const reverseMainColors = item.reverseMainColors ?? defaultReverseMainColors
   const reverseColor = item.reverseColor ?? false
 
   return (
@@ -137,7 +108,7 @@ function CustomLabel({
           : 'error'
 
   // Format the value display
-  let chipLabel: string | undefined
+  let chipLabel: string | undefined = undefined
   if (value !== undefined) {
     const sign = value > 0 ? '+' : ''
     chipLabel = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
