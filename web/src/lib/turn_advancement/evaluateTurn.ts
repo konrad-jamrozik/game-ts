@@ -4,6 +4,7 @@ import type { Faction, FactionRewards, GameState, MissionRewards } from '../mode
 import {
   newValueChange,
   type AssetsReport,
+  type AgentsReport,
   type FactionReport,
   type IntelBreakdown,
   type MoneyBreakdown,
@@ -40,6 +41,9 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 2. Compute agent upkeep
   const agentUpkeep = agsV(state.agents).agentUpkeep()
 
+  // Capture agent counts before turn advancement
+  const previousAgentCounts = getAgentCounts(state.agents)
+
   // 3. Update all agents in Available state
   updateAvailableAgents(state)
 
@@ -59,20 +63,31 @@ export default function evaluateTurn(state: GameState): TurnReport {
   updateActiveMissionSites(state)
 
   // 9. Evaluate deployed mission sites (and agents deployed to them)
-  const missionRewards = evaluateDeployedMissionSites(state)
+  const missionResults = evaluateDeployedMissionSites(state)
+  const missionRewards = missionResults.rewards
+  const agentsWoundedFromMissions = missionResults.agentsWounded
 
   // 10. Update player assets
-  const assetsReport = updatePlayerAssets(state, {
+  const assetsReportPartial = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
     intelGathered: espionageResults.intelGathered,
     missionRewards,
   })
 
-  // 11. Update panic
+  // 11. Update agents
+  const agentsReport = getAgentsReport(state, previousAgentCounts, agentsWoundedFromMissions)
+
+  // Combine assets and agents reports
+  const assetsReport: AssetsReport = {
+    ...assetsReportPartial,
+    agentsReport,
+  }
+
+  // 12. Update panic
   const panicReport = updatePanic(state, missionRewards)
 
-  // 12. Update factions
+  // 13. Update factions
   const factionsReport = updateFactions(state, missionRewards)
 
   validateGameStateInvariants(state)
@@ -87,6 +102,29 @@ export default function evaluateTurn(state: GameState): TurnReport {
   }
 
   return turnReport
+}
+
+/**
+ * Count agents by state and assignment
+ */
+function getAgentCounts(agents: GameState['agents']): {
+  total: number
+  available: number
+  inTransit: number
+  standby: number
+  recovering: number
+  wounded: number
+  terminated: number
+} {
+  return {
+    total: agents.filter((agent) => agent.state !== 'Terminated').length,
+    available: agents.filter((agent) => agent.state === 'Available').length,
+    inTransit: agents.filter((agent) => agent.state === 'InTransit').length,
+    standby: agents.filter((agent) => agent.assignment === 'Standby').length,
+    recovering: agents.filter((agent) => agent.state === 'Recovering').length,
+    wounded: agents.filter((agent) => agent.state === 'Recovering').length,
+    terminated: agents.filter((agent) => agent.state === 'Terminated').length,
+  }
 }
 
 /**
@@ -105,34 +143,37 @@ function updateActiveMissionSites(state: GameState): void {
 
 /**
  * Evaluates deployed mission sites and their agents
- * Returns collected mission rewards with site information to be applied later
+ * Returns collected mission rewards with site information and count of agents wounded
  */
-function evaluateDeployedMissionSites(
-  state: GameState,
-): { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] {
+function evaluateDeployedMissionSites(state: GameState): {
+  rewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
+  agentsWounded: number
+} {
   const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] = []
+  let agentsWounded = 0
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      const rewards = evaluateDeployedMissionSite(state, missionSite)
-      if (rewards) {
+      const result = evaluateDeployedMissionSite(state, missionSite)
+      if (result.rewards) {
         // Get mission to access title
         const mission = getMissionById(missionSite.missionId)
         missionRewards.push({
-          rewards,
+          rewards: result.rewards,
           missionSiteId: missionSite.id,
           missionTitle: mission.title,
         })
       }
+      agentsWounded += result.agentsWounded
     }
   }
 
-  return missionRewards
+  return { rewards: missionRewards, agentsWounded }
 }
 
 /**
  * Updates player assets based on the results of agent assignments and mission rewards
- * Returns detailed AssetsReport tracking all changes
+ * Returns partial AssetsReport without agentsReport (money, intel, and breakdowns only)
  */
 function updatePlayerAssets(
   state: GameState,
@@ -142,7 +183,7 @@ function updatePlayerAssets(
     intelGathered: number
     missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
   },
-): AssetsReport {
+): Omit<AssetsReport, 'agentsReport'> {
   // Capture previous values
   const previousMoney = state.money
   const previousIntel = state.intel
@@ -208,6 +249,43 @@ function updatePlayerAssets(
     intelChange,
     moneyBreakdown: moneyDetails,
     intelBreakdown: intelDetails,
+  }
+}
+
+/**
+ * Updates agent counts and returns AgentsReport tracking all changes
+ */
+function getAgentsReport(
+  state: GameState,
+  previousAgentCounts: {
+    total: number
+    available: number
+    inTransit: number
+    standby: number
+    recovering: number
+    wounded: number
+    terminated: number
+  },
+  agentsWoundedFromMissions: number,
+): AgentsReport {
+  // Capture agent counts after turn advancement
+  const currentAgentCounts = getAgentCounts(state.agents)
+
+  // Calculate wounded counts: wounded should only increase from missions, not decrease from recovery
+  // Previous wounded = 0 (we track delta only, reset each turn)
+  // Current wounded = agents wounded from missions this turn
+  // Delta = agents wounded from missions this turn
+  const previousWounded = 0
+  const currentWounded = agentsWoundedFromMissions
+
+  return {
+    total: newValueChange(previousAgentCounts.total, currentAgentCounts.total),
+    available: newValueChange(previousAgentCounts.available, currentAgentCounts.available),
+    inTransit: newValueChange(previousAgentCounts.inTransit, currentAgentCounts.inTransit),
+    standby: newValueChange(previousAgentCounts.standby, currentAgentCounts.standby),
+    recovering: newValueChange(previousAgentCounts.recovering, currentAgentCounts.recovering),
+    wounded: newValueChange(previousWounded, currentWounded),
+    terminated: newValueChange(previousAgentCounts.terminated, currentAgentCounts.terminated),
   }
 }
 

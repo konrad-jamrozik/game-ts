@@ -3,6 +3,7 @@ import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type {
+  AgentsReport,
   FactionDetails,
   FactionReport,
   IntelBreakdown,
@@ -25,11 +26,12 @@ export function TurnReportDisplay(): React.ReactElement {
   console.log('TurnReportDisplay!')
 
   const assetsDefaultExpandedItems: readonly string[] = [
-    //'money-summary',
+    // 'money-summary',
     // 'intel-summary'
+    'agents-summary',
   ]
   const situationReportDefaultExpandedItems: readonly string[] = [
-    //'panic-summary',
+    // 'panic-summary',
     'factions-summary',
     // 'faction-red-dawn',
   ]
@@ -38,6 +40,7 @@ export function TurnReportDisplay(): React.ReactElement {
     ? [
         ...formatMoneyBreakdownAsTree(report.assets.moneyChange, report.assets.moneyBreakdown),
         ...formatIntelBreakdownAsTree(report.assets.intelChange, report.assets.intelBreakdown),
+        ...formatAgentsBreakdownAsTree(report.assets.agentsReport),
       ]
     : []
 
@@ -127,6 +130,58 @@ function formatIntelBreakdownAsTree(
       id: 'intel-summary',
       label: `Intel: ${intelChange.previous} → ${intelChange.current}`,
       value: intelChange.delta,
+      children: treeItems,
+    },
+  ]
+}
+
+/**
+ * Format agents breakdown as tree structure for MUI Tree View with chips
+ */
+function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+  const { total, available, inTransit, recovering, wounded, terminated } = agentsReport
+
+  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+    {
+      id: 'agents-total',
+      label: `Total: ${total.previous} → ${total.current}`,
+      value: total.delta,
+    },
+    {
+      id: 'agents-available',
+      label: `Available: ${available.previous} → ${available.current}`,
+      value: available.delta,
+    },
+    {
+      id: 'agents-in-transit',
+      label: `In transit: ${inTransit.previous} → ${inTransit.current}`,
+      value: inTransit.delta,
+      reverseColor: true,
+    },
+    {
+      id: 'agents-recovering',
+      label: `Recovering: ${recovering.previous} → ${recovering.current}`,
+      value: recovering.delta,
+      reverseColor: true,
+    },
+    {
+      id: 'agents-wounded',
+      label: 'Wounded',
+      value: wounded.delta,
+      reverseColor: true,
+    },
+    {
+      id: 'agents-terminated',
+      label: 'Terminated',
+      value: terminated.delta,
+      reverseColor: true,
+    },
+  ]
+
+  return [
+    {
+      id: 'agents-summary',
+      label: 'Agents',
       children: treeItems,
     },
   ]

@@ -12,6 +12,7 @@ export type BaseReport = {
 export type AssetsReport = {
   moneyChange: ValueChange
   intelChange: ValueChange
+  agentsReport: AgentsReport
   moneyBreakdown: MoneyBreakdown
   intelBreakdown: IntelBreakdown
 }
@@ -43,6 +44,16 @@ export type MoneyBreakdown = {
 export type IntelBreakdown = {
   espionageGathered: number
   missionRewards: number
+}
+
+export type AgentsReport = {
+  total: ValueChange
+  available: ValueChange
+  inTransit: ValueChange
+  standby: ValueChange
+  recovering: ValueChange
+  wounded: ValueChange
+  terminated: ValueChange
 }
 
 export type PanicReport = {

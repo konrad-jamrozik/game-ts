@@ -106,23 +106,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       for (const missionSite of newlyConcludedMissionSites) {
         const mission = getMissionById(missionSite.missionId)
 
-        // KJA FUTURE currently cannot display agents results for mission sites as by the time
-        // deployed mission site update is done, this information is not available in the state anywhere.
-        // Instead, when "advanceTurn" is called, it should produce "turnAdvancementReport" that will contain all
-        // interesting information. evaluateTurn will write it out to dedicated GameState property.
-        // Then it will be rendered by the turn advancement log component (to be implemented).
-
-        // Compute agent outcome counts for this mission site
-        // const deployedAgents = agsV(gameState.agents).deployedOnMissionSite(missionSite.id).toAgentArray()
-
-        // const agentsLost = deployedAgents.filter((agent: Agent) => agent.state === 'Terminated').length
-        // const agentsWounded = deployedAgents.filter(
-        //   (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns > 0,
-        // ).length
-        // const agentsUnscathed = deployedAgents.filter(
-        //   (agent: Agent) => agent.state !== 'Terminated' && agent.recoveryTurns === 0,
-        // ).length
-
         postMissionCompletedEvent(mission.title, mission.rewards, missionSite.id, missionSite.state)
       }
     } else if (hireAgent.match(action)) {

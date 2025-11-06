@@ -9,9 +9,12 @@ import { assertDefined } from '../utils/assert'
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
  * This includes the mission site battle, agent updates, and rewards.
- * Returns the mission rewards to be applied later in the turn advancement process.
+ * Returns the mission rewards to be applied later in the turn advancement process and count of agents wounded.
  */
-export function evaluateDeployedMissionSite(state: GameState, missionSite: MissionSite): MissionRewards | undefined {
+export function evaluateDeployedMissionSite(
+  state: GameState,
+  missionSite: MissionSite,
+): { rewards: MissionRewards | undefined; agentsWounded: number } {
   // Get the mission to access enemy units
   const mission = getMissionById(missionSite.missionId)
 
@@ -21,36 +24,39 @@ export function evaluateDeployedMissionSite(state: GameState, missionSite: Missi
 
   const battleReport = evaluateBattle(deployedAgentsView, missionSite.enemies)
 
-  updateAgentsAfterBattle(deployedAgents, battleReport)
+  const agentsWounded = updateAgentsAfterBattle(deployedAgents, battleReport)
 
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
   missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
 
   // Return mission rewards to be applied later, don't apply them immediately
-  if (missionSite.state === 'Successful') {
-    return mission.rewards
-  }
+  const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
 
-  return undefined
+  return { rewards, agentsWounded }
 }
 
-function updateAgentsAfterBattle(deployedAgents: Agent[], battleReport: BattleReport): void {
+function updateAgentsAfterBattle(deployedAgents: Agent[], battleReport: BattleReport): number {
+  let agentsWounded = 0
   deployedAgents.forEach((agent) => {
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
 
     const isTerminated = agent.hitPoints <= 0
     if (!isTerminated) {
-      updateSurvivingAgent(agent, battleReport)
+      const wasWounded = updateSurvivingAgent(agent, battleReport)
+      if (wasWounded) {
+        agentsWounded += 1
+      }
     } else {
       agent.state = 'Terminated'
       agent.assignment = 'KIA'
     }
   })
+  return agentsWounded
 }
 
-function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): void {
+function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean {
   // ----------------------------------------
   // Update exhaustion
   // ----------------------------------------
@@ -93,7 +99,8 @@ function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): void {
     agent.assignment = 'Recovery'
     agent.hitPointsLostBeforeRecovery = agent.maxHitPoints - agent.hitPoints
     agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints)
-  } else {
-    agent.assignment = 'Standby'
+    return true // Agent was wounded
   }
+  agent.assignment = 'Standby'
+  return false // Agent was not wounded
 }
