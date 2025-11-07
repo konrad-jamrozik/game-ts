@@ -254,27 +254,29 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     },
   ]
 
-  // Add mission impacts
-  faction.missionImpacts.forEach((impact) => {
-    if (impact.threatReduction !== undefined && impact.threatReduction !== 0) {
-      children.push({
-        id: `faction-${faction.factionId}-mission-threat-${impact.missionSiteId}`,
-        label: `${shortenMissionTitle(impact.missionTitle)} Threat Reduction`,
-        value: impact.threatReduction,
-        reverseColor: false, // Threat reduction is good (default)
-        showPercentage: true,
-      })
-    }
-    if (impact.suppressionAdded !== undefined && impact.suppressionAdded !== 0) {
-      children.push({
-        id: `faction-${faction.factionId}-mission-suppression-${impact.missionSiteId}`,
-        label: `${shortenMissionTitle(impact.missionTitle)} Suppression`,
-        value: impact.suppressionAdded,
-        reverseColor: false, // Suppression increase is good (default)
-        showPercentage: true,
-      })
-    }
-  })
+  // Add mission impacts (summed across all missions)
+  const totalThreatReduction = faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction ?? 0), 0)
+  const totalSuppressionAdded = faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded ?? 0), 0)
+
+  if (totalThreatReduction !== 0) {
+    children.push({
+      id: `faction-${faction.factionId}-mission-threat`,
+      label: 'Missions Threat Reduction',
+      value: totalThreatReduction,
+      reverseColor: false, // Threat reduction is good (default)
+      showPercentage: true,
+    })
+  }
+
+  if (totalSuppressionAdded !== 0) {
+    children.push({
+      id: `faction-${faction.factionId}-mission-suppression`,
+      label: 'Missions Suppression',
+      value: totalSuppressionAdded,
+      reverseColor: false, // Suppression increase is good (default)
+      showPercentage: true,
+    })
+  }
 
   // Add suppression decay
   if (faction.suppressionDecay !== 0) {
@@ -289,7 +291,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
 
   return {
     id: faction.factionId,
-    label: `${faction.factionName}: ${fmtPctDiv100Dec2(faction.threatLevel.previous)} → ${fmtPctDiv100Dec2(faction.threatLevel.current)}`,
+    label: `${faction.factionName}: Threat Level: ${fmtPctDiv100Dec2(faction.threatLevel.previous)} → ${fmtPctDiv100Dec2(faction.threatLevel.current)}`,
     value: faction.threatLevel.delta,
     reverseMainColors: true,
     showPercentage: true,
