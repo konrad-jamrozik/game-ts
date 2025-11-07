@@ -7,7 +7,7 @@ import type { Bps } from '../../lib/model/bps'
 import type { ValueChange } from '../../lib/model/reportModel'
 import theme from '../../styling/theme'
 import { StyledDataGrid } from '../StyledDataGrid'
-import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+import { fmtPctDiv100Dec2, str } from '../../lib/utils/formatUtils'
 
 /**
  * Type guard for BreakdownRow
@@ -124,8 +124,7 @@ export function ValueChangeCard({
  */
 function formatValueChange(change: ValueChange, showPercentage = false, percentageOnly = false): string {
   if (showPercentage && percentageOnly) {
-    // KJA fix squiggly
-    return `${fmtPctDiv100Dec2(change.previous as Bps)} → ${fmtPctDiv100Dec2(change.current as Bps)}`
+    return `${str(change.previous)} → ${str(change.current)}`
   }
   return `${change.previous} → ${change.current}`
 }

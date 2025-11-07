@@ -10,14 +10,11 @@ export function str(value: unknown): string {
   }
   return String(value)
 }
-
 /**
- * @param value - The value to format (in basis points, where 100 = 1%)
- * @returns The value, divided by 100, formatted as percentage with 2 decimal places. 
-   For example, 12345 will be formatted as "123.45%"
+ * @returns The value, divided by 100, formatted as percentage with 2 decimal places.
+ * For example, 12345 will be formatted as "123.45%"
  */
 export function fmtPctDiv100Dec2(value: Bps): string {
-  // KJA do I still need fmtPctDiv100Dec2 now that I have Bps?
   return fmtPctDiv100(value, 2)
 }
 

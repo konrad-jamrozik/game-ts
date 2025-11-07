@@ -8,7 +8,8 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPctDiv100Dec2, fmtPct } from '../lib/utils/formatUtils'
+import { fmtPct } from '../lib/utils/formatUtils'
+import { str } from '../lib/model/bps'
 import { assertDefined } from '../lib/utils/assert'
 import { calculatePanicIncrease } from '../lib/utils/factionUtils'
 
@@ -16,7 +17,7 @@ export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
 
-  const panicPercentage = fmtPctDiv100Dec2(panic)
+  const panicPercentage = str(panic)
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -36,13 +37,13 @@ export function SituationReportCard(): React.JSX.Element {
     ? (() => {
         const panicIncrease = calculatePanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         return [
-          { id: 1, metric: 'Threat level', value: fmtPctDiv100Dec2(redDawnFaction.threatLevel) },
+          { id: 1, metric: 'Threat level', value: str(redDawnFaction.threatLevel) },
           {
             id: 2,
             metric: 'Threat increase',
-            value: fmtPctDiv100Dec2(redDawnFaction.threatIncrease),
+            value: str(redDawnFaction.threatIncrease),
           },
-          { id: 3, metric: 'Suppression', value: fmtPctDiv100Dec2(redDawnFaction.suppression) },
+          { id: 3, metric: 'Suppression', value: str(redDawnFaction.suppression) },
           {
             id: 4,
             metric: 'Suppr. decay',
@@ -51,7 +52,7 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 5,
             metric: 'Panic increase',
-            value: fmtPctDiv100Dec2(panicIncrease),
+            value: str(panicIncrease),
           },
         ]
       })()
