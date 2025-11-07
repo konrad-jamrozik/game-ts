@@ -1,5 +1,6 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
+import type { ValueChange } from '../model/reportModel'
 import { div } from './mathUtils'
 
 /**
@@ -43,4 +44,16 @@ export function fmtMissionTarget(missionSiteId: MissionSiteId | undefined): stri
 
 export function fmtAgentCount(count: number): string {
   return `${count} ${pluralize('agent', count)}`
+}
+
+/**
+ * Formats a value change as "previous → current"
+ * @param change - The value change to format
+ * @param formatter - Optional formatter function to apply to both values
+ * @returns Formatted string in the format "previous → current"
+ */
+export function formatValueChange(change: ValueChange, formatter?: (value: number) => string): string {
+  const prev = formatter ? formatter(change.previous) : change.previous.toString()
+  const curr = formatter ? formatter(change.current) : change.current.toString()
+  return `${prev} → ${curr}`
 }
