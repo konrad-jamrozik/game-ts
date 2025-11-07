@@ -1,8 +1,15 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
-import type { Bps } from '../model/bps'
+import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/reportModel'
 import { div } from './mathUtils'
+
+export function str(value: unknown): string {
+  if (isBps(value)) {
+    return fmtPctDiv100Dec2(value)
+  }
+  return String(value)
+}
 
 /**
  * @param value - The value to format (in basis points, where 100 = 1%)

@@ -24,3 +24,7 @@ export function bpsFromPercent(percent: number): Bps {
   // KJA fix squiggly
   return Math.round(percent * 100) as Bps
 }
+
+export function isBps(value: unknown): value is Bps {
+  return typeof value === 'number' && value.constructor.name === 'Bps'
+}
