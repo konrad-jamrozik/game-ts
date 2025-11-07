@@ -10,6 +10,7 @@ import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
 import { fmtPctDiv100Dec2, fmtPct } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
+import { calculatePanicIncrease } from '../lib/utils/factionUtils'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -36,8 +37,7 @@ export function SituationReportCard(): React.JSX.Element {
   // Only calculate faction-specific data if Red Dawn is discovered
   const redDawnRows = isRedDawnDiscovered
     ? (() => {
-        // KJA .threatLevel - .suppression is duplicated with evaluateTurn.ts updatePanic function.
-        const panicIncrease = Math.max(0, redDawnFaction.threatLevel - redDawnFaction.suppression)
+        const panicIncrease = calculatePanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         return [
           { id: 1, metric: 'Threat level', value: fmtPctDiv100Dec2(redDawnFaction.threatLevel) },
           {

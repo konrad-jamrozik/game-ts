@@ -13,6 +13,7 @@ import type {
   ValueChange,
 } from '../../lib/model/reportModel'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+import { calculatePanicIncrease } from '../../lib/utils/factionUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
 import type { BreakdownRow } from './ValueChangeCard'
@@ -226,10 +227,8 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
  * Format faction breakdown as tree structure for MUI Tree View with chips
  */
 function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  // KJA 2 dedup formula for panic increase, merge FactionDetails into FactionReport.
-  // Calculate panic increase: Math.max(0, threatLevel - suppression)
-  const previousPanicIncrease = Math.max(0, faction.threatLevel.previous - faction.suppression.previous)
-  const currentPanicIncrease = Math.max(0, faction.threatLevel.current - faction.suppression.current)
+  const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
+  const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
   const panicIncreaseDelta = currentPanicIncrease - previousPanicIncrease
 
   const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [

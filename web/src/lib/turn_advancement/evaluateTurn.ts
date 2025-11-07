@@ -13,6 +13,7 @@ import {
 } from '../model/reportModel'
 import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
+import { calculatePanicIncrease } from '../utils/factionUtils'
 import { floor } from '../utils/mathUtils'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
@@ -319,8 +320,7 @@ function updatePanic(
 
   // Track faction contributions
   const factionPanicIncreases = state.factions.map((faction) => {
-    // KJA 2 source of truth for panic increase: Math.max(0, threatLevel - suppression)
-    const factionPanicIncrease = Math.max(0, faction.threatLevel - faction.suppression)
+    const factionPanicIncrease = calculatePanicIncrease(faction.threatLevel, faction.suppression)
     return {
       factionId: faction.id,
       factionName: faction.name,
