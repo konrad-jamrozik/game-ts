@@ -300,7 +300,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
 
   return {
     id: faction.factionId,
-    label: `${faction.factionName}: Panic increase: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
+    label: `${faction.factionName}: Panic Caused: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
     value: panicIncreaseDelta,
     reverseMainColors: true,
     showPercentage: true,
