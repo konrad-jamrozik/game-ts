@@ -112,9 +112,11 @@ export type MissionSite = {
 export type Faction = {
   id: FactionId
   name: string
-  threatLevel: number
-  threatIncrease: number
-  suppression: number
+  threatLevel: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
+
+  threatIncrease: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
+
+  suppression: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
   discoveryPrerequisite: string[]
 }
 
@@ -123,7 +125,8 @@ export type GameState = {
   turn: number
   actionsCount: number
   // Situation
-  panic: number
+
+  panic: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
   factions: Faction[]
   // Assets
   money: number
