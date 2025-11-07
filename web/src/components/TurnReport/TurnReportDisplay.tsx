@@ -230,7 +230,12 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
   const panicIncreaseDelta = currentPanicIncrease - previousPanicIncrease
 
-  const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+  // Calculate mission impacts (summed across all missions)
+  const totalThreatReduction = faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction ?? 0), 0)
+  const totalSuppressionAdded = faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded ?? 0), 0)
+
+  // Build threat level children (base threat increase and mission threat reductions)
+  const threatLevelChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
       id: `faction-${faction.factionId}-baseThreatIncrease`,
       label: 'Base Threat Increase',
@@ -238,28 +243,10 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
       reverseColor: true, // Threat increase is bad
       showPercentage: true,
     },
-    {
-      id: `faction-${faction.factionId}-panic-increase`,
-      label: `Panic increase: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
-      value: panicIncreaseDelta,
-      reverseColor: true, // Panic increase is bad
-      showPercentage: true,
-    },
-    {
-      id: `faction-${faction.factionId}-suppression`,
-      label: `Suppression: ${fmtPctDiv100Dec2(faction.suppression.previous)} → ${fmtPctDiv100Dec2(faction.suppression.current)}`,
-      value: faction.suppression.delta,
-      reverseColor: false, // Suppression increase is good (default)
-      showPercentage: true,
-    },
   ]
 
-  // Add mission impacts (summed across all missions)
-  const totalThreatReduction = faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction ?? 0), 0)
-  const totalSuppressionAdded = faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded ?? 0), 0)
-
   if (totalThreatReduction !== 0) {
-    children.push({
+    threatLevelChildren.push({
       id: `faction-${faction.factionId}-mission-threat-reductions`,
       label: 'Mission Threat Reductions',
       value: totalThreatReduction,
@@ -268,19 +255,11 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     })
   }
 
-  if (totalSuppressionAdded !== 0) {
-    children.push({
-      id: `faction-${faction.factionId}-mission-suppressions`,
-      label: 'Mission Suppressions',
-      value: totalSuppressionAdded,
-      reverseColor: false, // Suppression increase is good (default)
-      showPercentage: true,
-    })
-  }
+  // Build suppression children (mission suppressions and suppression decay)
+  const suppressionChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = []
 
-  // Add suppression decay
   if (faction.suppressionDecay !== 0) {
-    children.push({
+    suppressionChildren.push({
       id: `faction-${faction.factionId}-suppressionDecay`,
       label: 'Suppression Decay',
       value: faction.suppressionDecay,
@@ -289,10 +268,40 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     })
   }
 
+  if (totalSuppressionAdded !== 0) {
+    suppressionChildren.push({
+      id: `faction-${faction.factionId}-mission-suppressions`,
+      label: 'Mission Suppressions',
+      value: totalSuppressionAdded,
+      reverseColor: false, // Suppression increase is good (default)
+      showPercentage: true,
+    })
+  }
+
+  // Top level children: threat level and suppression
+  const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+    {
+      id: `faction-${faction.factionId}-threat-level`,
+      label: `Threat Level: ${fmtPctDiv100Dec2(faction.threatLevel.previous)} → ${fmtPctDiv100Dec2(faction.threatLevel.current)}`,
+      value: faction.threatLevel.delta,
+      reverseMainColors: true,
+      showPercentage: true,
+      children: threatLevelChildren,
+    },
+    {
+      id: `faction-${faction.factionId}-suppression`,
+      label: `Suppression: ${fmtPctDiv100Dec2(faction.suppression.previous)} → ${fmtPctDiv100Dec2(faction.suppression.current)}`,
+      value: faction.suppression.delta,
+      reverseColor: false, // Suppression increase is good (default)
+      showPercentage: true,
+      children: suppressionChildren,
+    },
+  ]
+
   return {
     id: faction.factionId,
-    label: `${faction.factionName}: Threat Level: ${fmtPctDiv100Dec2(faction.threatLevel.previous)} → ${fmtPctDiv100Dec2(faction.threatLevel.current)}`,
-    value: faction.threatLevel.delta,
+    label: `${faction.factionName}: Panic increase: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
+    value: panicIncreaseDelta,
     reverseMainColors: true,
     showPercentage: true,
     children,
@@ -380,15 +389,15 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
 /**
  * Shorten mission titles for display in breakdown tables
  */
-function shortenMissionTitle(title: string): string {
-  // Remove common prefixes and make titles more concise
-  return title
-    .replaceAll(/^mission:\s*/giu, '')
-    .replaceAll(/^raid\s+/giu, '')
-    .replaceAll(/^apprehend\s+/giu, 'Capture ')
-    .replaceAll(/red dawn\s+/giu, 'RD ')
-    .replaceAll(/\s+safehouse$/giu, ' Safe')
-    .replaceAll(/\s+outpost$/giu, ' Out')
-    .replaceAll(/\s+base$/giu, ' Base')
-    .replaceAll(/\s+hq$/giu, ' HQ')
-}
+// function shortenMissionTitle(title: string): string {
+//   // Remove common prefixes and make titles more concise
+//   return title
+//     .replaceAll(/^mission:\s*/giu, '')
+//     .replaceAll(/^raid\s+/giu, '')
+//     .replaceAll(/^apprehend\s+/giu, 'Capture ')
+//     .replaceAll(/red dawn\s+/giu, 'RD ')
+//     .replaceAll(/\s+safehouse$/giu, ' Safe')
+//     .replaceAll(/\s+outpost$/giu, ' Out')
+//     .replaceAll(/\s+base$/giu, ' Base')
+//     .replaceAll(/\s+hq$/giu, ' HQ')
+// }
