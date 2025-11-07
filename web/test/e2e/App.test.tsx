@@ -9,6 +9,7 @@ import App from '../../src/app/App'
 import { store } from '../../src/app/store'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../../src/lib/slices/eventsSlice'
+import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
 
@@ -27,6 +28,9 @@ describe(App, () => {
     const debugState = makeInitialState({ debug: true })
     store.dispatch(reset({ customState: { ...debugState, money: 100 } }))
     store.dispatch(clearEvents()) // Clear the reset event
+
+    // Set reset controls to collapsed by default for this test
+    store.dispatch(setResetControlsExpanded(false))
 
     render(
       <Provider store={store}>
@@ -159,11 +163,7 @@ describe(App, () => {
 
     const resetControlsButton = screen.getByRole('button', { name: /reset controls/iu })
 
-    // KJA this double click is to hide and show reset buttons. Instead, default value should be changed to hide them.
-    // First click to hide
-    await userEvent.click(resetControlsButton)
-
-    // Second click to show
+    // Click to expand the reset controls
     await userEvent.click(resetControlsButton)
 
     // Wait for the reset controls to be visible and find the reset game button
