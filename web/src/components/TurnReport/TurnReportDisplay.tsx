@@ -260,8 +260,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
 
   if (totalThreatReduction !== 0) {
     children.push({
-      id: `faction-${faction.factionId}-mission-threat`,
-      label: 'Missions Threat Reduction',
+      id: `faction-${faction.factionId}-mission-threat-reductions`,
+      label: 'Mission Threat Reductions',
       value: totalThreatReduction,
       reverseColor: false, // Threat reduction is good (default)
       showPercentage: true,
@@ -270,8 +270,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
 
   if (totalSuppressionAdded !== 0) {
     children.push({
-      id: `faction-${faction.factionId}-mission-suppression`,
-      label: 'Missions Suppression',
+      id: `faction-${faction.factionId}-mission-suppressions`,
+      label: 'Mission Suppressions',
       value: totalSuppressionAdded,
       reverseColor: false, // Suppression increase is good (default)
       showPercentage: true,
@@ -356,7 +356,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
     if (faction.factionPanicIncrease !== 0) {
       rows.push({
         id: `faction-${faction.factionId}`,
-        label: `${faction.factionName} Contribution`,
+        label: `Caused by ${faction.factionName}`,
         value: faction.factionPanicIncrease,
         reverseColor: true, // Panic increase is bad
       })
@@ -364,16 +364,15 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   })
 
   // Add mission reductions (shown as negative values)
-  breakdown.missionReductions.forEach((mission) => {
-    if (mission.reduction !== 0) {
-      rows.push({
-        id: `mission-${mission.missionSiteId}`,
-        label: `${shortenMissionTitle(mission.missionTitle)} Reduction`,
-        value: mission.reduction,
-        reverseColor: false, // Panic reduction is good (default)
-      })
-    }
-  })
+  const totalMissionReduction = breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction, 0)
+  if (totalMissionReduction !== 0) {
+    rows.push({
+      id: 'mission-reductions',
+      label: 'Mission Reductions',
+      value: totalMissionReduction,
+      reverseColor: false, // Panic reduction is good (default)
+    })
+  }
 
   return rows
 }
