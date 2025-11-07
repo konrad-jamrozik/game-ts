@@ -1,3 +1,4 @@
+import { bps } from '../model/bps'
 import type { Mission } from '../model/model'
 import { assertDefined } from '../utils/assert'
 
@@ -12,12 +13,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 5,
       intel: 0,
-      panicReduction: 5,
+      panicReduction: bps(5),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 1,
-          suppression: 10,
+          threatReduction: bps(1),
+          suppression: bps(10),
         },
       ],
     },
@@ -32,12 +33,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 100,
       intel: 10,
-      panicReduction: 20,
+      panicReduction: bps(20),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 10,
-          suppression: 1000,
+          threatReduction: bps(10),
+          suppression: bps(1000),
         },
       ],
     },
@@ -52,12 +53,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 400,
       intel: 20,
-      panicReduction: 100,
+      panicReduction: bps(100),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 200,
-          suppression: 5000,
+          threatReduction: bps(200),
+          suppression: bps(5000),
         },
       ],
     },
@@ -72,12 +73,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 1000,
       intel: 50,
-      panicReduction: 500,
+      panicReduction: bps(500),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 1000,
-          suppression: 10_000,
+          threatReduction: bps(1000),
+          suppression: bps(10_000),
         },
       ],
     },
@@ -92,12 +93,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 10_000,
       intel: 100,
-      panicReduction: 2000,
+      panicReduction: bps(2000),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: 10_000,
-          suppression: 10_000,
+          threatReduction: bps(10_000),
+          suppression: bps(10_000),
         },
       ],
     },

@@ -1,3 +1,4 @@
+import type { Bps } from './bps'
 import type { TurnReport } from './reportModel'
 
 export type Actor = {
@@ -58,15 +59,15 @@ export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-ex
 
 export type FactionRewards = {
   factionId: FactionId
-  threatReduction?: number
-  suppression?: number
+  threatReduction?: Bps
+  suppression?: Bps
 }
 
 export type MissionRewards = {
   money?: number
   intel?: number
   funding?: number
-  panicReduction?: number
+  panicReduction?: Bps
   factionRewards?: FactionRewards[]
 }
 
@@ -112,11 +113,9 @@ export type MissionSite = {
 export type Faction = {
   id: FactionId
   name: string
-  threatLevel: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
-
-  threatIncrease: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
-
-  suppression: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
+  threatLevel: Bps
+  threatIncrease: Bps
+  suppression: Bps
   discoveryPrerequisite: string[]
 }
 
@@ -126,7 +125,7 @@ export type GameState = {
   actionsCount: number
   // Situation
 
-  panic: number // 100% = 10,000, so divide by 100 to get percentage with 2 decimal places
+  panic: Bps
   factions: Faction[]
   // Assets
   money: number

@@ -1,4 +1,5 @@
 import { describe, expect, test } from 'vitest'
+import { bps } from '../../src/lib/model/bps'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
@@ -44,7 +45,7 @@ describe(evaluateDeployedMissionSite, () => {
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       missionSites: [testMissionSite],
-      panic: 0,
+      panic: bps(0),
       factions: [],
     }
 
@@ -111,7 +112,7 @@ describe(evaluateDeployedMissionSite, () => {
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       missionSites: [testMissionSite],
-      panic: 0,
+      panic: bps(0),
       factions: [],
     }
 
@@ -196,7 +197,7 @@ describe(evaluateDeployedMissionSite, () => {
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       missionSites: [testMissionSite],
-      panic: 0,
+      panic: bps(0),
       factions: [],
     }
 

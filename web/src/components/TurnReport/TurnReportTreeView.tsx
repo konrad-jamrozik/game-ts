@@ -4,6 +4,7 @@ import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps } from '@mui/x-tree-view/TreeItem'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
+import type { Bps } from '../../lib/model/bps'
 import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
 import theme from '../../styling/theme'
 
@@ -113,7 +114,8 @@ function ValueChangeLabel({
   let chipLabel: string | undefined = undefined
   if (value !== undefined) {
     const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-    chipLabel = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
+    // KJA fix squiggly
+    chipLabel = showPercentage ? fmtPctDiv100Dec2(value as Bps) : `${sign}${value}`
   }
 
   return (

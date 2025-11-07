@@ -1,3 +1,5 @@
+import type { Bps } from './bps'
+
 export type TurnReport = BaseReport & {
   assets: AssetsReport
   panic: PanicReport
@@ -17,18 +19,25 @@ export type AssetsReport = {
   intelBreakdown: IntelBreakdown
 }
 
-export type ValueChange = {
-  previous: number
-  current: number
-  readonly delta: number
+export type ValueChange<T extends number = number> = {
+  previous: T
+  current: T
+  readonly delta: T
 }
 
-export function newValueChange(previous: number, current: number): ValueChange {
+export function newValueChange<T extends number = number>(previous: T, current: T): ValueChange<T> {
+  // Bps and other branded number types need arithmetic operations
+  // The subtraction is safe because T extends number
+  // We need to cast to number for the arithmetic, then back to T
+  // This is a known limitation when working with branded types
+  // KJA fix squiggly
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
+  const delta = ((current as unknown as number) - (previous as unknown as number)) as T
   return {
     previous,
     current,
-    get delta(): number {
-      return this.current - this.previous
+    get delta(): T {
+      return delta
     },
   }
 }
@@ -58,7 +67,7 @@ export type AgentsReport = {
 }
 
 export type PanicReport = {
-  change: ValueChange
+  change: ValueChange<Bps>
   breakdown: PanicBreakdown
 }
 
@@ -66,12 +75,12 @@ export type PanicBreakdown = {
   factionPanicIncreases: {
     factionId: string
     factionName: string
-    factionPanicIncrease: number
+    factionPanicIncrease: Bps
   }[]
   missionReductions: {
     missionSiteId: string
     missionTitle: string
-    reduction: number
+    reduction: Bps
   }[]
 }
 
@@ -88,15 +97,15 @@ export type FactionReport = {
   factionId: string
   factionName: string
   isDiscovered: boolean
-  threatLevel: ValueChange
-  threatIncrease: ValueChange
-  suppression: ValueChange
-  baseThreatIncrease: number
+  threatLevel: ValueChange<Bps>
+  threatIncrease: ValueChange<Bps>
+  suppression: ValueChange<Bps>
+  baseThreatIncrease: Bps
   missionImpacts: {
     missionSiteId: string
     missionTitle: string
-    threatReduction?: number
-    suppressionAdded?: number
+    threatReduction?: Bps
+    suppressionAdded?: Bps
   }[]
-  suppressionDecay: number
+  suppressionDecay: Bps
 }

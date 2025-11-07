@@ -1,3 +1,4 @@
+import { bps } from '../bps'
 import { factions } from '../../collections/factions'
 import type { GameState } from '../model'
 import { validateAgentInvariants } from '../agents/validateAgentInvariants'
@@ -11,7 +12,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     turn: 1,
     actionsCount: 0,
     // Situation
-    panic: 0,
+    panic: bps(0),
     factions,
     // Assets
     money: 500,

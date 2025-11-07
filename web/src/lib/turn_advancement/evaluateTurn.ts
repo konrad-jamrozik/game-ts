@@ -1,5 +1,6 @@
 import { agsV } from '../model/agents/AgentsView'
 import { getMissionById } from '../collections/missions'
+import { bps } from '../model/bps'
 import type { Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import {
   newValueChange,
@@ -329,8 +330,11 @@ function updatePanic(
   })
 
   // Increase panic by the sum of (threat level - suppression) for all factions
-  const totalPanicIncrease = factionPanicIncreases.reduce((sum, faction) => sum + faction.factionPanicIncrease, 0)
-  state.panic += totalPanicIncrease
+  const totalPanicIncrease = factionPanicIncreases.reduce(
+    (sum, faction) => (sum + (faction.factionPanicIncrease as unknown as number)) as typeof sum,
+    0 as ReturnType<typeof calculatePanicIncrease>,
+  )
+  state.panic = bps((state.panic as unknown as number) + (totalPanicIncrease as unknown as number))
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -341,7 +345,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      state.panic = Math.max(0, state.panic - rewards.panicReduction)
+      state.panic = bps(Math.max(0, (state.panic as unknown as number) - (rewards.panicReduction as unknown as number)))
     }
   }
 
@@ -359,10 +363,17 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = Math.max(0, targetFaction.threatLevel - factionReward.threatReduction)
+    targetFaction.threatLevel = bps(
+      Math.max(
+        0,
+        (targetFaction.threatLevel as unknown as number) - (factionReward.threatReduction as unknown as number),
+      ),
+    )
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression += factionReward.suppression
+    targetFaction.suppression = bps(
+      (targetFaction.suppression as unknown as number) + (factionReward.suppression as unknown as number),
+    )
   }
 }
 
@@ -383,11 +394,18 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    faction.threatLevel += faction.threatIncrease
+    // KJA fix squiggly
+    faction.threatLevel = bps(
+      (faction.threatLevel as unknown as number) + (faction.threatIncrease as unknown as number),
+    )
 
     // Apply suppression decay AFTER panic calculation and threat increase
-    faction.suppression = floor(faction.suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
-    const suppressionDecay = previousSuppression - faction.suppression
+    // KJA fix squiggly
+    faction.suppression = bps(floor((faction.suppression as unknown as number) * (1 - SUPPRESSION_DECAY_PCT / 100)))
+    // KJA fix squiggly
+    const suppressionDecay = bps(
+      (previousSuppression as unknown as number) - (faction.suppression as unknown as number),
+    )
 
     // Track mission impacts on this faction
     const missionImpacts = []
@@ -398,8 +416,8 @@ function updateFactions(
             const impact: {
               missionSiteId: string
               missionTitle: string
-              threatReduction?: number
-              suppressionAdded?: number
+              threatReduction?: typeof factionReward.threatReduction
+              suppressionAdded?: typeof factionReward.suppression
             } = {
               missionSiteId,
               missionTitle,

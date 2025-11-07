@@ -1,14 +1,16 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
+import type { Bps } from '../model/bps'
 import type { ValueChange } from '../model/reportModel'
 import { div } from './mathUtils'
 
 /**
- * @param value - The value to format
+ * @param value - The value to format (in basis points, where 100 = 1%)
  * @returns The value, divided by 100, formatted as percentage with 2 decimal places. 
    For example, 12345 will be formatted as "123.45%"
  */
-export function fmtPctDiv100Dec2(value: number): string {
+export function fmtPctDiv100Dec2(value: Bps): string {
+  // KJA do I still need fmtPctDiv100Dec2 now that I have Bps?
   return fmtPctDiv100(value, 2)
 }
 
@@ -52,8 +54,12 @@ export function fmtAgentCount(count: number): string {
  * @param formatter - Optional formatter function to apply to both values
  * @returns Formatted string in the format "previous → current"
  */
-export function formatValueChange(change: ValueChange, formatter?: (value: number) => string): string {
-  const prev = formatter ? formatter(change.previous) : change.previous.toString()
-  const curr = formatter ? formatter(change.current) : change.current.toString()
+export function formatValueChange<T extends number = number>(
+  change: ValueChange<T>,
+  formatter?: (value: T) => string,
+): string {
+  // KJA review this function
+  const prev = formatter ? formatter(change.previous) : String(change.previous)
+  const curr = formatter ? formatter(change.current) : String(change.current)
   return `${prev} → ${curr}`
 }

@@ -3,6 +3,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Card, CardContent, CardHeader, Chip, Collapse, IconButton, Typography, type SxProps } from '@mui/material'
 import * as React from 'react'
 import type { GridColDef } from '@mui/x-data-grid'
+import type { Bps } from '../../lib/model/bps'
 import type { ValueChange } from '../../lib/model/reportModel'
 import theme from '../../styling/theme'
 import { StyledDataGrid } from '../StyledDataGrid'
@@ -74,7 +75,8 @@ export function ValueChangeCard({
           value === 0 ? 'default' : shouldReverse ? (value > 0 ? 'error' : 'success') : value > 0 ? 'success' : 'error'
 
         const sign = value >= 0 ? '+' : ''
-        const displayValue = showPercentage ? fmtPctDiv100Dec2(value) : `${sign}${value}`
+        // KJA fix squiggly
+        const displayValue = showPercentage ? fmtPctDiv100Dec2(value as Bps) : `${sign}${value}`
         return <Chip label={displayValue} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       },
     },
@@ -122,7 +124,8 @@ export function ValueChangeCard({
  */
 function formatValueChange(change: ValueChange, showPercentage = false, percentageOnly = false): string {
   if (showPercentage && percentageOnly) {
-    return `${fmtPctDiv100Dec2(change.previous)} → ${fmtPctDiv100Dec2(change.current)}`
+    // KJA fix squiggly
+    return `${fmtPctDiv100Dec2(change.previous as Bps)} → ${fmtPctDiv100Dec2(change.current as Bps)}`
   }
   return `${change.previous} → ${change.current}`
 }
@@ -134,7 +137,8 @@ function formatDelta(delta: number, reverseColors = false, showPercentage = fals
   const color: 'success' | 'error' | 'default' =
     delta === 0 ? 'default' : reverseColors ? (delta > 0 ? 'error' : 'success') : delta > 0 ? 'success' : 'error'
   const sign = delta >= 0 ? '+' : ''
-  const displayValue = showPercentage ? fmtPctDiv100Dec2(delta) : `${sign}${delta}`
+  // KJA fix squiggly
+  const displayValue = showPercentage ? fmtPctDiv100Dec2(delta as Bps) : `${sign}${delta}`
   return <Chip label={displayValue} color={color} sx={{ fontSize: '1rem' }} />
 }
 
@@ -153,5 +157,6 @@ function formatPercentageDelta(change: ValueChange, reverseColors = false): Reac
       ? 'success'
       : 'error'
 
-  return <Chip label={fmtPctDiv100Dec2(delta)} color={color} sx={{ fontSize: '1rem' }} />
+  // KJA fix squiggly
+  return <Chip label={fmtPctDiv100Dec2(delta as Bps)} color={color} sx={{ fontSize: '1rem' }} />
 }
