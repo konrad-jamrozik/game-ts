@@ -63,10 +63,10 @@ export type PanicReport = {
 }
 
 export type PanicBreakdown = {
-  factionContributions: {
+  factionPanicIncreases: {
     factionId: string
     factionName: string
-    contribution: number
+    factionPanicIncrease: number
   }[]
   missionReductions: {
     missionSiteId: string
@@ -74,6 +74,15 @@ export type PanicBreakdown = {
     reduction: number
   }[]
 }
+
+// export type Faction = {
+//   id: FactionId
+//   name: string
+//   threatLevel: number
+//   threatIncrease: number
+//   suppression: number
+//   discoveryPrerequisite: string[]
+// }
 
 export type FactionReport = {
   factionId: string
@@ -85,7 +94,7 @@ export type FactionReport = {
   details: FactionDetails
 }
 
-// KJA rename to FactionReport; rename current FactionReport to FactionsReport
+// kja 2 merge FactionDetails into FactionReport.
 export type FactionDetails = {
   baseThreatIncrease: number
   missionImpacts: {

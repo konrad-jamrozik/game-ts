@@ -226,7 +226,7 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
  * Format faction breakdown as tree structure for MUI Tree View with chips
  */
 function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  // kja this should be part of FactionReport and formatFactionDetails
+  // KJA 2 dedup formula for panic increase, merge FactionDetails into FactionReport.
   // Calculate panic increase: Math.max(0, threatLevel - suppression)
   const previousPanicIncrease = Math.max(0, faction.threatLevel.previous - faction.suppression.previous)
   const currentPanicIncrease = Math.max(0, faction.threatLevel.current - faction.suppression.current)
@@ -325,12 +325,12 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   const rows: BreakdownRow[] = []
 
   // Add faction contributions
-  breakdown.factionContributions.forEach((faction) => {
-    if (faction.contribution !== 0) {
+  breakdown.factionPanicIncreases.forEach((faction) => {
+    if (faction.factionPanicIncrease !== 0) {
       rows.push({
         id: `faction-${faction.factionId}`,
         label: `${faction.factionName} Contribution`,
-        value: faction.contribution,
+        value: faction.factionPanicIncrease,
         reverseColor: true, // Panic increase is bad
       })
     }

@@ -318,17 +318,18 @@ function updatePanic(
   const previousPanic = state.panic
 
   // Track faction contributions
-  const factionContributions = state.factions.map((faction) => {
-    const contribution = Math.max(0, faction.threatLevel - faction.suppression)
+  const factionPanicIncreases = state.factions.map((faction) => {
+    // KJA 2 source of truth for panic increase: Math.max(0, threatLevel - suppression)
+    const factionPanicIncrease = Math.max(0, faction.threatLevel - faction.suppression)
     return {
       factionId: faction.id,
       factionName: faction.name,
-      contribution,
+      factionPanicIncrease,
     }
   })
 
   // Increase panic by the sum of (threat level - suppression) for all factions
-  const totalPanicIncrease = factionContributions.reduce((sum, faction) => sum + faction.contribution, 0)
+  const totalPanicIncrease = factionPanicIncreases.reduce((sum, faction) => sum + faction.factionPanicIncrease, 0)
   state.panic += totalPanicIncrease
 
   // Track mission reductions and apply them
@@ -347,7 +348,7 @@ function updatePanic(
   return {
     change: newValueChange(previousPanic, state.panic),
     breakdown: {
-      factionContributions,
+      factionPanicIncreases,
       missionReductions,
     },
   }
