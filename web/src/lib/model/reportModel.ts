@@ -30,7 +30,7 @@ export function newValueChange<T extends number = number>(previous: T, current: 
   // The subtraction is safe because T extends number
   // We need to cast to number for the arithmetic, then back to T
   // This is a known limitation when working with branded types
-  // KJA fix squiggly
+  // KJA fix squiggly (has comment added by AI)
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
   const delta = ((current as unknown as number) - (previous as unknown as number)) as T
   return {
