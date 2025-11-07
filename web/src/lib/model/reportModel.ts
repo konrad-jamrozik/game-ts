@@ -91,11 +91,6 @@ export type FactionReport = {
   threatLevel: ValueChange
   threatIncrease: ValueChange
   suppression: ValueChange
-  details: FactionDetails
-}
-
-// kja 2 merge FactionDetails into FactionReport.
-export type FactionDetails = {
   baseThreatIncrease: number
   missionImpacts: {
     missionSiteId: string

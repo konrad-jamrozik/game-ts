@@ -432,11 +432,9 @@ function updateFactions(
       threatLevel: newValueChange(previousThreatLevel, faction.threatLevel),
       threatIncrease: newValueChange(previousThreatIncrease, faction.threatIncrease),
       suppression: newValueChange(previousSuppression, faction.suppression),
-      details: {
-        baseThreatIncrease: faction.threatIncrease,
-        missionImpacts,
-        suppressionDecay,
-      },
+      baseThreatIncrease: faction.threatIncrease,
+      missionImpacts,
+      suppressionDecay,
     })
   }
 

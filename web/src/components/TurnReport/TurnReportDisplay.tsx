@@ -4,7 +4,6 @@ import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import type {
   AgentsReport,
-  FactionDetails,
   FactionReport,
   IntelBreakdown,
   MoneyBreakdown,
@@ -231,8 +230,14 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
   const panicIncreaseDelta = currentPanicIncrease - previousPanicIncrease
 
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
-    // Add Panic increase entry
+  const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+    {
+      id: `faction-${faction.factionId}-baseThreatIncrease`,
+      label: 'Base Threat Increase',
+      value: faction.baseThreatIncrease,
+      reverseColor: true, // Threat increase is bad
+      showPercentage: true,
+    },
     {
       id: `faction-${faction.factionId}-panic-increase`,
       label: `Panic increase: ${fmtPctDiv100Dec2(previousPanicIncrease)} → ${fmtPctDiv100Dec2(currentPanicIncrease)}`,
@@ -240,7 +245,6 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
       reverseColor: true, // Panic increase is bad
       showPercentage: true,
     },
-    // Add Suppression entry
     {
       id: `faction-${faction.factionId}-suppression`,
       label: `Suppression: ${fmtPctDiv100Dec2(faction.suppression.previous)} → ${fmtPctDiv100Dec2(faction.suppression.current)}`,
@@ -248,18 +252,40 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
       reverseColor: false, // Suppression increase is good (default)
       showPercentage: true,
     },
-    // Add breakdown details
-    ...formatFactionDetails(faction.details).map((row) => {
-      const item: ValueChangeTreeItemModelProps = {
-        id: `faction-${faction.factionId}-${row.id}`,
-        label: row.label,
-        value: row.value,
-        reverseColor: row.reverseColor ?? false,
-        showPercentage: true,
-      }
-      return item
-    }),
   ]
+
+  // Add mission impacts
+  faction.missionImpacts.forEach((impact) => {
+    if (impact.threatReduction !== undefined && impact.threatReduction !== 0) {
+      children.push({
+        id: `faction-${faction.factionId}-mission-threat-${impact.missionSiteId}`,
+        label: `${shortenMissionTitle(impact.missionTitle)} Threat Reduction`,
+        value: impact.threatReduction,
+        reverseColor: false, // Threat reduction is good (default)
+        showPercentage: true,
+      })
+    }
+    if (impact.suppressionAdded !== undefined && impact.suppressionAdded !== 0) {
+      children.push({
+        id: `faction-${faction.factionId}-mission-suppression-${impact.missionSiteId}`,
+        label: `${shortenMissionTitle(impact.missionTitle)} Suppression`,
+        value: impact.suppressionAdded,
+        reverseColor: false, // Suppression increase is good (default)
+        showPercentage: true,
+      })
+    }
+  })
+
+  // Add suppression decay
+  if (faction.suppressionDecay !== 0) {
+    children.push({
+      id: `faction-${faction.factionId}-suppressionDecay`,
+      label: 'Suppression Decay',
+      value: faction.suppressionDecay,
+      reverseColor: true, // Suppression decay is bad
+      showPercentage: true,
+    })
+  }
 
   return {
     id: faction.factionId,
@@ -267,7 +293,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     value: faction.threatLevel.delta,
     reverseMainColors: true,
     showPercentage: true,
-    children: treeItems,
+    children,
   }
 }
 
@@ -346,55 +372,6 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
       })
     }
   })
-
-  return rows
-}
-
-/**
- * Format faction details breakdown
- */
-function formatFactionDetails(details: FactionDetails): BreakdownRow[] {
-  const rows: BreakdownRow[] = []
-
-  // Add base threat increase
-  if (details.baseThreatIncrease !== 0) {
-    rows.push({
-      id: 'baseThreatIncrease',
-      label: 'Base Threat Increase',
-      value: details.baseThreatIncrease,
-      reverseColor: true, // Threat increase is bad
-    })
-  }
-
-  // Add mission impacts
-  details.missionImpacts.forEach((impact) => {
-    if (impact.threatReduction !== undefined && impact.threatReduction !== 0) {
-      rows.push({
-        id: `mission-threat-${impact.missionSiteId}`,
-        label: `${shortenMissionTitle(impact.missionTitle)} Threat Reduction`,
-        value: impact.threatReduction,
-        reverseColor: false, // Threat reduction is good (default)
-      })
-    }
-    if (impact.suppressionAdded !== undefined && impact.suppressionAdded !== 0) {
-      rows.push({
-        id: `mission-suppression-${impact.missionSiteId}`,
-        label: `${shortenMissionTitle(impact.missionTitle)} Suppression`,
-        value: impact.suppressionAdded,
-        reverseColor: false, // Suppression increase is good (default)
-      })
-    }
-  })
-
-  // Add suppression decay
-  if (details.suppressionDecay !== 0) {
-    rows.push({
-      id: 'suppressionDecay',
-      label: 'Suppression Decay',
-      value: details.suppressionDecay,
-      reverseColor: true, // Suppression decay is bad
-    })
-  }
 
   return rows
 }
