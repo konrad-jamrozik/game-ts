@@ -65,17 +65,18 @@ Here we describe the implementation order, while full details are available in [
 
 For each deployed mission site:
 
-// KJA I think there is no more objective fulfillment roll.
-
-1. Roll for objective fulfillment for each objective in appropriate order.
-2. Roll for hit points lost for each agent deployed to the mission site.
-3. Terminate agents that lost all their hit points.
-4. For agents that survived:
-   1. Apply agent exhaustion increases.
-   2. Award "survived mission count" increase and appropriate skill points.
-   3. Update agent state and assignment based on their final state (whether lost hit points or not).
-5. Update mission site state depending on if its objectives were fulfilled or not.
-6. If mission was fulfilled, return the mission site rewards to be later used to update player assets.
+1. Evaluate the mission site battle between deployed agents and enemy units. This includes:
+   - Multiple combat rounds until the battle concludes (all enemies neutralized, all agents terminated, or retreat ordered).
+   - During combat, agents and enemies attack each other, potentially losing hit points and causing exhaustion.
+   - Agents may be terminated if they lose all hit points during combat.
+2. Update agents after battle:
+   - Terminate agents that lost all their hit points.
+   - For agents that survived:
+     1. Apply agent exhaustion increases (mission conclusion exhaustion plus additional exhaustion for each terminated agent).
+     2. Award "survived mission count" increase and appropriate skill points (from battle combat and mission survival).
+     3. Update agent state and assignment based on their final state (whether lost hit points or not).
+3. Determine mission site state: `Successful` if all enemies were neutralized, otherwise `Failed`.
+4. If mission site state is `Successful`, return the mission site rewards to be later used to update player assets.
 
 # 10. Update player assets
 
