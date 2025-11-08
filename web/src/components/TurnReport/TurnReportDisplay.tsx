@@ -16,7 +16,6 @@ import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { formatValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
-import type { BreakdownRow } from './ValueChangeCard'
 import { bps, isBps } from '../../lib/model/bps'
 
 /**
@@ -397,18 +396,10 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   return rows
 }
 
-/**
- * Shorten mission titles for display in breakdown tables
- */
-// function shortenMissionTitle(title: string): string {
-//   // Remove common prefixes and make titles more concise
-//   return title
-//     .replaceAll(/^mission:\s*/giu, '')
-//     .replaceAll(/^raid\s+/giu, '')
-//     .replaceAll(/^apprehend\s+/giu, 'Capture ')
-//     .replaceAll(/red dawn\s+/giu, 'RD ')
-//     .replaceAll(/\s+safehouse$/giu, ' Safe')
-//     .replaceAll(/\s+outpost$/giu, ' Out')
-//     .replaceAll(/\s+base$/giu, ' Base')
-//     .replaceAll(/\s+hq$/giu, ' HQ')
-// }
+type BreakdownRow = {
+  id: string
+  label: string
+  value: number
+  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
+  reverseColor?: boolean
+}

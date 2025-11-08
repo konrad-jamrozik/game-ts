@@ -31,7 +31,7 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.undo())
   }
 
-  const isGameOver = gameState.panic >= 10_000 || gameState.money < 0 // 100% panic = 10,000 OR negative money
+  const isGameOver = gameState.panic.value >= 10_000 || gameState.money < 0 // 100% panic = 10,000 OR negative money
 
   const labelWidthPx = 110
   return (

@@ -98,6 +98,7 @@ function ValueChangeLabel({
   noColor = false,
   noPlusSign = false,
 }: ValueChangeLabelProps): React.ReactElement {
+  // KJA instead of showPercentage, the way to display it should be derived from Bps
   // Determine color based on value and reverseColor setting
   const color: 'success' | 'error' | 'default' =
     noColor || value === undefined || value === 0
