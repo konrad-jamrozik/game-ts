@@ -74,6 +74,7 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
         label: ValueChangeLabel,
       }}
       slotProps={{
+        // KJA unsafe
         // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         label: {
           value: item.value,

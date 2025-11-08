@@ -98,6 +98,7 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
         label: CustomLabel,
       }}
       slotProps={{
+        // KJA unsafe
         // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
         label: { secondaryLabel: (item.secondaryLabel ?? '') || '' } as CustomLabelProps,
       }}

@@ -57,6 +57,6 @@ export function fmtAgentCount(count: number): string {
  * @param change - The value change to format
  * @returns Formatted string in the format "previous → current"
  */
-export function formatValueChange<T extends number | Bps = number>(change: ValueChange<T>): string {
+export function formatValueChange(change: ValueChange): string {
   return `${str(change.previous)} → ${str(change.current)}`
 }

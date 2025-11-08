@@ -25,35 +25,30 @@ export type ValueChange<TNumber extends number | Bps = number> = {
   readonly delta: TNumber
 }
 
-export function newValueChange<TNumber extends number | Bps = number>(
-  previous: TNumber,
-  current: TNumber,
-): ValueChange<TNumber> {
-  // KJA review, especially the linter disablement
-  // Handle Bps values specially
+// --- Overloads ---
+export function newValueChange(previous: Bps, current: Bps): ValueChange<Bps>
+export function newValueChange(previous: number, current: number): ValueChange
+
+// --- Implementation ---
+export function newValueChange(previous: Bps | number, current: Bps | number): ValueChange<Bps> | ValueChange {
   if (isBps(previous) && isBps(current)) {
-    const delta = current.value - previous.value
     return {
       previous,
       current,
-      get delta(): TNumber {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        return bps(delta) as TNumber
-      },
+      delta: bps(current.value - previous.value),
     }
   }
 
-  // Handle number values
-  // TypeScript can't narrow the type here, but we know from the if condition above that these are numbers
-  const delta = Number(current) - Number(previous)
-  return {
-    previous,
-    current,
-    get delta(): TNumber {
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-      return delta as TNumber
-    },
+  if (typeof previous === 'number' && typeof current === 'number') {
+    return {
+      previous,
+      current,
+      delta: current - previous,
+    }
   }
+
+  // Exhaustive guard: disallow mixing number with Bps
+  throw new TypeError('newValueChange: mixed types (number vs Bps) are not allowed.')
 }
 
 export type MoneyBreakdown = {
