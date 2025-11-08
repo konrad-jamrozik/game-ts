@@ -55,15 +55,8 @@ export function fmtAgentCount(count: number): string {
 /**
  * Formats a value change as "previous → current"
  * @param change - The value change to format
- * @param formatter - Optional formatter function to apply to both values
  * @returns Formatted string in the format "previous → current"
  */
-export function formatValueChange<T extends number | Bps = number>(
-  change: ValueChange<T>,
-  formatter?: (value: T) => string,
-): string {
-  // KJA review this function
-  const prev = formatter ? formatter(change.previous) : str(change.previous)
-  const curr = formatter ? formatter(change.current) : str(change.current)
-  return `${prev} → ${curr}`
+export function formatValueChange<T extends number | Bps = number>(change: ValueChange<T>): string {
+  return `${str(change.previous)} → ${str(change.current)}`
 }

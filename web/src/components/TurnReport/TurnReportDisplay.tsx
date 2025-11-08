@@ -218,7 +218,7 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
 
   return {
     id: 'panic-summary',
-    label: `Panic: ${formatValueChange(panicReport.change, str)}`,
+    label: `Panic: ${formatValueChange(panicReport.change)}`,
     value: panicReport.change.delta.value,
     reverseMainColors: true,
     showPercentage: true,
@@ -292,7 +292,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
       id: `faction-${faction.factionId}-threat-level`,
-      label: `Threat Level: ${formatValueChange(faction.threatLevel, str)}`,
+      label: `Threat Level: ${formatValueChange(faction.threatLevel)}`,
       value: faction.threatLevel.delta.value,
       reverseMainColors: true,
       showPercentage: true,
@@ -300,7 +300,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     },
     {
       id: `faction-${faction.factionId}-suppression`,
-      label: `Suppression: ${formatValueChange(faction.suppression, str)}`,
+      label: `Suppression: ${formatValueChange(faction.suppression)}`,
       value: faction.suppression.delta.value,
       reverseColor: false, // Suppression increase is good (default)
       showPercentage: true,
@@ -308,9 +308,10 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     },
   ]
 
+  const panicCaused = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: faction.factionId,
-    label: `${faction.factionName}: Panic Caused: ${formatValueChange(newValueChange(previousPanicIncrease, currentPanicIncrease), str)}`,
+    label: `${faction.factionName}: Panic Caused: ${formatValueChange(panicCaused)}`,
     value: panicIncreaseDelta,
     reverseMainColors: true,
     showPercentage: true,
