@@ -328,12 +328,11 @@ function updatePanic(
   })
 
   // Increase panic by the sum of (threat level - suppression) for all factions
-  // KJA fix squiggly
-  const totalPanicIncrease = factionPanicIncreases.reduce(
-    (sum, faction) => (sum + (faction.factionPanicIncrease as unknown as number)) as typeof sum,
-    0 as ReturnType<typeof calculatePanicIncrease>,
-  )
-  state.panic = bps((state.panic as unknown as number) + (totalPanicIncrease as unknown as number))
+  let totalPanicIncrease = 0
+  for (const faction of factionPanicIncreases) {
+    totalPanicIncrease += faction.factionPanicIncrease
+  }
+  state.panic = bps(state.panic + totalPanicIncrease)
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -344,8 +343,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      // KJA fix squiggly
-      state.panic = bps(Math.max(0, (state.panic as unknown as number) - (rewards.panicReduction as unknown as number)))
+      state.panic = bps(Math.max(0, state.panic - rewards.panicReduction))
     }
   }
 
@@ -363,19 +361,10 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = bps(
-      Math.max(
-        0,
-        // KJA fix squiggly
-        (targetFaction.threatLevel as unknown as number) - (factionReward.threatReduction as unknown as number),
-      ),
-    )
+    targetFaction.threatLevel = bps(Math.max(0, targetFaction.threatLevel - factionReward.threatReduction))
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = bps(
-      // KJA fix squiggly
-      (targetFaction.suppression as unknown as number) + (factionReward.suppression as unknown as number),
-    )
+    targetFaction.suppression = bps(targetFaction.suppression + factionReward.suppression)
   }
 }
 
