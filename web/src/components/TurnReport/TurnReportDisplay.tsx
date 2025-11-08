@@ -204,11 +204,19 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
  * Format panic breakdown as tree structure for MUI Tree View with chips
  */
 function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  const breakdownTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(
+  const topLevelItem: TreeViewBaseItem<ValueChangeTreeItemModelProps> = {
+    id: 'panic-summary',
+    label: `Panic: ${fmtValueChange(panicReport.change)}`,
+    value: panicReport.change.delta.value,
+    reverseMainColors: true,
+    showPercentage: true,
+  }
+
+  const childrenTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(
     panicReport.breakdown,
   ).map((row) => {
     const treeItem: ValueChangeTreeItemModelProps = {
-      id: `panic-${row.id}`,
+      id: row.id,
       label: row.label,
       value: row.value,
       reverseColor: row.reverseColor ?? false,
@@ -217,16 +225,8 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
     return treeItem
   })
 
-  const entireTreeItem: TreeViewBaseItem<ValueChangeTreeItemModelProps> = {
-    id: 'panic-summary',
-    label: `Panic: ${fmtValueChange(panicReport.change)}`,
-    value: panicReport.change.delta.value,
-    reverseMainColors: true,
-    showPercentage: true,
-    children: breakdownTreeItems,
-  }
-
-  return entireTreeItem
+  topLevelItem.children = childrenTreeItems
+  return topLevelItem
 }
 
 /**
@@ -378,7 +378,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   breakdown.factionPanicIncreases.forEach((faction) => {
     if (faction.factionPanicIncrease.value !== 0) {
       rows.push({
-        id: `faction-${faction.factionId}`,
+        id: `panic-faction-${faction.factionId}`,
         label: `Caused by ${faction.factionName}`,
         value: faction.factionPanicIncrease.value,
         reverseColor: true, // Panic increase is bad
@@ -390,7 +390,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   const totalMissionReduction = breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0)
   if (totalMissionReduction !== 0) {
     rows.push({
-      id: 'mission-reductions',
+      id: 'panic-mission-reductions',
       label: 'Mission Reductions',
       value: totalMissionReduction,
       reverseColor: false, // Panic reduction is good (default)
