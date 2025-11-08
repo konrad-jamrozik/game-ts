@@ -20,7 +20,8 @@ type CustomTreeItemProps = TreeItemProps & {
   ref?: React.Ref<HTMLLIElement>
 }
 
-type CustomLabelProps = React.ComponentPropsWithoutRef<'div'> & {
+type CustomLabelProps = {
+  children: string
   secondaryLabel: string
 }
 
@@ -88,6 +89,7 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
   const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!
 
   const customLabelProps: CustomLabelProps = {
+    children: item.label,
     secondaryLabel: (item.secondaryLabel ?? '') || '',
   }
 

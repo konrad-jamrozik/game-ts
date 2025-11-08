@@ -470,5 +470,35 @@ const customLabelProps: CustomLabelProps = {
 }
 ```
 
+If you would rename the `item.label` e.g. to `item.label2`:
+
+``` typescript
+type TreeItemWithLabel = {
+  id: string
+  label2: string // Renamed from `label`, breaks MUI TreeView.
+  secondaryLabel?: string
+}
+```
+
+then the app will fail at runtime with following MUI error:
+
+``` text
+Error: MUI X: The Tree View component requires all items to have a `label` property.
+Alternatively, you can use the `getItemLabel` prop to specify a custom label for each item.
+An item was provided without label in the `items` prop:
+```
+
+You can actually find it defined in `web\node_modules\@mui\x-tree-view\esm\models\items.d.ts`
+
+``` typescript
+export type TreeViewDefaultItemModelProperties = {
+  id: string;
+  label: string;
+};
+export type TreeViewBaseItem<R extends {} = TreeViewDefaultItemModelProperties> = R & {
+  children?: TreeViewBaseItem<R>[];
+};
+```
+
 See also:
 - https://mui.com/x/common-concepts/custom-components/
