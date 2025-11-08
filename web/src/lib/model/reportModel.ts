@@ -1,4 +1,4 @@
-import type { Bps } from './bps'
+import { bps, isBps, type Bps } from './bps'
 
 export type TurnReport = BaseReport & {
   assets: AssetsReport
@@ -19,17 +19,33 @@ export type AssetsReport = {
   intelBreakdown: IntelBreakdown
 }
 
-export type ValueChange<TNumber extends number = number> = {
+export type ValueChange<TNumber extends number | Bps = number> = {
   previous: TNumber
   current: TNumber
   readonly delta: TNumber
 }
 
-export function newValueChange<TNumber extends number = number>(
+export function newValueChange<TNumber extends number | Bps = number>(
   previous: TNumber,
   current: TNumber,
 ): ValueChange<TNumber> {
-  const delta = current - previous
+  // KJA review, especially the linter disablement
+  // Handle Bps values specially
+  if (isBps(previous) && isBps(current)) {
+    const delta = current.value - previous.value
+    return {
+      previous,
+      current,
+      get delta(): TNumber {
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+        return bps(delta) as TNumber
+      },
+    }
+  }
+
+  // Handle number values
+  // TypeScript can't narrow the type here, but we know from the if condition above that these are numbers
+  const delta = Number(current) - Number(previous)
   return {
     previous,
     current,

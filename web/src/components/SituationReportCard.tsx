@@ -11,13 +11,12 @@ import { StyledDataGrid } from './StyledDataGrid'
 import { fmtPct, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import { calculatePanicIncrease } from '../lib/model/ruleset/ruleset'
-import { bpsStr } from '../lib/model/bps'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
 
-  const panicPercentage = bpsStr(panic)
+  const panicPercentage = str(panic)
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },

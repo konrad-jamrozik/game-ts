@@ -5,7 +5,8 @@ import { TreeItem, type TreeItemProps } from '@mui/x-tree-view/TreeItem'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import theme from '../../styling/theme'
-import { bpsStr, type Bps } from '../../lib/model/bps'
+import { str } from '../../lib/utils/formatUtils'
+import { bps } from '../../lib/model/bps'
 
 export type ValueChangeTreeItemModelProps = {
   id: string
@@ -113,8 +114,7 @@ function ValueChangeLabel({
   let chipLabel: string | undefined = undefined
   if (value !== undefined) {
     const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    chipLabel = showPercentage ? bpsStr(value as Bps) : `${sign}${value}`
+    chipLabel = showPercentage ? str(bps(value)) : `${sign}${value}`
   }
 
   return (

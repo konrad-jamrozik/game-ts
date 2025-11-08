@@ -73,8 +73,8 @@ export function getRecoveryTurns(damage: number, hitPoints: number): number {
  */
 
 export function calculatePanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
-  return bps(Math.max(0, threatLevel - suppression))
+  return bps(Math.max(0, threatLevel.value - suppression.value))
 }
 export function decaySuppression(suppression: Bps): Bps {
-  return bps(floor(suppression * (1 - SUPPRESSION_DECAY_PCT / 100)))
+  return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY_PCT / 100)))
 }

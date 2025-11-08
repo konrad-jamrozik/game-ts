@@ -3,11 +3,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import { Box, Card, CardContent, CardHeader, Chip, Collapse, IconButton, Typography, type SxProps } from '@mui/material'
 import * as React from 'react'
 import type { GridColDef } from '@mui/x-data-grid'
-import { bpsStr, type Bps } from '../../lib/model/bps'
+import { bps, isBps } from '../../lib/model/bps'
 import type { ValueChange } from '../../lib/model/reportModel'
 import theme from '../../styling/theme'
 import { StyledDataGrid } from '../StyledDataGrid'
-import { fmtPctDiv100Dec2 } from '../../lib/utils/formatUtils'
+import { str } from '../../lib/utils/formatUtils'
 
 /**
  * Type guard for BreakdownRow
@@ -75,8 +75,7 @@ export function ValueChangeCard({
           value === 0 ? 'default' : shouldReverse ? (value > 0 ? 'error' : 'success') : value > 0 ? 'success' : 'error'
 
         const sign = value >= 0 ? '+' : ''
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        const displayValue = showPercentage ? bpsStr(value as Bps) : `${sign}${value}`
+        const displayValue = showPercentage ? str(bps(value)) : `${sign}${value}`
         return <Chip label={displayValue} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       },
     },
@@ -124,8 +123,10 @@ export function ValueChangeCard({
  */
 function formatValueChange(change: ValueChange, showPercentage = false, percentageOnly = false): string {
   if (showPercentage && percentageOnly) {
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-    return `${bpsStr(change.previous as Bps)} → ${bpsStr(change.current as Bps)}`
+    // When showPercentage is true, the values should be Bps objects // KJA get rid of show percentage altogether
+    const previous = isBps(change.previous) ? change.previous : bps(change.previous)
+    const current = isBps(change.current) ? change.current : bps(change.current)
+    return `${str(previous)} → ${str(current)}`
   }
   return `${change.previous} → ${change.current}`
 }
@@ -137,8 +138,7 @@ function formatDelta(delta: number, reverseColors = false, showPercentage = fals
   const color: 'success' | 'error' | 'default' =
     delta === 0 ? 'default' : reverseColors ? (delta > 0 ? 'error' : 'success') : delta > 0 ? 'success' : 'error'
   const sign = delta >= 0 ? '+' : ''
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  const displayValue = showPercentage ? fmtPctDiv100Dec2(delta as Bps) : `${sign}${delta}`
+  const displayValue = showPercentage ? str(bps(delta)) : `${sign}${delta}`
   return <Chip label={displayValue} color={color} sx={{ fontSize: '1rem' }} />
 }
 
@@ -146,6 +146,7 @@ function formatDelta(delta: number, reverseColors = false, showPercentage = fals
  * Format percentage delta for percentage-only mode
  */
 function formatPercentageDelta(change: ValueChange, reverseColors = false): React.ReactNode {
+  // kja dedup formatDelta and format percentage delta
   const { delta } = change
   if (delta === 0) return <Chip label="no change" color="default" sx={{ fontSize: '1rem' }} />
 
@@ -157,6 +158,5 @@ function formatPercentageDelta(change: ValueChange, reverseColors = false): Reac
       ? 'success'
       : 'error'
 
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-  return <Chip label={fmtPctDiv100Dec2(delta as Bps)} color={color} sx={{ fontSize: '1rem' }} />
+  return <Chip label={str(bps(delta))} color={color} sx={{ fontSize: '1rem' }} />
 }

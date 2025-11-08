@@ -13,7 +13,7 @@ import { assertEqual } from '../lib/utils/assert'
 import { ExperimentalTurnReportModal } from './TurnReport/ExperimentalTurnReportModal'
 import { useTurnReportHistory } from './TurnReport/useTurnReportHistory'
 import type { TurnReport } from '../lib/model/reportModel'
-import { bpsStr } from '../lib/model/bps'
+import { str } from '../lib/utils/formatUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event
@@ -22,7 +22,7 @@ function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionComplete
   if (rewards.intel !== undefined) parts.push(`+${rewards.intel} intel`)
   if (rewards.funding !== undefined) parts.push(`+${rewards.funding} funding`)
   if (rewards.panicReduction !== undefined) {
-    parts.push(`-${bpsStr(rewards.panicReduction)}% panic`)
+    parts.push(`-${str(rewards.panicReduction)}% panic`)
   }
   return parts.join(', ')
 }

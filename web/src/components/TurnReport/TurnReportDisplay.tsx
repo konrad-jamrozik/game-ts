@@ -219,7 +219,7 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
   return {
     id: 'panic-summary',
     label: `Panic: ${formatValueChange(panicReport.change, str)}`,
-    value: panicReport.change.delta,
+    value: panicReport.change.delta.value,
     reverseMainColors: true,
     showPercentage: true,
     children: treeItems,
@@ -232,18 +232,24 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
 function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
   const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
-  const panicIncreaseDelta = currentPanicIncrease - previousPanicIncrease
+  const panicIncreaseDelta = currentPanicIncrease.value - previousPanicIncrease.value
 
   // Calculate mission impacts (summed across all missions)
-  const totalThreatReduction = faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction ?? 0), 0)
-  const totalSuppressionAdded = faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded ?? 0), 0)
+  const totalThreatReduction = faction.missionImpacts.reduce(
+    (sum, impact) => sum + (impact.threatReduction?.value ?? 0),
+    0,
+  )
+  const totalSuppressionAdded = faction.missionImpacts.reduce(
+    (sum, impact) => sum + (impact.suppressionAdded?.value ?? 0),
+    0,
+  )
 
   // Build threat level children (base threat increase and mission threat reductions)
   const threatLevelChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
       id: `faction-${faction.factionId}-baseThreatIncrease`,
       label: 'Base Threat Increase',
-      value: faction.baseThreatIncrease,
+      value: faction.baseThreatIncrease.value,
       reverseColor: true, // Threat increase is bad
       showPercentage: true,
     },
@@ -262,11 +268,11 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   // Build suppression children (mission suppressions and suppression decay)
   const suppressionChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = []
 
-  if (faction.suppressionDecay !== 0) {
+  if (faction.suppressionDecay.value !== 0) {
     suppressionChildren.push({
       id: `faction-${faction.factionId}-suppressionDecay`,
       label: 'Suppression Decay',
-      value: faction.suppressionDecay,
+      value: faction.suppressionDecay.value,
       reverseColor: true, // Suppression decay is bad
       showPercentage: true,
     })
@@ -287,7 +293,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     {
       id: `faction-${faction.factionId}-threat-level`,
       label: `Threat Level: ${formatValueChange(faction.threatLevel, str)}`,
-      value: faction.threatLevel.delta,
+      value: faction.threatLevel.delta.value,
       reverseMainColors: true,
       showPercentage: true,
       children: threatLevelChildren,
@@ -295,7 +301,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     {
       id: `faction-${faction.factionId}-suppression`,
       label: `Suppression: ${formatValueChange(faction.suppression, str)}`,
-      value: faction.suppression.delta,
+      value: faction.suppression.delta.value,
       reverseColor: false, // Suppression increase is good (default)
       showPercentage: true,
       children: suppressionChildren,
@@ -366,18 +372,18 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
 
   // Add faction contributions
   breakdown.factionPanicIncreases.forEach((faction) => {
-    if (faction.factionPanicIncrease !== 0) {
+    if (faction.factionPanicIncrease.value !== 0) {
       rows.push({
         id: `faction-${faction.factionId}`,
         label: `Caused by ${faction.factionName}`,
-        value: faction.factionPanicIncrease,
+        value: faction.factionPanicIncrease.value,
         reverseColor: true, // Panic increase is bad
       })
     }
   })
 
   // Add mission reductions (shown as negative values)
-  const totalMissionReduction = breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction, 0)
+  const totalMissionReduction = breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0)
   if (totalMissionReduction !== 0) {
     rows.push({
       id: 'mission-reductions',

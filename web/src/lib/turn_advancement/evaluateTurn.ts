@@ -330,9 +330,9 @@ function updatePanic(
   // Increase panic by the sum of (threat level - suppression) for all factions
   let totalPanicIncrease = 0
   for (const faction of factionPanicIncreases) {
-    totalPanicIncrease += faction.factionPanicIncrease
+    totalPanicIncrease += faction.factionPanicIncrease.value
   }
-  state.panic = bps(state.panic + totalPanicIncrease)
+  state.panic = bps(state.panic.value + totalPanicIncrease)
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -343,7 +343,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      state.panic = bps(Math.max(0, state.panic - rewards.panicReduction))
+      state.panic = bps(Math.max(0, state.panic.value - rewards.panicReduction.value))
     }
   }
 
@@ -361,10 +361,10 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = bps(Math.max(0, targetFaction.threatLevel - factionReward.threatReduction))
+    targetFaction.threatLevel = bps(Math.max(0, targetFaction.threatLevel.value - factionReward.threatReduction.value))
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = bps(targetFaction.suppression + factionReward.suppression)
+    targetFaction.suppression = bps(targetFaction.suppression.value + factionReward.suppression.value)
   }
 }
 
@@ -385,11 +385,11 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    faction.threatLevel = bps(faction.threatLevel + faction.threatIncrease)
+    faction.threatLevel = bps(faction.threatLevel.value + faction.threatIncrease.value)
 
     // Apply suppression decay AFTER panic calculation and threat increase
     faction.suppression = decaySuppression(faction.suppression)
-    const suppressionDecay = bps(previousSuppression - faction.suppression)
+    const suppressionDecay = bps(previousSuppression.value - faction.suppression.value)
 
     // Track mission impacts on this faction
     const missionImpacts = []

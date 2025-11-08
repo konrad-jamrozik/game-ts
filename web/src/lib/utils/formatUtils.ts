@@ -15,7 +15,7 @@ export function str(value: unknown): string {
  * For example, 12345 will be formatted as "123.45%"
  */
 export function fmtPctDiv100Dec2(value: Bps): string {
-  return fmtPctDiv100(value, 2)
+  return fmtPctDiv100(value.value, 2)
 }
 
 export function fmtPctDiv100(value: number, decimals: number): string {
@@ -58,12 +58,12 @@ export function fmtAgentCount(count: number): string {
  * @param formatter - Optional formatter function to apply to both values
  * @returns Formatted string in the format "previous → current"
  */
-export function formatValueChange<T extends number = number>(
+export function formatValueChange<T extends number | Bps = number>(
   change: ValueChange<T>,
   formatter?: (value: T) => string,
 ): string {
   // KJA review this function
-  const prev = formatter ? formatter(change.previous) : String(change.previous)
-  const curr = formatter ? formatter(change.current) : String(change.current)
+  const prev = formatter ? formatter(change.previous) : str(change.previous)
+  const curr = formatter ? formatter(change.current) : str(change.current)
   return `${prev} → ${curr}`
 }
