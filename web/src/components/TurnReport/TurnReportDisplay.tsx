@@ -17,6 +17,7 @@ import { formatValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
 import type { BreakdownRow } from './ValueChangeCard'
+import { bps, isBps } from '../../lib/model/bps'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -25,6 +26,8 @@ export function TurnReportDisplay(): React.ReactElement {
   const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
   console.log('TurnReportDisplay!')
+  // KJA temp debug for bps
+  console.log(`str: ${str(bps(100))}, isBps: ${isBps(bps(100))} | str: ${str(100)}, isBps: ${isBps(100)}`)
 
   const assetsDefaultExpandedItems: readonly string[] = [
     // 'money-summary',
