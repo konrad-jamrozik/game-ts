@@ -15,7 +15,7 @@ import {
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
-import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
+import { TurnReportTreeView, type TreeItemWithChipModelProps } from './TurnReportTreeView'
 import { bps, isBps } from '../../lib/model/bps'
 import ExampleTreeView from './ExampleTreeView'
 
@@ -88,18 +88,16 @@ export function TurnReportDisplay(): React.ReactElement {
 function formatMoneyBreakdownAsTree(
   moneyChange: ValueChange,
   moneyBreakdown: MoneyBreakdown,
-): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatMoneyBreakdown(moneyBreakdown).map(
-    (row) => {
-      const item: ValueChangeTreeItemModelProps = {
-        id: row.id,
-        label: row.label,
-        value: row.value,
-        reverseColor: row.reverseColor ?? false,
-      }
-      return item
-    },
-  )
+): TreeViewBaseItem<TreeItemWithChipModelProps>[] {
+  const treeItems: TreeViewBaseItem<TreeItemWithChipModelProps>[] = formatMoneyBreakdown(moneyBreakdown).map((row) => {
+    const item: TreeItemWithChipModelProps = {
+      id: row.id,
+      label: row.label,
+      value: row.value,
+      reverseColor: row.reverseColor ?? false,
+    }
+    return item
+  })
 
   return [
     {
@@ -117,18 +115,16 @@ function formatMoneyBreakdownAsTree(
 function formatIntelBreakdownAsTree(
   intelChange: ValueChange,
   intelBreakdown: IntelBreakdown,
-): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatIntelBreakdown(intelBreakdown).map(
-    (row) => {
-      const item: ValueChangeTreeItemModelProps = {
-        id: `intel-${row.id}`,
-        label: row.label,
-        value: row.value,
-        reverseColor: row.reverseColor ?? false,
-      }
-      return item
-    },
-  )
+): TreeViewBaseItem<TreeItemWithChipModelProps>[] {
+  const treeItems: TreeViewBaseItem<TreeItemWithChipModelProps>[] = formatIntelBreakdown(intelBreakdown).map((row) => {
+    const item: TreeItemWithChipModelProps = {
+      id: `intel-${row.id}`,
+      label: row.label,
+      value: row.value,
+      reverseColor: row.reverseColor ?? false,
+    }
+    return item
+  })
 
   return [
     {
@@ -143,10 +139,10 @@ function formatIntelBreakdownAsTree(
 /**
  * Format agents breakdown as tree structure for MUI Tree View with chips
  */
-function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseItem<TreeItemWithChipModelProps>[] {
   const { total, available, inTransit, recovering, wounded, unscathed, terminated } = agentsReport
 
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+  const treeItems: TreeViewBaseItem<TreeItemWithChipModelProps>[] = [
     {
       id: 'agents-total',
       label: `Total: ${fmtValueChange(total)}`,
@@ -203,8 +199,8 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
 /**
  * Format panic breakdown as tree structure for MUI Tree View with chips
  */
-function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  const topLevelItem: TreeViewBaseItem<ValueChangeTreeItemModelProps> = {
+function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<TreeItemWithChipModelProps> {
+  const topLevelItem: TreeViewBaseItem<TreeItemWithChipModelProps> = {
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
     value: panicReport.change.delta.value,
@@ -212,10 +208,10 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
     showPercentage: true,
   }
 
-  const childrenTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(
+  const childrenTreeItems: TreeViewBaseItem<TreeItemWithChipModelProps>[] = formatPanicBreakdown(
     panicReport.breakdown,
   ).map((row) => {
-    const treeItem: ValueChangeTreeItemModelProps = {
+    const treeItem: TreeItemWithChipModelProps = {
       id: row.id,
       label: row.label,
       value: row.value,
@@ -232,7 +228,7 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
 /**
  * Format faction breakdown as tree structure for MUI Tree View with chips
  */
-function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
+function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<TreeItemWithChipModelProps> {
   const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
   const panicIncreaseDelta = currentPanicIncrease.value - previousPanicIncrease.value
@@ -248,7 +244,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   )
 
   // Build threat level children (base threat increase and mission threat reductions)
-  const threatLevelChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+  const threatLevelChildren: TreeViewBaseItem<TreeItemWithChipModelProps>[] = [
     {
       id: `faction-${faction.factionId}-baseThreatIncrease`,
       label: 'Base Threat Increase',
@@ -269,7 +265,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   }
 
   // Build suppression children (mission suppressions and suppression decay)
-  const suppressionChildren: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = []
+  const suppressionChildren: TreeViewBaseItem<TreeItemWithChipModelProps>[] = []
 
   if (faction.suppressionDecay.value !== 0) {
     suppressionChildren.push({
@@ -292,7 +288,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   }
 
   // Top level children: threat level and suppression
-  const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
+  const children: TreeViewBaseItem<TreeItemWithChipModelProps>[] = [
     {
       id: `faction-${faction.factionId}-threat-level`,
       label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
@@ -328,10 +324,10 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
 function formatSituationReportAsTree(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
-): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
+): TreeViewBaseItem<TreeItemWithChipModelProps>[] {
   const panicTreeItem = formatPanicReportAsTreeViewItem(panicReport)
 
-  const factionTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = factions.map((faction) =>
+  const factionTreeItems: TreeViewBaseItem<TreeItemWithChipModelProps>[] = factions.map((faction) =>
     formatFactionBreakdownAsTree(faction),
   )
 

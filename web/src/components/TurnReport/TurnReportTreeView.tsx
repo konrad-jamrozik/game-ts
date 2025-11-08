@@ -12,11 +12,11 @@ const defaultShowPercentage = false
 const defaultReverseMainColors = false
 
 type TreeViewForValueChangesProps = {
-  items: TreeViewBaseItem<ValueChangeTreeItemModelProps>[]
+  items: TreeViewBaseItem<TreeItemWithChipModelProps>[]
   defaultExpandedItems?: readonly string[]
 }
 
-export type ValueChangeTreeItemModelProps = TreeViewDefaultItemModelProperties & {
+export type TreeItemWithChipModelProps = TreeViewDefaultItemModelProperties & {
   value?: number
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
@@ -30,14 +30,20 @@ export type ValueChangeTreeItemModelProps = TreeViewDefaultItemModelProperties &
   noPlusSign?: boolean
 }
 
-type ValueChangeLabelProps = {
-  children: React.ReactNode // Note: this must be called 'children' for MUI TreeItem to work. See about_mui.md for more.
-  value?: number | undefined
+type TreeItemLabelWithChipProps = {
+  // Note: 'children' property is required, and it denotes the plain textual label,
+  // adjacent to chipLabel.
+  // 'children' is required because and object of this type
+  // is used by MUI as TreeItemSlotProps for 'label' slot,
+  // which is SlotComponentProps<'div', {}, {}>.
+  // which is React.JSX.IntrinsicElements['div'],
+  // which uses 'children' to denote value of its content.
+  // See about_mui.md for more.
+  children: React.ReactNode
+  chipLabel?: string | undefined
   reverseColor?: boolean
-  showPercentage?: boolean
   reverseMainColors?: boolean
   noColor?: boolean
-  noPlusSign?: boolean
 }
 
 /**
@@ -61,17 +67,20 @@ type ValueChangeTreeItemProps = TreeItemProps & {
 
 function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const item = useTreeItemModel<ValueChangeTreeItemModelProps>(props.itemId)!
-  const valueChangeLabelProps: ValueChangeLabelProps = {
+  const item = useTreeItemModel<TreeItemWithChipModelProps>(props.itemId)!
+
+  // Format the chip label from the value
+  const chipLabel = formatChipLabel(item.value, item.showPercentage ?? defaultShowPercentage, item.noPlusSign ?? false)
+
+  const valueChangeLabelProps: TreeItemLabelWithChipProps = {
     children: item.label,
-    value: item.value, // KJA should be delta instead
+    chipLabel,
     reverseColor: item.reverseColor ?? false,
-    showPercentage: item.showPercentage ?? defaultShowPercentage,
     reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
     noColor: item.noColor ?? false,
-    noPlusSign: item.noPlusSign ?? false,
   }
 
+  const labelSlot: React.ElementType<TreeItemLabelWithChipProps> = TreeItemLabelWithChip
   const labelSlotProps: TreeItemSlotProps = {
     label: valueChangeLabelProps,
   }
@@ -81,41 +90,22 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
       {...props}
       ref={ref}
       slots={{
-        label: ValueChangeLabel,
+        label: labelSlot,
       }}
       slotProps={labelSlotProps}
     />
   )
 }
 
-function ValueChangeLabel({
+function TreeItemLabelWithChip({
   children,
-  value,
+  chipLabel,
   reverseColor = false,
-  showPercentage = false,
   reverseMainColors = false,
   noColor = false,
-  noPlusSign = false,
-}: ValueChangeLabelProps): React.ReactElement {
-  // KJA instead of showPercentage, the way to display it should be derived from Bps
-  // Determine color based on value and reverseColor setting
-  const color: 'success' | 'error' | 'default' =
-    noColor || value === undefined || value === 0
-      ? 'default'
-      : reverseColor || reverseMainColors
-        ? value > 0
-          ? 'error'
-          : 'success'
-        : value > 0
-          ? 'success'
-          : 'error'
-
-  // Format the value display
-  let chipLabel: string | undefined = undefined
-  if (value !== undefined) {
-    const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-    chipLabel = showPercentage ? str(bps(value)) : `${sign}${value}`
-  }
+}: TreeItemLabelWithChipProps): React.ReactElement {
+  // Determine color based on chipLabel content and reverseColor setting
+  const color: 'success' | 'error' | 'default' = determineChipColor(chipLabel, noColor, reverseColor, reverseMainColors)
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -125,4 +115,42 @@ function ValueChangeLabel({
       )}
     </div>
   )
+}
+
+/**
+ * Formats a numeric value into a chip label string.
+ */
+function formatChipLabel(value: number | undefined, showPercentage: boolean, noPlusSign: boolean): string | undefined {
+  if (value === undefined) {
+    return undefined
+  }
+  const sign = noPlusSign ? '' : value > 0 ? '+' : ''
+  return showPercentage ? str(bps(value)) : `${sign}${value}`
+}
+
+/**
+ * Determines the chip color based on the label content and color settings.
+ */
+function determineChipColor(
+  chipLabel: string | undefined,
+  noColor: boolean,
+  reverseColor: boolean,
+  reverseMainColors: boolean,
+): 'success' | 'error' | 'default' {
+  if (noColor || chipLabel === undefined) {
+    return 'default'
+  }
+
+  // Determine if the value is positive, negative, or zero based on the label
+  const isPositive = chipLabel.startsWith('+') || (!chipLabel.startsWith('-') && chipLabel !== '0')
+  const isZero = chipLabel === '0' || chipLabel === '+0'
+
+  if (isZero) {
+    return 'default'
+  }
+
+  if (reverseColor || reverseMainColors) {
+    return isPositive ? 'error' : 'success'
+  }
+  return isPositive ? 'success' : 'error'
 }
