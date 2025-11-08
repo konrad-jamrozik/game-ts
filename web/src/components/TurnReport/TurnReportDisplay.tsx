@@ -13,7 +13,7 @@ import {
   type ValueChange,
 } from '../../lib/model/reportModel'
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
-import { formatValueChange, str } from '../../lib/utils/formatUtils'
+import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'
 import { bps, isBps } from '../../lib/model/bps'
@@ -102,7 +102,7 @@ function formatMoneyBreakdownAsTree(
   return [
     {
       id: 'money-summary',
-      label: `Money: ${formatValueChange(moneyChange)}`,
+      label: `Money: ${fmtValueChange(moneyChange)}`,
       value: moneyChange.delta,
       children: treeItems,
     },
@@ -131,7 +131,7 @@ function formatIntelBreakdownAsTree(
   return [
     {
       id: 'intel-summary',
-      label: `Intel: ${formatValueChange(intelChange)}`,
+      label: `Intel: ${fmtValueChange(intelChange)}`,
       value: intelChange.delta,
       children: treeItems,
     },
@@ -147,23 +147,23 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
   const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
       id: 'agents-total',
-      label: `Total: ${formatValueChange(total)}`,
+      label: `Total: ${fmtValueChange(total)}`,
       value: total.delta,
     },
     {
       id: 'agents-available',
-      label: `Available: ${formatValueChange(available)}`,
+      label: `Available: ${fmtValueChange(available)}`,
       value: available.delta,
     },
     {
       id: 'agents-in-transit',
-      label: `In transit: ${formatValueChange(inTransit)}`,
+      label: `In transit: ${fmtValueChange(inTransit)}`,
       value: inTransit.delta,
       noColor: true,
     },
     {
       id: 'agents-recovering',
-      label: `Recovering: ${formatValueChange(recovering)}`,
+      label: `Recovering: ${fmtValueChange(recovering)}`,
       value: recovering.delta,
       reverseColor: true,
     },
@@ -217,7 +217,7 @@ function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<
 
   return {
     id: 'panic-summary',
-    label: `Panic: ${formatValueChange(panicReport.change)}`,
+    label: `Panic: ${fmtValueChange(panicReport.change)}`,
     value: panicReport.change.delta.value,
     reverseMainColors: true,
     showPercentage: true,
@@ -291,7 +291,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const children: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = [
     {
       id: `faction-${faction.factionId}-threat-level`,
-      label: `Threat Level: ${formatValueChange(faction.threatLevel)}`,
+      label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
       value: faction.threatLevel.delta.value,
       reverseMainColors: true,
       showPercentage: true,
@@ -299,7 +299,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     },
     {
       id: `faction-${faction.factionId}-suppression`,
-      label: `Suppression: ${formatValueChange(faction.suppression)}`,
+      label: `Suppression: ${fmtValueChange(faction.suppression)}`,
       value: faction.suppression.delta.value,
       reverseColor: false, // Suppression increase is good (default)
       showPercentage: true,
@@ -310,7 +310,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const panicCaused = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: faction.factionId,
-    label: `${faction.factionName}: Panic Caused: ${formatValueChange(panicCaused)}`,
+    label: `${faction.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
     value: panicIncreaseDelta,
     reverseMainColors: true,
     showPercentage: true,
