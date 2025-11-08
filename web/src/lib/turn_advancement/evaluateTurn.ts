@@ -12,10 +12,8 @@ import {
   type PanicReport,
   type TurnReport,
 } from '../model/reportModel'
-import { SUPPRESSION_DECAY_PCT } from '../model/ruleset/constants'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { calculatePanicIncrease } from '../utils/factionUtils'
-import { floor } from '../utils/mathUtils'
+import { calculatePanicIncrease, decaySuppression } from '../model/ruleset/ruleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
@@ -330,6 +328,7 @@ function updatePanic(
   })
 
   // Increase panic by the sum of (threat level - suppression) for all factions
+  // KJA fix squiggly
   const totalPanicIncrease = factionPanicIncreases.reduce(
     (sum, faction) => (sum + (faction.factionPanicIncrease as unknown as number)) as typeof sum,
     0 as ReturnType<typeof calculatePanicIncrease>,
@@ -345,6 +344,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
+      // KJA fix squiggly
       state.panic = bps(Math.max(0, (state.panic as unknown as number) - (rewards.panicReduction as unknown as number)))
     }
   }
@@ -366,12 +366,14 @@ function applyFactionReward(targetFaction: Faction, factionReward: FactionReward
     targetFaction.threatLevel = bps(
       Math.max(
         0,
+        // KJA fix squiggly
         (targetFaction.threatLevel as unknown as number) - (factionReward.threatReduction as unknown as number),
       ),
     )
   }
   if (factionReward.suppression !== undefined) {
     targetFaction.suppression = bps(
+      // KJA fix squiggly
       (targetFaction.suppression as unknown as number) + (factionReward.suppression as unknown as number),
     )
   }
@@ -394,18 +396,11 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    // KJA fix squiggly
-    faction.threatLevel = bps(
-      (faction.threatLevel as unknown as number) + (faction.threatIncrease as unknown as number),
-    )
+    faction.threatLevel = bps(faction.threatLevel + faction.threatIncrease)
 
     // Apply suppression decay AFTER panic calculation and threat increase
-    // KJA fix squiggly
-    faction.suppression = bps(floor((faction.suppression as unknown as number) * (1 - SUPPRESSION_DECAY_PCT / 100)))
-    // KJA fix squiggly
-    const suppressionDecay = bps(
-      (previousSuppression as unknown as number) - (faction.suppression as unknown as number),
-    )
+    faction.suppression = decaySuppression(faction.suppression)
+    const suppressionDecay = bps(previousSuppression - faction.suppression)
 
     // Track mission impacts on this faction
     const missionImpacts = []

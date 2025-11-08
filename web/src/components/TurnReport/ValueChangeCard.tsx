@@ -75,8 +75,7 @@ export function ValueChangeCard({
           value === 0 ? 'default' : shouldReverse ? (value > 0 ? 'error' : 'success') : value > 0 ? 'success' : 'error'
 
         const sign = value >= 0 ? '+' : ''
-        // KJA fix squiggly
-        const displayValue = showPercentage ? fmtPctDiv100Dec2(value as Bps) : `${sign}${value}`
+        const displayValue = showPercentage ? str(value) : `${sign}${value}`
         return <Chip label={displayValue} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       },
     },

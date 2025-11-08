@@ -113,7 +113,6 @@ function ValueChangeLabel({
   let chipLabel: string | undefined = undefined
   if (value !== undefined) {
     const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-    // KJA fix squiggly
     chipLabel = showPercentage ? str(value) : `${sign}${value}`
   }
 

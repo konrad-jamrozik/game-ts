@@ -12,7 +12,7 @@ import {
   type PanicReport,
   type ValueChange,
 } from '../../lib/model/reportModel'
-import { calculatePanicIncrease } from '../../lib/utils/factionUtils'
+import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { formatValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type ValueChangeTreeItemModelProps } from './TurnReportTreeView'

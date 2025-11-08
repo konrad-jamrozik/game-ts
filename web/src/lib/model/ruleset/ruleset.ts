@@ -3,10 +3,12 @@ import {
   AGENT_ESPIONAGE_INTEL,
   AGENT_RECOVERY_TURNS_FACTOR,
   AGENT_UPKEEP_COST,
+  SUPPRESSION_DECAY_PCT,
 } from './constants'
 import { div, floor } from '../../utils/mathUtils'
 import type { GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
+import { type Bps, bps } from '../bps'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST
@@ -56,4 +58,23 @@ export function getRecoveryTurns(damage: number, hitPoints: number): number {
   const hitPointsLostPercentage = Math.min(div(damage, hitPoints) * 100, 100)
   const recoveryTurns = Math.ceil(div(hitPointsLostPercentage, AGENT_RECOVERY_TURNS_FACTOR))
   return recoveryTurns
+}
+
+/**
+ * Calculates panic increase from faction threat level and suppression.
+ *
+ * Formula: Math.max(0, threatLevel - suppression)
+ *
+ * This is the source of truth for panic increase calculation.
+ *
+ * @param threatLevel - The faction's threat level (in basis points)
+ * @param suppression - The faction's suppression value (in basis points)
+ * @returns The panic increase (never negative, in basis points)
+ */
+
+export function calculatePanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
+  return bps(Math.max(0, threatLevel - suppression))
+}
+export function decaySuppression(suppression: Bps): Bps {
+  return bps(floor(suppression * (1 - SUPPRESSION_DECAY_PCT / 100)))
 }

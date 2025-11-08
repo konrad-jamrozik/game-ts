@@ -8,10 +8,9 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPct } from '../lib/utils/formatUtils'
-import { str } from '../lib/model/bps'
+import { fmtPct, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
-import { calculatePanicIncrease } from '../lib/utils/factionUtils'
+import { calculatePanicIncrease } from '../lib/model/ruleset/ruleset'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)

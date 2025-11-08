@@ -5,24 +5,16 @@
  * This type is used for panic, threat level, suppression, and related values
  * throughout the game state.
  */
-export type Bps = number & { readonly __brand: 'Bps' }
+export type Bps = number & { readonly __brand: 'BasisPoints' }
 
 /**
  * Creates a Bps value from a number.
  * Use this when you have a raw number that represents a percentage in this format.
  */
 export function bps(value: number): Bps {
-  // KJA fix squiggly
+  // We must disable the type assertion here because we are creating a new Bps value.
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
   return value as Bps
-}
-
-/**
- * Creates a Bps value from an actual percentage (e.g., 1.5 for 1.5%).
- * Multiplies by 100 to convert to the stored format.
- */
-export function bpsFromPercent(percent: number): Bps {
-  // KJA fix squiggly
-  return Math.round(percent * 100) as Bps
 }
 
 export function isBps(value: unknown): value is Bps {
