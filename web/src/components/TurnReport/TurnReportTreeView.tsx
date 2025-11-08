@@ -11,12 +11,13 @@ import { bps } from '../../lib/model/bps'
 const defaultShowPercentage = false
 const defaultReverseMainColors = false
 
-type TreeViewForValueChangesProps = {
-  items: TreeViewBaseItem<TreeItemWithChipModelProps>[]
+type TurnReportTreeViewProps = {
+  items: TreeViewBaseItem<TurnReportTreeViewModelProps>[]
   defaultExpandedItems?: readonly string[]
 }
 
-export type TreeItemWithChipModelProps = TreeViewDefaultItemModelProperties & {
+// KJA this should refer to TreeItemWithLabelChipProps
+export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties & {
   value?: number
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
@@ -32,7 +33,7 @@ export type TreeItemWithChipModelProps = TreeViewDefaultItemModelProperties & {
 
 type TreeItemLabelWithChipProps = {
   // Note: 'children' property is required, and it denotes the plain textual label,
-  // adjacent to chipLabel.
+  // adjacent to chipLabel. Here it often is of form "previous -> current", see formatUtils.ts.
   // 'children' is required because and object of this type
   // is used by MUI as TreeItemSlotProps for 'label' slot,
   // which is SlotComponentProps<'div', {}, {}>.
@@ -49,25 +50,21 @@ type TreeItemLabelWithChipProps = {
 /**
  * Custom TreeView component that displays chips in TreeItem labels.
  */
-export function TurnReportTreeView({ items, defaultExpandedItems }: TreeViewForValueChangesProps): React.ReactElement {
+export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTreeViewProps): React.ReactElement {
   return (
     <Box sx={{ backgroundColor: theme.palette.background.paper }}>
       <RichTreeView
         {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
         items={items}
-        slots={{ item: ValueChangeTreeItem }}
+        slots={{ item: TurnReportTreeItem }}
       />
     </Box>
   )
 }
 
-type ValueChangeTreeItemProps = TreeItemProps & {
-  ref?: React.Ref<HTMLLIElement>
-}
-
-function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React.ReactElement {
+function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-  const item = useTreeItemModel<TreeItemWithChipModelProps>(props.itemId)!
+  const item = useTreeItemModel<TurnReportTreeViewModelProps>(props.itemId)!
 
   // Format the chip label from the value
   const chipLabel = formatChipLabel(item.value, item.showPercentage ?? defaultShowPercentage, item.noPlusSign ?? false)
@@ -88,7 +85,6 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
   return (
     <TreeItem
       {...props}
-      ref={ref}
       slots={{
         label: labelSlot,
       }}
