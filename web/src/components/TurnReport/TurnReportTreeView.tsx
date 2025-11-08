@@ -2,7 +2,7 @@ import { Chip, Box } from '@mui/material'
 import * as React from 'react'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tree-view/TreeItem'
-import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
+import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import theme from '../../styling/theme'
 import { str } from '../../lib/utils/formatUtils'
@@ -16,9 +16,7 @@ type TreeViewForValueChangesProps = {
   defaultExpandedItems?: readonly string[]
 }
 
-export type ValueChangeTreeItemModelProps = {
-  id: string
-  label: string
+export type ValueChangeTreeItemModelProps = TreeViewDefaultItemModelProperties & {
   value?: number
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean

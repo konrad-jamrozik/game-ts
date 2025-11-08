@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
+import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import {
@@ -203,28 +203,30 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
 /**
  * Format panic breakdown as tree structure for MUI Tree View with chips
  */
-function formatPanicBreakdownAsTree(panicReport: PanicReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
-  const treeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(panicReport.breakdown).map(
-    (row) => {
-      const item: ValueChangeTreeItemModelProps = {
-        id: `panic-${row.id}`,
-        label: row.label,
-        value: row.value,
-        reverseColor: row.reverseColor ?? false,
-        showPercentage: true,
-      }
-      return item
-    },
-  )
+function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<ValueChangeTreeItemModelProps> {
+  const breakdownTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = formatPanicBreakdown(
+    panicReport.breakdown,
+  ).map((row) => {
+    const treeItem: ValueChangeTreeItemModelProps = {
+      id: `panic-${row.id}`,
+      label: row.label,
+      value: row.value,
+      reverseColor: row.reverseColor ?? false,
+      showPercentage: true,
+    }
+    return treeItem
+  })
 
-  return {
+  const entireTreeItem: TreeViewBaseItem<ValueChangeTreeItemModelProps> = {
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
     value: panicReport.change.delta.value,
     reverseMainColors: true,
     showPercentage: true,
-    children: treeItems,
+    children: breakdownTreeItems,
   }
+
+  return entireTreeItem
 }
 
 /**
@@ -327,7 +329,7 @@ function formatSituationReportAsTree(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
 ): TreeViewBaseItem<ValueChangeTreeItemModelProps>[] {
-  const panicTreeItem = formatPanicBreakdownAsTree(panicReport)
+  const panicTreeItem = formatPanicReportAsTreeViewItem(panicReport)
 
   const factionTreeItems: TreeViewBaseItem<ValueChangeTreeItemModelProps>[] = factions.map((faction) =>
     formatFactionBreakdownAsTree(faction),
@@ -398,9 +400,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   return rows
 }
 
-type BreakdownRow = {
-  id: string
-  label: string
+type BreakdownRow = TreeViewDefaultItemModelProperties & {
   value: number
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
