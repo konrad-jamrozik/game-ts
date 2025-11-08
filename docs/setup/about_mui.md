@@ -263,7 +263,8 @@ This MUI doc shows how to customize the label in a custom TreeView:
 
 Specifically this source code:
 
-https://github.com/mui/mui-x/blob/v8.17.0/docs/data/tree-view/tree-item-customization/LabelSlot.tsx
+- https://github.com/mui/mui-x/blob/v8.17.0/docs/data/tree-view/tree-item-customization/LabelSlot.tsx
+- https://github.com/mui/mui-x/blob/2423e2fd491c837ce5d30fbf6c34913c15ac2cb9/docs/data/tree-view/tree-item-customization/LabelSlot.tsx
 
 In the example, [this line][L100] (see line marked with `HERE ->`):
 ``` typescript
@@ -295,14 +296,18 @@ Shows this problem:
 [L100]: https://github.com/mui/mui-x/blob/2423e2fd491c837ce5d30fbf6c34913c15ac2cb9/docs/data/tree-view/tree-item-customization/LabelSlot.tsx#L100
 
 You can fix it by:
-- adding `children: item.label` and `className: props.className` to the props
-- ensuring that `CustomLabelProps` type defines the `className` as `string | undefined` instead of just `string`
-- optionally, you can also use newer syntax for `React.forwardRef` and get rid of it:
+- Adding `children: item.label` and `className: props.className` to the props.
+- Ensuring that `CustomLabelProps` type defines the `className` as `string | undefined` instead of just `string`.
+  - Alternatively, you can delete `className` from everywhere altogether. It is unused in the example anyway.
+- Optionally, you can also use newer syntax for `React.forwardRef` and get rid of it.
+- Optionally, also modernize the nullish checks in `secondaryLabel` value.
+
+Altogether, the fixed code looks like this:
 
 ``` typescript
 type CustomLabelProps = {
-  children: string
-  className: string | undefined
+  children: string // Note: this must be called 'children' for MUI TreeItem to work.
+  className: string | undefined // Or delete this altogether, and all references to it.
   secondaryLabel: string
 }
 
@@ -313,8 +318,10 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
 
   const customLabelProps: CustomLabelProps = {
     children: item.label,
-    className: props.className,
     secondaryLabel: (item.secondaryLabel ?? '') || '',
+  }
+  const treeItemSlotProps: TreeItemSlotProps = {
+    label: customLabelProps,
   }
   return (
     <TreeItem
@@ -323,11 +330,143 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
       slots={{
         label: CustomLabel,
       }}
-      slotProps={{
-        label: customLabelProps,
-      }}
+      slotProps={treeItemSlotProps}
     />
   )
+}
+
+```
+
+So what is going on here?
+
+First, observe that if you would define `customLabelProps: CustomLabelProps` without `children` property,
+you would get a type error of:
+`Property 'children' is missing in type '{ secondaryLabel: string; }' but required in type 'CustomLabelProps'.ts(2741)`.
+
+You could delete `children` from the `CustomLabelProps` type definition, but then this code:
+
+``` typescript
+slotProps={{
+  label: customLabelProps,
+}}
+```
+
+will give you following error:
+
+`Type 'CustomLabelProps' is not assignable to type 'SlotComponentProps<"div", {}, {}> | undefined'`
+
+This is because `CustomLabelProps` are passed as props to `CustomLabel` via the slot mechanism:
+
+``` typescript
+slots={{
+  label: CustomLabel,
+}}
+slotProps={treeItemSlotProps}
+```
+
+The `TreeItemSlotProps` expects a `label` property of type `SlotComponentProps<'div', {}, {}>`.
+
+`SlotComponentProps` is defined in:
+`node_modules\@mui\utils\esm\types\index.d.ts`
+
+as
+
+``` typescript
+export type SlotComponentProps<TSlotComponent extends React.ElementType, TOverrides, TOwnerState> = (Partial<React.ComponentPropsWithRef<TSlotComponent>> & TOverrides) | ((ownerState: TOwnerState) => Partial<React.ComponentPropsWithRef<TSlotComponent>> & TOverrides);
+```
+
+So in our case it is:
+
+``` typescript
+type SlotComponentProps<'div', {}, {}> = (Partial<React.ComponentPropsWithRef<'div'>> & {}) | ((ownerState: {}) => Partial<React.ComponentPropsWithRef<'div'>> & {})
+// Here, React.ComponentPropsWithRef<'div'>> evaluates to:
+ComponentProps<T> // <T extends ElementType> and T is 'div'
+// And ComponentProps<T> evaluates to:
+JSX.IntrinsicElements['div'] // T == 'div'
+// And JSX.IntrinsicElements['div'] is per node_modules\@types\react\index.d.ts
+div: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
+// Which eventually evaluates to:
+interface HTMLAttributes<T> extends AriaAttributes, DOMAttributes<T> { /* ... */ }
+// Where:
+    interface DOMAttributes<T> {
+        children?: ReactNode | undefined;
+        // ...
+    }
+```
+
+Which means there has to be at least one property that is both in  `CustomLabelProps` and `JSX.IntrinsicElements['div']`.
+It can be `children`, but technically speaking it can be also something else and it will work in this specific case.
+
+You can confirm this by doing e.g.:
+
+``` typescript
+const props1 = { secondaryLabel: "foo" }
+const props2 = { children: "foo" }
+const props3 = { content: "foo" }
+
+// ERROR: Type '{ secondaryLabel: string; }' has no properties in common with type 'DetailedHTMLProps<HTMLAttributes<HTMLDivElement>, HTMLDivElement>
+const treeItemSlotProps1: React.JSX.IntrinsicElements['div'] = props1
+
+// OK! - because the common property with JSX.IntrinsicElements['div'] is 'children'
+const treeItemSlotProps2: React.JSX.IntrinsicElements['div'] = props2
+
+// OK! - because the common property with JSX.IntrinsicElements['div'] is 'content'
+const treeItemSlotProps3: React.JSX.IntrinsicElements['div'] = props3
+```
+
+or even you can do this:
+
+``` typescript
+type CustomLabelProps = {
+  content: string // Renamed `children` to `content`
+  secondaryLabel: string
+}
+// And also replace all references to `children` with `content` in the code.
+```
+
+and it will work, but you should actually use `children`, not `content`.
+`children` semantically represents the content between opening and closing JSX tags.
+
+Basically the typing mechanism assumes the `label` slot will have a component compatible with the `div` element
+semantics, even though the `CustomLabel` is not simply `<div>{children}</div>` but:
+
+``` typescript
+function CustomLabel({ children, secondaryLabel }: CustomLabelProps): React.ReactElement {
+  return (
+    <div>
+      <Typography>{children}</Typography>
+      {secondaryLabel && (
+        <Typography variant="caption" color="secondary">
+          {secondaryLabel}
+        </Typography>
+      )}
+    </div>
+  )
+}
+```
+
+Note you could also change the definitions like that:
+
+``` typescript
+// PREVIOUS
+type CustomLabelProps = {
+  children: string
+  secondaryLabel: string
+}
+// ==========>>
+// CHANGED
+type CustomLabelProps = React.ComponentPropsWithoutRef<'div'> & {
+  secondaryLabel: string
+}
+```
+
+If you do it like that, you no longer have to pass `children` to the `CustomLabel` component, because it is already
+passed by MUI, presumably via the slot mechanism in the `TreeItem` component:
+
+``` typescript
+const customLabelProps: CustomLabelProps = {
+  // children: item.label, // Removed, passed implicitly by MUI. Triggered with React.ComponentPropsWithoutRef<'div'> in CustomLabelProps type definition.
+  secondaryLabel: (item.secondaryLabel ?? '') || '',
 }
 ```
 

@@ -1,7 +1,7 @@
 import { Chip, Box } from '@mui/material'
 import * as React from 'react'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
-import { TreeItem, type TreeItemProps } from '@mui/x-tree-view/TreeItem'
+import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tree-view/TreeItem'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import theme from '../../styling/theme'
@@ -66,12 +66,16 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
   const item = useTreeItemModel<ValueChangeTreeItemModelProps>(props.itemId)!
   const valueChangeLabelProps: ValueChangeLabelProps = {
     children: item.label,
-    value: item.value,
+    value: item.value, // KJA should be delta instead
     reverseColor: item.reverseColor ?? false,
     showPercentage: item.showPercentage ?? defaultShowPercentage,
     reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
     noColor: item.noColor ?? false,
     noPlusSign: item.noPlusSign ?? false,
+  }
+
+  const labelSlotProps: TreeItemSlotProps = {
+    label: valueChangeLabelProps,
   }
 
   return (
@@ -81,9 +85,7 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
       slots={{
         label: ValueChangeLabel,
       }}
-      slotProps={{
-        label: valueChangeLabelProps,
-      }}
+      slotProps={labelSlotProps}
     />
   )
 }

@@ -6,7 +6,7 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
-import { TreeItem, type TreeItemProps } from '@mui/x-tree-view/TreeItem'
+import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tree-view/TreeItem'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 
@@ -20,9 +20,7 @@ type CustomTreeItemProps = TreeItemProps & {
   ref?: React.Ref<HTMLLIElement>
 }
 
-type CustomLabelProps = {
-  children: string
-  className: string | undefined
+type CustomLabelProps = React.ComponentPropsWithoutRef<'div'> & {
   secondaryLabel: string
 }
 
@@ -90,10 +88,13 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
   const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!
 
   const customLabelProps: CustomLabelProps = {
-    children: item.label,
-    className: props.className,
     secondaryLabel: (item.secondaryLabel ?? '') || '',
   }
+
+  const treeItemSlotProps: TreeItemSlotProps = {
+    label: customLabelProps,
+  }
+
   return (
     <TreeItem
       {...props}
@@ -101,16 +102,14 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
       slots={{
         label: CustomLabel,
       }}
-      slotProps={{
-        label: customLabelProps,
-      }}
+      slotProps={treeItemSlotProps}
     />
   )
 }
 
-function CustomLabel({ children, className, secondaryLabel }: CustomLabelProps): React.ReactElement {
+function CustomLabel({ children, secondaryLabel }: CustomLabelProps): React.ReactElement {
   return (
-    <div className={className}>
+    <div>
       <Typography>{children}</Typography>
       {secondaryLabel && (
         <Typography variant="caption" color="secondary">
