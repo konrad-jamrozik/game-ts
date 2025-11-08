@@ -19,25 +19,23 @@ export type AssetsReport = {
   intelBreakdown: IntelBreakdown
 }
 
-export type ValueChange<T extends number = number> = {
-  previous: T
-  current: T
-  readonly delta: T
+export type ValueChange<TNumber extends number = number> = {
+  previous: TNumber
+  current: TNumber
+  readonly delta: TNumber
 }
 
-export function newValueChange<T extends number = number>(previous: T, current: T): ValueChange<T> {
-  // Bps and other branded number types need arithmetic operations
-  // The subtraction is safe because T extends number
-  // We need to cast to number for the arithmetic, then back to T
-  // This is a known limitation when working with branded types
-  // KJA fix squiggly (has comment added by AI)
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-argument
-  const delta = ((current as unknown as number) - (previous as unknown as number)) as T
+export function newValueChange<TNumber extends number = number>(
+  previous: TNumber,
+  current: TNumber,
+): ValueChange<TNumber> {
+  const delta = current - previous
   return {
     previous,
     current,
-    get delta(): T {
-      return delta
+    get delta(): TNumber {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+      return delta as TNumber
     },
   }
 }

@@ -1,3 +1,5 @@
+import { fmtPctDiv100Dec2 } from '../utils/formatUtils'
+
 /**
  * Represents a percentage value stored as an integer in basis points where 100 = 1%.
  * For example: 100 represents 1.00%, 10,000 represents 100.00%
@@ -18,5 +20,11 @@ export function bps(value: number): Bps {
 }
 
 export function isBps(value: unknown): value is Bps {
+  // KJA actually busted, branded type cannot have runtime checks
   return typeof value === 'number' && value.constructor.name === 'Bps'
+}
+
+export function bpsStr(value: Bps): string {
+  // kja use bpsStr everywhere instead of str
+  return fmtPctDiv100Dec2(value)
 }
