@@ -22,7 +22,7 @@ type CustomTreeItemProps = TreeItemProps & {
 
 type CustomLabelProps = {
   children: string
-  className: string
+  className: string | undefined
   secondaryLabel: string
 }
 
@@ -68,7 +68,6 @@ const MUI_X_PRODUCTS: TreeViewBaseItem<TreeItemWithLabel>[] = [
   {
     id: 'charts',
     label: 'Charts',
-
     children: [{ id: 'charts-community', label: '@mui/x-charts' }],
   },
   {
@@ -90,6 +89,11 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!
 
+  const customLabelProps: CustomLabelProps = {
+    children: item.label,
+    className: props.className,
+    secondaryLabel: (item.secondaryLabel ?? '') || '',
+  }
   return (
     <TreeItem
       {...props}
@@ -98,9 +102,7 @@ function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElem
         label: CustomLabel,
       }}
       slotProps={{
-        // KJA unsafe
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        label: { secondaryLabel: (item.secondaryLabel ?? '') || '' } as CustomLabelProps,
+        label: customLabelProps,
       }}
     />
   )

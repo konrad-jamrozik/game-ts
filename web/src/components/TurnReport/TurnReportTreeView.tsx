@@ -33,8 +33,7 @@ export type ValueChangeTreeItemModelProps = {
 }
 
 type ValueChangeLabelProps = {
-  children: React.ReactNode
-  className: string | undefined
+  children: React.ReactNode // Note: this must be called 'children' for MUI TreeItem to work. See about_mui.md for more.
   value?: number | undefined
   reverseColor?: boolean
   showPercentage?: boolean
@@ -67,7 +66,6 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
   const item = useTreeItemModel<ValueChangeTreeItemModelProps>(props.itemId)!
   const valueChangeLabelProps: ValueChangeLabelProps = {
     children: item.label,
-    className: props.className,
     value: item.value,
     reverseColor: item.reverseColor ?? false,
     showPercentage: item.showPercentage ?? defaultShowPercentage,
@@ -92,7 +90,6 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
 
 function ValueChangeLabel({
   children,
-  className,
   value,
   reverseColor = false,
   showPercentage = false,
@@ -121,7 +118,7 @@ function ValueChangeLabel({
   }
 
   return (
-    <div className={className} style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <span>{children}</span>
       {chipLabel !== undefined && (
         <Chip label={chipLabel} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />

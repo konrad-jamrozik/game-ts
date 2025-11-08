@@ -254,3 +254,82 @@ But better yet: use `<Card>` with `<Collapse>` instead of `<Accordion>`.
 [MUI MCP]: https://mui.com/material-ui/getting-started/mcp
 [MUI MCP FAQ instructions]: https://mui.com/material-ui/getting-started/mcp/#ive-installed-the-mcp-but-it-is-not-being-used-when-i-ask-questions
 [MCP inspector]: https://modelcontextprotocol.io/docs/tools/inspector
+
+# children prop in custom label in custom TreeView
+
+This MUI doc shows how to customize the label in a custom TreeView:
+
+- https://mui.com/x/react-tree-view/tree-item-customization/#label
+
+Specifically this source code:
+
+https://github.com/mui/mui-x/blob/v8.17.0/docs/data/tree-view/tree-item-customization/LabelSlot.tsx
+
+In the example, [this line][L100] (see line marked with `HERE ->`):
+``` typescript
+const CustomTreeItem = React.forwardRef(function CustomTreeItem(
+  props: TreeItemProps,
+  ref: React.Ref<HTMLLIElement>,
+) {
+  const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!;
+
+  return (
+    <TreeItem
+      {...props}
+      ref={ref}
+      slots={{
+        label: CustomLabel,
+      }}
+      slotProps={{
+HERE -> label: { secondaryLabel: item?.secondaryLabel || '' } as CustomLabelProps,
+      }}
+    />
+  );
+});
+```
+
+Shows this problem:
+
+`Unsafe type assertion: type 'CustomLabelProps' is more narrow than the original type.eslint@typescript-eslint/no-unsafe-type-assertion`
+
+[L100]: https://github.com/mui/mui-x/blob/2423e2fd491c837ce5d30fbf6c34913c15ac2cb9/docs/data/tree-view/tree-item-customization/LabelSlot.tsx#L100
+
+You can fix it by:
+- adding `children: item.label` and `className: props.className` to the props
+- ensuring that `CustomLabelProps` type defines the `className` as `string | undefined` instead of just `string`
+- optionally, you can also use newer syntax for `React.forwardRef` and get rid of it:
+
+``` typescript
+type CustomLabelProps = {
+  children: string
+  className: string | undefined
+  secondaryLabel: string
+}
+
+(...)
+function CustomTreeItem({ ref, ...props }: CustomTreeItemProps): React.ReactElement {
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  const item = useTreeItemModel<TreeItemWithLabel>(props.itemId)!
+
+  const customLabelProps: CustomLabelProps = {
+    children: item.label,
+    className: props.className,
+    secondaryLabel: (item.secondaryLabel ?? '') || '',
+  }
+  return (
+    <TreeItem
+      {...props}
+      ref={ref}
+      slots={{
+        label: CustomLabel,
+      }}
+      slotProps={{
+        label: customLabelProps,
+      }}
+    />
+  )
+}
+```
+
+See also:
+- https://mui.com/x/common-concepts/custom-components/
