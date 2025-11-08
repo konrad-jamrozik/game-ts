@@ -8,6 +8,14 @@ import theme from '../../styling/theme'
 import { str } from '../../lib/utils/formatUtils'
 import { bps } from '../../lib/model/bps'
 
+const defaultShowPercentage = false
+const defaultReverseMainColors = false
+
+type TreeViewForValueChangesProps = {
+  items: TreeViewBaseItem<ValueChangeTreeItemModelProps>[]
+  defaultExpandedItems?: readonly string[]
+}
+
 export type ValueChangeTreeItemModelProps = {
   id: string
   label: string
@@ -25,22 +33,14 @@ export type ValueChangeTreeItemModelProps = {
 }
 
 type ValueChangeLabelProps = {
-  children: string
-  className: string
-  value?: number
+  children: React.ReactNode
+  className: string | undefined
+  value?: number | undefined
   reverseColor?: boolean
   showPercentage?: boolean
   reverseMainColors?: boolean
   noColor?: boolean
   noPlusSign?: boolean
-}
-
-const defaultShowPercentage = false
-const defaultReverseMainColors = false
-
-type TreeViewForValueChangesProps = {
-  items: TreeViewBaseItem<ValueChangeTreeItemModelProps>[]
-  defaultExpandedItems?: readonly string[]
 }
 
 /**
@@ -65,6 +65,16 @@ type ValueChangeTreeItemProps = TreeItemProps & {
 function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<ValueChangeTreeItemModelProps>(props.itemId)!
+  const valueChangeLabelProps: ValueChangeLabelProps = {
+    children: item.label,
+    className: props.className,
+    value: item.value,
+    reverseColor: item.reverseColor ?? false,
+    showPercentage: item.showPercentage ?? defaultShowPercentage,
+    reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
+    noColor: item.noColor ?? false,
+    noPlusSign: item.noPlusSign ?? false,
+  }
 
   return (
     <TreeItem
@@ -74,16 +84,7 @@ function ValueChangeTreeItem({ ref, ...props }: ValueChangeTreeItemProps): React
         label: ValueChangeLabel,
       }}
       slotProps={{
-        // KJA unsafe
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
-        label: {
-          value: item.value,
-          reverseColor: item.reverseColor ?? false,
-          showPercentage: item.showPercentage ?? defaultShowPercentage,
-          reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
-          noColor: item.noColor ?? false,
-          noPlusSign: item.noPlusSign ?? false,
-        } as ValueChangeLabelProps,
+        label: valueChangeLabelProps,
       }}
     />
   )
