@@ -192,6 +192,20 @@ function formatBattleStats(
         noPlusSign: true,
       },
       {
+        id: `mission-${missionSiteId}-battle-stats-total-agent-hp-at-battle-start`,
+        label: 'Total agent hp at battle start',
+        chipValue: initialAgentHitPoints,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-enemy-hp-at-battle-start`,
+        label: 'Total enemy hp at battle start',
+        chipValue: initialEnemyHitPoints,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-at-battle-start`,
         label: 'Total agent skill at battle start',
         chipValue: totalAgentSkillAtBattleStart,

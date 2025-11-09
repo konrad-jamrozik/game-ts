@@ -1,8 +1,8 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
 import type { Bps } from '../../lib/model/bps'
-import { val } from '../../lib/utils/mathUtils'
 import { str } from '../../lib/utils/formatUtils'
+import { val } from '../../lib/utils/mathUtils'
 
 export type TreeItemLabelWithChipProps = {
   // Note: 'children' property is required, and it denotes the plain textual label,

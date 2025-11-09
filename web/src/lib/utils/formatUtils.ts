@@ -8,6 +8,9 @@ export function str(value: unknown): string {
   if (isBps(value)) {
     return fmtPctDiv100Dec2(value)
   }
+  if (typeof value === 'number' && value % 1 !== 0) {
+    return fmtDec2(value)
+  }
   return String(value)
 }
 /**
@@ -24,6 +27,15 @@ export function fmtPctDiv100(value: number, decimals: number): string {
 
 export function fmtPctDec2(value: number): string {
   return fmtPct(value, 2, 1)
+}
+
+/**
+ * Formats a number to 2 decimal places.
+ * @param value - The number to format
+ * @returns Formatted string with 2 decimal places (e.g., "3.67")
+ */
+export function fmtDec2(value: number): string {
+  return value.toFixed(2)
 }
 
 export function fmtPct(value: number, decimals = 0, denominator = 1): string {
