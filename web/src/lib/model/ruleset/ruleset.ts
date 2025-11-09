@@ -78,3 +78,20 @@ export function calculatePanicIncrease(threatLevel: Bps, suppression: Bps): Bps 
 export function decaySuppression(suppression: Bps): Bps {
   return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY_PCT / 100)))
 }
+
+/**
+ * Calculates projected panic value after turn advancement (without mission panic reductions).
+ * Panic increases by the sum of panic increases from all factions.
+ *
+ * @param gameState - The current game state
+ * @returns Projected panic value (in basis points)
+ */
+export function getPanicNewBalance(gameState: GameState): Bps {
+  // KJA dedup this with logic in updatePanic
+  let totalPanicIncrease = 0
+  for (const faction of gameState.factions) {
+    const panicIncrease = calculatePanicIncrease(faction.threatLevel, faction.suppression)
+    totalPanicIncrease += panicIncrease.value
+  }
+  return bps(gameState.panic.value + totalPanicIncrease)
+}
