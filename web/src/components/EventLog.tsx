@@ -4,7 +4,6 @@ import CardHeader from '@mui/material/CardHeader'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
-import ListItemButton from '@mui/material/ListItemButton'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
@@ -68,60 +67,29 @@ export function EventLog(): React.JSX.Element {
             </Typography>
           ) : (
             <List dense>
-              {visibleEvents.map((event: GameEvent) => {
-                const isClickableTurnReport = event.type === 'TurnAdvancement'
-
-                if (isClickableTurnReport) {
-                  return (
-                    <ListItem key={event.id} disablePadding>
-                      <ListItemButton>
-                        <ListItemText
-                          primary={renderPrimaryListItemText(event)}
-                          secondary={`T ${event.turn} / A ${event.actionsCount}`}
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'space-between',
-                            alignItems: 'center',
-                          }}
-                          slotProps={{
-                            primary: {
-                              component: 'span',
-                            },
-                            secondary: {
-                              component: 'span',
-                              sx: { marginLeft: 2, flexShrink: 0 },
-                            },
-                          }}
-                        />
-                      </ListItemButton>
-                    </ListItem>
-                  )
-                }
-
-                return (
-                  <ListItem key={event.id} disablePadding>
-                    <ListItemText
-                      primary={renderPrimaryListItemText(event)}
-                      secondary={`T ${event.turn} / A ${event.actionsCount}`}
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        px: 2,
-                      }}
-                      slotProps={{
-                        primary: {
-                          component: 'span',
-                        },
-                        secondary: {
-                          component: 'span',
-                          sx: { marginLeft: 2, flexShrink: 0 },
-                        },
-                      }}
-                    />
-                  </ListItem>
-                )
-              })}
+              {visibleEvents.map((event: GameEvent) => (
+                <ListItem key={event.id} disablePadding>
+                  <ListItemText
+                    primary={renderPrimaryListItemText(event)}
+                    secondary={`T ${event.turn} / A ${event.actionsCount}`}
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      px: 2,
+                    }}
+                    slotProps={{
+                      primary: {
+                        component: 'span',
+                      },
+                      secondary: {
+                        component: 'span',
+                        sx: { marginLeft: 2, flexShrink: 0 },
+                      },
+                    }}
+                  />
+                </ListItem>
+              ))}
             </List>
           )}
         </CardContent>
