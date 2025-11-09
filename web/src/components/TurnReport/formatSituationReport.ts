@@ -18,18 +18,12 @@ export function formatSituationReport(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const panicTreeItem = formatPanicReport(panicReport)
-
-  const factionTreeItems: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = factions.map((faction) =>
-    formatFactionBreakdown(faction),
-  )
-
   return [
-    panicTreeItem,
+    formatPanicReport(panicReport),
     {
       id: 'factions-summary',
       label: 'Factions',
-      children: factionTreeItems,
+      children: factions.map((faction) => formatFactionBreakdown(faction)),
     },
   ]
 }
