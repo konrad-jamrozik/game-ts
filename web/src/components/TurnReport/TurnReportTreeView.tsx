@@ -5,8 +5,6 @@ import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import type { Bps } from '../../lib/model/bps'
-import { str } from '../../lib/utils/formatUtils'
-import { val } from '../../lib/utils/mathUtils'
 import theme from '../../styling/theme'
 import { TreeItemLabelWithChip, type TreeItemLabelWithChipProps } from './TreeItemLabelWithChip'
 
@@ -49,12 +47,10 @@ function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<TurnReportTreeViewModelProps>(props.itemId)!
 
-  // Format the chip label from the value
-  const chipLabel = formatChipLabel(item.chipValue, item.noPlusSign ?? false)
-
   const valueChangeLabelProps: TreeItemLabelWithChipProps = {
     children: item.label,
-    chipLabel,
+    chipValue: item.chipValue,
+    noPlusSign: item.noPlusSign ?? false,
     reverseColor: item.reverseColor ?? false,
     reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
     noColor: item.noColor ?? false,
@@ -74,16 +70,4 @@ function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
       slotProps={labelSlotProps}
     />
   )
-}
-
-/**
- * Formats a numeric value into a chip label string.
- */
-function formatChipLabel(chipValue: number | Bps | undefined, noPlusSign: boolean): string | undefined {
-  if (chipValue === undefined) {
-    return undefined
-  }
-  const value = val(chipValue)
-  const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-  return `${sign}${str(chipValue)}`
 }

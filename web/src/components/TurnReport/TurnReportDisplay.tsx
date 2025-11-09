@@ -17,7 +17,6 @@ import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type TurnReportTreeViewModelProps } from './TurnReportTreeView'
 import { bps, isBps, type Bps } from '../../lib/model/bps'
-import ExampleTreeView from './ExampleTreeView'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -65,7 +64,6 @@ export function TurnReportDisplay(): React.ReactElement {
             alignItems: 'start',
           }}
         >
-          <ExampleTreeView />
           <ExpandableCard title="Assets" defaultExpanded={true} nested={true}>
             <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={assetsDefaultExpandedItems} />
           </ExpandableCard>

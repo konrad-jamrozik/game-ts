@@ -1,5 +1,8 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
+import type { Bps } from '../../lib/model/bps'
+import { val } from '../../lib/utils/mathUtils'
+import { str } from '../../lib/utils/formatUtils'
 
 export type TreeItemLabelWithChipProps = {
   // Note: 'children' property is required, and it denotes the plain textual label,
@@ -11,7 +14,8 @@ export type TreeItemLabelWithChipProps = {
   // which uses 'children' to denote value of its content.
   // See about_mui.md for more.
   children: React.ReactNode
-  chipLabel?: string | undefined
+  chipValue: number | Bps | undefined
+  noPlusSign?: boolean
   reverseColor?: boolean
   reverseMainColors?: boolean
   noColor?: boolean
@@ -19,11 +23,15 @@ export type TreeItemLabelWithChipProps = {
 
 export function TreeItemLabelWithChip({
   children,
-  chipLabel,
+  chipValue,
+  noPlusSign = false,
   reverseColor = false,
   reverseMainColors = false,
   noColor = false,
 }: TreeItemLabelWithChipProps): React.ReactElement {
+  // Format the chip label from the value
+  const chipLabel = formatChipLabel(chipValue, noPlusSign)
+
   // Determine color based on chipLabel content and reverseColor setting
   const color: 'success' | 'error' | 'default' = determineChipColor(chipLabel, noColor, reverseColor, reverseMainColors)
 
@@ -35,6 +43,18 @@ export function TreeItemLabelWithChip({
       )}
     </div>
   )
+}
+
+/**
+ * Formats a numeric value into a chip label string.
+ */
+function formatChipLabel(chipValue: number | Bps | undefined, noPlusSign?: boolean): string | undefined {
+  if (chipValue === undefined) {
+    return undefined
+  }
+  const value = val(chipValue)
+  const sign = (noPlusSign ?? false) ? '' : value > 0 ? '+' : ''
+  return `${sign}${str(chipValue)}`
 }
 
 /**
