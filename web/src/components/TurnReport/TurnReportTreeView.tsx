@@ -2,7 +2,7 @@ import { Box } from '@mui/material'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps, type TreeItemSlotProps, type TreeItemSlots } from '@mui/x-tree-view/TreeItem'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
-import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
+import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import theme from '../../styling/theme'
 import { TreeItemLabelWithChip, type TreeItemLabelWithChipProps } from './TreeItemLabelWithChip'
@@ -25,15 +25,96 @@ export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties &
   Omit<TreeItemLabelWithChipProps, 'children'>
 
 /**
+ * Recursively collects all item IDs that have children starting from a specific item.
+ * Based on the pattern from MUI TreeView documentation.
+ */
+function getAllChildItemIds(
+  items: TreeViewBaseItem<TurnReportTreeViewModelProps>[],
+  targetItemId: TreeViewItemId,
+): TreeViewItemId[] {
+  const itemIds: TreeViewItemId[] = []
+
+  // Find the target item first
+  function findTargetItem(
+    itemsToSearch: TreeViewBaseItem<TurnReportTreeViewModelProps>[],
+  ): TreeViewBaseItem<TurnReportTreeViewModelProps> | undefined {
+    for (const item of itemsToSearch) {
+      if (item.id === targetItemId) {
+        return item
+      }
+      if (item.children !== undefined && item.children.length > 0) {
+        const found = findTargetItem(item.children)
+        if (found !== undefined) {
+          return found
+        }
+      }
+    }
+    return undefined
+  }
+
+  const targetItem = findTargetItem(items)
+  if (targetItem === undefined) {
+    return itemIds
+  }
+
+  // Recursively register all item IDs that have children, starting from the target item's children
+  function registerItemId(item: TreeViewBaseItem<TurnReportTreeViewModelProps>): void {
+    if (item.children !== undefined && item.children.length > 0) {
+      itemIds.push(item.id)
+      for (const child of item.children) {
+        registerItemId(child)
+      }
+    }
+  }
+
+  // Start collecting from the target item's children
+  if (targetItem.children !== undefined && targetItem.children.length > 0) {
+    for (const child of targetItem.children) {
+      registerItemId(child)
+    }
+  }
+
+  return itemIds
+}
+
+/**
  * Custom TreeView component that displays chips in TreeItem labels.
  */
 export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTreeViewProps): React.ReactElement {
+  const [expandedItems, setExpandedItems] = React.useState<string[]>(
+    defaultExpandedItems !== undefined ? [...defaultExpandedItems] : [],
+  )
+  console.log('TurnReportTreeView! expandedItems:', expandedItems)
+
+  function handleExpandedItemsChange(_event: React.SyntheticEvent | null, itemIds: string[]): void {
+    console.log('handleExpandedItemsChange! itemIds:', itemIds, 'expandedItems:', expandedItems)
+    setExpandedItems(itemIds)
+  }
+
+  function handleItemClick(event: React.MouseEvent, itemId: string): void {
+    // Check if Ctrl key is held
+    if (event.ctrlKey) {
+      // Get all child item IDs recursively
+      console.log('Control clicked!')
+      const allChildIds = getAllChildItemIds(items, itemId)
+      console.log('allChildIds:', allChildIds)
+      // Expand the missions-summary item itself and all its children
+      const newExpandedItems = new Set([...expandedItems, 'missions-summary', ...allChildIds])
+      console.log('newExpandedItems:', newExpandedItems)
+      setExpandedItems([...newExpandedItems])
+    }
+  }
+
+  console.log('Rendering tree with expanded items:', expandedItems)
+
   return (
     <Box sx={{ backgroundColor: theme.palette.background.paper }}>
       <RichTreeView
-        {...(defaultExpandedItems !== undefined && { defaultExpandedItems: [...defaultExpandedItems] })}
+        expandedItems={expandedItems}
+        onExpandedItemsChange={handleExpandedItemsChange}
         items={items}
         slots={{ item: TurnReportTreeItem }}
+        onItemClick={handleItemClick}
       />
     </Box>
   )
