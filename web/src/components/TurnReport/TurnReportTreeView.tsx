@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
-import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tree-view/TreeItem'
+import { TreeItem, type TreeItemProps, type TreeItemSlotProps, type TreeItemSlots } from '@mui/x-tree-view/TreeItem'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import * as React from 'react'
@@ -43,27 +43,13 @@ function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const item = useTreeItemModel<TurnReportTreeViewModelProps>(props.itemId)!
 
-  const valueChangeLabelProps: TreeItemLabelWithChipProps = {
+  const labelProps: TreeItemLabelWithChipProps = {
+    ...item,
     children: item.label,
-    chipValue: item.chipValue ?? undefined,
-    noPlusSign: item.noPlusSign ?? false,
-    reverseColor: item.reverseColor ?? false,
-    reverseMainColors: item.reverseMainColors ?? false,
-    noColor: item.noColor ?? false,
   }
 
-  const labelSlot: React.ElementType<TreeItemLabelWithChipProps> = TreeItemLabelWithChip
-  const labelSlotProps: TreeItemSlotProps = {
-    label: valueChangeLabelProps,
-  }
+  const slots: TreeItemSlots = { label: TreeItemLabelWithChip }
+  const labelSlotProps: TreeItemSlotProps = { label: labelProps }
 
-  return (
-    <TreeItem
-      {...props}
-      slots={{
-        label: labelSlot,
-      }}
-      slotProps={labelSlotProps}
-    />
-  )
+  return <TreeItem {...props} slots={slots} slotProps={labelSlotProps} />
 }

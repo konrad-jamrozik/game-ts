@@ -33,17 +33,14 @@ export function TreeItemLabelWithChip({
   reverseMainColors = false,
   noColor = false,
 }: TreeItemLabelWithChipProps): React.ReactElement {
-  // Format the chip label from the value
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
-
-  // Determine color based on chipLabel content and reverseColor setting
-  const color: 'success' | 'error' | 'default' = determineChipColor(chipLabel, noColor, reverseColor, reverseMainColors)
+  const chipColor = determineChipColor(chipLabel, noColor, reverseColor, reverseMainColors)
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <span>{children}</span>
       {chipLabel !== undefined && (
-        <Chip label={chipLabel} color={color} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
+        <Chip label={chipLabel} color={chipColor} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
       )}
     </div>
   )
