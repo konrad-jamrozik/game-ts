@@ -84,28 +84,41 @@ export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTr
   const [expandedItems, setExpandedItems] = React.useState<string[]>(
     defaultExpandedItems !== undefined ? [...defaultExpandedItems] : [],
   )
-  console.log('TurnReportTreeView! expandedItems:', expandedItems)
+  // Track recursive expansion to prevent override by default expansion behavior
+  const recursiveExpansionRef = React.useRef<{ itemId: string; childIds: string[] } | undefined>(undefined)
 
   function handleExpandedItemsChange(_event: React.SyntheticEvent | null, itemIds: string[]): void {
-    console.log('handleExpandedItemsChange! itemIds:', itemIds, 'expandedItems:', expandedItems)
+    // If we have a pending recursive expansion, merge it instead of using the default toggle
+    if (recursiveExpansionRef.current !== undefined) {
+      const { itemId, childIds } = recursiveExpansionRef.current
+      // Merge the recursive expansion with the incoming change
+      const mergedExpandedItems = new Set([...itemIds, itemId, ...childIds])
+      setExpandedItems([...mergedExpandedItems])
+      // Clear the ref after handling
+      recursiveExpansionRef.current = undefined
+      return
+    }
     setExpandedItems(itemIds)
   }
 
   function handleItemClick(event: React.MouseEvent, itemId: string): void {
     // Check if Ctrl key is held
     if (event.ctrlKey) {
+      // Prevent default expansion behavior
+      event.preventDefault()
+      event.stopPropagation()
+
       // Get all child item IDs recursively
-      console.log('Control clicked!')
       const allChildIds = getAllChildItemIds(items, itemId)
-      console.log('allChildIds:', allChildIds)
-      // Expand the missions-summary item itself and all its children
-      const newExpandedItems = new Set([...expandedItems, 'missions-summary', ...allChildIds])
-      console.log('newExpandedItems:', newExpandedItems)
+
+      // Store the recursive expansion info for handleExpandedItemsChange to use
+      recursiveExpansionRef.current = { itemId, childIds: allChildIds }
+
+      // Expand the clicked item itself and all its children
+      const newExpandedItems = new Set([...expandedItems, itemId, ...allChildIds])
       setExpandedItems([...newExpandedItems])
     }
   }
-
-  console.log('Rendering tree with expanded items:', expandedItems)
 
   return (
     <Box sx={{ backgroundColor: theme.palette.background.paper }}>
