@@ -1,5 +1,6 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
+import { bps } from '../../lib/model/bps'
 import { fmtPctDec2 } from '../../lib/utils/formatUtils'
 import { divMult100Round } from '../../lib/utils/mathUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
@@ -68,9 +69,9 @@ function formatRewards(
   if (rewards.panicReduction !== undefined) {
     children.push({
       id: `mission-${missionSiteId}-reward-panic-reduction`,
-      label: 'Panic reduction',
-      chipValue: rewards.panicReduction,
-      reverseColor: false, // Panic reduction is good (default)
+      label: 'Panic',
+      chipValue: bps(-rewards.panicReduction.value),
+      reverseColor: true, // Negative values (reductions) should be green
     })
   }
 
@@ -81,9 +82,9 @@ function formatRewards(
       if (factionReward.threatReduction !== undefined) {
         children.push({
           id: `mission-${missionSiteId}-reward-faction-threat-reduction`,
-          label: 'Faction threat reduction',
-          chipValue: factionReward.threatReduction,
-          reverseColor: false, // Threat reduction is good (default)
+          label: 'Faction threat',
+          chipValue: bps(-factionReward.threatReduction.value),
+          reverseColor: true, // Negative values (reductions) should be green
         })
       }
       if (factionReward.suppression !== undefined) {
