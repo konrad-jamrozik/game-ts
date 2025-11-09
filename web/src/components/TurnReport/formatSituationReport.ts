@@ -21,6 +21,7 @@ export function formatSituationReport(
   factions: readonly FactionReport[],
   missions?: readonly MissionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+  // KJA need to display mission ID, and fix title so faction name is not repeated; should be separate line instead
   return [
     formatPanicReport(panicReport),
     {
@@ -70,8 +71,8 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
           {
             id: 'panic-mission-reductions',
             label: 'Mission Reductions',
-            chipValue: totalMissionReduction,
-            reverseColor: false, // Panic reduction is good (default)
+            chipValue: bps(-totalMissionReduction.value),
+            reverseColor: true, // Panic reduction is good (default)
           },
         ]
       : []),
@@ -154,8 +155,7 @@ function formatSuppressionChildren(
           {
             id: `faction-${factionId}-suppressionDecay`,
             label: 'Suppression Decay',
-            chipValue: suppressionDecay,
-            reverseColor: true, // Suppression decay is bad
+            chipValue: bps(-suppressionDecay.value),
           },
         ]
       : []),

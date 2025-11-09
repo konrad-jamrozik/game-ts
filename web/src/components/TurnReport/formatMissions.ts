@@ -225,7 +225,6 @@ function formatBattleStats(
         id: `mission-${missionSiteId}-battle-stats-total-damage-inflicted`,
         label: `Total damage inflicted (${fmtPctDec2(damageInflictedPct)} of enemy HP)`,
         chipValue: totalDamageInflicted,
-        noColor: true,
         noPlusSign: true,
       },
       {
@@ -239,7 +238,7 @@ function formatBattleStats(
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
         label: `Total agent skill gain (${fmtPctDec2(skillGainPct)} of initial skill)`,
         chipValue: totalAgentSkillGain,
-        noColor: true,
+        noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-average-agent-exhaustion-gain`,
