@@ -132,8 +132,8 @@ function formatThreatLevelChildren(
           {
             id: `faction-${factionId}-mission-threat-reductions`,
             label: 'Mission Threat Reductions',
-            chipValue: totalThreatReduction,
-            reverseColor: false, // Threat reduction is good (default)
+            chipValue: bps(-totalThreatReduction.value),
+            reverseColor: true, // Threat reduction is good (default)
           },
         ]
       : []),

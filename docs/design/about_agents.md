@@ -59,8 +59,8 @@ Refer to [about_deployed_mission_site.md](about_deployed_mission_site.md).
 Agent `skill` is used to compute `effective_skill`. `effective_skill` is equal to agent `skill` reduced by:
 
 - Percentage equal to percentage of `hitPointsLost`, rounded down.
-- Then again by percentage equal to agent `exhaustion`, rounded down. However, first 5 points of exhaustion
-  have no impact.
+- Then again, multiplicatively, by percentage equal to agent `exhaustion`, rounded down.
+  However, first 5 points of exhaustion have no impact.
 
 That is:
 ``` text

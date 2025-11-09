@@ -124,9 +124,9 @@ For example a `range` of 5-15 means there are 11 possible values, each being rol
 
 All weapon damage is +- 50%, rounded outside / to expand the damage range.
 
-For an example:
+For example:
 
-- A 7 damage weapon has damage range of 3-11.
+- A 7 damage weapon has damage range of 3-11 (3 is rounded outside / expanded from 3.5 and 11 from 10.5)
 - A 10 damage weapon has damage range of 5-15.
 
 # Mission site result and awards
