@@ -10,8 +10,6 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
 import { assertEqual } from '../lib/utils/assert'
-import { useTurnReportHistory } from './TurnReport/useTurnReportHistory'
-import type { TurnReport } from '../lib/model/reportModel'
 import { str } from '../lib/utils/formatUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
@@ -45,10 +43,6 @@ export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
   const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)
   const currentActionsCount = useAppSelector((state) => state.undoable.present.gameState.actionsCount)
-  const { getTurnReport } = useTurnReportHistory()
-
-  const [modalOpen, setModalOpen] = React.useState(false)
-  const [selectedTurnReport, setSelectedTurnReport] = React.useState<TurnReport | undefined>()
 
   // Hide events that are currently undone (beyond the undo pointer)
   // and also hide any legacy undo/redo/reset text events that may exist in persisted state
@@ -57,19 +51,6 @@ export function EventLog(): React.JSX.Element {
       event.turn < currentTurn || (event.turn === currentTurn && event.actionsCount <= currentActionsCount)
     return notUndone
   })
-
-  function handleTurnAdvancementClick(turn: number): void {
-    const turnReport = getTurnReport(turn)
-    if (turnReport) {
-      setSelectedTurnReport(turnReport)
-      setModalOpen(true)
-    }
-  }
-
-  function handleModalClose(): void {
-    setModalOpen(false)
-    setSelectedTurnReport(undefined)
-  }
 
   return (
     <React.Fragment>
@@ -93,7 +74,7 @@ export function EventLog(): React.JSX.Element {
                 if (isClickableTurnReport) {
                   return (
                     <ListItem key={event.id} disablePadding>
-                      <ListItemButton onClick={() => handleTurnAdvancementClick(event.turn)}>
+                      <ListItemButton>
                         <ListItemText
                           primary={renderPrimaryListItemText(event)}
                           secondary={`T ${event.turn} / A ${event.actionsCount}`}
