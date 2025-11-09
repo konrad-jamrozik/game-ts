@@ -1,5 +1,5 @@
 import { Box } from '@mui/material'
-import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
+import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import {
@@ -16,7 +16,7 @@ import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type TurnReportTreeViewModelProps } from './TurnReportTreeView'
-import { bps, isBps, type Bps } from '../../lib/model/bps'
+import { bps, isBps } from '../../lib/model/bps'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -337,7 +337,7 @@ function formatSituationReportAsTree(
 /**
  * Format money breakdown details
  */
-function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
+function formatMoneyBreakdown(breakdown: MoneyBreakdown): TurnReportTreeViewModelProps[] {
   return [
     { id: 'fundingIncome', label: 'Funding Income', chipValue: breakdown.fundingIncome },
     { id: 'contractingEarnings', label: 'Contracting Earnings', chipValue: breakdown.contractingEarnings },
@@ -350,7 +350,7 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
 /**
  * Format intel breakdown details
  */
-function formatIntelBreakdown(breakdown: IntelBreakdown): BreakdownRow[] {
+function formatIntelBreakdown(breakdown: IntelBreakdown): TurnReportTreeViewModelProps[] {
   return [
     { id: 'espionageGathered', label: 'Espionage Gathered', chipValue: breakdown.espionageGathered },
     { id: 'missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
@@ -360,8 +360,8 @@ function formatIntelBreakdown(breakdown: IntelBreakdown): BreakdownRow[] {
 /**
  * Format panic breakdown details
  */
-function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
-  const rows: BreakdownRow[] = []
+function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
+  const rows: TurnReportTreeViewModelProps[] = []
 
   // Add faction contributions
   breakdown.factionPanicIncreases.forEach((faction) => {
@@ -389,10 +389,4 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
   }
 
   return rows
-}
-
-type BreakdownRow = TreeViewDefaultItemModelProperties & {
-  chipValue: number | Bps
-  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
-  reverseColor?: boolean
 }
