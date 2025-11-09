@@ -15,7 +15,7 @@ import {
   type TurnReport,
 } from '../model/turnReportModel'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { calculatePanicIncrease, decaySuppression } from '../model/ruleset/ruleset'
+import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/ruleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
@@ -430,10 +430,7 @@ function updatePanic(
   })
 
   // Increase panic by the sum of (threat level - suppression) for all factions
-  let totalPanicIncrease = 0
-  for (const faction of factionPanicIncreases) {
-    totalPanicIncrease += faction.factionPanicIncrease.value
-  }
+  const totalPanicIncrease = getTotalPanicIncrease(state)
   state.panic = bps(state.panic.value + totalPanicIncrease)
 
   // Track mission reductions and apply them
