@@ -1,5 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { bps } from '../../lib/model/bps'
+import { bps, type Bps } from '../../lib/model/bps'
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import {
   newValueChange,
@@ -9,10 +9,10 @@ import {
 } from '../../lib/model/turnReportModel'
 import { fmtValueChange } from '../../lib/utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
-import { val } from '../../lib/utils/mathUtils'
 
 /**
- * Format situation report (panic and factions) as tree structure for MUI Tree View, for TurnReportTreeView component.
+ * Format situation report (panic and factions) as a tree structure for the MUI Tree View,
+ * for the TurnReportTreeView component, to display it as part of the TurnReportDisplay component.
  */
 export function formatSituationReport(
   panicReport: PanicReport,
@@ -68,80 +68,94 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
   return rows
 }
 
-function formatFactionBreakdown(faction: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
-  const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
+function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+  const previousPanicIncrease = calculatePanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
+  const currentPanicIncrease = calculatePanicIncrease(fct.threatLevel.current, fct.suppression.current)
   const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
-
-  // Calculate mission impacts (summed across all missions)
-  const totalThreatReduction = bps(
-    faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction?.value ?? 0), 0),
-  )
-  const totalSuppressionAdded = bps(
-    faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded?.value ?? 0), 0),
-  )
-
-  // Build threat level children (base threat increase and mission threat reductions)
-  const threatLevelChildren: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = [
-    {
-      id: `faction-${faction.factionId}-baseThreatIncrease`,
-      label: 'Base Threat Increase',
-      chipValue: faction.baseThreatIncrease,
-      reverseColor: true, // Threat increase is bad
-    },
-  ]
-
-  if (totalThreatReduction.value !== 0) {
-    threatLevelChildren.push({
-      id: `faction-${faction.factionId}-mission-threat-reductions`,
-      label: 'Mission Threat Reductions',
-      chipValue: totalThreatReduction,
-      reverseColor: false, // Threat reduction is good (default)
-    })
-  }
-
-  // Build suppression children (mission suppressions and suppression decay)
-  const suppressionChildren: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = []
-
-  if (faction.suppressionDecay.value !== 0) {
-    suppressionChildren.push({
-      id: `faction-${faction.factionId}-suppressionDecay`,
-      label: 'Suppression Decay',
-      chipValue: faction.suppressionDecay,
-      reverseColor: true, // Suppression decay is bad
-    })
-  }
-
-  if (totalSuppressionAdded.value !== 0) {
-    suppressionChildren.push({
-      id: `faction-${faction.factionId}-mission-suppressions`,
-      label: 'Mission Suppressions',
-      chipValue: totalSuppressionAdded,
-      reverseColor: false, // Suppression increase is good (default)
-    })
-  }
 
   const panicCaused = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
-    id: faction.factionId,
-    label: `${faction.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
+    id: fct.factionId,
+    label: `${fct.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
     chipValue: panicIncreaseDelta,
     reverseMainColors: true,
     children: [
       {
-        id: `faction-${faction.factionId}-threat-level`,
-        label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
-        chipValue: faction.threatLevel.delta,
+        id: `faction-${fct.factionId}-threat-level`,
+        label: `Threat Level: ${fmtValueChange(fct.threatLevel)}`,
+        chipValue: fct.threatLevel.delta,
         reverseMainColors: true,
-        children: threatLevelChildren,
+        children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
       },
       {
-        id: `faction-${faction.factionId}-suppression`,
-        label: `Suppression: ${fmtValueChange(faction.suppression)}`,
-        chipValue: faction.suppression.delta,
+        id: `faction-${fct.factionId}-suppression`,
+        label: `Suppression: ${fmtValueChange(fct.suppression)}`,
+        chipValue: fct.suppression.delta,
         reverseColor: false, // Suppression increase is good (default)
-        children: suppressionChildren,
+        children: formatSuppressionChildren(fct.factionId, fct.suppressionDecay, fct.missionImpacts),
       },
     ],
   }
+}
+
+function formatThreatLevelChildren(
+  factionId: string,
+  baseThreatIncrease: Bps,
+  missionImpacts: FactionReport['missionImpacts'],
+): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+  const totalThreatReduction = bps(
+    missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction?.value ?? 0), 0),
+  )
+
+  return [
+    {
+      id: `faction-${factionId}-baseThreatIncrease`,
+      label: 'Base Threat Increase',
+      chipValue: baseThreatIncrease,
+      reverseColor: true, // Threat increase is bad
+    },
+    ...(totalThreatReduction.value !== 0
+      ? [
+          {
+            id: `faction-${factionId}-mission-threat-reductions`,
+            label: 'Mission Threat Reductions',
+            chipValue: totalThreatReduction,
+            reverseColor: false, // Threat reduction is good (default)
+          },
+        ]
+      : []),
+  ]
+}
+
+function formatSuppressionChildren(
+  factionId: string,
+  suppressionDecay: Bps,
+  missionImpacts: FactionReport['missionImpacts'],
+): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+  const totalSuppressionAdded = bps(
+    missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded?.value ?? 0), 0),
+  )
+
+  return [
+    ...(suppressionDecay.value !== 0
+      ? [
+          {
+            id: `faction-${factionId}-suppressionDecay`,
+            label: 'Suppression Decay',
+            chipValue: suppressionDecay,
+            reverseColor: true, // Suppression decay is bad
+          },
+        ]
+      : []),
+    ...(totalSuppressionAdded.value !== 0
+      ? [
+          {
+            id: `faction-${factionId}-mission-suppressions`,
+            label: 'Mission Suppressions',
+            chipValue: totalSuppressionAdded,
+            reverseColor: false, // Suppression increase is good (default)
+          },
+        ]
+      : []),
+  ]
 }
