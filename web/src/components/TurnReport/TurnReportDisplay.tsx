@@ -202,27 +202,13 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
  * Format panic breakdown as tree structure for MUI Tree View with chips
  */
 function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  const topLevelItem: TreeViewBaseItem<TurnReportTreeViewModelProps> = {
+  return {
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
     chipValue: panicReport.change.delta,
     reverseMainColors: true,
+    children: formatPanicBreakdown(panicReport.breakdown),
   }
-
-  const childrenTreeItems: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = formatPanicBreakdown(
-    panicReport.breakdown,
-  ).map((row) => {
-    const treeItem: TurnReportTreeViewModelProps = {
-      id: row.id,
-      label: row.label,
-      chipValue: row.chipValue,
-      reverseColor: row.reverseColor ?? false,
-    }
-    return treeItem
-  })
-
-  topLevelItem.children = childrenTreeItems
-  return topLevelItem
 }
 
 /**
