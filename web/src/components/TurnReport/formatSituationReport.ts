@@ -33,7 +33,7 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
     chipValue: panicReport.change.delta,
-    reverseMainColors: true,
+    reverseColor: true, // Panic increase is bad
     children: formatPanicBreakdown(panicReport.breakdown),
   }
 }
@@ -78,13 +78,13 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
     id: fct.factionId,
     label: `${fct.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
     chipValue: panicIncreaseDelta,
-    reverseMainColors: true,
+    reverseColor: true, // Panic increase is bad
     children: [
       {
         id: `faction-${fct.factionId}-threat-level`,
         label: `Threat Level: ${fmtValueChange(fct.threatLevel)}`,
         chipValue: fct.threatLevel.delta,
-        reverseMainColors: true,
+        reverseColor: true, // Threat increase is bad
         children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
       },
       {

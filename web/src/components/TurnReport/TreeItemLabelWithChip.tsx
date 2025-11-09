@@ -19,9 +19,6 @@ export type TreeItemLabelWithChipProps = {
   noPlusSign?: boolean
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
-  /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
-  // KJA get rid of reverseMainColors
-  reverseMainColors?: boolean
   /** If true, always display as gray/default color regardless of value */
   noColor?: boolean
 }
@@ -31,11 +28,10 @@ export function TreeItemLabelWithChip({
   chipValue,
   noPlusSign = false,
   reverseColor = false,
-  reverseMainColors = false,
   noColor = false,
 }: TreeItemLabelWithChipProps): React.ReactElement {
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
-  const chipColor = determineChipColor(chipLabel, noColor, reverseColor, reverseMainColors)
+  const chipColor = determineChipColor(chipLabel, noColor, reverseColor)
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -66,7 +62,6 @@ function determineChipColor(
   chipLabel: string | undefined,
   noColor: boolean,
   reverseColor: boolean,
-  reverseMainColors: boolean,
 ): 'success' | 'error' | 'default' {
   if (noColor || chipLabel === undefined) {
     return 'default'
@@ -80,7 +75,7 @@ function determineChipColor(
     return 'default'
   }
 
-  if (reverseColor || reverseMainColors) {
+  if (reverseColor) {
     return isPositive ? 'error' : 'success'
   }
   return isPositive ? 'success' : 'error'
