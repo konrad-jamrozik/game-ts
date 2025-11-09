@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
 import { isBps, type Bps } from '../model/bps'
-import type { ValueChange } from '../model/reportModel'
+import type { ValueChange } from '../model/turnReportModel'
 import { div } from './mathUtils'
 
 export function str(value: unknown): string {

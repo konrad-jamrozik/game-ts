@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../app/hooks'
-import type { TurnReport } from '../../lib/model/reportModel'
+import type { TurnReport } from '../../lib/model/turnReportModel'
 
 /**
  * Hook to access historical turn reports from the undo system

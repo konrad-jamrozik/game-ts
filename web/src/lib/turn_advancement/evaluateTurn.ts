@@ -11,7 +11,7 @@ import {
   type MoneyBreakdown,
   type PanicReport,
   type TurnReport,
-} from '../model/reportModel'
+} from '../model/turnReportModel'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { calculatePanicIncrease, decaySuppression } from '../model/ruleset/ruleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'

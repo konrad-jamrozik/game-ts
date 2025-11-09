@@ -1,5 +1,5 @@
 import type { Bps } from './bps'
-import type { TurnReport } from './reportModel'
+import type { TurnReport } from './turnReportModel'
 
 export type Actor = {
   id: string

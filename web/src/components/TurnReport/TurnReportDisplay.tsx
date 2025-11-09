@@ -11,7 +11,7 @@ import {
   type PanicBreakdown,
   type PanicReport,
   type ValueChange,
-} from '../../lib/model/reportModel'
+} from '../../lib/model/turnReportModel'
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
