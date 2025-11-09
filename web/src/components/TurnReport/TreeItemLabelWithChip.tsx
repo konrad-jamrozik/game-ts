@@ -14,7 +14,7 @@ export type TreeItemLabelWithChipProps = {
   // which uses 'children' to denote value of its content.
   // See about_mui.md for more.
   children: React.ReactNode
-  chipValue?: number | Bps | undefined
+  chipValue?: number | Bps | string | undefined
   /** If true, never display "+" sign for positive values */
   noPlusSign?: boolean
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
@@ -47,12 +47,19 @@ export function TreeItemLabelWithChip({
 }
 
 /**
- * Formats a numeric value into a chip label string.
+ * Formats a numeric or string value into a chip label string.
  */
-function formatChipLabel(chipValue: number | Bps | undefined, noPlusSign?: boolean): string | undefined {
+function formatChipLabel(chipValue: number | Bps | string | undefined, noPlusSign?: boolean): string | undefined {
   if (chipValue === undefined) {
     return undefined
   }
+
+  // Handle strings directly
+  if (typeof chipValue === 'string') {
+    return chipValue
+  }
+
+  // Handle numbers and Bps
   const value = val(chipValue)
   const sign = (noPlusSign ?? false) ? '' : value > 0 ? '+' : ''
   return `${sign}${str(chipValue)}`
@@ -68,6 +75,23 @@ function determineChipColor(
   useWarningColor: boolean,
 ): 'success' | 'error' | 'warning' | 'default' {
   if (noColor || chipLabel === undefined) {
+    return 'default'
+  }
+
+  // For string labels (non-numeric), use default color unless reverseColor is set
+  // Check if the label is numeric (starts with +, -, or is a number)
+  const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
+
+  if (!isNumericLabel) {
+    if (chipLabel.includes('Success')) {
+      return 'success'
+    }
+    if (chipLabel.includes('Retreated')) {
+      return 'error'
+    }
+    if (chipLabel.includes('All agents lost')) {
+      return 'error'
+    }
     return 'default'
   }
 

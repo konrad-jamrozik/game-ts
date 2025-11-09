@@ -19,7 +19,8 @@ function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnRepor
     children: [
       {
         id: `mission-${mission.missionSiteId}-outcome`,
-        label: `Outcome: ${mission.outcome}`,
+        label: 'Outcome',
+        chipValue: mission.outcome,
       },
       {
         id: `mission-${mission.missionSiteId}-rounds`,
