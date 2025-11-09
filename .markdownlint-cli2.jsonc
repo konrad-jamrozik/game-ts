@@ -1,0 +1,24 @@
+{
+    // Note: the fact that the ".markdownlint-cli2.jsonc" must be used to configure anything else beyond rules
+    // for markdownlint in a way that will work both for a) pre-commit b) AND vscode extension,
+    // is superbly nontrivial. AI agents are hallucinating wrong answers.
+    //
+    // Ultimately I figured this out because the extension's marketplace page:
+    //
+    //   https://marketplace.visualstudio.com/items?itemName=DavidAnson.vscode-markdownlint
+    //
+    // Says:
+    //
+    //  > Additionally, options (which include rules and other settings) can be configured by creating a JSON file named .markdownlint-cli2.jsonc
+    //
+    // And the "ignores" property is documented here:
+    //
+    //  https://github.com/DavidAnson/markdownlint-cli2#markdownlint-cli2jsonc
+    //
+    // If you are curious how markdownlint-cli2 relates to markdownlint-cli, see:
+    // https://dlaa.me/blog/post/markdownlintcli2
+    // which is linked from https://github.com/DavidAnson/markdownlint-cli2#overview
+    // "ignores": [
+    //     ".cursor/plans"
+    // ]
+}
