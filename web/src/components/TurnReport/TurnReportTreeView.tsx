@@ -1,14 +1,14 @@
-import { Chip, Box } from '@mui/material'
-import * as React from 'react'
+import { Box, Chip } from '@mui/material'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tree-view/TreeItem'
-import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
-import theme from '../../styling/theme'
+import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
+import * as React from 'react'
+import type { Bps } from '../../lib/model/bps'
 import { str } from '../../lib/utils/formatUtils'
-import { bps } from '../../lib/model/bps'
+import { val } from '../../lib/utils/mathUtils'
+import theme from '../../styling/theme'
 
-const defaultShowPercentage = false
 const defaultReverseMainColors = false
 
 type TurnReportTreeViewProps = {
@@ -16,13 +16,11 @@ type TurnReportTreeViewProps = {
   defaultExpandedItems?: readonly string[]
 }
 
-// KJA this should refer to TreeItemWithLabelChipProps
+// KJA this should refer to TreeItemWithLabelChipProps. And what does it even represent? Why do I need it in addition to TreeItemWithLabelChipProps?
 export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties & {
-  value?: number
+  chipValue?: number | Bps
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
-  /** Show percentage change instead of absolute values */
-  showPercentage?: boolean
   /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseMainColors?: boolean
   /** If true, always display as gray/default color regardless of value */
@@ -67,7 +65,7 @@ function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
   const item = useTreeItemModel<TurnReportTreeViewModelProps>(props.itemId)!
 
   // Format the chip label from the value
-  const chipLabel = formatChipLabel(item.value, item.showPercentage ?? defaultShowPercentage, item.noPlusSign ?? false)
+  const chipLabel = formatChipLabel(item.chipValue, item.noPlusSign ?? false)
 
   const valueChangeLabelProps: TreeItemLabelWithChipProps = {
     children: item.label,
@@ -116,12 +114,13 @@ function TreeItemLabelWithChip({
 /**
  * Formats a numeric value into a chip label string.
  */
-function formatChipLabel(value: number | undefined, showPercentage: boolean, noPlusSign: boolean): string | undefined {
-  if (value === undefined) {
+function formatChipLabel(chipValue: number | Bps | undefined, noPlusSign: boolean): string | undefined {
+  if (chipValue === undefined) {
     return undefined
   }
+  const value = val(chipValue)
   const sign = noPlusSign ? '' : value > 0 ? '+' : ''
-  return showPercentage ? str(bps(value)) : `${sign}${value}`
+  return `${sign}${str(chipValue)}`
 }
 
 /**

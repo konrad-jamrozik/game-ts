@@ -1,3 +1,4 @@
+import { isBps, type Bps } from '../model/bps'
 import { assertNotZero } from './assert'
 
 /**
@@ -34,4 +35,8 @@ export function divMult100Round(nominator: number, denominator: number): number 
 export function div(nominator: number, denominator: number): number {
   assertNotZero(denominator)
   return nominator / denominator
+}
+
+export function val(value: number | Bps): number {
+  return isBps(value) ? value.value : value
 }

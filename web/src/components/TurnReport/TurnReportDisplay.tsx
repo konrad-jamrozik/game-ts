@@ -94,7 +94,7 @@ function formatMoneyBreakdownAsTree(
       const item: TurnReportTreeViewModelProps = {
         id: row.id,
         label: row.label,
-        value: row.value,
+        chipValue: row.value,
         reverseColor: row.reverseColor ?? false,
       }
       return item
@@ -105,7 +105,7 @@ function formatMoneyBreakdownAsTree(
     {
       id: 'money-summary',
       label: `Money: ${fmtValueChange(moneyChange)}`,
-      value: moneyChange.delta,
+      chipValue: moneyChange.delta,
       children: treeItems,
     },
   ]
@@ -123,7 +123,7 @@ function formatIntelBreakdownAsTree(
       const item: TurnReportTreeViewModelProps = {
         id: `intel-${row.id}`,
         label: row.label,
-        value: row.value,
+        chipValue: row.value,
         reverseColor: row.reverseColor ?? false,
       }
       return item
@@ -134,7 +134,7 @@ function formatIntelBreakdownAsTree(
     {
       id: 'intel-summary',
       label: `Intel: ${fmtValueChange(intelChange)}`,
-      value: intelChange.delta,
+      chipValue: intelChange.delta,
       children: treeItems,
     },
   ]
@@ -150,42 +150,42 @@ function formatAgentsBreakdownAsTree(agentsReport: AgentsReport): TreeViewBaseIt
     {
       id: 'agents-total',
       label: `Total: ${fmtValueChange(total)}`,
-      value: total.delta,
+      chipValue: total.delta,
     },
     {
       id: 'agents-available',
       label: `Available: ${fmtValueChange(available)}`,
-      value: available.delta,
+      chipValue: available.delta,
     },
     {
       id: 'agents-in-transit',
       label: `In transit: ${fmtValueChange(inTransit)}`,
-      value: inTransit.delta,
+      chipValue: inTransit.delta,
       noColor: true,
     },
     {
       id: 'agents-recovering',
       label: `Recovering: ${fmtValueChange(recovering)}`,
-      value: recovering.delta,
+      chipValue: recovering.delta,
       reverseColor: true,
     },
     {
       id: 'agents-unscathed',
       label: 'Unscathed',
-      value: unscathed.delta,
+      chipValue: unscathed.delta,
       noPlusSign: true,
     },
     {
       id: 'agents-wounded',
       label: 'Wounded',
-      value: wounded.delta,
+      chipValue: wounded.delta,
       reverseColor: true,
       noPlusSign: true,
     },
     {
       id: 'agents-terminated',
       label: 'Terminated',
-      value: terminated.delta,
+      chipValue: terminated.delta,
       reverseColor: true,
       noPlusSign: true,
     },
@@ -207,9 +207,8 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
   const topLevelItem: TreeViewBaseItem<TurnReportTreeViewModelProps> = {
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
-    value: panicReport.change.delta.value,
+    chipValue: panicReport.change.delta,
     reverseMainColors: true,
-    showPercentage: true,
   }
 
   const childrenTreeItems: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = formatPanicBreakdown(
@@ -218,9 +217,8 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
     const treeItem: TurnReportTreeViewModelProps = {
       id: row.id,
       label: row.label,
-      value: row.value,
+      chipValue: row.value,
       reverseColor: row.reverseColor ?? false,
-      showPercentage: true,
     }
     return treeItem
   })
@@ -235,7 +233,7 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
 function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
-  const panicIncreaseDelta = currentPanicIncrease.value - previousPanicIncrease.value
+  const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
 
   // Calculate mission impacts (summed across all missions)
   const totalThreatReduction = faction.missionImpacts.reduce(
@@ -252,9 +250,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     {
       id: `faction-${faction.factionId}-baseThreatIncrease`,
       label: 'Base Threat Increase',
-      value: faction.baseThreatIncrease.value,
+      chipValue: faction.baseThreatIncrease.value,
       reverseColor: true, // Threat increase is bad
-      showPercentage: true,
     },
   ]
 
@@ -262,9 +259,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     threatLevelChildren.push({
       id: `faction-${faction.factionId}-mission-threat-reductions`,
       label: 'Mission Threat Reductions',
-      value: totalThreatReduction,
+      chipValue: totalThreatReduction,
       reverseColor: false, // Threat reduction is good (default)
-      showPercentage: true,
     })
   }
 
@@ -275,9 +271,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     suppressionChildren.push({
       id: `faction-${faction.factionId}-suppressionDecay`,
       label: 'Suppression Decay',
-      value: faction.suppressionDecay.value,
+      chipValue: faction.suppressionDecay.value,
       reverseColor: true, // Suppression decay is bad
-      showPercentage: true,
     })
   }
 
@@ -285,9 +280,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     suppressionChildren.push({
       id: `faction-${faction.factionId}-mission-suppressions`,
       label: 'Mission Suppressions',
-      value: totalSuppressionAdded,
+      chipValue: totalSuppressionAdded,
       reverseColor: false, // Suppression increase is good (default)
-      showPercentage: true,
     })
   }
 
@@ -296,17 +290,15 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     {
       id: `faction-${faction.factionId}-threat-level`,
       label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
-      value: faction.threatLevel.delta.value,
+      chipValue: faction.threatLevel.delta,
       reverseMainColors: true,
-      showPercentage: true,
       children: threatLevelChildren,
     },
     {
       id: `faction-${faction.factionId}-suppression`,
       label: `Suppression: ${fmtValueChange(faction.suppression)}`,
-      value: faction.suppression.delta.value,
+      chipValue: faction.suppression.delta,
       reverseColor: false, // Suppression increase is good (default)
-      showPercentage: true,
       children: suppressionChildren,
     },
   ]
@@ -315,9 +307,8 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   return {
     id: faction.factionId,
     label: `${faction.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
-    value: panicIncreaseDelta,
+    chipValue: panicIncreaseDelta,
     reverseMainColors: true,
-    showPercentage: true,
     children,
   }
 }
