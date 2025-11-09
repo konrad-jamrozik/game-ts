@@ -124,7 +124,6 @@ export type GameState = {
   turn: number
   actionsCount: number
   // Situation
-
   panic: Bps
   factions: Faction[]
   // Assets
