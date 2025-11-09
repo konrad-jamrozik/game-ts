@@ -1,9 +1,8 @@
-import { Chip } from '@mui/material'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance, getIntelNewBalance } from '../lib/model/ruleset/ruleset'
-import { str } from '../lib/utils/formatUtils'
 import { DataGridCard } from './DataGridCard'
+import { MyChip } from './MyChip'
 
 export type BalanceSheetRow = {
   name: 'Money' | 'Projected' | 'Intel'
@@ -31,15 +30,11 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<BalanceSheetRow>): React.JSX.Element => {
         const { diff, name, value } = params.row
-        const chipLabel = diff !== undefined ? `${diff > 0 ? '+' : ''}${str(diff)}` : undefined
-        const chipColor = diff !== undefined ? (diff > 0 ? 'success' : diff < 0 ? 'error' : 'default') : undefined
 
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span aria-label={`balance-sheet-row-${name.toLowerCase().replace(' ', '-')}`}>{value}</span>
-            {chipLabel !== undefined && chipColor !== undefined && (
-              <Chip label={chipLabel} color={chipColor} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
-            )}
+            <MyChip chipValue={diff} />
           </div>
         )
       },
