@@ -16,7 +16,7 @@ import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { TurnReportTreeView, type TurnReportTreeViewModelProps } from './TurnReportTreeView'
-import { bps, isBps } from '../../lib/model/bps'
+import { bps, isBps, type Bps } from '../../lib/model/bps'
 import ExampleTreeView from './ExampleTreeView'
 
 /**
@@ -94,7 +94,7 @@ function formatMoneyBreakdownAsTree(
       const item: TurnReportTreeViewModelProps = {
         id: row.id,
         label: row.label,
-        chipValue: row.value,
+        chipValue: row.chipValue,
         reverseColor: row.reverseColor ?? false,
       }
       return item
@@ -123,7 +123,7 @@ function formatIntelBreakdownAsTree(
       const item: TurnReportTreeViewModelProps = {
         id: `intel-${row.id}`,
         label: row.label,
-        chipValue: row.value,
+        chipValue: row.chipValue,
         reverseColor: row.reverseColor ?? false,
       }
       return item
@@ -217,7 +217,7 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
     const treeItem: TurnReportTreeViewModelProps = {
       id: row.id,
       label: row.label,
-      chipValue: row.value,
+      chipValue: row.chipValue,
       reverseColor: row.reverseColor ?? false,
     }
     return treeItem
@@ -341,11 +341,11 @@ function formatSituationReportAsTree(
  */
 function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
   return [
-    { id: 'fundingIncome', label: 'Funding Income', value: breakdown.fundingIncome },
-    { id: 'contractingEarnings', label: 'Contracting Earnings', value: breakdown.contractingEarnings },
-    { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
-    { id: 'agentUpkeep', label: 'Agent Upkeep', value: breakdown.agentUpkeep },
-    { id: 'hireCosts', label: 'Hire Costs', value: breakdown.hireCosts },
+    { id: 'fundingIncome', label: 'Funding Income', chipValue: breakdown.fundingIncome },
+    { id: 'contractingEarnings', label: 'Contracting Earnings', chipValue: breakdown.contractingEarnings },
+    { id: 'missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
+    { id: 'agentUpkeep', label: 'Agent Upkeep', chipValue: breakdown.agentUpkeep },
+    { id: 'hireCosts', label: 'Hire Costs', chipValue: breakdown.hireCosts },
   ]
 }
 
@@ -354,8 +354,8 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): BreakdownRow[] {
  */
 function formatIntelBreakdown(breakdown: IntelBreakdown): BreakdownRow[] {
   return [
-    { id: 'espionageGathered', label: 'Espionage Gathered', value: breakdown.espionageGathered },
-    { id: 'missionRewards', label: 'Mission Rewards', value: breakdown.missionRewards },
+    { id: 'espionageGathered', label: 'Espionage Gathered', chipValue: breakdown.espionageGathered },
+    { id: 'missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
   ]
 }
 
@@ -371,19 +371,21 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
       rows.push({
         id: `panic-faction-${faction.factionId}`,
         label: `Caused by ${faction.factionName}`,
-        value: faction.factionPanicIncrease.value,
+        chipValue: faction.factionPanicIncrease,
         reverseColor: true, // Panic increase is bad
       })
     }
   })
 
   // Add mission reductions (shown as negative values)
-  const totalMissionReduction = breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0)
-  if (totalMissionReduction !== 0) {
+  const totalMissionReduction = bps(
+    breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0),
+  )
+  if (totalMissionReduction.value !== 0) {
     rows.push({
       id: 'panic-mission-reductions',
       label: 'Mission Reductions',
-      value: totalMissionReduction,
+      chipValue: totalMissionReduction,
       reverseColor: false, // Panic reduction is good (default)
     })
   }
@@ -392,7 +394,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): BreakdownRow[] {
 }
 
 type BreakdownRow = TreeViewDefaultItemModelProperties & {
-  value: number
+  chipValue: number | Bps
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
 }
