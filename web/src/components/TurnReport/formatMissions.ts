@@ -154,7 +154,7 @@ function formatBattleStats(
         id: `mission-${missionSiteId}-battle-stats-agents-wounded`,
         label: 'Agents wounded',
         chipValue: agentsWounded,
-        reverseColor: true,
+        useWarningColor: true,
         noPlusSign: true,
       },
       {
@@ -182,6 +182,7 @@ function formatBattleStats(
         id: `mission-${missionSiteId}-battle-stats-enemies-wounded`,
         label: 'Enemies wounded',
         chipValue: enemiesWounded,
+        useWarningColor: true,
         noPlusSign: true,
       },
       {

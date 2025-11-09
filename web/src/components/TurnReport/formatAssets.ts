@@ -106,7 +106,7 @@ function formatAgentsBreakdown(agentsReport: AgentsReport): TurnReportTreeViewMo
       id: 'agents-wounded',
       label: 'Wounded',
       chipValue: wounded.delta,
-      reverseColor: true,
+      useWarningColor: true,
       noPlusSign: true,
     },
     {

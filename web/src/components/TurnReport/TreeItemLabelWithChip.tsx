@@ -21,6 +21,8 @@ export type TreeItemLabelWithChipProps = {
   reverseColor?: boolean
   /** If true, always display as gray/default color regardless of value */
   noColor?: boolean
+  /** If true, display using warning color (orange/yellow) */
+  useWarningColor?: boolean
 }
 
 export function TreeItemLabelWithChip({
@@ -29,9 +31,10 @@ export function TreeItemLabelWithChip({
   noPlusSign = false,
   reverseColor = false,
   noColor = false,
+  useWarningColor = false,
 }: TreeItemLabelWithChipProps): React.ReactElement {
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
-  const chipColor = determineChipColor(chipLabel, noColor, reverseColor)
+  const chipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor)
 
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -62,7 +65,8 @@ function determineChipColor(
   chipLabel: string | undefined,
   noColor: boolean,
   reverseColor: boolean,
-): 'success' | 'error' | 'default' {
+  useWarningColor: boolean,
+): 'success' | 'error' | 'warning' | 'default' {
   if (noColor || chipLabel === undefined) {
     return 'default'
   }
@@ -73,6 +77,10 @@ function determineChipColor(
 
   if (isZero) {
     return 'default'
+  }
+
+  if (useWarningColor) {
+    return 'warning'
   }
 
   if (reverseColor) {
