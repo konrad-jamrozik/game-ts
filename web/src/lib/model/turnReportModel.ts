@@ -1,9 +1,11 @@
 import { bps, isBps, type Bps } from './bps'
+import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {
   assets: AssetsReport
   panic: PanicReport
   factions: FactionReport[]
+  missions: MissionReport[]
 }
 
 export type BaseReport = {
@@ -117,4 +119,33 @@ export type FactionReport = {
     suppressionAdded?: Bps
   }[]
   suppressionDecay: Bps
+}
+
+export type MissionReport = {
+  missionSiteId: string
+  missionTitle: string
+  faction: string
+  outcome: 'Successful' | 'Retreated' | 'All agents lost'
+  rounds: number
+  rewards?: MissionRewards
+  battleStats: BattleStats
+}
+
+export type BattleStats = {
+  agentsDeployed: number
+  agentsUnscathed: number
+  agentsWounded: number
+  agentsTerminated: number
+  enemiesTotal: number
+  enemiesUnscathed: number
+  enemiesWounded: number
+  enemiesTerminated: number
+  totalAgentSkillAtBattleStart: number
+  totalEnemySkillAtBattleStart: number
+  initialAgentHitPoints: number
+  initialEnemyHitPoints: number
+  totalDamageInflicted: number
+  totalDamageTaken: number
+  totalAgentSkillGain: number
+  averageAgentExhaustionGain: number
 }

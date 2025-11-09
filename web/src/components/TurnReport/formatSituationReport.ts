@@ -4,19 +4,22 @@ import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import {
   newValueChange,
   type FactionReport,
+  type MissionReport,
   type PanicBreakdown,
   type PanicReport,
 } from '../../lib/model/turnReportModel'
 import { fmtValueChange } from '../../lib/utils/formatUtils'
+import { formatMissions } from './formatMissions'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
- * Format situation report (panic and factions) as a tree structure for the MUI Tree View,
+ * Format situation report (panic, factions, and missions) as a tree structure for the MUI Tree View,
  * for the TurnReportTreeView component, to display it as part of the TurnReportDisplay component.
  */
 export function formatSituationReport(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
+  missions?: readonly MissionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return [
     formatPanicReport(panicReport),
@@ -25,6 +28,15 @@ export function formatSituationReport(
       label: 'Factions',
       children: factions.map((faction) => formatFactionBreakdown(faction)),
     },
+    ...(missions !== undefined && missions.length > 0
+      ? [
+          {
+            id: 'missions-summary',
+            label: 'Missions',
+            children: formatMissions(missions),
+          },
+        ]
+      : []),
   ]
 }
 

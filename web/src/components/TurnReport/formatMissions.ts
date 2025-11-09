@@ -1,0 +1,238 @@
+import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
+import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
+import { fmtPctDec2 } from '../../lib/utils/formatUtils'
+import { divMult100Round } from '../../lib/utils/mathUtils'
+import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
+
+/**
+ * Format missions report as a tree structure for the MUI Tree View,
+ * for the TurnReportTreeView component, to display it as part of the TurnReportDisplay component.
+ */
+export function formatMissions(missions: readonly MissionReport[]): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+  return missions.map((mission) => formatMissionReport(mission))
+}
+
+function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+  return {
+    id: `mission-${mission.missionSiteId}`,
+    label: `${mission.missionTitle} (${mission.faction})`,
+    children: [
+      {
+        id: `mission-${mission.missionSiteId}-outcome`,
+        label: `Outcome: ${mission.outcome}`,
+      },
+      {
+        id: `mission-${mission.missionSiteId}-rounds`,
+        label: `Rounds: ${mission.rounds}`,
+        chipValue: mission.rounds,
+        noColor: true,
+      },
+      ...(mission.rewards !== undefined ? [formatRewards(mission.missionSiteId, mission.rewards)] : []),
+      formatBattleStats(mission.missionSiteId, mission.battleStats),
+    ],
+  }
+}
+
+function formatRewards(
+  missionSiteId: string,
+  rewards: NonNullable<MissionReport['rewards']>,
+): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+  const children: TurnReportTreeViewModelProps[] = []
+
+  if (rewards.money !== undefined) {
+    children.push({
+      id: `mission-${missionSiteId}-reward-money`,
+      label: 'Money',
+      chipValue: rewards.money,
+    })
+  }
+
+  if (rewards.intel !== undefined) {
+    children.push({
+      id: `mission-${missionSiteId}-reward-intel`,
+      label: 'Intel',
+      chipValue: rewards.intel,
+    })
+  }
+
+  if (rewards.funding !== undefined) {
+    children.push({
+      id: `mission-${missionSiteId}-reward-funding`,
+      label: 'Funding',
+      chipValue: rewards.funding,
+    })
+  }
+
+  if (rewards.panicReduction !== undefined) {
+    children.push({
+      id: `mission-${missionSiteId}-reward-panic-reduction`,
+      label: 'Panic reduction',
+      chipValue: rewards.panicReduction,
+      reverseColor: false, // Panic reduction is good (default)
+    })
+  }
+
+  // Faction rewards - assume single faction (the one the mission is against)
+  if (rewards.factionRewards !== undefined && rewards.factionRewards.length > 0) {
+    const [factionReward] = rewards.factionRewards
+    if (factionReward !== undefined) {
+      if (factionReward.threatReduction !== undefined) {
+        children.push({
+          id: `mission-${missionSiteId}-reward-faction-threat-reduction`,
+          label: 'Faction threat reduction',
+          chipValue: factionReward.threatReduction,
+          reverseColor: false, // Threat reduction is good (default)
+        })
+      }
+      if (factionReward.suppression !== undefined) {
+        children.push({
+          id: `mission-${missionSiteId}-reward-faction-suppression`,
+          label: 'Faction suppression',
+          chipValue: factionReward.suppression,
+          reverseColor: false, // Suppression increase is good (default)
+        })
+      }
+    }
+  }
+
+  return {
+    id: `mission-${missionSiteId}-rewards`,
+    label: 'Rewards',
+    children,
+  }
+}
+
+function formatBattleStats(
+  missionSiteId: string,
+  battleStats: BattleStats,
+): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+  const {
+    agentsDeployed,
+    agentsUnscathed,
+    agentsWounded,
+    agentsTerminated,
+    enemiesTotal,
+    enemiesUnscathed,
+    enemiesWounded,
+    enemiesTerminated,
+    totalAgentSkillAtBattleStart,
+    totalEnemySkillAtBattleStart,
+    initialAgentHitPoints,
+    initialEnemyHitPoints,
+    totalDamageInflicted,
+    totalDamageTaken,
+    totalAgentSkillGain,
+    averageAgentExhaustionGain,
+  } = battleStats
+
+  // Calculate percentages
+  const damageInflictedPct =
+    initialEnemyHitPoints > 0 ? divMult100Round(totalDamageInflicted, initialEnemyHitPoints) : 0
+  const damageTakenPct = initialAgentHitPoints > 0 ? divMult100Round(totalDamageTaken, initialAgentHitPoints) : 0
+  const skillGainPct =
+    totalAgentSkillAtBattleStart > 0 ? divMult100Round(totalAgentSkillGain, totalAgentSkillAtBattleStart) : 0
+
+  return {
+    id: `mission-${missionSiteId}-battle-stats`,
+    label: 'Battle stats',
+    children: [
+      {
+        id: `mission-${missionSiteId}-battle-stats-agents-deployed`,
+        label: `Agents deployed: ${agentsDeployed}`,
+        chipValue: agentsDeployed,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-agents-unscathed`,
+        label: `Agents unscathed: ${agentsUnscathed}`,
+        chipValue: agentsUnscathed,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-agents-wounded`,
+        label: `Agents wounded: ${agentsWounded}`,
+        chipValue: agentsWounded,
+        reverseColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-agents-terminated`,
+        label: `Agents terminated: ${agentsTerminated}`,
+        chipValue: agentsTerminated,
+        reverseColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-enemies-total`,
+        label: `Enemies total: ${enemiesTotal}`,
+        chipValue: enemiesTotal,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-enemies-unscathed`,
+        label: `Enemies unscathed: ${enemiesUnscathed}`,
+        chipValue: enemiesUnscathed,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-enemies-wounded`,
+        label: `Enemies wounded: ${enemiesWounded}`,
+        chipValue: enemiesWounded,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-enemies-terminated`,
+        label: `Enemies terminated: ${enemiesTerminated}`,
+        chipValue: enemiesTerminated,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-agent-skill-at-battle-start`,
+        label: `Total agent skill at battle start: ${Math.round(totalAgentSkillAtBattleStart)}`,
+        chipValue: totalAgentSkillAtBattleStart,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-enemy-skill-at-battle-start`,
+        label: `Total enemy skill at battle start: ${Math.round(totalEnemySkillAtBattleStart)}`,
+        chipValue: totalEnemySkillAtBattleStart,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-damage-inflicted`,
+        label: `Total damage inflicted: ${totalDamageInflicted} (${fmtPctDec2(damageInflictedPct)} of enemy HP)`,
+        chipValue: totalDamageInflicted,
+        noColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-damage-taken`,
+        label: `Total damage taken: ${totalDamageTaken} (${fmtPctDec2(damageTakenPct)} of agent HP)`,
+        chipValue: totalDamageTaken,
+        reverseColor: true,
+        noPlusSign: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
+        label: `Total agent skill gain: ${totalAgentSkillGain} (${fmtPctDec2(skillGainPct)} of initial skill)`,
+        chipValue: totalAgentSkillGain,
+        noColor: true,
+      },
+      {
+        id: `mission-${missionSiteId}-battle-stats-average-agent-exhaustion-gain`,
+        label: `Average agent exhaustion gain: ${averageAgentExhaustionGain.toFixed(2)}`,
+        chipValue: averageAgentExhaustionGain,
+        reverseColor: true,
+        noPlusSign: true,
+      },
+    ],
+  }
+}

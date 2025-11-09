@@ -9,12 +9,12 @@ import { assertDefined } from '../utils/assert'
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
  * This includes the mission site battle, agent updates, and rewards.
- * Returns the mission rewards to be applied later in the turn advancement process and count of agents wounded.
+ * Returns the mission rewards to be applied later in the turn advancement process, count of agents wounded, and battle report.
  */
 export function evaluateDeployedMissionSite(
   state: GameState,
   missionSite: MissionSite,
-): { rewards: MissionRewards | undefined; agentsWounded: number; agentsUnscathed: number } {
+): { rewards: MissionRewards | undefined; agentsWounded: number; agentsUnscathed: number; battleReport: BattleReport } {
   // Get the mission to access enemy units
   const mission = getMissionById(missionSite.missionId)
 
@@ -33,7 +33,7 @@ export function evaluateDeployedMissionSite(
   // Return mission rewards to be applied later, don't apply them immediately
   const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
 
-  return { rewards, agentsWounded, agentsUnscathed }
+  return { rewards, agentsWounded, agentsUnscathed, battleReport }
 }
 
 function updateAgentsAfterBattle(

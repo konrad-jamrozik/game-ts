@@ -14,6 +14,13 @@ export type BattleReport = {
   enemyCasualties: number
   retreated: boolean
   agentSkillUpdates: Record<string, number>
+  initialAgentEffectiveSkill: number
+  initialAgentHitPoints: number
+  initialEnemySkill: number
+  initialEnemyHitPoints: number
+  totalDamageInflicted: number
+  totalDamageTaken: number
+  totalAgentExhaustionGain: number
 }
 
 export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
@@ -30,6 +37,13 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
   const initialEnemySkill = enemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
+
+  // Track initial agent exhaustion for calculating total exhaustion gain
+  const initialAgentExhaustion = agents.reduce((sum, agent) => sum + agent.exhaustion, 0)
+
+  // Track initial hit points for calculating damage
+  const initialAgentHitPointsMap = new Map(agents.map((agent) => [agent.id, agent.hitPoints]))
+  const initialEnemyHitPointsMap = new Map(enemies.map((enemy) => [enemy.id, enemy.hitPoints]))
 
   let roundIdx = 0
   let retreated = false
@@ -72,6 +86,27 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     agentSkillUpdates[stats.id] = stats.skillGained
   })
 
+  // Calculate total damage inflicted (by agents to enemies)
+  let totalDamageInflicted = 0
+  for (const enemy of enemies) {
+    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? enemy.maxHitPoints
+    totalDamageInflicted += initialHp - enemy.hitPoints
+  }
+
+  // Calculate total damage taken (by agents from enemies)
+  let totalDamageTaken = 0
+  for (const agent of agents) {
+    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? agent.maxHitPoints
+    totalDamageTaken += initialHp - agent.hitPoints
+  }
+
+  // Calculate total agent exhaustion gain
+  let finalAgentExhaustion = 0
+  for (const agent of agents) {
+    finalAgentExhaustion += agent.exhaustion
+  }
+  const totalAgentExhaustionGain = finalAgentExhaustion - initialAgentExhaustion
+
   showRoundStatus(
     roundIdx,
     agents,
@@ -92,6 +127,13 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     enemyCasualties,
     retreated,
     agentSkillUpdates,
+    initialAgentEffectiveSkill,
+    initialAgentHitPoints,
+    initialEnemySkill,
+    initialEnemyHitPoints,
+    totalDamageInflicted,
+    totalDamageTaken,
+    totalAgentExhaustionGain,
   }
 }
 

@@ -6,8 +6,10 @@ import {
   newValueChange,
   type AssetsReport,
   type AgentsReport,
+  type BattleStats,
   type FactionReport,
   type IntelBreakdown,
+  type MissionReport,
   type MoneyBreakdown,
   type PanicReport,
   type TurnReport,
@@ -63,10 +65,12 @@ export default function evaluateTurn(state: GameState): TurnReport {
   updateActiveMissionSites(state)
 
   // 9. Evaluate deployed mission sites (and agents deployed to them)
-  const missionResults = evaluateDeployedMissionSites(state)
-  const missionRewards = missionResults.rewards
-  const agentsWoundedFromMissions = missionResults.agentsWounded
-  const agentsUnscathedFromMissions = missionResults.agentsUnscathed
+  const {
+    rewards: missionRewards,
+    agentsWounded: agentsWoundedFromMissions,
+    agentsUnscathed: agentsUnscathedFromMissions,
+    missionReports,
+  } = evaluateDeployedMissionSites(state)
 
   // 10. Update player assets
   const assetsReportPartial = updatePlayerAssets(state, {
@@ -105,6 +109,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     assets: assetsReport,
     panic: panicReport,
     factions: factionsReport,
+    missions: missionReports,
   }
 
   return turnReport
@@ -149,35 +154,140 @@ function updateActiveMissionSites(state: GameState): void {
 
 /**
  * Evaluates deployed mission sites and their agents
- * Returns collected mission rewards with site information and count of agents wounded
+ * Returns collected mission rewards with site information, count of agents wounded, and mission reports
  */
 function evaluateDeployedMissionSites(state: GameState): {
   rewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
   agentsWounded: number
   agentsUnscathed: number
+  missionReports: MissionReport[]
 } {
   const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] = []
-  let agentsWounded = 0
-  let agentsUnscathed = 0
+  const missionReports: MissionReport[] = []
+  let totalAgentsWounded = 0
+  let totalAgentsUnscathed = 0
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      const result = evaluateDeployedMissionSite(state, missionSite)
-      if (result.rewards) {
-        // Get mission to access title
-        const mission = getMissionById(missionSite.missionId)
+      const mission = getMissionById(missionSite.missionId)
+      const deployedAgentsView = agsV(state.agents).withIds(missionSite.agentIds)
+      const deployedAgents = deployedAgentsView.toAgentArray()
+
+      // Capture agent states before battle
+      const agentsDeployed = deployedAgents.length
+
+      const result: {
+        rewards: MissionRewards | undefined
+        agentsWounded: number
+        agentsUnscathed: number
+        battleReport: {
+          rounds: number
+          agentCasualties: number
+          enemyCasualties: number
+          retreated: boolean
+          agentSkillUpdates: Record<string, number>
+          initialAgentEffectiveSkill: number
+          initialAgentHitPoints: number
+          initialEnemySkill: number
+          initialEnemyHitPoints: number
+          totalDamageInflicted: number
+          totalDamageTaken: number
+          totalAgentExhaustionGain: number
+        }
+      } = evaluateDeployedMissionSite(state, missionSite)
+      const { battleReport, rewards, agentsWounded, agentsUnscathed: agentsUnscathedFromBattle } = result
+
+      // Determine mission outcome
+      const outcome: 'Successful' | 'Retreated' | 'All agents lost' = battleReport.retreated
+        ? 'Retreated'
+        : battleReport.agentCasualties === agentsDeployed
+          ? 'All agents lost'
+          : 'Successful'
+
+      // Get faction name from mission rewards
+      let factionName = 'Unknown'
+      const { factionRewards } = mission.rewards
+      if (factionRewards !== undefined && factionRewards.length > 0) {
+        const [firstReward] = factionRewards
+        if (firstReward !== undefined) {
+          const { factionId } = firstReward
+          const faction = state.factions.find((factionItem) => factionItem.id === factionId)
+          if (faction !== undefined) {
+            factionName = faction.name
+          }
+        }
+      }
+
+      // Calculate battle stats
+      const agentsTerminated = battleReport.agentCasualties
+      const agentsWoundedFromBattle = agentsWounded
+
+      // Calculate enemy stats
+      const enemiesTotal = missionSite.enemies.length
+      const enemiesTerminated = battleReport.enemyCasualties
+      const enemiesWounded = enemiesTotal - enemiesTerminated
+      const enemiesUnscathed = enemiesTotal - enemiesTerminated
+
+      // Calculate total agent skill gain
+      let totalAgentSkillGain = 0
+      for (const gain of Object.values(battleReport.agentSkillUpdates)) {
+        if (typeof gain === 'number') {
+          totalAgentSkillGain += gain
+        }
+      }
+
+      // Calculate average agent exhaustion gain
+      const averageAgentExhaustionGain = agentsDeployed > 0 ? battleReport.totalAgentExhaustionGain / agentsDeployed : 0
+
+      const battleStats: BattleStats = {
+        agentsDeployed,
+        agentsUnscathed: agentsUnscathedFromBattle,
+        agentsWounded: agentsWoundedFromBattle,
+        agentsTerminated,
+        enemiesTotal,
+        enemiesUnscathed,
+        enemiesWounded,
+        enemiesTerminated,
+        totalAgentSkillAtBattleStart: battleReport.initialAgentEffectiveSkill,
+        totalEnemySkillAtBattleStart: battleReport.initialEnemySkill,
+        initialAgentHitPoints: battleReport.initialAgentHitPoints,
+        initialEnemyHitPoints: battleReport.initialEnemyHitPoints,
+        totalDamageInflicted: battleReport.totalDamageInflicted,
+        totalDamageTaken: battleReport.totalDamageTaken,
+        totalAgentSkillGain,
+        averageAgentExhaustionGain,
+      }
+
+      const missionReport: MissionReport = {
+        missionSiteId: missionSite.id,
+        missionTitle: mission.title,
+        faction: factionName,
+        outcome,
+        rounds: battleReport.rounds,
+        ...(rewards !== undefined && { rewards }),
+        battleStats,
+      }
+
+      missionReports.push(missionReport)
+
+      if (rewards !== undefined) {
         missionRewards.push({
-          rewards: result.rewards,
+          rewards,
           missionSiteId: missionSite.id,
           missionTitle: mission.title,
         })
       }
-      agentsWounded += result.agentsWounded
-      agentsUnscathed += result.agentsUnscathed
+      totalAgentsWounded += agentsWounded
+      totalAgentsUnscathed += agentsUnscathedFromBattle
     }
   }
 
-  return { rewards: missionRewards, agentsWounded, agentsUnscathed }
+  return {
+    rewards: missionRewards,
+    agentsWounded: totalAgentsWounded,
+    agentsUnscathed: totalAgentsUnscathed,
+    missionReports,
+  }
 }
 
 /**
