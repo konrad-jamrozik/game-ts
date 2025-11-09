@@ -30,7 +30,7 @@ export function TurnReportDisplay(): React.ReactElement {
   const situationReportTreeData = report ? formatSituationReport(report.panic, report.factions, report.missions) : []
 
   return (
-    <ExpandableCard title="Turn Report" defaultExpanded={true}>
+    <ExpandableCard title="Turn Report" defaultExpanded={true} sx={{ minWidth: '520px' }}>
       {report && (
         <Box
           sx={{

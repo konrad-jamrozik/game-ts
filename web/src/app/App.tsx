@@ -3,15 +3,15 @@ import Stack from '@mui/material/Stack'
 import { AgentsDataGrid } from '../components/AgentsDataGrid/AgentsDataGrid'
 import { ArchivedLeadCards } from '../components/ArchivedLeadCards'
 import { ArchivedMissionCards } from '../components/ArchivedMissionCards'
-import { AssetsDataGrid } from '../components/AssetsDataGrid'
-import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { LeadCards } from '../components/LeadCards'
 import { MissionCards } from '../components/MissionCards'
 import { PlayerActions } from '../components/PlayerActions'
-import { SituationReportCard } from '../components/SituationReportCard'
 import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
+import { AssetsDataGrid } from '../components/AssetsDataGrid'
+import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
+import { SituationReportCard } from '../components/SituationReportCard'
 
 function App(): React.JSX.Element {
   return (
@@ -35,12 +35,16 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <TurnReportDisplay />
           <AgentsDataGrid />
           <MissionCards />
           <LeadCards />
           <ArchivedMissionCards />
           <ArchivedLeadCards />
+        </Stack>
+      </Grid>
+      <Grid>
+        <Stack spacing={2}>
+          <TurnReportDisplay />
         </Stack>
       </Grid>
       <Grid>
