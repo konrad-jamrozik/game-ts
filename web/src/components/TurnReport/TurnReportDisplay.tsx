@@ -43,8 +43,9 @@ export function TurnReportDisplay(): React.ReactElement {
             gridTemplateColumns: '1fr',
             gridTemplateRows: 'auto auto',
             gap: 2, // `gap` adds spacing between grid items (2 is equivalent to 16px)
-            // Thanks to `alignItems: 'start'` each row will only take the space its content needs,
-            // preventing other rows from expanding when a card in one row is expanded.
+            // Thanks to `alignItems: 'start'` each card  will only take the vertical space its content needs,
+            // preventing other cards in the same row from expanding vertically.
+            // Note: this is needed only if 2 or more cards are in the same row.
             alignItems: 'start',
           }}
         >
