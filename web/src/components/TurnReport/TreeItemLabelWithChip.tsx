@@ -14,10 +14,14 @@ export type TreeItemLabelWithChipProps = {
   // which uses 'children' to denote value of its content.
   // See about_mui.md for more.
   children: React.ReactNode
-  chipValue: number | Bps | undefined
+  chipValue?: number | Bps | undefined
+  /** If true, never display "+" sign for positive values */
   noPlusSign?: boolean
+  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
+  /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseMainColors?: boolean
+  /** If true, always display as gray/default color regardless of value */
   noColor?: boolean
 }
 

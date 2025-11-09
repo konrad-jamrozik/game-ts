@@ -4,29 +4,25 @@ import { TreeItem, type TreeItemProps, type TreeItemSlotProps } from '@mui/x-tre
 import { useTreeItemModel } from '@mui/x-tree-view/hooks'
 import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties } from '@mui/x-tree-view/models'
 import * as React from 'react'
-import type { Bps } from '../../lib/model/bps'
 import theme from '../../styling/theme'
 import { TreeItemLabelWithChip, type TreeItemLabelWithChipProps } from './TreeItemLabelWithChip'
-
-const defaultReverseMainColors = false
 
 type TurnReportTreeViewProps = {
   items: TreeViewBaseItem<TurnReportTreeViewModelProps>[]
   defaultExpandedItems?: readonly string[]
 }
 
-// KJA this should refer to TreeItemWithLabelChipProps. And what does it even represent? Why do I need it in addition to TreeItemWithLabelChipProps?
-export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties & {
-  chipValue?: number | Bps
-  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
-  reverseColor?: boolean
-  /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
-  reverseMainColors?: boolean
-  /** If true, always display as gray/default color regardless of value */
-  noColor?: boolean
-  /** If true, never display "+" sign for positive values */
-  noPlusSign?: boolean
-}
+/**
+ * TurnReportTreeViewModelProps is defined this way because:
+ * 1. The main point of defining TurnReportTreeView is to enable the customized TreeItemLabelWithChip,
+ * so here we are drilling the properties from TurnReportTreeViewModelProps to TreeItemLabelWithChipProps.
+ * This is done via useTreeItemModel and slotProps. Refer to TurnReportTreeItem function for details.
+ * 2. We must omit children because their presence is required by MUI TreeView component.
+ * Refer to the comment on 'children' property in TreeItemLabelWithChipProps for details.
+ *
+ */
+export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties &
+  Omit<TreeItemLabelWithChipProps, 'children'>
 
 /**
  * Custom TreeView component that displays chips in TreeItem labels.
@@ -49,10 +45,10 @@ function TurnReportTreeItem(props: TreeItemProps): React.ReactElement {
 
   const valueChangeLabelProps: TreeItemLabelWithChipProps = {
     children: item.label,
-    chipValue: item.chipValue,
+    chipValue: item.chipValue ?? undefined,
     noPlusSign: item.noPlusSign ?? false,
     reverseColor: item.reverseColor ?? false,
-    reverseMainColors: item.reverseMainColors ?? defaultReverseMainColors,
+    reverseMainColors: item.reverseMainColors ?? false,
     noColor: item.noColor ?? false,
   }
 
