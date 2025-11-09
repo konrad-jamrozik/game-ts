@@ -9,6 +9,7 @@ import {
 } from '../../lib/model/turnReportModel'
 import { fmtValueChange } from '../../lib/utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
+import { val } from '../../lib/utils/mathUtils'
 
 /**
  * Format situation report (panic and factions) as tree structure for MUI Tree View
@@ -89,13 +90,11 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
   const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
 
   // Calculate mission impacts (summed across all missions)
-  const totalThreatReduction = faction.missionImpacts.reduce(
-    (sum, impact) => sum + (impact.threatReduction?.value ?? 0),
-    0,
+  const totalThreatReduction = bps(
+    faction.missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction?.value ?? 0), 0),
   )
-  const totalSuppressionAdded = faction.missionImpacts.reduce(
-    (sum, impact) => sum + (impact.suppressionAdded?.value ?? 0),
-    0,
+  const totalSuppressionAdded = bps(
+    faction.missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded?.value ?? 0), 0),
   )
 
   // Build threat level children (base threat increase and mission threat reductions)
@@ -103,12 +102,12 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     {
       id: `faction-${faction.factionId}-baseThreatIncrease`,
       label: 'Base Threat Increase',
-      chipValue: faction.baseThreatIncrease.value,
+      chipValue: faction.baseThreatIncrease,
       reverseColor: true, // Threat increase is bad
     },
   ]
 
-  if (totalThreatReduction !== 0) {
+  if (val(totalThreatReduction) !== 0) {
     threatLevelChildren.push({
       id: `faction-${faction.factionId}-mission-threat-reductions`,
       label: 'Mission Threat Reductions',
@@ -129,7 +128,7 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     })
   }
 
-  if (totalSuppressionAdded !== 0) {
+  if (val(totalSuppressionAdded) !== 0) {
     suppressionChildren.push({
       id: `faction-${faction.factionId}-mission-suppressions`,
       label: 'Mission Suppressions',

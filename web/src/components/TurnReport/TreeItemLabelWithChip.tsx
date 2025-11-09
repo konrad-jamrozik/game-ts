@@ -20,6 +20,7 @@ export type TreeItemLabelWithChipProps = {
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
   reverseColor?: boolean
   /** If true, reverse color semantics for the main value change: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
+  // KJA get rid of reverseMainColors
   reverseMainColors?: boolean
   /** If true, always display as gray/default color regardless of value */
   noColor?: boolean
