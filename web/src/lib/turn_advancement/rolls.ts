@@ -10,7 +10,7 @@ export type ContestRoll = {
   attackerValue: number
   defenderValue: number
   successProbabilityPct: number
-  failureProbabilityPct: number
+  failureProbabilityPct: number // aka threshold
   roll: number
   success: boolean
 }

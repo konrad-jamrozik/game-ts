@@ -54,9 +54,18 @@ describe('rolls', () => {
   })
 
   test('roll1to -> max random result is CONTEST_ROLL_PRECISION', () => {
-    rand.set('test_label', 1)
+    rand.set('test_label', 0.9999)
     const roll = roll1to(CONTEST_ROLL_PRECISION, 'test_label')
     expect(roll).toBe(CONTEST_ROLL_PRECISION)
+  })
+
+  test('roll1to -> (mix minus less than 1 unit of precision) random result is CONTEST_ROLL_PRECISION-1', () => {
+    const precisionTimes10Fraction = 1 / (10 * CONTEST_ROLL_PRECISION)
+    const rollFixture = 0.9999 - precisionTimes10Fraction
+    expect(rollFixture).toBeCloseTo(0.999_89, 10)
+    rand.set('test_label', rollFixture)
+    const roll = roll1to(CONTEST_ROLL_PRECISION, 'test_label')
+    expect(roll).toBe(CONTEST_ROLL_PRECISION - 1)
   })
 
   test('roll1to -> min random result is 1', () => {
