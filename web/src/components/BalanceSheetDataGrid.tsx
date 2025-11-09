@@ -34,7 +34,7 @@ export function BalanceSheetDataGrid(): React.JSX.Element {
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span aria-label={`balance-sheet-row-${name.toLowerCase().replace(' ', '-')}`}>{value}</span>
-            <MyChip chipValue={diff} />
+            {diff !== undefined && <MyChip chipValue={diff} />}
           </div>
         )
       },

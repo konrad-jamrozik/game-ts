@@ -22,13 +22,9 @@ export function MyChip({
   reverseColor = false,
   noColor = false,
   useWarningColor = false,
-}: MyChipProps): React.JSX.Element | null {
+}: MyChipProps): React.JSX.Element {
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
   const chipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor)
-
-  if (chipLabel === undefined) {
-    return null
-  }
 
   return <Chip label={chipLabel} color={chipColor} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
 }

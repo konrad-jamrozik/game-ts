@@ -1,8 +1,7 @@
 import * as React from 'react'
-import type { Bps } from '../../lib/model/bps'
-import { MyChip } from '../MyChip'
+import { MyChip, type MyChipProps } from '../MyChip'
 
-export type TreeItemLabelWithChipProps = {
+export type TreeItemLabelWithChipProps = MyChipProps & {
   // Note: 'children' property is required, and it denotes the plain textual label,
   // adjacent to chipLabel. Here it often is of form "previous -> current", see formatUtils.ts.
   // 'children' is required because and object of this type
@@ -12,15 +11,6 @@ export type TreeItemLabelWithChipProps = {
   // which uses 'children' to denote value of its content.
   // See about_mui.md for more.
   children: React.ReactNode
-  chipValue?: number | Bps | string | undefined
-  /** If true, never display "+" sign for positive values */
-  noPlusSign?: boolean
-  /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
-  reverseColor?: boolean
-  /** If true, always display as gray/default color regardless of value */
-  noColor?: boolean
-  /** If true, display using warning color (orange/yellow) */
-  useWarningColor?: boolean
 }
 
 export function TreeItemLabelWithChip({
@@ -34,7 +24,15 @@ export function TreeItemLabelWithChip({
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
       <span>{children}</span>
-      <MyChip chipValue={chipValue} noPlusSign={noPlusSign} reverseColor={reverseColor} noColor={noColor} useWarningColor={useWarningColor} />
+      {chipValue !== undefined && (
+        <MyChip
+          chipValue={chipValue}
+          noPlusSign={noPlusSign}
+          reverseColor={reverseColor}
+          noColor={noColor}
+          useWarningColor={useWarningColor}
+        />
+      )}
     </div>
   )
 }
