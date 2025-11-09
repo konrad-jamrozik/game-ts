@@ -21,7 +21,6 @@ export function formatSituationReport(
   factions: readonly FactionReport[],
   missions?: readonly MissionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  // KJA need to display mission ID, and fix title so faction name is not repeated; should be separate line instead
   return [
     formatPanicReport(panicReport),
     {
