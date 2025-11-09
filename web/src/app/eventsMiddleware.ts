@@ -1,13 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../lib/collections/missions'
-import {
-  addMissionCompletedEvent,
-  addTextEvent,
-  addTurnAdvancementEvent,
-  clearEvents,
-  truncateEventsTo,
-} from '../lib/slices/eventsSlice'
+import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from '../lib/slices/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -20,8 +14,6 @@ import {
   sackAgents,
 } from '../lib/slices/gameStateSlice'
 import { isPlayerAction } from '../lib/slices/reducers/asPlayerAction'
-import type { MissionRewards, MissionSite, MissionSiteState, MissionSiteId } from '../lib/model/model'
-import { isMissionSiteConcluded } from '../lib/model/ruleset/ruleset'
 import type { RootState } from './store'
 import { fmtAgentCount } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
@@ -63,24 +55,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       store.dispatch(addTextEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
     }
 
-    function postMissionCompletedEvent(
-      missionTitle: string,
-      rewards: MissionRewards,
-      missionSiteId: MissionSiteId,
-      finalState: MissionSiteState,
-    ): void {
-      store.dispatch(
-        addMissionCompletedEvent({
-          missionTitle,
-          rewards,
-          missionSiteId,
-          finalState,
-          turn: gameState.turn,
-          actionsCount: gameState.actionsCount,
-        }),
-      )
-    }
-
     // Dispatch events based on the action
     if (advanceTurn.match(action)) {
       assertDefined(gameState.turnStartReport)
@@ -91,23 +65,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
           actionsCount: gameState.actionsCount,
         }),
       )
-
-      // Check for newly concluded mission sites and log mission completion event with details
-      const previouslyConcludedMissionSiteIds = new Set(
-        previousGameState.missionSites
-          .filter((site: MissionSite) => isMissionSiteConcluded(site))
-          .map((site) => site.id),
-      )
-
-      const newlyConcludedMissionSites = gameState.missionSites.filter(
-        (site: MissionSite) => isMissionSiteConcluded(site) && !previouslyConcludedMissionSiteIds.has(site.id),
-      )
-
-      for (const missionSite of newlyConcludedMissionSites) {
-        const mission = getMissionById(missionSite.missionId)
-
-        postMissionCompletedEvent(mission.title, mission.rewards, missionSite.id, missionSite.state)
-      }
     } else if (hireAgent.match(action)) {
       postTextEvent('Agent hired')
     } else if (sackAgents.match(action)) {
