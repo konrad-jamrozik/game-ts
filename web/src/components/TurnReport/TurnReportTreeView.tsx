@@ -1,7 +1,7 @@
 import { Box } from '@mui/material'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps, type TreeItemSlotProps, type TreeItemSlots } from '@mui/x-tree-view/TreeItem'
-import { useTreeItemModel } from '@mui/x-tree-view/hooks'
+import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks'
 import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import theme from '../../styling/theme'
@@ -79,42 +79,38 @@ function getAllChildItemIds(
 
 /**
  * Custom TreeView component that displays chips in TreeItem labels.
+ * Supports Ctrl+Click to expand an item and all its children recursively.
  */
 export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTreeViewProps): React.ReactElement {
+  const apiRef = useTreeViewApiRef()
   const [expandedItems, setExpandedItems] = React.useState<string[]>(
     defaultExpandedItems !== undefined ? [...defaultExpandedItems] : [],
   )
-  // Track recursive expansion to prevent override by default expansion behavior
-  const recursiveExpansionRef = React.useRef<{ itemId: string; childIds: string[] } | undefined>(undefined)
+  // Track if we're performing a recursive expansion to ignore MUI's default toggle
+  const isRecursiveExpansionRef = React.useRef(false)
 
   function handleExpandedItemsChange(_event: React.SyntheticEvent | null, itemIds: string[]): void {
-    // If we have a pending recursive expansion, merge it instead of using the default toggle
-    if (recursiveExpansionRef.current !== undefined) {
-      const { itemId, childIds } = recursiveExpansionRef.current
-      // Merge the recursive expansion with the incoming change
-      const mergedExpandedItems = new Set([...itemIds, itemId, ...childIds])
-      setExpandedItems([...mergedExpandedItems])
-      // Clear the ref after handling
-      recursiveExpansionRef.current = undefined
+    // If we're in the middle of a recursive expansion, ignore MUI's default behavior
+    if (isRecursiveExpansionRef.current) {
+      isRecursiveExpansionRef.current = false
       return
     }
     setExpandedItems(itemIds)
   }
 
   function handleItemClick(event: React.MouseEvent, itemId: string): void {
-    // Check if Ctrl key is held
+    // Check if Ctrl key is held for recursive expansion
     if (event.ctrlKey) {
-      // Prevent default expansion behavior
       event.preventDefault()
       event.stopPropagation()
 
       // Get all child item IDs recursively
       const allChildIds = getAllChildItemIds(items, itemId)
 
-      // Store the recursive expansion info for handleExpandedItemsChange to use
-      recursiveExpansionRef.current = { itemId, childIds: allChildIds }
+      // Set flag to ignore the next onExpandedItemsChange call from MUI
+      isRecursiveExpansionRef.current = true
 
-      // Expand the clicked item itself and all its children
+      // Expand the clicked item and all its children by updating state directly
       const newExpandedItems = new Set([...expandedItems, itemId, ...allChildIds])
       setExpandedItems([...newExpandedItems])
     }
@@ -123,6 +119,7 @@ export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTr
   return (
     <Box sx={{ backgroundColor: theme.palette.background.paper }}>
       <RichTreeView
+        apiRef={apiRef}
         expandedItems={expandedItems}
         onExpandedItemsChange={handleExpandedItemsChange}
         items={items}
