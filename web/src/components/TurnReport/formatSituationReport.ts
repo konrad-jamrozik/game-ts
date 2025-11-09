@@ -39,32 +39,31 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
 }
 
 function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
-  const rows: TurnReportTreeViewModelProps[] = []
+  const totalMissionReduction = bps(
+    breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0),
+  )
+  const anyMissionReductionExists = totalMissionReduction.value > 0
 
-  // Add faction contributions
-  breakdown.factionPanicIncreases.forEach((faction) => {
-    if (faction.factionPanicIncrease.value !== 0) {
-      rows.push({
+  const rows: TurnReportTreeViewModelProps[] = [
+    ...breakdown.factionPanicIncreases
+      .filter((faction) => faction.factionPanicIncrease.value !== 0)
+      .map((faction) => ({
         id: `panic-faction-${faction.factionId}`,
         label: `Caused by ${faction.factionName}`,
         chipValue: faction.factionPanicIncrease,
         reverseColor: true, // Panic increase is bad
-      })
-    }
-  })
-
-  // Add mission reductions (shown as negative values)
-  const totalMissionReduction = bps(
-    breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0),
-  )
-  if (totalMissionReduction.value !== 0) {
-    rows.push({
-      id: 'panic-mission-reductions',
-      label: 'Mission Reductions',
-      chipValue: totalMissionReduction,
-      reverseColor: false, // Panic reduction is good (default)
-    })
-  }
+      })),
+    ...(anyMissionReductionExists
+      ? [
+          {
+            id: 'panic-mission-reductions',
+            label: 'Mission Reductions',
+            chipValue: totalMissionReduction,
+            reverseColor: false, // Panic reduction is good (default)
+          },
+        ]
+      : []),
+  ]
 
   return rows
 }
@@ -92,7 +91,7 @@ function formatFactionBreakdown(faction: FactionReport): TreeViewBaseItem<TurnRe
     },
   ]
 
-  if (val(totalThreatReduction) !== 0) {
+  if (totalThreatReduction.value !== 0) {
     threatLevelChildren.push({
       id: `faction-${faction.factionId}-mission-threat-reductions`,
       label: 'Mission Threat Reductions',
@@ -113,7 +112,7 @@ function formatFactionBreakdown(faction: FactionReport): TreeViewBaseItem<TurnRe
     })
   }
 
-  if (val(totalSuppressionAdded) !== 0) {
+  if (totalSuppressionAdded.value !== 0) {
     suppressionChildren.push({
       id: `faction-${faction.factionId}-mission-suppressions`,
       label: 'Mission Suppressions',
