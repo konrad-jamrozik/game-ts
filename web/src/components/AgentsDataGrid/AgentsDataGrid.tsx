@@ -170,6 +170,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
+  const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
   const [showDetailed, setShowDetailed] = React.useState(false)
 
   // Transform agents array to include rowId for DataGrid
@@ -178,14 +179,16 @@ export function AgentsDataGrid(): React.JSX.Element {
     rowId: index,
   }))
 
-  // Apply filtering based on checkbox
-  const rows: AgentRow[] = React.useMemo(
-    () =>
-      showOnlyTerminated
-        ? allRows.filter((agent) => agent.state === 'Terminated')
-        : allRows.filter((agent) => agent.state !== 'Terminated'),
-    [allRows, showOnlyTerminated],
-  )
+  // Apply filtering based on checkboxes
+  const rows: AgentRow[] = React.useMemo(() => {
+    if (showOnlyAvailable) {
+      return allRows.filter((agent) => agent.state === 'Available')
+    }
+    if (showOnlyTerminated) {
+      return allRows.filter((agent) => agent.state === 'Terminated')
+    }
+    return allRows.filter((agent) => agent.state !== 'Terminated')
+  }, [allRows, showOnlyTerminated, showOnlyAvailable])
 
   // Define and filter columns based on showDetailed state
   const visibleColumns = React.useMemo(() => {
@@ -250,6 +253,8 @@ export function AgentsDataGrid(): React.JSX.Element {
         toolbar: {
           showOnlyTerminated,
           onToggleTerminated: setShowOnlyTerminated,
+          showOnlyAvailable,
+          onToggleAvailable: setShowOnlyAvailable,
           showDetailed,
           onToggleDetailed: setShowDetailed,
         },

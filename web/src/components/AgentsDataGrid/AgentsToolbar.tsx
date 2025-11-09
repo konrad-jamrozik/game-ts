@@ -9,13 +9,22 @@ declare module '@mui/x-data-grid' {
   interface ToolbarPropsOverrides {
     showOnlyTerminated: boolean
     onToggleTerminated?: (checked: boolean) => void
+    showOnlyAvailable: boolean
+    onToggleAvailable?: (checked: boolean) => void
     showDetailed: boolean
     onToggleDetailed?: (checked: boolean) => void
   }
 }
 
 export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
-  const { showOnlyTerminated, onToggleTerminated, showDetailed, onToggleDetailed } = props
+  const {
+    showOnlyTerminated,
+    onToggleTerminated,
+    showOnlyAvailable,
+    onToggleAvailable,
+    showDetailed,
+    onToggleDetailed,
+  } = props
   return (
     <Toolbar>
       <FormControlLabel
@@ -28,6 +37,17 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
           />
         }
         label="detailed"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showOnlyAvailable}
+            onChange={(event) => onToggleAvailable?.(event.target.checked)}
+            slotProps={{ input: { 'aria-label': 'toggle-available-filter' } }}
+            size="small"
+          />
+        }
+        label="available"
       />
       <FormControlLabel
         control={
