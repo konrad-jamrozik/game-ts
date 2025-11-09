@@ -12,16 +12,16 @@ import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 import { val } from '../../lib/utils/mathUtils'
 
 /**
- * Format situation report (panic and factions) as tree structure for MUI Tree View
+ * Format situation report (panic and factions) as tree structure for MUI Tree View, for TurnReportTreeView component.
  */
-export function formatSituationReportAsTree(
+export function formatSituationReport(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const panicTreeItem = formatPanicReportAsTreeViewItem(panicReport)
+  const panicTreeItem = formatPanicReport(panicReport)
 
   const factionTreeItems: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = factions.map((faction) =>
-    formatFactionBreakdownAsTree(faction),
+    formatFactionBreakdown(faction),
   )
 
   return [
@@ -34,10 +34,7 @@ export function formatSituationReportAsTree(
   ]
 }
 
-/**
- * Format panic breakdown as tree structure for MUI Tree View with chips
- */
-function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   return {
     id: 'panic-summary',
     label: `Panic: ${fmtValueChange(panicReport.change)}`,
@@ -47,9 +44,6 @@ function formatPanicReportAsTreeViewItem(panicReport: PanicReport): TreeViewBase
   }
 }
 
-/**
- * Format panic breakdown details
- */
 function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
   const rows: TurnReportTreeViewModelProps[] = []
 
@@ -81,10 +75,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
   return rows
 }
 
-/**
- * Format faction breakdown as tree structure for MUI Tree View with chips
- */
-function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatFactionBreakdown(faction: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = calculatePanicIncrease(faction.threatLevel.previous, faction.suppression.previous)
   const currentPanicIncrease = calculatePanicIncrease(faction.threatLevel.current, faction.suppression.current)
   const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
@@ -137,30 +128,27 @@ function formatFactionBreakdownAsTree(faction: FactionReport): TreeViewBaseItem<
     })
   }
 
-  // Top level children: threat level and suppression
-  const children: TreeViewBaseItem<TurnReportTreeViewModelProps>[] = [
-    {
-      id: `faction-${faction.factionId}-threat-level`,
-      label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
-      chipValue: faction.threatLevel.delta,
-      reverseMainColors: true,
-      children: threatLevelChildren,
-    },
-    {
-      id: `faction-${faction.factionId}-suppression`,
-      label: `Suppression: ${fmtValueChange(faction.suppression)}`,
-      chipValue: faction.suppression.delta,
-      reverseColor: false, // Suppression increase is good (default)
-      children: suppressionChildren,
-    },
-  ]
-
   const panicCaused = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: faction.factionId,
     label: `${faction.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
     chipValue: panicIncreaseDelta,
     reverseMainColors: true,
-    children,
+    children: [
+      {
+        id: `faction-${faction.factionId}-threat-level`,
+        label: `Threat Level: ${fmtValueChange(faction.threatLevel)}`,
+        chipValue: faction.threatLevel.delta,
+        reverseMainColors: true,
+        children: threatLevelChildren,
+      },
+      {
+        id: `faction-${faction.factionId}-suppression`,
+        label: `Suppression: ${fmtValueChange(faction.suppression)}`,
+        chipValue: faction.suppression.delta,
+        reverseColor: false, // Suppression increase is good (default)
+        children: suppressionChildren,
+      },
+    ],
   }
 }

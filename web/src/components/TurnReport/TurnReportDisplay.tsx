@@ -6,7 +6,7 @@ import { bps, isBps } from '../../lib/model/bps'
 import type { AgentsReport, IntelBreakdown, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
 import { fmtValueChange, str } from '../../lib/utils/formatUtils'
 import { ExpandableCard } from '../ExpandableCard'
-import { formatSituationReportAsTree } from './formatSituationReport'
+import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView, type TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
@@ -39,7 +39,7 @@ export function TurnReportDisplay(): React.ReactElement {
     : []
 
   // Format situation report (panic and factions) for tree view
-  const situationReportTreeData = report ? formatSituationReportAsTree(report.panic, report.factions) : []
+  const situationReportTreeData = report ? formatSituationReport(report.panic, report.factions) : []
 
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true}>
