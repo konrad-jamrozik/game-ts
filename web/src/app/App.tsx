@@ -10,7 +10,6 @@ import { MissionCards } from '../components/MissionCards'
 import { PlayerActions } from '../components/PlayerActions'
 import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
-import { BalanceSheetDataGrid } from '../components/BalanceSheetDataGrid'
 import { SituationReportCard } from '../components/SituationReportCard'
 
 function App(): React.JSX.Element {
@@ -50,7 +49,6 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2}>
           <AssetsDataGrid />
-          <BalanceSheetDataGrid />
           <SituationReportCard />
         </Stack>
       </Grid>
