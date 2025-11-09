@@ -4,11 +4,14 @@ import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
 import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
 import { getLeadById } from '../../src/lib/collections/leads'
+import { AGENT_HIRE_COST } from '../../src/lib/model/ruleset/constants'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1' as const
 
   test("click 'hire agent' button -> happy path", async () => {
+    const initialMoney = 100
+    st.arrangeGameState({ money: initialMoney })
     st.expectAgentCount(0)
     ui.renderPlayerActions()
 
@@ -16,6 +19,8 @@ describe(PlayerActions, () => {
 
     st.expectAgentCount(1)
     st.expectTerminatedAgentCount(0)
+    // Verify money is immediately deducted
+    expect(st.gameState.money).toBe(initialMoney - AGENT_HIRE_COST)
   })
 
   test("click 'hire agent' button -> alert: insufficient funds", async () => {

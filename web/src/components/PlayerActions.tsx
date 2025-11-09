@@ -22,7 +22,7 @@ import { fmtAgentCount, fmtMissionTarget } from '../lib/utils/formatUtils'
 import { validateMissionSiteDeployment } from '../lib/utils/MissionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { agsV } from '../lib/model/agents/AgentsView'
-import { getMoneyNewBalance } from '../lib/model/ruleset/ruleset'
+import { AGENT_HIRE_COST } from '../lib/model/ruleset/constants'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -38,13 +38,8 @@ export function PlayerActions(): React.JSX.Element {
   const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.agent().id === id))
 
   function handleHireAgent(): void {
-    // Note: the newBalance here is counted before subtracting the about-to-be-hired agent hiring cost.
-    // As such, if current balance is below AGENT_HIRE_COST, the alert will still be hired,
-    // the newBalance will become negative, and no more agents will be hireable.
-    // This is by design: player can get into projected negative balance, but once they are in it,
-    // they cannot hire any more agents.
-    const newBalance = getMoneyNewBalance(gameState)
-    if (newBalance <= 0) {
+    // Check if player has enough money to hire an agent
+    if (gameState.money < AGENT_HIRE_COST) {
       setAlertMessage('Insufficient funds')
       setShowAlert(true)
       return

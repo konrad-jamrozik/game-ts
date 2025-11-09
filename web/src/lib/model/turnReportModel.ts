@@ -57,7 +57,6 @@ export type MoneyBreakdown = {
   agentUpkeep: number
   contractingEarnings: number
   fundingIncome: number
-  hireCosts: number
   missionRewards: number
 }
 

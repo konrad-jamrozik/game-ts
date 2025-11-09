@@ -320,13 +320,6 @@ function updatePlayerAssets(
   // Add funding income
   state.money += state.funding
 
-  // Subtract hire cost
-  state.money -= state.currentTurnTotalHireCost
-
-  // Reset hire cost
-  const hireCosts = state.currentTurnTotalHireCost
-  state.currentTurnTotalHireCost = 0
-
   // Add intel gathered by espionage agents
   state.intel += income.intelGathered
 
@@ -354,7 +347,6 @@ function updatePlayerAssets(
     agentUpkeep: -income.agentUpkeep,
     contractingEarnings: income.moneyEarned,
     fundingIncome: state.funding,
-    hireCosts: -hireCosts,
     missionRewards: missionMoneyRewards,
   }
 

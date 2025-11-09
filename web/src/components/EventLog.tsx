@@ -38,6 +38,7 @@ function renderPrimaryListItemText(event: GameEvent): string {
   return msg
 }
 
+// KJA I see "OnAssignment 1 agent to espionage" when assigning
 export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
   const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)

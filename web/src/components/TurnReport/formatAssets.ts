@@ -59,7 +59,6 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): TurnReportTreeViewMode
     { id: 'contractingEarnings', label: 'Contracting Earnings', chipValue: breakdown.contractingEarnings },
     { id: 'missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
     { id: 'agentUpkeep', label: 'Agent Upkeep', chipValue: breakdown.agentUpkeep },
-    { id: 'hireCosts', label: 'Hire Costs', chipValue: breakdown.hireCosts },
   ]
 }
 

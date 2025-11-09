@@ -15,7 +15,7 @@ export const hireAgent = asPlayerAction((state: GameState) => {
 
   const newAgent = newHiredAgent(newAgentId, state.turn)
   state.agents.push(newAgent)
-  state.currentTurnTotalHireCost += AGENT_HIRE_COST
+  state.money -= AGENT_HIRE_COST
 })
 
 export const sackAgents = asPlayerAction<string[]>((state: GameState, action) => {
