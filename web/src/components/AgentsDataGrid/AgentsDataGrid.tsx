@@ -22,28 +22,8 @@ export type AgentRow = Agent & {
   rowId: number
 }
 
-export function AgentsDataGrid(): React.JSX.Element {
-  const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const agentSelection = useAppSelector((state) => state.selection.agents)
-  const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
-
-  // Transform agents array to include rowId for DataGrid
-  const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
-    ...agent,
-    rowId: index,
-  }))
-
-  // Apply filtering based on checkbox
-  const rows: AgentRow[] = React.useMemo(
-    () =>
-      showOnlyTerminated
-        ? allRows.filter((agent) => agent.state === 'Terminated')
-        : allRows.filter((agent) => agent.state !== 'Terminated'),
-    [allRows, showOnlyTerminated],
-  )
-
-  const columns: GridColDef[] = [
+function createAgentColumns(rows: AgentRow[]): GridColDef[] {
+  return [
     {
       field: 'id',
       headerName: 'ID',
@@ -183,6 +163,36 @@ export function AgentsDataGrid(): React.JSX.Element {
       ),
     },
   ]
+}
+
+export function AgentsDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
+  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const agentSelection = useAppSelector((state) => state.selection.agents)
+  const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
+  const [showDetailed, setShowDetailed] = React.useState(false)
+
+  // Transform agents array to include rowId for DataGrid
+  const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
+    ...agent,
+    rowId: index,
+  }))
+
+  // Apply filtering based on checkbox
+  const rows: AgentRow[] = React.useMemo(
+    () =>
+      showOnlyTerminated
+        ? allRows.filter((agent) => agent.state === 'Terminated')
+        : allRows.filter((agent) => agent.state !== 'Terminated'),
+    [allRows, showOnlyTerminated],
+  )
+
+  // Define and filter columns based on showDetailed state
+  const visibleColumns = React.useMemo(() => {
+    const columns = createAgentColumns(rows)
+    // Filter columns based on showDetailed state
+    return showDetailed ? columns : columns.filter((col) => col.field !== 'hitPoints' && col.field !== 'recoveryTurns')
+  }, [rows, showDetailed])
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []
@@ -222,7 +232,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     <DataGridCard
       title="Agents"
       rows={rows}
-      columns={columns}
+      columns={visibleColumns}
       getRowId={(row: AgentRow) => row.rowId}
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
@@ -240,6 +250,8 @@ export function AgentsDataGrid(): React.JSX.Element {
         toolbar: {
           showOnlyTerminated,
           onToggleTerminated: setShowOnlyTerminated,
+          showDetailed,
+          onToggleDetailed: setShowDetailed,
         },
       }}
       showToolbar
