@@ -69,8 +69,8 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
     ...(anyMissionReductionExists
       ? [
           {
-            id: 'panic-mission-reductions',
-            label: 'Mission Reductions',
+            id: 'panic-mission-reduction',
+            label: 'Mission reduction',
             chipValue: bps(-totalMissionReduction.value),
             reverseColor: true, // Panic reduction is good (default)
           },
@@ -86,16 +86,16 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
   const currentPanicIncrease = calculatePanicIncrease(fct.threatLevel.current, fct.suppression.current)
   const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
 
-  const panicCaused = newValueChange(previousPanicIncrease, currentPanicIncrease)
+  const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: fct.factionId,
-    label: `${fct.factionName}: Panic Caused: ${fmtValueChange(panicCaused)}`,
+    label: `${fct.factionName}. Panic contrib.: ${fmtValueChange(panicIncrease)}`,
     chipValue: panicIncreaseDelta,
     reverseColor: true, // Panic increase is bad
     children: [
       {
         id: `faction-${fct.factionId}-threat-level`,
-        label: `Threat Level: ${fmtValueChange(fct.threatLevel)}`,
+        label: `Threat level: ${fmtValueChange(fct.threatLevel)}`,
         chipValue: fct.threatLevel.delta,
         reverseColor: true, // Threat increase is bad
         children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
@@ -123,7 +123,7 @@ function formatThreatLevelChildren(
   return [
     {
       id: `faction-${factionId}-baseThreatIncrease`,
-      label: 'Base Threat Increase',
+      label: 'Base threat',
       chipValue: baseThreatIncrease,
       reverseColor: true, // Threat increase is bad
     },
@@ -131,7 +131,7 @@ function formatThreatLevelChildren(
       ? [
           {
             id: `faction-${factionId}-mission-threat-reductions`,
-            label: 'Mission Threat Reductions',
+            label: 'Mission reduction',
             chipValue: bps(-totalThreatReduction.value),
             reverseColor: true, // Threat reduction is good (default)
           },
@@ -154,7 +154,7 @@ function formatSuppressionChildren(
       ? [
           {
             id: `faction-${factionId}-suppressionDecay`,
-            label: 'Suppression Decay',
+            label: 'Suppression decay',
             chipValue: bps(-suppressionDecay.value),
           },
         ]
@@ -162,8 +162,8 @@ function formatSuppressionChildren(
     ...(totalSuppressionAdded.value !== 0
       ? [
           {
-            id: `faction-${factionId}-mission-suppressions`,
-            label: 'Mission Suppressions',
+            id: `faction-${factionId}-mission-suppression`,
+            label: 'Mission suppression',
             chipValue: totalSuppressionAdded,
             reverseColor: false, // Suppression increase is good (default)
           },

@@ -55,17 +55,17 @@ function formatAgentsReport(agentsReport: AgentsReport): TreeViewBaseItem<TurnRe
 
 function formatMoneyBreakdown(breakdown: MoneyBreakdown): TurnReportTreeViewModelProps[] {
   return [
-    { id: 'fundingIncome', label: 'Funding Income', chipValue: breakdown.fundingIncome },
-    { id: 'contractingEarnings', label: 'Contracting Earnings', chipValue: breakdown.contractingEarnings },
-    { id: 'missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
-    { id: 'agentUpkeep', label: 'Agent Upkeep', chipValue: breakdown.agentUpkeep },
+    { id: 'fundingIncome', label: 'Funding income', chipValue: breakdown.fundingIncome },
+    { id: 'contractingEarnings', label: 'Contracting earnings', chipValue: breakdown.contractingEarnings },
+    { id: 'missionRewards', label: 'Mission rewards', chipValue: breakdown.missionRewards },
+    { id: 'agentUpkeep', label: 'Agent upkeep', chipValue: breakdown.agentUpkeep },
   ]
 }
 
 function formatIntelBreakdown(breakdown: IntelBreakdown): TurnReportTreeViewModelProps[] {
   return [
-    { id: 'intel-espionageGathered', label: 'Espionage Gathered', chipValue: breakdown.espionageGathered },
-    { id: 'intel-missionRewards', label: 'Mission Rewards', chipValue: breakdown.missionRewards },
+    { id: 'intel-espionageGathered', label: 'Espionage gathered', chipValue: breakdown.espionageGathered },
+    { id: 'intel-missionRewards', label: 'Mission rewards', chipValue: breakdown.missionRewards },
   ]
 }
 
