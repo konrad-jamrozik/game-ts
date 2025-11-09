@@ -74,11 +74,11 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`OnAssignment ${fmtAgentCount(agentCount)} to contracting`)
+      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to contracting`)
     } else if (assignAgentsToEspionage.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`OnAssignment ${fmtAgentCount(agentCount)} to espionage`)
+      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to espionage`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
