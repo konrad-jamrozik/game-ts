@@ -21,6 +21,7 @@ export function TurnReportDisplay(): React.ReactElement {
     // 'panic-summary',
     'factions-summary',
     // 'faction-red-dawn',
+    'missions-summary',
   ]
   // Format assets report (money, intel, and agents) for tree view
   const assetsTreeData = report ? formatAssets(report.assets) : []

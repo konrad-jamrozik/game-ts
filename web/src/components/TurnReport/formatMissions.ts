@@ -1,7 +1,7 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { bps } from '../../lib/model/bps'
-import { fmtPctDec2 } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtPctDec2 } from '../../lib/utils/formatUtils'
 import { divMult100Round } from '../../lib/utils/mathUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -14,14 +14,23 @@ export function formatMissions(missions: readonly MissionReport[]): TreeViewBase
 }
 
 function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+  const displayId = fmtNoPrefix(mission.missionSiteId, 'mission-site-')
   return {
     id: `mission-${mission.missionSiteId}`,
-    label: `${mission.missionTitle} (${mission.faction})`,
+    label: `${mission.missionTitle} (id: ${displayId})`,
+    chipValue: mission.outcome,
     children: [
       {
         id: `mission-${mission.missionSiteId}-outcome`,
         label: 'Outcome',
         chipValue: mission.outcome,
+      },
+      {
+        id: `mission-${mission.missionSiteId}-faction`,
+        label: 'Faction',
+        chipValue: mission.faction,
+        noColor: true,
+        noPlusSign: true,
       },
       {
         id: `mission-${mission.missionSiteId}-rounds`,
