@@ -131,7 +131,7 @@ export type GameState = {
   intel: number
   funding: number
   agents: Agent[]
-  // Liabilities
+  // Liabilities // KJa to remove, should be unused
   currentTurnTotalHireCost: number
   // Archive
   leadInvestigationCounts: Record<string, number>
