@@ -98,6 +98,11 @@ export const st = {
     expect(st.gameState.leadInvestigationCounts[leadId] ?? 0).toBe(times)
   },
 
+  expectLeadInvestigationCreated(leadId: string): void {
+    const investigations = Object.values(st.gameState.leadInvestigations).filter((inv) => inv.leadId === leadId)
+    expect(investigations.length).toBeGreaterThan(0)
+  },
+
   expectAgentCount(expectedCount: number): void {
     expect(st.agentsView).toHaveLength(expectedCount)
   },

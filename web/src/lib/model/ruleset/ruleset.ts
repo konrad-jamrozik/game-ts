@@ -3,6 +3,8 @@ import {
   AGENT_ESPIONAGE_INTEL,
   AGENT_RECOVERY_TURNS_FACTOR,
   AGENT_UPKEEP_COST,
+  INTEL_DECAY,
+  MAX_INTEL_DECAY,
   SUPPRESSION_DECAY_PCT,
 } from './constants'
 import { div, floor } from '../../utils/mathUtils'
@@ -104,4 +106,28 @@ export function getTotalPanicIncrease(gameState: GameState): number {
 export function getPanicNewBalance(gameState: GameState): Bps {
   const totalPanicIncrease = getTotalPanicIncrease(gameState)
   return bps(gameState.panic.value + totalPanicIncrease)
+}
+
+/**
+ * Calculates intel decay percentage based on accumulated intel.
+ * Formula: min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
+ *
+ * @param accumulatedIntel - The accumulated intel value
+ * @returns The decay percentage (in basis points)
+ */
+export function calculateIntelDecayPercent(accumulatedIntel: number): number {
+  const decayBps = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
+  return decayBps // KJA should return Bps, and name shouldn't have percent in it
+}
+
+/**
+ * Calculates lead success chance based on accumulated intel and difficulty constant.
+ * Formula: successChance = bps(accumulatedIntel * difficultyConstant)
+ *
+ * @param accumulatedIntel - The accumulated intel value
+ * @param difficultyConstant - The difficulty constant (C factor in basis points)
+ * @returns The success chance (in basis points)
+ */
+export function calculateLeadSuccessChance(accumulatedIntel: number, difficultyConstant: number): Bps {
+  return bps(accumulatedIntel * difficultyConstant)
 }

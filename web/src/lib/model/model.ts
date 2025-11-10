@@ -15,8 +15,9 @@ export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignmen
 // Assignment types for agents
 export type ActivityId = 'Contracting' | 'Espionage'
 export type MissionSiteId = `mission-site-${string}`
+export type LeadInvestigationId = `investigation-${string}`
 export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
-export type AgentAssignment = ActivityId | MissionSiteId | AgentAssignmentState
+export type AgentAssignment = ActivityId | MissionSiteId | LeadInvestigationId | AgentAssignmentState
 
 // Type guard functions for agent assignments
 export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
@@ -25,6 +26,10 @@ export function isActivityAssignment(assignment: AgentAssignment): assignment is
 
 export function isMissionSiteAssignment(assignment: AgentAssignment): assignment is MissionSiteId {
   return typeof assignment === 'string' && assignment.startsWith('mission-site-')
+}
+
+export function isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId {
+  return typeof assignment === 'string' && assignment.startsWith('investigation-')
 }
 
 export function isAssignmentState(assignment: AgentAssignment): assignment is AgentAssignmentState {
@@ -49,10 +54,11 @@ export type Agent = Actor & {
 export type Lead = {
   id: string
   title: string
-  intelCost: number
+  difficultyConstant: number // C factor in basis points, e.g., C=100 means 1 intel = 1% success chance // KJA should be Bps
   description: string
   dependsOn: string[]
   repeatable: boolean
+  enemyEstimate?: string // For observability, e.g., "Expect safehouse to have a dozen low-ranked cult members"
 }
 
 export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
@@ -119,6 +125,14 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
+export type LeadInvestigation = {
+  id: string // unique investigation ID
+  leadId: string
+  accumulatedIntel: number
+  agentIds: string[] // agents currently investigating this lead
+  turnsInvestigated: number // how long investigation has been ongoing
+}
+
 export type GameState = {
   // Session
   turn: number
@@ -128,13 +142,14 @@ export type GameState = {
   factions: Faction[]
   // Assets
   money: number
-  intel: number
+  intel: number // global intel (unused for leads, kept for backward compatibility)
   funding: number
   agents: Agent[]
   // Liabilities // KJa to remove, should be unused
   currentTurnTotalHireCost: number
   // Archive
   leadInvestigationCounts: Record<string, number>
+  leadInvestigations: Record<string, LeadInvestigation> // track ongoing investigations
   missionSites: MissionSite[]
   // TurnReport of turn advancement from previous to current turn.
   turnStartReport?: TurnReport | undefined

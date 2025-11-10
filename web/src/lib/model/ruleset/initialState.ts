@@ -22,6 +22,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     agents: [],
     // Leads
     leadInvestigationCounts: {},
+    leadInvestigations: {},
     // Mission sites
     missionSites: [],
     // Turn start report

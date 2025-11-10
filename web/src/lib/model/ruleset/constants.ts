@@ -33,3 +33,11 @@ export const AGENT_INITIAL_WEAPON_DAMAGE = 10
 export const CONTEST_ROLL_PRECISION = 10_000
 
 export const RETREAT_THRESHOLD = 0.5
+
+// Intel decay constants (in basis points)
+// KJA keep track of accumulated intel in bps, and measure probability with bps precision.
+// So if 1 intel = 1%, and 5 intel decays to by 0.5% to 4.975, then % of success
+// is 4.97%
+// Double check if the rounding is indeed down: toPrecisionRoundingDown
+export const INTEL_DECAY = 10 // 0.1% decay per intel point
+export const MAX_INTEL_DECAY = 5000 // hard cap on decay: 50%

@@ -76,6 +76,9 @@ export function updateInTransitAgents(state: GameState): void {
         agent.state = 'OnAssignment'
       } else if (agent.assignment === 'Recovery') {
         agent.state = 'Recovering'
+      } else if (typeof agent.assignment === 'string' && agent.assignment.startsWith('investigation-')) {
+        // Agents assigned to lead investigation transition to OnAssignment
+        agent.state = 'OnAssignment'
       } else {
         agent.state = 'Available'
       }

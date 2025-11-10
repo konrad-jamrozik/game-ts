@@ -7,7 +7,7 @@ import {
   assignAgentsToEspionage as assignAgentsToEspionageReducer,
   recallAgents as recallAgentsReducer,
 } from './reducers/agentReducers'
-import { investigateLead as investigateLeadReducer } from './reducers/leadReducers'
+import { createLeadInvestigation as createLeadInvestigationReducer } from './reducers/leadReducers'
 import { deployAgentsToMission as deployAgentsToMissionReducer } from './reducers/missionReducers'
 import { advanceTurn as advanceTurnReducer, reset as resetReducer } from './reducers/gameControlsReducers'
 
@@ -26,7 +26,7 @@ const gameStateSlice = createSlice({
     assignAgentsToEspionage: assignAgentsToEspionageReducer,
     recallAgents: recallAgentsReducer,
     reset: resetReducer,
-    investigateLead: investigateLeadReducer,
+    createLeadInvestigation: createLeadInvestigationReducer,
     deployAgentsToMission: deployAgentsToMissionReducer,
   },
 })
@@ -39,7 +39,7 @@ export const {
   assignAgentsToEspionage,
   recallAgents,
   reset,
-  investigateLead,
+  createLeadInvestigation,
   deployAgentsToMission,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

@@ -8,7 +8,7 @@ import {
   assignAgentsToEspionage,
   deployAgentsToMission,
   hireAgent,
-  investigateLead,
+  createLeadInvestigation,
   recallAgents,
   reset,
   sackAgents,
@@ -83,9 +83,10 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const agentIds = action.payload
       const agentCount = agentIds.length
       postTextEvent(`Recalled ${fmtAgentCount(agentCount)}`)
-    } else if (investigateLead.match(action)) {
-      const { leadId, intelCost } = action.payload
-      postTextEvent(`Investigated lead: ${leadId} (cost: ${intelCost} intel)`)
+    } else if (createLeadInvestigation.match(action)) {
+      const { leadId, agentIds } = action.payload
+      const agentCount = agentIds.length
+      postTextEvent(`Started investigating lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
     } else if (deployAgentsToMission.match(action)) {
       const { missionSiteId, agentIds } = action.payload
       const agentCount = agentIds.length

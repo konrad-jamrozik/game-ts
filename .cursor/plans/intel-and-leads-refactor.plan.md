@@ -142,8 +142,8 @@ increments `leadInvestigationCounts`, investigation is removed.
 **Model:**
 
 - `web/src/lib/model/model.ts` - Add `LeadInvestigation` type, update `GameState`, `Lead`, `AgentAssignment`
-  - Add `LeadInvestigationId` type as template literal: `type LeadInvestigationId = \`investigation-${string}\``
-  - Add type guard function: `isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId`
+- Add `LeadInvestigationId` type as template literal: `type LeadInvestigationId = \`investigation-${string}\``
+- Add type guard function: `isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId`
 - `web/src/lib/collections/leads.ts` - Update lead definitions: add `difficultyConstant`, `enemyEstimate`, remove `intelCost`
 
 **Reducers:**
@@ -157,8 +157,8 @@ remove old `investigateLead` logic
 
 - `web/src/lib/turn_advancement/evaluateTurn.ts` - Add lead investigation update step (after `updateEspionageAgents`)
 - `web/src/lib/turn_advancement/updateAgents.ts` - Update `updateInTransitAgents` to handle lead investigation assignments:
-  - Agents with `LeadInvestigationId` assignment should transition to `OnAssignment` state (not `Available`)
-  - Keep espionage update (still generates global intel)
+- Agents with `LeadInvestigationId` assignment should transition to `OnAssignment` state (not `Available`)
+- Keep espionage update (still generates global intel)
 - Create `web/src/lib/turn_advancement/updateLeadInvestigations.ts` - New file for lead investigation logic:
 - `updateLeadInvestigations(state: GameState): LeadInvestigationReport[]`
 - Handles decay, accumulation, success rolls, completion

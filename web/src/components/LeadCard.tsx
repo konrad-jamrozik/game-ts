@@ -8,6 +8,7 @@ import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
+import { calculateLeadSuccessChance } from '../lib/model/ruleset/ruleset'
 import { setLeadSelection } from '../lib/slices/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
@@ -21,10 +22,35 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const theme = useTheme()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
+  const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
   const lead = getLeadById(leadId)
 
   const selected = selectedLeadId === lead.id && displayMode === 'normal'
   const disabled = displayMode === 'repeated' || (!lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0)
+
+  // KJA WRONG - should be in a separate data grid in situations report card
+  // Find active investigations for this lead
+  const activeInvestigations = Object.values(leadInvestigations).filter((inv) => inv.leadId === leadId)
+
+  // KJA WRONG - should be in a separate data grid in situations report card
+  // Calculate total accumulated intel and success chance
+  let totalAccumulatedIntel = 0
+  let totalAssignedAgents = 0
+  for (const investigation of activeInvestigations) {
+    totalAccumulatedIntel += investigation.accumulatedIntel
+    totalAssignedAgents += investigation.agentIds.length
+  }
+
+  // KJA WRONG - should be in a separate data grid in situations report card
+  // Calculate success chance (use first investigation if multiple exist)
+  const [firstInvestigation] = activeInvestigations
+  const successChance =
+    firstInvestigation !== undefined
+      ? calculateLeadSuccessChance(firstInvestigation.accumulatedIntel, lead.difficultyConstant)
+      : undefined
+  console.log(['unused', totalAccumulatedIntel, totalAssignedAgents, successChance])
+
+  // KJA probably instead of intel cost want to display "intel needed for 10% chance"
 
   function handleClick(): void {
     if (!disabled) {
@@ -52,9 +78,9 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
         <CardHeader title={lead.title} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
-            <Stack direction="row" justifyContent="space-between">
+            {/* <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="Intel cost" value={lead.intelCost} sx={{ width: 140 }} />
-            </Stack>
+            </Stack> */}
             {displayMode === 'normal' && lead.repeatable && (
               <Stack direction="row" sx={{ paddingTop: 0.5 }}>
                 <LabeledValue label="Repeatable" />
@@ -69,6 +95,14 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
           <Typography sx={{ paddingTop: 1.7 }} variant="body1">
             {lead.description}
           </Typography>
+          {lead.enemyEstimate !== undefined && (
+            <Typography
+              sx={{ paddingTop: 1, fontStyle: 'italic', color: theme.palette.text.secondary }}
+              variant="body2"
+            >
+              {lead.enemyEstimate}
+            </Typography>
+          )}
         </CardContent>
       </CardActionArea>
     </Card>

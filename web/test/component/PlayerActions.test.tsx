@@ -3,7 +3,6 @@ import { PlayerActions } from '../../src/components/PlayerActions'
 import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
 import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
-import { getLeadById } from '../../src/lib/collections/leads'
 import { AGENT_HIRE_COST } from '../../src/lib/model/ruleset/constants'
 
 describe(PlayerActions, () => {
@@ -137,34 +136,28 @@ describe(PlayerActions, () => {
 
   test("click 'investigate lead' button -> happy path", async () => {
     const leadId = 'lead-criminal-orgs'
-    const leadIntelCost = getLeadById(leadId).intelCost
     st.arrangeGameState({
-      intel: leadIntelCost,
+      agents: [st.newAgent('agent-000', 'Standby')],
     })
-    st.arrangeSelection({ lead: leadId })
+    st.arrangeSelection({ lead: leadId, agents: ['agent-000'] })
 
     ui.renderPlayerActions()
     await ui.investigateLead() // Act
 
-    st.expectLeadInvestigatedOnce(leadId)
-    st.expectIntelAmount(10 - leadIntelCost)
+    st.expectLeadInvestigationCreated(leadId)
   })
 
-  test("click 'investigate lead' button -> alert: insufficient intel", async () => {
+  test("click 'investigate lead' button -> alert: no agents selected", async () => {
     const leadId = 'lead-criminal-orgs'
-    const leadIntelCost = getLeadById(leadId).intelCost
-    st.arrangeGameState({
-      intel: leadIntelCost - 1,
-    })
+    st.arrangeGameState({})
     st.arrangeSelection({ lead: leadId })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
 
     await ui.investigateLead() // Act
 
-    ui.expectPlayerActionsAlert('Not enough intel')
+    ui.expectPlayerActionsAlert('No agents selected!')
     st.expectLeadNotInvestigated(leadId)
-    st.expectIntelAmount(leadIntelCost - 1) // Expect unchanged
   })
 
   test("click 'deploy agents to active mission site' button -> happy path", async () => {

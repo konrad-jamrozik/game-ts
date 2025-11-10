@@ -52,6 +52,22 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
   const agentIdsToRecall = action.payload
   for (const agent of state.agents) {
     if (agentIdsToRecall.includes(agent.id)) {
+      // Check if agent is assigned to a lead investigation
+      const isLeadInvestigation = typeof agent.assignment === 'string' && agent.assignment.startsWith('investigation-')
+      if (isLeadInvestigation) {
+        // Remove agent from investigation
+        const investigationId = agent.assignment
+        const investigation = state.leadInvestigations[investigationId]
+        if (investigation !== undefined) {
+          investigation.agentIds = investigation.agentIds.filter((id) => id !== agent.id)
+          // If all agents are recalled, remove the investigation entirely
+          if (investigation.agentIds.length === 0) {
+            // KJA why eslint disable on delete?
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete state.leadInvestigations[investigationId]
+          }
+        }
+      }
       agent.assignment = 'Standby'
       agent.state = 'InTransit'
     }

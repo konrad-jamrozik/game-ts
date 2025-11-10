@@ -24,6 +24,7 @@ import {
   updateInTransitAgents,
   updateRecoveringAgents,
 } from './updateAgents'
+import { updateLeadInvestigations } from './updateLeadInvestigations'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -57,6 +58,9 @@ export default function evaluateTurn(state: GameState): TurnReport {
 
   // 6. Update all agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
+
+  // 6.5. Update lead investigations
+  const leadInvestigationReports = updateLeadInvestigations(state)
 
   // 7. Update all agents in InTransit state
   updateInTransitAgents(state)
@@ -110,6 +114,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     panic: panicReport,
     factions: factionsReport,
     missions: missionReports,
+    leadInvestigations: leadInvestigationReports,
   }
 
   return turnReport

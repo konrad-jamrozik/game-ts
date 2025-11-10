@@ -6,6 +6,7 @@ export type TurnReport = BaseReport & {
   panic: PanicReport
   factions: FactionReport[]
   missions: MissionReport[]
+  leadInvestigations?: LeadInvestigationReport[]
 }
 
 export type BaseReport = {
@@ -147,4 +148,15 @@ export type BattleStats = {
   totalDamageTaken: number
   totalAgentSkillGain: number
   averageAgentExhaustionGain: number
+}
+
+export type LeadInvestigationReport = {
+  investigationId: string
+  leadId: string
+  completed: boolean
+  accumulatedIntel: number
+  successChance: Bps
+  intelGathered?: number // KJA should not be needed, we only need accumulatedIntel
+  decayedIntel?: number // KJA rename to 'intelDecayed'
+  createdMissionSites?: string[]
 }

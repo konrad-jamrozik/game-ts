@@ -13,7 +13,7 @@ import {
   assignAgentsToEspionage,
   deployAgentsToMission,
   hireAgent,
-  investigateLead,
+  createLeadInvestigation,
   recallAgents,
   sackAgents,
 } from '../lib/slices/gameStateSlice'
@@ -115,6 +115,21 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    if (selectedAgentIds.length === 0) {
+      setAlertMessage('No agents selected!')
+      setShowAlert(true)
+      return
+    }
+
+    // Validate that all selected agents are available
+    const validationResult = agents.validateAvailable(selectedAgentIds)
+
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
+      setShowAlert(true)
+      return
+    }
+
     // Find the selected lead to get its properties
     const lead = getLeadById(selectedLeadId)
 
@@ -125,16 +140,10 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Check if player has enough intel
-    if (gameState.intel < lead.intelCost) {
-      setAlertMessage('Not enough intel')
-      setShowAlert(true)
-      return
-    }
-
     setShowAlert(false) // Hide alert on successful action
-    dispatch(investigateLead({ leadId: selectedLeadId, intelCost: lead.intelCost }))
+    dispatch(createLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
     dispatch(clearLeadSelection())
+    dispatch(clearAgentSelection())
   }
 
   function handleDeployAgents(): void {
@@ -204,7 +213,11 @@ export function PlayerActions(): React.JSX.Element {
           >
             Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionSiteId)}
           </Button>
-          <Button variant="contained" onClick={handleInvestigateLead} disabled={selectedLeadId === undefined}>
+          <Button
+            variant="contained"
+            onClick={handleInvestigateLead}
+            disabled={selectedLeadId === undefined || selectedAgentIds.length === 0}
+          >
             Investigate lead
           </Button>
           <Collapse in={showAlert}>
