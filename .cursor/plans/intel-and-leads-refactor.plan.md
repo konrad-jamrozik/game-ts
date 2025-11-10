@@ -61,14 +61,14 @@ intel that increases success chance per turn.
 **Intel decay:**
 
 - Applied each turn before new intel gathering
-- Formula: `intelDecay = min(bps(gatheredIntel * INTEL_DECAY.value), MAX_INTEL_DECAY)`
+- Formula: `intelDecay = min(bps(accumulatedIntel * INTEL_DECAY.value), MAX_INTEL_DECAY)`
 - Example: 100 intel → 10% decay (10 bps = 10 intel lost), 500 intel → 50% decay (5000 bps = 50% = 250 intel lost, capped)
-- Decay amount: `decayedIntel = gatheredIntel * intelDecay.value / 10000`
-- After decay: `gatheredIntel = gatheredIntel - decayedIntel`
+- Decay amount: `decayedIntel = accumulatedIntel * intelDecay.value / 10000`
+- After decay: `accumulatedIntel = accumulatedIntel - decayedIntel`
 
 **Success chance:**
 
-- Calculated each turn: `successChance = bps(gatheredIntel * lead.difficultyConstant)`
+- Calculated each turn: `successChance = bps(accumulatedIntel * lead.difficultyConstant)`
 - Example: 50 intel with C=100 → 5000 bps (50% chance), 50 intel with C=50 → 2500 bps (25% chance)
 - Roll success check each turn (random 1-10000 vs successChance.value)
 - On success: lead completes, creates mission sites (like current `investigateLead`),
@@ -142,6 +142,8 @@ increments `leadInvestigationCounts`, investigation is removed.
 **Model:**
 
 - `web/src/lib/model/model.ts` - Add `LeadInvestigation` type, update `GameState`, `Lead`, `AgentAssignment`
+  - Add `LeadInvestigationId` type as template literal: `type LeadInvestigationId = \`investigation-${string}\``
+  - Add type guard function: `isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId`
 - `web/src/lib/collections/leads.ts` - Update lead definitions: add `difficultyConstant`, `enemyEstimate`, remove `intelCost`
 
 **Reducers:**
@@ -154,7 +156,9 @@ remove old `investigateLead` logic
 **Turn advancement:**
 
 - `web/src/lib/turn_advancement/evaluateTurn.ts` - Add lead investigation update step (after `updateEspionageAgents`)
-- `web/src/lib/turn_advancement/updateAgents.ts` - Keep espionage update (still generates global intel)
+- `web/src/lib/turn_advancement/updateAgents.ts` - Update `updateInTransitAgents` to handle lead investigation assignments:
+  - Agents with `LeadInvestigationId` assignment should transition to `OnAssignment` state (not `Available`)
+  - Keep espionage update (still generates global intel)
 - Create `web/src/lib/turn_advancement/updateLeadInvestigations.ts` - New file for lead investigation logic:
 - `updateLeadInvestigations(state: GameState): LeadInvestigationReport[]`
 - Handles decay, accumulation, success rolls, completion
@@ -215,7 +219,7 @@ remove old `investigateLead` logic
 
 **Success roll:**
 
-- Use `rollAgainstProbability` with `successChancePercent`
+- Use `rollAgainstProbability` with `successChance`
 - If success, lead completes
 
 ### To-dos
