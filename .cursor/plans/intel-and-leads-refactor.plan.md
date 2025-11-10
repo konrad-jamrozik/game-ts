@@ -1,4 +1,3 @@
-<!-- de8fea56-02c4-4ec7-81b7-d7357608295b a8c9ac72-e184-4f6a-a2b5-e0a16cea12d4 -->
 # Intel and Leads System Refactor
 
 ## Overview
@@ -28,7 +27,7 @@ intel that increases success chance per turn.
 
 **Agent assignment changes:**
 
-- Add new assignment type: `LeadInvestigationId` (e.g., `'investigation-001'`)
+- Add new assignment type: `LeadInvestigationId` (with id of e.g., `'investigation-001'`)
 - Agents assigned to investigation enter `InTransit` → `OnAssignment` state
 - Multiple agents can investigate same lead simultaneously (via same investigation or different ones)
 - Multiple leads can be investigated simultaneously
@@ -41,7 +40,7 @@ intel that increases success chance per turn.
 
 **Constants:**
 
-- Add `INTEL_DECAY_INCREASE: Bps` = 10 bps (0.1% decay per intel point)
+- Add `INTEL_DECAY: Bps` = 10 bps (0.1% decay per intel point)
 - Add `MAX_INTEL_DECAY: Bps` = bps(5000) (hard cap on decay: 50%)
 
 ### 2. Lead Investigation Mechanics
@@ -56,13 +55,13 @@ intel that increases success chance per turn.
 **Intel accumulation:**
 
 - Each turn, agents investigating a lead generate intel based on their skill
-- Formula: `intelPerAgent = baseIntelPerTurn * agentSkillMultiplier` (TBD: need to check current espionage formula)
+- Formula: same as in `getEspionageIntel`
 - Total intel accumulated per turn = sum of all agents' contributions in that investigation
 
 **Intel decay:**
 
 - Applied each turn before new intel gathering
-- Formula: `intelDecay = min(bps(gatheredIntel * INTEL_DECAY_INCREASE.value / 100), MAX_INTEL_DECAY)`
+- Formula: `intelDecay = min(bps(gatheredIntel * INTEL_DECAY.value), MAX_INTEL_DECAY)`
 - Example: 100 intel → 10% decay (10 bps = 10 intel lost), 500 intel → 50% decay (5000 bps = 50% = 250 intel lost, capped)
 - Decay amount: `decayedIntel = gatheredIntel * intelDecay.value / 10000`
 - After decay: `gatheredIntel = gatheredIntel - decayedIntel`
@@ -91,7 +90,7 @@ increments `leadInvestigationCounts`, investigation is removed.
 - Accumulate new intel from assigned agents
 - Increment `turnsInvestigated`
 - Calculate success chance using `lead.difficultyConstant`
-- Roll for completion (random 0-100 vs successChancePercent)
+- Roll for completion using `rollAgainstProbability` with `successChance`
 - If successful:
 - Complete lead: increment `leadInvestigationCounts[leadId]`
 - Create mission sites (same logic as current `investigateLead`)
@@ -107,26 +106,27 @@ increments `leadInvestigationCounts`, investigation is removed.
 
 **PlayerActions.tsx:**
 
-- Replace "Investigate lead" button with "Assign agents to investigate lead"
+- Keep "Investigate lead" button, update its functionality to create new investigation entity
 - Requires both lead selection AND agent selection
 - Creates new investigation entity
-- Add "Recall agents from lead investigation" action (removes agents from investigation, removes investigation if empty)
+- Keep "Recall agents" button, which now will also recall agents from lead investigation if they are assigned to it
+- **Important:** When all agents are recalled from an investigation, the entire investigation is removed (accumulated intel is lost)
 
 **LeadCards.tsx:**
 
-- Display active investigations for each lead:
-- Accumulated intel per investigation
-- Success chance % (calculated from intel * difficultyConstant)
-- Intel accumulated per turn (from assigned agents)
-- Assigned agents list
-- Turns investigated
-- Display enemy estimates from lead description
-- Show multiple investigation cards if lead is repeatable and has multiple active investigations
+- Keep lead discovery/unlock logic
+- Display enemy estimates from lead description (if available)
+
+**SituationReportCard.tsx:**
+
+- Add new data grid section for lead investigations
+- One row per active lead investigation
+- Columns: Lead ID, Agents assigned count, accumulated intel, Success chance (in percentage)
+- Display below existing panic section, but above factions
 
 **AssetsDataGrid.tsx:**
 
 - Keep global intel display (still accumulates from espionage)
-- Add display for total intel across all lead investigations (optional)
 
 ### 5. Migration & Backward Compatibility
 
@@ -146,12 +146,14 @@ increments `leadInvestigationCounts`, investigation is removed.
 
 **Reducers:**
 
-- `web/src/lib/slices/reducers/leadReducers.ts` - Add `createLeadInvestigation`, `recallAgentsFromInvestigation`, remove old `investigateLead` logic
+- `web/src/lib/slices/reducers/leadReducers.ts` - Add `createLeadInvestigation`, `recallAgentsFromInvestigation`,
+remove old `investigateLead` logic
+- `recallAgentsFromInvestigation` must remove the investigation entirely if all agents are recalled
 - `web/src/lib/slices/reducers/agentReducers.ts` - Update agent assignment handling for lead investigation assignments
 
 **Turn advancement:**
 
-- `web/src/lib/turn_advancement/evaluateTurn.ts` - Add lead investigation update step (6.5)
+- `web/src/lib/turn_advancement/evaluateTurn.ts` - Add lead investigation update step (after `updateEspionageAgents`)
 - `web/src/lib/turn_advancement/updateAgents.ts` - Keep espionage update (still generates global intel)
 - Create `web/src/lib/turn_advancement/updateLeadInvestigations.ts` - New file for lead investigation logic:
 - `updateLeadInvestigations(state: GameState): LeadInvestigationReport[]`
@@ -162,7 +164,7 @@ increments `leadInvestigationCounts`, investigation is removed.
 - `web/src/lib/model/ruleset/ruleset.ts` - Add functions:
 - `calculateIntelDecayPercent(accumulatedIntel: number): number`
 - `calculateLeadSuccessChance(accumulatedIntel: number, difficultyConstant: number): number`
-- `web/src/lib/model/ruleset/constants.ts` - Add `INTEL_DECAY_INCREASE: Bps = bps(10)`, `MAX_INTEL_DECAY: Bps = bps(5000)`
+- `web/src/lib/model/ruleset/constants.ts` - Add `INTEL_DECAY: Bps = bps(10)`, `MAX_INTEL_DECAY: Bps = bps(5000)`
 
 **UI:**
 
@@ -182,12 +184,7 @@ increments `leadInvestigationCounts`, investigation is removed.
 ### 7. Testing
 
 - Update existing tests that use global intel spending
-- Add tests for intel accumulation per investigation
-- Add tests for intel decay (verify formula, verify 50% cap using MAX_INTEL_DECAY)
-- Add tests for lead completion probability (verify success chance calculation)
-- Add tests for multiple simultaneous investigations
-- Add tests for investigation creation and agent assignment
-- Add tests for mission site creation on lead completion
+- No other changes for now.
 
 ## Implementation Order
 
@@ -212,11 +209,14 @@ increments `leadInvestigationCounts`, investigation is removed.
 - When agents assigned to investigation, their `assignment` becomes the investigation ID
 - State transitions: `Available` → `InTransit` → `OnAssignment`
 - When investigation completes or agents recalled, agents return to `Available` with `Standby` assignment
+- **Important:** If all agents are recalled from an investigation, the investigation is removed entirely (disappears)
+- Accumulated intel is lost
+- Investigation entity is deleted from `leadInvestigations`
 
 **Success roll:**
 
-- Use `Math.random() * 100` vs `successChancePercent`
-- If roll < successChancePercent, lead completes
+- Use `rollAgainstProbability` with `successChancePercent`
+- If success, lead completes
 
 ### To-dos
 
@@ -227,6 +227,5 @@ increments `leadInvestigationCounts`, investigation is removed.
 - [ ] Integrate lead investigation updates into evaluateTurn.ts turn advancement flow
 - [ ] Update PlayerActions.tsx: Replace instant investigate with assign agents to lead
 - [ ] Update LeadCards.tsx: Display intel, success chance, assigned agents, enemy estimates
-- [ ] Update AssetsDataGrid.tsx: Remove or update global intel display
 - [ ] Create state migration logic for existing intel and leadInvestigationCounts
 - [ ] Update and add tests for new intel and lead investigation mechanics
