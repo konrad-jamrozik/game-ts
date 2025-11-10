@@ -2,7 +2,7 @@
 
 KJA backlog:
 
-# Mechanics improvement
+# Game mechanics
 
 - Figure out how to handle intel & mission expiration better
   - Problem: no incentive to investigate lead early, because that starts mission expiration counter
@@ -11,6 +11,10 @@ KJA backlog:
 - Reduce micromanagement of agents:
   - When sending on contracting or espionage gathering mission, it should be fixed length.
     Player can make the mission longer, thus blocking the agent for longer, but earning more.
+
+- Win criteria - defeat all enemy factions
+  - Implement how to defeat a faction:
+  - Raid HQ and win
 
 ## Domain model
 
