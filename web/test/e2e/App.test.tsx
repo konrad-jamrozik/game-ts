@@ -82,6 +82,7 @@ describe(App, () => {
     assertDefined(clickableCriminalOrgsLeads[0])
     await userEvent.click(clickableCriminalOrgsLeads[0])
 
+    // KJA TEST FIX: likely busted because likely agent must be selected first.
     // Click "Investigate lead" button
     await userEvent.click(screen.getByRole('button', { name: /investigate lead/iu }))
 
@@ -141,8 +142,10 @@ describe(App, () => {
       }),
     )
 
+    // KJA TEST FIX: this needs a fixup to point to the Assets / money / projected value.
     // Verify balance sheet shows negative value
-    const negativeBalance = screen.getByLabelText(/new.*balance/iu)
+    // const negativeBalance = screen.getByLabelText(/new.*balance/iu)
+    const negativeBalance = screen.getByLabelText(/Money/iu)
 
     expect(negativeBalance).toHaveTextContent(/-/iu)
 
