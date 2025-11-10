@@ -2,7 +2,15 @@
 
 KJA backlog:
 
-- Implement lead expiration logic, or remove the property
+# Mechanics improvement
+
+- Figure out how to handle intel & mission expiration better
+  - Problem: no incentive to investigate lead early, because that starts mission expiration counter
+  - Problem: silly kind of zero-cost leads, especially when repeatable.
+
+- Reduce micromanagement of agents:
+  - When sending on contracting or espionage gathering mission, it should be fixed length.
+    Player can make the mission longer, thus blocking the agent for longer, but earning more.
 
 ## Domain model
 
@@ -51,6 +59,8 @@ KJA backlog:
 
 ## Performance Optimization
 
+- replace applicable eslint rules with https://oxc.rs/docs/guide/usage/linter.html
+  - need to add it to package.json, CI/CD
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
