@@ -224,12 +224,12 @@ remove old `investigateLead` logic
 
 ### To-dos
 
-- [ ] Update data model: Add LeadInvestigation type, update GameState, Lead, and AgentAssignment types
-- [ ] Update lead definitions: Add difficulty constants and enemy estimates, remove intelCost
-- [ ] Create updateLeadInvestigations.ts: Implement intel accumulation, decay, and success chance calculation
-- [ ] Create assignAgentsToLead reducer and update agent assignment handling
-- [ ] Integrate lead investigation updates into evaluateTurn.ts turn advancement flow
-- [ ] Update PlayerActions.tsx: Replace instant investigate with assign agents to lead
-- [ ] Update LeadCards.tsx: Display intel, success chance, assigned agents, enemy estimates
-- [ ] Create state migration logic for existing intel and leadInvestigationCounts
-- [ ] Update and add tests for new intel and lead investigation mechanics
+- [x] Update data model: Add LeadInvestigation type, update GameState, Lead, and AgentAssignment types
+- [x] Update lead definitions: Add difficulty constants and enemy estimates, remove intelCost
+- [x] Create updateLeadInvestigations.ts: Implement intel accumulation, decay, and success chance calculation
+- [x] Create assignAgentsToLead reducer and update agent assignment handling
+- [x] Integrate lead investigation updates into evaluateTurn.ts turn advancement flow
+- [x] Update PlayerActions.tsx: Replace instant investigate with assign agents to lead
+- [x] Update LeadCards.tsx: Display intel, success chance, assigned agents, enemy estimates
+- [x] Create state migration logic for existing intel and leadInvestigationCounts
+- [x] Update and add tests for new intel and lead investigation mechanics

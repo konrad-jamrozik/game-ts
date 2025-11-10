@@ -16,6 +16,12 @@ KJA backlog:
   - Implement how to defeat a faction:
   - Raid HQ and win
 
+- When rolling for lead investigation success, and failing, keep track of "prob. of no success" which will
+  say was the probability that you have failed so many times in a row. E.g. if success is 50%,
+  and you failed 3 times in a row, the probability for that is 12.5%.
+  Or if making 1% rolls, then at 100 failed attempts it is 36.6%.
+  Basically it is a measure of unlucky you are. The lower the percentage, the more unlucky.
+
 ## Domain model
 
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
