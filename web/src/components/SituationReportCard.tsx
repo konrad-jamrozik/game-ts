@@ -5,7 +5,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPct, str } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtPct, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import {
   calculatePanicIncrease,
@@ -29,7 +29,7 @@ export type SituationReportRow = {
 
 export type LeadInvestigationRow = {
   id: string
-  leadTitle: string
+  leadInvestigationTitle: string
   intel: number
   successChance: Bps
   agents: number
@@ -83,22 +83,20 @@ export function SituationReportCard(): React.JSX.Element {
   ]
 
   const leadInvestigationColumns: GridColDef[] = [
-    { field: 'leadTitle', headerName: 'Lead', width: 200 },
+    { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
+    {
+      field: 'agents',
+      headerName: 'Ag#',
+      width: 40,
+      type: 'number',
+    },
     { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
     {
       field: 'successChance',
       headerName: 'Succ. %',
-      width: 100,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{str(params.row.successChance)}</span>
-      ),
-    },
-    {
-      field: 'agents',
-      headerName: 'Agents',
       width: 80,
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{params.row.agents}</span>
+        <span>{str(params.row.successChance)}</span>
       ),
     },
   ]
@@ -108,7 +106,7 @@ export function SituationReportCard(): React.JSX.Element {
     const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
     return {
       id: investigation.id,
-      leadTitle: lead.title,
+      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
       intel: investigation.accumulatedIntel,
       successChance,
       agents: investigation.agentIds.length,
