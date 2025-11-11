@@ -174,6 +174,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     if (includedRowIds.length === 0) {
       dispatch(clearInvestigationSelection())
     } else {
+      // With disableMultipleRowSelection, there should only be one row selected
       const [rowId] = includedRowIds
       const row = leadInvestigationRows.find((rowItem) => rowItem.rowId === rowId)
       if (row) {
@@ -203,6 +204,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         columns={leadInvestigationColumns}
         aria-label="Lead investigations data"
         checkboxSelection
+        disableMultipleRowSelection
         onRowSelectionModelChange={handleRowSelectionChange}
         rowSelectionModel={model}
         getRowId={(row: LeadInvestigationRow) => row.rowId}
