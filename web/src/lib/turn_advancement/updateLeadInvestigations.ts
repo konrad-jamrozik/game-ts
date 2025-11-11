@@ -1,7 +1,7 @@
 import type { GameState, MissionSite, MissionSiteId } from '../model/model'
 import { getLeadById } from '../collections/leads'
 import { missions } from '../collections/missions'
-import { calculateIntelDecayPercent, calculateLeadSuccessChance } from '../model/ruleset/ruleset'
+import { calculateIntelDecay, calculateLeadSuccessChance } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
 import { rollAgainstProbability } from './rolls'
 import { newEnemiesFromSpec } from '../utils/enemyUtils'
@@ -88,9 +88,8 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
       } else {
         // Investigation continues: apply intel changes
         // Apply intel decay (before accumulation)
-        const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-        const decayedIntel = floor((investigation.accumulatedIntel * decayBps) / 10_000)
-        investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - decayedIntel)
+        const intelDecay = calculateIntelDecay(investigation.accumulatedIntel)
+        investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
 
         // Accumulate new intel from assigned agents (same formula as espionage)
         let intelGathered = 0
@@ -108,7 +107,7 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
           accumulatedIntel: investigation.accumulatedIntel,
           successChance,
           intelGathered,
-          decayedIntel,
+          intelDecay,
         })
       }
     }

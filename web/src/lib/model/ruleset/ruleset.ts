@@ -7,7 +7,7 @@ import {
   MAX_INTEL_DECAY,
   SUPPRESSION_DECAY_PCT,
 } from './constants'
-import { div, floor } from '../../utils/mathUtils'
+import { div, floor, ceil } from '../../utils/mathUtils'
 import type { GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { type Bps, bps } from '../bps'
@@ -117,7 +117,19 @@ export function getPanicNewBalance(gameState: GameState): Bps {
  */
 export function calculateIntelDecayPercent(accumulatedIntel: number): number {
   const decayBps = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
-  return decayBps // KJA should return Bps, and name shouldn't have percent in it
+  return decayBps // KJA should return Bps type, and name shouldn't have percent in it
+}
+
+/**
+ * Calculates intel decay amount based on accumulated intel.
+ * Formula: ceil((accumulatedIntel * decayPercent) / 10_000)
+ *
+ * @param accumulatedIntel - The accumulated intel value
+ * @returns The decay amount (rounded up)
+ */
+export function calculateIntelDecay(accumulatedIntel: number): number {
+  const decayBps = calculateIntelDecayPercent(accumulatedIntel)
+  return ceil((accumulatedIntel * decayBps) / 10_000)
 }
 
 /**

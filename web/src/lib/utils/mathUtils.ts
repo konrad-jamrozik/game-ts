@@ -4,12 +4,23 @@ import { assertNotZero } from './assert'
 /**
  * A floor that adds a small tolerance to handle floating point precision issues before flooring.
  *
- * For example, Math,floor(100 * 0.2) would result in Math.floor(19.999999999999996) == 19, instead of 20.
+ * For example, Math.floor(100 * 0.2) would result in Math.floor(19.999999999999996) == 19, instead of 20.
  *
  */
 export function floor(value: number): number {
   // Add a small tolerance (1e-10) to handle floating point precision issues before flooring
   return Math.floor(value + 1e-10)
+}
+
+/**
+ * A ceil that subtracts a small tolerance to handle floating point precision issues before ceiling.
+ *
+ * For example, Math.ceil(100 * 0.2) might result in Math.ceil(20.000000000000004) == 21, instead of 20.
+ *
+ */
+export function ceil(value: number): number {
+  // Subtract a small tolerance (1e-10) to handle floating point precision issues before ceiling
+  return Math.ceil(value - 1e-10)
 }
 
 /**

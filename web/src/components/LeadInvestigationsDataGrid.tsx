@@ -13,7 +13,11 @@ import { agsV } from '../lib/model/agents/AgentsView'
 import { bps, type Bps } from '../lib/model/bps'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
-import { calculateIntelDecayPercent, calculateLeadSuccessChance } from '../lib/model/ruleset/ruleset'
+import {
+  calculateIntelDecay,
+  calculateIntelDecayPercent,
+  calculateLeadSuccessChance,
+} from '../lib/model/ruleset/ruleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -35,8 +39,8 @@ export type LeadInvestigationRow = {
   agents: number
   agentsInTransit: number
   startTurn: number
-  intelDecay: Bps
-  intelDecayAmount: number
+  intelDecayPercent: Bps
+  intelDecay: number
   projectedIntel: number
   intelDiff: number
   state: 'Active' | 'Successful' | 'Abandoned'
@@ -103,22 +107,22 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       headerName: 'Intel decay',
       width: 140,
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intelDecay, intelDecayAmount } = params.row
+        const { intelDecayPercent, intelDecay } = params.row
         return (
           <div
             style={{
               display: 'grid',
-              gridTemplateColumns: intelDecayAmount > 0 ? 'auto auto auto auto' : 'auto',
+              gridTemplateColumns: intelDecay > 0 ? 'auto auto auto auto' : 'auto',
               gap: '5px',
               alignItems: 'center',
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{str(intelDecay)}</span>
-            {intelDecayAmount > 0 && (
+            <span style={{ textAlign: 'right' }}>{str(intelDecayPercent)}</span>
+            {intelDecay > 0 && (
               <>
                 <span style={{ textAlign: 'center' }}>=</span>
-                <MyChip chipValue={-intelDecayAmount} />
+                <MyChip chipValue={-intelDecay} />
               </>
             )}
           </div>
@@ -157,21 +161,20 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     ).length
 
     // For Successful investigations, skip projected intel calculations
-    let intelDecay: Bps = bps(0)
-    let intelDecayAmount = 0
+    let intelDecayPercent: Bps = bps(0)
+    let intelDecay = 0
     let projectedIntel: number = investigation.accumulatedIntel
     let intelDiff = 0
 
     if (investigation.state === 'Active') {
-      // Calculate intel decay (reusing logic from updateLeadInvestigations)
+      // Calculate intel decay (using shared helper function)
+      intelDecay = calculateIntelDecay(investigation.accumulatedIntel)
       const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-      // KJA need to dedup this decay formula
-      intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
-      intelDecay = bps(decayBps)
+      intelDecayPercent = bps(decayBps)
 
       // Calculate projected intel (reusing logic from updateLeadInvestigations)
       // Apply decay first
-      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
+      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
       // Then accumulate new intel from assigned agents
       const investigatingAgents = agsV(agents)
         .withIds(investigation.agentIds)
@@ -199,8 +202,8 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       agents: activeAgents,
       agentsInTransit,
       startTurn: investigation.startTurn,
+      intelDecayPercent,
       intelDecay,
-      intelDecayAmount,
       projectedIntel,
       intelDiff,
       state: rowState,
