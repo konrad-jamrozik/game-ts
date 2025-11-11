@@ -183,7 +183,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     money: 1000,
     intel: 500,
     funding: 20,
-    leadInvestigationCounts: { 'lead-red-dawn-profile': 1 },
+    leadInvestigationCounts: {},
   }
 
   const missionSiteId: MissionSiteId = 'mission-site-000'
