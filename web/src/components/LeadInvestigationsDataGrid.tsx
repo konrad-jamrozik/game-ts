@@ -2,6 +2,7 @@ import {
   type GridColDef,
   type GridRenderCellParams,
   type GridRowId,
+  type GridRowParams,
   type GridRowSelectionModel,
   createRowSelectionManager,
 } from '@mui/x-data-grid'
@@ -37,6 +38,7 @@ export type LeadInvestigationRow = {
   intelDecayAmount: number
   projectedIntel: number
   intelDiff: number
+  state: 'Active' | 'Successful'
 }
 
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
@@ -66,9 +68,12 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       field: 'successChance',
       headerName: 'Succ. %',
       width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{str(params.row.successChance)}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
+        if (params.row.state === 'Successful') {
+          return <MyChip chipValue="Done" />
+        }
+        return <span>{str(params.row.successChance)}</span>
+      },
     },
     {
       field: 'intelDecay',
@@ -113,8 +118,9 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     },
   ]
 
-  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map(
-    (investigation, index) => {
+  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations)
+    .filter((investigation) => investigation.state === 'Active' || investigation.state === 'Successful')
+    .map((investigation, index) => {
       const lead = getLeadById(investigation.leadId)
       const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
 
@@ -128,25 +134,37 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
       ).length
 
-      // Calculate intel decay (reusing logic from updateLeadInvestigations)
-      const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-      const intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
+      // For Successful investigations, skip projected intel calculations
+      let intelDecay: Bps = bps(0)
+      let intelDecayAmount = 0
+      let projectedIntel: number = investigation.accumulatedIntel
+      let intelDiff = 0
 
-      // Calculate projected intel (reusing logic from updateLeadInvestigations)
-      // Apply decay first
-      let projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
-      // Then accumulate new intel from assigned agents
-      const investigatingAgents = agsV(agents)
-        .withIds(investigation.agentIds)
-        .toAgentArray()
-        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-      for (const agent of investigatingAgents) {
-        const effectiveSkill = agent.skill - agent.exhaustion
-        projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      if (investigation.state === 'Active') {
+        // Calculate intel decay (reusing logic from updateLeadInvestigations)
+        const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
+        // KJA need to dedup this decay formula
+        intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
+        intelDecay = bps(decayBps)
+
+        // Calculate projected intel (reusing logic from updateLeadInvestigations)
+        // Apply decay first
+        projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
+        // Then accumulate new intel from assigned agents
+        const investigatingAgents = agsV(agents)
+          .withIds(investigation.agentIds)
+          .toAgentArray()
+          .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+        for (const agent of investigatingAgents) {
+          const effectiveSkill = agent.skill - agent.exhaustion
+          projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+        }
+
+        // Calculate diff for chip display
+        intelDiff = projectedIntel - investigation.accumulatedIntel
       }
 
-      // Calculate diff for chip display
-      const intelDiff = projectedIntel - investigation.accumulatedIntel
+      const rowState: 'Active' | 'Successful' = investigation.state === 'Active' ? 'Active' : 'Successful'
 
       return {
         id: investigation.id,
@@ -157,13 +175,13 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         agents: activeAgents,
         agentsInTransit,
         turns: investigation.turnsInvestigated,
-        intelDecay: bps(decayBps),
+        intelDecay,
         intelDecayAmount,
         projectedIntel,
         intelDiff,
+        state: rowState,
       }
-    },
-  )
+    })
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     // KJA need to review this function
@@ -177,10 +195,14 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       // With disableMultipleRowSelection, there should only be one row selected
       const [rowId] = includedRowIds
       const row = leadInvestigationRows.find((rowItem) => rowItem.rowId === rowId)
-      if (row) {
+      if (row && row.state === 'Active') {
+        // Only allow selection of Active investigations
         // Clear lead selection when investigation is selected
         dispatch(clearLeadSelection())
         dispatch(setInvestigationSelection(row.id))
+      } else {
+        // If trying to select a Successful investigation, clear selection
+        dispatch(clearInvestigationSelection())
       }
     }
   }
@@ -208,6 +230,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         onRowSelectionModelChange={handleRowSelectionChange}
         rowSelectionModel={model}
         getRowId={(row: LeadInvestigationRow) => row.rowId}
+        isRowSelectable={(params: GridRowParams<LeadInvestigationRow>) => params.row.state === 'Active'}
       />
     </ExpandableCard>
   )

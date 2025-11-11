@@ -23,6 +23,8 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
     if (investigation === undefined) {
       // KJA these undefined checks are sus; instead should archive the leads, like missions
       // Skip if investigation was removed
+    } else if (investigation.state !== 'Active') {
+      // Skip investigations that are not Active (Abandoned or Successful)
     } else {
       // KJA reason to introduce leadsV
       const lead = getLeadById(investigation.leadId)
@@ -64,9 +66,9 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
           createdMissionSites.push(newMissionSite)
         }
 
-        // Remove investigation from leadInvestigations
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete state.leadInvestigations[investigationId]
+        investigation.state = 'Successful'
+        // Clear agent assignments (agents return to Available/Standby)
+        investigation.agentIds = []
 
         // Update agent assignments (agents return to Available/Standby)
         for (const agent of investigatingAgents) {

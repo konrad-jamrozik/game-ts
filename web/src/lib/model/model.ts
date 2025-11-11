@@ -125,12 +125,15 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
+export type LeadInvestigationState = 'Active' | 'Abandoned' | 'Successful'
+
 export type LeadInvestigation = {
   id: LeadInvestigationId // unique investigation ID
   leadId: string
   accumulatedIntel: number
   agentIds: string[] // agents currently investigating this lead
   turnsInvestigated: number // how long investigation has been ongoing
+  state: LeadInvestigationState
 }
 
 export type GameState = {

@@ -60,11 +60,9 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
         const investigation = state.leadInvestigations[investigationId]
         if (investigation !== undefined) {
           investigation.agentIds = investigation.agentIds.filter((id) => id !== agent.id)
-          // If all agents are recalled, remove the investigation entirely
+          // If all agents are recalled, mark investigation as Abandoned
           if (investigation.agentIds.length === 0) {
-            // KJA why eslint disable on delete?
-            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-            delete state.leadInvestigations[investigationId]
+            investigation.state = 'Abandoned'
           }
         }
       }

@@ -16,6 +16,7 @@ export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds
       accumulatedIntel: 0,
       agentIds,
       turnsInvestigated: 0,
+      state: 'Active',
     }
 
     state.leadInvestigations[investigationId] = newInvestigation
@@ -79,18 +80,16 @@ export const recallAgentsFromInvestigation = asPlayerAction<string[]>((state: Ga
     }
   }
 
-  // Remove agents from investigations and delete investigations if all agents recalled
+  // Remove agents from investigations and mark as Abandoned if all agents recalled
   for (const investigationId of investigationsToUpdate) {
     const investigation = state.leadInvestigations[investigationId]
     if (investigation !== undefined) {
       // Remove recalled agents from investigation
       investigation.agentIds = investigation.agentIds.filter((agentId) => !agentIdsToRecall.includes(agentId))
 
-      // If all agents are recalled, remove the investigation entirely
+      // If all agents are recalled, mark investigation as Abandoned
       if (investigation.agentIds.length === 0) {
-        // KJA duplicate of lead investigation deletion logic?
-        // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
-        delete state.leadInvestigations[investigationId]
+        investigation.state = 'Abandoned'
       }
     }
   }

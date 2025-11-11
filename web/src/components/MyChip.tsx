@@ -66,7 +66,7 @@ function determineChipColor(
   const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
 
   if (!isNumericLabel) {
-    if (chipLabel.includes('Success')) {
+    if (chipLabel.includes('Success') || chipLabel.includes('Done')) {
       return 'success'
     }
     if (chipLabel.includes('Retreated')) {
