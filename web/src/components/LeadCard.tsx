@@ -21,10 +21,16 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const theme = useTheme()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
+  const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
   const lead = getLeadById(leadId)
 
   const selected = selectedLeadId === lead.id && displayMode === 'normal'
-  const disabled = displayMode === 'repeated' || (!lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0)
+  const hasActiveInvestigation = Object.values(leadInvestigations).some(
+    (investigation) => investigation.leadId === lead.id,
+  )
+  const disabled =
+    displayMode === 'repeated' ||
+    (!lead.repeatable && ((leadInvestigationCounts[lead.id] ?? 0) > 0 || hasActiveInvestigation))
 
   function handleClick(): void {
     if (!disabled) {
