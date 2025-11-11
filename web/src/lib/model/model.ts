@@ -132,7 +132,7 @@ export type LeadInvestigation = {
   leadId: string
   accumulatedIntel: number
   agentIds: string[] // agents currently investigating this lead
-  turnsInvestigated: number // how long investigation has been ongoing
+  startTurn: number // turn when investigation started
   state: LeadInvestigationState
 }
 

@@ -15,7 +15,7 @@ export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds
       leadId,
       accumulatedIntel: 0,
       agentIds,
-      turnsInvestigated: 0,
+      startTurn: state.turn,
       state: 'Active',
     }
 

@@ -33,7 +33,7 @@ export type LeadInvestigationRow = {
   successChance: Bps
   agents: number
   agentsInTransit: number
-  turns: number
+  startTurn: number
   intelDecay: Bps
   intelDecayAmount: number
   projectedIntel: number
@@ -174,7 +174,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         successChance,
         agents: activeAgents,
         agentsInTransit,
-        turns: investigation.turnsInvestigated,
+        startTurn: investigation.startTurn,
         intelDecay,
         intelDecayAmount,
         projectedIntel,

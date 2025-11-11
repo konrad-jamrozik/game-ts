@@ -100,9 +100,6 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
         }
         investigation.accumulatedIntel += intelGathered
 
-        // Increment turns investigated
-        investigation.turnsInvestigated += 1
-
         // Create report
         reports.push({
           investigationId,
