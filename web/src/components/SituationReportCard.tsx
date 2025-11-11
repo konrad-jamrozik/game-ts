@@ -82,6 +82,40 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
+  const leadInvestigationColumns: GridColDef[] = [
+    { field: 'leadTitle', headerName: 'Lead', width: 200 },
+    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
+    {
+      field: 'successChance',
+      headerName: 'Succ. %',
+      width: 100,
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{str(params.row.successChance)}</span>
+      ),
+    },
+    {
+      field: 'agents',
+      headerName: 'Agents',
+      width: 80,
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{params.row.agents}</span>
+      ),
+    },
+  ]
+
+  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
+    const lead = getLeadById(investigation.leadId)
+    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+    return {
+      id: investigation.id,
+      leadTitle: lead.title,
+      intel: investigation.accumulatedIntel,
+      successChance,
+      agents: investigation.agentIds.length,
+      turns: investigation.turnsInvestigated,
+    }
+  })
+
   // Get Red Dawn faction data and check if it's discovered
   const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
   assertDefined(redDawnFaction, 'Red Dawn faction should be defined')
@@ -137,58 +171,20 @@ export function SituationReportCard(): React.JSX.Element {
       })()
     : []
 
-  const leadInvestigationColumns: GridColDef[] = [
-    { field: 'leadTitle', headerName: 'Lead', width: 200 },
-    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
-    {
-      field: 'successChance',
-      headerName: 'Succ. %',
-      width: 100,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{str(params.row.successChance)}</span>
-      ),
-    },
-    {
-      field: 'agents',
-      headerName: 'Agents',
-      width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{params.row.agents}</span>
-      ),
-    },
-  ]
-
-  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
-    const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
-    return {
-      id: investigation.id,
-      leadTitle: lead.title,
-      intel: investigation.accumulatedIntel,
-      successChance,
-      agents: investigation.agentIds.length,
-      turns: investigation.turnsInvestigated,
-    }
-  })
-
   return (
     <ExpandableCard title="Situation Report" defaultExpanded={true}>
       <Stack spacing={2}>
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
+        <Typography variant="h5">Lead Investigations</Typography>
+        <StyledDataGrid
+          rows={leadInvestigationRows}
+          columns={leadInvestigationColumns}
+          aria-label="Lead investigations data"
+        />
         {isRedDawnDiscovered && (
           <>
             <Typography variant="h5">{redDawnFaction.name} faction</Typography>
             <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
-          </>
-        )}
-        {leadInvestigationRows.length > 0 && (
-          <>
-            <Typography variant="h5">Lead Investigations</Typography>
-            <StyledDataGrid
-              rows={leadInvestigationRows}
-              columns={leadInvestigationColumns}
-              aria-label="Lead investigations data"
-            />
           </>
         )}
       </Stack>
