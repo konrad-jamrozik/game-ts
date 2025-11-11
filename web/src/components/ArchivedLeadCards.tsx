@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
+import type { LeadInvestigation } from '../lib/model/model'
 import { leads } from '../lib/collections/leads'
 import { LeadCard } from './LeadCard'
 
@@ -17,20 +18,23 @@ type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
 function getArchivedCardEntries(
   discoveredLeads: typeof leads,
   leadInvestigationCounts: Record<string, number>,
+  leadInvestigations: Record<string, LeadInvestigation>,
 ): CardEntry[] {
   const archivedCardEntries: CardEntry[] = []
 
-  // Add disabled normal cards (non-repeatable leads that have been investigated)
   for (const lead of discoveredLeads) {
-    const isDisabled = !lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0
-    if (isDisabled) {
-      archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
-    }
-  }
+    // Get all investigations for this lead
+    const investigationsForLead = Object.values(leadInvestigations).filter(
+      (investigation) => investigation.leadId === lead.id,
+    )
 
-  // Add repeated cards for repeatable leads that have been investigated
-  for (const lead of discoveredLeads) {
-    if (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
+    const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+
+    if (!lead.repeatable && hasSuccessfulInvestigation) {
+      // Non-repeatable leads with successful investigations go to archived
+      archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
+    } else if (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
+      // Repeatable leads that have been investigated show as repeated
       archivedCardEntries.push({ leadId: lead.id, displayMode: 'repeated' })
     }
   }
@@ -44,6 +48,7 @@ function getArchivedCardEntries(
 export function ArchivedLeadCards(): React.JSX.Element {
   const [expanded, setExpanded] = React.useState(false)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
+  const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   function handleExpandClick(): void {
@@ -62,7 +67,7 @@ export function ArchivedLeadCards(): React.JSX.Element {
     ),
   )
 
-  const archivedCardEntries = getArchivedCardEntries(discoveredLeads, leadInvestigationCounts)
+  const archivedCardEntries = getArchivedCardEntries(discoveredLeads, leadInvestigationCounts, leadInvestigations)
 
   const maxWidth = '800px'
   return (

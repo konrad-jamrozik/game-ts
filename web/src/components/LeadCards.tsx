@@ -15,15 +15,12 @@ import { LeadCard } from './LeadCard'
 export function LeadCards(): React.JSX.Element {
   const [expanded, setExpanded] = React.useState(true)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
+  const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   function handleExpandClick(): void {
     setExpanded(!expanded)
   }
-
-  // KJA 0 a lead card should be disabled only if non-repeatable and there is active investigation for it
-  // If there is successful investigation for it, a non-repeatable lead should be moved to the archived leads section
-  // If there are only abandoned investigations for it, the non-repeatble lead card should be active
 
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(
@@ -41,10 +38,22 @@ export function LeadCards(): React.JSX.Element {
   type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
   const cardEntries: CardEntry[] = []
 
-  // Add normal cards for all discovered leads that are enabled (not disabled)
+  // Add normal cards for all discovered leads
   for (const lead of discoveredLeads) {
-    const isEnabled = lead.repeatable || (leadInvestigationCounts[lead.id] ?? 0) === 0
-    if (isEnabled) {
+    // Get all investigations for this lead
+    const investigationsForLead = Object.values(leadInvestigations).filter(
+      (investigation) => investigation.leadId === lead.id,
+    )
+
+    const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+
+    if (lead.repeatable) {
+      // Repeatable leads: always show in LeadCards
+      cardEntries.push({ leadId: lead.id, displayMode: 'normal' })
+    } else if (!hasSuccessfulInvestigation) {
+      // Non-repeatable leads:
+      // - Show if no investigations OR only abandoned investigations OR has active investigation (will be disabled by LeadCard)
+      // - Don't show if has successful investigation (moved to archived)
       cardEntries.push({ leadId: lead.id, displayMode: 'normal' })
     }
   }
