@@ -212,20 +212,22 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   // KJA review if I need React.useMemo. Review all places in code with it. I should not need it due to react compiler.
   const leadInvestigationRows: LeadInvestigationRow[] = React.useMemo(
     () =>
-      allInvestigationRows.filter((row) => {
-        // If investigation was completed this turn, show it in both "active" and "done" when those are selected
-        if (row.completedThisTurn && row.state === 'Successful') {
-          return showActive || showDone
-        }
-        // Otherwise filter by state
-        if (row.state === 'Active') {
-          return showActive
-        }
-        if (row.state === 'Successful') {
-          return showDone
-        }
-        return showAbandoned
-      }),
+      allInvestigationRows
+        .filter((row) => {
+          // If investigation was completed this turn, show it in both "active" and "done" when those are selected
+          if (row.completedThisTurn && row.state === 'Successful') {
+            return showActive || showDone
+          }
+          // Otherwise filter by state
+          if (row.state === 'Active') {
+            return showActive
+          }
+          if (row.state === 'Successful') {
+            return showDone
+          }
+          return showAbandoned
+        })
+        .sort((rowA, rowB) => rowB.leadInvestigationTitle.localeCompare(rowA.leadInvestigationTitle)),
     [allInvestigationRows, showActive, showDone, showAbandoned],
   )
 
