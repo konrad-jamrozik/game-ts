@@ -1,6 +1,3 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
@@ -10,9 +7,16 @@ import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
 import { fmtPct, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
-import { calculatePanicIncrease, getPanicNewBalance, decaySuppression } from '../lib/model/ruleset/ruleset'
+import {
+  calculatePanicIncrease,
+  getPanicNewBalance,
+  decaySuppression,
+  calculateLeadSuccessChance,
+} from '../lib/model/ruleset/ruleset'
 import { MyChip } from './MyChip'
 import { bps, type Bps } from '../lib/model/bps'
+import { getLeadById } from '../lib/collections/leads'
+import { ExpandableCard } from './ExpandableCard'
 
 export type SituationReportRow = {
   id: number
@@ -23,9 +27,18 @@ export type SituationReportRow = {
   reverseColor?: boolean
 }
 
+export type LeadInvestigationRow = {
+  id: string
+  leadTitle: string
+  intel: number
+  successChance: Bps
+  agents: number
+  turns: number
+}
+
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions, leadInvestigationCounts } = gameState
+  const { panic, factions, leadInvestigationCounts, leadInvestigations } = gameState
 
   const panicPercentage = str(panic)
   const panicProjected = getPanicNewBalance(gameState)
@@ -124,20 +137,61 @@ export function SituationReportCard(): React.JSX.Element {
       })()
     : []
 
+  const leadInvestigationColumns: GridColDef[] = [
+    { field: 'leadTitle', headerName: 'Lead', width: 200 },
+    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
+    {
+      field: 'successChance',
+      headerName: 'Succ. %',
+      width: 100,
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{str(params.row.successChance)}</span>
+      ),
+    },
+    {
+      field: 'agents',
+      headerName: 'Agents',
+      width: 80,
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{params.row.agents}</span>
+      ),
+    },
+  ]
+
+  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
+    const lead = getLeadById(investigation.leadId)
+    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+    return {
+      id: investigation.id,
+      leadTitle: lead.title,
+      intel: investigation.accumulatedIntel,
+      successChance,
+      agents: investigation.agentIds.length,
+      turns: investigation.turnsInvestigated,
+    }
+  })
+
   return (
-    <Card>
-      <CardHeader title="Situation Report" />
-      <CardContent>
-        <Stack spacing={2}>
-          <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
-          {isRedDawnDiscovered && (
-            <>
-              <Typography variant="h5">{redDawnFaction.name} faction</Typography>
-              <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
-            </>
-          )}
-        </Stack>
-      </CardContent>
-    </Card>
+    <ExpandableCard title="Situation Report" defaultExpanded={true}>
+      <Stack spacing={2}>
+        <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
+        {isRedDawnDiscovered && (
+          <>
+            <Typography variant="h5">{redDawnFaction.name} faction</Typography>
+            <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
+          </>
+        )}
+        {leadInvestigationRows.length > 0 && (
+          <>
+            <Typography variant="h5">Lead Investigations</Typography>
+            <StyledDataGrid
+              rows={leadInvestigationRows}
+              columns={leadInvestigationColumns}
+              aria-label="Lead investigations data"
+            />
+          </>
+        )}
+      </Stack>
+    </ExpandableCard>
   )
 }

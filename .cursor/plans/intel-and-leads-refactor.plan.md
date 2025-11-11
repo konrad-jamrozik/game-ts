@@ -230,6 +230,7 @@ remove old `investigateLead` logic
 - [x] Create assignAgentsToLead reducer and update agent assignment handling
 - [x] Integrate lead investigation updates into evaluateTurn.ts turn advancement flow
 - [x] Update PlayerActions.tsx: Replace instant investigate with assign agents to lead
-- [x] Update LeadCards.tsx: Display intel, success chance, assigned agents, enemy estimates
+- [x] Update LeadCards.tsx
+- [ ] Add lead investigations data grid to SituationsReportCard.tsx
 - [x] Create state migration logic for existing intel and leadInvestigationCounts
 - [x] Update and add tests for new intel and lead investigation mechanics
