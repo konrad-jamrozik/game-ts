@@ -126,7 +126,7 @@ export type Faction = {
 }
 
 export type LeadInvestigation = {
-  id: string // unique investigation ID
+  id: LeadInvestigationId // unique investigation ID
   leadId: string
   accumulatedIntel: number
   agentIds: string[] // agents currently investigating this lead

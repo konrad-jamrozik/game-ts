@@ -30,6 +30,34 @@ export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds
   },
 )
 
+export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: string[] }>(
+  (state: GameState, action) => {
+    const { investigationId, agentIds } = action.payload
+
+    const investigation = state.leadInvestigations[investigationId]
+    if (investigation === undefined) {
+      throw new Error(`Investigation not found: ${investigationId}`)
+    }
+
+    // Add agents to investigation (throw error on duplicates)
+    for (const agentId of agentIds) {
+      if (investigation.agentIds.includes(agentId)) {
+        // KJA use assert
+        throw new Error(`Agent ${agentId} is already assigned to investigation ${investigationId}`)
+      }
+      investigation.agentIds.push(agentId)
+    }
+
+    // Assign agents to investigation (they enter InTransit state)
+    for (const agent of state.agents) {
+      if (agentIds.includes(agent.id)) {
+        agent.assignment = investigationId
+        agent.state = 'InTransit'
+      }
+    }
+  },
+)
+
 // KJA where is this used?
 export const recallAgentsFromInvestigation = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToRecall = action.payload

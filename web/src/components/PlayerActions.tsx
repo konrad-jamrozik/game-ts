@@ -14,10 +14,16 @@ import {
   deployAgentsToMission,
   hireAgent,
   createLeadInvestigation,
+  addAgentsToInvestigation,
   recallAgents,
   sackAgents,
 } from '../lib/slices/gameStateSlice'
-import { clearAgentSelection, clearLeadSelection, clearMissionSelection } from '../lib/slices/selectionSlice'
+import {
+  clearAgentSelection,
+  clearLeadSelection,
+  clearInvestigationSelection,
+  clearMissionSelection,
+} from '../lib/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../lib/utils/formatUtils'
 import { validateMissionSiteDeployment } from '../lib/utils/MissionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
@@ -28,6 +34,7 @@ export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
+  const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
 
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -109,6 +116,38 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleInvestigateLead(): void {
+    // Check if both lead and investigation are selected
+    if (selectedLeadId !== undefined && selectedInvestigationId !== undefined) {
+      setAlertMessage('Select a lead or investigation, but not both')
+      setShowAlert(true)
+      return
+    }
+
+    // Handle investigation selection (add agents to existing investigation)
+    if (selectedInvestigationId !== undefined) {
+      if (selectedAgentIds.length === 0) {
+        setAlertMessage('No agents selected!')
+        setShowAlert(true)
+        return
+      }
+
+      // Validate that all selected agents are available
+      const validationResult = agents.validateAvailable(selectedAgentIds)
+
+      if (!validationResult.isValid) {
+        setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
+        setShowAlert(true)
+        return
+      }
+
+      setShowAlert(false) // Hide alert on successful action
+      dispatch(addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds }))
+      dispatch(clearInvestigationSelection())
+      dispatch(clearAgentSelection())
+      return
+    }
+
+    // Handle lead selection (create new investigation)
     if (selectedLeadId === undefined) {
       setAlertMessage('No lead selected!')
       setShowAlert(true)
@@ -216,7 +255,9 @@ export function PlayerActions(): React.JSX.Element {
           <Button
             variant="contained"
             onClick={handleInvestigateLead}
-            disabled={selectedLeadId === undefined || selectedAgentIds.length === 0}
+            disabled={
+              (selectedLeadId === undefined && selectedInvestigationId === undefined) || selectedAgentIds.length === 0
+            }
           >
             Investigate lead
           </Button>

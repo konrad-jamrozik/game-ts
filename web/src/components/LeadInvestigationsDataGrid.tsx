@@ -1,19 +1,32 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import {
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridRowId,
+  type GridRowSelectionModel,
+  createRowSelectionManager,
+} from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppSelector } from '../app/hooks'
-import { calculateIntelDecayPercent, calculateLeadSuccessChance } from '../lib/model/ruleset/ruleset'
-import { StyledDataGrid } from './StyledDataGrid'
-import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
-import { MyChip } from './MyChip'
-import { bps, type Bps } from '../lib/model/bps'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
-import { ExpandableCard } from './ExpandableCard'
-import { floor } from '../lib/utils/mathUtils'
-import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import { agsV } from '../lib/model/agents/AgentsView'
+import { bps, type Bps } from '../lib/model/bps'
+import type { LeadInvestigationId } from '../lib/model/model'
+import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
+import { calculateIntelDecayPercent, calculateLeadSuccessChance } from '../lib/model/ruleset/ruleset'
+import {
+  clearInvestigationSelection,
+  clearLeadSelection,
+  setInvestigationSelection,
+} from '../lib/slices/selectionSlice'
+import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
+import { floor } from '../lib/utils/mathUtils'
+import { ExpandableCard } from './ExpandableCard'
+import { MyChip } from './MyChip'
+import { StyledDataGrid } from './StyledDataGrid'
 
 export type LeadInvestigationRow = {
-  id: string
+  id: LeadInvestigationId
+  rowId: number
   leadInvestigationTitle: string
   intel: number
   successChance: Bps
@@ -27,10 +40,12 @@ export type LeadInvestigationRow = {
 }
 
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { leadInvestigations, agents } = gameState
+  const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
 
-  const leadInvestigationColumns: GridColDef[] = [
+  const leadInvestigationColumns: GridColDef<LeadInvestigationRow>[] = [
     { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
     {
       field: 'agents',
@@ -98,54 +113,88 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     },
   ]
 
-  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
-    const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map(
+    (investigation, index) => {
+      const lead = getLeadById(investigation.leadId)
+      const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
 
-    // Count agents actively working on this investigation (OnAssignment state)
-    const activeAgents = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
-    ).length
+      // Count agents actively working on this investigation (OnAssignment state)
+      const activeAgents = agents.filter(
+        (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+      ).length
 
-    // Count agents in transit to this investigation
-    const agentsInTransit = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
-    ).length
+      // Count agents in transit to this investigation
+      const agentsInTransit = agents.filter(
+        (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
+      ).length
 
-    // Calculate intel decay (reusing logic from updateLeadInvestigations)
-    const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-    const intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
+      // Calculate intel decay (reusing logic from updateLeadInvestigations)
+      const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
+      const intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
 
-    // Calculate projected intel (reusing logic from updateLeadInvestigations)
-    // Apply decay first
-    let projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
-    // Then accumulate new intel from assigned agents
-    const investigatingAgents = agsV(agents)
-      .withIds(investigation.agentIds)
-      .toAgentArray()
-      .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-    for (const agent of investigatingAgents) {
-      const effectiveSkill = agent.skill - agent.exhaustion
-      projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      // Calculate projected intel (reusing logic from updateLeadInvestigations)
+      // Apply decay first
+      let projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
+      // Then accumulate new intel from assigned agents
+      const investigatingAgents = agsV(agents)
+        .withIds(investigation.agentIds)
+        .toAgentArray()
+        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+      for (const agent of investigatingAgents) {
+        const effectiveSkill = agent.skill - agent.exhaustion
+        projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      }
+
+      // Calculate diff for chip display
+      const intelDiff = projectedIntel - investigation.accumulatedIntel
+
+      return {
+        id: investigation.id,
+        rowId: index,
+        leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
+        intel: investigation.accumulatedIntel,
+        successChance,
+        agents: activeAgents,
+        agentsInTransit,
+        turns: investigation.turnsInvestigated,
+        intelDecay: bps(decayBps),
+        intelDecayAmount,
+        projectedIntel,
+        intelDiff,
+      }
+    },
+  )
+
+  function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
+    // KJA need to review this function
+    const mgr = createRowSelectionManager(newSelectionModel)
+    const existingRowIds = leadInvestigationRows.map((row) => row.rowId)
+    const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
+
+    if (includedRowIds.length === 0) {
+      dispatch(clearInvestigationSelection())
+    } else {
+      const [rowId] = includedRowIds
+      const row = leadInvestigationRows.find((rowItem) => rowItem.rowId === rowId)
+      if (row) {
+        // Clear lead selection when investigation is selected
+        dispatch(clearLeadSelection())
+        dispatch(setInvestigationSelection(row.id))
+      }
     }
+  }
 
-    // Calculate diff for chip display
-    const intelDiff = projectedIntel - investigation.accumulatedIntel
-
-    return {
-      id: investigation.id,
-      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
-      intel: investigation.accumulatedIntel,
-      successChance,
-      agents: activeAgents,
-      agentsInTransit,
-      turns: investigation.turnsInvestigated,
-      intelDecay: bps(decayBps),
-      intelDecayAmount,
-      projectedIntel,
-      intelDiff,
+  // Convert selected investigation ID back to row ID for DataGrid
+  const rowIds: GridRowId[] = []
+  if (selectedInvestigationId !== undefined) {
+    const row = leadInvestigationRows.find((rowCandidate) => rowCandidate.id === selectedInvestigationId)
+    if (row) {
+      rowIds.push(row.rowId)
     }
-  })
+  }
+
+  const idsSet = new Set<GridRowId>(rowIds)
+  const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
   return (
     <ExpandableCard title={`Lead Investigations (${leadInvestigationRows.length})`} defaultExpanded={true}>
@@ -153,6 +202,10 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         rows={leadInvestigationRows}
         columns={leadInvestigationColumns}
         aria-label="Lead investigations data"
+        checkboxSelection
+        onRowSelectionModelChange={handleRowSelectionChange}
+        rowSelectionModel={model}
+        getRowId={(row: LeadInvestigationRow) => row.rowId}
       />
     </ExpandableCard>
   )

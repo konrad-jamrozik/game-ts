@@ -8,7 +8,7 @@ import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
-import { setLeadSelection } from '../lib/slices/selectionSlice'
+import { setLeadSelection, clearInvestigationSelection } from '../lib/slices/selectionSlice'
 import { LabeledValue } from './LabeledValue'
 
 export type LeadCardProps = {
@@ -34,6 +34,8 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
 
   function handleClick(): void {
     if (!disabled) {
+      // Clear investigation selection when lead is selected
+      dispatch(clearInvestigationSelection())
       dispatch(setLeadSelection(lead.id))
     }
   }
