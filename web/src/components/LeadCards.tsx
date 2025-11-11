@@ -21,6 +21,10 @@ export function LeadCards(): React.JSX.Element {
     setExpanded(!expanded)
   }
 
+  // KJA 0 a lead card should be disabled only if non-repeatable and there is active investigation for it
+  // If there is successful investigation for it, a non-repeatable lead should be moved to the archived leads section
+  // If there are only abandoned investigations for it, the non-repeatble lead card should be active
+
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(
     missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),

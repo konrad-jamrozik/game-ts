@@ -72,7 +72,7 @@ function determineChipColor(
     if (chipLabel.includes('Retreated')) {
       return 'error'
     }
-    if (chipLabel.includes('All agents lost')) {
+    if (chipLabel.includes('All agents lost') || chipLabel.includes('Failed')) {
       return 'error'
     }
     return 'default'

@@ -22,6 +22,7 @@ import {
 import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
 import { floor } from '../lib/utils/mathUtils'
 import { ExpandableCard } from './ExpandableCard'
+import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'
 import { StyledDataGrid } from './StyledDataGrid'
 
@@ -38,14 +39,33 @@ export type LeadInvestigationRow = {
   intelDecayAmount: number
   projectedIntel: number
   intelDiff: number
-  state: 'Active' | 'Successful'
+  state: 'Active' | 'Successful' | 'Abandoned'
+  completedThisTurn: boolean
 }
 
+// eslint-disable-next-line max-lines-per-function
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { leadInvestigations, agents } = gameState
+  const { leadInvestigations, agents, turnStartReport } = gameState
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
+  const [showActive, setShowActive] = React.useState(true)
+  const [showDone, setShowDone] = React.useState(false)
+  const [showAbandoned, setShowAbandoned] = React.useState(false)
+
+  // Get IDs of investigations completed this turn
+  // KJA review useMemo usage. I should not need it due to react compiler.
+  const completedThisTurnIds = React.useMemo(() => {
+    const completedIds = new Set<string>()
+    if (turnStartReport?.leadInvestigations) {
+      for (const report of turnStartReport.leadInvestigations) {
+        if (report.completed) {
+          completedIds.add(report.investigationId)
+        }
+      }
+    }
+    return completedIds
+  }, [turnStartReport])
 
   const leadInvestigationColumns: GridColDef<LeadInvestigationRow>[] = [
     { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
@@ -71,6 +91,9 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         if (params.row.state === 'Successful') {
           return <MyChip chipValue="Done" />
+        }
+        if (params.row.state === 'Abandoned') {
+          return <MyChip chipValue="Failed" reverseColor={true} />
         }
         return <span>{str(params.row.successChance)}</span>
       },
@@ -118,70 +141,93 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     },
   ]
 
-  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations)
-    .filter((investigation) => investigation.state === 'Active' || investigation.state === 'Successful')
-    .map((investigation, index) => {
-      const lead = getLeadById(investigation.leadId)
-      const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+  // Create all rows from investigations
+  const allInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation, index) => {
+    const lead = getLeadById(investigation.leadId)
+    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
 
-      // Count agents actively working on this investigation (OnAssignment state)
-      const activeAgents = agents.filter(
-        (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
-      ).length
+    // Count agents actively working on this investigation (OnAssignment state)
+    const activeAgents = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+    ).length
 
-      // Count agents in transit to this investigation
-      const agentsInTransit = agents.filter(
-        (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
-      ).length
+    // Count agents in transit to this investigation
+    const agentsInTransit = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
+    ).length
 
-      // For Successful investigations, skip projected intel calculations
-      let intelDecay: Bps = bps(0)
-      let intelDecayAmount = 0
-      let projectedIntel: number = investigation.accumulatedIntel
-      let intelDiff = 0
+    // For Successful investigations, skip projected intel calculations
+    let intelDecay: Bps = bps(0)
+    let intelDecayAmount = 0
+    let projectedIntel: number = investigation.accumulatedIntel
+    let intelDiff = 0
 
-      if (investigation.state === 'Active') {
-        // Calculate intel decay (reusing logic from updateLeadInvestigations)
-        const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-        // KJA need to dedup this decay formula
-        intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
-        intelDecay = bps(decayBps)
+    if (investigation.state === 'Active') {
+      // Calculate intel decay (reusing logic from updateLeadInvestigations)
+      const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
+      // KJA need to dedup this decay formula
+      intelDecayAmount = floor((investigation.accumulatedIntel * decayBps) / 10_000)
+      intelDecay = bps(decayBps)
 
-        // Calculate projected intel (reusing logic from updateLeadInvestigations)
-        // Apply decay first
-        projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
-        // Then accumulate new intel from assigned agents
-        const investigatingAgents = agsV(agents)
-          .withIds(investigation.agentIds)
-          .toAgentArray()
-          .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-        for (const agent of investigatingAgents) {
-          const effectiveSkill = agent.skill - agent.exhaustion
-          projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      // Calculate projected intel (reusing logic from updateLeadInvestigations)
+      // Apply decay first
+      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecayAmount)
+      // Then accumulate new intel from assigned agents
+      const investigatingAgents = agsV(agents)
+        .withIds(investigation.agentIds)
+        .toAgentArray()
+        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+      for (const agent of investigatingAgents) {
+        const effectiveSkill = agent.skill - agent.exhaustion
+        projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+      }
+
+      // Calculate diff for chip display
+      intelDiff = projectedIntel - investigation.accumulatedIntel
+    }
+
+    const rowState: 'Active' | 'Successful' | 'Abandoned' =
+      investigation.state === 'Active' ? 'Active' : investigation.state === 'Successful' ? 'Successful' : 'Abandoned'
+    const completedThisTurn = completedThisTurnIds.has(investigation.id)
+
+    return {
+      id: investigation.id,
+      rowId: index,
+      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
+      intel: investigation.accumulatedIntel,
+      successChance,
+      agents: activeAgents,
+      agentsInTransit,
+      startTurn: investigation.startTurn,
+      intelDecay,
+      intelDecayAmount,
+      projectedIntel,
+      intelDiff,
+      state: rowState,
+      completedThisTurn,
+    }
+  })
+
+  // Filter rows based on checkbox states
+  // KJA review if I need React.useMemo. Review all places in code with it. I should not need it due to react compiler.
+  const leadInvestigationRows: LeadInvestigationRow[] = React.useMemo(
+    () =>
+      allInvestigationRows.filter((row) => {
+        // If investigation was completed this turn, show it in both "active" and "done" when those are selected
+        if (row.completedThisTurn && row.state === 'Successful') {
+          return showActive || showDone
         }
-
-        // Calculate diff for chip display
-        intelDiff = projectedIntel - investigation.accumulatedIntel
-      }
-
-      const rowState: 'Active' | 'Successful' = investigation.state === 'Active' ? 'Active' : 'Successful'
-
-      return {
-        id: investigation.id,
-        rowId: index,
-        leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
-        intel: investigation.accumulatedIntel,
-        successChance,
-        agents: activeAgents,
-        agentsInTransit,
-        startTurn: investigation.startTurn,
-        intelDecay,
-        intelDecayAmount,
-        projectedIntel,
-        intelDiff,
-        state: rowState,
-      }
-    })
+        // Otherwise filter by state
+        if (row.state === 'Active') {
+          return showActive
+        }
+        if (row.state === 'Successful') {
+          return showDone
+        }
+        return showAbandoned
+      }),
+    [allInvestigationRows, showActive, showDone, showAbandoned],
+  )
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     // KJA need to review this function
@@ -231,6 +277,18 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         rowSelectionModel={model}
         getRowId={(row: LeadInvestigationRow) => row.rowId}
         isRowSelectable={(params: GridRowParams<LeadInvestigationRow>) => params.row.state === 'Active'}
+        slots={{ toolbar: LeadInvestigationsToolbar }}
+        slotProps={{
+          toolbar: {
+            showActive,
+            onToggleActive: setShowActive,
+            showDone,
+            onToggleDone: setShowDone,
+            showAbandoned,
+            onToggleAbandoned: setShowAbandoned,
+          },
+        }}
+        showToolbar
       />
     </ExpandableCard>
   )
