@@ -1,22 +1,17 @@
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtNoPrefix, fmtPct, str } from '../lib/utils/formatUtils'
+import { fmtPct, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
-import {
-  calculatePanicIncrease,
-  getPanicNewBalance,
-  decaySuppression,
-  calculateLeadSuccessChance,
-} from '../lib/model/ruleset/ruleset'
+import { calculatePanicIncrease, getPanicNewBalance, decaySuppression } from '../lib/model/ruleset/ruleset'
 import { MyChip } from './MyChip'
 import { bps, type Bps } from '../lib/model/bps'
-import { getLeadById } from '../lib/collections/leads'
 import { ExpandableCard } from './ExpandableCard'
+import { Typography } from '@mui/material'
+import { Fragment } from 'react'
 
 export type SituationReportRow = {
   id: number
@@ -27,19 +22,9 @@ export type SituationReportRow = {
   reverseColor?: boolean
 }
 
-export type LeadInvestigationRow = {
-  id: string
-  leadInvestigationTitle: string
-  intel: number
-  successChance: Bps
-  agents: number
-  agentsInTransit: number
-  turns: number
-}
-
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions, leadInvestigationCounts, leadInvestigations, agents } = gameState
+  const { panic, factions, leadInvestigationCounts } = gameState
 
   const panicPercentage = str(panic)
   const panicProjected = getPanicNewBalance(gameState)
@@ -82,58 +67,6 @@ export function SituationReportCard(): React.JSX.Element {
       reverseColor: true,
     },
   ]
-
-  const leadInvestigationColumns: GridColDef[] = [
-    { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
-    {
-      field: 'agents',
-      headerName: 'Ag#',
-      width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { agents: activeAgentCount, agentsInTransit } = params.row
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{activeAgentCount}</span>
-            {agentsInTransit > 0 && <MyChip chipValue={`+${agentsInTransit}`} />}
-          </div>
-        )
-      },
-    },
-    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
-    {
-      field: 'successChance',
-      headerName: 'Succ. %',
-      width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{str(params.row.successChance)}</span>
-      ),
-    },
-  ]
-
-  const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
-    const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
-
-    // Count agents actively working on this investigation (OnAssignment state)
-    const activeAgents = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
-    ).length
-
-    // Count agents in transit to this investigation
-    const agentsInTransit = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
-    ).length
-
-    return {
-      id: investigation.id,
-      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
-      intel: investigation.accumulatedIntel,
-      successChance,
-      agents: activeAgents,
-      agentsInTransit,
-      turns: investigation.turnsInvestigated,
-    }
-  })
 
   // Get Red Dawn faction data and check if it's discovered
   const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
@@ -194,17 +127,11 @@ export function SituationReportCard(): React.JSX.Element {
     <ExpandableCard title="Situation Report" defaultExpanded={true}>
       <Stack spacing={2}>
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
-        <Typography variant="h5">Lead Investigations</Typography>
-        <StyledDataGrid
-          rows={leadInvestigationRows}
-          columns={leadInvestigationColumns}
-          aria-label="Lead investigations data"
-        />
         {isRedDawnDiscovered && (
-          <>
+          <Fragment>
             <Typography variant="h5">{redDawnFaction.name} faction</Typography>
             <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
-          </>
+          </Fragment>
         )}
       </Stack>
     </ExpandableCard>

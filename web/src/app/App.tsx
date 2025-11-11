@@ -6,6 +6,7 @@ import { ArchivedMissionCards } from '../components/ArchivedMissionCards'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { LeadCards } from '../components/LeadCards'
+import { LeadInvestigationsDataGrid } from '../components/LeadInvestigationsDataGrid'
 import { MissionCards } from '../components/MissionCards'
 import { PlayerActions } from '../components/PlayerActions'
 import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
@@ -37,6 +38,7 @@ function App(): React.JSX.Element {
           <AgentsDataGrid />
           <MissionCards />
           <LeadCards />
+          <LeadInvestigationsDataGrid />
           <ArchivedMissionCards />
           <ArchivedLeadCards />
         </Stack>
