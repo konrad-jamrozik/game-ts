@@ -36,9 +36,9 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2}>
           <AgentsDataGrid />
+          <LeadInvestigationsDataGrid />
           <MissionCards />
           <LeadCards />
-          <LeadInvestigationsDataGrid />
           <ArchivedMissionCards />
           <ArchivedLeadCards />
         </Stack>
