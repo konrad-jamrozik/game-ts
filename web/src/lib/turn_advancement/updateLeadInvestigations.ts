@@ -14,6 +14,7 @@ import type { LeadInvestigationReport } from '../model/turnReportModel'
  * Returns reports for each investigation updated
  */
 export function updateLeadInvestigations(state: GameState): LeadInvestigationReport[] {
+  // KJA this function is too complex, need to break it down
   const reports: LeadInvestigationReport[] = []
   const investigationIds = Object.keys(state.leadInvestigations)
 
@@ -32,27 +33,11 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
         .toAgentArray()
         .filter((agent) => agent.assignment === investigationId && agent.state === 'OnAssignment')
 
-      // Apply intel decay (before accumulation)
-      const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
-      const decayedIntel = floor((investigation.accumulatedIntel * decayBps) / 10_000)
-      investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - decayedIntel)
-
-      // Accumulate new intel from assigned agents (same formula as espionage)
-      let intelGathered = 0
-      for (const agent of investigatingAgents) {
-        const effectiveSkill = agent.skill - agent.exhaustion
-        intelGathered += floor((5 * effectiveSkill) / 100) // AGENT_ESPIONAGE_INTEL = 5
-      }
-      investigation.accumulatedIntel += intelGathered
-
-      // Increment turns investigated
-      investigation.turnsInvestigated += 1
-
-      // Calculate success chance
+      // Calculate success chance BEFORE any changes to intel
       const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
       const successProbability = successChance.value / 10_000
 
-      // Roll for completion
+      // Roll for completion BEFORE any changes to intel
       const [success] = rollAgainstProbability(successProbability)
 
       if (success) {
@@ -89,7 +74,7 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
           agent.state = 'InTransit' // They'll transition to Available next turn
         }
 
-        // Create report
+        // Create report (use original accumulatedIntel before any changes)
         reports.push({
           investigationId,
           leadId: investigation.leadId,
@@ -99,7 +84,24 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
           createdMissionSites: createdMissionSites.map((site) => site.id),
         })
       } else {
-        // Investigation continues
+        // Investigation continues: apply intel changes
+        // Apply intel decay (before accumulation)
+        const decayBps = calculateIntelDecayPercent(investigation.accumulatedIntel)
+        const decayedIntel = floor((investigation.accumulatedIntel * decayBps) / 10_000)
+        investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - decayedIntel)
+
+        // Accumulate new intel from assigned agents (same formula as espionage)
+        let intelGathered = 0
+        for (const agent of investigatingAgents) {
+          const effectiveSkill = agent.skill - agent.exhaustion
+          intelGathered += floor((5 * effectiveSkill) / 100) // AGENT_ESPIONAGE_INTEL = 5
+        }
+        investigation.accumulatedIntel += intelGathered
+
+        // Increment turns investigated
+        investigation.turnsInvestigated += 1
+
+        // Create report
         reports.push({
           investigationId,
           leadId: investigation.leadId,

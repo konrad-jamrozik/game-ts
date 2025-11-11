@@ -33,12 +33,13 @@ export type LeadInvestigationRow = {
   intel: number
   successChance: Bps
   agents: number
+  agentsInTransit: number
   turns: number
 }
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { panic, factions, leadInvestigationCounts, leadInvestigations } = gameState
+  const { panic, factions, leadInvestigationCounts, leadInvestigations, agents } = gameState
 
   const panicPercentage = str(panic)
   const panicProjected = getPanicNewBalance(gameState)
@@ -87,8 +88,16 @@ export function SituationReportCard(): React.JSX.Element {
     {
       field: 'agents',
       headerName: 'Ag#',
-      width: 40,
-      type: 'number',
+      width: 80,
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
+        const { agents: activeAgentCount, agentsInTransit } = params.row
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span>{activeAgentCount}</span>
+            {agentsInTransit > 0 && <MyChip chipValue={`+${agentsInTransit}`} />}
+          </div>
+        )
+      },
     },
     { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
     {
@@ -104,12 +113,24 @@ export function SituationReportCard(): React.JSX.Element {
   const leadInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation) => {
     const lead = getLeadById(investigation.leadId)
     const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+
+    // Count agents actively working on this investigation (OnAssignment state)
+    const activeAgents = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+    ).length
+
+    // Count agents in transit to this investigation
+    const agentsInTransit = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
+    ).length
+
     return {
       id: investigation.id,
       leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
       intel: investigation.accumulatedIntel,
       successChance,
-      agents: investigation.agentIds.length,
+      agents: activeAgents,
+      agentsInTransit,
       turns: investigation.turnsInvestigated,
     }
   })

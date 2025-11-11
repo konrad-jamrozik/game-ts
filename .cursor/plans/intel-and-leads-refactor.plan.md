@@ -221,16 +221,3 @@ remove old `investigateLead` logic
 
 - Use `rollAgainstProbability` with `successChance`
 - If success, lead completes
-
-### To-dos
-
-- [x] Update data model: Add LeadInvestigation type, update GameState, Lead, and AgentAssignment types
-- [x] Update lead definitions: Add difficulty constants and enemy estimates, remove intelCost
-- [x] Create updateLeadInvestigations.ts: Implement intel accumulation, decay, and success chance calculation
-- [x] Create assignAgentsToLead reducer and update agent assignment handling
-- [x] Integrate lead investigation updates into evaluateTurn.ts turn advancement flow
-- [x] Update PlayerActions.tsx: Replace instant investigate with assign agents to lead
-- [x] Update LeadCards.tsx
-- [ ] Add lead investigations data grid to SituationsReportCard.tsx
-- [x] Create state migration logic for existing intel and leadInvestigationCounts
-- [x] Update and add tests for new intel and lead investigation mechanics

@@ -122,12 +122,12 @@ export function calculateIntelDecayPercent(accumulatedIntel: number): number {
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty constant.
- * Formula: successChance = bps(accumulatedIntel * difficultyConstant)
+ * Formula: successChance = min(bps(accumulatedIntel * difficultyConstant), 100%)
  *
  * @param accumulatedIntel - The accumulated intel value
  * @param difficultyConstant - The difficulty constant (C factor in basis points)
- * @returns The success chance (in basis points)
+ * @returns The success chance (in basis points, capped at 100%)
  */
 export function calculateLeadSuccessChance(accumulatedIntel: number, difficultyConstant: number): Bps {
-  return bps(accumulatedIntel * difficultyConstant)
+  return bps(Math.min(accumulatedIntel * difficultyConstant, 10_000))
 }
