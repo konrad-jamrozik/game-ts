@@ -90,3 +90,7 @@ KJA backlog:
     - Configure manual chunks in Vite config for better caching
     - Accept larger initial bundle size (load everything at once)
     - No dynamic imports or lazy loading needed
+
+## Dev exp
+
+- Add ESLint server MCP: https://eslint.org/docs/latest/use/mcp
