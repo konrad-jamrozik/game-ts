@@ -45,13 +45,13 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <TurnReportDisplay />
+          <AssetsDataGrid />
+          <SituationReportCard />
         </Stack>
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <AssetsDataGrid />
-          <SituationReportCard />
+          <TurnReportDisplay />
         </Stack>
       </Grid>
     </Grid>

@@ -36,10 +36,10 @@ describe(App, () => {
    * 7. Select agents "000" and "001" by clicking their checkboxes in the Agents DataGrid
    * 8. Click "Deploy" button (should show "Deploy 2 agents on mission-site-001")
    *    - Verify mission shows "Status: Deployed"
-   * 9. Click "Hire Agent" button 4 times
-   *    - This hires 4 agents, spending 200 money total
-   * 10. Click "Advance turn" button
-   *     - Verify turn advances to 3
+   * 9. Click "Hire Agent" button 3 times
+   *    - This hires 3 agents, spending 150 money total
+   * 10. Click "Advance turn" button twice
+   *     - Verify turn advances to 4
    *     - Verify the "Current" column of "Assets" card for "Money" row has a negative value
    *     - Verify "Game over" button appears and is disabled (money goes negative due to upkeep)
    * 11. Click "Reset controls" button to expand reset controls
@@ -245,21 +245,21 @@ async function step8ClickDeployButton(): Promise<void> {
 }
 
 /**
- * Step 9: Click "Hire Agent" button 4 times
- * - This hires 4 agents, spending 200 money total
+ * Step 9: Click "Hire Agent" button 3 times
+ * - This hires 3 agents, spending 150 money total
  */
 async function step9HireAgent4Times(): Promise<void> {
   // Keep hiring agents until balance becomes low enough that projected balance is negative
-  // Starting debug balance is 200, agent cost is 50, so we can hire 4 agents
-  // With 4+ agents, upkeep costs should make projected balance negative
+  // Starting debug balance is 200, agent cost is 50, so we can hire 3 agents
+  // With 3+ agents, upkeep costs should make projected balance negative after advancing turns
   await Promise.all(
-    Array.from({ length: 4 }).map(async () => {
+    Array.from({ length: 3 }).map(async () => {
       const hireButton = screen.getByRole('button', { name: /hire agent/iu })
       await userEvent.click(hireButton)
     }),
   )
 
-  console.log('✅ Step 9 completed: Hire agent 4 times')
+  console.log('✅ Step 9 completed: Hire agent 3 times')
 }
 
 /**
@@ -287,18 +287,19 @@ function verifyMoneyCurrentValueIsNegative(): void {
 }
 
 /**
- * Step 10: Click "Advance turn" button
- * - Verify turn advances to 3
+ * Step 10: Click "Advance turn" button twice
+ * - Verify turn advances to 4
  * - Verify the "Current" column of "Assets" card for "Money" row has a negative value
  * - Verify "Game over" button appears and is disabled (money goes negative due to upkeep)
  */
 async function step10AdvanceTurnToGameOver(): Promise<void> {
   // After hiring multiple agents, the balance is low enough that
-  // after turn advancement, agent upkeep costs will make money negative and trigger game over
+  // after advancing turns twice, agent upkeep costs will make money negative and trigger game over
+  await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
   await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
   const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
-  expect(turnValueAfterGameOver).toHaveTextContent('3')
+  expect(turnValueAfterGameOver).toHaveTextContent('4')
 
   verifyMoneyCurrentValueIsNegative()
 
