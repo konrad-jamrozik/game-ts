@@ -86,7 +86,7 @@ Some elements do not have roles, like `<div>` or `<span>`.
 In such cases querying should be done by label text:
   https://testing-library.com/docs/queries/bylabeltext
 
-Which relies on the concept of accessible label to match find the labelled element:
+Which relies on the concept of accessible label to find the labelled element:
   https://developer.mozilla.org/en-US/docs/Glossary/Accessible_name
   https://www.tpgi.com/what-is-an-accessible-name/
 
@@ -103,7 +103,7 @@ or `aria-label` attribute of the element:
 
 E.g. `getByRole`: https://vitest.dev/guide/browser/locators.html#getbyrole
 
-Note: this is currently unused, but perhaps could could replace the selectors from `@testing-library/react`?
+Note: this is currently unused, but perhaps could replace the selectors from `@testing-library/react`?
 
 # Notes
 
