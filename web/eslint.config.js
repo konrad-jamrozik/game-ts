@@ -23,6 +23,7 @@ import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
+import oxlint from 'eslint-plugin-oxlint'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist', 'coverage']),
@@ -98,6 +99,12 @@ export default plugTypescriptEslint.config([
       // Miscellaneous
       // --------------------
       plugUnicorn.configs.all, // [eslint-plugin-unicorn]
+
+      // oxlint
+      // --------------------
+      // Disabled ESLint rules supported by oxlint.
+      // Verified with eslint config inspector this disables rules, e.g. eqeqeq.
+      oxlint.configs['flat/all'], // [eslint-plugin-oxlint]
     ],
     languageOptions: {
       ecmaVersion: 2024,
@@ -490,10 +497,13 @@ export default plugTypescriptEslint.config([
 [eslint-plugin-import-x]: https://github.com/un-ts/eslint-plugin-import-x
 [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import
 [eslint-plugin-import]: https://github.com/import-js/eslint-plugin-import/tree/main
+[eslint-plugin-oxlint]: https://oxc.rs/docs/guide/usage/linter.html#eslint
 [eslint-plugin-react pkg]: https://www.npmjs.com/package/eslint-plugin-react
+[eslint-plugin-react-compiler]: https://www.npmjs.com/package/eslint-plugin-react-compiler
 [eslint-plugin-react-dom pkg]: https://www.npmjs.com/package/eslint-plugin-react-dom
 [eslint-plugin-react-hooks about]: https://react.dev/learn/editor-setup#linting
 [eslint-plugin-react-hooks src]: https://github.com/facebook/react/tree/main/packages/eslint-plugin-react-hooks
+[eslint-plugin-react-redux]: https://github.com/DianaSuvorova/eslint-plugin-react-redux#usage
 [eslint-plugin-react-refresh pkg]: https://www.npmjs.com/package/eslint-plugin-react-refresh/v/0.1.0
 [eslint-plugin-react-x pkg]: https://www.npmjs.com/package/eslint-plugin-react-x
 [eslint-plugin-tsdoc]: https://tsdoc.org/pages/packages/eslint-plugin-tsdoc/
@@ -514,6 +524,4 @@ export default plugTypescriptEslint.config([
 [ts-eslint]: https://ts-eslint.io/users/configs/
 [typed-linting]: https://typescript-eslint.io/getting-started/typed-linting/
 [vite public directory]: https://vite.dev/guide/assets.html#the-public-directory
-[eslint-plugin-react-compiler]: https://www.npmjs.com/package/eslint-plugin-react-compiler
-[eslint-plugin-react-redux]: https://github.com/DianaSuvorova/eslint-plugin-react-redux#usage
 */

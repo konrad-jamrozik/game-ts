@@ -124,5 +124,44 @@ Read more on that in [About Prettier - Prettier and other tools](about_prettier.
 
 Read https://typescript-eslint.io/blog/project-service#additional-files
 
+# Oxlint setup
+
+https://oxc.rs/docs/guide/usage/linter.html
+
+Installed with:
+
+``` bash
+npm install --save-dev oxlint
+npm install --save-dev eslint-plugin-oxlint
+```
+
+Then added `.oxlintrc.json` by migrating with:
+
+```powershell
+npx @oxlint/migrate --type-aware
+```
+
+Then added `oxlint.configs['flat/all']` to the ESLint config.
+
+# Performance measurements
+
+As of 2025-11-11:
+
+```powershell
+measure-Command { npm run lint }
+
+# Before I added oxlint.configs['flat/all'] to the ESLint config
+
+TotalHours        : 0.0581391343611111
+TotalMinutes      : 3.48834806166667
+TotalSeconds      : 209.3008837
+
+# After I added oxlint.configs['flat/all'] to the ESLint config
+
+TotalHours        : 0.0565549312777778
+TotalMinutes      : 3.39329587666667
+TotalSeconds      : 203.5977526
+```
+
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [eslint]: https://eslint.org/
