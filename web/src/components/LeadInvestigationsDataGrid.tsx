@@ -148,7 +148,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   // Create all rows from investigations
   const allInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation, index) => {
     const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
     // Count agents actively working on this investigation (OnAssignment state)
     const activeAgents = agents.filter(

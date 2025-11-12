@@ -54,7 +54,7 @@ export type Agent = Actor & {
 export type Lead = {
   id: string
   title: string
-  difficultyConstant: number // C factor in basis points, e.g., C=100 means 1 intel = 1% success chance // KJA should be Bps
+  difficulty: Bps // Difficulty in basis points, e.g., 100 means 1 intel = 1% success chance
   description: string
   dependsOn: string[]
   repeatable: boolean

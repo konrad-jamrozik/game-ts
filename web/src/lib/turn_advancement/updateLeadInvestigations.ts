@@ -36,7 +36,7 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
         .filter((agent) => agent.assignment === investigationId && agent.state === 'OnAssignment')
 
       // Calculate success chance BEFORE any changes to intel
-      const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficultyConstant)
+      const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
       const successProbability = successChance.value / 10_000
 
       // Roll for completion BEFORE any changes to intel
