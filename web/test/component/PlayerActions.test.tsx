@@ -154,8 +154,8 @@ describe(PlayerActions, () => {
     ui.renderPlayerActions()
 
     // Act: consider clicking the "Investigate lead" button and realize it is disabled.
-
     ui.expectInvestigateLeadButtonDisabled()
+
     st.expectLeadNotInvestigated(leadId)
   })
 
