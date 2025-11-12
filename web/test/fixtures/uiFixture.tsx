@@ -43,6 +43,11 @@ export const ui = {
     await userEvent.click(deployButton)
   },
 
+  expectInvestigateLeadButtonDisabled(): void {
+    const button = screen.getByRole('button', { name: /investigate lead/iu })
+    expect(button).toBeDisabled()
+  },
+
   expectPlayerActionsAlert(message: string | { hidden: true }): void {
     const alert = screen.queryByRole('alert', { name: 'player-actions-alert' })
     if (typeof message === 'object' && 'hidden' in message) {

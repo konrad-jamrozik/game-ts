@@ -147,16 +147,15 @@ describe(PlayerActions, () => {
     st.expectLeadInvestigationCreated(leadId)
   })
 
-  test("click 'investigate lead' button -> alert: no agents selected", async () => {
+  test("'investigate lead' button is disabled when no agents selected", () => {
     const leadId = 'lead-criminal-orgs'
     st.arrangeGameState({})
     st.arrangeSelection({ lead: leadId })
     ui.renderPlayerActions()
-    ui.expectPlayerActionsAlert({ hidden: true })
 
-    await ui.investigateLead() // Act
+    // Act: consider clicking the "Investigate lead" button and realize it is disabled.
 
-    ui.expectPlayerActionsAlert('No agents selected!')
+    ui.expectInvestigateLeadButtonDisabled()
     st.expectLeadNotInvestigated(leadId)
   })
 
