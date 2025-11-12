@@ -92,12 +92,12 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
         investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
 
         // Accumulate new intel from assigned agents (same formula as espionage)
-        let intelGathered = 0
+        let accumulatedIntel = 0
         for (const agent of investigatingAgents) {
           const effectiveSkill = agent.skill - agent.exhaustion
-          intelGathered += floor((5 * effectiveSkill) / 100) // AGENT_ESPIONAGE_INTEL = 5
+          accumulatedIntel += floor((5 * effectiveSkill) / 100) // AGENT_ESPIONAGE_INTEL = 5
         }
-        investigation.accumulatedIntel += intelGathered
+        investigation.accumulatedIntel += accumulatedIntel
 
         // Create report
         reports.push({
@@ -106,7 +106,6 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
           completed: false,
           accumulatedIntel: investigation.accumulatedIntel,
           successChance,
-          intelGathered,
           intelDecay,
         })
       }

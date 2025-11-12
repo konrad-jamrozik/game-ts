@@ -156,7 +156,6 @@ export type LeadInvestigationReport = {
   completed: boolean
   accumulatedIntel: number
   successChance: Bps
-  intelGathered?: number // KJA should not be needed, we only need accumulatedIntel
   intelDecay?: number
   createdMissionSites?: string[]
 }
