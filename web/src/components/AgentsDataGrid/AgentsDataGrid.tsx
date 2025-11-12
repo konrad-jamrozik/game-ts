@@ -173,6 +173,21 @@ export function AgentsDataGrid(): React.JSX.Element {
   const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
   const [showDetailed, setShowDetailed] = React.useState(false)
 
+  // Handlers that enforce mutual exclusivity between "Available" and "Terminated"
+  const handleToggleAvailable = React.useCallback((checked: boolean) => {
+    setShowOnlyAvailable(checked)
+    if (checked) {
+      setShowOnlyTerminated(false)
+    }
+  }, [])
+
+  const handleToggleTerminated = React.useCallback((checked: boolean) => {
+    setShowOnlyTerminated(checked)
+    if (checked) {
+      setShowOnlyAvailable(false)
+    }
+  }, [])
+
   // Transform agents array to include rowId for DataGrid
   const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
@@ -252,9 +267,9 @@ export function AgentsDataGrid(): React.JSX.Element {
       slotProps={{
         toolbar: {
           showOnlyTerminated,
-          onToggleTerminated: setShowOnlyTerminated,
+          onToggleTerminated: handleToggleTerminated,
           showOnlyAvailable,
-          onToggleAvailable: setShowOnlyAvailable,
+          onToggleAvailable: handleToggleAvailable,
           showDetailed,
           onToggleDetailed: setShowDetailed,
         },

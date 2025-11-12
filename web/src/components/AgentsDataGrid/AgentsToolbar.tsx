@@ -25,7 +25,6 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
     showDetailed,
     onToggleDetailed,
   } = props
-  // KJA only one from "Available" and "Terminated" should be selectable at once.
   return (
     <Toolbar>
       <FormControlLabel
