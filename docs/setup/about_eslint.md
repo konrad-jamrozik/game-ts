@@ -161,6 +161,34 @@ TotalSeconds      : 209.3008837
 TotalHours        : 0.0565549312777778
 TotalMinutes      : 3.39329587666667
 TotalSeconds      : 203.5977526
+
+$env:TIMING=20; npm run lint
+
+> web@0.0.0 lint
+> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
+
+Rule                                            | Time (ms) | Relative
+:-----------------------------------------------|----------:|--------:
+@typescript-eslint/no-deprecated                |  3950.912 |    40.8%
+@typescript-eslint/no-misused-promises          |  2154.413 |    22.2%
+import-x/namespace                              |  1080.965 |    11.2%
+react-compiler/react-compiler                   |   684.500 |     7.1%
+@typescript-eslint/no-unsafe-assignment         |   282.774 |     2.9%
+unicorn/no-unnecessary-polyfills                |   146.228 |     1.5%
+@typescript-eslint/no-floating-promises         |    85.799 |     0.9%
+@typescript-eslint/naming-convention            |    80.818 |     0.8%
+@typescript-eslint/promise-function-async       |    72.911 |     0.8%
+import-x/no-unresolved                          |    45.718 |     0.5%
+@typescript-eslint/no-redeclare                 |    41.130 |     0.4%
+@typescript-eslint/no-unsafe-return             |    39.543 |     0.4%
+@typescript-eslint/no-unsafe-argument           |    29.553 |     0.3%
+@typescript-eslint/no-unnecessary-condition     |    28.224 |     0.3%
+unicorn/expiring-todo-comments                  |    27.523 |     0.3%
+import-x/no-named-as-default                    |    26.279 |     0.3%
+unicorn/no-thenable                             |    22.403 |     0.2%
+@typescript-eslint/unbound-method               |    22.211 |     0.2%
+camelcase                                       |    22.205 |     0.2%
+@typescript-eslint/no-confusing-void-expression |    16.937 |     0.2%
 ```
 
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
