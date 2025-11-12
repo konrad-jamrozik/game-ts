@@ -109,27 +109,27 @@ export function getPanicNewBalance(gameState: GameState): Bps {
 }
 
 /**
- * Calculates intel decay percentage based on accumulated intel.
+ * Calculates intel decay based on accumulated intel.
  * Formula: min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
  *
  * @param accumulatedIntel - The accumulated intel value
- * @returns The decay percentage (in basis points)
+ * @returns The decay in basis points
  */
-export function calculateIntelDecayPercent(accumulatedIntel: number): number {
+export function calculateIntelDecay(accumulatedIntel: number): Bps {
   const decayBps = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
-  return decayBps // KJA should return Bps type, and name shouldn't have percent in it
+  return bps(decayBps)
 }
 
 /**
  * Calculates intel decay amount based on accumulated intel.
- * Formula: ceil((accumulatedIntel * decayPercent) / 10_000)
+ * Formula: ceil((accumulatedIntel * decay) / 10_000)
  *
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay amount (rounded up)
  */
-export function calculateIntelDecay(accumulatedIntel: number): number {
-  const decayBps = calculateIntelDecayPercent(accumulatedIntel)
-  return ceil((accumulatedIntel * decayBps) / 10_000)
+export function calculateIntelDecayAmount(accumulatedIntel: number): number {
+  const decay = calculateIntelDecay(accumulatedIntel)
+  return ceil((accumulatedIntel * decay.value) / 10_000)
 }
 
 /**
