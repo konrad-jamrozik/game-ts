@@ -11,8 +11,9 @@ All these commands to be run from the `web/` directory:
 
 # Slow commands
 
-- To fix code style issues, run `npm run lint:fix`.
-- To check if the project types adn builds, run `npm run build`.
+- To do thorough linting check, run `npm run eslint:cached`.
+- To fix code style issues, run `npm run eslint:fix`.
+- To check if the project types and builds, run `npm run build`.
 - To verify that unit tests pass, run `npm run test`
 
 # Very slow commands
