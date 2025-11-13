@@ -223,6 +223,8 @@ camelcase                                       |    22.205 |     0.2%
 
 ## Slow config load on eslint.config.js
 
+See logs in `./logs`.
+
 ``` powershell
 measure-command { npm run lint:debug }
 # which resolves to:
