@@ -41,7 +41,7 @@ Run all of the below commands from the `web/` directory to verify your work:
 - To check for obvious errors, run `npm run build`.
 - To check for code formatting issues, run `npm run format`.
 - To fix code formatting issues, run `npm run format:fix`.
-- To check for code style issues, run `npm run lint:cached`.
+- To check for code style issues, run `npm run oxlint`.
 - To fix code style issues, run `npm run lint:fix`.
 - To verify that unit tests pass, run `npm run test`.
 - To run the development server, run `npm run dev`.
@@ -76,6 +76,7 @@ This project uses following technologies:
 - `web/package.json` for all scripts and dependencies.
 - `web/vite.config.ts`: Vite config. Note the `base: '/game-ts/'` for GitHub Pages.
 - `web/tsconfig.*.json`: TypeScript config.
+- `web/.oxlintrc.json`: oxlint linter config.
 - `web/eslint.config.js`: ESLint linter config.
 - `web/prettier.config.js`: "Prettier" formatter config.
 - `web/vitest.config.ts`: Vitest config for unit tests. Test setup in `src/utils/setupReactTests.ts`.
@@ -99,10 +100,42 @@ This project uses following technologies:
 - `web/src/app/eventsMiddleware.ts`: Redux toolkit store events middleware for recording state changes in form of events.
 - `web/src/components/EventLog.tsx`: Component for displaying the event log.
 
+## Coding conventions
+
+- Follow ESLint rules from `web/.eslintrc.js`
+- Follow oxlint rules from `web/.oxlintrc.json`
+- Follow Prettier rules from `web/prettier.config.js`.
+- Always use TypeScript types, never interfaces, unless it won't compile otherwise.
+- Always use function declarations instead of function expressions if possible.
+- Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
+- Prefer `<Fragment>` over `<>`.
+
 ## MCP servers
 
 - Use `mui-mcp` MCP server for MUI questions.
 - Use `context7` MCP server for documentation of used libraries or frameworks.
+
+### Use the mui-mcp server to answer any MUI questions
+
+1. call the "useMuiDocs" tool to fetch the docs of the package relevant in the question
+2. call the "fetchDocs" tool to fetch any additional docs if needed using ONLY the URLs
+   present in the returned content.
+3. repeat steps 1-2 until you have fetched all relevant docs for the given question
+4. use the fetched content to answer the question
+
+## React development conventions
+
+### Project React Usage
+
+- This project uses React (with TypeScript) for all UI in `web/src/`.
+- Use `web/src/App.tsx` as the main entry point for the app.
+- Refer to `AGENTS.md` for general project setup, architecture, dependencies, and conventions.
+
+### React Feature implementation & Code Completeness
+
+- Every time you add a new reducer that has `meta: { playerAction: true }` in `prepare`, for example to
+  `web/src/model/gameStateSlice.ts`, also add relevant event to  `web/src/app/eventsMiddleware.ts`.
+- Every time you add a new player action, ensure it will show up in event log when executed.
 
 ## Shell substitutions
 
