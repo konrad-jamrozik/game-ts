@@ -1649,12 +1649,7 @@
         "vitest/prefer-lowercase-title": "off",
         "vitest/no-hooks": "off",
         "max-lines-per-function": "off",
-        "vitest/max-expects": [
-          "error",
-          {
-            "max": 20
-          }
-        ],
+        "vitest/max-expects": "off",
         "vitest/no-standalone-expect": "off",
         "vitest/expect-expect": "off"
       },

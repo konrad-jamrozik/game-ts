@@ -17,8 +17,17 @@
 # Linting setup
 
 - GH CI uses both and `npm run oxlint` and `npm run eslint:ci`. The latter is a full battery of ESLint rules.
-- For local dev I rely on VSCode ESLint and oxc extensions.
 - AI agents use `npm run oxlint` which is powered by the very fast `oxlint`.
+- For local dev I rely on:
+  - ESLint VS Code extension with full ruleset, but some rules appear to not work as intended,
+    e.g. oxlint triggers on `vitest/no-conditional-in-test` but `eslint` does not.
+  - oxlint VS Code extension but with no type-aware linting. Reasons given in [about_oxlint.md](about_oxlint.md).
+  - `npm run oxlint` for type-aware linting.
+  - `npm run eslint:cached` for sanity check for eslint. But this is often slow.
+
+I disabled many ESLint rules that are not supported by oxlint, because if I have a directive in code
+disabling this rule for ESLint given line, oxlint will flag it as unknown rule disablement hence error.
+I detail what was disabled in [eslint.config.js](../web/eslint.config.js).
 
 # How to run eslint
 

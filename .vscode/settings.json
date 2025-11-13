@@ -69,6 +69,7 @@
         "sonarjs",
         "substep",
         "Suppr",
+        "tsgolint",
         "uicov",
         "undoable",
         "vite",

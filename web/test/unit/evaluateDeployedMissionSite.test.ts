@@ -123,14 +123,11 @@ describe(evaluateDeployedMissionSite, () => {
     let callCount = 0
     Math.random = (): number => {
       callCount += 1
+      // Odd calls are agent attack rolls, and we want them to fail, so low value.
+      // Even calls are enemy attack rolls, and we want them to succeed, so high value.
       // Agent fails attacks, enemies succeed
-      // eslint-disable-next-line unicorn/prefer-ternary
-      if (callCount % 2 === 1) {
-        return 0.9 // High value = agent fails contest rolls
-        // eslint-disable-next-line no-else-return
-      } else {
-        return 0.8 // High damage rolls for enemies
-      }
+      // oxlint-disable-next-line no-conditional-in-test
+      return callCount % 2 === 1 ? 0 : 0.9999
     }
 
     try {

@@ -372,6 +372,9 @@ export default plugTypescriptEslint.config([
       // Sometimes the code is significantly more concise with forEach.
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/no-array-for-each.md
       'unicorn/no-array-for-each': 'off',
+      // oxlint does not support this rule, and I don't care that much.
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prefer-ternary.md
+      'unicorn/prefer-ternary': 'off',
     },
   },
   {
@@ -445,7 +448,8 @@ export default plugTypescriptEslint.config([
       'max-lines-per-function': 'off',
 
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md
-      'vitest/max-expects': ['error', { max: 20 }],
+      // We don't care about too many expects.
+      'vitest/max-expects': 'off',
 
       // I use expect() in test utility methods to assert arranged assumptions, reuse assertions, etc.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-standalone-expect.md
@@ -468,6 +472,9 @@ export default plugTypescriptEslint.config([
       // invoke expect() in turn.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md
       'vitest/expect-expect': 'off',
+
+      // https://github.com/vitest-dev/eslint-plugin-vitest/blob/HEAD/docs/rules/no-conditional-in-test.md
+      'vitest/no-conditional-in-test': 'error',
     },
   },
 ])
