@@ -13,7 +13,7 @@ import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
 
 export default plugTypescriptEslint.config([
-  globalIgnores(['dist', 'coverage']),
+  globalIgnores(['dist', 'coverage', 'node_modules', 'logs']),
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],

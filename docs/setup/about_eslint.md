@@ -204,5 +204,7 @@ And:
 15   Sum for < 1s
 ```
 
+So loading config takes 99.5 seconds out of entire 173 s runtime.
+
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [eslint]: https://eslint.org/
