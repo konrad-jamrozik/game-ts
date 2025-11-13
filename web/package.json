@@ -29,7 +29,7 @@
     "test:ui": "vitest --ui --api.port=6174",
     "test:cov": "vitest --coverage",
     "test:uicov": "vitest --ui --coverage.enabled=true",
-    "check": "npm run format && npm run lint:cached && npm run test && npm run build"
+    "check": "npm run format && npm run oxlint && npm run eslint:cached && npm run build && npm run test:all"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
