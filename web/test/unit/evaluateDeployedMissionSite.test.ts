@@ -183,7 +183,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('3 Soldier, 2 Elite'), // Strong enemies
+      enemies: newEnemiesFromSpec('3 Soldier, 6 Elite'), // Strong enemies
     }
 
     const gameState: GameState = {
