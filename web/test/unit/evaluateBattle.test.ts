@@ -75,20 +75,10 @@ describe(evaluateBattle, () => {
  */
 function expectReportToBe(actual: BattleReport): (expected: Partial<BattleReport>) => void {
   return (expected: Partial<BattleReport>): void => {
-    if (expected.rounds !== undefined) {
-      expect(actual.rounds).toBe(expected.rounds)
-    }
-    if (expected.agentCasualties !== undefined) {
-      expect(actual.agentCasualties).toBe(expected.agentCasualties)
-    }
-    if (expected.enemyCasualties !== undefined) {
-      expect(actual.enemyCasualties).toBe(expected.enemyCasualties)
-    }
-    if (expected.retreated !== undefined) {
-      expect(actual.retreated).toBe(expected.retreated)
-    }
-    if (expected.agentSkillUpdates !== undefined) {
-      expect(actual.agentSkillUpdates).toStrictEqual(expected.agentSkillUpdates)
-    }
+    expect(actual.rounds).toBe(expected.rounds)
+    expect(actual.agentCasualties).toBe(expected.agentCasualties)
+    expect(actual.enemyCasualties).toBe(expected.enemyCasualties)
+    expect(actual.retreated).toBe(expected.retreated)
+    expect(actual.agentSkillUpdates).toStrictEqual(expected.agentSkillUpdates)
   }
 }
