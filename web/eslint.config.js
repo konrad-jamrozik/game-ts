@@ -427,11 +427,6 @@ export default plugTypescriptEslint.config([
       // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/consistent-test-it.md
       'vitest/consistent-test-it': ['error', { fn: 'test', withinDescribe: 'test' }],
 
-      // Force async test to declare in first line they expect to have assertions in them.
-      // (yes, it is a meta-defensive code measure)
-      // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
-      'vitest/prefer-expect-assertions': ['error', { onlyFunctionsWithAsyncKeyword: true }],
-
       // Tests titles can start from capital letters.
       // https://github.com/veritem/eslint-plugin-vitest/blob/main/docs/rules/prefer-lowercase-title.md
       'vitest/prefer-lowercase-title': 'off',
@@ -468,6 +463,7 @@ export default plugTypescriptEslint.config([
       // It just adds extra lines and noise to otherwise sometimes very short (<= 5 lines tests).
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/prefer-expect-assertions.md
       'vitest/prefer-expect-assertions': 'off',
+
       // Tests that do not contain expect() calls are allowed, because tests call test utils that
       // invoke expect() in turn.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md

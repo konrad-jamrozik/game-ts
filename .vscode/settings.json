@@ -105,6 +105,13 @@
         "typescript",
         "typescriptreact"
     ],
+    // oxlint / oxc extension settings
+    // --------------------
+    // Enable type-aware linting for oxlint
+    // See: https://oxc.rs/docs/guide/usage/linter/type-aware
+    "oxc.typeAware": true,
+    // end of oxlint / oxc extension settings
+    
     // https://code.visualstudio.com/docs/copilot/chat/mcp-servers
     "chat.mcp.enabled": true,
     "chat.mcp.discovery.enabled": true,

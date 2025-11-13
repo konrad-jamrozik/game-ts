@@ -139,6 +139,8 @@ Installed with:
 ``` bash
 npm install --save-dev oxlint
 npm install --save-dev eslint-plugin-oxlint
+npm install --save-dev tsgolint
+npm install --save-dev oxlint-tsgolint
 ```
 
 Then added `.oxlintrc.json` by migrating with:
