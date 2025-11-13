@@ -11,3 +11,8 @@ For full `eslint.config.js` with `oxlint.configs['flat/all']` added, which shoul
 ## `lint.debug_2025_11_12_exp2.txt`
 
 Same as `lint.debug_2025_11_12_exp1.txt`, but another experiment.
+
+## `lint.debug_2025_11_12_exp3.txt`
+
+Same as `lint.debug_2025_11_12_exp2.txt`, but without `oxlint.configs['flat/all']`,
+so all rules are in effect.

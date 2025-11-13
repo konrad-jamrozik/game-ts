@@ -26,7 +26,7 @@ import plugTypescriptEslint from 'typescript-eslint'
 import oxlint from 'eslint-plugin-oxlint'
 
 export default plugTypescriptEslint.config([
-  globalIgnores(['dist', 'coverage']),
+  globalIgnores(['dist', 'coverage', 'node_modules', 'logs']),
   {
     name: 'cfg',
     files: ['**/*.{ts,tsx}'],
@@ -104,7 +104,7 @@ export default plugTypescriptEslint.config([
       // --------------------
       // Disabled ESLint rules supported by oxlint.
       // Verified with eslint config inspector this disables rules, e.g. eqeqeq.
-      oxlint.configs['flat/all'], // [eslint-plugin-oxlint]
+      // oxlint.configs['flat/all'], // [eslint-plugin-oxlint]
     ],
     languageOptions: {
       ecmaVersion: 2024,

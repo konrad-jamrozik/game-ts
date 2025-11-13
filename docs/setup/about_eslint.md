@@ -175,90 +175,34 @@ export default plugTypescriptEslint.config([
 
 # Performance measurements
 
-As of 2025-11-11:
+As of 2025-11-12:
 
-```powershell
-measure-Command { npm run lint }
+Set `$env:TIMING=20` and run `npm run lint:debug` to produce logs.
 
-# Before I added oxlint.configs['flat/all'] to the ESLint config
+For analysis, refer to [/web/logs/about_logs.md](/web/logs/about_logs.md) and
+ to `/web/logs/eslint_log_analysis.xlsx`.
 
-TotalHours        : 0.0581391343611111
-TotalMinutes      : 3.48834806166667
-TotalSeconds      : 209.3008837
+Bottom line, all lines with >= 1000 ms are:
 
-# After I added oxlint.configs['flat/all'] to the ESLint config
-
-TotalHours        : 0.0565549312777778
-TotalMinutes      : 3.39329587666667
-TotalSeconds      : 203.5977526
-
-$env:TIMING=20; npm run lint
-
-> web@0.0.0 lint
-> eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0
-
-Rule                                            | Time (ms) | Relative
-:-----------------------------------------------|----------:|--------:
-@typescript-eslint/no-deprecated                |  3950.912 |    40.8%
-@typescript-eslint/no-misused-promises          |  2154.413 |    22.2%
-import-x/namespace                              |  1080.965 |    11.2%
-react-compiler/react-compiler                   |   684.500 |     7.1%
-@typescript-eslint/no-unsafe-assignment         |   282.774 |     2.9%
-unicorn/no-unnecessary-polyfills                |   146.228 |     1.5%
-@typescript-eslint/no-floating-promises         |    85.799 |     0.9%
-@typescript-eslint/naming-convention            |    80.818 |     0.8%
-@typescript-eslint/promise-function-async       |    72.911 |     0.8%
-import-x/no-unresolved                          |    45.718 |     0.5%
-@typescript-eslint/no-redeclare                 |    41.130 |     0.4%
-@typescript-eslint/no-unsafe-return             |    39.543 |     0.4%
-@typescript-eslint/no-unsafe-argument           |    29.553 |     0.3%
-@typescript-eslint/no-unnecessary-condition     |    28.224 |     0.3%
-unicorn/expiring-todo-comments                  |    27.523 |     0.3%
-import-x/no-named-as-default                    |    26.279 |     0.3%
-unicorn/no-thenable                             |    22.403 |     0.2%
-@typescript-eslint/unbound-method               |    22.211 |     0.2%
-camelcase                                       |    22.205 |     0.2%
-@typescript-eslint/no-confusing-void-expression |    16.937 |     0.2%
+``` text
+   ms   log
+99577   eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
+ 2564   eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+44240   eslint:languages:js Parsing: C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+ 1130   eslint:languages:js Scope analysis successful: C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+ 3099   eslint:languages:js Scope analysis successful: C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+ 3262   eslint:languages:js Scope analysis successful: C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+ 2000   eslint:languages:js Scope analysis successful: C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+ 1743   eslint:languages:js Parsing: C:\Users\spawa\repos\game-ts\web\vitest.config.ts
 ```
 
-## Slow config load on eslint.config.js
+And:
 
-See logs in `./logs`.
-
-``` powershell
-measure-command { npm run lint:debug }
-# which resolves to:
-eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --debug > lint.debug.txt 2>&1
-
-Output in lint.debug.txt
-2025-11-13T00:18:02.506Z eslint:cli CLI args: [ '.', '--ext', 'ts,tsx', '--report-unused-disable-directives', '--max-warnings', '0', '--debug' ]
-2025-11-13T00:18:02.507Z eslint:cli Using flat config? true
-2025-11-13T00:18:02.512Z eslint:cli Running on files
-2025-11-13T00:18:02.513Z eslint:eslint Using config loader LegacyConfigLoader
-2025-11-13T00:18:02.514Z eslint:eslint Using file patterns: .
-2025-11-13T00:18:02.514Z eslint:eslint Deleting cache file at C:\Users\spawa\repos\game-ts\web\.eslintcache
-2025-11-13T00:18:02.820Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.gitignore
-2025-11-13T00:18:02.820Z eslint:config-loader Searching for eslint.config.js
-2025-11-13T00:18:02.822Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.gitignore
-2025-11-13T00:18:02.822Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
-2025-11-13T00:18:02.822Z eslint:config-loader Calculating config array from config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
-2025-11-13T00:18:02.824Z eslint:config-loader Loading config file C:\Users\spawa\repos\game-ts\web\eslint.config.js
-2025-11-13T00:18:02.824Z eslint:config-loader Loading config from C:\Users\spawa\repos\game-ts\web\eslint.config.js
-2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
-2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
-2025-11-13T00:19:42.602Z eslint:rules Loading rule 'consistent-return' (remaining=289)
+``` text
+173  Sum s
+158  Sum for >=1 s
+15   Sum for < 1s
 ```
-
-In the log above, observe the big jump timestamp jump after "Config file URL":
-``` powershell
-2025-11-13T00:18:02.824Z eslint:config-loader Loading config file C:\Users\spawa\repos\game-ts\web\eslint.config.js
-2025-11-13T00:18:02.824Z eslint:config-loader Loading config from C:\Users\spawa\repos\game-ts\web\eslint.config.js
-2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
-2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
-2025-11-13T00:19:42.602Z eslint:rules Loading rule 'consistent-return' (remaining=289)
-
-```
-which is 1m 33s.
 
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [eslint]: https://eslint.org/
