@@ -143,6 +143,36 @@ npx @oxlint/migrate --type-aware
 
 Then added `oxlint.configs['flat/all']` to the ESLint config.
 
+# Performance investigation
+
+https://stackoverflow.com/questions/78186272/how-can-i-find-out-why-eslint-performance-is-slow
+https://typescript-eslint.io/troubleshooting/typed-linting/performance/
+https://typescript-eslint.io/getting-started/typed-linting
+
+I created an empty ESLint config that still runs for 10+ seconds, possibly minutes, when TS parser is enabled.
+But this is needed to parse TypeScript correctly.
+
+``` javascript
+export default plugTypescriptEslint.config([
+  globalIgnores(['dist', 'coverage']),
+  {
+    name: 'cfg',
+    files: ['**/*.{ts,tsx}'],
+    plugins: {},
+    extends: [],
+    languageOptions: {
+      ecmaVersion: 2024,
+      globals: globals.browser,
+      // ====> THIS IS THE CULPRIT <====
+      // BUT REQUIRED FOR TYPESCRIPT SYNTAX PARSING
+      parser: plugTypescriptEslint.parser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
+```
+
 # Performance measurements
 
 As of 2025-11-11:
@@ -189,6 +219,39 @@ unicorn/no-thenable                             |    22.403 |     0.2%
 @typescript-eslint/unbound-method               |    22.211 |     0.2%
 camelcase                                       |    22.205 |     0.2%
 @typescript-eslint/no-confusing-void-expression |    16.937 |     0.2%
+```
+
+## Slow config load on eslint.config.js
+
+In the log below, observe the timestamp diff here:
+``` powershell
+2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
+2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+```
+which is 1m 33s.
+
+``` powershell
+measure-command { npm run lint:debug }
+# which resolves to:
+eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --debug > lint.debug.txt 2>&1
+
+Output in lint.debug.txt
+2025-11-13T00:18:02.506Z eslint:cli CLI args: [ '.', '--ext', 'ts,tsx', '--report-unused-disable-directives', '--max-warnings', '0', '--debug' ]
+2025-11-13T00:18:02.507Z eslint:cli Using flat config? true
+2025-11-13T00:18:02.512Z eslint:cli Running on files
+2025-11-13T00:18:02.513Z eslint:eslint Using config loader LegacyConfigLoader
+2025-11-13T00:18:02.514Z eslint:eslint Using file patterns: .
+2025-11-13T00:18:02.514Z eslint:eslint Deleting cache file at C:\Users\spawa\repos\game-ts\web\.eslintcache
+2025-11-13T00:18:02.820Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.gitignore
+2025-11-13T00:18:02.820Z eslint:config-loader Searching for eslint.config.js
+2025-11-13T00:18:02.822Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.gitignore
+2025-11-13T00:18:02.822Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T00:18:02.822Z eslint:config-loader Calculating config array from config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T00:18:02.824Z eslint:config-loader Loading config file C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T00:18:02.824Z eslint:config-loader Loading config from C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
+2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+2025-11-13T00:19:42.602Z eslint:rules Loading rule 'consistent-return' (remaining=289)
 ```
 
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts

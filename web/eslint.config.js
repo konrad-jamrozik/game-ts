@@ -142,6 +142,15 @@ export default plugTypescriptEslint.config([
       ],
     },
     rules: {
+      // Rules with perf. issues:
+      // --------------------
+      // '@typescript-eslint/no-deprecated': 'off',
+      // '@typescript-eslint/no-misused-promises': 'off',
+      // '@typescript-eslint/no-unsafe-assignment': 'off',
+      // '@typescript-eslint/strict-boolean-expressions': 'off',
+      // '@typescript-eslint/no-unsafe-argument': 'off',
+      // 'import-x/namespace': 'off',
+
       // [eslint configs]
       // --------------------
       // https://eslint.org/docs/latest/rules/sort-imports
@@ -271,13 +280,6 @@ export default plugTypescriptEslint.config([
       // https://typescript-eslint.io/rules/explicit-function-return-type/
       '@typescript-eslint/explicit-function-return-type': ['error', { allowIIFEs: true }],
       // Turn off as it was eating  4323.078 ms / 33.6% of total run time
-      // KJA need to investigate further - use experimetnal gotsc?
-      '@typescript-eslint/no-deprecated': 'off',
-      '@typescript-eslint/no-misused-promises': 'off',
-      '@typescript-eslint/no-unsafe-assignment': 'off',
-      '@typescript-eslint/strict-boolean-expressions': 'off',
-      '@typescript-eslint/no-unsafe-argument': 'off',
-      'import-x/namespace': 'off',
 
       // React configs
       // --------------------
