@@ -23,7 +23,6 @@ import plugUnicorn from 'eslint-plugin-unicorn'
 import { globalIgnores } from 'eslint/config'
 import globals from 'globals'
 import plugTypescriptEslint from 'typescript-eslint'
-import oxlint from 'eslint-plugin-oxlint'
 
 export default plugTypescriptEslint.config([
   globalIgnores(['dist', 'coverage', 'node_modules', 'logs']),

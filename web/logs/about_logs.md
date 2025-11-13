@@ -16,3 +16,14 @@ Same as `lint.debug_2025_11_12_exp1.txt`, but another experiment.
 
 Same as `lint.debug_2025_11_12_exp2.txt`, but without `oxlint.configs['flat/all']`,
 so all rules are in effect.
+
+## `lint.debug.cached_1_cold_start.txt`
+
+Ran `eslint . --cache --ext ts,tsx --report-unused-disable-directives --max-warnings 0 --debug > lint.debug.txt 2>&1`
+with no cache.
+
+## `lint.debug.cached_2nd_run.txt` up to `lint.debug.cached_4th_run.txt`
+
+Same commands as the `lint.debug.cached_1_cold_start.txt` but with warmed up cache.
+
+Shows long inconsistent and long config load times.

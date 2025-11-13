@@ -14,6 +14,12 @@
 
 [eslint] is a code linter for TypeScript and JavaScript projects.
 
+# Linting setup
+
+- GH CI uses both and `npm run oxlint` and `npm run eslint:ci`. The latter is a full battery of ESLint rules.
+- For local dev I rely on VSCode ESLint and oxc extensions.
+- AI agents use `npm run oxlint` which is powered by the very fast `oxlint`.
+
 # How to run eslint
 
 ## Integrate eslint with VS Code
@@ -143,37 +149,11 @@ npx @oxlint/migrate --type-aware
 
 Then added `oxlint.configs['flat/all']` to the ESLint config.
 
-# Performance investigation
+# Performance investigation & measurements
 
 https://stackoverflow.com/questions/78186272/how-can-i-find-out-why-eslint-performance-is-slow
 https://typescript-eslint.io/troubleshooting/typed-linting/performance/
 https://typescript-eslint.io/getting-started/typed-linting
-
-I created an empty ESLint config that still runs for 10+ seconds, possibly minutes, when TS parser is enabled.
-But this is needed to parse TypeScript correctly.
-
-``` javascript
-export default plugTypescriptEslint.config([
-  globalIgnores(['dist', 'coverage']),
-  {
-    name: 'cfg',
-    files: ['**/*.{ts,tsx}'],
-    plugins: {},
-    extends: [],
-    languageOptions: {
-      ecmaVersion: 2024,
-      globals: globals.browser,
-      // ====> THIS IS THE CULPRIT <====
-      // BUT REQUIRED FOR TYPESCRIPT SYNTAX PARSING
-      parser: plugTypescriptEslint.parser,
-      parserOptions: {
-        projectService: true,
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-```
-
-# Performance measurements
 
 As of 2025-11-12:
 
@@ -205,6 +185,24 @@ And:
 ```
 
 So loading config takes 99.5 seconds out of entire 173 s runtime.
+
+However, in CI, the config loading takes only 2.5:
+
+``` text
+2025-11-13T04:05:29.572Z eslint:config-loader Config file URL is file:///home/runner/work/game-ts/game-ts/web/eslint.config.js
+2025-11-13T04:05:31.108Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+```
+
+I triggered this by adding to `.github/workflows/web_gh_pages_CICD.yml`:
+
+``` yaml
+      - name: Run lint:debug:ci
+        run: |
+            npm run lint:debug:ci
+```
+
+Even running ESLint with caching doesn't help: the config load sometimes takes 90+ seconds, sometimes 2, sometimes 30+.
+See [/web/logs/about_logs.md](/web/logs/about_logs.md) for details.
 
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [eslint]: https://eslint.org/

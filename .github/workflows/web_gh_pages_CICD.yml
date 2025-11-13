@@ -42,14 +42,14 @@ jobs:
       - name: Run formatter
         run: |
           npm run format
-
-      - name: Run lint:debug:ci
+      
+      - name: Run oxlint
         run: |
-            npm run lint:debug:ci
+          npm run oxlint
 
-      - name: Run linter
+      - name: Run ESLint
         run: |
-          npm run lint
+          npm run eslint:ci
 
       - name: Run tests
         # --pool=forks adds test isolation. --retry=1 accommodates for flaky tests.

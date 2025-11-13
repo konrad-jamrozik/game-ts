@@ -1,0 +1,1044 @@
+2025-11-13T04:12:33.932Z eslint:cli CLI args: [ '.', '--cache', '--ext', 'ts,tsx', '--report-unused-disable-directives', '--max-warnings', '0', '--debug' ]
+2025-11-13T04:12:33.933Z eslint:cli Using flat config? true
+2025-11-13T04:12:33.935Z eslint:cli Running on files
+2025-11-13T04:12:33.935Z eslint:lint-result-cache Caching results to C:\Users\spawa\repos\game-ts\web\.eslintcache
+2025-11-13T04:12:33.935Z eslint:lint-result-cache Using "metadata" strategy to detect changes
+2025-11-13T04:12:33.943Z eslint:eslint Using config loader LegacyConfigLoader
+2025-11-13T04:12:33.943Z eslint:eslint Using file patterns: .
+2025-11-13T04:12:33.951Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.eslintcache
+2025-11-13T04:12:33.951Z eslint:config-loader Searching for eslint.config.js
+2025-11-13T04:12:33.951Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.eslintcache
+2025-11-13T04:12:33.951Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:33.952Z eslint:config-loader Calculating config array from config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:33.952Z eslint:config-loader Loading config file C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:33.952Z eslint:config-loader Loading config from C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:33.952Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
+2025-11-13T04:12:34.906Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+2025-11-13T04:12:34.974Z eslint:rules Loading rule 'consistent-return' (remaining=289)
+2025-11-13T04:12:34.982Z eslint:rules Loading rule 'dot-notation' (remaining=288)
+2025-11-13T04:12:34.987Z eslint:rules Loading rule 'init-declarations' (remaining=287)
+2025-11-13T04:12:34.988Z eslint:rules Loading rule 'max-params' (remaining=286)
+2025-11-13T04:12:35.009Z eslint:rules Loading rule 'no-dupe-class-members' (remaining=285)
+2025-11-13T04:12:35.013Z eslint:rules Loading rule 'no-empty-function' (remaining=284)
+2025-11-13T04:12:35.028Z eslint:rules Loading rule 'no-invalid-this' (remaining=283)
+2025-11-13T04:12:35.030Z eslint:rules Loading rule 'no-loop-func' (remaining=282)
+2025-11-13T04:12:35.031Z eslint:rules Loading rule 'no-loss-of-precision' (remaining=281)
+2025-11-13T04:12:35.031Z eslint:rules Loading rule 'no-magic-numbers' (remaining=280)
+2025-11-13T04:12:35.045Z eslint:rules Loading rule 'no-restricted-imports' (remaining=279)
+2025-11-13T04:12:35.080Z eslint:rules Loading rule 'no-unused-expressions' (remaining=278)
+2025-11-13T04:12:35.082Z eslint:rules Loading rule 'no-useless-constructor' (remaining=277)
+2025-11-13T04:12:35.089Z eslint:rules Loading rule 'prefer-destructuring' (remaining=276)
+2025-11-13T04:12:35.136Z eslint:config-loader Config file C:\Users\spawa\repos\game-ts\web\eslint.config.js is not empty
+2025-11-13T04:12:35.138Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.gitignore
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.gitignore
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.138Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.oxlintrc.json
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.oxlintrc.json
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.138Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\.prettierignore
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\.prettierignore
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\coverage
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\dist
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.138Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:35.138Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.139Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\eslint.config_empty.js
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\eslint.config_empty.js
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.139Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\index.html
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\index.html
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\logs
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\node_modules
+2025-11-13T04:12:35.139Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.139Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\package-lock.json
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\package-lock.json
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\package.json
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\package.json
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\prettier.config.js
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\prettier.config.js
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\public
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\public\vite.svg
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\public\vite.svg
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\README.web.md
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\README.web.md
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app
+2025-11-13T04:12:35.140Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.141Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+2025-11-13T04:12:35.141Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+2025-11-13T04:12:35.141Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.161Z eslint:rules Loading rule 'accessor-pairs' (remaining=275)
+2025-11-13T04:12:35.162Z eslint:rules Loading rule 'array-callback-return' (remaining=274)
+2025-11-13T04:12:35.162Z eslint:rules Loading rule 'arrow-body-style' (remaining=273)
+2025-11-13T04:12:35.163Z eslint:rules Loading rule 'block-scoped-var' (remaining=272)
+2025-11-13T04:12:35.163Z eslint:rules Loading rule 'camelcase' (remaining=271)
+2025-11-13T04:12:35.164Z eslint:rules Loading rule 'capitalized-comments' (remaining=270)
+2025-11-13T04:12:35.164Z eslint:rules Loading rule 'class-methods-use-this' (remaining=269)
+2025-11-13T04:12:35.165Z eslint:rules Loading rule 'complexity' (remaining=268)
+2025-11-13T04:12:35.165Z eslint:rules Loading rule 'consistent-this' (remaining=267)
+2025-11-13T04:12:35.166Z eslint:rules Loading rule 'constructor-super' (remaining=266)
+2025-11-13T04:12:35.166Z eslint:rules Loading rule 'curly' (remaining=265)
+2025-11-13T04:12:35.167Z eslint:rules Loading rule 'default-case' (remaining=264)
+2025-11-13T04:12:35.167Z eslint:rules Loading rule 'default-case-last' (remaining=263)
+2025-11-13T04:12:35.168Z eslint:rules Loading rule 'default-param-last' (remaining=262)
+2025-11-13T04:12:35.168Z eslint:rules Loading rule 'eqeqeq' (remaining=261)
+2025-11-13T04:12:35.168Z eslint:rules Loading rule 'for-direction' (remaining=260)
+2025-11-13T04:12:35.169Z eslint:rules Loading rule 'func-name-matching' (remaining=259)
+2025-11-13T04:12:35.169Z eslint:rules Loading rule 'func-names' (remaining=258)
+2025-11-13T04:12:35.170Z eslint:rules Loading rule 'func-style' (remaining=257)
+2025-11-13T04:12:35.171Z eslint:rules Loading rule 'getter-return' (remaining=256)
+2025-11-13T04:12:35.171Z eslint:rules Loading rule 'grouped-accessor-pairs' (remaining=255)
+2025-11-13T04:12:35.172Z eslint:rules Loading rule 'guard-for-in' (remaining=254)
+2025-11-13T04:12:35.172Z eslint:rules Loading rule 'id-denylist' (remaining=253)
+2025-11-13T04:12:35.173Z eslint:rules Loading rule 'id-length' (remaining=252)
+2025-11-13T04:12:35.173Z eslint:rules Loading rule 'id-match' (remaining=251)
+2025-11-13T04:12:35.173Z eslint:rules Loading rule 'logical-assignment-operators' (remaining=250)
+2025-11-13T04:12:35.174Z eslint:rules Loading rule 'max-classes-per-file' (remaining=249)
+2025-11-13T04:12:35.174Z eslint:rules Loading rule 'max-depth' (remaining=248)
+2025-11-13T04:12:35.175Z eslint:rules Loading rule 'max-lines' (remaining=247)
+2025-11-13T04:12:35.175Z eslint:rules Loading rule 'max-lines-per-function' (remaining=246)
+2025-11-13T04:12:35.176Z eslint:rules Loading rule 'max-nested-callbacks' (remaining=245)
+2025-11-13T04:12:35.176Z eslint:rules Loading rule 'max-statements' (remaining=244)
+2025-11-13T04:12:35.176Z eslint:rules Loading rule 'new-cap' (remaining=243)
+2025-11-13T04:12:35.177Z eslint:rules Loading rule 'no-alert' (remaining=242)
+2025-11-13T04:12:35.177Z eslint:rules Loading rule 'no-array-constructor' (remaining=241)
+2025-11-13T04:12:35.177Z eslint:rules Loading rule 'no-async-promise-executor' (remaining=240)
+2025-11-13T04:12:35.178Z eslint:rules Loading rule 'no-await-in-loop' (remaining=239)
+2025-11-13T04:12:35.178Z eslint:rules Loading rule 'no-bitwise' (remaining=238)
+2025-11-13T04:12:35.179Z eslint:rules Loading rule 'no-caller' (remaining=237)
+2025-11-13T04:12:35.179Z eslint:rules Loading rule 'no-case-declarations' (remaining=236)
+2025-11-13T04:12:35.179Z eslint:rules Loading rule 'no-class-assign' (remaining=235)
+2025-11-13T04:12:35.180Z eslint:rules Loading rule 'no-compare-neg-zero' (remaining=234)
+2025-11-13T04:12:35.180Z eslint:rules Loading rule 'no-cond-assign' (remaining=233)
+2025-11-13T04:12:35.180Z eslint:rules Loading rule 'no-console' (remaining=232)
+2025-11-13T04:12:35.181Z eslint:rules Loading rule 'no-const-assign' (remaining=231)
+2025-11-13T04:12:35.181Z eslint:rules Loading rule 'no-constant-binary-expression' (remaining=230)
+2025-11-13T04:12:35.181Z eslint:rules Loading rule 'no-constant-condition' (remaining=229)
+2025-11-13T04:12:35.182Z eslint:rules Loading rule 'no-constructor-return' (remaining=228)
+2025-11-13T04:12:35.182Z eslint:rules Loading rule 'no-continue' (remaining=227)
+2025-11-13T04:12:35.183Z eslint:rules Loading rule 'no-control-regex' (remaining=226)
+2025-11-13T04:12:35.183Z eslint:rules Loading rule 'no-debugger' (remaining=225)
+2025-11-13T04:12:35.184Z eslint:rules Loading rule 'no-delete-var' (remaining=224)
+2025-11-13T04:12:35.184Z eslint:rules Loading rule 'no-div-regex' (remaining=223)
+2025-11-13T04:12:35.184Z eslint:rules Loading rule 'no-dupe-args' (remaining=222)
+2025-11-13T04:12:35.185Z eslint:rules Loading rule 'no-dupe-else-if' (remaining=221)
+2025-11-13T04:12:35.185Z eslint:rules Loading rule 'no-dupe-keys' (remaining=220)
+2025-11-13T04:12:35.185Z eslint:rules Loading rule 'no-duplicate-case' (remaining=219)
+2025-11-13T04:12:35.186Z eslint:rules Loading rule 'no-duplicate-imports' (remaining=218)
+2025-11-13T04:12:35.186Z eslint:rules Loading rule 'no-else-return' (remaining=217)
+2025-11-13T04:12:35.187Z eslint:rules Loading rule 'no-empty' (remaining=216)
+2025-11-13T04:12:35.188Z eslint:rules Loading rule 'no-empty-character-class' (remaining=215)
+2025-11-13T04:12:35.188Z eslint:rules Loading rule 'no-empty-pattern' (remaining=214)
+2025-11-13T04:12:35.189Z eslint:rules Loading rule 'no-empty-static-block' (remaining=213)
+2025-11-13T04:12:35.189Z eslint:rules Loading rule 'no-eq-null' (remaining=212)
+2025-11-13T04:12:35.189Z eslint:rules Loading rule 'no-eval' (remaining=211)
+2025-11-13T04:12:35.190Z eslint:rules Loading rule 'no-ex-assign' (remaining=210)
+2025-11-13T04:12:35.190Z eslint:rules Loading rule 'no-extend-native' (remaining=209)
+2025-11-13T04:12:35.190Z eslint:rules Loading rule 'no-extra-bind' (remaining=208)
+2025-11-13T04:12:35.191Z eslint:rules Loading rule 'no-extra-boolean-cast' (remaining=207)
+2025-11-13T04:12:35.191Z eslint:rules Loading rule 'no-extra-label' (remaining=206)
+2025-11-13T04:12:35.192Z eslint:rules Loading rule 'no-fallthrough' (remaining=205)
+2025-11-13T04:12:35.192Z eslint:rules Loading rule 'no-func-assign' (remaining=204)
+2025-11-13T04:12:35.192Z eslint:rules Loading rule 'no-global-assign' (remaining=203)
+2025-11-13T04:12:35.193Z eslint:rules Loading rule 'no-implicit-coercion' (remaining=202)
+2025-11-13T04:12:35.193Z eslint:rules Loading rule 'no-implicit-globals' (remaining=201)
+2025-11-13T04:12:35.194Z eslint:rules Loading rule 'no-implied-eval' (remaining=200)
+2025-11-13T04:12:35.194Z eslint:rules Loading rule 'no-import-assign' (remaining=199)
+2025-11-13T04:12:35.195Z eslint:rules Loading rule 'no-inline-comments' (remaining=198)
+2025-11-13T04:12:35.195Z eslint:rules Loading rule 'no-inner-declarations' (remaining=197)
+2025-11-13T04:12:35.196Z eslint:rules Loading rule 'no-invalid-regexp' (remaining=196)
+2025-11-13T04:12:35.196Z eslint:rules Loading rule 'no-irregular-whitespace' (remaining=195)
+2025-11-13T04:12:35.197Z eslint:rules Loading rule 'no-iterator' (remaining=194)
+2025-11-13T04:12:35.197Z eslint:rules Loading rule 'no-label-var' (remaining=193)
+2025-11-13T04:12:35.197Z eslint:rules Loading rule 'no-labels' (remaining=192)
+2025-11-13T04:12:35.198Z eslint:rules Loading rule 'no-lone-blocks' (remaining=191)
+2025-11-13T04:12:35.198Z eslint:rules Loading rule 'no-lonely-if' (remaining=190)
+2025-11-13T04:12:35.199Z eslint:rules Loading rule 'no-misleading-character-class' (remaining=189)
+2025-11-13T04:12:35.202Z eslint:rules Loading rule 'no-multi-assign' (remaining=188)
+2025-11-13T04:12:35.202Z eslint:rules Loading rule 'no-multi-str' (remaining=187)
+2025-11-13T04:12:35.203Z eslint:rules Loading rule 'no-negated-condition' (remaining=186)
+2025-11-13T04:12:35.203Z eslint:rules Loading rule 'no-nested-ternary' (remaining=185)
+2025-11-13T04:12:35.203Z eslint:rules Loading rule 'no-new' (remaining=184)
+2025-11-13T04:12:35.204Z eslint:rules Loading rule 'no-new-func' (remaining=183)
+2025-11-13T04:12:35.204Z eslint:rules Loading rule 'no-new-native-nonconstructor' (remaining=182)
+2025-11-13T04:12:35.205Z eslint:rules Loading rule 'no-new-wrappers' (remaining=181)
+2025-11-13T04:12:35.205Z eslint:rules Loading rule 'no-nonoctal-decimal-escape' (remaining=180)
+2025-11-13T04:12:35.206Z eslint:rules Loading rule 'no-obj-calls' (remaining=179)
+2025-11-13T04:12:35.206Z eslint:rules Loading rule 'no-object-constructor' (remaining=178)
+2025-11-13T04:12:35.207Z eslint:rules Loading rule 'no-octal' (remaining=177)
+2025-11-13T04:12:35.207Z eslint:rules Loading rule 'no-octal-escape' (remaining=176)
+2025-11-13T04:12:35.207Z eslint:rules Loading rule 'no-param-reassign' (remaining=175)
+2025-11-13T04:12:35.208Z eslint:rules Loading rule 'no-plusplus' (remaining=174)
+2025-11-13T04:12:35.208Z eslint:rules Loading rule 'no-promise-executor-return' (remaining=173)
+2025-11-13T04:12:35.209Z eslint:rules Loading rule 'no-proto' (remaining=172)
+2025-11-13T04:12:35.209Z eslint:rules Loading rule 'no-prototype-builtins' (remaining=171)
+2025-11-13T04:12:35.209Z eslint:rules Loading rule 'no-redeclare' (remaining=170)
+2025-11-13T04:12:35.210Z eslint:rules Loading rule 'no-regex-spaces' (remaining=169)
+2025-11-13T04:12:35.210Z eslint:rules Loading rule 'no-restricted-exports' (remaining=168)
+2025-11-13T04:12:35.211Z eslint:rules Loading rule 'no-restricted-globals' (remaining=167)
+2025-11-13T04:12:35.211Z eslint:rules Loading rule 'no-restricted-properties' (remaining=166)
+2025-11-13T04:12:35.211Z eslint:rules Loading rule 'no-restricted-syntax' (remaining=165)
+2025-11-13T04:12:35.212Z eslint:rules Loading rule 'no-return-assign' (remaining=164)
+2025-11-13T04:12:35.212Z eslint:rules Loading rule 'no-script-url' (remaining=163)
+2025-11-13T04:12:35.212Z eslint:rules Loading rule 'no-self-assign' (remaining=162)
+2025-11-13T04:12:35.213Z eslint:rules Loading rule 'no-self-compare' (remaining=161)
+2025-11-13T04:12:35.213Z eslint:rules Loading rule 'no-sequences' (remaining=160)
+2025-11-13T04:12:35.213Z eslint:rules Loading rule 'no-setter-return' (remaining=159)
+2025-11-13T04:12:35.214Z eslint:rules Loading rule 'no-shadow' (remaining=158)
+2025-11-13T04:12:35.214Z eslint:rules Loading rule 'no-shadow-restricted-names' (remaining=157)
+2025-11-13T04:12:35.215Z eslint:rules Loading rule 'no-sparse-arrays' (remaining=156)
+2025-11-13T04:12:35.215Z eslint:rules Loading rule 'no-template-curly-in-string' (remaining=155)
+2025-11-13T04:12:35.215Z eslint:rules Loading rule 'no-ternary' (remaining=154)
+2025-11-13T04:12:35.216Z eslint:rules Loading rule 'no-this-before-super' (remaining=153)
+2025-11-13T04:12:35.216Z eslint:rules Loading rule 'no-throw-literal' (remaining=152)
+2025-11-13T04:12:35.217Z eslint:rules Loading rule 'no-unassigned-vars' (remaining=151)
+2025-11-13T04:12:35.217Z eslint:rules Loading rule 'no-undef' (remaining=150)
+2025-11-13T04:12:35.217Z eslint:rules Loading rule 'no-undef-init' (remaining=149)
+2025-11-13T04:12:35.218Z eslint:rules Loading rule 'no-undefined' (remaining=148)
+2025-11-13T04:12:35.218Z eslint:rules Loading rule 'no-underscore-dangle' (remaining=147)
+2025-11-13T04:12:35.219Z eslint:rules Loading rule 'no-unexpected-multiline' (remaining=146)
+2025-11-13T04:12:35.219Z eslint:rules Loading rule 'no-unmodified-loop-condition' (remaining=145)
+2025-11-13T04:12:35.219Z eslint:rules Loading rule 'no-unneeded-ternary' (remaining=144)
+2025-11-13T04:12:35.220Z eslint:rules Loading rule 'no-unreachable' (remaining=143)
+2025-11-13T04:12:35.220Z eslint:rules Loading rule 'no-unreachable-loop' (remaining=142)
+2025-11-13T04:12:35.221Z eslint:rules Loading rule 'no-unsafe-finally' (remaining=141)
+2025-11-13T04:12:35.221Z eslint:rules Loading rule 'no-unsafe-negation' (remaining=140)
+2025-11-13T04:12:35.221Z eslint:rules Loading rule 'no-unsafe-optional-chaining' (remaining=139)
+2025-11-13T04:12:35.222Z eslint:rules Loading rule 'no-unused-labels' (remaining=138)
+2025-11-13T04:12:35.222Z eslint:rules Loading rule 'no-unused-private-class-members' (remaining=137)
+2025-11-13T04:12:35.222Z eslint:rules Loading rule 'no-unused-vars' (remaining=136)
+2025-11-13T04:12:35.223Z eslint:rules Loading rule 'no-use-before-define' (remaining=135)
+2025-11-13T04:12:35.223Z eslint:rules Loading rule 'no-useless-assignment' (remaining=134)
+2025-11-13T04:12:35.224Z eslint:rules Loading rule 'no-useless-backreference' (remaining=133)
+2025-11-13T04:12:35.225Z eslint:rules Loading rule 'no-useless-call' (remaining=132)
+2025-11-13T04:12:35.225Z eslint:rules Loading rule 'no-useless-catch' (remaining=131)
+2025-11-13T04:12:35.226Z eslint:rules Loading rule 'no-useless-computed-key' (remaining=130)
+2025-11-13T04:12:35.226Z eslint:rules Loading rule 'no-useless-concat' (remaining=129)
+2025-11-13T04:12:35.226Z eslint:rules Loading rule 'no-useless-escape' (remaining=128)
+2025-11-13T04:12:35.227Z eslint:rules Loading rule 'no-useless-rename' (remaining=127)
+2025-11-13T04:12:35.228Z eslint:rules Loading rule 'no-useless-return' (remaining=126)
+2025-11-13T04:12:35.228Z eslint:rules Loading rule 'no-var' (remaining=125)
+2025-11-13T04:12:35.228Z eslint:rules Loading rule 'no-void' (remaining=124)
+2025-11-13T04:12:35.229Z eslint:rules Loading rule 'no-with' (remaining=123)
+2025-11-13T04:12:35.229Z eslint:rules Loading rule 'object-shorthand' (remaining=122)
+2025-11-13T04:12:35.230Z eslint:rules Loading rule 'one-var' (remaining=121)
+2025-11-13T04:12:35.230Z eslint:rules Loading rule 'operator-assignment' (remaining=120)
+2025-11-13T04:12:35.231Z eslint:rules Loading rule 'prefer-arrow-callback' (remaining=119)
+2025-11-13T04:12:35.231Z eslint:rules Loading rule 'prefer-const' (remaining=118)
+2025-11-13T04:12:35.232Z eslint:rules Loading rule 'prefer-exponentiation-operator' (remaining=117)
+2025-11-13T04:12:35.232Z eslint:rules Loading rule 'prefer-named-capture-group' (remaining=116)
+2025-11-13T04:12:35.233Z eslint:rules Loading rule 'prefer-numeric-literals' (remaining=115)
+2025-11-13T04:12:35.233Z eslint:rules Loading rule 'prefer-object-has-own' (remaining=114)
+2025-11-13T04:12:35.234Z eslint:rules Loading rule 'prefer-object-spread' (remaining=113)
+2025-11-13T04:12:35.234Z eslint:rules Loading rule 'prefer-promise-reject-errors' (remaining=112)
+2025-11-13T04:12:35.235Z eslint:rules Loading rule 'prefer-regex-literals' (remaining=111)
+2025-11-13T04:12:35.236Z eslint:rules Loading rule 'prefer-rest-params' (remaining=110)
+2025-11-13T04:12:35.236Z eslint:rules Loading rule 'prefer-spread' (remaining=109)
+2025-11-13T04:12:35.237Z eslint:rules Loading rule 'prefer-template' (remaining=108)
+2025-11-13T04:12:35.237Z eslint:rules Loading rule 'radix' (remaining=107)
+2025-11-13T04:12:35.238Z eslint:rules Loading rule 'require-atomic-updates' (remaining=106)
+2025-11-13T04:12:35.238Z eslint:rules Loading rule 'require-await' (remaining=105)
+2025-11-13T04:12:35.239Z eslint:rules Loading rule 'require-unicode-regexp' (remaining=104)
+2025-11-13T04:12:35.239Z eslint:rules Loading rule 'require-yield' (remaining=103)
+2025-11-13T04:12:35.240Z eslint:rules Loading rule 'sort-imports' (remaining=102)
+2025-11-13T04:12:35.240Z eslint:rules Loading rule 'sort-keys' (remaining=101)
+2025-11-13T04:12:35.241Z eslint:rules Loading rule 'sort-vars' (remaining=100)
+2025-11-13T04:12:35.241Z eslint:rules Loading rule 'strict' (remaining=99)
+2025-11-13T04:12:35.241Z eslint:rules Loading rule 'symbol-description' (remaining=98)
+2025-11-13T04:12:35.242Z eslint:rules Loading rule 'unicode-bom' (remaining=97)
+2025-11-13T04:12:35.242Z eslint:rules Loading rule 'use-isnan' (remaining=96)
+2025-11-13T04:12:35.243Z eslint:rules Loading rule 'valid-typeof' (remaining=95)
+2025-11-13T04:12:35.243Z eslint:rules Loading rule 'vars-on-top' (remaining=94)
+2025-11-13T04:12:35.243Z eslint:rules Loading rule 'yoda' (remaining=93)
+2025-11-13T04:12:35.244Z eslint:rules Loading rule 'no-new-symbol' (remaining=92)
+2025-11-13T04:12:35.244Z eslint:rules Loading rule 'no-return-await' (remaining=91)
+2025-11-13T04:12:35.324Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\eventsMiddleware.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\eventsMiddleware.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.324Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\hooks.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\hooks.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.324Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\persist.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\persist.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.324Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\store.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\store.ts
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\assets
+2025-11-13T04:12:35.324Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.325Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\assets\react.svg
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\assets\react.svg
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid
+2025-11-13T04:12:35.325Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsDataGrid.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsDataGrid.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ArchivedLeadCards.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ArchivedLeadCards.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ArchivedMissionCards.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ArchivedMissionCards.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AssetsDataGrid.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AssetsDataGrid.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\DataGridCard.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\DataGridCard.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.326Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ErrorBoundary.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ErrorBoundary.tsx
+2025-11-13T04:12:35.326Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ErrorTrigger.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ErrorTrigger.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\EventLog.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\EventLog.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ExpandableCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ExpandableCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\GameControls.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\GameControls.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LabeledValue.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LabeledValue.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadCards.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadCards.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsDataGrid.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsDataGrid.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsToolbar.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsToolbar.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.327Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MissionCards.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MissionCards.tsx
+2025-11-13T04:12:35.327Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MyChip.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MyChip.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\PlayerActions.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\PlayerActions.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ResetControls.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ResetControls.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\SituationReportCard.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\SituationReportCard.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\StyledDataGrid.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\StyledDataGrid.tsx
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport
+2025-11-13T04:12:35.328Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatAssets.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatAssets.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatMissions.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatMissions.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatSituationReport.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatSituationReport.ts
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TreeItemLabelWithChip.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TreeItemLabelWithChip.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportDisplay.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportDisplay.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportTreeView.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportTreeView.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\useTurnReportHistory.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\useTurnReportHistory.tsx
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib
+2025-11-13T04:12:35.334Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\enemyUnits.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\enemyUnits.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\factions.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\factions.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\leads.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\leads.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\missions.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\missions.ts
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents
+2025-11-13T04:12:35.335Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentsView.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentsView.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentView.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentView.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgentInvariants.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgentInvariants.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgents.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgents.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\bps.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\bps.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\model.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\model.ts
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset
+2025-11-13T04:12:35.336Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\constants.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\constants.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\debugInitialState.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\debugInitialState.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\initialState.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\initialState.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\ruleset.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\ruleset.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\turnReportModel.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\turnReportModel.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\validateGameStateInvariants.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\validateGameStateInvariants.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\selectors
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\selectors\selectors.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\selectors\selectors.ts
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices
+2025-11-13T04:12:35.337Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\eventsSlice.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\eventsSlice.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\gameStateSlice.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\gameStateSlice.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\agentReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\agentReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\asPlayerAction.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\asPlayerAction.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\gameControlsReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\gameControlsReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.338Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\leadReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\leadReducers.ts
+2025-11-13T04:12:35.338Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\missionReducers.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\missionReducers.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\selectionSlice.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\selectionSlice.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\settingsSlice.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\settingsSlice.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateAttack.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateAttack.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateBattle.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateBattle.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateDeployedMissionSite.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateDeployedMissionSite.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateTurn.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateTurn.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\rolls.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\rolls.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateAgents.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateAgents.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateLeadInvestigations.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateLeadInvestigations.ts
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils
+2025-11-13T04:12:35.339Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.340Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\actorUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\actorUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.340Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\assert.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\assert.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.340Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\enemyUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\enemyUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.340Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\formatUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\formatUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.340Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\mathUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\mathUtils.ts
+2025-11-13T04:12:35.340Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.341Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\MissionSiteUtils.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\MissionSiteUtils.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.341Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\rand.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\rand.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.341Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\weaponUtils.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\weaponUtils.ts
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.341Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\main.tsx
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\main.tsx
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\model
+2025-11-13T04:12:35.341Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\styling
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\styling\styleUtils.ts
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\styling\styleUtils.ts
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\vite-env.d.ts
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\vite-env.d.ts
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.342Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\ErrorBoundary.test.tsx
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\ErrorBoundary.test.tsx
+2025-11-13T04:12:35.342Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.372Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\EventLog.test.tsx
+2025-11-13T04:12:35.372Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\EventLog.test.tsx
+2025-11-13T04:12:35.372Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.373Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\GameControls.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\GameControls.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.373Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\PlayerActions.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\PlayerActions.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\e2e
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.373Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\e2e\App.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\e2e\App.test.tsx
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures
+2025-11-13T04:12:35.373Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\agentFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\agentFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\enemyFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\enemyFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\resetAllFixtures.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\resetAllFixtures.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\stateFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\stateFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\uiFixture.tsx
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\uiFixture.tsx
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\weaponFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\weaponFixture.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\effectiveSkill.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\effectiveSkill.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateBattle.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateBattle.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateDeployedMissionSite.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateDeployedMissionSite.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateTurn.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateTurn.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\rolls.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\rolls.test.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\setupAllTests.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\setupAllTests.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.374Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\setupReactTests.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\setupReactTests.ts
+2025-11-13T04:12:35.374Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\unusedTestUtils.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\unusedTestUtils.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\__mocks__
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\tsconfig.app.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\tsconfig.app.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\tsconfig.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\tsconfig.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\tsconfig.node.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\tsconfig.node.json
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\vite.config.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\vite.config.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\vitest.config.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\vitest.config.ts
+2025-11-13T04:12:35.375Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.375Z eslint:eslint 104 files found in: 1432ms
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\eslint.config_empty.js
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\prettier.config.js
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\eventsMiddleware.ts
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\hooks.ts
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\persist.ts
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\app\store.ts
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsDataGrid.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ArchivedLeadCards.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ArchivedMissionCards.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\AssetsDataGrid.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\DataGridCard.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ErrorBoundary.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ErrorTrigger.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\EventLog.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ExpandableCard.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\GameControls.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LabeledValue.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadCard.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadCards.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsDataGrid.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsToolbar.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MissionCards.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\MyChip.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\PlayerActions.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\ResetControls.tsx
+2025-11-13T04:12:35.375Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\SituationReportCard.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\StyledDataGrid.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatAssets.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatMissions.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatSituationReport.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TreeItemLabelWithChip.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportDisplay.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportTreeView.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\useTurnReportHistory.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\enemyUnits.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\factions.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\leads.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\collections\missions.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentsView.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentView.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgentInvariants.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgents.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\bps.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\model.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\constants.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\debugInitialState.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\initialState.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\ruleset.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\turnReportModel.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\model\validateGameStateInvariants.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\selectors\selectors.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\eventsSlice.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\gameStateSlice.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\agentReducers.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\asPlayerAction.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\gameControlsReducers.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\leadReducers.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\missionReducers.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\selectionSlice.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\slices\settingsSlice.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateAttack.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateBattle.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateDeployedMissionSite.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateTurn.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\rolls.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateAgents.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateLeadInvestigations.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\actorUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\assert.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\enemyUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\formatUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\mathUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\MissionSiteUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\rand.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\lib\utils\weaponUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\main.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\styling\styleUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\src\vite-env.d.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\ErrorBoundary.test.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\EventLog.test.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\GameControls.test.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\component\PlayerActions.test.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\e2e\App.test.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\agentFixture.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\enemyFixture.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\resetAllFixtures.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\stateFixture.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\uiFixture.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\fixtures\weaponFixture.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\effectiveSkill.test.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateBattle.test.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateDeployedMissionSite.test.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\evaluateTurn.test.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\unit\rolls.test.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\setupAllTests.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\setupReactTests.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\test\utils\unusedTestUtils.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\vite.config.ts
+2025-11-13T04:12:35.376Z eslint:config-loader Calculating config for file C:\Users\spawa\repos\game-ts\web\vitest.config.ts
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\eslint.config_empty.js
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\prettier.config.js
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\eventsMiddleware.ts
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\hooks.ts
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\persist.ts
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\app\store.ts
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsDataGrid.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ArchivedLeadCards.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ArchivedMissionCards.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\AssetsDataGrid.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\DataGridCard.tsx
+2025-11-13T04:12:35.376Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ErrorBoundary.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ErrorTrigger.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\EventLog.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ExpandableCard.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\GameControls.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LabeledValue.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadCard.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadCards.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsDataGrid.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsToolbar.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MissionCards.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\MyChip.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\PlayerActions.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\ResetControls.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\SituationReportCard.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\StyledDataGrid.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatAssets.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatMissions.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatSituationReport.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TreeItemLabelWithChip.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportDisplay.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportTreeView.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\useTurnReportHistory.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\enemyUnits.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\factions.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\leads.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\collections\missions.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentsView.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentView.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgentInvariants.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgents.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\bps.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\model.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\constants.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\debugInitialState.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\initialState.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\ruleset.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\turnReportModel.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\model\validateGameStateInvariants.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\selectors\selectors.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\eventsSlice.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\gameStateSlice.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\agentReducers.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\asPlayerAction.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\gameControlsReducers.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\leadReducers.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\missionReducers.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\selectionSlice.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\slices\settingsSlice.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateAttack.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateBattle.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateDeployedMissionSite.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateTurn.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\rolls.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateAgents.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateLeadInvestigations.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\actorUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\assert.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\enemyUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\formatUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\mathUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\MissionSiteUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\rand.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\lib\utils\weaponUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\main.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\styling\styleUtils.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\src\vite-env.d.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\ErrorBoundary.test.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\EventLog.test.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\GameControls.test.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\component\PlayerActions.test.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\e2e\App.test.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\agentFixture.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\enemyFixture.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\resetAllFixtures.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\stateFixture.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\uiFixture.tsx
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\fixtures\weaponFixture.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\effectiveSkill.test.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateBattle.test.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateDeployedMissionSite.test.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\evaluateTurn.test.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\unit\rolls.test.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\setupAllTests.ts
+2025-11-13T04:12:35.377Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\setupReactTests.ts
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\test\utils\unusedTestUtils.ts
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\vite.config.ts
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Calculating config for C:\Users\spawa\repos\game-ts\web\vitest.config.ts
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.378Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:config-loader [Legacy]: Using config file C:\Users\spawa\repos\game-ts\web\eslint.config.js and base path C:\Users\spawa\repos\game-ts\web
+2025-11-13T04:12:35.379Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T04:12:35.379Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\eslint.config_empty.js
+2025-11-13T04:12:35.380Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\prettier.config.js
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\app\App.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\app\eventsMiddleware.ts
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\app\hooks.ts
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\app\persist.ts
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\app\store.ts
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsDataGrid.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\AgentsDataGrid\AgentsToolbar.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ArchivedLeadCards.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ArchivedMissionCards.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\AssetsDataGrid.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\DataGridCard.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ErrorBoundary.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ErrorTrigger.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\EventLog.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ExpandableCard.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\GameControls.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\LabeledValue.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\LeadCard.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\LeadCards.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsDataGrid.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\LeadInvestigationsToolbar.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\MissionCard.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\MissionCards.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\MyChip.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\PlayerActions.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\ResetControls.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\SituationReportCard.tsx
+2025-11-13T04:12:35.382Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\StyledDataGrid.tsx
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatAssets.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatMissions.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\formatSituationReport.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TreeItemLabelWithChip.tsx
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportDisplay.tsx
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\TurnReportTreeView.tsx
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\components\TurnReport\useTurnReportHistory.tsx
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\collections\enemyUnits.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\collections\factions.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\collections\leads.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\collections\missions.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentsView.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\AgentView.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgentInvariants.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\agents\validateAgents.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\bps.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\model.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\constants.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\debugInitialState.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\initialState.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\ruleset\ruleset.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\turnReportModel.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\model\validateGameStateInvariants.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\selectors\selectors.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\eventsSlice.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\gameStateSlice.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\agentReducers.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\asPlayerAction.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\gameControlsReducers.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\leadReducers.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\reducers\missionReducers.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\selectionSlice.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\slices\settingsSlice.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateAttack.ts
+2025-11-13T04:12:35.383Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateBattle.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateDeployedMissionSite.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\evaluateTurn.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\rolls.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateAgents.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\turn_advancement\updateLeadInvestigations.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\actorUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\assert.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\enemyUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\formatUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\mathUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\MissionSiteUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\rand.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\lib\utils\weaponUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\main.tsx
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\styling\styleUtils.ts
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\styling\theme.tsx
+2025-11-13T04:12:35.384Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\src\vite-env.d.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\component\ErrorBoundary.test.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\component\EventLog.test.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\component\GameControls.test.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\component\PlayerActions.test.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\e2e\App.test.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\agentFixture.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\enemyFixture.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\resetAllFixtures.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\stateFixture.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\uiFixture.tsx
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\fixtures\weaponFixture.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\unit\effectiveSkill.test.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\unit\evaluateBattle.test.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\unit\evaluateDeployedMissionSite.test.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\unit\evaluateTurn.test.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\unit\rolls.test.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\utils\setupAllTests.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\utils\setupReactTests.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\test\utils\unusedTestUtils.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\vite.config.ts
+2025-11-13T04:12:35.386Z eslint:eslint Skipping file since it hasn't changed: C:\Users\spawa\repos\game-ts\web\vitest.config.ts
+2025-11-13T04:12:35.387Z eslint:lint-result-cache Persisting cached results: C:\Users\spawa\repos\game-ts\web\.eslintcache
+Rule | Time (ms) | Relative
+:----|----------:|--------:

@@ -7,7 +7,7 @@
   "env": {
     "builtin": true
   },
-  "ignorePatterns": ["dist", "coverage"],
+  "ignorePatterns": ["dist", "coverage", "node_modules", "logs"],
   "overrides": [
     {
       "files": ["**/*.{ts,tsx}"],
@@ -26,7 +26,7 @@
         "func-style": "error",
         "grouped-accessor-pairs": "error",
         "guard-for-in": "error",
-        "id-length": "error",
+        "id-length": "off",
         "init-declarations": "error",
         "max-classes-per-file": "error",
         "max-depth": "error",
