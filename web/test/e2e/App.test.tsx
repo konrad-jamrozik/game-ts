@@ -60,7 +60,7 @@ describe(App, () => {
     await step6ClickMissionCard001()
     await step7SelectAgents000And001()
     await step8ClickDeployButton()
-    await step9HireAgent4Times()
+    await step9HireAgent3Times()
     await step10AdvanceTurnToGameOver()
     await step11ClickResetControls()
     await step12ClickResetGame()
@@ -247,7 +247,7 @@ async function step8ClickDeployButton(): Promise<void> {
  * Step 9: Click "Hire Agent" button 3 times
  * - This hires 3 agents, spending 150 money total
  */
-async function step9HireAgent4Times(): Promise<void> {
+async function step9HireAgent3Times(): Promise<void> {
   // Keep hiring agents until balance becomes low enough that projected balance is negative
   // Starting debug balance is 200, agent cost is 50, so we can hire 3 agents
   // With 3+ agents, upkeep costs should make projected balance negative after advancing turns
@@ -262,9 +262,9 @@ async function step9HireAgent4Times(): Promise<void> {
 }
 
 /**
- * Verify the "Current" column of "Assets" card for "Money" row has a negative value
+ * Get the current money value from the "Current" column of "Assets" card for "Money" row
  */
-function verifyMoneyCurrentValueIsNegative(): void {
+function getCurrentMoneyValue(): number {
   // Verify the "Current" column of "Assets" card for "Money" row exists
   const gridRows = screen.getAllByRole('row')
   const moneyRow = gridRows.find((row) => row.textContent?.includes('Money') ?? false)
@@ -272,7 +272,7 @@ function verifyMoneyCurrentValueIsNegative(): void {
   assertDefined(moneyRow)
 
   // Find the "Current" column value in the Money row
-  // The Current column shows the money value, which should be negative
+  // The Current column shows the money value
   // The row structure is: Money | <current_value> | <projected_value>
   const cells = within(moneyRow).getAllByRole('gridcell')
   // The Current column is the second cell (index 1) - first is "Money", second is "Current"
@@ -282,7 +282,17 @@ function verifyMoneyCurrentValueIsNegative(): void {
   const currentValueText = currentValueCell.textContent ?? ''
   // Parse the number (may include negative sign and digits)
   const currentValue = Number.parseInt(currentValueText.trim(), 10)
+  return currentValue
+}
+
+/**
+ * Verify the "Current" column of "Assets" card for "Money" row has a negative value
+ * Returns the current money value
+ */
+function verifyMoneyCurrentValueIsNegative(): number {
+  const currentValue = getCurrentMoneyValue()
   expect(currentValue).toBeLessThan(0)
+  return currentValue
 }
 
 /**
@@ -300,6 +310,13 @@ async function step10AdvanceTurnToGameOver(): Promise<void> {
   const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
   expect(turnValueAfterGameOver).toHaveTextContent('4')
 
+  const currentMoneyValue = getCurrentMoneyValue()
+  // If money is still above zero, advance turn one more time
+  // This may happen if e.g. the evaluation of completed mission site resulted in an agent being
+  // terminated, hence lower upkeep, hence player still having sufficient funds.
+  if (currentMoneyValue > 0) {
+    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+  }
   verifyMoneyCurrentValueIsNegative()
 
   // Should show disabled "Game over" button instead of "Advance turn"
