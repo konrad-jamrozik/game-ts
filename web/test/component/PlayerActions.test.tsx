@@ -6,7 +6,7 @@ import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
 import { AGENT_HIRE_COST } from '../../src/lib/model/ruleset/constants'
 
 describe(PlayerActions, () => {
-  const agentId = 'agent-1' as const
+  const agentId = 'agent-1'
 
   test("click 'hire agent' button -> happy path", async () => {
     const initialMoney = 100
@@ -160,7 +160,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
-    const missionSiteId = 'mission-site-1' as const
+    const missionSiteId = 'mission-site-1'
     st.arrangeGameState({
       agents: [st.newAgentInStandby(agentId)],
       missionSites: [st.newMissionSite(missionSiteId)],
@@ -174,7 +174,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
-    const missionSiteId = 'mission-site-1' as const
+    const missionSiteId = 'mission-site-1'
     st.arrangeGameState({
       agents: [st.newAgentInContracting(agentId)],
       missionSites: [st.newMissionSite(missionSiteId)],

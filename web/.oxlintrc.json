@@ -449,12 +449,7 @@
         "no-warning-comments": "off",
         "max-lines": "off",
         "max-depth": "off",
-        "@typescript-eslint/no-confusing-void-expression": [
-          "error",
-          {
-            "ignoreVoidReturningFunctions": true
-          }
-        ],
+        "@typescript-eslint/no-confusing-void-expression": "off",
         "@typescript-eslint/consistent-type-definitions": ["error", "type"],
         "@typescript-eslint/explicit-function-return-type": [
           "error",
@@ -469,7 +464,7 @@
               "camelCase": true,
               "pascalCase": true
             },
-            "ignore": ["vite-env.d.ts", "^AI.*"]
+            "ignore": "vite-env.d.ts"
           }
         ],
         "unicorn/no-empty-file": "off",
@@ -1657,7 +1652,7 @@
         "vitest/max-expects": [
           "error",
           {
-            "max": 10
+            "max": 20
           }
         ],
         "vitest/no-standalone-expect": "off",

@@ -107,9 +107,14 @@
     ],
     // oxlint / oxc extension settings
     // --------------------
-    // Enable type-aware linting for oxlint
-    // See: https://oxc.rs/docs/guide/usage/linter/type-aware
-    "oxc.typeAware": true,
+    
+    "oxc.enable": true,
+    "oxc.fmt.experimental": false,
+    "oxc.typeAware": false,
+    "oxc.requireConfig": true,
+    "oxc.configPath": "web/.oxlintrc.json",
+    "oxc.tsConfigPath": "web/tsconfig.json",
+    "oxc.unusedDisableDirectives": "deny",
     // end of oxlint / oxc extension settings
     
     // https://code.visualstudio.com/docs/copilot/chat/mcp-servers
@@ -128,4 +133,5 @@
     "github.copilot.chat.languageContext.typescript.enabled": true,
     "files.trimFinalNewlines": true,
     "markdown-preview-enhanced.enableExtendedTableSyntax": true,
+    
 }

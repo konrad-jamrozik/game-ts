@@ -130,27 +130,6 @@ Read more on that in [About Prettier - Prettier and other tools](about_prettier.
 
 Read https://typescript-eslint.io/blog/project-service#additional-files
 
-# Oxlint setup
-
-https://oxc.rs/docs/guide/usage/linter.html
-
-Installed with:
-
-``` bash
-npm install --save-dev oxlint
-npm install --save-dev eslint-plugin-oxlint
-npm install --save-dev tsgolint
-npm install --save-dev oxlint-tsgolint
-```
-
-Then added `.oxlintrc.json` by migrating with:
-
-```powershell
-npx @oxlint/migrate --type-aware
-```
-
-Then added `oxlint.configs['flat/all']` to the ESLint config.
-
 # Performance investigation & measurements
 
 https://stackoverflow.com/questions/78186272/how-can-i-find-out-why-eslint-performance-is-slow

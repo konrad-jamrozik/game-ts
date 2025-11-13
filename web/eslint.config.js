@@ -445,7 +445,7 @@ export default plugTypescriptEslint.config([
       'max-lines-per-function': 'off',
 
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/max-expects.md
-      'vitest/max-expects': ['error', { max: 10 }],
+      'vitest/max-expects': ['error', { max: 20 }],
 
       // I use expect() in test utility methods to assert arranged assumptions, reuse assertions, etc.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/no-standalone-expect.md
