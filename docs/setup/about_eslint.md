@@ -223,13 +223,6 @@ camelcase                                       |    22.205 |     0.2%
 
 ## Slow config load on eslint.config.js
 
-In the log below, observe the timestamp diff here:
-``` powershell
-2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
-2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
-```
-which is 1m 33s.
-
 ``` powershell
 measure-command { npm run lint:debug }
 # which resolves to:
@@ -253,6 +246,17 @@ Output in lint.debug.txt
 2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
 2025-11-13T00:19:42.602Z eslint:rules Loading rule 'consistent-return' (remaining=289)
 ```
+
+In the log above, observe the big jump timestamp jump after "Config file URL":
+``` powershell
+2025-11-13T00:18:02.824Z eslint:config-loader Loading config file C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T00:18:02.824Z eslint:config-loader Loading config from C:\Users\spawa\repos\game-ts\web\eslint.config.js
+2025-11-13T00:18:02.824Z eslint:config-loader Config file URL is file:///C:/Users/spawa/repos/game-ts/web/eslint.config.js
+2025-11-13T00:19:35.901Z eslint:rules Loading rule 'no-warning-comments' (remaining=290)
+2025-11-13T00:19:42.602Z eslint:rules Loading rule 'consistent-return' (remaining=289)
+
+```
+which is 1m 33s.
 
 [create-vite react-ts]: https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts
 [eslint]: https://eslint.org/
