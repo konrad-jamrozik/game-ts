@@ -6,7 +6,7 @@ This repository contains personal code of Konrad Jamrozik, written for his game 
 
 # Project overview
 
-The project sources, architecture, conventions and architecture are detailed in [`.github/copilot-instructions.md](.github/copilot-instructions.md).
+The project sources, architecture, conventions and architecture are detailed in [AGENTS.md](AGENTS.md).
 
 # License
 

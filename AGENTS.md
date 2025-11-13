@@ -35,17 +35,12 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 
 ## Verification of work and build tasks
 
-Run all of the below commands from the `web/` directory to verify your work:
+To verify your changes are correct, rely on the built-in IDE typescript compiler and linter
+errors.
 
-- To do thorough check of all validations, run `npm run check`.
-- To check for obvious errors, run `npm run build`.
-- To check for code formatting issues, run `npm run format`.
-- To fix code formatting issues, run `npm run format:fix`.
-- To check for code style issues, run `npm run oxlint`.
-- To fix code style issues, run `npm run lint:fix`.
-- To verify that unit tests pass, run `npm run test`.
-- To run the development server, run `npm run dev`.
-- To install dependencies, run `npm install`.
+You can also run `npm run oxlint` from the `web/` directory.
+
+Do not run tests, do not run `tsc`, do not run `build`, do not run tests.
 
 ## Tech stack
 
@@ -129,7 +124,6 @@ This project uses following technologies:
 
 - This project uses React (with TypeScript) for all UI in `web/src/`.
 - Use `web/src/App.tsx` as the main entry point for the app.
-- Refer to `AGENTS.md` for general project setup, architecture, dependencies, and conventions.
 
 ### React Feature implementation & Code Completeness
 
