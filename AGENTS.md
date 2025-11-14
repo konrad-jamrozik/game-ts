@@ -123,6 +123,7 @@ This project uses following technologies:
 ### Project React Usage
 
 - This project uses React (with TypeScript) for all UI in `web/src/`.
+- This project uses React Compiler, so never use `React.useMemo`.
 - Use `web/src/App.tsx` as the main entry point for the app.
 
 ### React Feature implementation & Code Completeness

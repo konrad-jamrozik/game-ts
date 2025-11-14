@@ -29,6 +29,7 @@ import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'
 import { StyledDataGrid } from './StyledDataGrid'
+import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
 
 export type LeadInvestigationRow = {
   id: LeadInvestigationId
@@ -57,19 +58,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const [showDone, setShowDone] = React.useState(false)
   const [showAbandoned, setShowAbandoned] = React.useState(false)
 
-  // Get IDs of investigations completed this turn
-  // KJA review useMemo usage. I should not need it due to react compiler.
-  const completedThisTurnIds = React.useMemo(() => {
-    const completedIds = new Set<string>()
-    if (turnStartReport?.leadInvestigations) {
-      for (const report of turnStartReport.leadInvestigations) {
-        if (report.completed) {
-          completedIds.add(report.investigationId)
-        }
-      }
-    }
-    return completedIds
-  }, [turnStartReport])
+  const completedThisTurnIds = getCompletedInvestigationIds(turnStartReport)
 
   const leadInvestigationColumns: GridColDef<LeadInvestigationRow>[] = [
     { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
