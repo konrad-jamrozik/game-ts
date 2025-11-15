@@ -208,16 +208,15 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   )
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
-    // KJA need to review this function
     const mgr = createRowSelectionManager(newSelectionModel)
     const existingRowIds = leadInvestigationRows.map((row) => row.rowId)
-    const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
+    const selectedRowIds = existingRowIds.filter((id) => mgr.has(id))
 
-    if (includedRowIds.length === 0) {
+    if (selectedRowIds.length === 0) {
       dispatch(clearInvestigationSelection())
     } else {
-      // With disableMultipleRowSelection, there should only be one row selected
-      const [rowId] = includedRowIds
+      // We assume disableMultipleRowSelection, so we assume there is exactly one rowId in selectedRowIds
+      const [rowId] = selectedRowIds
       const row = leadInvestigationRows.find((rowItem) => rowItem.rowId === rowId)
       if (row && row.state === 'Active') {
         // Only allow selection of Active investigations
@@ -225,7 +224,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         dispatch(clearLeadSelection())
         dispatch(setInvestigationSelection(row.id))
       } else {
-        // If trying to select a Successful investigation, clear selection
+        // If trying to select any other investigation, clear selection
         dispatch(clearInvestigationSelection())
       }
     }
