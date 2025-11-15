@@ -8,9 +8,9 @@ export function filterMissionSitesByState(missionSites: MissionSite[], states: M
 }
 
 /**
- * Gets active mission sites (Active or Deployed)
+ * Gets active or deployed mission sites
  */
-export function getActiveMissionSites(missionSites: MissionSite[]): MissionSite[] {
+export function getActiveOrDeployedMissionSites(missionSites: MissionSite[]): MissionSite[] {
   return filterMissionSitesByState(missionSites, ['Active', 'Deployed'])
 }
 
@@ -32,7 +32,7 @@ export function sortMissionSitesByIdDesc(missionSites: MissionSite[]): MissionSi
  * Sorts mission sites by state priority and then by ID
  * Active missions come before Deployed, within each group by ID (newest first)
  */
-export function sortActiveMissionSites(missionSites: MissionSite[]): MissionSite[] {
+export function sortActiveOrDeployedMissionSites(missionSites: MissionSite[]): MissionSite[] {
   return [...missionSites].sort((siteA, siteB) => {
     // First sort by state: Active missions come before Deployed
     if (siteA.state !== siteB.state) {

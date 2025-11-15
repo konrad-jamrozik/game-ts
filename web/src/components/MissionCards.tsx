@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { getActiveMissionSites, sortActiveMissionSites } from '../lib/utils/MissionSiteUtils'
+import { getActiveOrDeployedMissionSites, sortActiveOrDeployedMissionSites } from '../lib/utils/MissionSiteUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { MissionCard } from './MissionCard'
 
@@ -10,8 +10,8 @@ export function MissionCards(): React.JSX.Element {
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
 
   // Get and sort active mission sites
-  const activeMissionSites = getActiveMissionSites(missionSites)
-  const sortedActiveMissionSites = sortActiveMissionSites(activeMissionSites)
+  const activeMissionSites = getActiveOrDeployedMissionSites(missionSites)
+  const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSites)
 
   const widthVal = '800px'
   return (

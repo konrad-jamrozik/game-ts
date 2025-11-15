@@ -8,6 +8,7 @@ import { GameControls } from '../components/GameControls'
 import { LeadCards } from '../components/LeadCards'
 import { LeadInvestigationsDataGrid } from '../components/LeadInvestigationsDataGrid'
 import { MissionCards } from '../components/MissionCards'
+import { MissionsDataGrid } from '../components/MissionsDataGrid'
 import { PlayerActions } from '../components/PlayerActions'
 import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
 import { AssetsDataGrid } from '../components/AssetsDataGrid'
@@ -37,6 +38,7 @@ function App(): React.JSX.Element {
         <Stack spacing={2}>
           <AgentsDataGrid />
           <LeadInvestigationsDataGrid />
+          <MissionsDataGrid />
           <MissionCards />
           <LeadCards />
           <ArchivedMissionCards />
