@@ -14,6 +14,7 @@ import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
+import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
 import { div } from '../../lib/utils/mathUtils'
 
 export type AgentRow = Agent & {
@@ -195,22 +196,11 @@ export function AgentsDataGrid(): React.JSX.Element {
   }))
 
   // Apply filtering based on checkboxes
-  const rows: AgentRow[] = React.useMemo(() => {
-    if (showOnlyAvailable) {
-      return allRows.filter((agent) => agent.state === 'Available')
-    }
-    if (showOnlyTerminated) {
-      return allRows.filter((agent) => agent.state === 'Terminated')
-    }
-    return allRows.filter((agent) => agent.state !== 'Terminated')
-  }, [allRows, showOnlyTerminated, showOnlyAvailable])
+  const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable)
 
   // Define and filter columns based on showDetailed state
-  const visibleColumns = React.useMemo(() => {
-    const columns = createAgentColumns(rows)
-    // Filter columns based on showDetailed state
-    return showDetailed ? columns : columns.filter((col) => col.field !== 'hitPoints' && col.field !== 'recoveryTurns')
-  }, [rows, showDetailed])
+  const columns = createAgentColumns(rows)
+  const visibleColumns = filterVisibleAgentColumns(columns, showDetailed)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []

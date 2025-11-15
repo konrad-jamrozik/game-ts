@@ -25,6 +25,7 @@ import {
 } from '../lib/slices/selectionSlice'
 import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
 import { floor } from '../lib/utils/mathUtils'
+import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'
@@ -48,7 +49,6 @@ export type LeadInvestigationRow = {
   completedThisTurn: boolean
 }
 
-// eslint-disable-next-line max-lines-per-function
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -200,26 +200,11 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   })
 
   // Filter rows based on checkbox states
-  // KJA review if I need React.useMemo. Review all places in code with it. I should not need it due to react compiler.
-  const leadInvestigationRows: LeadInvestigationRow[] = React.useMemo(
-    () =>
-      allInvestigationRows
-        .filter((row) => {
-          // If investigation was completed this turn, show it in both "active" and "done" when those are selected
-          if (row.completedThisTurn && row.state === 'Successful') {
-            return showActive || showDone
-          }
-          // Otherwise filter by state
-          if (row.state === 'Active') {
-            return showActive
-          }
-          if (row.state === 'Successful') {
-            return showDone
-          }
-          return showAbandoned
-        })
-        .sort((rowA, rowB) => rowB.leadInvestigationTitle.localeCompare(rowA.leadInvestigationTitle)),
-    [allInvestigationRows, showActive, showDone, showAbandoned],
+  const leadInvestigationRows: LeadInvestigationRow[] = filterLeadInvestigationRows(
+    allInvestigationRows,
+    showActive,
+    showDone,
+    showAbandoned,
   )
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
