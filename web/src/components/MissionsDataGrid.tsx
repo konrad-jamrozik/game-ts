@@ -64,8 +64,8 @@ export function MissionsDataGrid(): React.JSX.Element {
     }
   })
 
-  // Combine and filter rows based on archived checkbox
-  const rows: MissionRow[] = [...allActiveRows, ...(showArchived ? allArchivedRows : [])]
+  // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
+  const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
 
   const columns = createMissionColumns()
 
@@ -91,11 +91,15 @@ export function MissionsDataGrid(): React.JSX.Element {
   }
 
   // Convert selected mission site ID back to row ID for DataGrid
+  // Clear selection if selected row is not in currently displayed rows
   const rowIds: GridRowId[] = []
   if (selectedMissionSiteId !== undefined) {
     const row = rows.find((rowCandidate) => rowCandidate.id === selectedMissionSiteId)
     if (row) {
       rowIds.push(row.rowId)
+    } else {
+      // Selected row is not in currently displayed rows, clear selection
+      dispatch(clearMissionSelection())
     }
   }
 

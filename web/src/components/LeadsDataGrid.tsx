@@ -117,8 +117,8 @@ export function LeadsDataGrid(): React.JSX.Element {
     }
   })
 
-  // Filter rows based on archived checkbox
-  const rows: LeadRow[] = allRows.filter((row) => !row.isArchived || showArchived)
+  // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY non-archived when unchecked
+  const rows: LeadRow[] = allRows.filter((row) => (showArchived ? row.isArchived : !row.isArchived))
 
   const columns = createLeadColumns()
 
@@ -146,11 +146,15 @@ export function LeadsDataGrid(): React.JSX.Element {
   }
 
   // Convert selected lead ID back to row ID for DataGrid
+  // Clear selection if selected row is not in currently displayed rows
   const rowIds: GridRowId[] = []
   if (selectedLeadId !== undefined) {
     const row = rows.find((rowCandidate) => rowCandidate.id === selectedLeadId)
     if (row) {
       rowIds.push(row.rowId)
+    } else {
+      // Selected row is not in currently displayed rows, clear selection
+      dispatch(clearLeadSelection())
     }
   }
 
