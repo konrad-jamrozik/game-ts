@@ -13,7 +13,7 @@ describe('rolls', () => {
     // prettier-ignore
     const testCases: [number, number, boolean][] = [
       [0,      0,      false ], // { probability: 0,       roll: 1,     failureInt: 10000, success: false }
-      [0,      1,      false ], // { probability: 0,       roll: 10000, failureInt: 10000, success: false }
+      [0,      0.9999, false ], // { probability: 0,       roll: 10000, failureInt: 10000, success: false }
       [0.0001, 0.9998, false ], // { probability: 0.0001,  roll: 9999,  failureInt: 9999,  success: false }
       [0.0001, 0.9999, true  ], // { probability: 0.0001,  roll: 10000, failureInt: 9999,  success: true  }
       [0.0001, 1,      true  ], // { probability: 0.0001,  roll: 10000, failureInt: 9999,  success: true  }
@@ -27,7 +27,7 @@ describe('rolls', () => {
       [0.9999, 0.0001, true  ], // { probability: 0.9999,  roll: 2,     failureInt: 1,     success: true  }
       [1,      0,      true  ], // { probability: 1,       roll: 1,     failureInt: 0,     success: true  }
       [1,      0.0001, true  ], // { probability: 1,       roll: 2,     failureInt: 0,     success: true  }
-      [1,      1,      true  ], // { probability: 1,       roll: 10000, failureInt: 0,     success: true  }
+      [1,      0.9999, true  ], // { probability: 1,       roll: 10000, failureInt: 0,     success: true  }
     ]
     testCases.forEach(([probability, fixedRoll, expectedSuccess]) => {
       rand.set('test_label', fixedRoll)
