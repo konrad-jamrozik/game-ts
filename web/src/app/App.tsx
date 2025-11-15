@@ -7,6 +7,7 @@ import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { LeadCards } from '../components/LeadCards'
 import { LeadInvestigationsDataGrid } from '../components/LeadInvestigationsDataGrid'
+import { LeadsDataGrid } from '../components/LeadsDataGrid'
 import { MissionCards } from '../components/MissionCards'
 import { MissionsDataGrid } from '../components/MissionsDataGrid'
 import { PlayerActions } from '../components/PlayerActions'
@@ -38,9 +39,10 @@ function App(): React.JSX.Element {
         <Stack spacing={2}>
           <AgentsDataGrid />
           <LeadInvestigationsDataGrid />
+          <LeadsDataGrid />
+          <LeadCards />
           <MissionsDataGrid />
           <MissionCards />
-          <LeadCards />
           <ArchivedMissionCards />
           <ArchivedLeadCards />
         </Stack>
