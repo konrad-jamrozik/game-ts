@@ -11,6 +11,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { leads } from '../lib/collections/leads'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../lib/slices/selectionSlice'
 import { DataGridCard } from './DataGridCard'
+import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 
 export type LeadRow = {
   rowId: number
@@ -20,6 +21,7 @@ export type LeadRow = {
   repeatable: boolean
   hasActiveInvestigation: boolean
   hasSuccessfulInvestigation: boolean
+  isArchived: boolean
 }
 
 function createLeadColumns(): GridColDef<LeadRow>[] {
@@ -53,10 +55,18 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
       headerName: 'Repeatable',
       minWidth: 100,
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value ? 'Yes' : 'No'}</span>
+        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
       ),
     },
   ]
+}
+
+// Check if a row is disabled (same logic as LeadCard for normal displayMode)
+function isRowDisabled(row: LeadRow): boolean {
+  // For normal displayMode leads:
+  // - Repeatable: never disabled
+  // - Non-repeatable: disabled if hasActiveInvestigation OR hasSuccessfulInvestigation
+  return !row.repeatable && (row.hasActiveInvestigation || row.hasSuccessfulInvestigation)
 }
 
 export function LeadsDataGrid(): React.JSX.Element {
@@ -65,6 +75,7 @@ export function LeadsDataGrid(): React.JSX.Element {
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+  const [showArchived, setShowArchived] = React.useState(false)
 
   // Get mission IDs that have successful mission sites
   const successfulMissionIds = new Set(
@@ -78,32 +89,21 @@ export function LeadsDataGrid(): React.JSX.Element {
     ),
   )
 
-  // Filter leads to show (same logic as LeadCards - only normal displayMode leads)
-  const leadsToShow = discoveredLeads.filter((lead) => {
-    // Get all investigations for this lead
-    const investigationsForLead = Object.values(leadInvestigations).filter(
-      (investigation) => investigation.leadId === lead.id,
-    )
-
-    const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
-
-    if (lead.repeatable) {
-      // Repeatable leads: always show
-      return true
-    } else {
-      // Non-repeatable leads: show if no successful investigation
-      return !hasSuccessfulInvestigation
-    }
-  })
-
-  // Transform leads to rows
-  const rows: LeadRow[] = leadsToShow.map((lead, index) => {
+  // Transform all discovered leads to rows (both active and archived)
+  const allRows: LeadRow[] = discoveredLeads.map((lead, index) => {
     const investigationsForLead = Object.values(leadInvestigations).filter(
       (investigation) => investigation.leadId === lead.id,
     )
 
     const hasActiveInvestigation = investigationsForLead.some((inv) => inv.state === 'Active')
     const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+
+    // Determine if lead is archived:
+    // - Non-repeatable leads with successful investigations
+    // - Repeatable leads that have been investigated (leadInvestigationCounts > 0)
+    const isArchived =
+      (!lead.repeatable && hasSuccessfulInvestigation) ||
+      (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0)
 
     return {
       rowId: index,
@@ -113,8 +113,12 @@ export function LeadsDataGrid(): React.JSX.Element {
       repeatable: lead.repeatable,
       hasActiveInvestigation,
       hasSuccessfulInvestigation,
+      isArchived,
     }
   })
+
+  // Filter rows based on archived checkbox
+  const rows: LeadRow[] = allRows.filter((row) => !row.isArchived || showArchived)
 
   const columns = createLeadColumns()
 
@@ -141,14 +145,6 @@ export function LeadsDataGrid(): React.JSX.Element {
     }
   }
 
-  // Check if a row is disabled (same logic as LeadCard for normal displayMode)
-  function isRowDisabled(row: LeadRow): boolean {
-    // For normal displayMode leads:
-    // - Repeatable: never disabled
-    // - Non-repeatable: disabled if hasActiveInvestigation OR hasSuccessfulInvestigation
-    return !row.repeatable && (row.hasActiveInvestigation || row.hasSuccessfulInvestigation)
-  }
-
   // Convert selected lead ID back to row ID for DataGrid
   const rowIds: GridRowId[] = []
   if (selectedLeadId !== undefined) {
@@ -172,6 +168,14 @@ export function LeadsDataGrid(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<LeadRow>) => !isRowDisabled(params.row)}
+      slots={{ toolbar: LeadsDataGridToolbar }}
+      slotProps={{
+        toolbar: {
+          showArchived,
+          onToggleArchived: setShowArchived,
+        },
+      }}
+      showToolbar
     />
   )
 }

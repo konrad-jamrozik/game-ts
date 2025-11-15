@@ -11,9 +11,15 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../lib/collections/missions'
 import type { MissionSite } from '../lib/model/model'
 import { clearMissionSelection, setMissionSiteSelection } from '../lib/slices/selectionSlice'
-import { getActiveOrDeployedMissionSites, sortActiveOrDeployedMissionSites } from '../lib/utils/MissionSiteUtils'
+import {
+  getActiveOrDeployedMissionSites,
+  getArchivedMissionSites,
+  sortActiveOrDeployedMissionSites,
+  sortMissionSitesByIdDesc,
+} from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix } from '../lib/utils/formatUtils'
 import { DataGridCard } from './DataGridCard'
+import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -25,13 +31,16 @@ export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
+  const [showArchived, setShowArchived] = React.useState(false)
 
-  // Get and sort active mission sites
+  // Get active and archived mission sites
   const activeMissionSites = getActiveOrDeployedMissionSites(missionSites)
+  const archivedMissionSites = getArchivedMissionSites(missionSites)
   const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSites)
+  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
 
-  // Transform mission sites to rows with mission data
-  const rows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
+  // Transform all mission sites to rows (both active and archived)
+  const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
     const mission = getMissionById(site.missionId)
     const displayId = fmtNoPrefix(site.id, 'mission-site-')
 
@@ -42,6 +51,24 @@ export function MissionsDataGrid(): React.JSX.Element {
       displayId,
     }
   })
+
+  const allArchivedRows: MissionRow[] = sortedArchivedMissionSites.map((site, index) => {
+    const mission = getMissionById(site.missionId)
+    const displayId = fmtNoPrefix(site.id, 'mission-site-')
+
+    return {
+      ...site,
+      rowId: allActiveRows.length + index,
+      title: mission.title,
+      displayId,
+    }
+  })
+
+  // Combine and filter rows based on archived checkbox
+  const rows: MissionRow[] = [
+    ...allActiveRows,
+    ...(showArchived ? allArchivedRows : []),
+  ]
 
   const columns = createMissionColumns()
 
@@ -89,6 +116,14 @@ export function MissionsDataGrid(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<MissionRow>) => params.row.state === 'Active'}
+      slots={{ toolbar: MissionsDataGridToolbar }}
+      slotProps={{
+        toolbar: {
+          showArchived,
+          onToggleArchived: setShowArchived,
+        },
+      }}
+      showToolbar
     />
   )
 }
