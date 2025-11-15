@@ -2,13 +2,43 @@
 
 KJA backlog:
 
-# Game mechanics
+# Brainstorming
+
+- Add AI player that can play the game for me
+
+- Add Capabilities / Stats screen that show player capabilities like:
+  - Max agent capacity (living quarters)
+  - Display agent weapon damage and add an ability to upgrade
+  - Max agents can be sent on one mission
+  - HP Recovery rate
+  - Exhaustion recovery rate
+
+- Display details on mission difficulty - enemy count, their skills, hp, weapons
+
+- Training activity for agents
+
+- Add new mechanic: procurement / investments / upgrades
+  - Allow to spend money on upgrades
+  - Examples of upgrades:
+    - More agent capacity (living quarters)
+    - Better agent weapons (upgraded for all)
+    - More agent hit points (upgraded for all)
+    - Faster HP recovery rate
+    - Faster exhaustion recovery rate
+    - Faster training
+
+- Funding increase every X turns based on score
 
 - Win criteria - defeat all enemy factions
-  - Implement how to defeat a faction:
-  - Raid HQ and win
+  - Raiding each HQ should unlock new lead
+  - Unlocking all HQ raids leads should unlock the final "game victory" lead
+  - Researching that lead should win the game.
 
-## Domain model
+- Add more factions
+
+# Game mechanics
+
+# Domain model
 
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
   there should be LeadsView akin to AgentsView, that has functions withId and isInvestigated()
@@ -31,28 +61,28 @@ KJA backlog:
   Because all other places should not return undefined, so no need to use it.
   In case of finding single item, it will basically become dotnet .Single()
 
-## Docs
+# Docs
 
 - Add a reference doc listing critical code components, like `evalTurn`
 - Update the AI instructions to reference the new docs
 
-## Tests
+# Tests
 
 - Address all 🚧 TODOS, except "not implemented yet", in [about_test_suite.md](../design/about_test_suite.md)
 - In tests, need a helper that does both `expect(X).toDefined()` and `assertDefined(X)`
 
-## UI improvements
+# UI improvements
 
 - Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
 
-## UI ideas
+# UI ideas
 
 - for mission evaluation, idea for a table: columns are combat rounds, and rows are units. Each cell tells what
   interesting happened to that unit in that round.
   E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
   Cell background gradient may denote % of original effective skill.
 
-## Performance Optimization
+# Performance Optimization
 
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
@@ -74,6 +104,6 @@ KJA backlog:
     - Accept larger initial bundle size (load everything at once)
     - No dynamic imports or lazy loading needed
 
-## Dev exp
+# Dev exp
 
 - Add ESLint server MCP: https://eslint.org/docs/latest/use/mcp
