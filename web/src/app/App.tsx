@@ -1,8 +1,6 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { AgentsDataGrid } from '../components/AgentsDataGrid/AgentsDataGrid'
-import { ArchivedLeadCards } from '../components/ArchivedLeadCards'
-import { ArchivedMissionCards } from '../components/ArchivedMissionCards'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { LeadInvestigationsDataGrid } from '../components/LeadInvestigationsDataGrid'
@@ -37,10 +35,8 @@ function App(): React.JSX.Element {
         <Stack spacing={2}>
           <AgentsDataGrid />
           <LeadInvestigationsDataGrid />
-          <LeadsDataGrid />
           <MissionsDataGrid />
-          <ArchivedMissionCards />
-          <ArchivedLeadCards />
+          <LeadsDataGrid />
         </Stack>
       </Grid>
       <Grid>

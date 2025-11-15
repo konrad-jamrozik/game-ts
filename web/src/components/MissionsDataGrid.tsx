@@ -65,10 +65,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   })
 
   // Combine and filter rows based on archived checkbox
-  const rows: MissionRow[] = [
-    ...allActiveRows,
-    ...(showArchived ? allArchivedRows : []),
-  ]
+  const rows: MissionRow[] = [...allActiveRows, ...(showArchived ? allArchivedRows : [])]
 
   const columns = createMissionColumns()
 

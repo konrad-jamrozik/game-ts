@@ -8,10 +8,10 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppSelector } from '../app/hooks'
-import type { LeadInvestigation } from '../lib/model/model'
-import { leads } from '../lib/collections/leads'
-import { LeadCard } from './deprecated/LeadCard'
+import { useAppSelector } from '../../app/hooks'
+import type { LeadInvestigation } from '../../lib/model/model'
+import { leads } from '../../lib/collections/leads'
+import { LeadCard } from './LeadCard'
 
 type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
 
