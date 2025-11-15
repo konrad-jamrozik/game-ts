@@ -1,8 +1,19 @@
 import { bps } from '../bps'
 import { factions } from '../../collections/factions'
-import type { GameState } from '../model'
+import type { Agent, GameState } from '../model'
 import { validateAgentInvariants } from '../agents/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
+import {
+  AGENT_INITIAL_EXHAUSTION,
+  AGENT_INITIAL_HIT_POINTS,
+  AGENT_INITIAL_SKILL,
+  AGENT_INITIAL_WEAPON_DAMAGE,
+} from './constants'
+import { newWeapon } from '../../utils/weaponUtils'
+
+const initialState: GameState = makeInitialState()
+
+export default initialState
 
 export function makeInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
@@ -19,7 +30,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     intel: 0,
     funding: 20,
     currentTurnTotalHireCost: 0,
-    agents: [],
+    agents: buildInitialAgents(),
     // Leads
     leadInvestigationCounts: {},
     leadInvestigations: {},
@@ -40,6 +51,32 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
   return gameState
 }
 
-const initialState: GameState = makeInitialState()
+function buildInitialAgents(): Agent[] {
+  let agentCounter = 0
+  function nextId(): string {
+    const id = agentCounter.toString().padStart(3, '0')
+    agentCounter += 1
+    return id
+  }
 
-export default initialState
+  const agents: Agent[] = []
+  for (let index = 0; index < 4; index += 1) {
+    const agentId = `agent-${nextId()}`
+    agents.push({
+      id: agentId,
+      turnHired: 1,
+      state: 'Available',
+      assignment: 'Standby',
+      skill: AGENT_INITIAL_SKILL,
+      exhaustion: AGENT_INITIAL_EXHAUSTION,
+      hitPoints: AGENT_INITIAL_HIT_POINTS,
+      maxHitPoints: AGENT_INITIAL_HIT_POINTS,
+      recoveryTurns: 0,
+      hitPointsLostBeforeRecovery: 0,
+      missionsSurvived: 0,
+      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    })
+  }
+
+  return agents
+}
