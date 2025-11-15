@@ -33,20 +33,16 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <AgentsDataGrid />
-          <LeadInvestigationsDataGrid />
           <MissionsDataGrid />
           <LeadsDataGrid />
+          <LeadInvestigationsDataGrid />
+          <AgentsDataGrid />
         </Stack>
       </Grid>
       <Grid>
         <Stack spacing={2}>
           <AssetsDataGrid />
           <SituationReportCard />
-        </Stack>
-      </Grid>
-      <Grid>
-        <Stack spacing={2}>
           <TurnReportDisplay />
         </Stack>
       </Grid>

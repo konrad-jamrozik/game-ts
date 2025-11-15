@@ -61,7 +61,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const completedThisTurnIds = getCompletedInvestigationIds(turnStartReport)
 
   const leadInvestigationColumns: GridColDef<LeadInvestigationRow>[] = [
-    { field: 'leadInvestigationTitle', headerName: 'Investigation', width: 200 },
+    { field: 'leadInvestigationTitle', headerName: 'Investigation ID', width: 200 },
     {
       field: 'agents',
       headerName: 'Ag#',

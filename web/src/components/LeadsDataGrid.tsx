@@ -30,8 +30,8 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
   return [
     {
       field: 'id',
-      headerName: 'ID',
-      minWidth: 200,
+      headerName: 'Lead ID',
+      minWidth: 250,
       renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
         <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
       ),
@@ -114,11 +114,8 @@ export function LeadsDataGrid(): React.JSX.Element {
     const completedInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Successful').length
 
     // Determine if lead is archived:
-    // - Non-repeatable leads with successful investigations
-    // - Repeatable leads that have been investigated (leadInvestigationCounts > 0)
-    const isArchived =
-      (!lead.repeatable && hasSuccessfulInvestigation) ||
-      (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0)
+    // - Only non-repeatable leads with successful investigations are archived
+    const isArchived = !lead.repeatable && hasSuccessfulInvestigation
 
     return {
       rowId: index,
