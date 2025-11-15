@@ -4,23 +4,9 @@ KJA backlog:
 
 # Game mechanics
 
-- Figure out how to handle intel & mission expiration better
-  - Problem: no incentive to investigate lead early, because that starts mission expiration counter
-  - Problem: silly kind of zero-cost leads, especially when repeatable.
-
-- Reduce micromanagement of agents:
-  - When sending on contracting or espionage gathering mission, it should be fixed length.
-    Player can make the mission longer, thus blocking the agent for longer, but earning more.
-
 - Win criteria - defeat all enemy factions
   - Implement how to defeat a faction:
   - Raid HQ and win
-
-- When rolling for lead investigation success, and failing, keep track of "prob. of no success" which will
-  say was the probability that you have failed so many times in a row. E.g. if success is 50%,
-  and you failed 3 times in a row, the probability for that is 12.5%.
-  Or if making 1% rolls, then at 100 failed attempts it is 36.6%.
-  Basically it is a measure of unlucky you are. The lower the percentage, the more unlucky.
 
 ## Domain model
 
@@ -58,7 +44,6 @@ KJA backlog:
 ## UI improvements
 
 - Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
-- Use Chips for Balance Sheet data grid, same as TurnsDisplay Report
 
 ## UI ideas
 
@@ -69,8 +54,6 @@ KJA backlog:
 
 ## Performance Optimization
 
-- replace applicable eslint rules with https://oxc.rs/docs/guide/usage/linter.html
-  - need to add it to package.json, CI/CD
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
