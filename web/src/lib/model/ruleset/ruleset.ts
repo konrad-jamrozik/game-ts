@@ -160,7 +160,7 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
   // accumulatedIntel = 100, difficulty = 300
   // successChance = 100/300 = 1/3 = 33.(3)%
   if (difficulty === 0) {
-    return 0
+    return 1
   }
   return Math.min(1, div(accumulatedIntel, difficulty))
 }
