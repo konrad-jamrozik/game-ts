@@ -16,7 +16,7 @@ export const leads: Lead[] = [
     id: 'lead-deep-state',
     title: 'Deep state',
     description: 'Investigate the deep state',
-    difficulty: bps(10),
+    difficulty: bps(10), // 0.1% per 1 intel
     dependsOn: [],
     repeatable: false,
   },

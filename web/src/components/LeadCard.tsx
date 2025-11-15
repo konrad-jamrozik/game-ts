@@ -56,7 +56,9 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const combinedHeaderSx: SxProps = { ...selectedSx, ...disabledSx, ...leadCardHeaderSx }
   const combinedContentSx: SxProps = { ...selectedSx, ...disabledSx, ...leadCardContentSx }
 
-  // KJA display difficulty, expressed as "amount of intel needed for 10% success chance". Just show the number.
+  // If 1 intel gives 100% success (difficulty >= 10_000), display 0
+  const intelFor1Percent = lead.difficulty.value >= 10_000 ? 0 : 100 / lead.difficulty.value
+
   return (
     <Card sx={disabledSx}>
       <CardActionArea
@@ -69,9 +71,9 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
         <CardHeader title={lead.title} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
-            {/* <Stack direction="row" justifyContent="space-between">
-              <LabeledValue label="Intel cost" value={lead.intelCost} sx={{ width: 140 }} />
-            </Stack> */}
+            <Stack direction="row" sx={{ paddingTop: 0.5 }}>
+              <LabeledValue label="Difficulty" value={intelFor1Percent} />
+            </Stack>
             {displayMode === 'normal' && lead.repeatable && (
               <Stack direction="row" sx={{ paddingTop: 0.5 }}>
                 <LabeledValue label="Repeatable" />

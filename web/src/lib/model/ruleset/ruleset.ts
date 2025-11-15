@@ -120,6 +120,10 @@ export function calculateIntelDecay(accumulatedIntel: number): Bps {
   return bps(decayBps)
 }
 
+// kja consider formula where successChance = (accumulatedIntel / difficulty) * 100%
+// diff = 1 : 100 intel == 100%, 10 intel = 10%
+// diff = 2 : 200 intel == 100%, 10 intel = 5%
+// diff = 3 : 300 intel == 100%, 10 intel = 3.33%
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
  * Formula: successChance = min(bps(accumulatedIntel * difficulty), 100%)
