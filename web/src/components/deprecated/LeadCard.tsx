@@ -6,10 +6,10 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getLeadById } from '../lib/collections/leads'
-import { setLeadSelection, clearInvestigationSelection } from '../lib/slices/selectionSlice'
-import { LabeledValue } from './LabeledValue'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { getLeadById } from '../../lib/collections/leads'
+import { setLeadSelection, clearInvestigationSelection } from '../../lib/slices/selectionSlice'
+import { LabeledValue } from '../LabeledValue'
 
 export type LeadCardProps = {
   leadId: string

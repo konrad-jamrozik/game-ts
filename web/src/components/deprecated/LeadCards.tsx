@@ -8,8 +8,8 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppSelector } from '../app/hooks'
-import { leads } from '../lib/collections/leads'
+import { useAppSelector } from '../../app/hooks'
+import { leads } from '../../lib/collections/leads'
 import { LeadCard } from './LeadCard'
 
 export function LeadCards(): React.JSX.Element {

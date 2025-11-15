@@ -6,12 +6,12 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getMissionById } from '../lib/collections/missions'
-import { setMissionSiteSelection } from '../lib/slices/selectionSlice'
-import { fmtNoPrefix } from '../lib/utils/formatUtils'
-import type { MissionSiteId } from '../lib/model/model'
-import { LabeledValue } from './LabeledValue'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { getMissionById } from '../../lib/collections/missions'
+import { setMissionSiteSelection } from '../../lib/slices/selectionSlice'
+import { fmtNoPrefix } from '../../lib/utils/formatUtils'
+import type { MissionSiteId } from '../../lib/model/model'
+import { LabeledValue } from '../LabeledValue'
 
 export type MissionCardProps = { missionSiteId: MissionSiteId }
 

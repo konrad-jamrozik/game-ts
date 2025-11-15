@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { getArchivedMissionSites, sortMissionSitesByIdDesc } from '../lib/utils/MissionSiteUtils'
 import { ExpandableCard } from './ExpandableCard'
-import { MissionCard } from './MissionCard'
+import { MissionCard } from './deprecated/MissionCard'
 
 export function ArchivedMissionCards(): React.JSX.Element {
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)

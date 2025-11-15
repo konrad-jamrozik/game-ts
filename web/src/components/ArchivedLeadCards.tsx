@@ -11,7 +11,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { LeadInvestigation } from '../lib/model/model'
 import { leads } from '../lib/collections/leads'
-import { LeadCard } from './LeadCard'
+import { LeadCard } from './deprecated/LeadCard'
 
 type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
 
