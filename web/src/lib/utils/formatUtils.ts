@@ -42,6 +42,10 @@ export function addPctSign(value: number, decimals = 0, denominator = 1): string
   return `${div(value, denominator).toFixed(decimals)}%`
 }
 
+export function fmtDec1(value: number): string {
+  return value.toFixed(1)
+}
+
 /**
  * Formats string by removing common prefixes
  */

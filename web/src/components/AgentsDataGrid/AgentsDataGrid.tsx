@@ -15,7 +15,8 @@ import { AgentsToolbar } from './AgentsToolbar'
 import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
 import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
-import { div } from '../../lib/utils/mathUtils'
+import { toPct } from '../../lib/utils/mathUtils'
+import { fmtDec1 } from '../../lib/utils/formatUtils'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -88,8 +89,7 @@ function createAgentColumns(rows: AgentRow[]): GridColDef[] {
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? 0
-        // KJA use here format utils
-        const percentage = baselineSkill > 0 ? (div(effectiveSkill, baselineSkill) * 100).toFixed(1) : '0.0'
+        const percentage = baselineSkill > 0 ? fmtDec1(toPct(effectiveSkill, baselineSkill)) : '0.0'
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}

@@ -52,3 +52,7 @@ export function div(nominator: number, denominator: number): number {
 export function val(value: number | Bps): number {
   return isBps(value) ? value.value : value
 }
+
+export function toPct(value: number, denominator = 1): number {
+  return div(value * 100, denominator)
+}
