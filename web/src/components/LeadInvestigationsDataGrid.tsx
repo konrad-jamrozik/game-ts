@@ -10,7 +10,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
-import { bps, type Bps } from '../lib/model/bps'
+import { bps, toBpsFloor, type Bps } from '../lib/model/bps'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
@@ -23,7 +23,7 @@ import {
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtPctDec2, str } from '../lib/utils/formatUtils'
 import { floor } from '../lib/utils/mathUtils'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
 import { ExpandableCard } from './ExpandableCard'
@@ -37,7 +37,7 @@ export type LeadInvestigationRow = {
   rowId: number
   leadInvestigationTitle: string
   intel: number
-  successChance: Bps
+  successChance: number
   agents: number
   agentsInTransit: number
   startTurn: number
@@ -88,7 +88,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         if (params.row.state === 'Abandoned') {
           return <MyChip chipValue="Failed" reverseColor={true} />
         }
-        return <span>{str(params.row.successChance)}</span>
+        return <span>{str(toBpsFloor(params.row.successChance))}</span>
       },
     },
     {

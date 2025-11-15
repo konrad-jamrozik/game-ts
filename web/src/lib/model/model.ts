@@ -54,7 +54,7 @@ export type Agent = Actor & {
 export type Lead = {
   id: string
   title: string
-  difficulty: Bps // Difficulty in basis points, e.g., 100 means 1 intel = 1% success chance
+  difficulty: number
   description: string
   dependsOn: string[]
   repeatable: boolean

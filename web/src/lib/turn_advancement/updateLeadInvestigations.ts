@@ -1,8 +1,8 @@
 import { getLeadById } from '../collections/leads'
 import { missions } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
-import type { Bps } from '../model/bps'
 import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import {
   calculateAccumulatedIntel,
   calculateIntelDecayRounded,
@@ -52,6 +52,9 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
+  const agents = agsV(state.agents)
+  agents.investigatingLead(investigation.id).applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+
   const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
 
   return {
@@ -70,11 +73,10 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
  */
 function rollForInvestigationSuccess(
   accumulatedIntel: number,
-  difficulty: Bps,
-): { successChance: Bps; success: boolean } {
+  difficulty: number,
+): { successChance: number; success: boolean } {
   const successChance = calculateLeadSuccessChance(accumulatedIntel, difficulty)
-  const successProbability = successChance.value / 10_000
-  const [success] = rollAgainstProbability(successProbability)
+  const [success] = rollAgainstProbability(successChance)
   return { successChance, success }
 }
 

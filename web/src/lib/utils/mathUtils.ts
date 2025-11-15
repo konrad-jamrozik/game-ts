@@ -24,18 +24,19 @@ export function ceil(value: number): number {
 }
 
 /**
- * Rounds down given value to given precision, then returns it as integer.
+ * Multiplies given value by given precision, then rounds down the result to nearest integer.
  *
  * For example:
- * toPrecisionRoundingDown(0.1278,     100) ->   12
- * toPrecisionRoundingDown(0.12348, 10_000) -> 1234
- * toPrecisionRoundingDown(0.99999, 10_000) -> 9999
+ * multAndFloor(0.1278,     100) ->   12
+ * multAndFloor(0.009,   10_000) ->   90
+ * multAndFloor(0.12348, 10_000) -> 1234
+ * multAndFloor(0.99999, 10_000) -> 9999
  *
  * @param value - The value to round
  * @param precision - The precision to round to
  * @returns The rounded value
  */
-export function toPrecisionRoundingDown(value: number, precision: number): number {
+export function multAndFloor(value: number, precision: number): number {
   return floor(value * precision)
 }
 

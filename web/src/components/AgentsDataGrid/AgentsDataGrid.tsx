@@ -88,6 +88,7 @@ function createAgentColumns(rows: AgentRow[]): GridColDef[] {
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? 0
+        // KJA use here format utils
         const percentage = baselineSkill > 0 ? (div(effectiveSkill, baselineSkill) * 100).toFixed(1) : '0.0'
         return (
           <div

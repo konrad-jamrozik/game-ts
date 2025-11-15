@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { div, toPrecisionRoundingDown } from '../utils/mathUtils'
+import { div, multAndFloor } from '../utils/mathUtils'
 import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
 import { rand } from '../utils/rand'
 
@@ -72,7 +72,7 @@ export function rollAgainstProbability(probability: number, label?: string): [bo
 }
 
 export function getSuccessAndFailureInts(successProbability: number): [number, number] {
-  const successInt = toPrecisionRoundingDown(successProbability, CONTEST_ROLL_PRECISION)
+  const successInt = multAndFloor(successProbability, CONTEST_ROLL_PRECISION)
   const failureInt = CONTEST_ROLL_PRECISION - successInt
   return [failureInt, successInt]
 }

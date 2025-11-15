@@ -155,7 +155,7 @@ export type LeadInvestigationReport = {
   leadId: string
   completed: boolean
   accumulatedIntel: number
-  successChance: Bps
+  successChance: number
   intelDecay?: number
   createdMissionSites?: string[]
 }
