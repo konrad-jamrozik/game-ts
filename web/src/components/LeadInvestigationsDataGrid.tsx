@@ -88,6 +88,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         if (params.row.state === 'Abandoned') {
           return <MyChip chipValue="Failed" reverseColor={true} />
         }
+        console.log('successChance', params.row.successChance)
         return <span>{str(toBpsFloor(params.row.successChance))}</span>
       },
     },
