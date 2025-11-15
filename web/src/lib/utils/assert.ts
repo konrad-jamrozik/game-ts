@@ -40,6 +40,16 @@ export function assertOneOf<T>(
   }
 }
 
+export function assertNotIn<T>(
+  value: T,
+  array: readonly T[] | T[],
+  errMsg = 'Value must not be in the array',
+): asserts value is T {
+  if (array.includes(value)) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertNotEmpty<T>(value: T[], errMsg = 'Value must not be empty'): asserts value is T[] {
   if (value.length === 0) {
     throw new Error(errMsg)

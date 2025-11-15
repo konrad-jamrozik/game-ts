@@ -1,4 +1,5 @@
 import type { GameState, LeadInvestigation, LeadInvestigationId } from '../../model/model'
+import { assertDefined, assertNotIn } from '../../utils/assert'
 import { asPlayerAction } from './asPlayerAction'
 
 export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
@@ -36,16 +37,15 @@ export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadIn
     const { investigationId, agentIds } = action.payload
 
     const investigation = state.leadInvestigations[investigationId]
-    if (investigation === undefined) {
-      throw new Error(`Investigation not found: ${investigationId}`)
-    }
+    assertDefined(investigation, `Investigation not found: ${investigationId}`)
 
     // Add agents to investigation (throw error on duplicates)
     for (const agentId of agentIds) {
-      if (investigation.agentIds.includes(agentId)) {
-        // KJA use assert
-        throw new Error(`Agent ${agentId} is already assigned to investigation ${investigationId}`)
-      }
+      assertNotIn(
+        agentId,
+        investigation.agentIds,
+        `Agent ${agentId} is already assigned to investigation ${investigationId}`,
+      )
       investigation.agentIds.push(agentId)
     }
 
