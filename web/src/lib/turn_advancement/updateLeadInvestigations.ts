@@ -25,7 +25,7 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
     const investigation = state.leadInvestigations[investigationId]
     assertDefined(investigation, `Investigation not found: ${investigationId}`)
     if (investigation.state === 'Active') {
-      const report = processInvestigation(state, investigation)
+      const report = processActiveInvestigation(state, investigation)
       reports.push(report)
     }
   }
@@ -36,16 +36,33 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
 /**
  * Processes a single active investigation
  */
-function processInvestigation(state: GameState, investigation: LeadInvestigation): LeadInvestigationReport {
+function processActiveInvestigation(state: GameState, investigation: LeadInvestigation): LeadInvestigationReport {
   const lead = getLeadById(investigation.leadId)
   const investigatingAgents = getInvestigatingAgents(state, investigation)
 
   const { successChance, success } = rollForInvestigationSuccess(investigation.accumulatedIntel, lead.difficulty)
 
-  if (success) {
-    return completeInvestigation(state, investigation, investigatingAgents, successChance)
+  // Calculate intel decay before applying it
+  const intelDecay = calculateIntelDecayAmount(investigation.accumulatedIntel)
+
+  // Apply intel decay (before accumulation)
+  investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
+
+  // Accumulate new intel from assigned agents (same formula as espionage)
+  const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
+  investigation.accumulatedIntel += accumulatedIntel
+
+  const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
+
+  return {
+    investigationId: investigation.id,
+    leadId: investigation.leadId,
+    completed: success,
+    accumulatedIntel: investigation.accumulatedIntel,
+    successChance,
+    intelDecay,
+    ...(createdMissionSites !== undefined && { createdMissionSites }),
   }
-  return continueInvestigation(investigation, investigatingAgents, successChance)
 }
 
 /**
@@ -72,20 +89,21 @@ function getInvestigatingAgents(state: GameState, investigation: LeadInvestigati
 }
 
 /**
- * Handles completion of an investigation: creates mission sites, updates agents, marks investigation as successful
+ * Completes a successful investigation: creates mission sites, updates agents, marks investigation as successful
+ * Returns created mission sites
  */
 function completeInvestigation(
   state: GameState,
   investigation: LeadInvestigation,
   investigatingAgents: Agent[],
-  successChance: Bps,
-): LeadInvestigationReport {
+): string[] {
   // Increment lead investigation count
   const currentCount = state.leadInvestigationCounts[investigation.leadId] ?? 0
   state.leadInvestigationCounts[investigation.leadId] = currentCount + 1
 
   // Create mission sites for dependent missions
-  const createdMissionSites = createMissionSitesForLead(state, investigation.leadId)
+  const missionSites = createMissionSitesForLead(state, investigation.leadId)
+  const createdMissionSites = missionSites.map((site) => site.id)
 
   // Mark investigation as successful and clear agent assignments
   investigation.state = 'Successful'
@@ -97,14 +115,7 @@ function completeInvestigation(
     agent.state = 'InTransit'
   }
 
-  return {
-    investigationId: investigation.id,
-    leadId: investigation.leadId,
-    completed: true,
-    accumulatedIntel: investigation.accumulatedIntel,
-    successChance,
-    createdMissionSites: createdMissionSites.map((site) => site.id),
-  }
+  return createdMissionSites
 }
 
 /**
@@ -131,30 +142,4 @@ function createMissionSitesForLead(state: GameState, leadId: string): MissionSit
   }
 
   return createdMissionSites
-}
-
-/**
- * Handles continuation of an investigation: applies intel decay and accumulates new intel
- */
-function continueInvestigation(
-  investigation: LeadInvestigation,
-  investigatingAgents: Agent[],
-  successChance: Bps,
-): LeadInvestigationReport {
-  // Apply intel decay (before accumulation)
-  const intelDecay = calculateIntelDecayAmount(investigation.accumulatedIntel)
-  investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
-
-  // Accumulate new intel from assigned agents (same formula as espionage)
-  const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
-  investigation.accumulatedIntel += accumulatedIntel
-
-  return {
-    investigationId: investigation.id,
-    leadId: investigation.leadId,
-    completed: false,
-    accumulatedIntel: investigation.accumulatedIntel,
-    successChance,
-    intelDecay,
-  }
 }
