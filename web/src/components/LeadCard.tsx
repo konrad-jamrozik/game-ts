@@ -56,7 +56,7 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const combinedHeaderSx: SxProps = { ...selectedSx, ...disabledSx, ...leadCardHeaderSx }
   const combinedContentSx: SxProps = { ...selectedSx, ...disabledSx, ...leadCardContentSx }
 
-  // KJA 2 probably instead of intel cost want to display "difficulty"
+  // KJA display difficulty, expressed as "amount of intel needed for 10% success chance". Just show the number.
   return (
     <Card sx={disabledSx}>
       <CardActionArea

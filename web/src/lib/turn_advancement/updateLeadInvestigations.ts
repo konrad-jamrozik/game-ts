@@ -5,7 +5,7 @@ import type { Bps } from '../model/bps'
 import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import {
   calculateAccumulatedIntel,
-  calculateIntelDecayAmount,
+  calculateIntelDecayRounded,
   calculateLeadSuccessChance,
 } from '../model/ruleset/ruleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
@@ -43,7 +43,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const { successChance, success } = rollForInvestigationSuccess(investigation.accumulatedIntel, lead.difficulty)
 
   // Calculate intel decay before applying it
-  const intelDecay = calculateIntelDecayAmount(investigation.accumulatedIntel)
+  const intelDecay = calculateIntelDecayRounded(investigation.accumulatedIntel)
 
   // Apply intel decay (before accumulation)
   investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)

@@ -15,7 +15,7 @@ import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
   calculateIntelDecay,
-  calculateIntelDecayAmount,
+  calculateIntelDecayRounded,
   calculateLeadSuccessChance,
 } from '../lib/model/ruleset/ruleset'
 import {
@@ -157,7 +157,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
 
     if (investigation.state === 'Active') {
       // Calculate intel decay (using shared helper function)
-      intelDecay = calculateIntelDecayAmount(investigation.accumulatedIntel)
+      intelDecay = calculateIntelDecayRounded(investigation.accumulatedIntel)
       intelDecayPercent = calculateIntelDecay(investigation.accumulatedIntel)
 
       // Calculate projected intel (reusing logic from updateLeadInvestigations)

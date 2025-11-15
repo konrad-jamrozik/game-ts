@@ -139,7 +139,7 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay amount (rounded up)
  */
-export function calculateIntelDecayAmount(accumulatedIntel: number): number {
+export function calculateIntelDecayRounded(accumulatedIntel: number): number {
   const decay = calculateIntelDecay(accumulatedIntel)
   return ceil((accumulatedIntel * decay.value) / 10_000)
 }
