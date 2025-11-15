@@ -22,6 +22,8 @@ export type LeadRow = {
   hasActiveInvestigation: boolean
   hasSuccessfulInvestigation: boolean
   isArchived: boolean
+  activeInvestigationCount: number
+  completedInvestigationCount: number
 }
 
 function createLeadColumns(): GridColDef<LeadRow>[] {
@@ -35,12 +37,23 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
       ),
     },
     {
-      field: 'title',
-      headerName: 'Title',
+      field: 'investigations',
+      headerName: 'Investigations',
       minWidth: 200,
-      renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
-        <span aria-label={`leads-row-title-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
+        const { activeInvestigationCount, completedInvestigationCount } = params.row
+        if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {
+          return <span aria-label={`leads-row-investigations-${params.id}`}>None</span>
+        }
+        const parts: string[] = []
+        if (activeInvestigationCount > 0) {
+          parts.push(`${activeInvestigationCount} active`)
+        }
+        if (completedInvestigationCount > 0) {
+          parts.push(`${completedInvestigationCount} completed`)
+        }
+        return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
+      },
     },
     {
       field: 'difficulty',
@@ -97,6 +110,8 @@ export function LeadsDataGrid(): React.JSX.Element {
 
     const hasActiveInvestigation = investigationsForLead.some((inv) => inv.state === 'Active')
     const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+    const activeInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Active').length
+    const completedInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Successful').length
 
     // Determine if lead is archived:
     // - Non-repeatable leads with successful investigations
@@ -114,6 +129,8 @@ export function LeadsDataGrid(): React.JSX.Element {
       hasActiveInvestigation,
       hasSuccessfulInvestigation,
       isArchived,
+      activeInvestigationCount,
+      completedInvestigationCount,
     }
   })
 
