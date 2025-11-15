@@ -38,9 +38,9 @@ const colorSystemOptions: ColorSystemOptions = {
     },
     // https://colors.artyclick.com/color-shades-finder/?color=#404040
     background: {
-      default: 'hsl(0,0%,12.9%)',
+      default: 'hsl(0, 0%, 12.9%)',
       paper: 'hsl(0, 0%, 16%)',
-      cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than #404040
+      cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than hsl(0, 0%, 25.10%)
       cardContent: 'hsl(0, 0.00%, 25.10%)',
       nestedCardContent: 'hsl(0, 0.00%, 22.10%)',
       leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
