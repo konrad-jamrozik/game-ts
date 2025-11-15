@@ -6,7 +6,7 @@ import { div } from './mathUtils'
 
 export function str(value: unknown): string {
   if (isBps(value)) {
-    return fmtPctDiv100Dec2(value)
+    return addPctSignDiv100Dec2(value)
   }
   if (typeof value === 'number' && value % 1 !== 0) {
     return fmtDec2(value)
@@ -17,16 +17,16 @@ export function str(value: unknown): string {
  * @returns The value, divided by 100, formatted as percentage with 2 decimal places.
  * For example, 12345 will be formatted as "123.45%"
  */
-export function fmtPctDiv100Dec2(value: Bps): string {
-  return fmtPctDiv100(value.value, 2)
+export function addPctSignDiv100Dec2(value: Bps): string {
+  return addPctSignDiv100(value.value, 2)
 }
 
-export function fmtPctDiv100(value: number, decimals: number): string {
-  return fmtPct(value, decimals, 100)
+export function addPctSignDiv100(value: number, decimals: number): string {
+  return addPctSign(value, decimals, 100)
 }
 
-export function fmtPctDec2(value: number): string {
-  return fmtPct(value, 2, 1)
+export function addPctSignDec2(value: number): string {
+  return addPctSign(value, 2, 1)
 }
 
 /**
@@ -38,7 +38,7 @@ export function fmtDec2(value: number): string {
   return value.toFixed(2)
 }
 
-export function fmtPct(value: number, decimals = 0, denominator = 1): string {
+export function addPctSign(value: number, decimals = 0, denominator = 1): string {
   return `${div(value, denominator).toFixed(decimals)}%`
 }
 

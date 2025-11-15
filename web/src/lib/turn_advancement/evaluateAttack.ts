@@ -10,7 +10,7 @@ import {
 } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
-import { fmtPctDec2 } from '../utils/formatUtils'
+import { addPctSignDec2 } from '../utils/formatUtils'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
@@ -64,7 +64,7 @@ export function evaluateAttack(
     }
 
     // Detailed success log
-    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
+    const rollInfo = `[${addPctSignDec2(contestResult.roll)} vs ${addPctSignDec2(contestResult.failureProbabilityPct)} threshold]`
 
     if (defender.hitPoints <= 0) {
       console.log(
@@ -83,7 +83,7 @@ export function evaluateAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollInfo = `[${fmtPctDec2(contestResult.roll)} vs ${fmtPctDec2(contestResult.failureProbabilityPct)} threshold]`
+    const rollInfo = `[${addPctSignDec2(contestResult.roll)} vs ${addPctSignDec2(contestResult.failureProbabilityPct)} threshold]`
     console.log(
       `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
     )

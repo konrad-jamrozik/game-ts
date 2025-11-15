@@ -1,7 +1,7 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { bps } from '../../lib/model/bps'
-import { fmtNoPrefix, fmtPctDec2 } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix, addPctSignDec2 } from '../../lib/utils/formatUtils'
 import { divMult100Round } from '../../lib/utils/mathUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -232,20 +232,20 @@ function formatBattleStats(
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-inflicted`,
-        label: `Total damage inflicted (${fmtPctDec2(damageInflictedPct)} of enemy HP)`,
+        label: `Total damage inflicted (${addPctSignDec2(damageInflictedPct)} of enemy HP)`,
         chipValue: totalDamageInflicted,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-taken`,
-        label: `Total damage taken (${fmtPctDec2(damageTakenPct)} of agent HP)`,
+        label: `Total damage taken (${addPctSignDec2(damageTakenPct)} of agent HP)`,
         chipValue: totalDamageTaken,
         reverseColor: true,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
-        label: `Total agent skill gain (${fmtPctDec2(skillGainPct)} of initial skill)`,
+        label: `Total agent skill gain (${addPctSignDec2(skillGainPct)} of initial skill)`,
         chipValue: totalAgentSkillGain,
         noPlusSign: true,
       },

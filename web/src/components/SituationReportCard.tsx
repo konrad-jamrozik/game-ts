@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPct, str } from '../lib/utils/formatUtils'
+import { addPctSign, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import { calculatePanicIncrease, getPanicNewBalance, decaySuppression } from '../lib/model/ruleset/ruleset'
 import { MyChip } from './MyChip'
@@ -109,7 +109,7 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 4,
             metric: 'Suppr. decay',
-            value: fmtPct(SUPPRESSION_DECAY_PCT),
+            value: addPctSign(SUPPRESSION_DECAY_PCT),
           },
           {
             id: 5,

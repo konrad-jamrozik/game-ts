@@ -23,7 +23,7 @@ import {
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtNoPrefix, fmtPctDec2, str } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
 import { floor } from '../lib/utils/mathUtils'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
 import { ExpandableCard } from './ExpandableCard'
