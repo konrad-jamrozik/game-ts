@@ -8,7 +8,7 @@ import {
   SUPPRESSION_DECAY_PCT,
 } from './constants'
 import { div, floor, ceil } from '../../utils/mathUtils'
-import type { GameState, MissionSite } from '../model'
+import type { Agent, GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { type Bps, bps } from '../bps'
 
@@ -121,6 +121,18 @@ export function calculateIntelDecay(accumulatedIntel: number): Bps {
 }
 
 /**
+ * Calculates lead success chance based on accumulated intel and difficulty.
+ * Formula: successChance = min(bps(accumulatedIntel * difficulty), 100%)
+ *
+ * @param accumulatedIntel - The accumulated intel value
+ * @param difficulty - The difficulty in basis points
+ * @returns The success chance (in basis points, capped at 100%)
+ */
+export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty: Bps): Bps {
+  return bps(Math.min(accumulatedIntel * difficulty.value, 10_000))
+}
+
+/**
  * Calculates intel decay amount based on accumulated intel.
  * Formula: ceil((accumulatedIntel * decay) / 10_000)
  *
@@ -133,13 +145,13 @@ export function calculateIntelDecayAmount(accumulatedIntel: number): number {
 }
 
 /**
- * Calculates lead success chance based on accumulated intel and difficulty.
- * Formula: successChance = min(bps(accumulatedIntel * difficulty), 100%)
- *
- * @param accumulatedIntel - The accumulated intel value
- * @param difficulty - The difficulty in basis points
- * @returns The success chance (in basis points, capped at 100%)
+ * Calculates total intel accumulated from investigating agents
  */
-export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty: Bps): Bps {
-  return bps(Math.min(accumulatedIntel * difficulty.value, 10_000))
+export function calculateAccumulatedIntel(agents: Agent[]): number {
+  let total = 0
+  for (const agent of agents) {
+    const effectiveSkill = agent.skill - agent.exhaustion
+    total += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+  }
+  return total
 }
