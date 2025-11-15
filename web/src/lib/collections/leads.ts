@@ -8,7 +8,7 @@ export const leads: Lead[] = [
     id: 'lead-criminal-orgs',
     title: 'Criminal organizations',
     description: 'Investigate local criminal organizations to find cult connections.',
-    difficulty: bps(10), //10_000, // Instant success // KJA temp debug set to 10% for now
+    difficulty: bps(10), //10_000, // Instant success // KJA 2 temp debug set to 10% for now
     dependsOn: [],
     repeatable: false,
   },
