@@ -60,16 +60,16 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 6. Update all agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
 
-  // 6.5. Update lead investigations
-  const leadInvestigationReports = updateLeadInvestigations(state)
-
-  // 7. Update all agents in InTransit state
+  // 7. Update all agents in InTransit state (before investigations complete)
   updateInTransitAgents(state)
 
-  // 8. Update active non-deployed mission sites
+  // 8. Update lead investigations (agents completing investigations go to InTransit)
+  const leadInvestigationReports = updateLeadInvestigations(state)
+
+  // 9. Update active non-deployed mission sites
   const expiredMissionSiteReports = updateActiveMissionSites(state)
 
-  // 9. Evaluate deployed mission sites (and agents deployed to them)
+  // 10. Evaluate deployed mission sites (and agents deployed to them)
   const {
     rewards: missionRewards,
     agentsWounded: agentsWoundedFromMissions,
@@ -77,7 +77,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     missionReports,
   } = evaluateDeployedMissionSites(state)
 
-  // 10. Update player assets
+  // 11. Update player assets
   const assetsReportPartial = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
@@ -85,7 +85,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     missionRewards,
   })
 
-  // 11. Get agents report
+  // 12. Get agents report
   const agentsReport = getAgentsReport(
     state,
     previousAgentCounts,
@@ -99,10 +99,10 @@ export default function evaluateTurn(state: GameState): TurnReport {
     agentsReport,
   }
 
-  // 12. Update panic
+  // 13. Update panic
   const panicReport = updatePanic(state, missionRewards)
 
-  // 13. Update factions
+  // 14. Update factions
   const factionsReport = updateFactions(state, missionRewards)
 
   validateGameStateInvariants(state)

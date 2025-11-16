@@ -110,7 +110,7 @@ function completeInvestigation(
   investigation.state = 'Successful'
   investigation.agentIds = []
 
-  // Return agents to standby
+  // Return agents to InTransit state (they will transition to Available on next turn)
   for (const agent of investigatingAgents) {
     agent.assignment = 'Standby'
     agent.state = 'InTransit'

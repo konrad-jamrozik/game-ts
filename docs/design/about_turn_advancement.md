@@ -13,11 +13,13 @@ On a high level, the update logic consists of following steps:
 5. Update all agents in `OnAssignment` state and `Contracting` assignment.
 6. Update all agents in `OnAssignment` state and `Espionage` assignment.
 7. Update all agents in `InTransit` state.
-8. Update all active non-deployed mission sites.
-9. Evaluate all deployed mission sites, thus also updating all agents deployed to them.
-10. Update player assets based on the results of previous steps.
-11. Update panic, based on the results of previous steps.
-12. Update factions, based on the results of previous steps.
+8. Update lead investigations.
+9. Update all active non-deployed mission sites.
+10. Evaluate all deployed mission sites, thus also updating all agents deployed to them.
+11. Update player assets based on the results of previous steps.
+12. Get agents report.
+13. Update panic, based on the results of previous steps.
+14. Update factions, based on the results of previous steps.
 
 Below each step is described in detail.
 
@@ -53,11 +55,16 @@ Then apply exhaustion increase.
 
 Apply appropriate state and assignment updates.
 
-## 8. Update active non-deployed mission sites
+## 8. Update lead investigations
+
+Update lead investigations: check for completion, apply decay, accumulate intel.
+Agents completing investigations transition to `InTransit` state.
+
+## 9. Update active non-deployed mission sites
 
 Apply mission site expiration progress and expire mission sites that have expired.
 
-## 9. Evaluate deployed mission sites
+## 10. Evaluate deployed mission sites
 
 Evaluate all deployed mission sites, including all agents deployed to them.
 
@@ -78,7 +85,7 @@ For each deployed mission site:
 3. Determine mission site state: `Successful` if all enemies were neutralized, otherwise `Failed`.
 4. If mission site state is `Successful`, return the mission site rewards to be later used to update player assets.
 
-# 10. Update player assets
+# 11. Update player assets
 
 Update player assets based on the results of previous steps. This includes:
 
@@ -86,14 +93,18 @@ Update player assets based on the results of previous steps. This includes:
 - Adding intel gathered by agents on `Espionage` assignment.
 - Adding mission site rewards for each `Successful` mission site.
 
-# 11. Update panic
+# 12. Get agents report
+
+Generate agents report tracking changes in agent counts and states.
+
+# 13. Update panic
 
 Update panic based on the total factions panic increase formula,
 which incorporates `threatLevel` and `suppression` of all factions.
 
 Then apply panic reduction reward from any `Successful` mission sites.
 
-# 12. Update factions
+# 14. Update factions
 
 Update factions, based on the results of previous steps. This includes, for each faction:
 
