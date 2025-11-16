@@ -145,9 +145,15 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'id',
       headerName: 'Mission site ID',
       minWidth: 200,
-      renderCell: (params: GridRenderCellParams<MissionRow, string>) => (
-        <span aria-label={`missions-row-id-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
+        const missionSiteIdWithoutPrefix = fmtNoPrefix(params.value ?? params.row.id, 'mission-site-')
+        const missionIdWithoutPrefix = fmtNoPrefix(params.row.missionId, 'mission-')
+        return (
+          <span aria-label={`missions-row-id-${params.id}`}>
+            {missionSiteIdWithoutPrefix} ({missionIdWithoutPrefix})
+          </span>
+        )
+      },
     },
     // {
     //   field: 'title',
@@ -185,6 +191,29 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
           )
         }
         return <span aria-label={`missions-row-expires-in-${params.id}`}>-</span>
+      },
+    },
+    {
+      field: 'enemies',
+      headerName: 'Enemies',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+        const enemyCount = params.row.enemies.length
+        return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
+      },
+    },
+    {
+      field: 'avgSkill',
+      headerName: 'Avg. skill',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+        const { enemies } = params.row
+        if (enemies.length === 0) {
+          return <span aria-label={`missions-row-avg-skill-${params.id}`}>-</span>
+        }
+        const totalSkill = enemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+        const avgSkill = (totalSkill / enemies.length).toFixed(1)
+        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{avgSkill}</span>
       },
     },
   ]
