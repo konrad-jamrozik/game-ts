@@ -46,13 +46,8 @@ export function MissionsDataGrid(): React.JSX.Element {
   const completedThisTurnSites = archivedMissionSites.filter((site) => completedThisTurnIds.has(site.id))
   const activeMissionSitesIncludingCompleted = [...activeMissionSites, ...completedThisTurnSites]
 
-  // Exclude completed missions from archived rows if they completed this turn
-  const archivedMissionSitesExcludingCompleted = archivedMissionSites.filter(
-    (site) => !completedThisTurnIds.has(site.id),
-  )
-
   const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSitesIncludingCompleted)
-  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSitesExcludingCompleted)
+  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
 
   // Transform all mission sites to rows (both active and archived)
   const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
