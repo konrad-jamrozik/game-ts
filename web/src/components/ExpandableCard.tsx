@@ -31,7 +31,8 @@ export function ExpandableCard({
 }: ExpandableCardProps): React.JSX.Element {
   const [expanded, setExpanded] = useState(defaultExpanded)
   const nestedCardContentSx: SxProps<Theme> = { backgroundColor: theme.palette.background.nestedCardContent }
-  const cardContentSx: SxProps<Theme> = nested ? nestedCardContentSx : defaultSx
+  // KJA dedup this padding 1 here with `'&:last-child': { paddingBottom: 1 },` in theme.tsx
+  const cardContentSx: SxProps<Theme> = nested ? nestedCardContentSx : { padding: 1 }
 
   function handleExpandClick(): void {
     setExpanded(!expanded)
