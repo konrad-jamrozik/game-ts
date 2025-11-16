@@ -34,6 +34,8 @@ export const BPS_PRECISION = 10_000
 
 // When agents' total effective skill is less than this threshold, they will retreat.
 export const RETREAT_THRESHOLD = 0.5
+// Retreat also occurs when enemy effective skill is at least this percentage of agents' current effective skill.
+export const RETREAT_ENEMY_SKILL_THRESHOLD = 0.8
 
 // Intel decay constants (in basis points)
 // So if 1 intel = 1%, and 5 intel decays by 0.5% or 0.025, rounded up (see calculateIntelDecayRounded),

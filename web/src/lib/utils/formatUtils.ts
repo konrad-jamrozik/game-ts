@@ -14,12 +14,21 @@ export function str(value: unknown): string {
   }
   return String(value)
 }
+
 /**
  * @returns The value, divided by 100, formatted as percentage with 2 decimal places.
  * For example, 12345 will be formatted as "123.45%"
  */
 export function addPctSignDiv100Dec2(value: Bps): string {
   return addPctSignDiv100(value.value, 2)
+}
+
+/**
+ * @returns The value, multiple  by 100, formatted as percentage with 2 decimal places.
+ * For example, 0.12345 will be formatted as "12.34%"
+ */
+export function addPctSignMult100Dec2(value: number): string {
+  return addPctSign(value * 100, 2)
 }
 
 export function addPctSignDiv100(value: number, decimals: number): string {
