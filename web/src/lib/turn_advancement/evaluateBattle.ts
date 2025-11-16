@@ -5,7 +5,7 @@ import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { effectiveSkill } from '../utils/actorUtils'
-import { assertNotEmpty } from '../utils/assert'
+import { assertNotEmpty, assertNotNaN } from '../utils/assert'
 import { addPctSignMult100Dec2 } from '../utils/formatUtils'
 import { div, divMult100Round } from '../utils/mathUtils'
 import { evaluateAttack, isAgent, type AgentCombatStats } from './evaluateAttack'
@@ -167,18 +167,52 @@ function logRetreat(retreatResult: RetreatResult): void {
   )
 }
 
+// Extract numeric suffix from IDs.
+// Handles formats:
+// - "enemy-initiate-123" -> 123
+// - "agent-011" -> 11
+function extractNumberFromId(id: string): number {
+  const regex = /-(?<number>\d+)$/u
+  const match = regex.exec(id)
+  const numberStr = match?.groups?.['number']
+  if (numberStr === undefined || numberStr === '') {
+    return Number.NaN
+  }
+  return Number.parseInt(numberStr, 10)
+}
+
+function compareIdsNumeric(idA: string, idB: string): number {
+  const numA = extractNumberFromId(idA)
+  const numB = extractNumberFromId(idB)
+
+  // Both IDs must have numeric suffixes for numeric comparison
+  if (Number.isNaN(numA)) {
+    assertNotNaN(
+      numA,
+      `Failed to extract numeric ID from "${idA}" (extracted: ${numA}). ID must have a numeric suffix.`,
+    )
+  }
+  if (Number.isNaN(numB)) {
+    assertNotNaN(
+      numB,
+      `Failed to extract numeric ID from "${idB}" (extracted: ${numB}). ID must have a numeric suffix.`,
+    )
+  }
+
+  return numA - numB
+}
+
 function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
   // Track attack counts per target for fair distribution
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
-  // KJA enemies of the same skill are not sorted by numeric value. So instead of 1, 2, 3, ... 10 it is 1, 10, 2, 20, 3.
   console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   activeAgents.sort((agentA, agentB) => {
-    if (agentA.skill === agentB.skill) return agentA.id.localeCompare(agentB.id)
+    if (agentA.skill === agentB.skill) return compareIdsNumeric(agentA.id, agentB.id)
     return agentA.skill - agentB.skill
   })
 
@@ -202,7 +236,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   activeEnemies.sort((enemyA, enemyB) => {
-    if (enemyA.skill === enemyB.skill) return enemyA.id.localeCompare(enemyB.id)
+    if (enemyA.skill === enemyB.skill) return compareIdsNumeric(enemyA.id, enemyB.id)
     return enemyA.skill - enemyB.skill
   })
 
@@ -239,7 +273,7 @@ function selectTargetWithFairDistribution<T extends Agent | Enemy>(
   const sorted = [...leastAttackedTargets].sort((targetA, targetB) => {
     const skillA = isAgent(targetA) ? agV(targetA).effectiveSkill() : effectiveSkill(targetA)
     const skillB = isAgent(targetB) ? agV(targetB).effectiveSkill() : effectiveSkill(targetB)
-    if (skillA === skillB) return targetA.id.localeCompare(targetB.id)
+    if (skillA === skillB) return compareIdsNumeric(targetA.id, targetB.id)
     return skillA - skillB
   })
 

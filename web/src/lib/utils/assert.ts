@@ -56,6 +56,12 @@ export function assertNotEmpty<T>(value: T[], errMsg = 'Value must not be empty'
   }
 }
 
+export function assertNotNaN(value: number, errMsg = 'Value must not be NaN'): asserts value is number {
+  if (Number.isNaN(value)) {
+    throw new TypeError(errMsg)
+  }
+}
+
 export function assertUnreachable(value: never): never {
   throw new Error(`Unreachable code reached. Received: ${JSON.stringify(value)}`)
 }
