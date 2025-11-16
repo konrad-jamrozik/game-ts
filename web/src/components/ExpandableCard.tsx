@@ -40,12 +40,13 @@ export function ExpandableCard({
     <Card sx={sx}>
       <CardHeader
         avatar={
-          <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more">
+          <IconButton onClick={handleExpandClick} aria-expanded={expanded} aria-label="show more" size="small">
             {expanded ? <ExpandLessIcon /> : <ExpandMoreIcon />}
           </IconButton>
         }
         title={title}
-        slotProps={{ title: { variant: 'h5' } }}
+        slotProps={{ title: { variant: 'h6' } }}
+        sx={{ paddingY: 0.75 }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={nested ? nestedCardContentSx : defaultSx}>{children}</CardContent>
