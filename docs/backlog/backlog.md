@@ -4,6 +4,13 @@ KJA backlog:
 
 # Brainstorming
 
+- Make each repeatable lead be investigated only once at a time.
+  - Make even allow one lead per faction at a time.
+
+- Interrogating captured enemies should provide bonus towards various lead investigations.
+  - Intel lump sum.
+  - What if there is currently no eligible lead investigation?
+
 - Add AI player that can play the game for me
 
 - Add Capabilities / Stats screen that show player capabilities like:

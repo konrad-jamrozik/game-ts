@@ -129,7 +129,7 @@ export function SituationReportCard(): React.JSX.Element {
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
         {isRedDawnDiscovered && (
           <Fragment>
-            <Typography variant="h5">{redDawnFaction.name} faction</Typography>
+            <Typography variant="h6">{redDawnFaction.name} faction</Typography>
             <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
           </Fragment>
         )}
