@@ -22,6 +22,10 @@ The game is a purely client-side web app, using:
 The documentation is in `docs/` directory.
 It has project-specific documentation for setup, linting, formatting, testing, MUI, and more.
 
+# Important coding guidelines
+
+- Never memoize values with `React.useMemo`. The project uses React Compiler, so use `React.useMemo` is not needed.
+
 ## Key aspects and conventions of the project
 
 **Sources**: The main web app sources is in `web/`. See Tech Stack below for details.

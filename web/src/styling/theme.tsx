@@ -116,7 +116,7 @@ const colorSystemOptions: ColorSystemOptions = {
 
     agentStateRecovering: defaultTheme.palette.augmentColor({
       color: {
-        main: deepOrange[800],
+        main: deepOrange[700],
       },
       name: 'agentStateRecovering',
     }),
