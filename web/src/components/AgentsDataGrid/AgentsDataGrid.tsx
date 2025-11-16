@@ -18,6 +18,7 @@ import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/data
 import { toPct } from '../../lib/utils/mathUtils'
 import { fmtDec1 } from '../../lib/utils/formatUtils'
 import { MyChip } from '../MyChip'
+import { getModelPalette } from '../../styling/modelPaletteUtils'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -38,42 +39,19 @@ function createAgentColumns(rows: AgentRow[]): GridColDef[] {
     {
       field: 'state',
       headerName: 'State',
-      minWidth: 120,
-      // KJA ===== Need review/fixup
+      width: 140,
       renderCell: (params: GridRenderCellParams<AgentRow, AgentState>): React.JSX.Element => {
         const state = params.value
-        let customColor: string | undefined = undefined
-        // Default case handles all other states, so switch is exhaustive at runtime
-        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
-        switch (state) {
-          case 'Available': {
-            customColor = 'available'
-            break
-          }
-          case 'Terminated': {
-            customColor = 'terminated'
-            break
-          }
-          case 'Recovering': {
-            customColor = 'recovering'
-            break
-          }
-          default: {
-            customColor = undefined
-            break
-          }
+        if (state === undefined) {
+          return <span aria-label={`agents-row-state-${params.id}`}>-</span>
         }
+        const paletteColorName = getModelPalette()[state]
         return (
           <span aria-label={`agents-row-state-${params.id}`}>
-            {customColor !== undefined ? (
-              <MyChip chipValue={state} customColor={customColor} />
-            ) : (
-              <MyChip chipValue={state} />
-            )}
+            <MyChip chipValue={state} paletteColorName={paletteColorName} />
           </span>
         )
       },
-      // ===== end of KJA
     },
     {
       field: 'assignment',

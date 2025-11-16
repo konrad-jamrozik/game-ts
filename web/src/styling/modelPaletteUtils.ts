@@ -1,29 +1,25 @@
-import { type Theme, useTheme } from '@mui/material/styles'
+import type { ChipPropsColorOverrides } from '@mui/material'
 import type { AgentState } from '../lib/model/model'
+import type { OverridableStringUnion } from '@mui/types'
+
+export type MyPaletteColor = OverridableStringUnion<
+  'success' | 'error' | 'warning' | 'default' | 'primary' | 'secondary' | 'info',
+  ChipPropsColorOverrides
+>
 
 /**
  * Maps AgentState values to their corresponding palette color strings.
  * @param theme - The MUI theme object
  * @returns A Record mapping AgentState to color strings from the palette
  */
-export function getModelPalette(theme: Theme): Record<AgentState, string> {
-  const { agentStates } = theme.palette
+export function getModelPalette(): Record<AgentState, MyPaletteColor> {
   return {
-    Available: agentStates.available,
-    Terminated: agentStates.terminated,
-    Recovering: agentStates.recovering,
-    StartingTransit: agentStates.default,
-    InTransit: agentStates.default,
-    OnAssignment: agentStates.default,
-    OnMission: agentStates.default,
+    Available: 'agentStateAvailable',
+    Terminated: 'agentStateTerminated',
+    Recovering: 'agentStateRecovering',
+    StartingTransit: 'agentStateDefault',
+    InTransit: 'agentStateDefault',
+    OnAssignment: 'agentStateDefault',
+    OnMission: 'agentStateDefault',
   }
-}
-
-/**
- * Hook version that uses the current theme from context.
- * @returns A Record mapping AgentState to color strings from the palette
- */
-export function useModelPalette(): Record<AgentState, string> {
-  const theme = useTheme()
-  return getModelPalette(theme)
 }

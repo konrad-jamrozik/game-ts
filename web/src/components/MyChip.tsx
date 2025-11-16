@@ -1,8 +1,9 @@
-import { Chip, useTheme } from '@mui/material'
+import { Chip } from '@mui/material'
 import * as React from 'react'
 import type { Bps } from '../lib/model/bps'
 import { str } from '../lib/utils/formatUtils'
 import { val } from '../lib/utils/mathUtils'
+import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
 export type MyChipProps = {
   chipValue?: number | Bps | string | undefined
@@ -15,8 +16,10 @@ export type MyChipProps = {
   /** If true, display using warning color (orange/yellow) */
   useWarningColor?: boolean
   /** Custom color from theme palette (e.g., 'agentAvailable', 'agentTerminated', 'agentRecovering') */
-  customColor?: string
+  paletteColorName?: MyPaletteColor
 }
+
+export type ChipColor = MyPaletteColor
 
 export function MyChip({
   chipValue,
@@ -24,49 +27,12 @@ export function MyChip({
   reverseColor = false,
   noColor = false,
   useWarningColor = false,
-  customColor,
+  paletteColorName,
 }: MyChipProps): React.JSX.Element {
-  const theme = useTheme()
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
-  const chipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor)
+  const chipColor: ChipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor, paletteColorName)
 
-  // KJA ===== Need review/fixup
-  const sxProps = React.useMemo(() => {
-    const baseSx = { fontSize: '0.875rem', height: 18 }
-    if (customColor !== undefined && customColor !== '') {
-      // Access agent state colors from theme.palette.agentStates
-      const { agentStates } = theme.palette
-      if (customColor === 'available' || customColor === 'terminated' || customColor === 'recovering') {
-        const stateColor = agentStates[customColor]
-        if (stateColor !== '') {
-          return {
-            ...baseSx,
-            backgroundColor: stateColor,
-            color: theme.palette.getContrastText(stateColor),
-          }
-        }
-      }
-    }
-    return baseSx
-  }, [customColor, theme])
-
-  const chipProps = React.useMemo(() => {
-    const baseProps = {
-      label: chipLabel,
-      size: 'small' as const,
-      sx: sxProps,
-    }
-    if (customColor !== undefined && customColor !== '') {
-      return baseProps
-    }
-    return {
-      ...baseProps,
-      color: chipColor,
-    }
-  }, [chipLabel, chipColor, customColor, sxProps])
-
-  return <Chip {...chipProps} />
-  // ===== end of KJA
+  return <Chip label={chipLabel} size="small" sx={{ fontSize: '0.875rem', height: 18 }} color={chipColor} />
 }
 
 /**
@@ -96,42 +62,49 @@ function determineChipColor(
   noColor: boolean,
   reverseColor: boolean,
   useWarningColor: boolean,
-): 'success' | 'error' | 'warning' | 'default' {
-  if (noColor || chipLabel === undefined) {
-    return 'default'
-  }
+  paletteColorName?: ChipColor,
+): ChipColor {
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let returnedColor: ChipColor
 
-  // For string labels (non-numeric), use default color unless reverseColor is set
-  // Check if the label is numeric (starts with +, -, or is a number)
-  const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
+  if (paletteColorName !== undefined) {
+    returnedColor = paletteColorName
+  } else if (noColor || chipLabel === undefined) {
+    returnedColor = 'default'
+  } else {
+    // For string labels (non-numeric), use default color unless reverseColor is set
+    // Check if the label is numeric (starts with +, -, or is a number)
+    const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
 
-  if (!isNumericLabel) {
-    if (chipLabel.includes('Success') || chipLabel.includes('Done')) {
-      return 'success'
+    if (!isNumericLabel) {
+      if (chipLabel.includes('Success') || chipLabel.includes('Done')) {
+        returnedColor = 'success'
+      } else if (chipLabel.includes('Retreated')) {
+        returnedColor = 'error'
+      } else if (
+        chipLabel.includes('All agents lost') ||
+        chipLabel.includes('Failed') ||
+        chipLabel.includes('Expired')
+      ) {
+        returnedColor = 'error'
+      } else {
+        returnedColor = 'default'
+      }
+    } else {
+      // Determine if the value is positive, negative, or zero based on the label
+      const isPositive = chipLabel.startsWith('+') || (!chipLabel.startsWith('-') && chipLabel !== '0')
+      const isZero = ['0', '+0', '-0', '0.00%', '+0.00%', '-0.00%'].includes(chipLabel)
+
+      if (isZero) {
+        returnedColor = 'default'
+      } else if (useWarningColor) {
+        returnedColor = 'warning'
+      } else if (reverseColor) {
+        returnedColor = isPositive ? 'error' : 'success'
+      } else {
+        returnedColor = isPositive ? 'success' : 'error'
+      }
     }
-    if (chipLabel.includes('Retreated')) {
-      return 'error'
-    }
-    if (chipLabel.includes('All agents lost') || chipLabel.includes('Failed') || chipLabel.includes('Expired')) {
-      return 'error'
-    }
-    return 'default'
   }
-
-  // Determine if the value is positive, negative, or zero based on the label
-  const isPositive = chipLabel.startsWith('+') || (!chipLabel.startsWith('-') && chipLabel !== '0')
-  const isZero = ['0', '+0', '-0', '0.00%', '+0.00%', '-0.00%'].includes(chipLabel)
-
-  if (isZero) {
-    return 'default'
-  }
-
-  if (useWarningColor) {
-    return 'warning'
-  }
-
-  if (reverseColor) {
-    return isPositive ? 'error' : 'success'
-  }
-  return isPositive ? 'success' : 'error'
+  return returnedColor
 }

@@ -4,11 +4,31 @@ import {
   type ColorSystemOptions,
   type Components,
   type CssVarsTheme,
+  type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
+  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
+  interface Palette {
+    agentStateAvailable: PaletteColorOptions
+    agentStateTerminated: PaletteColorOptions
+    agentStateRecovering: PaletteColorOptions
+    agentStateDefault: PaletteColorOptions
+  }
+
+  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
+  interface PaletteOptions {
+    background?: Partial<TypeBackground>
+    agentStateAvailable?: PaletteColorOptions
+    agentStateTerminated?: PaletteColorOptions
+    agentStateRecovering?: PaletteColorOptions
+    agentStateDefault?: PaletteColorOptions
+  }
+
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
   // TypeBackground is a member of export interface Palette {
   interface TypeBackground {
@@ -20,28 +40,14 @@ declare module '@mui/material/styles' {
     missionCardHeader: string
     missionCardContent: string
   }
+}
 
-  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
-  // export default function createPalette(palette: PaletteOptions): Palette;
-  interface PaletteOptions {
-    background?: Partial<TypeBackground>
-    agentStates?: {
-      available: string
-      terminated: string
-      recovering: string
-      default: string
-    }
-  }
-
-  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
-  // export default function createPalette(palette: PaletteOptions): Palette;
-  interface Palette {
-    agentStates: {
-      available: string
-      terminated: string
-      recovering: string
-      default: string
-    }
+declare module '@mui/material/Chip' {
+  interface ChipPropsColorOverrides {
+    agentStateAvailable: true
+    agentStateTerminated: true
+    agentStateRecovering: true
+    agentStateDefault: true
   }
 }
 
@@ -70,11 +76,17 @@ const colorSystemOptions: ColorSystemOptions = {
       missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
       missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
     },
-    agentStates: {
-      available: defaultTheme.palette.success.main,
-      terminated: defaultTheme.palette.error.main,
-      recovering: defaultTheme.palette.error.main,
-      default: defaultTheme.palette.text.primary,
+    agentStateAvailable: {
+      main: defaultTheme.palette.success.main,
+    },
+    agentStateTerminated: {
+      main: defaultTheme.palette.error.main,
+    },
+    agentStateRecovering: {
+      main: defaultTheme.palette.error.main,
+    },
+    agentStateDefault: {
+      main: defaultTheme.palette.grey[500],
     },
   },
 }
