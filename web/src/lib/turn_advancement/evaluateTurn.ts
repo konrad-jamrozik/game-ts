@@ -60,11 +60,11 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 6. Update all agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
 
-  // 7. Update all agents in InTransit state (before investigations complete)
-  updateInTransitAgents(state)
-
-  // 8. Update lead investigations (agents completing investigations go to InTransit)
+  // 7. Update lead investigations (agents completing investigations go to InTransit)
   const leadInvestigationReports = updateLeadInvestigations(state)
+
+  // 8. Update all agents in InTransit state (after investigations complete)
+  updateInTransitAgents(state)
 
   // 9. Update active non-deployed mission sites
   const expiredMissionSiteReports = updateActiveMissionSites(state)

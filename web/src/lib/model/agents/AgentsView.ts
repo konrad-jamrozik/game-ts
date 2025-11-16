@@ -29,7 +29,6 @@ type AgentsViewMethods = Readonly<{
   available(): AgentsView
   notAvailable(): AgentsView
   onAssignment(): AgentsView
-  investigatingLead(investigationId: string): AgentsView
   notOnAssignment(): AgentsView
   terminated(): AgentsView
   notTerminated(): AgentsView
@@ -57,8 +56,6 @@ function getAgentsViewMethods(
     available: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isAvailable())),
     notAvailable: (): AgentsView => toAgsV(agVArr.filter((agent) => !agent.isAvailable())),
     onAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnAssignment())),
-    investigatingLead: (investigationId: string): AgentsView =>
-      toAgsV(agVArr.filter((agent) => agent.isInvestigatingLead(investigationId))),
     notOnAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => !agent.isOnAssignment())),
     onContractingAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnContractingAssignment())),
     onEspionageAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnEspionageAssignment())),

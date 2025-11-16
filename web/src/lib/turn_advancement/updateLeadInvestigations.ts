@@ -51,8 +51,8 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
-  const agents = agsV(state.agents)
-  agents.investigatingLead(investigation.id).applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  const agents = agsV(investigatingAgents)
+  agents.applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
   const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
 

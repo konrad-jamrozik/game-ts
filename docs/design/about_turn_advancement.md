@@ -12,8 +12,8 @@ On a high level, the update logic consists of following steps:
 4. Update all agents in `Recovering` state.
 5. Update all agents in `OnAssignment` state and `Contracting` assignment.
 6. Update all agents in `OnAssignment` state and `Espionage` assignment.
-7. Update all agents in `InTransit` state.
-8. Update lead investigations.
+7. Update lead investigations.
+8. Update all agents in `InTransit` state.
 9. Update all active non-deployed mission sites.
 10. Evaluate all deployed mission sites, thus also updating all agents deployed to them.
 11. Update player assets based on the results of previous steps.
@@ -51,14 +51,16 @@ Then apply exhaustion increase.
 Compute intel earned to be later used to update player assets.
 Then apply exhaustion increase.
 
-## 7. Update agents in `InTransit` state
-
-Apply appropriate state and assignment updates.
-
-## 8. Update lead investigations
+## 7. Update lead investigations
 
 Update lead investigations: check for completion, apply decay, accumulate intel.
 Agents completing investigations transition to `InTransit` state.
+
+## 8. Update agents in `InTransit` state
+
+Apply appropriate state and assignment updates.
+This runs after lead investigations are updated, so agents completing investigations
+remain in `InTransit` state until the next turn.
 
 ## 9. Update active non-deployed mission sites
 
