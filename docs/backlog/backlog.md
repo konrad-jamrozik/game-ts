@@ -4,12 +4,37 @@ KJA backlog:
 
 # Brainstorming
 
+- KJA Add turn terminated to KIAed agents, enemy who killed them, and mission site.
+
+- KJA Fix the combat target selection so that in case the number of enemies doesn't exactly match player agents,
+  it won't be the case the best agent attacks some lousy unit because of the attack counter looping.
+  Best agent should generally try to attack best enemy unit, or at least someone close to their skill level.
+  Attacking too weak enemy is a waste, and attacking too strong enemy won't be effective.
+
+- KJA retreat logic could be smarter: retreat when agents effective skill is < 50%
+  AND ALSO if enemy effective skill is at least 80% of agents effective skill.
+
+- KJA in archived agents state terminated should display in red. Available in green.
+
+- KJA in situation reports if panic or thread didn't grow it should display in grey, not red.
+
+- For combat reports, add dedicated data grid with columns:
+  - round,
+  - attacker & effective skill & % of initial,
+  - defender & effective skill & % of initial,
+  - roll & result & threshold & diff to threshold
+  - damage inflicted (if any) & % of weapon range & min & max
+  - hit points remaining & percentage of total & total
+
+- Add "Details" button to completed missions that show the combat log
+
 - Make each repeatable lead be investigated only once at a time.
   - Make even allow one lead per faction at a time.
 
 - Interrogating captured enemies should provide bonus towards various lead investigations.
   - Intel lump sum.
   - What if there is currently no eligible lead investigation?
+    - Maybe decrease lead difficulty by some amount?
 
 - Add AI player that can play the game for me
 

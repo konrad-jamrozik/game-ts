@@ -37,7 +37,7 @@ export function SituationReportCard(): React.JSX.Element {
     {
       field: 'projected',
       headerName: 'Projected',
-      minWidth: 130,
+      width: 150,
       renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
         const { diff, metric, projected, reverseColor } = params.row
 

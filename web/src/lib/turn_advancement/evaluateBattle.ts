@@ -151,6 +151,7 @@ function isSideWiped(agents: Agent[], enemies: Enemy[]): boolean {
   return allAgentsTerminated || allEnemiesTerminated
 }
 
+// KJA should be in ruleset
 function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[]): boolean {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
   const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
@@ -163,6 +164,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
+  // KJA enemies of the same skill are not sorted by numeric value. So instead of 1, 2, 3, ... 10 it is 1, 10, 2, 20, 3.
   console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled

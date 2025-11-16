@@ -144,7 +144,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     {
       field: 'id',
       headerName: 'Mission site ID',
-      minWidth: 200,
+      minWidth: 240,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
         const missionSiteIdWithoutPrefix = fmtNoPrefix(params.value ?? params.row.id, 'mission-site-')
         const missionIdWithoutPrefix = fmtNoPrefix(params.row.missionId, 'mission-')
@@ -180,8 +180,8 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     },
     {
       field: 'expiresIn',
-      headerName: 'Expires In',
-      minWidth: 120,
+      headerName: 'Expires in',
+      width: 90,
       renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
         if (params.row.state === 'Active') {
           return (
@@ -196,7 +196,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     {
       field: 'enemies',
       headerName: 'Enemies',
-      minWidth: 100,
+      width: 80,
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const enemyCount = params.row.enemies.length
         return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
@@ -205,7 +205,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     {
       field: 'avgSkill',
       headerName: 'Avg. skill',
-      minWidth: 100,
+      width: 80,
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const { enemies } = params.row
         if (enemies.length === 0) {
