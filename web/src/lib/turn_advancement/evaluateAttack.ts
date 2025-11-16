@@ -10,7 +10,7 @@ import {
 } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
-import { addPctSignDec2 } from '../utils/formatUtils'
+import { fmtRollResult } from '../utils/formatUtils'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
@@ -35,7 +35,7 @@ export function evaluateAttack(
   }
 
   // Contest roll
-  const contestResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill, label)
+  const rollResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill, label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
@@ -45,7 +45,7 @@ export function evaluateAttack(
   const attackerName = attacker.id
   const defenderName = defender.id
 
-  if (contestResult.success) {
+  if (rollResult.success) {
     // Successful attack - roll damage
     const damage = rollWeaponDamage(attacker.weapon, label)
     const damageDenominator = attacker.weapon.maxDamage - attacker.weapon.minDamage
@@ -63,17 +63,16 @@ export function evaluateAttack(
       defenderStats.skillGained += AGENT_FAILED_DEFENSE_SKILL_REWARD
     }
 
-    // Detailed success log
-    const rollInfo = `[${addPctSignDec2(contestResult.roll)} vs ${addPctSignDec2(contestResult.failureProbabilityPct)} threshold]`
+    const rollResultStr = fmtRollResult(rollResult)
 
     if (defender.hitPoints <= 0) {
       console.log(
-        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollInfo}`,
+        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollResultStr}`,
       )
     } else {
       const hpPercentage = divMult100Round(defender.hitPoints, defender.maxHitPoints)
       console.log(
-        `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollInfo} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
+        `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollResultStr} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
       )
     }
 
@@ -83,7 +82,7 @@ export function evaluateAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollInfo = `[${addPctSignDec2(contestResult.roll)} vs ${addPctSignDec2(contestResult.failureProbabilityPct)} threshold]`
+    const rollInfo = fmtRollResult(rollResult)
     console.log(
       `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
     )

@@ -11,6 +11,7 @@ import {
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../utils/assert'
 import { newEnemiesFromSpec } from '../utils/enemyUtils'
+import { fmtRollResult } from '../utils/formatUtils'
 import { rollAgainstProbability } from './rolls'
 
 /**
@@ -76,8 +77,10 @@ function rollForInvestigationSuccess(
   difficulty: number,
 ): { successChance: number; success: boolean } {
   const successChance = calculateLeadSuccessChance(accumulatedIntel, difficulty)
-  const [success] = rollAgainstProbability(successChance)
-  return { successChance, success }
+  const rollResult = rollAgainstProbability(successChance)
+  const rollResultStr = fmtRollResult(rollResult)
+  console.log(`Investigation roll result: ${rollResultStr}`)
+  return { successChance, success: rollResult.success }
 }
 
 /**

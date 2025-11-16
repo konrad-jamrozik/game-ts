@@ -31,8 +31,8 @@ describe('rolls', () => {
     ]
     testCases.forEach(([probability, fixedRoll, expectedSuccess]) => {
       rand.set('test_label', fixedRoll)
-      const [success] = rollAgainstProbability(probability, 'test_label')
-      expect(success).toBe(expectedSuccess)
+      const rollResult = rollAgainstProbability(probability, 'test_label')
+      expect(rollResult.success).toBe(expectedSuccess)
     })
   })
 

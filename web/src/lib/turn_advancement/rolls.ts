@@ -6,12 +6,15 @@ import { div, multAndFloor } from '../utils/mathUtils'
 import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
 import { rand } from '../utils/rand'
 
-export type ContestRoll = {
+export type ContestRollResult = {
   attackerValue: number
   defenderValue: number
+} & RollResult
+
+export type RollResult = {
   successProbabilityPct: number
   failureProbabilityPct: number // aka threshold
-  roll: number
+  rollPct: number
   success: boolean
 }
 
@@ -38,37 +41,32 @@ export type RangeRoll = {
  * @param label - Optional label for controllable random in tests
  * @returns The contest roll result
  */
-export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRoll {
+export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRollResult {
   const ratioSquared = div(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
-  const [success, failureInt, successInt, roll] = rollAgainstProbability(successProbability, label)
-
-  // Express the values as percentages with 0.01% precision
-  const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
-  const failureProbabilityPct = failureInt / (CONTEST_ROLL_PRECISION / 100)
-  const rollPct = roll / (CONTEST_ROLL_PRECISION / 100)
+  const rollResult = rollAgainstProbability(successProbability, label)
 
   return {
     attackerValue,
     defenderValue,
-    successProbabilityPct,
-    failureProbabilityPct,
-    roll: rollPct,
-    success,
+    ...rollResult,
   }
 }
 
-export function rollAgainstProbability(probability: number, label?: string): [boolean, number, number, number] {
+export function rollAgainstProbability(probability: number, label?: string): RollResult {
   const [failureInt, successInt] = getSuccessAndFailureInts(probability)
   const roll = roll1to(CONTEST_ROLL_PRECISION, label)
 
   // Higher rolls are better: success when roll > P(failure)
   const success = roll > failureInt
 
-  // for debugging: console.log({ probability, roll, failureInt, success })
+  // Express the values as percentages with 0.01% precision
+  const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
+  const failureProbabilityPct = failureInt / (CONTEST_ROLL_PRECISION / 100)
+  const rollPct = roll / (CONTEST_ROLL_PRECISION / 100)
 
-  return [success, failureInt, successInt, roll]
+  return { successProbabilityPct, failureProbabilityPct, rollPct, success }
 }
 
 export function getSuccessAndFailureInts(successProbability: number): [number, number] {

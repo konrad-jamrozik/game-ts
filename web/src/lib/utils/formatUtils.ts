@@ -2,6 +2,7 @@ import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
 import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
+import type { RollResult } from '../turn_advancement/rolls'
 import { div } from './mathUtils'
 
 export function str(value: unknown): string {
@@ -75,4 +76,13 @@ export function fmtAgentCount(count: number): string {
  */
 export function fmtValueChange<TNumber extends number | Bps = number>(change: ValueChange<TNumber>): string {
   return `${str(change.previous)} → ${str(change.current)}`
+}
+
+/**
+ * Formats roll result information
+ * @param rollResult - The roll result
+ * @returns Formatted string in the format "[roll% vs threshold% threshold]"
+ */
+export function fmtRollResult(rollResult: RollResult): string {
+  return `[${addPctSignDec2(rollResult.rollPct)} vs ${addPctSignDec2(rollResult.failureProbabilityPct)} threshold]`
 }
