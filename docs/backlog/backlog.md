@@ -40,6 +40,21 @@ KJA backlog:
 
 - KJA if agents were terminated during mission combat in current turn, show them in agents data grid
 
+- Debug tab that shows when game was reset with ctrl click. Has options like:
+  - Add 100_000 money
+  - Reset panic to 0
+  - Suppress all factions to 10_000%
+  - Make all leads  available
+
+- Charts for stats over time, at the bottom of the screen.
+  - Panic
+  - Each faction threat level, suppression, panic increase
+  - Money
+  - Cumulative missions completed successfully, failed, expired
+  - Hardest mission completed by total enemy skill
+  - Agents, and what they do: contracting, investigating leads, on missions, etc.
+  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+
 - For combat reports, add dedicated data grid with columns:
   - round,
   - attacker & effective skill & % of initial,
