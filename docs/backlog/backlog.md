@@ -4,6 +4,10 @@ KJA backlog:
 
 # Brainstorming
 
+- KJA document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
+  Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
+  introducing a trade-off. Read more in OneNote for MLS4 intel page.
+  
 - KJA Add turn terminated to KIAed agents, enemy who killed them, and mission site.
 
 - KJA Fix the combat target selection so that in case the number of enemies doesn't exactly match player agents,
@@ -17,6 +21,8 @@ KJA backlog:
 - KJA in archived agents state terminated should display in red. Available in green.
 
 - KJA in situation reports if panic or thread didn't grow it should display in grey, not red.
+
+- KJA if agents were terminated during mission combat in current turn, show them in agents data grid
 
 - For combat reports, add dedicated data grid with columns:
   - round,
