@@ -10,6 +10,7 @@ import {
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // TypeBackground is a member of export interface Palette {
   interface TypeBackground {
     cardHeader: string
     cardContent: string
@@ -79,7 +80,7 @@ let theme = createTheme({
   colorSchemes: {
     dark: colorSystemOptions,
     // We set light to dark because we don't really support light, but the values
-    // must be the same for light and dark for the component overrides to work.
+    // must be the same for light and dark for the component overrides to work well.
     light: colorSystemOptions,
   },
 })

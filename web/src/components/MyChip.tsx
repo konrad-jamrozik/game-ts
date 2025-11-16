@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material'
+import { Chip, useTheme } from '@mui/material'
 import * as React from 'react'
 import type { Bps } from '../lib/model/bps'
 import { str } from '../lib/utils/formatUtils'
@@ -14,6 +14,8 @@ export type MyChipProps = {
   noColor?: boolean
   /** If true, display using warning color (orange/yellow) */
   useWarningColor?: boolean
+  /** Custom color from theme palette (e.g., 'agentAvailable', 'agentTerminated', 'agentRecovering') */
+  customColor?: string
 }
 
 export function MyChip({
@@ -22,11 +24,49 @@ export function MyChip({
   reverseColor = false,
   noColor = false,
   useWarningColor = false,
+  customColor,
 }: MyChipProps): React.JSX.Element {
+  const theme = useTheme()
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
   const chipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor)
 
-  return <Chip label={chipLabel} color={chipColor} size="small" sx={{ fontSize: '0.875rem', height: 18 }} />
+  // KJA ===== Need review/fixup
+  const sxProps = React.useMemo(() => {
+    const baseSx = { fontSize: '0.875rem', height: 18 }
+    if (customColor !== undefined && customColor !== '') {
+      // Access agent state colors from theme.palette.agentStates
+      const { agentStates } = theme.palette
+      if (customColor === 'available' || customColor === 'terminated' || customColor === 'recovering') {
+        const stateColor = agentStates[customColor]
+        if (stateColor !== '') {
+          return {
+            ...baseSx,
+            backgroundColor: stateColor,
+            color: theme.palette.getContrastText(stateColor),
+          }
+        }
+      }
+    }
+    return baseSx
+  }, [customColor, theme])
+
+  const chipProps = React.useMemo(() => {
+    const baseProps = {
+      label: chipLabel,
+      size: 'small' as const,
+      sx: sxProps,
+    }
+    if (customColor !== undefined && customColor !== '') {
+      return baseProps
+    }
+    return {
+      ...baseProps,
+      color: chipColor,
+    }
+  }, [chipLabel, chipColor, customColor, sxProps])
+
+  return <Chip {...chipProps} />
+  // ===== end of KJA
 }
 
 /**

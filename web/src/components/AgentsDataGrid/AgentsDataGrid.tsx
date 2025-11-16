@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import type { Agent } from '../../lib/model/model'
+import type { Agent, AgentState } from '../../lib/model/model'
 import { setAgentSelection } from '../../lib/slices/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
@@ -17,6 +17,7 @@ import { assertDefined } from '../../lib/utils/assert'
 import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
 import { toPct } from '../../lib/utils/mathUtils'
 import { fmtDec1 } from '../../lib/utils/formatUtils'
+import { MyChip } from '../MyChip'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -38,9 +39,41 @@ function createAgentColumns(rows: AgentRow[]): GridColDef[] {
       field: 'state',
       headerName: 'State',
       minWidth: 120,
-      renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-        <span aria-label={`agents-row-state-${params.id}`}>{params.value}</span>
-      ),
+      // KJA ===== Need review/fixup
+      renderCell: (params: GridRenderCellParams<AgentRow, AgentState>): React.JSX.Element => {
+        const state = params.value
+        let customColor: string | undefined = undefined
+        // Default case handles all other states, so switch is exhaustive at runtime
+        // eslint-disable-next-line @typescript-eslint/switch-exhaustiveness-check
+        switch (state) {
+          case 'Available': {
+            customColor = 'available'
+            break
+          }
+          case 'Terminated': {
+            customColor = 'terminated'
+            break
+          }
+          case 'Recovering': {
+            customColor = 'recovering'
+            break
+          }
+          default: {
+            customColor = undefined
+            break
+          }
+        }
+        return (
+          <span aria-label={`agents-row-state-${params.id}`}>
+            {customColor !== undefined ? (
+              <MyChip chipValue={state} customColor={customColor} />
+            ) : (
+              <MyChip chipValue={state} />
+            )}
+          </span>
+        )
+      },
+      // ===== end of KJA
     },
     {
       field: 'assignment',
