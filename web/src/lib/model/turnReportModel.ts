@@ -76,6 +76,7 @@ export type AgentsReport = {
   wounded: ValueChange
   unscathed: ValueChange
   terminated: ValueChange
+  terminatedAgentIds: string[] // IDs of agents terminated during this turn advancement
 }
 
 export type PanicReport = {

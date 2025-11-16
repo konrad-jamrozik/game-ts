@@ -30,14 +30,20 @@ export function filterAgentRows(
   allRows: AgentRow[],
   showOnlyTerminated: boolean,
   showOnlyAvailable: boolean,
+  agentsTerminatedThisTurnIds: Set<string>,
 ): AgentRow[] {
   if (showOnlyAvailable) {
+    // If agents were terminated this turn, include them even when showing only available
+    if (agentsTerminatedThisTurnIds.size > 0) {
+      return allRows.filter((agent) => agent.state === 'Available' || agentsTerminatedThisTurnIds.has(agent.id))
+    }
     return allRows.filter((agent) => agent.state === 'Available')
   }
   if (showOnlyTerminated) {
     return allRows.filter((agent) => agent.state === 'Terminated')
   }
-  return allRows.filter((agent) => agent.state !== 'Terminated')
+  // Default: show all non-terminated agents, plus agents terminated this turn
+  return allRows.filter((agent) => agent.state !== 'Terminated' || agentsTerminatedThisTurnIds.has(agent.id))
 }
 
 export function filterVisibleAgentColumns(columns: GridColDef[], showDetailed: boolean): GridColDef[] {

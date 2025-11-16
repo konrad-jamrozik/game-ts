@@ -1,7 +1,7 @@
 import { agsV } from '../model/agents/AgentsView'
 import { getMissionById } from '../collections/missions'
 import { bps } from '../model/bps'
-import type { Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
+import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import {
   newValueChange,
   type AssetsReport,
@@ -45,8 +45,9 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 2. Compute agent upkeep
   const agentUpkeep = agsV(state.agents).agentUpkeep()
 
-  // Capture agent counts before turn advancement
+  // Capture agent counts and agents list before turn advancement
   const previousAgentCounts = getAgentCounts(state.agents)
+  const previousAgents = state.agents.map((agent) => ({ id: agent.id, state: agent.state }))
 
   // 3. Update all agents in Available state
   updateAvailableAgents(state)
@@ -89,6 +90,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   const agentsReport = getAgentsReport(
     state,
     previousAgentCounts,
+    previousAgents,
     agentsWoundedFromMissions,
     agentsUnscathedFromMissions,
   )
@@ -392,6 +394,7 @@ function getAgentsReport(
     wounded: number
     terminated: number
   },
+  previousAgents: { id: string; state: AgentState }[],
   agentsWoundedFromMissions: number,
   agentsUnscathedFromMissions: number,
 ): AgentsReport {
@@ -412,6 +415,16 @@ function getAgentsReport(
   const previousUnscathed = 0
   const currentUnscathed = agentsUnscathedFromMissions
 
+  // Identify agents terminated during this turn advancement
+  const previousAgentsById = new Map(previousAgents.map((agent) => [agent.id, agent]))
+  const terminatedAgentIds: string[] = []
+  for (const currentAgent of state.agents) {
+    const previousAgent = previousAgentsById.get(currentAgent.id)
+    if (currentAgent.state === 'Terminated' && previousAgent && previousAgent.state !== 'Terminated') {
+      terminatedAgentIds.push(currentAgent.id)
+    }
+  }
+
   return {
     total: newValueChange(previousAgentCounts.total, currentAgentCounts.total),
     available: newValueChange(previousAgentCounts.available, currentAgentCounts.available),
@@ -421,6 +434,7 @@ function getAgentsReport(
     wounded: newValueChange(previousWounded, currentWounded),
     unscathed: newValueChange(previousUnscathed, currentUnscathed),
     terminated: newValueChange(previousAgentCounts.terminated, currentAgentCounts.terminated),
+    terminatedAgentIds,
   }
 }
 

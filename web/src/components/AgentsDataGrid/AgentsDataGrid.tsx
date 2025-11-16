@@ -201,6 +201,11 @@ export function AgentsDataGrid(): React.JSX.Element {
     }
   }, [])
 
+  // Get IDs of agents terminated during the last turn advancement from turnStartReport
+  const agentsReport = gameState.turnStartReport?.assets.agentsReport
+  const terminatedIds = agentsReport && 'terminatedAgentIds' in agentsReport ? agentsReport.terminatedAgentIds : []
+  const agentsTerminatedThisTurnIds = new Set<string>(terminatedIds)
+
   // Transform agents array to include rowId for DataGrid
   const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
@@ -208,7 +213,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   }))
 
   // Apply filtering based on checkboxes
-  const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable)
+  const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable, agentsTerminatedThisTurnIds)
 
   // Define and filter columns based on showDetailed state
   const columns = createAgentColumns(rows)
