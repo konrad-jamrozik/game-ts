@@ -42,6 +42,7 @@ declare module '@mui/material/styles' {
   }
 }
 
+// Defined in game-ts/web/node_modules/@mui/material/esm/Chip/Chip.d.ts
 declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides {
     agentStateAvailable: true
@@ -56,10 +57,10 @@ const defaultTheme = createTheme()
 const colorSystemOptions: ColorSystemOptions = {
   palette: {
     primary: {
-      main: defaultTheme.palette.primary.dark,
+      main: defaultTheme.palette.primary.main,
     },
     error: {
-      main: defaultTheme.palette.error.dark,
+      main: defaultTheme.palette.error.main,
     },
     success: {
       main: defaultTheme.palette.success.main,
@@ -78,16 +79,28 @@ const colorSystemOptions: ColorSystemOptions = {
     },
     agentStateAvailable: {
       main: defaultTheme.palette.success.main,
+      light: defaultTheme.palette.success.light,
+      dark: defaultTheme.palette.success.dark,
+      contrastText: defaultTheme.palette.success.contrastText,
     },
     agentStateTerminated: {
       main: defaultTheme.palette.error.main,
+      light: defaultTheme.palette.error.light,
+      dark: defaultTheme.palette.error.dark,
+      contrastText: defaultTheme.palette.error.contrastText,
     },
     agentStateRecovering: {
       main: defaultTheme.palette.error.main,
+      light: defaultTheme.palette.error.light,
+      dark: defaultTheme.palette.error.dark,
+      contrastText: defaultTheme.palette.error.contrastText,
     },
-    agentStateDefault: {
-      main: defaultTheme.palette.grey[500],
-    },
+    agentStateDefault: defaultTheme.palette.augmentColor({
+      color: {
+        main: defaultTheme.palette.grey[800],
+      },
+      name: 'agentStateDefault',
+    }),
   },
 }
 
