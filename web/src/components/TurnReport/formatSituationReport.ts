@@ -3,12 +3,13 @@ import { bps, type Bps } from '../../lib/model/bps'
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
 import {
   newValueChange,
+  type ExpiredMissionSiteReport,
   type FactionReport,
   type MissionReport,
   type PanicBreakdown,
   type PanicReport,
 } from '../../lib/model/turnReportModel'
-import { fmtValueChange } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtValueChange } from '../../lib/utils/formatUtils'
 import { formatMissions } from './formatMissions'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -20,6 +21,7 @@ export function formatSituationReport(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
   missions?: readonly MissionReport[],
+  expiredMissionSites?: readonly ExpiredMissionSiteReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return [
     formatPanicReport(panicReport),
@@ -34,6 +36,15 @@ export function formatSituationReport(
             id: 'missions-summary',
             label: 'Missions',
             children: formatMissions(missions),
+          },
+        ]
+      : []),
+    ...(expiredMissionSites !== undefined && expiredMissionSites.length > 0
+      ? [
+          {
+            id: 'expired-missions-summary',
+            label: 'Expired Mission Sites',
+            children: formatExpiredMissionSites(expiredMissionSites),
           },
         ]
       : []),
@@ -169,4 +180,17 @@ function formatSuppressionChildren(
         ]
       : []),
   ]
+}
+
+function formatExpiredMissionSites(
+  expiredMissionSites: readonly ExpiredMissionSiteReport[],
+): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+  return expiredMissionSites.map((expired) => {
+    const displayId = fmtNoPrefix(expired.missionSiteId, 'mission-site-')
+    return {
+      id: `expired-mission-${expired.missionSiteId}`,
+      label: `${expired.missionTitle} (id: ${displayId})`,
+      chipValue: 'Expired',
+    }
+  })
 }

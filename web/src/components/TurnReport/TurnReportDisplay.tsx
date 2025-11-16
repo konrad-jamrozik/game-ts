@@ -27,7 +27,9 @@ export function TurnReportDisplay(): React.ReactElement {
   const assetsTreeData = report ? formatAssets(report.assets) : []
 
   // Format situation report (panic, factions, and missions) for tree view
-  const situationReportTreeData = report ? formatSituationReport(report.panic, report.factions, report.missions) : []
+  const situationReportTreeData = report
+    ? formatSituationReport(report.panic, report.factions, report.missions, report.expiredMissionSites)
+    : []
 
   return (
     <ExpandableCard title="Turn Report" defaultExpanded={true} sx={{ minWidth: '520px' }}>

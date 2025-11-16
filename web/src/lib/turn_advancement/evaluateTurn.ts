@@ -7,6 +7,7 @@ import {
   type AssetsReport,
   type AgentsReport,
   type BattleStats,
+  type ExpiredMissionSiteReport,
   type FactionReport,
   type IntelBreakdown,
   type MissionReport,
@@ -66,7 +67,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   updateInTransitAgents(state)
 
   // 8. Update active non-deployed mission sites
-  updateActiveMissionSites(state)
+  const expiredMissionSiteReports = updateActiveMissionSites(state)
 
   // 9. Evaluate deployed mission sites (and agents deployed to them)
   const {
@@ -115,6 +116,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     factions: factionsReport,
     missions: missionReports,
     leadInvestigations: leadInvestigationReports,
+    expiredMissionSites: expiredMissionSiteReports,
   }
 
   return turnReport
@@ -145,16 +147,24 @@ function getAgentCounts(agents: GameState['agents']): {
 
 /**
  * Updates active non-deployed mission sites - apply expiration countdown
+ * Returns reports for mission sites that expired this turn
  */
-function updateActiveMissionSites(state: GameState): void {
+function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] {
+  const expiredReports: ExpiredMissionSiteReport[] = []
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Active' && missionSite.expiresIn !== 'never') {
       missionSite.expiresIn -= 1
       if (missionSite.expiresIn <= 0) {
         missionSite.state = 'Expired'
+        const mission = getMissionById(missionSite.missionId)
+        expiredReports.push({
+          missionSiteId: missionSite.id,
+          missionTitle: mission.title,
+        })
       }
     }
   }
+  return expiredReports
 }
 
 /**

@@ -19,5 +19,11 @@ export function getCompletedMissionSiteIds(turnReport: TurnReport | undefined): 
       completedIds.add(missionReport.missionSiteId)
     }
   }
+  // Also include expired mission sites
+  if (turnReport?.expiredMissionSites) {
+    for (const expiredMissionSite of turnReport.expiredMissionSites) {
+      completedIds.add(expiredMissionSite.missionSiteId)
+    }
+  }
   return completedIds
 }

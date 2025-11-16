@@ -7,6 +7,7 @@ export type TurnReport = BaseReport & {
   factions: FactionReport[]
   missions: MissionReport[]
   leadInvestigations?: LeadInvestigationReport[]
+  expiredMissionSites: ExpiredMissionSiteReport[]
 }
 
 export type BaseReport = {
@@ -158,4 +159,9 @@ export type LeadInvestigationReport = {
   successChance: number
   intelDecay?: number
   createdMissionSites?: string[]
+}
+
+export type ExpiredMissionSiteReport = {
+  missionSiteId: string
+  missionTitle: string
 }
