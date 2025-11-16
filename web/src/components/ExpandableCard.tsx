@@ -31,6 +31,7 @@ export function ExpandableCard({
 }: ExpandableCardProps): React.JSX.Element {
   const [expanded, setExpanded] = useState(defaultExpanded)
   const nestedCardContentSx: SxProps<Theme> = { backgroundColor: theme.palette.background.nestedCardContent }
+  const cardContentSx: SxProps<Theme> = nested ? nestedCardContentSx : defaultSx
 
   function handleExpandClick(): void {
     setExpanded(!expanded)
@@ -49,7 +50,7 @@ export function ExpandableCard({
         sx={{ paddingY: 0.75 }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
-        <CardContent sx={nested ? nestedCardContentSx : defaultSx}>{children}</CardContent>
+        <CardContent sx={cardContentSx}>{children}</CardContent>
       </Collapse>
     </Card>
   )
