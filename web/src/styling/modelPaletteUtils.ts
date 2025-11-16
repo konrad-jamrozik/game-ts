@@ -17,9 +17,9 @@ export function getModelPalette(): Record<AgentState, MyPaletteColor> {
     Available: 'agentStateAvailable',
     Terminated: 'agentStateTerminated',
     Recovering: 'agentStateRecovering',
-    StartingTransit: 'agentStateDefault',
-    InTransit: 'agentStateDefault',
-    OnAssignment: 'agentStateDefault',
-    OnMission: 'agentStateDefault',
+    StartingTransit: 'agentStateInTransit',
+    InTransit: 'agentStateInTransit',
+    OnAssignment: 'agentStateOnAssignment',
+    OnMission: 'agentStateOnMission',
   }
 }

@@ -7,6 +7,7 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
+import { blue, deepOrange, cyan, deepPurple } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -14,8 +15,11 @@ declare module '@mui/material/styles' {
   // export default function createPalette(palette: PaletteOptions): Palette;
   interface Palette {
     agentStateAvailable: PaletteColorOptions
-    agentStateTerminated: PaletteColorOptions
+    agentStateInTransit: PaletteColorOptions
+    agentStateOnAssignment: PaletteColorOptions
+    agentStateOnMission: PaletteColorOptions
     agentStateRecovering: PaletteColorOptions
+    agentStateTerminated: PaletteColorOptions
     agentStateDefault: PaletteColorOptions
   }
 
@@ -24,8 +28,11 @@ declare module '@mui/material/styles' {
   interface PaletteOptions {
     background?: Partial<TypeBackground>
     agentStateAvailable?: PaletteColorOptions
-    agentStateTerminated?: PaletteColorOptions
+    agentStateInTransit?: PaletteColorOptions
+    agentStateOnAssignment?: PaletteColorOptions
+    agentStateOnMission?: PaletteColorOptions
     agentStateRecovering?: PaletteColorOptions
+    agentStateTerminated?: PaletteColorOptions
     agentStateDefault?: PaletteColorOptions
   }
 
@@ -46,8 +53,11 @@ declare module '@mui/material/styles' {
 declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides {
     agentStateAvailable: true
-    agentStateTerminated: true
+    agentStateInTransit: true
+    agentStateOnAssignment: true
+    agentStateOnMission: true
     agentStateRecovering: true
+    agentStateTerminated: true
     agentStateDefault: true
   }
 }
@@ -83,13 +93,35 @@ const colorSystemOptions: ColorSystemOptions = {
       dark: defaultTheme.palette.success.dark,
       contrastText: defaultTheme.palette.success.contrastText,
     },
+    agentStateInTransit: defaultTheme.palette.augmentColor({
+      color: {
+        main: blue[700],
+      },
+      name: 'agentStateInTransit',
+    }),
+
+    agentStateOnAssignment: defaultTheme.palette.augmentColor({
+      color: {
+        main: cyan[800],
+      },
+      name: 'agentStateOnAssignment',
+    }),
+
+    agentStateOnMission: defaultTheme.palette.augmentColor({
+      color: {
+        main: deepPurple[500],
+      },
+      name: 'agentStateOnMission',
+    }),
+
+    agentStateRecovering: defaultTheme.palette.augmentColor({
+      color: {
+        main: deepOrange[800],
+      },
+      name: 'agentStateRecovering',
+    }),
+
     agentStateTerminated: {
-      main: defaultTheme.palette.error.main,
-      light: defaultTheme.palette.error.light,
-      dark: defaultTheme.palette.error.dark,
-      contrastText: defaultTheme.palette.error.contrastText,
-    },
-    agentStateRecovering: {
       main: defaultTheme.palette.error.main,
       light: defaultTheme.palette.error.light,
       dark: defaultTheme.palette.error.dark,
