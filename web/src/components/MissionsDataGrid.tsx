@@ -18,6 +18,7 @@ import {
   sortMissionSitesByIdDesc,
 } from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix } from '../lib/utils/formatUtils'
+import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -30,15 +31,28 @@ export type MissionRow = MissionSite & {
 
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const { missionSites, turnStartReport } = gameState
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
   const [showArchived, setShowArchived] = React.useState(false)
+
+  const completedThisTurnIds: Set<string> = getCompletedMissionSiteIds(turnStartReport)
 
   // Get active and archived mission sites
   const activeMissionSites = getActiveOrDeployedMissionSites(missionSites)
   const archivedMissionSites = getArchivedMissionSites(missionSites)
-  const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSites)
-  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
+
+  // Include completed missions (Successful, Failed, Expired) in active rows if they completed this turn
+  const completedThisTurnSites = archivedMissionSites.filter((site) => completedThisTurnIds.has(site.id))
+  const activeMissionSitesIncludingCompleted = [...activeMissionSites, ...completedThisTurnSites]
+
+  // Exclude completed missions from archived rows if they completed this turn
+  const archivedMissionSitesExcludingCompleted = archivedMissionSites.filter(
+    (site) => !completedThisTurnIds.has(site.id),
+  )
+
+  const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSitesIncludingCompleted)
+  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSitesExcludingCompleted)
 
   // Transform all mission sites to rows (both active and archived)
   const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {

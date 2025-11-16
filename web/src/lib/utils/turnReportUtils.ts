@@ -11,3 +11,13 @@ export function getCompletedInvestigationIds(turnReport: TurnReport | undefined)
   }
   return completedIds
 }
+
+export function getCompletedMissionSiteIds(turnReport: TurnReport | undefined): Set<string> {
+  const completedIds = new Set<string>()
+  if (turnReport?.missions) {
+    for (const missionReport of turnReport.missions) {
+      completedIds.add(missionReport.missionSiteId)
+    }
+  }
+  return completedIds
+}
