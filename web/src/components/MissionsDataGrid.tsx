@@ -20,6 +20,7 @@ import {
 import { fmtNoPrefix } from '../lib/utils/formatUtils'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
+import { MyChip } from './MyChip'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -151,9 +152,16 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'state',
       headerName: 'State',
       minWidth: 120,
-      renderCell: (params: GridRenderCellParams<MissionRow, string>) => (
-        <span aria-label={`missions-row-state-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
+        if (params.value === 'Successful' || params.value === 'Failed' || params.value === 'Expired') {
+          return (
+            <span aria-label={`missions-row-state-${params.id}`}>
+              <MyChip chipValue={params.value} />
+            </span>
+          )
+        }
+        return <span aria-label={`missions-row-state-${params.id}`}>{params.value}</span>
+      },
     },
     {
       field: 'expiresIn',
