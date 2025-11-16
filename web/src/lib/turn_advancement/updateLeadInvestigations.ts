@@ -38,10 +38,7 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
  * Processes a single active investigation
  */
 function processActiveInvestigation(state: GameState, investigation: LeadInvestigation): LeadInvestigationReport {
-  const lead = getLeadById(investigation.leadId)
-  const investigatingAgents = getInvestigatingAgents(state, investigation)
-
-  const { successChance, success } = rollForInvestigationSuccess(investigation.accumulatedIntel, lead.difficulty)
+  const { success, successChance } = rollAndLogInvestigationResult(investigation)
 
   // Calculate intel decay before applying it
   const intelDecay = calculateIntelDecayRounded(investigation.accumulatedIntel)
@@ -50,6 +47,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
 
   // Accumulate new intel from assigned agents (same formula as espionage)
+  const investigatingAgents = getInvestigatingAgents(state, investigation)
   const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
@@ -70,17 +68,15 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 }
 
 /**
- * Calculates success chance and rolls for investigation completion
+ * Rolls for investigation success and logs the result
  */
-function rollForInvestigationSuccess(
-  accumulatedIntel: number,
-  difficulty: number,
-): { successChance: number; success: boolean } {
-  const successChance = calculateLeadSuccessChance(accumulatedIntel, difficulty)
+function rollAndLogInvestigationResult(investigation: LeadInvestigation): { success: boolean; successChance: number } {
+  const lead = getLeadById(investigation.leadId)
+  const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
   const rollResult = rollAgainstProbability(successChance)
   const rollResultStr = fmtRollResult(rollResult)
-  console.log(`Investigation roll result: ${rollResultStr}`)
-  return { successChance, success: rollResult.success }
+  console.log(`${investigation.id} result: ${rollResultStr}`)
+  return { success: rollResult.success, successChance }
 }
 
 /**

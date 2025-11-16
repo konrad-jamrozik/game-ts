@@ -82,9 +82,9 @@ export function evaluateAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollInfo = fmtRollResult(rollResult)
+    const rollResultStr = fmtRollResult(rollResult)
     console.log(
-      `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollInfo}`,
+      `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollResultStr}`,
     )
 
     // Update skill gains (postponed)

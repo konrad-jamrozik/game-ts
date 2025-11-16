@@ -3,6 +3,7 @@ import {
   AGENT_ESPIONAGE_INTEL,
   AGENT_RECOVERY_TURNS_FACTOR,
   AGENT_UPKEEP_COST,
+  BPS_PRECISION,
   INTEL_DECAY,
   MAX_INTEL_DECAY,
   SUPPRESSION_DECAY_PCT,
@@ -177,7 +178,7 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  */
 export function calculateIntelDecayRounded(accumulatedIntel: number): number {
   const decay = calculateIntelDecay(accumulatedIntel)
-  return ceil((accumulatedIntel * decay.value) / 10_000)
+  return ceil((accumulatedIntel * decay.value) / BPS_PRECISION)
 }
 
 /**

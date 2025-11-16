@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { CONTEST_ROLL_PRECISION } from '../../src/lib/model/ruleset/constants'
+import { BPS_PRECISION } from '../../src/lib/model/ruleset/constants'
 import { getSuccessAndFailureInts, roll1to, rollAgainstProbability } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
@@ -55,22 +55,22 @@ describe('rolls', () => {
 
   test('roll1to -> max random result is CONTEST_ROLL_PRECISION', () => {
     rand.set('test_label', 0.9999)
-    const roll = roll1to(CONTEST_ROLL_PRECISION, 'test_label')
-    expect(roll).toBe(CONTEST_ROLL_PRECISION)
+    const roll = roll1to(BPS_PRECISION, 'test_label')
+    expect(roll).toBe(BPS_PRECISION)
   })
 
   test('roll1to -> (mix minus less than 1 unit of precision) random result is CONTEST_ROLL_PRECISION-1', () => {
-    const precisionTimes10Fraction = 1 / (10 * CONTEST_ROLL_PRECISION)
+    const precisionTimes10Fraction = 1 / (10 * BPS_PRECISION)
     const rollFixture = 0.9999 - precisionTimes10Fraction
     expect(rollFixture).toBeCloseTo(0.999_89, 10)
     rand.set('test_label', rollFixture)
-    const roll = roll1to(CONTEST_ROLL_PRECISION, 'test_label')
-    expect(roll).toBe(CONTEST_ROLL_PRECISION - 1)
+    const roll = roll1to(BPS_PRECISION, 'test_label')
+    expect(roll).toBe(BPS_PRECISION - 1)
   })
 
   test('roll1to -> min random result is 1', () => {
     rand.set('test_label', 0)
-    const roll = roll1to(CONTEST_ROLL_PRECISION, 'test_label')
+    const roll = roll1to(BPS_PRECISION, 'test_label')
     expect(roll).toBe(1)
   })
 })

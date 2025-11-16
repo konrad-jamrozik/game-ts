@@ -1,4 +1,5 @@
 import { multAndFloor } from '../utils/mathUtils'
+import { BPS_PRECISION } from './ruleset/constants'
 
 /**
  * Represents a percentage value stored as an integer in basis points where 100 = 1%.
@@ -39,5 +40,5 @@ export function isBps(value: unknown): value is Bps {
  * toBps(1.289) = toBps(128.9%) = bps(12_890)
  */
 export function toBpsFloor(value: number): Bps {
-  return bps(multAndFloor(value, 10_000))
+  return bps(multAndFloor(value, BPS_PRECISION))
 }

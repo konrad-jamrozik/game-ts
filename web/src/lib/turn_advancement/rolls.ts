@@ -3,7 +3,7 @@
  */
 
 import { div, multAndFloor } from '../utils/mathUtils'
-import { CONTEST_ROLL_PRECISION } from '../model/ruleset/constants'
+import { BPS_PRECISION } from '../model/ruleset/constants'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
@@ -13,7 +13,7 @@ export type ContestRollResult = {
 
 export type RollResult = {
   successProbabilityPct: number
-  failureProbabilityPct: number // aka threshold
+  failureProbabilityPct: number
   rollPct: number
   success: boolean
 }
@@ -56,22 +56,22 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
 
 export function rollAgainstProbability(probability: number, label?: string): RollResult {
   const [failureInt, successInt] = getSuccessAndFailureInts(probability)
-  const roll = roll1to(CONTEST_ROLL_PRECISION, label)
+  const roll = roll1to(BPS_PRECISION, label)
 
   // Higher rolls are better: success when roll > P(failure)
   const success = roll > failureInt
 
   // Express the values as percentages with 0.01% precision
-  const successProbabilityPct = successInt / (CONTEST_ROLL_PRECISION / 100)
-  const failureProbabilityPct = failureInt / (CONTEST_ROLL_PRECISION / 100)
-  const rollPct = roll / (CONTEST_ROLL_PRECISION / 100)
+  const successProbabilityPct = successInt / (BPS_PRECISION / 100)
+  const failureProbabilityPct = failureInt / (BPS_PRECISION / 100)
+  const rollPct = roll / (BPS_PRECISION / 100)
 
   return { successProbabilityPct, failureProbabilityPct, rollPct, success }
 }
 
 export function getSuccessAndFailureInts(successProbability: number): [number, number] {
-  const successInt = multAndFloor(successProbability, CONTEST_ROLL_PRECISION)
-  const failureInt = CONTEST_ROLL_PRECISION - successInt
+  const successInt = multAndFloor(successProbability, BPS_PRECISION)
+  const failureInt = BPS_PRECISION - successInt
   return [failureInt, successInt]
 }
 

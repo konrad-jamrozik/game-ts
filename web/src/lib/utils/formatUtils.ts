@@ -84,5 +84,7 @@ export function fmtValueChange<TNumber extends number | Bps = number>(change: Va
  * @returns Formatted string in the format "[roll% vs threshold% threshold]"
  */
 export function fmtRollResult(rollResult: RollResult): string {
-  return `[${addPctSignDec2(rollResult.rollPct)} vs ${addPctSignDec2(rollResult.failureProbabilityPct)} threshold]`
+  const icon = rollResult.success ? '✅' : '❌'
+  const relation = rollResult.success ? '> ' : '<='
+  return `[${icon} roll ${addPctSignDec2(rollResult.rollPct)} is ${relation} ${addPctSignDec2(rollResult.failureProbabilityPct)} threshold]`
 }
