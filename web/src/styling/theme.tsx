@@ -29,6 +29,7 @@ declare module '@mui/material/styles' {
       available: string
       terminated: string
       recovering: string
+      default: string
     }
   }
 
@@ -39,6 +40,7 @@ declare module '@mui/material/styles' {
       available: string
       terminated: string
       recovering: string
+      default: string
     }
   }
 }
@@ -72,6 +74,7 @@ const colorSystemOptions: ColorSystemOptions = {
       available: defaultTheme.palette.success.main,
       terminated: defaultTheme.palette.error.main,
       recovering: defaultTheme.palette.error.main,
+      default: defaultTheme.palette.text.primary,
     },
   },
 }
