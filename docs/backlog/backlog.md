@@ -4,11 +4,11 @@ KJA backlog:
 
 # Brainstorming
 
+- KJA fix e2e test
+
 - KJA document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
   Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
   introducing a trade-off. Read more in OneNote for MLS4 intel page.
-
-- KJA Add turn terminated to KIAed agents, enemy who killed them, and mission site.
 
 - KJA Fix the combat target selection so that in case the number of enemies doesn't exactly match player agents,
   it won't be the case the best agent attacks some lousy unit because of the attack counter looping.
@@ -18,8 +18,7 @@ KJA backlog:
 - KJA retreat logic could be smarter: retreat when agents effective skill is < 50%
   AND ALSO if enemy effective skill is at least 80% of agents effective skill.
 
-- KJA in archived agents state terminated should display in red. Available in green.
-- KJA overall show agents states and assignments as colorful chips. Reuse built-in MUI data grid column filters.
+- KJA Allow State column filtering:
   Per LLM, how to make MUI use enum for filtering:
   > In MUI, when I have column menu for filtering, can I make it so that it allows me to pick from multiple predefined
   > values? An enumeration
@@ -35,10 +34,6 @@ KJA backlog:
       width: 150,
     },  
   ```
-
-- KJA in situation reports if panic or threat didn't grow it should display in grey, not red.
-
-- KJA if agents were terminated during mission combat in current turn, show them in agents data grid
 
 - Debug tab that shows when game was reset with ctrl click. Has options like:
   - Add 100_000 money
@@ -81,8 +76,6 @@ KJA backlog:
   - Max agents can be sent on one mission
   - HP Recovery rate
   - Exhaustion recovery rate
-
-- Display details on mission difficulty - enemy count, their skills, hp, weapons
 
 - Training activity for agents
 
