@@ -113,7 +113,7 @@ function completeInvestigation(
   // Return agents to InTransit state (they will transition to Available on next turn)
   for (const agent of investigatingAgents) {
     agent.assignment = 'Standby'
-    agent.state = 'InTransit'
+    agent.state = 'StartingTransit'
   }
 
   return createdMissionSites

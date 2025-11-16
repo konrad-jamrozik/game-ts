@@ -83,5 +83,8 @@ export function updateInTransitAgents(state: GameState): void {
         agent.state = 'Available'
       }
     }
+    if (agent.state === 'StartingTransit') {
+      agent.state = 'InTransit'
+    }
   }
 }

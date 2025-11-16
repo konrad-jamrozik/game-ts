@@ -10,7 +10,14 @@ export type Actor = {
   weapon: Weapon
 }
 
-export type AgentState = 'Available' | 'InTransit' | 'Recovering' | 'OnAssignment' | 'OnMission' | 'Terminated'
+export type AgentState =
+  | 'Available'
+  | 'StartingTransit'
+  | 'InTransit'
+  | 'Recovering'
+  | 'OnAssignment'
+  | 'OnMission'
+  | 'Terminated'
 
 // Assignment types for agents
 export type ActivityId = 'Contracting' | 'Espionage'
