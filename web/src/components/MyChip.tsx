@@ -80,7 +80,7 @@ function determineChipColor(
 
   // Determine if the value is positive, negative, or zero based on the label
   const isPositive = chipLabel.startsWith('+') || (!chipLabel.startsWith('-') && chipLabel !== '0')
-  const isZero = chipLabel === '0' || chipLabel === '+0' || chipLabel === '0.00%' || chipLabel === '+0.00%'
+  const isZero = ['0', '+0', '-0', '0.00%', '+0.00%', '-0.00%'].includes(chipLabel)
 
   if (isZero) {
     return 'default'
