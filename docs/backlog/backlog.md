@@ -36,7 +36,7 @@ KJA backlog:
     },  
   ```
 
-- KJA in situation reports if panic or thread didn't grow it should display in grey, not red.
+- KJA in situation reports if panic or threat didn't grow it should display in grey, not red.
 
 - KJA if agents were terminated during mission combat in current turn, show them in agents data grid
 
