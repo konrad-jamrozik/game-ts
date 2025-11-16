@@ -221,7 +221,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (agent.hitPoints > 0) {
       const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-      const target = selectTargetWithFairDistribution(activeEnemies, enemyAttackCounts)
+      const target = selectTarget(activeEnemies, enemyAttackCounts)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
         evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll')
@@ -244,7 +244,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (enemy.hitPoints > 0) {
       const currentActiveAgents = agents.filter((agent) => agent.hitPoints > 0)
-      const target = selectTargetWithFairDistribution(currentActiveAgents, agentAttackCounts)
+      const target = selectTarget(currentActiveAgents, agentAttackCounts)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
         evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll')
@@ -255,7 +255,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   }
 }
 
-function selectTargetWithFairDistribution<T extends Agent | Enemy>(
+function selectTarget<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
 ): T | undefined {
