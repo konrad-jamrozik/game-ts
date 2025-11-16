@@ -37,6 +37,22 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
       ),
     },
     {
+      field: 'difficulty',
+      headerName: 'Difficulty',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
+        <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
+      ),
+    },
+    {
+      field: 'repeatable',
+      headerName: 'Repeatable',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
+        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
+      ),
+    },
+    {
       field: 'investigations',
       headerName: 'Investigations',
       minWidth: 200,
@@ -54,22 +70,6 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
         }
         return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
       },
-    },
-    {
-      field: 'difficulty',
-      headerName: 'Difficulty',
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
-        <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'repeatable',
-      headerName: 'Repeatable',
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
-      ),
     },
   ]
 }
