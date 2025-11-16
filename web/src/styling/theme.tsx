@@ -21,8 +21,24 @@ declare module '@mui/material/styles' {
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
   interface PaletteOptions {
     background?: Partial<TypeBackground>
+    agentStates?: {
+      available: string
+      terminated: string
+      recovering: string
+    }
+  }
+
+  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
+  interface Palette {
+    agentStates: {
+      available: string
+      terminated: string
+      recovering: string
+    }
   }
 }
 
@@ -36,6 +52,9 @@ const colorSystemOptions: ColorSystemOptions = {
     error: {
       main: defaultTheme.palette.error.dark,
     },
+    success: {
+      main: defaultTheme.palette.success.main,
+    },
     // https://colors.artyclick.com/color-shades-finder/?color=#404040
     background: {
       default: 'hsl(0, 0%, 12.9%)',
@@ -47,6 +66,11 @@ const colorSystemOptions: ColorSystemOptions = {
       leadCardContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
       missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
       missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
+    },
+    agentStates: {
+      available: defaultTheme.palette.success.main,
+      terminated: defaultTheme.palette.error.main,
+      recovering: defaultTheme.palette.error.main,
     },
   },
 }

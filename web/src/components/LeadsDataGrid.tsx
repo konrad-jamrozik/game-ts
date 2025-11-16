@@ -31,7 +31,7 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'id',
       headerName: 'Lead ID',
-      minWidth: 250,
+      minWidth: 300,
       renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
         <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
       ),
