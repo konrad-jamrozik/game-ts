@@ -116,7 +116,7 @@
     "oxc.requireConfig": true,
     "oxc.configPath": "web/.oxlintrc.json",
     "oxc.tsConfigPath": "web/tsconfig.json",
-    "oxc.unusedDisableDirectives": "deny",
+    "oxc.unusedDisableDirectives": "allow",
     // end of oxlint / oxc extension settings
     
     // https://code.visualstudio.com/docs/copilot/chat/mcp-servers
