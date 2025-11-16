@@ -15,9 +15,6 @@ KJA backlog:
   Best agent should generally try to attack best enemy unit, or at least someone close to their skill level.
   Attacking too weak enemy is a waste, and attacking too strong enemy won't be effective.
 
-- KJA retreat logic could be smarter: retreat when agents effective skill is < 50%
-  AND ALSO if enemy effective skill is at least 80% of agents effective skill.
-
 - KJA Allow State column filtering:
   Per LLM, how to make MUI use enum for filtering:
   > In MUI, when I have column menu for filtering, can I make it so that it allows me to pick from multiple predefined

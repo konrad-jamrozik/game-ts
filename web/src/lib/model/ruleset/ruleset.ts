@@ -16,7 +16,6 @@ import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
 import { type Bps, bps } from '../bps'
 import { effectiveSkill } from '../../utils/actorUtils'
-import { addPctSignMult100Dec2 } from '../../utils/formatUtils'
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 
 export function getAgentUpkeep(agents: AgentsView): number {
@@ -200,6 +199,16 @@ export function calculateAccumulatedIntel(agents: Agent[]): number {
 }
 
 /**
+ * Result of retreat evaluation containing the decision and calculated values.
+ */
+export type RetreatResult = {
+  shouldRetreat: boolean
+  totalOriginalEffectiveSkill: number
+  totalCurrentEffectiveSkill: number
+  enemySkillRatio: number
+}
+
+/**
  * Determines whether agents should retreat from battle based on their current combat effectiveness
  * and enemy strength.
  *
@@ -213,9 +222,9 @@ export function calculateAccumulatedIntel(agents: Agent[]): number {
  * @param agents - Array of all agents in the battle (alive and terminated)
  * @param agentStats - Array of combat statistics for each agent, including their initial effective skill
  * @param enemies - Array of all enemies in the battle (alive and terminated)
- * @returns true if agents should retreat, false otherwise
+ * @returns RetreatResult containing the retreat decision and calculated values for logging
  */
-export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): boolean {
+export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
   const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
   const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
@@ -232,19 +241,10 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const enemyAboveThreshold = enemySkillRatio >= RETREAT_ENEMY_SKILL_THRESHOLD
 
   // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
-  const result = agentsBelowThreshold && enemyAboveThreshold
-
-  // KJA move back into the caller
-  if (result) {
-    const agentEffectiveSkillPct = addPctSignMult100Dec2(div(totalCurrentEffectiveSkill, totalOriginalEffectiveSkill))
-    const retreatThresholdPct = addPctSignMult100Dec2(RETREAT_THRESHOLD)
-    const enemySkillRatioPct = addPctSignMult100Dec2(enemySkillRatio)
-    const enemySkillThresholdPct = addPctSignMult100Dec2(RETREAT_ENEMY_SKILL_THRESHOLD)
-    console.log(
-      `🏃 Agent mission commander orders retreat! ` +
-        `Agent effective skill = ${agentEffectiveSkillPct} < ${retreatThresholdPct} threshold. ` +
-        `Enemy skill ratio = ${enemySkillRatioPct} >= ${enemySkillThresholdPct} threshold.`,
-    )
+  return {
+    shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
+    totalOriginalEffectiveSkill,
+    totalCurrentEffectiveSkill,
+    enemySkillRatio,
   }
-  return result
 }

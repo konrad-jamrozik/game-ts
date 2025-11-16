@@ -2,10 +2,12 @@ import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
-import { shouldRetreat } from '../model/ruleset/ruleset'
+import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
+import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
-import { divMult100Round } from '../utils/mathUtils'
+import { addPctSignMult100Dec2 } from '../utils/formatUtils'
+import { div, divMult100Round } from '../utils/mathUtils'
 import { evaluateAttack, isAgent, type AgentCombatStats } from './evaluateAttack'
 
 export type BattleReport = {
@@ -66,7 +68,11 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
     const sideEliminated = isSideEliminated(agents, enemies)
     if (!sideEliminated) {
-      retreated = shouldRetreat(agents, agentStats, enemies)
+      const retreatResult = shouldRetreat(agents, agentStats, enemies)
+      retreated = retreatResult.shouldRetreat
+      if (retreated) {
+        logRetreat(retreatResult)
+      }
     }
     battleEnded = sideEliminated || retreated
 
@@ -145,6 +151,20 @@ function isSideEliminated(agents: Agent[], enemies: Enemy[]): boolean {
   const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
   const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
   return allAgentsTerminated || allEnemiesTerminated
+}
+
+function logRetreat(retreatResult: RetreatResult): void {
+  const agentEffectiveSkillPct = addPctSignMult100Dec2(
+    div(retreatResult.totalCurrentEffectiveSkill, retreatResult.totalOriginalEffectiveSkill),
+  )
+  const retreatThresholdPct = addPctSignMult100Dec2(RETREAT_THRESHOLD)
+  const enemySkillRatioPct = addPctSignMult100Dec2(retreatResult.enemySkillRatio)
+  const enemySkillThresholdPct = addPctSignMult100Dec2(RETREAT_ENEMY_SKILL_THRESHOLD)
+  console.log(
+    `🏃 Agent mission commander orders retreat! ` +
+      `Agent effective skill = ${agentEffectiveSkillPct} < ${retreatThresholdPct} threshold. ` +
+      `Enemy skill ratio = ${enemySkillRatioPct} >= ${enemySkillThresholdPct} threshold.`,
+  )
 }
 
 function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
