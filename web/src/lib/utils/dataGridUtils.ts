@@ -33,10 +33,6 @@ export function filterAgentRows(
   agentsTerminatedThisTurnIds: Set<string>,
 ): AgentRow[] {
   if (showOnlyAvailable) {
-    // If agents were terminated this turn, include them even when showing only available
-    if (agentsTerminatedThisTurnIds.size > 0) {
-      return allRows.filter((agent) => agent.state === 'Available' || agentsTerminatedThisTurnIds.has(agent.id))
-    }
     return allRows.filter((agent) => agent.state === 'Available')
   }
   if (showOnlyTerminated) {
