@@ -2,12 +2,11 @@ import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
-import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
+import { shouldRetreat } from '../model/ruleset/ruleset'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
-import { div, divMult100Round } from '../utils/mathUtils'
-import { type AgentCombatStats, evaluateAttack, isAgent } from './evaluateAttack'
-import { addPctSignMult100Dec2 } from '../utils/formatUtils'
+import { divMult100Round } from '../utils/mathUtils'
+import { evaluateAttack, isAgent, type AgentCombatStats } from './evaluateAttack'
 
 export type BattleReport = {
   rounds: number
@@ -146,40 +145,6 @@ function isSideEliminated(agents: Agent[], enemies: Enemy[]): boolean {
   const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
   const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
   return allAgentsTerminated || allEnemiesTerminated
-}
-
-// KJA should be in ruleset
-function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): boolean {
-  const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
-  const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
-  const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
-
-  const agentEffectiveSkillThreshold = totalOriginalEffectiveSkill * RETREAT_THRESHOLD
-
-  // Check if agents' effective skill is below threshold
-  const agentsBelowThreshold = totalCurrentEffectiveSkill < agentEffectiveSkillThreshold
-
-  // Check if enemy effective skill is at least 80% of agents' current effective skill
-  const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const totalCurrentEnemyEffectiveSkill = aliveEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
-  const enemySkillRatio = div(totalCurrentEnemyEffectiveSkill, totalCurrentEffectiveSkill)
-  const enemyAboveThreshold = enemySkillRatio >= RETREAT_ENEMY_SKILL_THRESHOLD
-
-  // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
-  const result = agentsBelowThreshold && enemyAboveThreshold
-
-  if (result) {
-    const agentEffectiveSkillPct = addPctSignMult100Dec2(div(totalCurrentEffectiveSkill, totalOriginalEffectiveSkill))
-    const retreatThresholdPct = addPctSignMult100Dec2(RETREAT_THRESHOLD)
-    const enemySkillRatioPct = addPctSignMult100Dec2(enemySkillRatio)
-    const enemySkillThresholdPct = addPctSignMult100Dec2(RETREAT_ENEMY_SKILL_THRESHOLD)
-    console.log(
-      `🏃 Agent mission commander orders retreat! ` +
-        `Agent effective skill = ${agentEffectiveSkillPct} < ${retreatThresholdPct} threshold. ` +
-        `Enemy skill ratio = ${enemySkillRatioPct} >= ${enemySkillThresholdPct} threshold.`,
-    )
-  }
-  return result
 }
 
 function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {

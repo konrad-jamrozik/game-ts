@@ -6,12 +6,18 @@ import {
   BPS_PRECISION,
   INTEL_DECAY,
   MAX_INTEL_DECAY,
+  RETREAT_ENEMY_SKILL_THRESHOLD,
+  RETREAT_THRESHOLD,
   SUPPRESSION_DECAY_PCT,
 } from './constants'
 import { div, floor, ceil } from '../../utils/mathUtils'
-import type { Agent, GameState, MissionSite } from '../model'
+import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
+import { agV } from '../agents/AgentView'
 import { type Bps, bps } from '../bps'
+import { effectiveSkill } from '../../utils/actorUtils'
+import { addPctSignMult100Dec2 } from '../../utils/formatUtils'
+import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST
@@ -21,8 +27,8 @@ export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
   let total = 0
   for (const agent of contractingAgents) {
-    const effectiveSkill = agent.effectiveSkill()
-    total += floor((AGENT_CONTRACTING_INCOME * effectiveSkill) / 100)
+    const agentEffectiveSkill = agent.effectiveSkill()
+    total += floor((AGENT_CONTRACTING_INCOME * agentEffectiveSkill) / 100)
   }
   return total
 }
@@ -31,8 +37,8 @@ export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
   let total = 0
   for (const agent of espionageAgents) {
-    const effectiveSkill = agent.effectiveSkill()
-    total += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+    const agentEffectiveSkill = agent.effectiveSkill()
+    total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
   }
   return total
 }
@@ -187,8 +193,58 @@ export function calculateIntelDecayRounded(accumulatedIntel: number): number {
 export function calculateAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
-    const effectiveSkill = agent.skill - agent.exhaustion
-    total += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+    const agentEffectiveSkill = agent.skill - agent.exhaustion
+    total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
   }
   return total
+}
+
+/**
+ * Determines whether agents should retreat from battle based on their current combat effectiveness
+ * and enemy strength.
+ *
+ * Retreat occurs when BOTH of the following conditions are met:
+ * 1. Agents' total current effective skill is less than RETREAT_THRESHOLD (50%) of their original effective skill
+ * 2. Enemy total effective skill is at least RETREAT_ENEMY_SKILL_THRESHOLD (80%) of agents' current effective skill
+ *
+ * This ensures agents only retreat when they are both weakened AND facing a strong enemy force,
+ * preventing unnecessary retreats when agents are weakened but enemies are also significantly damaged.
+ *
+ * @param agents - Array of all agents in the battle (alive and terminated)
+ * @param agentStats - Array of combat statistics for each agent, including their initial effective skill
+ * @param enemies - Array of all enemies in the battle (alive and terminated)
+ * @returns true if agents should retreat, false otherwise
+ */
+export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): boolean {
+  const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
+  const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
+
+  const agentEffectiveSkillThreshold = totalOriginalEffectiveSkill * RETREAT_THRESHOLD
+
+  // Check if agents' effective skill is below threshold
+  const agentsBelowThreshold = totalCurrentEffectiveSkill < agentEffectiveSkillThreshold
+
+  // Check if enemy effective skill is at least 80% of agents' current effective skill
+  const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const totalCurrentEnemyEffectiveSkill = aliveEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
+  const enemySkillRatio = div(totalCurrentEnemyEffectiveSkill, totalCurrentEffectiveSkill)
+  const enemyAboveThreshold = enemySkillRatio >= RETREAT_ENEMY_SKILL_THRESHOLD
+
+  // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
+  const result = agentsBelowThreshold && enemyAboveThreshold
+
+  // KJA move back into the caller
+  if (result) {
+    const agentEffectiveSkillPct = addPctSignMult100Dec2(div(totalCurrentEffectiveSkill, totalOriginalEffectiveSkill))
+    const retreatThresholdPct = addPctSignMult100Dec2(RETREAT_THRESHOLD)
+    const enemySkillRatioPct = addPctSignMult100Dec2(enemySkillRatio)
+    const enemySkillThresholdPct = addPctSignMult100Dec2(RETREAT_ENEMY_SKILL_THRESHOLD)
+    console.log(
+      `🏃 Agent mission commander orders retreat! ` +
+        `Agent effective skill = ${agentEffectiveSkillPct} < ${retreatThresholdPct} threshold. ` +
+        `Enemy skill ratio = ${enemySkillRatioPct} >= ${enemySkillThresholdPct} threshold.`,
+    )
+  }
+  return result
 }
