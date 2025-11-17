@@ -179,8 +179,14 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   activeAgents.sort((agentA, agentB) => {
-    if (agentA.skill === agentB.skill) return compareIdsNumeric(agentA.id, agentB.id)
-    return agentA.skill - agentB.skill
+    // KJA should use effective skill?
+    if (agentA.skill === agentB.skill) {
+      return compareIdsNumeric(agentA.id, agentB.id)
+    }
+    // Return the agent with higher skill as first.
+    // Explanation:
+    // sort() will return agentA as first if output is negative, i.e. when agentB.skill - agentA.skill < 0 i.e. agentB.skill < agentA.skill.
+    return agentB.skill - agentA.skill
   })
 
   // Each agent attacks
@@ -203,8 +209,13 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   activeEnemies.sort((enemyA, enemyB) => {
-    if (enemyA.skill === enemyB.skill) return compareIdsNumeric(enemyA.id, enemyB.id)
-    return enemyA.skill - enemyB.skill
+    if (enemyA.skill === enemyB.skill) {
+      return compareIdsNumeric(enemyA.id, enemyB.id)
+    }
+    // Return the enemy with higher skill as first.
+    // Explanation:
+    // sort() will return enemyA as first if output is negative, i.e. when enemyB.skill - enemyA.skill < 0 i.e. enemyB.skill < enemyA.skill.
+    return enemyB.skill - enemyA.skill
   })
 
   for (const enemy of activeEnemies) {

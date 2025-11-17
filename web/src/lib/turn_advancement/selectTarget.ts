@@ -103,7 +103,9 @@ function compareTargetsBySkill(targetA: Agent | Enemy, targetB: Agent | Enemy): 
   if (skillA === skillB) {
     return compareIdsNumeric(targetA.id, targetB.id)
   }
-  // sort() will return targetA if returned value is negative, i.e. when skillA < skillB.
+  // Return the target with lower skill as first.
+  // Explanation:
+  // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
   return skillA - skillB
 }
 
