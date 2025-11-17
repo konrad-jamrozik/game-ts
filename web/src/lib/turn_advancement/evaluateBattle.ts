@@ -201,9 +201,10 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
       const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
-        evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll')
+        const currentAttackCount = enemyAttackCounts.get(target.id) ?? 0
+        evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll', currentAttackCount + 1)
         // Increment attack count for this enemy
-        enemyAttackCounts.set(target.id, (enemyAttackCounts.get(target.id) ?? 0) + 1)
+        enemyAttackCounts.set(target.id, currentAttackCount + 1)
       }
     }
   }
@@ -221,9 +222,10 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
       const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
-        evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll')
+        const currentAttackCount = agentAttackCounts.get(target.id) ?? 0
+        evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll', currentAttackCount + 1)
         // Increment attack count for this agent
-        agentAttackCounts.set(target.id, (agentAttackCounts.get(target.id) ?? 0) + 1)
+        agentAttackCounts.set(target.id, currentAttackCount + 1)
       }
     }
   }

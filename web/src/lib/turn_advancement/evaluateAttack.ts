@@ -21,6 +21,7 @@ export function evaluateAttack(
   defender: Agent | Enemy,
   defenderStats?: AgentCombatStats,
   label?: string,
+  attackCount = 0,
 ): void {
   // Calculate effective skills
   const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
@@ -76,6 +77,7 @@ export function evaluateAttack(
           defenderEffectiveSkill,
           defenderIsAgent,
           rollResult,
+          attackCount,
           damageInfo: { damage, damagePct },
           hpRemainingInfo: { current: hpRemaining, max: defender.maxHitPoints, percentage: hpPercentage },
         }),
@@ -92,6 +94,7 @@ export function evaluateAttack(
           defenderEffectiveSkill,
           defenderIsAgent,
           rollResult,
+          attackCount,
           damageInfo: { damage, damagePct },
           hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPercentage },
         }),
@@ -114,6 +117,7 @@ export function evaluateAttack(
         defenderEffectiveSkill,
         defenderIsAgent,
         rollResult,
+        attackCount,
       }),
     )
 

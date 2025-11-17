@@ -17,6 +17,7 @@ export type AttackLogParams = {
   defenderEffectiveSkill: number
   defenderIsAgent: boolean
   rollResult: RollResult
+  attackCount: number
   damageInfo?: { damage: number; damagePct: string }
   hpRemainingInfo?: { current: number; max: number; percentage: string }
 }
@@ -33,6 +34,7 @@ export function fmtAttackLog(params: AttackLogParams): string {
     defenderEffectiveSkill,
     defenderIsAgent,
     rollResult,
+    attackCount,
     damageInfo,
     hpRemainingInfo,
   } = params
@@ -45,11 +47,12 @@ export function fmtAttackLog(params: AttackLogParams): string {
     defenderEffectiveSkill,
     defenderIsAgent,
   )
+  const attackCountStr = buildAttackCountStr(attackCount)
   const damageStr = buildDamageStr(damageInfo, attackVerb)
   const rollResultStr = buildRollResultStr(rollResult)
   const hpStr = buildHpStr(hpRemainingInfo)
 
-  return `${basicInfoStr}${damageStr}${rollResultStr}${hpStr}`
+  return `${basicInfoStr}${attackCountStr}${damageStr}${rollResultStr}${hpStr}`
 }
 
 function buildAttackResultIcon(kind: AttackLogKind): string {
@@ -112,6 +115,11 @@ function buildRollResultStr(rollResult: RollResult): string {
   const rollRelation = rollResult.success ? '> ' : '<='
   const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct).padStart(7)
   return `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
+}
+
+function buildAttackCountStr(attackCount: number): string {
+  const attackCountStr = `${attackCount}`.padStart(2)
+  return ` [AC: ${attackCountStr}] `
 }
 
 function buildHpStr(hpRemainingInfo: { current: number; max: number; percentage: string } | undefined): string {
