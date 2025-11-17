@@ -10,14 +10,16 @@ export function effectiveSkill(actor: Actor): number {
   const hitPointsLostRatio = div(hitPointsLost, actor.maxHitPoints)
   const hitPointsReduction = Math.max(1 - hitPointsLostRatio, 0)
   // First 5 points of exhaustion have no impact
-  const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - 5, 0) / 100, 0)
 
+  const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - 5, 0) / 100, 0)
   const result = actor.skill * hitPointsReduction * exhaustionReduction
+
   return floor(result)
 }
 
 // Helper function to get effective skill of an actor (agent or enemy)
 export function getActorEffectiveSkill(actor: Agent | Enemy): number {
+  // KJA this is silly, dedup
   // Check if it's an agent by checking for turnHired property (agents have it, enemies don't)
   if ('turnHired' in actor) {
     return agV(actor).effectiveSkill()

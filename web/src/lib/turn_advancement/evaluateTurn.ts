@@ -254,6 +254,9 @@ function evaluateDeployedMissionSites(state: GameState): {
       }
 
       // Calculate average agent exhaustion gain
+      // KJA 3 bug: this value is busted. It shows e.g. 9.25 while the surviving agents have exhaustion of 60+.
+      //   see todo in evaluateBattle
+      // See totalAgentExhaustionGain
       const averageAgentExhaustionGain = agentsDeployed > 0 ? battleReport.totalAgentExhaustionGain / agentsDeployed : 0
 
       const battleStats: BattleStats = {

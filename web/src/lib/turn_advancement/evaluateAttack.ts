@@ -1,4 +1,3 @@
-import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
 import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
@@ -8,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { effectiveSkill } from '../utils/actorUtils'
+import { getActorEffectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { divMult100Round } from '../utils/mathUtils'
@@ -24,8 +23,10 @@ export function evaluateAttack(
   attackCount = 0,
 ): void {
   // Calculate effective skills
-  const attackerEffectiveSkill = isAgent(attacker) ? agV(attacker).effectiveSkill() : effectiveSkill(attacker)
-  const defenderEffectiveSkill = isAgent(defender) ? agV(defender).effectiveSkill() : effectiveSkill(defender)
+
+  // KJA in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
+  const attackerEffectiveSkill = getActorEffectiveSkill(attacker)
+  const defenderEffectiveSkill = getActorEffectiveSkill(defender)
 
   if (isAgent(attacker)) {
     assertDefined(attackerStats)

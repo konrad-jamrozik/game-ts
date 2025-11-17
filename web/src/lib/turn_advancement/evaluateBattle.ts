@@ -80,9 +80,20 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     // Battle continues until one side is eliminated or agents retreat
   } while (!battleEnded)
 
-  // Count casualties
-  const agentCasualties = agents.filter((agent) => agent.hitPoints <= 0).length
-  const enemyCasualties = enemies.filter((enemy) => enemy.hitPoints <= 0).length
+  // Count casualties - terminated and wounded
+  const agentsTerminated = agents.filter((agent) => agent.hitPoints <= 0).length
+  const agentsWounded = agents.filter((agent) => {
+    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? agent.maxHitPoints
+    return agent.hitPoints > 0 && agent.hitPoints < initialHp
+  }).length
+  const agentCasualties = agentsWounded + agentsTerminated
+
+  const enemiesTerminated = enemies.filter((enemy) => enemy.hitPoints <= 0).length
+  const enemiesWounded = enemies.filter((enemy) => {
+    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? enemy.maxHitPoints
+    return enemy.hitPoints > 0 && enemy.hitPoints < initialHp
+  }).length
+  const enemyCasualties = enemiesWounded + enemiesTerminated
 
   // Collect skill updates
   agentStats.forEach((stats) => {
@@ -108,6 +119,13 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   for (const agent of agents) {
     finalAgentExhaustion += agent.exhaustion
   }
+  // KJA 3 bug: problem here: this is computed BEFORE the updateSurvivingAgent call in evaluateDeployedMissionSite,
+  // which takes into account exhaustion from casualties:
+  // Basically it is:
+  //  evaluateDeployedMissionSite
+  //    evaluateBattle <- we are here
+  //    updateAgentsAfterBattle
+  //      updateSurvivingAgent <- this is where we compute the agentCasualties penalty
   const totalAgentExhaustionGain = finalAgentExhaustion - initialAgentExhaustion
 
   showRoundStatus(
@@ -121,8 +139,12 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     true,
   )
 
-  console.log(`Agent casualties: ${agentCasualties} / ${agents.length}`)
-  console.log(`Enemy casualties: ${enemyCasualties} / ${enemies.length}`)
+  console.log(
+    `Agent casualties: ${agentCasualties} / ${agents.length} (${agentsWounded} wounded, ${agentsTerminated} terminated)`,
+  )
+  console.log(
+    `Enemy casualties: ${enemyCasualties} / ${enemies.length} (${enemiesWounded} wounded, ${enemiesTerminated} terminated)`,
+  )
 
   return {
     rounds: roundIdx,
