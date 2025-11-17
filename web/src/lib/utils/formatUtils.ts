@@ -133,13 +133,13 @@ export type AttackLogParams = {
  * ☠️ 👺 enemy-highcommander-33 (400) terminates 👤 agent-010 (220) with 44 (147%) damage [✅ roll  31.38% is >   23.23% threshold]
  * ➖ 👺 enemy-commander-32      (18) misses     👤 agent-029  (47)                       [❌ roll   3.97% is <=  87.21% threshold]
  */
-function getAttackResultIcon(kind: AttackLogKind): string {
+function buildAttackResultIcon(kind: AttackLogKind): string {
   if (kind.includes('terminates')) return '☠️'
   if (kind.includes('hits')) return '🩸'
   return '➖'
 }
 
-function getAttackVerb(kind: AttackLogKind): string {
+function buildAttackVerb(kind: AttackLogKind): string {
   if (kind.includes('terminates')) return 'terminates'
   if (kind.includes('hits')) return 'hits      '
   return 'misses    '
@@ -169,37 +169,58 @@ export function fmtAttackLog(params: AttackLogParams): string {
     hpRemainingInfo,
   } = params
 
-  const attackerIsAgent = kind.startsWith('agent')
-  const attackerIcon = attackerIsAgent ? '👤' : '👺'
-  const defenderIcon = defenderIsAgent ? '👤' : '👺'
-
-  const attackResultIcon = getAttackResultIcon(kind)
-  const attackVerb = getAttackVerb(kind)
-  const attackerPart = buildActorInfoPart(attackerIsAgent, attackerIcon, attackerName, attackerEffectiveSkill)
-  const defenderPart = buildActorInfoPart(!attackerIsAgent, defenderIcon, defenderName, defenderEffectiveSkill)
-
+  const { basicInfoStr, attackVerb } = buildBasicInfoStr(
+    kind,
+    attackerName,
+    attackerEffectiveSkill,
+    defenderName,
+    defenderEffectiveSkill,
+    defenderIsAgent,
+  )
   const damageStr = buildDamageStr(damageInfo, attackVerb)
-
-  const rollResultIcon = rollResult.success ? '✅' : '❌'
-  const rollPercentage = addPctSignDec2(rollResult.rollPct)
-  const rollRelation = rollResult.success ? '>' : '<='
-  const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct)
-
-  const basicInfoStr = `${attackResultIcon} ${attackerPart} ${attackVerb} ${defenderPart}`
-  const rollResultStr = `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
+  const rollResultStr = buildRollResultStr(rollResult)
   const hpStr = buildHpStr(hpRemainingInfo)
 
   return `${basicInfoStr}${damageStr}${rollResultStr}${hpStr}`
 }
 
+function buildBasicInfoStr(
+  kind: AttackLogKind,
+  attackerName: string,
+  attackerEffectiveSkill: number,
+  defenderName: string,
+  defenderEffectiveSkill: number,
+  defenderIsAgent: boolean,
+): { basicInfoStr: string; attackVerb: string } {
+  const attackerIsAgent = kind.startsWith('agent')
+  const attackerIcon = attackerIsAgent ? '👤' : '👺'
+  const defenderIcon = defenderIsAgent ? '👤' : '👺'
+
+  const attackResultIcon = buildAttackResultIcon(kind)
+  const attackVerb = buildAttackVerb(kind)
+  const attackerPart = buildActorInfoPart(attackerIsAgent, attackerIcon, attackerName, attackerEffectiveSkill)
+  const defenderPart = buildActorInfoPart(!attackerIsAgent, defenderIcon, defenderName, defenderEffectiveSkill)
+
+  const basicInfoStr = `${attackResultIcon} ${attackerPart} ${attackVerb} ${defenderPart}`
+  return { basicInfoStr, attackVerb }
+}
+
 function buildDamageStr(damageInfo: { damage: number; damagePct: string } | undefined, attackVerb: string): string {
   if (!damageInfo) {
-    return ' '
+    return '                       '
   }
   const damagePreposition = attackVerb === 'terminates' ? 'with' : 'for '
   const attackDamage = String(damageInfo.damage).padStart(2)
-  const weaponRangePct = damageInfo.damagePct
-  return ` ${damagePreposition} ${attackDamage} (${weaponRangePct}) damage `
+  const weaponRangePct = `(${damageInfo.damagePct})`.padStart(6)
+  return ` ${damagePreposition} ${attackDamage} ${weaponRangePct} damage `
+}
+
+function buildRollResultStr(rollResult: RollResult): string {
+  const rollResultIcon = rollResult.success ? '✅' : '❌'
+  const rollPercentage = addPctSignDec2(rollResult.rollPct).padStart(7)
+  const rollRelation = rollResult.success ? '> ' : '<='
+  const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct).padStart(7)
+  return `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
 }
 
 function buildHpStr(hpRemainingInfo: { current: number; max: number; percentage: string } | undefined): string {
@@ -207,8 +228,8 @@ function buildHpStr(hpRemainingInfo: { current: number; max: number; percentage:
     return ''
   }
   const hpOpeningParen = ' ('
-  const currMaxHp = `${String(hpRemainingInfo.current).padStart(2)}/${String(hpRemainingInfo.max).padStart(2)}`
-  const hpPercentage = hpRemainingInfo.percentage.padStart(3)
+  const currMaxHp = ` ${String(hpRemainingInfo.current).padStart(3)} / ${String(hpRemainingInfo.max).padStart(3)}`
+  const hpPercentage = `(${hpRemainingInfo.percentage})`.padStart(5)
   const hpRemainingPhrase = 'HP remaining)'
-  return `${hpOpeningParen}${currMaxHp} (${hpPercentage}) ${hpRemainingPhrase}`
+  return `${hpOpeningParen}${currMaxHp} ${hpPercentage} ${hpRemainingPhrase}`
 }
