@@ -120,8 +120,18 @@ export type AttackLogParams = {
 
 /**
  * Formats attack log message for console output
- * @param params - Attack log parameters
- * @returns Formatted attack log message
+ *
+ * Example outputs for agents attacking enemies:
+ *
+ * ➖ 👤 agent-023 (294) misses     👺 enemy-commander-32     (242)                       [❌ roll  22.09% is <=  40.39% threshold]
+ * 🩸 👤 agent-013 (291) hits       👺 enemy-commander-32     (240)  for  5  (50%) damage [✅ roll  52.47% is >   40.49% threshold] (35/40 (88%) HP remaining)
+ * 🩸 👤 agent-021 (244) hits       👺 enemy-highcommander-33  (72)  for  6  (60%) damage [✅ roll  45.35% is >    8.01% threshold] ( 4/50  (8%) HP remaining)
+ * ☠️ 👤 agent-031 (244) terminates 👺 enemy-highcommander-33  (28) with  6  (60%) damage [✅ roll   1.96% is >    1.30% threshold]
+ *
+ * Example outputs for enemies attacking agents:
+ *
+ * ☠️ 👺 enemy-highcommander-33 (400) terminates 👤 agent-010 (220) with 44 (147%) damage [✅ roll  31.38% is >   23.23% threshold]
+ * ➖ 👺 enemy-commander-32      (18) misses     👤 agent-029  (47)                       [❌ roll   3.97% is <=  87.21% threshold]
  */
 export function fmtAttackLog(params: AttackLogParams): string {
   const {
@@ -151,20 +161,55 @@ export function fmtAttackLog(params: AttackLogParams): string {
     actionVerb = 'hits'
   }
 
-  const attackerPart = `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
-  const defenderPart = `${defenderIcon} ${defenderName} (${defenderEffectiveSkill})`
+  // When attacker is agent: attacker part is not padded, action verb is padded to 9 chars
+  // When attacker is enemy: attacker part (name + skill) is padded to fixed width, action verb is padded to 9 chars
+  const actionVerbPadded = actionVerb.padEnd(9)
 
-  let message = `${emoji} ${attackerPart} ${actionVerb} ${defenderPart}`
+  const attackerPart = attackerIsAgent
+    ? // Agent attacker: no padding on attacker part
+      `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
+    : // Enemy attacker: attacker name+skill padded to fixed width (looks like ~32 chars based on examples)
+      (() => {
+        const attackerNameWithSkill = `${attackerName} (${attackerEffectiveSkill})`
+        const attackerNamePadded = attackerNameWithSkill.padEnd(32)
+        return `${attackerIcon} ${attackerNamePadded}`
+      })()
+
+  const defenderPart = attackerIsAgent
+    ? // Defender (enemy) name padded to ~25 chars
+      (() => {
+        const defenderNamePadded = defenderName.padEnd(25)
+        return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
+      })()
+    : // Defender (agent) name padded so opening parenthesis aligns
+      (() => {
+        // Examples show: "agent-010 (220)" vs "agent-029  (47)"
+        // Both have opening paren at same position, so pad name to align
+        // "agent-010" (9) + 1 space = 10 chars to paren
+        // "agent-029" (9) + 2 spaces = 11 chars to paren
+        // But they align, so maybe pad to a fixed width that accounts for skill number width?
+        // Actually, looking more carefully, pad name to 10 chars, template adds space
+        const defenderNamePadded = defenderName.padEnd(10)
+        return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
+      })()
+
+  let message = `${emoji} ${attackerPart} ${actionVerbPadded} ${defenderPart}`
 
   if (damageInfo) {
     const preposition = actionVerb === 'terminates' ? 'with' : 'for'
-    message += ` ${preposition} ${damageInfo.damage} (${damageInfo.damagePct}) damage`
+    // Damage number padded to 2 chars, space before percentage
+    const damageStr = String(damageInfo.damage).padStart(2)
+    message += `  ${preposition} ${damageStr} (${damageInfo.damagePct}) damage`
   }
 
   message += ` ${rollResultStr}`
 
   if (hpRemainingInfo) {
-    message += ` (${hpRemainingInfo.current}/${hpRemainingInfo.max} (${hpRemainingInfo.percentage}%) HP remaining)`
+    // Pad HP values: current HP right-aligned (2 chars), max HP right-aligned (2 chars), percentage right-aligned (3 chars including %)
+    const currentHpStr = String(hpRemainingInfo.current).padStart(2)
+    const maxHpStr = String(hpRemainingInfo.max).padStart(2)
+    const percentageStr = hpRemainingInfo.percentage.padStart(3)
+    message += ` (${currentHpStr}/${maxHpStr} (${percentageStr}) HP remaining)`
   }
 
   return message
