@@ -227,9 +227,8 @@ function buildHpStr(hpRemainingInfo: { current: number; max: number; percentage:
   if (!hpRemainingInfo) {
     return ''
   }
-  const hpOpeningParen = ' ('
-  const currMaxHp = ` ${String(hpRemainingInfo.current).padStart(3)} / ${String(hpRemainingInfo.max).padStart(3)}`
-  const hpPercentage = `(${hpRemainingInfo.percentage})`.padStart(5)
+  const hpRatio = `${String(hpRemainingInfo.current).padStart(3)} / ${String(hpRemainingInfo.max).padStart(3)}`
+  const hpPercentage = `(${hpRemainingInfo.percentage})`.padStart(6)
   const hpRemainingPhrase = 'HP remaining)'
-  return `${hpOpeningParen}${currMaxHp} ${hpPercentage} ${hpRemainingPhrase}`
+  return ` ( ${hpRatio} ${hpPercentage} ${hpRemainingPhrase}`
 }

@@ -53,7 +53,8 @@ export function evaluateAttack(
       damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100
     const damagePct = `${Math.round(50 + damageRangePct)}%`
 
-    defender.hitPoints = Math.max(0, defender.hitPoints - damage)
+    const hpRemaining = defender.hitPoints - damage
+    defender.hitPoints = Math.max(0, hpRemaining)
 
     // Update skill gains from battle combat
     if (attackerStats) {
@@ -63,8 +64,9 @@ export function evaluateAttack(
       defenderStats.skillGained += AGENT_FAILED_DEFENSE_SKILL_REWARD
     }
 
-    if (defender.hitPoints <= 0) {
+    if (hpRemaining <= 0) {
       const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
+      const hpPercentage = `${divMult100Round(hpRemaining, defender.maxHitPoints)}%`
       console.log(
         fmtAttackLog({
           kind,
@@ -75,6 +77,7 @@ export function evaluateAttack(
           defenderIsAgent,
           rollResult,
           damageInfo: { damage, damagePct },
+          hpRemainingInfo: { current: hpRemaining, max: defender.maxHitPoints, percentage: hpPercentage },
         }),
       )
     } else {

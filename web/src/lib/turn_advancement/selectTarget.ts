@@ -28,8 +28,8 @@ export function selectTarget<T extends Agent | Enemy>(
   if (potentialTargets.length === 0) return undefined
 
   const attackerEffectiveSkill = getActorEffectiveSkill(attacker)
-  const targetSkillLowerBound = attackerEffectiveSkill * 0.1
-  const targetSkillUpperBound = attackerEffectiveSkill * 0.9
+  const targetSkillLowerBound = attackerEffectiveSkill * 0.2
+  const targetSkillUpperBound = attackerEffectiveSkill * 0.8
   const targetSkillPreferred = attackerEffectiveSkill * 0.5
 
   // Find minimum attack count among all potential targets
