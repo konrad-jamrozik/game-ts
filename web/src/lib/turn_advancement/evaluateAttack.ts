@@ -10,7 +10,7 @@ import {
 } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
-import { fmtAttackLog, type AttackLogKind } from '../utils/formatUtils'
+import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
