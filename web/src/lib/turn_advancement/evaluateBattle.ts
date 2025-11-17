@@ -5,10 +5,12 @@ import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { effectiveSkill } from '../utils/actorUtils'
-import { assertNotEmpty, assertNotNaN } from '../utils/assert'
+import { assertNotEmpty } from '../utils/assert'
 import { addPctSignMult100Dec2 } from '../utils/formatUtils'
 import { div, divMult100Round } from '../utils/mathUtils'
-import { evaluateAttack, isAgent, type AgentCombatStats } from './evaluateAttack'
+import { compareIdsNumeric } from '../utils/stringUtils'
+import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
+import { selectTarget } from './selectTarget'
 
 export type BattleReport = {
   rounds: number
@@ -167,41 +169,6 @@ function logRetreat(retreatResult: RetreatResult): void {
   )
 }
 
-// Extract numeric suffix from IDs.
-// Handles formats:
-// - "enemy-initiate-123" -> 123
-// - "agent-011" -> 11
-function extractNumberFromId(id: string): number {
-  const regex = /-(?<number>\d+)$/u
-  const match = regex.exec(id)
-  const numberStr = match?.groups?.['number']
-  if (numberStr === undefined || numberStr === '') {
-    return Number.NaN
-  }
-  return Number.parseInt(numberStr, 10)
-}
-
-function compareIdsNumeric(idA: string, idB: string): number {
-  const numA = extractNumberFromId(idA)
-  const numB = extractNumberFromId(idB)
-
-  // Both IDs must have numeric suffixes for numeric comparison
-  if (Number.isNaN(numA)) {
-    assertNotNaN(
-      numA,
-      `Failed to extract numeric ID from "${idA}" (extracted: ${numA}). ID must have a numeric suffix.`,
-    )
-  }
-  if (Number.isNaN(numB)) {
-    assertNotNaN(
-      numB,
-      `Failed to extract numeric ID from "${idB}" (extracted: ${numB}). ID must have a numeric suffix.`,
-    )
-  }
-
-  return numA - numB
-}
-
 function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
   // Track attack counts per target for fair distribution
   const enemyAttackCounts = new Map<string, number>()
@@ -221,7 +188,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (agent.hitPoints > 0) {
       const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-      const target = selectTarget(activeEnemies, enemyAttackCounts)
+      const target = selectTarget(activeEnemies, enemyAttackCounts, agent)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
         evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll')
@@ -244,7 +211,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (enemy.hitPoints > 0) {
       const currentActiveAgents = agents.filter((agent) => agent.hitPoints > 0)
-      const target = selectTarget(currentActiveAgents, agentAttackCounts)
+      const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
         evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll')
@@ -253,43 +220,6 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
       }
     }
   }
-}
-
-/**
- * Selects a target from potential targets using a fair distribution algorithm.
- *
- * The selection process prioritizes fairness and tactical advantage:
- * 1. Fair distribution: Selects from targets that have been attacked the least
- * 2. Weakest target: Among equally-attacked targets, chooses the one with lowest effective skill
- * 3. Deterministic tiebreaking: If skills are equal, uses numeric ID comparison for consistent ordering
- *
- * @param potentialTargets - Array of potential targets (agents or enemies) to choose from
- * @param attackCounts - Map tracking how many times each target has been attacked (keyed by target ID)
- * @returns The selected target, or undefined if no targets are available
- */
-function selectTarget<T extends Agent | Enemy>(
-  potentialTargets: T[],
-  attackCounts: Map<string, number>,
-): T | undefined {
-  if (potentialTargets.length === 0) return undefined
-
-  // Find minimum attack count among all potential targets
-  const minAttackCount = Math.min(...potentialTargets.map((target) => attackCounts.get(target.id) ?? 0))
-
-  // Filter to targets with minimum attack count
-  const leastAttackedTargets = potentialTargets.filter(
-    (target) => (attackCounts.get(target.id) ?? 0) === minAttackCount,
-  )
-
-  // Among least attacked targets, select the one with lowest effective skill
-  const sorted = [...leastAttackedTargets].sort((targetA, targetB) => {
-    const skillA = isAgent(targetA) ? agV(targetA).effectiveSkill() : effectiveSkill(targetA)
-    const skillB = isAgent(targetB) ? agV(targetB).effectiveSkill() : effectiveSkill(targetB)
-    if (skillA === skillB) return compareIdsNumeric(targetA.id, targetB.id)
-    return skillA - skillB
-  })
-
-  return sorted[0]
 }
 
 function showRoundStatus(
