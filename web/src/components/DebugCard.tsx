@@ -8,6 +8,7 @@ import {
   debugSetPanicToZero,
   debugSetAllFactionsSuppressionTo1000Percent,
   debugAddMoney,
+  debugSpawn10Agents,
 } from '../lib/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
@@ -29,6 +30,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugAddMoney())
   }
 
+  function handleSpawn10Agents(): void {
+    dispatch(debugSpawn10Agents())
+  }
+
   return (
     <ExpandableCard title="Debug" defaultExpanded={true}>
       <Stack spacing={1}>
@@ -43,6 +48,9 @@ export function DebugCard(): React.JSX.Element {
         </Button>
         <Button variant="contained" onClick={handleAddMoney}>
           Add 10000 money
+        </Button>
+        <Button variant="contained" onClick={handleSpawn10Agents}>
+          Spawn 10 agents
         </Button>
       </Stack>
     </ExpandableCard>

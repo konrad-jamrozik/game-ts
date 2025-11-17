@@ -29,6 +29,7 @@ export type MissionRow = MissionSite & {
   displayId: string
 }
 
+// KJA bug: for some reason column sort over enemies and avg. skill doesn't work
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
