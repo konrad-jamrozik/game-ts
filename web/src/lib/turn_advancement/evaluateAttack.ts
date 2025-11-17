@@ -10,7 +10,7 @@ import {
 } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
-import { fmtAttackLog, fmtRollResult, type AttackLogKind } from '../utils/formatUtils'
+import { fmtAttackLog, type AttackLogKind } from '../utils/formatUtils'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
@@ -63,8 +63,6 @@ export function evaluateAttack(
       defenderStats.skillGained += AGENT_FAILED_DEFENSE_SKILL_REWARD
     }
 
-    const rollResultStr = fmtRollResult(rollResult)
-
     if (defender.hitPoints <= 0) {
       const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
       console.log(
@@ -75,7 +73,7 @@ export function evaluateAttack(
           defenderName,
           defenderEffectiveSkill,
           defenderIsAgent,
-          rollResultStr,
+          rollResult,
           damageInfo: { damage, damagePct },
         }),
       )
@@ -90,7 +88,7 @@ export function evaluateAttack(
           defenderName,
           defenderEffectiveSkill,
           defenderIsAgent,
-          rollResultStr,
+          rollResult,
           damageInfo: { damage, damagePct },
           hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPercentage },
         }),
@@ -103,7 +101,6 @@ export function evaluateAttack(
     }
   } else {
     // Failed attack - show roll details
-    const rollResultStr = fmtRollResult(rollResult)
     const kind: AttackLogKind = attackerIsAgent ? 'agent misses' : 'enemy misses'
     console.log(
       fmtAttackLog({
@@ -113,7 +110,7 @@ export function evaluateAttack(
         defenderName,
         defenderEffectiveSkill,
         defenderIsAgent,
-        rollResultStr,
+        rollResult,
       }),
     )
 

@@ -113,7 +113,7 @@ export type AttackLogParams = {
   defenderName: string
   defenderEffectiveSkill: number
   defenderIsAgent: boolean
-  rollResultStr: string
+  rollResult: RollResult
   damageInfo?: { damage: number; damagePct: string }
   hpRemainingInfo?: { current: number; max: number; percentage: string }
 }
@@ -133,6 +133,46 @@ export type AttackLogParams = {
  * ☠️ 👺 enemy-highcommander-33 (400) terminates 👤 agent-010 (220) with 44 (147%) damage [✅ roll  31.38% is >   23.23% threshold]
  * ➖ 👺 enemy-commander-32      (18) misses     👤 agent-029  (47)                       [❌ roll   3.97% is <=  87.21% threshold]
  */
+function getAttackResultIcon(kind: AttackLogKind): string {
+  if (kind.includes('terminates')) return '☠️'
+  if (kind.includes('hits')) return '🩸'
+  return '➖'
+}
+
+function getAttackVerb(kind: AttackLogKind): string {
+  if (kind.includes('terminates')) return 'terminates'
+  if (kind.includes('hits')) return 'hits'
+  return 'misses'
+}
+
+function buildAttackerPart(
+  attackerIsAgent: boolean,
+  attackerIcon: string,
+  attackerName: string,
+  attackerEffectiveSkill: number,
+): string {
+  if (attackerIsAgent) {
+    return `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
+  }
+  const attackerNameWithSkill = `${attackerName} (${attackerEffectiveSkill})`
+  const attackerNamePadded = attackerNameWithSkill.padEnd(32)
+  return `${attackerIcon} ${attackerNamePadded}`
+}
+
+function buildDefenderPart(
+  attackerIsAgent: boolean,
+  defenderIcon: string,
+  defenderName: string,
+  defenderEffectiveSkill: number,
+): string {
+  if (attackerIsAgent) {
+    const defenderNamePadded = defenderName.padEnd(25)
+    return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
+  }
+  const defenderNamePadded = defenderName.padEnd(10)
+  return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
+}
+
 export function fmtAttackLog(params: AttackLogParams): string {
   const {
     kind,
@@ -141,7 +181,7 @@ export function fmtAttackLog(params: AttackLogParams): string {
     defenderName,
     defenderEffectiveSkill,
     defenderIsAgent,
-    rollResultStr,
+    rollResult,
     damageInfo,
     hpRemainingInfo,
   } = params
@@ -150,67 +190,40 @@ export function fmtAttackLog(params: AttackLogParams): string {
   const attackerIcon = attackerIsAgent ? '👤' : '👺'
   const defenderIcon = defenderIsAgent ? '👤' : '👺'
 
-  let emoji = '➖'
-  let actionVerb = 'misses'
+  const attackResultIcon = getAttackResultIcon(kind)
+  const attackVerb = getAttackVerb(kind)
+  const attackVerbPadded = attackVerb.padEnd(9)
+  const attackerPart = buildAttackerPart(attackerIsAgent, attackerIcon, attackerName, attackerEffectiveSkill)
+  const defenderPart = buildDefenderPart(attackerIsAgent, defenderIcon, defenderName, defenderEffectiveSkill)
 
-  if (kind.includes('terminates')) {
-    emoji = '☠️'
-    actionVerb = 'terminates'
-  } else if (kind.includes('hits')) {
-    emoji = '🩸'
-    actionVerb = 'hits'
+  const damageStr = getDamageStr(damageInfo, attackVerb)
+
+  const rollResultIcon = rollResult.success ? '✅' : '❌'
+  const rollPercentage = addPctSignDec2(rollResult.rollPct)
+  const rollRelation = rollResult.success ? '>' : '<='
+  const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct)
+
+  const hpOpeningParen = hpRemainingInfo ? ' (' : ''
+  const currMaxHp = hpRemainingInfo
+    ? `${String(hpRemainingInfo.current).padStart(2)}/${String(hpRemainingInfo.max).padStart(2)}`
+    : ''
+  const hpPercentage = hpRemainingInfo ? hpRemainingInfo.percentage.padStart(3) : ''
+  const hpRemainingPhrase = hpRemainingInfo ? 'HP remaining)' : ''
+
+  const basicInfoStr = `${attackResultIcon} ${attackerPart} ${attackVerbPadded} ${defenderPart}`
+  const rollResultStr = `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
+  const hpStr = `${hpOpeningParen}${currMaxHp} (${hpPercentage}) ${hpRemainingPhrase}`
+
+  return `${basicInfoStr}${damageStr} ${rollResultStr}${hpStr}`
+}
+
+function getDamageStr(damageInfo: { damage: number; damagePct: string } | undefined, attackVerb: string): string {
+  if (!damageInfo) {
+    return ''
   }
-
-  // When attacker is agent: attacker part is not padded, action verb is padded to 9 chars
-  // When attacker is enemy: attacker part (name + skill) is padded to fixed width, action verb is padded to 9 chars
-  const actionVerbPadded = actionVerb.padEnd(9)
-
-  const attackerPart = attackerIsAgent
-    ? // Agent attacker: no padding on attacker part
-      `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
-    : // Enemy attacker: attacker name+skill padded to fixed width (looks like ~32 chars based on examples)
-      (() => {
-        const attackerNameWithSkill = `${attackerName} (${attackerEffectiveSkill})`
-        const attackerNamePadded = attackerNameWithSkill.padEnd(32)
-        return `${attackerIcon} ${attackerNamePadded}`
-      })()
-
-  const defenderPart = attackerIsAgent
-    ? // Defender (enemy) name padded to ~25 chars
-      (() => {
-        const defenderNamePadded = defenderName.padEnd(25)
-        return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
-      })()
-    : // Defender (agent) name padded so opening parenthesis aligns
-      (() => {
-        // Examples show: "agent-010 (220)" vs "agent-029  (47)"
-        // Both have opening paren at same position, so pad name to align
-        // "agent-010" (9) + 1 space = 10 chars to paren
-        // "agent-029" (9) + 2 spaces = 11 chars to paren
-        // But they align, so maybe pad to a fixed width that accounts for skill number width?
-        // Actually, looking more carefully, pad name to 10 chars, template adds space
-        const defenderNamePadded = defenderName.padEnd(10)
-        return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
-      })()
-
-  let message = `${emoji} ${attackerPart} ${actionVerbPadded} ${defenderPart}`
-
-  if (damageInfo) {
-    const preposition = actionVerb === 'terminates' ? 'with' : 'for'
-    // Damage number padded to 2 chars, space before percentage
-    const damageStr = String(damageInfo.damage).padStart(2)
-    message += `  ${preposition} ${damageStr} (${damageInfo.damagePct}) damage`
-  }
-
-  message += ` ${rollResultStr}`
-
-  if (hpRemainingInfo) {
-    // Pad HP values: current HP right-aligned (2 chars), max HP right-aligned (2 chars), percentage right-aligned (3 chars including %)
-    const currentHpStr = String(hpRemainingInfo.current).padStart(2)
-    const maxHpStr = String(hpRemainingInfo.max).padStart(2)
-    const percentageStr = hpRemainingInfo.percentage.padStart(3)
-    message += ` (${currentHpStr}/${maxHpStr} (${percentageStr}) HP remaining)`
-  }
-
-  return message
+  const damagePreposition = attackVerb === 'terminates' ? 'with' : 'for'
+  const attackDamage = String(damageInfo.damage).padStart(2)
+  const weaponRangePct = damageInfo.damagePct
+  const damageWord = 'damage'
+  return `  ${damagePreposition} ${attackDamage} (${weaponRangePct}) ${damageWord}`
 }
