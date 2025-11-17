@@ -173,6 +173,20 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
 
+  // Calculate effective skills at round start to prevent targets from becoming more attractive
+  // as they take damage during the round
+  const effectiveSkillsAtRoundStart = new Map<string, number>()
+  for (const agent of agents) {
+    if (agent.hitPoints > 0) {
+      effectiveSkillsAtRoundStart.set(agent.id, agV(agent).effectiveSkill())
+    }
+  }
+  for (const enemy of enemies) {
+    if (enemy.hitPoints > 0) {
+      effectiveSkillsAtRoundStart.set(enemy.id, effectiveSkill(enemy))
+    }
+  }
+
   console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
@@ -184,7 +198,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (agent.hitPoints > 0) {
       const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-      const target = selectTarget(activeEnemies, enemyAttackCounts, agent)
+      const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
         evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll')
@@ -204,7 +218,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
     // Skip if terminated during this round
     if (enemy.hitPoints > 0) {
       const currentActiveAgents = agents.filter((agent) => agent.hitPoints > 0)
-      const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy)
+      const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
         evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll')

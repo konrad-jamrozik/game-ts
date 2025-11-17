@@ -1,19 +1,8 @@
 import type { Agent, Enemy } from '../model/model'
-import { getActorEffectiveSkill } from '../utils/actorUtils'
+import { assertDefined } from '../utils/assert'
 import { compareIdsNumeric } from '../utils/stringUtils'
 import { rollRange } from './rolls'
 
-// KJA this is the problem with current target selection:
-// 🩸 👺 enemy-soldier-20        (83) hits       👤 agent-016 (160) for  20 (143%) damage [✅ roll  81.01% is >   78.80% threshold] (  10 /  30  (33%) HP remaining)
-// ☠️ 👺 enemy-soldier-14        (80) terminates 👤 agent-016  (53) with 12  (86%) damage [✅ roll  39.41% is >   30.51% threshold] (  -2 /  30  (-7%) HP remaining)
-// Basically, if all agents are 100+, as soon as one soldier damages an agent, it falls into the 20-80% range and is selected by next soldier, and all of them
-// pile up, terminating the agent.
-// To solve this problem, the target effective skill should not be updated until the end of round.
-// The adjustments will have to be made in:
-// evaluateAttack
-// To
-// defender.hitPoints = Math.max(0, hpRemaining)
-// and related. Basically when selecting target the "effective skill at turn start" must be kept track of, and updated only at the end of the round.
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
  *
@@ -27,19 +16,26 @@ import { rollRange } from './rolls'
  * 4. Final fallback: If across all attack counts there is no target between 20% and 80% of attacker's skill,
  *    picks at random a target from targets with minimum number of attacks only
  *
+ * Note: Uses effective skill at round start to prevent targets from becoming more attractive
+ * as they take damage during the round, which would cause enemies to pile up on damaged targets.
+ *
  * @param potentialTargets - Array of potential targets (agents or enemies) to choose from
  * @param attackCounts - Map tracking how many times each target has been attacked (keyed by target ID)
  * @param attacker - The attacker (agent or enemy) selecting the target
+ * @param effectiveSkillsAtRoundStart - Optional map of effective skills at round start (keyed by actor ID).
+ *                                      Uses these values instead of calculating current effective skill.
  * @returns The selected target, or undefined if no targets are available
  */
 export function selectTarget<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
   attacker: Agent | Enemy,
+  effectiveSkillsAtRoundStart: Map<string, number>,
 ): T | undefined {
   if (potentialTargets.length === 0) return undefined
 
-  const attackerEffectiveSkill = getActorEffectiveSkill(attacker)
+  const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
+  assertDefined(attackerEffectiveSkill)
   const targetSkillLowerBound = attackerEffectiveSkill * 0.2
   const targetSkillUpperBound = attackerEffectiveSkill * 0.8
   const targetSkillPreferred = attackerEffectiveSkill * 0.5
@@ -57,6 +53,7 @@ export function selectTarget<T extends Agent | Enemy>(
       targetSkillLowerBound,
       targetSkillUpperBound,
       targetSkillPreferred,
+      effectiveSkillsAtRoundStart,
     )
 
     if (selectedTarget) {
@@ -78,17 +75,18 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
   targetSkillLowerBound: number,
   targetSkillUpperBound: number,
   targetSkillPreferred: number,
+  effectiveSkillsAtRoundStart: Map<string, number>,
 ): T | undefined {
   // Get targets that are in valid skill range
   const validTargets = targetsAtAttackCount.filter((target) =>
-    isInValidSkillRange(target, targetSkillLowerBound, targetSkillUpperBound),
+    isInValidSkillRange(target, targetSkillLowerBound, targetSkillUpperBound, effectiveSkillsAtRoundStart),
   )
 
   if (validTargets.length > 0) {
     // Find target closest to 50% of attacker's skill
     const sorted = [...validTargets].sort((targetA, targetB) => {
-      const distanceA = distanceFromPreferred(targetA, targetSkillPreferred)
-      const distanceB = distanceFromPreferred(targetB, targetSkillPreferred)
+      const distanceA = distanceFromPreferred(targetA, targetSkillPreferred, effectiveSkillsAtRoundStart)
+      const distanceB = distanceFromPreferred(targetB, targetSkillPreferred, effectiveSkillsAtRoundStart)
 
       // KJA because of the floor rounding in effectiveSkill called from getActorEffectiveSkill
       // this may be imprecise, like: 50% = 10, target 1 = 7.9 (dist = 2.1), target 2 = 12.9 (dist = 2.9)
@@ -97,7 +95,7 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
       //
       // If distances are equal, prefer lower skill
       if (distanceA === distanceB) {
-        return compareTargetsBySkill(targetA, targetB)
+        return compareTargetsBySkill(targetA, targetB, effectiveSkillsAtRoundStart)
       }
 
       return distanceA - distanceB
@@ -110,9 +108,15 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
 }
 
 // Helper function to compare targets by effective skill, then by ID if skills are equal
-function compareTargetsBySkill(targetA: Agent | Enemy, targetB: Agent | Enemy): number {
-  const skillA = getActorEffectiveSkill(targetA)
-  const skillB = getActorEffectiveSkill(targetB)
+function compareTargetsBySkill(
+  targetA: Agent | Enemy,
+  targetB: Agent | Enemy,
+  effectiveSkillsAtRoundStart: Map<string, number>,
+): number {
+  const skillA = effectiveSkillsAtRoundStart.get(targetA.id)
+  const skillB = effectiveSkillsAtRoundStart.get(targetB.id)
+  assertDefined(skillA)
+  assertDefined(skillB)
   if (skillA === skillB) {
     return compareIdsNumeric(targetA.id, targetB.id)
   }
@@ -127,13 +131,20 @@ function isInValidSkillRange(
   target: Agent | Enemy,
   targetSkillLowerBound: number,
   targetSkillUpperBound: number,
+  effectiveSkillsAtRoundStart: Map<string, number>,
 ): boolean {
-  const skill = getActorEffectiveSkill(target)
+  const skill = effectiveSkillsAtRoundStart.get(target.id)
+  assertDefined(skill)
   return skill >= targetSkillLowerBound && skill <= targetSkillUpperBound
 }
 
 // Helper function to calculate distance from preferred skill (50% of attacker's skill)
-function distanceFromPreferred(target: Agent | Enemy, targetSkillPreferred: number): number {
-  const skill = getActorEffectiveSkill(target)
+function distanceFromPreferred(
+  target: Agent | Enemy,
+  targetSkillPreferred: number,
+  effectiveSkillsAtRoundStart: Map<string, number>,
+): number {
+  const skill = effectiveSkillsAtRoundStart.get(target.id)
+  assertDefined(skill)
   return Math.abs(skill - targetSkillPreferred)
 }
