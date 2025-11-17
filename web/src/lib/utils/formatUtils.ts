@@ -141,36 +141,19 @@ function getAttackResultIcon(kind: AttackLogKind): string {
 
 function getAttackVerb(kind: AttackLogKind): string {
   if (kind.includes('terminates')) return 'terminates'
-  if (kind.includes('hits')) return 'hits'
-  return 'misses'
+  if (kind.includes('hits')) return 'hits      '
+  return 'misses    '
 }
 
-function buildAttackerPart(
-  attackerIsAgent: boolean,
-  attackerIcon: string,
-  attackerName: string,
-  attackerEffectiveSkill: number,
+function buildActorInfoPart(
+  actorIsAgent: boolean,
+  actorIcon: string,
+  actorName: string,
+  actorEffectiveSkill: number,
 ): string {
-  if (attackerIsAgent) {
-    return `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
-  }
-  const attackerNameWithSkill = `${attackerName} (${attackerEffectiveSkill})`
-  const attackerNamePadded = attackerNameWithSkill.padEnd(32)
-  return `${attackerIcon} ${attackerNamePadded}`
-}
-
-function buildDefenderPart(
-  attackerIsAgent: boolean,
-  defenderIcon: string,
-  defenderName: string,
-  defenderEffectiveSkill: number,
-): string {
-  if (attackerIsAgent) {
-    const defenderNamePadded = defenderName.padEnd(25)
-    return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
-  }
-  const defenderNamePadded = defenderName.padEnd(10)
-  return `${defenderIcon} ${defenderNamePadded} (${defenderEffectiveSkill})`
+  const actorEffectiveSkillStr = `(${actorEffectiveSkill})`.padStart(5)
+  const actorNameStr = actorIsAgent ? actorName : actorName.padEnd(22)
+  return `${actorIcon} ${actorNameStr} ${actorEffectiveSkillStr}`
 }
 
 export function fmtAttackLog(params: AttackLogParams): string {
@@ -192,38 +175,40 @@ export function fmtAttackLog(params: AttackLogParams): string {
 
   const attackResultIcon = getAttackResultIcon(kind)
   const attackVerb = getAttackVerb(kind)
-  const attackVerbPadded = attackVerb.padEnd(9)
-  const attackerPart = buildAttackerPart(attackerIsAgent, attackerIcon, attackerName, attackerEffectiveSkill)
-  const defenderPart = buildDefenderPart(attackerIsAgent, defenderIcon, defenderName, defenderEffectiveSkill)
+  const attackerPart = buildActorInfoPart(attackerIsAgent, attackerIcon, attackerName, attackerEffectiveSkill)
+  const defenderPart = buildActorInfoPart(!attackerIsAgent, defenderIcon, defenderName, defenderEffectiveSkill)
 
-  const damageStr = getDamageStr(damageInfo, attackVerb)
+  const damageStr = buildDamageStr(damageInfo, attackVerb)
 
   const rollResultIcon = rollResult.success ? '✅' : '❌'
   const rollPercentage = addPctSignDec2(rollResult.rollPct)
   const rollRelation = rollResult.success ? '>' : '<='
   const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct)
 
-  const hpOpeningParen = hpRemainingInfo ? ' (' : ''
-  const currMaxHp = hpRemainingInfo
-    ? `${String(hpRemainingInfo.current).padStart(2)}/${String(hpRemainingInfo.max).padStart(2)}`
-    : ''
-  const hpPercentage = hpRemainingInfo ? hpRemainingInfo.percentage.padStart(3) : ''
-  const hpRemainingPhrase = hpRemainingInfo ? 'HP remaining)' : ''
-
-  const basicInfoStr = `${attackResultIcon} ${attackerPart} ${attackVerbPadded} ${defenderPart}`
+  const basicInfoStr = `${attackResultIcon} ${attackerPart} ${attackVerb} ${defenderPart}`
   const rollResultStr = `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
-  const hpStr = `${hpOpeningParen}${currMaxHp} (${hpPercentage}) ${hpRemainingPhrase}`
+  const hpStr = buildHpStr(hpRemainingInfo)
 
-  return `${basicInfoStr}${damageStr} ${rollResultStr}${hpStr}`
+  return `${basicInfoStr}${damageStr}${rollResultStr}${hpStr}`
 }
 
-function getDamageStr(damageInfo: { damage: number; damagePct: string } | undefined, attackVerb: string): string {
+function buildDamageStr(damageInfo: { damage: number; damagePct: string } | undefined, attackVerb: string): string {
   if (!damageInfo) {
-    return ''
+    return ' '
   }
-  const damagePreposition = attackVerb === 'terminates' ? 'with' : 'for'
+  const damagePreposition = attackVerb === 'terminates' ? 'with' : 'for '
   const attackDamage = String(damageInfo.damage).padStart(2)
   const weaponRangePct = damageInfo.damagePct
-  const damageWord = 'damage'
-  return `  ${damagePreposition} ${attackDamage} (${weaponRangePct}) ${damageWord}`
+  return ` ${damagePreposition} ${attackDamage} (${weaponRangePct}) damage `
+}
+
+function buildHpStr(hpRemainingInfo: { current: number; max: number; percentage: string } | undefined): string {
+  if (!hpRemainingInfo) {
+    return ''
+  }
+  const hpOpeningParen = ' ('
+  const currMaxHp = `${String(hpRemainingInfo.current).padStart(2)}/${String(hpRemainingInfo.max).padStart(2)}`
+  const hpPercentage = hpRemainingInfo.percentage.padStart(3)
+  const hpRemainingPhrase = 'HP remaining)'
+  return `${hpOpeningParen}${currMaxHp} (${hpPercentage}) ${hpRemainingPhrase}`
 }
