@@ -179,11 +179,11 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
 // Return only the overrides that should replace values in the normal initial state
 export function makeDebugInitialOverrides(): Partial<GameState> {
   const stateBase: Partial<GameState> = {
-    agents: [],
     money: 1000,
     intel: 500,
-    funding: 20,
-    leadInvestigationCounts: {},
+    leadInvestigationCounts: {
+      'lead-red-dawn-profile': 1,
+    },
   }
 
   const missionSiteId: MissionSiteId = 'mission-site-000'
