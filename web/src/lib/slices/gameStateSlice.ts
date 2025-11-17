@@ -16,6 +16,11 @@ import {
   debugSpawnMissionSites as debugSpawnMissionSitesReducer,
 } from './reducers/missionReducers'
 import { advanceTurn as advanceTurnReducer, reset as resetReducer } from './reducers/gameControlsReducers'
+import {
+  debugSetPanicToZero as debugSetPanicToZeroReducer,
+  debugSetAllFactionsSuppressionTo1000Percent as debugSetAllFactionsSuppressionTo1000PercentReducer,
+  debugAddMoney as debugAddMoneyReducer,
+} from './reducers/debugReducers'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action
@@ -36,6 +41,9 @@ const gameStateSlice = createSlice({
     addAgentsToInvestigation: addAgentsToInvestigationReducer,
     deployAgentsToMission: deployAgentsToMissionReducer,
     debugSpawnMissionSites: debugSpawnMissionSitesReducer,
+    debugSetPanicToZero: debugSetPanicToZeroReducer,
+    debugSetAllFactionsSuppressionTo1000Percent: debugSetAllFactionsSuppressionTo1000PercentReducer,
+    debugAddMoney: debugAddMoneyReducer,
   },
 })
 
@@ -51,5 +59,8 @@ export const {
   addAgentsToInvestigation,
   deployAgentsToMission,
   debugSpawnMissionSites,
+  debugSetPanicToZero,
+  debugSetAllFactionsSuppressionTo1000Percent,
+  debugAddMoney,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

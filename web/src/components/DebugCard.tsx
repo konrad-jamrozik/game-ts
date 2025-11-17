@@ -1,8 +1,14 @@
 import Button from '@mui/material/Button'
+import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch } from '../app/hooks'
 import { ExpandableCard } from './ExpandableCard'
-import { debugSpawnMissionSites } from '../lib/slices/gameStateSlice'
+import {
+  debugSpawnMissionSites,
+  debugSetPanicToZero,
+  debugSetAllFactionsSuppressionTo1000Percent,
+  debugAddMoney,
+} from '../lib/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -11,11 +17,34 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugSpawnMissionSites())
   }
 
+  function handleSetPanicToZero(): void {
+    dispatch(debugSetPanicToZero())
+  }
+
+  function handleSetAllFactionsSuppressionTo1000Percent(): void {
+    dispatch(debugSetAllFactionsSuppressionTo1000Percent())
+  }
+
+  function handleAddMoney(): void {
+    dispatch(debugAddMoney())
+  }
+
   return (
     <ExpandableCard title="Debug" defaultExpanded={true}>
-      <Button variant="contained" onClick={handleSpawnMissionSites}>
-        Spawn mission sites
-      </Button>
+      <Stack spacing={1}>
+        <Button variant="contained" onClick={handleSpawnMissionSites}>
+          Spawn mission sites
+        </Button>
+        <Button variant="contained" onClick={handleSetPanicToZero}>
+          Set panic to zero
+        </Button>
+        <Button variant="contained" onClick={handleSetAllFactionsSuppressionTo1000Percent}>
+          Set all factions suppression to 1000%
+        </Button>
+        <Button variant="contained" onClick={handleAddMoney}>
+          Add 10000 money
+        </Button>
+      </Stack>
     </ExpandableCard>
   )
 }
