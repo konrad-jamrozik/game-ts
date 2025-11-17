@@ -1,7 +1,19 @@
 import type { Agent, Enemy } from '../model/model'
 import { getActorEffectiveSkill } from '../utils/actorUtils'
 import { compareIdsNumeric } from '../utils/stringUtils'
+import { rollRange } from './rolls'
 
+// KJA this is the problem with current target selection:
+// 🩸 👺 enemy-soldier-20        (83) hits       👤 agent-016 (160) for  20 (143%) damage [✅ roll  81.01% is >   78.80% threshold] (  10 /  30  (33%) HP remaining)
+// ☠️ 👺 enemy-soldier-14        (80) terminates 👤 agent-016  (53) with 12  (86%) damage [✅ roll  39.41% is >   30.51% threshold] (  -2 /  30  (-7%) HP remaining)
+// Basically, if all agents are 100+, as soon as one soldier damages an agent, it falls into the 20-80% range and is selected by next soldier, and all of them
+// pile up, terminating the agent.
+// To solve this problem, the target effective skill should not be updated until the end of round.
+// The adjustments will have to be made in:
+// evaluateAttack
+// To
+// defender.hitPoints = Math.max(0, hpRemaining)
+// and related. Basically when selecting target the "effective skill at turn start" must be kept track of, and updated only at the end of the round.
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
  *
@@ -10,10 +22,10 @@ import { compareIdsNumeric } from '../utils/stringUtils'
  * 2. Skill preference: From those targets, chooses one whose effective skill is closest to 50% of attacker's effective skill
  *    - If multiple targets have the same distance from 50%, chooses the one with lowest effective skill
  *    - If still multiple targets, chooses the one with lowest ID number
- * 3. Fallback expansion: If no target in the least-attacked group has effective skill between 10% and 90%
+ * 3. Fallback expansion: If no target in the least-attacked group has effective skill between 20% and 80%
  *    (inclusive) of attacker's skill, expands to targets with attack count 1 higher and repeats the algorithm
- * 4. Final fallback: If across all attack counts there is no target between 10% and 90% of attacker's skill,
- *    selects the available target with the lowest effective skill from targets with minimum number of attacks only
+ * 4. Final fallback: If across all attack counts there is no target between 20% and 80% of attacker's skill,
+ *    picks at random a target from targets with minimum number of attacks only
  *
  * @param potentialTargets - Array of potential targets (agents or enemies) to choose from
  * @param attackCounts - Map tracking how many times each target has been attacked (keyed by target ID)
@@ -52,14 +64,13 @@ export function selectTarget<T extends Agent | Enemy>(
     }
   }
 
-  // Fallback: No target in valid skill range, select lowest effective skill target
-  // from targets with minimum number of attacks only
+  // Fallback: No target in valid skill range, pick at random from targets
+  // with minimum number of attacks only
   const targetsWithMinAttacks = potentialTargets.filter(
     (target) => (attackCounts.get(target.id) ?? 0) === minAttackCount,
   )
-  const sorted = [...targetsWithMinAttacks].sort(compareTargetsBySkill)
-
-  return sorted[0]
+  const randomIndex = rollRange(0, targetsWithMinAttacks.length - 1).roll
+  return targetsWithMinAttacks[randomIndex]
 }
 
 function selectTargetAtAttackCount<T extends Agent | Enemy>(
