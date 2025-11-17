@@ -1,8 +1,6 @@
 import type { Agent, Enemy } from '../model/model'
-import { agV } from '../model/agents/AgentView'
-import { effectiveSkill } from '../utils/actorUtils'
+import { getActorEffectiveSkill } from '../utils/actorUtils'
 import { compareIdsNumeric } from '../utils/stringUtils'
-import { isAgent } from './evaluateAttack'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -107,12 +105,6 @@ function compareTargetsBySkill(targetA: Agent | Enemy, targetB: Agent | Enemy): 
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
   return skillA - skillB
-}
-
-// Helper function to get effective skill of a target
-function getActorEffectiveSkill(actor: Agent | Enemy): number {
-  // KJA this duplication of effectiveSkill is silly, dedup.
-  return isAgent(actor) ? agV(actor).effectiveSkill() : effectiveSkill(actor)
 }
 
 // Helper function to check if target is in valid skill range

@@ -4,11 +4,10 @@ import { agV } from '../model/agents/AgentView'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
-import { effectiveSkill } from '../utils/actorUtils'
+import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
 import { addPctSignMult100Dec2 } from '../utils/formatUtils'
 import { div, divMult100Round } from '../utils/mathUtils'
-import { compareIdsNumeric } from '../utils/stringUtils'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 
@@ -178,16 +177,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
 
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
-  activeAgents.sort((agentA, agentB) => {
-    // KJA should use effective skill?
-    if (agentA.skill === agentB.skill) {
-      return compareIdsNumeric(agentA.id, agentB.id)
-    }
-    // Return the agent with higher skill as first.
-    // Explanation:
-    // sort() will return agentA as first if output is negative, i.e. when agentB.skill - agentA.skill < 0 i.e. agentB.skill < agentA.skill.
-    return agentB.skill - agentA.skill
-  })
+  activeAgents.sort(compareActorsBySkillDescending)
 
   // Each agent attacks
   for (const agent of activeAgents) {
@@ -208,15 +198,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
 
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  activeEnemies.sort((enemyA, enemyB) => {
-    if (enemyA.skill === enemyB.skill) {
-      return compareIdsNumeric(enemyA.id, enemyB.id)
-    }
-    // Return the enemy with higher skill as first.
-    // Explanation:
-    // sort() will return enemyA as first if output is negative, i.e. when enemyB.skill - enemyA.skill < 0 i.e. enemyB.skill < enemyA.skill.
-    return enemyB.skill - enemyA.skill
-  })
+  activeEnemies.sort(compareActorsBySkillDescending)
 
   for (const enemy of activeEnemies) {
     // Skip if terminated during this round
