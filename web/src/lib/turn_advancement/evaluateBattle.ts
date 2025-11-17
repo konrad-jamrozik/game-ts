@@ -255,6 +255,18 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   }
 }
 
+/**
+ * Selects a target from potential targets using a fair distribution algorithm.
+ *
+ * The selection process prioritizes fairness and tactical advantage:
+ * 1. Fair distribution: Selects from targets that have been attacked the least
+ * 2. Weakest target: Among equally-attacked targets, chooses the one with lowest effective skill
+ * 3. Deterministic tiebreaking: If skills are equal, uses numeric ID comparison for consistent ordering
+ *
+ * @param potentialTargets - Array of potential targets (agents or enemies) to choose from
+ * @param attackCounts - Map tracking how many times each target has been attacked (keyed by target ID)
+ * @returns The selected target, or undefined if no targets are available
+ */
 function selectTarget<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
