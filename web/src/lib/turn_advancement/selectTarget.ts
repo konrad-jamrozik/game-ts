@@ -13,7 +13,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
  * 3. Fallback expansion: If no target in the least-attacked group has effective skill between 10% and 90%
  *    (inclusive) of attacker's skill, expands to targets with attack count 1 higher and repeats the algorithm
  * 4. Final fallback: If across all attack counts there is no target between 10% and 90% of attacker's skill,
- *    selects the available target with the lowest effective skill
+ *    selects the available target with the lowest effective skill from targets with minimum number of attacks only
  *
  * @param potentialTargets - Array of potential targets (agents or enemies) to choose from
  * @param attackCounts - Map tracking how many times each target has been attacked (keyed by target ID)
@@ -53,7 +53,11 @@ export function selectTarget<T extends Agent | Enemy>(
   }
 
   // Fallback: No target in valid skill range, select lowest effective skill target
-  const sorted = [...potentialTargets].sort(compareTargetsBySkill)
+  // from targets with minimum number of attacks only
+  const targetsWithMinAttacks = potentialTargets.filter(
+    (target) => (attackCounts.get(target.id) ?? 0) === minAttackCount,
+  )
+  const sorted = [...targetsWithMinAttacks].sort(compareTargetsBySkill)
 
   return sorted[0]
 }
