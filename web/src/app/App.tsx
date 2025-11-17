@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { AgentsDataGrid } from '../components/AgentsDataGrid/AgentsDataGrid'
+import { DebugCard } from '../components/DebugCard'
 import { EventLog } from '../components/EventLog'
 import { GameControls } from '../components/GameControls'
 import { LeadInvestigationsDataGrid } from '../components/LeadInvestigationsDataGrid'
@@ -29,6 +30,7 @@ function App(): React.JSX.Element {
           <GameControls />
           <PlayerActions />
           <EventLog />
+          <DebugCard />
         </Stack>
       </Grid>
       <Grid>

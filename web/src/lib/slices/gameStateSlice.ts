@@ -11,7 +11,10 @@ import {
   createLeadInvestigation as createLeadInvestigationReducer,
   addAgentsToInvestigation as addAgentsToInvestigationReducer,
 } from './reducers/leadReducers'
-import { deployAgentsToMission as deployAgentsToMissionReducer } from './reducers/missionReducers'
+import {
+  deployAgentsToMission as deployAgentsToMissionReducer,
+  debugSpawnMissionSites as debugSpawnMissionSitesReducer,
+} from './reducers/missionReducers'
 import { advanceTurn as advanceTurnReducer, reset as resetReducer } from './reducers/gameControlsReducers'
 
 // Relevant docs on createSlice:
@@ -32,6 +35,7 @@ const gameStateSlice = createSlice({
     createLeadInvestigation: createLeadInvestigationReducer,
     addAgentsToInvestigation: addAgentsToInvestigationReducer,
     deployAgentsToMission: deployAgentsToMissionReducer,
+    debugSpawnMissionSites: debugSpawnMissionSitesReducer,
   },
 })
 
@@ -46,5 +50,6 @@ export const {
   createLeadInvestigation,
   addAgentsToInvestigation,
   deployAgentsToMission,
+  debugSpawnMissionSites,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer
