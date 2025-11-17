@@ -42,52 +42,69 @@ export function selectTarget<T extends Agent | Enemy>(
   for (let attackCount = minAttackCount; attackCount <= maxAttackCount; attackCount += 1) {
     const targetsAtAttackCount = potentialTargets.filter((target) => (attackCounts.get(target.id) ?? 0) === attackCount)
 
-    // Get targets that are in valid skill range
-    const validTargets = targetsAtAttackCount.filter((target) =>
-      isInValidSkillRange(target, targetSkillLowerBound, targetSkillUpperBound),
+    const selectedTarget = selectTargetAtAttackCount(
+      targetsAtAttackCount,
+      targetSkillLowerBound,
+      targetSkillUpperBound,
+      targetSkillPreferred,
     )
 
-    if (validTargets.length > 0) {
-      // Find target closest to 50% of attacker's skill
-      const sorted = [...validTargets].sort((targetA, targetB) => {
-        const distanceA = distanceFromPreferred(targetA, targetSkillPreferred)
-        const distanceB = distanceFromPreferred(targetB, targetSkillPreferred)
-
-        // KJA because of the floor rounding in effectiveSkill called from getActorEffectiveSkill
-        // this may be imprecise, like: 50% = 10, target 1 = 7.9 (dist = 2.1), target 2 = 12.9 (dist = 2.9)
-        // so it rounds target 1 to 7 and target 2 to 12, thus picking target 2 instead of target 1
-        // Need to think about the rounding precisions here of effectiveSkill, Bps, etc.
-        //
-        // If distances are equal, prefer lower skill
-        if (distanceA === distanceB) {
-          const skillA = getActorEffectiveSkill(targetA)
-          const skillB = getActorEffectiveSkill(targetB)
-          if (skillA === skillB) {
-            return compareIdsNumeric(targetA.id, targetB.id)
-          }
-          // sort() will return targetA if returned value is negative, i.e. when skillA < skillB.
-          return skillA - skillB
-        }
-
-        return distanceA - distanceB
-      })
-
-      return sorted[0]
+    if (selectedTarget) {
+      return selectedTarget
     }
   }
 
   // Fallback: No target in valid skill range, select lowest effective skill target
-  const sorted = [...potentialTargets].sort((targetA, targetB) => {
-    const skillA = getActorEffectiveSkill(targetA)
-    const skillB = getActorEffectiveSkill(targetB)
-    if (skillA === skillB) {
-      return compareIdsNumeric(targetA.id, targetB.id)
-    }
-    // sort() will return targetA if returned value is negative, i.e. when skillA < skillB.
-    return skillA - skillB
-  })
+  const sorted = [...potentialTargets].sort(compareTargetsBySkill)
 
   return sorted[0]
+}
+
+function selectTargetAtAttackCount<T extends Agent | Enemy>(
+  targetsAtAttackCount: T[],
+  targetSkillLowerBound: number,
+  targetSkillUpperBound: number,
+  targetSkillPreferred: number,
+): T | undefined {
+  // Get targets that are in valid skill range
+  const validTargets = targetsAtAttackCount.filter((target) =>
+    isInValidSkillRange(target, targetSkillLowerBound, targetSkillUpperBound),
+  )
+
+  if (validTargets.length > 0) {
+    // Find target closest to 50% of attacker's skill
+    const sorted = [...validTargets].sort((targetA, targetB) => {
+      const distanceA = distanceFromPreferred(targetA, targetSkillPreferred)
+      const distanceB = distanceFromPreferred(targetB, targetSkillPreferred)
+
+      // KJA because of the floor rounding in effectiveSkill called from getActorEffectiveSkill
+      // this may be imprecise, like: 50% = 10, target 1 = 7.9 (dist = 2.1), target 2 = 12.9 (dist = 2.9)
+      // so it rounds target 1 to 7 and target 2 to 12, thus picking target 2 instead of target 1
+      // Need to think about the rounding precisions here of effectiveSkill, Bps, etc.
+      //
+      // If distances are equal, prefer lower skill
+      if (distanceA === distanceB) {
+        return compareTargetsBySkill(targetA, targetB)
+      }
+
+      return distanceA - distanceB
+    })
+
+    return sorted[0]
+  }
+
+  return undefined
+}
+
+// Helper function to compare targets by effective skill, then by ID if skills are equal
+function compareTargetsBySkill(targetA: Agent | Enemy, targetB: Agent | Enemy): number {
+  const skillA = getActorEffectiveSkill(targetA)
+  const skillB = getActorEffectiveSkill(targetB)
+  if (skillA === skillB) {
+    return compareIdsNumeric(targetA.id, targetB.id)
+  }
+  // sort() will return targetA if returned value is negative, i.e. when skillA < skillB.
+  return skillA - skillB
 }
 
 // Helper function to get effective skill of a target

@@ -25,6 +25,7 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 # Important coding guidelines
 
 - Never memoize values with `React.useMemo`. The project uses React Compiler, so use `React.useMemo` is not needed.
+- Helper functions should be always defined below the caller function.
 
 ## Key aspects and conventions of the project
 

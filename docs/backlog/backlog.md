@@ -10,11 +10,6 @@ KJA backlog:
   Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
   introducing a trade-off. Read more in OneNote for MLS4 intel page.
 
-- KJA Fix the combat target selection so that in case the number of enemies doesn't exactly match player agents,
-  it won't be the case the best agent attacks some lousy unit because of the attack counter looping.
-  Best agent should generally try to attack best enemy unit, or at least someone close to their skill level.
-  Attacking too weak enemy is a waste, and attacking too strong enemy won't be effective.
-
 - KJA Allow State column filtering:
   Per LLM, how to make MUI use enum for filtering:
   > In MUI, when I have column menu for filtering, can I make it so that it allows me to pick from multiple predefined
