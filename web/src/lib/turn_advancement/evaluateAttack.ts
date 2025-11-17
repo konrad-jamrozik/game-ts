@@ -10,7 +10,7 @@ import {
 } from '../model/ruleset/constants'
 import { effectiveSkill } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
-import { fmtRollResult } from '../utils/formatUtils'
+import { fmtAttackLog, fmtRollResult, type AttackLogKind } from '../utils/formatUtils'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
@@ -40,10 +40,10 @@ export function evaluateAttack(
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
 
-  const attackerIcon = isAgent(attacker) ? '👤' : '👺'
-  const defenderIcon = isAgent(defender) ? '👤' : '👺'
   const attackerName = attacker.id
   const defenderName = defender.id
+  const attackerIsAgent = isAgent(attacker)
+  const defenderIsAgent = isAgent(defender)
 
   if (rollResult.success) {
     // Successful attack - roll damage
@@ -66,13 +66,34 @@ export function evaluateAttack(
     const rollResultStr = fmtRollResult(rollResult)
 
     if (defender.hitPoints <= 0) {
+      const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
       console.log(
-        `☠️ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) terminates ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) with ${damage} (${damagePct}) damage ${rollResultStr}`,
+        fmtAttackLog({
+          kind,
+          attackerName,
+          attackerEffectiveSkill,
+          defenderName,
+          defenderEffectiveSkill,
+          defenderIsAgent,
+          rollResultStr,
+          damageInfo: { damage, damagePct },
+        }),
       )
     } else {
-      const hpPercentage = divMult100Round(defender.hitPoints, defender.maxHitPoints)
+      const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
+      const hpPercentage = `${divMult100Round(defender.hitPoints, defender.maxHitPoints)}%`
       console.log(
-        `🩸 ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) hits ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) for ${damage} (${damagePct}) damage ${rollResultStr} (${defender.hitPoints}/${defender.maxHitPoints} (${hpPercentage}%) HP remaining)`,
+        fmtAttackLog({
+          kind,
+          attackerName,
+          attackerEffectiveSkill,
+          defenderName,
+          defenderEffectiveSkill,
+          defenderIsAgent,
+          rollResultStr,
+          damageInfo: { damage, damagePct },
+          hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPercentage },
+        }),
       )
     }
 
@@ -83,8 +104,17 @@ export function evaluateAttack(
   } else {
     // Failed attack - show roll details
     const rollResultStr = fmtRollResult(rollResult)
+    const kind: AttackLogKind = attackerIsAgent ? 'agent misses' : 'enemy misses'
     console.log(
-      `➖ ${attackerIcon} ${attackerName} (${attackerEffectiveSkill}) misses ${defenderIcon} ${defenderName} (${defenderEffectiveSkill}) ${rollResultStr}`,
+      fmtAttackLog({
+        kind,
+        attackerName,
+        attackerEffectiveSkill,
+        defenderName,
+        defenderEffectiveSkill,
+        defenderIsAgent,
+        rollResultStr,
+      }),
     )
 
     // Update skill gains (postponed)

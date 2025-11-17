@@ -97,3 +97,75 @@ export function fmtRollResult(rollResult: RollResult): string {
   const relation = rollResult.success ? '> ' : '<='
   return `[${icon} roll ${addPctSignDec2(rollResult.rollPct)} is ${relation} ${addPctSignDec2(rollResult.failureProbabilityPct)} threshold]`
 }
+
+export type AttackLogKind =
+  | 'agent misses'
+  | 'agent hits'
+  | 'agent terminates'
+  | 'enemy misses'
+  | 'enemy hits'
+  | 'enemy terminates'
+
+export type AttackLogParams = {
+  kind: AttackLogKind
+  attackerName: string
+  attackerEffectiveSkill: number
+  defenderName: string
+  defenderEffectiveSkill: number
+  defenderIsAgent: boolean
+  rollResultStr: string
+  damageInfo?: { damage: number; damagePct: string }
+  hpRemainingInfo?: { current: number; max: number; percentage: string }
+}
+
+/**
+ * Formats attack log message for console output
+ * @param params - Attack log parameters
+ * @returns Formatted attack log message
+ */
+export function fmtAttackLog(params: AttackLogParams): string {
+  const {
+    kind,
+    attackerName,
+    attackerEffectiveSkill,
+    defenderName,
+    defenderEffectiveSkill,
+    defenderIsAgent,
+    rollResultStr,
+    damageInfo,
+    hpRemainingInfo,
+  } = params
+
+  const attackerIsAgent = kind.startsWith('agent')
+  const attackerIcon = attackerIsAgent ? '👤' : '👺'
+  const defenderIcon = defenderIsAgent ? '👤' : '👺'
+
+  let emoji = '➖'
+  let actionVerb = 'misses'
+
+  if (kind.includes('terminates')) {
+    emoji = '☠️'
+    actionVerb = 'terminates'
+  } else if (kind.includes('hits')) {
+    emoji = '🩸'
+    actionVerb = 'hits'
+  }
+
+  const attackerPart = `${attackerIcon} ${attackerName} (${attackerEffectiveSkill})`
+  const defenderPart = `${defenderIcon} ${defenderName} (${defenderEffectiveSkill})`
+
+  let message = `${emoji} ${attackerPart} ${actionVerb} ${defenderPart}`
+
+  if (damageInfo) {
+    const preposition = actionVerb === 'terminates' ? 'with' : 'for'
+    message += ` ${preposition} ${damageInfo.damage} (${damageInfo.damagePct}) damage`
+  }
+
+  message += ` ${rollResultStr}`
+
+  if (hpRemainingInfo) {
+    message += ` (${hpRemainingInfo.current}/${hpRemainingInfo.max} (${hpRemainingInfo.percentage}%) HP remaining)`
+  }
+
+  return message
+}
