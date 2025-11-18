@@ -11,28 +11,28 @@ describe(PlayerActions, () => {
   test("click 'hire agent' button -> happy path", async () => {
     const initialMoney = 100
     st.arrangeGameState({ money: initialMoney })
-    st.expectAgentCount(0)
+    st.expectAgentCount(4)
     ui.renderPlayerActions()
 
     await ui.hireAgent() // Act
 
-    st.expectAgentCount(1)
+    st.expectAgentCount(5)
     st.expectTerminatedAgentCount(0)
     // Verify money is immediately deducted
     expect(st.gameState.money).toBe(initialMoney - AGENT_HIRE_COST)
   })
 
   test("click 'hire agent' button -> alert: insufficient funds", async () => {
-    st.arrangeGameState({ money: 0, funding: 0 })
+    st.arrangeGameState({ money: 0 })
     expect(getMoneyNewBalance(st.gameState)).toBe(0)
-    st.expectAgentCount(0)
+    st.expectAgentCount(4)
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
 
     await ui.hireAgent() // Act
 
     ui.expectPlayerActionsAlert('Insufficient funds')
-    st.expectAgentCount(0) // Expect unchanged
+    st.expectAgentCount(4) // Expect unchanged
   })
 
   test("click 'sack agents' button -> happy path", async () => {

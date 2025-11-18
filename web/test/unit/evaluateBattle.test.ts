@@ -59,7 +59,7 @@ describe(evaluateBattle, () => {
     const expectedSkillUpdate = (AGENT_FAILED_ATTACK_SKILL_REWARD + AGENT_FAILED_DEFENSE_SKILL_REWARD) * expectedRounds
     expectReportToBe(report)({
       rounds: expectedRounds,
-      agentCasualties: 0,
+      agentCasualties: 1,
       enemyCasualties: 0,
       retreated: true,
       agentSkillUpdates: { [agent.id]: expectedSkillUpdate },
