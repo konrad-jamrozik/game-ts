@@ -4,12 +4,13 @@
 {
   // Applicability of this config.
   // --------------------
-  "include": ["vite.config.ts", "vitest.config.ts"],
+  "include": ["vite.config.ts", "vitest.config.ts", "test/utils/unusedNodeTestUtils.ts"],
 
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "composite": true,
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
-    "lib": ["ES2024"]
+    "lib": ["ES2024"],
+    "types": ["node"] // Node.js types, e.g. for `process`.
   }
 }

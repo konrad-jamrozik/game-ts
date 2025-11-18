@@ -5,6 +5,7 @@
   // Applicability of this config.
   // --------------------
   "include": ["src", "test"],
+  "exclude": ["test/utils/unusedNodeTestUtils.ts"],
 
   "extends": "./tsconfig.json",
 
