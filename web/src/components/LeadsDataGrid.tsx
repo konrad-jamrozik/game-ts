@@ -26,62 +26,6 @@ export type LeadRow = {
   completedInvestigationCount: number
 }
 
-function createLeadColumns(): GridColDef<LeadRow>[] {
-  return [
-    {
-      field: 'id',
-      headerName: 'Lead ID',
-      minWidth: 300,
-      renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
-        <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'difficulty',
-      headerName: 'Difficulty',
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
-        <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'repeatable',
-      headerName: 'Repeatable',
-      minWidth: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
-      ),
-    },
-    {
-      field: 'investigations',
-      headerName: 'Investigations',
-      minWidth: 200,
-      renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
-        const { activeInvestigationCount, completedInvestigationCount } = params.row
-        if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {
-          return <span aria-label={`leads-row-investigations-${params.id}`}>None</span>
-        }
-        const parts: string[] = []
-        if (activeInvestigationCount > 0) {
-          parts.push(`${activeInvestigationCount} active`)
-        }
-        if (completedInvestigationCount > 0) {
-          parts.push(`${completedInvestigationCount} completed`)
-        }
-        return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
-      },
-    },
-  ]
-}
-
-// Check if a row is disabled (same logic as LeadCard for normal displayMode)
-function isRowDisabled(row: LeadRow): boolean {
-  // For normal displayMode leads:
-  // - Repeatable: never disabled
-  // - Non-repeatable: disabled if hasActiveInvestigation OR hasSuccessfulInvestigation
-  return !row.repeatable && (row.hasActiveInvestigation || row.hasSuccessfulInvestigation)
-}
-
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
@@ -196,4 +140,60 @@ export function LeadsDataGrid(): React.JSX.Element {
       showToolbar
     />
   )
+}
+
+function createLeadColumns(): GridColDef<LeadRow>[] {
+  return [
+    {
+      field: 'id',
+      headerName: 'Lead ID',
+      minWidth: 300,
+      renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
+        <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
+      ),
+    },
+    {
+      field: 'difficulty',
+      headerName: 'Difficulty',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
+        <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
+      ),
+    },
+    {
+      field: 'repeatable',
+      headerName: 'Repeatable',
+      minWidth: 100,
+      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
+        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
+      ),
+    },
+    {
+      field: 'investigations',
+      headerName: 'Investigations',
+      minWidth: 200,
+      renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
+        const { activeInvestigationCount, completedInvestigationCount } = params.row
+        if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {
+          return <span aria-label={`leads-row-investigations-${params.id}`}>None</span>
+        }
+        const parts: string[] = []
+        if (activeInvestigationCount > 0) {
+          parts.push(`${activeInvestigationCount} active`)
+        }
+        if (completedInvestigationCount > 0) {
+          parts.push(`${completedInvestigationCount} completed`)
+        }
+        return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
+      },
+    },
+  ]
+}
+
+// Check if a row is disabled (same logic as LeadCard for normal displayMode)
+function isRowDisabled(row: LeadRow): boolean {
+  // For normal displayMode leads:
+  // - Repeatable: never disabled
+  // - Non-repeatable: disabled if hasActiveInvestigation OR hasSuccessfulInvestigation
+  return !row.repeatable && (row.hasActiveInvestigation || row.hasSuccessfulInvestigation)
 }
