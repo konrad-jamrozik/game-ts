@@ -10,7 +10,7 @@ import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
-import { verifyMissionState, selectAgents } from '../utils/testComponentUtils'
+import { verifyMissionState, selectAgents, selectLead } from '../utils/testComponentUtils'
 
 describe(App, () => {
   beforeEach(() => {
@@ -139,16 +139,13 @@ async function step3SelectAgent002(): Promise<void> {
 }
 
 /**
- * Step 4: Click on the "Criminal organizations" lead card
+ * Step 4: Select the "Criminal organizations" lead by clicking its checkbox in the Leads DataGrid
  */
 async function step4ClickCriminalOrganizationsLead(): Promise<void> {
-  // Find and click the Criminal organizations lead (use the first one, which should be the title)
-  // KJA thee is no more lead to click; instead, a row must be selected as in step 3
-  const clickableCriminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
-  assertDefined(clickableCriminalOrgsLeads[0])
-  await userEvent.click(clickableCriminalOrgsLeads[0])
+  // Select the Criminal organizations lead by clicking its checkbox
+  await selectLead('lead-criminal-orgs')
 
-  console.log('✅ Step 4 completed: Click "Criminal organizations" lead')
+  console.log('✅ Step 4 completed: Select "Criminal organizations" lead')
 }
 
 /**
