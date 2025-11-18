@@ -4,8 +4,6 @@ KJA backlog:
 
 # Brainstorming
 
-- KJA fix e2e test
-
 - KJA document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
   Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
   introducing a trade-off. Read more in OneNote for MLS4 intel page.
