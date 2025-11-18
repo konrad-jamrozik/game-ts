@@ -10,7 +10,7 @@ import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
-import { verifyMissionState } from '../utils/testUtils'
+import { verifyMissionState, selectAgents } from '../utils/testComponentUtils'
 
 describe(App, () => {
   beforeEach(() => {
@@ -133,24 +133,7 @@ async function step2AdvanceTurn(): Promise<void> {
  */
 async function step3SelectAgent002(): Promise<void> {
   // Use agent-002 so agent-000 and agent-001 remain available for mission deployment
-  const investigationAgentCheckboxes: HTMLElement[] = []
-  const investigationAgentIds = ['agent-002']
-
-  for (const agentId of investigationAgentIds) {
-    // Find all grid rows
-    const gridRows = screen.getAllByRole('row')
-    // Find the row that contains this agent ID
-    const targetRow = gridRows.find((row) => row.textContent?.includes(agentId) ?? false)
-    if (targetRow) {
-      // Use within() to scope the checkbox query to this specific row
-      const checkbox = within(targetRow).getByRole('checkbox')
-      investigationAgentCheckboxes.push(checkbox)
-    }
-  }
-
-  // Click the agent checkbox to select it
-  assertDefined(investigationAgentCheckboxes[0])
-  await userEvent.click(investigationAgentCheckboxes[0])
+  await selectAgents(['agent-002'])
 
   console.log('✅ Step 3 completed: Select agent "002"')
 }
@@ -208,23 +191,7 @@ async function step6ClickMissionCard001(): Promise<void> {
  */
 async function step7SelectAgents000And001(): Promise<void> {
   // Note: agent-002 is already assigned to lead investigation, so use agent-000 and agent-001
-  const agentCheckboxes: HTMLElement[] = []
-  const agentIds = ['agent-000', 'agent-001']
-
-  for (const agentId of agentIds) {
-    // Find all grid rows
-    const gridRows = screen.getAllByRole('row')
-    // Find the row that contains this agent ID
-    const targetRow = gridRows.find((row) => row.textContent?.includes(agentId) ?? false)
-    if (targetRow) {
-      // Use within() to scope the checkbox query to this specific row
-      const checkbox = within(targetRow).getByRole('checkbox')
-      agentCheckboxes.push(checkbox)
-    }
-  }
-
-  // Click the agent checkboxes we found
-  await Promise.all(agentCheckboxes.map(async (checkbox) => userEvent.click(checkbox)))
+  await selectAgents(['agent-000', 'agent-001'])
 
   console.log('✅ Step 7 completed: Select agents "000" and "001"')
 }
