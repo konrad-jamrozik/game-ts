@@ -10,6 +10,7 @@ import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
+import { verifyMissionState } from '../utils/testUtils'
 
 describe(App, () => {
   beforeEach(() => {
@@ -122,21 +123,7 @@ async function step2AdvanceTurn(): Promise<void> {
   expect(turnValue).toHaveTextContent('2')
 
   // Verify mission "000" is in "Successful" state
-  // Find the row containing mission site ID "000"
-  const gridRows = screen.getAllByRole('row')
-  const mission000Row = gridRows.find((row) => {
-    // Check if this row contains "000" in its text content (mission site ID)
-    // and has a state cell (indicating it's a mission row)
-    const has000 = row.textContent?.includes('000') ?? false
-    const hasStateCell = within(row).queryByLabelText(/missions-row-state-/iu) !== null
-    return has000 && hasStateCell
-  })
-  expect(mission000Row).toBeDefined()
-  assertDefined(mission000Row)
-
-  // Find the state cell for this row and verify it contains "Successful"
-  const stateCell = within(mission000Row).getByLabelText(/missions-row-state-/iu)
-  expect(stateCell).toHaveTextContent('Successful')
+  verifyMissionState('000', 'Successful')
 
   console.log('✅ Step 2 completed: Advance turn')
 }
