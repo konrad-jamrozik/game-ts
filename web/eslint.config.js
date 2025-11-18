@@ -33,6 +33,12 @@ export default plugTypescriptEslint.config([
       // Note: the plugin [eslint-plugin-tsdoc] must be imported as a plugin,
       // not via extends, because of its definition.
       tsdoc: plugTsdoc,
+      // React configs
+      // --------------------
+      // Came with [create-vite react-ts] template.
+      // Explained at [eslint-plugin-react-hooks about].
+      // Source at [eslint-plugin-react-hooks src].
+      'react-hooks': plugReactHooks,
     },
     extends: [
       // [eslint configs]
@@ -52,10 +58,6 @@ export default plugTypescriptEslint.config([
 
       // React configs
       // --------------------
-      // Came with [create-vite react-ts] template.
-      // Explained at [eslint-plugin-react-hooks about].
-      // Source at [eslint-plugin-react-hooks src].
-      plugReactHooks.configs['recommended-latest'],
       // Came with [create-vite react-ts] template.
       // Package at [eslint-plugin-react-refresh pkg].
       plugReactRefresh.configs.vite,
@@ -141,6 +143,11 @@ export default plugTypescriptEslint.config([
       ],
     },
     rules: {
+      // React configs
+      // Note: since react-hooks v7.0.0 it must be done this way,
+      // together with the "plugins" entry above,
+      // as this no longer works in "extends": "plugReactHooks.configs['recommended-latest']"
+      ...plugReactHooks.configs['recommended-latest'].rules,
       // Rules with perf. issues:
       // --------------------
       // '@typescript-eslint/no-deprecated': 'off',
