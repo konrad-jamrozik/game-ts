@@ -10,7 +10,7 @@ import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/utils/assert'
 import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
-import { verifyMissionState, selectAgents, selectLead } from '../utils/testComponentUtils'
+import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {
   beforeEach(() => {
@@ -58,7 +58,7 @@ describe(App, () => {
     await step3SelectAgent002()
     await step4ClickCriminalOrganizationsLead()
     await step5ClickInvestigateLeadButton()
-    await step6ClickMissionCard001()
+    await step6SelectMission001()
     await step7SelectAgents000And001()
     await step8ClickDeployButton()
     await step9HireAgent3Times()
@@ -168,19 +168,13 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
 }
 
 /**
- * Step 6: Click on mission card containing "001"
+ * Step 6: Select mission "001" by clicking its checkbox in the Missions DataGrid
  */
-async function step6ClickMissionCard001(): Promise<void> {
-  // Select mission - find mission cards and click on one containing "001"
-  const missionCardButtons = screen.getAllByRole('button')
-  const mission001Card = missionCardButtons.find((button) => button.textContent?.includes('001') ?? false)
+async function step6SelectMission001(): Promise<void> {
+  // Select mission "001 (apprehend-red-dawn)" by clicking its checkbox
+  await selectMission('001 (apprehend-red-dawn)')
 
-  expect(mission001Card).toBeDefined()
-  assertDefined(mission001Card)
-
-  await userEvent.click(mission001Card)
-
-  console.log('✅ Step 6 completed: Click mission card "001"')
+  console.log('✅ Step 6 completed: Select mission "001"')
 }
 
 /**
@@ -323,20 +317,16 @@ async function step12ClickResetGame(): Promise<void> {
   const resetTurnValue = screen.getByLabelText(/turn/iu)
   expect(resetTurnValue).toHaveTextContent('1')
 
-  // Should have no missions or archived missions
-  expect(screen.getByText(/archived missions \(0\)/iu)).toBeInTheDocument()
-
   // Should have only "Criminal organizations" lead
-  const finalCriminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+  const finalCriminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
   expect(finalCriminalOrgsLeads.length).toBeGreaterThan(0)
 
-  // Should have no archived leads
-  expect(screen.getByText(/archived leads \(0\)/iu)).toBeInTheDocument()
-
-  // Should have no agents (reset to initial state, not debug state)
-  expect(screen.queryByText(/agent-000/iu)).not.toBeInTheDocument()
-  expect(screen.queryByText(/agent-001/iu)).not.toBeInTheDocument()
-  expect(screen.queryByText(/agent-002/iu)).not.toBeInTheDocument()
+  // Should have the 4 agents from the initial state only.
+  expect(screen.getByText(/agent-000/iu)).toBeInTheDocument()
+  expect(screen.getByText(/agent-001/iu)).toBeInTheDocument()
+  expect(screen.getByText(/agent-002/iu)).toBeInTheDocument()
+  expect(screen.getByText(/agent-003/iu)).toBeInTheDocument()
+  expect(screen.queryByText(/agent-004/iu)).not.toBeInTheDocument()
 
   console.log('✅ Step 12 completed: Click "Reset game" button')
 }

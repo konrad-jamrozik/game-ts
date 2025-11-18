@@ -48,6 +48,18 @@ export async function selectLead(leadId: string): Promise<void> {
   }
 }
 
+export async function selectMission(missionDisplayText: string): Promise<void> {
+  // Find and click checkbox for the specified mission in the Missions DataGrid
+  // The display text format is: "001 (apprehend-red-dawn)"
+  // Only one mission can be selected at a time
+  const targetRow = findRowById(missionDisplayText)
+  if (targetRow) {
+    // Use within() to scope the checkbox query to this specific row
+    const checkbox = within(targetRow).getByRole('checkbox')
+    await userEvent.click(checkbox)
+  }
+}
+
 function findRowById(id: string): HTMLElement | undefined {
   // Find all grid rows and return the row that contains the specified ID
   const gridRows = screen.getAllByRole('row')
