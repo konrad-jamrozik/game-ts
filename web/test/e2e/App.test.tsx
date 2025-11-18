@@ -160,7 +160,8 @@ async function step3SelectAgent002(): Promise<void> {
  */
 async function step4ClickCriminalOrganizationsLead(): Promise<void> {
   // Find and click the Criminal organizations lead (use the first one, which should be the title)
-  const clickableCriminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+  // KJA thee is no more lead to click; instead, a row must be selected as in step 3
+  const clickableCriminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
   assertDefined(clickableCriminalOrgsLeads[0])
   await userEvent.click(clickableCriminalOrgsLeads[0])
 
