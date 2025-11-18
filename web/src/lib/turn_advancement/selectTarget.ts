@@ -91,7 +91,7 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
 
   if (validTargets.length > 0) {
     // Find target closest to 50% of attacker's skill
-    const sorted = [...validTargets].sort((targetA, targetB) => {
+    const sorted = validTargets.toSorted((targetA, targetB) => {
       const distanceA = distanceFromPreferred(targetA, targetSkillPreferred, effectiveSkillsAtRoundStart)
       const distanceB = distanceFromPreferred(targetB, targetSkillPreferred, effectiveSkillsAtRoundStart)
 

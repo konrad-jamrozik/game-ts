@@ -25,7 +25,7 @@ export function getArchivedMissionSites(missionSites: MissionSite[]): MissionSit
  * Sorts mission sites by ID (newest first)
  */
 export function sortMissionSitesByIdDesc(missionSites: MissionSite[]): MissionSite[] {
-  return [...missionSites].sort((siteA, siteB) => siteB.id.localeCompare(siteA.id))
+  return missionSites.toSorted((siteA, siteB) => siteB.id.localeCompare(siteA.id))
 }
 
 /**
@@ -33,7 +33,7 @@ export function sortMissionSitesByIdDesc(missionSites: MissionSite[]): MissionSi
  * Active missions come before Deployed, within each group by ID (newest first)
  */
 export function sortActiveOrDeployedMissionSites(missionSites: MissionSite[]): MissionSite[] {
-  return [...missionSites].sort((siteA, siteB) => {
+  return missionSites.toSorted((siteA, siteB) => {
     // First sort by state: Active missions come before Deployed
     if (siteA.state !== siteB.state) {
       return siteA.state === 'Active' ? -1 : 1

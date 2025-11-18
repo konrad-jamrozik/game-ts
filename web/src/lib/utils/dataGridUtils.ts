@@ -23,7 +23,7 @@ export function filterLeadInvestigationRows(
       }
       return showAbandoned
     })
-    .sort((rowA, rowB) => rowB.leadInvestigationTitle.localeCompare(rowA.leadInvestigationTitle))
+    .toSorted((rowA, rowB) => rowB.leadInvestigationTitle.localeCompare(rowA.leadInvestigationTitle))
 }
 
 export function filterAgentRows(
