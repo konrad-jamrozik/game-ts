@@ -218,7 +218,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       // We assume disableMultipleRowSelection, so we assume there is exactly one rowId in selectedRowIds
       const [rowId] = selectedRowIds
       const row = leadInvestigationRows.find((rowItem) => rowItem.rowId === rowId)
-      if (row && row.state === 'Active') {
+      if (row?.state === 'Active') {
         // Only allow selection of Active investigations
         // Clear lead selection when investigation is selected
         dispatch(clearLeadSelection())

@@ -313,6 +313,7 @@
       "rules": {
         "no-negated-condition": "off",
         "no-nested-ternary": "off",
+        "unicorn/no-array-sort": "error",
         "unicorn/catch-error-name": "error",
         "unicorn/consistent-assert": "error",
         "unicorn/consistent-date-clone": "error",
@@ -471,6 +472,7 @@
         "unicorn/no-nested-ternary": "off",
         "unicorn/no-negated-condition": "off",
         "unicorn/no-array-for-each": "off",
+
         "max-params": [
           "error",
           {
