@@ -91,7 +91,7 @@ function step1StartWithDebugInitialState(): void {
 
   // Verify initial debug state
   // Should have a lead "Criminal organizations"
-  const criminalOrgsLeads = screen.getAllByText(/criminal organizations/iu)
+  const criminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
   expect(criminalOrgsLeads.length).toBeGreaterThan(0)
 
   // Should have mission with ID "000" (in deployed state) - look for exact mission ID
@@ -113,7 +113,7 @@ function step1StartWithDebugInitialState(): void {
 /**
  * Step 2: Click "Advance turn" button
  * - Verify turn advances to 2
- * - Verify mission "000" appears in "Archived missions"
+ * - Verify mission "000" is in "Successful" state.
  */
 async function step2AdvanceTurn(): Promise<void> {
   await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
@@ -121,9 +121,22 @@ async function step2AdvanceTurn(): Promise<void> {
   const turnValue = screen.getByLabelText(/turn/iu)
   expect(turnValue).toHaveTextContent('2')
 
-  // Mission with ID "000" should now appear in "Archived missions"
-  // We expect the deployed mission site to have been evaluated
-  expect(screen.getByText(/archived missions/iu)).toBeInTheDocument()
+  // Verify mission "000" is in "Successful" state
+  // Find the row containing mission site ID "000"
+  const gridRows = screen.getAllByRole('row')
+  const mission000Row = gridRows.find((row) => {
+    // Check if this row contains "000" in its text content (mission site ID)
+    // and has a state cell (indicating it's a mission row)
+    const has000 = row.textContent?.includes('000') ?? false
+    const hasStateCell = within(row).queryByLabelText(/missions-row-state-/iu) !== null
+    return has000 && hasStateCell
+  })
+  expect(mission000Row).toBeDefined()
+  assertDefined(mission000Row)
+
+  // Find the state cell for this row and verify it contains "Successful"
+  const stateCell = within(mission000Row).getByLabelText(/missions-row-state-/iu)
+  expect(stateCell).toHaveTextContent('Successful')
 
   console.log('✅ Step 2 completed: Advance turn')
 }
