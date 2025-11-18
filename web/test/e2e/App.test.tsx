@@ -161,7 +161,7 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
 
   // Verify the data grid in lead investigations card has a row containing "000 Criminal organizations"
   const gridRows = screen.getAllByRole('row')
-  const investigationRow = gridRows.find((row) => row.textContent?.includes('000 Criminal organizations') ?? false)
+  const investigationRow = gridRows.find((row) => row.textContent.includes('000 Criminal organizations'))
   expect(investigationRow).toBeDefined()
 
   console.log('✅ Step 5 completed: Click "Investigate lead" button')
@@ -226,7 +226,7 @@ async function step9HireAgent3Times(): Promise<void> {
 function getCurrentMoneyValue(): number {
   // Verify the "Current" column of "Assets" card for "Money" row exists
   const gridRows = screen.getAllByRole('row')
-  const moneyRow = gridRows.find((row) => row.textContent?.includes('Money') ?? false)
+  const moneyRow = gridRows.find((row) => row.textContent.includes('Money'))
   expect(moneyRow).toBeDefined()
   assertDefined(moneyRow)
 
@@ -238,7 +238,7 @@ function getCurrentMoneyValue(): number {
   expect(cells.length).toBeGreaterThanOrEqual(2)
   const [, currentValueCell] = cells
   assertDefined(currentValueCell)
-  const currentValueText = currentValueCell.textContent ?? ''
+  const currentValueText = currentValueCell.textContent
   // Parse the number (may include negative sign and digits)
   const currentValue = Number.parseInt(currentValueText.trim(), 10)
   return currentValue
@@ -306,7 +306,7 @@ async function step11ClickResetControls(): Promise<void> {
 async function step12ClickResetGame(): Promise<void> {
   // Wait for the reset controls to be visible and find the reset game button
   const buttons = await screen.findAllByRole('button')
-  const resetGameButton = buttons.find((button) => button.textContent?.toLowerCase().includes('reset game') ?? false)
+  const resetGameButton = buttons.find((button) => button.textContent.toLowerCase().includes('reset game'))
 
   expect(resetGameButton).toBeDefined()
   assertDefined(resetGameButton)

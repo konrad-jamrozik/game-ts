@@ -63,5 +63,5 @@ export async function selectMission(missionDisplayText: string): Promise<void> {
 function findRowById(id: string): HTMLElement | undefined {
   // Find all grid rows and return the row that contains the specified ID
   const gridRows = screen.getAllByRole('row')
-  return gridRows.find((row) => row.textContent?.includes(id) ?? false)
+  return gridRows.find((row) => row.textContent.includes(id))
 }
