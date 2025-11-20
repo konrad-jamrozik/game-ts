@@ -30,6 +30,8 @@ import { destructiveButtonSx } from '../styling/styleUtils'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { AGENT_HIRE_COST } from '../lib/model/ruleset/constants'
 
+// oxlint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
@@ -196,6 +198,13 @@ export function PlayerActions(): React.JSX.Element {
     const agentValidation = agents.validateAvailable(selectedAgentIds)
     if (!agentValidation.isValid) {
       setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
+      setShowAlert(true)
+      return
+    }
+
+    // Validate transport cap
+    if (selectedAgentIds.length > gameState.transportCap) {
+      setAlertMessage(`Cannot deploy more than ${gameState.transportCap} agents (transport cap exceeded)`)
       setShowAlert(true)
       return
     }
