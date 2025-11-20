@@ -281,7 +281,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
   const [showDetailed, setShowDetailed] = React.useState(false)
 
-  // Handlers that enforce mutual exclusivity between "Available" and "Terminated"
+  // Handlers that enforce mutual exclusivity: "Terminated" cannot be selected with "Available" or "Detailed"
   const handleToggleAvailable = React.useCallback((checked: boolean) => {
     setShowOnlyAvailable(checked)
     if (checked) {
@@ -293,6 +293,14 @@ export function AgentsDataGrid(): React.JSX.Element {
     setShowOnlyTerminated(checked)
     if (checked) {
       setShowOnlyAvailable(false)
+      setShowDetailed(false)
+    }
+  }, [])
+
+  const handleToggleDetailed = React.useCallback((checked: boolean) => {
+    setShowDetailed(checked)
+    if (checked) {
+      setShowOnlyTerminated(false)
     }
   }, [])
 
@@ -375,7 +383,7 @@ export function AgentsDataGrid(): React.JSX.Element {
           showOnlyAvailable,
           onToggleAvailable: handleToggleAvailable,
           showDetailed,
-          onToggleDetailed: setShowDetailed,
+          onToggleDetailed: handleToggleDetailed,
         },
       }}
       showToolbar

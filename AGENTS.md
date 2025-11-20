@@ -24,7 +24,8 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 
 # Important coding guidelines
 
-- Never memoize values with `React.useMemo`. The project uses React Compiler, so use `React.useMemo` is not needed.
+- Never memoize values with `React.useMemo`. The project uses React Compiler.
+- Never memoize values with `React.useCallback`. The project uses React Compiler.
 - Helper functions should be always defined below the caller function.
 
 ## Key aspects and conventions of the project
@@ -128,7 +129,7 @@ This project uses following technologies:
 ### Project React Usage
 
 - This project uses React (with TypeScript) for all UI in `web/src/`.
-- This project uses React Compiler, so never use `React.useMemo`.
+- This project uses React Compiler, so never use `React.useMemo` nor `React.useCallback`.
 - Use `web/src/App.tsx` as the main entry point for the app.
 
 ### React Feature implementation & Code Completeness
