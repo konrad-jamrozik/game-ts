@@ -54,6 +54,13 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
+    // Validate agent cap
+    if (gameState.agents.length >= gameState.agentCap) {
+      setAlertMessage(`Cannot hire more than ${gameState.agentCap} agents (agent cap reached)`)
+      setShowAlert(true)
+      return
+    }
+
     setShowAlert(false) // Hide alert on successful action
     dispatch(hireAgent())
   }
