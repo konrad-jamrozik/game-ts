@@ -24,7 +24,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
   ]
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Item', minWidth: 120 },
+    { field: 'name', headerName: 'Asset', minWidth: 120 },
     {
       field: 'value',
       headerName: 'Current',

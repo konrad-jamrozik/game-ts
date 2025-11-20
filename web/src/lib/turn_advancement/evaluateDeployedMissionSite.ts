@@ -107,11 +107,8 @@ function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean
   // Apply mission conclusion exhaustion
   agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
-  // KJA 3 here is where we compute the agentCasualties penalty
-  //   see todo in evaluateBattle
-  // KJA 3 note it should not be casualties, but terminated only
   // Additional exhaustion for each terminated agent
-  agent.exhaustion += battleReport.agentCasualties * AGENT_EXHAUSTION_RECOVERY_PER_TURN
+  agent.exhaustion += battleReport.agentsTerminated * AGENT_EXHAUSTION_RECOVERY_PER_TURN
 
   // ----------------------------------------
   // Update skill

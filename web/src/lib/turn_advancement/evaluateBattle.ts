@@ -14,6 +14,7 @@ import { selectTarget } from './selectTarget'
 export type BattleReport = {
   rounds: number
   agentCasualties: number
+  agentsTerminated: number
   enemyCasualties: number
   retreated: boolean
   agentSkillUpdates: Record<string, number>
@@ -145,6 +146,7 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   return {
     rounds: roundIdx,
     agentCasualties,
+    agentsTerminated,
     enemyCasualties,
     retreated,
     agentSkillUpdates,

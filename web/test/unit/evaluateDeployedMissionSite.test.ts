@@ -20,7 +20,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsTotal: 0,
+      missionsTotal: 1,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
