@@ -11,6 +11,7 @@ import { getLeadById } from '../lib/collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
+  buyUpgrade,
   deployAgentsToMission,
   hireAgent,
   createLeadInvestigation,
@@ -38,6 +39,7 @@ export function PlayerActions(): React.JSX.Element {
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
   const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
+  const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const agents = agsV(gameState.agents)
@@ -231,6 +233,24 @@ export function PlayerActions(): React.JSX.Element {
     dispatch(clearMissionSelection())
   }
 
+  function handleBuyUpgrade(): void {
+    if (selectedUpgradeName === undefined) {
+      setAlertMessage('No upgrade selected!')
+      setShowAlert(true)
+      return
+    }
+
+    const UPGRADE_PRICE = 100
+    if (gameState.money < UPGRADE_PRICE) {
+      setAlertMessage('Insufficient funds')
+      setShowAlert(true)
+      return
+    }
+
+    setShowAlert(false) // Hide alert on successful action
+    dispatch(buyUpgrade(selectedUpgradeName))
+  }
+
   return (
     <Card sx={{ width: 380 }}>
       <CardHeader title="Player Actions" />
@@ -276,6 +296,9 @@ export function PlayerActions(): React.JSX.Element {
             }
           >
             Investigate lead
+          </Button>
+          <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined}>
+            Buy asset
           </Button>
           <Collapse in={showAlert}>
             <Alert

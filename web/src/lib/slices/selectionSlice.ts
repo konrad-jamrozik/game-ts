@@ -1,11 +1,20 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { LeadInvestigationId, MissionSiteId } from '../model/model'
 
+export type UpgradeName =
+  | 'Agent cap'
+  | 'Transport cap'
+  | 'Training cap'
+  | 'Training skill gain'
+  | 'Exhaustion recovery'
+  | 'Health recovery'
+
 export type SelectionState = {
   agents: string[]
   selectedLeadId?: string
   selectedInvestigationId?: LeadInvestigationId
   selectedMissionSiteId?: MissionSiteId
+  selectedUpgradeName?: UpgradeName
 }
 
 const initialState: SelectionState = {
@@ -40,11 +49,18 @@ const selectionSlice = createSlice({
     clearMissionSelection(state) {
       delete state.selectedMissionSiteId
     },
+    setUpgradeSelection(state, action: PayloadAction<UpgradeName>) {
+      state.selectedUpgradeName = action.payload
+    },
+    clearUpgradeSelection(state) {
+      delete state.selectedUpgradeName
+    },
     clearAllSelection(state) {
       state.agents = []
       delete state.selectedLeadId
       delete state.selectedInvestigationId
       delete state.selectedMissionSiteId
+      delete state.selectedUpgradeName
     },
   },
 })
@@ -58,6 +74,8 @@ export const {
   clearInvestigationSelection,
   setMissionSiteSelection,
   clearMissionSelection,
+  setUpgradeSelection,
+  clearUpgradeSelection,
   clearAllSelection,
 } = selectionSlice.actions
 export default selectionSlice.reducer

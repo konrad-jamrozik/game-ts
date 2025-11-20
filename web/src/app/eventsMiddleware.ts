@@ -6,6 +6,7 @@ import {
   advanceTurn,
   assignAgentsToContracting,
   assignAgentsToEspionage,
+  buyUpgrade,
   deployAgentsToMission,
   hireAgent,
   createLeadInvestigation,
@@ -97,6 +98,9 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const missionTitle = missionSite ? getMissionById(missionSite.missionId).title : 'Unknown Mission'
 
       postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionTitle}`)
+    } else if (buyUpgrade.match(action)) {
+      const upgradeName = action.payload
+      postTextEvent(`Bought upgrade: ${upgradeName}`)
     } else if (reset.match(action)) {
       // Clear all events on full game reset
       store.dispatch(clearEvents())

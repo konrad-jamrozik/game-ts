@@ -1,8 +1,16 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import {
+  createRowSelectionManager,
+  type GridColDef,
+  type GridRenderCellParams,
+  type GridRowId,
+  type GridRowSelectionModel,
+} from '@mui/x-data-grid'
 import Stack from '@mui/material/Stack'
-import { useAppSelector } from '../app/hooks'
+import * as React from 'react'
+import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance, getIntelNewBalance } from '../lib/model/ruleset/ruleset'
 import { agsV } from '../lib/model/agents/AgentsView'
+import { setUpgradeSelection, clearUpgradeSelection } from '../lib/slices/selectionSlice'
 import { ExpandableCard } from './ExpandableCard'
 import { StyledDataGrid } from './StyledDataGrid'
 import { MyChip } from './MyChip'
@@ -31,7 +39,9 @@ export type UpgradeRow = {
 }
 
 export function AssetsDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
   const moneyProjected = getMoneyNewBalance(gameState)
   const intelProjected = getIntelNewBalance(gameState)
   const moneyDiff = moneyProjected - gameState.money
@@ -81,21 +91,50 @@ export function AssetsDataGrid(): React.JSX.Element {
     },
   ]
 
-  // Second card: Upgrades with Current and Buy columns
+  // Second card: Upgrades with Current and Price columns
+  const UPGRADE_PRICE = 100
   const upgradeRows: UpgradeRow[] = [
-    { name: 'Agent cap', id: 4, value: gameState.agentCap, buy: 0 },
-    { name: 'Transport cap', id: 5, value: gameState.transportCap, buy: 0 },
-    { name: 'Training cap', id: 6, value: gameState.trainingCap, buy: 0 },
-    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, buy: 0 },
+    { name: 'Agent cap', id: 4, value: gameState.agentCap, buy: UPGRADE_PRICE },
+    { name: 'Transport cap', id: 5, value: gameState.transportCap, buy: UPGRADE_PRICE },
+    { name: 'Training cap', id: 6, value: gameState.trainingCap, buy: UPGRADE_PRICE },
+    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, buy: UPGRADE_PRICE },
     {
       name: 'Exhaustion recovery',
       id: 8,
       value: gameState.exhaustionRecovery,
       displayedName: 'Exhaustion recov.',
-      buy: 0,
+      buy: UPGRADE_PRICE,
     },
-    { name: 'Health recovery', id: 9, value: gameState.healthRecovery, displayedName: 'Health recov.', buy: 0 },
+    {
+      name: 'Health recovery',
+      id: 9,
+      value: gameState.healthRecovery,
+      displayedName: 'Health recov.',
+      buy: UPGRADE_PRICE,
+    },
   ]
+
+  function handleUpgradeSelectionChange(newSelectionModel: GridRowSelectionModel): void {
+    const mgr = createRowSelectionManager(newSelectionModel)
+    const existingRowIds = upgradeRows.map((row) => row.id)
+    const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
+
+    if (includedRowIds.length > 0) {
+      const [selectedRowId] = includedRowIds
+      const selectedRow = upgradeRows.find((row) => row.id === selectedRowId)
+      if (selectedRow) {
+        dispatch(setUpgradeSelection(selectedRow.name))
+      }
+    } else {
+      dispatch(clearUpgradeSelection())
+    }
+  }
+
+  const selectedUpgradeRow = upgradeRows.find((row) => row.name === selectedUpgradeName)
+  const upgradeSelectionModel: GridRowSelectionModel = {
+    type: 'include',
+    ids: selectedUpgradeRow ? new Set<GridRowId>([selectedUpgradeRow.id]) : new Set<GridRowId>(),
+  }
 
   const upgradeColumns: GridColDef[] = [
     {
@@ -123,7 +162,15 @@ export function AssetsDataGrid(): React.JSX.Element {
     <ExpandableCard title="Assets" defaultExpanded={true}>
       <Stack spacing={2}>
         <StyledDataGrid rows={assetRows} columns={assetColumns} aria-label="Assets" />
-        <StyledDataGrid rows={upgradeRows} columns={upgradeColumns} aria-label="Upgrades" />
+        <StyledDataGrid
+          rows={upgradeRows}
+          columns={upgradeColumns}
+          aria-label="Upgrades"
+          checkboxSelection
+          rowSelectionModel={upgradeSelectionModel}
+          onRowSelectionModelChange={handleUpgradeSelectionChange}
+          disableRowSelectionOnClick={false}
+        />
       </Stack>
     </ExpandableCard>
   )
