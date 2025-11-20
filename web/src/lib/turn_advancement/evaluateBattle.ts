@@ -26,6 +26,8 @@ export type BattleReport = {
   initialAgentExhaustion: number
   initialAgentExhaustionByAgentId: Record<string, number>
   agentExhaustionAfterBattle: number
+  agentsWounded: number
+  agentsUnscathed: number
 }
 
 export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
@@ -155,6 +157,8 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     initialAgentExhaustion,
     initialAgentExhaustionByAgentId,
     agentExhaustionAfterBattle: 0, // Will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
+    agentsWounded: 0, // Will be set in updateAgentsAfterBattle
+    agentsUnscathed: 0, // Will be set in updateAgentsAfterBattle
   }
 }
 

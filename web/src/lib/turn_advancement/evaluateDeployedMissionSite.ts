@@ -14,7 +14,7 @@ import { assertDefined } from '../utils/assert'
 export function evaluateDeployedMissionSite(
   state: GameState,
   missionSite: MissionSite,
-): { rewards: MissionRewards | undefined; agentsWounded: number; agentsUnscathed: number; battleReport: BattleReport } {
+): { rewards: MissionRewards | undefined; battleReport: BattleReport } {
   // Get the mission to access enemy units
   const mission = getMissionById(missionSite.missionId)
 
@@ -30,6 +30,8 @@ export function evaluateDeployedMissionSite(
     state.turn,
     missionSite.id,
   )
+  battleReport.agentsWounded = agentsWounded
+  battleReport.agentsUnscathed = agentsUnscathed
 
   battleReport.agentExhaustionAfterBattle = calculateAgentExhaustionAfterBattle(
     deployedAgents,
@@ -43,7 +45,7 @@ export function evaluateDeployedMissionSite(
   // Return mission rewards to be applied later, don't apply them immediately
   const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
 
-  return { rewards, agentsWounded, agentsUnscathed, battleReport }
+  return { rewards, battleReport }
 }
 
 function calculateAgentExhaustionAfterBattle(

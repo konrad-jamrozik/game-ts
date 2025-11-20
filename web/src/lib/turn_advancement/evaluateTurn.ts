@@ -18,7 +18,6 @@ import {
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/ruleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
-import type { BattleReport } from './evaluateBattle'
 import {
   updateAvailableAgents,
   updateContractingAgents,
@@ -74,8 +73,8 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 10. Evaluate deployed mission sites (and agents deployed to them)
   const {
     rewards: missionRewards,
-    agentsWounded: agentsWoundedFromMissions,
-    agentsUnscathed: agentsUnscathedFromMissions,
+    agentsWounded,
+    agentsUnscathed,
     missionReports,
   } = evaluateDeployedMissionSites(state)
 
@@ -88,13 +87,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   })
 
   // 12. Get agents report
-  const agentsReport = getAgentsReport(
-    state,
-    previousAgentCounts,
-    previousAgents,
-    agentsWoundedFromMissions,
-    agentsUnscathedFromMissions,
-  )
+  const agentsReport = getAgentsReport(state, previousAgentCounts, previousAgents, agentsWounded, agentsUnscathed)
 
   // Combine assets and agents reports
   const assetsReport: AssetsReport = {
@@ -194,18 +187,28 @@ function evaluateDeployedMissionSites(state: GameState): {
       // Capture agent states before battle
       const agentsDeployed = deployedAgents.length
 
-      const result: {
-        rewards: MissionRewards | undefined
-        agentsWounded: number
-        agentsUnscathed: number
-        battleReport: BattleReport
-      } = evaluateDeployedMissionSite(state, missionSite)
-      const { battleReport, rewards, agentsWounded, agentsUnscathed: agentsUnscathedFromBattle } = result
+      const { battleReport, rewards } = evaluateDeployedMissionSite(state, missionSite)
+      const {
+        agentsWounded,
+        agentsUnscathed,
+        retreated,
+        agentCasualties,
+        enemyCasualties,
+        agentSkillUpdates,
+        agentExhaustionAfterBattle,
+        initialAgentEffectiveSkill,
+        initialEnemySkill,
+        initialAgentHitPoints,
+        initialEnemyHitPoints,
+        totalDamageInflicted,
+        totalDamageTaken,
+        rounds,
+      } = battleReport
 
       // Determine mission outcome
-      const outcome: 'Successful' | 'Retreated' | 'All agents lost' = battleReport.retreated
+      const outcome: 'Successful' | 'Retreated' | 'All agents lost' = retreated
         ? 'Retreated'
-        : battleReport.agentCasualties === agentsDeployed
+        : agentCasualties === agentsDeployed
           ? 'All agents lost'
           : 'Successful'
 
@@ -224,42 +227,40 @@ function evaluateDeployedMissionSites(state: GameState): {
       }
 
       // Calculate battle stats
-      const agentsTerminated = battleReport.agentCasualties
-      const agentsWoundedFromBattle = agentsWounded
+      const agentsTerminated = agentCasualties
 
       // Calculate enemy stats
       const enemiesTotal = missionSite.enemies.length
-      const enemiesTerminated = battleReport.enemyCasualties
+      const enemiesTerminated = enemyCasualties
       const enemiesWounded = enemiesTotal - enemiesTerminated
       const enemiesUnscathed = enemiesTotal - enemiesTerminated
 
       // Calculate total agent skill gain
       let totalAgentSkillGain = 0
-      for (const gain of Object.values(battleReport.agentSkillUpdates)) {
+      for (const gain of Object.values(agentSkillUpdates)) {
         if (typeof gain === 'number') {
           totalAgentSkillGain += gain
         }
       }
 
       // Calculate average agent exhaustion gain (after battle, including casualty penalty)
-      const averageAgentExhaustionGain =
-        agentsDeployed > 0 ? battleReport.agentExhaustionAfterBattle / agentsDeployed : 0
+      const averageAgentExhaustionGain = agentsDeployed > 0 ? agentExhaustionAfterBattle / agentsDeployed : 0
 
       const battleStats: BattleStats = {
         agentsDeployed,
-        agentsUnscathed: agentsUnscathedFromBattle,
-        agentsWounded: agentsWoundedFromBattle,
+        agentsUnscathed,
+        agentsWounded,
         agentsTerminated,
         enemiesTotal,
         enemiesUnscathed,
         enemiesWounded,
         enemiesTerminated,
-        totalAgentSkillAtBattleStart: battleReport.initialAgentEffectiveSkill,
-        totalEnemySkillAtBattleStart: battleReport.initialEnemySkill,
-        initialAgentHitPoints: battleReport.initialAgentHitPoints,
-        initialEnemyHitPoints: battleReport.initialEnemyHitPoints,
-        totalDamageInflicted: battleReport.totalDamageInflicted,
-        totalDamageTaken: battleReport.totalDamageTaken,
+        totalAgentSkillAtBattleStart: initialAgentEffectiveSkill,
+        totalEnemySkillAtBattleStart: initialEnemySkill,
+        initialAgentHitPoints,
+        initialEnemyHitPoints,
+        totalDamageInflicted,
+        totalDamageTaken,
         totalAgentSkillGain,
         averageAgentExhaustionGain,
       }
@@ -269,7 +270,7 @@ function evaluateDeployedMissionSites(state: GameState): {
         missionTitle: mission.title,
         faction: factionName,
         outcome,
-        rounds: battleReport.rounds,
+        rounds,
         ...(rewards !== undefined && { rewards }),
         battleStats,
       }
@@ -284,7 +285,7 @@ function evaluateDeployedMissionSites(state: GameState): {
         })
       }
       totalAgentsWounded += agentsWounded
-      totalAgentsUnscathed += agentsUnscathedFromBattle
+      totalAgentsUnscathed += agentsUnscathed
     }
   }
 
@@ -384,8 +385,8 @@ function getAgentsReport(
     terminated: number
   },
   previousAgents: { id: string; state: AgentState }[],
-  agentsWoundedFromMissions: number,
-  agentsUnscathedFromMissions: number,
+  agentsWounded: number,
+  agentsUnscathed: number,
 ): AgentsReport {
   // Capture agent counts after turn advancement
   const currentAgentCounts = getAgentCounts(state.agents)
@@ -395,14 +396,14 @@ function getAgentsReport(
   // Current wounded = agents wounded from missions this turn
   // Delta = agents wounded from missions this turn
   const previousWounded = 0
-  const currentWounded = agentsWoundedFromMissions
+  const currentWounded = agentsWounded
 
   // Calculate unscathed counts: unscathed should only increase from missions, not decrease
   // Previous unscathed = 0 (we track delta only, reset each turn)
   // Current unscathed = agents unscathed from missions this turn
   // Delta = agents unscathed from missions this turn
   const previousUnscathed = 0
-  const currentUnscathed = agentsUnscathedFromMissions
+  const currentUnscathed = agentsUnscathed
 
   // Identify agents terminated during this turn advancement
   const previousAgentsById = new Map(previousAgents.map((agent) => [agent.id, agent]))
