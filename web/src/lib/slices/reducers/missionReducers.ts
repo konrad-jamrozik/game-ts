@@ -18,6 +18,8 @@ export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSite
         if (agentIds.includes(agent.id)) {
           agent.assignment = missionSiteId
           agent.state = 'OnMission'
+          // Increment missionsTotal when agent is deployed to a mission
+          agent.missionsTotal += 1
         }
       }
     }

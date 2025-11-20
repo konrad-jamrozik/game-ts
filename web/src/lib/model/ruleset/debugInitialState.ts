@@ -133,7 +133,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsTotal: 0,
+      missionsTotal: 1,
     }),
     makeAgent({
       turnHired: 1,
