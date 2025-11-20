@@ -153,6 +153,7 @@ export function createAgentColumns(
       field: 'skillSimple',
       headerName: 'Skill',
       width: 40,
+      valueGetter: (_value, row: AgentRow) => row.skill,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.row.skill}</span>
       ),
@@ -161,7 +162,7 @@ export function createAgentColumns(
       field: 'hitPointsMax',
       headerName: 'HP',
       width: 40,
-      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => (
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
       ),
     },
@@ -169,7 +170,7 @@ export function createAgentColumns(
       field: 'service',
       headerName: 'Service',
       width: 80,
-      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { turnHired, turnTerminated } = params.row
         if (turnTerminated !== undefined) {
           // Terminated agent: show turnHired - turnTerminated (totalTurnsServed)
@@ -201,7 +202,7 @@ export function createAgentColumns(
       field: 'mission',
       headerName: 'Mission',
       width: 220,
-      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedOnMissionSiteId, assignment } = params.row
 
         if (terminatedOnMissionSiteId !== undefined) {
@@ -223,7 +224,7 @@ export function createAgentColumns(
       field: 'by',
       headerName: 'By',
       width: 180,
-      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedBy } = params.row
         // If agent was terminated by an enemy, show the enemy ID without prefix
         if (terminatedBy !== undefined) {
