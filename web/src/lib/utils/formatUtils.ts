@@ -1,8 +1,9 @@
 import pluralize from 'pluralize'
-import type { MissionSiteId } from '../model/model'
+import type { MissionSiteId, MissionSite } from '../model/model'
 import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
 import type { RollResult } from '../turn_advancement/rolls'
+import { getMissionById } from '../collections/missions'
 import { div } from './mathUtils'
 
 export function str(value: unknown): string {
@@ -72,6 +73,18 @@ export function fmtMissionTarget(missionSiteId: MissionSiteId | undefined): stri
   }
   const displayId = missionSiteId.replaceAll('-site-', ' ')
   return ` on ${displayId}`
+}
+
+/**
+ * Formats mission site ID with mission ID for display
+ * @param missionSite - The mission site object
+ * @returns Formatted string in the format "{siteId} ({missionId})" (e.g., "001 (001)")
+ */
+export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
+  const mission = getMissionById(missionSite.missionId)
+  const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
+  const missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
+  return `${missionSiteIdWithoutPrefix} (${missionIdWithoutPrefix})`
 }
 
 export function fmtAgentCount(count: number): string {

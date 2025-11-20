@@ -8,7 +8,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
-import type { Agent, AgentState } from '../../lib/model/model'
+import type { Agent, AgentState, GameState } from '../../lib/model/model'
 import { setAgentSelection } from '../../lib/slices/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
@@ -16,7 +16,7 @@ import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
 import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
 import { toPct } from '../../lib/utils/mathUtils'
-import { fmtDec1 } from '../../lib/utils/formatUtils'
+import { fmtDec1, fmtMissionSiteIdWithMissionId } from '../../lib/utils/formatUtils'
 import { MyChip } from '../MyChip'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 
@@ -28,7 +28,11 @@ export type AgentRow = Agent & {
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
-function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): GridColDef[] {
+function createAgentColumns(
+  rows: AgentRow[],
+  showOnlyTerminated: boolean,
+  missionSites: GameState['missionSites'],
+): GridColDef[] {
   // For terminated agents, show only specific columns
   if (showOnlyTerminated) {
     return [
@@ -76,12 +80,23 @@ function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): Grid
       {
         field: 'mission',
         headerName: 'Mission',
-        minWidth: 140,
+        width: 220,
         renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
           const { terminatedOnMissionSiteId, assignment } = params.row
 
-          const displayValue: string = terminatedOnMissionSiteId ?? (assignment === 'Sacked' ? 'Sacked' : 'ERROR')
-          return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
+          if (terminatedOnMissionSiteId !== undefined) {
+            const missionSite = missionSites.find((site) => site.id === terminatedOnMissionSiteId)
+            if (missionSite !== undefined) {
+              const displayValue = fmtMissionSiteIdWithMissionId(missionSite)
+              return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
+            }
+          }
+          // If agent was sacked (assignment is 'Sacked'), show "-"
+          if (assignment === 'Sacked') {
+            return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
+          }
+          // Fallback (shouldn't happen for terminated agents, but just in case)
+          return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
         },
       },
       {
@@ -285,7 +300,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable, agentsTerminatedThisTurnIds)
 
   // Define columns based on whether we're showing terminated agents
-  const columns = createAgentColumns(rows, showOnlyTerminated)
+  const columns = createAgentColumns(rows, showOnlyTerminated, gameState.missionSites)
   // For terminated agents, show all columns (they're already filtered in createAgentColumns)
   // For non-terminated agents, filter based on showDetailed state
   const visibleColumns = showOnlyTerminated ? columns : filterVisibleAgentColumns(columns, showDetailed)

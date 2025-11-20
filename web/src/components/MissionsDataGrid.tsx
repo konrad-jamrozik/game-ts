@@ -17,7 +17,7 @@ import {
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
 } from '../lib/utils/MissionSiteUtils'
-import { fmtNoPrefix } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtMissionSiteIdWithMissionId } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
@@ -147,13 +147,8 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       headerName: 'Mission site ID',
       minWidth: 240,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        const missionSiteIdWithoutPrefix = fmtNoPrefix(params.value ?? params.row.id, 'mission-site-')
-        const missionIdWithoutPrefix = fmtNoPrefix(params.row.missionId, 'mission-')
-        return (
-          <span aria-label={`missions-row-id-${params.id}`}>
-            {missionSiteIdWithoutPrefix} ({missionIdWithoutPrefix})
-          </span>
-        )
+        const displayValue = fmtMissionSiteIdWithMissionId(params.row)
+        return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },
     },
     // {
