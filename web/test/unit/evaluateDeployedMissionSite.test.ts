@@ -2,7 +2,16 @@ import { describe, expect, test } from 'vitest'
 import { bps } from '../../src/lib/model/bps'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
-import { AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
+import {
+  AGENT_CAP,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+  AGENT_INITIAL_HIT_POINTS,
+  AGENT_INITIAL_WEAPON_DAMAGE,
+  AGENT_RECOVERY_TURNS_FACTOR,
+  TRAINING_CAP,
+  TRAINING_GAIN,
+  TRANSPORT_CAP,
+} from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 
@@ -42,6 +51,12 @@ describe(evaluateDeployedMissionSite, () => {
       money: 100,
       intel: 50,
       funding: 20,
+      agentCap: AGENT_CAP,
+      transportCap: TRANSPORT_CAP,
+      trainingCap: TRAINING_CAP,
+      trainingGain: TRAINING_GAIN,
+      exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+      healthRecovery: AGENT_RECOVERY_TURNS_FACTOR,
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       leadInvestigations: {},
@@ -110,6 +125,12 @@ describe(evaluateDeployedMissionSite, () => {
       money: 100,
       intel: 50,
       funding: 20,
+      agentCap: AGENT_CAP,
+      transportCap: TRANSPORT_CAP,
+      trainingCap: TRAINING_CAP,
+      trainingGain: TRAINING_GAIN,
+      exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+      healthRecovery: AGENT_RECOVERY_TURNS_FACTOR,
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       leadInvestigations: {},
@@ -193,6 +214,12 @@ describe(evaluateDeployedMissionSite, () => {
       money: 100,
       intel: 50,
       funding: 20,
+      agentCap: AGENT_CAP,
+      transportCap: TRANSPORT_CAP,
+      trainingCap: TRAINING_CAP,
+      trainingGain: TRAINING_GAIN,
+      exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+      healthRecovery: AGENT_RECOVERY_TURNS_FACTOR,
       currentTurnTotalHireCost: 0,
       leadInvestigationCounts: {},
       leadInvestigations: {},

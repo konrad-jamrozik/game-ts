@@ -4,10 +4,16 @@ import type { Agent, GameState } from '../model'
 import { validateAgentInvariants } from '../agents/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
 import {
+  AGENT_CAP,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
+  AGENT_RECOVERY_TURNS_FACTOR,
+  TRAINING_CAP,
+  TRAINING_GAIN,
+  TRANSPORT_CAP,
 } from './constants'
 import { newWeapon } from '../../utils/weaponUtils'
 
@@ -29,6 +35,12 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     money: 500,
     intel: 0,
     funding: 20,
+    agentCap: AGENT_CAP,
+    transportCap: TRANSPORT_CAP,
+    trainingCap: TRAINING_CAP,
+    trainingGain: TRAINING_GAIN,
+    exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+    healthRecovery: AGENT_RECOVERY_TURNS_FACTOR,
     currentTurnTotalHireCost: 0,
     agents: buildInitialAgents(),
     // Leads

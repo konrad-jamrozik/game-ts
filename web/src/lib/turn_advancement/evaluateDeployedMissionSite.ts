@@ -1,5 +1,5 @@
 import { getMissionById } from '../collections/missions'
-import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
+import { MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
@@ -29,6 +29,8 @@ export function evaluateDeployedMissionSite(
     battleReport,
     state.turn,
     missionSite.id,
+    state.exhaustionRecovery,
+    state.healthRecovery,
   )
   battleReport.agentsWounded = agentsWounded
   battleReport.agentsUnscathed = agentsUnscathed
@@ -70,6 +72,8 @@ function updateAgentsAfterBattle(
   battleReport: BattleReport,
   currentTurn: number,
   missionSiteId: MissionSiteId,
+  exhaustionRecovery: number,
+  healthRecovery: number,
 ): {
   agentsWounded: number
   agentsUnscathed: number
@@ -83,7 +87,7 @@ function updateAgentsAfterBattle(
     const isTerminated = agent.hitPoints <= 0
 
     if (!isTerminated) {
-      const wasWounded = updateSurvivingAgent(agent, battleReport)
+      const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, healthRecovery)
       if (wasWounded) {
         agentsWounded += 1
       } else {
@@ -99,16 +103,21 @@ function updateAgentsAfterBattle(
   return { agentsWounded, agentsUnscathed }
 }
 
-function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean {
+function updateSurvivingAgent(
+  agent: Agent,
+  battleReport: BattleReport,
+  exhaustionRecovery: number,
+  healthRecovery: number,
+): boolean {
   // ----------------------------------------
   // Update exhaustion
   // ----------------------------------------
 
   // Apply mission conclusion exhaustion
-  agent.exhaustion += AGENT_EXHAUSTION_RECOVERY_PER_TURN
+  agent.exhaustion += exhaustionRecovery
 
   // Additional exhaustion for each terminated agent
-  agent.exhaustion += battleReport.agentsTerminated * AGENT_EXHAUSTION_RECOVERY_PER_TURN
+  agent.exhaustion += battleReport.agentsTerminated * exhaustionRecovery
 
   // ----------------------------------------
   // Update skill
@@ -141,7 +150,7 @@ function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean
   if (tookDamage) {
     agent.assignment = 'Recovery'
     agent.hitPointsLostBeforeRecovery = agent.maxHitPoints - agent.hitPoints
-    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints)
+    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints, healthRecovery)
     return true // Agent was wounded
   }
   agent.assignment = 'Standby'

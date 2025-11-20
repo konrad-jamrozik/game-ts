@@ -1,4 +1,4 @@
-import { AGENT_EXHAUSTION_INCREASE_PER_TURN, AGENT_EXHAUSTION_RECOVERY_PER_TURN } from '../model/ruleset/constants'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import { assertEqual } from '../utils/assert'
 import { floor, div } from '../utils/mathUtils'
 import type { GameState } from '../model/model'
@@ -9,7 +9,7 @@ import { agsV } from '../model/agents/AgentsView'
  */
 export function updateAvailableAgents(state: GameState): void {
   const agents = agsV(state.agents)
-  agents.available().applyExhaustion(-AGENT_EXHAUSTION_RECOVERY_PER_TURN)
+  agents.available().applyExhaustion(-state.exhaustionRecovery)
 }
 
 /**
@@ -19,7 +19,7 @@ export function updateRecoveringAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'Recovering') {
       // Apply exhaustion recovery
-      agent.exhaustion = Math.max(0, agent.exhaustion - AGENT_EXHAUSTION_RECOVERY_PER_TURN)
+      agent.exhaustion = Math.max(0, agent.exhaustion - state.exhaustionRecovery)
 
       // Handle recovery countdown and hit point restoration
       if (agent.recoveryTurns > 0) {
@@ -27,7 +27,9 @@ export function updateRecoveringAgents(state: GameState): void {
 
         // Calculate total recovery turns originally needed
         const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
-        const totalRecoveryTurns = Math.ceil((div(originalHitPointsLost, agent.maxHitPoints) * 100) / 2)
+        const totalRecoveryTurns = Math.ceil(
+          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / state.healthRecovery,
+        )
 
         // Calculate which turn of recovery we just completed
         const turnsCompletedSoFar = totalRecoveryTurns - agent.recoveryTurns

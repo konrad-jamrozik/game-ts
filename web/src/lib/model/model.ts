@@ -158,6 +158,12 @@ export type GameState = {
   intel: number // global intel (unused for leads, kept for backward compatibility)
   funding: number
   agents: Agent[]
+  agentCap: number
+  transportCap: number
+  trainingCap: number
+  trainingGain: number
+  exhaustionRecovery: number
+  healthRecovery: number
   // Liabilities // KJa to remove, should be unused
   currentTurnTotalHireCost: number
   // Archive

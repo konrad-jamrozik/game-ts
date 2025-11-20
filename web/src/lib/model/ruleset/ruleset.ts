@@ -1,7 +1,6 @@
 import {
   AGENT_CONTRACTING_INCOME,
   AGENT_ESPIONAGE_INTEL,
-  AGENT_RECOVERY_TURNS_FACTOR,
   AGENT_UPKEEP_COST,
   BPS_PRECISION,
   INTEL_DECAY,
@@ -62,9 +61,9 @@ export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
   return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
 }
 
-export function getRecoveryTurns(damage: number, hitPoints: number): number {
+export function getRecoveryTurns(damage: number, hitPoints: number, healthRecoveryFactor: number): number {
   const hitPointsLostPercentage = Math.min(div(damage, hitPoints) * 100, 100)
-  const recoveryTurns = Math.ceil(div(hitPointsLostPercentage, AGENT_RECOVERY_TURNS_FACTOR))
+  const recoveryTurns = Math.ceil(div(hitPointsLostPercentage, healthRecoveryFactor))
   return recoveryTurns
 }
 
