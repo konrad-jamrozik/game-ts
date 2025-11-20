@@ -1,11 +1,29 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance, getIntelNewBalance } from '../lib/model/ruleset/ruleset'
+import {
+  AGENT_CAP,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+  AGENT_RECOVERY_TURNS_FACTOR,
+  TRAINING_CAP,
+  TRAINING_GAIN,
+  TRANSPORT_CAP,
+} from '../lib/model/ruleset/constants'
 import { DataGridCard } from './DataGridCard'
 import { MyChip } from './MyChip'
 
 export type AssetRow = {
-  name: 'Money' | 'Intel' | 'Agents'
+  name:
+    | 'Money'
+    | 'Intel'
+    | 'Agents'
+    | 'Agent cap'
+    | 'Transport cap'
+    | 'Training cap'
+    | 'Training gain'
+    | 'Exhaustion recovery'
+    | 'Health recovery'
+  displayedName?: string
   value: number
   projected?: number
   diff?: number
@@ -22,9 +40,28 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Agents', id: 1, value: agentCount },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
+    { name: 'Agent cap', id: 4, value: AGENT_CAP },
+    { name: 'Transport cap', id: 5, value: TRANSPORT_CAP },
+    { name: 'Training cap', id: 6, value: TRAINING_CAP },
+    { name: 'Training gain', id: 7, value: TRAINING_GAIN },
+    {
+      name: 'Exhaustion recovery',
+      id: 8,
+      value: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+      displayedName: 'Exhaustion recov.',
+    },
+    { name: 'Health recovery', id: 9, value: AGENT_RECOVERY_TURNS_FACTOR, displayedName: 'Health recov.' },
   ]
   const columns: GridColDef[] = [
-    { field: 'name', headerName: 'Asset', minWidth: 120 },
+    {
+      field: 'name',
+      headerName: 'Asset',
+      width: 160,
+      renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
+        const displayName = params.row.displayedName ?? params.row.name
+        return <span>{displayName}</span>
+      },
+    },
     {
       field: 'value',
       headerName: 'Current',

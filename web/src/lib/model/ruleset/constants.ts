@@ -14,6 +14,11 @@ export const AGENT_EXHAUSTION_RECOVERY_PER_TURN = 5
 
 export const AGENT_RECOVERY_TURNS_FACTOR = 2
 
+export const AGENT_CAP = 20
+export const TRANSPORT_CAP = 6
+export const TRAINING_CAP = 0
+export const TRAINING_GAIN = 1
+
 // 100, 130, 155, 175, 190, 205
 export const MISSION_SURVIVAL_SKILL_GAIN = [30, 25, 20, 15]
 export const AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD = 4

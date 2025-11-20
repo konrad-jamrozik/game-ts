@@ -64,6 +64,7 @@
         "oxlint",
         "oxlintrc",
         "radash",
+        "recov",
         "renderable",
         "safehouse",
         "Sldr",
