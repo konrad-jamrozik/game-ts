@@ -13,7 +13,7 @@ export type AssetRow = {
     | 'Agent cap'
     | 'Transport cap'
     | 'Training cap'
-    | 'Training gain'
+    | 'Training skill gain'
     | 'Exhaustion recovery'
     | 'Health recovery'
   displayedName?: string
@@ -36,7 +36,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Agent cap', id: 4, value: gameState.agentCap },
     { name: 'Transport cap', id: 5, value: gameState.transportCap },
     { name: 'Training cap', id: 6, value: gameState.trainingCap },
-    { name: 'Training gain', id: 7, value: gameState.trainingGain },
+    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain },
     {
       name: 'Exhaustion recovery',
       id: 8,

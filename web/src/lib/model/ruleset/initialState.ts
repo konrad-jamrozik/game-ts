@@ -12,7 +12,7 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
   AGENT_RECOVERY_TURNS_FACTOR,
   TRAINING_CAP,
-  TRAINING_GAIN,
+  TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
 import { newWeapon } from '../../utils/weaponUtils'
@@ -38,7 +38,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     agentCap: AGENT_CAP,
     transportCap: TRANSPORT_CAP,
     trainingCap: TRAINING_CAP,
-    trainingGain: TRAINING_GAIN,
+    trainingSkillGain: TRAINING_SKILL_GAIN,
     exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
     healthRecovery: AGENT_RECOVERY_TURNS_FACTOR,
     currentTurnTotalHireCost: 0,
