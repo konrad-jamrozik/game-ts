@@ -7,7 +7,7 @@ export type UpgradeName =
   | 'Training cap'
   | 'Training skill gain'
   | 'Exhaustion recovery'
-  | 'Health recovery'
+  | 'Hit points recovery %'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {
   const upgradeName = action.payload
@@ -38,8 +38,8 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       state.exhaustionRecovery += 1
       break
     }
-    case 'Health recovery': {
-      state.healthRecovery += 1
+    case 'Hit points recovery %': {
+      state.hitPointsRecoveryPct += 1
       break
     }
     default: {

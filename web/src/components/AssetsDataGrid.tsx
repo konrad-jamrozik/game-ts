@@ -32,10 +32,10 @@ export type UpgradeRow = {
     | 'Training cap'
     | 'Training skill gain'
     | 'Exhaustion recovery'
-    | 'Health recovery'
+    | 'Hit points recovery %'
   displayedName?: string
   value: number
-  buy: number
+  price: number
 }
 
 export function AssetsDataGrid(): React.JSX.Element {
@@ -94,23 +94,23 @@ export function AssetsDataGrid(): React.JSX.Element {
   // Second card: Upgrades with Current and Price columns
   const UPGRADE_PRICE = 100
   const upgradeRows: UpgradeRow[] = [
-    { name: 'Agent cap', id: 4, value: gameState.agentCap, buy: UPGRADE_PRICE },
-    { name: 'Transport cap', id: 5, value: gameState.transportCap, buy: UPGRADE_PRICE },
-    { name: 'Training cap', id: 6, value: gameState.trainingCap, buy: UPGRADE_PRICE },
-    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, buy: UPGRADE_PRICE },
+    { name: 'Agent cap', id: 4, value: gameState.agentCap, price: UPGRADE_PRICE },
+    { name: 'Transport cap', id: 5, value: gameState.transportCap, price: UPGRADE_PRICE },
+    { name: 'Training cap', id: 6, value: gameState.trainingCap, price: UPGRADE_PRICE },
+    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, price: UPGRADE_PRICE },
     {
       name: 'Exhaustion recovery',
       id: 8,
       value: gameState.exhaustionRecovery,
       displayedName: 'Exhaustion recov.',
-      buy: UPGRADE_PRICE,
+      price: UPGRADE_PRICE,
     },
     {
-      name: 'Health recovery',
+      name: 'Hit points recovery %',
       id: 9,
-      value: gameState.healthRecovery,
-      displayedName: 'Health recov.',
-      buy: UPGRADE_PRICE,
+      value: gameState.hitPointsRecoveryPct,
+      displayedName: 'Hit points recov. %',
+      price: UPGRADE_PRICE,
     },
   ]
 
@@ -152,8 +152,8 @@ export function AssetsDataGrid(): React.JSX.Element {
       minWidth: 100,
     },
     {
-      field: 'buy',
-      headerName: 'Price',
+      field: 'price',
+      headerName: 'Price for 1',
       minWidth: 100,
     },
   ]
@@ -170,6 +170,7 @@ export function AssetsDataGrid(): React.JSX.Element {
           rowSelectionModel={upgradeSelectionModel}
           onRowSelectionModelChange={handleUpgradeSelectionChange}
           disableRowSelectionOnClick={false}
+          disableMultipleRowSelection
         />
       </Stack>
     </ExpandableCard>

@@ -61,9 +61,9 @@ export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
   return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
 }
 
-export function getRecoveryTurns(damage: number, hitPoints: number, healthRecoveryFactor: number): number {
+export function getRecoveryTurns(damage: number, hitPoints: number, hitPointsRecoveryPct: number): number {
   const hitPointsLostPercentage = Math.min(div(damage, hitPoints) * 100, 100)
-  const recoveryTurns = Math.ceil(div(hitPointsLostPercentage, healthRecoveryFactor))
+  const recoveryTurns = Math.ceil(div(hitPointsLostPercentage, hitPointsRecoveryPct))
   return recoveryTurns
 }
 

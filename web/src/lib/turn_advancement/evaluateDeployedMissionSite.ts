@@ -30,7 +30,7 @@ export function evaluateDeployedMissionSite(
     state.turn,
     missionSite.id,
     state.exhaustionRecovery,
-    state.healthRecovery,
+    state.hitPointsRecoveryPct,
   )
   battleReport.agentsWounded = agentsWounded
   battleReport.agentsUnscathed = agentsUnscathed
@@ -73,7 +73,7 @@ function updateAgentsAfterBattle(
   currentTurn: number,
   missionSiteId: MissionSiteId,
   exhaustionRecovery: number,
-  healthRecovery: number,
+  hitPointsRecoveryPct: number,
 ): {
   agentsWounded: number
   agentsUnscathed: number
@@ -87,7 +87,7 @@ function updateAgentsAfterBattle(
     const isTerminated = agent.hitPoints <= 0
 
     if (!isTerminated) {
-      const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, healthRecovery)
+      const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, hitPointsRecoveryPct)
       if (wasWounded) {
         agentsWounded += 1
       } else {
@@ -107,7 +107,7 @@ function updateSurvivingAgent(
   agent: Agent,
   battleReport: BattleReport,
   exhaustionRecovery: number,
-  healthRecovery: number,
+  hitPointsRecoveryPct: number,
 ): boolean {
   // ----------------------------------------
   // Update exhaustion
@@ -150,7 +150,7 @@ function updateSurvivingAgent(
   if (tookDamage) {
     agent.assignment = 'Recovery'
     agent.hitPointsLostBeforeRecovery = agent.maxHitPoints - agent.hitPoints
-    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints, healthRecovery)
+    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints, hitPointsRecoveryPct)
     return true // Agent was wounded
   }
   agent.assignment = 'Standby'

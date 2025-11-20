@@ -28,7 +28,7 @@ export function updateRecoveringAgents(state: GameState): void {
         // Calculate total recovery turns originally needed
         const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
         const totalRecoveryTurns = Math.ceil(
-          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / state.healthRecovery,
+          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / state.hitPointsRecoveryPct,
         )
 
         // Calculate which turn of recovery we just completed

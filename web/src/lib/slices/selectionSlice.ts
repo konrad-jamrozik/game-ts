@@ -7,7 +7,7 @@ export type UpgradeName =
   | 'Training cap'
   | 'Training skill gain'
   | 'Exhaustion recovery'
-  | 'Health recovery'
+  | 'Hit points recovery %'
 
 export type SelectionState = {
   agents: string[]
