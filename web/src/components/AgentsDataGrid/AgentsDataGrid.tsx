@@ -77,9 +77,12 @@ function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): Grid
         field: 'mission',
         headerName: 'Mission',
         minWidth: 140,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
-          <span aria-label={`agents-row-mission-${params.id}`}></span>
-        ),
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+          const { terminatedOnMissionSiteId, assignment } = params.row
+
+          const displayValue: string = terminatedOnMissionSiteId ?? (assignment === 'Sacked' ? 'Sacked' : 'ERROR')
+          return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
+        },
       },
       {
         field: 'by',

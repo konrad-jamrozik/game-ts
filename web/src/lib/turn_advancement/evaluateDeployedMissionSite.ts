@@ -1,6 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import { AGENT_EXHAUSTION_RECOVERY_PER_TURN, MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
-import type { GameState, MissionRewards, MissionSite, Agent } from '../model/model'
+import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -24,7 +24,12 @@ export function evaluateDeployedMissionSite(
 
   const battleReport = evaluateBattle(deployedAgentsView, missionSite.enemies)
 
-  const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(deployedAgents, battleReport, state.turn)
+  const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(
+    deployedAgents,
+    battleReport,
+    state.turn,
+    missionSite.id,
+  )
 
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
@@ -40,6 +45,7 @@ function updateAgentsAfterBattle(
   deployedAgents: Agent[],
   battleReport: BattleReport,
   currentTurn: number,
+  missionSiteId: MissionSiteId,
 ): {
   agentsWounded: number
   agentsUnscathed: number
@@ -62,6 +68,7 @@ function updateAgentsAfterBattle(
       agent.state = 'Terminated'
       agent.assignment = 'KIA'
       agent.turnTerminated = currentTurn
+      agent.terminatedOnMissionSiteId = missionSiteId
     }
   })
   return { agentsWounded, agentsUnscathed }
