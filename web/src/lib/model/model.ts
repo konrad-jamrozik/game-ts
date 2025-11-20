@@ -53,6 +53,7 @@ export type Agent = Actor & {
   turnHired: number
   turnTerminated?: number
   terminatedOnMissionSiteId?: MissionSiteId
+  terminatedBy?: string
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsSurvived: number

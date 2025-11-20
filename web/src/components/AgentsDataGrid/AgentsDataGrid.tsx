@@ -16,7 +16,7 @@ import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
 import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
 import { toPct } from '../../lib/utils/mathUtils'
-import { fmtDec1, fmtMissionSiteIdWithMissionId } from '../../lib/utils/formatUtils'
+import { fmtDec1, fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
 import { MyChip } from '../MyChip'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 
@@ -63,7 +63,7 @@ function createAgentColumns(
       {
         field: 'service',
         headerName: 'Service',
-        minWidth: 100,
+        width: 80,
         renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
           const { turnHired, turnTerminated } = params.row
           if (turnTerminated === undefined) {
@@ -102,10 +102,21 @@ function createAgentColumns(
       {
         field: 'by',
         headerName: 'By',
-        minWidth: 100,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
-          <span aria-label={`agents-row-by-${params.id}`}></span>
-        ),
+        width: 180,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+          const { terminatedBy, assignment } = params.row
+          // If agent was terminated by an enemy, show the enemy ID without prefix
+          if (terminatedBy !== undefined) {
+            const displayValue = fmtNoPrefix(terminatedBy, 'enemy-')
+            return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
+          }
+          // If agent was sacked (assignment is 'Sacked'), show "-"
+          if (assignment === 'Sacked') {
+            return <span aria-label={`agents-row-by-${params.id}`}>-</span>
+          }
+          // Fallback (shouldn't happen for terminated agents, but just in case)
+          return <span aria-label={`agents-row-by-${params.id}`}>-</span>
+        },
       },
     ]
   }

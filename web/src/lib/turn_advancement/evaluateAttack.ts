@@ -67,6 +67,10 @@ export function evaluateAttack(
     }
 
     if (hpRemaining <= 0) {
+      // If an enemy terminated an agent, track which enemy did it
+      if (defenderIsAgent && !attackerIsAgent) {
+        defender.terminatedBy = attacker.id
+      }
       const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
       const hpPercentage = `${divMult100Round(hpRemaining, defender.maxHitPoints)}%`
       console.log(
