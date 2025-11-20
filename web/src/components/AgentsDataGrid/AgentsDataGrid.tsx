@@ -93,7 +93,7 @@ function createAgentColumns(
           }
           // If agent was sacked (assignment is 'Sacked'), show "-"
           if (assignment === 'Sacked') {
-            return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
+            return <span aria-label={`agents-row-mission-${params.id}`}>Sacked</span>
           }
           // Fallback (shouldn't happen for terminated agents, but just in case)
           return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
@@ -104,24 +104,17 @@ function createAgentColumns(
         headerName: 'By',
         width: 180,
         renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
-          const { terminatedBy, assignment } = params.row
+          const { terminatedBy } = params.row
           // If agent was terminated by an enemy, show the enemy ID without prefix
           if (terminatedBy !== undefined) {
             const displayValue = fmtNoPrefix(terminatedBy, 'enemy-')
             return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
           }
-          // If agent was sacked (assignment is 'Sacked'), show "-"
-          if (assignment === 'Sacked') {
-            return <span aria-label={`agents-row-by-${params.id}`}>-</span>
-          }
-          // Fallback (shouldn't happen for terminated agents, but just in case)
           return <span aria-label={`agents-row-by-${params.id}`}>-</span>
         },
       },
     ]
   }
-
-  // For non-terminated agents, show all columns
   return [
     {
       field: 'id',
