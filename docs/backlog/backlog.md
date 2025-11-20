@@ -25,12 +25,6 @@ KJA backlog:
     },  
   ```
 
-- Debug tab that shows when game was reset with ctrl click. Has options like:
-  - Add 100_000 money
-  - Reset panic to 0
-  - Suppress all factions to 10_000%
-  - Make all leads  available
-
 - Charts for stats over time, at the bottom of the screen.
   - Panic
   - Each faction threat level, suppression, panic increase

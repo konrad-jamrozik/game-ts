@@ -26,7 +26,73 @@ export type AgentRow = Agent & {
   rowId: number
 }
 
-function createAgentColumns(rows: AgentRow[]): GridColDef[] {
+// oxlint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
+function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): GridColDef[] {
+  // For terminated agents, show only specific columns
+  if (showOnlyTerminated) {
+    return [
+      {
+        field: 'id',
+        headerName: 'ID',
+        minWidth: 120,
+        renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
+          <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
+        ),
+      },
+      // {
+      //   field: 'state',
+      //   headerName: 'State',
+      //   width: 140,
+      //   renderCell: (params: GridRenderCellParams<AgentRow, AgentState>): React.JSX.Element => {
+      //     const state = params.value
+      //     if (state === undefined) {
+      //       return <span aria-label={`agents-row-state-${params.id}`}>-</span>
+      //     }
+      //     const paletteColorName = getModelPalette()[state]
+      //     return (
+      //       <span aria-label={`agents-row-state-${params.id}`}>
+      //         <MyChip chipValue={state} paletteColorName={paletteColorName} />
+      //       </span>
+      //     )
+      //   },
+      // },
+      {
+        field: 'stats',
+        headerName: 'Stats',
+        minWidth: 100,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
+          <span aria-label={`agents-row-stats-${params.id}`}></span>
+        ),
+      },
+      {
+        field: 'service',
+        headerName: 'Service',
+        minWidth: 100,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
+          <span aria-label={`agents-row-service-${params.id}`}></span>
+        ),
+      },
+      {
+        field: 'mission',
+        headerName: 'Mission',
+        minWidth: 140,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
+          <span aria-label={`agents-row-mission-${params.id}`}></span>
+        ),
+      },
+      {
+        field: 'by',
+        headerName: 'By',
+        minWidth: 100,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
+          <span aria-label={`agents-row-by-${params.id}`}></span>
+        ),
+      },
+    ]
+  }
+
+  // For non-terminated agents, show all columns
   return [
     {
       field: 'id',
@@ -215,9 +281,11 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Apply filtering based on checkboxes
   const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable, agentsTerminatedThisTurnIds)
 
-  // Define and filter columns based on showDetailed state
-  const columns = createAgentColumns(rows)
-  const visibleColumns = filterVisibleAgentColumns(columns, showDetailed)
+  // Define columns based on whether we're showing terminated agents
+  const columns = createAgentColumns(rows, showOnlyTerminated)
+  // For terminated agents, show all columns (they're already filtered in createAgentColumns)
+  // For non-terminated agents, filter based on showDetailed state
+  const visibleColumns = showOnlyTerminated ? columns : filterVisibleAgentColumns(columns, showDetailed)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []
