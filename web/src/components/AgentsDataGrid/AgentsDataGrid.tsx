@@ -26,6 +26,8 @@ export type AgentRow = Agent & {
   rowId: number
 }
 
+// oxlint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
 function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): GridColDef[] {
   // For terminated agents, show only specific columns
   if (showOnlyTerminated) {
@@ -39,17 +41,20 @@ function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): Grid
         ),
       },
       {
-        field: 'stats',
-        headerName: 'Stats',
-        minWidth: 100,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
-          const { skill, hitPoints: hp } = params.row
-          return (
-            <span aria-label={`agents-row-stats-${params.id}`}>
-              {skill} sk, {hp} hp
-            </span>
-          )
-        },
+        field: 'skill',
+        headerName: 'Skill',
+        width: 40,
+        renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+          <span aria-label={`agents-row-skill-${params.id}`}>{params.row.skill}</span>
+        ),
+      },
+      {
+        field: 'hp',
+        headerName: 'HP',
+        width: 40,
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => (
+          <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
+        ),
       },
       {
         field: 'service',
