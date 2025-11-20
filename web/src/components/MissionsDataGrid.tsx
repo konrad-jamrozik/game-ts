@@ -22,6 +22,7 @@ import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
+import { div } from '../lib/utils/mathUtils'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -29,7 +30,6 @@ export type MissionRow = MissionSite & {
   displayId: string
 }
 
-// KJA bug: for some reason column sort over enemies and avg. skill doesn't work
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -193,8 +193,9 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'enemies',
       headerName: 'Enemies',
       width: 80,
+      valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const enemyCount = params.row.enemies.length
+        const enemyCount = getEnemyCount(params.row)
         return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
       },
     },
@@ -202,15 +203,27 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'avgSkill',
       headerName: 'Avg. skill',
       width: 80,
+      valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const { enemies } = params.row
-        if (enemies.length === 0) {
+        const avgSkill = getAverageSkill(params.row)
+        if (avgSkill === 0) {
           return <span aria-label={`missions-row-avg-skill-${params.id}`}>-</span>
         }
-        const totalSkill = enemies.reduce((sum, enemy) => sum + enemy.skill, 0)
-        const avgSkill = (totalSkill / enemies.length).toFixed(1)
-        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{avgSkill}</span>
+        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{avgSkill.toFixed(1)}</span>
       },
     },
   ]
+}
+
+function getEnemyCount(row: MissionRow): number {
+  return row.enemies.length
+}
+
+function getAverageSkill(row: MissionRow): number {
+  const { enemies } = row
+  if (enemies.length === 0) {
+    return 0
+  }
+  const totalSkill = enemies.reduce((sum, enemy) => sum + enemy.skill, 0)
+  return div(totalSkill, enemies.length)
 }

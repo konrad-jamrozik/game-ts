@@ -170,6 +170,13 @@ export function createAgentColumns(
       field: 'service',
       headerName: 'Service',
       width: 80,
+      valueGetter: (_value, row: AgentRow): number => {
+        const { turnHired, turnTerminated } = row
+        if (turnTerminated !== undefined) {
+          return turnTerminated - turnHired + 1
+        }
+        return currentTurn - turnHired + 1
+      },
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { turnHired, turnTerminated } = params.row
         if (turnTerminated !== undefined) {
