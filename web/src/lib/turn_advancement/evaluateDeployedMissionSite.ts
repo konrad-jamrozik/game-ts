@@ -31,6 +31,11 @@ export function evaluateDeployedMissionSite(
     missionSite.id,
   )
 
+  battleReport.agentExhaustionAfterBattle = calculateAgentExhaustionAfterBattle(
+    deployedAgents,
+    battleReport.initialAgentExhaustionByAgentId,
+  )
+
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
   missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
@@ -39,6 +44,23 @@ export function evaluateDeployedMissionSite(
   const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
 
   return { rewards, agentsWounded, agentsUnscathed, battleReport }
+}
+
+function calculateAgentExhaustionAfterBattle(
+  deployedAgents: Agent[],
+  initialAgentExhaustionByAgentId: Record<string, number>,
+): number {
+  // Calculate final exhaustion gain AFTER updateAgentsAfterBattle (which includes casualty penalty)
+  // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
+  const survivingAgentsView = agsV(deployedAgents).notTerminated()
+  const survivingAgents = survivingAgentsView.toAgentArray()
+  const finalAgentExhaustion = survivingAgents.reduce((sum, agent) => sum + agent.exhaustion, 0)
+  // Calculate initial exhaustion for only the surviving agents
+  const initialSurvivingAgentExhaustion = survivingAgents.reduce(
+    (sum, agent) => sum + (initialAgentExhaustionByAgentId[agent.id] ?? 0),
+    0,
+  )
+  return finalAgentExhaustion - initialSurvivingAgentExhaustion
 }
 
 function updateAgentsAfterBattle(

@@ -18,6 +18,7 @@ import {
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
 import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/ruleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
+import type { BattleReport } from './evaluateBattle'
 import {
   updateAvailableAgents,
   updateContractingAgents,
@@ -197,20 +198,7 @@ function evaluateDeployedMissionSites(state: GameState): {
         rewards: MissionRewards | undefined
         agentsWounded: number
         agentsUnscathed: number
-        battleReport: {
-          rounds: number
-          agentCasualties: number
-          enemyCasualties: number
-          retreated: boolean
-          agentSkillUpdates: Record<string, number>
-          initialAgentEffectiveSkill: number
-          initialAgentHitPoints: number
-          initialEnemySkill: number
-          initialEnemyHitPoints: number
-          totalDamageInflicted: number
-          totalDamageTaken: number
-          totalAgentExhaustionGain: number
-        }
+        battleReport: BattleReport
       } = evaluateDeployedMissionSite(state, missionSite)
       const { battleReport, rewards, agentsWounded, agentsUnscathed: agentsUnscathedFromBattle } = result
 
@@ -253,11 +241,9 @@ function evaluateDeployedMissionSites(state: GameState): {
         }
       }
 
-      // Calculate average agent exhaustion gain
-      // KJA 3 bug: this value is busted. It shows e.g. 9.25 while the surviving agents have exhaustion of 60+.
-      //   see todo in evaluateBattle
-      // See totalAgentExhaustionGain
-      const averageAgentExhaustionGain = agentsDeployed > 0 ? battleReport.totalAgentExhaustionGain / agentsDeployed : 0
+      // Calculate average agent exhaustion gain (after battle, including casualty penalty)
+      const averageAgentExhaustionGain =
+        agentsDeployed > 0 ? battleReport.agentExhaustionAfterBattle / agentsDeployed : 0
 
       const battleStats: BattleStats = {
         agentsDeployed,

@@ -23,7 +23,9 @@ export type BattleReport = {
   initialEnemyHitPoints: number
   totalDamageInflicted: number
   totalDamageTaken: number
-  totalAgentExhaustionGain: number
+  initialAgentExhaustion: number
+  initialAgentExhaustionByAgentId: Record<string, number>
+  agentExhaustionAfterBattle: number
 }
 
 export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
@@ -43,6 +45,10 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   // Track initial agent exhaustion for calculating total exhaustion gain
   const initialAgentExhaustion = agents.reduce((sum, agent) => sum + agent.exhaustion, 0)
+  const initialAgentExhaustionByAgentId: Record<string, number> = {}
+  for (const agent of agents) {
+    initialAgentExhaustionByAgentId[agent.id] = agent.exhaustion
+  }
 
   // Track initial hit points for calculating damage
   const initialAgentHitPointsMap = new Map(agents.map((agent) => [agent.id, agent.hitPoints]))
@@ -114,19 +120,7 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     totalDamageTaken += initialHp - agent.hitPoints
   }
 
-  // Calculate total agent exhaustion gain
-  let finalAgentExhaustion = 0
-  for (const agent of agents) {
-    finalAgentExhaustion += agent.exhaustion
-  }
-  // KJA 3 bug: problem here: this is computed BEFORE the updateSurvivingAgent call in evaluateDeployedMissionSite,
-  // which takes into account exhaustion from casualties:
-  // Basically it is:
-  //  evaluateDeployedMissionSite
-  //    evaluateBattle <- we are here
-  //    updateAgentsAfterBattle
-  //      updateSurvivingAgent <- this is where we compute the agentCasualties penalty
-  const totalAgentExhaustionGain = finalAgentExhaustion - initialAgentExhaustion
+  // agentExhaustionAfterBattle will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
 
   showRoundStatus(
     roundIdx,
@@ -158,7 +152,9 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
     initialEnemyHitPoints,
     totalDamageInflicted,
     totalDamageTaken,
-    totalAgentExhaustionGain,
+    initialAgentExhaustion,
+    initialAgentExhaustionByAgentId,
+    agentExhaustionAfterBattle: 0, // Will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
   }
 }
 
