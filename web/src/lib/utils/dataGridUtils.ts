@@ -30,6 +30,7 @@ export function filterAgentRows(
   allRows: AgentRow[],
   showOnlyTerminated: boolean,
   showOnlyAvailable: boolean,
+  showOnlyRecovering: boolean,
   agentsTerminatedThisTurnIds: Set<string>,
 ): AgentRow[] {
   if (showOnlyAvailable) {
@@ -38,10 +39,18 @@ export function filterAgentRows(
   if (showOnlyTerminated) {
     return allRows.filter((agent) => agent.state === 'Terminated')
   }
+  if (showOnlyRecovering) {
+    return allRows.filter((agent) => agent.assignment === 'Recovery')
+  }
   // Default: show all non-terminated agents, plus agents terminated this turn
   return allRows.filter((agent) => agent.state !== 'Terminated' || agentsTerminatedThisTurnIds.has(agent.id))
 }
 
-export function filterVisibleAgentColumns(columns: GridColDef[], showDetailed: boolean): GridColDef[] {
-  return showDetailed ? columns : columns.filter((col) => col.field !== 'hitPoints' && col.field !== 'recoveryTurns')
+export function filterVisibleAgentColumns(columns: GridColDef[], showRecovering: boolean): GridColDef[] {
+  if (showRecovering) {
+    // When "recovering" is selected, hide the "assignment" column
+    return columns.filter((col) => col.field !== 'assignment')
+  }
+  // Default: hide hitPoints and recoveryTurns columns
+  return columns.filter((col) => col.field !== 'hitPoints' && col.field !== 'recoveryTurns')
 }

@@ -279,30 +279,32 @@ export function AgentsDataGrid(): React.JSX.Element {
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
   const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
-  const [showDetailed, setShowDetailed] = React.useState(false)
+  const [showRecovering, setShowRecovering] = React.useState(false)
 
-  // Handlers that enforce mutual exclusivity: "Terminated" cannot be selected with "Available" or "Detailed"
-  const handleToggleAvailable = React.useCallback((checked: boolean) => {
+  // Handlers that enforce mutual exclusivity: only one checkbox can be selected at a time
+  function handleToggleAvailable(checked: boolean): void {
     setShowOnlyAvailable(checked)
     if (checked) {
       setShowOnlyTerminated(false)
+      setShowRecovering(false)
     }
-  }, [])
+  }
 
-  const handleToggleTerminated = React.useCallback((checked: boolean) => {
+  function handleToggleTerminated(checked: boolean): void {
     setShowOnlyTerminated(checked)
     if (checked) {
       setShowOnlyAvailable(false)
-      setShowDetailed(false)
+      setShowRecovering(false)
     }
-  }, [])
+  }
 
-  const handleToggleDetailed = React.useCallback((checked: boolean) => {
-    setShowDetailed(checked)
+  function handleToggleRecovering(checked: boolean): void {
+    setShowRecovering(checked)
     if (checked) {
       setShowOnlyTerminated(false)
+      setShowOnlyAvailable(false)
     }
-  }, [])
+  }
 
   // Get IDs of agents terminated during the last turn advancement from turnStartReport
   const agentsReport = gameState.turnStartReport?.assets.agentsReport
@@ -316,13 +318,19 @@ export function AgentsDataGrid(): React.JSX.Element {
   }))
 
   // Apply filtering based on checkboxes
-  const rows: AgentRow[] = filterAgentRows(allRows, showOnlyTerminated, showOnlyAvailable, agentsTerminatedThisTurnIds)
+  const rows: AgentRow[] = filterAgentRows(
+    allRows,
+    showOnlyTerminated,
+    showOnlyAvailable,
+    showRecovering,
+    agentsTerminatedThisTurnIds,
+  )
 
   // Define columns based on whether we're showing terminated agents
   const columns = createAgentColumns(rows, showOnlyTerminated, gameState.missionSites)
   // For terminated agents, show all columns (they're already filtered in createAgentColumns)
-  // For non-terminated agents, filter based on showDetailed state
-  const visibleColumns = showOnlyTerminated ? columns : filterVisibleAgentColumns(columns, showDetailed)
+  // For non-terminated agents, filter based on showRecovering state
+  const visibleColumns = showOnlyTerminated ? columns : filterVisibleAgentColumns(columns, showRecovering)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []
@@ -382,8 +390,8 @@ export function AgentsDataGrid(): React.JSX.Element {
           onToggleTerminated: handleToggleTerminated,
           showOnlyAvailable,
           onToggleAvailable: handleToggleAvailable,
-          showDetailed,
-          onToggleDetailed: handleToggleDetailed,
+          showRecovering,
+          onToggleRecovering: handleToggleRecovering,
         },
       }}
       showToolbar
