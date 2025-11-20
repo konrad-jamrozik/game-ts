@@ -30,9 +30,9 @@ export function AssetsDataGrid(): React.JSX.Element {
   const intelDiff = intelProjected - gameState.intel
   const agentCount = agsV(gameState.agents).notTerminated().length
   const rows = [
-    { name: 'Agents', id: 1, value: agentCount },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
+    { name: 'Agents', id: 1, value: agentCount },
     { name: 'Agent cap', id: 4, value: gameState.agentCap },
     { name: 'Transport cap', id: 5, value: gameState.transportCap },
     { name: 'Training cap', id: 6, value: gameState.trainingCap },
