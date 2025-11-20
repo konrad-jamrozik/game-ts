@@ -24,7 +24,7 @@ export function evaluateDeployedMissionSite(
 
   const battleReport = evaluateBattle(deployedAgentsView, missionSite.enemies)
 
-  const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(deployedAgents, battleReport)
+  const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(deployedAgents, battleReport, state.turn)
 
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
@@ -39,6 +39,7 @@ export function evaluateDeployedMissionSite(
 function updateAgentsAfterBattle(
   deployedAgents: Agent[],
   battleReport: BattleReport,
+  currentTurn: number,
 ): {
   agentsWounded: number
   agentsUnscathed: number
@@ -60,6 +61,7 @@ function updateAgentsAfterBattle(
     } else {
       agent.state = 'Terminated'
       agent.assignment = 'KIA'
+      agent.turnTerminated = currentTurn
     }
   })
   return { agentsWounded, agentsUnscathed }

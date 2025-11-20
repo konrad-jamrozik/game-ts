@@ -137,6 +137,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
     }),
     makeAgent({
       turnHired: 1,
+      turnTerminated: 1,
       state: 'Terminated',
       assignment: 'KIA',
       skill: 70,

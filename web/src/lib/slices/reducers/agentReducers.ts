@@ -24,6 +24,7 @@ export const sackAgents = asPlayerAction<string[]>((state: GameState, action) =>
     if (agentIdsToSack.includes(agent.id)) {
       agent.state = 'Terminated'
       agent.assignment = 'Sacked'
+      agent.turnTerminated = state.turn
     }
   }
 })

@@ -51,6 +51,7 @@ export type Weapon = {
 
 export type Agent = Actor & {
   turnHired: number
+  turnTerminated?: number
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsSurvived: number

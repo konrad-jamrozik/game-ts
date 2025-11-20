@@ -26,8 +26,6 @@ export type AgentRow = Agent & {
   rowId: number
 }
 
-// oxlint-disable-next-line max-lines-per-function
-// eslint-disable-next-line max-lines-per-function
 function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): GridColDef[] {
   // For terminated agents, show only specific columns
   if (showOnlyTerminated) {
@@ -40,38 +38,35 @@ function createAgentColumns(rows: AgentRow[], showOnlyTerminated: boolean): Grid
           <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
         ),
       },
-      // {
-      //   field: 'state',
-      //   headerName: 'State',
-      //   width: 140,
-      //   renderCell: (params: GridRenderCellParams<AgentRow, AgentState>): React.JSX.Element => {
-      //     const state = params.value
-      //     if (state === undefined) {
-      //       return <span aria-label={`agents-row-state-${params.id}`}>-</span>
-      //     }
-      //     const paletteColorName = getModelPalette()[state]
-      //     return (
-      //       <span aria-label={`agents-row-state-${params.id}`}>
-      //         <MyChip chipValue={state} paletteColorName={paletteColorName} />
-      //       </span>
-      //     )
-      //   },
-      // },
       {
         field: 'stats',
         headerName: 'Stats',
         minWidth: 100,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
-          <span aria-label={`agents-row-stats-${params.id}`}></span>
-        ),
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+          const { skill, hitPoints: hp } = params.row
+          return (
+            <span aria-label={`agents-row-stats-${params.id}`}>
+              {skill} sk, {hp} hp
+            </span>
+          )
+        },
       },
       {
         field: 'service',
         headerName: 'Service',
         minWidth: 100,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>) => (
-          <span aria-label={`agents-row-service-${params.id}`}></span>
-        ),
+        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+          const { turnHired, turnTerminated } = params.row
+          if (turnTerminated === undefined) {
+            return <span aria-label={`agents-row-service-${params.id}`}>-</span>
+          }
+          const totalTurnsServed = turnTerminated - turnHired + 1
+          return (
+            <span aria-label={`agents-row-service-${params.id}`}>
+              {turnHired} - {turnTerminated} ({totalTurnsServed})
+            </span>
+          )
+        },
       },
       {
         field: 'mission',
