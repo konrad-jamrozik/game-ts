@@ -162,15 +162,6 @@ function createAgentColumns(rows: AgentRow[], missionSites: GameState['missionSi
         </span>
       ),
     },
-
-    {
-      field: 'turnHired',
-      headerName: 'T. hired',
-      width: 100,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
-      ),
-    },
     // Terminated agent specific columns
     {
       field: 'skillSimple',
@@ -318,9 +309,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  // Define all columns - visibility is controlled by filterVisibleAgentColumns
   const columns = createAgentColumns(rows, gameState.missionSites)
-  // Filter columns based on showOnlyTerminated, showRecovering, and showStats state
   const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
@@ -366,13 +355,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      initialState={{
-        columns: {
-          columnVisibilityModel: {
-            turnHired: false,
-          },
-        },
-      }}
       slots={{ toolbar: AgentsToolbar }}
       slotProps={{
         toolbar: {
