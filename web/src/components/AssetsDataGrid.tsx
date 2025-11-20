@@ -1,6 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance, getIntelNewBalance } from '../lib/model/ruleset/ruleset'
+import { agsV } from '../lib/model/agents/AgentsView'
 import { DataGridCard } from './DataGridCard'
 import { MyChip } from './MyChip'
 
@@ -27,7 +28,7 @@ export function AssetsDataGrid(): React.JSX.Element {
   const intelProjected = getIntelNewBalance(gameState)
   const moneyDiff = moneyProjected - gameState.money
   const intelDiff = intelProjected - gameState.intel
-  const agentCount = gameState.agents.length
+  const agentCount = agsV(gameState.agents).notTerminated().length
   const rows = [
     { name: 'Agents', id: 1, value: agentCount },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
