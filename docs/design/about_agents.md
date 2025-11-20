@@ -197,7 +197,8 @@ end up with:
 **hitPointsLostBeforeRecovery** - The number of hit points the agent lost before starting recovery
 (used for calculating linear restoration).
 
-**missionsSurvived** - The number of missions the agent has survived.
+**missionsTotal** - The total number of missions the agent has been on, including the mission where they were
+terminated (if any).
 
 **state** - The current state of the agent.
 

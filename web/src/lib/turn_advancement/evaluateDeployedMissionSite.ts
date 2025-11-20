@@ -57,6 +57,8 @@ function updateAgentsAfterBattle(
     assertDefined(battleSkillGain)
 
     const isTerminated = agent.hitPoints <= 0
+    // Increment missionsTotal for all agents (surviving and terminated)
+    agent.missionsTotal += 1
     if (!isTerminated) {
       const wasWounded = updateSurvivingAgent(agent, battleReport)
       if (wasWounded) {
@@ -98,8 +100,8 @@ function updateSurvivingAgent(agent: Agent, battleReport: BattleReport): boolean
   agent.skill += battleSkillGain
 
   // Skill from mission survival
-  agent.missionsSurvived += 1
-  const survivalIndex = Math.min(agent.missionsSurvived - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1)
+  // missionsTotal was already incremented in updateAgentsAfterBattle
+  const survivalIndex = Math.min(agent.missionsTotal - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1)
   const survivalSkillGain = MISSION_SURVIVAL_SKILL_GAIN[survivalIndex]
   assertDefined(survivalSkillGain)
   agent.skill += survivalSkillGain

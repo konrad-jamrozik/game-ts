@@ -37,7 +37,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
     }),
     makeAgent({
       turnHired: 1,
@@ -49,7 +49,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 3,
+      missionsTotal: 3,
     }),
     makeAgent({
       turnHired: 1,
@@ -61,7 +61,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
     }),
     makeAgent({
       turnHired: 1,
@@ -73,7 +73,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 4,
       hitPointsLostBeforeRecovery: 2,
-      missionsSurvived: 1,
+      missionsTotal: 1,
     }),
     makeAgent({
       turnHired: 1,
@@ -85,7 +85,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 2,
+      missionsTotal: 2,
     }),
     makeAgent({
       turnHired: 1,
@@ -97,7 +97,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 4,
+      missionsTotal: 4,
     }),
     makeAgent({
       turnHired: 1,
@@ -109,7 +109,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 1,
+      missionsTotal: 1,
     }),
     makeAgent({
       turnHired: 1,
@@ -121,7 +121,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 3,
       hitPointsLostBeforeRecovery: 10,
-      missionsSurvived: 2,
+      missionsTotal: 2,
     }),
     makeAgent({
       turnHired: 1,
@@ -133,7 +133,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
     }),
     makeAgent({
       turnHired: 1,
@@ -146,7 +146,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
     }),
     makeAgent({
       turnHired: 1,
@@ -158,7 +158,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 20,
       hitPointsLostBeforeRecovery: 12,
-      missionsSurvived: 0,
+      missionsTotal: 0,
     }),
     makeAgent({
       turnHired: 1,
@@ -170,7 +170,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       maxHitPoints: 30,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 1,
+      missionsTotal: 1,
     }),
   ]
 

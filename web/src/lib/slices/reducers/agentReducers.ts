@@ -88,7 +88,7 @@ export function newHiredAgent(id: string, turnHired: number): Agent {
     maxHitPoints: AGENT_INITIAL_HIT_POINTS,
     recoveryTurns: 0,
     hitPointsLostBeforeRecovery: 0,
-    missionsSurvived: 0,
+    missionsTotal: 0,
     weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
   }
 }

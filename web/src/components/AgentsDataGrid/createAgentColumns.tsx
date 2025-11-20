@@ -193,8 +193,8 @@ export function createAgentColumns(
       field: 'missionsTotal',
       headerName: 'Miss #',
       width: 70,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-missions-total-${params.id}`}>{params.value}</span>
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-missions-total-${params.id}`}>{params.row.missionsTotal}</span>
       ),
     },
     {

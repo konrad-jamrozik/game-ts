@@ -56,7 +56,7 @@ export type Agent = Actor & {
   terminatedBy?: string
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
-  missionsSurvived: number
+  missionsTotal: number
   state: AgentState
   assignment: AgentAssignment
 }

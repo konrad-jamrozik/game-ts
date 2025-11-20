@@ -20,7 +20,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
@@ -62,7 +62,7 @@ describe(evaluateDeployedMissionSite, () => {
       expect(testMissionSite.state).toBe('Successful')
 
       // Verify agent gained experience
-      expect(testAgent.missionsSurvived).toBe(1)
+      expect(testAgent.missionsTotal).toBe(1)
       expect(testAgent.skill).toBeGreaterThan(200)
 
       // Verify agent gained exhaustion from combat
@@ -90,7 +90,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
@@ -158,7 +158,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: 20,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
@@ -173,7 +173,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: 15,
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
-      missionsSurvived: 0,
+      missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
