@@ -9,7 +9,13 @@ import { MyChip } from '../MyChip'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 import type { AgentRow } from './AgentsDataGrid'
 
-export function createAgentColumns(rows: AgentRow[], missionSites: GameState['missionSites']): GridColDef[] {
+// oxlint-disable-next-line max-lines-per-function
+// eslint-disable-next-line max-lines-per-function
+export function createAgentColumns(
+  rows: AgentRow[],
+  missionSites: GameState['missionSites'],
+  currentTurn: number,
+): GridColDef[] {
   // Return all columns - visibility will be controlled by filterVisibleAgentColumns
   return [
     {
@@ -165,13 +171,20 @@ export function createAgentColumns(rows: AgentRow[], missionSites: GameState['mi
       width: 80,
       renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
         const { turnHired, turnTerminated } = params.row
-        if (turnTerminated === undefined) {
-          return <span aria-label={`agents-row-service-${params.id}`}>-</span>
+        if (turnTerminated !== undefined) {
+          // Terminated agent: show turnHired - turnTerminated (totalTurnsServed)
+          const totalTurnsServed = turnTerminated - turnHired + 1
+          return (
+            <span aria-label={`agents-row-service-${params.id}`}>
+              {turnHired} - {turnTerminated} ({totalTurnsServed})
+            </span>
+          )
         }
-        const totalTurnsServed = turnTerminated - turnHired + 1
+        // Active agent: show turnHired - currentTurn (totalTurnsServed)
+        const totalTurnsServed = currentTurn - turnHired + 1
         return (
           <span aria-label={`agents-row-service-${params.id}`}>
-            {turnHired} - {turnTerminated} ({totalTurnsServed})
+            {turnHired} - {currentTurn} ({totalTurnsServed})
           </span>
         )
       },
