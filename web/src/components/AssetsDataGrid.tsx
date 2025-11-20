@@ -114,7 +114,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     },
     {
       field: 'buy',
-      headerName: 'Buy',
+      headerName: 'Price',
       minWidth: 100,
     },
   ]
