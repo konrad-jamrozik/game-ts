@@ -1,15 +1,24 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import Stack from '@mui/material/Stack'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance, getIntelNewBalance } from '../lib/model/ruleset/ruleset'
 import { agsV } from '../lib/model/agents/AgentsView'
-import { DataGridCard } from './DataGridCard'
+import { ExpandableCard } from './ExpandableCard'
+import { StyledDataGrid } from './StyledDataGrid'
 import { MyChip } from './MyChip'
 
 export type AssetRow = {
+  id: number
+  name: 'Money' | 'Intel' | 'Agents'
+  displayedName?: string
+  value: number
+  projected?: number
+  diff?: number
+}
+
+export type UpgradeRow = {
+  id: number
   name:
-    | 'Money'
-    | 'Intel'
-    | 'Agents'
     | 'Agent cap'
     | 'Transport cap'
     | 'Training cap'
@@ -18,8 +27,7 @@ export type AssetRow = {
     | 'Health recovery'
   displayedName?: string
   value: number
-  projected?: number
-  diff?: number
+  buy: number
 }
 
 export function AssetsDataGrid(): React.JSX.Element {
@@ -29,23 +37,15 @@ export function AssetsDataGrid(): React.JSX.Element {
   const moneyDiff = moneyProjected - gameState.money
   const intelDiff = intelProjected - gameState.intel
   const agentCount = agsV(gameState.agents).notTerminated().length
-  const rows = [
+
+  // First card: Assets with Current and Projected columns
+  const assetRows: AssetRow[] = [
+    { name: 'Agents', id: 1, value: agentCount },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
-    { name: 'Agents', id: 1, value: agentCount },
-    { name: 'Agent cap', id: 4, value: gameState.agentCap },
-    { name: 'Transport cap', id: 5, value: gameState.transportCap },
-    { name: 'Training cap', id: 6, value: gameState.trainingCap },
-    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain },
-    {
-      name: 'Exhaustion recovery',
-      id: 8,
-      value: gameState.exhaustionRecovery,
-      displayedName: 'Exhaustion recov.',
-    },
-    { name: 'Health recovery', id: 9, value: gameState.healthRecovery, displayedName: 'Health recov.' },
   ]
-  const columns: GridColDef[] = [
+
+  const assetColumns: GridColDef[] = [
     {
       field: 'name',
       headerName: 'Asset',
@@ -80,5 +80,51 @@ export function AssetsDataGrid(): React.JSX.Element {
       },
     },
   ]
-  return <DataGridCard title="Assets" rows={rows} columns={columns} />
+
+  // Second card: Upgrades with Current and Buy columns
+  const upgradeRows: UpgradeRow[] = [
+    { name: 'Agent cap', id: 4, value: gameState.agentCap, buy: 0 },
+    { name: 'Transport cap', id: 5, value: gameState.transportCap, buy: 0 },
+    { name: 'Training cap', id: 6, value: gameState.trainingCap, buy: 0 },
+    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, buy: 0 },
+    {
+      name: 'Exhaustion recovery',
+      id: 8,
+      value: gameState.exhaustionRecovery,
+      displayedName: 'Exhaustion recov.',
+      buy: 0,
+    },
+    { name: 'Health recovery', id: 9, value: gameState.healthRecovery, displayedName: 'Health recov.', buy: 0 },
+  ]
+
+  const upgradeColumns: GridColDef[] = [
+    {
+      field: 'name',
+      headerName: 'Asset',
+      width: 160,
+      renderCell: (params: GridRenderCellParams<UpgradeRow>): React.JSX.Element => {
+        const displayName = params.row.displayedName ?? params.row.name
+        return <span>{displayName}</span>
+      },
+    },
+    {
+      field: 'value',
+      headerName: 'Current',
+      minWidth: 100,
+    },
+    {
+      field: 'buy',
+      headerName: 'Buy',
+      minWidth: 100,
+    },
+  ]
+
+  return (
+    <ExpandableCard title="Assets" defaultExpanded={true}>
+      <Stack spacing={2}>
+        <StyledDataGrid rows={assetRows} columns={assetColumns} aria-label="Assets" />
+        <StyledDataGrid rows={upgradeRows} columns={upgradeColumns} aria-label="Upgrades" />
+      </Stack>
+    </ExpandableCard>
+  )
 }
