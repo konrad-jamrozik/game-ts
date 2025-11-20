@@ -17,7 +17,7 @@ import { MyChip } from './MyChip'
 
 export type AssetRow = {
   id: number
-  name: 'Money' | 'Intel' | 'Agents'
+  name: 'Money' | 'Intel' | 'Agents' | 'Funding'
   displayedName?: string
   value: number
   projected?: number
@@ -51,6 +51,7 @@ export function AssetsDataGrid(): React.JSX.Element {
   // First card: Assets with Current and Projected columns
   const assetRows: AssetRow[] = [
     { name: 'Agents', id: 1, value: agentCount },
+    { name: 'Funding', id: 4, value: gameState.funding },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
   ]
