@@ -162,14 +162,7 @@ function createAgentColumns(rows: AgentRow[], missionSites: GameState['missionSi
         </span>
       ),
     },
-    {
-      field: 'missionsTotal',
-      headerName: 'Miss #',
-      width: 70,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-missions-total-${params.id}`}>{params.value}</span>
-      ),
-    },
+
     {
       field: 'turnHired',
       headerName: 'T. hired',
@@ -211,6 +204,14 @@ function createAgentColumns(rows: AgentRow[], missionSites: GameState['missionSi
           </span>
         )
       },
+    },
+    {
+      field: 'missionsTotal',
+      headerName: 'Miss #',
+      width: 70,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
+        <span aria-label={`agents-row-missions-total-${params.id}`}>{params.value}</span>
+      ),
     },
     {
       field: 'mission',
@@ -258,6 +259,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
   const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
   const [showRecovering, setShowRecovering] = React.useState(false)
+  const [showStats, setShowStats] = React.useState(false)
 
   // Handlers that enforce mutual exclusivity: only one checkbox can be selected at a time
   function handleToggleAvailable(checked: boolean): void {
@@ -265,6 +267,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     if (checked) {
       setShowOnlyTerminated(false)
       setShowRecovering(false)
+      setShowStats(false)
     }
   }
 
@@ -273,6 +276,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     if (checked) {
       setShowOnlyAvailable(false)
       setShowRecovering(false)
+      setShowStats(false)
     }
   }
 
@@ -281,6 +285,16 @@ export function AgentsDataGrid(): React.JSX.Element {
     if (checked) {
       setShowOnlyTerminated(false)
       setShowOnlyAvailable(false)
+      setShowStats(false)
+    }
+  }
+
+  function handleToggleStats(checked: boolean): void {
+    setShowStats(checked)
+    if (checked) {
+      setShowOnlyTerminated(false)
+      setShowOnlyAvailable(false)
+      setShowRecovering(false)
     }
   }
 
@@ -306,8 +320,8 @@ export function AgentsDataGrid(): React.JSX.Element {
 
   // Define all columns - visibility is controlled by filterVisibleAgentColumns
   const columns = createAgentColumns(rows, gameState.missionSites)
-  // Filter columns based on showOnlyTerminated and showRecovering state
-  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering)
+  // Filter columns based on showOnlyTerminated, showRecovering, and showStats state
+  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []
@@ -368,6 +382,8 @@ export function AgentsDataGrid(): React.JSX.Element {
           onToggleAvailable: handleToggleAvailable,
           showRecovering,
           onToggleRecovering: handleToggleRecovering,
+          showStats,
+          onToggleStats: handleToggleStats,
         },
       }}
       showToolbar

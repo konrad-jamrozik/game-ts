@@ -13,6 +13,8 @@ declare module '@mui/x-data-grid' {
     onToggleAvailable?: (checked: boolean) => void
     showRecovering: boolean
     onToggleRecovering?: (checked: boolean) => void
+    showStats: boolean
+    onToggleStats?: (checked: boolean) => void
   }
 }
 
@@ -24,6 +26,8 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
     onToggleAvailable,
     showRecovering,
     onToggleRecovering,
+    showStats,
+    onToggleStats,
   } = props
   return (
     <Toolbar>
@@ -48,6 +52,17 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
           />
         }
         label="recovering"
+      />
+      <FormControlLabel
+        control={
+          <Checkbox
+            checked={showStats}
+            onChange={(event) => onToggleStats?.(event.target.checked)}
+            slotProps={{ input: { 'aria-label': 'toggle-stats-view' } }}
+            size="small"
+          />
+        }
+        label="stats"
       />
       <FormControlLabel
         control={

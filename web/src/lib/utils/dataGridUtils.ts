@@ -50,10 +50,9 @@ export function filterVisibleAgentColumns(
   columns: GridColDef[],
   showOnlyTerminated: boolean,
   showRecovering: boolean,
+  showStats: boolean,
 ): GridColDef[] {
   if (showOnlyTerminated) {
-    // For terminated agents, show only: ID, Skill, HP (hp field), Service, Mission, By, Missions (missionsSurvived)
-    // Hide: state, assignment, exhaustion, hitPoints, recoveryTurns, turnHired
     return columns.filter(
       (col) =>
         col.field === 'id' ||
@@ -66,8 +65,6 @@ export function filterVisibleAgentColumns(
     )
   }
   if (showRecovering) {
-    // When "recovering" is selected, hide the "assignment" column
-    // Also hide hitPoints, recoveryTurns, and terminated-specific columns
     return columns.filter(
       (col) =>
         col.field === 'id' ||
@@ -78,7 +75,17 @@ export function filterVisibleAgentColumns(
         col.field === 'skillSimple',
     )
   }
-  // Default
+  if (showStats) {
+    // When "stats" is selected, show only: id, skillSimple, hitPointsMax, missionsTotal, service
+    return columns.filter(
+      (col) =>
+        col.field === 'id' ||
+        col.field === 'skillSimple' ||
+        col.field === 'hitPointsMax' ||
+        col.field === 'missionsTotal' ||
+        col.field === 'service',
+    )
+  }
   return columns.filter(
     (col) =>
       col.field === 'id' ||
