@@ -4,28 +4,17 @@ KJA backlog:
 
 # Brainstorming
 
-- Add to assets:
-  - Max agent capacity (living quarters)
-  - Max training capacity
-  - Max transport capacity (number of agents that can be sent on one mission)
-  - HP Recovery rate
-  - Exhaustion recovery rate
-- New button: "Upgrade asset", when upgradeable asset is selected
+- KJA Add new mechanic: assigning agents to training
   
-- Add new mechanic: procurement / investments / upgrades
-  - Allow to spend money on upgrades
-  - Examples of upgrades:
-    - More agent capacity (living quarters)
-    - Better agent weapons (upgraded for all)
-    - More agent hit points (upgraded for all)
-    - Faster HP recovery rate
-    - Faster exhaustion recovery rate
-    - Faster training
+- KJA Add to assets: Agent weapon damage range min-max
+  
+- KJA fix up the assets prices, and make their cost increase
+  
+- KJA make buying training skill gain and health recov. % fractional
 
-- Limit amount of agents that can be trained at a time.
-- Limit amount of living quarters available.
+- KJA funding increase reward for missions
 
-- Training activity for agents
+- KJA funding penalty for expired missions
 
 - For combat reports, add dedicated data grid with columns:
   - round,
@@ -47,14 +36,21 @@ KJA backlog:
 
 - Add AI player that can play the game for me
 
-- Funding increase every X turns based on score
-
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
   - Unlocking all HQ raids leads should unlock the final "game victory" lead
   - Researching that lead should win the game.
 
 - Add more factions
+
+- Enemy factions should generate missions themselves that player must counter to avoid penalties
+  - Offensive missions like "Red dawn terror" or "Red dawn assault" where someone called for help
+
+- Accumulated generic intel ideas:
+  - Spend to discover enemy offensive missions faster
+  - Spend to reveal more details about existing mission sites
+  - Spend to give combat bonus to player's agents on missions
+  - It decays same as lead investigation intel
 
 # Game mechanics
 
