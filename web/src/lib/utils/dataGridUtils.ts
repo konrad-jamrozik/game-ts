@@ -46,11 +46,45 @@ export function filterAgentRows(
   return allRows.filter((agent) => agent.state !== 'Terminated' || agentsTerminatedThisTurnIds.has(agent.id))
 }
 
-export function filterVisibleAgentColumns(columns: GridColDef[], showRecovering: boolean): GridColDef[] {
+export function filterVisibleAgentColumns(
+  columns: GridColDef[],
+  showOnlyTerminated: boolean,
+  showRecovering: boolean,
+): GridColDef[] {
+  if (showOnlyTerminated) {
+    // For terminated agents, show only: ID, Skill, HP (hp field), Service, Mission, By, Missions (missionsSurvived)
+    // Hide: state, assignment, exhaustion, hitPoints, recoveryTurns, turnHired
+    return columns.filter(
+      (col) =>
+        col.field === 'id' ||
+        col.field === 'skillSimple' ||
+        col.field === 'hitPointsMax' ||
+        col.field === 'service' ||
+        col.field === 'missionsTotal' ||
+        col.field === 'mission' ||
+        col.field === 'by',
+    )
+  }
   if (showRecovering) {
     // When "recovering" is selected, hide the "assignment" column
-    return columns.filter((col) => col.field !== 'assignment')
+    // Also hide hitPoints, recoveryTurns, and terminated-specific columns
+    return columns.filter(
+      (col) =>
+        col.field === 'id' ||
+        col.field === 'state' ||
+        col.field === 'recoveryTurns' ||
+        col.field === 'exhaustion' ||
+        col.field === 'hitPoints' ||
+        col.field === 'skillSimple',
+    )
   }
-  // Default: hide hitPoints and recoveryTurns columns
-  return columns.filter((col) => col.field !== 'hitPoints' && col.field !== 'recoveryTurns')
+  // Default
+  return columns.filter(
+    (col) =>
+      col.field === 'id' ||
+      col.field === 'state' ||
+      col.field === 'assignment' ||
+      col.field === 'skill' ||
+      col.field === 'exhaustion',
+  )
 }

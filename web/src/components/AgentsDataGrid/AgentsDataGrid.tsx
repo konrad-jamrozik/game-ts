@@ -28,93 +28,8 @@ export type AgentRow = Agent & {
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
-function createAgentColumns(
-  rows: AgentRow[],
-  showOnlyTerminated: boolean,
-  missionSites: GameState['missionSites'],
-): GridColDef[] {
-  // For terminated agents, show only specific columns
-  if (showOnlyTerminated) {
-    return [
-      {
-        field: 'id',
-        headerName: 'ID',
-        minWidth: 120,
-        renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-          <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
-        ),
-      },
-      {
-        field: 'skill',
-        headerName: 'Skill',
-        width: 40,
-        renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
-          <span aria-label={`agents-row-skill-${params.id}`}>{params.row.skill}</span>
-        ),
-      },
-      {
-        field: 'hp',
-        headerName: 'HP',
-        width: 40,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => (
-          <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
-        ),
-      },
-      {
-        field: 'service',
-        headerName: 'Service',
-        width: 80,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
-          const { turnHired, turnTerminated } = params.row
-          if (turnTerminated === undefined) {
-            return <span aria-label={`agents-row-service-${params.id}`}>-</span>
-          }
-          const totalTurnsServed = turnTerminated - turnHired + 1
-          return (
-            <span aria-label={`agents-row-service-${params.id}`}>
-              {turnHired} - {turnTerminated} ({totalTurnsServed})
-            </span>
-          )
-        },
-      },
-      {
-        field: 'mission',
-        headerName: 'Mission',
-        width: 220,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
-          const { terminatedOnMissionSiteId, assignment } = params.row
-
-          if (terminatedOnMissionSiteId !== undefined) {
-            const missionSite = missionSites.find((site) => site.id === terminatedOnMissionSiteId)
-            if (missionSite !== undefined) {
-              const displayValue = fmtMissionSiteIdWithMissionId(missionSite)
-              return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
-            }
-          }
-          // If agent was sacked (assignment is 'Sacked'), show "-"
-          if (assignment === 'Sacked') {
-            return <span aria-label={`agents-row-mission-${params.id}`}>Sacked</span>
-          }
-          // Fallback (shouldn't happen for terminated agents, but just in case)
-          return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
-        },
-      },
-      {
-        field: 'by',
-        headerName: 'By',
-        width: 180,
-        renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
-          const { terminatedBy } = params.row
-          // If agent was terminated by an enemy, show the enemy ID without prefix
-          if (terminatedBy !== undefined) {
-            const displayValue = fmtNoPrefix(terminatedBy, 'enemy-')
-            return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
-          }
-          return <span aria-label={`agents-row-by-${params.id}`}>-</span>
-        },
-      },
-    ]
-  }
+function createAgentColumns(rows: AgentRow[], missionSites: GameState['missionSites']): GridColDef[] {
+  // Return all columns - visibility will be controlled by filterVisibleAgentColumns
   return [
     {
       field: 'id',
@@ -248,11 +163,11 @@ function createAgentColumns(
       ),
     },
     {
-      field: 'missionsSurvived',
-      headerName: 'Missions',
-      width: 90,
+      field: 'missionsTotal',
+      headerName: 'Miss #',
+      width: 70,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-missions-survived-${params.id}`}>{params.value}</span>
+        <span aria-label={`agents-row-missions-total-${params.id}`}>{params.value}</span>
       ),
     },
     {
@@ -262,6 +177,76 @@ function createAgentColumns(
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-turn-hired-${params.id}`}>{params.value}</span>
       ),
+    },
+    // Terminated agent specific columns
+    {
+      field: 'skillSimple',
+      headerName: 'Skill',
+      width: 40,
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.row.skill}</span>
+      ),
+    },
+    {
+      field: 'hitPointsMax',
+      headerName: 'HP',
+      width: 40,
+      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => (
+        <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
+      ),
+    },
+    {
+      field: 'service',
+      headerName: 'Service',
+      width: 80,
+      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+        const { turnHired, turnTerminated } = params.row
+        if (turnTerminated === undefined) {
+          return <span aria-label={`agents-row-service-${params.id}`}>-</span>
+        }
+        const totalTurnsServed = turnTerminated - turnHired + 1
+        return (
+          <span aria-label={`agents-row-service-${params.id}`}>
+            {turnHired} - {turnTerminated} ({totalTurnsServed})
+          </span>
+        )
+      },
+    },
+    {
+      field: 'mission',
+      headerName: 'Mission',
+      width: 220,
+      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+        const { terminatedOnMissionSiteId, assignment } = params.row
+
+        if (terminatedOnMissionSiteId !== undefined) {
+          const missionSite = missionSites.find((site) => site.id === terminatedOnMissionSiteId)
+          if (missionSite !== undefined) {
+            const displayValue = fmtMissionSiteIdWithMissionId(missionSite)
+            return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
+          }
+        }
+        // If agent was sacked (assignment is 'Sacked'), show "-"
+        if (assignment === 'Sacked') {
+          return <span aria-label={`agents-row-mission-${params.id}`}>Sacked</span>
+        }
+        // Fallback (shouldn't happen for terminated agents, but just in case)
+        return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
+      },
+    },
+    {
+      field: 'by',
+      headerName: 'By',
+      width: 180,
+      renderCell: (params: GridRenderCellParams<AgentRow, unknown>): React.JSX.Element => {
+        const { terminatedBy } = params.row
+        // If agent was terminated by an enemy, show the enemy ID without prefix
+        if (terminatedBy !== undefined) {
+          const displayValue = fmtNoPrefix(terminatedBy, 'enemy-')
+          return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
+        }
+        return <span aria-label={`agents-row-by-${params.id}`}>-</span>
+      },
     },
   ]
 }
@@ -319,11 +304,10 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  // Define columns based on whether we're showing terminated agents
-  const columns = createAgentColumns(rows, showOnlyTerminated, gameState.missionSites)
-  // For terminated agents, show all columns (they're already filtered in createAgentColumns)
-  // For non-terminated agents, filter based on showRecovering state
-  const visibleColumns = showOnlyTerminated ? columns : filterVisibleAgentColumns(columns, showRecovering)
+  // Define all columns - visibility is controlled by filterVisibleAgentColumns
+  const columns = createAgentColumns(rows, gameState.missionSites)
+  // Filter columns based on showOnlyTerminated and showRecovering state
+  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: string[] = []
@@ -371,7 +355,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       initialState={{
         columns: {
           columnVisibilityModel: {
-            missionsSurvived: false,
             turnHired: false,
           },
         },
