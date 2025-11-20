@@ -4,35 +4,28 @@ KJA backlog:
 
 # Brainstorming
 
-- KJA document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
-  Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
-  introducing a trade-off. Read more in OneNote for MLS4 intel page.
+- Add to assets:
+  - Max agent capacity (living quarters)
+  - Max training capacity
+  - Max transport capacity (number of agents that can be sent on one mission)
+  - HP Recovery rate
+  - Exhaustion recovery rate
+- New button: "Upgrade asset", when upgradeable asset is selected
+  
+- Add new mechanic: procurement / investments / upgrades
+  - Allow to spend money on upgrades
+  - Examples of upgrades:
+    - More agent capacity (living quarters)
+    - Better agent weapons (upgraded for all)
+    - More agent hit points (upgraded for all)
+    - Faster HP recovery rate
+    - Faster exhaustion recovery rate
+    - Faster training
 
-- KJA Allow State column filtering:
-  Per LLM, how to make MUI use enum for filtering:
-  > In MUI, when I have column menu for filtering, can I make it so that it allows me to pick from multiple predefined
-  > values? An enumeration
-  >
-  > "Solution: Use singleSelect Type with valueOptions"
-  ``` typescript
-  const columns: GridColDef[] = [
-    {
-      field: 'status',
-      headerName: 'Status',
-      type: 'singleSelect',
-      valueOptions: ['Active', 'Inactive', 'Pending', 'Completed'],
-      width: 150,
-    },  
-  ```
+- Limit amount of agents that can be trained at a time.
+- Limit amount of living quarters available.
 
-- Charts for stats over time, at the bottom of the screen.
-  - Panic
-  - Each faction threat level, suppression, panic increase
-  - Money
-  - Cumulative missions completed successfully, failed, expired
-  - Hardest mission completed by total enemy skill
-  - Agents, and what they do: contracting, investigating leads, on missions, etc.
-  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+- Training activity for agents
 
 - For combat reports, add dedicated data grid with columns:
   - round,
@@ -53,25 +46,6 @@ KJA backlog:
     - Maybe decrease lead difficulty by some amount?
 
 - Add AI player that can play the game for me
-
-- Add Capabilities / Stats screen that show player capabilities like:
-  - Max agent capacity (living quarters)
-  - Display agent weapon damage and add an ability to upgrade
-  - Max agents can be sent on one mission
-  - HP Recovery rate
-  - Exhaustion recovery rate
-
-- Training activity for agents
-
-- Add new mechanic: procurement / investments / upgrades
-  - Allow to spend money on upgrades
-  - Examples of upgrades:
-    - More agent capacity (living quarters)
-    - Better agent weapons (upgraded for all)
-    - More agent hit points (upgraded for all)
-    - Faster HP recovery rate
-    - Faster exhaustion recovery rate
-    - Faster training
 
 - Funding increase every X turns based on score
 
@@ -98,6 +72,7 @@ KJA backlog:
     - Replace idioms like `leadInvestigationCounts[lead.id] ?? 0` with LeadsView methods
     - Replace `getLeadById(leadId)` calls with LeadsView
     - Update selectors to use LeadsView
+  - OR do the opposite, get rid of AgentsView, use utils instead
 - hierarchize the game state per the comments and use more fine-grained selectors.
   `export type GameState = {`
   - Log (turn counter, action tracking)
@@ -111,6 +86,9 @@ KJA backlog:
 
 # Docs
 
+- document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
+  Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
+  introducing a trade-off. Read more in OneNote for MLS4 intel page.
 - Add a reference doc listing critical code components, like `evalTurn`
 - Update the AI instructions to reference the new docs
 
@@ -121,6 +99,15 @@ KJA backlog:
 
 # UI improvements
 
+- Charts for stats over time, at the bottom of the screen.
+  - Panic
+  - Each faction threat level, suppression, panic increase
+  - Money
+  - Cumulative missions completed successfully, failed, expired
+  - Hardest mission completed by total enemy skill
+  - Agents, and what they do: contracting, investigating leads, on missions, etc.
+  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+
 - Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
 
 # UI ideas
@@ -130,7 +117,7 @@ KJA backlog:
   E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
   Cell background gradient may denote % of original effective skill.
 
-# Performance Optimization
+# Performance Optimizations
 
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
@@ -155,3 +142,22 @@ KJA backlog:
 # Dev exp
 
 - Add ESLint server MCP: https://eslint.org/docs/latest/use/mcp
+
+# Maybe, future
+
+- Allow State column filtering:
+  Per LLM, how to make MUI use enum for filtering:
+  > In MUI, when I have column menu for filtering, can I make it so that it allows me to pick from multiple predefined
+  > values? An enumeration
+  >
+  > "Solution: Use singleSelect Type with valueOptions"
+  ``` typescript
+  const columns: GridColDef[] = [
+    {
+      field: 'status',
+      headerName: 'Status',
+      type: 'singleSelect',
+      valueOptions: ['Active', 'Inactive', 'Pending', 'Completed'],
+      width: 150,
+    },  
+  ```
