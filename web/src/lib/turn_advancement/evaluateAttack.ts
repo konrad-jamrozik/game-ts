@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { getActorEffectiveSkill } from '../utils/actorUtils'
+import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { divMult100Round } from '../utils/mathUtils'
@@ -137,10 +137,6 @@ export function evaluateAttack(
     // Apply defender exhaustion (both agents and enemies)
     defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
   }
-}
-
-export function isAgent(unit: Agent | Enemy): unit is Agent {
-  return 'turnHired' in unit
 }
 
 export type AgentCombatStats = {

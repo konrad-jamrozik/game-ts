@@ -45,6 +45,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsTotal: 0,
+      skillFromTraining: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 

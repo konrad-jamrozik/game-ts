@@ -3,6 +3,11 @@ import type { Actor, Agent, Enemy } from '../model/model'
 import { agV } from '../model/agents/AgentView'
 import { compareIdsNumeric } from './stringUtils'
 
+// Type guard function to determine if an Actor is an Agent
+export function isAgent(actor: Actor): actor is Agent {
+  return 'turnHired' in actor
+}
+
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
 export function effectiveSkill(actor: Actor): number {
@@ -12,7 +17,14 @@ export function effectiveSkill(actor: Actor): number {
   // First 5 points of exhaustion have no impact
 
   const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - 5, 0) / 100, 0)
-  const result = actor.skill * hitPointsReduction * exhaustionReduction
+
+  // For agents, add skillFromTraining to base skill
+  let baseSkill = actor.skill
+  if (isAgent(actor)) {
+    baseSkill = actor.skill + actor.skillFromTraining
+  }
+
+  const result = baseSkill * hitPointsReduction * exhaustionReduction
 
   return floor(result)
 }

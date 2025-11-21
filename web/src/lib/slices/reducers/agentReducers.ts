@@ -1,4 +1,5 @@
 import type { Agent, GameState } from '../../model/model'
+import { agV } from '../../model/agents/AgentView'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
@@ -49,6 +50,16 @@ export const assignAgentsToEspionage = asPlayerAction<string[]>((state: GameStat
   }
 })
 
+export const assignAgentsToTraining = asPlayerAction<string[]>((state: GameState, action) => {
+  const agentIdsToAssign = action.payload
+  for (const agent of state.agents) {
+    if (agentIdsToAssign.includes(agent.id)) {
+      agent.assignment = 'Training'
+      agent.state = 'InTraining'
+    }
+  }
+})
+
 export const recallAgents = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToRecall = action.payload
   for (const agent of state.agents) {
@@ -67,8 +78,16 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
           }
         }
       }
+      // Check if agent is in training before changing assignment
+      const isTraining = agV(agent).isOnTrainingAssignment()
       agent.assignment = 'Standby'
-      agent.state = 'InTransit'
+      // Training agents go directly to Available (no transit needed)
+      if (isTraining) {
+        agent.state = 'Available'
+      } else {
+        // Other assignments (Contracting, Espionage, Lead Investigation) go to InTransit
+        agent.state = 'InTransit'
+      }
     }
   }
 })
@@ -89,6 +108,7 @@ export function newHiredAgent(id: string, turnHired: number): Agent {
     recoveryTurns: 0,
     hitPointsLostBeforeRecovery: 0,
     missionsTotal: 0,
+    skillFromTraining: 0,
     weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
   }
 }

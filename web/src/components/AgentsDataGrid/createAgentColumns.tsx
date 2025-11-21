@@ -78,8 +78,9 @@ export function createAgentColumns(
         }
 
         // Secondary sort: baseline skill (if effective skills are equal)
-        const baselineSkill1 = row1.skill
-        const baselineSkill2 = row2.skill
+        // KJA dedup the concept of baseline skill
+        const baselineSkill1 = row1.skill + row1.skillFromTraining
+        const baselineSkill2 = row2.skill + row2.skillFromTraining
         if (baselineSkill1 !== baselineSkill2) {
           return baselineSkill1 - baselineSkill2
         }
@@ -89,7 +90,8 @@ export function createAgentColumns(
       },
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
-        const baselineSkill = params.value ?? 0
+        // KJA dedup the concept of baseline skill
+        const baselineSkill = (params.value ?? 0) + params.row.skillFromTraining
         const percentage = baselineSkill > 0 ? fmtDec1(toPct(effectiveSkill, baselineSkill)) : '0.0'
         return (
           <div
@@ -153,9 +155,11 @@ export function createAgentColumns(
       field: 'skillSimple',
       headerName: 'Skill',
       width: 40,
-      valueGetter: (_value, row: AgentRow) => row.skill,
+      valueGetter: (_value, row: AgentRow) => row.skill + row.skillFromTraining,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
-        <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.row.skill}</span>
+        <span aria-label={`agents-row-skill-simple-${params.id}`}>
+          {params.row.skill + params.row.skillFromTraining}
+        </span>
       ),
     },
     {

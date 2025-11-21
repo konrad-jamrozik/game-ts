@@ -13,10 +13,11 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
   }
 
   const onMissionAgentIds: string[] = []
-  function makeAgent(agent: Omit<Agent, 'id' | 'weapon'>): Agent {
+  function makeAgent(agent: Omit<Agent, 'id' | 'weapon' | 'skillFromTraining'>): Agent {
     const id = `agent-${nextId()}`
     const built: Agent = {
       id,
+      skillFromTraining: 0,
       ...agent,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
     }

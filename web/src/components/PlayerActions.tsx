@@ -11,6 +11,7 @@ import { getLeadById } from '../lib/collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
+  assignAgentsToTraining,
   buyUpgrade,
   deployAgentsToMission,
   hireAgent,
@@ -109,6 +110,33 @@ export function PlayerActions(): React.JSX.Element {
 
     setShowAlert(false) // Hide alert on successful action
     dispatch(assignAgentsToEspionage(selectedAgentIds))
+    dispatch(clearAgentSelection())
+  }
+
+  function handleAssignToTraining(): void {
+    // Validate that all selected agents are available
+    const validationResult = agents.validateAvailable(selectedAgentIds)
+
+    if (!validationResult.isValid) {
+      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
+      setShowAlert(true)
+      return
+    }
+
+    // Count how many agents are already in training
+    const agentsInTraining = agents.onTrainingAssignment().length
+    const availableTrainingCap = gameState.trainingCap - agentsInTraining
+
+    if (selectedAgentIds.length > availableTrainingCap) {
+      setAlertMessage(
+        `Cannot assign ${selectedAgentIds.length} agents to training. Only ${availableTrainingCap} training slots available.`,
+      )
+      setShowAlert(true)
+      return
+    }
+
+    setShowAlert(false) // Hide alert on successful action
+    dispatch(assignAgentsToTraining(selectedAgentIds))
     dispatch(clearAgentSelection())
   }
 
@@ -280,6 +308,9 @@ export function PlayerActions(): React.JSX.Element {
           </Button>
           <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
             Assign {fmtAgentCount(selectedAgentIds.length)} to espionage
+          </Button>
+          <Button variant="contained" onClick={handleAssignToTraining} disabled={selectedAgentIds.length === 0}>
+            Assign {fmtAgentCount(selectedAgentIds.length)} to training
           </Button>
           <Button
             variant="contained"

@@ -24,6 +24,7 @@ import {
   updateEspionageAgents,
   updateInTransitAgents,
   updateRecoveringAgents,
+  updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 
@@ -60,6 +61,9 @@ export default function evaluateTurn(state: GameState): TurnReport {
 
   // 6. Update all agents on Espionage assignment
   const espionageResults = updateEspionageAgents(state)
+
+  // 6.5. Update all agents in Training
+  updateTrainingAgents(state)
 
   // 7. Update lead investigations (agents completing investigations go to InTransit)
   const leadInvestigationReports = updateLeadInvestigations(state)

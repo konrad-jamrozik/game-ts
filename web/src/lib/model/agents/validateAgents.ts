@@ -48,6 +48,6 @@ export function validateOnAssignmentAgents(agentsView: AgentsView, selectedAgent
     agentsView,
     selectedAgentIds,
     (view) => view.notOnAssignment(),
-    'This action can be done only on OnAssignment agents!',
+    'This action can be done only on OnAssignment or InTraining agents!',
   )
 }

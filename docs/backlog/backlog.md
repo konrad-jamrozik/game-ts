@@ -4,8 +4,6 @@ KJA backlog:
 
 # Brainstorming
 
-- KJA Add new mechanic: assigning agents to training
-  
 - KJA Add to assets: Agent weapon damage range min-max
   
 - KJA fix up the assets prices, and make their cost increase
@@ -34,14 +32,14 @@ KJA backlog:
   - What if there is currently no eligible lead investigation?
     - Maybe decrease lead difficulty by some amount?
 
-- Add AI player that can play the game for me
-
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
   - Unlocking all HQ raids leads should unlock the final "game victory" lead
   - Researching that lead should win the game.
 
 - Add more factions
+
+- Add AI player that can play the game for me
 
 - Enemy factions should generate missions themselves that player must counter to avoid penalties
   - Offensive missions like "Red dawn terror" or "Red dawn assault" where someone called for help

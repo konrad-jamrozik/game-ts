@@ -7,7 +7,7 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -19,6 +19,7 @@ declare module '@mui/material/styles' {
     agentStateOnAssignment: PaletteColorOptions
     agentStateOnMission: PaletteColorOptions
     agentStateRecovering: PaletteColorOptions
+    agentStateInTraining: PaletteColorOptions
     agentStateTerminated: PaletteColorOptions
     agentStateDefault: PaletteColorOptions
   }
@@ -32,6 +33,7 @@ declare module '@mui/material/styles' {
     agentStateOnAssignment?: PaletteColorOptions
     agentStateOnMission?: PaletteColorOptions
     agentStateRecovering?: PaletteColorOptions
+    agentStateInTraining?: PaletteColorOptions
     agentStateTerminated?: PaletteColorOptions
     agentStateDefault?: PaletteColorOptions
   }
@@ -57,6 +59,7 @@ declare module '@mui/material/Chip' {
     agentStateOnAssignment: true
     agentStateOnMission: true
     agentStateRecovering: true
+    agentStateInTraining: true
     agentStateTerminated: true
     agentStateDefault: true
   }
@@ -119,6 +122,13 @@ const colorSystemOptions: ColorSystemOptions = {
         main: deepOrange[700],
       },
       name: 'agentStateRecovering',
+    }),
+
+    agentStateInTraining: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[700],
+      },
+      name: 'agentStateInTraining',
     }),
 
     agentStateTerminated: {

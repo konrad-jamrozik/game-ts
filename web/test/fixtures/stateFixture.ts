@@ -34,7 +34,8 @@ export const st = {
   newAgentInEspionage: (id: string): Agent => st.newAgent(id, 'Espionage'),
 
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
-    const state: AgentState = isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
+    const state: AgentState =
+      assignment === 'Training' ? 'InTraining' : isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
     return agFix.new({ id, state, assignment })
   },
 

@@ -21,5 +21,6 @@ export function getModelPalette(): Record<AgentState, MyPaletteColor> {
     InTransit: 'agentStateInTransit',
     OnAssignment: 'agentStateOnAssignment',
     OnMission: 'agentStateOnMission',
+    InTraining: 'agentStateInTraining',
   }
 }

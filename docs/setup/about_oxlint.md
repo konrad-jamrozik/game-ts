@@ -73,7 +73,7 @@ I discovered I need to install `npm install --save-dev oxlint-tsgolint` which I 
 after installing `oxc` vscode extension and looking into its Output logs - it told me this is missing.
 
 However, the extension still doesn't seem to be able to find it, because it is in `web/node_modules` and not `node_modules`.
-ESLint extension config allows specifying workspace dir, but apparently this doesn't work for the extension.
+ESLint extension config allows specifying workspace dir, but apparently this doesn't work for the oxlint extension.
 
 ## Fix for default-case
 

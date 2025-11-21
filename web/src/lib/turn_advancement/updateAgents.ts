@@ -71,6 +71,18 @@ export function updateEspionageAgents(state: GameState): { intelGathered: number
   return { intelGathered }
 }
 
+export function updateTrainingAgents(state: GameState): void {
+  const agents = agsV(state.agents)
+  const trainingAgents = agents.onTrainingAssignment()
+  // Increase skillFromTraining by trainingSkillGain for each agent
+  for (const agentView of trainingAgents) {
+    const agent = agentView.agent()
+    agent.skillFromTraining += state.trainingSkillGain
+  }
+  // Increase exhaustion by 1 for each training agent
+  trainingAgents.applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+}
+
 export function updateInTransitAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'InTransit') {

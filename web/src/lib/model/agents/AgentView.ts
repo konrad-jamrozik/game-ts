@@ -11,6 +11,7 @@ export type AgentView = Readonly<{
   isOnAssignment(): boolean
   isOnContractingAssignment(): boolean
   isOnEspionageAssignment(): boolean
+  isOnTrainingAssignment(): boolean
   validateInvariants(): void
   agent(): Agent
 }>
@@ -25,6 +26,7 @@ export function agV(agent: Agent): AgentView {
     isOnAssignment: () => agent.state === 'OnAssignment',
     isOnContractingAssignment: () => agV(agent).isOnAssignment() && agent.assignment === 'Contracting',
     isOnEspionageAssignment: () => agV(agent).isOnAssignment() && agent.assignment === 'Espionage',
+    isOnTrainingAssignment: () => agent.state === 'InTraining' && agent.assignment === 'Training',
     validateInvariants: () => validateAgentLocalInvariants(agent),
     agent: () => agent,
   }

@@ -6,6 +6,7 @@ import {
   advanceTurn,
   assignAgentsToContracting,
   assignAgentsToEspionage,
+  assignAgentsToTraining,
   buyUpgrade,
   deployAgentsToMission,
   hireAgent,
@@ -33,7 +34,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line unicorn/consistent-function-scoping
+  // eslint-disable-next-line unicorn/consistent-function-scoping, complexity
   return (store) => (next) => (action) => {
     // Get the state before the action for comparison
     const previousState = store.getState()
@@ -81,6 +82,10 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const agentIds = action.payload
       const agentCount = agentIds.length
       postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to espionage`)
+    } else if (assignAgentsToTraining.match(action)) {
+      const agentIds = action.payload
+      const agentCount = agentIds.length
+      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to training`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length

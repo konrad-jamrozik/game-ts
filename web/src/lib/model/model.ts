@@ -17,10 +17,11 @@ export type AgentState =
   | 'Recovering'
   | 'OnAssignment'
   | 'OnMission'
+  | 'InTraining'
   | 'Terminated'
 
 // Assignment types for agents
-export type ActivityId = 'Contracting' | 'Espionage'
+export type ActivityId = 'Contracting' | 'Espionage' | 'Training'
 export type MissionSiteId = `mission-site-${string}`
 export type LeadInvestigationId = `investigation-${string}`
 export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
@@ -28,7 +29,7 @@ export type AgentAssignment = ActivityId | MissionSiteId | LeadInvestigationId |
 
 // Type guard functions for agent assignments
 export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
-  return assignment === 'Contracting' || assignment === 'Espionage'
+  return assignment === 'Contracting' || assignment === 'Espionage' || assignment === 'Training'
 }
 
 export function isMissionSiteAssignment(assignment: AgentAssignment): assignment is MissionSiteId {
@@ -57,6 +58,7 @@ export type Agent = Actor & {
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsTotal: number
+  skillFromTraining: number
   state: AgentState
   assignment: AgentAssignment
 }

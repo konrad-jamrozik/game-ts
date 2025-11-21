@@ -26,10 +26,12 @@ type AgentsViewMethods = Readonly<{
   withIds(ids: readonly string[]): AgentsView
   onContractingAssignment(): AgentsView
   onEspionageAssignment(): AgentsView
+  onTrainingAssignment(): AgentsView
   available(): AgentsView
   notAvailable(): AgentsView
   onAssignment(): AgentsView
   notOnAssignment(): AgentsView
+  recallable(): AgentsView
   terminated(): AgentsView
   notTerminated(): AgentsView
   inTransit(): AgentsView
@@ -56,9 +58,13 @@ function getAgentsViewMethods(
     available: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isAvailable())),
     notAvailable: (): AgentsView => toAgsV(agVArr.filter((agent) => !agent.isAvailable())),
     onAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnAssignment())),
-    notOnAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => !agent.isOnAssignment())),
+    notOnAssignment: (): AgentsView =>
+      toAgsV(agVArr.filter((agent) => !agent.isOnAssignment() && !agent.isOnTrainingAssignment())),
+    recallable: (): AgentsView =>
+      toAgsV(agVArr.filter((agent) => agent.isOnAssignment() || agent.isOnTrainingAssignment())),
     onContractingAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnContractingAssignment())),
     onEspionageAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnEspionageAssignment())),
+    onTrainingAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnTrainingAssignment())),
     terminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isTerminated())),
     notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
