@@ -17,7 +17,7 @@
         "block-scoped-var": "error",
         "class-methods-use-this": "error",
         "curly": "error",
-        "default-case": "error",
+        "default-case": "off",
         "default-case-last": "error",
         "default-param-last": "error",
         "eqeqeq": "error",

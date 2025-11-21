@@ -74,3 +74,10 @@ after installing `oxc` vscode extension and looking into its Output logs - it to
 
 However, the extension still doesn't seem to be able to find it, because it is in `web/node_modules` and not `node_modules`.
 ESLint extension config allows specifying workspace dir, but apparently this doesn't work for the extension.
+
+## Fix for default-case
+
+type-aware oxlint correctly identifies when `switch` doesn't need `default` case.
+But I managed to make oxlint be type-aware only with `npm run oxlint`, not with VS Code extension.
+
+Hence I had to disable `default-case` rule both for ESLint and oxlint.

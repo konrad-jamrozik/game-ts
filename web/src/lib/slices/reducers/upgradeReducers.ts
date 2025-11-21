@@ -42,10 +42,5 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       state.hitPointsRecoveryPct += 1
       break
     }
-    default: {
-      // Exhaustive check: all UpgradeName cases are handled above
-      const exhaustiveCheck: never = upgradeName
-      throw new Error(`Unknown upgrade name: ${String(exhaustiveCheck)}`)
-    }
   }
 })
