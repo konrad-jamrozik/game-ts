@@ -14,15 +14,14 @@ KJA backlog:
 
 - KJA funding penalty for expired missions
 
-- For combat reports, add dedicated data grid with columns:
+- Add "Details" button to completed missions that show the combat log
+- For combat reports, add dedicated data grid with columns same as console.log i.e.:
   - round,
   - attacker & effective skill & % of initial,
   - defender & effective skill & % of initial,
   - roll & result & threshold & diff to threshold
   - damage inflicted (if any) & % of weapon range & min & max
   - hit points remaining & percentage of total & total
-
-- Add "Details" button to completed missions that show the combat log
 
 - Make each repeatable lead be investigated only once at a time.
   - Make even allow one lead per faction at a time.

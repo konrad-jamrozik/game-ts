@@ -18,13 +18,7 @@ export function effectiveSkill(actor: Actor): number {
 
   const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - 5, 0) / 100, 0)
 
-  // For agents, add skillFromTraining to base skill
-  let baseSkill = actor.skill
-  if (isAgent(actor)) {
-    baseSkill = actor.skill + actor.skillFromTraining
-  }
-
-  const result = baseSkill * hitPointsReduction * exhaustionReduction
+  const result = actor.skill * hitPointsReduction * exhaustionReduction
 
   return floor(result)
 }
