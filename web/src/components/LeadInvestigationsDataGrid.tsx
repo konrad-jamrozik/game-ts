@@ -10,6 +10,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
+import { agV } from '../lib/model/agents/AgentView'
 import { bps, toBpsFloor, type Bps } from '../lib/model/bps'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
@@ -169,7 +170,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
-        const effectiveSkill = agent.skill - agent.exhaustion
+        const effectiveSkill = agV(agent).effectiveSkill()
         projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
       }
 

@@ -1,6 +1,5 @@
 import { div, floor } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
-import { agV } from '../model/agents/AgentView'
 import { compareIdsNumeric } from './stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
@@ -25,11 +24,6 @@ export function effectiveSkill(actor: Actor): number {
 
 // Helper function to get effective skill of an actor (agent or enemy)
 export function getActorEffectiveSkill(actor: Agent | Enemy): number {
-  // KJA this is silly, dedup
-  // Check if it's an agent by checking for turnHired property (agents have it, enemies don't)
-  if ('turnHired' in actor) {
-    return agV(actor).effectiveSkill()
-  }
   return effectiveSkill(actor)
 }
 

@@ -191,7 +191,7 @@ export function calculateIntelDecayRounded(accumulatedIntel: number): number {
 export function calculateAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
-    const agentEffectiveSkill = agent.skill - agent.exhaustion
+    const agentEffectiveSkill = agV(agent).effectiveSkill()
     total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
   }
   return total
