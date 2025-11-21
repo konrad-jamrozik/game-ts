@@ -8,6 +8,8 @@ import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/utils/dataGridUtils'
 import { createAgentColumns } from './createAgentColumns'
 
+// KJA add "SkillFromTraining" to 'stats' view, and also show precise skill in this view.
+
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
   // https://mui.com/x/react-data-grid/row-definition/
