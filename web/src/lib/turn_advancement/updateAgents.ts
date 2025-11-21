@@ -3,6 +3,7 @@ import { assertEqual } from '../utils/assert'
 import { floor, div } from '../utils/mathUtils'
 import type { GameState } from '../model/model'
 import { agsV } from '../model/agents/AgentsView'
+import { addSkill, addSkillFromTraining } from '../utils/actorUtils'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
@@ -77,8 +78,8 @@ export function updateTrainingAgents(state: GameState): void {
   // Increase both skill and skillFromTraining by trainingSkillGain for each agent
   for (const agentView of trainingAgents) {
     const agent = agentView.agent()
-    agent.skill += state.trainingSkillGain
-    agent.skillFromTraining += state.trainingSkillGain
+    addSkill(agent, state.trainingSkillGain)
+    addSkillFromTraining(agent, state.trainingSkillGain)
   }
   // Increase exhaustion by 1 for each training agent
   trainingAgents.applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)

@@ -5,6 +5,7 @@ import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../utils/assert'
+import { addSkill } from '../utils/actorUtils'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
@@ -126,14 +127,14 @@ function updateSurvivingAgent(
   // Skill from battle combat
   const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
   assertDefined(battleSkillGain)
-  agent.skill += battleSkillGain
+  addSkill(agent, battleSkillGain)
 
   // Skill from mission survival
   // missionsTotal was already incremented when agent was deployed to the mission
   const survivalIndex = Math.min(agent.missionsTotal - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1)
   const survivalSkillGain = MISSION_SURVIVAL_SKILL_GAIN[survivalIndex]
   assertDefined(survivalSkillGain)
-  agent.skill += survivalSkillGain
+  addSkill(agent, survivalSkillGain)
 
   console.log(
     `📈 Agent ${agent.id} gained ${battleSkillGain + survivalSkillGain} skill (${battleSkillGain} from combat, ${survivalSkillGain} from survival)`,

@@ -7,6 +7,22 @@ export function isAgent(actor: Actor): actor is Agent {
   return 'turnHired' in actor
 }
 
+/**
+ * Adds skill points to an agent.
+ * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
+ */
+export function addSkill(agent: Agent, amount: number): void {
+  agent.skill += amount
+}
+
+/**
+ * Adds skill points from training to an agent.
+ * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
+ */
+export function addSkillFromTraining(agent: Agent, amount: number): void {
+  agent.skillFromTraining += amount
+}
+
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
 export function effectiveSkill(actor: Actor): number {
