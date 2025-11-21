@@ -1,6 +1,7 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import type { AgentState, GameState } from '../../lib/model/model'
+import { fromFixed2, toFixed2, type Fixed2 } from '../../lib/model/fixed2'
 import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
 import { fmtDec1, fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
@@ -72,14 +73,14 @@ export function createAgentColumns(
         const effectiveSkill1 = agV(row1).effectiveSkill()
         const effectiveSkill2 = agV(row2).effectiveSkill()
 
-        // Primary sort: effective skill
-        if (effectiveSkill1 !== effectiveSkill2) {
-          return effectiveSkill1 - effectiveSkill2
+        // Primary sort: effective skill (compare Fixed2 values)
+        if (effectiveSkill1.value !== effectiveSkill2.value) {
+          return effectiveSkill1.value - effectiveSkill2.value
         }
 
         // Secondary sort: baseline skill (if effective skills are equal)
-        const baselineSkill1 = row1.skill
-        const baselineSkill2 = row2.skill
+        const baselineSkill1 = row1.skill.value
+        const baselineSkill2 = row2.skill.value
         if (baselineSkill1 !== baselineSkill2) {
           return baselineSkill1 - baselineSkill2
         }
@@ -87,9 +88,11 @@ export function createAgentColumns(
         // Tertiary sort: agent ID (for stable sorting)
         return row1.id.localeCompare(row2.id)
       },
-      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
-        const effectiveSkill = agV(params.row).effectiveSkill()
-        const baselineSkill = params.value ?? 0
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed2>): React.JSX.Element => {
+        const effectiveSkillFixed = agV(params.row).effectiveSkill()
+        const effectiveSkill = fromFixed2(effectiveSkillFixed)
+        const baselineSkillFixed = params.value ?? toFixed2(0)
+        const baselineSkill = fromFixed2(baselineSkillFixed)
         const percentage = baselineSkill > 0 ? fmtDec1(toPct(effectiveSkill, baselineSkill)) : '0.0'
         return (
           <div
@@ -153,9 +156,9 @@ export function createAgentColumns(
       field: 'skillSimple',
       headerName: 'Skill',
       width: 40,
-      valueGetter: (_value, row: AgentRow) => row.skill,
+      valueGetter: (_value, row: AgentRow) => fromFixed2(row.skill),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
-        <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.row.skill}</span>
+        <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
       ),
     },
     {

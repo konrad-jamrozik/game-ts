@@ -1,6 +1,7 @@
 import { getMissionById } from '../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
+import { fromFixed2Decimal } from '../model/fixed2'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -136,8 +137,10 @@ function updateSurvivingAgent(
   assertDefined(survivalSkillGain)
   addSkill(agent, survivalSkillGain)
 
+  const totalSkillGain = fromFixed2Decimal(battleSkillGain) + fromFixed2Decimal(survivalSkillGain)
+  // KJA I think here skill may display with numeric imprecision due to lack of floor
   console.log(
-    `📈 Agent ${agent.id} gained ${battleSkillGain + survivalSkillGain} skill (${battleSkillGain} from combat, ${survivalSkillGain} from survival)`,
+    `📈 Agent ${agent.id} gained ${totalSkillGain} skill (${fromFixed2Decimal(battleSkillGain)} from combat, ${fromFixed2Decimal(survivalSkillGain)} from survival)`,
   )
 
   // ----------------------------------------

@@ -1,5 +1,6 @@
-import { div, floor } from './mathUtils'
+import { div } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
+import { fixed2, floorFixed2, fromFixed2Decimal, toFixed2, type Fixed2 } from '../model/fixed2'
 import { compareIdsNumeric } from './stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
@@ -11,35 +12,44 @@ export function isAgent(actor: Actor): actor is Agent {
  * Adds skill points to an agent.
  * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
  */
-export function addSkill(agent: Agent, amount: number): void {
-  agent.skill += amount
+export function addSkill(agent: Agent, amount: Fixed2): void {
+  agent.skill = fixed2(agent.skill.value + amount.value)
 }
 
 /**
  * Adds skill points from training to an agent.
  * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
  */
-export function addSkillFromTraining(agent: Agent, amount: number): void {
-  agent.skillFromTraining += amount
+export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
+  agent.skillFromTraining = fixed2(agent.skillFromTraining.value + amount.value)
 }
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
-export function effectiveSkill(actor: Actor): number {
+export function effectiveSkill(actor: Actor): Fixed2 {
   const hitPointsLost = actor.maxHitPoints - actor.hitPoints
   const hitPointsLostRatio = div(hitPointsLost, actor.maxHitPoints)
   const hitPointsReduction = Math.max(1 - hitPointsLostRatio, 0)
+
   // First 5 points of exhaustion have no impact
+  const noImpactExhaustion = 5
+  const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - noImpactExhaustion, 0) / 100, 0)
 
-  const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - 5, 0) / 100, 0)
+  // KJA 1 the remainder of calculations on Fixed2 here is a good example how this could be abstracted.
+  // something like
+  // const result: Fixed2 = fixed2mult(actor.skill, hitPointsReduction, exhaustionReduction)
+  // return floorFixed2(result)
 
-  const result = actor.skill * hitPointsReduction * exhaustionReduction
+  // Convert skill from Fixed2 to decimal for calculations
+  const skillDecimal = fromFixed2Decimal(actor.skill)
+  const result = skillDecimal * hitPointsReduction * exhaustionReduction
 
-  return floor(result)
+  // Convert result to Fixed2 and round down to 2 decimal places
+  return floorFixed2(toFixed2(result))
 }
 
 // Helper function to get effective skill of an actor (agent or enemy)
-export function getActorEffectiveSkill(actor: Agent | Enemy): number {
+export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed2 {
   return effectiveSkill(actor)
 }
 
@@ -47,11 +57,11 @@ export function getActorEffectiveSkill(actor: Agent | Enemy): number {
 export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
   const skillA = getActorEffectiveSkill(actorA)
   const skillB = getActorEffectiveSkill(actorB)
-  if (skillA === skillB) {
+  if (skillA.value === skillB.value) {
     return compareIdsNumeric(actorA.id, actorB.id)
   }
   // Return the actor with higher effective skill as first.
   // Explanation:
-  // sort() will return actorA as first if output is negative, i.e. when actorB.skill - actorA.skill < 0 i.e. actorB.skill < actorA.skill.
-  return skillB - skillA
+  // sort() will return actorA as first if output is negative, i.e. when skillB.value - skillA.value < 0 i.e. skillB.value < skillA.value.
+  return skillB.value - skillA.value
 }

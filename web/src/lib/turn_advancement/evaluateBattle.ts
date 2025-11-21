@@ -1,6 +1,7 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
-import { agV } from '../model/agents/AgentView'
+import { agV, type AgentView } from '../model/agents/AgentView'
+import { fromFixed2Decimal, toFixed2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
@@ -17,7 +18,7 @@ export type BattleReport = {
   agentsTerminated: number
   enemyCasualties: number
   retreated: boolean
-  agentSkillUpdates: Record<string, number>
+  agentSkillUpdates: Record<string, Fixed2>
   initialAgentEffectiveSkill: number
   initialAgentHitPoints: number
   initialEnemySkill: number
@@ -38,12 +39,15 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   const agentStats = newAgentsCombatStats(agentsView)
 
-  const agentSkillUpdates: Record<string, number> = {}
+  const agentSkillUpdates: Record<string, Fixed2> = {}
 
   // Calculate initial totals for percentage tracking
-  const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + stats.initialEffectiveSkill, 0)
+  const initialAgentEffectiveSkill = agentStats.reduce(
+    (sum, stats) => sum + fromFixed2Decimal(stats.initialEffectiveSkill),
+    0,
+  )
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
+  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + fromFixed2Decimal(effectiveSkill(enemy)), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
@@ -165,10 +169,10 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 }
 
 function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
-  return agentViews.map((agentView) => ({
+  return agentViews.map((agentView: AgentView) => ({
     id: agentView.agent().id,
     initialEffectiveSkill: agentView.effectiveSkill(),
-    skillGained: 0,
+    skillGained: toFixed2(0),
   }))
 }
 
@@ -199,7 +203,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
 
   // Calculate effective skills at round start to prevent targets from becoming more attractive
   // as they take damage during the round
-  const effectiveSkillsAtRoundStart = new Map<string, number>()
+  const effectiveSkillsAtRoundStart = new Map<string, Fixed2>()
   for (const agent of agents) {
     if (agent.hitPoints > 0) {
       effectiveSkillsAtRoundStart.set(agent.id, agV(agent).effectiveSkill())
@@ -274,14 +278,17 @@ function showRoundStatus(
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
-  const currentAgentEffectiveSkill = activeAgents.reduce((sum, agent) => sum + agV(agent).effectiveSkill(), 0)
+  const currentAgentEffectiveSkill = activeAgents.reduce(
+    (sum, agent) => sum + fromFixed2Decimal(agV(agent).effectiveSkill()),
+    0,
+  )
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
   const agentSkillPercentage = divMult100Round(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPercentage = divMult100Round(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + effectiveSkill(enemy), 0)
+  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + fromFixed2Decimal(effectiveSkill(enemy)), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
   const enemySkillPercentage = divMult100Round(currentEnemySkill, initialEnemySkill)
   const enemyHpPercentage = divMult100Round(currentEnemyHitPoints, initialEnemyHitPoints)

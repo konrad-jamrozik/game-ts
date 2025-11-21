@@ -69,7 +69,7 @@ function getAgentsViewMethods(
     notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
     sortedByEffectiveSkill: (): AgentsView =>
-      toAgsV(agVArr.toSorted((ag1, ag2) => ag1.effectiveSkill() - ag2.effectiveSkill())),
+      toAgsV(agVArr.toSorted((ag1, ag2) => ag1.effectiveSkill().value - ag2.effectiveSkill().value)),
     agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),

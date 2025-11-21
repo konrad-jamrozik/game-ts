@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
+import { toFixed2 } from '../../src/lib/model/fixed2'
 
 describe(effectiveSkill, () => {
   test('no exhaustion, no hit points lost', () => {
@@ -12,7 +13,7 @@ describe(effectiveSkill, () => {
 
   test('exhaustion only', () => {
     const agent = agFix.new({
-      skill: 116,
+      skill: toFixed2(116),
       exhaustion: 20,
     })
 
@@ -30,7 +31,7 @@ describe(effectiveSkill, () => {
 
   test('exhaustion and hit points lost', () => {
     const agent = agFix.new({
-      skill: 150,
+      skill: toFixed2(150),
       exhaustion: 20,
       hitPoints: 23,
       maxHitPoints: 30,

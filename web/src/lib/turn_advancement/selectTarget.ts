@@ -4,6 +4,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 import { rollRange } from './rolls'
+import { fromFixed2Decimal, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -35,7 +36,7 @@ export function selectTarget<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
   attacker: Agent | Enemy,
-  effectiveSkillsAtRoundStart: Map<string, number>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
 ): T | undefined {
   if (potentialTargets.length === 0) return undefined
 
@@ -43,9 +44,10 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
-  const targetSkillLowerBound = attackerEffectiveSkill * 0.2
-  const targetSkillUpperBound = attackerEffectiveSkill * 0.8
-  const targetSkillPreferred = attackerEffectiveSkill * 0.5
+  // KJA review for numeric imprecision due to lack of floor, same for all other fromFixed2Decimal and fromFixed2 calls
+  const targetSkillLowerBound = fromFixed2Decimal(attackerEffectiveSkill) * 0.2
+  const targetSkillUpperBound = fromFixed2Decimal(attackerEffectiveSkill) * 0.8
+  const targetSkillPreferred = fromFixed2Decimal(attackerEffectiveSkill) * 0.5
 
   // Find minimum attack count among available targets
   const minAttackCount = Math.min(...availableTargets.map((target) => attackCounts.get(target.id) ?? 0))
@@ -82,7 +84,7 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
   targetSkillLowerBound: number,
   targetSkillUpperBound: number,
   targetSkillPreferred: number,
-  effectiveSkillsAtRoundStart: Map<string, number>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
 ): T | undefined {
   // Get targets that are in valid skill range
   const validTargets = targetsAtAttackCount.filter((target) =>
@@ -118,7 +120,7 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
 function compareTargetsBySkill(
   targetA: Agent | Enemy,
   targetB: Agent | Enemy,
-  effectiveSkillsAtRoundStart: Map<string, number>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
 ): number {
   const skillA = effectiveSkillsAtRoundStart.get(targetA.id)
   const skillB = effectiveSkillsAtRoundStart.get(targetB.id)
@@ -130,7 +132,7 @@ function compareTargetsBySkill(
   // Return the target with lower skill as first.
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
-  return skillA - skillB
+  return fromFixed2Decimal(skillA) - fromFixed2Decimal(skillB)
 }
 
 // Helper function to check if target is in valid skill range
@@ -138,11 +140,11 @@ function isInValidSkillRange(
   target: Agent | Enemy,
   targetSkillLowerBound: number,
   targetSkillUpperBound: number,
-  effectiveSkillsAtRoundStart: Map<string, number>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return skill >= targetSkillLowerBound && skill <= targetSkillUpperBound
+  return fromFixed2Decimal(skill) >= targetSkillLowerBound && fromFixed2Decimal(skill) <= targetSkillUpperBound
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
@@ -177,9 +179,9 @@ function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T
 function distanceFromPreferred(
   target: Agent | Enemy,
   targetSkillPreferred: number,
-  effectiveSkillsAtRoundStart: Map<string, number>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
 ): number {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return Math.abs(skill - targetSkillPreferred)
+  return Math.abs(fromFixed2Decimal(skill) - targetSkillPreferred)
 }

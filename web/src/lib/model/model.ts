@@ -1,9 +1,10 @@
 import type { Bps } from './bps'
+import type { Fixed2 } from './fixed2'
 import type { TurnReport } from './turnReportModel'
 
 export type Actor = {
   id: string
-  skill: number
+  skill: Fixed2
   hitPoints: number
   maxHitPoints: number
   exhaustion: number
@@ -58,7 +59,7 @@ export type Agent = Actor & {
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsTotal: number
-  skillFromTraining: number
+  skillFromTraining: Fixed2
   state: AgentState
   assignment: AgentAssignment
 }
@@ -163,7 +164,7 @@ export type GameState = {
   agentCap: number
   transportCap: number
   trainingCap: number
-  trainingSkillGain: number
+  trainingSkillGain: Fixed2
   exhaustionRecovery: number
   hitPointsRecoveryPct: number
   // Liabilities // KJa to remove, should be unused

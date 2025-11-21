@@ -1,5 +1,6 @@
 import type { Agent, GameState } from '../../model/model'
 import { bps } from '../../model/bps'
+import { toFixed2 } from '../../model/fixed2'
 import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
@@ -31,7 +32,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
     // KJA dedup agent ID with agent reducers
     const agentId = `agent-${agentNumericId.toString().padStart(3, '0')}`
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
-    const skill = 120 + index * 20
+    const skill = toFixed2(120 + index * 20)
 
     const newAgent: Agent = {
       id: agentId,
@@ -45,7 +46,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsTotal: 0,
-      skillFromTraining: 0,
+      skillFromTraining: toFixed2(0),
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 

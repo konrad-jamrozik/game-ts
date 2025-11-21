@@ -14,6 +14,7 @@ import { setUpgradeSelection, clearUpgradeSelection } from '../lib/slices/select
 import { ExpandableCard } from './ExpandableCard'
 import { StyledDataGrid } from './StyledDataGrid'
 import { MyChip } from './MyChip'
+import { fromFixed2Decimal } from '../lib/model/fixed2'
 
 export type AssetRow = {
   id: number
@@ -98,7 +99,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Agent cap', id: 4, value: gameState.agentCap, price: UPGRADE_PRICE },
     { name: 'Transport cap', id: 5, value: gameState.transportCap, price: UPGRADE_PRICE },
     { name: 'Training cap', id: 6, value: gameState.trainingCap, price: UPGRADE_PRICE },
-    { name: 'Training skill gain', id: 7, value: gameState.trainingSkillGain, price: UPGRADE_PRICE },
+    { name: 'Training skill gain', id: 7, value: fromFixed2Decimal(gameState.trainingSkillGain), price: UPGRADE_PRICE },
     {
       name: 'Exhaustion recovery',
       id: 8,

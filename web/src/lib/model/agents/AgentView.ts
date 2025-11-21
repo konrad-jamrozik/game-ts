@@ -1,12 +1,13 @@
 import { effectiveSkill } from '../../utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
+import type { Fixed2 } from '../fixed2'
 
 export type AgentView = Readonly<{
   isTerminated(): boolean
   isInTransit(): boolean
   isDeployedOnMissionSite(missionSiteId: MissionSiteId): boolean
-  effectiveSkill(): number
+  effectiveSkill(): Fixed2
   isAvailable(): boolean
   isOnAssignment(): boolean
   isOnContractingAssignment(): boolean
