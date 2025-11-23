@@ -1,6 +1,14 @@
 import { div } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
-import { fixed2, floorFixed2, fromFixed2Decimal, toFixed2, type Fixed2 } from '../model/fixed2'
+import {
+  addFixed2,
+  compareFixed2,
+  equalsFixed2,
+  floorFixed2,
+  fromFixed2Decimal,
+  toFixed2,
+  type Fixed2,
+} from '../model/fixed2'
 import { compareIdsNumeric } from './stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
@@ -13,7 +21,7 @@ export function isAgent(actor: Actor): actor is Agent {
  * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
  */
 export function addSkill(agent: Agent, amount: Fixed2): void {
-  agent.skill = fixed2(agent.skill.value + amount.value)
+  agent.skill = addFixed2(agent.skill, amount)
 }
 
 /**
@@ -21,7 +29,7 @@ export function addSkill(agent: Agent, amount: Fixed2): void {
  * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
  */
 export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
-  agent.skillFromTraining = fixed2(agent.skillFromTraining.value + amount.value)
+  agent.skillFromTraining = addFixed2(agent.skillFromTraining, amount)
 }
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
@@ -57,11 +65,11 @@ export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed2 {
 export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
   const skillA = getActorEffectiveSkill(actorA)
   const skillB = getActorEffectiveSkill(actorB)
-  if (skillA.value === skillB.value) {
+  if (equalsFixed2(skillA, skillB)) {
     return compareIdsNumeric(actorA.id, actorB.id)
   }
   // Return the actor with higher effective skill as first.
   // Explanation:
-  // sort() will return actorA as first if output is negative, i.e. when skillB.value - skillA.value < 0 i.e. skillB.value < skillA.value.
-  return skillB.value - skillA.value
+  // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
+  return compareFixed2(skillB, skillA)
 }

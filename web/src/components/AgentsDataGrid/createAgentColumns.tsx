@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import type { AgentState, GameState } from '../../lib/model/model'
-import { fromFixed2, toFixed2, type Fixed2 } from '../../lib/model/fixed2'
+import { compareFixed2, equalsFixed2, fromFixed2, toFixed2, type Fixed2 } from '../../lib/model/fixed2'
 import { agV } from '../../lib/model/agents/AgentView'
 import { assertDefined } from '../../lib/utils/assert'
 import { fmtDec1, fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
@@ -74,15 +74,14 @@ export function createAgentColumns(
         const effectiveSkill2 = agV(row2).effectiveSkill()
 
         // Primary sort: effective skill (compare Fixed2 values)
-        if (effectiveSkill1.value !== effectiveSkill2.value) {
-          return effectiveSkill1.value - effectiveSkill2.value
+        if (!equalsFixed2(effectiveSkill1, effectiveSkill2)) {
+          return compareFixed2(effectiveSkill1, effectiveSkill2)
         }
 
         // Secondary sort: baseline skill (if effective skills are equal)
-        const baselineSkill1 = row1.skill.value
-        const baselineSkill2 = row2.skill.value
-        if (baselineSkill1 !== baselineSkill2) {
-          return baselineSkill1 - baselineSkill2
+        const comparison = compareFixed2(row1.skill, row2.skill)
+        if (comparison !== 0) {
+          return comparison
         }
 
         // Tertiary sort: agent ID (for stable sorting)

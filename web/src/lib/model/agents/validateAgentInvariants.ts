@@ -1,5 +1,5 @@
 import type { Agent, GameState } from '../model'
-import { fromFixed2 } from '../fixed2'
+import { fromFixed2, isLessThanFixed2, toFixed2 } from '../fixed2'
 import { assertDefined, assertEqual, assertOneOf } from '../../utils/assert'
 import { div } from '../../utils/mathUtils'
 
@@ -27,7 +27,7 @@ function validateBasicStatRanges(agent: Agent): void {
   if (agent.exhaustion < 0) {
     throw new Error(`Agent ${agent.id} has negative exhaustion: ${agent.exhaustion}`)
   }
-  if (agent.skill.value < 0) {
+  if (isLessThanFixed2(agent.skill, toFixed2(0))) {
     throw new Error(`Agent ${agent.id} has negative skill: ${fromFixed2(agent.skill)}`)
   }
   if (agent.hitPointsLostBeforeRecovery < 0) {
