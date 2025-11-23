@@ -12,7 +12,7 @@ import {
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   RETREAT_THRESHOLD,
 } from '../../src/lib/model/ruleset/constants'
-import { fixed2 } from '../../src/lib/model/fixed2'
+import { addFixed2, fromFixed2Decimal, toFixed2 } from '../../src/lib/model/fixed2'
 
 describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
@@ -45,7 +45,7 @@ describe(evaluateBattle, () => {
       enemyCasualties: 0,
       retreated: false,
       agentSkillUpdates: {
-        [agent.id]: fixed2(AGENT_FAILED_ATTACK_SKILL_REWARD.value + AGENT_FAILED_DEFENSE_SKILL_REWARD.value),
+        [agent.id]: addFixed2(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD),
       },
     })
   })
@@ -59,9 +59,8 @@ describe(evaluateBattle, () => {
     const report = evaluateBattle(agsV([agent]), [enemy]) // Act
 
     const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * RETREAT_THRESHOLD) / enemy.weapon.damage)
-    const expectedSkillUpdate = fixed2(
-      fixed2(AGENT_FAILED_ATTACK_SKILL_REWARD.value + AGENT_FAILED_DEFENSE_SKILL_REWARD.value).value * expectedRounds,
-    )
+    const skillGainPerRound = addFixed2(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
+    const expectedSkillUpdate = toFixed2(fromFixed2Decimal(skillGainPerRound) * expectedRounds)
     expectReportToBe(report)({
       rounds: expectedRounds,
       agentCasualties: 1,

@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { fromFixed2Decimal, type Fixed2 } from '../model/fixed2'
+import { addFixed2, fromFixed2Decimal, type Fixed2 } from '../model/fixed2'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
@@ -65,10 +65,10 @@ export function evaluateAttack(
 
     // Update skill gains from battle combat
     if (attackerStats) {
-      attackerStats.skillGained = AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD
+      attackerStats.skillGained = addFixed2(attackerStats.skillGained, AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = AGENT_FAILED_DEFENSE_SKILL_REWARD
+      defenderStats.skillGained = addFixed2(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     }
 
     if (hpRemaining <= 0) {
@@ -133,10 +133,10 @@ export function evaluateAttack(
 
     // Update skill gains (postponed)
     if (attackerStats) {
-      attackerStats.skillGained = AGENT_FAILED_ATTACK_SKILL_REWARD
+      attackerStats.skillGained = addFixed2(attackerStats.skillGained, AGENT_FAILED_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD
+      defenderStats.skillGained = addFixed2(defenderStats.skillGained, AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD)
     }
 
     // Apply defender exhaustion (both agents and enemies)
