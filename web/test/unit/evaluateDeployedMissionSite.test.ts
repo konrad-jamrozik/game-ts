@@ -14,7 +14,7 @@ import {
 } from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
-import { toFixed2 } from '../../src/lib/model/fixed2'
+import { fromFixed2Decimal, toFixed2 } from '../../src/lib/model/fixed2'
 
 describe(evaluateDeployedMissionSite, () => {
   test('success', () => {
@@ -80,7 +80,7 @@ describe(evaluateDeployedMissionSite, () => {
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
-      expect(testAgent.skill).toBeGreaterThan(200)
+      expect(fromFixed2Decimal(testAgent.skill)).toBeGreaterThan(200)
 
       // Verify agent gained exhaustion from combat
       expect(testAgent.exhaustion).toBeGreaterThan(0)
