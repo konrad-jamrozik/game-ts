@@ -32,6 +32,24 @@ export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
   agent.skillFromTraining = addFixed2(agent.skillFromTraining, amount)
 }
 
+// Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
+export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
+  const skillA = getActorEffectiveSkill(actorA)
+  const skillB = getActorEffectiveSkill(actorB)
+  if (equalsFixed2(skillA, skillB)) {
+    return compareIdsNumeric(actorA.id, actorB.id)
+  }
+  // Return the actor with higher effective skill as first.
+  // Explanation:
+  // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
+  return compareFixed2(skillB, skillA)
+}
+
+// Helper function to get effective skill of an actor (agent or enemy)
+export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed2 {
+  return effectiveSkill(actor)
+}
+
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
 export function effectiveSkill(actor: Actor): Fixed2 {
@@ -54,22 +72,4 @@ export function effectiveSkill(actor: Actor): Fixed2 {
 
   // Convert result to Fixed2 and round down to 2 decimal places
   return floorFixed2(toFixed2(result))
-}
-
-// Helper function to get effective skill of an actor (agent or enemy)
-export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed2 {
-  return effectiveSkill(actor)
-}
-
-// Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
-export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
-  const skillA = getActorEffectiveSkill(actorA)
-  const skillB = getActorEffectiveSkill(actorB)
-  if (equalsFixed2(skillA, skillB)) {
-    return compareIdsNumeric(actorA.id, actorB.id)
-  }
-  // Return the actor with higher effective skill as first.
-  // Explanation:
-  // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
-  return compareFixed2(skillB, skillA)
 }

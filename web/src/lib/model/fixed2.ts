@@ -11,15 +11,6 @@ export type Fixed2 = {
   readonly kind: 'Fixed2'
 }
 
-/**
- * Creates a Fixed2 value from a number.
- * Use this when you have a raw number that represents a fixed-point value in this format.
- * For example: fixed2(700) represents 7.00
- */
-export function fixed2(value: number): Fixed2 {
-  return { value, kind: 'Fixed2' }
-}
-
 export function isFixed2(value: unknown): value is Fixed2 {
   return (
     typeof value === 'object' &&
@@ -114,4 +105,14 @@ export function compareFixed2(first: Fixed2, second: Fixed2): number {
  */
 export function isLessThanFixed2(first: Fixed2, second: Fixed2): boolean {
   return first.value < second.value
+}
+
+/**
+ * Creates a Fixed2 value from a number.
+ * Use this when you have a raw number that represents a fixed-point value in this format.
+ * For example: fixed2(700) represents 7.00
+ * @internal
+ */
+function fixed2(value: number): Fixed2 {
+  return { value, kind: 'Fixed2' }
 }
