@@ -82,12 +82,22 @@ export function assertInteger(
   }
 }
 
-export function assertFixed2DecimalPlaces(
+/**
+ * Asserts that a number has at most 2 decimal places.
+ * For example:
+ * assertMax2Dec(100) = true
+ * assertMax2Dec(100.1) = true
+ * assertMax2Dec(100.12) = true
+ * assertMax2Dec(100.1200) = true
+ * assertMax2Dec(100.123) = false
+ * assertMax2Dec(100.120001) = false
+ */
+export function assertMax2Dec(
   value: number,
   errMsg = `Value must have at most 2 decimal places, got: ${value}`,
 ): asserts value is number {
-  const decimalPart = Math.abs(value % 100)
-  if (decimalPart !== Math.floor(decimalPart)) {
+  const multiplied = Math.abs(value * 100)
+  if (multiplied !== Math.floor(multiplied)) {
     throw new Error(errMsg)
   }
 }

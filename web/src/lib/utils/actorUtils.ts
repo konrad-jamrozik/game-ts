@@ -1,9 +1,9 @@
-import { div, nonNeg } from './mathUtils'
+import { f2Add, f2Compare, f2Equals, f2Mult, type Fixed2 } from '../model/fixed2'
 import type { Actor, Agent, Enemy } from '../model/model'
-import { f2Add, f2Compare, f2Equals, f2Flr, f2AsFloat, toF2, type Fixed2 } from '../model/fixed2'
-import { compareIdsNumeric } from './stringUtils'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from './assert'
+import { div, nonNeg } from './mathUtils'
+import { compareIdsNumeric } from './stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {

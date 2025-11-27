@@ -7,7 +7,7 @@ describe(effectiveSkill, () => {
   test('no exhaustion, no hit points lost', () => {
     const agent = agFix.default()
 
-    // effective_skill = floor(100 * (1 - 0/30) * (1 - 0/100)) = floor(100 * 1 * 1) = 100
+    // effective_skill = 100 * (1 - 0/30) * (1 - 0/100) = 100 * 1 * 1 = 100
     expect(effectiveSkill(agent)).toStrictEqual(toF2(100))
   })
 
@@ -17,8 +17,7 @@ describe(effectiveSkill, () => {
       exhaustion: 20,
     })
 
-    // KJA fix
-    // effective_skill = floor(116 * (1 - 0/30) * (1 - 15/100)) = floor(116 * 1 * 0.85) = floor(98.6) = 98
+    // effective_skill = 116 * (1 - 0/30) * (1 - 15/100) = 116 * 1 * 0.85 = 98.6
     expect(effectiveSkill(agent)).toStrictEqual(toF2(98.6))
   })
 
@@ -27,7 +26,7 @@ describe(effectiveSkill, () => {
 
     // hit points lost = 30 - 23 = 7
     // effective_skill = floor(100 * (1 - 7/30) * (1 - 0/100)) = floor(100 * 0.76666... * 1) = floor(76.666...) = 76
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(76)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(76.66))
   })
 
   test('exhaustion and hit points lost', () => {

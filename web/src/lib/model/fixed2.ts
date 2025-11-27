@@ -1,6 +1,6 @@
-import { assertFixed2DecimalPlaces, assertInteger } from '../utils/assert'
+import { assertMax2Dec, assertInteger } from '../utils/assert'
 import { fmtPctDec1 } from '../utils/formatUtils'
-import { floor } from '../utils/mathUtils'
+import { div100Flr, floor, mult100Flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -34,8 +34,8 @@ export function isF2(value: unknown): value is Fixed2 {
  * toF2(21.75) creates fixed2(2175), which represents 21.75.
  */
 export function toF2(value: number): Fixed2 {
-  assertFixed2DecimalPlaces(value)
-  return fixed2(value * 100)
+  assertMax2Dec(value)
+  return fixed2(mult100Flr(value))
 }
 
 /**
@@ -48,8 +48,8 @@ export function toF2(value: number): Fixed2 {
  * f2FlrStr(fixed2(2175)) = "21" (not "21.75")
  *
  */
-export function f2FlrStr(fixed: Fixed2): string {
-  return floor(fixed.value / 100).toString()
+export function f2FlrStr(value: Fixed2): string {
+  return div100Flr(value.value).toString()
 }
 
 /**
@@ -93,7 +93,7 @@ export function f2Add(first: Fixed2, second: Fixed2): Fixed2 {
 }
 
 export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
-  return fixed2(f2AsFloat(first) * second * third)
+  return fixed2(mult100Flr(f2AsFloat(first) * second * third))
 }
 
 /**
