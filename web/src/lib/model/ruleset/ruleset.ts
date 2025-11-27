@@ -235,7 +235,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
 
   // Check if enemy effective skill is at least 80% of agents' current effective skill
   const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const totalCurrentEnemyEffectiveSkill = aliveEnemies.reduce((sum, enemy) => sum + f2asFloat(effectiveSkill(enemy)), 0)
+  const totalCurrentEnemyEffectiveSkill = f2asFloat(f2sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy))))
   const enemySkillRatio = div(totalCurrentEnemyEffectiveSkill, totalCurrentEffectiveSkill)
   const enemyAboveThreshold = enemySkillRatio >= RETREAT_ENEMY_SKILL_THRESHOLD
 
