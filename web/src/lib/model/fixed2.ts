@@ -56,8 +56,8 @@ export function f2FlrStr(fixed: Fixed2): string {
  * f2fmtPctDec1(toF2(75), toF2(100)) = "75.0" (representing 75.0%)
  * f2fmtPctDec1(toF2(98.5), toF2(52)) = "189.4" (representing 189.4%)
  */
-export function f2fmtPctDec1(nominator: number, denominator: number): string {
-  return fmtPctDec1(nominator, denominator)
+export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
+  return fmtPctDec1(nominator.value, denominator.value)
 }
 
 /**
