@@ -1,10 +1,10 @@
+import { f2cmp, f2dist, f2eq, f2mult, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { assertDefined } from '../utils/assert'
-import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
+import { compareIdsNumeric } from '../utils/stringUtils'
 import { rollRange } from './rolls'
-import { f2cmp, f2eq, f2mult, toF2Flr, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -96,11 +96,6 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
       const distanceA = distanceFromPreferred(targetA, targetSkillPreferred, effectiveSkillsAtRoundStart)
       const distanceB = distanceFromPreferred(targetB, targetSkillPreferred, effectiveSkillsAtRoundStart)
 
-      // KJA because of the floor rounding in effectiveSkill called from getActorEffectiveSkill
-      // this may be imprecise, like: 50% = 10, target 1 = 7.9 (dist = 2.1), target 2 = 12.9 (dist = 2.9)
-      // so it rounds target 1 to 7 and target 2 to 12, thus picking target 2 instead of target 1
-      // Need to think about the rounding precisions here of effectiveSkill, Bps, etc.
-      //
       // If distances are equal, prefer lower skill
       if (f2eq(distanceA, distanceB)) {
         return compareTargetsBySkill(targetA, targetB, effectiveSkillsAtRoundStart)
@@ -182,6 +177,6 @@ function distanceFromPreferred(
 ): Fixed2 {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  const diff = skill.value - targetSkillPreferred.value
-  return toF2Flr(Math.abs(diff / 100))
+  const dist = f2dist(skill, targetSkillPreferred)
+  return dist
 }

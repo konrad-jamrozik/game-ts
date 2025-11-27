@@ -1,6 +1,6 @@
 import { assertMax2Dec, assertInteger } from '../utils/assert'
 import { fmtDec2, fmtPctDec1 } from '../utils/formatUtils'
-import { div100Flr, floor, mult100Flr } from '../utils/mathUtils'
+import { dist, div100Flr, floor, mult100Flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -35,10 +35,10 @@ export function isF2(value: unknown): value is Fixed2 {
  */
 export function toF2(value: number): Fixed2 {
   assertMax2Dec(value)
-  return toF2Flr(value)
+  return toF2flr(value)
 }
 
-export function toF2Flr(value: number): Fixed2 {
+export function toF2flr(value: number): Fixed2 {
   return fixed2(mult100Flr(value))
 }
 
@@ -102,6 +102,18 @@ export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
 }
 
+export function f2sub(first: Fixed2, second: Fixed2): Fixed2 {
+  return fixed2(first.value - second.value)
+}
+
+export function f2abs(value: Fixed2): Fixed2 {
+  return fixed2(Math.abs(value.value))
+}
+
+export function f2dist(first: Fixed2, second: Fixed2): Fixed2 {
+  return fixed2(dist(first.value, second.value))
+}
+
 /**
  * Multiplies a Fixed2 value by one or more decimal numbers and returns the result as a Fixed2.
  * The result is floored to maintain Fixed2 precision.
@@ -112,7 +124,7 @@ export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
  */
 export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
   const product = multipliers.reduce((acc, mult) => acc * mult, f2asFloat(first))
-  return toF2Flr(product)
+  return toF2flr(product)
 }
 
 /**

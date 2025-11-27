@@ -63,3 +63,7 @@ export function mult100Flr(value: number): number {
 export function div100Flr(value: number): number {
   return floor(value / 100)
 }
+
+export function dist(first: number, second: number): number {
+  return Math.abs(first - second)
+}
