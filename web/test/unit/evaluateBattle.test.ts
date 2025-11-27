@@ -10,7 +10,7 @@ import {
   AGENT_FAILED_DEFENSE_SKILL_REWARD,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
-  RETREAT_THRESHOLD,
+  AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/model/ruleset/constants'
 import { f2add, f2asFloat, toF2 } from '../../src/lib/model/fixed2'
 
@@ -58,7 +58,7 @@ describe(evaluateBattle, () => {
 
     const report = evaluateBattle(agsV([agent]), [enemy]) // Act
 
-    const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * RETREAT_THRESHOLD) / enemy.weapon.damage)
+    const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f2add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     const expectedSkillUpdate = toF2(f2asFloat(skillGainPerRound) * expectedRounds)
     expectReportToBe(report)({

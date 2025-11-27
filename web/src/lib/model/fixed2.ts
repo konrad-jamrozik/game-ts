@@ -128,6 +128,18 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
 }
 
 /**
+ * Divides one Fixed2 value by another and returns the result as a Fixed2.
+ * The result represents the ratio directly (not as a percentage).
+ * For example:
+ * f2div(fixed2(800), fixed2(1000)) = fixed2(80) (representing 8.00 / 10.00 = 0.80)
+ * f2div(fixed2(1500), fixed2(1000)) = fixed2(150) (representing 15.00 / 10.00 = 1.50)
+ */
+export function f2div(numerator: Fixed2, denominator: Fixed2): Fixed2 {
+  const ratio = numerator.value / denominator.value
+  return toF2flr(ratio)
+}
+
+/**
  * Sums one or more Fixed2 values together and returns the result as a Fixed2.
  * For example:
  * f2sum(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
@@ -170,6 +182,17 @@ export function f2cmp(first: Fixed2, second: Fixed2): number {
  */
 export function f2lt(first: Fixed2, second: Fixed2): boolean {
   return first.value < second.value
+}
+
+/**
+ * Checks if the first Fixed2 value is greater than or equal to the second.
+ * For example:
+ * f2ge(fixed2(800), fixed2(700)) = true (8.00 >= 7.00)
+ * f2ge(fixed2(700), fixed2(800)) = false (7.00 >= 8.00 is false)
+ * f2ge(fixed2(700), fixed2(700)) = true (7.00 >= 7.00)
+ */
+export function f2ge(first: Fixed2, second: Fixed2): boolean {
+  return first.value >= second.value
 }
 
 /**
