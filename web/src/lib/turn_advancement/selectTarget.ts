@@ -4,7 +4,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 import { rollRange } from './rolls'
-import { f2asFloat, f2Compare, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, f2cmp, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -131,7 +131,7 @@ function compareTargetsBySkill(
   // Return the target with lower skill as first.
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
-  return f2Compare(skillA, skillB)
+  return f2cmp(skillA, skillB)
 }
 
 // Helper function to check if target is in valid skill range

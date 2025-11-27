@@ -1,4 +1,4 @@
-import { f2add, f2Compare, f2Equals, f2mult, type Fixed2 } from '../model/fixed2'
+import { f2add, f2cmp, f2eq, f2mult, type Fixed2 } from '../model/fixed2'
 import type { Actor, Agent, Enemy } from '../model/model'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from './assert'
@@ -30,13 +30,13 @@ export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
 export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
   const skillA = getActorEffectiveSkill(actorA)
   const skillB = getActorEffectiveSkill(actorB)
-  if (f2Equals(skillA, skillB)) {
+  if (f2eq(skillA, skillB)) {
     return compareIdsNumeric(actorA.id, actorB.id)
   }
   // Return the actor with higher effective skill as first.
   // Explanation:
   // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
-  return f2Compare(skillB, skillA)
+  return f2cmp(skillB, skillA)
 }
 
 // Helper function to get effective skill of an actor (agent or enemy)

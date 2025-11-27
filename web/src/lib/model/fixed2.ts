@@ -47,9 +47,9 @@ export function toF2Flr(value: number): Fixed2 {
  * Use this when you want to display a Fixed2 value as a plain integer number.
  *
  * For example:
- * f2FlrStr(fixed2(700)) = "7"
- * f2FlrStr(fixed2(2150)) = "21" (not "21.5")
- * f2FlrStr(fixed2(2175)) = "21" (not "21.75")
+ * f2fmtInt(fixed2(700)) = "7"
+ * f2fmtInt(fixed2(2150)) = "21" (not "21.5")
+ * f2fmtInt(fixed2(2175)) = "21" (not "21.75")
  *
  */
 export function f2fmtInt(value: Fixed2): string {
@@ -64,9 +64,9 @@ export function f2fmt(value: Fixed2): string {
  * // KJA review all usages of f2AsFloat
  * Converts a Fixed2 value to a decimal number without rounding.
  * For example:
- * f2AsFloat(fixed2(700)) = 7.0
- * f2AsFloat(fixed2(2150)) = 21.5
- * f2AsFloat(fixed2(2175)) = 21.75
+ * f2asFloat(fixed2(700)) = 7.0
+ * f2asFloat(fixed2(2150)) = 21.5
+ * f2asFloat(fixed2(2175)) = 21.75
  */
 export function f2asFloat(fixed: Fixed2): number {
   return fixed.value / 100
@@ -86,8 +86,8 @@ export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
  * // KJA unused, do we need this?
  * Rounds down a Fixed2 value to the nearest integer (maintaining 2 decimal precision).
  * For example:
- * f2Flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
- * f2Flr(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
+ * f2flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
+ * f2flr(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
  */
 export function f2flr(fixed: Fixed2): Fixed2 {
   return fixed2(floor(fixed.value))
@@ -96,7 +96,7 @@ export function f2flr(fixed: Fixed2): Fixed2 {
 /**
  * Adds two Fixed2 values together.
  * For example:
- * f2Add(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
+ * f2add(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
  */
 export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
@@ -106,8 +106,8 @@ export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
  * Multiplies a Fixed2 value by two decimal numbers and returns the result as a Fixed2.
  * The result is floored to maintain Fixed2 precision.
  * For example:
- * f2Mult(fixed2(1000), 0.5, 0.8) = fixed2(400) (representing 10.00 * 0.5 * 0.8 = 4.00)
- * f2Mult(fixed2(2150), 0.9, 0.95) = fixed2(1838) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.38)
+ * f2mult(fixed2(1000), 0.5, 0.8) = fixed2(400) (representing 10.00 * 0.5 * 0.8 = 4.00)
+ * f2mult(fixed2(2150), 0.9, 0.95) = fixed2(1838) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.38)
  */
 export function f2mult(first: Fixed2, second: number, third: number): Fixed2 {
   return toF2Flr(f2asFloat(first) * second * third)
@@ -116,10 +116,10 @@ export function f2mult(first: Fixed2, second: number, third: number): Fixed2 {
 /**
  * Checks if two Fixed2 values are equal.
  * For example:
- * f2Equals(fixed2(700), fixed2(700)) = true
- * f2Equals(fixed2(700), fixed2(701)) = false
+ * f2eq(fixed2(700), fixed2(700)) = true
+ * f2eq(fixed2(700), fixed2(701)) = false
  */
-export function f2Equals(first: Fixed2, second: Fixed2): boolean {
+export function f2eq(first: Fixed2, second: Fixed2): boolean {
   return first.value === second.value
 }
 
@@ -128,11 +128,11 @@ export function f2Equals(first: Fixed2, second: Fixed2): boolean {
  * Returns a negative number if first < second, zero if first === second, or a positive number if first > second.
  * Useful for sorting and comparison operations.
  * For example:
- * f2Compare(fixed2(700), fixed2(800)) < 0 (7.00 < 8.00)
- * f2Compare(fixed2(800), fixed2(700)) > 0 (8.00 > 7.00)
- * f2Compare(fixed2(700), fixed2(700)) === 0 (7.00 === 7.00)
+ * f2cmp(fixed2(700), fixed2(800)) < 0 (7.00 < 8.00)
+ * f2cmp(fixed2(800), fixed2(700)) > 0 (8.00 > 7.00)
+ * f2cmp(fixed2(700), fixed2(700)) === 0 (7.00 === 7.00)
  */
-export function f2Compare(first: Fixed2, second: Fixed2): number {
+export function f2cmp(first: Fixed2, second: Fixed2): number {
   return first.value - second.value
 }
 
