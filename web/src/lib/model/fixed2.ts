@@ -35,6 +35,10 @@ export function isF2(value: unknown): value is Fixed2 {
  */
 export function toF2(value: number): Fixed2 {
   assertMax2Dec(value)
+  return toF2Flr(value)
+}
+
+export function toF2Flr(value: number): Fixed2 {
   return fixed2(mult100Flr(value))
 }
 
@@ -74,6 +78,7 @@ export function f2AsFloat(fixed: Fixed2): number {
 }
 
 /**
+ * // KJA unused, do we need this?
  * Rounds down a Fixed2 value to the nearest integer (maintaining 2 decimal precision).
  * For example:
  * f2Flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
@@ -92,8 +97,15 @@ export function f2Add(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
 }
 
+/**
+ * Multiplies a Fixed2 value by two decimal numbers and returns the result as a Fixed2.
+ * The result is floored to maintain Fixed2 precision.
+ * For example:
+ * f2Mult(fixed2(1000), 0.5, 0.8) = fixed2(400) (representing 10.00 * 0.5 * 0.8 = 4.00)
+ * f2Mult(fixed2(2150), 0.9, 0.95) = fixed2(1838) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.38)
+ */
 export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
-  return fixed2(mult100Flr(f2AsFloat(first) * second * third))
+  return toF2Flr(f2AsFloat(first) * second * third)
 }
 
 /**
