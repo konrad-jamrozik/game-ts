@@ -4,7 +4,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 import { rollRange } from './rolls'
-import { f2AsFloat, f2Compare, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, f2Compare, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -44,9 +44,9 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
-  const targetSkillLowerBound = f2AsFloat(attackerEffectiveSkill) * 0.2
-  const targetSkillUpperBound = f2AsFloat(attackerEffectiveSkill) * 0.8
-  const targetSkillPreferred = f2AsFloat(attackerEffectiveSkill) * 0.5
+  const targetSkillLowerBound = f2asFloat(attackerEffectiveSkill) * 0.2
+  const targetSkillUpperBound = f2asFloat(attackerEffectiveSkill) * 0.8
+  const targetSkillPreferred = f2asFloat(attackerEffectiveSkill) * 0.5
 
   // Find minimum attack count among available targets
   const minAttackCount = Math.min(...availableTargets.map((target) => attackCounts.get(target.id) ?? 0))
@@ -143,7 +143,7 @@ function isInValidSkillRange(
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return f2AsFloat(skill) >= targetSkillLowerBound && f2AsFloat(skill) <= targetSkillUpperBound
+  return f2asFloat(skill) >= targetSkillLowerBound && f2asFloat(skill) <= targetSkillUpperBound
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
@@ -182,5 +182,5 @@ function distanceFromPreferred(
 ): number {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return Math.abs(f2AsFloat(skill) - targetSkillPreferred)
+  return Math.abs(f2asFloat(skill) - targetSkillPreferred)
 }

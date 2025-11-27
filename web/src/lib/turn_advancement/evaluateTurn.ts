@@ -27,7 +27,7 @@ import {
   updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
-import { f2AsFloat } from '../model/fixed2'
+import { f2asFloat } from '../model/fixed2'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -244,7 +244,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       let totalAgentSkillGain = 0
       // KJA reduce over fixed2
       for (const gain of Object.values(agentSkillUpdates)) {
-        totalAgentSkillGain += f2AsFloat(gain)
+        totalAgentSkillGain += f2asFloat(gain)
       }
 
       // Calculate average agent exhaustion gain (after battle, including casualty penalty)

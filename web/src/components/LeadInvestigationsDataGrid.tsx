@@ -12,7 +12,7 @@ import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
 import { bps, toBpsFloor, type Bps } from '../lib/model/bps'
-import { f2AsFloat } from '../lib/model/fixed2'
+import { f2asFloat } from '../lib/model/fixed2'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
@@ -172,7 +172,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
         // KJA redundant / unsanctioned effectiveSkill computation. Dedup with formula in calculateAccumulatedIntel
-        const effectiveSkill = f2AsFloat(agV(agent).effectiveSkill())
+        const effectiveSkill = f2asFloat(agV(agent).effectiveSkill())
         projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
       }
 

@@ -57,7 +57,19 @@ export function f2fmtInt(value: Fixed2): string {
 }
 
 export function f2fmt(value: Fixed2): string {
-  return fmtDec2(f2AsFloat(value))
+  return fmtDec2(f2asFloat(value))
+}
+
+/**
+ * // KJA review all usages of f2AsFloat
+ * Converts a Fixed2 value to a decimal number without rounding.
+ * For example:
+ * f2AsFloat(fixed2(700)) = 7.0
+ * f2AsFloat(fixed2(2150)) = 21.5
+ * f2AsFloat(fixed2(2175)) = 21.75
+ */
+export function f2asFloat(fixed: Fixed2): number {
+  return fixed.value / 100
 }
 
 /**
@@ -71,25 +83,13 @@ export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
 }
 
 /**
- * // KJA review all usages of f2AsFloat
- * Converts a Fixed2 value to a decimal number without rounding.
- * For example:
- * f2AsFloat(fixed2(700)) = 7.0
- * f2AsFloat(fixed2(2150)) = 21.5
- * f2AsFloat(fixed2(2175)) = 21.75
- */
-export function f2AsFloat(fixed: Fixed2): number {
-  return fixed.value / 100
-}
-
-/**
  * // KJA unused, do we need this?
  * Rounds down a Fixed2 value to the nearest integer (maintaining 2 decimal precision).
  * For example:
  * f2Flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
  * f2Flr(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
  */
-export function f2Flr(fixed: Fixed2): Fixed2 {
+export function f2flr(fixed: Fixed2): Fixed2 {
   return fixed2(floor(fixed.value))
 }
 
@@ -98,7 +98,7 @@ export function f2Flr(fixed: Fixed2): Fixed2 {
  * For example:
  * f2Add(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
  */
-export function f2Add(first: Fixed2, second: Fixed2): Fixed2 {
+export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
 }
 
@@ -109,8 +109,8 @@ export function f2Add(first: Fixed2, second: Fixed2): Fixed2 {
  * f2Mult(fixed2(1000), 0.5, 0.8) = fixed2(400) (representing 10.00 * 0.5 * 0.8 = 4.00)
  * f2Mult(fixed2(2150), 0.9, 0.95) = fixed2(1838) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.38)
  */
-export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
-  return toF2Flr(f2AsFloat(first) * second * third)
+export function f2mult(first: Fixed2, second: number, third: number): Fixed2 {
+  return toF2Flr(f2asFloat(first) * second * third)
 }
 
 /**

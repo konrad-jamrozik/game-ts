@@ -1,4 +1,4 @@
-import { f2Add, toF2 } from '../../model/fixed2'
+import { f2add, toF2 } from '../../model/fixed2'
 import type { GameState } from '../../model/model'
 import { asPlayerAction } from './asPlayerAction'
 
@@ -32,7 +32,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       break
     }
     case 'Training skill gain': {
-      state.trainingSkillGain = f2Add(state.trainingSkillGain, toF2(1))
+      state.trainingSkillGain = f2add(state.trainingSkillGain, toF2(1))
       break
     }
     case 'Exhaustion recovery': {

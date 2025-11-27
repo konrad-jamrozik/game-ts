@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { f2AsFloat, toF2, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, toF2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
@@ -43,9 +43,9 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   // KJA reduce over fixed2
   // Calculate initial totals for percentage tracking
-  const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2AsFloat(stats.initialEffectiveSkill), 0)
+  const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2asFloat(stats.initialEffectiveSkill), 0)
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + f2AsFloat(effectiveSkill(enemy)), 0)
+  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + f2asFloat(effectiveSkill(enemy)), 0)
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
@@ -278,7 +278,7 @@ function showRoundStatus(
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   // KJA reduce over fixed2
   const currentAgentEffectiveSkill = activeAgents.reduce(
-    (sum, agent) => sum + f2AsFloat(agV(agent).effectiveSkill()),
+    (sum, agent) => sum + f2asFloat(agV(agent).effectiveSkill()),
     0,
   )
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
@@ -287,7 +287,7 @@ function showRoundStatus(
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + f2AsFloat(effectiveSkill(enemy)), 0)
+  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + f2asFloat(effectiveSkill(enemy)), 0)
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
   const enemySkillPercentage = divMult100Round(currentEnemySkill, initialEnemySkill)
   const enemyHpPercentage = divMult100Round(currentEnemyHitPoints, initialEnemyHitPoints)
