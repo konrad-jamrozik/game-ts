@@ -4,7 +4,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 import { rollRange } from './rolls'
-import { fromF2Dec, type Fixed2 } from '../model/fixed2'
+import { f2AsFloat, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -45,9 +45,9 @@ export function selectTarget<T extends Agent | Enemy>(
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
   // KJA review for numeric imprecision due to lack of floor, same for all other fromFixed2Decimal and fromFixed2 calls
-  const targetSkillLowerBound = fromF2Dec(attackerEffectiveSkill) * 0.2
-  const targetSkillUpperBound = fromF2Dec(attackerEffectiveSkill) * 0.8
-  const targetSkillPreferred = fromF2Dec(attackerEffectiveSkill) * 0.5
+  const targetSkillLowerBound = f2AsFloat(attackerEffectiveSkill) * 0.2
+  const targetSkillUpperBound = f2AsFloat(attackerEffectiveSkill) * 0.8
+  const targetSkillPreferred = f2AsFloat(attackerEffectiveSkill) * 0.5
 
   // Find minimum attack count among available targets
   const minAttackCount = Math.min(...availableTargets.map((target) => attackCounts.get(target.id) ?? 0))
@@ -132,7 +132,7 @@ function compareTargetsBySkill(
   // Return the target with lower skill as first.
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
-  return fromF2Dec(skillA) - fromF2Dec(skillB)
+  return f2AsFloat(skillA) - f2AsFloat(skillB)
 }
 
 // Helper function to check if target is in valid skill range
@@ -144,7 +144,7 @@ function isInValidSkillRange(
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return fromF2Dec(skill) >= targetSkillLowerBound && fromF2Dec(skill) <= targetSkillUpperBound
+  return f2AsFloat(skill) >= targetSkillLowerBound && f2AsFloat(skill) <= targetSkillUpperBound
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
@@ -183,5 +183,5 @@ function distanceFromPreferred(
 ): number {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return Math.abs(fromF2Dec(skill) - targetSkillPreferred)
+  return Math.abs(f2AsFloat(skill) - targetSkillPreferred)
 }

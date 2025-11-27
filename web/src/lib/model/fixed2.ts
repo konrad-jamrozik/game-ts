@@ -65,39 +65,42 @@ export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
 /**
  * Converts a Fixed2 value to a decimal number without rounding.
  * For example:
- * fromFixed2Decimal(fixed2(700)) = 7.0
- * fromFixed2Decimal(fixed2(2150)) = 21.5
- * fromFixed2Decimal(fixed2(2175)) = 21.75
+ * f2AsFloat(fixed2(700)) = 7.0
+ * f2AsFloat(fixed2(2150)) = 21.5
+ * f2AsFloat(fixed2(2175)) = 21.75
  */
-// KJA name it f2ToFloat
-export function fromF2Dec(fixed: Fixed2): number {
+export function f2AsFloat(fixed: Fixed2): number {
   return fixed.value / 100
 }
 
 /**
  * Rounds down a Fixed2 value to the nearest integer (maintaining 2 decimal precision).
  * For example:
- * floorFixed2(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
- * floorFixed2(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
+ * f2Flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
+ * f2Flr(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
  */
-export function floorF2(fixed: Fixed2): Fixed2 {
+export function f2Flr(fixed: Fixed2): Fixed2 {
   return fixed2(floor(fixed.value))
 }
 
 /**
  * Adds two Fixed2 values together.
  * For example:
- * addFixed2(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
+ * f2Add(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
  */
-export function addF2(first: Fixed2, second: Fixed2): Fixed2 {
+export function f2Add(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
+}
+
+export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
+  return fixed2(f2AsFloat(first) * second * third)
 }
 
 /**
  * Checks if two Fixed2 values are equal.
  * For example:
- * equalsFixed2(fixed2(700), fixed2(700)) = true
- * equalsFixed2(fixed2(700), fixed2(701)) = false
+ * f2Equals(fixed2(700), fixed2(700)) = true
+ * f2Equals(fixed2(700), fixed2(701)) = false
  */
 export function f2Equals(first: Fixed2, second: Fixed2): boolean {
   return first.value === second.value
@@ -108,9 +111,9 @@ export function f2Equals(first: Fixed2, second: Fixed2): boolean {
  * Returns a negative number if first < second, zero if first === second, or a positive number if first > second.
  * Useful for sorting and comparison operations.
  * For example:
- * compareFixed2(fixed2(700), fixed2(800)) < 0 (7.00 < 8.00)
- * compareFixed2(fixed2(800), fixed2(700)) > 0 (8.00 > 7.00)
- * compareFixed2(fixed2(700), fixed2(700)) === 0 (7.00 === 7.00)
+ * f2Compare(fixed2(700), fixed2(800)) < 0 (7.00 < 8.00)
+ * f2Compare(fixed2(800), fixed2(700)) > 0 (8.00 > 7.00)
+ * f2Compare(fixed2(700), fixed2(700)) === 0 (7.00 === 7.00)
  */
 export function f2Compare(first: Fixed2, second: Fixed2): number {
   return first.value - second.value
@@ -119,8 +122,8 @@ export function f2Compare(first: Fixed2, second: Fixed2): number {
 /**
  * Checks if the first Fixed2 value is less than the second.
  * For example:
- * isLessThanFixed2(fixed2(700), fixed2(800)) = true (7.00 < 8.00)
- * isLessThanFixed2(fixed2(800), fixed2(700)) = false (8.00 < 7.00 is false)
+ * f2lt(fixed2(700), fixed2(800)) = true (7.00 < 8.00)
+ * f2lt(fixed2(800), fixed2(700)) = false (8.00 < 7.00 is false)
  */
 export function f2lt(first: Fixed2, second: Fixed2): boolean {
   return first.value < second.value
@@ -139,8 +142,4 @@ export function f2lt(first: Fixed2, second: Fixed2): boolean {
 function fixed2(value: number): Fixed2 {
   assertInteger(value)
   return { value, kind: 'Fixed2' }
-}
-
-export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
-  return fixed2(fromF2Dec(first) * second * third)
 }

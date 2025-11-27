@@ -1,6 +1,6 @@
 import { div, nonNeg } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
-import { addF2, f2Compare, f2Equals, floorF2, fromF2Dec, toF2, type Fixed2 } from '../model/fixed2'
+import { f2Add, f2Compare, f2Equals, f2Flr, f2AsFloat, toF2, type Fixed2 } from '../model/fixed2'
 import { compareIdsNumeric } from './stringUtils'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from './assert'
@@ -15,7 +15,7 @@ export function isAgent(actor: Actor): actor is Agent {
  * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
  */
 export function addSkill(agent: Agent, amount: Fixed2): void {
-  agent.skill = addF2(agent.skill, amount)
+  agent.skill = f2Add(agent.skill, amount)
 }
 
 /**
@@ -23,7 +23,7 @@ export function addSkill(agent: Agent, amount: Fixed2): void {
  * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
  */
 export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
-  agent.skillFromTraining = addF2(agent.skillFromTraining, amount)
+  agent.skillFromTraining = f2Add(agent.skillFromTraining, amount)
 }
 
 // Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
