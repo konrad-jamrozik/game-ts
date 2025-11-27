@@ -1,3 +1,5 @@
+import { floor } from './mathUtils'
+
 export function assertDefined<T>(
   value: T,
   errMsg = 'Value must be defined (not null or undefined)',
@@ -97,7 +99,10 @@ export function assertMax2Dec(
   errMsg = `Value must have at most 2 decimal places, got: ${value}`,
 ): asserts value is number {
   const multiplied = Math.abs(value * 100)
-  if (multiplied !== Math.floor(multiplied)) {
+  const floored = floor(multiplied)
+  // Use a tolerance to handle floating point precision issues
+  // If the difference is less than 1e-8, consider them equal
+  if (Math.abs(multiplied - floored) > 1e-8) {
     throw new Error(errMsg)
   }
 }

@@ -26,7 +26,7 @@ export type AttackLogParams = {
  * Formats attack log message for console output.
  */
 export function fmtAttackLog(params: AttackLogParams): string {
-  // KJA this attack log now shows skill fractions, so it is not aligned
+  // KJA2 this attack log now shows skill fractions, so it is not aligned
   const {
     kind,
     attackerName,

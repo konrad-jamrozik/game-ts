@@ -6,6 +6,8 @@ import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
 import { div, toPct } from './mathUtils'
 
+// KJA formatUtils.ts should not depend on bps. fixed2 depends on fmtUtils and the same should be the case for bps.
+
 export function str(value: unknown): string {
   if (isBps(value)) {
     return addPctSignDiv100Dec2(value)

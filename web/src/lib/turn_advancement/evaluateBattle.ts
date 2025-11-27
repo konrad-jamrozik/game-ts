@@ -41,6 +41,7 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   const agentSkillUpdates: Record<string, Fixed2> = {}
 
+  // KJA reduce over fixed2
   // Calculate initial totals for percentage tracking
   const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2AsFloat(stats.initialEffectiveSkill), 0)
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
@@ -275,6 +276,7 @@ function showRoundStatus(
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
+  // KJA reduce over fixed2
   const currentAgentEffectiveSkill = activeAgents.reduce(
     (sum, agent) => sum + f2AsFloat(agV(agent).effectiveSkill()),
     0,

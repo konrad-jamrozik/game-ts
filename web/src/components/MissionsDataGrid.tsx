@@ -225,6 +225,7 @@ function getAverageSkill(row: MissionRow): number {
   if (enemies.length === 0) {
     return 0
   }
+  // KJA reduce over fixed2
   const totalSkill = enemies.reduce((sum, enemy) => sum + f2AsFloat(enemy.skill), 0)
   return div(totalSkill, enemies.length)
 }

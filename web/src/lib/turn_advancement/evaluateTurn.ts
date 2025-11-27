@@ -242,6 +242,7 @@ function evaluateDeployedMissionSites(state: GameState): {
 
       // Calculate total agent skill gain
       let totalAgentSkillGain = 0
+      // KJA reduce over fixed2
       for (const gain of Object.values(agentSkillUpdates)) {
         totalAgentSkillGain += f2AsFloat(gain)
       }

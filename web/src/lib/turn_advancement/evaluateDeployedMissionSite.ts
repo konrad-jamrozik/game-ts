@@ -1,7 +1,7 @@
 import { getMissionById } from '../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
-import { f2AsFloat } from '../model/fixed2'
+import { f2Add, f2fmt } from '../model/fixed2'
 import { getRecoveryTurns } from '../model/ruleset/ruleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -137,10 +137,10 @@ function updateSurvivingAgent(
   assertDefined(survivalSkillGain)
   addSkill(agent, survivalSkillGain)
 
-  const totalSkillGain = f2AsFloat(battleSkillGain) + f2AsFloat(survivalSkillGain)
-  // KJA I think here skill may display with numeric imprecision due to lack of floor
+  // KJA review combat report alignment
+  const totalSkillGain = f2Add(battleSkillGain, survivalSkillGain)
   console.log(
-    `📈 Agent ${agent.id} gained ${totalSkillGain} skill (${f2AsFloat(battleSkillGain)} from combat, ${f2AsFloat(survivalSkillGain)} from survival)`,
+    `📈 Agent ${agent.id} gained ${f2fmt(totalSkillGain)} skill (${f2fmt(battleSkillGain)} from combat, ${f2fmt(survivalSkillGain)} from survival)`,
   )
 
   // ----------------------------------------

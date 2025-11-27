@@ -1,5 +1,5 @@
 import { assertMax2Dec, assertInteger } from '../utils/assert'
-import { fmtPctDec1 } from '../utils/formatUtils'
+import { fmtDec2, fmtPctDec1 } from '../utils/formatUtils'
 import { div100Flr, floor, mult100Flr } from '../utils/mathUtils'
 
 /**
@@ -56,6 +56,10 @@ export function f2fmtInt(value: Fixed2): string {
   return div100Flr(value.value).toString()
 }
 
+export function f2fmt(value: Fixed2): string {
+  return fmtDec2(f2AsFloat(value))
+}
+
 /**
  * Formats a Fixed2 value as a percentage with 1 decimal place, comparing it to a denominator.
  * For example:
@@ -67,6 +71,7 @@ export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
 }
 
 /**
+ * // KJA review all usages of f2AsFloat
  * Converts a Fixed2 value to a decimal number without rounding.
  * For example:
  * f2AsFloat(fixed2(700)) = 7.0

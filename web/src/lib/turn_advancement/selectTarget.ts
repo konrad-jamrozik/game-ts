@@ -4,7 +4,7 @@ import { compareIdsNumeric } from '../utils/stringUtils'
 import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 import { rollRange } from './rolls'
-import { f2AsFloat, type Fixed2 } from '../model/fixed2'
+import { f2AsFloat, f2Compare, type Fixed2 } from '../model/fixed2'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -44,7 +44,6 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
-  // KJA review for numeric imprecision due to lack of floor, same for all other fromFixed2Decimal and fromFixed2 calls
   const targetSkillLowerBound = f2AsFloat(attackerEffectiveSkill) * 0.2
   const targetSkillUpperBound = f2AsFloat(attackerEffectiveSkill) * 0.8
   const targetSkillPreferred = f2AsFloat(attackerEffectiveSkill) * 0.5
@@ -132,7 +131,7 @@ function compareTargetsBySkill(
   // Return the target with lower skill as first.
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
-  return f2AsFloat(skillA) - f2AsFloat(skillB)
+  return f2Compare(skillA, skillB)
 }
 
 // Helper function to check if target is in valid skill range

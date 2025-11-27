@@ -225,6 +225,7 @@ export type RetreatResult = {
  */
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
+  // KJA reduce over fixed2
   const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2AsFloat(stats.initialEffectiveSkill), 0)
   const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + f2AsFloat(agV(agent).effectiveSkill()), 0)
 

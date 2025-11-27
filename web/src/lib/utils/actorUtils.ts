@@ -55,16 +55,4 @@ export function effectiveSkill(actor: Actor): Fixed2 {
   const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
   return f2Mult(actor.skill, hitPointsMult, exhaustionMult)
-
-  // KJA 1 the remainder of calculations on Fixed2 here is a good example how this could be abstracted.
-  // something like
-  // const result: Fixed2 = fixed2mult(actor.skill, hitPointsReduction, exhaustionReduction)
-  // return floorFixed2(result)
-
-  // // Convert skill from Fixed2 to decimal for calculations
-  // const skillDecimal = fromF2Dec(actor.skill)
-  // const result = skillDecimal * hitPointsMult * exhaustionMult
-
-  // // Convert result to Fixed2 and round down to 2 decimal places
-  // return floorF2(toF2(result))
 }

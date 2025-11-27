@@ -171,6 +171,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
+        // KJA redundant / unsanctioned effectiveSkill computation. Dedup with formula in calculateAccumulatedIntel
         const effectiveSkill = f2AsFloat(agV(agent).effectiveSkill())
         projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
       }

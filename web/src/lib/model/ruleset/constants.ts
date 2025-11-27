@@ -22,7 +22,7 @@ export const AGENT_RECOVERY_TURNS_FACTOR = 2
 export const AGENT_CAP = 20
 export const TRANSPORT_CAP = 6
 export const TRAINING_CAP = 0
-export const TRAINING_SKILL_GAIN = toF2(1)
+export const TRAINING_SKILL_GAIN = toF2(1.12) // KJA temp, should be 1
 
 // 100, 130, 155, 175, 190, 205
 export const MISSION_SURVIVAL_SKILL_GAIN = [toF2(30), toF2(25), toF2(20), toF2(15)]

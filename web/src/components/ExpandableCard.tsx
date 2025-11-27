@@ -30,7 +30,7 @@ export function ExpandableCard({
   sx = defaultSx,
 }: ExpandableCardProps): React.JSX.Element {
   const [expanded, setExpanded] = useState(defaultExpanded)
-  // KJA dedup this padding 1 here with `'&:last-child': { paddingBottom: 1 },` in theme.tsx
+  // KJA2 dedup this padding 1 here with `'&:last-child': { paddingBottom: 1 },` in theme.tsx
   const cardContentSx: SxProps<Theme> = {
     padding: 1,
     ...(nested && { backgroundColor: theme.palette.background.nestedCardContent }),

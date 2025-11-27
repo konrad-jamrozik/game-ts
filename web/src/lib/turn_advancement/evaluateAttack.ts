@@ -25,7 +25,7 @@ export function evaluateAttack(
 ): void {
   // Calculate effective skills
 
-  // KJA in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
+  // KJA2 in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
   const attackerEffectiveSkill = getActorEffectiveSkill(attacker)
   const defenderEffectiveSkill = getActorEffectiveSkill(defender)
 

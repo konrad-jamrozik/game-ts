@@ -29,7 +29,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
 
   for (let index = 0; index < 10; index += 1) {
     const agentNumericId = nextAgentNumericId + index
-    // KJA dedup agent ID with agent reducers
+    // KJA2 dedup agent ID with agent reducers
     const agentId = `agent-${agentNumericId.toString().padStart(3, '0')}`
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
     const skill = toF2(120 + index * 20)
