@@ -137,7 +137,6 @@ function updateSurvivingAgent(
   assertDefined(survivalSkillGain)
   addSkill(agent, survivalSkillGain)
 
-  // KJA review combat report alignment
   const totalSkillGain = f2Add(battleSkillGain, survivalSkillGain)
   console.log(
     `📈 Agent ${agent.id} gained ${f2fmt(totalSkillGain)} skill (${f2fmt(battleSkillGain)} from combat, ${f2fmt(survivalSkillGain)} from survival)`,

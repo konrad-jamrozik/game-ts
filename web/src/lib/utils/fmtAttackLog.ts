@@ -1,5 +1,5 @@
 import type { RollResult } from '../turn_advancement/rolls'
-import { addPctSignDec2 } from './formatUtils'
+import { addPctSignDec2, fmtInt } from './formatUtils'
 
 export type AttackLogKind =
   | 'agent misses'
@@ -26,7 +26,7 @@ export type AttackLogParams = {
  * Formats attack log message for console output.
  */
 export function fmtAttackLog(params: AttackLogParams): string {
-  // KJA2 this attack log now shows skill fractions, so it is not aligned
+  // KJA this attack log now shows skill fractions, so it is not aligned
   const {
     kind,
     attackerName,
@@ -74,7 +74,10 @@ function buildActorInfoPart(
   actorName: string,
   actorEffectiveSkill: number,
 ): string {
-  const actorEffectiveSkillStr = `(${actorEffectiveSkill})`.padStart(5)
+  // KJA problem: there are many numbers displayed now that are now decimals, so they all need fmtDec2 or fmtInt.
+  // This is because they were derived from Fixed2 with f2AsFloat so now they are just number
+  // and the info that they are in fact float is lost on them.
+  const actorEffectiveSkillStr = `(${fmtInt(actorEffectiveSkill)})`.padStart(5)
   const actorNameStr = actorIsAgent ? actorName : actorName.padEnd(22)
   return `${actorIcon} ${actorNameStr} ${actorEffectiveSkillStr}`
 }

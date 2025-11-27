@@ -4,7 +4,7 @@ import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
 import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
-import { div, toPct } from './mathUtils'
+import { div, floor, toPct } from './mathUtils'
 
 // KJA formatUtils.ts should not depend on bps. fixed2 depends on fmtUtils and the same should be the case for bps.
 
@@ -49,6 +49,10 @@ export function addPctSignDec2(value: number): string {
  */
 export function fmtDec2(value: number): string {
   return value.toFixed(2)
+}
+
+export function fmtInt(value: number): string {
+  return floor(value).toFixed(0)
 }
 
 export function addPctSign(value: number, decimals = 0, denominator = 1): string {
