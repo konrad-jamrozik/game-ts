@@ -13,7 +13,7 @@ import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
 import { BPS_PRECISION, type Bps, bps } from '../bps'
-import { f2asFloat } from '../fixed2'
+import { f2asFloat, f2sum } from '../fixed2'
 import { effectiveSkill } from '../../utils/actorUtils'
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 
@@ -225,9 +225,8 @@ export type RetreatResult = {
  */
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
-  // KJA reduce over fixed2
-  const totalOriginalEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2asFloat(stats.initialEffectiveSkill), 0)
-  const totalCurrentEffectiveSkill = aliveAgents.reduce((sum, agent) => sum + f2asFloat(agV(agent).effectiveSkill()), 0)
+  const totalOriginalEffectiveSkill = f2asFloat(f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill)))
+  const totalCurrentEffectiveSkill = f2asFloat(f2sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill())))
 
   const agentEffectiveSkillThreshold = totalOriginalEffectiveSkill * RETREAT_THRESHOLD
 

@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { f2asFloat, toF2, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, f2sum, toF2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_SKILL_THRESHOLD, RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
@@ -41,11 +41,10 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   const agentSkillUpdates: Record<string, Fixed2> = {}
 
-  // KJA reduce over fixed2
   // Calculate initial totals for percentage tracking
-  const initialAgentEffectiveSkill = agentStats.reduce((sum, stats) => sum + f2asFloat(stats.initialEffectiveSkill), 0)
+  const initialAgentEffectiveSkill = f2asFloat(f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill)))
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = enemies.reduce((sum, enemy) => sum + f2asFloat(effectiveSkill(enemy)), 0)
+  const initialEnemySkill = f2asFloat(f2sum(...enemies.map((enemy) => effectiveSkill(enemy))))
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
@@ -276,11 +275,7 @@ function showRoundStatus(
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
-  // KJA reduce over fixed2
-  const currentAgentEffectiveSkill = activeAgents.reduce(
-    (sum, agent) => sum + f2asFloat(agV(agent).effectiveSkill()),
-    0,
-  )
+  const currentAgentEffectiveSkill = f2asFloat(f2sum(...activeAgents.map((agent) => agV(agent).effectiveSkill())))
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
   const agentSkillPercentage = divMult100Round(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPercentage = divMult100Round(currentAgentHitPoints, initialAgentHitPoints)

@@ -19,7 +19,7 @@ import {
 } from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix, fmtMissionSiteIdWithMissionId } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { f2asFloat } from '../lib/model/fixed2'
+import { f2asFloat, f2sum } from '../lib/model/fixed2'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -225,7 +225,6 @@ function getAverageSkill(row: MissionRow): number {
   if (enemies.length === 0) {
     return 0
   }
-  // KJA reduce over fixed2
-  const totalSkill = enemies.reduce((sum, enemy) => sum + f2asFloat(enemy.skill), 0)
+  const totalSkill = f2asFloat(f2sum(...enemies.map((enemy) => enemy.skill)))
   return div(totalSkill, enemies.length)
 }

@@ -128,6 +128,18 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
 }
 
 /**
+ * Sums one or more Fixed2 values together and returns the result as a Fixed2.
+ * For example:
+ * f2sum(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
+ * f2sum(fixed2(100), fixed2(200), fixed2(300)) = fixed2(600) (representing 1.00 + 2.00 + 3.00 = 6.00)
+ * f2sum(...arrayOfFixed2) = sum of all values in the array
+ */
+export function f2sum(...values: Fixed2[]): Fixed2 {
+  const sum = values.reduce((acc, val) => acc + val.value, 0)
+  return fixed2(sum)
+}
+
+/**
  * Checks if two Fixed2 values are equal.
  * For example:
  * f2eq(fixed2(700), fixed2(700)) = true
