@@ -25,10 +25,12 @@ export function isF2(value: unknown): value is Fixed2 {
 
 /**
  * Converts a decimal value to Fixed2 format by multiplying by 100.
+ * Use this when you want to create a Fixed2 value.
+ *
  * For example:
- * toFixed2(7) = fixed2(700)
- * toFixed2(1.1) = fixed2(110)
- * toFixed2(21.75) = fixed2(2175)
+ * toF2(7) creates fixed2(700), which represents 7.00.
+ * toF2(1.1) creates fixed2(110), which represents 1.10.
+ * toF2(21.75) creates fixed2(2175), which represents 21.75.
  */
 export function toF2(value: number): Fixed2 {
   return fixed2(value * 100)
@@ -36,17 +38,26 @@ export function toF2(value: number): Fixed2 {
 
 /**
  * Converts a Fixed2 value to an integer string by dividing by 100 and rounding down.
+ * Use this when you want to display a Fixed2 value as a plain integer number.
+ *
  * For example:
  * f2FlrStr(fixed2(700)) = "7"
  * f2FlrStr(fixed2(2150)) = "21" (not "21.5")
  * f2FlrStr(fixed2(2175)) = "21" (not "21.75")
+ *
  */
 export function f2FlrStr(fixed: Fixed2): string {
   return floor(fixed.value / 100).toString()
 }
 
-export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
-  return fmtPctDec1(nominator.value, denominator.value)
+/**
+ * Formats a Fixed2 value as a percentage with 1 decimal place, comparing it to a denominator.
+ * For example:
+ * f2fmtPctDec1(toF2(75), toF2(100)) = "75.0" (representing 75.0%)
+ * f2fmtPctDec1(toF2(98.5), toF2(52)) = "189.4" (representing 189.4%)
+ */
+export function f2fmtPctDec1(nominator: number, denominator: number): string {
+  return fmtPctDec1(nominator, denominator)
 }
 
 /**
