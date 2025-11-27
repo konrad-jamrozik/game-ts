@@ -1,6 +1,6 @@
 import { assertMax2Dec, assertInteger } from '../utils/assert'
 import { fmtDec2, fmtPctDec1 } from '../utils/formatUtils'
-import { dist, div100Flr, floor, mult100Flr } from '../utils/mathUtils'
+import { dist, div100flr, floor, mult100flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -39,7 +39,7 @@ export function toF2(value: number): Fixed2 {
 }
 
 function toF2flr(value: number): Fixed2 {
-  return fixed2(mult100Flr(value))
+  return fixed2(mult100flr(value))
 }
 
 /**
@@ -53,7 +53,7 @@ function toF2flr(value: number): Fixed2 {
  *
  */
 export function f2fmtInt(value: Fixed2): string {
-  return div100Flr(value.value).toString()
+  return div100flr(value.value).toString()
 }
 
 export function f2fmt(value: Fixed2): string {
