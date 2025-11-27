@@ -184,6 +184,23 @@ export function f2lt(first: Fixed2, second: Fixed2): boolean {
   return first.value < second.value
 }
 
+export function f2le(first: Fixed2, second: Fixed2): boolean {
+  return first.value <= second.value
+}
+
+/**
+ * Checks if a Fixed2 value is within a range (inclusive on both ends).
+ * For example:
+ * f2inRange(fixed2(500), fixed2(400), fixed2(600)) = true (5.00 is between 4.00 and 6.00)
+ * f2inRange(fixed2(400), fixed2(400), fixed2(600)) = true (4.00 is at lower bound)
+ * f2inRange(fixed2(600), fixed2(400), fixed2(600)) = true (6.00 is at upper bound)
+ * f2inRange(fixed2(300), fixed2(400), fixed2(600)) = false (3.00 is below range)
+ * f2inRange(fixed2(700), fixed2(400), fixed2(600)) = false (7.00 is above range)
+ */
+export function f2inRange(value: Fixed2, lowerBound: Fixed2, upperBound: Fixed2): boolean {
+  return f2ge(value, lowerBound) && f2le(value, upperBound)
+}
+
 /**
  * Checks if the first Fixed2 value is greater than or equal to the second.
  * For example:

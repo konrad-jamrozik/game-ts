@@ -1,4 +1,4 @@
-import { f2cmp, f2dist, f2eq, f2mult, type Fixed2 } from '../model/fixed2'
+import { f2cmp, f2dist, f2eq, f2inRange, f2mult, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { assertDefined } from '../utils/assert'
 import { div } from '../utils/mathUtils'
@@ -138,7 +138,7 @@ function isInValidSkillRange(
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return f2cmp(skill, targetSkillLowerBound) >= 0 && f2cmp(skill, targetSkillUpperBound) <= 0
+  return f2inRange(skill, targetSkillLowerBound, targetSkillUpperBound)
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
