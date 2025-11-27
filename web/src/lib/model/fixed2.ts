@@ -103,14 +103,16 @@ export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
 }
 
 /**
- * Multiplies a Fixed2 value by two decimal numbers and returns the result as a Fixed2.
+ * Multiplies a Fixed2 value by one or more decimal numbers and returns the result as a Fixed2.
  * The result is floored to maintain Fixed2 precision.
  * For example:
+ * f2mult(fixed2(1000), 0.2) = fixed2(200) (representing 10.00 * 0.2 = 2.00)
  * f2mult(fixed2(1000), 0.5, 0.8) = fixed2(400) (representing 10.00 * 0.5 * 0.8 = 4.00)
  * f2mult(fixed2(2150), 0.9, 0.95) = fixed2(1838) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.38)
  */
-export function f2mult(first: Fixed2, second: number, third: number): Fixed2 {
-  return toF2Flr(f2asFloat(first) * second * third)
+export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
+  const product = multipliers.reduce((acc, mult) => acc * mult, f2asFloat(first))
+  return toF2Flr(product)
 }
 
 /**
