@@ -1,7 +1,9 @@
-import { div } from './mathUtils'
+import { div, nonNeg } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
 import { addF2, f2Compare, f2Equals, floorF2, fromF2Dec, toF2, type Fixed2 } from '../model/fixed2'
 import { compareIdsNumeric } from './stringUtils'
+import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
+import { assertNonNeg } from './assert'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {
@@ -46,12 +48,11 @@ export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed2 {
 // Refer to about_agents.md for details
 export function effectiveSkill(actor: Actor): Fixed2 {
   const hitPointsLost = actor.maxHitPoints - actor.hitPoints
-  const hitPointsLostRatio = div(hitPointsLost, actor.maxHitPoints)
-  const hitPointsReduction = Math.max(1 - hitPointsLostRatio, 0)
+  const hitPointsMalus = div(hitPointsLost, actor.maxHitPoints)
+  const hitPointsMult = assertNonNeg(1 - hitPointsMalus)
 
-  // First 5 points of exhaustion have no impact
-  const noImpactExhaustion = 5
-  const exhaustionReduction = Math.max(1 - Math.max(actor.exhaustion - noImpactExhaustion, 0) / 100, 0)
+  const exhaustionMalus = nonNeg(actor.exhaustion - NO_IMPACT_EXHAUSTION) / 100
+  const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
   // KJA 1 the remainder of calculations on Fixed2 here is a good example how this could be abstracted.
   // something like
@@ -60,7 +61,7 @@ export function effectiveSkill(actor: Actor): Fixed2 {
 
   // Convert skill from Fixed2 to decimal for calculations
   const skillDecimal = fromF2Dec(actor.skill)
-  const result = skillDecimal * hitPointsReduction * exhaustionReduction
+  const result = skillDecimal * hitPointsMult * exhaustionMult
 
   // Convert result to Fixed2 and round down to 2 decimal places
   return floorF2(toF2(result))

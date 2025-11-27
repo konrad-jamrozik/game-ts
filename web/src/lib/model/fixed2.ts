@@ -132,3 +132,8 @@ export function f2lt(first: Fixed2, second: Fixed2): boolean {
 function fixed2(value: number): Fixed2 {
   return { value, kind: 'Fixed2' }
 }
+
+// KJA recommended by composer 1
+// export function multF2(first: Fixed2, second: Fixed2): Fixed2 {
+//   return fixed2(Math.round((first.value * second.value) / 100))
+// }

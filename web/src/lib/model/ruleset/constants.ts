@@ -9,6 +9,9 @@ export const AGENT_INITIAL_SKILL = toF2(100)
 export const AGENT_INITIAL_EXHAUSTION = 0
 export const AGENT_INITIAL_HIT_POINTS = 30
 
+// First 5 points of exhaustion have no impact
+export const NO_IMPACT_EXHAUSTION = 5
+
 export const AGENT_EXHAUSTION_INCREASE_PER_TURN = 1
 export const AGENT_EXHAUSTION_INCREASE_PER_ATTACK = 1
 export const AGENT_EXHAUSTION_INCREASE_PER_DEFENSE = 1

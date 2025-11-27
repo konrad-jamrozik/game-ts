@@ -56,3 +56,7 @@ export function val(value: number | Bps): number {
 export function toPct(value: number, denominator = 1): number {
   return div(value * 100, denominator)
 }
+
+export function nonNeg(value: number): number {
+  return Math.max(0, value)
+}

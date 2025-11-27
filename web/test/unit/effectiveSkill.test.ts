@@ -8,7 +8,7 @@ describe(effectiveSkill, () => {
     const agent = agFix.default()
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 0/100)) = floor(100 * 1 * 1) = 100
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(100)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(100))
   })
 
   test('exhaustion only', () => {
@@ -18,7 +18,7 @@ describe(effectiveSkill, () => {
     })
 
     // effective_skill = floor(116 * (1 - 0/30) * (1 - 15/100)) = floor(116 * 1 * 0.85) = floor(98.6) = 98
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(98)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(98.6))
   })
 
   test('hit points lost only', () => {
