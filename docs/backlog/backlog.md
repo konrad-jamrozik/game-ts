@@ -1,21 +1,21 @@
 # Backlog
 
-KJA backlog:
+KJA3 backlog:
 
 # Brainstorming
 
-- KJA review all usage of Fixed2;
+- KJA3 review all usage of Fixed2;
   - introduce type Skill = Fixed2 and introduce functions tightly controlling any conversions to/from Skill and rounding
 
-- KJA Add to assets: Agent weapon damage range min-max
+- KJA3 Add to assets: Agent weapon damage range min-max
   
-- KJA fix up the assets prices, and make their cost increase
+- KJA3 fix up the assets prices, and make their cost increase
   
-- KJA make buying training skill gain and health recov. % fractional
+- KJA3 make buying training skill gain and health recov. % fractional
 
-- KJA funding increase reward for missions
+- KJA3 funding increase reward for missions
 
-- KJA funding penalty for expired missions
+- KJA3 funding penalty for expired missions
 
 - Add "Details" button to completed missions that show the combat log
 - For combat reports, add dedicated data grid with columns same as console.log i.e.:

@@ -44,6 +44,7 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
+  // KJA these should instead use f2mult
   const targetSkillLowerBound = f2asFloat(attackerEffectiveSkill) * 0.2
   const targetSkillUpperBound = f2asFloat(attackerEffectiveSkill) * 0.8
   const targetSkillPreferred = f2asFloat(attackerEffectiveSkill) * 0.5
