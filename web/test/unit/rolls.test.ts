@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { BPS_PRECISION } from '../../src/lib/model/ruleset/constants'
+import { BPS_PRECISION } from '../../src/lib/model/bps'
 import { getSuccessAndFailureInts, roll1to, rollAgainstProbability } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
