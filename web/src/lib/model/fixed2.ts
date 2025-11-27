@@ -52,7 +52,7 @@ export function toF2Flr(value: number): Fixed2 {
  * f2FlrStr(fixed2(2175)) = "21" (not "21.75")
  *
  */
-export function f2FlrStr(value: Fixed2): string {
+export function f2fmtInt(value: Fixed2): string {
   return div100Flr(value.value).toString()
 }
 
