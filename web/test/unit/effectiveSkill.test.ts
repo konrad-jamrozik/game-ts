@@ -17,6 +17,7 @@ describe(effectiveSkill, () => {
       exhaustion: 20,
     })
 
+    // KJA fix
     // effective_skill = floor(116 * (1 - 0/30) * (1 - 15/100)) = floor(116 * 1 * 0.85) = floor(98.6) = 98
     expect(effectiveSkill(agent)).toStrictEqual(toF2(98.6))
   })

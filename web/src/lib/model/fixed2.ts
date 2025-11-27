@@ -1,3 +1,4 @@
+import { assertFixed2DecimalPlaces, assertInteger } from '../utils/assert'
 import { fmtPctDec1 } from '../utils/formatUtils'
 import { floor } from '../utils/mathUtils'
 
@@ -33,6 +34,7 @@ export function isF2(value: unknown): value is Fixed2 {
  * toF2(21.75) creates fixed2(2175), which represents 21.75.
  */
 export function toF2(value: number): Fixed2 {
+  assertFixed2DecimalPlaces(value)
   return fixed2(value * 100)
 }
 
@@ -67,6 +69,7 @@ export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
  * fromFixed2Decimal(fixed2(2150)) = 21.5
  * fromFixed2Decimal(fixed2(2175)) = 21.75
  */
+// KJA name it f2ToFloat
 export function fromF2Dec(fixed: Fixed2): number {
   return fixed.value / 100
 }
@@ -126,14 +129,18 @@ export function f2lt(first: Fixed2, second: Fixed2): boolean {
 /**
  * Creates a Fixed2 value from a number.
  * Use this when you have a raw number that represents a fixed-point value in this format.
- * For example: fixed2(700) represents 7.00
+ * For example:
+ * fixed2(700) represents 7.00
+ * fixed2(7000) represents 70.00
+ * fixed2(7) represents 0.07
+ * fixed2(7.7) throws an error
  * @internal
  */
 function fixed2(value: number): Fixed2 {
+  assertInteger(value)
   return { value, kind: 'Fixed2' }
 }
 
-// KJA recommended by composer 1
-// export function multF2(first: Fixed2, second: Fixed2): Fixed2 {
-//   return fixed2(Math.round((first.value * second.value) / 100))
-// }
+export function f2Mult(first: Fixed2, second: number, third: number): Fixed2 {
+  return fixed2(fromF2Dec(first) * second * third)
+}

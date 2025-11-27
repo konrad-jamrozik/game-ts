@@ -72,3 +72,22 @@ export function assertNonNeg(value: number, errMsg = 'Value must be non-negative
   }
   return value
 }
+
+export function assertInteger(
+  value: number,
+  errMsg = `Value must be an integer, got: ${value}`,
+): asserts value is number {
+  if (!Number.isInteger(value)) {
+    throw new TypeError(errMsg)
+  }
+}
+
+export function assertFixed2DecimalPlaces(
+  value: number,
+  errMsg = `Value must have at most 2 decimal places, got: ${value}`,
+): asserts value is number {
+  const decimalPart = Math.abs(value % 100)
+  if (decimalPart !== Math.floor(decimalPart)) {
+    throw new Error(errMsg)
+  }
+}
