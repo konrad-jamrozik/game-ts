@@ -1,3 +1,4 @@
+import { fmtPctDec1 } from '../utils/formatUtils'
 import { floor } from '../utils/mathUtils'
 
 /**
@@ -34,14 +35,18 @@ export function toF2(value: number): Fixed2 {
 }
 
 /**
- * Converts a Fixed2 value to an integer by dividing by 100 and rounding down.
+ * Converts a Fixed2 value to an integer string by dividing by 100 and rounding down.
  * For example:
- * fromFixed2(fixed2(700)) = 7
- * fromFixed2(fixed2(2150)) = 21 (not 21.5)
- * fromFixed2(fixed2(2175)) = 21 (not 21.75)
+ * f2FlrStr(fixed2(700)) = "7"
+ * f2FlrStr(fixed2(2150)) = "21" (not "21.5")
+ * f2FlrStr(fixed2(2175)) = "21" (not "21.75")
  */
-export function fromF2(fixed: Fixed2): number {
-  return floor(fixed.value / 100)
+export function f2FlrStr(fixed: Fixed2): string {
+  return floor(fixed.value / 100).toString()
+}
+
+export function f2fmtPctDec1(nominator: Fixed2, denominator: Fixed2): string {
+  return fmtPctDec1(nominator.value, denominator.value)
 }
 
 /**

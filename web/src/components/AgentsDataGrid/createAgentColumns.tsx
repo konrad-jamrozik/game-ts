@@ -1,13 +1,12 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import type { AgentState, GameState } from '../../lib/model/model'
-import { f2Compare, f2Equals, fromF2, toF2, type Fixed2 } from '../../lib/model/fixed2'
 import { agV } from '../../lib/model/agents/AgentView'
+import { f2FlrStr, f2Compare, f2Equals, f2fmtPctDec1, toF2, type Fixed2 } from '../../lib/model/fixed2'
+import type { AgentState, GameState } from '../../lib/model/model'
 import { assertDefined } from '../../lib/utils/assert'
-import { fmtDec1, fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
-import { toPct } from '../../lib/utils/mathUtils'
-import { MyChip } from '../MyChip'
+import { fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
+import { MyChip } from '../MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 
 // oxlint-disable-next-line max-lines-per-function
@@ -88,11 +87,9 @@ export function createAgentColumns(
         return row1.id.localeCompare(row2.id)
       },
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed2>): React.JSX.Element => {
-        const effectiveSkillFixed = agV(params.row).effectiveSkill()
-        const effectiveSkill = fromF2(effectiveSkillFixed)
-        const baselineSkillFixed = params.value ?? toF2(0)
-        const baselineSkill = fromF2(baselineSkillFixed)
-        const percentage = baselineSkill > 0 ? fmtDec1(toPct(effectiveSkill, baselineSkill)) : '0.0'
+        const effectiveSkill = agV(params.row).effectiveSkill()
+        const baselineSkill = params.value ?? toF2(0)
+        const percentage = f2fmtPctDec1(effectiveSkill, baselineSkill)
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}
@@ -104,9 +101,9 @@ export function createAgentColumns(
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{effectiveSkill}</span>
+            <span style={{ textAlign: 'right' }}>{f2FlrStr(effectiveSkill)}</span>
             <span style={{ textAlign: 'center' }}>/</span>
-            <span style={{ textAlign: 'right' }}>{baselineSkill}</span>
+            <span style={{ textAlign: 'right' }}>{f2FlrStr(baselineSkill)}</span>
             <span style={{ textAlign: 'right' }}>({percentage}%)</span>
           </div>
         )
@@ -155,7 +152,7 @@ export function createAgentColumns(
       field: 'skillSimple',
       headerName: 'Skill',
       width: 40,
-      valueGetter: (_value, row: AgentRow) => fromF2(row.skill),
+      valueGetter: (_value, row: AgentRow) => f2FlrStr(row.skill),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
       ),

@@ -4,7 +4,7 @@ import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
 import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
-import { div } from './mathUtils'
+import { div, toPct } from './mathUtils'
 
 export function str(value: unknown): string {
   if (isBps(value)) {
@@ -51,6 +51,13 @@ export function fmtDec2(value: number): string {
 
 export function addPctSign(value: number, decimals = 0, denominator = 1): string {
   return `${div(value, denominator).toFixed(decimals)}%`
+}
+
+export function fmtPctDec1(nominator: number, denominator: number): string {
+  if (denominator === 0) {
+    return '0.0'
+  }
+  return fmtDec1(toPct(nominator, denominator))
 }
 
 export function fmtDec1(value: number): string {
