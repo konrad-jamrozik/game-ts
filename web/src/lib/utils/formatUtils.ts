@@ -27,7 +27,7 @@ export function addPctSignDiv100Dec2(value: Bps): string {
 }
 
 /**
- * @returns The value, multiple  by 100, formatted as percentage with 2 decimal places.
+ * @returns The value, multiplied by 100, formatted as percentage with 2 decimal places.
  * For example, 0.12345 will be formatted as "12.34%"
  */
 export function addPctSignMult100Dec2(value: number): string {

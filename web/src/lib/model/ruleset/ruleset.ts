@@ -241,6 +241,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const enemyAboveThreshold = f2ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
 
   // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
+  // KJA don't do f2asFloat here; this will require downstream fix of 'function logRetreat'
   const result = {
     shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
     totalOriginalEffectiveSkill: f2asFloat(agentsTotalOriginalEffectiveSkill),

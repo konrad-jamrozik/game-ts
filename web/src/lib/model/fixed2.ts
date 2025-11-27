@@ -38,7 +38,7 @@ export function toF2(value: number): Fixed2 {
   return toF2flr(value)
 }
 
-export function toF2flr(value: number): Fixed2 {
+function toF2flr(value: number): Fixed2 {
   return fixed2(mult100Flr(value))
 }
 
