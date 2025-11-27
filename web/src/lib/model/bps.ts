@@ -1,6 +1,6 @@
 import { multAndFloor } from '../utils/mathUtils'
 
-// Precision of 0.01%. 10_000 = 100%
+// Precision of 0.01%. 10_000 = 1 = 100%
 export const BPS_PRECISION = 10_000
 
 /**
