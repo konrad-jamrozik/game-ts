@@ -14,7 +14,7 @@ import {
 } from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
-import { fromFixed2Decimal, toFixed2 } from '../../src/lib/model/fixed2'
+import { fromF2Dec, toF2 } from '../../src/lib/model/fixed2'
 
 describe(evaluateDeployedMissionSite, () => {
   test('success', () => {
@@ -24,8 +24,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toFixed2(200), // High skill to ensure success
-      skillFromTraining: toFixed2(0),
+      skill: toF2(200), // High skill to ensure success
+      skillFromTraining: toF2(0),
       exhaustion: 0,
       hitPoints: AGENT_INITIAL_HIT_POINTS,
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -80,7 +80,7 @@ describe(evaluateDeployedMissionSite, () => {
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
-      expect(fromFixed2Decimal(testAgent.skill)).toBeGreaterThan(200)
+      expect(fromF2Dec(testAgent.skill)).toBeGreaterThan(200)
 
       // Verify agent gained exhaustion from combat
       expect(testAgent.exhaustion).toBeGreaterThan(0)
@@ -101,8 +101,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toFixed2(50), // Low skill
-      skillFromTraining: toFixed2(0),
+      skill: toF2(50), // Low skill
+      skillFromTraining: toF2(0),
       exhaustion: 0,
       hitPoints: 10, // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -176,8 +176,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toFixed2(60),
-      skillFromTraining: toFixed2(0),
+      skill: toF2(60),
+      skillFromTraining: toF2(0),
       exhaustion: 0,
       hitPoints: 20,
       maxHitPoints: 20,
@@ -192,8 +192,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toFixed2(50),
-      skillFromTraining: toFixed2(0),
+      skill: toF2(50),
+      skillFromTraining: toF2(0),
       exhaustion: 0,
       hitPoints: 15,
       maxHitPoints: 15,

@@ -11,7 +11,7 @@ export type Fixed2 = {
   readonly kind: 'Fixed2'
 }
 
-export function isFixed2(value: unknown): value is Fixed2 {
+export function isF2(value: unknown): value is Fixed2 {
   return (
     typeof value === 'object' &&
     value !== null &&
@@ -29,7 +29,7 @@ export function isFixed2(value: unknown): value is Fixed2 {
  * toFixed2(1.1) = fixed2(110)
  * toFixed2(21.75) = fixed2(2175)
  */
-export function toFixed2(value: number): Fixed2 {
+export function toF2(value: number): Fixed2 {
   return fixed2(value * 100)
 }
 
@@ -40,7 +40,7 @@ export function toFixed2(value: number): Fixed2 {
  * fromFixed2(fixed2(2150)) = 21 (not 21.5)
  * fromFixed2(fixed2(2175)) = 21 (not 21.75)
  */
-export function fromFixed2(fixed: Fixed2): number {
+export function fromF2(fixed: Fixed2): number {
   return floor(fixed.value / 100)
 }
 
@@ -51,7 +51,7 @@ export function fromFixed2(fixed: Fixed2): number {
  * fromFixed2Decimal(fixed2(2150)) = 21.5
  * fromFixed2Decimal(fixed2(2175)) = 21.75
  */
-export function fromFixed2Decimal(fixed: Fixed2): number {
+export function fromF2Dec(fixed: Fixed2): number {
   return fixed.value / 100
 }
 
@@ -61,7 +61,7 @@ export function fromFixed2Decimal(fixed: Fixed2): number {
  * floorFixed2(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
  * floorFixed2(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
  */
-export function floorFixed2(fixed: Fixed2): Fixed2 {
+export function floorF2(fixed: Fixed2): Fixed2 {
   return fixed2(floor(fixed.value))
 }
 
@@ -70,7 +70,7 @@ export function floorFixed2(fixed: Fixed2): Fixed2 {
  * For example:
  * addFixed2(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
  */
-export function addFixed2(first: Fixed2, second: Fixed2): Fixed2 {
+export function addF2(first: Fixed2, second: Fixed2): Fixed2 {
   return fixed2(first.value + second.value)
 }
 
@@ -80,7 +80,7 @@ export function addFixed2(first: Fixed2, second: Fixed2): Fixed2 {
  * equalsFixed2(fixed2(700), fixed2(700)) = true
  * equalsFixed2(fixed2(700), fixed2(701)) = false
  */
-export function equalsFixed2(first: Fixed2, second: Fixed2): boolean {
+export function f2Equals(first: Fixed2, second: Fixed2): boolean {
   return first.value === second.value
 }
 
@@ -93,7 +93,7 @@ export function equalsFixed2(first: Fixed2, second: Fixed2): boolean {
  * compareFixed2(fixed2(800), fixed2(700)) > 0 (8.00 > 7.00)
  * compareFixed2(fixed2(700), fixed2(700)) === 0 (7.00 === 7.00)
  */
-export function compareFixed2(first: Fixed2, second: Fixed2): number {
+export function f2Compare(first: Fixed2, second: Fixed2): number {
   return first.value - second.value
 }
 
@@ -103,7 +103,7 @@ export function compareFixed2(first: Fixed2, second: Fixed2): number {
  * isLessThanFixed2(fixed2(700), fixed2(800)) = true (7.00 < 8.00)
  * isLessThanFixed2(fixed2(800), fixed2(700)) = false (8.00 < 7.00 is false)
  */
-export function isLessThanFixed2(first: Fixed2, second: Fixed2): boolean {
+export function f2lt(first: Fixed2, second: Fixed2): boolean {
   return first.value < second.value
 }
 

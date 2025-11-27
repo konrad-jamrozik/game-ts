@@ -15,7 +15,7 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { toFixed2 } from '../fixed2'
+import { toF2 } from '../fixed2'
 import { newWeapon } from '../../utils/weaponUtils'
 
 const initialState: GameState = makeInitialState()
@@ -87,7 +87,7 @@ function buildInitialAgents(): Agent[] {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsTotal: 0,
-      skillFromTraining: toFixed2(0),
+      skillFromTraining: toF2(0),
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     })
   }

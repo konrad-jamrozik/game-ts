@@ -27,7 +27,7 @@ import {
   updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
-import { fromFixed2Decimal } from '../model/fixed2'
+import { fromF2Dec } from '../model/fixed2'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -243,7 +243,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       // Calculate total agent skill gain
       let totalAgentSkillGain = 0
       for (const gain of Object.values(agentSkillUpdates)) {
-        totalAgentSkillGain += fromFixed2Decimal(gain)
+        totalAgentSkillGain += fromF2Dec(gain)
       }
 
       // Calculate average agent exhaustion gain (after battle, including casualty penalty)

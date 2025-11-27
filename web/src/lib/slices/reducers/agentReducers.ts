@@ -7,7 +7,7 @@ import {
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../model/ruleset/constants'
-import { toFixed2 } from '../../model/fixed2'
+import { toF2 } from '../../model/fixed2'
 import { newWeapon } from '../../utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
 
@@ -109,7 +109,7 @@ export function newHiredAgent(id: string, turnHired: number): Agent {
     recoveryTurns: 0,
     hitPointsLostBeforeRecovery: 0,
     missionsTotal: 0,
-    skillFromTraining: toFixed2(0),
+    skillFromTraining: toF2(0),
     weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
   }
 }

@@ -1,5 +1,5 @@
 import type { Agent, GameState, MissionSiteId } from '../model'
-import { toFixed2 } from '../fixed2'
+import { toF2 } from '../fixed2'
 import { newWeapon } from '../../utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
@@ -18,7 +18,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
     const id = `agent-${nextId()}`
     const built: Agent = {
       id,
-      skillFromTraining: toFixed2(0),
+      skillFromTraining: toF2(0),
       ...agent,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
     }
@@ -33,7 +33,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: toFixed2(60),
+      skill: toF2(60),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -45,7 +45,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: toFixed2(140),
+      skill: toF2(140),
       exhaustion: 10,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -57,7 +57,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: toFixed2(100),
+      skill: toF2(100),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -69,7 +69,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
-      skill: toFixed2(80),
+      skill: toF2(80),
       exhaustion: 20,
       hitPoints: 28,
       maxHitPoints: 30,
@@ -81,7 +81,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Contracting',
-      skill: toFixed2(90),
+      skill: toF2(90),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -93,7 +93,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnAssignment',
       assignment: 'Contracting',
-      skill: toFixed2(110),
+      skill: toF2(110),
       exhaustion: 5,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -105,7 +105,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnAssignment',
       assignment: 'Espionage',
-      skill: toFixed2(120),
+      skill: toF2(120),
       exhaustion: 12,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -117,7 +117,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Recovering',
       assignment: 'Recovery',
-      skill: toFixed2(100),
+      skill: toF2(100),
       exhaustion: 8,
       hitPoints: 28,
       maxHitPoints: 30,
@@ -129,7 +129,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
-      skill: toFixed2(95),
+      skill: toF2(95),
       exhaustion: 15,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -142,7 +142,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnTerminated: 1,
       state: 'Terminated',
       assignment: 'Sacked',
-      skill: toFixed2(70),
+      skill: toF2(70),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -154,7 +154,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
-      skill: toFixed2(30),
+      skill: toF2(30),
       exhaustion: 25,
       hitPoints: 18,
       maxHitPoints: 30,
@@ -166,7 +166,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
-      skill: toFixed2(85),
+      skill: toF2(85),
       exhaustion: 7,
       hitPoints: 30,
       maxHitPoints: 30,

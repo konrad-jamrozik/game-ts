@@ -19,7 +19,7 @@ import {
 } from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix, fmtMissionSiteIdWithMissionId } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { fromFixed2Decimal } from '../lib/model/fixed2'
+import { fromF2Dec } from '../lib/model/fixed2'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -225,6 +225,6 @@ function getAverageSkill(row: MissionRow): number {
   if (enemies.length === 0) {
     return 0
   }
-  const totalSkill = enemies.reduce((sum, enemy) => sum + fromFixed2Decimal(enemy.skill), 0)
+  const totalSkill = enemies.reduce((sum, enemy) => sum + fromF2Dec(enemy.skill), 0)
   return div(totalSkill, enemies.length)
 }

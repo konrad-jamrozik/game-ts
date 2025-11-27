@@ -1,14 +1,6 @@
 import { div } from './mathUtils'
 import type { Actor, Agent, Enemy } from '../model/model'
-import {
-  addFixed2,
-  compareFixed2,
-  equalsFixed2,
-  floorFixed2,
-  fromFixed2Decimal,
-  toFixed2,
-  type Fixed2,
-} from '../model/fixed2'
+import { addF2, f2Compare, f2Equals, floorF2, fromF2Dec, toF2, type Fixed2 } from '../model/fixed2'
 import { compareIdsNumeric } from './stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
@@ -21,7 +13,7 @@ export function isAgent(actor: Actor): actor is Agent {
  * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
  */
 export function addSkill(agent: Agent, amount: Fixed2): void {
-  agent.skill = addFixed2(agent.skill, amount)
+  agent.skill = addF2(agent.skill, amount)
 }
 
 /**
@@ -29,20 +21,20 @@ export function addSkill(agent: Agent, amount: Fixed2): void {
  * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
  */
 export function addSkillFromTraining(agent: Agent, amount: Fixed2): void {
-  agent.skillFromTraining = addFixed2(agent.skillFromTraining, amount)
+  agent.skillFromTraining = addF2(agent.skillFromTraining, amount)
 }
 
 // Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
 export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
   const skillA = getActorEffectiveSkill(actorA)
   const skillB = getActorEffectiveSkill(actorB)
-  if (equalsFixed2(skillA, skillB)) {
+  if (f2Equals(skillA, skillB)) {
     return compareIdsNumeric(actorA.id, actorB.id)
   }
   // Return the actor with higher effective skill as first.
   // Explanation:
   // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
-  return compareFixed2(skillB, skillA)
+  return f2Compare(skillB, skillA)
 }
 
 // Helper function to get effective skill of an actor (agent or enemy)
@@ -67,9 +59,9 @@ export function effectiveSkill(actor: Actor): Fixed2 {
   // return floorFixed2(result)
 
   // Convert skill from Fixed2 to decimal for calculations
-  const skillDecimal = fromFixed2Decimal(actor.skill)
+  const skillDecimal = fromF2Dec(actor.skill)
   const result = skillDecimal * hitPointsReduction * exhaustionReduction
 
   // Convert result to Fixed2 and round down to 2 decimal places
-  return floorFixed2(toFixed2(result))
+  return floorF2(toF2(result))
 }

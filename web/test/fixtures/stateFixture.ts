@@ -17,7 +17,7 @@ import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '..
 import { assertDefined } from '../../src/lib/utils/assert'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 import { agFix } from './agentFixture'
-import { toFixed2 } from '../../src/lib/model/fixed2'
+import { toF2 } from '../../src/lib/model/fixed2'
 
 export const st = {
   get gameState(): GameState {
@@ -44,7 +44,7 @@ export const st = {
     const { count = 3, skill } = options
     const agents: Agent[] = []
     for (let index = 0; index < count; index += 1) {
-      const agent = agFix.new(skill !== undefined ? { skill: toFixed2(skill) } : {})
+      const agent = agFix.new(skill !== undefined ? { skill: toF2(skill) } : {})
       agents.push(agent)
     }
     return agents

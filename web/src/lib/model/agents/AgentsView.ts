@@ -1,6 +1,6 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
-import { compareFixed2 } from '../fixed2'
+import { f2Compare } from '../fixed2'
 import { getAgentUpkeep, getContractingIncome, getEspionageIntel } from '../ruleset/ruleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
@@ -70,7 +70,7 @@ function getAgentsViewMethods(
     notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
     sortedByEffectiveSkill: (): AgentsView =>
-      toAgsV(agVArr.toSorted((ag1, ag2) => compareFixed2(ag1.effectiveSkill(), ag2.effectiveSkill()))),
+      toAgsV(agVArr.toSorted((ag1, ag2) => f2Compare(ag1.effectiveSkill(), ag2.effectiveSkill()))),
     agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),

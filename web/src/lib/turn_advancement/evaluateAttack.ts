@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { addFixed2, fromFixed2Decimal, type Fixed2 } from '../model/fixed2'
+import { addF2, fromF2Dec, type Fixed2 } from '../model/fixed2'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
@@ -38,11 +38,7 @@ export function evaluateAttack(
   }
 
   // Contest roll
-  const rollResult = rollContest(
-    fromFixed2Decimal(attackerEffectiveSkill),
-    fromFixed2Decimal(defenderEffectiveSkill),
-    label,
-  )
+  const rollResult = rollContest(fromF2Dec(attackerEffectiveSkill), fromF2Dec(defenderEffectiveSkill), label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
@@ -65,10 +61,10 @@ export function evaluateAttack(
 
     // Update skill gains from battle combat
     if (attackerStats) {
-      attackerStats.skillGained = addFixed2(attackerStats.skillGained, AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD)
+      attackerStats.skillGained = addF2(attackerStats.skillGained, AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = addFixed2(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
+      defenderStats.skillGained = addF2(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     }
 
     if (hpRemaining <= 0) {
@@ -82,9 +78,9 @@ export function evaluateAttack(
         fmtAttackLog({
           kind,
           attackerName,
-          attackerEffectiveSkill: fromFixed2Decimal(attackerEffectiveSkill),
+          attackerEffectiveSkill: fromF2Dec(attackerEffectiveSkill),
           defenderName,
-          defenderEffectiveSkill: fromFixed2Decimal(defenderEffectiveSkill),
+          defenderEffectiveSkill: fromF2Dec(defenderEffectiveSkill),
           defenderIsAgent,
           rollResult,
           attackCount,
@@ -99,9 +95,9 @@ export function evaluateAttack(
         fmtAttackLog({
           kind,
           attackerName,
-          attackerEffectiveSkill: fromFixed2Decimal(attackerEffectiveSkill),
+          attackerEffectiveSkill: fromF2Dec(attackerEffectiveSkill),
           defenderName,
-          defenderEffectiveSkill: fromFixed2Decimal(defenderEffectiveSkill),
+          defenderEffectiveSkill: fromF2Dec(defenderEffectiveSkill),
           defenderIsAgent,
           rollResult,
           attackCount,
@@ -122,9 +118,9 @@ export function evaluateAttack(
       fmtAttackLog({
         kind,
         attackerName,
-        attackerEffectiveSkill: fromFixed2Decimal(attackerEffectiveSkill),
+        attackerEffectiveSkill: fromF2Dec(attackerEffectiveSkill),
         defenderName,
-        defenderEffectiveSkill: fromFixed2Decimal(defenderEffectiveSkill),
+        defenderEffectiveSkill: fromF2Dec(defenderEffectiveSkill),
         defenderIsAgent,
         rollResult,
         attackCount,
@@ -133,10 +129,10 @@ export function evaluateAttack(
 
     // Update skill gains (postponed)
     if (attackerStats) {
-      attackerStats.skillGained = addFixed2(attackerStats.skillGained, AGENT_FAILED_ATTACK_SKILL_REWARD)
+      attackerStats.skillGained = addF2(attackerStats.skillGained, AGENT_FAILED_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = addFixed2(defenderStats.skillGained, AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD)
+      defenderStats.skillGained = addF2(defenderStats.skillGained, AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD)
     }
 
     // Apply defender exhaustion (both agents and enemies)
