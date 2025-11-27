@@ -1,5 +1,7 @@
 import { multAndFloor } from '../utils/mathUtils'
-import { BPS_PRECISION } from './ruleset/constants'
+
+// Precision of 0.01%. 10_000 = 100%
+export const BPS_PRECISION = 10_000
 
 /**
  * Represents a percentage value stored as an integer in basis points where 100 = 1%.
@@ -30,6 +32,10 @@ export function isBps(value: unknown): value is Bps {
     'value' in value &&
     typeof value.value === 'number'
   )
+}
+
+export function val(value: number | Bps): number {
+  return isBps(value) ? value.value : value
 }
 
 /**

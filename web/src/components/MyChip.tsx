@@ -1,8 +1,7 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
-import type { Bps } from '../lib/model/bps'
+import { val, type Bps } from '../lib/model/bps'
 import { str } from '../lib/utils/formatUtils'
-import { val } from '../lib/utils/mathUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
 export type MyChipProps = {

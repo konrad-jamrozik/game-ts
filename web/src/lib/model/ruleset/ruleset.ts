@@ -2,7 +2,6 @@ import {
   AGENT_CONTRACTING_INCOME,
   AGENT_ESPIONAGE_INTEL,
   AGENT_UPKEEP_COST,
-  BPS_PRECISION,
   INTEL_DECAY,
   MAX_INTEL_DECAY,
   RETREAT_ENEMY_SKILL_THRESHOLD,
@@ -13,7 +12,7 @@ import { div, floor, ceil } from '../../utils/mathUtils'
 import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
-import { type Bps, bps } from '../bps'
+import { BPS_PRECISION, type Bps, bps } from '../bps'
 import { f2AsFloat } from '../fixed2'
 import { effectiveSkill } from '../../utils/actorUtils'
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'

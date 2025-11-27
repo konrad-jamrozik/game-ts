@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
-import { f2FlrStr, toF2 } from '../../src/lib/model/fixed2'
+import { toF2 } from '../../src/lib/model/fixed2'
 
 describe(effectiveSkill, () => {
   test('no exhaustion, no hit points lost', () => {
@@ -38,29 +38,29 @@ describe(effectiveSkill, () => {
     })
 
     // hit points lost = 30 - 23 = 7
-    // effective_skill = floor(150 * (1 - 7/30) * (1 - 15/100)) = floor(150 * 0.76666... * 0.85) = floor(97.75) = 97
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(97)
+    // effective_skill = 150 * (1 - 7/30) * (1 - 15/100) = 150 * 0.76666... * 0.85 = 97.75
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(97.75))
   })
 
   test('high exhaustion', () => {
     const agent = agFix.exhausted(85)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 80/100)) = floor(100 * 1 * 0.2) = floor(20) = 20
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(20)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(20))
   })
 
   test('100% exhaustion', () => {
     const agent = agFix.exhausted(100)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 0.95) = floor(5) = 5
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(5)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(5))
   })
 
   test('105% exhaustion', () => {
     const agent = agFix.exhausted(105)
 
     // effective_skill = floor(100 * (1 - 0/30) * (1 - 95/100)) = floor(100 * 1 * 1) = floor(0) = 0
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(0)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(0))
   })
 
   test('zero hit points', () => {
@@ -71,6 +71,6 @@ describe(effectiveSkill, () => {
 
     // hit points lost = 30 - 0 = 30
     // effective_skill = floor(100 * (1 - 30/30) * (1 - 0/100)) = floor(100 * 0 * 1) = floor(0) = 0
-    expect(f2FlrStr(effectiveSkill(agent))).toBe(0)
+    expect(effectiveSkill(agent)).toStrictEqual(toF2(0))
   })
 })

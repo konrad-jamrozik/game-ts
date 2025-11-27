@@ -3,7 +3,7 @@
  */
 
 import { div, multAndFloor } from '../utils/mathUtils'
-import { BPS_PRECISION } from '../model/ruleset/constants'
+import { BPS_PRECISION } from '../model/bps'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
