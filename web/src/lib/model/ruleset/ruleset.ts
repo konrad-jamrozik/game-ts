@@ -15,7 +15,7 @@ import {
   INTEL_DECAY,
   MAX_INTEL_DECAY,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
-  SUPPRESSION_DECAY_PCT,
+  SUPPRESSION_DECAY,
 } from './constants'
 
 export function getAgentUpkeep(agents: AgentsView): number {
@@ -84,7 +84,8 @@ export function calculatePanicIncrease(threatLevel: Bps, suppression: Bps): Bps 
   return bps(Math.max(0, threatLevel.value - suppression.value))
 }
 export function decaySuppression(suppression: Bps): Bps {
-  return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY_PCT / 100)))
+  // KJA refactor bps formula here
+  return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY)))
 }
 
 /**

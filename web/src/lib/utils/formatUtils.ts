@@ -4,7 +4,7 @@ import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
 import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
-import { div, floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
+import { floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
 import { f4fmtPctDec2 } from '../model/fixed4'
 
 // KJA formatUtils.ts should not depend on bps or fixed2. fixed2 depends on fmtUtils and the same should be the case for bps.
@@ -17,10 +17,6 @@ export function str(value: unknown): string {
     return fmtDec2(value)
   }
   return String(value)
-}
-
-export function addPctSignDec2(value: number): string {
-  return addPctSign(value, 2, 1)
 }
 
 export function fmtPctDec0(nominator: number, denominator = 1): string {
@@ -64,11 +60,6 @@ export function fmtDec1(value: number): string {
  */
 export function fmtDec2(value: number): string {
   return floorToDec2(value).toFixed(2)
-}
-
-// KJA note it rounds to nearest due to toFixed, not down. Get rid of this.
-export function addPctSign(value: number, decimals = 0, denominator = 1): string {
-  return `${div(value, denominator).toFixed(decimals)}%`
 }
 
 /**

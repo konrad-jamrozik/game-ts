@@ -110,10 +110,10 @@ but before mission rewards are applied.
 The suppression decay formula is:
 
 ``` text
-suppression = floor(suppression * (1 - SUPPRESSION_DECAY_PCT / 100))
+suppression = floor(suppression * (1 - SUPPRESSION_DECAY))
 ```
 
-Where `SUPPRESSION_DECAY_PCT` is `10`, meaning suppression decays by 10% each turn.
+Where `SUPPRESSION_DECAY` is `0.1`, meaning suppression decays by 10% each turn.
 
 For example:
 - If suppression is `100`, after decay it becomes `floor(100 * 0.9) = 90`.

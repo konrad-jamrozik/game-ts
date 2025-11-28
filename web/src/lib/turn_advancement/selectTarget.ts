@@ -151,9 +151,6 @@ function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T
     }
     const hpLostPercentage = div(hitPointsLost, target.maxHitPoints)
     const roll = rand.get()
-    // console.log(
-    //   `🎲 Self-removal roll for ${target.id}: ${addPctSignMult100Dec2(roll)} vs ${addPctSignMult100Dec2(hpLostPercentage)} HP lost threshold`,
-    // )
 
     // If roll is less than HP lost percentage, target removes itself
     const willRemove = roll <= hpLostPercentage

@@ -31,7 +31,7 @@ export const AGENT_FAILED_ATTACK_SKILL_REWARD = toF2(2)
 export const AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD = toF2(2)
 export const AGENT_FAILED_DEFENSE_SKILL_REWARD = toF2(1)
 
-export const SUPPRESSION_DECAY_PCT = 10
+export const SUPPRESSION_DECAY = 0.1
 
 // Weapon damage ranges are +/- 50% of base damage
 export const WEAPON_DAMAGE_RANGE_FACTOR = 0.5

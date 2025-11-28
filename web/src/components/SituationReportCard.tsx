@@ -2,9 +2,9 @@ import Stack from '@mui/material/Stack'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import { SUPPRESSION_DECAY_PCT } from '../lib/model/ruleset/constants'
+import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { addPctSign, str } from '../lib/utils/formatUtils'
+import { fmtPctDec0, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import { calculatePanicIncrease, getPanicNewBalance, decaySuppression } from '../lib/model/ruleset/ruleset'
 import { MyChip } from './MyChip'
@@ -109,7 +109,7 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 4,
             metric: 'Suppr. decay',
-            value: addPctSign(SUPPRESSION_DECAY_PCT),
+            value: fmtPctDec0(SUPPRESSION_DECAY),
           },
           {
             id: 5,
