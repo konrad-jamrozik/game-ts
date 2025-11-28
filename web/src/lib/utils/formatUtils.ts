@@ -76,16 +76,19 @@ export function fmtDec0(value: number): string {
 }
 
 export function fmtDec1(value: number): string {
-  return floor(value).toFixed(1)
+  // KJA2 introduce "floorAtDec1" function
+  return (floor(value * 10) / 10).toFixed(1)
 }
 
 /**
- * Formats a number to 2 decimal places.
+/**
+ * Formats a number to 2 decimal places, flooring at the 2nd decimal.
  * @param value - The number to format
- * @returns Formatted string with 2 decimal places (e.g., "3.67")
+ * @returns Formatted string with 2 decimal places (e.g., "123.456" -> "123.45")
  */
 export function fmtDec2(value: number): string {
-  return floor(value).toFixed(2)
+  // KJA2 introduce "floorAtDec2" function
+  return (floor(value * 100) / 100).toFixed(2)
 }
 
 // KJA note it rounds to nearest due to toFixed, not down
