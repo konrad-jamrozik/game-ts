@@ -18,11 +18,11 @@ export function getContractingIncome(agents: AgentsView): number {
   return total
 }
 
-export function getMoneyGain(gameState: GameState): number {
+export function getMoneyTurnDiff(gameState: GameState): number {
   const agents = agsV(gameState.agents)
   return gameState.funding + agents.contractingIncome() - agents.agentUpkeep()
 }
 
 export function getMoneyNewBalance(gameState: GameState): number {
-  return gameState.money + getMoneyGain(gameState)
+  return gameState.money + getMoneyTurnDiff(gameState)
 }
