@@ -1,6 +1,6 @@
 import { f2fmtInt, type Fixed2 } from '../model/fixed2'
 import type { RollResult } from '../turn_advancement/rolls'
-import { addPctSignDec2, fmtInt } from './formatUtils'
+import { addPctSignDec2 } from './formatUtils'
 
 export type AttackLogKind =
   | 'agent misses'
