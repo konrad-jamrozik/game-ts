@@ -36,10 +36,6 @@ export function isBps(value: unknown): value is Bps {
   )
 }
 
-export function val(value: number | Bps): number {
-  return isBps(value) ? value.value : value
-}
-
 /**
  * Converts a decimal percentage value to Bps format, rounding down.
  * For example:

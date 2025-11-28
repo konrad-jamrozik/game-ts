@@ -143,8 +143,8 @@ export type BattleStats = {
   enemiesUnscathed: number
   enemiesWounded: number
   enemiesTerminated: number
-  totalAgentSkillAtBattleStart: number
-  totalEnemySkillAtBattleStart: number
+  totalAgentSkillAtBattleStart: Fixed2
+  totalEnemySkillAtBattleStart: Fixed2
   initialAgentHitPoints: number
   initialEnemyHitPoints: number
   totalDamageInflicted: number
