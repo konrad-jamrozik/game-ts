@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { BPS_PRECISION, type Bps } from '../model/bps'
+import { bps, BPS_PRECISION, type Bps } from '../model/bps'
 import { f2divPrecise, type Fixed2 } from '../model/fixed2'
 import { f4gt, f4sub, toF4 } from '../model/fixed4'
 import { multAndFloor } from '../utils/mathUtils'
@@ -66,7 +66,7 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
 
   // roll a random number from [1, 10_000]
   // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
-  const rollInt = toF4(roll1to(BPS_PRECISION, label))
+  const rollInt = bps(roll1to(BPS_PRECISION, label))
 
   // Success when roll > P(failure)
   // I.e. higher rolls are better.
@@ -84,7 +84,7 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
  * - successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
  */
 export function getSuccessAndFailureInts(successProbability: number): [Bps, Bps] {
-  const successInt = toF4(multAndFloor(successProbability, BPS_PRECISION))
+  const successInt = bps(multAndFloor(successProbability, BPS_PRECISION))
   const failureInt = f4sub(toF4(1), successInt)
   return [failureInt, successInt]
 }
