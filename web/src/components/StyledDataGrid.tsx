@@ -1,5 +1,6 @@
 import Box from '@mui/material/Box'
 import { DataGrid, type GridColDef, type DataGridProps, type GridRowModel } from '@mui/x-data-grid'
+import { sum } from 'radash'
 
 type StyledDataGridProps = {
   rows: readonly GridRowModel[]
@@ -7,7 +8,7 @@ type StyledDataGridProps = {
 } & Omit<DataGridProps, 'rows' | 'columns'>
 
 export function StyledDataGrid({ rows, columns, ...dataGridProps }: StyledDataGridProps): React.JSX.Element {
-  const colsMinWidth = columns.reduce((sum, col) => sum + (col.minWidth ?? 0), 0)
+  const colsMinWidth = sum(columns, (col) => col.minWidth ?? 0)
 
   return (
     <Box minWidth={colsMinWidth}>

@@ -1,3 +1,4 @@
+import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { bps, type Bps } from '../../lib/model/bps'
 import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
@@ -62,9 +63,7 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
 }
 
 function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
-  const totalMissionReduction = bps(
-    breakdown.missionReductions.reduce((sum, mission) => sum + mission.reduction.value, 0),
-  )
+  const totalMissionReduction = bps(sum(breakdown.missionReductions, (mission) => mission.reduction.value))
   const anyMissionReductionExists = totalMissionReduction.value > 0
 
   const rows: TurnReportTreeViewModelProps[] = [
@@ -126,9 +125,7 @@ function formatThreatLevelChildren(
   baseThreatIncrease: Bps,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalThreatReduction = bps(
-    missionImpacts.reduce((sum, impact) => sum + (impact.threatReduction?.value ?? 0), 0),
-  )
+  const totalThreatReduction = bps(sum(missionImpacts, (impact) => impact.threatReduction?.value ?? 0))
 
   return [
     {
@@ -155,9 +152,7 @@ function formatSuppressionChildren(
   suppressionDecay: Bps,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalSuppressionAdded = bps(
-    missionImpacts.reduce((sum, impact) => sum + (impact.suppressionAdded?.value ?? 0), 0),
-  )
+  const totalSuppressionAdded = bps(sum(missionImpacts, (impact) => impact.suppressionAdded?.value ?? 0))
 
   return [
     ...(suppressionDecay.value !== 0

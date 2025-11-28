@@ -1,3 +1,4 @@
+import { sum } from 'radash'
 import { getMissionById } from '../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
@@ -60,11 +61,11 @@ function calculateAgentExhaustionAfterBattle(
   // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
   const survivingAgentsView = agsV(deployedAgents).notTerminated()
   const survivingAgents = survivingAgentsView.toAgentArray()
-  const finalAgentExhaustion = survivingAgents.reduce((sum, agent) => sum + agent.exhaustion, 0)
+  const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustion)
   // Calculate initial exhaustion for only the surviving agents
-  const initialSurvivingAgentExhaustion = survivingAgents.reduce(
-    (sum, agent) => sum + (initialAgentExhaustionByAgentId[agent.id] ?? 0),
-    0,
+  const initialSurvivingAgentExhaustion = sum(
+    survivingAgents,
+    (agent) => initialAgentExhaustionByAgentId[agent.id] ?? 0,
   )
   return finalAgentExhaustion - initialSurvivingAgentExhaustion
 }
