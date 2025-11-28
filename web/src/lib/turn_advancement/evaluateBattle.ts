@@ -19,9 +19,9 @@ export type BattleReport = {
   enemyCasualties: number
   retreated: boolean
   agentSkillUpdates: Record<string, Fixed2>
-  initialAgentEffectiveSkill: number
+  initialAgentEffectiveSkill: Fixed2
   initialAgentHitPoints: number
-  initialEnemySkill: number
+  initialEnemySkill: Fixed2
   initialEnemyHitPoints: number
   totalDamageInflicted: number
   totalDamageTaken: number
