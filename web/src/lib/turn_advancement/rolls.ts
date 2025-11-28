@@ -54,14 +54,35 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   }
 }
 
+/**
+ * Refer to rolls.test.ts for examples of how this works.
+ */
 export function rollAgainstProbability(probability: number, label?: string): RollResult {
+  // failureInt: Failure probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
+  // successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
   const [failureInt, successInt] = getSuccessAndFailureInts(probability)
+
+  // roll a random number from [1, 10_000]
+  // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
   const roll = roll1to(BPS_PRECISION, label)
 
-  // Higher rolls are better: success when roll > P(failure)
+  // Success when roll > P(failure)
+  // I.e. higher rolls are better.
+  // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
+  // So we had to roll at least 376 from the range [1, 10_000] to succeed.
   const success = roll > failureInt
 
   // Express the values as percentages with 0.01% precision
+  // KJA2 this is not good, these should not be percentages. Just keep here the raw fractional
+  // and then format as percentage during display.
+  // E.g.:
+  // successInt = 7312
+  // successProbabilityPct = successInt / (BPS_PRECISION / 100)
+  // successProbabilityPct = 7312 / (10_000 / 100)
+  // successProbabilityPct = 7312 / 100
+  // successProbabilityPct = 73.12 # Because this is percentage, i.e. 73.12%
+  //
+  // But we want 0.7312
   const successProbabilityPct = successInt / (BPS_PRECISION / 100)
   const failureProbabilityPct = failureInt / (BPS_PRECISION / 100)
   const rollPct = roll / (BPS_PRECISION / 100)
@@ -75,12 +96,31 @@ export function getSuccessAndFailureInts(successProbability: number): [number, n
   return [failureInt, successInt]
 }
 
+/**
+ * Performs a roll from 1 to precision (inclusive), uniformly selecting a random integer value.
+ * This is a convenience function that calls rollRange(1, precision, label).
+ *
+ * @example
+ * roll1to(10000) -> returns a value in [1, 10000] (inclusive)
+ *
+ * @param precision - Maximum value (inclusive)
+ * @param label - Optional label for controllable random in tests
+ * @returns A random integer from 1 to precision (inclusive)
+ */
 export function roll1to(precision: number, label?: string): number {
   return rollRange(1, precision, label).roll
 }
 
 /**
  * Performs a range roll, uniformly selecting a random value from the given (min, max) range, both inclusive.
+ *
+ * @example
+ * rollRange(1, 100) -> returns a value in [1, 100] (inclusive)
+ * - range = 100 - 1 + 1 = 100
+ * - randResult * 100 gives [0, 100)
+ * - Math.floor(randResult * 100) gives [0, 99] (integers)
+ * - Math.floor(randResult * 100) + 1 gives [1, 100] (inclusive)
+ *
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)
  * @param label - Optional label for controllable random in tests
