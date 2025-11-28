@@ -14,10 +14,10 @@ export function getEspionageIntel(agents: AgentsView): number {
   return total
 }
 
-export function getIntelDiff(gameState: GameState): number {
+export function getIntelGain(gameState: GameState): number {
   return agsV(gameState.agents).espionageIntel()
 }
 
 export function getIntelNewBalance(gameState: GameState): number {
-  return gameState.intel + getIntelDiff(gameState)
+  return gameState.intel + getIntelGain(gameState)
 }

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/PlayerActions'
 import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
-import { getMoneyNewBalance } from '../../src/lib/model/ruleset/ruleset'
+import { getMoneyNewBalance } from '../../src/lib/model/ruleset/moneyRuleset'
 import { AGENT_HIRE_COST } from '../../src/lib/model/ruleset/constants'
 
 describe(PlayerActions, () => {
