@@ -96,7 +96,8 @@ export function calculateLeadIntelDecayPct(accumulatedIntel: number): Bps {
  */
 export function calculateLeadIntelDecayAbsRounded(accumulatedIntel: number): number {
   const decay = calculateLeadIntelDecayPct(accumulatedIntel)
-  return ceil((accumulatedIntel * decay.value) / BPS_PRECISION)
+  const res = ceil((accumulatedIntel * decay.value) / BPS_PRECISION)
+  return res
 }
 
 /**
