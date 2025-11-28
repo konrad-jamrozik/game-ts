@@ -1,5 +1,5 @@
 import { assertInteger, assertMax2Dec } from '../utils/assert'
-import { fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
+import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { dist, div100flr, floor, mult100flr } from '../utils/mathUtils'
 
 /**
@@ -65,7 +65,11 @@ export function f2asFloat(fixed: Fixed2): number {
  *
  */
 export function f2fmtInt(value: Fixed2): string {
-  return div100flr(value.value).toString()
+  return fmtDec0(f2asFloat(value))
+}
+
+export function f2fmtDec1(value: Fixed2): string {
+  return fmtDec1(f2asFloat(value))
 }
 
 export function f2fmt(value: Fixed2): string {
@@ -89,17 +93,6 @@ export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2 | undefined 
     return fmtPctDec0(nominator.value, denominator.value)
   }
   return fmtPctDec0(f2asFloat(nominator))
-}
-
-/**
- * // KJA unused, do we need this?
- * Rounds down a Fixed2 value to the nearest integer (maintaining 2 decimal precision).
- * For example:
- * f2flr(fixed2(2175.9)) = fixed2(2175) (representing 21.75)
- * f2flr(fixed2(2150.7)) = fixed2(2150) (representing 21.50)
- */
-export function f2flr(fixed: Fixed2): Fixed2 {
-  return fixed2(floor(fixed.value))
 }
 
 /**
@@ -168,6 +161,17 @@ export function f2sum(...values: Fixed2[]): Fixed2 {
  */
 export function f2eq(first: Fixed2, second: Fixed2): boolean {
   return first.value === second.value
+}
+
+/**
+ * Checks if a Fixed2 value is zero.
+ * For example:
+ * f2isZero(fixed2(0)) = true
+ * f2isZero(toF2(0)) = true
+ * f2isZero(fixed2(700)) = false
+ */
+export function f2isZero(value: Fixed2): boolean {
+  return value.value === 0
 }
 
 /**

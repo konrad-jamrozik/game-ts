@@ -18,7 +18,7 @@ export function str(value: unknown): string {
   return String(value)
 }
 
-/**
+/** // KJA this should be called bpsFmtPctDec2 and be in bps.ts
  * @returns The value, divided by 100, formatted as percentage with 2 decimal places.
  * For example, 12345 will be formatted as "123.45%"
  */
@@ -72,7 +72,7 @@ export function fmtDec0(value: number): string {
 }
 
 export function fmtDec1(value: number): string {
-  return value.toFixed(1)
+  return floor(value).toFixed(1)
 }
 
 /**
@@ -81,9 +81,10 @@ export function fmtDec1(value: number): string {
  * @returns Formatted string with 2 decimal places (e.g., "3.67")
  */
 export function fmtDec2(value: number): string {
-  return value.toFixed(2)
+  return floor(value).toFixed(2)
 }
 
+// KJA note it rounds to nearest due to toFixed, not down
 export function addPctSign(value: number, decimals = 0, denominator = 1): string {
   return `${div(value, denominator).toFixed(decimals)}%`
 }

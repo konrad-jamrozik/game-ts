@@ -241,6 +241,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       const enemiesUnscathed = enemiesTotal - enemiesTerminated
 
       // Calculate total agent skill gain
+      // KJA f2asFloat for total agent skill gain
       const totalAgentSkillGain = f2asFloat(f2sum(...Object.values(agentSkillUpdates)))
 
       // Calculate average agent exhaustion gain (after battle, including casualty penalty)

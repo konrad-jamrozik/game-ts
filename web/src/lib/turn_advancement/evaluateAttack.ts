@@ -37,6 +37,7 @@ export function evaluateAttack(
     assertDefined(defenderStats)
   }
 
+  // KJA f2asFloat for roll contest
   // Contest roll
   const rollResult = rollContest(f2asFloat(attackerEffectiveSkill), f2asFloat(defenderEffectiveSkill), label)
 

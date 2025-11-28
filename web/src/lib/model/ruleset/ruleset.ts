@@ -25,6 +25,7 @@ export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
   let total = 0
   for (const agent of contractingAgents) {
+    // KJA f2asFloat for contracting income
     const agentEffectiveSkill = f2asFloat(agent.effectiveSkill())
     total += floor((AGENT_CONTRACTING_INCOME * agentEffectiveSkill) / 100)
   }
@@ -35,6 +36,7 @@ export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
   let total = 0
   for (const agent of espionageAgents) {
+    // KJA f2asFloat for espionage intel
     const agentEffectiveSkill = f2asFloat(agent.effectiveSkill())
     total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
   }
@@ -191,6 +193,7 @@ export function calculateIntelDecayRounded(accumulatedIntel: number): number {
 export function calculateAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
+    // KJA f2asFloat for accumulated intel
     const agentEffectiveSkill = f2asFloat(agV(agent).effectiveSkill())
     total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
   }
@@ -241,7 +244,6 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const enemyAboveThreshold = f2ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
 
   // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
-  // KJA don't do f2asFloat here; this will require downstream fix of 'function logRetreat'
   const result = {
     shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
     agentsTotalOriginalEffectiveSkill,

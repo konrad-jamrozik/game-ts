@@ -19,11 +19,10 @@ import {
 } from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix, fmtMissionSiteIdWithMissionId } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { f2asFloat, f2sum } from '../lib/model/fixed2'
+import { f2div, f2fmtDec1, f2isZero, f2sum, toF2, type Fixed2 } from '../lib/model/fixed2'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
-import { div } from '../lib/utils/mathUtils'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -204,13 +203,11 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'avgSkill',
       headerName: 'Avg. skill',
       width: 80,
-      valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
+      valueGetter: (_value, row: MissionRow) => getAverageSkill(row).value,
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const avgSkill = getAverageSkill(params.row)
-        if (avgSkill === 0) {
-          return <span aria-label={`missions-row-avg-skill-${params.id}`}>-</span>
-        }
-        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{avgSkill.toFixed(1)}</span>
+        const displayValue = f2isZero(avgSkill) ? '-' : f2fmtDec1(avgSkill)
+        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
       },
     },
   ]
@@ -220,11 +217,12 @@ function getEnemyCount(row: MissionRow): number {
   return row.enemies.length
 }
 
-function getAverageSkill(row: MissionRow): number {
+function getAverageSkill(row: MissionRow): Fixed2 {
   const { enemies } = row
   if (enemies.length === 0) {
-    return 0
+    return toF2(0)
   }
-  const totalSkill = f2asFloat(f2sum(...enemies.map((enemy) => enemy.skill)))
-  return div(totalSkill, enemies.length)
+  const totalSkill = f2sum(...enemies.map((enemy) => enemy.skill))
+  const count = toF2(enemies.length)
+  return f2div(totalSkill, count)
 }
