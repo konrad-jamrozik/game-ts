@@ -1,4 +1,4 @@
-import { div } from '../../utils/mathUtils'
+import { ceil, div } from '../../utils/mathUtils'
 import { agV } from '../agents/AgentView'
 import { f2addToInt } from '../fixed2'
 import type { Agent } from '../model'
@@ -41,7 +41,7 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
 
 /**
  * Calculates intel decay amount based on accumulated intel.
- * Formula: accumulatedIntel * decayPct
+ * Formula: ceil(accumulatedIntel * decayPct)
  *
  * For example I/O pairs, refer to the test of this function.
  *
@@ -50,7 +50,7 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  */
 export function getLeadIntelDecay(accumulatedIntel: number): number {
   const decayPct = getLeadIntelDecayPct(accumulatedIntel)
-  const decay = accumulatedIntel * decayPct
+  const decay = ceil(accumulatedIntel * decayPct)
   return decay
 }
 
