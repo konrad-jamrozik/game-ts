@@ -42,11 +42,18 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
 
 /**
  * Calculates intel decay based on accumulated intel.
- * Formula: min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
+ * Formula:
+ * intelDecay = min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
+ *            = min(accumulatedIntel * 0.1%, 50%)
  *
  * E.g. at INTEL_DECAY = 10, MAX_INTEL_DECAY = 5000,
- * 100 intel decays by 100*0.1% = 10% = 10 intel.
- * Overall the values for equilibrium are:
+ * intelDecay(  1) =   1 * 0.1% = 0.1%
+ * intelDecay(  5) =   5 * 0.1% = 0.5%
+ * intelDecay(100) = 100 * 0.1% = 10%
+ * intelDecay(500) = 500 * 0.1% = 50%
+ * intelDecay(600) = 600 * 0.1% = 50% not 60%, because of min(... , 50%)
+
+ * Overall the values for equilibrium (== eq) are:
  *   k intel / turn: eq = sqrt(1000 * k) IF k <= 250, 2k otherwise.
  *   5 intel / turn: eq = 70.7 (70.7 * 0.1% = 7.07% decay. 70.7*(1-0.0707) = 65.7 intel + 5 = 70.7)
  *  10 intel / turn: eq = 100 (100 * 0.1% = 10% decay. 100*(1-0.1) = 90 intel + 10 = 100)
@@ -61,9 +68,9 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay in basis points
  */
-export function calculateLeadIntelDecay(accumulatedIntel: number): Bps {
-  const decayBps = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
-  return bps(decayBps)
+export function calculateLeadIntelDecayPct(accumulatedIntel: number): Bps {
+  const decayPct = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
+  return bps(decayPct)
 }
 
 /**
@@ -73,8 +80,8 @@ export function calculateLeadIntelDecay(accumulatedIntel: number): Bps {
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay amount (rounded up)
  */
-export function calculateLeadIntelDecayRounded(accumulatedIntel: number): number {
-  const decay = calculateLeadIntelDecay(accumulatedIntel)
+export function calculateLeadIntelDecayAbsRounded(accumulatedIntel: number): number {
+  const decay = calculateLeadIntelDecayPct(accumulatedIntel)
   return ceil((accumulatedIntel * decay.value) / BPS_PRECISION)
 }
 

@@ -34,6 +34,9 @@ npm run test:component
 npm run test:e2e
 ```
 
+Run tests from a specific test file:
+`npm run test:unit -- test/unit/rolls.test.ts`
+
 Run all tests:
 `npm run test:all`
 

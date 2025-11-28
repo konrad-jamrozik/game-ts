@@ -13,11 +13,11 @@ import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
 import { bps, type Bps } from '../lib/model/bps'
 import { f2addToInt } from '../lib/model/fixed2'
-import type { LeadInvestigationId } from '../lib/model/model'
+import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
-  calculateLeadIntelDecay,
-  calculateLeadIntelDecayRounded,
+  calculateLeadIntelDecayPct,
+  calculateLeadIntelDecayAbsRounded,
   calculateLeadSuccessChance,
 } from '../lib/model/ruleset/leadRuleset'
 import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
@@ -43,7 +43,7 @@ export type LeadInvestigationRow = {
   agents: number
   agentsInTransit: number
   startTurn: number
-  intelDecayPercent: Bps
+  intelDecayPct: Bps
   intelDecay: number
   projectedIntel: number
   intelDiff: number
@@ -98,7 +98,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       headerName: 'Intel decay',
       width: 140,
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intelDecayPercent, intelDecay } = params.row
+        const { intelDecayPct: intelDecayPercent, intelDecay } = params.row
         return (
           <div
             style={{
@@ -137,69 +137,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   ]
 
   // Create all rows from investigations
-  const allInvestigationRows: LeadInvestigationRow[] = Object.values(leadInvestigations).map((investigation, index) => {
-    const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
-
-    // Count agents actively working on this investigation (OnAssignment state)
-    const activeAgents = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
-    ).length
-
-    // Count agents in transit to this investigation
-    const agentsInTransit = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
-    ).length
-
-    // For Successful investigations, skip projected intel calculations
-    let intelDecayPercent: Bps = bps(0)
-    let intelDecay = 0
-    let projectedIntel: number = investigation.accumulatedIntel
-    let intelDiff = 0
-
-    if (investigation.state === 'Active') {
-      // Calculate intel decay (using shared helper function)
-      intelDecay = calculateLeadIntelDecayRounded(investigation.accumulatedIntel)
-      intelDecayPercent = calculateLeadIntelDecay(investigation.accumulatedIntel)
-
-      // Calculate projected intel (reusing logic from updateLeadInvestigations)
-      // Apply decay first
-      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
-      // Then accumulate new intel from assigned agents
-      const investigatingAgents = agsV(agents)
-        .withIds(investigation.agentIds)
-        .toAgentArray()
-        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-      for (const agent of investigatingAgents) {
-        const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
-        projectedIntel = f2addToInt(projectedIntel, intelFromAgent)
-      }
-
-      // Calculate diff for chip display
-      intelDiff = projectedIntel - investigation.accumulatedIntel
-    }
-
-    const rowState: 'Active' | 'Successful' | 'Abandoned' =
-      investigation.state === 'Active' ? 'Active' : investigation.state === 'Successful' ? 'Successful' : 'Abandoned'
-    const completedThisTurn = completedThisTurnIds.has(investigation.id)
-
-    return {
-      id: investigation.id,
-      rowId: index,
-      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
-      intel: investigation.accumulatedIntel,
-      successChance,
-      agents: activeAgents,
-      agentsInTransit,
-      startTurn: investigation.startTurn,
-      intelDecayPercent,
-      intelDecay,
-      projectedIntel,
-      intelDiff,
-      state: rowState,
-      completedThisTurn,
-    }
-  })
+  const allInvestigationRows = buildAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds)
 
   // Filter rows based on checkbox states
   const leadInvestigationRows: LeadInvestigationRow[] = filterLeadInvestigationRows(
@@ -271,4 +209,74 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       />
     </ExpandableCard>
   )
+}
+
+function buildAllInvestigationRows(
+  leadInvestigations: Record<string, LeadInvestigation>,
+  agents: Agent[],
+  completedThisTurnIds: Set<string>,
+): LeadInvestigationRow[] {
+  return Object.values(leadInvestigations).map((investigation, index) => {
+    const lead = getLeadById(investigation.leadId)
+    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
+
+    // Count agents actively working on this investigation (OnAssignment state)
+    const activeAgents = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+    ).length
+
+    // Count agents in transit to this investigation
+    const agentsInTransit = agents.filter(
+      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
+    ).length
+
+    // For Successful investigations, skip projected intel calculations
+    let intelDecayPct: Bps = bps(0)
+    let intelDecay = 0
+    let projectedIntel: number = investigation.accumulatedIntel
+    let intelDiff = 0
+
+    if (investigation.state === 'Active') {
+      // Calculate intel decay (using shared helper function)
+      intelDecay = calculateLeadIntelDecayAbsRounded(investigation.accumulatedIntel)
+      intelDecayPct = calculateLeadIntelDecayPct(investigation.accumulatedIntel)
+
+      // Calculate projected intel (reusing logic from updateLeadInvestigations)
+      // Apply decay first
+      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
+      // Then accumulate new intel from assigned agents
+      const investigatingAgents = agsV(agents)
+        .withIds(investigation.agentIds)
+        .toAgentArray()
+        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+      for (const agent of investigatingAgents) {
+        const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
+        projectedIntel = f2addToInt(projectedIntel, intelFromAgent)
+      }
+
+      // Calculate diff for chip display
+      intelDiff = projectedIntel - investigation.accumulatedIntel
+    }
+
+    const rowState: 'Active' | 'Successful' | 'Abandoned' =
+      investigation.state === 'Active' ? 'Active' : investigation.state === 'Successful' ? 'Successful' : 'Abandoned'
+    const completedThisTurn = completedThisTurnIds.has(investigation.id)
+
+    return {
+      id: investigation.id,
+      rowId: index,
+      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.title}`,
+      intel: investigation.accumulatedIntel,
+      successChance,
+      agents: activeAgents,
+      agentsInTransit,
+      startTurn: investigation.startTurn,
+      intelDecayPct,
+      intelDecay,
+      projectedIntel,
+      intelDiff,
+      state: rowState,
+      completedThisTurn,
+    }
+  })
 }
