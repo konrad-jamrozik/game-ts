@@ -20,6 +20,12 @@ export type RollResult = {
   success: boolean
 }
 
+export type RollResultNew = {
+  successProb: number
+  roll: number
+  success: boolean
+}
+
 export type RangeRoll = {
   min: number
   max: number
@@ -58,6 +64,22 @@ export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?
   }
 }
 
+export function rollAgainstProbability(probability: number, label?: string): RollResult {
+  const [failureInt, successInt] = getSuccessAndFailureInts(probability)
+
+  // roll a random number from [1, 10_000]
+  // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
+  const rollInt = rollBps(label)
+
+  // Success when roll > P(failure)
+  // I.e. higher rolls are better.
+  // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
+  // So we had to roll at least 376 from the range [1, 10_000] to succeed.
+  const success = f4gt(rollInt, failureInt)
+
+  return { failureInt, successInt, rollInt, success }
+}
+
 // KJA idea for new approach to rolling:
 // Input: precise float probability.
 // Roll happens with exact precision, not on integers, as currently.
@@ -80,20 +102,19 @@ export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?
 /**
  * Refer to rolls.test.ts for examples of how this works.
  */
-export function rollAgainstProbability(probability: number, label?: string): RollResult {
-  const [failureInt, successInt] = getSuccessAndFailureInts(probability)
+// KJA curr work
+export function rollAgainstProbabilityNew(successProb: number, label?: string): RollResultNew {
+  const failureProb = 1 - successProb
 
-  // roll a random number from [1, 10_000]
-  // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
-  const rollInt = rollBps(label)
+  const { roll } = rollIn0to1range(label)
 
-  // Success when roll > P(failure)
-  // I.e. higher rolls are better.
-  // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
-  // So we had to roll at least 376 from the range [1, 10_000] to succeed.
-  const success = f4gt(rollInt, failureInt)
+  const success = roll >= failureProb
 
-  return { failureInt, successInt, rollInt, success }
+  return {
+    successProb,
+    roll,
+    success,
+  }
 }
 
 /**
@@ -131,6 +152,21 @@ export function rollBps(label?: string): Bps {
  */
 export function roll1to(precision: number, label?: string): number {
   return rollRange(1, precision, label).roll
+}
+
+export function rollIn0to1range(label?: string): RangeRoll {
+  return rollFloatRange(0, 1, label)
+}
+
+function rollFloatRange(min: number, max: number, label?: string): RangeRoll {
+  const range = max - min
+  const randResult = rand.get(label)
+  const roll = randResult * range + min
+  return {
+    min,
+    max,
+    roll,
+  }
 }
 
 /**

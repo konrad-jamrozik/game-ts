@@ -9,8 +9,8 @@ import { assertNotZero } from './assert'
  *
  */
 export function floor(value: number): number {
-  // Add a small tolerance (1e-10) to handle floating point precision issues before flooring
-  return Math.floor(value + 1e-10)
+  // Add a small tolerance (1e-8) to handle floating point precision issues before flooring
+  return Math.floor(value + 1e-8)
 }
 
 /**
@@ -20,13 +20,13 @@ export function floor(value: number): number {
  *
  */
 export function ceil(value: number): number {
-  // Subtract a small tolerance (1e-10) to handle floating point precision issues before ceiling
+  // Subtract a small tolerance (1e-8) to handle floating point precision issues before ceiling
   // Note: Math.abs is required for the case when value is < 1e-10, including if it is 0.
   // Without abs, the function would return -0, which would fail .toBe() tests from vitest,
   // as they use Object.is():
   // Object.is( 0, 0) -> true
   // Object.is(-0, 0) -> false
-  return Math.abs(Math.ceil(value - 1e-10))
+  return Math.abs(Math.ceil(value - 1e-8))
 }
 
 export function div(nominator: number, denominator: number): number {

@@ -6,7 +6,7 @@ import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
 import { fmtPctDec0, str } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
-import { getPanicIncrease, getPanicNewBalance, decaySuppression } from '../lib/model/ruleset/panicRuleset'
+import { getPanicIncrease, getPanicNewBalance, getSuppressionAfterDecay } from '../lib/model/ruleset/panicRuleset'
 import { MyChip } from './MyChip'
 import { bps, type Bps } from '../lib/model/bps'
 import { ExpandableCard } from './ExpandableCard'
@@ -80,7 +80,7 @@ export function SituationReportCard(): React.JSX.Element {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = bps(redDawnFaction.threatLevel.value + redDawnFaction.threatIncrease.value)
         const threatLevelDiff = bps(redDawnFaction.threatIncrease.value)
-        const suppressionProjected = decaySuppression(redDawnFaction.suppression)
+        const suppressionProjected = getSuppressionAfterDecay(redDawnFaction.suppression)
         const suppressionDiff = bps(suppressionProjected.value - redDawnFaction.suppression.value)
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
         const panicIncreaseDiff = bps(panicIncreaseProjected.value - panicIncrease.value)

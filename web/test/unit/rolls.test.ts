@@ -1,6 +1,11 @@
 import { describe, expect, test } from 'vitest'
 import { BPS_PRECISION } from '../../src/lib/model/bps'
-import { getSuccessAndFailureInts, roll1to, rollAgainstProbability } from '../../src/lib/turn_advancement/rolls'
+import {
+  getSuccessAndFailureInts,
+  roll1to,
+  rollAgainstProbability,
+  rollAgainstProbabilityNew,
+} from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
 describe('rolls', () => {
@@ -71,10 +76,12 @@ describe('rolls', () => {
       rand.set('injected_roll_result', roll)
       console.log(`probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}`)
       const rollResult = rollAgainstProbability(probability, 'injected_roll_result')
+      const rollResultNew = rollAgainstProbabilityNew(probability, 'injected_roll_result')
       console.log(
         `probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}, rollResult: ${rollResult.success}`,
       )
       expect(rollResult.success).toBe(expectedSuccess)
+      expect(rollResultNew.success).toBe(expectedSuccess)
     })
   })
 })

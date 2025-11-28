@@ -18,7 +18,7 @@ export function getPanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
   return bps(Math.max(0, threatLevel.value - suppression.value))
 }
 
-export function decaySuppression(suppression: Bps): Bps {
+export function getSuppressionAfterDecay(suppression: Bps): Bps {
   // KJA refactor bps formula here
   return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY)))
 }
