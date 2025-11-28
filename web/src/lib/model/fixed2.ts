@@ -242,6 +242,11 @@ export function f2ge(first: Fixed2, second: Fixed2): boolean {
   return first.value >= second.value
 }
 
+export function f2gt(first: Fixed2, second: Fixed2 | number): boolean {
+  const secondValue = typeof second === 'number' ? toF2(second).value : second.value
+  return first.value > secondValue
+}
+
 /**
  * Creates a Fixed2 value from a number.
  * Use this when you have a raw number that represents a fixed-point value in this format.

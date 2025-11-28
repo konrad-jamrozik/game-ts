@@ -14,10 +14,10 @@ import {
 } from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
-import { f2asFloat, toF2 } from '../../src/lib/model/fixed2'
+import { f2gt, toF2 } from '../../src/lib/model/fixed2'
 
 describe(evaluateDeployedMissionSite, () => {
-  test('success', () => {
+  test('evaluateDeployedMissionSite succeeds', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
@@ -80,7 +80,7 @@ describe(evaluateDeployedMissionSite, () => {
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
-      expect(f2asFloat(testAgent.skill)).toBeGreaterThan(200)
+      expect(f2gt(testAgent.skill, 200)).toBe(true)
 
       // Verify agent gained exhaustion from combat
       expect(testAgent.exhaustion).toBeGreaterThan(0)

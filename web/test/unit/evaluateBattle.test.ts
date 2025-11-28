@@ -1,10 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
-import { st } from '../fixtures/stateFixture'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { agFix } from '../fixtures/agentFixture'
-import { enFix } from '../fixtures/enemyFixture'
-import { rand } from '../../src/lib/utils/rand'
+import { f2add, f2mult } from '../../src/lib/model/fixed2'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,
@@ -12,7 +8,11 @@ import {
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/model/ruleset/constants'
-import { f2add, f2asFloat, toF2 } from '../../src/lib/model/fixed2'
+import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
+import { rand } from '../../src/lib/utils/rand'
+import { agFix } from '../fixtures/agentFixture'
+import { enFix } from '../fixtures/enemyFixture'
+import { st } from '../fixtures/stateFixture'
 
 describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
@@ -60,7 +60,7 @@ describe(evaluateBattle, () => {
 
     const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f2add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
-    const expectedSkillUpdate = toF2(f2asFloat(skillGainPerRound) * expectedRounds)
+    const expectedSkillUpdate = f2mult(skillGainPerRound, expectedRounds)
     expectReportToBe(report)({
       rounds: expectedRounds,
       agentCasualties: 1,
