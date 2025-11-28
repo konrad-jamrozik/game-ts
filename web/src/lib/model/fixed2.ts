@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, div, floor, mult100flr } from '../utils/mathUtils'
+import { dist, div, floor, mult100floor } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -36,7 +36,7 @@ export function isF2(value: unknown): value is Fixed2 {
  */
 export function toF2(value: number): Fixed2 {
   assertMax2Dec(value)
-  return toF2flr(value)
+  return toF2floor(value)
 }
 
 export function f2addToInt(target: number, value: Fixed2): number {
@@ -122,7 +122,7 @@ export function f2dist(first: Fixed2, second: Fixed2): Fixed2 {
  */
 export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
   const product = multipliers.reduce((acc, mult) => acc * mult, f2asFloat(first))
-  return toF2flr(product)
+  return toF2floor(product)
 }
 
 /**
@@ -135,7 +135,7 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
 export function f2div(numerator: Fixed2, denominator: Fixed2 | number): Fixed2 {
   const denominatorValue = typeof denominator === 'number' ? toF2(denominator).value : denominator.value
   const divResult = div(numerator.value, denominatorValue)
-  return toF2flr(divResult)
+  return toF2floor(divResult)
 }
 
 export function f2divPrecise(numerator: Fixed2, denominator: Fixed2): number {
@@ -231,8 +231,8 @@ export function f2gt(first: Fixed2, second: Fixed2 | number): boolean {
   return first.value > secondValue
 }
 
-function toF2flr(value: number): Fixed2 {
-  return fixed2(mult100flr(value))
+function toF2floor(value: number): Fixed2 {
+  return fixed2(mult100floor(value))
 }
 
 function f2asInt(value: Fixed2): number {

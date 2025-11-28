@@ -57,11 +57,11 @@ export function nonNeg(value: number): number {
   return Math.max(0, value)
 }
 
-export function mult100flr(value: number): number {
+export function mult100floor(value: number): number {
   return floor(value * 100)
 }
 
-export function div100flr(value: number): number {
+export function div100floor(value: number): number {
   return floor(value / 100)
 }
 
