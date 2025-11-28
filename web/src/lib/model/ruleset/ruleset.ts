@@ -1,10 +1,11 @@
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../../utils/actorUtils'
+import { calculateAgentSkillBasedValue } from '../../utils/skillUtils'
 import { ceil, div, floor } from '../../utils/mathUtils'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
 import { bps, BPS_PRECISION, type Bps } from '../bps'
-import { f2addToInt, f2asFloat, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
+import { f2addToInt, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
 import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import {
   AGENT_CONTRACTING_INCOME,
@@ -25,8 +26,7 @@ export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
   let total = 0
   for (const agent of contractingAgents) {
-    const skillCoefficient = f2div(agent.effectiveSkill(), 100)
-    const incomeFromAgent = f2mult(skillCoefficient, AGENT_CONTRACTING_INCOME)
+    const incomeFromAgent = calculateAgentSkillBasedValue(agent, AGENT_CONTRACTING_INCOME)
     total = f2addToInt(total, incomeFromAgent)
   }
   return total
@@ -36,8 +36,7 @@ export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
   let total = 0
   for (const agent of espionageAgents) {
-    const skillCoefficient = f2div(agent.effectiveSkill(), 100)
-    const intelFromAgent = f2mult(skillCoefficient, AGENT_ESPIONAGE_INTEL)
+    const intelFromAgent = calculateAgentSkillBasedValue(agent, AGENT_ESPIONAGE_INTEL)
     total = f2addToInt(total, intelFromAgent)
   }
   return total
@@ -193,9 +192,8 @@ export function calculateIntelDecayRounded(accumulatedIntel: number): number {
 export function calculateAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
-    // KJA f2asFloat for accumulated intel
-    const agentEffectiveSkill = f2asFloat(agV(agent).effectiveSkill())
-    total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
+    const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
+    total = f2addToInt(total, intelFromAgent)
   }
   return total
 }
@@ -251,7 +249,4 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
     enemyToAgentsSkillRatio,
   }
   return result
-}
-function f2AsInt(arg0: Fixed2): number {
-  throw new Error('Function not implemented.')
 }
