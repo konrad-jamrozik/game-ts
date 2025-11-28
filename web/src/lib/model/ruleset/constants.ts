@@ -48,5 +48,6 @@ export const RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD = 0.8
 // So if 1 intel = 1%, and 5 intel decays by 0.5% or 0.025, rounded up (see calculateLeadIntelDecayRounded),
 // to 1, it decays by 1 from 5 to 4, resulting in 4% success chance.
 // (without rounding, it would be 4.97%).
+// KJA change INTEL_DECAY to be INTEL_DECAY_BPS = toBps(0.001)
 export const INTEL_DECAY = 10 // 0.1% decay per intel point
 export const MAX_INTEL_DECAY = 5000 // hard cap on decay: 50%

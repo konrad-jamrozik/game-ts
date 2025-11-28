@@ -1,17 +1,17 @@
 import {
+  createRowSelectionManager,
   type GridColDef,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowParams,
   type GridRowSelectionModel,
-  createRowSelectionManager,
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
-import { bps, toBpsFloor, type Bps } from '../lib/model/bps'
+import { bps, type Bps } from '../lib/model/bps'
 import { f2addToInt } from '../lib/model/fixed2'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
@@ -20,19 +20,19 @@ import {
   calculateLeadIntelDecayRounded,
   calculateLeadSuccessChance,
 } from '../lib/model/ruleset/leadRuleset'
+import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
-import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
+import { fmtNoPrefix, fmtPctDec2, str } from '../lib/utils/formatUtils'
+import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'
 import { StyledDataGrid } from './StyledDataGrid'
-import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
 
 export type LeadInvestigationRow = {
   id: LeadInvestigationId
@@ -90,7 +90,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         if (params.row.state === 'Abandoned') {
           return <MyChip chipValue="Failed" reverseColor={true} />
         }
-        return <span>{str(toBpsFloor(params.row.successChance))}</span>
+        return <span>{fmtPctDec2(params.row.successChance)}</span>
       },
     },
     {

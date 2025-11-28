@@ -1,5 +1,3 @@
-import { multAndFloor } from '../utils/mathUtils'
-
 // KJA refactor bps to follow the same pattern as Fixed2
 
 // KJA review all standalone usages of BPS_PRECISION
@@ -35,15 +33,4 @@ export function isBps(value: unknown): value is Bps {
     'value' in value &&
     typeof value.value === 'number'
   )
-}
-
-/** // KJA review usage of toBpsFloor
- * Converts a decimal percentage value to Bps format, rounding down.
- * For example:
- * toBps(1) = toBps(100%) = bps(10_00)
- * toBps(0.129) = toBps(12.9%) = bps(1290)
- * toBps(1.289) = toBps(128.9%) = bps(12_890)
- */
-export function toBpsFloor(value: number): Bps {
-  return bps(multAndFloor(value, BPS_PRECISION))
 }
