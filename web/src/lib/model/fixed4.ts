@@ -23,3 +23,12 @@ function floorToF4(value: number): Bps {
 export function f4sub(first: Bps, second: Bps): Bps {
   return bps(first.value - second.value)
 }
+
+/**
+ * f4gt(bps(8000), bps(7000)) = true  (80.00% > 70.00%)
+ * f4gt(bps(7000), bps(8000)) = false (70.00% > 80.00% is false)
+ * f4gt(bps(7000), bps(7000)) = false (70.00% > 70.00% is false)
+ */
+export function f4gt(first: Bps, second: Bps): boolean {
+  return first.value > second.value
+}

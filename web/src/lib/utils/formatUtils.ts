@@ -122,5 +122,7 @@ export function fmtValueChange<TNumber extends number | Bps = number>(change: Va
 export function fmtRollResult(rollResult: RollResult): string {
   const icon = rollResult.success ? '✅' : '❌'
   const relation = rollResult.success ? '> ' : '<='
-  return `[${icon} roll ${addPctSignDec2(rollResult.rollPct)} is ${relation} ${addPctSignDec2(rollResult.failureProbabilityPct)} threshold]`
+  // KJA bug: this now displays:
+  // 🩸 👤 agent-011  (83) hits       👺 enemy-initiate-2        (40) [AC:  1]  for   8  (80%) damage [✅ roll 726400.00% is >  -812500.00% threshold] (  12 /  20  (60%) HP remaining)
+  return `[${icon} roll ${f4fmtPctDec2(rollResult.rollInt)} is ${relation} ${f4fmtPctDec2(rollResult.failureInt)} threshold]`
 }

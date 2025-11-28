@@ -4,7 +4,7 @@
 
 import { BPS_PRECISION, type Bps } from '../model/bps'
 import { f2divPrecise, type Fixed2 } from '../model/fixed2'
-import { f4sub, toF4 } from '../model/fixed4'
+import { f4gt, f4sub, toF4 } from '../model/fixed4'
 import { multAndFloor } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
@@ -14,9 +14,9 @@ export type ContestRollResult = {
 } & RollResult
 
 export type RollResult = {
-  successProbabilityPct: number
-  failureProbabilityPct: number
-  rollPct: number
+  failureInt: Bps
+  successInt: Bps
+  rollInt: Bps
   success: boolean
 }
 
@@ -72,24 +72,9 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
   // I.e. higher rolls are better.
   // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
   // So we had to roll at least 376 from the range [1, 10_000] to succeed.
-  const success = rollInt > failureInt
+  const success = f4gt(rollInt, failureInt)
 
-  // Express the values as percentages with 0.01% precision
-  // KJA2 this is not good, these should not be percentages. Just keep here the raw fractional
-  // and then format as percentage during display.
-  // E.g.:
-  // successInt = 7312
-  // successProbabilityPct = successInt / (BPS_PRECISION / 100)
-  // successProbabilityPct = 7312 / (10_000 / 100)
-  // successProbabilityPct = 7312 / 100
-  // successProbabilityPct = 73.12 # Because this is percentage, i.e. 73.12%
-  //
-  // But we want 0.7312
-  const successProb = successInt / (BPS_PRECISION / 100)
-  const failureProb = failureInt / (BPS_PRECISION / 100)
-  const rollPct = rollInt / (BPS_PRECISION / 100)
-
-  return { successProbabilityPct: successProb, failureProbabilityPct: failureProb, rollPct, success }
+  return { failureInt, successInt, rollInt, success }
 }
 
 /**

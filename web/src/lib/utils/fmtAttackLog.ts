@@ -1,6 +1,6 @@
 import { f2fmtInt, type Fixed2 } from '../model/fixed2'
+import { f4fmtPctDec2 } from '../model/fixed4'
 import type { RollResult } from '../turn_advancement/rolls'
-import { addPctSignDec2 } from './formatUtils'
 
 export type AttackLogKind =
   | 'agent misses'
@@ -112,10 +112,10 @@ function buildDamageStr(damageInfo: { damage: number; damagePct: string } | unde
 
 function buildRollResultStr(rollResult: RollResult): string {
   const rollResultIcon = rollResult.success ? '✅' : '❌'
-  const rollPercentage = addPctSignDec2(rollResult.rollPct).padStart(7)
+  const rollPctStr = f4fmtPctDec2(rollResult.rollInt).padStart(7)
   const rollRelation = rollResult.success ? '> ' : '<='
-  const thresholdPercentage = addPctSignDec2(rollResult.failureProbabilityPct).padStart(7)
-  return `[${rollResultIcon} roll ${rollPercentage} is ${rollRelation} ${thresholdPercentage} threshold]`
+  const thresholdPctStr = f4fmtPctDec2(rollResult.failureInt).padStart(7)
+  return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
 }
 
 function buildAttackCountStr(attackCount: number): string {
