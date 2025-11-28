@@ -2,8 +2,9 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { BPS_PRECISION } from '../model/bps'
+import { BPS_PRECISION, type Bps } from '../model/bps'
 import { f2divPrecise, type Fixed2 } from '../model/fixed2'
+import { f4sub, toF4 } from '../model/fixed4'
 import { multAndFloor } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
@@ -61,19 +62,17 @@ export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?
  * Refer to rolls.test.ts for examples of how this works.
  */
 export function rollAgainstProbability(probability: number, label?: string): RollResult {
-  // failureInt: Failure probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
-  // successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
   const [failureInt, successInt] = getSuccessAndFailureInts(probability)
 
   // roll a random number from [1, 10_000]
   // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
-  const roll = roll1to(BPS_PRECISION, label)
+  const rollInt = toF4(roll1to(BPS_PRECISION, label))
 
   // Success when roll > P(failure)
   // I.e. higher rolls are better.
   // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
   // So we had to roll at least 376 from the range [1, 10_000] to succeed.
-  const success = roll > failureInt
+  const success = rollInt > failureInt
 
   // Express the values as percentages with 0.01% precision
   // KJA2 this is not good, these should not be percentages. Just keep here the raw fractional
@@ -86,16 +85,22 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
   // successProbabilityPct = 73.12 # Because this is percentage, i.e. 73.12%
   //
   // But we want 0.7312
-  const successProbabilityPct = successInt / (BPS_PRECISION / 100)
-  const failureProbabilityPct = failureInt / (BPS_PRECISION / 100)
-  const rollPct = roll / (BPS_PRECISION / 100)
+  const successProb = successInt / (BPS_PRECISION / 100)
+  const failureProb = failureInt / (BPS_PRECISION / 100)
+  const rollPct = rollInt / (BPS_PRECISION / 100)
 
-  return { successProbabilityPct, failureProbabilityPct, rollPct, success }
+  return { successProbabilityPct: successProb, failureProbabilityPct: failureProb, rollPct, success }
 }
 
-export function getSuccessAndFailureInts(successProbability: number): [number, number] {
-  const successInt = multAndFloor(successProbability, BPS_PRECISION)
-  const failureInt = BPS_PRECISION - successInt
+/**
+ * @param successProbability - Success probability as a decimal in range [0, 1], both inclusive.
+ * @returns A tuple of [failureInt, successInt] where:
+ * - failureInt: Failure probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
+ * - successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
+ */
+export function getSuccessAndFailureInts(successProbability: number): [Bps, Bps] {
+  const successInt = toF4(multAndFloor(successProbability, BPS_PRECISION))
+  const failureInt = f4sub(toF4(1), successInt)
   return [failureInt, successInt]
 }
 

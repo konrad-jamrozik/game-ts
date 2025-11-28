@@ -106,3 +106,16 @@ export function assertMax2Dec(
     throw new Error(errMsg)
   }
 }
+
+export function assertMax4Dec(
+  value: number,
+  errMsg = `Value must have at most 4 decimal places, got: ${value}`,
+): asserts value is number {
+  const multiplied = Math.abs(value * 10_000)
+  const floored = floor(multiplied)
+  // Use a tolerance to handle floating point precision issues
+  // If the difference is less than 1e-8, consider them equal
+  if (Math.abs(multiplied - floored) > 1e-8) {
+    throw new Error(errMsg)
+  }
+}

@@ -7,7 +7,7 @@ import { getMissionById } from '../collections/missions'
 import { div, floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
 import { f4fmtPctDec2 } from '../model/fixed4'
 
-// KJA formatUtils.ts should not depend on bps. fixed2 depends on fmtUtils and the same should be the case for bps.
+// KJA formatUtils.ts should not depend on bps or fixed2. fixed2 depends on fmtUtils and the same should be the case for bps.
 
 export function str(value: unknown): string {
   if (isBps(value)) {
