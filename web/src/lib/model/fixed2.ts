@@ -1,6 +1,6 @@
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, div100flr, floor, mult100flr } from '../utils/mathUtils'
+import { dist, mult100flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
