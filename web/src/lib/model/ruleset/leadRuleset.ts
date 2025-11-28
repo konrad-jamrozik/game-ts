@@ -47,14 +47,19 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  *            = min(accumulatedIntel * 0.1%, 50%)
  *
  * E.g. at INTEL_DECAY = 10, MAX_INTEL_DECAY = 5000,
- * intelDecay(  1) =   1 * 0.1% = 0.1%
- * intelDecay(  5) =   5 * 0.1% = 0.5%
- * intelDecay(100) = 100 * 0.1% = 10%
- * intelDecay(500) = 500 * 0.1% = 50%
- * intelDecay(600) = 600 * 0.1% = 50% not 60%, because of min(... , 50%)
+ * intelDecayPct(  1) =   1 * 0.1% = 0.1%
+ * intelDecayPct(  5) =   5 * 0.1% = 0.5%
+ * intelDecayPct( 10) =  10 * 0.1% = 1%
+ * intelDecayPct( 40) =  40 * 0.1% = 4%
+ * intelDecayPct(100) = 100 * 0.1% = 10%
+ * intelDecayPct(250) = 250 * 0.1% = 25%
+ * intelDecayPct(300) = 300 * 0.1% = 30%
+ * intelDecayPct(500) = 500 * 0.1% = 50%
+ * intelDecayPct(600) = 600 * 0.1% = 50% not 60%, because of min(... , 50%)
 
  * Overall the values for equilibrium (== eq) are:
  *   k intel / turn: eq = sqrt(1000 * k) IF k <= 250, 2k otherwise.
+ * This is because at 500 intel (which is == 2k) the max 50% decay kicks in.
  *   5 intel / turn: eq = 70.7 (70.7 * 0.1% = 7.07% decay. 70.7*(1-0.0707) = 65.7 intel + 5 = 70.7)
  *  10 intel / turn: eq = 100 (100 * 0.1% = 10% decay. 100*(1-0.1) = 90 intel + 10 = 100)
  *  40 intel / turn: eq = 200 (200 * 0.1% = 20% decay. 200*(1-0.2) = 160 intel + 40 = 200)
@@ -75,7 +80,16 @@ export function calculateLeadIntelDecayPct(accumulatedIntel: number): Bps {
 
 /**
  * Calculates intel decay amount based on accumulated intel.
- * Formula: ceil((accumulatedIntel * decay) / 10_000)
+ * Formula: ceil((accumulatedIntel * decayPct) / 10_000)
+ *
+ * Example values:
+ * decayAbs(  1) = ceil(  1 *  0.1%) = ceil(  0.001) =   1
+ * decayAbs(  5) = ceil(  5 *  0.5%) = ceil(  0.025) =   1
+ * decayAbs(100) = ceil(100 * 10  %) = ceil( 10    ) =  10
+ * decayAbs(250) = ceil(250 * 25  %) = ceil( 62.5  ) =  63
+ * decayAbs(300) = ceil(300 * 30  %) = ceil( 90    ) =  90
+ * decayAbs(500) = ceil(500 * 50  %) = ceil(250    ) = 250
+ * decayAbs(600) = ceil(600 * 50  %) = ceil(300    ) = 300
  *
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay amount (rounded up)

@@ -58,6 +58,19 @@ export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?
   }
 }
 
+// KJA idea for new approach to rolling:
+// Input: precise float probability.
+// Roll happens with exact precision, not on integers, as currently.
+// Roll returns exact floats rolled, not Bps.
+//
+// There is a formatting function
+// KJA idea for new approach to storing numbers:
+// - numbers are stored as either:
+//  - number, if integers,
+//  - OR Fixed6, i.e. F6  == precision of 1/100 of 0.01% == 0.0001%.
+// - all operations are always precise floating points
+// - When displayed, appropriate format functions are called at the very last moment, like "format as 100.00%"
+// -
 /**
  * Refer to rolls.test.ts for examples of how this works.
  */
