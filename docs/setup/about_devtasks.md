@@ -15,11 +15,14 @@ All these commands to be run from the `web/` directory:
 - To fix code style issues, run `npm run eslint:fix`.
 - To check if the project types and builds, run `npm run build`.
 - To verify that unit tests pass, run `npm run test`
+- To do relatively quick verification of the project, run `npm run qcheck`.
+  - It runs `oxlint`, `tsc` and `test` commands.
 
 # Very slow commands
 
-- To do thorough check of all validations, run `npm run check`.
 - To verify e2e tests pass, run `npm run test:e2e`
+- To do thorough check of all validations, run `npm run check`.
+  - It runs `format`, `oxlint`, `eslint:cached`, `build` and `test:all` commands.
 
 # Misc. commands
 
