@@ -14,8 +14,8 @@ import { agV } from '../lib/model/agents/AgentView'
 import { f2addToInt } from '../lib/model/fixed2'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
-import { calculateLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
-import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
+import { getLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
+import { getAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -213,7 +213,7 @@ function buildAllInvestigationRows(
 ): LeadInvestigationRow[] {
   return Object.values(leadInvestigations).map((investigation, index) => {
     const lead = getLeadById(investigation.leadId)
-    const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
+    const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
     // Count agents actively working on this investigation (OnAssignment state)
     const activeAgents = agents.filter(
@@ -245,7 +245,7 @@ function buildAllInvestigationRows(
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
-        const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
+        const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
         projectedIntel = f2addToInt(projectedIntel, intelFromAgent)
       }
 

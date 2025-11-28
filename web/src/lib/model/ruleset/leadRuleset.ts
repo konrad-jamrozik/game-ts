@@ -3,7 +3,7 @@ import { agV } from '../agents/AgentView'
 import { f2addToInt } from '../fixed2'
 import type { Agent } from '../model'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
-import { calculateAgentSkillBasedValue } from './skillRuleset'
+import { getAgentSkillBasedValue } from './skillRuleset'
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
@@ -18,7 +18,7 @@ import { calculateAgentSkillBasedValue } from './skillRuleset'
  * @param difficulty - The difficulty in basis points
  * @returns The success chance
  */
-export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty: number): number {
+export function getLeadSuccessChance(accumulatedIntel: number, difficulty: number): number {
   // Example 1:
   // accumulatedIntel = 1, difficulty = 100
   // successChance = 1/100 = 1%
@@ -86,10 +86,10 @@ export function getLeadIntelDecayPct(accumulatedIntel: number): number {
 /**
  * Calculates total intel accumulated from investigating agents
  */
-export function calculateLeadAccumulatedIntel(agents: Agent[]): number {
+export function getLeadAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
-    const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
+    const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
     total = f2addToInt(total, intelFromAgent)
   }
   return total

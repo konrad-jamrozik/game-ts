@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { bps, type Bps } from '../../lib/model/bps'
-import { calculatePanicIncrease } from '../../lib/model/ruleset/panicRuleset'
+import { getPanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {
   newValueChange,
   type ExpiredMissionSiteReport,
@@ -91,8 +91,8 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 }
 
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  const previousPanicIncrease = calculatePanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
-  const currentPanicIncrease = calculatePanicIncrease(fct.threatLevel.current, fct.suppression.current)
+  const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
+  const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
   const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
 
   const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)

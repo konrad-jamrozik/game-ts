@@ -3,11 +3,7 @@ import { missions } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
 import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
-import {
-  calculateLeadAccumulatedIntel,
-  getLeadIntelDecay,
-  calculateLeadSuccessChance,
-} from '../model/ruleset/leadRuleset'
+import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from '../model/ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../utils/assert'
 import { newEnemiesFromSpec } from '../utils/enemyUtils'
@@ -48,7 +44,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 
   // Accumulate new intel from assigned agents (same formula as espionage)
   const investigatingAgents = getInvestigatingAgents(state, investigation)
-  const accumulatedIntel = calculateLeadAccumulatedIntel(investigatingAgents)
+  const accumulatedIntel = getLeadAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
   const agents = agsV(investigatingAgents)
@@ -72,7 +68,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
  */
 function rollAndLogInvestigationResult(investigation: LeadInvestigation): { success: boolean; successChance: number } {
   const lead = getLeadById(investigation.leadId)
-  const successChance = calculateLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
+  const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
   const rollResult = rollAgainstProbability(successChance)
   const rollResultStr = fmtRollResult(rollResult)
   console.log(`${investigation.id} result: ${rollResultStr}`)

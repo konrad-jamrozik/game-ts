@@ -1,6 +1,6 @@
 import { f2addToInt } from '../fixed2'
 import { agsV, type AgentsView } from '../agents/AgentsView'
-import { calculateAgentSkillBasedValue } from './skillRuleset'
+import { getAgentSkillBasedValue } from './skillRuleset'
 import type { GameState } from '../model'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
 
@@ -8,7 +8,7 @@ export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
   let total = 0
   for (const agent of espionageAgents) {
-    const intelFromAgent = calculateAgentSkillBasedValue(agent, AGENT_ESPIONAGE_INTEL)
+    const intelFromAgent = getAgentSkillBasedValue(agent, AGENT_ESPIONAGE_INTEL)
     total = f2addToInt(total, intelFromAgent)
   }
   return total

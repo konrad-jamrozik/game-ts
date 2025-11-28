@@ -38,7 +38,7 @@ export function evaluateDeployedMissionSite(
   battleReport.agentsWounded = agentsWounded
   battleReport.agentsUnscathed = agentsUnscathed
 
-  battleReport.agentExhaustionAfterBattle = calculateAgentExhaustionAfterBattle(
+  battleReport.agentExhaustionAfterBattle = getAgentExhaustionAfterBattle(
     deployedAgents,
     battleReport.initialAgentExhaustionByAgentId,
   )
@@ -53,7 +53,7 @@ export function evaluateDeployedMissionSite(
   return { rewards, battleReport }
 }
 
-function calculateAgentExhaustionAfterBattle(
+function getAgentExhaustionAfterBattle(
   deployedAgents: Agent[],
   initialAgentExhaustionByAgentId: Record<string, number>,
 ): number {

@@ -16,7 +16,7 @@ import {
   type TurnReport,
 } from '../model/turnReportModel'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
+import { getPanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
@@ -440,7 +440,7 @@ function updatePanic(
 
   // Track faction contributions
   const factionPanicIncreases = state.factions.map((faction) => {
-    const factionPanicIncrease = calculatePanicIncrease(faction.threatLevel, faction.suppression)
+    const factionPanicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
     return {
       factionId: faction.id,
       factionName: faction.name,

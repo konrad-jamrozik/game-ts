@@ -14,7 +14,7 @@ import { SUPPRESSION_DECAY } from './constants'
  * @param suppression - The faction's suppression value (in basis points)
  * @returns The panic increase (never negative, in basis points)
  */
-export function calculatePanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
+export function getPanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
   return bps(Math.max(0, threatLevel.value - suppression.value))
 }
 
@@ -32,7 +32,7 @@ export function decaySuppression(suppression: Bps): Bps {
 export function getTotalPanicIncrease(gameState: GameState): number {
   let totalPanicIncrease = 0
   for (const faction of gameState.factions) {
-    const panicIncrease = calculatePanicIncrease(faction.threatLevel, faction.suppression)
+    const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
     totalPanicIncrease += panicIncrease.value
   }
   return totalPanicIncrease
