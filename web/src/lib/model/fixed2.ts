@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, div, floor, mult100floor } from '../utils/mathUtils'
+import { dist, div, floor } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -33,10 +33,11 @@ export function isF2(value: unknown): value is Fixed2 {
  * toF2(7) creates fixed2(700), which represents 7.00.
  * toF2(1.1) creates fixed2(110), which represents 1.10.
  * toF2(21.75) creates fixed2(2175), which represents 21.75.
+ * toF2(21.758) fails assertion.
  */
 export function toF2(value: number): Fixed2 {
   assertMax2Dec(value)
-  return toF2floor(value)
+  return floorToF2(value)
 }
 
 export function f2addToInt(target: number, value: Fixed2): number {
@@ -122,7 +123,7 @@ export function f2dist(first: Fixed2, second: Fixed2): Fixed2 {
  */
 export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
   const product = multipliers.reduce((acc, mult) => acc * mult, f2asFloat(first))
-  return toF2floor(product)
+  return floorToF2(product)
 }
 
 /**
@@ -135,7 +136,7 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
 export function f2div(numerator: Fixed2, denominator: Fixed2 | number): Fixed2 {
   const denominatorValue = typeof denominator === 'number' ? toF2(denominator).value : denominator.value
   const divResult = div(numerator.value, denominatorValue)
-  return toF2floor(divResult)
+  return floorToF2(divResult)
 }
 
 export function f2divPrecise(numerator: Fixed2, denominator: Fixed2): number {
@@ -231,8 +232,15 @@ export function f2gt(first: Fixed2, second: Fixed2 | number): boolean {
   return first.value > secondValue
 }
 
-function toF2floor(value: number): Fixed2 {
-  return fixed2(mult100floor(value))
+/**
+ * Converts a decimal number to a Fixed2 value by flooring to 2 decimal places.
+ * For example:
+ * floorToF2(7.123) = fixed2(712) (7.12)
+ * floorToF2(7.999) = fixed2(799) (7.99)
+ * floorToF2(7.0  ) = fixed2(700) (7.00)
+ */
+function floorToF2(value: number): Fixed2 {
+  return fixed2(floor(value * 100))
 }
 
 function f2asInt(value: Fixed2): number {

@@ -22,7 +22,7 @@ export function ceil(value: number): number {
   return Math.ceil(value - 1e-10)
 }
 
-/**
+/** // KJA get rid of multAndFloor
  * Multiplies given value by given precision, then rounds down the result to nearest integer.
  *
  * For example:
@@ -55,14 +55,6 @@ export function toPct(value: number, denominator = 1): number {
 
 export function nonNeg(value: number): number {
   return Math.max(0, value)
-}
-
-export function mult100floor(value: number): number {
-  return floor(value * 100)
-}
-
-export function div100floor(value: number): number {
-  return floor(value / 100)
 }
 
 export function dist(first: number, second: number): number {
