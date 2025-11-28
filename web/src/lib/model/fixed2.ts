@@ -84,7 +84,7 @@ export function f2fmtPctDec2(nominator: Fixed2, denominator: Fixed2 | undefined 
   return fmtPctDec2(f2asFloat(nominator))
 }
 
-export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2): string {
+export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2 | undefined = undefined): string {
   if (isF2(denominator)) {
     return fmtPctDec0(nominator.value, denominator.value)
   }
