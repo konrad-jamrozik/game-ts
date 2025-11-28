@@ -4,42 +4,19 @@ import { isBps, type Bps } from '../model/bps'
 import type { ValueChange } from '../model/turnReportModel'
 import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
-import { div, floor, toPct } from './mathUtils'
+import { div, floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
+import { f4fmtPctDec2 } from '../model/fixed4'
 
 // KJA formatUtils.ts should not depend on bps. fixed2 depends on fmtUtils and the same should be the case for bps.
 
 export function str(value: unknown): string {
   if (isBps(value)) {
-    return addPctSignDiv100Dec2(value)
+    return f4fmtPctDec2(value)
   }
   if (typeof value === 'number' && value % 1 !== 0) {
     return fmtDec2(value)
   }
   return String(value)
-}
-
-/** // KJA this should be called bpsFmtPctDec2 and be in bps.ts
- * @returns The value, divided by 100, formatted as percentage with 2 decimal places.
- * For example, 12345 will be formatted as "123.45%"
- */
-export function addPctSignDiv100Dec2(value: Bps): string {
-  return addPctSignDiv100(value.value, 2)
-}
-
-/** // KJA2 now unused, previously was used in retreat report
- * @returns The value, multiplied by 100, formatted as percentage with 2 decimal places.
- * For example, 0.12345 will be formatted as "12.34%"
- */
-export function addPctSignMult100Dec2(value: number): string {
-  return addPctSign(value * 100, 2)
-}
-
-export function addPctSignDiv100(value: number, decimals: number): string {
-  return addPctSign(value, decimals, 100)
-}
-
-export function addPctSignDec0(value: number): string {
-  return addPctSign(value, 0, 1)
 }
 
 export function addPctSignDec2(value: number): string {
@@ -76,8 +53,7 @@ export function fmtDec0(value: number): string {
 }
 
 export function fmtDec1(value: number): string {
-  // KJA introduce "floorAtDec1" function
-  return (floor(value * 10) / 10).toFixed(1)
+  return floorToDec1(value).toFixed(1)
 }
 
 /**
@@ -87,11 +63,10 @@ export function fmtDec1(value: number): string {
  * @returns Formatted string with 2 decimal places (e.g., "123.456" -> "123.45")
  */
 export function fmtDec2(value: number): string {
-  // KJA introduce "floorAtDec2" function
-  return (floor(value * 100) / 100).toFixed(2)
+  return floorToDec2(value).toFixed(2)
 }
 
-// KJA note it rounds to nearest due to toFixed, not down
+// KJA note it rounds to nearest due to toFixed, not down. Get rid of this.
 export function addPctSign(value: number, decimals = 0, denominator = 1): string {
   return `${div(value, denominator).toFixed(decimals)}%`
 }

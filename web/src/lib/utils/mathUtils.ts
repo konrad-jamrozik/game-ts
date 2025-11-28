@@ -66,3 +66,11 @@ export function dist(first: number, second: number): number {
 export function val(value: number | Bps | Fixed2): number {
   return isBps(value) || isF2(value) ? value.value : value
 }
+
+export function floorToDec1(value: number): number {
+  return floor(value * 10) / 10
+}
+
+export function floorToDec2(value: number): number {
+  return floor(value * 100) / 100
+}

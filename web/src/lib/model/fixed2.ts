@@ -66,29 +66,19 @@ export function f2fmt(value: Fixed2): string {
   return fmtDec2(f2asFloat(value))
 }
 /**
- * Formats a Fixed2 value as a percentage with 2 decimal places, comparing it to a denominator.
+ * Formats a Fixed2 value as a percentage with 2 decimal places, after dividing it by the denominator.
  * For example:
  * f2fmtPctDec2(toF2(75), toF2(100)) = "75.00" (representing 75.00%)
  * f2fmtPctDec2(toF2(98.5), toF2(52)) = "189.42" (representing 189.42%)
  */
-export function f2fmtPctDec2(nominator: Fixed2, denominator: Fixed2 | number | undefined = undefined): string {
-  if (isF2(denominator)) {
-    return fmtPctDec2(nominator.value, denominator.value)
-  }
-  if (typeof denominator === 'number') {
-    return fmtPctDec2(nominator.value, toF2(denominator).value)
-  }
-  return fmtPctDec2(f2asFloat(nominator))
+export function f2fmtPctDec2(nominator: Fixed2, denominator: Fixed2 | number = 1): string {
+  const denominatorValue = isF2(denominator) ? denominator.value : toF2(denominator).value
+  return fmtPctDec2(nominator.value, denominatorValue)
 }
 
-export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2 | number | undefined = undefined): string {
-  if (isF2(denominator)) {
-    return fmtPctDec0(nominator.value, denominator.value)
-  }
-  if (typeof denominator === 'number') {
-    return fmtPctDec0(nominator.value, toF2(denominator).value)
-  }
-  return fmtPctDec0(f2asFloat(nominator))
+export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2 | number = 1): string {
+  const denominatorValue = isF2(denominator) ? denominator.value : toF2(denominator).value
+  return fmtPctDec0(nominator.value, denominatorValue)
 }
 
 /**
