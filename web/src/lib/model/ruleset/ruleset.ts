@@ -13,7 +13,7 @@ import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
 import { BPS_PRECISION, type Bps, bps } from '../bps'
-import { f2asFloat, f2div, f2ge, f2lt, f2mult, f2sum, toF2 } from '../fixed2'
+import { f2asFloat, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
 import { effectiveSkill } from '../../utils/actorUtils'
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 
@@ -202,9 +202,9 @@ export function calculateAccumulatedIntel(agents: Agent[]): number {
  */
 export type RetreatResult = {
   shouldRetreat: boolean
-  totalOriginalEffectiveSkill: number
-  totalCurrentEffectiveSkill: number
-  enemyToAgentsSkillRatio: number
+  agentsTotalOriginalEffectiveSkill: Fixed2
+  agentsTotalCurrentEffectiveSkill: Fixed2
+  enemyToAgentsSkillRatio: Fixed2
 }
 
 /**
@@ -244,9 +244,9 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   // KJA don't do f2asFloat here; this will require downstream fix of 'function logRetreat'
   const result = {
     shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
-    totalOriginalEffectiveSkill: f2asFloat(agentsTotalOriginalEffectiveSkill),
-    totalCurrentEffectiveSkill: f2asFloat(agentsTotalCurrentEffectiveSkill),
-    enemyToAgentsSkillRatio: f2asFloat(enemyToAgentsSkillRatio),
+    agentsTotalOriginalEffectiveSkill,
+    agentsTotalCurrentEffectiveSkill,
+    enemyToAgentsSkillRatio,
   }
   return result
 }

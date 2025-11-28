@@ -1,14 +1,14 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { f2asFloat, f2sum, toF2, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, f2div, f2fmtPctDec2, f2sum, toF2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD, AGENTS_SKILL_RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
-import { addPctSignMult100Dec2 } from '../utils/formatUtils'
-import { div, divMult100Round } from '../utils/mathUtils'
+import { fmtPctDec2 } from '../utils/formatUtils'
+import { divMult100Round } from '../utils/mathUtils'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 
@@ -180,16 +180,18 @@ function isSideEliminated(agents: Agent[], enemies: Enemy[]): boolean {
 }
 
 function logRetreat(retreatResult: RetreatResult): void {
-  const agentEffectiveSkillPct = addPctSignMult100Dec2(
-    div(retreatResult.totalCurrentEffectiveSkill, retreatResult.totalOriginalEffectiveSkill),
+  const agentsEffectiveSkillPct = f2div(
+    retreatResult.agentsTotalCurrentEffectiveSkill,
+    retreatResult.agentsTotalOriginalEffectiveSkill,
   )
-  const agentsSkillRetreatThresholdPct = addPctSignMult100Dec2(AGENTS_SKILL_RETREAT_THRESHOLD)
-  const enemyToAgentsSkillRatioPct = addPctSignMult100Dec2(retreatResult.enemyToAgentsSkillRatio)
-  const enemyToAgentsSkillRatioThresholdPct = addPctSignMult100Dec2(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+  const agentsSkillPctFmt = f2fmtPctDec2(agentsEffectiveSkillPct)
+  const agentsSkillThresholdFmt = fmtPctDec2(AGENTS_SKILL_RETREAT_THRESHOLD)
+  const enemyToAgentsSkillRatioFmt = f2fmtPctDec2(retreatResult.enemyToAgentsSkillRatio)
+  const enemyToAgentsSkillThresholdFmt = fmtPctDec2(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
   console.log(
     `🏃 Agent mission commander orders retreat! ` +
-      `Agents total skill = ${agentEffectiveSkillPct} < ${agentsSkillRetreatThresholdPct} threshold. ` +
-      `Enemy/Agents skill ratio = ${enemyToAgentsSkillRatioPct} >= ${enemyToAgentsSkillRatioThresholdPct} threshold.`,
+      `Agents Current/Total skill = ${agentsSkillPctFmt} < ${agentsSkillThresholdFmt} threshold. ` +
+      `Enemy/Agents skill ratio = ${enemyToAgentsSkillRatioFmt} >= ${enemyToAgentsSkillThresholdFmt} threshold.`,
   )
 }
 

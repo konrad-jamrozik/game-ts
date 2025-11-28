@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { agV } from '../../lib/model/agents/AgentView'
-import { f2fmtInt, f2cmp, f2eq, f2fmtPctDec1, toF2, type Fixed2 } from '../../lib/model/fixed2'
+import { f2cmp, f2eq, f2fmtInt, f2fmtPctDec0, toF2, type Fixed2 } from '../../lib/model/fixed2'
 import type { AgentState, GameState } from '../../lib/model/model'
 import { assertDefined } from '../../lib/utils/assert'
 import { fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
@@ -89,7 +89,7 @@ export function createAgentColumns(
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed2>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
         const baselineSkill = params.value ?? toF2(0)
-        const percentage = f2fmtPctDec1(effectiveSkill, baselineSkill)
+        const percentage = f2fmtPctDec0(effectiveSkill, baselineSkill)
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}

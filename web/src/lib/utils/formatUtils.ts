@@ -26,7 +26,7 @@ export function addPctSignDiv100Dec2(value: Bps): string {
   return addPctSignDiv100(value.value, 2)
 }
 
-/**
+/** // KJA2 now unused, previously was used in retreat report
  * @returns The value, multiplied by 100, formatted as percentage with 2 decimal places.
  * For example, 0.12345 will be formatted as "12.34%"
  */
@@ -42,6 +42,39 @@ export function addPctSignDec2(value: number): string {
   return addPctSign(value, 2, 1)
 }
 
+export function fmtPctDec0(nominator: number, denominator = 1): string {
+  if (denominator === 0) {
+    return '0%'
+  }
+  return `${fmtDec0(toPct(nominator, denominator))}%`
+}
+
+export function fmtPctDec1(nominator: number, denominator = 1): string {
+  if (denominator === 0) {
+    return '0.0%'
+  }
+  return `${fmtDec1(toPct(nominator, denominator))}%`
+}
+
+export function fmtPctDec2(nominator: number, denominator = 1): string {
+  if (denominator === 0) {
+    return '0.00%'
+  }
+  return `${fmtDec2(toPct(nominator, denominator))}%`
+}
+
+export function fmtInt(value: number): string {
+  return fmtDec0(value)
+}
+
+export function fmtDec0(value: number): string {
+  return floor(value).toFixed(0)
+}
+
+export function fmtDec1(value: number): string {
+  return value.toFixed(1)
+}
+
 /**
  * Formats a number to 2 decimal places.
  * @param value - The number to format
@@ -51,23 +84,8 @@ export function fmtDec2(value: number): string {
   return value.toFixed(2)
 }
 
-export function fmtInt(value: number): string {
-  return floor(value).toFixed(0)
-}
-
 export function addPctSign(value: number, decimals = 0, denominator = 1): string {
   return `${div(value, denominator).toFixed(decimals)}%`
-}
-
-export function fmtPctDec1(nominator: number, denominator: number): string {
-  if (denominator === 0) {
-    return '0.0'
-  }
-  return fmtDec1(toPct(nominator, denominator))
-}
-
-export function fmtDec1(value: number): string {
-  return value.toFixed(1)
 }
 
 /**
