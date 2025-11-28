@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { f2div, f2fmtPctDec0, f2fmtPctDec2, toF2 } from '../../src/lib/model/fixed2'
 import { fmtPctDec0, fmtPctDec2 } from '../../src/lib/utils/formatUtils'
 
-describe('fixed2 formatting tests - fixed2', () => {
+describe('formatUtils', () => {
   test('formatting percentages should be accurate', () => {
     const nominator = 281
     const denominator = 71
