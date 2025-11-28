@@ -38,6 +38,10 @@ export function addPctSignDiv100(value: number, decimals: number): string {
   return addPctSign(value, decimals, 100)
 }
 
+export function addPctSignDec0(value: number): string {
+  return addPctSign(value, 0, 1)
+}
+
 export function addPctSignDec2(value: number): string {
   return addPctSign(value, 2, 1)
 }

@@ -1,4 +1,5 @@
 import { bps, isBps, type Bps } from './bps'
+import type { Fixed2 } from './fixed2'
 import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {
@@ -148,7 +149,7 @@ export type BattleStats = {
   initialEnemyHitPoints: number
   totalDamageInflicted: number
   totalDamageTaken: number
-  totalAgentSkillGain: number
+  totalAgentSkillGain: Fixed2
   averageAgentExhaustionGain: number
 }
 

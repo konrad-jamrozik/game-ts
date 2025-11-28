@@ -4,7 +4,7 @@ import { ceil, div, floor } from '../../utils/mathUtils'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import { agV } from '../agents/AgentView'
 import { bps, BPS_PRECISION, type Bps } from '../bps'
-import { f2add, f2addToInt, f2asFloat, f2asInt, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
+import { f2addToInt, f2asFloat, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
 import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import {
   AGENT_CONTRACTING_INCOME,

@@ -1,7 +1,8 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { bps } from '../../lib/model/bps'
-import { fmtNoPrefix, addPctSignDec2 } from '../../lib/utils/formatUtils'
+import { f2fmtInt, f2fmtPctDec0 } from '../../lib/model/fixed2'
+import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
+import { addPctSignDec0, fmtNoPrefix } from '../../lib/utils/formatUtils'
 import { divMult100Round } from '../../lib/utils/mathUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -141,8 +142,7 @@ function formatBattleStats(
   const damageInflictedPct =
     initialEnemyHitPoints > 0 ? divMult100Round(totalDamageInflicted, initialEnemyHitPoints) : 0
   const damageTakenPct = initialAgentHitPoints > 0 ? divMult100Round(totalDamageTaken, initialAgentHitPoints) : 0
-  const skillGainPct =
-    totalAgentSkillAtBattleStart > 0 ? divMult100Round(totalAgentSkillGain, totalAgentSkillAtBattleStart) : 0
+  const skillGainPctStr = f2fmtPctDec0(totalAgentSkillGain, totalAgentSkillAtBattleStart)
 
   return {
     id: `mission-${missionSiteId}-battle-stats`,
@@ -232,21 +232,21 @@ function formatBattleStats(
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-inflicted`,
-        label: `Total damage inflicted (${addPctSignDec2(damageInflictedPct)} of enemy HP)`,
+        label: `Total damage inflicted (${addPctSignDec0(damageInflictedPct)} of enemy HP)`,
         chipValue: totalDamageInflicted,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-taken`,
-        label: `Total damage taken (${addPctSignDec2(damageTakenPct)} of agent HP)`,
+        label: `Total damage taken (${addPctSignDec0(damageTakenPct)} of agent HP)`,
         chipValue: totalDamageTaken,
         reverseColor: true,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
-        label: `Total agent skill gain (${addPctSignDec2(skillGainPct)} of initial skill)`,
-        chipValue: totalAgentSkillGain,
+        label: `Total agent skill gain (${skillGainPctStr} of initial skill)`,
+        chipValue: f2fmtInt(totalAgentSkillGain),
         noPlusSign: true,
       },
       {

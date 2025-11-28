@@ -39,6 +39,7 @@ export function multAndFloor(value: number, precision: number): number {
   return floor(value * precision)
 }
 
+// KJA2 get rid of this
 export function divMult100Round(nominator: number, denominator: number): number {
   return Math.round(div(nominator, denominator) * 100)
 }
