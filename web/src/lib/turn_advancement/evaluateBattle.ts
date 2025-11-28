@@ -1,13 +1,13 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { f2asFloat, f2div, f2fmtPctDec2, f2sum, toF2, type Fixed2 } from '../model/fixed2'
+import { f2asFloat, f2div, f2fmtPctDec0, f2fmtPctDec2, f2sum, toF2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD, AGENTS_SKILL_RETREAT_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
-import { fmtPctDec2 } from '../utils/formatUtils'
+import { fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { divMult100Round } from '../utils/mathUtils'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
@@ -184,10 +184,10 @@ function logRetreat(retreatResult: RetreatResult): void {
     retreatResult.agentsTotalCurrentEffectiveSkill,
     retreatResult.agentsTotalOriginalEffectiveSkill,
   )
-  const agentsSkillPctFmt = f2fmtPctDec2(agentsEffectiveSkillPct)
-  const agentsSkillThresholdFmt = fmtPctDec2(AGENTS_SKILL_RETREAT_THRESHOLD)
-  const enemyToAgentsSkillRatioFmt = f2fmtPctDec2(retreatResult.enemyToAgentsSkillRatio)
-  const enemyToAgentsSkillThresholdFmt = fmtPctDec2(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+  const agentsSkillPctFmt = f2fmtPctDec0(agentsEffectiveSkillPct)
+  const agentsSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
+  const enemyToAgentsSkillRatioFmt = f2fmtPctDec0(retreatResult.enemyToAgentsSkillRatio)
+  const enemyToAgentsSkillThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
   console.log(
     `🏃 Agent mission commander orders retreat! ` +
       `Agents Current/Total skill = ${agentsSkillPctFmt} < ${agentsSkillThresholdFmt} threshold. ` +
