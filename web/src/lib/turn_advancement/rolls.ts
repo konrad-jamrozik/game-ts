@@ -62,6 +62,12 @@ export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?
 // Input: precise float probability.
 // Roll happens with exact precision, not on integers, as currently.
 // Roll returns exact floats rolled, not Bps.
+// Then when formatting  we pretend that was a less precise roll and display up to 123.45% precision
+// Problem: need to map accurately, e.g.:
+// [0, 1/10_000) maps to 0.01%
+// [1/10_000, 2/10_000) maps to 0.02%
+// ...
+// [9999/10_000, 1) maps to 100.00%
 //
 // There is a formatting function
 // KJA idea for new approach to storing numbers:
