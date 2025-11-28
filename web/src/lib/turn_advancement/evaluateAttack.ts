@@ -38,10 +38,7 @@ export function evaluateAttack(
   }
 
   // Contest roll
-  // Note: here we convert the Fixed2 inputs to floats as we want precise probability calculations,
-  // and so we want to internally use div instead of f2div, as f2div floors the division result to
-  // fit into Fixed2, thus losing precision.
-  const rollResult = rollContest(f2asFloat(attackerEffectiveSkill), f2asFloat(defenderEffectiveSkill), label)
+  const rollResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill, label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK

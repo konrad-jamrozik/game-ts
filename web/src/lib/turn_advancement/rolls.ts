@@ -5,10 +5,11 @@
 import { div, multAndFloor } from '../utils/mathUtils'
 import { BPS_PRECISION } from '../model/bps'
 import { rand } from '../utils/rand'
+import { f2asFloat, type Fixed2 } from '../model/fixed2'
 
 export type ContestRollResult = {
-  attackerValue: number
-  defenderValue: number
+  attackerValue: Fixed2
+  defenderValue: Fixed2
 } & RollResult
 
 export type RollResult = {
@@ -31,9 +32,9 @@ export type RangeRoll = {
  * Higher rolls are better - success occurs when roll > P(failure)
  *
  * @example
- * contestRoll(100, 100) -> 50    % chance of success
- * contestRoll(100, 150) -> 30.76 % chance of success
- * contestRoll(150, 100) -> 69.23 % chance of success
+ * rollContest(100, 100) -> 50    % chance of success
+ * rollContest(100, 150) -> 30.76 % chance of success
+ * rollContest(150, 100) -> 69.23 % chance of success
  * For more examples refer to docs/design/about_deployed_mission_site.md
  *
  * @param attackerValue - The attacker's contested value (typically effective skill)
@@ -41,8 +42,11 @@ export type RangeRoll = {
  * @param label - Optional label for controllable random in tests
  * @returns The contest roll result
  */
-export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRollResult {
-  const ratioSquared = div(defenderValue, attackerValue) ** 2
+export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?: string): ContestRollResult {
+  // Note: here we convert the Fixed2 inputs to floats as we want precise probability calculations,
+  // and so we want to internally use div instead of f2div, as f2div floors the division result to
+  // fit into Fixed2, thus losing precision.
+  const ratioSquared = div(f2asFloat(defenderValue), f2asFloat(attackerValue)) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
   const rollResult = rollAgainstProbability(successProbability, label)
