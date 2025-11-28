@@ -16,7 +16,7 @@ import {
   type TurnReport,
 } from '../model/turnReportModel'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/ruleset'
+import { calculatePanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,

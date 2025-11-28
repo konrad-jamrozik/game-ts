@@ -1,7 +1,8 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
 import { f2cmp } from '../fixed2'
-import { getAgentUpkeep, getContractingIncome, getEspionageIntel } from '../ruleset/ruleset'
+import { getAgentUpkeep, getContractingIncome } from '../ruleset/moneyRuleset'
+import { getEspionageIntel } from '../ruleset/intelRuleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 

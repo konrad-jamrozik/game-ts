@@ -16,17 +16,17 @@ import { f2addToInt } from '../lib/model/fixed2'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
-  calculateIntelDecay,
-  calculateIntelDecayRounded,
+  calculateLeadIntelDecay,
+  calculateLeadIntelDecayRounded,
   calculateLeadSuccessChance,
-} from '../lib/model/ruleset/ruleset'
+} from '../lib/model/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
 import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
-import { calculateAgentSkillBasedValue } from '../lib/utils/skillUtils'
+import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
@@ -159,8 +159,8 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
 
     if (investigation.state === 'Active') {
       // Calculate intel decay (using shared helper function)
-      intelDecay = calculateIntelDecayRounded(investigation.accumulatedIntel)
-      intelDecayPercent = calculateIntelDecay(investigation.accumulatedIntel)
+      intelDecay = calculateLeadIntelDecayRounded(investigation.accumulatedIntel)
+      intelDecayPercent = calculateLeadIntelDecay(investigation.accumulatedIntel)
 
       // Calculate projected intel (reusing logic from updateLeadInvestigations)
       // Apply decay first

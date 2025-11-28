@@ -2,6 +2,7 @@ import { multAndFloor } from '../utils/mathUtils'
 
 // KJA refactor bps to follow the same pattern as Fixed2
 
+// KJA review all standalone usages of BPS_PRECISION
 // Precision of 0.01%. 10_000 = 1 = 100%
 export const BPS_PRECISION = 10_000
 

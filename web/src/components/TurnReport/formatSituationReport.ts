@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { bps, type Bps } from '../../lib/model/bps'
-import { calculatePanicIncrease } from '../../lib/model/ruleset/ruleset'
+import { calculatePanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {
   newValueChange,
   type ExpiredMissionSiteReport,

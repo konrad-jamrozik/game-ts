@@ -4,10 +4,10 @@ import { agsV } from '../model/agents/AgentsView'
 import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import {
-  calculateAccumulatedIntel,
-  calculateIntelDecayRounded,
+  calculateLeadAccumulatedIntel,
+  calculateLeadIntelDecayRounded,
   calculateLeadSuccessChance,
-} from '../model/ruleset/ruleset'
+} from '../model/ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../utils/assert'
 import { newEnemiesFromSpec } from '../utils/enemyUtils'
@@ -41,14 +41,14 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const { success, successChance } = rollAndLogInvestigationResult(investigation)
 
   // Calculate intel decay before applying it
-  const intelDecay = calculateIntelDecayRounded(investigation.accumulatedIntel)
+  const intelDecay = calculateLeadIntelDecayRounded(investigation.accumulatedIntel)
 
   // Apply intel decay (before accumulation)
   investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
 
   // Accumulate new intel from assigned agents (same formula as espionage)
   const investigatingAgents = getInvestigatingAgents(state, investigation)
-  const accumulatedIntel = calculateAccumulatedIntel(investigatingAgents)
+  const accumulatedIntel = calculateLeadAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
   const agents = agsV(investigatingAgents)

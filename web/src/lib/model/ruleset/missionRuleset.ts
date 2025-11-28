@@ -1,0 +1,63 @@
+import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
+import { effectiveSkill } from '../../utils/actorUtils'
+import { agV } from '../agents/AgentView'
+import { f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
+import type { Agent, Enemy, MissionSite } from '../model'
+import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
+
+export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
+  return missionSite.state === 'Successful' || missionSite.state === 'Failed' || missionSite.state === 'Expired'
+}
+
+/**
+ * Result of retreat evaluation containing the decision and calculated values.
+ */
+export type RetreatResult = {
+  shouldRetreat: boolean
+  agentsTotalOriginalEffectiveSkill: Fixed2
+  agentsTotalCurrentEffectiveSkill: Fixed2
+  enemyToAgentsSkillRatio: Fixed2
+}
+
+/**
+ * Determines whether agents should retreat from battle based on their current combat effectiveness
+ * and enemy strength.
+ *
+ * Retreat occurs when BOTH of the following conditions are met:
+ * 1. Agents' total current effective skill is less than RETREAT_THRESHOLD (50%) of their original effective skill
+ * 2. Enemy total effective skill is at least RETREAT_ENEMY_SKILL_THRESHOLD (80%) of agents' current effective skill
+ *
+ * This ensures agents only retreat when they are both weakened AND facing a strong enemy force,
+ * preventing unnecessary retreats when agents are weakened but enemies are also significantly damaged.
+ *
+ * @param agents - Array of all agents in the battle (alive and terminated)
+ * @param agentStats - Array of combat statistics for each agent, including their initial effective skill
+ * @param enemies - Array of all enemies in the battle (alive and terminated)
+ * @returns RetreatResult containing the retreat decision and calculated values for logging
+ */
+export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
+  const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const agentsTotalOriginalEffectiveSkill = f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
+  const agentsTotalCurrentEffectiveSkill = f2sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill()))
+
+  const agentsEffectiveSkillThreshold = f2mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
+
+  // Check if agents' effective skill is below threshold
+  const agentsBelowThreshold = f2lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
+
+  // Check if enemy effective skill is at least 80% of agents' current effective skill
+  const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const enemyTotalCurrentEffectiveSkill = f2sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy)))
+  const enemyToAgentsSkillRatio = f2div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill)
+  const enemyToAgentsSkillThreshold = toF2(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+  const enemyAboveThreshold = f2ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
+
+  // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
+  const result = {
+    shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
+    agentsTotalOriginalEffectiveSkill,
+    agentsTotalCurrentEffectiveSkill,
+    enemyToAgentsSkillRatio,
+  }
+  return result
+}
