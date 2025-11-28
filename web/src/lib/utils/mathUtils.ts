@@ -29,28 +29,6 @@ export function ceil(value: number): number {
   return Math.abs(Math.ceil(value - 1e-10))
 }
 
-/** // KJA get rid of multAndFloor
- * Multiplies given value by given precision, then rounds down the result to nearest integer.
- *
- * For example:
- * multAndFloor(0.1278,     100) ->   12
- * multAndFloor(0.009,   10_000) ->   90
- * multAndFloor(0.12348, 10_000) -> 1234
- * multAndFloor(0.99999, 10_000) -> 9999
- *
- * @param value - The value to round
- * @param precision - The precision to round to
- * @returns The rounded value
- */
-export function multAndFloor(value: number, precision: number): number {
-  return floor(value * precision)
-}
-
-// KJA2 get rid of this
-export function divMult100Round(nominator: number, denominator: number): number {
-  return Math.round(div(nominator, denominator) * 100)
-}
-
 export function div(nominator: number, denominator: number): number {
   assertNotZero(denominator)
   return nominator / denominator

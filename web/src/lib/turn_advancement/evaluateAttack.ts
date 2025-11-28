@@ -14,6 +14,7 @@ import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { divMult100Round } from '../utils/mathUtils'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
+import { fmtPctDec0 } from '../utils/formatUtils'
 
 export function evaluateAttack(
   attacker: Agent | Enemy,
@@ -73,7 +74,7 @@ export function evaluateAttack(
         defender.terminatedBy = attacker.id
       }
       const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
-      const hpPercentage = `${divMult100Round(hpRemaining, defender.maxHitPoints)}%`
+      const hpPct = fmtPctDec0(hpRemaining, defender.maxHitPoints)
       console.log(
         fmtAttackLog({
           kind,
@@ -85,12 +86,12 @@ export function evaluateAttack(
           rollResult,
           attackCount,
           damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: hpRemaining, max: defender.maxHitPoints, percentage: hpPercentage },
+          hpRemainingInfo: { current: hpRemaining, max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
     } else {
       const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
-      const hpPercentage = `${divMult100Round(defender.hitPoints, defender.maxHitPoints)}%`
+      const hpPct = fmtPctDec0(defender.hitPoints, defender.maxHitPoints)
       console.log(
         fmtAttackLog({
           kind,
@@ -102,7 +103,7 @@ export function evaluateAttack(
           rollResult,
           attackCount,
           damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPercentage },
+          hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
     }
