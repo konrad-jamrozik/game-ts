@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, floor, mult100flr } from '../utils/mathUtils'
+import { dist, div, floor, mult100flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -39,28 +39,8 @@ export function toF2(value: number): Fixed2 {
   return toF2flr(value)
 }
 
-function toF2flr(value: number): Fixed2 {
-  return fixed2(mult100flr(value))
-}
-
 export function f2addToInt(target: number, value: Fixed2): number {
   return f2asInt(f2add(toF2(target), value))
-}
-
-function f2asInt(value: Fixed2): number {
-  return floor(f2asFloat(value))
-}
-
-/**
- * // KJA review all usages of f2AsFloat
- * Converts a Fixed2 value to a decimal number without rounding.
- * For example:
- * f2asFloat(fixed2(700)) = 7.0
- * f2asFloat(fixed2(2150)) = 21.5
- * f2asFloat(fixed2(2175)) = 21.75
- */
-export function f2asFloat(fixed: Fixed2): number {
-  return fixed.value / 100
 }
 
 /**
@@ -154,8 +134,12 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
  */
 export function f2div(numerator: Fixed2, denominator: Fixed2 | number): Fixed2 {
   const denominatorValue = typeof denominator === 'number' ? toF2(denominator).value : denominator.value
-  const ratio = numerator.value / denominatorValue
-  return toF2flr(ratio)
+  const divResult = div(numerator.value, denominatorValue)
+  return toF2flr(divResult)
+}
+
+export function f2divPrecise(numerator: Fixed2, denominator: Fixed2): number {
+  return div(numerator.value, denominator.value)
 }
 
 /**
@@ -245,6 +229,25 @@ export function f2ge(first: Fixed2, second: Fixed2): boolean {
 export function f2gt(first: Fixed2, second: Fixed2 | number): boolean {
   const secondValue = typeof second === 'number' ? toF2(second).value : second.value
   return first.value > secondValue
+}
+
+function toF2flr(value: number): Fixed2 {
+  return fixed2(mult100flr(value))
+}
+
+function f2asInt(value: Fixed2): number {
+  return floor(f2asFloat(value))
+}
+
+/**
+ * Converts a Fixed2 value to a decimal number without rounding.
+ * For example:
+ * f2asFloat(fixed2(700)) = 7.0
+ * f2asFloat(fixed2(2150)) = 21.5
+ * f2asFloat(fixed2(2175)) = 21.75
+ */
+function f2asFloat(fixed: Fixed2): number {
+  return fixed.value / 100
 }
 
 /**

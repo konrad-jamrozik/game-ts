@@ -2,10 +2,10 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { div, multAndFloor } from '../utils/mathUtils'
 import { BPS_PRECISION } from '../model/bps'
+import { f2divPrecise, type Fixed2 } from '../model/fixed2'
+import { multAndFloor } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
-import { f2asFloat, type Fixed2 } from '../model/fixed2'
 
 export type ContestRollResult = {
   attackerValue: Fixed2
@@ -43,10 +43,9 @@ export type RangeRoll = {
  * @returns The contest roll result
  */
 export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?: string): ContestRollResult {
-  // Note: here we convert the Fixed2 inputs to floats as we want precise probability calculations,
-  // and so we want to internally use div instead of f2div, as f2div floors the division result to
-  // fit into Fixed2, thus losing precision.
-  const ratioSquared = div(f2asFloat(defenderValue), f2asFloat(attackerValue)) ** 2
+  // Note: here we use f2divPrecise instead of f2div to get precise probability calculations,
+  // f2div floors the division result to fit into Fixed2, thus losing precision.
+  const ratioSquared = f2divPrecise(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
   const rollResult = rollAgainstProbability(successProbability, label)

@@ -76,7 +76,7 @@ export function fmtDec0(value: number): string {
 }
 
 export function fmtDec1(value: number): string {
-  // KJA2 introduce "floorAtDec1" function
+  // KJA introduce "floorAtDec1" function
   return (floor(value * 10) / 10).toFixed(1)
 }
 
@@ -87,7 +87,7 @@ export function fmtDec1(value: number): string {
  * @returns Formatted string with 2 decimal places (e.g., "123.456" -> "123.45")
  */
 export function fmtDec2(value: number): string {
-  // KJA2 introduce "floorAtDec2" function
+  // KJA introduce "floorAtDec2" function
   return (floor(value * 100) / 100).toFixed(2)
 }
 
