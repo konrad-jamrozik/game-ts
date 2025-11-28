@@ -1,3 +1,4 @@
+import { f2fmtInt, type Fixed2 } from '../model/fixed2'
 import type { RollResult } from '../turn_advancement/rolls'
 import { addPctSignDec2, fmtInt } from './formatUtils'
 
@@ -12,9 +13,9 @@ export type AttackLogKind =
 export type AttackLogParams = {
   kind: AttackLogKind
   attackerName: string
-  attackerEffectiveSkill: number
+  attackerEffectiveSkill: Fixed2
   defenderName: string
-  defenderEffectiveSkill: number
+  defenderEffectiveSkill: Fixed2
   defenderIsAgent: boolean
   rollResult: RollResult
   attackCount: number
@@ -71,12 +72,9 @@ function buildActorInfoPart(
   actorIsAgent: boolean,
   actorIcon: string,
   actorName: string,
-  actorEffectiveSkill: number,
+  actorEffectiveSkill: Fixed2,
 ): string {
-  // KJA problem: there are many numbers displayed now that are now decimals, so they all need fmtDec2 or fmtInt.
-  // This is because they were derived from Fixed2 with f2AsFloat so now they are just number
-  // and the info that they are in fact float is lost on them.
-  const actorEffectiveSkillStr = `(${fmtInt(actorEffectiveSkill)})`.padStart(5)
+  const actorEffectiveSkillStr = `(${f2fmtInt(actorEffectiveSkill)})`.padStart(5)
   const actorNameStr = actorIsAgent ? actorName : actorName.padEnd(22)
   return `${actorIcon} ${actorNameStr} ${actorEffectiveSkillStr}`
 }
@@ -84,9 +82,9 @@ function buildActorInfoPart(
 function buildBasicInfoStr(
   kind: AttackLogKind,
   attackerName: string,
-  attackerEffectiveSkill: number,
+  attackerEffectiveSkill: Fixed2,
   defenderName: string,
-  defenderEffectiveSkill: number,
+  defenderEffectiveSkill: Fixed2,
   defenderIsAgent: boolean,
 ): { basicInfoStr: string; attackVerb: string } {
   const attackerIsAgent = kind.startsWith('agent')
