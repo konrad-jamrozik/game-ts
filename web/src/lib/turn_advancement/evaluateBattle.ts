@@ -1,4 +1,5 @@
 import pluralize from 'pluralize'
+import { sum } from 'radash'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
 import { f2div, f2fmtInt, f2fmtPctDec0, f2sum, toF2, type Fixed2 } from '../model/fixed2'
@@ -42,12 +43,12 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
 
   // Calculate initial totals for percentage tracking
   const initialAgentEffectiveSkill = f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
-  const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
+  const initialAgentHitPoints = sum(agents, (agent) => agent.maxHitPoints)
   const initialEnemySkill = f2sum(...enemies.map((enemy) => effectiveSkill(enemy)))
-  const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
+  const initialEnemyHitPoints = sum(enemies, (enemy) => enemy.maxHitPoints)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
-  const initialAgentExhaustion = agents.reduce((sum, agent) => sum + agent.exhaustion, 0)
+  const initialAgentExhaustion = sum(agents, (agent) => agent.exhaustion)
   const initialAgentExhaustionByAgentId: Record<string, number> = {}
   for (const agent of agents) {
     initialAgentExhaustionByAgentId[agent.id] = agent.exhaustion
@@ -277,14 +278,14 @@ function showRoundStatus(
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
   const currentAgentEffectiveSkill = f2sum(...activeAgents.map((agent) => agV(agent).effectiveSkill()))
-  const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
+  const currentAgentHitPoints = sum(activeAgents, (agent) => agent.hitPoints)
   const agentSkillPct = f2fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   const currentEnemySkill = f2sum(...activeEnemies.map((enemy) => effectiveSkill(enemy)))
-  const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
+  const currentEnemyHitPoints = sum(activeEnemies, (enemy) => enemy.hitPoints)
   const enemySkillPct = f2fmtPctDec0(currentEnemySkill, initialEnemySkill)
   const enemyHpPct = fmtPctDec0(currentEnemyHitPoints, initialEnemyHitPoints)
 

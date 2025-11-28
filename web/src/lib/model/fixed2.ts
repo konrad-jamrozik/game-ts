@@ -1,3 +1,4 @@
+import { sum } from 'radash'
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { dist, floor, mult100flr } from '../utils/mathUtils'
@@ -165,8 +166,8 @@ export function f2div(numerator: Fixed2, denominator: Fixed2 | number): Fixed2 {
  * f2sum(...arrayOfFixed2) = sum of all values in the array
  */
 export function f2sum(...values: Fixed2[]): Fixed2 {
-  const sum = values.reduce((acc, val) => acc + val.value, 0)
-  return fixed2(sum)
+  const sumRes = sum(values, (value) => value.value)
+  return fixed2(sumRes)
 }
 
 /**
