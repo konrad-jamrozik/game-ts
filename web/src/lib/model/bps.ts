@@ -36,7 +36,7 @@ export function isBps(value: unknown): value is Bps {
   )
 }
 
-/**
+/** // KJA review usage of toBpsFloor
  * Converts a decimal percentage value to Bps format, rounding down.
  * For example:
  * toBps(1) = toBps(100%) = bps(10_00)

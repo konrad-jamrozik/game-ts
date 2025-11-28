@@ -5,7 +5,7 @@
 import { bps, BPS_PRECISION, type Bps } from '../model/bps'
 import { f2divPrecise, type Fixed2 } from '../model/fixed2'
 import { f4gt, f4sub, toF4 } from '../model/fixed4'
-import { multAndFloor } from '../utils/mathUtils'
+import { floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
@@ -66,7 +66,7 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
 
   // roll a random number from [1, 10_000]
   // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
-  const rollInt = bps(roll1to(BPS_PRECISION, label))
+  const rollInt = rollBps(label)
 
   // Success when roll > P(failure)
   // I.e. higher rolls are better.
@@ -84,9 +84,19 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
  * - successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
  */
 export function getSuccessAndFailureInts(successProbability: number): [Bps, Bps] {
-  const successInt = bps(multAndFloor(successProbability, BPS_PRECISION))
+  const successInt = toF4(floorToDec4(successProbability))
   const failureInt = f4sub(toF4(1), successInt)
   return [failureInt, successInt]
+}
+
+/**
+ * Rolls a random Bps value from 1 to 10_000 (inclusive), representing the range (0, 1] in basis points.
+ *
+ * @param label - Optional label for controllable random in tests
+ * @returns A random Bps value in the range [1, 10_000], equivalent to (0.01%, 100%] or (0, 1] as a decimal
+ */
+export function rollBps(label?: string): Bps {
+  return bps(roll1to(BPS_PRECISION, label))
 }
 
 /**
