@@ -1,21 +1,21 @@
+import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
+import { effectiveSkill } from '../../utils/actorUtils'
+import { ceil, div, floor } from '../../utils/mathUtils'
+import { agsV, type AgentsView } from '../agents/AgentsView'
+import { agV } from '../agents/AgentView'
+import { bps, BPS_PRECISION, type Bps } from '../bps'
+import { f2add, f2addToInt, f2asFloat, f2asInt, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
+import type { Agent, Enemy, GameState, MissionSite } from '../model'
 import {
   AGENT_CONTRACTING_INCOME,
   AGENT_ESPIONAGE_INTEL,
   AGENT_UPKEEP_COST,
+  AGENTS_SKILL_RETREAT_THRESHOLD,
   INTEL_DECAY,
   MAX_INTEL_DECAY,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
-  AGENTS_SKILL_RETREAT_THRESHOLD,
   SUPPRESSION_DECAY_PCT,
 } from './constants'
-import { div, floor, ceil } from '../../utils/mathUtils'
-import type { Agent, Enemy, GameState, MissionSite } from '../model'
-import { agsV, type AgentsView } from '../agents/AgentsView'
-import { agV } from '../agents/AgentView'
-import { BPS_PRECISION, type Bps, bps } from '../bps'
-import { f2asFloat, f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
-import { effectiveSkill } from '../../utils/actorUtils'
-import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST
@@ -25,9 +25,9 @@ export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
   let total = 0
   for (const agent of contractingAgents) {
-    // KJA f2asFloat for contracting income
-    const agentEffectiveSkill = f2asFloat(agent.effectiveSkill())
-    total += floor((AGENT_CONTRACTING_INCOME * agentEffectiveSkill) / 100)
+    const skillCoefficient = f2div(agent.effectiveSkill(), 100)
+    const incomeFromAgent = f2mult(skillCoefficient, AGENT_CONTRACTING_INCOME)
+    total = f2addToInt(total, incomeFromAgent)
   }
   return total
 }
@@ -36,9 +36,9 @@ export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
   let total = 0
   for (const agent of espionageAgents) {
-    // KJA f2asFloat for espionage intel
-    const agentEffectiveSkill = f2asFloat(agent.effectiveSkill())
-    total += floor((AGENT_ESPIONAGE_INTEL * agentEffectiveSkill) / 100)
+    const skillCoefficient = f2div(agent.effectiveSkill(), 100)
+    const intelFromAgent = f2mult(skillCoefficient, AGENT_ESPIONAGE_INTEL)
+    total = f2addToInt(total, intelFromAgent)
   }
   return total
 }
@@ -251,4 +251,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
     enemyToAgentsSkillRatio,
   }
   return result
+}
+function f2AsInt(arg0: Fixed2): number {
+  throw new Error('Function not implemented.')
 }

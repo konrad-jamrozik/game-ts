@@ -1,6 +1,6 @@
 import { assertInteger, assertMax2Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, mult100flr } from '../utils/mathUtils'
+import { dist, floor, mult100flr } from '../utils/mathUtils'
 
 /**
  * Represents a fixed-point number with 2 decimal places precision.
@@ -40,6 +40,14 @@ export function toF2(value: number): Fixed2 {
 
 function toF2flr(value: number): Fixed2 {
   return fixed2(mult100flr(value))
+}
+
+export function f2addToInt(target: number, value: Fixed2): number {
+  return f2asInt(f2add(toF2(target), value))
+}
+
+function f2asInt(value: Fixed2): number {
+  return floor(f2asFloat(value))
 }
 
 /**
@@ -100,8 +108,9 @@ export function f2fmtPctDec0(nominator: Fixed2, denominator: Fixed2 | undefined 
  * For example:
  * f2add(fixed2(700), fixed2(300)) = fixed2(1000) (representing 7.00 + 3.00 = 10.00)
  */
-export function f2add(first: Fixed2, second: Fixed2): Fixed2 {
-  return fixed2(first.value + second.value)
+export function f2add(first: Fixed2, second: Fixed2 | number): Fixed2 {
+  const secondValue = typeof second === 'number' ? toF2(second).value : second.value
+  return fixed2(first.value + secondValue)
 }
 
 export function f2sub(first: Fixed2, second: Fixed2): Fixed2 {
@@ -136,8 +145,9 @@ export function f2mult(first: Fixed2, ...multipliers: number[]): Fixed2 {
  * f2div(fixed2(800), fixed2(1000)) = fixed2(80) (representing 8.00 / 10.00 = 0.80)
  * f2div(fixed2(1500), fixed2(1000)) = fixed2(150) (representing 15.00 / 10.00 = 1.50)
  */
-export function f2div(numerator: Fixed2, denominator: Fixed2): Fixed2 {
-  const ratio = numerator.value / denominator.value
+export function f2div(numerator: Fixed2, denominator: Fixed2 | number): Fixed2 {
+  const denominatorValue = typeof denominator === 'number' ? toF2(denominator).value : denominator.value
+  const ratio = numerator.value / denominatorValue
   return toF2flr(ratio)
 }
 
