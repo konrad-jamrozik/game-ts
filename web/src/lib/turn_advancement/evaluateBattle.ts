@@ -1,14 +1,13 @@
 import pluralize from 'pluralize'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { f2asFloat, f2div, f2fmtPctDec0, f2sum, toF2, type Fixed2 } from '../model/fixed2'
+import { f2div, f2fmtInt, f2fmtPctDec0, f2sum, toF2, type Fixed2 } from '../model/fixed2'
 import type { Agent, Enemy } from '../model/model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/ruleset'
 import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../utils/assert'
 import { fmtPctDec0 } from '../utils/formatUtils'
-import { divMult100Round } from '../utils/mathUtils'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 
@@ -42,10 +41,9 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   const agentSkillUpdates: Record<string, Fixed2> = {}
 
   // Calculate initial totals for percentage tracking
-  // KJA f2asFloat for evaluate battle
-  const initialAgentEffectiveSkill = f2asFloat(f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill)))
+  const initialAgentEffectiveSkill = f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
   const initialAgentHitPoints = agents.reduce((sum, agent) => sum + agent.maxHitPoints, 0)
-  const initialEnemySkill = f2asFloat(f2sum(...enemies.map((enemy) => effectiveSkill(enemy))))
+  const initialEnemySkill = f2sum(...enemies.map((enemy) => effectiveSkill(enemy)))
   const initialEnemyHitPoints = enemies.reduce((sum, enemy) => sum + enemy.maxHitPoints, 0)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
@@ -263,9 +261,9 @@ function showRoundStatus(
   rounds: number,
   agents: Agent[],
   enemies: Enemy[],
-  initialAgentEffectiveSkill: number,
+  initialAgentEffectiveSkill: Fixed2,
   initialAgentHitPoints: number,
-  initialEnemySkill: number,
+  initialEnemySkill: Fixed2,
   initialEnemyHitPoints: number,
   battleConcluded = false,
 ): void {
@@ -277,24 +275,23 @@ function showRoundStatus(
   }
 
   // Current agent statistics
-  // KJA f2asFloat for showRoundStatus
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
-  const currentAgentEffectiveSkill = f2asFloat(f2sum(...activeAgents.map((agent) => agV(agent).effectiveSkill())))
+  const currentAgentEffectiveSkill = f2sum(...activeAgents.map((agent) => agV(agent).effectiveSkill()))
   const currentAgentHitPoints = activeAgents.reduce((sum, agent) => sum + agent.hitPoints, 0)
-  const agentSkillPercentage = divMult100Round(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
-  const agentHpPercentage = divMult100Round(currentAgentHitPoints, initialAgentHitPoints)
+  const agentSkillPct = f2fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
+  const agentHpPct = fmtPctDec0(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const currentEnemySkill = activeEnemies.reduce((sum, enemy) => sum + f2asFloat(effectiveSkill(enemy)), 0)
+  const currentEnemySkill = f2sum(...activeEnemies.map((enemy) => effectiveSkill(enemy)))
   const currentEnemyHitPoints = activeEnemies.reduce((sum, enemy) => sum + enemy.hitPoints, 0)
-  const enemySkillPercentage = divMult100Round(currentEnemySkill, initialEnemySkill)
-  const enemyHpPercentage = divMult100Round(currentEnemyHitPoints, initialEnemyHitPoints)
+  const enemySkillPct = f2fmtPctDec0(currentEnemySkill, initialEnemySkill)
+  const enemyHpPct = fmtPctDec0(currentEnemyHitPoints, initialEnemyHitPoints)
 
   console.log(
-    `👤👤 Agents: ${activeAgents.length} units, ${Math.round(currentAgentEffectiveSkill)} total skill (${agentSkillPercentage}%), ${currentAgentHitPoints} HP (${agentHpPercentage}%)`,
+    `👤👤 Agents: ${activeAgents.length} units, ${f2fmtInt(currentAgentEffectiveSkill)} total skill (${agentSkillPct}), ${currentAgentHitPoints} HP (${agentHpPct})`,
   )
   console.log(
-    `👺👺 Enemies: ${activeEnemies.length} units, ${Math.round(currentEnemySkill)} total skill (${enemySkillPercentage}%), ${currentEnemyHitPoints} HP (${enemyHpPercentage}%)`,
+    `👺👺 Enemies: ${activeEnemies.length} units, ${f2fmtInt(currentEnemySkill)} total skill (${enemySkillPct}), ${currentEnemyHitPoints} HP (${enemyHpPct})`,
   )
 }
