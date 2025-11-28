@@ -2,8 +2,7 @@ import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { bps } from '../../lib/model/bps'
 import { f2fmtInt, f2fmtPctDec0 } from '../../lib/model/fixed2'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
-import { addPctSignDec0, fmtNoPrefix } from '../../lib/utils/formatUtils'
-import { divMult100Round } from '../../lib/utils/mathUtils'
+import { fmtNoPrefix, fmtPctDec0 } from '../../lib/utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
@@ -139,9 +138,8 @@ function formatBattleStats(
   } = battleStats
 
   // Calculate percentages
-  const damageInflictedPct =
-    initialEnemyHitPoints > 0 ? divMult100Round(totalDamageInflicted, initialEnemyHitPoints) : 0
-  const damageTakenPct = initialAgentHitPoints > 0 ? divMult100Round(totalDamageTaken, initialAgentHitPoints) : 0
+  const damageInflictedPctStr = fmtPctDec0(totalDamageInflicted, initialEnemyHitPoints)
+  const damageTakenPctStr = fmtPctDec0(totalDamageTaken, initialAgentHitPoints)
   const skillGainPctStr = f2fmtPctDec0(totalAgentSkillGain, totalAgentSkillAtBattleStart)
 
   return {
@@ -232,13 +230,13 @@ function formatBattleStats(
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-inflicted`,
-        label: `Total damage inflicted (${addPctSignDec0(damageInflictedPct)} of enemy HP)`,
+        label: `Total damage inflicted (${damageInflictedPctStr} of enemy HP)`,
         chipValue: totalDamageInflicted,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-damage-taken`,
-        label: `Total damage taken (${addPctSignDec0(damageTakenPct)} of agent HP)`,
+        label: `Total damage taken (${damageTakenPctStr} of agent HP)`,
         chipValue: totalDamageTaken,
         reverseColor: true,
         noPlusSign: true,
