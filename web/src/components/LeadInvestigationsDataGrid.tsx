@@ -12,7 +12,7 @@ import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
 import { bps, toBpsFloor, type Bps } from '../lib/model/bps'
-import { f2asFloat } from '../lib/model/fixed2'
+import { f2addToInt } from '../lib/model/fixed2'
 import type { LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import {
@@ -26,7 +26,7 @@ import {
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
 import { fmtNoPrefix, str } from '../lib/utils/formatUtils'
-import { floor } from '../lib/utils/mathUtils'
+import { calculateAgentSkillBasedValue } from '../lib/utils/skillUtils'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
@@ -171,9 +171,8 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
-        // KJA f2asFloat: redundant / unsanctioned effectiveSkill computation. Dedup with formula in calculateAccumulatedIntel
-        const effectiveSkill = f2asFloat(agV(agent).effectiveSkill())
-        projectedIntel += floor((AGENT_ESPIONAGE_INTEL * effectiveSkill) / 100)
+        const intelFromAgent = calculateAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
+        projectedIntel = f2addToInt(projectedIntel, intelFromAgent)
       }
 
       // Calculate diff for chip display
