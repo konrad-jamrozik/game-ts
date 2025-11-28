@@ -5,7 +5,7 @@ import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } 
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import {
   calculateLeadAccumulatedIntel,
-  calculateLeadIntelDecayAbsRounded,
+  getLeadIntelDecay,
   calculateLeadSuccessChance,
 } from '../model/ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
@@ -41,7 +41,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const { success, successChance } = rollAndLogInvestigationResult(investigation)
 
   // Calculate intel decay before applying it
-  const intelDecay = calculateLeadIntelDecayAbsRounded(investigation.accumulatedIntel)
+  const intelDecay = getLeadIntelDecay(investigation.accumulatedIntel)
 
   // Apply intel decay (before accumulation)
   investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)

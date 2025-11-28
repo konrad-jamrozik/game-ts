@@ -1,9 +1,8 @@
-import { bps, BPS_PRECISION, type Bps } from '../bps'
-import { f2addToInt } from '../fixed2'
-import { ceil, div } from '../../utils/mathUtils'
+import { div } from '../../utils/mathUtils'
 import { agV } from '../agents/AgentView'
+import { f2addToInt } from '../fixed2'
 import type { Agent } from '../model'
-import { AGENT_ESPIONAGE_INTEL, INTEL_DECAY, MAX_INTEL_DECAY } from './constants'
+import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
 import { calculateAgentSkillBasedValue } from './skillRuleset'
 
 /**
@@ -41,30 +40,36 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
 }
 
 /**
+ * Calculates intel decay amount based on accumulated intel.
+ * Formula: accumulatedIntel * decayPct
+ *
+ * For example I/O pairs, refer to the test of this function.
+ *
+ * @param accumulatedIntel - The accumulated intel value
+ * @returns The decay amount (rounded up)
+ */
+export function getLeadIntelDecay(accumulatedIntel: number): number {
+  const decayPct = getLeadIntelDecayPct(accumulatedIntel)
+  const decay = accumulatedIntel * decayPct
+  return decay
+}
+
+/**
  * Calculates intel decay based on accumulated intel.
  * Formula:
  * intelDecay = min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
  *            = min(accumulatedIntel * 0.1%, 50%)
  *
- * E.g. at INTEL_DECAY = 10, MAX_INTEL_DECAY = 5000,
- * intelDecayPct(  1) =   1 * 0.1% = 0.1%
- * intelDecayPct(  5) =   5 * 0.1% = 0.5%
- * intelDecayPct( 10) =  10 * 0.1% = 1%
- * intelDecayPct( 40) =  40 * 0.1% = 4%
- * intelDecayPct(100) = 100 * 0.1% = 10%
- * intelDecayPct(250) = 250 * 0.1% = 25%
- * intelDecayPct(300) = 300 * 0.1% = 30%
- * intelDecayPct(500) = 500 * 0.1% = 50%
- * intelDecayPct(600) = 600 * 0.1% = 50% not 60%, because of min(... , 50%)
+ * For example I/O pairs, refer to the test of this function.
 
  * Overall the values for equilibrium (== eq) are:
  *   k intel / turn: eq = sqrt(1000 * k) IF k <= 250, 2k otherwise.
  * This is because at 500 intel (which is == 2k) the max 50% decay kicks in.
- *   5 intel / turn: eq = 70.7 (70.7 * 0.1% = 7.07% decay. 70.7*(1-0.0707) = 65.7 intel + 5 = 70.7)
- *  10 intel / turn: eq = 100 (100 * 0.1% = 10% decay. 100*(1-0.1) = 90 intel + 10 = 100)
- *  40 intel / turn: eq = 200 (200 * 0.1% = 20% decay. 200*(1-0.2) = 160 intel + 40 = 200)
- * 250 intel / turn: eq = 500 (500 * 0.1% = 50% decay. 500*(1-0.5) = 250 intel + 250 = 500)
- * 300 intel / turn: eq = 600 (600 * 0.1% = 60% decay. 600*(1-0.5) = 300 intel + 300 = 300)
+ *   5 intel / turn: eq = 70.7 ( 70.7 * 0.1% =  7.07% decay. 70.7 * (1-0.0707) =  65.7 intel +   5 =  70.7)
+ *  10 intel / turn: eq = 100  (100   * 0.1% = 10%    decay. 100  * (1-0.1)    =  90   intel +  10 = 100)
+ *  40 intel / turn: eq = 200  (200   * 0.1% = 20%    decay. 200  * (1-0.2)    = 160   intel +  40 = 200)
+ * 250 intel / turn: eq = 500  (500   * 0.1% = 50%    decay. 500  * (1-0.5)    = 250   intel + 250 = 500)
+ * 300 intel / turn: eq = 600  (600   * 0.1% = 60%    decay. 600  * (1-0.5)    = 300   intel + 300 = 300)
  *
  * See also:
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/6918110b-7590-8325-8caa-62ae074491c6
@@ -73,31 +78,9 @@ export function calculateLeadSuccessChance(accumulatedIntel: number, difficulty:
  * @param accumulatedIntel - The accumulated intel value
  * @returns The decay in basis points
  */
-export function calculateLeadIntelDecayPct(accumulatedIntel: number): Bps {
-  const decayPct = Math.min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
-  return bps(decayPct)
-}
-
-/**
- * Calculates intel decay amount based on accumulated intel.
- * Formula: ceil((accumulatedIntel * decayPct) / 10_000)
- *
- * Example values:
- * decayAbs(  1) = ceil(  1 *  0.1%) = ceil(  0.001) =   1
- * decayAbs(  5) = ceil(  5 *  0.5%) = ceil(  0.025) =   1
- * decayAbs(100) = ceil(100 * 10  %) = ceil( 10    ) =  10
- * decayAbs(250) = ceil(250 * 25  %) = ceil( 62.5  ) =  63
- * decayAbs(300) = ceil(300 * 30  %) = ceil( 90    ) =  90
- * decayAbs(500) = ceil(500 * 50  %) = ceil(250    ) = 250
- * decayAbs(600) = ceil(600 * 50  %) = ceil(300    ) = 300
- *
- * @param accumulatedIntel - The accumulated intel value
- * @returns The decay amount (rounded up)
- */
-export function calculateLeadIntelDecayAbsRounded(accumulatedIntel: number): number {
-  const decay = calculateLeadIntelDecayPct(accumulatedIntel)
-  const res = ceil((accumulatedIntel * decay.value) / BPS_PRECISION)
-  return res
+export function getLeadIntelDecayPct(accumulatedIntel: number): number {
+  const decayPct = Math.min(accumulatedIntel * LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY)
+  return decayPct
 }
 
 /**

@@ -11,15 +11,10 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
-import { bps, type Bps } from '../lib/model/bps'
 import { f2addToInt } from '../lib/model/fixed2'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
-import {
-  calculateLeadIntelDecayPct,
-  calculateLeadIntelDecayAbsRounded,
-  calculateLeadSuccessChance,
-} from '../lib/model/ruleset/leadRuleset'
+import { calculateLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
 import { calculateAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
@@ -43,7 +38,7 @@ export type LeadInvestigationRow = {
   agents: number
   agentsInTransit: number
   startTurn: number
-  intelDecayPct: Bps
+  intelDecayPct: number
   intelDecay: number
   projectedIntel: number
   intelDiff: number
@@ -231,15 +226,15 @@ function buildAllInvestigationRows(
     ).length
 
     // For Successful investigations, skip projected intel calculations
-    let intelDecayPct: Bps = bps(0)
+    let intelDecayPct = 0
     let intelDecay = 0
     let projectedIntel: number = investigation.accumulatedIntel
     let intelDiff = 0
 
     if (investigation.state === 'Active') {
       // Calculate intel decay (using shared helper function)
-      intelDecay = calculateLeadIntelDecayAbsRounded(investigation.accumulatedIntel)
-      intelDecayPct = calculateLeadIntelDecayPct(investigation.accumulatedIntel)
+      intelDecay = getLeadIntelDecay(investigation.accumulatedIntel)
+      intelDecayPct = getLeadIntelDecayPct(investigation.accumulatedIntel)
 
       // Calculate projected intel (reusing logic from updateLeadInvestigations)
       // Apply decay first

@@ -44,10 +44,12 @@ export const AGENTS_SKILL_RETREAT_THRESHOLD = 0.5
 // Retreat also occurs when enemy effective skill is at least this percentage of agents' current effective skill.
 export const RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD = 0.8
 
-// Intel decay constants (in basis points)
-// So if 1 intel = 1%, and 5 intel decays by 0.5% or 0.025, rounded up (see calculateLeadIntelDecayRounded),
-// to 1, it decays by 1 from 5 to 4, resulting in 4% success chance.
-// (without rounding, it would be 4.97%).
-// KJA change INTEL_DECAY to be INTEL_DECAY_BPS = toBps(0.001)
-export const INTEL_DECAY = 10 // 0.1% decay per intel point
-export const MAX_INTEL_DECAY = 5000 // hard cap on decay: 50%
+/** The total accumulated lead intel decays by this amount per 1 accumulated intel.
+ * Refer to getLeadIntelDecayPct and its test for examples.
+ */
+export const LEAD_INTEL_DECAY_PER_ONE_INTEL = 0.001 // 0.1% decay per intel point
+/**
+ * The maximum amount of intel that can be lost through decay.
+ * This cap exists to prevent intel decaying too fast, see comment on getLeadIntelDecayPct.
+ */
+export const MAX_INTEL_DECAY = 0.5
