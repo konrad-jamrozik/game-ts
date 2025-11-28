@@ -64,6 +64,7 @@
         "Oper",
         "oxlint",
         "oxlintrc",
+        "qcheck",
         "radash",
         "recov",
         "renderable",
