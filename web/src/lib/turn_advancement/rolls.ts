@@ -200,9 +200,19 @@ export function rollRange(min: number, max: number, label?: string): RangeRoll {
  * Formats a roll result for display.
  */
 export function fmtRoll(rollResult: RollResultNew): string {
-  const rollResultIcon = rollResult.success ? '✅' : '❌'
-  const rollPctStr = fmtPctDec2(rollResult.roll).padStart(7)
-  const rollRelation = rollResult.success ? '> ' : '<='
-  const thresholdPctStr = fmtPctDec2(rollResult.successProb).padStart(7)
+  const failureProb = 1 - rollResult.successProb
+  // Recalculate success based on actual values (roll >= failureProb)
+  const actualSuccess = rollResult.roll >= failureProb
+  const rollResultIcon = actualSuccess ? '✅' : '❌'
+
+  // Add 0.0001 to roll value before formatting so that:
+  // - Roll of 0 displays as 0.01% (not 0.00%)
+  // - Roll of 0.9999 displays as 100.00% (not 99.99%)
+  // Cap at 1.0 to prevent values > 100%
+  const rollToDisplay = Math.min(rollResult.roll + 0.0001, 1)
+
+  const rollPctStr = fmtPctDec2(rollToDisplay).padStart(7)
+  const rollRelation = actualSuccess ? '> ' : '<='
+  const thresholdPctStr = fmtPctDec2(failureProb).padStart(7)
   return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
 }
