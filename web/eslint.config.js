@@ -391,6 +391,9 @@ export default plugTypescriptEslint.config([
       // Sometimes I prefer to keep zero fractions to denote number precision.
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/no-zero-fractions.md
       'unicorn/no-zero-fractions': 'off',
+      // I like reduce
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/no-array-reduce.md
+      'unicorn/no-array-reduce': 'off',
     },
   },
   {
