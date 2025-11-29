@@ -3,14 +3,14 @@ import { f6div, f6mult, type Fixed6 } from '../fixed6'
 
 /**
  * Calculates the value contribution from an agent based on their effective skill and a constant multiplier.
- * Formula: (agent.effectiveSkill() / 100) * constant
+ * Formula: (agent.effectiveSkill() / 100) * multiplier
  *
  * This is the source of truth for skill-based value calculations.
  *
  * @param agent - The agent view to calculate the contribution for
  * @param multiplier - The constant multiplier (e.g., AGENT_CONTRACTING_INCOME or AGENT_ESPIONAGE_INTEL)
  * @returns The calculated value contribution as a Fixed6
- */ // KJA add tests
+ */
 export function getAgentSkillBasedValue(agent: AgentView, multiplier: number): Fixed6 {
   const skillCoefficient = f6div(agent.effectiveSkill(), 100)
   return f6mult(skillCoefficient, multiplier)
