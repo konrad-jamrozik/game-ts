@@ -108,17 +108,24 @@ describe('Common floating point precision pitfalls', () => {
   })
 
   test('Imprecise division may result in incorrect threshold checks', () => {
-    const ratio = 0.3 / 0.1
-    expect(ratio).toBe(2.999_999_999_999_999_6)
+    testRatio(0.3, 0.1, 2.999_999_999_999_999_6)
+    testRatio(-0.3, 0.1, -2.999_999_999_999_999_6)
 
-    expect(ratio === 3).toBe(false) // bad
-    expect(ratio > 3).toBe(false) // good
-    expect(ratio < 3).toBe(true) // bad
+    // eslint-disable-next-line unicorn/consistent-function-scoping
+    function testRatio(numerator: number, denominator: number, expected: number): void {
+      const ratio = numerator / denominator
+      expect(ratio).toBe(expected)
 
-    const ratioF6 = asF6(ratio)
+      expect(ratio === 3).toBe(false) // bad
+      expect(ratio > 3).toBe(false) // good
+      expect(ratio < 3).toBe(true) // bad
 
-    expect(f6eq(ratioF6, asF6(3))).toBe(true) // good
-    expect(f6gt(ratioF6, asF6(3))).toBe(false) // good
-    expect(f6lt(ratioF6, asF6(3))).toBe(false) // good
+      const ratioF6 = asF6(ratio)
+      const sign = Math.sign(expected)
+
+      expect(f6eq(ratioF6, asF6(3 * sign))).toBe(true) // good
+      expect(f6gt(ratioF6, asF6(3 * sign))).toBe(false) // good
+      expect(f6lt(ratioF6, asF6(3 * sign))).toBe(false) // good
+    }
   })
 })
