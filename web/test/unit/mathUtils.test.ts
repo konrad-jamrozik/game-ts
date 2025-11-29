@@ -78,6 +78,10 @@ describe(ceil, () => {
   })
 })
 
+/**
+ * More of such common pitfalls explained at
+ * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528/c/692b25b2-eb70-8332-b3dd-a1ab8902d25d
+ */
 describe('Common floating point precision pitfalls', () => {
   test('Floor goes one below after "obviously safe" math', () => {
     const subFromFloat = 1.2 - 1
