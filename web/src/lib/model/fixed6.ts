@@ -267,7 +267,9 @@ export function roundToF6(value: number): Fixed6 {
 }
 
 export function f6asInt(value: Fixed6): number {
-  return floor(toF(value))
+  const float = toF(value)
+  assertInteger(float)
+  return float
 }
 
 /**
