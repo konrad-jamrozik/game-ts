@@ -76,20 +76,7 @@ describe(ceil, () => {
 })
 
 describe('Common floating point precision pitfalls', () => {
-  test('extracting fractional part', () => {
-    const price = 0.29
-    const cents = price * 100
-    expect(cents).toBe(28.999_999_999_999_996)
-
-    // act
-    const flooredCentsMathFloor = Math.floor(cents)
-    const flooredCentsMyFloor = floor(cents)
-
-    expect(flooredCentsMathFloor).toBe(28) // expected 29
-    expect(flooredCentsMyFloor).toBe(29)
-  })
-
-  test('subtracting floating point numbers', () => {
+  test('Floor goes one below after "obviously safe" math', () => {
     const subFromFloat = 1.2 - 1
     expect(subFromFloat).toBe(0.199_999_999_999_999_96)
 
@@ -97,10 +84,23 @@ describe('Common floating point precision pitfalls', () => {
     expect(scaled).toBe(1.999_999_999_999_999_6)
 
     // act
-    const flooredMathFloor = Math.floor(scaled)
-    const flooredMyFloor = floor(scaled)
+    const mathFloor = Math.floor(scaled)
+    const myFloor = floor(scaled)
 
-    expect(flooredMathFloor).toBe(1) // expected 2
-    expect(flooredMyFloor).toBe(2)
+    expect(mathFloor).toBe(1) // bad, expected 2
+    expect(myFloor).toBe(2) // good, as expected
+  })
+
+  test('Floor may drop fractional "cents" after conversion to int', () => {
+    const price = 0.29
+    const cents = price * 100
+    expect(cents).toBe(28.999_999_999_999_996)
+
+    // act
+    const mathFloor = Math.floor(cents)
+    const myFloor = floor(cents)
+
+    expect(mathFloor).toBe(28) // bad, expected 29
+    expect(myFloor).toBe(29) // good, as expected
   })
 })
