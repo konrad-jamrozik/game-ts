@@ -29,13 +29,10 @@ describe(floor, () => {
     // cases with too high precision
     // floor adds 0.000_000_01, so values as close as that to next higher integer 
     // will be rounded up to it instead of down.
-    [0.999_999_99, 1],
-    [-0.999_999_99, -1],
-    // even though these cases are with too high precision, 
-    //because they are not close to the next higher integer,
-    // it still works as expected.
-    [0.000_000_01, 0],
-    [-0.000_000_01, 0],
+    [0.999_999_99, 1], // results in 1 instead of 0 due to too high precision
+    [-0.999_999_99, -1], // all good, just rounded down
+    [0.000_000_01, 0], // all good, just rounded down
+    [-0.000_000_01, 0], // results in 0 instead of -1 due to too high precision
   ])('should floor %f to %f', (value, expected) => {
     expect(floor(value)).toBe(expected)
   })
@@ -44,28 +41,35 @@ describe(floor, () => {
 describe(ceil, () => {
   // prettier-ignore
   test.each([
-    // basic ceil functionality
+    // basic functionality
     [5.999, 6],
     [5.001, 6],
     [5.000, 5],
-    // handles negative numbers
-    [-5.7, -5],
-    [-5.1, -5],
-    [-5.0, -5],
-    // handles zero
+    [4.999, 5],
+    // negative numbers
+    [-5.999, -5],
+    [-5.001, -5],
+    [-5.000, -5],
+    [-4.999, -4],
+    // integers
+    [5, 5],
+    [-5, -5],    
+    // zero
+    [-0, 0],
     [0, 0],
     [0.0, 0],
-    [-0, 0], // Math.abs prevents -0
-    // handles integers
-    [5, 5],
-    [-5, -5],
-    // handles very small values
-    [0.000_000_01, 1],
-    [0.999_999_99, 1],
-    // Values < 0.000_000_01 should return 0 (not -0)
-    [0.000_000_000_1, 0],
-    // ceil subtracts 0.000_000_01, so values very close to 0 might become negative
-    [0.000_000_001, 0],
+    // very small values, but still within acceptable precision
+    [0.999_999_9, 1],
+    [-0.999_999_9, 0],
+    [0.000_000_1, 1],
+    [-0.000_000_1, 0],
+    // cases with too high precision
+    // ceil subtracts 0.000_000_01, so values as close as that to next lower integer 
+    // will be rounded down to it instead of up.
+    [0.999_999_99, 1], // all good, just rounded up
+    [-0.999_999_99, -1], // results in -1 instead of 0 due to too high precision
+    [0.000_000_01, 0], // results in 0 instead of 1 due to too high precision
+    [-0.000_000_01, 0], // all good, just rounded up
   ])('should ceil %f to %f', (value, expected) => {
     expect(ceil(value)).toBe(expected)
   })
