@@ -2,14 +2,9 @@
 
 This document explains how numbers are handled in the codebase, including:
 
-- integers
-- floating point numbers
-- fixed point numbers
-- percentages
-- basis points
-- fractions
-- decimals
-- formatting
+- Number types: integers, floating point numbers, fixed point numbers, percentages, basis points, fractions, decimals
+- Precision of computation, including rounding.
+- Formatting, to display to the player
 
 # Number types
 
@@ -66,6 +61,9 @@ Furthermore, given concept may be formatted in various ways, depending on the co
 E.g. the concept of `skill` has a `concept precision` of 2 decimal places, but usually it is formatted as an integer.
 In few places where the precision is important it is formatted as a number with 2 decimal places.
 
+Every time a number is formatted to a less decimal places than actual, the formatted number is flooring
+the formatted number to the decimals places it is formatted to.
+
 # Full example
 
 As a example, let's take a concept named `foobarness` that has a `concept precision` of 2 decimal places.
@@ -106,5 +104,70 @@ console.log(fmtPct2(next_foobarness))
 // effectively flooring it to 27.227200, i.e. to 6 decimal places.
 const stored_next_foobarness: Fixed6 = asF6(next_foobarness)
 ```
+
+# Known limitations of this design
+
+## 1. Floating-point quirks affect intermediate calculations
+
+All domain math is performed using JavaScript `number`, which is a 64-bit binary floating-point type.
+This means intermediate values can contain artifacts such as:
+
+``` typescript
+if (value >= 0.5) 
+// fails due to (0.49999999997 >= 0.5) == false
+```
+
+These artifacts do not persist (because values are clamped when stored as `Fixed6`),
+but they **can influence logic** if intermediate results are used in comparisons, thresholds, or branching conditions.
+
+Game logic that is sensitive to boundary values should use tolerant comparisons or integer-based logic where possible.
+
+## 2. Systematic downward bias due to flooring
+
+When persisting values, conversion to `Fixed6` always **floors** (never rounds).
+This introduces a consistent downward bias in all stored values. Over many turns or repeated multiplications,
+this can accumulate into a noticeable drift from the mathematically “ideal” result.
+This behavior is intentional but should be remembered when tuning game mechanics.
+
+It is also mitigated by the fact that numbers are stored as `Fixed6`, but max allowed precision is 4 decimal places,
+thus giving 2 decimal places of "precision buffer".
+
+### 3. “Concept precision” is not enforced by the type system
+
+The rule that each concept may have at most 4 decimal places (or concept-specific limits like 2 decimals for skill)
+is currently a **documentation-level constraint**. TypeScript cannot prevent a developer from accidentally writing:
+
+```ts
+const suppressionDecay = 0.00005; // illegal by policy
+```
+
+Such mistakes silently work but violate the design.
+This may lead to tuning inconsistencies or accidental use of higher-precision constants than intended.
+
+### 4. Overloaded meanings of `number`
+
+Although the design intends that plain `number` represents either integers or transient floating-point intermediates,
+TypeScript does not distinguish these two forms.
+As a result, it is possible to:
+
+- Pass a non-integer `number` where an integer was expected,
+- Convert arbitrary `number` values into `Fixed6`,
+- Accidentally mix incompatible numeric concepts.
+
+This requires developer discipline, since the compiler cannot enforce the separation.
+
+### 5. Formatting rules are separate from storage rules
+
+A concept may have a certain precision (e.g. 2 decimals) but be formatted as an integer in most places.
+This separation is flexible but also increases the chance of inconsistent presentation if formatting helpers are
+misused or omitted.
+
+### 7. All fractional concepts share the same storage precision
+
+Every fractional value is stored as `Fixed6`, even if its concept precision is only 2 or 3 decimals.
+This is convenient, but it also means:
+
+- The system does not communicate the *intended* conceptual precision,
+- Some concepts may accumulate more noise than expected during intermediate float computations.
 
 [`number` type]: https://www.typescriptlang.org/docs/handbook/basic-types.html#number
