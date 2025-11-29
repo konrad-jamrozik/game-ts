@@ -13,8 +13,14 @@ as plain [`number` type].
 
 Fractional numbers are stored as type `Fixed6`, i.e. numbers with 6 decimal places precision.
 
-Intermediate computations based on fractional numbers are performed using floating point numbers,
-so in code they also show as `number` type.
+Intermediate computations based on fractional numbers that require floating point precision
+are performed using floating point numbers, so in code they also show as `number` type.
+E.g. multiplication or division of two `Fixed6` numbers results in a floating point number.
+
+Intermediate computations based on fractional numbers that do not require floating point precision
+are performed using arithmetic operations on `Fixed6` numbers.
+E.g. addition or subtraction of `Fixed6` numbers results in a `Fixed6` number
+without any loss of precision.
 
 There are no other numbers in the codebase. As such if you see a `number` type,
 it is either an integer or a transient floating point number derived from the integer numbers
@@ -28,12 +34,16 @@ meaning plain number 1 is equal to `Fixed6` number 1_000_000.
 While fractional numbers are stored as `Fixed6`, any floating point operations made
 on them use full available `number` precision.
 
-As such `Fixed6` is used only when a floating point number needs to be stored.
-Then it is converted to `Fixed6` by flooring to 6 decimal places.
+As such `Fixed6` is used only when:
+- A floating point number needs to be stored.
+  Then it is first converted to `Fixed6` by flooring to 6 decimal places.
+- The computations do not require floating point precision. E.g. because `Fixed6` is added to an integer,
+  or there is a series of `Fixed6` operations resulting in `Fixed6`, with no loss of precision at any point,
+  e.g. because only additions and subtractions are performed.
 
 # Number precision
 
-In the codebase each concept that is represented by numbers has its own `concept max number precision`,
+In the codebase each domain model concept that is represented by numbers has its own `concept max number precision`,
 or `concept precision` for short.
 
 The max allowed `concept precision` for any concept is 4 decimal places.
@@ -56,13 +66,15 @@ Note that the actual computation can be more precise, e.g:
 
 # Number formatting
 
-Furthermore, given concept may be formatted in various ways, depending on the context.
+Given domain model concept may be formatted in various ways, depending on the context.
 
 E.g. the concept of `skill` has a `concept precision` of 2 decimal places, but usually it is formatted as an integer.
 In few places where the precision is important it is formatted as a number with 2 decimal places.
 
 Every time a number is formatted to a less decimal places than actual, the formatted number is flooring
 the formatted number to the decimals places it is formatted to.
+
+The code supports formatting directly both `number` and `Fixed6` numbers.
 
 # Full example
 
