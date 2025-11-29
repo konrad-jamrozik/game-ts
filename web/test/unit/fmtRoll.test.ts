@@ -39,6 +39,14 @@ describe(fmtRoll, () => {
       [0.555_55, 0.444_45, true,  '✅ roll  44.45% is >   44.44% threshold'],
       // Same special case as described above.
       [0.555_55, 0.444_44, false, '❌ roll  44.44% is <=  44.44% threshold'],
+      // Test case proving that when actualSuccess is true, displayed roll is always >= displayed threshold
+      // even with fine-grained values, so no special handling is needed:
+      // - successProb   = 0.444_45, so failureProb = 0.555_55
+      // - roll          = 0.555_551 (just barely succeeds: 0.555551 >= 0.55555)
+      // - roll displayed as 55.56%
+      // - threshold     = 0.555_55  -> displays as 55.55%
+      // - Result: displayed roll (55.56%) > threshold (55.55%)
+      [0.444_45, 0.555_551, true, '✅ roll  55.56% is >   55.55% threshold'],
   ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
     const rollResult: RollResultNew = {
       successProb,
