@@ -106,7 +106,7 @@ export function rollAgainstProbability(probability: number, label?: string): Rol
 export function rollAgainstProbabilityNew(successProb: number, label?: string): RollResultNew {
   const failureProb = 1 - successProb
 
-  const { roll } = rollIn0to1range(label)
+  const { roll } = roll0IncTo1Exc(label)
 
   const success = roll >= failureProb
 
@@ -154,11 +154,11 @@ export function roll1to(precision: number, label?: string): number {
   return rollRange(1, precision, label).roll
 }
 
-export function rollIn0to1range(label?: string): RangeRoll {
-  return rollFloatRange(0, 1, label)
+export function roll0IncTo1Exc(label?: string): RangeRoll {
+  return rollInFloatRange(0, 1, label)
 }
 
-function rollFloatRange(min: number, max: number, label?: string): RangeRoll {
+function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
   const range = max - min
   const randResult = rand.get(label)
   const roll = randResult * range + min

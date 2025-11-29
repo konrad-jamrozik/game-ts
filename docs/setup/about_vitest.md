@@ -35,10 +35,10 @@ npm run test:e2e
 ```
 
 Run tests from a specific test file:
-`npm run test:unit -- test/unit/rolls.test.ts`
+`npm run test:unit -- fooFile.test.ts`
 
 Run a specific test from a specific test file:
-`npm test -- rolls.test.ts -t rollAgainstProbability`
+`npm test -- fooFile.test.ts -t barTest`
 
 Run all tests:
 `npm run test:all`
