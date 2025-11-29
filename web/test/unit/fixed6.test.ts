@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { asF6, f6div, f6gt, f6lt, f6multV2, f6sub, asFloat, f6fmtPctDec2, f6multV3 } from '../../src/lib/model/fixed6'
-import { floorToDec2, round6 } from '../../src/lib/utils/mathUtils'
+import { asF6, f6div, f6fmtPctDec2, f6gt, f6lt, f6multV2, f6multV3 } from '../../src/lib/model/fixed6'
+import { round6 } from '../../src/lib/utils/mathUtils'
 
 describe('Common floating point precision pitfalls', () => {
   test('Imprecise division may result in incorrect threshold checks', () => {
