@@ -27,10 +27,10 @@ describe(getAgentSkillBasedValue, () => {
   // prettier-ignore
   test.each<[Fixed6, Fixed6]>([
     // Basic cases - exact divisions
-    [toF6(0), toF6(0)],           // 0 / 100 * 5 = 0
-    [toF6(100), toF6(5)],         // 100 / 100 * 5 = 1 * 5 = 5
-    [toF6(200), toF6(10)],        // 200 / 100 * 5 = 2 * 5 = 10
-    [toF6(50), toF6(2.5)],        // 50 / 100 * 5 = 0.5 * 5 = 2.5
+    [toF6(  0), toF6( 0  )],       //   0 / 100 * 5 = 0
+    [toF6(100), toF6( 5  )],       // 100 / 100 * 5 = 1   * 5 =  5
+    [toF6(200), toF6(10  )],       // 200 / 100 * 5 = 2   * 5 = 10
+    [toF6( 50), toF6( 2.5)],       //  50 / 100 * 5 = 0.5 * 5 =  2.5
 
     // Cases with repeating decimals that could cause floating point issues
     // 33.333333 / 100 = 0.33333333, which in binary is repeating
