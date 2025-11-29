@@ -1,7 +1,5 @@
-/* eslint-disable vitest/prefer-comparison-matcher */
-/* eslint-disable vitest/prefer-equality-matcher */
 import { describe, expect, test } from 'vitest'
-import { asF6, f6div, f6eq, f6gt, f6lt, f6multV2, f6sub } from '../../src/lib/model/fixed6'
+import { asF6, f6div, f6gt, f6lt, f6multV2, f6sub } from '../../src/lib/model/fixed6'
 import { div } from '../../src/lib/utils/mathUtils'
 
 describe('Common floating point precision pitfalls', () => {
@@ -14,14 +12,14 @@ describe('Common floating point precision pitfalls', () => {
       const ratio = numerator / denominator
       expect(ratio).toBe(expected)
 
-      expect(ratio === 3).toBe(false) // bad
-      expect(ratio > 3).toBe(false) // good
-      expect(ratio < 3).toBe(true) // bad
+      expect(ratio).not.toBe(3) // bad, expected ratio == 3
+      expect(ratio).not.toBeGreaterThan(3) // good, expected ratio to be not > 3
+      expect(ratio).toBeLessThan(3) // bad, expected ratio to be not < 3
 
       const ratioF6 = asF6(ratio)
       const sign = Math.sign(expected)
 
-      expect(f6eq(ratioF6, asF6(3 * sign))).toBe(true) // good
+      expect(ratioF6).toStrictEqual(asF6(3 * sign)) // good
       expect(f6gt(ratioF6, asF6(3 * sign))).toBe(false) // good
       expect(f6lt(ratioF6, asF6(3 * sign))).toBe(false) // good
     }
