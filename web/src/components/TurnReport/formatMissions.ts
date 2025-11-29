@@ -217,14 +217,14 @@ function formatBattleStats(
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-at-battle-start`,
         label: 'Total agent skill at battle start',
-        chipValue: totalAgentSkillAtBattleStart,
+        chipValue: f2fmtInt(totalAgentSkillAtBattleStart),
         noColor: true,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-enemy-skill-at-battle-start`,
         label: 'Total enemy skill at battle start',
-        chipValue: totalEnemySkillAtBattleStart,
+        chipValue: f2fmtInt(totalEnemySkillAtBattleStart),
         noColor: true,
         noPlusSign: true,
       },

@@ -1,5 +1,3 @@
-import { isBps, type Bps } from '../model/bps'
-import { isF2, type Fixed2 } from '../model/fixed2'
 import { assertNotZero } from './assert'
 
 /**
@@ -44,10 +42,6 @@ export function nonNeg(value: number): number {
 
 export function dist(first: number, second: number): number {
   return Math.abs(first - second)
-}
-
-export function val(value: number | Bps | Fixed2): number {
-  return isBps(value) || isF2(value) ? value.value : value
 }
 
 export function floorToDec1(value: number): number {

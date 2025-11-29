@@ -1,9 +1,8 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
-import type { Bps } from '../lib/model/bps'
-import type { Fixed2 } from '../lib/model/fixed2'
+import { BPS_PRECISION, isBps, type Bps } from '../lib/model/bps'
+import { isF2, type Fixed2 } from '../lib/model/fixed2'
 import { str } from '../lib/utils/formatUtils'
-import { val } from '../lib/utils/mathUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
 export type MyChipProps = {
@@ -52,9 +51,8 @@ function formatChipLabel(
     return chipValue
   }
 
-  // Handle numbers and Bps
-  const value = val(chipValue)
-  const sign = (noPlusSign ?? false) ? '' : value > 0 ? '+' : ''
+  const valueToDetermineSign = isBps(chipValue) || isF2(chipValue) ? chipValue.value : chipValue
+  const sign = (noPlusSign ?? false) ? '' : valueToDetermineSign > 0 ? '+' : ''
   return `${sign}${str(chipValue)}`
 }
 

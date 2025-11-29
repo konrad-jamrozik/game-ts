@@ -6,12 +6,16 @@ import type { RollResult } from '../turn_advancement/rolls'
 import { getMissionById } from '../collections/missions'
 import { floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
 import { f4fmtPctDec2 } from '../model/fixed4'
+import { f2fmtPctDec2, isF2, type Fixed2 } from '../model/fixed2'
 
 // KJA formatUtils.ts should not depend on bps or fixed2. fixed2 depends on fmtUtils and the same should be the case for bps.
 
-export function str(value: unknown): string {
+export function str(value: number | Bps | Fixed2): string {
   if (isBps(value)) {
     return f4fmtPctDec2(value)
+  }
+  if (isF2(value)) {
+    return f2fmtPctDec2(value)
   }
   if (typeof value === 'number' && value % 1 !== 0) {
     return fmtDec2(value)
