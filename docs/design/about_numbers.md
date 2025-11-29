@@ -36,44 +36,75 @@ on them use full available `number` precision.
 As such `Fixed6` is used only when a floating point number needs to be stored.
 Then it is converted to `Fixed6` by flooring to 6 decimal places.
 
-## Concept number precision
+# Number precision
 
-// KJA call it `concept number precision` and elaborate it is not only for constants
+In the codebase each concept that is represented by numbers has its own `concept max number precision`,
+or `concept precision` for short.
 
-In the codebase the concept of `constants precision` is used to describe the precision of various constants
-that appear in the codebase.
+The max allowed `concept precision` for any concept is 4 decimal places.
 
-The max allowed constant precision is 4 decimal places.
-
-For example, "suppression decay" constant can be `0.0001`, which is `0.01%`.
+For example, `suppression decay` concept can have constants as precise as `0.0001`, which is `0.01%`.
 But it cannot be `0.00005`, because it would require constant precision of 5 decimal places.
+
+As another example, `skill` concept can have constants as precise as `0.01`, which is `1%`.
 
 Note that the actual computation can be more precise, e.g:
 
 - Suppression `12.34%` multiplied by constant of `1.0002` results in `12.342468%` represented
   as a intermediate floating point number `0.12342468`.
 - This floating point number can be then multiplied by another floating point number,
-  resulting in another floating point number having even more decimal places.
-- A floating point number may be used to store an updated suppression value in game sate.
-  Then it will have to be stored as `Fixed6` by flooring to 6 decimal places,
-  resulting in `0.123424` or `12.3424%`.
+  resulting in yet another floating point number having even more decimal places.
+- Such a  floating point number may be used to store an updated suppression value in game sate.
+  Then it will have to be stored as `Fixed6` by flooring to 6 decimal places.
+  So e.g. an intermediate floating point number `0.12342468` representing some derivation of the
+  concept of suppression will be stored as `Fixed6` number `0.123424` or `12.3424%`.
 
-# Concept number formatting
+# Number formatting
 
-// KJA to document
-
-Number formatting is independent on the underlying number type and depends on the concept it represents.
 Furthermore, given concept may be formatted in various ways, depending on the context.
 
-E.g. the concept of `skill` is often formatted as integer, even though its
+E.g. the concept of `skill` has a `concept precision` of 2 decimal places, but usually it is formatted as an integer.
+In few places where the precision is important it is formatted as a number with 2 decimal places.
 
-While fractional numbers are stored as `Fixed6`, the `constants precision` and formatting
-depends on the concept represented by the number.
+# Full example
 
-For example:
-- `suppression` constants are never more precise than basis points and presented to the player the same way. That is,
-  all actual computations are done with fixed precision of 4, and formatted as a percentage with 2 decimal places,
-  e.g. `12.34%`.
-- `skill` is
+As a example, let's take a concept named `foobarness` that has a `concept precision` of 2 decimal places.
+As such, it is stored as a `Fixed6` number. Usually it is formatted as an integer,
+but in few places where fractions matter it is formatted as a number with 2 decimal places.
+
+Initial game state may be initialized to have `foobarness` set to `13.00`.
+It is multiplied every turn by `1.12`.
+As such once player advances a turn, `foobarness` will be set to `13.00 * 1.12 = 14.56`.
+The actual computation will look like that:
+
+``` typescript
+// "asF6" means to convert a number to a Fixed6 number
+// As such, stored_foobarness is stored as 13_000_000
+const stored_foobarness: Fixed6 = asF6(13.00)
+
+// "asFloat" means to convert a Fixed6 number to a floating point number
+// As such, foobarness is set to 13_000_000 / 1_000_000 = 13.00
+const foobarness: number = asFloat(stored_foobarness)
+
+// intermediate_foobarness == 14.560000000000002 
+const intermediate_foobarness: number = foobarness * 1.12
+
+// Display intermediate_foobarness as integer with 1 decimal places,
+// after flooring to 1 decimal place.
+// i.e. 14.5
+console.log(fmtDec1(intermediate_foobarness))
+
+// next_foobarness == 27.227200000000007 
+const next_foobarness: number = intermediate_foobarness * 1.87
+
+// Display next_foobarness as percentage with 2 decimal places,
+// i.e. 2722.72%
+console.log(fmtPct2(next_foobarness))
+
+// "asF6" means to convert a number to a Fixed6 number
+// As such, stored_next_foobarness internally stored as integer 27_227_200,
+// effectively flooring it to 27.227200, i.e. to 6 decimal places.
+const stored_next_foobarness: Fixed6 = asF6(next_foobarness)
+```
 
 [`number` type]: https://www.typescriptlang.org/docs/handbook/basic-types.html#number
