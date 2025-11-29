@@ -5,7 +5,7 @@
 import { bps, BPS_PRECISION, type Bps } from '../model/bps'
 import { f4gt, f4sub, toF4 } from '../model/fixed4'
 import { fmtPctDec2 } from '../utils/formatUtils'
-import { div, floorToDec4 } from '../utils/mathUtils'
+import { div, floorToDec2, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
@@ -210,7 +210,17 @@ export function fmtRoll(rollResult: RollResultNew): string {
   // - Roll of 0 displays as 0.01% (not 0.00%)
   // - Roll of 0.9999 displays as 100.00% (not 99.99%)
   // Cap at 1.0 to prevent values > 100%
-  const rollToDisplay = Math.min(rollResult.roll + 0.0001, 1)
+  let rollToDisplay = Math.min(rollResult.roll + 0.0001, 1)
+
+  // Check if rounding would cause a display mismatch:
+  // If displayed roll > displayed threshold but actual roll <= actual threshold,
+  // round roll down instead of up to avoid confusing display like "❌ roll 100.00% is <= 99.99% threshold"
+  const displayedRoll = floorToDec2(rollToDisplay * 100) / 100
+  const displayedThreshold = floorToDec2(failureProb * 100) / 100
+  if (displayedRoll > displayedThreshold && !actualSuccess) {
+    // Round down to nearest basis point (0.01%)
+    rollToDisplay = floorToDec2(rollResult.roll * 100) / 100
+  }
 
   const rollPctStr = fmtPctDec2(rollToDisplay).padStart(7)
   const rollRelation = actualSuccess ? '> ' : '<='

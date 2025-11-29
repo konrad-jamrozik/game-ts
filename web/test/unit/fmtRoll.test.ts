@@ -29,13 +29,16 @@ describe(fmtRoll, () => {
       [0.0001,   1,        true,  '✅ roll 100.00% is >   99.99% threshold'],
       // Test cases for values more fine grained than display precision (which is 123.45%)
       [0.000_01, 0.999_99, true,  '✅ roll 100.00% is >   99.99% threshold'],
-      // Here: 
+      // Here we have a special case where we round down to roll instead of up, otherwise 
+      // rounded up roll would be > rounded down threshold even though roll < threshold.
+      // Specifically:
       // - successProb = 0.000_01
-      // - roll        = 0.999_98 -> 99.998% -> round up   to display as 100.00%
+      // - roll        = 0.999_98 -> 99.998% -> round down to display as 99.99% (special case to avoid confusing display)
       // - failureProb = 0.999_99 -> 99.999% -> round down to display as  99.99%
-      [0.000_01, 0.999_98, false, '❌ roll 100.00% is <=  99.99% threshold'],      
+      [0.000_01, 0.999_98, false, '❌ roll  99.99% is <=  99.99% threshold'],      
       [0.555_55, 0.444_45, true,  '✅ roll  44.45% is >   44.44% threshold'],
-      [0.555_55, 0.444_44, false, '❌ roll  44.45% is <=  44.44% threshold'],
+      // Same special case as described above.
+      [0.555_55, 0.444_44, false, '❌ roll  44.44% is <=  44.44% threshold'],
   ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
     const rollResult: RollResultNew = {
       successProb,
