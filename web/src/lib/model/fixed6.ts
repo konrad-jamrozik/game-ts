@@ -273,12 +273,12 @@ export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
  * floorToF6(7.999999999) = fixed6(7_999_999) (7.999999)
  * floorToF6(7.0) = fixed6(7_000_000) (7.000000)
  */
-function floorToF6(value: number): Fixed6 {
+export function floorToF6(value: number): Fixed6 {
   const floored = floor(value * 1_000_000)
   return fixed6(floored)
 }
 
-function roundToF6(value: number): Fixed6 {
+export function roundToF6(value: number): Fixed6 {
   const rounded = Math.round(value * 1_000_000)
   return fixed6(rounded)
 }
