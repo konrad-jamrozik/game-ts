@@ -2,6 +2,9 @@ import { describe, expect, test } from 'vitest'
 import { rollAgainstProbability, rollAgainstProbabilityNew } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
+/**
+ * See also related tests in fmtRoll.test.ts
+ */
 describe(rollAgainstProbability, () => {
   // Note:
   // Roll is a random number in [0, 1)

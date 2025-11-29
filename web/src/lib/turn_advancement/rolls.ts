@@ -4,6 +4,7 @@
 
 import { bps, BPS_PRECISION, type Bps } from '../model/bps'
 import { f4gt, f4sub, toF4 } from '../model/fixed4'
+import { fmtPctDec2 } from '../utils/formatUtils'
 import { div, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
@@ -193,4 +194,15 @@ export function rollRange(min: number, max: number, label?: string): RangeRoll {
     max,
     roll,
   }
+}
+
+/**
+ * Formats a roll result for display.
+ */
+export function fmtRoll(rollResult: RollResultNew): string {
+  const rollResultIcon = rollResult.success ? '✅' : '❌'
+  const rollPctStr = fmtPctDec2(rollResult.roll).padStart(7)
+  const rollRelation = rollResult.success ? '> ' : '<='
+  const thresholdPctStr = fmtPctDec2(rollResult.successProb).padStart(7)
+  return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
 }

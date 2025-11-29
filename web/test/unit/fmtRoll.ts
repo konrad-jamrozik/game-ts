@@ -1,14 +1,10 @@
-/* eslint-disable vitest/no-commented-out-tests */
 import { describe, expect, test } from 'vitest'
-import type { RollResultNew } from '../../src/lib/turn_advancement/rolls'
-import { buildRollResultStr } from '../../src/lib/utils/fmtAttackLog'
+import { fmtRoll, type RollResultNew } from '../../src/lib/turn_advancement/rolls'
 
-describe(buildRollResultStr, () => {
-  //   [0,      0,      false ], // { probability: 0      , roll: 0,     , success: false }
-  //   [0,      0.9999, false ], // { probability: 0      , roll: 0.9999 , success: false }
-  //   [0.0001, 0.9998, false ], // { probability: 0.0001 , roll: 0.9998 , success: false }
-  //   [0.0001, 0.9999, true  ], // { probability: 0.0001 , roll: 0.9999 , success: true  }
-  //   [0.0001, 1,      true  ], // { probability: 0.0001 , roll: 1      , success: true  }
+/**
+ * See also related tests in rollAgainstProbability.test.ts
+ */
+describe(fmtRoll, () => {
   // prettier-ignore
   test.each<[number, number, boolean, string]>([
       [0,      0,      false, '❌ roll   0.00% is <= 100.00% threshold'],
@@ -25,7 +21,7 @@ describe(buildRollResultStr, () => {
       roll,
       success,
     }
-    const result = buildRollResultStr(rollResult)
+    const result = fmtRoll(rollResult)
     expect(result).toContain(expectedFormat)
   })
 })

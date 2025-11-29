@@ -1,5 +1,5 @@
-import type { RollResultNew } from '../turn_advancement/rolls'
-import { fmtInt, fmtPctDec2 } from './formatUtils'
+import { fmtRoll, type RollResultNew } from '../turn_advancement/rolls'
+import { fmtInt } from './formatUtils'
 
 export type AttackLogKind =
   | 'agent misses'
@@ -49,7 +49,7 @@ export function fmtAttackLog(params: AttackLogParams): string {
   )
   const attackCountStr = buildAttackCountStr(attackCount)
   const damageStr = buildDamageStr(damageInfo, attackVerb)
-  const rollResultStr = buildRollResultStr(rollResult)
+  const rollResultStr = fmtRoll(rollResult)
   const hpStr = buildHpStr(hpRemainingInfo)
 
   return `${basicInfoStr}${attackCountStr}${damageStr}${rollResultStr}${hpStr}`
@@ -107,19 +107,6 @@ function buildDamageStr(damageInfo: { damage: number; damagePct: string } | unde
   const attackDamage = String(damageInfo.damage).padStart(2)
   const weaponRangePct = `(${damageInfo.damagePct})`.padStart(6)
   return ` ${damagePreposition} ${attackDamage} ${weaponRangePct} damage `
-}
-
-export function buildRollResultStr(rollResult: RollResultNew): string {
-  const rollResultIcon = rollResult.success ? '✅' : '❌'
-  // KJA I am concerned here that the roll will have off by 1 error.
-  // Roll of 0 should display as 0.01% not 0.00%
-  // Similarly, roll of 0.(9) should display as 100% not 99.99%
-  // ALSO same with displaying successProb and the equalities: should it be > or >= ?
-  // ADD TESTS FOR THIS FORMAT
-  const rollPctStr = fmtPctDec2(rollResult.roll).padStart(7)
-  const rollRelation = rollResult.success ? '> ' : '<='
-  const thresholdPctStr = fmtPctDec2(rollResult.successProb).padStart(7)
-  return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
 }
 
 function buildAttackCountStr(attackCount: number): string {
