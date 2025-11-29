@@ -198,6 +198,7 @@ export function rollRange(min: number, max: number, label?: string): RangeRoll {
 
 /**
  * Formats a roll result for display.
+ * See this function tests for examples.
  */
 export function fmtRoll(rollResult: RollResultNew): string {
   const failureProb = 1 - rollResult.successProb
