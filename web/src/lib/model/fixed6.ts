@@ -39,7 +39,7 @@ export function isF6(value: unknown): value is Fixed6 {
 export function toF6(value: number): Fixed6 {
   // KJA assert here that precision is no more than 6 decimal places
   // assertMax6Dec(value)
-  return floorToF6(value)
+  return roundToF6(value)
 }
 
 export function toF6r(value: number): Fixed6 {
@@ -135,28 +135,6 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
-  return floorToF6(product)
-}
-
-export function f6multV2(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fixed6 {
-  const flooredMultipliers = multipliers.map((mult) => (isF6(mult) ? mult : floorToF6(mult)))
-  const product = flooredMultipliers.reduce((acc, mult) => f6multTwoV2(acc, mult), first)
-  return product
-}
-
-export function f6multV3(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fixed6 {
-  const flooredMultipliers = multipliers.map((mult) => (isF6(mult) ? mult : floorToF6(mult)))
-  const product = flooredMultipliers.reduce((acc, mult) => f6multTwoV3(acc, mult), first)
-  return product
-}
-
-function f6multTwoV2(first: Fixed6, second: Fixed6): Fixed6 {
-  const product = toF(first) * toF(second)
-  return floorToF6(product)
-}
-
-function f6multTwoV3(first: Fixed6, second: Fixed6): Fixed6 {
-  const product = toF(first) * toF(second)
   return roundToF6(product)
 }
 
