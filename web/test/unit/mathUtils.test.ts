@@ -27,12 +27,12 @@ describe(floor, () => {
     [0.000_000_1, 0],
     [-0.000_000_1, -1],
     // cases with too high precision
-    // floor adds 0.000_000_01, so values as close as that to next higher integer 
+    // floor adds 0.000_000_001, so values as close as that to next higher integer 
     // will be rounded up to it instead of down.
-    [0.999_999_99, 1], // results in 1 instead of 0 due to too high precision
-    [-0.999_999_99, -1], // all good, just rounded down
-    [0.000_000_01, 0], // all good, just rounded down
-    [-0.000_000_01, 0], // results in 0 instead of -1 due to too high precision
+    [0.999_999_999, 1], // results in 1 instead of 0 due to too high precision
+    [-0.999_999_999, -1], // all good, just rounded down
+    [0.000_000_001, 0], // all good, just rounded down
+    [-0.000_000_001, 0], // results in 0 instead of -1 due to too high precision
   ])('should floor %f to %f', (value, expected) => {
     expect(floor(value)).toBe(expected)
   })
@@ -64,12 +64,12 @@ describe(ceil, () => {
     [0.000_000_1, 1],
     [-0.000_000_1, 0],
     // cases with too high precision
-    // ceil subtracts 0.000_000_01, so values as close as that to next lower integer 
+    // ceil subtracts 0.000_000_001, so values as close as that to next lower integer 
     // will be rounded down to it instead of up.
-    [0.999_999_99, 1], // all good, just rounded up
-    [-0.999_999_99, -1], // results in -1 instead of 0 due to too high precision
-    [0.000_000_01, 0], // results in 0 instead of 1 due to too high precision
-    [-0.000_000_01, 0], // all good, just rounded up
+    [0.999_999_999, 1], // all good, just rounded up
+    [-0.999_999_999, -1], // results in -1 instead of 0 due to too high precision
+    [0.000_000_001, 0], // results in 0 instead of 1 due to too high precision
+    [-0.000_000_001, 0], // all good, just rounded up
   ])('should ceil %f to %f', (value, expected) => {
     expect(ceil(value)).toBe(expected)
   })
@@ -102,5 +102,14 @@ describe('Common floating point precision pitfalls', () => {
 
     expect(mathFloor).toBe(28) // bad, expected 29
     expect(myFloor).toBe(29) // good, as expected
+  })
+
+  test('Imprecise division may result in incorrect threshold checks', () => {
+    const ratio = 0.3 / 0.1
+    expect(ratio).toBe(2.999_999_999_999_999_6)
+
+    expect(ratio === 3).toBe(false)
+    expect(ratio > 3).toBe(false)
+    expect(ratio < 3).toBe(true)
   })
 })

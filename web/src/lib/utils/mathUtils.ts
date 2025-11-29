@@ -2,29 +2,28 @@ import { assertNotZero } from './assert'
 
 /**
  * A floor that adds a small tolerance to handle floating point precision issues before flooring.
- *
- * For example, Math.floor(100 * 0.2) would result in Math.floor(19.999999999999996) == 19, instead of 20.
- *
+ * Refer to tests for this function for details.
  */
 export function floor(value: number): number {
-  // Add a small tolerance (1e-8) to handle floating point precision issues before flooring
-  return Math.floor(value + 1e-8)
+  // Add a small tolerance to handle floating point precision issues before flooring
+  // Note: This floor function is not doing the "-0" fix done by the ceil function
+  // as it would be needed only in cases where we expect from the floor function to return -0.
+  // This should never be the case - we should never want to explicitly have -0 anywhere.
+  return Math.floor(value + 1e-9)
 }
 
 /**
  * A ceil that subtracts a small tolerance to handle floating point precision issues before ceiling.
- *
- * For example, Math.ceil(100 * 0.2) might result in Math.ceil(20.000000000000004) == 21, instead of 20.
- *
+ * Refer to tests for this function for details.
  */
 export function ceil(value: number): number {
-  // Subtract a small tolerance (1e-8) to handle floating point precision issues before ceiling
+  // Subtract a small tolerance to handle floating point precision issues before ceiling
   // Note: Object.is check is required for the case when value is < 1e-10, including if it is 0.
   // Without it, the function would return -0, which would fail .toBe() tests from vitest,
   // as they use Object.is():
   // Object.is( 0, 0) -> true
   // Object.is(-0, 0) -> false
-  let res = Math.ceil(value - 1e-8)
+  let res = Math.ceil(value - 1e-9)
   res = Object.is(res, -0) ? 0 : res
   return res
 }
