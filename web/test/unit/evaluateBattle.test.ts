@@ -13,6 +13,7 @@ import { rand } from '../../src/lib/utils/rand'
 import { agFix } from '../fixtures/agentFixture'
 import { enFix } from '../fixtures/enemyFixture'
 import { st } from '../fixtures/stateFixture'
+import { ceil } from '../../src/lib/utils/mathUtils'
 
 describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
@@ -58,7 +59,7 @@ describe(evaluateBattle, () => {
 
     const report = evaluateBattle(agsV([agent]), [enemy]) // Act
 
-    const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
+    const expectedRounds = ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     const expectedSkillUpdate = f6mult(skillGainPerRound, expectedRounds)
     expectReportToBe(report)({

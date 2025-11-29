@@ -1,5 +1,5 @@
 import { sum } from 'radash'
-import { assertInteger } from '../utils/assert'
+import { assertInteger, assertMax6Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { dist, div, floor } from '../utils/mathUtils'
 
@@ -127,15 +127,16 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
 
 /**
  * Multiplies a Fixed6 value by one or more decimal numbers and returns the result as a Fixed6.
- * The result is floored to maintain Fixed6 precision.
+ * The result is rounded to maintain Fixed6 precision.
  * For example:
  * f6mult(fixed6(10_000_000), 0.2) = fixed6(2_000_000) (representing 10.00 * 0.2 = 2.00)
  * f6mult(fixed6(10_000_000), 0.5, 0.8) = fixed6(4_000_000) (representing 10.00 * 0.5 * 0.8 = 4.00)
- * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.382500)
+ * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825, rounded to 18.382500)
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
-  return roundToF6(product)
+  assertMax6Dec(product)
+  return toF6(product)
 }
 
 /**
@@ -164,6 +165,7 @@ export function f6divPrecise(numerator: Fixed6, denominator: Fixed6): number {
  */
 export function f6sum(...values: Fixed6[]): Fixed6 {
   const sumRes = sum(values, (value) => value.value)
+  assertMax6Dec(sumRes)
   return fixed6(sumRes)
 }
 
