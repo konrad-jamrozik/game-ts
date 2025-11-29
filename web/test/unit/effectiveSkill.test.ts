@@ -26,7 +26,7 @@ describe(effectiveSkill, () => {
 
     // hit points lost = 30 - 23 = 7
     // effective_skill = floor(100 * (1 - 7/30) * (1 - 0/100)) = 100 * 0.76666... * 1 = 76.666...
-    expect(effectiveSkill(agent)).toStrictEqual(asF6(76.666_600))
+    expect(effectiveSkill(agent)).toStrictEqual(asF6(76.666_667))
   })
 
   test('exhaustion and hit points lost', () => {

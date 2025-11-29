@@ -1,4 +1,4 @@
-import { f6add, f6cmp, f6eq, f6multV2, type Fixed6 } from '../model/fixed6'
+import { asF6r, asFloat, f6add, f6cmp, f6eq, type Fixed6 } from '../model/fixed6'
 import type { Actor, Agent, Enemy } from '../model/model'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from './assert'
@@ -54,5 +54,5 @@ export function effectiveSkill(actor: Actor): Fixed6 {
   const exhaustionMalus = nonNeg(actor.exhaustion - NO_IMPACT_EXHAUSTION) / 100
   const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
-  return f6multV2(actor.skill, hitPointsMult, exhaustionMult)
+  return asF6r(asFloat(actor.skill) * hitPointsMult * exhaustionMult)
 }

@@ -42,6 +42,12 @@ export function asF6(value: number): Fixed6 {
   return floorToF6(value)
 }
 
+export function asF6r(value: number): Fixed6 {
+  // KJA assert here that precision is no more than 6 decimal places
+  // assertMax6Dec(value)
+  return roundToF6(value)
+}
+
 export function f6addToInt(target: number, value: Fixed6): number {
   return f6asInt(f6add(asF6(target), value))
 }
