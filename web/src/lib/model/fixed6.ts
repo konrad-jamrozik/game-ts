@@ -26,9 +26,12 @@ export function isF6(value: unknown): value is Fixed6 {
   )
 }
 
-/** // kja rename to toF6
- * Converts a decimal value to Fixed6 format by flooring to 6 decimal places.
- * Use this when you want to create a Fixed6 value.
+/**
+ * Converts a decimal value to Fixed6 format.
+ * It asserts the converted value has no more decimal places than 6.
+ * As such, it guarantees no loss of precision.
+ * If you need to convert a value to Fixed6 format with rounding,
+ * use toF6r instead.
  *
  * For example:
  * asF6(7) creates fixed6(7_000_000), which represents 7.000000.
@@ -37,14 +40,15 @@ export function isF6(value: unknown): value is Fixed6 {
  * asF6(21.758123456) creates fixed6(21_758_123), which represents 21.758123 (floored to 6 decimals).
  */
 export function toF6(value: number): Fixed6 {
-  // KJA assert here that precision is no more than 6 decimal places
-  // assertMax6Dec(value)
+  assertMax6Dec(value)
   return roundToF6(value)
 }
 
+/**
+ * Converts a decimal value to Fixed6 format by rounding to 6 decimal places.
+ * If you want to conversion that guarantees no loss of precision, use toF6 instead.
+ */
 export function toF6r(value: number): Fixed6 {
-  // KJA assert here that precision is no more than 6 decimal places
-  // assertMax6Dec(value)
   return roundToF6(value)
 }
 
@@ -135,7 +139,6 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
-  assertMax6Dec(product)
   return toF6(product)
 }
 

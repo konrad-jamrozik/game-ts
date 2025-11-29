@@ -1,5 +1,5 @@
 import type { AgentView } from '../agents/AgentView'
-import { toF, toF6, type Fixed6 } from '../fixed6'
+import { toF, toF6r, type Fixed6 } from '../fixed6'
 
 /**
  * Calculates the value contribution from an agent based on their effective skill and a constant multiplier.
@@ -13,5 +13,5 @@ import { toF, toF6, type Fixed6 } from '../fixed6'
  */
 export function getAgentSkillBasedValue(agent: AgentView, value: number): Fixed6 {
   const skillCoefficient = toF(agent.effectiveSkill()) / 100
-  return toF6(skillCoefficient * value)
+  return toF6r(skillCoefficient * value)
 }

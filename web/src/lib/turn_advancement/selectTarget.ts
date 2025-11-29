@@ -1,4 +1,4 @@
-import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF, toF6, type Fixed6 } from '../model/fixed6'
+import { f6cmp, f6dist, f6eq, f6inRange, toF, toF6, toF6r, type Fixed6 } from '../model/fixed6'
 import type { Agent, Enemy } from '../model/model'
 import { assertDefined } from '../utils/assert'
 import { div } from '../utils/mathUtils'
@@ -138,7 +138,7 @@ function isInValidSkillRange(
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return f6inRange(skill, toF6(targetSkillLowerBound), toF6(targetSkillUpperBound))
+  return f6inRange(skill, toF6r(targetSkillLowerBound), toF6r(targetSkillUpperBound))
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
