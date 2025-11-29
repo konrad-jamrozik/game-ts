@@ -4,8 +4,10 @@ import { rand } from '../../src/lib/utils/rand'
 
 describe(rollAgainstProbability, () => {
   // Note:
-  // Probability of 0 will cause the roll to always fail, Success = Roll > 10_000 -> impossible.
-  // Probability of 1 will cause the roll to always succeed. Failure = Roll <= 0 -> impossible.
+  // Roll is a random number in [0, 1)
+  // As such:
+  // - probability of 0 will cause the roll to always fail, Success = Roll >= 1 -> impossible.
+  // - probability of 1 will cause the roll to always succeed. Failure = Roll < 0 -> impossible.
   //
   // Note: probability of 1 in the test cases below is in fact 0.(9) - see rand.ts for details.
   // prettier-ignore
