@@ -388,6 +388,9 @@ export default plugTypescriptEslint.config([
       // oxlint does not support this rule, and I don't care that much.
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prefer-ternary.md
       'unicorn/prefer-ternary': 'off',
+      // Sometimes I prefer to keep zero fractions to denote number precision.
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/no-zero-fractions.md
+      'unicorn/no-zero-fractions': 'off',
     },
   },
   {
