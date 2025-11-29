@@ -1,6 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { bps } from '../../lib/model/bps'
-import { f2fmtInt, f2fmtPctDec0 } from '../../lib/model/fixed2'
+import { asF6, asFloat, f6fmtInt, f6fmtPctDec0 } from '../../lib/model/fixed6'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix, fmtPctDec0 } from '../../lib/utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
@@ -79,7 +78,7 @@ function formatRewards(
     children.push({
       id: `mission-${missionSiteId}-reward-panic-reduction`,
       label: 'Panic',
-      chipValue: bps(-rewards.panicReduction.value),
+      chipValue: asF6(-asFloat(rewards.panicReduction)),
       reverseColor: true, // Negative values (reductions) should be green
     })
   }
@@ -92,7 +91,7 @@ function formatRewards(
         children.push({
           id: `mission-${missionSiteId}-reward-faction-threat-reduction`,
           label: 'Faction threat',
-          chipValue: bps(-factionReward.threatReduction.value),
+          chipValue: asF6(-asFloat(factionReward.threatReduction)),
           reverseColor: true, // Negative values (reductions) should be green
         })
       }
@@ -140,7 +139,7 @@ function formatBattleStats(
   // Calculate percentages
   const damageInflictedPctStr = fmtPctDec0(totalDamageInflicted, initialEnemyHitPoints)
   const damageTakenPctStr = fmtPctDec0(totalDamageTaken, initialAgentHitPoints)
-  const skillGainPctStr = f2fmtPctDec0(totalAgentSkillGain, totalAgentSkillAtBattleStart)
+  const skillGainPctStr = f6fmtPctDec0(totalAgentSkillGain, totalAgentSkillAtBattleStart)
 
   return {
     id: `mission-${missionSiteId}-battle-stats`,
@@ -217,14 +216,14 @@ function formatBattleStats(
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-at-battle-start`,
         label: 'Total agent skill at battle start',
-        chipValue: f2fmtInt(totalAgentSkillAtBattleStart),
+        chipValue: f6fmtInt(totalAgentSkillAtBattleStart),
         noColor: true,
         noPlusSign: true,
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-enemy-skill-at-battle-start`,
         label: 'Total enemy skill at battle start',
-        chipValue: f2fmtInt(totalEnemySkillAtBattleStart),
+        chipValue: f6fmtInt(totalEnemySkillAtBattleStart),
         noColor: true,
         noPlusSign: true,
       },
@@ -244,7 +243,7 @@ function formatBattleStats(
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
         label: `Total agent skill gain (${skillGainPctStr} of initial skill)`,
-        chipValue: f2fmtInt(totalAgentSkillGain),
+        chipValue: f6fmtInt(totalAgentSkillGain),
         noPlusSign: true,
       },
       {

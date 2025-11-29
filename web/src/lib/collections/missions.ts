@@ -1,4 +1,4 @@
-import { bps } from '../model/bps'
+import { asF6 } from '../model/fixed6'
 import type { Mission } from '../model/model'
 import { assertDefined } from '../utils/assert'
 
@@ -13,12 +13,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 5,
       intel: 0,
-      panicReduction: bps(5),
+      panicReduction: asF6(0.0005), // 5 basis points = 0.05% = 0.0005
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: bps(1),
-          suppression: bps(10),
+          threatReduction: asF6(0.0001), // 1 basis point = 0.01% = 0.0001
+          suppression: asF6(0.001), // 10 basis points = 0.1% = 0.001
         },
       ],
     },
@@ -33,12 +33,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 100,
       intel: 10,
-      panicReduction: bps(20),
+      panicReduction: asF6(0.002), // 20 basis points = 0.2% = 0.002
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: bps(10),
-          suppression: bps(1000),
+          threatReduction: asF6(0.001), // 10 basis points = 0.1% = 0.001
+          suppression: asF6(0.1), // 1000 basis points = 10% = 0.1
         },
       ],
     },
@@ -53,12 +53,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 400,
       intel: 20,
-      panicReduction: bps(100),
+      panicReduction: asF6(0.01), // 100 basis points = 1% = 0.01
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: bps(200),
-          suppression: bps(5000),
+          threatReduction: asF6(0.02), // 200 basis points = 2% = 0.02
+          suppression: asF6(0.5), // 5000 basis points = 50% = 0.5
         },
       ],
     },
@@ -73,12 +73,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 1000,
       intel: 50,
-      panicReduction: bps(500),
+      panicReduction: asF6(0.05), // 500 basis points = 5% = 0.05
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: bps(1000),
-          suppression: bps(10_000),
+          threatReduction: asF6(0.1), // 1000 basis points = 10% = 0.1
+          suppression: asF6(1), // 10_000 basis points = 100% = 1.0
         },
       ],
     },
@@ -93,12 +93,12 @@ export const missions: Mission[] = [
     rewards: {
       money: 10_000,
       intel: 100,
-      panicReduction: bps(2000),
+      panicReduction: asF6(0.2), // 2000 basis points = 20% = 0.2
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: bps(10_000),
-          suppression: bps(10_000),
+          threatReduction: asF6(1), // 10_000 basis points = 100% = 1.0
+          suppression: asF6(1), // 10_000 basis points = 100% = 1.0
         },
       ],
     },

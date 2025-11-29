@@ -1,6 +1,7 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { bps, type Bps } from '../../lib/model/bps'
+import { asF6, asFloat, type Fixed6 } from '../../lib/model/fixed6'
+import { f6fmtValueChange } from '../../lib/model/f6fmtUtils'
 import { getPanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {
   newValueChange,
@@ -10,7 +11,7 @@ import {
   type PanicBreakdown,
   type PanicReport,
 } from '../../lib/model/turnReportModel'
-import { fmtNoPrefix, fmtValueChange } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix } from '../../lib/utils/formatUtils'
 import { formatMissions } from './formatMissions'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -55,7 +56,7 @@ export function formatSituationReport(
 function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   return {
     id: 'panic-summary',
-    label: `Panic: ${fmtValueChange(panicReport.change)}`,
+    label: `Panic: ${f6fmtValueChange(panicReport.change)}`,
     chipValue: panicReport.change.delta,
     reverseColor: true, // Panic increase is bad
     children: formatPanicBreakdown(panicReport.breakdown),
@@ -63,12 +64,12 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
 }
 
 function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
-  const totalMissionReduction = bps(sum(breakdown.missionReductions, (mission) => mission.reduction.value))
-  const anyMissionReductionExists = totalMissionReduction.value > 0
+  const totalMissionReduction = asF6(sum(breakdown.missionReductions, (mission) => asFloat(mission.reduction)))
+  const anyMissionReductionExists = asFloat(totalMissionReduction) > 0
 
   const rows: TurnReportTreeViewModelProps[] = [
     ...breakdown.factionPanicIncreases
-      .filter((faction) => faction.factionPanicIncrease.value !== 0)
+      .filter((faction) => asFloat(faction.factionPanicIncrease) !== 0)
       .map((faction) => ({
         id: `panic-faction-${faction.factionId}`,
         label: `Caused by ${faction.factionName}`,
@@ -80,7 +81,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
           {
             id: 'panic-mission-reduction',
             label: 'Mission reduction',
-            chipValue: bps(-totalMissionReduction.value),
+            chipValue: asF6(-asFloat(totalMissionReduction)),
             reverseColor: true, // Panic reduction is good (default)
           },
         ]
@@ -93,25 +94,25 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
   const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
-  const panicIncreaseDelta = bps(currentPanicIncrease.value - previousPanicIncrease.value)
+  const panicIncreaseDelta = asF6(asFloat(currentPanicIncrease) - asFloat(previousPanicIncrease))
 
   const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: fct.factionId,
-    label: `${fct.factionName}. Panic contrib.: ${fmtValueChange(panicIncrease)}`,
+    label: `${fct.factionName}. Panic contrib.: ${f6fmtValueChange(panicIncrease)}`,
     chipValue: panicIncreaseDelta,
     reverseColor: true, // Panic increase is bad
     children: [
       {
         id: `faction-${fct.factionId}-threat-level`,
-        label: `Threat level: ${fmtValueChange(fct.threatLevel)}`,
+        label: `Threat level: ${f6fmtValueChange(fct.threatLevel)}`,
         chipValue: fct.threatLevel.delta,
         reverseColor: true, // Threat increase is bad
         children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
       },
       {
         id: `faction-${fct.factionId}-suppression`,
-        label: `Suppression: ${fmtValueChange(fct.suppression)}`,
+        label: `Suppression: ${f6fmtValueChange(fct.suppression)}`,
         chipValue: fct.suppression.delta,
         reverseColor: false, // Suppression increase is good (default)
         children: formatSuppressionChildren(fct.factionId, fct.suppressionDecay, fct.missionImpacts),
@@ -122,10 +123,12 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
 
 function formatThreatLevelChildren(
   factionId: string,
-  baseThreatIncrease: Bps,
+  baseThreatIncrease: Fixed6,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalThreatReduction = bps(sum(missionImpacts, (impact) => impact.threatReduction?.value ?? 0))
+  const totalThreatReduction = asF6(
+    sum(missionImpacts, (impact) => (impact.threatReduction ? asFloat(impact.threatReduction) : 0)),
+  )
 
   return [
     {
@@ -134,12 +137,12 @@ function formatThreatLevelChildren(
       chipValue: baseThreatIncrease,
       reverseColor: true, // Threat increase is bad
     },
-    ...(totalThreatReduction.value !== 0
+    ...(asFloat(totalThreatReduction) !== 0
       ? [
           {
             id: `faction-${factionId}-mission-threat-reductions`,
             label: 'Mission reduction',
-            chipValue: bps(-totalThreatReduction.value),
+            chipValue: asF6(-asFloat(totalThreatReduction)),
             reverseColor: true, // Threat reduction is good (default)
           },
         ]
@@ -149,22 +152,24 @@ function formatThreatLevelChildren(
 
 function formatSuppressionChildren(
   factionId: string,
-  suppressionDecay: Bps,
+  suppressionDecay: Fixed6,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalSuppressionAdded = bps(sum(missionImpacts, (impact) => impact.suppressionAdded?.value ?? 0))
+  const totalSuppressionAdded = asF6(
+    sum(missionImpacts, (impact) => (impact.suppressionAdded ? asFloat(impact.suppressionAdded) : 0)),
+  )
 
   return [
-    ...(suppressionDecay.value !== 0
+    ...(asFloat(suppressionDecay) !== 0
       ? [
           {
             id: `faction-${factionId}-suppressionDecay`,
             label: 'Suppression decay',
-            chipValue: bps(-suppressionDecay.value),
+            chipValue: asF6(-asFloat(suppressionDecay)),
           },
         ]
       : []),
-    ...(totalSuppressionAdded.value !== 0
+    ...(asFloat(totalSuppressionAdded) !== 0
       ? [
           {
             id: `faction-${factionId}-mission-suppression`,

@@ -1,5 +1,5 @@
 import type { Agent, GameState } from '../model'
-import { f2fmtInt, f2lt, toF2 } from '../fixed2'
+import { asF6, f6fmtInt, f6lt } from '../fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../../utils/assert'
 import { div } from '../../utils/mathUtils'
 
@@ -27,8 +27,8 @@ function validateBasicStatRanges(agent: Agent): void {
   if (agent.exhaustion < 0) {
     throw new Error(`Agent ${agent.id} has negative exhaustion: ${agent.exhaustion}`)
   }
-  if (f2lt(agent.skill, toF2(0))) {
-    throw new Error(`Agent ${agent.id} has negative skill: ${f2fmtInt(agent.skill)}`)
+  if (f6lt(agent.skill, asF6(0))) {
+    throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
   }
   if (agent.hitPointsLostBeforeRecovery < 0) {
     throw new Error(`Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${agent.hitPointsLostBeforeRecovery}`)

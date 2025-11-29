@@ -1,10 +1,9 @@
-import type { Bps } from './bps'
-import type { Fixed2 } from './fixed2'
+import type { Fixed6 } from './fixed6'
 import type { TurnReport } from './turnReportModel'
 
 export type Actor = {
   id: string
-  skill: Fixed2
+  skill: Fixed6
   hitPoints: number
   maxHitPoints: number
   exhaustion: number
@@ -59,7 +58,7 @@ export type Agent = Actor & {
   recoveryTurns: number
   hitPointsLostBeforeRecovery: number
   missionsTotal: number
-  skillFromTraining: Fixed2
+  skillFromTraining: Fixed6
   state: AgentState
   assignment: AgentAssignment
 }
@@ -78,15 +77,15 @@ export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-ex
 
 export type FactionRewards = {
   factionId: FactionId
-  threatReduction?: Bps
-  suppression?: Bps
+  threatReduction?: Fixed6
+  suppression?: Fixed6
 }
 
 export type MissionRewards = {
   money?: number
   intel?: number
   funding?: number
-  panicReduction?: Bps
+  panicReduction?: Fixed6
   factionRewards?: FactionRewards[]
 }
 
@@ -132,9 +131,9 @@ export type MissionSite = {
 export type Faction = {
   id: FactionId
   name: string
-  threatLevel: Bps
-  threatIncrease: Bps
-  suppression: Bps
+  threatLevel: Fixed6
+  threatIncrease: Fixed6
+  suppression: Fixed6
   discoveryPrerequisite: string[]
 }
 
@@ -154,7 +153,7 @@ export type GameState = {
   turn: number
   actionsCount: number
   // Situation
-  panic: Bps
+  panic: Fixed6
   factions: Faction[]
   // Assets
   money: number
@@ -164,7 +163,7 @@ export type GameState = {
   agentCap: number
   transportCap: number
   trainingCap: number
-  trainingSkillGain: Fixed2
+  trainingSkillGain: Fixed6
   exhaustionRecovery: number
   hitPointsRecoveryPct: number
   // Liabilities // KJa to remove, should be unused

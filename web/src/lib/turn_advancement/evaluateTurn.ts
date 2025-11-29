@@ -1,6 +1,6 @@
 import { agsV } from '../model/agents/AgentsView'
 import { getMissionById } from '../collections/missions'
-import { bps } from '../model/bps'
+import { asF6, asFloat, f6sum } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import {
   newValueChange,
@@ -27,7 +27,6 @@ import {
   updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
-import { f2sum } from '../model/fixed2'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -241,7 +240,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       const enemiesUnscathed = enemiesTotal - enemiesTerminated
 
       // Calculate total agent skill gain
-      const totalAgentSkillGain = f2sum(...Object.values(agentSkillUpdates))
+      const totalAgentSkillGain = f6sum(...Object.values(agentSkillUpdates))
 
       // Calculate average agent exhaustion gain (after battle, including casualty penalty)
       const averageAgentExhaustionGain = agentsDeployed > 0 ? agentExhaustionAfterBattle / agentsDeployed : 0
@@ -450,7 +449,7 @@ function updatePanic(
 
   // Increase panic by the sum of (threat level - suppression) for all factions
   const totalPanicIncrease = getTotalPanicIncrease(state)
-  state.panic = bps(state.panic.value + totalPanicIncrease)
+  state.panic = asF6(asFloat(state.panic) + totalPanicIncrease)
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -461,7 +460,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      state.panic = bps(Math.max(0, state.panic.value - rewards.panicReduction.value))
+      state.panic = asF6(Math.max(0, asFloat(state.panic) - asFloat(rewards.panicReduction)))
     }
   }
 
@@ -479,10 +478,12 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = bps(Math.max(0, targetFaction.threatLevel.value - factionReward.threatReduction.value))
+    targetFaction.threatLevel = asF6(
+      Math.max(0, asFloat(targetFaction.threatLevel) - asFloat(factionReward.threatReduction)),
+    )
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = bps(targetFaction.suppression.value + factionReward.suppression.value)
+    targetFaction.suppression = asF6(asFloat(targetFaction.suppression) + asFloat(factionReward.suppression))
   }
 }
 
@@ -503,11 +504,11 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    faction.threatLevel = bps(faction.threatLevel.value + faction.threatIncrease.value)
+    faction.threatLevel = asF6(asFloat(faction.threatLevel) + asFloat(faction.threatIncrease))
 
     // Apply suppression decay AFTER panic calculation and threat increase
     faction.suppression = getSuppressionAfterDecay(faction.suppression)
-    const suppressionDecay = bps(previousSuppression.value - faction.suppression.value)
+    const suppressionDecay = asF6(asFloat(previousSuppression) - asFloat(faction.suppression))
 
     // Track mission impacts on this faction
     const missionImpacts = []

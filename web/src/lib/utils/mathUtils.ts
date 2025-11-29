@@ -55,3 +55,7 @@ export function floorToDec2(value: number): number {
 export function floorToDec4(value: number): number {
   return floor(value * 10_000) / 10_000
 }
+
+export function floorToDec6(value: number): number {
+  return floor(value * 1_000_000) / 1_000_000
+}

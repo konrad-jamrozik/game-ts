@@ -1,12 +1,11 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
-import { isBps, type Bps } from '../lib/model/bps'
-import { isF2, type Fixed2 } from '../lib/model/fixed2'
-import { str } from '../lib/utils/formatUtils'
+import { asFloat, isF6, type Fixed6 } from '../lib/model/fixed6'
+import { f6str } from '../lib/model/f6fmtUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
 export type MyChipProps = {
-  chipValue?: number | Bps | Fixed2 | string | undefined
+  chipValue?: number | Fixed6 | string | undefined
   /** If true, never display "+" sign for positive values */
   noPlusSign?: boolean
   /** If true, reverse color semantics: positive = bad/red, negative = good/green. Default false = positive good/green, negative bad/red */
@@ -38,10 +37,7 @@ export function MyChip({
 /**
  * Formats a numeric or string value into a chip label string.
  */
-function formatChipLabel(
-  chipValue: number | Bps | Fixed2 | string | undefined,
-  noPlusSign?: boolean,
-): string | undefined {
+function formatChipLabel(chipValue: number | Fixed6 | string | undefined, noPlusSign?: boolean): string | undefined {
   if (chipValue === undefined) {
     return undefined
   }
@@ -51,9 +47,9 @@ function formatChipLabel(
     return chipValue
   }
 
-  const valueToDetermineSign = isBps(chipValue) || isF2(chipValue) ? chipValue.value : chipValue
+  const valueToDetermineSign = isF6(chipValue) ? asFloat(chipValue) : chipValue
   const sign = (noPlusSign ?? false) ? '' : valueToDetermineSign > 0 ? '+' : ''
-  return `${sign}${str(chipValue)}`
+  return `${sign}${f6str(chipValue)}`
 }
 
 /**

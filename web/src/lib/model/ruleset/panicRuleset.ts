@@ -1,4 +1,4 @@
-import { bps, type Bps } from '../bps'
+import { asF6, asFloat, type Fixed6 } from '../fixed6'
 import { floor } from '../../utils/mathUtils'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
@@ -10,30 +10,29 @@ import { SUPPRESSION_DECAY } from './constants'
  *
  * This is the source of truth for panic increase calculation.
  *
- * @param threatLevel - The faction's threat level (in basis points)
- * @param suppression - The faction's suppression value (in basis points)
- * @returns The panic increase (never negative, in basis points)
+ * @param threatLevel - The faction's threat level (as Fixed6)
+ * @param suppression - The faction's suppression value (as Fixed6)
+ * @returns The panic increase (never negative, as Fixed6)
  */
-export function getPanicIncrease(threatLevel: Bps, suppression: Bps): Bps {
-  return bps(Math.max(0, threatLevel.value - suppression.value))
+export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
+  return asF6(Math.max(0, asFloat(threatLevel) - asFloat(suppression)))
 }
 
-export function getSuppressionAfterDecay(suppression: Bps): Bps {
-  // KJA refactor bps formula here
-  return bps(floor(suppression.value * (1 - SUPPRESSION_DECAY)))
+export function getSuppressionAfterDecay(suppression: Fixed6): Fixed6 {
+  return asF6(floor(asFloat(suppression) * (1 - SUPPRESSION_DECAY)))
 }
 
 /**
  * Calculates the total panic increase from all factions in the game state.
  *
  * @param gameState - The current game state
- * @returns Total panic increase value (in basis points, as a number)
+ * @returns Total panic increase value (as a number)
  */
 export function getTotalPanicIncrease(gameState: GameState): number {
   let totalPanicIncrease = 0
   for (const faction of gameState.factions) {
     const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
-    totalPanicIncrease += panicIncrease.value
+    totalPanicIncrease += asFloat(panicIncrease)
   }
   return totalPanicIncrease
 }
@@ -43,9 +42,9 @@ export function getTotalPanicIncrease(gameState: GameState): number {
  * Panic increases by the sum of panic increases from all factions.
  *
  * @param gameState - The current game state
- * @returns Projected panic value (in basis points)
+ * @returns Projected panic value (as Fixed6)
  */
-export function getPanicNewBalance(gameState: GameState): Bps {
+export function getPanicNewBalance(gameState: GameState): Fixed6 {
   const totalPanicIncrease = getTotalPanicIncrease(gameState)
-  return bps(gameState.panic.value + totalPanicIncrease)
+  return asF6(asFloat(gameState.panic) + totalPanicIncrease)
 }

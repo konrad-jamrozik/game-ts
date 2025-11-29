@@ -4,11 +4,12 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPctDec0, str } from '../lib/utils/formatUtils'
+import { fmtPctDec0 } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import { getPanicIncrease, getPanicNewBalance, getSuppressionAfterDecay } from '../lib/model/ruleset/panicRuleset'
 import { MyChip } from './MyChip'
-import { bps, type Bps } from '../lib/model/bps'
+import { asF6, asFloat, type Fixed6 } from '../lib/model/fixed6'
+import { f6str } from '../lib/model/f6fmtUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { Typography } from '@mui/material'
 import { Fragment } from 'react'
@@ -18,7 +19,7 @@ export type SituationReportRow = {
   metric: string
   value: string
   projected?: string
-  diff?: number | Bps
+  diff?: number | Fixed6
   reverseColor?: boolean
 }
 
@@ -26,10 +27,10 @@ export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
 
-  const panicPercentage = str(panic)
+  const panicPercentage = f6str(panic)
   const panicProjected = getPanicNewBalance(gameState)
-  const panicProjectedStr = str(panicProjected)
-  const panicDiff = bps(panicProjected.value - panic.value)
+  const panicProjectedStr = f6str(panicProjected)
+  const panicDiff = asF6(asFloat(panicProjected) - asFloat(panic))
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -78,32 +79,32 @@ export function SituationReportCard(): React.JSX.Element {
   const redDawnRows: SituationReportRow[] = isRedDawnDiscovered
     ? (() => {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
-        const threatLevelProjected = bps(redDawnFaction.threatLevel.value + redDawnFaction.threatIncrease.value)
-        const threatLevelDiff = bps(redDawnFaction.threatIncrease.value)
+        const threatLevelProjected = asF6(asFloat(redDawnFaction.threatLevel) + asFloat(redDawnFaction.threatIncrease))
+        const threatLevelDiff = asF6(asFloat(redDawnFaction.threatIncrease))
         const suppressionProjected = getSuppressionAfterDecay(redDawnFaction.suppression)
-        const suppressionDiff = bps(suppressionProjected.value - redDawnFaction.suppression.value)
+        const suppressionDiff = asF6(asFloat(suppressionProjected) - asFloat(redDawnFaction.suppression))
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiff = bps(panicIncreaseProjected.value - panicIncrease.value)
+        const panicIncreaseDiff = asF6(asFloat(panicIncreaseProjected) - asFloat(panicIncrease))
         return [
           {
             id: 1,
             metric: 'Threat level',
-            value: str(redDawnFaction.threatLevel),
-            projected: str(threatLevelProjected),
+            value: f6str(redDawnFaction.threatLevel),
+            projected: f6str(threatLevelProjected),
             diff: threatLevelDiff,
             reverseColor: true,
           },
           {
             id: 2,
             metric: 'Threat increase',
-            value: str(redDawnFaction.threatIncrease),
+            value: f6str(redDawnFaction.threatIncrease),
             reverseColor: true,
           },
           {
             id: 3,
             metric: 'Suppression',
-            value: str(redDawnFaction.suppression),
-            projected: str(suppressionProjected),
+            value: f6str(redDawnFaction.suppression),
+            projected: f6str(suppressionProjected),
             diff: suppressionDiff,
           },
           {
@@ -114,8 +115,8 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 5,
             metric: 'Panic increase',
-            value: str(panicIncrease),
-            projected: str(panicIncreaseProjected),
+            value: f6str(panicIncrease),
+            projected: f6str(panicIncreaseProjected),
             diff: panicIncreaseDiff,
             reverseColor: true,
           },

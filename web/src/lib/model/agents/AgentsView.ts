@@ -1,6 +1,6 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
-import { f2cmp } from '../fixed2'
+import { f6cmp } from '../fixed6'
 import { getAgentUpkeep, getContractingIncome } from '../ruleset/moneyRuleset'
 import { getEspionageIntel } from '../ruleset/intelRuleset'
 import { agV, type AgentView } from './AgentView'
@@ -71,7 +71,7 @@ function getAgentsViewMethods(
     notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
     sortedByEffectiveSkill: (): AgentsView =>
-      toAgsV(agVArr.toSorted((ag1, ag2) => f2cmp(ag1.effectiveSkill(), ag2.effectiveSkill()))),
+      toAgsV(agVArr.toSorted((ag1, ag2) => f6cmp(ag1.effectiveSkill(), ag2.effectiveSkill()))),
     agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),

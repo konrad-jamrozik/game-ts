@@ -1,6 +1,5 @@
 import type { Agent, GameState } from '../../model/model'
-import { bps } from '../../model/bps'
-import { toF2 } from '../../model/fixed2'
+import { asF6 } from '../../model/fixed6'
 import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
@@ -10,13 +9,13 @@ import { newWeapon } from '../../utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
-  state.panic = bps(0)
+  state.panic = asF6(0)
 })
 
 export const debugSetAllFactionsSuppressionTo1000Percent = asPlayerAction((state: GameState) => {
   // 1000% = 100,000 basis points
   for (const faction of state.factions) {
-    faction.suppression = bps(100_000)
+    faction.suppression = asF6(10) // 1000% = 10.0
   }
 })
 
@@ -32,7 +31,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
     // KJA2 dedup agent ID with agent reducers
     const agentId = `agent-${agentNumericId.toString().padStart(3, '0')}`
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
-    const skill = toF2(120 + index * 20)
+    const skill = asF6(120 + index * 20)
 
     const newAgent: Agent = {
       id: agentId,
@@ -46,7 +45,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
       recoveryTurns: 0,
       hitPointsLostBeforeRecovery: 0,
       missionsTotal: 0,
-      skillFromTraining: toF2(0),
+      skillFromTraining: asF6(0),
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 

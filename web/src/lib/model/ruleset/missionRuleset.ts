@@ -1,7 +1,7 @@
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../../utils/actorUtils'
 import { agV } from '../agents/AgentView'
-import { f2div, f2ge, f2lt, f2mult, f2sum, toF2, type Fixed2 } from '../fixed2'
+import { asF6, f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6 } from '../fixed6'
 import type { Agent, Enemy, MissionSite } from '../model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
@@ -14,9 +14,9 @@ export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
  */
 export type RetreatResult = {
   shouldRetreat: boolean
-  agentsTotalOriginalEffectiveSkill: Fixed2
-  agentsTotalCurrentEffectiveSkill: Fixed2
-  enemyToAgentsSkillRatio: Fixed2
+  agentsTotalOriginalEffectiveSkill: Fixed6
+  agentsTotalCurrentEffectiveSkill: Fixed6
+  enemyToAgentsSkillRatio: Fixed6
 }
 
 /**
@@ -37,20 +37,20 @@ export type RetreatResult = {
  */
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
-  const agentsTotalOriginalEffectiveSkill = f2sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
-  const agentsTotalCurrentEffectiveSkill = f2sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill()))
+  const agentsTotalOriginalEffectiveSkill = f6sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
+  const agentsTotalCurrentEffectiveSkill = f6sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill()))
 
-  const agentsEffectiveSkillThreshold = f2mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
+  const agentsEffectiveSkillThreshold = f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
 
   // Check if agents' effective skill is below threshold
-  const agentsBelowThreshold = f2lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
+  const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
 
   // Check if enemy effective skill is at least 80% of agents' current effective skill
   const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
-  const enemyTotalCurrentEffectiveSkill = f2sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy)))
-  const enemyToAgentsSkillRatio = f2div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill)
-  const enemyToAgentsSkillThreshold = toF2(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
-  const enemyAboveThreshold = f2ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
+  const enemyTotalCurrentEffectiveSkill = f6sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy)))
+  const enemyToAgentsSkillRatio = f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill)
+  const enemyToAgentsSkillThreshold = asF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+  const enemyAboveThreshold = f6ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
 
   // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
   const result = {

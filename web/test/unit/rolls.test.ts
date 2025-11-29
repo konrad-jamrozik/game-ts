@@ -1,7 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import { BPS_PRECISION } from '../../src/lib/model/bps'
 import { getSuccessAndFailureInts, roll1to } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
+
+const FIXED6_PRECISION = 1_000_000
 
 describe('rolls', () => {
   test('getSuccessAndFailureInts', () => {
@@ -21,24 +22,24 @@ describe('rolls', () => {
     })
   })
 
-  test('roll1to -> max random result is CONTEST_ROLL_PRECISION', () => {
-    rand.set('test_label', 0.9999)
-    const roll = roll1to(BPS_PRECISION, 'test_label')
-    expect(roll).toBe(BPS_PRECISION)
+  test('roll1to -> max random result is FIXED6_PRECISION', () => {
+    rand.set('test_label', 0.999_999)
+    const roll = roll1to(FIXED6_PRECISION, 'test_label')
+    expect(roll).toBe(FIXED6_PRECISION)
   })
 
-  test('roll1to -> (mix minus less than 1 unit of precision) random result is CONTEST_ROLL_PRECISION-1', () => {
-    const precisionTimes10Fraction = 1 / (10 * BPS_PRECISION)
-    const rollFixture = 0.9999 - precisionTimes10Fraction
-    expect(rollFixture).toBeCloseTo(0.999_89, 10)
+  test('roll1to -> (mix minus less than 1 unit of precision) random result is FIXED6_PRECISION-1', () => {
+    const oneUnitOfPrecision = 1 / FIXED6_PRECISION
+    const rollFixture = 0.999_999 - oneUnitOfPrecision
+    expect(rollFixture).toBeCloseTo(0.999_998, 10)
     rand.set('test_label', rollFixture)
-    const roll = roll1to(BPS_PRECISION, 'test_label')
-    expect(roll).toBe(BPS_PRECISION - 1)
+    const roll = roll1to(FIXED6_PRECISION, 'test_label')
+    expect(roll).toBe(FIXED6_PRECISION - 1)
   })
 
   test('roll1to -> min random result is 1', () => {
     rand.set('test_label', 0)
-    const roll = roll1to(BPS_PRECISION, 'test_label')
+    const roll = roll1to(FIXED6_PRECISION, 'test_label')
     expect(roll).toBe(1)
   })
 })
@@ -50,6 +51,9 @@ function testSuccessAndFailureInts(
   expectedSuccessInt: number,
 ): void {
   const [failureInt, successInt] = getSuccessAndFailureInts(successProbability)
-  expect(failureInt.value).toBe(expectedFailureInt)
-  expect(successInt.value).toBe(expectedSuccessInt)
+  // Convert expected values from basis points (10_000 = 1.0) to Fixed6 (1_000_000 = 1.0)
+  const expectedFailureFixed6 = Math.floor(expectedFailureInt * 100)
+  const expectedSuccessFixed6 = Math.floor(expectedSuccessInt * 100)
+  expect(failureInt.value).toBe(expectedFailureFixed6)
+  expect(successInt.value).toBe(expectedSuccessFixed6)
 }

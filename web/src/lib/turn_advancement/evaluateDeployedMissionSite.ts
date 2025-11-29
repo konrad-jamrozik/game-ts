@@ -2,7 +2,7 @@ import { sum } from 'radash'
 import { getMissionById } from '../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN } from '../model/ruleset/constants'
 import type { GameState, MissionRewards, MissionSite, Agent, MissionSiteId } from '../model/model'
-import { f2add, f2fmt } from '../model/fixed2'
+import { f6add, f6fmtDec2, f6fmtInt } from '../model/fixed6'
 import { getRecoveryTurns } from '../model/ruleset/recoveryRuleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -138,9 +138,9 @@ function updateSurvivingAgent(
   assertDefined(survivalSkillGain)
   addSkill(agent, survivalSkillGain)
 
-  const totalSkillGain = f2add(battleSkillGain, survivalSkillGain)
+  const totalSkillGain = f6add(battleSkillGain, survivalSkillGain)
   console.log(
-    `📈 Agent ${agent.id} gained ${f2fmt(totalSkillGain)} skill (${f2fmt(battleSkillGain)} from combat, ${f2fmt(survivalSkillGain)} from survival)`,
+    `📈 Agent ${agent.id} gained ${f6fmtInt(totalSkillGain)} skill (${f6fmtInt(battleSkillGain)} from combat, ${f6fmtInt(survivalSkillGain)} from survival)`,
   )
 
   // ----------------------------------------

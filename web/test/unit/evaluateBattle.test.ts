@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { f2add, f2mult } from '../../src/lib/model/fixed2'
+import { f6add, f6mult } from '../../src/lib/model/fixed6'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,
@@ -45,7 +45,7 @@ describe(evaluateBattle, () => {
       enemyCasualties: 0,
       retreated: false,
       agentSkillUpdates: {
-        [agent.id]: f2add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD),
+        [agent.id]: f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD),
       },
     })
   })
@@ -59,8 +59,8 @@ describe(evaluateBattle, () => {
     const report = evaluateBattle(agsV([agent]), [enemy]) // Act
 
     const expectedRounds = Math.ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
-    const skillGainPerRound = f2add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
-    const expectedSkillUpdate = f2mult(skillGainPerRound, expectedRounds)
+    const skillGainPerRound = f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
+    const expectedSkillUpdate = f6mult(skillGainPerRound, expectedRounds)
     expectReportToBe(report)({
       rounds: expectedRounds,
       agentCasualties: 1,

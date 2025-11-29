@@ -1,27 +1,6 @@
 import pluralize from 'pluralize'
-import type { MissionSiteId, MissionSite } from '../model/model'
-import { isBps, type Bps } from '../model/bps'
-import type { ValueChange } from '../model/turnReportModel'
-import type { RollResult } from '../turn_advancement/rolls'
-import { getMissionById } from '../collections/missions'
+import type { MissionSiteId } from '../model/model'
 import { floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
-import { f4fmtPctDec2 } from '../model/fixed4'
-import { f2fmtPctDec2, isF2, type Fixed2 } from '../model/fixed2'
-
-// KJA formatUtils.ts should not depend on bps or fixed2. fixed2 depends on fmtUtils and the same should be the case for bps.
-
-export function str(value: number | Bps | Fixed2): string {
-  if (isBps(value)) {
-    return f4fmtPctDec2(value)
-  }
-  if (isF2(value)) {
-    return f2fmtPctDec2(value)
-  }
-  if (typeof value === 'number' && value % 1 !== 0) {
-    return fmtDec2(value)
-  }
-  return String(value)
-}
 
 export function fmtPctDec0(nominator: number, denominator = 1): string {
   if (denominator === 0) {
@@ -84,38 +63,6 @@ export function fmtMissionTarget(missionSiteId: MissionSiteId | undefined): stri
   return ` on ${displayId}`
 }
 
-/**
- * Formats mission site ID with mission ID for display
- * @param missionSite - The mission site object
- * @returns Formatted string in the format "{siteId} ({missionId})" (e.g., "001 (001)")
- */
-export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
-  const mission = getMissionById(missionSite.missionId)
-  const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
-  const missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
-  return `${missionSiteIdWithoutPrefix} (${missionIdWithoutPrefix})`
-}
-
 export function fmtAgentCount(count: number): string {
   return `${count} ${pluralize('agent', count)}`
-}
-
-/**
- * Formats a value change as "previous → current"
- * @param change - The value change to format
- * @returns Formatted string in the format "previous → current"
- */
-export function fmtValueChange<TNumber extends number | Bps = number>(change: ValueChange<TNumber>): string {
-  return `${str(change.previous)} → ${str(change.current)}`
-}
-
-/**
- * Formats roll result information
- * @param rollResult - The roll result
- * @returns Formatted string in the format "[roll% vs threshold% threshold]"
- */
-export function fmtRollResult(rollResult: RollResult): string {
-  const icon = rollResult.success ? '✅' : '❌'
-  const relation = rollResult.success ? '> ' : '<='
-  return `[${icon} roll ${f4fmtPctDec2(rollResult.rollInt)} is ${relation} ${f4fmtPctDec2(rollResult.failureInt)} threshold]`
 }

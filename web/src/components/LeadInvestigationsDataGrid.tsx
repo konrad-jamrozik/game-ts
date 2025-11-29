@@ -11,7 +11,8 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
-import { f2addToInt } from '../lib/model/fixed2'
+import { f6addToInt } from '../lib/model/fixed6'
+import { f6str } from '../lib/model/f6fmtUtils'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import { getLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
@@ -22,7 +23,7 @@ import {
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
-import { fmtNoPrefix, fmtPctDec2, str } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtPctDec2 } from '../lib/utils/formatUtils'
 import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
@@ -104,7 +105,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{str(intelDecayPercent)}</span>
+            <span style={{ textAlign: 'right' }}>{f6str(intelDecayPercent)}</span>
             {intelDecay > 0 && (
               <>
                 <span style={{ textAlign: 'center' }}>=</span>
@@ -246,7 +247,7 @@ function buildAllInvestigationRows(
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       for (const agent of investigatingAgents) {
         const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
-        projectedIntel = f2addToInt(projectedIntel, intelFromAgent)
+        projectedIntel = f6addToInt(projectedIntel, intelFromAgent)
       }
 
       // Calculate diff for chip display

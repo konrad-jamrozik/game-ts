@@ -13,8 +13,8 @@ describe(getLeadIntelDecayPct, () => {
     [300, 0.3  ],     // getLeadIntelDecayPct(300) = 300 * 0.1% = 30%  = 0.3
     [500, 0.5  ],     // getLeadIntelDecayPct(500) = 500 * 0.1% = 50%  = 0.5
     [600, 0.5  ],     // getLeadIntelDecayPct(600) = 600 * 0.1% = 50%  = 0.5 # not 60%, because of min(... , 50%) = 0.5
-  ])('should return correct decay percentage for %d intel', (accumulatedIntel, expectedBps) => {
+  ])('should return correct decay percentage for %d intel', (accumulatedIntel, expectedPct) => {
     const result = getLeadIntelDecayPct(accumulatedIntel)
-    expect(result).toBe(expectedBps)
+    expect(result).toBe(expectedPct)
   })
 })

@@ -1,6 +1,6 @@
 import { ceil, div } from '../../utils/mathUtils'
 import { agV } from '../agents/AgentView'
-import { f2addToInt } from '../fixed2'
+import { f6addToInt } from '../fixed6'
 import type { Agent } from '../model'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
 import { getAgentSkillBasedValue } from './skillRuleset'
@@ -90,7 +90,7 @@ export function getLeadAccumulatedIntel(agents: Agent[]): number {
   let total = 0
   for (const agent of agents) {
     const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
-    total = f2addToInt(total, intelFromAgent)
+    total = f6addToInt(total, intelFromAgent)
   }
   return total
 }

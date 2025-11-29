@@ -1,5 +1,8 @@
+import { getMissionById } from '../collections/missions'
 import type { MissionSite, MissionSiteState } from '../model/model'
+import { fmtNoPrefix } from './formatUtils'
 
+// KJA2 uncapitalize: MissionSiteUtils -> missionSiteUtils
 /**
  * Filters mission sites by their state
  */
@@ -65,4 +68,16 @@ export function validateMissionSiteDeployment(missionSite: MissionSite | undefin
   }
 
   return { isValid: true }
+}
+
+/**
+ * Formats mission site ID with mission ID for display
+ * @param missionSite - The mission site object
+ * @returns Formatted string in the format "{siteId} ({missionId})" (e.g., "001 (001)")
+ */
+export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
+  const mission = getMissionById(missionSite.missionId)
+  const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
+  const missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
+  return `${missionSiteIdWithoutPrefix} (${missionIdWithoutPrefix})`
 }

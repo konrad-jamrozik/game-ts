@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { bps } from '../../src/lib/model/bps'
+import { asF6, f6gt } from '../../src/lib/model/fixed6'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import {
@@ -14,7 +14,6 @@ import {
 } from '../../src/lib/model/ruleset/constants'
 import { newWeapon } from '../../src/lib/utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
-import { f2gt, toF2 } from '../../src/lib/model/fixed2'
 
 describe(evaluateDeployedMissionSite, () => {
   test('evaluateDeployedMissionSite succeeds', () => {
@@ -24,8 +23,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toF2(200), // High skill to ensure success
-      skillFromTraining: toF2(0),
+      skill: asF6(200), // High skill to ensure success
+      skillFromTraining: asF6(0),
       exhaustion: 0,
       hitPoints: AGENT_INITIAL_HIT_POINTS,
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -63,7 +62,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: bps(0),
+      panic: asF6(0),
       factions: [],
     }
 
@@ -80,7 +79,7 @@ describe(evaluateDeployedMissionSite, () => {
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
-      expect(f2gt(testAgent.skill, 200)).toBe(true)
+      expect(f6gt(testAgent.skill, 200)).toBe(true)
 
       // Verify agent gained exhaustion from combat
       expect(testAgent.exhaustion).toBeGreaterThan(0)
@@ -101,8 +100,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toF2(50), // Low skill
-      skillFromTraining: toF2(0),
+      skill: asF6(50), // Low skill
+      skillFromTraining: asF6(0),
       exhaustion: 0,
       hitPoints: 10, // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -138,7 +137,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: bps(0),
+      panic: asF6(0),
       factions: [],
     }
 
@@ -176,8 +175,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toF2(60),
-      skillFromTraining: toF2(0),
+      skill: asF6(60),
+      skillFromTraining: asF6(0),
       exhaustion: 0,
       hitPoints: 20,
       maxHitPoints: 20,
@@ -192,8 +191,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: toF2(50),
-      skillFromTraining: toF2(0),
+      skill: asF6(50),
+      skillFromTraining: asF6(0),
       exhaustion: 0,
       hitPoints: 15,
       maxHitPoints: 15,
@@ -229,7 +228,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: bps(0),
+      panic: asF6(0),
       factions: [],
     }
 

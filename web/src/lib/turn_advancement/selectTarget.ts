@@ -1,4 +1,4 @@
-import { f2cmp, f2dist, f2eq, f2inRange, f2mult, type Fixed2 } from '../model/fixed2'
+import { f6cmp, f6dist, f6eq, f6inRange, f6mult, type Fixed6 } from '../model/fixed6'
 import type { Agent, Enemy } from '../model/model'
 import { assertDefined } from '../utils/assert'
 import { div } from '../utils/mathUtils'
@@ -36,7 +36,7 @@ export function selectTarget<T extends Agent | Enemy>(
   potentialTargets: T[],
   attackCounts: Map<string, number>,
   attacker: Agent | Enemy,
-  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
 ): T | undefined {
   if (potentialTargets.length === 0) return undefined
 
@@ -44,9 +44,9 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
-  const targetSkillLowerBound = f2mult(attackerEffectiveSkill, 0.2)
-  const targetSkillUpperBound = f2mult(attackerEffectiveSkill, 0.8)
-  const targetSkillPreferred = f2mult(attackerEffectiveSkill, 0.5)
+  const targetSkillLowerBound = f6mult(attackerEffectiveSkill, 0.2)
+  const targetSkillUpperBound = f6mult(attackerEffectiveSkill, 0.8)
+  const targetSkillPreferred = f6mult(attackerEffectiveSkill, 0.5)
 
   // Find minimum attack count among available targets
   const minAttackCount = Math.min(...availableTargets.map((target) => attackCounts.get(target.id) ?? 0))
@@ -80,10 +80,10 @@ export function selectTarget<T extends Agent | Enemy>(
 
 function selectTargetAtAttackCount<T extends Agent | Enemy>(
   targetsAtAttackCount: T[],
-  targetSkillLowerBound: Fixed2,
-  targetSkillUpperBound: Fixed2,
-  targetSkillPreferred: Fixed2,
-  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
+  targetSkillLowerBound: Fixed6,
+  targetSkillUpperBound: Fixed6,
+  targetSkillPreferred: Fixed6,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
 ): T | undefined {
   // Get targets that are in valid skill range
   const validTargets = targetsAtAttackCount.filter((target) =>
@@ -97,11 +97,11 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
       const distanceB = distanceFromPreferred(targetB, targetSkillPreferred, effectiveSkillsAtRoundStart)
 
       // If distances are equal, prefer lower skill
-      if (f2eq(distanceA, distanceB)) {
+      if (f6eq(distanceA, distanceB)) {
         return compareTargetsBySkill(targetA, targetB, effectiveSkillsAtRoundStart)
       }
 
-      return f2cmp(distanceA, distanceB)
+      return f6cmp(distanceA, distanceB)
     })
 
     return sorted[0]
@@ -114,7 +114,7 @@ function selectTargetAtAttackCount<T extends Agent | Enemy>(
 function compareTargetsBySkill(
   targetA: Agent | Enemy,
   targetB: Agent | Enemy,
-  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
 ): number {
   const skillA = effectiveSkillsAtRoundStart.get(targetA.id)
   const skillB = effectiveSkillsAtRoundStart.get(targetB.id)
@@ -126,19 +126,19 @@ function compareTargetsBySkill(
   // Return the target with lower skill as first.
   // Explanation:
   // sort() will return targetA as first if output is negative, i.e. when skillA - skillB < 0 i.e. skillA < skillB.
-  return f2cmp(skillA, skillB)
+  return f6cmp(skillA, skillB)
 }
 
 // Helper function to check if target is in valid skill range
 function isInValidSkillRange(
   target: Agent | Enemy,
-  targetSkillLowerBound: Fixed2,
-  targetSkillUpperBound: Fixed2,
-  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
+  targetSkillLowerBound: Fixed6,
+  targetSkillUpperBound: Fixed6,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
 ): boolean {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  return f2inRange(skill, targetSkillLowerBound, targetSkillUpperBound)
+  return f6inRange(skill, targetSkillLowerBound, targetSkillUpperBound)
 }
 
 // Helper function to filter targets by self-removal based on HP lost percentage
@@ -169,11 +169,11 @@ function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T
 // Helper function to calculate distance from preferred skill (50% of attacker's skill)
 function distanceFromPreferred(
   target: Agent | Enemy,
-  targetSkillPreferred: Fixed2,
-  effectiveSkillsAtRoundStart: Map<string, Fixed2>,
-): Fixed2 {
+  targetSkillPreferred: Fixed6,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
+): Fixed6 {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  const dist = f2dist(skill, targetSkillPreferred)
+  const dist = f6dist(skill, targetSkillPreferred)
   return dist
 }

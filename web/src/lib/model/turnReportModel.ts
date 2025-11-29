@@ -1,5 +1,4 @@
-import { bps, isBps, type Bps } from './bps'
-import type { Fixed2 } from './fixed2'
+import { asF6, asFloat, isF6, type Fixed6 } from './fixed6'
 import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {
@@ -24,23 +23,23 @@ export type AssetsReport = {
   intelBreakdown: IntelBreakdown
 }
 
-export type ValueChange<TNumber extends number | Bps = number> = {
+export type ValueChange<TNumber extends number | Fixed6 = number> = {
   previous: TNumber
   current: TNumber
   readonly delta: TNumber
 }
 
 // --- Overloads ---
-export function newValueChange(previous: Bps, current: Bps): ValueChange<Bps>
+export function newValueChange(previous: Fixed6, current: Fixed6): ValueChange<Fixed6>
 export function newValueChange(previous: number, current: number): ValueChange
 
 // --- Implementation ---
-export function newValueChange(previous: Bps | number, current: Bps | number): ValueChange<Bps> | ValueChange {
-  if (isBps(previous) && isBps(current)) {
+export function newValueChange(previous: Fixed6 | number, current: Fixed6 | number): ValueChange<Fixed6> | ValueChange {
+  if (isF6(previous) && isF6(current)) {
     return {
       previous,
       current,
-      delta: bps(current.value - previous.value),
+      delta: asF6(asFloat(current) - asFloat(previous)),
     }
   }
 
@@ -52,8 +51,8 @@ export function newValueChange(previous: Bps | number, current: Bps | number): V
     }
   }
 
-  // Exhaustive guard: disallow mixing number with Bps
-  throw new TypeError('newValueChange: mixed types (number vs Bps) are not allowed.')
+  // Exhaustive guard: disallow mixing number with Fixed6
+  throw new TypeError('newValueChange: mixed types (number vs Fixed6) are not allowed.')
 }
 
 export type MoneyBreakdown = {
@@ -81,7 +80,7 @@ export type AgentsReport = {
 }
 
 export type PanicReport = {
-  change: ValueChange<Bps>
+  change: ValueChange<Fixed6>
   breakdown: PanicBreakdown
 }
 
@@ -89,12 +88,12 @@ export type PanicBreakdown = {
   factionPanicIncreases: {
     factionId: string
     factionName: string
-    factionPanicIncrease: Bps
+    factionPanicIncrease: Fixed6
   }[]
   missionReductions: {
     missionSiteId: string
     missionTitle: string
-    reduction: Bps
+    reduction: Fixed6
   }[]
 }
 
@@ -111,17 +110,17 @@ export type FactionReport = {
   factionId: string
   factionName: string
   isDiscovered: boolean
-  threatLevel: ValueChange<Bps>
-  threatIncrease: ValueChange<Bps>
-  suppression: ValueChange<Bps>
-  baseThreatIncrease: Bps
+  threatLevel: ValueChange<Fixed6>
+  threatIncrease: ValueChange<Fixed6>
+  suppression: ValueChange<Fixed6>
+  baseThreatIncrease: Fixed6
   missionImpacts: {
     missionSiteId: string
     missionTitle: string
-    threatReduction?: Bps
-    suppressionAdded?: Bps
+    threatReduction?: Fixed6
+    suppressionAdded?: Fixed6
   }[]
-  suppressionDecay: Bps
+  suppressionDecay: Fixed6
 }
 
 export type MissionReport = {
@@ -143,13 +142,13 @@ export type BattleStats = {
   enemiesUnscathed: number
   enemiesWounded: number
   enemiesTerminated: number
-  totalAgentSkillAtBattleStart: Fixed2
-  totalEnemySkillAtBattleStart: Fixed2
+  totalAgentSkillAtBattleStart: Fixed6
+  totalEnemySkillAtBattleStart: Fixed6
   initialAgentHitPoints: number
   initialEnemyHitPoints: number
   totalDamageInflicted: number
   totalDamageTaken: number
-  totalAgentSkillGain: Fixed2
+  totalAgentSkillGain: Fixed6
   averageAgentExhaustionGain: number
 }
 

@@ -1,4 +1,4 @@
-import { f2addToInt } from '../fixed2'
+import { f6addToInt } from '../fixed6'
 import { agsV, type AgentsView } from '../agents/AgentsView'
 import type { GameState } from '../model'
 import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from './constants'
@@ -13,7 +13,7 @@ export function getContractingIncome(agents: AgentsView): number {
   let total = 0
   for (const agent of contractingAgents) {
     const incomeFromAgent = getAgentSkillBasedValue(agent, AGENT_CONTRACTING_INCOME)
-    total = f2addToInt(total, incomeFromAgent)
+    total = f6addToInt(total, incomeFromAgent)
   }
   return total
 }

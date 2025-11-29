@@ -1,6 +1,6 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { AgentsReport, IntelBreakdown, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
-import { fmtValueChange } from '../../lib/utils/formatUtils'
+import { f6fmtValueChange } from '../../lib/model/f6fmtUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
@@ -27,7 +27,7 @@ function formatMoneyReport(
 ): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   return {
     id: 'money-summary',
-    label: `Money: ${fmtValueChange(moneyChange)}`,
+    label: `Money: ${f6fmtValueChange(moneyChange)}`,
     chipValue: moneyChange.delta,
     children: formatMoneyBreakdown(moneyBreakdown),
   }
@@ -39,7 +39,7 @@ function formatIntelReport(
 ): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   return {
     id: 'intel-summary',
-    label: `Intel: ${fmtValueChange(intelChange)}`,
+    label: `Intel: ${f6fmtValueChange(intelChange)}`,
     chipValue: intelChange.delta,
     children: formatIntelBreakdown(intelBreakdown),
   }
@@ -75,23 +75,23 @@ function formatAgentsBreakdown(agentsReport: AgentsReport): TurnReportTreeViewMo
   return [
     {
       id: 'agents-total',
-      label: `Total: ${fmtValueChange(total)}`,
+      label: `Total: ${f6fmtValueChange(total)}`,
       chipValue: total.delta,
     },
     {
       id: 'agents-available',
-      label: `Available: ${fmtValueChange(available)}`,
+      label: `Available: ${f6fmtValueChange(available)}`,
       chipValue: available.delta,
     },
     {
       id: 'agents-in-transit',
-      label: `In transit: ${fmtValueChange(inTransit)}`,
+      label: `In transit: ${f6fmtValueChange(inTransit)}`,
       chipValue: inTransit.delta,
       noColor: true,
     },
     {
       id: 'agents-recovering',
-      label: `Recovering: ${fmtValueChange(recovering)}`,
+      label: `Recovering: ${f6fmtValueChange(recovering)}`,
       chipValue: recovering.delta,
       reverseColor: true,
     },

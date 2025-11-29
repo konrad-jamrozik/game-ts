@@ -16,10 +16,11 @@ import {
   getArchivedMissionSites,
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
+  fmtMissionSiteIdWithMissionId,
 } from '../lib/utils/MissionSiteUtils'
-import { fmtNoPrefix, fmtMissionSiteIdWithMissionId } from '../lib/utils/formatUtils'
+import { fmtNoPrefix } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { f2div, f2fmtDec1, f2isZero, f2sum, toF2, type Fixed2 } from '../lib/model/fixed2'
+import { asF6, f6div, f6fmtDec1, f6isZero, f6sum, type Fixed6 } from '../lib/model/fixed6'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -206,7 +207,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       valueGetter: (_value, row: MissionRow) => getAverageSkill(row).value,
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const avgSkill = getAverageSkill(params.row)
-        const displayValue = f2isZero(avgSkill) ? '-' : f2fmtDec1(avgSkill)
+        const displayValue = f6isZero(avgSkill) ? '-' : f6fmtDec1(avgSkill)
         return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
       },
     },
@@ -217,12 +218,12 @@ function getEnemyCount(row: MissionRow): number {
   return row.enemies.length
 }
 
-function getAverageSkill(row: MissionRow): Fixed2 {
+function getAverageSkill(row: MissionRow): Fixed6 {
   const { enemies } = row
   if (enemies.length === 0) {
-    return toF2(0)
+    return asF6(0)
   }
-  const totalSkill = f2sum(...enemies.map((enemy) => enemy.skill))
-  const count = toF2(enemies.length)
-  return f2div(totalSkill, count)
+  const totalSkill = f6sum(...enemies.map((enemy) => enemy.skill))
+  const count = asF6(enemies.length)
+  return f6div(totalSkill, count)
 }

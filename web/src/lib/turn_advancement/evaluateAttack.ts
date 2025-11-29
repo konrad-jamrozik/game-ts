@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { f2add, f2asFloat, type Fixed2 } from '../model/fixed2'
+import { asFloat, f6add, type Fixed6 } from '../model/fixed6'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
@@ -26,8 +26,8 @@ export function evaluateAttack(
   // Calculate effective skills
 
   // KJA2 in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
-  const attackerEffectiveSkill = f2asFloat(getActorEffectiveSkill(attacker))
-  const defenderEffectiveSkill = f2asFloat(getActorEffectiveSkill(defender))
+  const attackerEffectiveSkill = asFloat(getActorEffectiveSkill(attacker))
+  const defenderEffectiveSkill = asFloat(getActorEffectiveSkill(defender))
 
   if (isAgent(attacker)) {
     assertDefined(attackerStats)
@@ -61,10 +61,10 @@ export function evaluateAttack(
 
     // Update skill gains from battle combat
     if (attackerStats) {
-      attackerStats.skillGained = f2add(attackerStats.skillGained, AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD)
+      attackerStats.skillGained = f6add(attackerStats.skillGained, AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = f2add(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
+      defenderStats.skillGained = f6add(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     }
 
     if (hpRemaining <= 0) {
@@ -129,10 +129,10 @@ export function evaluateAttack(
 
     // Update skill gains (postponed)
     if (attackerStats) {
-      attackerStats.skillGained = f2add(attackerStats.skillGained, AGENT_FAILED_ATTACK_SKILL_REWARD)
+      attackerStats.skillGained = f6add(attackerStats.skillGained, AGENT_FAILED_ATTACK_SKILL_REWARD)
     }
     if (defenderStats) {
-      defenderStats.skillGained = f2add(defenderStats.skillGained, AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD)
+      defenderStats.skillGained = f6add(defenderStats.skillGained, AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD)
     }
 
     // Apply defender exhaustion (both agents and enemies)
@@ -142,6 +142,6 @@ export function evaluateAttack(
 
 export type AgentCombatStats = {
   id: string
-  initialEffectiveSkill: Fixed2
-  skillGained: Fixed2
+  initialEffectiveSkill: Fixed6
+  skillGained: Fixed6
 }

@@ -2,11 +2,12 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { bps, BPS_PRECISION, type Bps } from '../model/bps'
-import { f4gt, f4sub, toF4 } from '../model/fixed4'
+import { asF6, f6gt, f6sub, type Fixed6 } from '../model/fixed6'
 import { fmtPctDec2 } from '../utils/formatUtils'
 import { div, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
+
+const FIXED6_PRECISION = 1_000_000
 
 export type ContestRollResult = {
   attackerValue: number
@@ -14,9 +15,9 @@ export type ContestRollResult = {
 } & RollResultNew
 
 export type RollResult = {
-  failureInt: Bps
-  successInt: Bps
-  rollInt: Bps
+  failureInt: Fixed6
+  successInt: Fixed6
+  rollInt: Fixed6
   success: boolean
 }
 
@@ -67,38 +68,19 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
 export function rollAgainstProbability(probability: number, label?: string): RollResult {
   const [failureInt, successInt] = getSuccessAndFailureInts(probability)
 
-  // roll a random number from [1, 10_000]
-  // Here 10_000 denotes 100%, so we are uniformly choosing a 0.01% precision value.
-  const rollInt = rollBps(label)
+  // roll a random number from [1, 1_000_000]
+  // Here 1_000_000 denotes 1.0, so we are uniformly choosing a 0.000001 precision value.
+  const rollInt = rollFixed6(label)
 
   // Success when roll > P(failure)
   // I.e. higher rolls are better.
-  // If e.g. failureInt is 375, it means 3.75% chance of failure, or 96.25% chance of success.
-  // So we had to roll at least 376 from the range [1, 10_000] to succeed.
-  const success = f4gt(rollInt, failureInt)
+  // If e.g. failureInt represents 0.0375, it means 3.75% chance of failure, or 96.25% chance of success.
+  // So we had to roll at least that value from the range [1, 1_000_000] to succeed.
+  const success = f6gt(rollInt, failureInt)
 
   return { failureInt, successInt, rollInt, success }
 }
 
-// KJA idea for new approach to rolling:
-// Input: precise float probability.
-// Roll happens with exact precision, not on integers, as currently.
-// Roll returns exact floats rolled, not Bps.
-// Then when formatting  we pretend that was a less precise roll and display up to 123.45% precision
-// Problem: need to map accurately, e.g.:
-// [0, 1/10_000) maps to 0.01%
-// [1/10_000, 2/10_000) maps to 0.02%
-// ...
-// [9999/10_000, 1) maps to 100.00%
-//
-// There is a formatting function
-// KJA idea for new approach to storing numbers:
-// - numbers are stored as either:
-//  - number, if integers,
-//  - OR Fixed6, i.e. F6  == precision of 1/100 of 0.01% == 0.0001%.
-// - all operations are always precise floating points
-// - When displayed, appropriate format functions are called at the very last moment, like "format as 100.00%"
-// -
 /**
  * Refer to rolls.test.ts for examples of how this works.
  */
@@ -120,23 +102,24 @@ export function rollAgainstProbabilityNew(successProb: number, label?: string): 
 /**
  * @param successProbability - Success probability as a decimal in range [0, 1], both inclusive.
  * @returns A tuple of [failureInt, successInt] where:
- * - failureInt: Failure probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
- * - successInt: Success probability expressed as an integer in basis points (0-10000 range, where 10000 = 100%)
+ * - failureInt: Failure probability expressed as Fixed6 (0-1_000_000 range, where 1_000_000 = 1.0)
+ * - successInt: Success probability expressed as Fixed6 (0-1_000_000 range, where 1_000_000 = 1.0)
  */
-export function getSuccessAndFailureInts(successProbability: number): [Bps, Bps] {
-  const successInt = toF4(floorToDec4(successProbability))
-  const failureInt = f4sub(toF4(1), successInt)
+export function getSuccessAndFailureInts(successProbability: number): [Fixed6, Fixed6] {
+  const successInt = asF6(successProbability)
+  const failureInt = f6sub(asF6(1), successInt)
   return [failureInt, successInt]
 }
 
 /**
- * Rolls a random Bps value from 1 to 10_000 (inclusive), representing the range (0, 1] in basis points.
+ * Rolls a random Fixed6 value from 1 to 1_000_000 (inclusive), representing the range (0, 1] in Fixed6.
  *
  * @param label - Optional label for controllable random in tests
- * @returns A random Bps value in the range [1, 10_000], equivalent to (0.01%, 100%] or (0, 1] as a decimal
+ * @returns A random Fixed6 value in the range [1, 1_000_000], equivalent to (0, 1] as a decimal
  */
-export function rollBps(label?: string): Bps {
-  return bps(roll1to(BPS_PRECISION, label))
+export function rollFixed6(label?: string): Fixed6 {
+  const rollValue = roll1to(FIXED6_PRECISION, label)
+  return asF6(rollValue / FIXED6_PRECISION)
 }
 
 /**

@@ -1,10 +1,11 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { agV } from '../../lib/model/agents/AgentView'
-import { f2cmp, f2eq, f2fmtInt, f2fmtPctDec0, toF2, type Fixed2 } from '../../lib/model/fixed2'
+import { asF6, f6cmp, f6eq, f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/model/fixed6'
 import type { AgentState, GameState } from '../../lib/model/model'
 import { assertDefined } from '../../lib/utils/assert'
-import { fmtMissionSiteIdWithMissionId, fmtNoPrefix } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix } from '../../lib/utils/formatUtils'
+import { fmtMissionSiteIdWithMissionId } from '../../lib/utils/MissionSiteUtils'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 import { MyChip } from '../MyChip'
 import type { AgentRow } from './AgentsDataGrid'
@@ -72,13 +73,13 @@ export function createAgentColumns(
         const effectiveSkill1 = agV(row1).effectiveSkill()
         const effectiveSkill2 = agV(row2).effectiveSkill()
 
-        // Primary sort: effective skill (compare Fixed2 values)
-        if (!f2eq(effectiveSkill1, effectiveSkill2)) {
-          return f2cmp(effectiveSkill1, effectiveSkill2)
+        // Primary sort: effective skill (compare Fixed6 values)
+        if (!f6eq(effectiveSkill1, effectiveSkill2)) {
+          return f6cmp(effectiveSkill1, effectiveSkill2)
         }
 
         // Secondary sort: baseline skill (if effective skills are equal)
-        const comparison = f2cmp(row1.skill, row2.skill)
+        const comparison = f6cmp(row1.skill, row2.skill)
         if (comparison !== 0) {
           return comparison
         }
@@ -86,10 +87,10 @@ export function createAgentColumns(
         // Tertiary sort: agent ID (for stable sorting)
         return row1.id.localeCompare(row2.id)
       },
-      renderCell: (params: GridRenderCellParams<AgentRow, Fixed2>): React.JSX.Element => {
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         const effectiveSkill = agV(params.row).effectiveSkill()
-        const baselineSkill = params.value ?? toF2(0)
-        const percentage = f2fmtPctDec0(effectiveSkill, baselineSkill)
+        const baselineSkill = params.value ?? asF6(0)
+        const percentage = f6fmtPctDec0(effectiveSkill, baselineSkill)
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}
@@ -101,10 +102,10 @@ export function createAgentColumns(
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{f2fmtInt(effectiveSkill)}</span>
+            <span style={{ textAlign: 'right' }}>{f6fmtInt(effectiveSkill)}</span>
             <span style={{ textAlign: 'center' }}>/</span>
-            <span style={{ textAlign: 'right' }}>{f2fmtInt(baselineSkill)}</span>
-            <span style={{ textAlign: 'right' }}>({percentage}%)</span>
+            <span style={{ textAlign: 'right' }}>{f6fmtInt(baselineSkill)}</span>
+            <span style={{ textAlign: 'right' }}>({percentage})</span>
           </div>
         )
       },
@@ -152,7 +153,7 @@ export function createAgentColumns(
       field: 'skillSimple',
       headerName: 'Skill',
       width: 40,
-      valueGetter: (_value, row: AgentRow) => f2fmtInt(row.skill),
+      valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skill),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
       ),
