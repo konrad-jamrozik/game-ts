@@ -109,7 +109,7 @@ function buildDamageStr(damageInfo: { damage: number; damagePct: string } | unde
   return ` ${damagePreposition} ${attackDamage} ${weaponRangePct} damage `
 }
 
-function buildRollResultStr(rollResult: RollResultNew): string {
+export function buildRollResultStr(rollResult: RollResultNew): string {
   const rollResultIcon = rollResult.success ? '✅' : '❌'
   // KJA I am concerned here that the roll will have off by 1 error.
   // Roll of 0 should display as 0.01% not 0.00%
