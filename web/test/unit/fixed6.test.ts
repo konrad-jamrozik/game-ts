@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { asF6, f6div, f6gt, f6lt, f6multV2, f6sub, asFloat } from '../../src/lib/model/fixed6'
-import { floorToDec2 } from '../../src/lib/utils/mathUtils'
+import { asF6, f6div, f6gt, f6lt, f6multV2, f6sub, asFloat, f6fmtPctDec2, f6multV3 } from '../../src/lib/model/fixed6'
+import { floorToDec2, round6 } from '../../src/lib/utils/mathUtils'
 
 describe('Common floating point precision pitfalls', () => {
   test('Imprecise division may result in incorrect threshold checks', () => {
@@ -25,42 +25,26 @@ describe('Common floating point precision pitfalls', () => {
     }
   })
 
-  test('Minimal: Order of operations causes F6 imprecision affecting F2 precision', () => {
-    // Mathematically: 1 - 7/30 = 23/30 = 0.766666...
-    // But due to floating point precision and flooring at F6, they differ
+  test('F6 does not protect against div imprecision for F2', () => {
+    // 23/10 * 85/2 = 1955 / 20 = 97.75
 
-    const skill = asF6(150)
-    const exhaustionMult = f6div(asF6(85), asF6(100)) // 1 - 15/100 = 85/100 = 0.85
+    const div1 = 23 / 10
+    const div2 = 85 / 2
+    const div3 = div1 * div2
+    expect(div3).toBe(97.749_999_999_999_99)
 
-    // Method 1: Compute 1 - 7/30, then multiply
-    const hitPointsMult1 = f6sub(asF6(1), f6div(asF6(7), asF6(30)))
-    const result1 = f6multV2(skill, hitPointsMult1, exhaustionMult)
+    expect(round6(div3)).toBe(97.75)
 
-    // Method 2: Compute 23/30 directly, then multiply
-    const hitPointsMult2 = f6div(asF6(23), asF6(30))
-    const result2 = f6multV2(skill, hitPointsMult2, exhaustionMult)
+    const f6div1 = f6div(asF6(23), asF6(10))
+    const f6div2 = f6div(asF6(85), asF6(2))
+    const f6div3 = f6multV2(f6div1, f6div2)
+    expect(f6div3).toStrictEqual(asF6(97.749_999_999_999_99))
 
-    // Both should mathematically equal 97.75, but F6 precision causes difference
-    expect(result1.value).not.toStrictEqual(result2.value)
+    expect(f6fmtPctDec2(f6div3)).toBe('9774.99%')
 
-    // Show the actual F6 values - they differ due to order of operations
-    expect(result1.value).toBe(97_750_042) // Method 1: 1 - 7/30
-    expect(result2.value).toBe(97_749_915) // Method 2: 23/30
+    const f6div3r = f6multV3(f6div1, f6div2)
+    expect(f6div3r).toStrictEqual(asF6(97.75))
 
-    // When floored to F2 precision (2 decimal places), we expect 97.75
-    // But due to F6 imprecision, one method gives 97.74 instead
-    const result1Float = asFloat(result1)
-    const result2Float = asFloat(result2)
-    const result1F2 = floorToDec2(result1Float)
-    const result2F2 = floorToDec2(result2Float)
-
-    // Method 1 (1 - 7/30) gives 97.75 at F2 (correct)
-    // Method 2 (23/30) gives 97.74 at F2 (incorrect due to F6 imprecision)
-    // This demonstrates that order of operations matters!
-    expect(result1F2).toStrictEqual(97.75)
-    expect(result2F2).toStrictEqual(97.74)
-
-    // The difference shows up at F2 precision even though both should be 97.75
-    expect(result1F2).not.toStrictEqual(result2F2)
+    expect(f6fmtPctDec2(f6div3r)).toBe('9775.00%')
   })
 })

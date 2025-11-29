@@ -28,6 +28,10 @@ export function ceil(value: number): number {
   return res
 }
 
+export function round6(value: number): number {
+  return Math.round(value * 1_000_000) / 1_000_000
+}
+
 export function div(nominator: number, denominator: number): number {
   assertNotZero(denominator)
   return nominator / denominator

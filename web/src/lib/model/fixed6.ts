@@ -134,13 +134,24 @@ export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
 
 export function f6multV2(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fixed6 {
   const flooredMultipliers = multipliers.map((mult) => (isF6(mult) ? mult : floorToF6(mult)))
-  const product = flooredMultipliers.reduce((acc, mult) => f6multTwo(acc, mult), first)
+  const product = flooredMultipliers.reduce((acc, mult) => f6multTwoV2(acc, mult), first)
   return product
 }
 
-function f6multTwo(first: Fixed6, second: Fixed6): Fixed6 {
+export function f6multV3(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fixed6 {
+  const flooredMultipliers = multipliers.map((mult) => (isF6(mult) ? mult : floorToF6(mult)))
+  const product = flooredMultipliers.reduce((acc, mult) => f6multTwoV3(acc, mult), first)
+  return product
+}
+
+function f6multTwoV2(first: Fixed6, second: Fixed6): Fixed6 {
   const product = asFloat(first) * asFloat(second)
   return floorToF6(product)
+}
+
+function f6multTwoV3(first: Fixed6, second: Fixed6): Fixed6 {
+  const product = asFloat(first) * asFloat(second)
+  return roundToF6(product)
 }
 
 /**
@@ -259,6 +270,11 @@ export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
 function floorToF6(value: number): Fixed6 {
   const floored = floor(value * 1_000_000)
   return fixed6(floored)
+}
+
+function roundToF6(value: number): Fixed6 {
+  const rounded = Math.round(value * 1_000_000)
+  return fixed6(rounded)
 }
 
 export function f6asInt(value: Fixed6): number {
