@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { asF6, f6gt, f6sub, type Fixed6 } from '../model/fixed6'
+import { toF6, f6gt, f6sub, type Fixed6 } from '../model/fixed6'
 import { fmtPctDec2 } from '../utils/formatUtils'
 import { div, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
@@ -106,8 +106,8 @@ export function rollAgainstProbabilityNew(successProb: number, label?: string): 
  * - successInt: Success probability expressed as Fixed6 (0-1_000_000 range, where 1_000_000 = 1.0)
  */
 export function getSuccessAndFailureInts(successProbability: number): [Fixed6, Fixed6] {
-  const successInt = asF6(successProbability)
-  const failureInt = f6sub(asF6(1), successInt)
+  const successInt = toF6(successProbability)
+  const failureInt = f6sub(toF6(1), successInt)
   return [failureInt, successInt]
 }
 
@@ -119,7 +119,7 @@ export function getSuccessAndFailureInts(successProbability: number): [Fixed6, F
  */
 export function rollFixed6(label?: string): Fixed6 {
   const rollValue = roll1to(FIXED6_PRECISION, label)
-  return asF6(rollValue / FIXED6_PRECISION)
+  return toF6(rollValue / FIXED6_PRECISION)
 }
 
 /**

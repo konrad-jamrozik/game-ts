@@ -1,6 +1,6 @@
 import { agsV } from '../model/agents/AgentsView'
 import { getMissionById } from '../collections/missions'
-import { asF6, asFloat, f6sum } from '../model/fixed6'
+import { toF6, asFloat, f6sum } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import {
   newValueChange,
@@ -449,7 +449,7 @@ function updatePanic(
 
   // Increase panic by the sum of (threat level - suppression) for all factions
   const totalPanicIncrease = getTotalPanicIncrease(state)
-  state.panic = asF6(asFloat(state.panic) + totalPanicIncrease)
+  state.panic = toF6(asFloat(state.panic) + totalPanicIncrease)
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -460,7 +460,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      state.panic = asF6(Math.max(0, asFloat(state.panic) - asFloat(rewards.panicReduction)))
+      state.panic = toF6(Math.max(0, asFloat(state.panic) - asFloat(rewards.panicReduction)))
     }
   }
 
@@ -478,12 +478,12 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = asF6(
+    targetFaction.threatLevel = toF6(
       Math.max(0, asFloat(targetFaction.threatLevel) - asFloat(factionReward.threatReduction)),
     )
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = asF6(asFloat(targetFaction.suppression) + asFloat(factionReward.suppression))
+    targetFaction.suppression = toF6(asFloat(targetFaction.suppression) + asFloat(factionReward.suppression))
   }
 }
 
@@ -504,11 +504,11 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    faction.threatLevel = asF6(asFloat(faction.threatLevel) + asFloat(faction.threatIncrease))
+    faction.threatLevel = toF6(asFloat(faction.threatLevel) + asFloat(faction.threatIncrease))
 
     // Apply suppression decay AFTER panic calculation and threat increase
     faction.suppression = getSuppressionAfterDecay(faction.suppression)
-    const suppressionDecay = asF6(asFloat(previousSuppression) - asFloat(faction.suppression))
+    const suppressionDecay = toF6(asFloat(previousSuppression) - asFloat(faction.suppression))
 
     // Track mission impacts on this faction
     const missionImpacts = []

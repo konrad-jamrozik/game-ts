@@ -8,7 +8,7 @@ import { fmtPctDec0 } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
 import { getPanicIncrease, getPanicNewBalance, getSuppressionAfterDecay } from '../lib/model/ruleset/panicRuleset'
 import { MyChip } from './MyChip'
-import { asF6, asFloat, type Fixed6 } from '../lib/model/fixed6'
+import { toF6, asFloat, type Fixed6 } from '../lib/model/fixed6'
 import { f6str } from '../lib/model/f6fmtUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { Typography } from '@mui/material'
@@ -30,7 +30,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPercentage = f6str(panic)
   const panicProjected = getPanicNewBalance(gameState)
   const panicProjectedStr = f6str(panicProjected)
-  const panicDiff = asF6(asFloat(panicProjected) - asFloat(panic))
+  const panicDiff = toF6(asFloat(panicProjected) - asFloat(panic))
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -79,12 +79,12 @@ export function SituationReportCard(): React.JSX.Element {
   const redDawnRows: SituationReportRow[] = isRedDawnDiscovered
     ? (() => {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
-        const threatLevelProjected = asF6(asFloat(redDawnFaction.threatLevel) + asFloat(redDawnFaction.threatIncrease))
-        const threatLevelDiff = asF6(asFloat(redDawnFaction.threatIncrease))
+        const threatLevelProjected = toF6(asFloat(redDawnFaction.threatLevel) + asFloat(redDawnFaction.threatIncrease))
+        const threatLevelDiff = toF6(asFloat(redDawnFaction.threatIncrease))
         const suppressionProjected = getSuppressionAfterDecay(redDawnFaction.suppression)
-        const suppressionDiff = asF6(asFloat(suppressionProjected) - asFloat(redDawnFaction.suppression))
+        const suppressionDiff = toF6(asFloat(suppressionProjected) - asFloat(redDawnFaction.suppression))
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiff = asF6(asFloat(panicIncreaseProjected) - asFloat(panicIncrease))
+        const panicIncreaseDiff = toF6(asFloat(panicIncreaseProjected) - asFloat(panicIncrease))
         return [
           {
             id: 1,

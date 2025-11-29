@@ -36,20 +36,20 @@ export function isF6(value: unknown): value is Fixed6 {
  * asF6(21.75) creates fixed6(21_750_000), which represents 21.750000.
  * asF6(21.758123456) creates fixed6(21_758_123), which represents 21.758123 (floored to 6 decimals).
  */
-export function asF6(value: number): Fixed6 {
+export function toF6(value: number): Fixed6 {
   // KJA assert here that precision is no more than 6 decimal places
   // assertMax6Dec(value)
   return floorToF6(value)
 }
 
-export function asF6r(value: number): Fixed6 {
+export function toF6r(value: number): Fixed6 {
   // KJA assert here that precision is no more than 6 decimal places
   // assertMax6Dec(value)
   return roundToF6(value)
 }
 
 export function f6addToInt(target: number, value: Fixed6): number {
-  return f6asInt(f6add(asF6(target), value))
+  return f6asInt(f6add(toF6(target), value))
 }
 
 /**
@@ -91,12 +91,12 @@ export function f6fmtDec2(value: Fixed6): string {
  * f6fmtPctDec2(asF6(98.5), asF6(52)) = "189.42" (representing 189.42%)
  */
 export function f6fmtPctDec2(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
-  const denominatorValue = isF6(denominator) ? denominator.value : asF6(denominator).value
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
   return fmtPctDec2(nominator.value, denominatorValue)
 }
 
 export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
-  const denominatorValue = isF6(denominator) ? denominator.value : asF6(denominator).value
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
   return fmtPctDec0(nominator.value, denominatorValue)
 }
 
@@ -109,7 +109,7 @@ export { f6fmtRollResult, f6fmtValueChange, f6str } from './f6fmtUtils'
  * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
  */
 export function f6add(first: Fixed6, second: Fixed6 | number): Fixed6 {
-  const secondValue = typeof second === 'number' ? asF6(second).value : second.value
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
   return fixed6(first.value + secondValue)
 }
 
@@ -168,7 +168,7 @@ function f6multTwoV3(first: Fixed6, second: Fixed6): Fixed6 {
  * f6div(fixed6(15_000_000), fixed6(10_000_000)) = fixed6(1_500_000) (representing 15.00 / 10.00 = 1.50)
  */
 export function f6div(numerator: Fixed6, denominator: Fixed6 | number): Fixed6 {
-  const denominatorValue = typeof denominator === 'number' ? asF6(denominator).value : denominator.value
+  const denominatorValue = typeof denominator === 'number' ? toF6(denominator).value : denominator.value
   const divResult = div(numerator.value, denominatorValue)
   return floorToF6(divResult)
 }
@@ -262,7 +262,7 @@ export function f6ge(first: Fixed6, second: Fixed6): boolean {
 }
 
 export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
-  const secondValue = typeof second === 'number' ? asF6(second).value : second.value
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
   return first.value > secondValue
 }
 

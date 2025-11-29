@@ -1,5 +1,5 @@
 import type { Agent, GameState, MissionSiteId } from '../model'
-import { asF6 } from '../fixed6'
+import { toF6 } from '../fixed6'
 import { newWeapon } from '../../utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
@@ -18,7 +18,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
     const id = `agent-${nextId()}`
     const built: Agent = {
       id,
-      skillFromTraining: asF6(0),
+      skillFromTraining: toF6(0),
       ...agent,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
     }
@@ -33,7 +33,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: asF6(60),
+      skill: toF6(60),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -45,7 +45,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: asF6(140),
+      skill: toF6(140),
       exhaustion: 10,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -57,7 +57,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
-      skill: asF6(100),
+      skill: toF6(100),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -69,7 +69,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
-      skill: asF6(80),
+      skill: toF6(80),
       exhaustion: 20,
       hitPoints: 28,
       maxHitPoints: 30,
@@ -81,7 +81,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Contracting',
-      skill: asF6(90),
+      skill: toF6(90),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -93,7 +93,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnAssignment',
       assignment: 'Contracting',
-      skill: asF6(110),
+      skill: toF6(110),
       exhaustion: 5,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -105,7 +105,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnAssignment',
       assignment: 'Espionage',
-      skill: asF6(120),
+      skill: toF6(120),
       exhaustion: 12,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -117,7 +117,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'Recovering',
       assignment: 'Recovery',
-      skill: asF6(100),
+      skill: toF6(100),
       exhaustion: 8,
       hitPoints: 28,
       maxHitPoints: 30,
@@ -129,7 +129,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
-      skill: asF6(95),
+      skill: toF6(95),
       exhaustion: 15,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -142,7 +142,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnTerminated: 1,
       state: 'Terminated',
       assignment: 'Sacked',
-      skill: asF6(70),
+      skill: toF6(70),
       exhaustion: 0,
       hitPoints: 30,
       maxHitPoints: 30,
@@ -154,7 +154,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
-      skill: asF6(30),
+      skill: toF6(30),
       exhaustion: 25,
       hitPoints: 18,
       maxHitPoints: 30,
@@ -166,7 +166,7 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
-      skill: asF6(85),
+      skill: toF6(85),
       exhaustion: 7,
       hitPoints: 30,
       maxHitPoints: 30,

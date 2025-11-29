@@ -2,7 +2,7 @@ import pluralize from 'pluralize'
 import { sum } from 'radash'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { asF6, f6div, f6fmtInt, f6fmtPctDec0, f6sum, type Fixed6 } from '../model/fixed6'
+import { toF6, f6div, f6fmtInt, f6fmtPctDec0, f6sum, type Fixed6 } from '../model/fixed6'
 import type { Agent, Enemy } from '../model/model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/missionRuleset'
@@ -169,7 +169,7 @@ function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
   return agentViews.map((agentView: AgentView) => ({
     id: agentView.agent().id,
     initialEffectiveSkill: agentView.effectiveSkill(),
-    skillGained: asF6(0),
+    skillGained: toF6(0),
   }))
 }
 

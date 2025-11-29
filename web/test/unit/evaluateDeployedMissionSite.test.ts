@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { asF6, f6gt } from '../../src/lib/model/fixed6'
+import { toF6, f6gt } from '../../src/lib/model/fixed6'
 import type { Agent, GameState, MissionSite } from '../../src/lib/model/model'
 import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
 import {
@@ -23,8 +23,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: asF6(200), // High skill to ensure success
-      skillFromTraining: asF6(0),
+      skill: toF6(200), // High skill to ensure success
+      skillFromTraining: toF6(0),
       exhaustion: 0,
       hitPoints: AGENT_INITIAL_HIT_POINTS,
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -62,7 +62,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: asF6(0),
+      panic: toF6(0),
       factions: [],
     }
 
@@ -100,8 +100,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: asF6(50), // Low skill
-      skillFromTraining: asF6(0),
+      skill: toF6(50), // Low skill
+      skillFromTraining: toF6(0),
       exhaustion: 0,
       hitPoints: 10, // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
@@ -137,7 +137,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: asF6(0),
+      panic: toF6(0),
       factions: [],
     }
 
@@ -175,8 +175,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: asF6(60),
-      skillFromTraining: asF6(0),
+      skill: toF6(60),
+      skillFromTraining: toF6(0),
       exhaustion: 0,
       hitPoints: 20,
       maxHitPoints: 20,
@@ -191,8 +191,8 @@ describe(evaluateDeployedMissionSite, () => {
       turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-site-001',
-      skill: asF6(50),
-      skillFromTraining: asF6(0),
+      skill: toF6(50),
+      skillFromTraining: toF6(0),
       exhaustion: 0,
       hitPoints: 15,
       maxHitPoints: 15,
@@ -228,7 +228,7 @@ describe(evaluateDeployedMissionSite, () => {
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missionSites: [testMissionSite],
-      panic: asF6(0),
+      panic: toF6(0),
       factions: [],
     }
 

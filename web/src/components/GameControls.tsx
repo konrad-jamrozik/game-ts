@@ -10,7 +10,7 @@ import { advanceTurn } from '../lib/slices/gameStateSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { LabeledValue } from './LabeledValue'
 import { ResetControls } from './ResetControls'
-import { asF6, f6ge } from '../lib/model/fixed6'
+import { toF6, f6ge } from '../lib/model/fixed6'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -32,7 +32,7 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.undo())
   }
 
-  const isGameOver = f6ge(gameState.panic, asF6(1)) || gameState.money < 0 // 100% panic OR negative money
+  const isGameOver = f6ge(gameState.panic, toF6(1)) || gameState.money < 0 // 100% panic OR negative money
 
   const labelWidthPx = 110
   return (

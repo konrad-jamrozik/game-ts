@@ -20,7 +20,7 @@ import {
 } from '../lib/utils/MissionSiteUtils'
 import { fmtNoPrefix } from '../lib/utils/formatUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { asF6, f6div, f6fmtDec1, f6isZero, f6sum, type Fixed6 } from '../lib/model/fixed6'
+import { toF6, f6div, f6fmtDec1, f6isZero, f6sum, type Fixed6 } from '../lib/model/fixed6'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -221,9 +221,9 @@ function getEnemyCount(row: MissionRow): number {
 function getAverageSkill(row: MissionRow): Fixed6 {
   const { enemies } = row
   if (enemies.length === 0) {
-    return asF6(0)
+    return toF6(0)
   }
   const totalSkill = f6sum(...enemies.map((enemy) => enemy.skill))
-  const count = asF6(enemies.length)
+  const count = toF6(enemies.length)
   return f6div(totalSkill, count)
 }

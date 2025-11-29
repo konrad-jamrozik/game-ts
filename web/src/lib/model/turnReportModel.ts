@@ -1,4 +1,4 @@
-import { asF6, asFloat, isF6, type Fixed6 } from './fixed6'
+import { toF6, asFloat, isF6, type Fixed6 } from './fixed6'
 import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {
@@ -39,7 +39,7 @@ export function newValueChange(previous: Fixed6 | number, current: Fixed6 | numb
     return {
       previous,
       current,
-      delta: asF6(asFloat(current) - asFloat(previous)),
+      delta: toF6(asFloat(current) - asFloat(previous)),
     }
   }
 

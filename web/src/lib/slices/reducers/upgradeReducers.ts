@@ -1,4 +1,4 @@
-import { asF6, f6add } from '../../model/fixed6'
+import { toF6, f6add } from '../../model/fixed6'
 import type { GameState } from '../../model/model'
 import { asPlayerAction } from './asPlayerAction'
 
@@ -32,7 +32,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       break
     }
     case 'Training skill gain': {
-      state.trainingSkillGain = f6add(state.trainingSkillGain, asF6(1))
+      state.trainingSkillGain = f6add(state.trainingSkillGain, toF6(1))
       break
     }
     case 'Exhaustion recovery': {

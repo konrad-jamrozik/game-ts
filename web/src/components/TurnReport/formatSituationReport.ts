@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { asF6, asFloat, type Fixed6 } from '../../lib/model/fixed6'
+import { toF6, asFloat, type Fixed6 } from '../../lib/model/fixed6'
 import { f6fmtValueChange } from '../../lib/model/f6fmtUtils'
 import { getPanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {
@@ -64,7 +64,7 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
 }
 
 function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewModelProps[] {
-  const totalMissionReduction = asF6(sum(breakdown.missionReductions, (mission) => asFloat(mission.reduction)))
+  const totalMissionReduction = toF6(sum(breakdown.missionReductions, (mission) => asFloat(mission.reduction)))
   const anyMissionReductionExists = asFloat(totalMissionReduction) > 0
 
   const rows: TurnReportTreeViewModelProps[] = [
@@ -81,7 +81,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
           {
             id: 'panic-mission-reduction',
             label: 'Mission reduction',
-            chipValue: asF6(-asFloat(totalMissionReduction)),
+            chipValue: toF6(-asFloat(totalMissionReduction)),
             reverseColor: true, // Panic reduction is good (default)
           },
         ]
@@ -94,7 +94,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
   const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
-  const panicIncreaseDelta = asF6(asFloat(currentPanicIncrease) - asFloat(previousPanicIncrease))
+  const panicIncreaseDelta = toF6(asFloat(currentPanicIncrease) - asFloat(previousPanicIncrease))
 
   const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
@@ -126,7 +126,7 @@ function formatThreatLevelChildren(
   baseThreatIncrease: Fixed6,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalThreatReduction = asF6(
+  const totalThreatReduction = toF6(
     sum(missionImpacts, (impact) => (impact.threatReduction ? asFloat(impact.threatReduction) : 0)),
   )
 
@@ -142,7 +142,7 @@ function formatThreatLevelChildren(
           {
             id: `faction-${factionId}-mission-threat-reductions`,
             label: 'Mission reduction',
-            chipValue: asF6(-asFloat(totalThreatReduction)),
+            chipValue: toF6(-asFloat(totalThreatReduction)),
             reverseColor: true, // Threat reduction is good (default)
           },
         ]
@@ -155,7 +155,7 @@ function formatSuppressionChildren(
   suppressionDecay: Fixed6,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalSuppressionAdded = asF6(
+  const totalSuppressionAdded = toF6(
     sum(missionImpacts, (impact) => (impact.suppressionAdded ? asFloat(impact.suppressionAdded) : 0)),
   )
 
@@ -165,7 +165,7 @@ function formatSuppressionChildren(
           {
             id: `faction-${factionId}-suppressionDecay`,
             label: 'Suppression decay',
-            chipValue: asF6(-asFloat(suppressionDecay)),
+            chipValue: toF6(-asFloat(suppressionDecay)),
           },
         ]
       : []),
