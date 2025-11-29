@@ -25,6 +25,7 @@ describe(rollAgainstProbability, () => {
     [0.3,    0.7,    true  ], // { probability: 0.3    , roll: 0.7    , success: true  }
     [0.5,    0.4999, false ], // { probability: 0.5    , roll: 0.4999 , success: false }
     [0.5,    0.5,    true  ], // { probability: 0.5    , roll: 0.5    , success: true  }
+    [0.5555, 0.4445, true  ], // { probability: 0.5555 , roll: 0.5555 , success: true  }
     [0.9998, 0.0001, false ], // { probability: 0.9998 , roll: 0.0001 , success: false }
     [0.9998, 0.0002, true  ], // { probability: 0.9998 , roll: 0.0002 , success: true  }
     [0.9999, 0,      false ], // { probability: 0.9999 , roll: 0      , success: false }
@@ -57,9 +58,11 @@ describe(rollAgainstProbability, () => {
     // Note: probability of 1 in the test cases below is in fact 0.(9) - see rand.ts for details.
     // prettier-ignore
     test.each<[number, number, boolean]>([
-        [0.0001,   0.999_89, false], // { probability: 0.0001  , roll: 0.999_89, success: false }
-        [0.000_01, 0.999_99, true ], // { probability: 0.000_01, roll: 0.999_99, success: true }
-        [0.000_01, 0.999_98, false]  // { probability: 0.000_01, roll: 0.999_98, success: false }
+        [0.0001,   0.999_89, false], // { probability: 0.0001   , roll: 0.999_89, success: false }
+        [0.000_01, 0.999_99, true ], // { probability: 0.000_01 , roll: 0.999_99, success: true }
+        [0.000_01, 0.999_98, false], // { probability: 0.000_01 , roll: 0.999_98, success: false }
+        [0.555_55, 0.444_45, true ], // { probability: 0.555_55 , roll: 0.444_45, success: true  }
+        [0.555_55, 0.444_44, false], // { probability: 0.555_55 , roll: 0.444_44, success: false }
     ])(
       'probability: %f, roll: %f -> success: %s',
       (probability, roll, expectedSuccess) => {

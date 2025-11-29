@@ -24,15 +24,18 @@ describe(fmtRoll, () => {
       [0.3,      0.7,      true,  '✅ roll  70.01% is >   70.00% threshold'],
       [0.5,      0.4999,   false, '❌ roll  50.00% is <=  50.00% threshold'],
       [0.5,      0.5,      true,  '✅ roll  50.01% is >   50.00% threshold'],
+      [0.5555,   0.4445,   true,  '✅ roll  44.46% is >   44.45% threshold'],
       [1,        0,        false, '✅ roll   0.01% is >    0.00% threshold'],
       [0.0001,   1,        true,  '✅ roll 100.00% is >   99.99% threshold'],
       // Test cases for values more fine grained than display precision (which is 123.45%)
       [0.000_01, 0.999_99, true,  '✅ roll 100.00% is >   99.99% threshold'],
       // Here: 
       // - successProb = 0.000_01
-      // - failureProb = 0.999_99 -> 99.999% -> display as  99.00%
-      // - roll        = 0.999_98 -> 99.998% -> display as 100.00%
-      [0.000_01, 0.999_98, false, '❌ roll 100.00% is <=  99.99% threshold'], // kja lol      
+      // - roll        = 0.999_98 -> 99.998% -> round up   to display as 100.00%
+      // - failureProb = 0.999_99 -> 99.999% -> round down to display as  99.99%
+      [0.000_01, 0.999_98, false, '❌ roll 100.00% is <=  99.99% threshold'],      
+      [0.555_55, 0.444_45, true,  '✅ roll  44.45% is >   44.44% threshold'],
+      [0.555_55, 0.444_44, false, '❌ roll  44.45% is <=  44.44% threshold'],
   ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
     const rollResult: RollResultNew = {
       successProb,
