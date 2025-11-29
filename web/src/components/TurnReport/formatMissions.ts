@@ -1,5 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, asFloat, f6fmtInt, f6fmtPctDec0 } from '../../lib/model/fixed6'
+import { toF6, toF, f6fmtInt, f6fmtPctDec0 } from '../../lib/model/fixed6'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix, fmtPctDec0 } from '../../lib/utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
@@ -78,7 +78,7 @@ function formatRewards(
     children.push({
       id: `mission-${missionSiteId}-reward-panic-reduction`,
       label: 'Panic',
-      chipValue: toF6(-asFloat(rewards.panicReduction)),
+      chipValue: toF6(-toF(rewards.panicReduction)),
       reverseColor: true, // Negative values (reductions) should be green
     })
   }
@@ -91,7 +91,7 @@ function formatRewards(
         children.push({
           id: `mission-${missionSiteId}-reward-faction-threat-reduction`,
           label: 'Faction threat',
-          chipValue: toF6(-asFloat(factionReward.threatReduction)),
+          chipValue: toF6(-toF(factionReward.threatReduction)),
           reverseColor: true, // Negative values (reductions) should be green
         })
       }

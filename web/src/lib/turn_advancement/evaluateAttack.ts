@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { asFloat, f6add, type Fixed6 } from '../model/fixed6'
+import { toF, f6add, type Fixed6 } from '../model/fixed6'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
@@ -26,8 +26,8 @@ export function evaluateAttack(
   // Calculate effective skills
 
   // KJA2 in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
-  const attackerEffectiveSkill = asFloat(getActorEffectiveSkill(attacker))
-  const defenderEffectiveSkill = asFloat(getActorEffectiveSkill(defender))
+  const attackerEffectiveSkill = toF(getActorEffectiveSkill(attacker))
+  const defenderEffectiveSkill = toF(getActorEffectiveSkill(defender))
 
   if (isAgent(attacker)) {
     assertDefined(attackerStats)

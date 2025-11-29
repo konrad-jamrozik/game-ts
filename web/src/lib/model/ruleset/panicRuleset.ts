@@ -1,4 +1,4 @@
-import { toF6, asFloat, type Fixed6 } from '../fixed6'
+import { toF6, toF, type Fixed6 } from '../fixed6'
 import { floor } from '../../utils/mathUtils'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
@@ -15,11 +15,11 @@ import { SUPPRESSION_DECAY } from './constants'
  * @returns The panic increase (never negative, as Fixed6)
  */
 export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
-  return toF6(Math.max(0, asFloat(threatLevel) - asFloat(suppression)))
+  return toF6(Math.max(0, toF(threatLevel) - toF(suppression)))
 }
 
 export function getSuppressionAfterDecay(suppression: Fixed6): Fixed6 {
-  return toF6(floor(asFloat(suppression) * (1 - SUPPRESSION_DECAY)))
+  return toF6(floor(toF(suppression) * (1 - SUPPRESSION_DECAY)))
 }
 
 /**
@@ -32,7 +32,7 @@ export function getTotalPanicIncrease(gameState: GameState): number {
   let totalPanicIncrease = 0
   for (const faction of gameState.factions) {
     const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
-    totalPanicIncrease += asFloat(panicIncrease)
+    totalPanicIncrease += toF(panicIncrease)
   }
   return totalPanicIncrease
 }
@@ -46,5 +46,5 @@ export function getTotalPanicIncrease(gameState: GameState): number {
  */
 export function getPanicNewBalance(gameState: GameState): Fixed6 {
   const totalPanicIncrease = getTotalPanicIncrease(gameState)
-  return toF6(asFloat(gameState.panic) + totalPanicIncrease)
+  return toF6(toF(gameState.panic) + totalPanicIncrease)
 }

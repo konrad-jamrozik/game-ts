@@ -59,7 +59,7 @@ export function f6addToInt(target: number, value: Fixed6): number {
  * asFloat(fixed6(21_500_000)) = 21.5
  * asFloat(fixed6(21_750_000)) = 21.75
  */
-export function asFloat(fixed: Fixed6): number {
+export function toF(fixed: Fixed6): number {
   return fixed.value / 1_000_000
 }
 
@@ -73,15 +73,15 @@ export function asFloat(fixed: Fixed6): number {
  * f6fmtInt(fixed6(21_750_000)) = "21" (not "21.75")
  */
 export function f6fmtInt(value: Fixed6): string {
-  return fmtDec0(asFloat(value))
+  return fmtDec0(toF(value))
 }
 
 export function f6fmtDec1(value: Fixed6): string {
-  return fmtDec1(asFloat(value))
+  return fmtDec1(toF(value))
 }
 
 export function f6fmtDec2(value: Fixed6): string {
-  return fmtDec2(asFloat(value))
+  return fmtDec2(toF(value))
 }
 
 /**
@@ -134,7 +134,7 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
  * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825, floored to 18.382500)
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
-  const product = multipliers.reduce((acc, mult) => acc * mult, asFloat(first))
+  const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
   return floorToF6(product)
 }
 
@@ -151,12 +151,12 @@ export function f6multV3(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fi
 }
 
 function f6multTwoV2(first: Fixed6, second: Fixed6): Fixed6 {
-  const product = asFloat(first) * asFloat(second)
+  const product = toF(first) * toF(second)
   return floorToF6(product)
 }
 
 function f6multTwoV3(first: Fixed6, second: Fixed6): Fixed6 {
-  const product = asFloat(first) * asFloat(second)
+  const product = toF(first) * toF(second)
   return roundToF6(product)
 }
 
@@ -284,7 +284,7 @@ export function roundToF6(value: number): Fixed6 {
 }
 
 export function f6asInt(value: Fixed6): number {
-  return floor(asFloat(value))
+  return floor(toF(value))
 }
 
 /**

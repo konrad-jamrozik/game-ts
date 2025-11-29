@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
-import { asFloat, isF6, type Fixed6 } from '../lib/model/fixed6'
+import { toF, isF6, type Fixed6 } from '../lib/model/fixed6'
 import { f6str } from '../lib/model/f6fmtUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
@@ -47,7 +47,7 @@ function formatChipLabel(chipValue: number | Fixed6 | string | undefined, noPlus
     return chipValue
   }
 
-  const valueToDetermineSign = isF6(chipValue) ? asFloat(chipValue) : chipValue
+  const valueToDetermineSign = isF6(chipValue) ? toF(chipValue) : chipValue
   const sign = (noPlusSign ?? false) ? '' : valueToDetermineSign > 0 ? '+' : ''
   return `${sign}${f6str(chipValue)}`
 }
