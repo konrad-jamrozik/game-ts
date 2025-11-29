@@ -7,6 +7,16 @@ import { GameControls } from '../../src/components/GameControls'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 
 describe(GameControls, () => {
+  // This is commented out because I want to for the tests to reuse state.
+  // This way I caught a bug after where the first test advanced turn, the second test
+  // failed as 'game over' was displayed instead of 'restart game' button. This was because
+  // game over logic was wrong, the panic number was still assuming bps (fixed2) precision instead of fixed6.
+  // beforeEach(() => {
+  //   // Reset the store before each test to ensure test isolation
+  //   store.dispatch(ActionCreators.clearHistory())
+  //   store.dispatch(reset())
+  // })
+
   test("click 'advance turn' button -> happy path", async () => {
     expect.hasAssertions()
 
