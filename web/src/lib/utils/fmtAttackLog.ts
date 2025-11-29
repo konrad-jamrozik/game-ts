@@ -1,6 +1,5 @@
-import { f2fmtInt, type Fixed2 } from '../model/fixed2'
-import { f4fmtPctDec2 } from '../model/fixed4'
-import type { RollResult } from '../turn_advancement/rolls'
+import type { RollResultNew } from '../turn_advancement/rolls'
+import { fmtInt, fmtPctDec2 } from './formatUtils'
 
 export type AttackLogKind =
   | 'agent misses'
@@ -13,11 +12,11 @@ export type AttackLogKind =
 export type AttackLogParams = {
   kind: AttackLogKind
   attackerName: string
-  attackerEffectiveSkill: Fixed2
+  attackerEffectiveSkill: number
   defenderName: string
-  defenderEffectiveSkill: Fixed2
+  defenderEffectiveSkill: number
   defenderIsAgent: boolean
-  rollResult: RollResult
+  rollResult: RollResultNew
   attackCount: number
   damageInfo?: { damage: number; damagePct: string }
   hpRemainingInfo?: { current: number; max: number; percentage: string }
@@ -72,9 +71,9 @@ function buildActorInfoPart(
   actorIsAgent: boolean,
   actorIcon: string,
   actorName: string,
-  actorEffectiveSkill: Fixed2,
+  actorEffectiveSkill: number,
 ): string {
-  const actorEffectiveSkillStr = `(${f2fmtInt(actorEffectiveSkill)})`.padStart(5)
+  const actorEffectiveSkillStr = `(${fmtInt(actorEffectiveSkill)})`.padStart(5)
   const actorNameStr = actorIsAgent ? actorName : actorName.padEnd(22)
   return `${actorIcon} ${actorNameStr} ${actorEffectiveSkillStr}`
 }
@@ -82,9 +81,9 @@ function buildActorInfoPart(
 function buildBasicInfoStr(
   kind: AttackLogKind,
   attackerName: string,
-  attackerEffectiveSkill: Fixed2,
+  attackerEffectiveSkill: number,
   defenderName: string,
-  defenderEffectiveSkill: Fixed2,
+  defenderEffectiveSkill: number,
   defenderIsAgent: boolean,
 ): { basicInfoStr: string; attackVerb: string } {
   const attackerIsAgent = kind.startsWith('agent')
@@ -110,11 +109,16 @@ function buildDamageStr(damageInfo: { damage: number; damagePct: string } | unde
   return ` ${damagePreposition} ${attackDamage} ${weaponRangePct} damage `
 }
 
-function buildRollResultStr(rollResult: RollResult): string {
+function buildRollResultStr(rollResult: RollResultNew): string {
   const rollResultIcon = rollResult.success ? '✅' : '❌'
-  const rollPctStr = f4fmtPctDec2(rollResult.rollInt).padStart(7)
+  // KJA I am concerned here that the roll will have off by 1 error.
+  // Roll of 0 should display as 0.01% not 0.00%
+  // Similarly, roll of 0.(9) should display as 100% not 99.99%
+  // ALSO same with displaying successProb and the equalities: should it be > or >= ?
+  // ADD TESTS FOR THIS FORMAT
+  const rollPctStr = fmtPctDec2(rollResult.roll).padStart(7)
   const rollRelation = rollResult.success ? '> ' : '<='
-  const thresholdPctStr = f4fmtPctDec2(rollResult.failureInt).padStart(7)
+  const thresholdPctStr = fmtPctDec2(rollResult.successProb).padStart(7)
   return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
 }
 

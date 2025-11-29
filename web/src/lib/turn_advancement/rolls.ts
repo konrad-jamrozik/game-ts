@@ -3,15 +3,14 @@
  */
 
 import { bps, BPS_PRECISION, type Bps } from '../model/bps'
-import { f2divPrecise, type Fixed2 } from '../model/fixed2'
 import { f4gt, f4sub, toF4 } from '../model/fixed4'
-import { floorToDec4 } from '../utils/mathUtils'
+import { div, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
-  attackerValue: Fixed2
-  defenderValue: Fixed2
-} & RollResult
+  attackerValue: number
+  defenderValue: number
+} & RollResultNew
 
 export type RollResult = {
   failureInt: Bps
@@ -49,13 +48,13 @@ export type RangeRoll = {
  * @param label - Optional label for controllable random in tests
  * @returns The contest roll result
  */
-export function rollContest(attackerValue: Fixed2, defenderValue: Fixed2, label?: string): ContestRollResult {
+export function rollContest(attackerValue: number, defenderValue: number, label?: string): ContestRollResult {
   // Note: here we use f2divPrecise instead of f2div to get precise probability calculations,
   // f2div floors the division result to fit into Fixed2, thus losing precision.
-  const ratioSquared = f2divPrecise(defenderValue, attackerValue) ** 2
+  const ratioSquared = div(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
-  const rollResult = rollAgainstProbability(successProbability, label)
+  const rollResult = rollAgainstProbabilityNew(successProbability, label)
 
   return {
     attackerValue,

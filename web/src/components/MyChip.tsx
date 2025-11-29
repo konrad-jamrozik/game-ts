@@ -1,6 +1,6 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
-import { BPS_PRECISION, isBps, type Bps } from '../lib/model/bps'
+import { isBps, type Bps } from '../lib/model/bps'
 import { isF2, type Fixed2 } from '../lib/model/fixed2'
 import { str } from '../lib/utils/formatUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'

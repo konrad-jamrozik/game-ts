@@ -244,7 +244,7 @@ function f2asInt(value: Fixed2): number {
  * f2asFloat(fixed2(2150)) = 21.5
  * f2asFloat(fixed2(2175)) = 21.75
  */
-function f2asFloat(fixed: Fixed2): number {
+export function f2asFloat(fixed: Fixed2): number {
   return fixed.value / 100
 }
 
