@@ -26,7 +26,7 @@ There are no other numbers in the codebase. As such if you see a `number` type,
 it is either an integer or a transient floating point number derived from the integer numbers
 or `Fixed6` numbers.
 
-Internally,`Fixed6` numbers are stored as integers where 1 is equal to 0.000001 (one millionth),
+Internally, `Fixed6` numbers are stored as integers where 1 is equal to 0.000001 (one millionth),
 meaning plain number 1 is equal to `Fixed6` number 1_000_000.
 
 # Number type conversions & arithmetic operations precision
@@ -35,8 +35,9 @@ While fractional numbers are stored as `Fixed6`, any floating point operations m
 on them use full available `number` precision.
 
 As such `Fixed6` is used only when:
+
 - A floating point number needs to be stored.
-  Then it is first converted to `Fixed6` by flooring to 6 decimal places.
+  Then it is first converted to `Fixed6` by **rounding** to 6 decimal places.
 - The computations do not require floating point precision. E.g. because `Fixed6` is added to an integer,
   or there is a series of `Fixed6` operations resulting in `Fixed6`, with no loss of precision at any point,
   e.g. because only additions and subtractions are performed.
@@ -56,13 +57,17 @@ As another example, `skill` concept can have constants as precise as `0.01`, whi
 Note that the actual computation can be more precise, e.g:
 
 - Suppression `12.34%` multiplied by constant of `1.0002` results in `12.342468%` represented
-  as a intermediate floating point number `0.12342468`.
+  as an intermediate floating point number `0.12342468`.
 - This floating point number can be then multiplied by another floating point number,
   resulting in yet another floating point number having even more decimal places.
-- Such a  floating point number may be used to store an updated suppression value in game sate.
-  Then it will have to be stored as `Fixed6` by flooring to 6 decimal places.
+- Such a floating point number may be used to store an updated suppression value in game state.
+  Then it will have to be stored as `Fixed6` by **rounding** to 6 decimal places.
   So e.g. an intermediate floating point number `0.12342468` representing some derivation of the
-  concept of suppression will be stored as `Fixed6` number `0.123424` or `12.3424%`.
+  concept of suppression will be stored as `Fixed6` number `0.123425` or `12.3425%`.
+
+Because storage is done in `Fixed6` and all concepts are limited to at most 4 decimal places,
+this gives 2 decimal places of “precision buffer”: rounding error (±0.000001) is always smaller
+than the smallest concept precision step (0.0001).
 
 # Number formatting
 
@@ -71,8 +76,10 @@ Given domain model concept may be formatted in various ways, depending on the co
 E.g. the concept of `skill` has a `concept precision` of 2 decimal places, but usually it is formatted as an integer.
 In few places where the precision is important it is formatted as a number with 2 decimal places.
 
-Every time a number is formatted to a less decimal places than actual, the formatted number is flooring
-the formatted number to the decimals places it is formatted to.
+Every time a number is formatted to a less decimal places than actual, the formatted number is **floored**
+to the decimals places it is formatted to. This is independent from how values are stored:
+storage uses rounding to the `Fixed6` grid, while presentation may still floor to avoid ever
+displaying “optimistic” values.
 
 The code supports formatting directly both `number` and `Fixed6` numbers.
 
@@ -87,10 +94,10 @@ It is multiplied every turn by `1.12`.
 As such once player advances a turn, `foobarness` will be set to `13.00 * 1.12 = 14.56`.
 The actual computation will look like that:
 
-``` typescript
+```typescript
 // "asF6" means to convert a number to a Fixed6 number
 // As such, stored_foobarness is stored as 13_000_000
-const stored_foobarness: Fixed6 = asF6(13.00)
+const stored_foobarness: Fixed6 = asF6(13.0)
 
 // "asFloat" means to convert a Fixed6 number to a floating point number
 // As such, foobarness is set to 13_000_000 / 1_000_000 = 13.00
@@ -111,9 +118,9 @@ const next_foobarness: number = intermediate_foobarness * 1.87
 // i.e. 2722.72%
 console.log(fmtPct2(next_foobarness))
 
-// "asF6" means to convert a number to a Fixed6 number
+// "asF6" means to convert a number to a Fixed6 number by rounding to 6 decimals
 // As such, stored_next_foobarness internally stored as integer 27_227_200,
-// effectively flooring it to 27.227200, i.e. to 6 decimal places.
+// effectively rounding it to 27.227200, i.e. to 6 decimal places.
 const stored_next_foobarness: Fixed6 = asF6(next_foobarness)
 ```
 
@@ -124,25 +131,31 @@ const stored_next_foobarness: Fixed6 = asF6(next_foobarness)
 All domain math is performed using JavaScript `number`, which is a 64-bit binary floating-point type.
 This means intermediate values can contain artifacts such as:
 
-``` typescript
+```typescript
 if (value >= 0.5) 
 // fails due to (0.49999999997 >= 0.5) == false
 ```
 
-These artifacts do not persist (because values are clamped when stored as `Fixed6`),
+These artifacts do not persist (because values are clamped when stored as `Fixed6` via rounding),
 but they **can influence logic** if intermediate results are used in comparisons, thresholds, or branching conditions.
 
-Game logic that is sensitive to boundary values should use tolerant comparisons or integer-based logic where possible.
+Game logic that is sensitive to boundary values should use Fixed6-based comparisons or tolerant comparisons,
+rather than comparing raw floats.
 
-## 2. Systematic downward bias due to flooring
+## 2. Quantization error due to rounding
 
-When persisting values, conversion to `Fixed6` always **floors** (never rounds).
-This introduces a consistent downward bias in all stored values. Over many turns or repeated multiplications,
-this can accumulate into a noticeable drift from the mathematically “ideal” result.
-This behavior is intentional but should be remembered when tuning game mechanics.
+When persisting values, conversion to `Fixed6` always **rounds** (never stores the full float).
+This introduces a bounded quantization error of at most ±0.000001 in the stored value.
 
-It is also mitigated by the fact that numbers are stored as `Fixed6`, but max allowed precision is 4 decimal places,
-thus giving 2 decimal places of "precision buffer".
+Because:
+
+- all concepts are limited to 4 decimal places, and
+- `Fixed6` resolution is 6 decimal places,
+
+this quantization error is strictly smaller than the smallest concept precision step.
+However, over many turns or repeated multiplications, this rounding may still introduce a small drift from the
+mathematically “ideal” result. The drift is not systematically downward (as with flooring),
+but it still exists and should be kept in mind when tuning mechanics.
 
 ### 3. “Concept precision” is not enforced by the type system
 
