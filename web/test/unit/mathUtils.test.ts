@@ -4,30 +4,37 @@ import { ceil, floor } from '../../src/lib/utils/mathUtils'
 describe(floor, () => {
   // prettier-ignore
   test.each([
-    // basic floor functionality
+    // basic functionality
     [5.999, 5],
     [5.001, 5],
     [5.000, 5],
     [4.999, 4],
-    // handles negative numbers
+    // negative numbers
     [-5.999, -6],
     [-5.001, -6],
     [-5.000, -5],
     [-4.999, -5],
-    // handles zero
+    // integers
+    [5, 5],
+    [-5, -5],    
+    // zero
     [-0, 0],
     [0, 0],
     [0.0, 0],
-    // handles integers
-    [5, 5],
-    [-5, -5],
-    // handles very small values
+    // very small values, but still within acceptable precision
+    [0.999_999_9, 0],
+    [-0.999_999_9, -1],
     [0.000_000_1, 0],
     [-0.000_000_1, -1],
-    // does not handle cases with too high precision
+    // cases with too high precision
     // floor adds 0.000_000_01, so values as close as that to next higher integer 
     // will be rounded up to it instead of down.
     [0.999_999_99, 1],
+    [-0.999_999_99, -1],
+    // even though these cases are with too high precision, 
+    //because they are not close to the next higher integer,
+    // it still works as expected.
+    [0.000_000_01, 0],
     [-0.000_000_01, 0],
   ])('should floor %f to %f', (value, expected) => {
     expect(floor(value)).toBe(expected)
@@ -71,11 +78,11 @@ describe('Common floating point precision pitfalls', () => {
     expect(cents).toBe(28.999_999_999_999_996)
 
     // act
-    const flooredCentsBad = Math.floor(cents)
-    const flooredCentsGood = floor(cents)
+    const flooredCentsMathFloor = Math.floor(cents)
+    const flooredCentsMyFloor = floor(cents)
 
-    expect(flooredCentsBad).toBe(28) // expected 29
-    expect(flooredCentsGood).toBe(29)
+    expect(flooredCentsMathFloor).toBe(28) // expected 29
+    expect(flooredCentsMyFloor).toBe(29)
   })
 
   test('subtracting floating point numbers', () => {
@@ -86,10 +93,10 @@ describe('Common floating point precision pitfalls', () => {
     expect(scaled).toBe(1.999_999_999_999_999_6)
 
     // act
-    const flooredBad = Math.floor(scaled)
-    const flooredGood = floor(scaled)
+    const flooredMathFloor = Math.floor(scaled)
+    const flooredMyFloor = floor(scaled)
 
-    expect(flooredBad).toBe(1) // expected 2
-    expect(flooredGood).toBe(2)
+    expect(flooredMathFloor).toBe(1) // expected 2
+    expect(flooredMyFloor).toBe(2)
   })
 })
