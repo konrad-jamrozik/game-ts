@@ -41,6 +41,8 @@ export function isF6(value: unknown): value is Fixed6 {
  */
 export function toF6(value: number): Fixed6 {
   assertMax6Dec(value)
+  // We still round here instead of doing toF6 because assertMax6Dec allows for a tolerance of 1e-8,
+  // which should be removed by this rounding.
   return roundToF6(value)
 }
 
@@ -130,12 +132,13 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
 }
 
 /**
- * Multiplies a Fixed6 value by one or more decimal numbers and returns the result as a Fixed6.
- * The result is rounded to maintain Fixed6 precision.
+ * Multiplies a Fixed6 value by zero or more decimal numbers and returns the result as a Fixed6.
+ * The result is asserted to have at most 6 decimal places (throws an error if precision would be lost).
  * For example:
+ * f6mult(fixed6(10_000_000)) = fixed6(10_000_000) (representing 10.00 * 1 = 10.00, no multipliers)
  * f6mult(fixed6(10_000_000), 0.2) = fixed6(2_000_000) (representing 10.00 * 0.2 = 2.00)
  * f6mult(fixed6(10_000_000), 0.5, 0.8) = fixed6(4_000_000) (representing 10.00 * 0.5 * 0.8 = 4.00)
- * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825, rounded to 18.382500)
+ * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825)
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
@@ -148,7 +151,7 @@ export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
  * For example:
  * f6div(fixed6(8_000_000), fixed6(10_000_000)) = fixed6(800_000) (representing 8.00 / 10.00 = 0.80)
  * f6div(fixed6(15_000_000), fixed6(10_000_000)) = fixed6(1_500_000) (representing 15.00 / 10.00 = 1.50)
- */
+ */ // kja get rid of this
 export function f6div(numerator: Fixed6, denominator: Fixed6 | number): Fixed6 {
   const denominatorValue = typeof denominator === 'number' ? toF6(denominator).value : denominator.value
   const divResult = div(numerator.value, denominatorValue)
@@ -168,8 +171,7 @@ export function f6divPrecise(numerator: Fixed6, denominator: Fixed6): number {
  */
 export function f6sum(...values: Fixed6[]): Fixed6 {
   const sumRes = sum(values, (value) => value.value)
-  assertMax6Dec(sumRes)
-  return fixed6(sumRes)
+  return toF6(sumRes)
 }
 
 /**
@@ -266,7 +268,7 @@ export function roundToF6(value: number): Fixed6 {
   return fixed6(rounded)
 }
 
-export function f6asInt(value: Fixed6): number {
+function f6asInt(value: Fixed6): number {
   const float = toF(value)
   assertInteger(float)
   return float

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6fmtPctDec2, f6gt, f6lt, floorToF6, roundToF6 } from '../../src/lib/model/fixed6'
+import { toF6, f6fmtPctDec2, f6gt, f6lt, floorToF6, roundToF6, f6mult } from '../../src/lib/model/fixed6'
 
 describe('Common floating point precision pitfalls', () => {
   test('Imprecise division may result in incorrect threshold checks', () => {
@@ -44,5 +44,14 @@ describe('Common floating point precision pitfalls', () => {
     const resultF6round = roundToF6(resultFloat)
     expect(resultF6round).toStrictEqual(toF6(97.75))
     expect(f6fmtPctDec2(resultF6round)).toBe('9775.00%')
+  })
+
+  test('f6mult asserts no loss of precision', () => {
+    // f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
+    const res1 = f6mult(toF6(1234), 0.5)
+    expect(res1).toStrictEqual(toF6(617))
+    // This is because 1234 * 0.12 = 148.07999999999998, which has more than 6 decimal places
+    expect(() => f6mult(toF6(1234), 0.12)).toThrow('Value must have at most 6 decimal places')
+    expect(() => f6mult(toF6(1234), 0.000_000_05)).toThrow('Value must have at most 6 decimal places')
   })
 })
