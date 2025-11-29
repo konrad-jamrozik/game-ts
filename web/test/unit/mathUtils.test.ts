@@ -1,5 +1,8 @@
+/* eslint-disable vitest/prefer-comparison-matcher */
+/* eslint-disable vitest/prefer-equality-matcher */
 import { describe, expect, test } from 'vitest'
 import { ceil, floor } from '../../src/lib/utils/mathUtils'
+import { asF6, f6eq, f6gt, f6lt } from '../../src/lib/model/fixed6'
 
 describe(floor, () => {
   // prettier-ignore
@@ -108,8 +111,14 @@ describe('Common floating point precision pitfalls', () => {
     const ratio = 0.3 / 0.1
     expect(ratio).toBe(2.999_999_999_999_999_6)
 
-    expect(ratio === 3).toBe(false)
-    expect(ratio > 3).toBe(false)
-    expect(ratio < 3).toBe(true)
+    expect(ratio === 3).toBe(false) // bad
+    expect(ratio > 3).toBe(false) // good
+    expect(ratio < 3).toBe(true) // bad
+
+    const ratioF6 = asF6(ratio)
+
+    expect(f6eq(ratioF6, asF6(3))).toBe(true) // good
+    expect(f6gt(ratioF6, asF6(3))).toBe(false) // good
+    expect(f6lt(ratioF6, asF6(3))).toBe(false) // good
   })
 })
