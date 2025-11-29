@@ -26,7 +26,7 @@ export function isF6(value: unknown): value is Fixed6 {
   )
 }
 
-/**
+/** // kja rename to toF6
  * Converts a decimal value to Fixed6 format by flooring to 6 decimal places.
  * Use this when you want to create a Fixed6 value.
  *
@@ -37,6 +37,8 @@ export function isF6(value: unknown): value is Fixed6 {
  * asF6(21.758123456) creates fixed6(21_758_123), which represents 21.758123 (floored to 6 decimals).
  */
 export function asF6(value: number): Fixed6 {
+  // KJA assert here that precision is no more than 6 decimal places
+  // assertMax6Dec(value)
   return floorToF6(value)
 }
 
@@ -127,6 +129,17 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
  */
 export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   const product = multipliers.reduce((acc, mult) => acc * mult, asFloat(first))
+  return floorToF6(product)
+}
+
+export function f6multV2(first: Fixed6, ...multipliers: (number | Fixed6)[]): Fixed6 {
+  const flooredMultipliers = multipliers.map((mult) => (isF6(mult) ? mult : floorToF6(mult)))
+  const product = flooredMultipliers.reduce((acc, mult) => f6multTwo(acc, mult), first)
+  return product
+}
+
+function f6multTwo(first: Fixed6, second: Fixed6): Fixed6 {
+  const product = asFloat(first) * asFloat(second)
   return floorToF6(product)
 }
 
@@ -244,7 +257,8 @@ export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
  * floorToF6(7.0) = fixed6(7_000_000) (7.000000)
  */
 function floorToF6(value: number): Fixed6 {
-  return fixed6(floor(value * 1_000_000))
+  const floored = floor(value * 1_000_000)
+  return fixed6(floored)
 }
 
 export function f6asInt(value: Fixed6): number {
