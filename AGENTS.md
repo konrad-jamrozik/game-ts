@@ -46,7 +46,10 @@ errors.
 
 You can also run `npm run oxlint` from the `web/` directory.
 
-Do not run tests, do not run `tsc`, do not run `build`, do not run tests.
+**Important**: Every time any significant changes are made, correctness must be verified by running
+`npm run qcheck` from the `web/` directory.
+
+Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
 ## Tech stack
 
