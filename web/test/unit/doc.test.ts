@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, atoF, type Fixed6 } from '../../src/lib/model/fixed6'
+import { toF6, toF, type Fixed6 } from '../../src/lib/model/fixed6'
 import { fmtDec1, fmtPctDec2 } from '../../src/lib/utils/formatUtils'
 
 describe('about_numbers.md', () => {
   test('foobarness doc example', () => {
-    // "asF6" means to convert a number to a Fixed6 number
-    // As such, stored_foobarness is stored as 13_000_000
+    // "toF6" means to convert a number to a Fixed6 number
+    // As such, storedFoobarness is stored as 13_000_000
     const storedFoobarness: Fixed6 = toF6(13.0)
 
     // "toF" means to convert a Fixed6 number to a floating point number
@@ -13,11 +13,11 @@ describe('about_numbers.md', () => {
     const foobarness: number = toF(storedFoobarness)
     expect(foobarness).toBe(13.0)
 
-    // intermediate_foobarness == 14.560_000_000_000_002
+    // intermediateFoobarness == 14.560_000_000_000_002
     const intermediateFoobarness: number = foobarness * 1.12
     expect(intermediateFoobarness).toBe(14.560_000_000_000_002)
 
-    // Display intermediate_foobarness as integer with 1 decimal places,
+    // Display intermediateFoobarness as integer with 1 decimal places,
     // after flooring to 1 decimal place.
     // i.e. 14.5
     expect(fmtDec1(intermediateFoobarness)).toBe('14.5')
@@ -30,8 +30,7 @@ describe('about_numbers.md', () => {
     // i.e. 2722.72%
     expect(fmtPctDec2(nextFoobarness)).toBe('2722.72%')
 
-    // "asF6" means to convert a number to a Fixed6 number by rounding to 6 decimals
-    // As such, storedNextFoobarness internally stored as integer 27_227_200,
+    // Now storedNextFoobarness is internally stored as integer 27_227_200,
     // effectively rounding it to 27.227200, i.e. to 6 decimal places.
     const storedNextFoobarness: Fixed6 = toF6(nextFoobarness)
     expect(storedNextFoobarness).toStrictEqual(toF6(27.2272))

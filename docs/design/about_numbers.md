@@ -95,33 +95,36 @@ As such once player advances a turn, `foobarness` will be set to `13.00 * 1.12 =
 The actual computation will look like that:
 
 ```typescript
-// "asF6" means to convert a number to a Fixed6 number
-// As such, stored_foobarness is stored as 13_000_000
-const stored_foobarness: Fixed6 = asF6(13.0)
+    // "toF6" means to convert a number to a Fixed6 number
+    // As such, storedFoobarness is stored as 13_000_000
+    const storedFoobarness: Fixed6 = toF6(13.0)
 
-// "asFloat" means to convert a Fixed6 number to a floating point number
-// As such, foobarness is set to 13_000_000 / 1_000_000 = 13.00
-const foobarness: number = asFloat(stored_foobarness)
+    // "toF" means to convert a Fixed6 number to a floating point number
+    // As such, foobarness is set to 13_000_000 / 1_000_000 = 13.00
+    const foobarness: number = toF(storedFoobarness)
+    expect(foobarness).toBe(13.0)
 
-// intermediate_foobarness == 14.560000000000002 
-const intermediate_foobarness: number = foobarness * 1.12
+    // intermediateFoobarness == 14.560_000_000_000_002
+    const intermediateFoobarness: number = foobarness * 1.12
+    expect(intermediateFoobarness).toBe(14.560_000_000_000_002)
 
-// Display intermediate_foobarness as integer with 1 decimal places,
-// after flooring to 1 decimal place.
-// i.e. 14.5
-console.log(fmtDec1(intermediate_foobarness))
+    // Display intermediateFoobarness as integer with 1 decimal places,
+    // after flooring to 1 decimal place.
+    // i.e. 14.5
+    expect(fmtDec1(intermediateFoobarness)).toBe('14.5')
 
-// next_foobarness == 27.227200000000007 
-const next_foobarness: number = intermediate_foobarness * 1.87
+    // nextFoobarness == 27.227_200_000_000_007
+    const nextFoobarness: number = intermediateFoobarness * 1.87
+    expect(nextFoobarness).toBe(27.227_200_000_000_007)
 
-// Display next_foobarness as percentage with 2 decimal places,
-// i.e. 2722.72%
-console.log(fmtPct2(next_foobarness))
+    // Display nextFoobarness as percentage with 2 decimal places,
+    // i.e. 2722.72%
+    expect(fmtPctDec2(nextFoobarness)).toBe('2722.72%')
 
-// "asF6" means to convert a number to a Fixed6 number by rounding to 6 decimals
-// As such, stored_next_foobarness internally stored as integer 27_227_200,
-// effectively rounding it to 27.227200, i.e. to 6 decimal places.
-const stored_next_foobarness: Fixed6 = asF6(next_foobarness)
+    // Now storedNextFoobarness is internally stored as integer 27_227_200,
+    // effectively rounding it to 27.227200, i.e. to 6 decimal places.
+    const storedNextFoobarness: Fixed6 = toF6(nextFoobarness)
+    expect(storedNextFoobarness).toStrictEqual(toF6(27.2272))
 ```
 
 # Known limitations of this design
