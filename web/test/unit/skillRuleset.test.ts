@@ -1,27 +1,8 @@
 import { describe, expect, test } from 'vitest'
-import type { AgentView } from '../../src/lib/model/agents/AgentView'
+import { agV } from '../../src/lib/model/agents/AgentView'
 import { getAgentSkillBasedValue } from '../../src/lib/model/ruleset/skillRuleset'
-import { toF6, type Fixed6 } from '../../src/lib/model/fixed6'
-
-function createMockAgentView(effectiveSkill: Fixed6): AgentView {
-  return {
-    isTerminated: () => false,
-    isInTransit: () => false,
-    isDeployedOnMissionSite: () => false,
-    effectiveSkill: () => effectiveSkill,
-    isAvailable: () => false,
-    isOnAssignment: () => false,
-    isOnContractingAssignment: () => false,
-    isOnEspionageAssignment: () => false,
-    isOnTrainingAssignment: () => false,
-    validateInvariants: (): void => {
-      // Mock implementation - no validation needed for tests
-    },
-    agent: (): never => {
-      throw new Error('Not implemented in mock')
-    },
-  }
-}
+import { toF6 } from '../../src/lib/model/fixed6'
+import { agFix } from '../fixtures/agentFixture'
 
 describe(getAgentSkillBasedValue, () => {
   // prettier-ignore
@@ -76,11 +57,18 @@ describe(getAgentSkillBasedValue, () => {
     [1.1, 0.055],  //  1.1 / 100 * 5 = 0.011 * 5 = 0.055
     [1.7, 0.085],  //  1.7 / 100 * 5 = 0.017 * 5 = 0.085
   ])('should calculate skill-based value correctly for effectiveSkill %s', (effectiveSkill, expected) => {
-    const effectiveSkillF6 = toF6(effectiveSkill)
     const expectedF6 = toF6(expected)
-    const agent = createMockAgentView(effectiveSkillF6)
+    // Create agent with skill set to effectiveSkill, no exhaustion, full hit points
+    // so that effectiveSkill(agent) = skill
+    const agent = agFix.new({
+      skill: toF6(effectiveSkill),
+      exhaustion: 0,
+      hitPoints: 30,
+      maxHitPoints: 30,
+    })
+    const agentView = agV(agent)
     const multiplier = 5 // Using AGENT_ESPIONAGE_INTEL as a realistic multiplier
-    const result = getAgentSkillBasedValue(agent, multiplier)
+    const result = getAgentSkillBasedValue(agentView, multiplier)
     expect(result).toStrictEqual(expectedF6)
   })
 })

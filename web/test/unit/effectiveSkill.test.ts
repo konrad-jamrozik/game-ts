@@ -1,76 +1,41 @@
 import { describe, expect, test } from 'vitest'
+import type { Agent } from '../../src/lib/model/model'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
 import { toF6 } from '../../src/lib/model/fixed6'
 
 describe(effectiveSkill, () => {
-  test('no exhaustion, no hit points lost', () => {
-    const agent = agFix.default()
+  // prettier-ignore
+  test.each<[string, Agent, number]>([
+    ['no exhaustion, no hit points lost', agFix.default(), 100],  // effective_skill = 100 * (1 - 0/30) * (1 - 0/100) = 100 * 1 * 1 = 100
 
-    // effective_skill = 100 * (1 - 0/30) * (1 - 0/100) = 100 * 1 * 1 = 100
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(100))
-  })
-
-  test('exhaustion only', () => {
-    const agent = agFix.new({
+    ['exhaustion only', agFix.new({
       skill: toF6(116),
       exhaustion: 20,
-    })
+    }), 98.6],  // effective_skill = 116 * (1 - 0/30) * (1 - 15/100) = 116 * 1 * 0.85 = 98.6
 
-    // effective_skill = 116 * (1 - 0/30) * (1 - 15/100) = 116 * 1 * 0.85 = 98.6
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(98.6))
-  })
+    ['hit points lost only', agFix.wounded(7), 76.666_667],  // hit points lost = 30 - 23 = 7; effective_skill = 100 * (1 - 7/30) * (1 - 0/100) = 100 * 0.76666... * 1 = 76.666...
 
-  test('hit points lost only', () => {
-    const agent = agFix.wounded(7) // Creates agent with 7 HP lost (23/30 HP)
-
-    // hit points lost = 30 - 23 = 7
-    // effective_skill = floor(100 * (1 - 7/30) * (1 - 0/100)) = 100 * 0.76666... * 1 = 76.666...
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(76.666_667))
-  })
-
-  test('exhaustion and hit points lost', () => {
-    const agent = agFix.new({
+    ['exhaustion and hit points lost', agFix.new({
       skill: toF6(150),
       exhaustion: 20,
       hitPoints: 23,
       maxHitPoints: 30,
-    })
+    }), 97.75],  // hit points lost = 30 - 23 = 7; effective_skill = 150 * (1 - 7/30) * (1 - 15/100) = 150 * 0.76666... * 0.85 = 97.75
 
-    // hit points lost = 30 - 23 = 7
-    // effective_skill = 150 * (1 - 7/30) * (1 - 15/100) = 150 * 0.76666... * 0.85 = 97.75
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(97.75))
-  })
+    ['high exhaustion', agFix.exhausted(85), 20],  // effective_skill = 100 * (1 - 0/30) * (1 - 80/100) = 100 * 1 * 0.2 = 20
 
-  test('high exhaustion', () => {
-    const agent = agFix.exhausted(85)
+    ['100% exhaustion', agFix.exhausted(100), 5],  // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
 
-    // effective_skill = 100 * (1 - 0/30) * (1 - 80/100) = 100 * 1 * 0.2 = 20
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(20))
-  })
+    ['105% exhaustion', agFix.exhausted(105), 0],  // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0 = 0
 
-  test('100% exhaustion', () => {
-    const agent = agFix.exhausted(100)
-
-    // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.95 = 5
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(5))
-  })
-
-  test('105% exhaustion', () => {
-    const agent = agFix.exhausted(105)
-
-    // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 1 = 0
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(0))
-  })
-
-  test('zero hit points', () => {
-    const agent = agFix.new({
+    ['zero hit points', agFix.new({
       hitPoints: 0,
       maxHitPoints: 30,
-    })
-
-    // hit points lost = 30 - 0 = 30
-    // effective_skill = 100 * (1 - 30/30) * (1 - 0/100) = 100 * 0 * 1 = 0
-    expect(effectiveSkill(agent)).toStrictEqual(toF6(0))
+    }), 0],  // hit points lost = 30 - 0 = 30; effective_skill = 100 * (1 - 30/30) * (1 - 0/100) = 100 * 0 * 1 = 0
+  ])('%s', (_testName, agent, expected) => {
+    const expectedF6 = toF6(expected)
+    const result = effectiveSkill(agent)
+    expect(result).toStrictEqual(expectedF6)
   })
 })
