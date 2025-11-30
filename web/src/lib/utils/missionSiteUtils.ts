@@ -2,7 +2,6 @@ import { getMissionById } from '../collections/missions'
 import type { MissionSite, MissionSiteState } from '../model/model'
 import { fmtNoPrefix } from './formatUtils'
 
-// KJA2 uncapitalize: MissionSiteUtils -> missionSiteUtils
 /**
  * Filters mission sites by their state
  */

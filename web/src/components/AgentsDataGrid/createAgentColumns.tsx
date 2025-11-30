@@ -5,7 +5,7 @@ import { toF6, f6cmp, f6eq, f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../li
 import type { AgentState, GameState } from '../../lib/model/model'
 import { assertDefined } from '../../lib/utils/assert'
 import { fmtNoPrefix } from '../../lib/utils/formatUtils'
-import { fmtMissionSiteIdWithMissionId } from '../../lib/utils/xMissionSiteUtils'
+import { fmtMissionSiteIdWithMissionId } from '../../lib/utils/missionSiteUtils'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 import { MyChip } from '../MyChip'
 import type { AgentRow } from './AgentsDataGrid'
