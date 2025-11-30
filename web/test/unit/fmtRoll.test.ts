@@ -79,17 +79,19 @@ describe(fmtRollResultQuantized, () => {
     [1,        0,        true,  '✅ roll   0.01% is >    0.00% threshold'],
     [0.0001,   1,        true,  '✅ roll 100.00% is >   99.99% threshold'],
     // Test cases for values more fine grained than display precision (which is 123.45%)
-    [0.000_01, 0.999_99, true,  '✅ roll 100.00% is >   99.99% threshold'],
+    // ⚠️ Observe the result difference between float and quantized
+    [0.000_01, 0.999_99, false,  '❌ roll 100.00% is <= 100.00% threshold'],
     // Here we have a special case where we round down to roll instead of up, otherwise 
     // rounded up roll would be > rounded down threshold even though roll < threshold.
     // Specifically:
     // - successProb = 0.000_01
     // - roll        = 0.999_98 -> 99.998% -> round down to display as 99.99% (special case to avoid confusing display)
     // - failureProb = 0.999_99 -> 99.999% -> round down to display as  99.99%
-    [0.000_01, 0.999_98, false, '❌ roll  99.99% is <=  99.99% threshold'],      
+    [0.000_01, 0.999_98, false, '❌ roll 100.00% is <= 100.00% threshold'],      
     [0.555_55, 0.444_45, true,  '✅ roll  44.45% is >   44.44% threshold'],
     // Same special case as described above.
-    [0.555_55, 0.444_44, false, '❌ roll  44.44% is <=  44.44% threshold'],
+    // ⚠️ Observe the result difference between float and quantized
+    [0.555_55, 0.444_44, true, '✅ roll  44.45% is >   44.44% threshold'],
     // Test case proving that when actualSuccess is true, displayed roll is always >= displayed threshold
     // even with fine-grained values, so no special handling is needed:
     // - successProb   = 0.444_45, so failureProb = 0.555_55

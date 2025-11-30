@@ -36,13 +36,13 @@ describe('rollAgainstProbability', () => {
         
         // Rolls above Fixed4 precision     
         [0.0001,   0.999_89, false , false ], // { prob: 0.0001   , roll: 0.999_89, float: false , quant: false }
-        // Notice the result difference 
+        // ⚠️ Notice the result difference 
         [0.000_01, 0.999_99, true  , false ], // { prob: 0.000_01 , roll: 0.999_99, float: true  , quant: false }
         [0.000_01, 0.999_98, false , false ], // { prob: 0.000_01 , roll: 0.999_98, float: false , quant: false }
         [0.555_55, 0.444_45, true  , true  ], // { prob: 0.555_55 , roll: 0.444_45, float: true  , quant: true  }
-        // Notice the result difference 
+        // ⚠️ Notice the result difference 
         [0.555_55, 0.444_44, false , true  ], // { prob: 0.555_55 , roll: 0.444_44, float: false , quant: true  }
-    ])( // KJA apply this test to quantized roll
+    ])( 
       'prob: %f, roll: %f -> float success: %s, quantized success: %s',
       (probability, roll, expectedFloatSuccess, expectedQuantizedSuccess) => {
         rand.set('injected_roll_result', roll)
