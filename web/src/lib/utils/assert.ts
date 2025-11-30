@@ -81,6 +81,16 @@ export function assertAboveZero(value: number, errMsg = 'Value must be above zer
   }
 }
 
+export function assertLessThan(
+  left: number,
+  right: number,
+  errMsg = 'Left value must be less than right value',
+): asserts left is number {
+  if (left >= right) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertInteger(
   value: number,
   errMsg = `Value must be an integer, got: ${value}`,
