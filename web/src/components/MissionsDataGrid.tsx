@@ -18,7 +18,7 @@ import {
   getArchivedMissionSites,
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
-} from '../lib/utils/MissionSiteUtils'
+} from '../lib/utils/xMissionSiteUtils'
 import { fmtDec1, fmtNoPrefix } from '../lib/utils/formatUtils'
 import { div } from '../lib/utils/mathUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
