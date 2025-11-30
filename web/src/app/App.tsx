@@ -9,7 +9,7 @@ import { LeadsDataGrid } from '../components/LeadsDataGrid'
 import { MissionsDataGrid } from '../components/MissionsDataGrid'
 import { PlayerActions } from '../components/PlayerActions'
 import { TurnReportDisplay } from '../components/TurnReport/TurnReportDisplay'
-import { AssetsDataGrid } from '../components/AssetsDataGrid'
+import { AssetsAndCapabCard } from '../components/AssetsAndCapabCard'
 import { SituationReportCard } from '../components/SituationReportCard'
 
 function App(): React.JSX.Element {
@@ -43,7 +43,7 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <AssetsDataGrid />
+          <AssetsAndCapabCard />
           <SituationReportCard />
           <TurnReportDisplay />
         </Stack>

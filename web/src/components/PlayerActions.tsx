@@ -329,7 +329,7 @@ export function PlayerActions(): React.JSX.Element {
             Investigate lead
           </Button>
           <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined}>
-            Buy asset
+            Buy upgrade
           </Button>
           <Collapse in={showAlert}>
             <Alert
