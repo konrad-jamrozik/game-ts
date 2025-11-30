@@ -38,6 +38,7 @@ describe('fmtRollResult - aligned display', () => {
       // - roll        = 0.999_92 -> 99.992% -> round up   to display as 100.00%
       // - failureProb = 0.999_91 -> 99.991% -> round down to display as  99.99%
       [0.000_09, 0.999_92, true,  '✅ roll 100.00% is >   99.99% threshold'],
+      [0.000_07, 0.999_93, true,  '✅ roll 100.00% is >   99.99% threshold'],
       [0.555_55, 0.444_45, true,  '✅ roll  44.45% is >   44.44% threshold'],
       // Test case proving that when actualSuccess is true, displayed roll is always >= displayed threshold
       // even with fine-grained values, so no special handling is needed:
@@ -78,7 +79,7 @@ describe('fmtRollResult - float-specific', () => {
       [0.000_07, 0.999_92, false,  '❌ roll 100.00% is <=  99.99% threshold'],
       // ⚠️ Observe the result difference between float and quantized
       // ⚠️ Observe wrong inequality displayed
-      [0.555_55, 0.444_44, false, '❌ roll  44.45% is <=  44.44% threshold'],
+      [0.555_55, 0.444_44, false,  '❌ roll  44.45% is <=  44.44% threshold'],
 
 ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
   rand.set('injected_roll_result', roll)
@@ -92,9 +93,12 @@ describe('fmtRollResult - float-specific', () => {
 describe('fmtRollResult - quantized-specific', () => {
   // prettier-ignore
   test.each<[number, number, boolean, string]>([
+      // ⚠️ Observe the result difference between float and quantized
       [0.000_01, 0.999_99, false, '❌ roll 100.00% is <= 100.00% threshold'],
-      [0.000_01, 0.999_98, false, '❌ roll 100.00% is <= 100.00% threshold]'],
+      [0.000_01, 0.999_98, false, '❌ roll 100.00% is <= 100.00% threshold'],
+      // ⚠️ Observe the result difference between float and quantized
       [0.000_07, 0.999_92, true,  '✅ roll 100.00% is >   99.99% threshold'],
+      // ⚠️ Observe the result difference between float and quantized
       [0.555_55, 0.444_44, true,  '✅ roll  44.45% is >   44.44% threshold'],      
 ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
   rand.set('injected_roll_result', roll)
