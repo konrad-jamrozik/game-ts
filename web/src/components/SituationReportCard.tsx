@@ -6,7 +6,7 @@ import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
 import { StyledDataGrid } from './StyledDataGrid'
 import { fmtPctDec0 } from '../lib/utils/formatUtils'
 import { assertDefined } from '../lib/utils/assert'
-import { getPanicIncrease, getPanicNewBalance, getSuppressionAfterDecay } from '../lib/model/ruleset/panicRuleset'
+import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/model/ruleset/panicRuleset'
 import { MyChip } from './MyChip'
 import { toF6, toF, type Fixed6 } from '../lib/model/fixed6'
 import { f6str } from '../lib/model/f6fmtUtils'
@@ -78,10 +78,12 @@ export function SituationReportCard(): React.JSX.Element {
   // Only calculate faction-specific data if Red Dawn is discovered
   const redDawnRows: SituationReportRow[] = isRedDawnDiscovered
     ? (() => {
+        // kja review all toF6(toF usages.
+        // kja review all toF() + toF() usages
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = toF6(toF(redDawnFaction.threatLevel) + toF(redDawnFaction.threatIncrease))
         const threatLevelDiff = toF6(toF(redDawnFaction.threatIncrease))
-        const suppressionProjected = getSuppressionAfterDecay(redDawnFaction.suppression)
+        const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
         const suppressionDiff = toF6(toF(suppressionProjected) - toF(redDawnFaction.suppression))
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
         const panicIncreaseDiff = toF6(toF(panicIncreaseProjected) - toF(panicIncrease))
