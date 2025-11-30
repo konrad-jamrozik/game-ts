@@ -8,12 +8,14 @@ export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateMissionAssignment(agent, state)
 }
 
-export function validateAgentLocalInvariants(agent: Agent, state: GameState): void {
+export function validateAgentLocalInvariants(agent: Agent, state?: GameState): void {
   validateBasicStatRanges(agent)
   validateTermination(agent)
   validateInjuryAndAssignment(agent)
   validateRecoveryStateConsistency(agent)
-  validateRecoveryMath(agent, state)
+  if (state !== undefined) {
+    validateRecoveryMath(agent, state)
+  }
 }
 
 /**
