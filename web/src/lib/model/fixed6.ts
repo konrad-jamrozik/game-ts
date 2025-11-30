@@ -112,9 +112,6 @@ export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1
   return fmtPctDec0(nominator.value, denominatorValue)
 }
 
-// Re-export formatting utilities for convenience
-export { f6fmtRollResult, f6fmtValueChange, f6str } from './f6fmtUtils'
-
 /**
  * Adds two Fixed6 values together.
  * For example:

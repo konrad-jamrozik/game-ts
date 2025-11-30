@@ -2,10 +2,10 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { toF6, f6gt, f6sub, type Fixed6, roundToF4, FIXED4_PRECISION, f6fromF4, f6fmtPctDec2 } from '../model/fixed6'
+import { FIXED4_PRECISION, f6fmtPctDec2, f6fromF4, f6gt, f6sub, roundToF4, toF6, type Fixed6 } from '../model/fixed6'
 import { assertInRange } from '../utils/assert'
 import { fmtPctDec2 } from '../utils/formatUtils'
-import { div, floorToDec4 } from '../utils/mathUtils'
+import { div } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
@@ -196,17 +196,17 @@ export function fmtRollResultFloat(rollResult: RollResultFloat): string {
   // - Roll of 0 displays as 0.01% (not 0.00%)
   // - Roll of 0.9999 displays as 100.00% (not 99.99%)
   // Cap at 1.0 to prevent values > 100%
-  let rollToDisplay = Math.min(rollResult.roll + 0.0001, 1)
+  const rollToDisplay = Math.min(rollResult.roll + 0.0001, 1)
 
-  // Check if rounding would cause a display mismatch:
-  // If displayed roll > displayed threshold but actual roll <= actual threshold,
-  // round roll down instead of up to avoid confusing display like "❌ roll 100.00% is <= 99.99% threshold"
-  const displayedRoll = floorToDec4(rollToDisplay)
-  const displayedThreshold = floorToDec4(failureProb)
-  if (displayedRoll > displayedThreshold && !actualSuccess) {
-    // Round down to nearest basis point (0.01%)
-    rollToDisplay = floorToDec4(rollResult.roll)
-  }
+  // // Check if rounding would cause a display mismatch:
+  // // If displayed roll > displayed threshold but actual roll <= actual threshold,
+  // // round roll down instead of up to avoid confusing display like "❌ roll 100.00% is <= 99.99% threshold"
+  // const displayedRoll = roundToDec4(rollToDisplay)
+  // const displayedThreshold = floorToDec4(failureProb)
+  // if (displayedRoll > displayedThreshold && !actualSuccess) {
+  //   // Round to nearest basis point (0.01%)
+  //   rollToDisplay = roundToDec4(rollResult.roll)
+  // }
 
   const rollPctStr = fmtPctDec2(rollToDisplay).padStart(7)
   const rollRelation = actualSuccess ? '> ' : '<='
