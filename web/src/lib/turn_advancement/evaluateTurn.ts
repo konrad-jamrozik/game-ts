@@ -1,11 +1,12 @@
-import { agsV } from '../model/agents/AgentsView'
 import { getMissionById } from '../collections/missions'
-import { toF6, toF, f6sum } from '../model/fixed6'
+import { agsV } from '../model/agents/AgentsView'
+import { f6sub, f6sum, toF, toF6 } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
+import { getPanicIncrease, getSuppressionDecay, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import {
   newValueChange,
-  type AssetsReport,
   type AgentsReport,
+  type AssetsReport,
   type BattleStats,
   type ExpiredMissionSiteReport,
   type FactionReport,
@@ -16,7 +17,6 @@ import {
   type TurnReport,
 } from '../model/turnReportModel'
 import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
-import { getPanicIncrease, getSuppressionAfterDecay, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
@@ -502,11 +502,11 @@ function updateFactions(
     const previousSuppression = faction.suppression
 
     // Increment faction threat levels
-    faction.threatLevel = toF6(toF(faction.threatLevel) + toF(faction.threatIncrease))
+    faction.threatLevel = f6sum(faction.threatLevel, faction.threatIncrease)
 
     // Apply suppression decay AFTER panic calculation and threat increase
-    faction.suppression = getSuppressionAfterDecay(faction.suppression)
-    const suppressionDecay = toF6(toF(previousSuppression) - toF(faction.suppression))
+    const suppressionDecay = getSuppressionDecay(faction.suppression)
+    faction.suppression = f6sub(faction.suppression, suppressionDecay)
 
     // Track mission impacts on this faction
     const missionImpacts = []

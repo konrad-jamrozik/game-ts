@@ -1,4 +1,4 @@
-import { toF6, toF, type Fixed6 } from '../fixed6'
+import { toF6, toF, type Fixed6, f6mult } from '../fixed6'
 import { floor } from '../../utils/mathUtils'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
@@ -16,6 +16,17 @@ import { SUPPRESSION_DECAY } from './constants'
  */
 export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
   return toF6(Math.max(0, toF(threatLevel) - toF(suppression)))
+}
+
+export function getSuppressionDecay(suppression: Fixed6): Fixed6 {
+  // KJA buggy, see test
+  const decay = f6mult(suppression, SUPPRESSION_DECAY)
+  console.log('getSuppressionDecay:', {
+    suppression: toF(suppression),
+    SUPPRESSION_DECAY,
+    decay: toF(decay),
+  })
+  return decay
 }
 
 // KJA review getSuppressionAfterDecay formula
