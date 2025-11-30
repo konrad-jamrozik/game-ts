@@ -10,7 +10,7 @@ export function getAgentUpkeep(agents: AgentsView): number {
 
 export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
-  // This flooring strips any fractional income from the total, which is the desired behavior
+  // This flooring strips any fractional income from the total
   return f6floorToInt(sumAgentSkillBasedValues(contractingAgents, AGENT_CONTRACTING_INCOME))
 }
 

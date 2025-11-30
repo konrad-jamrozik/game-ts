@@ -1,5 +1,6 @@
 import { ceil, div } from '../../utils/mathUtils'
 import { agV } from '../agents/AgentView'
+import { f6floorToInt } from '../fixed6'
 import type { Agent } from '../model'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
 import { sumAgentSkillBasedValues } from './skillRuleset'
@@ -87,5 +88,6 @@ export function getLeadIntelDecayPct(accumulatedIntel: number): number {
  */
 export function getLeadAccumulatedIntel(agents: Agent[]): number {
   const agentViews = agents.map((agent) => agV(agent))
-  return sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL)
+  // This flooring strips any fractional intel from the total
+  return f6floorToInt(sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL))
 }

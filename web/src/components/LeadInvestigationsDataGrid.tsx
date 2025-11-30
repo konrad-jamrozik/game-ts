@@ -11,10 +11,10 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
-import { f6addToInt, f6str, toF6r } from '../lib/model/fixed6'
+import { f6floorToInt, f6str } from '../lib/model/fixed6'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
-import { getLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
+import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../lib/model/ruleset/leadRuleset'
 import { sumAgentSkillBasedValues } from '../lib/model/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
@@ -245,9 +245,9 @@ function buildAllInvestigationRows(
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
       const agentViews = investigatingAgents.map((agent) => agV(agent))
-      const intelFromAgents = sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL)
-      // Use f6addToInt to maintain same behavior as original loop
-      projectedIntel = f6addToInt(projectedIntel, toF6r(intelFromAgents))
+      // This flooring strips any fractional intel from the total
+      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL))
+      projectedIntel += intelFromAgents
 
       // Calculate diff for chip display
       intelDiff = projectedIntel - investigation.accumulatedIntel

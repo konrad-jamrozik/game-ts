@@ -2,10 +2,12 @@ import { agsV, type AgentsView } from '../agents/AgentsView'
 import { sumAgentSkillBasedValues } from './skillRuleset'
 import type { GameState } from '../model'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
+import { f6floorToInt } from '../fixed6'
 
 export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
-  return sumAgentSkillBasedValues(espionageAgents, AGENT_ESPIONAGE_INTEL)
+  // This flooring strips any fractional intel from the total
+  return f6floorToInt(sumAgentSkillBasedValues(espionageAgents, AGENT_ESPIONAGE_INTEL))
 }
 
 export function getIntelTurnDiff(gameState: GameState): number {
