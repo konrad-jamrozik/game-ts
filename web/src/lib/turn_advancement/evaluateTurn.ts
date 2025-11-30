@@ -1,8 +1,8 @@
 import { getMissionById } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
-import { f6sub, f6sum, toF, toF6 } from '../model/fixed6'
+import { f6sum, toF, toF6 } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
-import { getPanicIncrease, getSuppressionDecay, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
+import { getPanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import {
   newValueChange,
   type AgentsReport,
@@ -505,8 +505,8 @@ function updateFactions(
     faction.threatLevel = f6sum(faction.threatLevel, faction.threatIncrease)
 
     // Apply suppression decay AFTER panic calculation and threat increase
-    const suppressionDecay = getSuppressionDecay(faction.suppression)
-    faction.suppression = f6sub(faction.suppression, suppressionDecay)
+    const { decayedSuppression, suppressionDecay } = decaySuppression(faction.suppression)
+    faction.suppression = decayedSuppression
 
     // Track mission impacts on this faction
     const missionImpacts = []

@@ -1,4 +1,4 @@
-import { toF6, toF, type Fixed6, f6mult } from '../fixed6'
+import { toF6, toF, type Fixed6, f6mult, f6sub } from '../fixed6'
 import { floor } from '../../utils/mathUtils'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
@@ -27,6 +27,12 @@ export function getSuppressionDecay(suppression: Fixed6): Fixed6 {
     decay: toF(decay),
   })
   return decay
+}
+
+export function decaySuppression(suppression: Fixed6): { decayedSuppression: Fixed6; suppressionDecay: Fixed6 } {
+  const suppressionDecay = getSuppressionDecay(suppression)
+  const decayedSuppression = f6sub(suppression, suppressionDecay)
+  return { decayedSuppression, suppressionDecay }
 }
 
 // KJA review getSuppressionAfterDecay formula
