@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { fmtRoll, type RollResultNew } from '../../src/lib/turn_advancement/rolls'
+import { fmtRoll, type RollResultFloat } from '../../src/lib/turn_advancement/rolls'
 
 /**
  * See also related tests in rollAgainstProbability.test.ts
@@ -48,7 +48,7 @@ describe(fmtRoll, () => {
       // - Result: displayed roll (55.56%) > threshold (55.55%)
       [0.444_45, 0.555_551, true, '✅ roll  55.56% is >   55.55% threshold'],
   ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
-    const rollResult: RollResultNew = {
+    const rollResult: RollResultFloat = {
       successProb,
       roll,
       success,

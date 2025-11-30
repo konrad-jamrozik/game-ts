@@ -7,8 +7,7 @@ import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../utils/assert'
 import { newEnemiesFromSpec } from '../utils/enemyUtils'
-import { f6fmtRollResult } from '../model/f6fmtUtils'
-import { rollAgainstProbability } from './rolls'
+import { fmtRoll, rollAgainstProbabilityFloat } from './rolls'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -69,9 +68,8 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 function rollAndLogInvestigationResult(investigation: LeadInvestigation): { success: boolean; successChance: number } {
   const lead = getLeadById(investigation.leadId)
   const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
-  // KJA switch to rollAgainstProbabilityNew in rollAndLogInvestigationResult
-  const rollResult = rollAgainstProbability(successChance)
-  const rollResultStr = f6fmtRollResult(rollResult)
+  const rollResult = rollAgainstProbabilityFloat(successChance)
+  const rollResultStr = fmtRoll(rollResult)
   console.log(`${investigation.id} result: ${rollResultStr}`)
   return { success: rollResult.success, successChance }
 }

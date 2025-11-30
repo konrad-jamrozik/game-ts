@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getSuccessAndFailureInts, roll1to } from '../../src/lib/turn_advancement/rolls'
+import { getRollF4Probabilities, roll1to } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
 const FIXED6_PRECISION = 1_000_000
@@ -50,7 +50,7 @@ function testSuccessAndFailureInts(
   expectedFailureInt: number,
   expectedSuccessInt: number,
 ): void {
-  const [failureInt, successInt] = getSuccessAndFailureInts(successProbability)
+  const [failureInt, successInt] = getRollF4Probabilities(successProbability)
   // Convert expected values from basis points (10_000 = 1.0) to Fixed6 (1_000_000 = 1.0)
   const expectedFailureFixed6 = Math.floor(expectedFailureInt * 100)
   const expectedSuccessFixed6 = Math.floor(expectedSuccessInt * 100)

@@ -1,7 +1,9 @@
 import { sum } from 'radash'
-import { assertInteger, assertMax6Dec } from '../utils/assert'
+import { assertInRange, assertInteger, assertMax6Dec } from '../utils/assert'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { dist, div, floor } from '../utils/mathUtils'
+
+export const FIXED4_PRECISION = 10_000
 
 /**
  * Represents a fixed-point number with 6 decimal places precision.
@@ -269,7 +271,12 @@ export function roundToF6(value: number): Fixed6 {
 
 export function roundToF4(value: number): Fixed6 {
   const rounded = Math.round(value * 10_000)
-  return fixed6(rounded)
+  return f6fromF4(rounded)
+}
+
+export function f6fromF4(value: number): Fixed6 {
+  assertInRange(value, 0, FIXED4_PRECISION)
+  return fixed6(value * 100)
 }
 
 export function f6floorToInt(value: Fixed6): number {

@@ -1,4 +1,4 @@
-import { fmtRoll, type RollResultNew } from '../turn_advancement/rolls'
+import { fmtRoll, type RollResultFloat } from '../turn_advancement/rolls'
 import { fmtInt } from './formatUtils'
 
 export type AttackLogKind =
@@ -16,7 +16,7 @@ export type AttackLogParams = {
   defenderName: string
   defenderEffectiveSkill: number
   defenderIsAgent: boolean
-  rollResult: RollResultNew
+  rollResult: RollResultFloat
   attackCount: number
   damageInfo?: { damage: number; damagePct: string }
   hpRemainingInfo?: { current: number; max: number; percentage: string }

@@ -2,26 +2,25 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { toF6, f6gt, f6sub, type Fixed6 } from '../model/fixed6'
+import { toF6, f6gt, f6sub, type Fixed6, roundToF4, FIXED4_PRECISION, f6fromF4 } from '../model/fixed6'
+import { assertInRange } from '../utils/assert'
 import { fmtPctDec2 } from '../utils/formatUtils'
 import { div, floorToDec4 } from '../utils/mathUtils'
 import { rand } from '../utils/rand'
 
-const FIXED6_PRECISION = 1_000_000
-
 export type ContestRollResult = {
   attackerValue: number
   defenderValue: number
-} & RollResultNew
+} & RollResultFloat
 
 export type RollResult = {
-  failureInt: Fixed6
-  successInt: Fixed6
-  rollInt: Fixed6
+  failureProbF4: Fixed6
+  successProbF4: Fixed6
+  rollF4: Fixed6
   success: boolean
 }
 
-export type RollResultNew = {
+export type RollResultFloat = {
   successProb: number
   roll: number
   success: boolean
@@ -56,7 +55,7 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   const ratioSquared = div(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
-  const rollResult = rollAgainstProbabilityNew(successProbability, label)
+  const rollResult = rollAgainstProbabilityFloat(successProbability, label)
 
   return {
     attackerValue,
@@ -65,27 +64,25 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   }
 }
 
-export function rollAgainstProbability(probability: number, label?: string): RollResult {
-  const [failureInt, successInt] = getSuccessAndFailureInts(probability)
+export function rollAgainstProbabilityQuantized(probability: number, label?: string): RollResult {
+  const [failureProbF4, successProbF4] = getRollF4Probabilities(probability)
 
-  // roll a random number from [1, 1_000_000]
-  // Here 1_000_000 denotes 1.0, so we are uniformly choosing a 0.000001 precision value.
-  const rollInt = rollFixed6(label)
+  const rollF4 = rollFixed4(label)
 
   // Success when roll > P(failure)
   // I.e. higher rolls are better.
-  // If e.g. failureInt represents 0.0375, it means 3.75% chance of failure, or 96.25% chance of success.
-  // So we had to roll at least that value from the range [1, 1_000_000] to succeed.
-  const success = f6gt(rollInt, failureInt)
+  // If e.g. failureProbF4 represents 0.0375, it means 3.75% chance of failure, or 96.25% chance of success.
+  // This means that if we rolled anything from range [1, 375000], we would fail the roll,
+  // hence we must roll at least 375001 to succeed.
+  const success = f6gt(rollF4, failureProbF4)
 
-  return { failureInt, successInt, rollInt, success }
+  return { failureProbF4, successProbF4, rollF4, success }
 }
 
 /**
  * Refer to rolls.test.ts for examples of how this works.
  */
-// KJA curr work
-export function rollAgainstProbabilityNew(successProb: number, label?: string): RollResultNew {
+export function rollAgainstProbabilityFloat(successProb: number, label?: string): RollResultFloat {
   const failureProb = 1 - successProb
 
   const { roll } = roll0IncTo1Exc(label)
@@ -105,21 +102,27 @@ export function rollAgainstProbabilityNew(successProb: number, label?: string): 
  * - failureInt: Failure probability expressed as Fixed6 (0-1_000_000 range, where 1_000_000 = 1.0)
  * - successInt: Success probability expressed as Fixed6 (0-1_000_000 range, where 1_000_000 = 1.0)
  */
-export function getSuccessAndFailureInts(successProbability: number): [Fixed6, Fixed6] {
-  const successInt = toF6(successProbability)
-  const failureInt = f6sub(toF6(1), successInt)
-  return [failureInt, successInt]
+export function getRollF4Probabilities(successProbability: number): [Fixed6, Fixed6] {
+  const successProbF4 = roundToF4(successProbability)
+  const failureProbF4 = f6sub(toF6(1), successProbF4)
+  return [failureProbF4, successProbF4]
 }
 
 /**
- * Rolls a random Fixed6 value from 1 to 1_000_000 (inclusive), representing the range (0, 1] in Fixed6.
+ * First rolls a float in [0, 1) and then quantizes it to range [1, 10_000],
+ * finally multiplying it by 100 to save it as Fixed6 of range [1, 1_000_000].
+ *
+ * That is:
+ * - The underlying roll is a float in [0, 1)
+ * - But then it is rounded/quantized to precision of Fixed4, i.e. an integer in range 10_000
+ * - And finally it is multiplied by 100 to save it as Fixed6, i.e. an integer in range [1, 1_000_000].
  *
  * @param label - Optional label for controllable random in tests
- * @returns A random Fixed6 value in the range [1, 1_000_000], equivalent to (0, 1] as a decimal
  */
-export function rollFixed6(label?: string): Fixed6 {
-  const rollValue = roll1to(FIXED6_PRECISION, label)
-  return toF6(rollValue / FIXED6_PRECISION)
+export function rollFixed4(label?: string): Fixed6 {
+  const rollValue = roll1to(FIXED4_PRECISION, label)
+  assertInRange(rollValue, 1, FIXED4_PRECISION)
+  return f6fromF4(rollValue)
 }
 
 /**
@@ -183,7 +186,7 @@ export function rollRange(min: number, max: number, label?: string): RangeRoll {
  * Formats a roll result for display.
  * See this function tests for examples.
  */
-export function fmtRoll(rollResult: RollResultNew): string {
+export function fmtRoll(rollResult: RollResultFloat): string {
   const failureProb = 1 - rollResult.successProb
   // Recalculate success based on actual values (roll >= failureProb)
   const actualSuccess = rollResult.roll >= failureProb

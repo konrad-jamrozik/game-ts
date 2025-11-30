@@ -1,11 +1,11 @@
 import { describe, expect, test } from 'vitest'
-import { rollAgainstProbability, rollAgainstProbabilityNew } from '../../src/lib/turn_advancement/rolls'
+import { rollAgainstProbabilityQuantized, rollAgainstProbabilityFloat } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
 
 /**
  * See also related tests in fmtRoll.test.ts
  */
-describe(rollAgainstProbability, () => {
+describe(rollAgainstProbabilityQuantized, () => {
   // Note:
   // Roll is a random number in [0, 1)
   // As such:
@@ -38,17 +38,17 @@ describe(rollAgainstProbability, () => {
     (probability, roll, expectedSuccess) => {
       rand.set('injected_roll_result', roll)
       console.log(`probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}`)
-      const rollResult = rollAgainstProbability(probability, 'injected_roll_result')
-      const rollResultNew = rollAgainstProbabilityNew(probability, 'injected_roll_result')
+      const rollResultQuantized = rollAgainstProbabilityQuantized(probability, 'injected_roll_result')
+      const rollResultFloat = rollAgainstProbabilityFloat(probability, 'injected_roll_result')
       console.log(
-        `probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}, rollResult: ${rollResult.success}`,
+        `probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}, rollResult: ${rollResultQuantized.success}`,
       )
-      expect(rollResult.success).toBe(expectedSuccess)
-      expect(rollResultNew.success).toBe(expectedSuccess)
+      expect(rollResultQuantized.success).toBe(expectedSuccess)
+      expect(rollResultFloat.success).toBe(expectedSuccess)
     },
   )
 
-  describe(rollAgainstProbabilityNew, () => {
+  describe(rollAgainstProbabilityFloat, () => {
     // Note:
     // Roll is a random number in [0, 1)
     // As such:
@@ -63,13 +63,13 @@ describe(rollAgainstProbability, () => {
         [0.000_01, 0.999_98, false], // { probability: 0.000_01 , roll: 0.999_98, success: false }
         [0.555_55, 0.444_45, true ], // { probability: 0.555_55 , roll: 0.444_45, success: true  }
         [0.555_55, 0.444_44, false], // { probability: 0.555_55 , roll: 0.444_44, success: false }
-    ])(
+    ])( // KJA apply this test to quantized roll
       'probability: %f, roll: %f -> success: %s',
       (probability, roll, expectedSuccess) => {
         rand.set('injected_roll_result', roll)
         console.log(`probability: ${probability}, roll: ${roll}, expectedSuccess: ${expectedSuccess}`)
-        const rollResultNew = rollAgainstProbabilityNew(probability, 'injected_roll_result')
-        expect(rollResultNew.success).toBe(expectedSuccess)
+        const rollResultFloat = rollAgainstProbabilityFloat(probability, 'injected_roll_result')
+        expect(rollResultFloat.success).toBe(expectedSuccess)
       },
     )
   })
