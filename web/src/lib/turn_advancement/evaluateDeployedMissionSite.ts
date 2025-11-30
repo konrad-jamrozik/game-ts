@@ -154,7 +154,7 @@ function updateSurvivingAgent(
   if (tookDamage) {
     agent.assignment = 'Recovery'
     agent.hitPointsLostBeforeRecovery = agent.maxHitPoints - agent.hitPoints
-    agent.recoveryTurns = getRecoveryTurns(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints, hitPointsRecoveryPct)
+    agent.recoveryTurns = getRecoveryTurns(agent.maxHitPoints, agent.hitPointsLostBeforeRecovery, hitPointsRecoveryPct)
     return true // Agent was wounded
   }
   agent.assignment = 'Standby'

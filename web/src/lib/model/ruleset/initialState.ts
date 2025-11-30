@@ -10,7 +10,7 @@ import {
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
-  AGENT_RECOVERY_TURNS_FACTOR,
+  AGENT_HIT_POINTS_RECOVERY_PCT,
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
@@ -40,7 +40,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     trainingCap: TRAINING_CAP,
     trainingSkillGain: TRAINING_SKILL_GAIN,
     exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
-    hitPointsRecoveryPct: AGENT_RECOVERY_TURNS_FACTOR,
+    hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
     currentTurnTotalHireCost: 0,
     agents: buildInitialAgents(),
     // Leads
