@@ -131,6 +131,14 @@ export function f6dist(first: Fixed6, second: Fixed6): Fixed6 {
   return fixed6(dist(first.value, second.value))
 }
 
+export function f6max(first: Fixed6, second: Fixed6): Fixed6 {
+  return fixed6(Math.max(first.value, second.value))
+}
+
+export function f6min(first: Fixed6, second: Fixed6): Fixed6 {
+  return fixed6(Math.min(first.value, second.value))
+}
+
 /**
  * Multiplies a Fixed6 value by zero or more decimal numbers and returns the result as a Fixed6.
  * The result is asserted to have at most 6 decimal places (throws an error if precision would be lost).

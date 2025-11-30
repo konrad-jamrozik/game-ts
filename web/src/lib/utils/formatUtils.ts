@@ -1,6 +1,6 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
-import { floor, floorToDec1, floorToDec2, toPct } from './mathUtils'
+import { floor, floorToDec1, floorToDec2, floorToDec4, toPct } from './mathUtils'
 
 export function fmtPctDec0(nominator: number, denominator = 1): string {
   if (denominator === 0) {
@@ -23,6 +23,13 @@ export function fmtPctDec2(nominator: number, denominator = 1): string {
   return `${fmtDec2(toPct(nominator, denominator))}%`
 }
 
+export function fmtPctDec4(nominator: number, denominator = 1): string {
+  if (denominator === 0) {
+    return '0.0000%'
+  }
+  return `${fmtDec4(toPct(nominator, denominator))}%`
+}
+
 export function fmtInt(value: number): string {
   return fmtDec0(value)
 }
@@ -43,6 +50,10 @@ export function fmtDec1(value: number): string {
  */
 export function fmtDec2(value: number): string {
   return floorToDec2(value).toFixed(2)
+}
+
+export function fmtDec4(value: number): string {
+  return floorToDec4(value).toFixed(4)
 }
 
 /**
