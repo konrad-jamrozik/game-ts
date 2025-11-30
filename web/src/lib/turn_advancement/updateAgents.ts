@@ -1,6 +1,6 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import { assertEqual } from '../utils/assert'
-import { floor, div } from '../utils/mathUtils'
+import { floor, div, ceil } from '../utils/mathUtils'
 import type { GameState } from '../model/model'
 import { agsV } from '../model/agents/AgentsView'
 import { addSkill, addSkillFromTraining } from '../utils/actorUtils'
@@ -28,7 +28,7 @@ export function updateRecoveringAgents(state: GameState): void {
 
         // Calculate total recovery turns originally needed
         const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
-        const totalRecoveryTurns = Math.ceil(
+        const totalRecoveryTurns = ceil(
           (div(originalHitPointsLost, agent.maxHitPoints) * 100) / state.hitPointsRecoveryPct,
         )
 

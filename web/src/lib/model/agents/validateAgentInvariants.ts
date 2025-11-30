@@ -1,19 +1,19 @@
 import type { Agent, GameState } from '../model'
 import { toF6, f6fmtInt, f6lt } from '../fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../../utils/assert'
-import { div } from '../../utils/mathUtils'
+import { ceil, div } from '../../utils/mathUtils'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
-  validateAgentLocalInvariants(agent)
+  validateAgentLocalInvariants(agent, state)
   validateMissionAssignment(agent, state)
 }
 
-export function validateAgentLocalInvariants(agent: Agent): void {
+export function validateAgentLocalInvariants(agent: Agent, state: GameState): void {
   validateBasicStatRanges(agent)
   validateTermination(agent)
   validateInjuryAndAssignment(agent)
   validateRecoveryStateConsistency(agent)
-  validateRecoveryMath(agent)
+  validateRecoveryMath(agent, state)
 }
 
 /**
@@ -90,7 +90,7 @@ function validateRecoveryStateConsistency(agent: Agent): void {
   }
 }
 
-function validateRecoveryMath(agent: Agent): void {
+function validateRecoveryMath(agent: Agent, state: GameState): void {
   const lostHitPoints = agent.maxHitPoints - agent.hitPoints
   if (!(agent.assignment === 'Recovery' || agent.state === 'Recovering')) {
     return
@@ -99,7 +99,10 @@ function validateRecoveryMath(agent: Agent): void {
     return
   }
 
-  const expectedTotalRecoveryTurns = Math.ceil((div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / 2)
+  const { hitPointsRecoveryPct } = state
+  const expectedTotalRecoveryTurns = ceil(
+    (div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / hitPointsRecoveryPct,
+  )
 
   // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
   if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
@@ -109,7 +112,9 @@ function validateRecoveryMath(agent: Agent): void {
       expectedImmediateLost,
       `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${expectedImmediateLost} at start of recovery`,
     )
-    const expectedImmediateRecoveryTurns = Math.ceil((div(expectedImmediateLost, agent.maxHitPoints) * 100) / 2)
+    const expectedImmediateRecoveryTurns = ceil(
+      (div(expectedImmediateLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPct,
+    )
     assertEqual(
       agent.recoveryTurns,
       expectedImmediateRecoveryTurns,

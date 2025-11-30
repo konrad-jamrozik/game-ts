@@ -1,13 +1,14 @@
 import { WEAPON_DAMAGE_RANGE_FACTOR } from '../model/ruleset/constants'
 import type { Weapon } from '../model/model'
 import { rollRange } from '../turn_advancement/rolls'
+import { ceil, floor } from './mathUtils'
 
 /**
  * Creates a weapon with damage range calculated as +/- 50% of base damage
  */
 export function newWeapon(baseDamage: number): Weapon {
-  const minDamage = Math.floor(baseDamage * (1 - WEAPON_DAMAGE_RANGE_FACTOR))
-  const maxDamage = Math.ceil(baseDamage * (1 + WEAPON_DAMAGE_RANGE_FACTOR))
+  const minDamage = floor(baseDamage * (1 - WEAPON_DAMAGE_RANGE_FACTOR))
+  const maxDamage = ceil(baseDamage * (1 + WEAPON_DAMAGE_RANGE_FACTOR))
 
   return {
     damage: baseDamage,
