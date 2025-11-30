@@ -7,7 +7,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { UPGRADE_PRICE, UPGRADE_INCREMENTS } from '../lib/collections/upgrades'
+import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../lib/collections/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../lib/slices/selectionSlice'
 import { StyledDataGrid } from './StyledDataGrid'
 import { f6fmtDec2, isF6, type Fixed6 } from '../lib/model/fixed6'
@@ -45,28 +45,28 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       id: 4,
       value: gameState.agentCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Agent cap']),
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Agent cap'],
     },
     {
       name: 'Transport cap',
       id: 5,
       value: gameState.transportCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Transport cap']),
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Transport cap'],
     },
     {
       name: 'Training cap',
       id: 6,
       value: gameState.trainingCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training cap']),
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Training cap'],
     },
     {
       name: 'Training skill gain',
       id: 7,
       value: f6fmtDec2(gameState.trainingSkillGain),
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training skill gain']),
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Training skill gain'],
     },
     {
       name: 'Exhaustion recovery',
@@ -74,7 +74,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       value: gameState.exhaustionRecovery,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery']),
       displayedName: 'Exhaustion recov.',
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Exhaustion recovery'],
     },
     {
       name: 'Hit points recovery %',
@@ -82,7 +82,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       value: gameState.hitPointsRecoveryPct,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Hit points recovery %']),
       displayedName: 'Hit points recov. %',
-      price: UPGRADE_PRICE,
+      price: UPGRADE_PRICES['Hit points recovery %'],
     },
   ]
 

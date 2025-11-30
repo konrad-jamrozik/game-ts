@@ -1,5 +1,10 @@
 import { f6add } from '../../model/fixed6'
-import { UPGRADE_PRICE, getUpgradeIncrement, getUpgradeIncrementFixed6, type UpgradeName } from '../../collections/upgrades'
+import {
+  getUpgradePrice,
+  getUpgradeIncrement,
+  getUpgradeIncrementFixed6,
+  type UpgradeName,
+} from '../../collections/upgrades'
 import type { GameState } from '../../model/model'
 import { asPlayerAction } from './asPlayerAction'
 
@@ -7,7 +12,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
   const upgradeName = action.payload
 
   // Deduct money
-  state.money -= UPGRADE_PRICE
+  state.money -= getUpgradePrice(upgradeName)
 
   // Increase the selected upgrade by the increment amount
   switch (upgradeName) {

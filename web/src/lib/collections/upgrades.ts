@@ -8,7 +8,14 @@ export type UpgradeName =
   | 'Exhaustion recovery'
   | 'Hit points recovery %'
 
-export const UPGRADE_PRICE = 100
+export const UPGRADE_PRICES: Record<UpgradeName, number> = {
+  'Agent cap': 50,
+  'Transport cap': 500,
+  'Training cap': 50,
+  'Training skill gain': 400,
+  'Exhaustion recovery': 500,
+  'Hit points recovery %': 1000,
+}
 
 export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
   'Agent cap': 1,
@@ -17,6 +24,10 @@ export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
   'Training skill gain': toF6(0.1),
   'Exhaustion recovery': 1,
   'Hit points recovery %': 1,
+}
+
+export function getUpgradePrice(upgradeName: UpgradeName): number {
+  return UPGRADE_PRICES[upgradeName]
 }
 
 export function getUpgradeIncrement(upgradeName: UpgradeName): number {
