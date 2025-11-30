@@ -1,4 +1,4 @@
-import { toF6, toF, isF6, type Fixed6 } from './fixed6'
+import { isF6, type Fixed6, f6sub } from './fixed6'
 import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {
@@ -39,7 +39,7 @@ export function newValueChange(previous: Fixed6 | number, current: Fixed6 | numb
     return {
       previous,
       current,
-      delta: toF6(toF(current) - toF(previous)),
+      delta: f6sub(current, previous),
     }
   }
 

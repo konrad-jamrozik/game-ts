@@ -1,5 +1,5 @@
 import { fmtPctDec4 } from '../../utils/formatUtils'
-import { f6ge, f6max, f6min, f6sub, toF, toF6, toF6r, type Fixed6 } from '../fixed6'
+import { f6add, f6ge, f6max, f6min, f6sub, toF, toF6, toF6r, type Fixed6 } from '../fixed6'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
 
@@ -15,6 +15,7 @@ import { SUPPRESSION_DECAY } from './constants'
  * @returns The panic increase (never negative, as Fixed6)
  */
 export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
+  // kja review
   return toF6(Math.max(0, toF(threatLevel) - toF(suppression)))
 }
 
@@ -62,5 +63,5 @@ export function getTotalPanicIncrease(gameState: GameState): number {
  */
 export function getPanicNewBalance(gameState: GameState): Fixed6 {
   const totalPanicIncrease = getTotalPanicIncrease(gameState)
-  return toF6(toF(gameState.panic) + totalPanicIncrease)
+  return f6add(gameState.panic, totalPanicIncrease)
 }

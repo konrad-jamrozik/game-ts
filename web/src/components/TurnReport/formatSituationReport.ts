@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, toF, type Fixed6 } from '../../lib/model/fixed6'
+import { toF6, toF, type Fixed6, f6sub } from '../../lib/model/fixed6'
 import { f6fmtValueChange } from '../../lib/model/f6fmtUtils'
 import { getPanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {
@@ -94,7 +94,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
   const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
-  const panicIncreaseDelta = toF6(toF(currentPanicIncrease) - toF(previousPanicIncrease))
+  const panicIncreaseDelta = f6sub(currentPanicIncrease, previousPanicIncrease)
 
   const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {

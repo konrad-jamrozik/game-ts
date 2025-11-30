@@ -1,6 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
-import { f6sum, toF, toF6 } from '../model/fixed6'
+import { f6add, f6sum, toF, toF6 } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import { getPanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import {
@@ -449,7 +449,7 @@ function updatePanic(
 
   // Increase panic by the sum of (threat level - suppression) for all factions
   const totalPanicIncrease = getTotalPanicIncrease(state)
-  state.panic = toF6(toF(state.panic) + totalPanicIncrease)
+  state.panic = f6add(state.panic, totalPanicIncrease)
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -460,6 +460,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
+      // kja review
       state.panic = toF6(Math.max(0, toF(state.panic) - toF(rewards.panicReduction)))
     }
   }
@@ -478,10 +479,11 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
+    // KJA review
     targetFaction.threatLevel = toF6(Math.max(0, toF(targetFaction.threatLevel) - toF(factionReward.threatReduction)))
   }
   if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = toF6(toF(targetFaction.suppression) + toF(factionReward.suppression))
+    targetFaction.suppression = f6add(targetFaction.suppression, factionReward.suppression)
   }
 }
 

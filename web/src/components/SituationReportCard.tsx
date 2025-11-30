@@ -1,18 +1,18 @@
+import { Typography } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppSelector } from '../app/hooks'
-import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
-import { StyledDataGrid } from './StyledDataGrid'
-import { fmtPctDec0 } from '../lib/utils/formatUtils'
-import { assertDefined } from '../lib/utils/assert'
-import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/model/ruleset/panicRuleset'
-import { MyChip } from './MyChip'
-import { toF6, toF, type Fixed6 } from '../lib/model/fixed6'
-import { f6str } from '../lib/model/f6fmtUtils'
-import { ExpandableCard } from './ExpandableCard'
-import { Typography } from '@mui/material'
 import { Fragment } from 'react'
+import { useAppSelector } from '../app/hooks'
+import { f6str } from '../lib/model/f6fmtUtils'
+import { f6add, f6sub, type Fixed6 } from '../lib/model/fixed6'
+import { SUPPRESSION_DECAY } from '../lib/model/ruleset/constants'
+import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/model/ruleset/panicRuleset'
+import { assertDefined } from '../lib/utils/assert'
+import { fmtPctDec0 } from '../lib/utils/formatUtils'
+import { ExpandableCard } from './ExpandableCard'
+import { MyChip } from './MyChip'
+import { StyledDataGrid } from './StyledDataGrid'
 
 export type SituationReportRow = {
   id: number
@@ -30,7 +30,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPercentage = f6str(panic)
   const panicProjected = getPanicNewBalance(gameState)
   const panicProjectedStr = f6str(panicProjected)
-  const panicDiff = toF6(toF(panicProjected) - toF(panic))
+  const panicDiff = f6sub(panicProjected, panic)
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -81,12 +81,12 @@ export function SituationReportCard(): React.JSX.Element {
         // kja review all toF6(toF usages.
         // kja review all toF() + toF() usages
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
-        const threatLevelProjected = toF6(toF(redDawnFaction.threatLevel) + toF(redDawnFaction.threatIncrease))
-        const threatLevelDiff = toF6(toF(redDawnFaction.threatIncrease))
+        const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
+        const threatLevelDiff = redDawnFaction.threatIncrease
         const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
-        const suppressionDiff = toF6(toF(suppressionProjected) - toF(redDawnFaction.suppression))
+        const suppressionDiff = f6sub(suppressionProjected, redDawnFaction.suppression)
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiff = toF6(toF(panicIncreaseProjected) - toF(panicIncrease))
+        const panicIncreaseDiff = f6sub(panicIncreaseProjected, panicIncrease)
         return [
           {
             id: 1,
