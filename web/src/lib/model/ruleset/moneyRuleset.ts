@@ -1,5 +1,5 @@
 import { agsV, type AgentsView } from '../agents/AgentsView'
-import { f6floorToInt } from '../fixed6'
+import { f6floorToInt } from '../../primitives/fixed6'
 import type { GameState } from '../model'
 import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from './constants'
 import { sumAgentSkillBasedValues } from './skillRuleset'

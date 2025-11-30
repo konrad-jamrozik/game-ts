@@ -17,7 +17,7 @@ import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '..
 import { assertDefined } from '../../src/lib/utils/assert'
 import { newEnemiesFromSpec } from '../../src/lib/utils/enemyUtils'
 import { agFix } from './agentFixture'
-import { toF6 } from '../../src/lib/model/fixed6'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 
 export const st = {
   get gameState(): GameState {

@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../lib/collections/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../lib/slices/selectionSlice'
 import { StyledDataGrid } from './StyledDataGrid'
-import { f6fmtDec2, isF6, type Fixed6 } from '../lib/model/fixed6'
+import { f6fmtDec2, isF6, type Fixed6 } from '../lib/primitives/fixed6'
 
 export type UpgradeRow = {
   id: number

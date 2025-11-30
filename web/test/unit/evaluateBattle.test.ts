@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { f6add, f6mult, toF6 } from '../../src/lib/model/fixed6'
+import { f6add, f6mult, toF6 } from '../../src/lib/primitives/fixed6'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,

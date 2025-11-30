@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6fmtPctDec2, f6gt, f6lt, floorToF6, roundToF6, f6mult } from '../../src/lib/model/fixed6'
+import { toF6, f6fmtPctDec2, f6gt, f6lt, floorToF6, roundToF6, f6mult } from '../../src/lib/primitives/fixed6'
 
 describe('Common floating point precision pitfalls', () => {
   test('Imprecise division may result in incorrect threshold checks', () => {

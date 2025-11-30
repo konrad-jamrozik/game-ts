@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../lib/collections/missions'
-import { f6sum, toF } from '../lib/model/fixed6'
+import { f6sum, toF } from '../lib/primitives/fixed6'
 import type { MissionSite } from '../lib/model/model'
 import { clearMissionSelection, setMissionSiteSelection } from '../lib/slices/selectionSlice'
 import {

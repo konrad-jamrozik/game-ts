@@ -1,6 +1,6 @@
 import { floorToDec2 } from '../utils/mathUtils'
 import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6'
-import type { ValueChange } from './turnReportModel'
+import type { ValueChange } from '../model/turnReportModel'
 
 /**
  * Formats a value (Fixed6 or number) as a string.

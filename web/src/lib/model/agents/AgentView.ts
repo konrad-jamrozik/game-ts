@@ -1,7 +1,7 @@
 import { effectiveSkill } from '../../utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
-import type { Fixed6 } from '../fixed6'
+import type { Fixed6 } from '../../primitives/fixed6'
 
 export type AgentView = Readonly<{
   isTerminated(): boolean

@@ -1,6 +1,6 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
-import { f6cmp } from '../fixed6'
+import { f6cmp } from '../../primitives/fixed6'
 import { getAgentUpkeep, getContractingIncome } from '../ruleset/moneyRuleset'
 import { getEspionageIntel } from '../ruleset/intelRuleset'
 import { agV, type AgentView } from './AgentView'

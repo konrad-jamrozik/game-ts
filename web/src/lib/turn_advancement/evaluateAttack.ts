@@ -7,7 +7,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
-import { toF, f6add, type Fixed6 } from '../model/fixed6'
+import { toF, f6add, type Fixed6 } from '../primitives/fixed6'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
 import { assertDefined } from '../utils/assert'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
