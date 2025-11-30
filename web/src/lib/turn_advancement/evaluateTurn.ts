@@ -1,8 +1,8 @@
 import { getMissionById } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
-import { f6add, f6sum, toF, toF6 } from '../model/fixed6'
+import { f6add, f6max, f6sub, f6sum, toF6 } from '../model/fixed6'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
-import { getPanicIncrease, decaySuppression, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
+import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import {
   newValueChange,
   type AgentsReport,
@@ -460,8 +460,7 @@ function updatePanic(
         missionTitle,
         reduction: rewards.panicReduction,
       })
-      // kja review
-      state.panic = toF6(Math.max(0, toF(state.panic) - toF(rewards.panicReduction)))
+      state.panic = f6max(toF6(0), f6sub(state.panic, rewards.panicReduction))
     }
   }
 
@@ -479,8 +478,7 @@ function updatePanic(
  */
 function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
   if (factionReward.threatReduction !== undefined) {
-    // KJA review
-    targetFaction.threatLevel = toF6(Math.max(0, toF(targetFaction.threatLevel) - toF(factionReward.threatReduction)))
+    targetFaction.threatLevel = f6max(toF6(0), f6sub(targetFaction.threatLevel, factionReward.threatReduction))
   }
   if (factionReward.suppression !== undefined) {
     targetFaction.suppression = f6add(targetFaction.suppression, factionReward.suppression)

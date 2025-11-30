@@ -78,8 +78,6 @@ export function SituationReportCard(): React.JSX.Element {
   // Only calculate faction-specific data if Red Dawn is discovered
   const redDawnRows: SituationReportRow[] = isRedDawnDiscovered
     ? (() => {
-        // kja review all toF6(toF usages.
-        // kja review all toF() + toF() usages
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
         const threatLevelDiff = redDawnFaction.threatIncrease

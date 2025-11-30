@@ -15,8 +15,7 @@ import { SUPPRESSION_DECAY } from './constants'
  * @returns The panic increase (never negative, as Fixed6)
  */
 export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
-  // kja review
-  return toF6(Math.max(0, toF(threatLevel) - toF(suppression)))
+  return f6max(toF6(0), f6sub(threatLevel, suppression))
 }
 
 export function getSuppressionToDecay(suppression: Fixed6): Fixed6 {
