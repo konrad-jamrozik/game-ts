@@ -1,4 +1,4 @@
-import { f6cmp, f6dist, f6eq, f6inRange, toF, toF6, toF6r, type Fixed6 } from '../model/fixed6'
+import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6, toF6r, type Fixed6 } from '../model/fixed6'
 import type { Agent, Enemy } from '../model/model'
 import { assertDefined } from '../utils/assert'
 import { div } from '../utils/mathUtils'
@@ -44,9 +44,9 @@ export function selectTarget<T extends Agent | Enemy>(
 
   const attackerEffectiveSkill = effectiveSkillsAtRoundStart.get(attacker.id)
   assertDefined(attackerEffectiveSkill)
-  const targetSkillLowerBound = toF(attackerEffectiveSkill) * 0.2
-  const targetSkillUpperBound = toF(attackerEffectiveSkill) * 0.8
-  const targetSkillPreferred = toF(attackerEffectiveSkill) * 0.5
+  const targetSkillLowerBound = f6mult(attackerEffectiveSkill, 0.2)
+  const targetSkillUpperBound = f6mult(attackerEffectiveSkill, 0.8)
+  const targetSkillPreferred = f6mult(attackerEffectiveSkill, 0.5)
 
   // Find minimum attack count among available targets
   const minAttackCount = Math.min(...availableTargets.map((target) => attackCounts.get(target.id) ?? 0))
