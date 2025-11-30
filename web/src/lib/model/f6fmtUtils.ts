@@ -1,4 +1,4 @@
-import type { RollResult } from '../turn_advancement/rolls'
+import type { RollResultQuantized } from '../turn_advancement/rolls'
 import { floorToDec2 } from '../utils/mathUtils'
 import type { ValueChange } from './turnReportModel'
 import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6'
@@ -26,15 +26,4 @@ export function f6str(value: number | Fixed6): string {
  */
 export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(change: ValueChange<TNumber>): string {
   return `${f6str(change.previous)} → ${f6str(change.current)}`
-}
-
-/**
- * Formats roll result information
- * @param rollResult - The roll result
- * @returns Formatted string in the format "[roll% vs threshold% threshold]"
- */
-export function f6fmtRollResult(rollResult: RollResult): string {
-  const icon = rollResult.success ? '✅' : '❌'
-  const relation = rollResult.success ? '> ' : '<='
-  return `[${icon} roll ${f6fmtPctDec2(rollResult.rollInt)} is ${relation} ${f6fmtPctDec2(rollResult.failureInt)} threshold]`
 }

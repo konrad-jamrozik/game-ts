@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { toF6, f6gt, f6sub, type Fixed6, roundToF4, FIXED4_PRECISION, f6fromF4 } from '../model/fixed6'
+import { toF6, f6gt, f6sub, type Fixed6, roundToF4, FIXED4_PRECISION, f6fromF4, f6fmtPctDec2 } from '../model/fixed6'
 import { assertInRange } from '../utils/assert'
 import { fmtPctDec2 } from '../utils/formatUtils'
 import { div, floorToDec4 } from '../utils/mathUtils'
@@ -13,7 +13,7 @@ export type ContestRollResult = {
   defenderValue: number
 } & RollResultFloat
 
-export type RollResult = {
+export type RollResultQuantized = {
   failureProbF4: Fixed6
   successProbF4: Fixed6
   rollF4: Fixed6
@@ -64,7 +64,7 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   }
 }
 
-export function rollAgainstProbabilityQuantized(probability: number, label?: string): RollResult {
+export function rollAgainstProbabilityQuantized(probability: number, label?: string): RollResultQuantized {
   const [failureProbF4, successProbF4] = getRollF4Probabilities(probability)
 
   const rollF4 = rollFixed4(label)
@@ -186,7 +186,7 @@ export function rollRange(min: number, max: number, label?: string): RangeRoll {
  * Formats a roll result for display.
  * See this function tests for examples.
  */
-export function fmtRoll(rollResult: RollResultFloat): string {
+export function fmtRollResultFloat(rollResult: RollResultFloat): string {
   const failureProb = 1 - rollResult.successProb
   // Recalculate success based on actual values (roll >= failureProb)
   const actualSuccess = rollResult.roll >= failureProb
@@ -212,4 +212,15 @@ export function fmtRoll(rollResult: RollResultFloat): string {
   const rollRelation = actualSuccess ? '> ' : '<='
   const thresholdPctStr = fmtPctDec2(failureProb).padStart(7)
   return `[${rollResultIcon} roll ${rollPctStr} is ${rollRelation} ${thresholdPctStr} threshold]`
+}
+
+/**
+ * Formats roll result information
+ * @param rollResult - The roll result
+ * @returns Formatted string in the format "[roll% vs threshold% threshold]"
+ */
+export function fmtRollResultQuantized(rollResult: RollResultQuantized): string {
+  const icon = rollResult.success ? '✅' : '❌'
+  const relation = rollResult.success ? '> ' : '<='
+  return `[${icon} roll ${f6fmtPctDec2(rollResult.rollF4)} is ${relation} ${f6fmtPctDec2(rollResult.failureProbF4)} threshold]`
 }

@@ -1,11 +1,10 @@
 import { describe, expect, test } from 'vitest'
 import { getRollF4Probabilities, roll1to } from '../../src/lib/turn_advancement/rolls'
 import { rand } from '../../src/lib/utils/rand'
-
-const FIXED6_PRECISION = 1_000_000
+import { FIXED4_PRECISION } from '../../src/lib/model/fixed6'
 
 describe('rolls', () => {
-  test('getSuccessAndFailureInts', () => {
+  test(getRollF4Probabilities, () => {
     const testCases: [number, number, number][] = [
       [0, 10_000, 0],
       [0.0001, 9999, 1],
@@ -18,42 +17,42 @@ describe('rolls', () => {
       [1, 0, 10_000],
     ]
     testCases.forEach(([probability, expectedFailure, expectedSuccess]) => {
-      testSuccessAndFailureInts(probability, expectedFailure, expectedSuccess)
+      testRollF4Probabilities(probability, expectedFailure, expectedSuccess)
     })
   })
 
-  test('roll1to -> max random result is FIXED6_PRECISION', () => {
-    rand.set('test_label', 0.999_999)
-    const roll = roll1to(FIXED6_PRECISION, 'test_label')
-    expect(roll).toBe(FIXED6_PRECISION)
+  test('roll1to -> max random result is FIXED4_PRECISION', () => {
+    rand.set('test_label', 0.9999)
+    const roll = roll1to(FIXED4_PRECISION, 'test_label')
+    expect(roll).toBe(FIXED4_PRECISION)
   })
 
-  test('roll1to -> (mix minus less than 1 unit of precision) random result is FIXED6_PRECISION-1', () => {
-    const oneUnitOfPrecision = 1 / FIXED6_PRECISION
-    const rollFixture = 0.999_999 - oneUnitOfPrecision
-    expect(rollFixture).toBeCloseTo(0.999_998, 10)
+  test('roll1to -> (mix minus less than 1 unit of precision) random result is FIXED4_PRECISION-1', () => {
+    const oneUnitOfPrecision = 1 / FIXED4_PRECISION
+    const rollFixture = 0.9999 - oneUnitOfPrecision
+    expect(rollFixture).toBeCloseTo(0.9998, 10)
     rand.set('test_label', rollFixture)
-    const roll = roll1to(FIXED6_PRECISION, 'test_label')
-    expect(roll).toBe(FIXED6_PRECISION - 1)
+    const roll = roll1to(FIXED4_PRECISION, 'test_label')
+    expect(roll).toBe(FIXED4_PRECISION - 1)
   })
 
   test('roll1to -> min random result is 1', () => {
     rand.set('test_label', 0)
-    const roll = roll1to(FIXED6_PRECISION, 'test_label')
+    const roll = roll1to(FIXED4_PRECISION, 'test_label')
     expect(roll).toBe(1)
   })
 })
 
 // Helper function for testing getSuccessAndFailureInts with different probabilities
-function testSuccessAndFailureInts(
-  successProbability: number,
-  expectedFailureInt: number,
-  expectedSuccessInt: number,
+function testRollF4Probabilities(
+  successF4Prob: number,
+  expectedFailureProbF4: number,
+  expectedSuccessProbF4: number,
 ): void {
-  const [failureInt, successInt] = getRollF4Probabilities(successProbability)
+  const [failureProbF4, successProbF4] = getRollF4Probabilities(successF4Prob)
   // Convert expected values from basis points (10_000 = 1.0) to Fixed6 (1_000_000 = 1.0)
-  const expectedFailureFixed6 = Math.floor(expectedFailureInt * 100)
-  const expectedSuccessFixed6 = Math.floor(expectedSuccessInt * 100)
-  expect(failureInt.value).toBe(expectedFailureFixed6)
-  expect(successInt.value).toBe(expectedSuccessFixed6)
+  const expectedFailureF4 = Math.floor(expectedFailureProbF4 * 100)
+  const expectedSuccessF4 = Math.floor(expectedSuccessProbF4 * 100)
+  expect(failureProbF4.value).toBe(expectedFailureF4)
+  expect(successProbF4.value).toBe(expectedSuccessF4)
 }
