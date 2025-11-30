@@ -76,7 +76,7 @@ describe(fmtRollResultQuantized, () => {
     [0.5,      0.4999,   false, '❌ roll  50.00% is <=  50.00% threshold'],
     [0.5,      0.5,      true,  '✅ roll  50.01% is >   50.00% threshold'],
     [0.5555,   0.4445,   true,  '✅ roll  44.46% is >   44.45% threshold'],
-    [1,        0,        false, '✅ roll   0.01% is >    0.00% threshold'],
+    [1,        0,        true,  '✅ roll   0.01% is >    0.00% threshold'],
     [0.0001,   1,        true,  '✅ roll 100.00% is >   99.99% threshold'],
     // Test cases for values more fine grained than display precision (which is 123.45%)
     [0.000_01, 0.999_99, true,  '✅ roll 100.00% is >   99.99% threshold'],
