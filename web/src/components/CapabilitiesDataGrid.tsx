@@ -7,9 +7,10 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
+import { UPGRADE_PRICE, UPGRADE_INCREMENTS } from '../lib/collections/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../lib/slices/selectionSlice'
 import { StyledDataGrid } from './StyledDataGrid'
-import { f6fmtDec2 } from '../lib/model/fixed6'
+import { f6fmtDec2, isF6, type Fixed6 } from '../lib/model/fixed6'
 
 export type UpgradeRow = {
   id: number
@@ -22,6 +23,7 @@ export type UpgradeRow = {
     | 'Hit points recovery %'
   displayedName?: string
   value: number | string
+  upgrade: number | string
   price: number
 }
 
@@ -30,16 +32,47 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
-  const UPGRADE_PRICE = 100
+  function formatUpgradeIncrement(increment: number | Fixed6): number | string {
+    if (isF6(increment)) {
+      return f6fmtDec2(increment)
+    }
+    return increment
+  }
+
   const upgradeRows: UpgradeRow[] = [
-    { name: 'Agent cap', id: 4, value: gameState.agentCap, price: UPGRADE_PRICE },
-    { name: 'Transport cap', id: 5, value: gameState.transportCap, price: UPGRADE_PRICE },
-    { name: 'Training cap', id: 6, value: gameState.trainingCap, price: UPGRADE_PRICE },
-    { name: 'Training skill gain', id: 7, value: f6fmtDec2(gameState.trainingSkillGain), price: UPGRADE_PRICE },
+    {
+      name: 'Agent cap',
+      id: 4,
+      value: gameState.agentCap,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Agent cap']),
+      price: UPGRADE_PRICE,
+    },
+    {
+      name: 'Transport cap',
+      id: 5,
+      value: gameState.transportCap,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Transport cap']),
+      price: UPGRADE_PRICE,
+    },
+    {
+      name: 'Training cap',
+      id: 6,
+      value: gameState.trainingCap,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training cap']),
+      price: UPGRADE_PRICE,
+    },
+    {
+      name: 'Training skill gain',
+      id: 7,
+      value: f6fmtDec2(gameState.trainingSkillGain),
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training skill gain']),
+      price: UPGRADE_PRICE,
+    },
     {
       name: 'Exhaustion recovery',
       id: 8,
       value: gameState.exhaustionRecovery,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery']),
       displayedName: 'Exhaustion recov.',
       price: UPGRADE_PRICE,
     },
@@ -47,6 +80,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       name: 'Hit points recovery %',
       id: 9,
       value: gameState.hitPointsRecoveryPct,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Hit points recovery %']),
       displayedName: 'Hit points recov. %',
       price: UPGRADE_PRICE,
     },
@@ -78,7 +112,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       field: 'name',
       headerName: 'Capability',
-      width: 160,
+      width: 140,
       renderCell: (params: GridRenderCellParams<UpgradeRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -90,8 +124,13 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       minWidth: 100,
     },
     {
+      field: 'upgrade',
+      headerName: 'Upgrade',
+      minWidth: 100,
+    },
+    {
       field: 'price',
-      headerName: 'Price for 1',
+      headerName: 'Price',
       minWidth: 100,
     },
   ]

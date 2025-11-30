@@ -1,13 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { LeadInvestigationId, MissionSiteId } from '../model/model'
-
-export type UpgradeName =
-  | 'Agent cap'
-  | 'Transport cap'
-  | 'Training cap'
-  | 'Training skill gain'
-  | 'Exhaustion recovery'
-  | 'Hit points recovery %'
+import type { UpgradeName } from '../collections/upgrades'
 
 export type SelectionState = {
   agents: string[]
