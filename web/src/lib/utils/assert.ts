@@ -75,6 +75,12 @@ export function assertNonNeg(value: number, errMsg = 'Value must be non-negative
   return value
 }
 
+export function assertAboveZero(value: number, errMsg = 'Value must be above zero'): asserts value is number {
+  if (value <= 0) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertInteger(
   value: number,
   errMsg = `Value must be an integer, got: ${value}`,

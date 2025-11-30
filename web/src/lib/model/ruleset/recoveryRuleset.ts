@@ -1,5 +1,5 @@
 import { ceil, div } from '../../utils/mathUtils'
-import { assertInteger } from '../../utils/assert'
+import { assertAboveZero, assertInteger } from '../../utils/assert'
 
 // KJA add battery of tests protecting against float issues
 // Note that e.g. hitPointsLostPct = 0.8 and recoverPct = 0.02,
@@ -8,6 +8,7 @@ import { assertInteger } from '../../utils/assert'
 // then ceil will make it 41, but we want 40.
 // But we must keep ceil, as if recovery would be 3.1, we do want for it to be 4.
 export function getRecoveryTurns(hitPoints: number, damage: number, hitPointsRecoveryPct: number): number {
+  assertAboveZero(damage, `damage must be above 0, got: ${damage}`)
   assertInteger(hitPoints, `hitPoints must be a whole integer, got: ${hitPoints}`)
   assertInteger(damage, `damage must be a whole integer, got: ${damage}`)
   assertInteger(hitPointsRecoveryPct, `hitPointsRecoveryPct must be a whole integer, got: ${hitPointsRecoveryPct}`)
