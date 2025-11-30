@@ -1,8 +1,8 @@
-import { f6addToInt } from '../fixed6'
 import { agsV, type AgentsView } from '../agents/AgentsView'
+import { f6floorToInt } from '../fixed6'
 import type { GameState } from '../model'
 import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from './constants'
-import { getAgentSkillBasedValue } from './skillRuleset'
+import { sumAgentSkillBasedValues } from './skillRuleset'
 
 export function getAgentUpkeep(agents: AgentsView): number {
   return agents.notTerminated().length * AGENT_UPKEEP_COST
@@ -10,12 +10,8 @@ export function getAgentUpkeep(agents: AgentsView): number {
 
 export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
-  let total = 0
-  for (const agent of contractingAgents) {
-    const incomeFromAgent = getAgentSkillBasedValue(agent, AGENT_CONTRACTING_INCOME)
-    total = f6addToInt(total, incomeFromAgent)
-  }
-  return total
+  // This flooring strips any fractional income from the total, which is the desired behavior
+  return f6floorToInt(sumAgentSkillBasedValues(contractingAgents, AGENT_CONTRACTING_INCOME))
 }
 
 export function getMoneyTurnDiff(gameState: GameState): number {

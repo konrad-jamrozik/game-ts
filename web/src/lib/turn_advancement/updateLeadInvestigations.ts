@@ -76,7 +76,7 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
   return { success: rollResult.success, successChance }
 }
 
-/**
+/** // KJA2 this should return AgentsView and simplified downstream
  * Gets agents that are actively investigating the lead
  */
 function getInvestigatingAgents(state: GameState, investigation: LeadInvestigation): Agent[] {

@@ -11,12 +11,11 @@ import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
-import { f6addToInt } from '../lib/model/fixed6'
-import { f6str } from '../lib/model/f6fmtUtils'
+import { f6addToInt, f6str, toF6r } from '../lib/model/fixed6'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
 import { getLeadSuccessChance, getLeadIntelDecay, getLeadIntelDecayPct } from '../lib/model/ruleset/leadRuleset'
-import { getAgentSkillBasedValue } from '../lib/model/ruleset/skillRuleset'
+import { sumAgentSkillBasedValues } from '../lib/model/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -245,10 +244,10 @@ function buildAllInvestigationRows(
         .withIds(investigation.agentIds)
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-      for (const agent of investigatingAgents) {
-        const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
-        projectedIntel = f6addToInt(projectedIntel, intelFromAgent)
-      }
+      const agentViews = investigatingAgents.map((agent) => agV(agent))
+      const intelFromAgents = sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL)
+      // Use f6addToInt to maintain same behavior as original loop
+      projectedIntel = f6addToInt(projectedIntel, toF6r(intelFromAgents))
 
       // Calculate diff for chip display
       intelDiff = projectedIntel - investigation.accumulatedIntel

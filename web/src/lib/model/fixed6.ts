@@ -158,7 +158,7 @@ export function f6div(numerator: Fixed6, denominator: Fixed6): number {
  */
 export function f6sum(...values: Fixed6[]): Fixed6 {
   const sumRes = sum(values, (value) => value.value)
-  return toF6(sumRes)
+  return fixed6(sumRes)
 }
 
 /**
@@ -253,6 +253,12 @@ export function floorToF6(value: number): Fixed6 {
 export function roundToF6(value: number): Fixed6 {
   const rounded = Math.round(value * 1_000_000)
   return fixed6(rounded)
+}
+
+export function f6floorToInt(value: Fixed6): number {
+  const floored = floor(toF(value))
+  assertInteger(floored)
+  return floored
 }
 
 function f6asInt(value: Fixed6): number {

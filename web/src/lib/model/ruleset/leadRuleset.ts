@@ -1,9 +1,8 @@
 import { ceil, div } from '../../utils/mathUtils'
 import { agV } from '../agents/AgentView'
-import { f6addToInt } from '../fixed6'
 import type { Agent } from '../model'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
-import { getAgentSkillBasedValue } from './skillRuleset'
+import { sumAgentSkillBasedValues } from './skillRuleset'
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
@@ -87,10 +86,6 @@ export function getLeadIntelDecayPct(accumulatedIntel: number): number {
  * Calculates total intel accumulated from investigating agents
  */
 export function getLeadAccumulatedIntel(agents: Agent[]): number {
-  let total = 0
-  for (const agent of agents) {
-    const intelFromAgent = getAgentSkillBasedValue(agV(agent), AGENT_ESPIONAGE_INTEL)
-    total = f6addToInt(total, intelFromAgent)
-  }
-  return total
+  const agentViews = agents.map((agent) => agV(agent))
+  return sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL)
 }

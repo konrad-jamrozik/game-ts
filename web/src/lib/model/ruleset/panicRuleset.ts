@@ -18,6 +18,7 @@ export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixe
   return toF6(Math.max(0, toF(threatLevel) - toF(suppression)))
 }
 
+// KJA review getSuppressionAfterDecay formula
 export function getSuppressionAfterDecay(suppression: Fixed6): Fixed6 {
   return toF6(floor(toF(suppression) * (1 - SUPPRESSION_DECAY)))
 }
