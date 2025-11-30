@@ -174,6 +174,6 @@ function distanceFromPreferred(
 ): Fixed6 {
   const skill = effectiveSkillsAtRoundStart.get(target.id)
   assertDefined(skill)
-  const dist = f6dist(skill, toF6(targetSkillPreferred))
+  const dist = f6dist(skill, toF6r(targetSkillPreferred))
   return dist
 }
