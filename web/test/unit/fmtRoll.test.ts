@@ -67,7 +67,7 @@ describe(fmtRollResultFloat, () => {
 describe(fmtRollResultQuantized, () => {
   // prettier-ignore
   test.each<[number, number, boolean, string]>([
-    [0,        0,        false, '❌ roll 0.01% is <= 100.00% threshold'],
+    [0,        0,        false, '❌ roll   0.01% is <= 100.00% threshold'],
     [0,        0.9999,   false, '❌ roll 100.00% is <= 100.00% threshold'],
     [0.0001,   0.9998,   false, '❌ roll  99.99% is <=  99.99% threshold'],
     [0.0001,   0.999_89, false, '❌ roll  99.99% is <=  99.99% threshold'],

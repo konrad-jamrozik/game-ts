@@ -1,7 +1,6 @@
-import type { RollResultQuantized } from '../turn_advancement/rolls'
 import { floorToDec2 } from '../utils/mathUtils'
-import type { ValueChange } from './turnReportModel'
 import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6'
+import type { ValueChange } from './turnReportModel'
 
 /**
  * Formats a value (Fixed6 or number) as a string.

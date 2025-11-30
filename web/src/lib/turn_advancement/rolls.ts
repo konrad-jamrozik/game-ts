@@ -222,5 +222,7 @@ export function fmtRollResultFloat(rollResult: RollResultFloat): string {
 export function fmtRollResultQuantized(rollResult: RollResultQuantized): string {
   const icon = rollResult.success ? '✅' : '❌'
   const relation = rollResult.success ? '> ' : '<='
-  return `[${icon} roll ${f6fmtPctDec2(rollResult.rollF4)} is ${relation} ${f6fmtPctDec2(rollResult.failureProbF4)} threshold]`
+  const rollPctStr = f6fmtPctDec2(rollResult.rollF4).padStart(7)
+  const thresholdPctStr = f6fmtPctDec2(rollResult.failureProbF4).padStart(7)
+  return `[${icon} roll ${rollPctStr} is ${relation} ${thresholdPctStr} threshold]`
 }
