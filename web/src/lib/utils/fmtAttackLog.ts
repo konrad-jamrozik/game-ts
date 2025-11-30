@@ -1,4 +1,4 @@
-import { fmtRollResultFloat, type RollResultFloat } from '../turn_advancement/rolls'
+import { fmtRollResultQuantized, type RollResultQuantized } from '../turn_advancement/rolls'
 import { fmtInt } from './formatUtils'
 
 export type AttackLogKind =
@@ -16,7 +16,7 @@ export type AttackLogParams = {
   defenderName: string
   defenderEffectiveSkill: number
   defenderIsAgent: boolean
-  rollResult: RollResultFloat
+  rollResult: RollResultQuantized
   attackCount: number
   damageInfo?: { damage: number; damagePct: string }
   hpRemainingInfo?: { current: number; max: number; percentage: string }
@@ -49,7 +49,7 @@ export function fmtAttackLog(params: AttackLogParams): string {
   )
   const attackCountStr = buildAttackCountStr(attackCount)
   const damageStr = buildDamageStr(damageInfo, attackVerb)
-  const rollResultStr = fmtRollResultFloat(rollResult)
+  const rollResultStr = fmtRollResultQuantized(rollResult)
   const hpStr = buildHpStr(hpRemainingInfo)
 
   return `${basicInfoStr}${attackCountStr}${damageStr}${rollResultStr}${hpStr}`

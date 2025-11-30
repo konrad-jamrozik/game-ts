@@ -11,7 +11,7 @@ import { rand } from '../utils/rand'
 export type ContestRollResult = {
   attackerValue: number
   defenderValue: number
-} & RollResultFloat
+} & RollResultQuantized
 
 export type RollResultQuantized = {
   failureProbF4: Fixed6
@@ -55,7 +55,7 @@ export function rollContest(attackerValue: number, defenderValue: number, label?
   const ratioSquared = div(defenderValue, attackerValue) ** 2
   const successProbability = 1 / (1 + ratioSquared)
 
-  const rollResult = rollAgainstProbabilityFloat(successProbability, label)
+  const rollResult = rollAgainstProbabilityQuantized(successProbability, label)
 
   return {
     attackerValue,
