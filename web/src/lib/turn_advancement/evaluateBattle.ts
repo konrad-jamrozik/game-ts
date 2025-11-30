@@ -2,7 +2,7 @@ import pluralize from 'pluralize'
 import { sum } from 'radash'
 import type { AgentsView } from '../model/agents/AgentsView'
 import { agV, type AgentView } from '../model/agents/AgentView'
-import { toF6, f6div, f6fmtInt, f6fmtPctDec0, f6sum, type Fixed6 } from '../model/fixed6'
+import { f6div, f6fmtInt, f6fmtPctDec0, f6sum, toF6, type Fixed6 } from '../model/fixed6'
 import type { Agent, Enemy } from '../model/model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/missionRuleset'
@@ -184,7 +184,7 @@ function logRetreat(retreatResult: RetreatResult): void {
     retreatResult.agentsTotalCurrentEffectiveSkill,
     retreatResult.agentsTotalOriginalEffectiveSkill,
   )
-  const agentsSkillPctFmt = f6fmtPctDec0(agentsEffectiveSkillPct)
+  const agentsSkillPctFmt = fmtPctDec0(agentsEffectiveSkillPct)
   const agentsSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
   const enemyToAgentsSkillRatioFmt = f6fmtPctDec0(retreatResult.enemyToAgentsSkillRatio)
   const enemyToAgentsSkillThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)

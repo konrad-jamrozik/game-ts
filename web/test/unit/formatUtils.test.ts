@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6div, f6fmtPctDec0, f6fmtPctDec2 } from '../../src/lib/model/fixed6'
+import { f6div, toF6 } from '../../src/lib/model/fixed6'
 import { fmtPctDec0, fmtPctDec2 } from '../../src/lib/utils/formatUtils'
 
 describe('formatUtils', () => {
@@ -14,8 +14,8 @@ describe('formatUtils', () => {
 
       expect(fmtPctDec0(ratio)).toBe(expectedFmtPctDec0)
       expect(fmtPctDec2(ratio)).toBe(expectedFmtPctDec2)
-      expect(f6fmtPctDec0(ratioF6)).toBe(expectedF6fmtPctDec0)
-      expect(f6fmtPctDec2(ratioF6)).toBe(expectedF6fmtPctDec2)
+      expect(fmtPctDec0(ratioF6)).toBe(expectedF6fmtPctDec0)
+      expect(fmtPctDec2(ratioF6)).toBe(expectedF6fmtPctDec2)
     },
   )
 })

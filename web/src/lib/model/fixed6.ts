@@ -145,20 +145,7 @@ export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
   return toF6(product)
 }
 
-/**
- * Divides one Fixed6 value by another and returns the result as a Fixed6.
- * The result represents the ratio directly (not as a percentage).
- * For example:
- * f6div(fixed6(8_000_000), fixed6(10_000_000)) = fixed6(800_000) (representing 8.00 / 10.00 = 0.80)
- * f6div(fixed6(15_000_000), fixed6(10_000_000)) = fixed6(1_500_000) (representing 15.00 / 10.00 = 1.50)
- */ // kja get rid of this
-export function f6div(numerator: Fixed6, denominator: Fixed6 | number): Fixed6 {
-  const denominatorValue = typeof denominator === 'number' ? toF6(denominator).value : denominator.value
-  const divResult = div(numerator.value, denominatorValue)
-  return floorToF6(divResult)
-}
-
-export function f6divPrecise(numerator: Fixed6, denominator: Fixed6): number {
+export function f6div(numerator: Fixed6, denominator: Fixed6): number {
   return div(numerator.value, denominator.value)
 }
 
@@ -223,19 +210,6 @@ export function f6le(first: Fixed6, second: Fixed6): boolean {
 }
 
 /**
- * Checks if a Fixed6 value is within a range (inclusive on both ends).
- * For example:
- * f6inRange(fixed6(5_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (5.00 is between 4.00 and 6.00)
- * f6inRange(fixed6(4_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (4.00 is at lower bound)
- * f6inRange(fixed6(6_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (6.00 is at upper bound)
- * f6inRange(fixed6(3_000_000), fixed6(4_000_000), fixed6(6_000_000)) = false (3.00 is below range)
- * f6inRange(fixed6(7_000_000), fixed6(4_000_000), fixed6(6_000_000)) = false (7.00 is above range)
- */
-export function f6inRange(value: Fixed6, lowerBound: Fixed6, upperBound: Fixed6): boolean {
-  return f6ge(value, lowerBound) && f6le(value, upperBound)
-}
-
-/**
  * Checks if the first Fixed6 value is greater than or equal to the second.
  * For example:
  * f6ge(fixed6(8_000_000), fixed6(7_000_000)) = true (8.00 >= 7.00)
@@ -249,6 +223,19 @@ export function f6ge(first: Fixed6, second: Fixed6): boolean {
 export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
   const secondValue = typeof second === 'number' ? toF6(second).value : second.value
   return first.value > secondValue
+}
+
+/**
+ * Checks if a Fixed6 value is within a range (inclusive on both ends).
+ * For example:
+ * f6inRange(fixed6(5_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (5.00 is between 4.00 and 6.00)
+ * f6inRange(fixed6(4_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (4.00 is at lower bound)
+ * f6inRange(fixed6(6_000_000), fixed6(4_000_000), fixed6(6_000_000)) = true (6.00 is at upper bound)
+ * f6inRange(fixed6(3_000_000), fixed6(4_000_000), fixed6(6_000_000)) = false (3.00 is below range)
+ * f6inRange(fixed6(7_000_000), fixed6(4_000_000), fixed6(6_000_000)) = false (7.00 is above range)
+ */
+export function f6inRange(value: Fixed6, lowerBound: Fixed6, upperBound: Fixed6): boolean {
+  return f6ge(value, lowerBound) && f6le(value, upperBound)
 }
 
 /**

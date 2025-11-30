@@ -9,18 +9,19 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getMissionById } from '../lib/collections/missions'
+import { f6sum, toF } from '../lib/model/fixed6'
 import type { MissionSite } from '../lib/model/model'
 import { clearMissionSelection, setMissionSiteSelection } from '../lib/slices/selectionSlice'
 import {
+  fmtMissionSiteIdWithMissionId,
   getActiveOrDeployedMissionSites,
   getArchivedMissionSites,
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
-  fmtMissionSiteIdWithMissionId,
 } from '../lib/utils/MissionSiteUtils'
-import { fmtNoPrefix } from '../lib/utils/formatUtils'
+import { fmtDec1, fmtNoPrefix } from '../lib/utils/formatUtils'
+import { div } from '../lib/utils/mathUtils'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
-import { toF6, f6div, f6fmtDec1, f6isZero, f6sum, type Fixed6 } from '../lib/model/fixed6'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'
@@ -204,10 +205,10 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
       field: 'avgSkill',
       headerName: 'Avg. skill',
       width: 80,
-      valueGetter: (_value, row: MissionRow) => getAverageSkill(row).value,
+      valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const avgSkill = getAverageSkill(params.row)
-        const displayValue = f6isZero(avgSkill) ? '-' : f6fmtDec1(avgSkill)
+        const displayValue = avgSkill === 0 ? '-' : fmtDec1(avgSkill)
         return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
       },
     },
@@ -218,12 +219,11 @@ function getEnemyCount(row: MissionRow): number {
   return row.enemies.length
 }
 
-function getAverageSkill(row: MissionRow): Fixed6 {
+function getAverageSkill(row: MissionRow): number {
   const { enemies } = row
   if (enemies.length === 0) {
-    return toF6(0)
+    return 0
   }
-  const totalSkill = f6sum(...enemies.map((enemy) => enemy.skill))
-  const count = toF6(enemies.length)
-  return f6div(totalSkill, count)
+  const totalSkill = toF(f6sum(...enemies.map((enemy) => enemy.skill)))
+  return div(totalSkill, enemies.length)
 }

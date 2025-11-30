@@ -1,7 +1,7 @@
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../../utils/actorUtils'
 import { agV } from '../agents/AgentView'
-import { toF6, f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF } from '../fixed6'
+import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6, toF6r } from '../fixed6'
 import type { Agent, Enemy, MissionSite } from '../model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
@@ -48,7 +48,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   // Check if enemy effective skill is at least 80% of agents' current effective skill
   const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
   const enemyTotalCurrentEffectiveSkill = f6sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy)))
-  const enemyToAgentsSkillRatio = f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill)
+  const enemyToAgentsSkillRatio = toF6r(f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill))
   const enemyToAgentsSkillThreshold = toF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
   const enemyAboveThreshold = f6ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
 
