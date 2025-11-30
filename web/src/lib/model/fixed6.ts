@@ -56,14 +56,6 @@ export function toF6r(value: number): Fixed6 {
   return roundToF6(value)
 }
 
-export function toF6r4(value: number): Fixed6 {
-  return roundToF4(value)
-}
-
-export function f6addToInt(target: number, value: Fixed6): number {
-  return f6asInt(f6add(toF6(target), value))
-}
-
 /**
  * Converts a Fixed6 value to a decimal number without rounding.
  * For example:
@@ -143,17 +135,16 @@ export function f6min(first: Fixed6, second: Fixed6): Fixed6 {
 }
 
 /**
- * Multiplies a Fixed6 value by zero or more decimal numbers and returns the result as a Fixed6.
- * The result is asserted to have at most 6 decimal places (throws an error if precision would be lost).
+ * Multiplies a Fixed6 value by zero or more decimal numbers and returns the result as a number.
  * For example:
- * f6mult(fixed6(10_000_000)) = fixed6(10_000_000) (representing 10.00 * 1 = 10.00, no multipliers)
- * f6mult(fixed6(10_000_000), 0.2) = fixed6(2_000_000) (representing 10.00 * 0.2 = 2.00)
- * f6mult(fixed6(10_000_000), 0.5, 0.8) = fixed6(4_000_000) (representing 10.00 * 0.5 * 0.8 = 4.00)
- * f6mult(fixed6(21_500_000), 0.9, 0.95) = fixed6(18_382_500) (representing 21.50 * 0.9 * 0.95 = 18.3825)
+ * f6mult(fixed6(10_000_000)) = 10.00 (representing 10.00 * 1 = 10.00, no multipliers)
+ * f6mult(fixed6(10_000_000), 0.2) = 2.00 (representing 10.00 * 0.2 = 2.00)
+ * f6mult(fixed6(10_000_000), 0.5, 0.8) = 4.00 (representing 10.00 * 0.5 * 0.8 = 4.00)
+ * f6mult(fixed6(21_500_000), 0.9, 0.95) = 18.3825 (representing 21.50 * 0.9 * 0.95 = 18.3825)
  */
-export function f6mult(first: Fixed6, ...multipliers: number[]): Fixed6 {
+export function f6mult(first: Fixed6, ...multipliers: number[]): number {
   const product = multipliers.reduce((acc, mult) => acc * mult, toF(first))
-  return toF6(product)
+  return product
 }
 
 export function f6div(numerator: Fixed6, denominator: Fixed6): number {
@@ -280,12 +271,6 @@ export function f6floorToInt(value: Fixed6): number {
   const floored = floor(toF(value))
   assertInteger(floored)
   return floored
-}
-
-function f6asInt(value: Fixed6): number {
-  const float = toF(value)
-  assertInteger(float)
-  return float
 }
 
 /**

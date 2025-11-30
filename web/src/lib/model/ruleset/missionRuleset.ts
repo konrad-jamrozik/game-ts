@@ -40,7 +40,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const agentsTotalOriginalEffectiveSkill = f6sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
   const agentsTotalCurrentEffectiveSkill = f6sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill()))
 
-  const agentsEffectiveSkillThreshold = f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
+  const agentsEffectiveSkillThreshold = toF6r(f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD))
 
   // Check if agents' effective skill is below threshold
   const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)

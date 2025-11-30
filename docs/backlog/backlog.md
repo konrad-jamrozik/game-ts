@@ -4,9 +4,6 @@ KJA3 backlog:
 
 # Brainstorming
 
-- KJA3 review all usage of Fixed2;
-  - introduce type Skill = Fixed2 and introduce functions tightly controlling any conversions to/from Skill and rounding
-
 - KJA3 Add to assets: Agent weapon damage range min-max
   
 - KJA3 fix up the assets prices, and make their cost increase

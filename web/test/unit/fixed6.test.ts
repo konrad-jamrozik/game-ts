@@ -46,12 +46,12 @@ describe('Common floating point precision pitfalls', () => {
     expect(f6fmtPctDec2(resultF6round)).toBe('9775.00%')
   })
 
-  test('f6mult asserts no loss of precision', () => {
-    // f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD)
+  test('f6mult returns float number', () => {
     const res1 = f6mult(toF6(1234), 0.5)
-    expect(res1).toStrictEqual(toF6(617))
-    // This is because 1234 * 0.12 = 148.07999999999998, which has more than 6 decimal places
-    expect(() => f6mult(toF6(1234), 0.12)).toThrow('Value must have at most 6 decimal places')
-    expect(() => f6mult(toF6(1234), 0.000_000_05)).toThrow('Value must have at most 6 decimal places')
+    expect(res1).toBe(617)
+    const res2 = f6mult(toF6(1234), 0.12)
+    expect(res2).toBeCloseTo(148.08, 10)
+    const res3 = f6mult(toF6(1234), 0.000_000_05)
+    expect(res3).toBeCloseTo(0.000_061_7, 10)
   })
 })

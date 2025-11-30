@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { f6add, f6mult } from '../../src/lib/model/fixed6'
+import { f6add, f6mult, toF6 } from '../../src/lib/model/fixed6'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,
@@ -61,7 +61,7 @@ describe(evaluateBattle, () => {
 
     const expectedRounds = ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
-    const expectedSkillUpdate = f6mult(skillGainPerRound, expectedRounds)
+    const expectedSkillUpdate = toF6(f6mult(skillGainPerRound, expectedRounds))
     expectReportToBe(report)({
       rounds: expectedRounds,
       agentCasualties: 1,

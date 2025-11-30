@@ -1,4 +1,3 @@
-import { fmtPctDec4 } from '../../utils/formatUtils'
 import { f6add, f6ge, f6max, f6min, f6sub, toF, toF6, toF6r, type Fixed6 } from '../fixed6'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
@@ -24,11 +23,6 @@ export function getSuppressionToDecay(suppression: Fixed6): Fixed6 {
   // otherwise decay all of the remaining suppression.
   const minDecay = f6ge(suppression, toF6(0.0002)) ? toF6(0.0001) : suppression
   const decay = f6min(f6max(standardDecay, minDecay), suppression)
-  console.log('getSuppressionDecay:', {
-    suppression: fmtPctDec4(toF(suppression)),
-    SUPPRESSION_DECAY,
-    decay: fmtPctDec4(toF(decay)),
-  })
   return decay
 }
 
