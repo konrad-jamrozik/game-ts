@@ -1,4 +1,6 @@
-import { describe, test } from 'vitest'
+/* eslint-disable vitest/no-conditional-expect */
+// oxlint-disable no-conditional-in-test
+import { describe, test, expect } from 'vitest'
 import { toF6 } from '../../src/lib/model/fixed6'
 import { decaySuppression } from '../../src/lib/model/ruleset/panicRuleset'
 
@@ -13,11 +15,12 @@ describe('panicRuleset', () => {
         const { decayedSuppression } = decaySuppression(suppression)
         suppression = decayedSuppression
 
-        if (idx === 24) {
-          // After 25 calls (idx 0-24), suppression should be 0.000027
-          expect(suppression).toStrictEqual(toF6(0.000027))
-        } else if (idx === 25) {
-          // After 26 calls (idx 0-25), suppression should be 0
+        if (idx === 23) {
+          // After 24 calls (idx 0-23), suppression should be 0.000_127
+          // i.e. 0.27%
+          expect(suppression).toStrictEqual(toF6(0.000_127))
+        } else if (idx === 24) {
+          // After 25 calls (idx 0-24), suppression should be 0.000_000
           expect(suppression).toStrictEqual(toF6(0))
         }
       }

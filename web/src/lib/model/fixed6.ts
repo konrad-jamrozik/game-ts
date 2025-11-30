@@ -54,6 +54,10 @@ export function toF6r(value: number): Fixed6 {
   return roundToF6(value)
 }
 
+export function toF6r4(value: number): Fixed6 {
+  return roundToF4(value)
+}
+
 export function f6addToInt(target: number, value: Fixed6): number {
   return f6asInt(f6add(toF6(target), value))
 }
@@ -260,6 +264,11 @@ export function floorToF6(value: number): Fixed6 {
 
 export function roundToF6(value: number): Fixed6 {
   const rounded = Math.round(value * 1_000_000)
+  return fixed6(rounded)
+}
+
+export function roundToF4(value: number): Fixed6 {
+  const rounded = Math.round(value * 10_000)
   return fixed6(rounded)
 }
 

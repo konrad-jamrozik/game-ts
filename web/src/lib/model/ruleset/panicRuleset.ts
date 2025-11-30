@@ -1,6 +1,6 @@
 import { fmtPctDec4 } from '../../utils/formatUtils'
 import { floor } from '../../utils/mathUtils'
-import { f6max, f6min, f6sub, toF, toF6, toF6r, type Fixed6 } from '../fixed6'
+import { f6ge, f6max, f6min, f6sub, toF, toF6, toF6r, type Fixed6 } from '../fixed6'
 import type { GameState } from '../model'
 import { SUPPRESSION_DECAY } from './constants'
 
@@ -21,7 +21,9 @@ export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixe
 
 export function getSuppressionToDecay(suppression: Fixed6): Fixed6 {
   const standardDecay = toF6r(toF(suppression) * SUPPRESSION_DECAY)
-  const minDecay = toF6(0.0001) // 0.01%
+  // If suppression is greater than or equal to 0.02%, then decay by at least 0.01%,
+  // otherwise decay all of the remaining suppression.
+  const minDecay = f6ge(suppression, toF6(0.0002)) ? toF6(0.0001) : suppression
   const decay = f6min(f6max(standardDecay, minDecay), suppression)
   console.log('getSuppressionDecay:', {
     suppression: fmtPctDec4(toF(suppression)),
