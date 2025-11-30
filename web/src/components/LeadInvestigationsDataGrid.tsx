@@ -93,7 +93,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
       headerName: 'Intel decay',
       width: 140,
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intelDecayPct: intelDecayPercent, intelDecay } = params.row
+        const { intelDecayPct, intelDecay } = params.row
         return (
           <div
             style={{
@@ -104,7 +104,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{f6str(intelDecayPercent)}</span>
+            <span style={{ textAlign: 'right' }}>{fmtPctDec2(intelDecayPct)}</span>
             {intelDecay > 0 && (
               <>
                 <span style={{ textAlign: 'center' }}>=</span>
