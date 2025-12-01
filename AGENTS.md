@@ -44,10 +44,10 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 To verify your changes are correct, rely on the built-in IDE typescript compiler and linter
 errors.
 
-You can also run `npm run oxlint` from the `web/` directory.
-
 **Important**: Every time any significant changes are made, correctness must be verified by running
 `npm run qcheck` from the `web/` directory.
+
+If the changes are minor, you can instead only run `npm run oxlint` from the `web/` directory.
 
 Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
