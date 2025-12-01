@@ -5,7 +5,7 @@ import {
   rollAgainstProbabilityFloat,
   rollAgainstProbabilityQuantized,
 } from '../../src/lib/turn_advancement/rolls'
-import { rand } from '../../src/lib/utils/rand'
+import { rand } from '../../src/lib/primitives/rand'
 
 /**
  * See also related tests in rollAgainstProbability.test.ts

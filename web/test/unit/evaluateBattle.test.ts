@@ -9,7 +9,7 @@ import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/model/ruleset/constants'
 import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
-import { rand } from '../../src/lib/utils/rand'
+import { rand } from '../../src/lib/primitives/rand'
 import { agFix } from '../fixtures/agentFixture'
 import { enFix } from '../fixtures/enemyFixture'
 import { st } from '../fixtures/stateFixture'

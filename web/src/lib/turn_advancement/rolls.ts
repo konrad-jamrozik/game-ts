@@ -15,7 +15,7 @@ import {
 import { assertInRange } from '../primitives/assertPrimitives'
 import { fmtPctDec2 } from '../primitives/formatPrimitives'
 import { div } from '../primitives/mathPrimitives'
-import { rand } from '../utils/rand'
+import { rand } from '../primitives/rand'
 
 export type ContestRollResult = {
   attackerValue: number

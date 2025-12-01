@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { f6div, toF6 } from '../../src/lib/primitives/fixed6Primitives'
 import { fmtPctDec0, fmtPctDec2 } from '../../src/lib/primitives/formatPrimitives'
 
-describe('formatUtils', () => {
+describe('formatPrimitives', () => {
   test.each([
     [281, 71, '395%', '395.77%', '395%', '395.77%'],
     [281.9, 71, '397%', '397.04%', '397%', '397.04%'],

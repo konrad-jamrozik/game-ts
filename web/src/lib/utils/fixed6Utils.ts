@@ -1,5 +1,6 @@
-import { roundToF6, type Fixed6 } from '../primitives/fixed6Primitives'
+import { roundToF6, toF, isF6, type Fixed6 } from '../primitives/fixed6Primitives'
 import { assertMax6Dec } from './assertUtils'
+import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../primitives/formatPrimitives'
 
 /**
  * Converts a decimal value to Fixed6 format.
@@ -19,4 +20,41 @@ export function toF6(value: number): Fixed6 {
   // We still round here instead of doing toF6 because assertMax6Dec allows for a tolerance of 1e-8,
   // which should be removed by this rounding.
   return roundToF6(value)
+}
+
+/**
+ * Converts a Fixed6 value to an integer string by dividing by 1_000_000 and rounding down.
+ * Use this when you want to display a Fixed6 value as a plain integer number.
+ *
+ * For example:
+ * f6fmtInt(fixed6(7_000_000)) = "7"
+ * f6fmtInt(fixed6(21_500_000)) = "21" (not "21.5")
+ * f6fmtInt(fixed6(21_750_000)) = "21" (not "21.75")
+ */
+export function f6fmtInt(value: Fixed6): string {
+  return fmtDec0(toF(value))
+}
+
+export function f6fmtDec1(value: Fixed6): string {
+  return fmtDec1(toF(value))
+}
+
+export function f6fmtDec2(value: Fixed6): string {
+  return fmtDec2(toF(value))
+}
+
+/**
+ * Formats a Fixed6 value as a percentage with 2 decimal places, after dividing it by the denominator.
+ * For example:
+ * f6fmtPctDec2(asF6(75), asF6(100)) = "75.00" (representing 75.00%)
+ * f6fmtPctDec2(asF6(98.5), asF6(52)) = "189.42" (representing 189.42%)
+ */
+export function f6fmtPctDec2(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
+  return fmtPctDec2(nominator.value, denominatorValue)
+}
+
+export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
+  return fmtPctDec0(nominator.value, denominatorValue)
 }

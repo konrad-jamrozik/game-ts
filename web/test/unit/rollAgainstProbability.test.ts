@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { rollAgainstProbabilityQuantized, rollAgainstProbabilityFloat } from '../../src/lib/turn_advancement/rolls'
-import { rand } from '../../src/lib/utils/rand'
+import { rand } from '../../src/lib/primitives/rand'
 
 /**
  * See also related tests in fmtRoll.test.ts
