@@ -1,10 +1,9 @@
 import { describe, expect, test } from 'vitest'
-import { agV } from '../../src/lib/model_utils/AgentView'
-import { getAgentSkillBasedValue } from '../../src/lib/ruleset/skillRuleset'
+import { getAgentSkillBasedValueV2 } from '../../src/lib/ruleset/skillRuleset'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import { agFix } from '../fixtures/agentFixture'
 
-describe(getAgentSkillBasedValue, () => {
+describe(getAgentSkillBasedValueV2, () => {
   // prettier-ignore
   test.each<[number, number]>([
     // Basic cases - exact divisions
@@ -66,9 +65,8 @@ describe(getAgentSkillBasedValue, () => {
       hitPoints: 30,
       maxHitPoints: 30,
     })
-    const agentView = agV(agent)
     const multiplier = 5 // Using AGENT_ESPIONAGE_INTEL as a realistic multiplier
-    const result = getAgentSkillBasedValue(agentView, multiplier)
+    const result = getAgentSkillBasedValueV2(agent, multiplier)
     expect(result).toStrictEqual(expectedF6)
   })
 })

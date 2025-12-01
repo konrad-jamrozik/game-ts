@@ -1,6 +1,5 @@
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { agV } from '../../model_utils/AgentView'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
@@ -11,6 +10,7 @@ import {
 import { toF6 } from '../../utils/fixed6Utils'
 import { newWeapon } from '../../domain_utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
+import { agentsOnTrainingAssignmentFromArray } from '../../model_utils/gameStateUtils'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
@@ -81,7 +81,7 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
         }
       }
       // Check if agent is in training before changing assignment
-      const isTraining = agV(agent).isOnTrainingAssignment()
+      const isTraining = agentsOnTrainingAssignmentFromArray([agent]).length > 0
       agent.assignment = 'Standby'
       // Training agents go directly to Available (no transit needed)
       if (isTraining) {

@@ -45,7 +45,6 @@ export function agentsWithIds(agents: Agent[], ids: readonly string[]): Agent[] 
 export function agentsOnTrainingAssignmentFromArray(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'InTraining' && agent.assignment === 'Training')
 }
-
 export function agentsOnTrainingAssignment(gameState: GameState): Agent[] {
   return agentsOnTrainingAssignmentFromArray(gameState.agents)
 }

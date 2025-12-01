@@ -1,6 +1,5 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { agV } from '../../lib/model_utils/AgentView'
 import { toF6, f6fmtInt, f6fmtPctDec0 } from '../../lib/utils/fixed6Utils'
 import { f6cmp, f6eq, type Fixed6 } from '../../lib/primitives/fixed6Primitives'
 import type { AgentState } from '../../lib/model/agentModel'
@@ -11,6 +10,7 @@ import { fmtMissionSiteIdWithMissionId } from '../../lib/domain_utils/missionSit
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 import { MyChip } from '../MyChip'
 import type { AgentRow } from './AgentsDataGrid'
+import { effectiveSkill } from '../../lib/domain_utils/actorUtils'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
@@ -72,8 +72,8 @@ export function createAgentColumns(
         assertDefined(row1, `Row not found for id: ${param1.id}`)
         assertDefined(row2, `Row not found for id: ${param2.id}`)
 
-        const effectiveSkill1 = agV(row1).effectiveSkill()
-        const effectiveSkill2 = agV(row2).effectiveSkill()
+        const effectiveSkill1 = effectiveSkill(row1)
+        const effectiveSkill2 = effectiveSkill(row2)
 
         // Primary sort: effective skill (compare Fixed6 values)
         if (!f6eq(effectiveSkill1, effectiveSkill2)) {
@@ -90,9 +90,9 @@ export function createAgentColumns(
         return row1.id.localeCompare(row2.id)
       },
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
-        const effectiveSkill = agV(params.row).effectiveSkill()
+        const effectiveSkillVal = effectiveSkill(params.row)
         const baselineSkill = params.value ?? toF6(0)
-        const percentage = f6fmtPctDec0(effectiveSkill, baselineSkill)
+        const percentage = f6fmtPctDec0(effectiveSkillVal, baselineSkill)
         return (
           <div
             aria-label={`agents-row-skill-${params.id}`}
@@ -104,7 +104,7 @@ export function createAgentColumns(
               width: '100%',
             }}
           >
-            <span style={{ textAlign: 'right' }}>{f6fmtInt(effectiveSkill)}</span>
+            <span style={{ textAlign: 'right' }}>{f6fmtInt(effectiveSkillVal)}</span>
             <span style={{ textAlign: 'center' }}>/</span>
             <span style={{ textAlign: 'right' }}>{f6fmtInt(baselineSkill)}</span>
             <span style={{ textAlign: 'right' }}>({percentage})</span>
