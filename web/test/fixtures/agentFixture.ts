@@ -1,4 +1,4 @@
-import type { Agent } from '../../src/lib/model/model'
+import type { Agent } from '../../src/lib/model/agentModel'
 import { newHiredAgent } from '../../src/lib/slices/reducers/agentReducers'
 import { wpnFix } from './weaponFixture'
 

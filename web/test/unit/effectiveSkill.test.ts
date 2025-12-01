@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import type { Agent } from '../../src/lib/model/model'
+import type { Agent } from '../../src/lib/model/agentModel'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/domain_utils/actorUtils'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'

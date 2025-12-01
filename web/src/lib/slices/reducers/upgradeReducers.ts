@@ -5,7 +5,7 @@ import {
   getUpgradeIncrementFixed6,
   type UpgradeName,
 } from '../../collections/upgrades'
-import type { GameState } from '../../model/model'
+import type { GameState } from '../../model/gameStateModel'
 import { asPlayerAction } from './asPlayerAction'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {

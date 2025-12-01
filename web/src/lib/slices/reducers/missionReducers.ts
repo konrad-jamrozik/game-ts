@@ -1,4 +1,5 @@
-import type { GameState, MissionSite, MissionSiteId } from '../../model/model'
+import type { GameState } from '../../model/gameStateModel'
+import type { MissionSite, MissionSiteId } from '../../model/model'
 import { missions } from '../../collections/missions'
 import { newEnemiesFromSpec } from '../../domain_utils/enemyUtils'
 import { asPlayerAction } from './asPlayerAction'

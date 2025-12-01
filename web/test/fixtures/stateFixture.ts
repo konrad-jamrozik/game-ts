@@ -1,16 +1,9 @@
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
 import { agsV, type AgentsView } from '../../src/lib/model_utils/AgentsView'
-import {
-  isActivityAssignment,
-  type Agent,
-  type AgentAssignment,
-  type AgentState,
-  type Enemy,
-  type GameState,
-  type MissionSite,
-  type MissionSiteId,
-} from '../../src/lib/model/model'
+import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
+import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/model'
+import type { GameState } from '../../src/lib/model/gameStateModel'
 import { makeInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'

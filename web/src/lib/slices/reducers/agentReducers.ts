@@ -1,4 +1,5 @@
-import type { Agent, GameState } from '../../model/model'
+import type { Agent } from '../../model/agentModel'
+import type { GameState } from '../../model/gameStateModel'
 import { agV } from '../../model_utils/AgentView'
 import {
   AGENT_HIRE_COST,

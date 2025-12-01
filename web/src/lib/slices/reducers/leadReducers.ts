@@ -1,4 +1,5 @@
-import type { GameState, LeadInvestigation, LeadInvestigationId } from '../../model/model'
+import type { GameState } from '../../model/gameStateModel'
+import type { LeadInvestigation, LeadInvestigationId } from '../../model/model'
 import { assertDefined, assertNotIn } from '../../primitives/assertPrimitives'
 import { asPlayerAction } from './asPlayerAction'
 
