@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
-import { PlayerActions } from '../../src/components/PlayerActions'
+import { PlayerActions } from '../../src/components/GameControls/PlayerActions'
 
 export const ui = {
   renderPlayerActions(): void {
