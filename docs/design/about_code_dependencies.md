@@ -59,7 +59,7 @@ lib/ruleset      -> lib/model
 lib/ruleset      -> lib/domain_utils
 ```
 
-# Proposed_redesign
+# Proposed redesign
 
 Allow following dependencies:
 ``` text
@@ -69,3 +69,17 @@ lib/ruleset      -> lib/model
 ```
 
 I.e. push `model` and `collections` down.
+
+So it will become:
+
+``` text
+app              -> components
+components       -> lib
+lib/domain_utils -> lib/collections
+lib/collections  -> lib/ruleset
+lib/ruleset      -> lib/model
+lib/model        -> lib/utils
+lib/utils        -> lib/primitives
+```
+
+Maybe introduce model_utils?
