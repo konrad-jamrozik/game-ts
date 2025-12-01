@@ -1,7 +1,7 @@
-import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../ruleset/constants'
-import { assertEqual } from '../primitives/assertPrimitives'
-import { floor, div, ceil } from '../primitives/mathPrimitives'
-import type { GameState } from '../model/gameStateModel'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
+import { assertEqual } from '../../primitives/assertPrimitives'
+import { floor, div, ceil } from '../../primitives/mathPrimitives'
+import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
   addSkillFromTraining,
@@ -10,9 +10,9 @@ import {
   onEspionageAssignment,
   onTrainingAssignment,
   applyExhaustion,
-} from '../model_utils/agentUtils'
-import { getContractingIncome } from '../ruleset/moneyRuleset'
-import { getEspionageIntel } from '../ruleset/intelRuleset'
+} from '../../model_utils/agentUtils'
+import { getContractingIncome } from '../../ruleset/moneyRuleset'
+import { getEspionageIntel } from '../../ruleset/intelRuleset'
 
 /** // KJA there should be ruleset call somewhere here, but there isn't
  * Updates agents in Available state - apply exhaustion recovery

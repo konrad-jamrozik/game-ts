@@ -3,7 +3,7 @@ import { toF6, f6gt } from '../../src/lib/utils/fixed6Utils'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { MissionSite } from '../../src/lib/model/model'
-import { evaluateDeployedMissionSite } from '../../src/lib/turn_advancement/evaluateDeployedMissionSite'
+import { evaluateDeployedMissionSite } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMissionSite'
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,

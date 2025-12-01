@@ -1,11 +1,11 @@
-import { getMissionById } from '../collections/missions'
-import { withIds } from '../model_utils/agentUtils'
-import { toF6, f6add } from '../utils/fixed6Utils'
-import { f6max, f6sub, f6sum } from '../primitives/fixed6Primitives'
-import type { Faction, FactionRewards, MissionRewards } from '../model/model'
-import type { AgentState } from '../model/agentModel'
-import type { GameState } from '../model/gameStateModel'
-import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../ruleset/panicRuleset'
+import { getMissionById } from '../../collections/missions'
+import { withIds } from '../../model_utils/agentUtils'
+import { toF6, f6add } from '../../utils/fixed6Utils'
+import { f6max, f6sub, f6sum } from '../../primitives/fixed6Primitives'
+import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
+import type { AgentState } from '../../model/agentModel'
+import type { GameState } from '../../model/gameStateModel'
+import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../../ruleset/panicRuleset'
 import {
   newValueChange,
   type AgentsReport,
@@ -18,8 +18,8 @@ import {
   type MoneyBreakdown,
   type PanicReport,
   type TurnReport,
-} from '../model/turnReportModel'
-import { validateGameStateInvariants } from '../model_utils/validateGameStateInvariants'
+} from '../../model/turnReportModel'
+import { validateGameStateInvariants } from '../../model_utils/validateGameStateInvariants'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
@@ -30,7 +30,7 @@ import {
   updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
-import { getAgentUpkeep } from '../ruleset/moneyRuleset'
+import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
 
 /**
  * This function is documented by the about_turn_advancement.md document.

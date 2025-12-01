@@ -1,14 +1,14 @@
 import { sum } from 'radash'
-import { getMissionById } from '../collections/missions'
-import { MISSION_SURVIVAL_SKILL_GAIN } from '../ruleset/constants'
-import type { MissionRewards, MissionSite, MissionSiteId } from '../model/model'
-import type { Agent } from '../model/agentModel'
-import type { GameState } from '../model/gameStateModel'
-import { f6add, f6fmtInt } from '../utils/fixed6Utils'
-import { getRecoveryTurns } from '../ruleset/recoveryRuleset'
-import { addSkill, notTerminated, withIds } from '../model_utils/agentUtils'
+import { getMissionById } from '../../collections/missions'
+import { MISSION_SURVIVAL_SKILL_GAIN } from '../../ruleset/constants'
+import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
+import type { Agent } from '../../model/agentModel'
+import type { GameState } from '../../model/gameStateModel'
+import { f6add, f6fmtInt } from '../../utils/fixed6Utils'
+import { getRecoveryTurns } from '../../ruleset/recoveryRuleset'
+import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
-import { assertDefined } from '../primitives/assertPrimitives'
+import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.

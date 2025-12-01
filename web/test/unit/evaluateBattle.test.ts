@@ -8,7 +8,7 @@ import {
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/ruleset/constants'
-import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
+import { evaluateBattle, type BattleReport } from '../../src/lib/game_utils/turn_advancement/evaluateBattle'
 import { rand } from '../../src/lib/primitives/rand'
 import { agFix } from '../fixtures/agentFixture'
 import { enFix } from '../fixtures/enemyFixture'

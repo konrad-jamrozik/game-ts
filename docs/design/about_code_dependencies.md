@@ -40,7 +40,7 @@ Directory import rules for dirs in `src/` dir:
 ``` text
 app
 components
-lib/turn_advancement
+lib/game_utils
 lib/ruleset
 lib/model_utils
 lib/collections
@@ -52,6 +52,6 @@ lib/primitives
 Plus there are special import rules for the following directories:
 
 ``` text
-lib/slices --> lib/turn_advancement
+lib/slices --> lib/game_utils
 lib/selectors --> lib/model
 ```
