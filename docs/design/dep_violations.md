@@ -1,69 +1,74 @@
-# Dependency Violations
+# Dependency violations
 
 This document lists violations of the dependency constraints defined in `about_code_dependencies.md`.
 
 ## Violations
 
-### 1. `lib/turn_advancement` imports from `lib/domain_utils` (VIOLATION)
+### 1. `lib/ruleset` importing from `lib/turn_advancement`
 
-According to the dependency rules, `lib/turn_advancement` is below `lib/domain_utils` in the hierarchy,
-so it cannot depend on `lib/domain_utils`.
+**File**: `web/src/lib/ruleset/missionRuleset.ts`
 
-**Violating files:**
+**Violation**: Line 1 imports `AgentCombatStats` type from `../turn_advancement/evaluateAttack`
 
-- `web/src/lib/turn_advancement/evaluateAttack.ts`
-  - Imports from `../domain_utils/actorUtils`
-  - Imports from `../domain_utils/fmtAttackLog`
-  - Imports from `../domain_utils/weaponUtils`
+```typescript
+import type { AgentCombatStats } from '../turn_advancement/evaluateAttack'
+```
 
-- `web/src/lib/turn_advancement/updateAgents.ts`
-  - Imports from `../domain_utils/actorUtils`
+**Rule violated**: According to the dependency hierarchy, `lib/ruleset` can only depend on:
+- `lib/model_utils`
+- `lib/collections`
+- `lib/model`
+- `lib/utils`
+- `lib/primitives`
 
-- `web/src/lib/turn_advancement/updateLeadInvestigations.ts`
-  - Imports from `../domain_utils/enemyUtils`
+`lib/ruleset` cannot depend on `lib/turn_advancement` (which is higher in the dependency hierarchy).
 
-- `web/src/lib/turn_advancement/evaluateDeployedMissionSite.ts`
-  - Imports from `../domain_utils/actorUtils`
+### 2. `lib/component_utils` importing from `components`
 
-- `web/src/lib/turn_advancement/evaluateBattle.ts`
-  - Imports from `../domain_utils/actorUtils`
+**File**: `web/src/lib/component_utils/dataGridUtils.ts`
 
-### 2. `lib/ruleset` imports from `lib/domain_utils` (VIOLATION)
+**Violation**: Lines 2-3 import types from `components` directory
 
-According to the dependency rules, `lib/ruleset` is below `lib/domain_utils` in the hierarchy, so it cannot depend on `lib/domain_utils`.
+```typescript
+import type { AgentRow } from '../../components/AgentsDataGrid/AgentsDataGrid'
+import type { LeadInvestigationRow } from '../../components/LeadInvestigationsDataGrid'
+```
 
-**Violating files:**
+**Rule violated**: `lib/component_utils` is not listed in the dependency rules, so it follows default rules.
+According to default rules, code in `lib/component_utils` cannot import from other directories (like `components`).
+Additionally, `lib/*` directories should not import from `components` directory.
 
-- `web/src/lib/ruleset/skillRuleset.ts`
-  - Imports from `../domain_utils/actorUtils`
+### 3. `lib/selectors` importing from `app`
 
-- `web/src/lib/ruleset/missionRuleset.ts`
-  - Imports from `../domain_utils/actorUtils`
+**File**: `web/src/lib/selectors/selectors.ts`
 
-- `web/src/lib/ruleset/initialState.ts`
-  - Imports from `../domain_utils/weaponUtils`
+**Violation**: Line 2 imports `RootState` type from `app/store`
 
-- `web/src/lib/ruleset/debugInitialState.ts`
-  - Imports from `../domain_utils/weaponUtils`
-  - Imports from `../domain_utils/enemyUtils`
+```typescript
+import type { RootState } from '../../app/store'
+```
 
-### 3. `lib/selectors` imports from `app` (VIOLATION)
+**Rule violated**: `lib/selectors` is not listed in the dependency rules, so it follows default rules.
+According to default rules, code in `lib/selectors` cannot import from other directories (like `app`).
+Additionally, `lib/*` directories should not import from `app` directory.
 
-According to the dependency rules, `lib/selectors` is not in the allowed list of directories,
-so by default it can only import from itself and subdirectories. It cannot import from `app/`.
+### 4. `lib/slices` not listed in dependency rules
 
-**Violating files:**
+**Directory**: `web/src/lib/slices`
 
-- `web/src/lib/selectors/selectors.ts`
-  - Imports from `../../app/store`
+**Issue**: The `lib/slices` directory is not listed in the dependency hierarchy rules, but it is being imported by:
+- `app` directory (e.g., `app/store.ts`, `app/eventsMiddleware.ts`)
+- `components` directory (multiple files)
 
-### 4. `lib/component_utils` imports from `components` (VIOLATION)
+**Current imports in `lib/slices`**: Files in `lib/slices` import from:
+- `lib/ruleset`
+- `lib/model`
+- `lib/collections`
+- `lib/utils`
+- `lib/model_utils`
+- `lib/turn_advancement` (in `lib/slices/reducers/gameControlsReducers.ts`)
 
-According to the dependency rules, `lib/component_utils` is not in the allowed list of directories,
-so by default it can only import from itself and subdirectories. It cannot import from `components/`.
-
-**Violating files:**
-
-- `web/src/lib/component_utils/dataGridUtils.ts`
-  - Imports from `../../components/AgentsDataGrid/AgentsDataGrid`
-  - Imports from `../../components/LeadInvestigationsDataGrid`
+**Recommendation**: Either:
+1. Add `lib/slices` to the dependency hierarchy rules with appropriate position, or
+2. If `lib/slices` should follow default rules, it should only import from itself and external code,
+   which would require significant refactoring.

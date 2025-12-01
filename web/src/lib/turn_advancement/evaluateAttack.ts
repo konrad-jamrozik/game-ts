@@ -1,5 +1,5 @@
 import type { Enemy } from '../model/model'
-import type { Agent } from '../model/agentModel'
+import type { Agent, AgentCombatStats } from '../model/agentModel'
 import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
@@ -9,7 +9,7 @@ import {
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../ruleset/constants'
 import { f6add } from '../utils/fixed6Utils'
-import { toF, type Fixed6 } from '../primitives/fixed6Primitives'
+import { toF } from '../primitives/fixed6Primitives'
 import { isAgent } from '../model_utils/agentUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
@@ -141,10 +141,4 @@ export function evaluateAttack(
     // Apply defender exhaustion (both agents and enemies)
     defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
   }
-}
-
-export type AgentCombatStats = {
-  id: string
-  initialEffectiveSkill: Fixed6
-  skillGained: Fixed6
 }

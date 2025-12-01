@@ -1,9 +1,8 @@
-import type { AgentCombatStats } from '../turn_advancement/evaluateAttack'
+import type { Enemy, MissionSite } from '../model/model'
+import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
 import { toF6 } from '../utils/fixed6Utils'
 import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6Primitives'
-import type { Enemy, MissionSite } from '../model/model'
-import type { Agent } from '../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
 export function isMissionSiteConcluded(missionSite: MissionSite): boolean {

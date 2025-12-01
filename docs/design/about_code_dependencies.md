@@ -40,7 +40,6 @@ Directory import rules for dirs in `src/` dir:
 ``` text
 app
 components
-lib/domain_utils
 lib/turn_advancement
 lib/ruleset
 lib/model_utils
