@@ -1,5 +1,5 @@
 import { sum } from 'radash'
-import { assertInRange, assertInteger, assertMax6Dec } from '../utils/assert'
+import { assertInRange, assertInteger, assertMax6Dec } from './assertPrimitives'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
 import { dist, div, floor } from '../utils/mathUtils'
 

@@ -1,6 +1,6 @@
 import { toF6 } from '../primitives/fixed6'
 import type { Mission } from '../model/model'
-import { assertDefined } from '../utils/assert'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 export const missions: Mission[] = [
   {

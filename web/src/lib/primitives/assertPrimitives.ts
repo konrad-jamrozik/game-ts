@@ -1,4 +1,4 @@
-import { hasAtMostDecimals } from './mathUtils'
+import { hasAtMostDecimals } from '../utils/mathUtils'
 
 export function assertDefined<T>(
   value: T,

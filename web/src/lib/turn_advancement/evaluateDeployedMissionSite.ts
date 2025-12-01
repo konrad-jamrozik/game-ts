@@ -6,7 +6,7 @@ import { f6add, f6fmtInt } from '../primitives/fixed6'
 import { getRecoveryTurns } from '../model/ruleset/recoveryRuleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
-import { assertDefined } from '../utils/assert'
+import { assertDefined } from '../primitives/assertPrimitives'
 import { addSkill } from '../utils/actorUtils'
 
 /**

@@ -1,4 +1,4 @@
-import { assertNotZero } from './assert'
+import { assertNotZero } from '../primitives/assertPrimitives'
 
 /**
  * A floor that adds a small tolerance to handle floating point precision issues before flooring.

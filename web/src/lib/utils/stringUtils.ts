@@ -1,4 +1,4 @@
-import { assertNotNaN } from './assert'
+import { assertNotNaN } from '../primitives/assertPrimitives'
 
 // Extract numeric suffix from IDs.
 // Handles formats:

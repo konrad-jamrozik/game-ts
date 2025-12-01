@@ -9,7 +9,7 @@ import {
 } from '../model/ruleset/constants'
 import { toF, f6add, type Fixed6 } from '../primitives/fixed6'
 import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
-import { assertDefined } from '../utils/assert'
+import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'

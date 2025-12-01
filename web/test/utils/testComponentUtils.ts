@@ -1,7 +1,7 @@
 import { screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { expect } from 'vitest'
-import { assertDefined } from '../../src/lib/utils/assert'
+import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 
 export function verifyMissionState(missionId: string, expectedState: string): void {
   // Verify mission is in the expected state

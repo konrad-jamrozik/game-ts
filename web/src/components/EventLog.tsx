@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
-import { assertEqual } from '../lib/utils/assert'
+import { assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/primitives/f6fmtUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {

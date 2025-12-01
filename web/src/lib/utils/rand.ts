@@ -2,7 +2,7 @@
  * A random number generator that can return fixed values for labeled random calls.
  */
 
-import { assertDefined, assertInRange } from './assert'
+import { assertDefined, assertInRange } from '../primitives/assertPrimitives'
 
 function newRand(): {
   readonly get: (label?: string) => number

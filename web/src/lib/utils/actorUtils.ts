@@ -1,7 +1,7 @@
 import { f6add, f6cmp, f6eq, f6mult, type Fixed6, toF6r } from '../primitives/fixed6'
 import type { Actor, Agent, Enemy } from '../model/model'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
-import { assertNonNeg } from './assert'
+import { assertNonNeg } from '../primitives/assertPrimitives'
 import { div, nonNeg } from './mathUtils'
 import { compareIdsNumeric } from './stringUtils'
 

@@ -1,5 +1,5 @@
 import type { Lead } from '../model/model'
-import { assertDefined } from '../utils/assert'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 export const leads: Lead[] = [
   // Starting lead
