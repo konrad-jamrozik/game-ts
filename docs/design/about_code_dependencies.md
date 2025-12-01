@@ -12,10 +12,10 @@ which files can `import` which symbols from other files.
 
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
-- By default, code in files being directly (not in child dirs) in any given directory `dir`:
+- By default, code in files being directly in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
-  - Cannot import any other code from other directories than itself.
+  - Cannot import any code from other directories than itself.
 - However, each subdirectory may have more restrictive rules applied to it than the default rules.
 - The rules for deeper directory take precedence over the rules for shallower directories.
 
@@ -29,22 +29,19 @@ of the `src/` directory. This means that:
 
 # Directory import rules
 
-We define the notation `foo -> bar` as denoting a rule that means that code in `foo/` can import code from `bar/`.
+We define the notation `foo -> bar` as denoting a rule that means that code in `foo/` can import code from `bar/`,
+as well as any other code that `bar/` can import.
+
 This is in addition to the general import rules listed above.
 
 Directory import rules for dirs in `app/` dir:
 
 ``` text
 app              -> components
-app              -> lib
 components       -> lib
-lib/model        -> lib/ruleset
+lib/collections  -> lib/model
 lib/model        -> lib/domain_utils
-lib/model        -> lib/utils
-lib/model        -> lib/primitives
-lib/ruleset      -> lib/domain_utils
+lib/domain_utils -> lib/ruleset
 lib/ruleset      -> lib/utils
-lib/ruleset      -> lib/primitives
-lib/domain_utils -> lib/utils
-lib/domain_utils -> lib/primitives
+lib/utils        -> lib/primitives
 ```
