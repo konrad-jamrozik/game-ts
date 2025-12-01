@@ -166,7 +166,7 @@ export type GameState = {
   trainingSkillGain: Fixed6
   exhaustionRecovery: number
   hitPointsRecoveryPct: number
-  // Liabilities // KJa to remove, should be unused
+  // Liabilities // KJA3 to remove, should be unused
   currentTurnTotalHireCost: number
   // Archive
   leadInvestigationCounts: Record<string, number>

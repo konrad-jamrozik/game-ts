@@ -6,21 +6,41 @@ which files can `import` which symbols from other files.
 # Assumptions made in this document
 
 > [!IMPORTANT]
-> - Assume that current directory for this document purposes is `web/`
-> - Assume that `external code` is code referenced in `package.json`.
+> Assume that current directory for this document purposes is `web/`
 
-# Import rules
+# General import rules
 
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
-- By default, code in any given directory `dir` can import any other code from the same directory and all its subdirectories.
-  This may be overridden for more specific rules for its subdirectories.
-- Code in following directories cannot import code from any other directories than itself:
-  - `src/`
-  - `src/lib/`
-  - `src/lib/primitives/`
-- Code in `src/app/` can also import code from `src/components/` and `src/lib/`.
-- Code in `src/components/` can also import code from `src/lib/`.
-- Code in `src/lib/model/` can also import code from `src/lib/domain_utils/`, `src/lib/utils/`, and `src/lib/primitives/`.
-- Code in `src/lib/domain_utils/` can also import code from `src/lib/utils/` and `src/lib/primitives/`.
-- Code in `src/lib/utils/` can also import code from `src/lib/primitives/`.
+- By default, code in any given directory `dir`:
+  - Can import `external code`, referenced in `package.json`.
+  - Can import any other code from the same directory and all its subdirectories.
+  - Cannot import any other code from other directories than itself.
+- However, each subdirectory may have more restrictive rules applied to it than the default rules.
+- The rules for deeper directory take precedence over the rules for shallower directories.
+
+# Import rules for the test directory
+
+Code in `test/` directory can import code in `src/` directory, following the import rules
+of the `src/` directory. This means that:
+
+- If `src/foo` can depend on `src/bar`, then `test` for `foo` can import both `src/foo` and `src/bar`.
+- If `src/foo` can not depend on `src/qux`, then `test` for `foo` can not import `src/qux`.
+
+# Directory import rules
+
+We define the notation `foo -> bar` as denoting a rule that means that code in `foo/` can import code from `bar/`.
+This is in addition to the general import rules listed above.
+
+Directory import rules for dirs in `app/` dir:
+
+``` text
+app              -> components
+app              -> lib
+components       -> lib
+lib/model        -> lib/domain_utils
+lib/model        -> lib/utils
+lib/model        -> lib/primitives
+lib/domain_utils -> lib/utils
+lib/domain_utils -> lib/primitives
+```
