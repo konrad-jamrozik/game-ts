@@ -1,7 +1,7 @@
 import { Chip } from '@mui/material'
 import * as React from 'react'
 import { toF, isF6, type Fixed6 } from '../lib/primitives/fixed6Primitives'
-import { f6str } from '../lib/primitives/f6fmtUtils'
+import { f6str } from '../lib/utils/formatDomainUtils'
 import type { MyPaletteColor } from '../styling/modelPaletteUtils'
 
 export type MyChipProps = {
