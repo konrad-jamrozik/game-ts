@@ -7,7 +7,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import { useState } from 'react'
-import theme from '../styling/theme'
+import theme from '../../styling/theme'
 
 type ExpandableCardProps = {
   title: string

@@ -1,9 +1,9 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppSelector } from '../app/hooks'
-import { getMoneyNewBalance } from '../lib/ruleset/moneyRuleset'
-import { getIntelNewBalance } from '../lib/ruleset/intelRuleset'
-import { notTerminated } from '../lib/model_utils/agentUtils'
+import { useAppSelector } from '../../app/hooks'
+import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
+import { getIntelNewBalance } from '../../lib/ruleset/intelRuleset'
+import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
 

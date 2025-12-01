@@ -5,13 +5,13 @@ import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { advanceTurn } from '../lib/slices/gameStateSlice'
-import { destructiveButtonSx } from '../styling/styleUtils'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { advanceTurn } from '../../lib/slices/gameStateSlice'
+import { destructiveButtonSx } from '../../styling/styleUtils'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ResetControls } from './ResetControls'
-import { toF6 } from '../lib/utils/fixed6Utils'
-import { f6ge } from '../lib/primitives/fixed6Primitives'
+import { toF6 } from '../../lib/utils/fixed6Utils'
+import { f6ge } from '../../lib/primitives/fixed6Primitives'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()

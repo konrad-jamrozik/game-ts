@@ -6,8 +6,8 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../app/hooks'
-import { getLeadById } from '../lib/collections/leads'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { getLeadById } from '../../lib/collections/leads'
 import {
   assignAgentsToContracting,
   assignAgentsToEspionage,
@@ -19,19 +19,19 @@ import {
   addAgentsToInvestigation,
   recallAgents,
   sackAgents,
-} from '../lib/slices/gameStateSlice'
+} from '../../lib/slices/gameStateSlice'
 import {
   clearAgentSelection,
   clearLeadSelection,
   clearInvestigationSelection,
   clearMissionSelection,
-} from '../lib/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../lib/model_utils/formatModelUtils'
-import { validateMissionSiteDeployment } from '../lib/model_utils/missionSiteUtils'
-import { destructiveButtonSx } from '../styling/styleUtils'
-import { notTerminated, onTrainingAssignment } from '../lib/model_utils/agentUtils'
-import { validateAvailableAgents, validateOnAssignmentAgents } from '../lib/model_utils/validateAgents'
-import { AGENT_HIRE_COST } from '../lib/ruleset/constants'
+} from '../../lib/slices/selectionSlice'
+import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
+import { validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
+import { destructiveButtonSx } from '../../styling/styleUtils'
+import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
+import { validateAvailableAgents, validateOnAssignmentAgents } from '../../lib/model_utils/validateAgents'
+import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
