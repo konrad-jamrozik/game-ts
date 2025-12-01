@@ -11,6 +11,12 @@ import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../src/lib/domain_utils/enemyUtils'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
+import {
+  agentsTerminated,
+  agentsOnContractingAssignment,
+  agentsOnEspionageAssignment,
+  agentsAvailable,
+} from '../../src/lib/model_utils/gameStateUtils'
 
 export const st = {
   get gameState(): GameState {
@@ -103,7 +109,7 @@ export const st = {
   },
 
   expectTerminatedAgentCount(expectedCount: number): void {
-    expect(st.agentsView.terminated()).toHaveLength(expectedCount)
+    expect(agentsTerminated(st.gameState)).toHaveLength(expectedCount)
   },
 
   expectAgentState(agentId: string, expectedState: Agent['state']): void {
@@ -123,17 +129,17 @@ export const st = {
   },
 
   expectAgentsOnContracting(count: number): void {
-    const contractingAgents = st.agentsView.onContractingAssignment()
+    const contractingAgents = agentsOnContractingAssignment(st.gameState)
     expect(contractingAgents).toHaveLength(count)
   },
 
   expectAgentsOnEspionage(count: number): void {
-    const espionageAgents = st.agentsView.onEspionageAssignment()
+    const espionageAgents = agentsOnEspionageAssignment(st.gameState)
     expect(espionageAgents).toHaveLength(count)
   },
 
   expectAgentsAvailable(count: number): void {
-    const availableAgents = st.agentsView.available()
+    const availableAgents = agentsAvailable(st.gameState)
     expect(availableAgents).toHaveLength(count)
   },
 

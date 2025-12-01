@@ -1,7 +1,4 @@
-import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId } from '../model/model'
-import { f6cmp } from '../primitives/fixed6Primitives'
 import { agV, type AgentView } from './AgentView'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent,
@@ -23,66 +20,15 @@ export function agsV(agents: Agent[]): AgentsView {
 }
 
 type AgentsViewMethods = Readonly<{
-  withIds(ids: readonly string[]): AgentsView
-  onContractingAssignment(): AgentsView
-  onEspionageAssignment(): AgentsView
-  onTrainingAssignment(): AgentsView
-  available(): AgentsView
-  notAvailable(): AgentsView
-  onAssignment(): AgentsView
-  notOnAssignment(): AgentsView
-  recallable(): AgentsView
-  terminated(): AgentsView
-  notTerminated(): AgentsView
-  inTransit(): AgentsView
-  sortedByEffectiveSkill(): AgentsView
-  applyExhaustion(exhaustion: number): void
-  deployedOnMissionSite(missionSiteId: MissionSiteId): AgentsView
-  validateInvariants(): void
   toAgentArray(): Agent[]
 }>
 
 function getAgentsViewMethods(
   agVArr: AgentView[],
-  agentIdToView: Map<string, AgentView>,
-  toAgsV: (agentViewArray: AgentView[]) => AgentsView,
+  _agentIdToView: Map<string, AgentView>,
+  _toAgsV: (agentViewArray: AgentView[]) => AgentsView,
 ): AgentsViewMethods {
   const methods: AgentsViewMethods = {
-    withIds: (ids: readonly string[]): AgentsView =>
-      toAgsV(ids.map((id) => agentIdToView.get(id)).filter((agent): agent is AgentView => agent !== undefined)),
-    available: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isAvailable())),
-    notAvailable: (): AgentsView => toAgsV(agVArr.filter((agent) => !agent.isAvailable())),
-    onAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnAssignment())),
-    notOnAssignment: (): AgentsView =>
-      toAgsV(agVArr.filter((agent) => !agent.isOnAssignment() && !agent.isOnTrainingAssignment())),
-    recallable: (): AgentsView =>
-      toAgsV(agVArr.filter((agent) => agent.isOnAssignment() || agent.isOnTrainingAssignment())),
-    onContractingAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnContractingAssignment())),
-    onEspionageAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnEspionageAssignment())),
-    onTrainingAssignment: (): AgentsView => toAgsV(agVArr.filter((agent) => agent.isOnTrainingAssignment())),
-    terminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isTerminated())),
-    notTerminated: (): AgentsView => toAgsV(agVArr.filter((agentView) => !agentView.isTerminated())),
-    inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
-    sortedByEffectiveSkill: (): AgentsView =>
-      toAgsV(agVArr.toSorted((ag1, ag2) => f6cmp(ag1.effectiveSkill(), ag2.effectiveSkill()))),
-    applyExhaustion: (exhaustion: number): void => {
-      agVArr.forEach((agentView) => {
-        agentView.agent().exhaustion = Math.max(0, agentView.agent().exhaustion + exhaustion)
-      })
-    },
-    deployedOnMissionSite: (missionSiteId: MissionSiteId): AgentsView =>
-      toAgsV(
-        agVArr.filter((agentView) => {
-          const agent = agentView.agent()
-          return agent.assignment === missionSiteId && agent.state === 'OnMission'
-        }),
-      ),
-    validateInvariants: (): void => {
-      agVArr.forEach((agentView) => {
-        const underlyingAgent = agentView.agent()
-        validateAgentLocalInvariants(underlyingAgent)
-      })
-    },
     toAgentArray: (): Agent[] => agVArr.map((agentView) => agentView.agent()),
   }
   return methods
