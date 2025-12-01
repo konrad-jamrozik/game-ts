@@ -3,7 +3,6 @@ import type { Agent } from '../model/agentModel'
 import type { MissionSiteId } from '../model/model'
 import { f6cmp } from '../primitives/fixed6Primitives'
 import { agV, type AgentView } from './AgentView'
-import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 
 // Possible future work: rename AgentsView to Agents, AgentView, to Agent,
 // and current Agent to AgentDTO or AgentModel or AgentData
@@ -39,8 +38,6 @@ type AgentsViewMethods = Readonly<{
   sortedByEffectiveSkill(): AgentsView
   applyExhaustion(exhaustion: number): void
   deployedOnMissionSite(missionSiteId: MissionSiteId): AgentsView
-  validateAvailable(selectedAgentIds: string[]): ValidateAgentsResult
-  validateOnAssignment(selectedAgentIds: string[]): ValidateAgentsResult
   validateInvariants(): void
   toAgentArray(): Agent[]
 }>
@@ -80,10 +77,6 @@ function getAgentsViewMethods(
           return agent.assignment === missionSiteId && agent.state === 'OnMission'
         }),
       ),
-    validateAvailable: (selectedAgentIds: string[]): ValidateAgentsResult =>
-      validateAvailableAgents(toAgsV(agVArr), selectedAgentIds),
-    validateOnAssignment: (selectedAgentIds: string[]): ValidateAgentsResult =>
-      validateOnAssignmentAgents(toAgsV(agVArr), selectedAgentIds),
     validateInvariants: (): void => {
       agVArr.forEach((agentView) => {
         const underlyingAgent = agentView.agent()
