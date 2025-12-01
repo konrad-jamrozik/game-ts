@@ -38,14 +38,14 @@ As such:
 Directory import rules for dirs in `src/` dir:
 
 ``` text
-app             
-components      
+app
+components
 lib/domain_utils
 lib/turn_advancement
-lib/model_utils 
-lib/ruleset     
-lib/collections 
-lib/model       
-lib/utils       
+lib/ruleset
+lib/model_utils
+lib/collections
+lib/model
+lib/utils
 lib/primitives
 ```
