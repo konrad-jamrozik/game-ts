@@ -1,6 +1,5 @@
 import pluralize from 'pluralize'
 import { sum } from 'radash'
-import type { AgentsView } from '../model_utils/AgentsView'
 import { toF6, f6fmtInt, f6fmtPctDec0 } from '../utils/fixed6Utils'
 import { f6div, f6sum, type Fixed6 } from '../primitives/fixed6Primitives'
 import type { Enemy } from '../model/model'
@@ -31,11 +30,6 @@ export type BattleReport = {
   agentExhaustionAfterBattle: number
   agentsWounded: number
   agentsUnscathed: number
-}
-
-export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
-  const agents = agentsView.toAgentArray()
-  return evaluateBattleV2(agents, enemies)
 }
 
 export function evaluateBattleV2(agents: Agent[], enemies: Enemy[]): BattleReport {

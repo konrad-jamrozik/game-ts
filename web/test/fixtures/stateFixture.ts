@@ -1,6 +1,5 @@
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
-import { agsV, type AgentsView } from '../../src/lib/model_utils/AgentsView'
 import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
 import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/model'
 import type { GameState } from '../../src/lib/model/gameStateModel'
@@ -21,10 +20,6 @@ import {
 export const st = {
   get gameState(): GameState {
     return store.getState().undoable.present.gameState
-  },
-
-  get agentsView(): AgentsView {
-    return agsV(st.gameState.agents)
   },
 
   newAgentInStandby: (id: string): Agent => st.newAgent(id, 'Standby'),
@@ -105,7 +100,7 @@ export const st = {
   },
 
   expectAgentCount(expectedCount: number): void {
-    expect(st.agentsView).toHaveLength(expectedCount)
+    expect(st.gameState.agents).toHaveLength(expectedCount)
   },
 
   expectTerminatedAgentCount(expectedCount: number): void {
