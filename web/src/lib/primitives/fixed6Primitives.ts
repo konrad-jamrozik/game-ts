@@ -46,8 +46,6 @@ export function toF(fixed: Fixed6): number {
   return fixed.value / 1_000_000
 }
 
-export { f6fmtInt, f6fmtDec1, f6fmtDec2, f6fmtPctDec2, f6fmtPctDec0, f6add, f6gt } from '../utils/fixed6Utils'
-
 export function f6sub(first: Fixed6, second: Fixed6): Fixed6 {
   return fixed6(first.value - second.value)
 }

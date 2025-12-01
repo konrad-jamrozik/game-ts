@@ -45,3 +45,27 @@ lib/domain_utils -> lib/ruleset
 lib/ruleset      -> lib/utils
 lib/utils        -> lib/primitives
 ```
+
+# Forbidden dependencies
+
+Following dependencies are FORBIDDEN ❌ by design:
+
+```text
+lib/model        -> lib/collections
+lib/domain_utils -> lib/collections
+lib/domain_utils -> lib/model
+lib/ruleset      -> lib/collections
+lib/ruleset      -> lib/model
+lib/ruleset      -> lib/domain_utils
+```
+
+# Proposed_redesign
+
+Allow following dependencies:
+``` text
+lib/domain_utils -> lib/model
+lib/domain_utils -> lib/collections
+lib/ruleset      -> lib/model
+```
+
+I.e. push `model` and `collections` down.
