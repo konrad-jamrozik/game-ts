@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance } from '../lib/ruleset/moneyRuleset'
 import { getIntelNewBalance } from '../lib/ruleset/intelRuleset'
-import { agentsNotTerminated } from '../lib/model_utils/gameStateUtils'
+import { notTerminated } from '../lib/model_utils/agentUtils'
 import { StyledDataGrid } from './StyledDataGrid'
 import { MyChip } from './MyChip'
 
@@ -22,7 +22,7 @@ export function AssetsDataGrid(): React.JSX.Element {
   const intelProjected = getIntelNewBalance(gameState)
   const moneyDiff = moneyProjected - gameState.money
   const intelDiff = intelProjected - gameState.intel
-  const agentCount = agentsNotTerminated(gameState).length
+  const agentCount = notTerminated(gameState.agents).length
 
   const assetRows: AssetRow[] = [
     { name: 'Agents', id: 1, value: agentCount },

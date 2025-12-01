@@ -6,7 +6,7 @@ import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { f6add, f6fmtInt } from '../utils/fixed6Utils'
 import { getRecoveryTurns } from '../ruleset/recoveryRuleset'
-import { agentsWithIds, agentsNotTerminatedFromArray } from '../model_utils/gameStateUtils'
+import { withIds, notTerminated } from '../model_utils/agentUtils'
 import { evaluateBattleV2, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { addSkill } from '../domain_utils/actorUtils'
@@ -24,7 +24,7 @@ export function evaluateDeployedMissionSite(
   const mission = getMissionById(missionSite.missionId)
 
   // Get agents deployed to this mission site
-  const deployedAgents = agentsWithIds(state.agents, missionSite.agentIds)
+  const deployedAgents = withIds(state.agents, missionSite.agentIds)
 
   const battleReport = evaluateBattleV2(deployedAgents, missionSite.enemies)
 
@@ -60,7 +60,7 @@ function getAgentExhaustionAfterBattle(
 ): number {
   // Calculate final exhaustion gain AFTER updateAgentsAfterBattle (which includes casualty penalty)
   // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
-  const survivingAgents = agentsNotTerminatedFromArray(deployedAgents)
+  const survivingAgents = notTerminated(deployedAgents)
   const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustion)
   // Calculate initial exhaustion for only the surviving agents
   const initialSurvivingAgentExhaustion = sum(

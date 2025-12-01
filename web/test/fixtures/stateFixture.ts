@@ -11,11 +11,11 @@ import { newEnemiesFromSpec } from '../../src/lib/domain_utils/enemyUtils'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import {
-  agentsTerminated,
-  agentsOnContractingAssignment,
-  agentsOnEspionageAssignment,
-  agentsAvailable,
-} from '../../src/lib/model_utils/gameStateUtils'
+  terminated,
+  onContractingAssignment,
+  onEspionageAssignment,
+  available,
+} from '../../src/lib/model_utils/agentUtils'
 
 export const st = {
   get gameState(): GameState {
@@ -104,7 +104,7 @@ export const st = {
   },
 
   expectTerminatedAgentCount(expectedCount: number): void {
-    expect(agentsTerminated(st.gameState)).toHaveLength(expectedCount)
+    expect(terminated(st.gameState.agents)).toHaveLength(expectedCount)
   },
 
   expectAgentState(agentId: string, expectedState: Agent['state']): void {
@@ -124,17 +124,17 @@ export const st = {
   },
 
   expectAgentsOnContracting(count: number): void {
-    const contractingAgents = agentsOnContractingAssignment(st.gameState)
+    const contractingAgents = onContractingAssignment(st.gameState.agents)
     expect(contractingAgents).toHaveLength(count)
   },
 
   expectAgentsOnEspionage(count: number): void {
-    const espionageAgents = agentsOnEspionageAssignment(st.gameState)
+    const espionageAgents = onEspionageAssignment(st.gameState.agents)
     expect(espionageAgents).toHaveLength(count)
   },
 
   expectAgentsAvailable(count: number): void {
-    const availableAgents = agentsAvailable(st.gameState)
+    const availableAgents = available(st.gameState.agents)
     expect(availableAgents).toHaveLength(count)
   },
 

@@ -1,5 +1,5 @@
 import { getMissionById } from '../collections/missions'
-import { agentsWithIds } from '../model_utils/gameStateUtils'
+import { withIds } from '../model_utils/agentUtils'
 import { toF6, f6add } from '../utils/fixed6Utils'
 import { f6max, f6sub, f6sum } from '../primitives/fixed6Primitives'
 import type { Faction, FactionRewards, MissionRewards } from '../model/model'
@@ -189,7 +189,7 @@ function evaluateDeployedMissionSites(state: GameState): {
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
       const mission = getMissionById(missionSite.missionId)
-      const deployedAgents = agentsWithIds(state.agents, missionSite.agentIds)
+      const deployedAgents = withIds(state.agents, missionSite.agentIds)
 
       // Capture agent states before battle
       const agentsDeployed = deployedAgents.length

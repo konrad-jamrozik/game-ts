@@ -6,19 +6,19 @@ import { addSkill, addSkillFromTraining } from '../domain_utils/actorUtils'
 import { getContractingIncomeV2 } from '../ruleset/moneyRuleset'
 import { getEspionageIntelV2 } from '../ruleset/intelRuleset'
 import {
-  agentsAvailable,
-  agentsOnContractingAssignment,
-  agentsOnEspionageAssignment,
-  agentsOnTrainingAssignmentFromArray,
-  applyExhaustionToAgents,
-} from '../model_utils/gameStateUtils'
+  available,
+  onContractingAssignment,
+  onEspionageAssignment,
+  onTrainingAssignment,
+  applyExhaustion,
+} from '../model_utils/agentUtils'
 
-/**
+/** // KJA there should be ruleset call somewhere here, but there isn't
  * Updates agents in Available state - apply exhaustion recovery
  */
 export function updateAvailableAgents(state: GameState): void {
-  const availableAgents = agentsAvailable(state)
-  applyExhaustionToAgents(availableAgents, -state.exhaustionRecovery)
+  const availableAgents = available(state.agents)
+  applyExhaustion(availableAgents, -state.exhaustionRecovery)
 }
 
 /**
@@ -68,27 +68,27 @@ export function updateRecoveringAgents(state: GameState): void {
 
 export function updateContractingAgents(state: GameState): { moneyEarned: number } {
   const moneyEarned = getContractingIncomeV2(state)
-  const contractingAgents = agentsOnContractingAssignment(state)
-  applyExhaustionToAgents(contractingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  const contractingAgents = onContractingAssignment(state.agents)
+  applyExhaustion(contractingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { moneyEarned }
 }
 
 export function updateEspionageAgents(state: GameState): { intelGathered: number } {
   const intelGathered = getEspionageIntelV2(state)
-  const espionageAgents = agentsOnEspionageAssignment(state)
-  applyExhaustionToAgents(espionageAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  const espionageAgents = onEspionageAssignment(state.agents)
+  applyExhaustion(espionageAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { intelGathered }
 }
 
 export function updateTrainingAgents(state: GameState): void {
-  const trainingAgents = agentsOnTrainingAssignmentFromArray(state.agents)
+  const trainingAgents = onTrainingAssignment(state.agents)
   // Increase both skill and skillFromTraining by trainingSkillGain for each agent
   for (const agent of trainingAgents) {
     addSkill(agent, state.trainingSkillGain)
     addSkillFromTraining(agent, state.trainingSkillGain)
   }
   // Increase exhaustion by 1 for each training agent
-  applyExhaustionToAgents(trainingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  applyExhaustion(trainingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 }
 
 export function updateInTransitAgents(state: GameState): void {

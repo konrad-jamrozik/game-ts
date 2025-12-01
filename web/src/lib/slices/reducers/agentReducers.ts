@@ -10,7 +10,7 @@ import {
 import { toF6 } from '../../utils/fixed6Utils'
 import { newWeapon } from '../../domain_utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
-import { agentsOnTrainingAssignmentFromArray } from '../../model_utils/gameStateUtils'
+import { onTrainingAssignment } from '../../model_utils/agentUtils'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
@@ -81,7 +81,8 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
         }
       }
       // Check if agent is in training before changing assignment
-      const isTraining = agentsOnTrainingAssignmentFromArray([agent]).length > 0
+      const trainingAgents: Agent[] = onTrainingAssignment([agent])
+      const isTraining = trainingAgents.length > 0
       agent.assignment = 'Standby'
       // Training agents go directly to Available (no transit needed)
       if (isTraining) {

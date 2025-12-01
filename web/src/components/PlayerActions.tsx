@@ -29,7 +29,7 @@ import {
 import { fmtAgentCount, fmtMissionTarget } from '../lib/domain_utils/formatDomainUtils'
 import { validateMissionSiteDeployment } from '../lib/domain_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { agentsNotTerminated, agentsOnTrainingAssignmentFromArray } from '../lib/model_utils/gameStateUtils'
+import { notTerminated, onTrainingAssignment } from '../lib/model_utils/agentUtils'
 import { validateAvailableAgentsV2, validateOnAssignmentAgentsV2 } from '../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../lib/ruleset/constants'
 
@@ -58,7 +58,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agent cap (only count non-terminated agents)
-    if (agentsNotTerminated(gameState).length >= gameState.agentCap) {
+    if (notTerminated(gameState.agents).length >= gameState.agentCap) {
       setAlertMessage(`Cannot hire more than ${gameState.agentCap} agents (agent cap reached)`)
       setShowAlert(true)
       return
@@ -124,7 +124,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Count how many agents are already in training
-    const agentsInTraining = agentsOnTrainingAssignmentFromArray(gameState.agents).length
+    const agentsInTraining = onTrainingAssignment(gameState.agents).length
     const availableTrainingCap = gameState.trainingCap - agentsInTraining
 
     if (selectedAgentIds.length > availableTrainingCap) {

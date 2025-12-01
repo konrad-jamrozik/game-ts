@@ -1,6 +1,6 @@
 import { getLeadById } from '../collections/leads'
 import { missions } from '../collections/missions'
-import { agentsWithIds, applyExhaustionToAgents } from '../model_utils/gameStateUtils'
+import { withIds, applyExhaustion } from '../model_utils/agentUtils'
 import type { LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
@@ -48,7 +48,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const accumulatedIntel = getLeadAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
-  applyExhaustionToAgents(investigatingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  applyExhaustion(investigatingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
   const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
 
@@ -80,7 +80,7 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
  * // KJA this should be in gameStateUtils
  */
 function getInvestigatingAgents(state: GameState, investigation: LeadInvestigation): Agent[] {
-  const agents = agentsWithIds(state.agents, investigation.agentIds)
+  const agents = withIds(state.agents, investigation.agentIds)
   return agents.filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
 }
 

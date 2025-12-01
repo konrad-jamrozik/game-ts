@@ -1,5 +1,5 @@
 import type { Agent } from '../model/agentModel'
-import { agentsWithIds, agentsNotAvailableFromArray, agentsNotOnAssignmentFromArray } from './gameStateUtils'
+import { withIds, notAvailable, notOnAssignment } from './agentUtils'
 
 export type ValidateAgentsResult = Readonly<{
   isValid: boolean
@@ -15,7 +15,7 @@ export function validateAgentsV2(
   getInvalidSubset: (agents: Agent[]) => Agent[],
   invalidSelectionMessage: string,
 ): ValidateAgentsResult {
-  const selectedAgents = agentsWithIds(agents, selectedAgentIds)
+  const selectedAgents = withIds(agents, selectedAgentIds)
 
   let isValid = true
   let errorMessage: string | undefined = undefined
@@ -40,7 +40,7 @@ export function validateAvailableAgentsV2(agents: Agent[], selectedAgentIds: str
   return validateAgentsV2(
     agents,
     selectedAgentIds,
-    (selectedAgents) => agentsNotAvailableFromArray(selectedAgents),
+    (selectedAgents) => notAvailable(selectedAgents),
     'This action can be done only on available agents!',
   )
 }
@@ -49,7 +49,7 @@ export function validateOnAssignmentAgentsV2(agents: Agent[], selectedAgentIds: 
   return validateAgentsV2(
     agents,
     selectedAgentIds,
-    (selectedAgents) => agentsNotOnAssignmentFromArray(selectedAgents),
+    (selectedAgents) => notOnAssignment(selectedAgents),
     'This action can be done only on OnAssignment or InTraining agents!',
   )
 }
