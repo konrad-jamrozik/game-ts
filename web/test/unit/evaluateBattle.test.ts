@@ -8,20 +8,20 @@ import {
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/ruleset/constants'
-import { evaluateBattleV2, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
+import { evaluateBattle, type BattleReport } from '../../src/lib/turn_advancement/evaluateBattle'
 import { rand } from '../../src/lib/primitives/rand'
 import { agFix } from '../fixtures/agentFixture'
 import { enFix } from '../fixtures/enemyFixture'
 import { st } from '../fixtures/stateFixture'
 import { ceil } from '../../src/lib/primitives/mathPrimitives'
 
-describe(evaluateBattleV2, () => {
+describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
     rand.set('agent_attack_roll', 1)
     const agent = agFix.withSuperWeapon()
     const enemy = st.newEnemyInitiate()
 
-    const report = evaluateBattleV2([agent], [enemy]) // Act
+    const report = evaluateBattle([agent], [enemy]) // Act
 
     expectReportToBe(report)({
       rounds: 1,
@@ -38,7 +38,7 @@ describe(evaluateBattleV2, () => {
     const agent = agFix.new()
     const enemy = enFix.withSuperWeapon()
 
-    const report = evaluateBattleV2([agent], [enemy]) // Act
+    const report = evaluateBattle([agent], [enemy]) // Act
 
     expectReportToBe(report)({
       rounds: 1,
@@ -57,7 +57,7 @@ describe(evaluateBattleV2, () => {
     const agent = agFix.new()
     const enemy = enFix.withWeakWeapon()
 
-    const report = evaluateBattleV2([agent], [enemy]) // Act
+    const report = evaluateBattle([agent], [enemy]) // Act
 
     const expectedRounds = ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
