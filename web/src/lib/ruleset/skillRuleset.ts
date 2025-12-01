@@ -1,3 +1,5 @@
+import { effectiveSkill } from '../domain_utils/actorUtils'
+import type { Agent } from '../model/agentModel'
 import type { AgentView } from '../model_utils/AgentView'
 import { f6sum, toF, toF6r, type Fixed6 } from '../primitives/fixed6Primitives'
 
@@ -16,6 +18,11 @@ export function getAgentSkillBasedValue(agent: AgentView, value: number): Fixed6
   return toF6r(skillCoefficient * value)
 }
 
+export function getAgentSkillBasedValueV2(agent: Agent, value: number): Fixed6 {
+  const skillCoefficient = toF(effectiveSkill(agent)) / 100
+  return toF6r(skillCoefficient * value)
+}
+
 /**
  * Sums skill-based values from multiple agents.
  * Iterates over agents and accumulates their skill-based contributions.
@@ -26,6 +33,12 @@ export function getAgentSkillBasedValue(agent: AgentView, value: number): Fixed6
  */
 export function sumAgentSkillBasedValues(agents: readonly AgentView[], value: number): Fixed6 {
   const values = agents.map((agent) => getAgentSkillBasedValue(agent, value))
+  const sum = f6sum(...values)
+  return sum
+}
+
+export function sumAgentSkillBasedValuesV2(agents: readonly Agent[], value: number): Fixed6 {
+  const values = agents.map((agent) => getAgentSkillBasedValueV2(agent, value))
   const sum = f6sum(...values)
   return sum
 }

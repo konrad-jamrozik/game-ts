@@ -1,81 +1,44 @@
-# Dependency Violations for lib/ruleset
+# Dependency Violations for lib/model_utils
 
-According to the dependency rules in `about_code_dependencies.md`, `lib/ruleset` can only depend on:
+According to the dependency rules in `about_code_dependencies.md`, `lib/model_utils` can only depend on:
 - `lib/collections`
 - `lib/model`
 - `lib/utils`
 - `lib/primitives`
 
-`lib/ruleset` CANNOT depend on:
+`lib/model_utils` CANNOT depend on:
 - `app`
 - `components`
 - `lib/domain_utils`
 - `lib/turn_advancement`
-- `lib/model_utils`
+- `lib/ruleset`
 
 ## Violations Found
 
-### debugInitialState.ts
+### Current Status
 
-- **Line 5**: `import { newWeapon } from '../domain_utils/weaponUtils'`
-  - Violates: Cannot import from `lib/domain_utils`
+**No violations found.** ✅
 
-- **Line 6**: `import { newEnemiesFromSpec } from '../domain_utils/enemyUtils'`
-  - Violates: Cannot import from `lib/domain_utils`
+All files in `lib/model_utils` have been checked and none import from `lib/ruleset`:
 
-### initialState.ts
+- `AgentsView.ts` - No imports from `lib/ruleset`
+- `AgentView.ts` - No imports from `lib/ruleset`
+- `gameStateUtils.ts` - No imports from `lib/ruleset`
+- `validateAgentInvariants.ts` - No imports from `lib/ruleset`
+- `validateAgents.ts` - No imports from `lib/ruleset`
+- `validateGameStateInvariants.ts` - No imports from `lib/ruleset`
 
-- **Line 5**: `import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'`
-  - Violates: Cannot import from `lib/model_utils`
+## Historical Context
 
-- **Line 19**: `import { newWeapon } from '../domain_utils/weaponUtils'`
-  - Violates: Cannot import from `lib/domain_utils`
+Previously, `AgentsView.ts` had dependencies on `lib/ruleset`:
+- `import { getContractingIncome } from '../ruleset/moneyRuleset'`
+- `import { getEspionageIntel } from '../ruleset/intelRuleset'`
 
-### intelRuleset.ts
-
-- **Line 1**: `import { agsV, type AgentsView } from '../model_utils/AgentsView'`
-  - Violates: Cannot import from `lib/model_utils`
-
-### leadRuleset.ts
-
-- **Line 2**: `import { agV } from '../model_utils/AgentView'`
-  - Violates: Cannot import from `lib/model_utils`
-
-### missionRuleset.ts
-
-- **Line 1**: `import type { AgentCombatStats } from '../turn_advancement/evaluateAttack'`
-  - Violates: Cannot import from `lib/turn_advancement`
-
-- **Line 2**: `import { effectiveSkill } from '../domain_utils/actorUtils'`
-  - Violates: Cannot import from `lib/domain_utils`
-
-- **Line 3**: `import { agV } from '../model_utils/AgentView'`
-  - Violates: Cannot import from `lib/model_utils`
-
-### moneyRuleset.ts
-
-- **Line 1**: `import { agsV, type AgentsView } from '../model_utils/AgentsView'`
-  - Violates: Cannot import from `lib/model_utils`
-
-### skillRuleset.ts
-
-- **Line 1**: `import type { AgentView } from '../model_utils/AgentView'`
-  - Violates: Cannot import from `lib/model_utils`
+These were removed by:
+1. Creating V2 versions of the ruleset functions (`getContractingIncomeV2`, `getEspionageIntelV2`) that take `GameState` directly
+2. Removing the `contractingIncome()` and `espionageIntel()` methods from `AgentsView`
+3. Updating all callers to use the V2 functions instead
 
 ## Summary
 
-Total violations: **11**
-
-Breakdown by forbidden directory:
-- `lib/model_utils`: **6 violations**
-- `lib/domain_utils`: **4 violations**
-- `lib/turn_advancement`: **1 violation**
-
-Files with violations:
-- `debugInitialState.ts`: 2 violations
-- `initialState.ts`: 2 violations
-- `intelRuleset.ts`: 1 violation
-- `leadRuleset.ts`: 1 violation
-- `missionRuleset.ts`: 3 violations
-- `moneyRuleset.ts`: 1 violation
-- `skillRuleset.ts`: 1 violation
+Total violations: **0**
