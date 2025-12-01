@@ -1,17 +1,17 @@
 import pluralize from 'pluralize'
 import { sum } from 'radash'
 import { toF6, f6fmtInt, f6fmtPctDec0 } from '../utils/fixed6Utils'
-import { f6div, f6sum, type Fixed6 } from '../primitives/fixed6Primitives'
-import type { Enemy } from '../model/model'
+import { f6cmp, f6div, f6eq, f6sum, type Fixed6 } from '../primitives/fixed6Primitives'
+import type { Actor, Enemy } from '../model/model'
 import type { Agent } from '../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../ruleset/missionRuleset'
-import { compareActorsBySkillDescending } from '../domain_utils/actorUtils'
 import { effectiveSkill } from '../ruleset/skillRuleset'
 import { assertNotEmpty } from '../primitives/assertPrimitives'
 import { fmtPctDec0 } from '../primitives/formatPrimitives'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
+import { compareIdsNumeric } from '../primitives/stringPrimitives'
 
 export type BattleReport = {
   rounds: number
@@ -295,4 +295,17 @@ function showRoundStatus(
   console.log(
     `👺👺 Enemies: ${activeEnemies.length} units, ${f6fmtInt(currentEnemySkill)} total skill (${enemySkillPct}), ${currentEnemyHitPoints} HP (${enemyHpPct})`,
   )
+}
+
+// Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
+function compareActorsBySkillDescending(actorA: Actor, actorB: Actor): number {
+  const skillA = effectiveSkill(actorA)
+  const skillB = effectiveSkill(actorB)
+  if (f6eq(skillA, skillB)) {
+    return compareIdsNumeric(actorA.id, actorB.id)
+  }
+  // Return the actor with higher effective skill as first.
+  // Explanation:
+  // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
+  return f6cmp(skillB, skillA)
 }

@@ -6,10 +6,9 @@ import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { f6add, f6fmtInt } from '../utils/fixed6Utils'
 import { getRecoveryTurns } from '../ruleset/recoveryRuleset'
-import { withIds, notTerminated } from '../model_utils/agentUtils'
+import { addSkill, notTerminated, withIds } from '../model_utils/agentUtils'
 import { evaluateBattleV2, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { addSkill } from '../domain_utils/actorUtils'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.

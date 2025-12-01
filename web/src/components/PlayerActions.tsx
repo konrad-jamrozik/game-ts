@@ -26,7 +26,7 @@ import {
   clearInvestigationSelection,
   clearMissionSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../lib/model_utils/formatDomainUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../lib/model_utils/formatModelUtils'
 import { validateMissionSiteDeployment } from '../lib/model_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { notTerminated, onTrainingAssignment } from '../lib/model_utils/agentUtils'

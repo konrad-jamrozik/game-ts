@@ -1,9 +1,27 @@
 import type { Actor, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
+import { f6add } from '../utils/fixed6Utils'
+import type { Fixed6 } from '../primitives/fixed6Primitives'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {
   return 'turnHired' in actor
+}
+
+/**
+ * Adds skill points to an agent.
+ * Use this function instead of directly modifying agent.skill to centralize skill arithmetic operations.
+ */
+export function addSkill(agent: Agent, amount: Fixed6): void {
+  agent.skill = f6add(agent.skill, amount)
+}
+
+/**
+ * Adds skill points from training to an agent.
+ * Use this function instead of directly modifying agent.skillFromTraining to centralize skill arithmetic operations.
+ */
+export function addSkillFromTraining(agent: Agent, amount: Fixed6): void {
+  agent.skillFromTraining = f6add(agent.skillFromTraining, amount)
 }
 
 export function notTerminated(agents: Agent[]): Agent[] {
