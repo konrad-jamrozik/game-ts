@@ -4,6 +4,8 @@ import { floor, div, ceil } from '../primitives/mathPrimitives'
 import type { GameState } from '../model/gameStateModel'
 import { agsV } from '../model_utils/AgentsView'
 import { addSkill, addSkillFromTraining } from '../domain_utils/actorUtils'
+import { getContractingIncomeV2 } from '../ruleset/moneyRuleset'
+import { getEspionageIntelV2 } from '../ruleset/intelRuleset'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
@@ -59,15 +61,15 @@ export function updateRecoveringAgents(state: GameState): void {
 }
 
 export function updateContractingAgents(state: GameState): { moneyEarned: number } {
+  const moneyEarned = getContractingIncomeV2(state)
   const agents = agsV(state.agents)
-  const moneyEarned = agents.contractingIncome()
   agents.onContractingAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { moneyEarned }
 }
 
 export function updateEspionageAgents(state: GameState): { intelGathered: number } {
+  const intelGathered = getEspionageIntelV2(state)
   const agents = agsV(state.agents)
-  const intelGathered = agents.espionageIntel()
   agents.onEspionageAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { intelGathered }
 }
