@@ -22,7 +22,7 @@ import {
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
 import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
-import { fmtNoPrefix, fmtPctDec2 } from '../lib/utils/formatUtils'
+import { fmtNoPrefix, fmtPctDec2 } from '../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'

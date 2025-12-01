@@ -19,7 +19,7 @@ import {
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
 } from '../lib/utils/missionSiteUtils'
-import { fmtDec1, fmtNoPrefix } from '../lib/utils/formatUtils'
+import { fmtDec1, fmtNoPrefix } from '../lib/primitives/formatPrimitives'
 import { div } from '../lib/primitives/mathPrimitives'
 import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
 import { DataGridCard } from './DataGridCard'

@@ -8,7 +8,7 @@ import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/missionRuleset'
 import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
 import { assertNotEmpty } from '../primitives/assertPrimitives'
-import { fmtPctDec0 } from '../utils/formatUtils'
+import { fmtPctDec0 } from '../primitives/formatPrimitives'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 

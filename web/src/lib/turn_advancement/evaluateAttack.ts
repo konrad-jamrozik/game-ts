@@ -13,7 +13,7 @@ import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { rollWeaponDamage } from '../utils/weaponUtils'
 import { rollContest } from './rolls'
-import { fmtPctDec0 } from '../utils/formatUtils'
+import { fmtPctDec0 } from '../primitives/formatPrimitives'
 
 export function evaluateAttack(
   attacker: Agent | Enemy,

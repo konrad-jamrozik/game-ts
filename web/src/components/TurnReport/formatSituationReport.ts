@@ -11,7 +11,7 @@ import {
   type PanicBreakdown,
   type PanicReport,
 } from '../../lib/model/turnReportModel'
-import { fmtNoPrefix } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { formatMissions } from './formatMissions'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 

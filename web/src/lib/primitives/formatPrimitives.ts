@@ -1,6 +1,4 @@
-import pluralize from 'pluralize'
-import type { MissionSiteId } from '../model/model'
-import { floor, floorToDec1, floorToDec2, floorToDec4, toPct } from '../primitives/mathPrimitives'
+import { floor, floorToDec1, floorToDec2, floorToDec4, toPct } from './mathPrimitives'
 
 export function fmtPctDec0(nominator: number, denominator = 1): string {
   if (denominator === 0) {
@@ -61,19 +59,4 @@ export function fmtDec4(value: number): string {
  */
 export function fmtNoPrefix(id: string, prefix: string): string {
   return id.replace(new RegExp(`^${prefix}`, 'u'), '')
-}
-
-/**
- * Formats mission site target for display (removes '-site-' patterns)
- */
-export function fmtMissionTarget(missionSiteId: MissionSiteId | undefined): string {
-  if (missionSiteId === undefined) {
-    return 'mission ?'
-  }
-  const displayId = missionSiteId.replaceAll('-site-', ' ')
-  return ` on ${displayId}`
-}
-
-export function fmtAgentCount(count: number): string {
-  return `${count} ${pluralize('agent', count)}`
 }

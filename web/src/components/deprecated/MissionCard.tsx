@@ -9,7 +9,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getMissionById } from '../../lib/collections/missions'
 import { setMissionSiteSelection } from '../../lib/slices/selectionSlice'
-import { fmtNoPrefix } from '../../lib/utils/formatUtils'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
 import { LabeledValue } from '../LabeledValue'
 

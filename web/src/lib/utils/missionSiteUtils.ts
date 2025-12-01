@@ -1,6 +1,6 @@
 import { getMissionById } from '../collections/missions'
 import type { MissionSite, MissionSiteState } from '../model/model'
-import { fmtNoPrefix } from './formatUtils'
+import { fmtNoPrefix } from '../primitives/formatPrimitives'
 
 /**
  * Filters mission sites by their state

@@ -13,7 +13,7 @@ import {
   type Fixed6,
 } from '../primitives/fixed6'
 import { assertInRange } from '../primitives/assertPrimitives'
-import { fmtPctDec2 } from '../utils/formatUtils'
+import { fmtPctDec2 } from '../primitives/formatPrimitives'
 import { div } from '../primitives/mathPrimitives'
 import { rand } from '../utils/rand'
 
