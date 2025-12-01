@@ -1,4 +1,4 @@
-import { ceil, div } from '../../utils/mathUtils'
+import { ceil, div } from '../../utils/mathPrimitives'
 import { agV } from '../agents/AgentView'
 import { f6floorToInt } from '../../primitives/fixed6'
 import type { Agent } from '../model'

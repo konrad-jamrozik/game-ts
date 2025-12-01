@@ -1,7 +1,7 @@
 import type { Agent, GameState } from '../model'
 import { toF6, f6fmtInt, f6lt } from '../../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../../primitives/assertPrimitives'
-import { ceil, div } from '../../utils/mathUtils'
+import { ceil, div } from '../../utils/mathPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)

@@ -1,6 +1,6 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import { assertEqual } from '../primitives/assertPrimitives'
-import { floor, div, ceil } from '../utils/mathUtils'
+import { floor, div, ceil } from '../utils/mathPrimitives'
 import type { GameState } from '../model/model'
 import { agsV } from '../model/agents/AgentsView'
 import { addSkill, addSkillFromTraining } from '../utils/actorUtils'

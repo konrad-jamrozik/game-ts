@@ -14,7 +14,7 @@ import {
 } from '../primitives/fixed6'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { fmtPctDec2 } from '../utils/formatUtils'
-import { div } from '../utils/mathUtils'
+import { div } from '../utils/mathPrimitives'
 import { rand } from '../utils/rand'
 
 export type ContestRollResult = {
