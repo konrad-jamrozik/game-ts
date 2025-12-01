@@ -1,9 +1,8 @@
 import { ceil, div } from '../primitives/mathPrimitives'
-import { agV } from '../model_utils/AgentView'
 import { f6floorToInt } from '../primitives/fixed6Primitives'
 import type { Agent } from '../model/agentModel'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
-import { sumAgentSkillBasedValues } from './skillRuleset'
+import { sumAgentSkillBasedValuesV2 } from './skillRuleset'
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
@@ -87,7 +86,6 @@ export function getLeadIntelDecayPct(accumulatedIntel: number): number {
  * Calculates total intel accumulated from investigating agents
  */
 export function getLeadAccumulatedIntel(agents: Agent[]): number {
-  const agentViews = agents.map((agent) => agV(agent))
   // This flooring strips any fractional intel from the total
-  return f6floorToInt(sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL))
+  return f6floorToInt(sumAgentSkillBasedValuesV2(agents, AGENT_ESPIONAGE_INTEL))
 }

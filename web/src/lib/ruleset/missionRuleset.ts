@@ -1,6 +1,5 @@
 import type { AgentCombatStats } from '../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../domain_utils/actorUtils'
-import { agV } from '../model_utils/AgentView'
 import { toF6 } from '../utils/fixed6Utils'
 import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6Primitives'
 import type { Enemy, MissionSite } from '../model/model'
@@ -40,7 +39,7 @@ export type RetreatResult = {
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
   const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
   const agentsTotalOriginalEffectiveSkill = f6sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
-  const agentsTotalCurrentEffectiveSkill = f6sum(...aliveAgents.map((agent) => agV(agent).effectiveSkill()))
+  const agentsTotalCurrentEffectiveSkill = f6sum(...aliveAgents.map((agent) => effectiveSkill(agent)))
 
   const agentsEffectiveSkillThreshold = toF6r(f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD))
 

@@ -1,10 +1,10 @@
 import { describe, expect, test } from 'vitest'
-import { getContractingIncome } from '../../src/lib/ruleset/moneyRuleset'
-import { agsV } from '../../src/lib/model_utils/AgentsView'
+import { getContractingIncomeV2 } from '../../src/lib/ruleset/moneyRuleset'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import { agFix } from '../fixtures/agentFixture'
+import { st } from '../fixtures/stateFixture'
 
-describe(getContractingIncome, () => {
+describe(getContractingIncomeV2, () => {
   test('should handle agent with effective skill that results in fractional income', () => {
     // Create an agent with skill 110
     const agent = agFix.new({
@@ -13,13 +13,12 @@ describe(getContractingIncome, () => {
       assignment: 'Contracting',
     })
 
-    const agentsView = agsV([agent])
-    const contractingAgents = agentsView.onContractingAssignment()
+    st.arrangeGameState({ agents: [agent] })
 
     // With skill 110 and AGENT_CONTRACTING_INCOME = 15:
     // income = (110 / 100) * 15 = 1.1 * 15 = 16.5
     // Flooring strips the fractional part, so result is 16
-    expect(getContractingIncome(contractingAgents)).toBe(16)
+    expect(getContractingIncomeV2(st.gameState)).toBe(16)
   })
 
   test('should floor fractional income from total', () => {
@@ -38,10 +37,9 @@ describe(getContractingIncome, () => {
       }),
     )
 
-    const agentsView = agsV(agents)
-    const contractingAgents = agentsView.onContractingAssignment()
+    st.arrangeGameState({ agents })
 
-    const income = getContractingIncome(contractingAgents)
+    const income = getContractingIncomeV2(st.gameState)
     expect(income).toBe(6) // Floored from 6.15 (5 * 1.23)
     expect(Number.isInteger(income)).toBe(true) // Always returns an integer
   })

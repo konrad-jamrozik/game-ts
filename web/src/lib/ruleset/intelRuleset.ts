@@ -1,15 +1,8 @@
-import type { AgentsView } from '../model_utils/AgentsView'
-import { sumAgentSkillBasedValues, sumAgentSkillBasedValuesV2 } from './skillRuleset'
+import { sumAgentSkillBasedValuesV2 } from './skillRuleset'
 import type { GameState } from '../model/gameStateModel'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
 import { f6floorToInt } from '../primitives/fixed6Primitives'
 import { agentsOnEspionageAssignment } from '../model_utils/gameStateUtils'
-
-export function getEspionageIntel(agents: AgentsView): number {
-  const espionageAgents = agents.onEspionageAssignment()
-  // This flooring strips any fractional intel from the total
-  return f6floorToInt(sumAgentSkillBasedValues(espionageAgents, AGENT_ESPIONAGE_INTEL))
-}
 
 export function getEspionageIntelV2(gameState: GameState): number {
   const espionageAgents = agentsOnEspionageAssignment(gameState)
