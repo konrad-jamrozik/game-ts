@@ -39,9 +39,10 @@ Directory import rules for dirs in `app/` dir:
 ``` text
 app              -> components
 components       -> lib
+lib/domain_utils -> lib/model_utils
+lib/model_utils  -> lib/ruleset
+lib/ruleset      -> lib/collections
 lib/collections  -> lib/model
-lib/model        -> lib/domain_utils
-lib/domain_utils -> lib/ruleset
 lib/model        -> lib/utils
 lib/utils        -> lib/primitives
 ```
