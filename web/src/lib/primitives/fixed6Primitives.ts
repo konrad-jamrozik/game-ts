@@ -27,9 +27,6 @@ export function isF6(value: unknown): value is Fixed6 {
   )
 }
 
-export { toF6 } from '../utils/fixed6Utils'
-import { toF6 } from '../utils/fixed6Utils'
-
 /**
  * Converts a decimal value to Fixed6 format by rounding to 6 decimal places.
  * If you want to conversion that guarantees no loss of precision, use toF6 instead.
@@ -49,17 +46,7 @@ export function toF(fixed: Fixed6): number {
   return fixed.value / 1_000_000
 }
 
-export { f6fmtInt, f6fmtDec1, f6fmtDec2, f6fmtPctDec2, f6fmtPctDec0 } from '../utils/fixed6Utils'
-
-/**
- * Adds two Fixed6 values together.
- * For example:
- * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
- */
-export function f6add(first: Fixed6, second: Fixed6 | number): Fixed6 {
-  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
-  return fixed6(first.value + secondValue)
-}
+export { f6fmtInt, f6fmtDec1, f6fmtDec2, f6fmtPctDec2, f6fmtPctDec0, f6add, f6gt } from '../utils/fixed6Utils'
 
 export function f6sub(first: Fixed6, second: Fixed6): Fixed6 {
   return fixed6(first.value - second.value)
@@ -169,11 +156,6 @@ export function f6ge(first: Fixed6, second: Fixed6): boolean {
   return first.value >= second.value
 }
 
-export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
-  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
-  return first.value > secondValue
-}
-
 /**
  * Checks if a Fixed6 value is within a range (inclusive on both ends).
  * For example:
@@ -230,7 +212,7 @@ export function f6floorToInt(value: Fixed6): number {
  * fixed6(7.7) throws an error
  * @internal
  */
-function fixed6(value: number): Fixed6 {
+export function fixed6(value: number): Fixed6 {
   assertInteger(value)
   return { value, kind: 'Fixed6' }
 }

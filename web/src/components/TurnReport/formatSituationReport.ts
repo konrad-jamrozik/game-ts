@@ -1,6 +1,7 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, toF, type Fixed6, f6sub } from '../../lib/primitives/fixed6Primitives'
+import { toF6 } from '../../lib/utils/fixed6Utils'
+import { toF, type Fixed6, f6sub } from '../../lib/primitives/fixed6Primitives'
 import { f6fmtValueChange } from '../../lib/domain_utils/formatDomainUtils'
 import { getPanicIncrease } from '../../lib/model/ruleset/panicRuleset'
 import {

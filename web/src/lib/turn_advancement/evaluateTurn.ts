@@ -1,6 +1,7 @@
 import { getMissionById } from '../collections/missions'
 import { agsV } from '../model/agents/AgentsView'
-import { f6add, f6max, f6sub, f6sum, toF6 } from '../primitives/fixed6Primitives'
+import { toF6, f6add } from '../utils/fixed6Utils'
+import { f6max, f6sub, f6sum } from '../primitives/fixed6Primitives'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
 import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
 import {

@@ -10,7 +10,8 @@ import { advanceTurn } from '../lib/slices/gameStateSlice'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { LabeledValue } from './LabeledValue'
 import { ResetControls } from './ResetControls'
-import { toF6, f6ge } from '../lib/primitives/fixed6Primitives'
+import { toF6 } from '../lib/utils/fixed6Utils'
+import { f6ge } from '../lib/primitives/fixed6Primitives'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()

@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, toF, type Fixed6 } from '../../src/lib/primitives/fixed6Primitives'
+import { toF6 } from '../../src/lib/utils/fixed6Utils'
+import { toF, type Fixed6 } from '../../src/lib/primitives/fixed6Primitives'
 import { fmtDec1, fmtPctDec2 } from '../../src/lib/primitives/formatPrimitives'
 
 describe('about_numbers.md', () => {

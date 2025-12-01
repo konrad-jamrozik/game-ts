@@ -1,7 +1,7 @@
 /* eslint-disable vitest/no-conditional-expect */
 // oxlint-disable no-conditional-in-test
 import { describe, test, expect } from 'vitest'
-import { toF6 } from '../../src/lib/primitives/fixed6Primitives'
+import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import { decaySuppression } from '../../src/lib/model/ruleset/panicRuleset'
 
 describe('panicRuleset', () => {

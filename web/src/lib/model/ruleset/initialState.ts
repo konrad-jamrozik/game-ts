@@ -1,4 +1,4 @@
-import { toF6 } from '../../primitives/fixed6Primitives'
+import { toF6 } from '../../utils/fixed6Utils'
 import { factions } from '../../collections/factions'
 import type { Agent, GameState } from '../model'
 import { validateAgentInvariants } from '../agents/validateAgentInvariants'

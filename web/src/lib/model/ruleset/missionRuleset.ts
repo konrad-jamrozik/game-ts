@@ -1,7 +1,8 @@
 import type { AgentCombatStats } from '../../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../../domain_utils/actorUtils'
 import { agV } from '../agents/AgentView'
-import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6, toF6r } from '../../primitives/fixed6Primitives'
+import { toF6 } from '../../utils/fixed6Utils'
+import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../../primitives/fixed6Primitives'
 import type { Agent, Enemy, MissionSite } from '../model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 

@@ -1,4 +1,5 @@
-import { f6add, f6cmp, f6eq, f6mult, type Fixed6, toF6r } from '../primitives/fixed6Primitives'
+import { f6add } from '../utils/fixed6Utils'
+import { f6cmp, f6eq, f6mult, type Fixed6, toF6r } from '../primitives/fixed6Primitives'
 import type { Actor, Agent, Enemy } from '../model/model'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'

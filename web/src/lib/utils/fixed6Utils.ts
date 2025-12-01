@@ -1,4 +1,4 @@
-import { roundToF6, toF, isF6, type Fixed6 } from '../primitives/fixed6Primitives'
+import { roundToF6, toF, isF6, fixed6, type Fixed6 } from '../primitives/fixed6Primitives'
 import { assertMax6Dec } from './assertUtils'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../primitives/formatPrimitives'
 
@@ -57,4 +57,19 @@ export function f6fmtPctDec2(nominator: Fixed6, denominator: Fixed6 | number = 1
 export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
   const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
   return fmtPctDec0(nominator.value, denominatorValue)
+}
+
+/**
+ * Adds two Fixed6 values together.
+ * For example:
+ * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
+ */
+export function f6add(first: Fixed6, second: Fixed6 | number): Fixed6 {
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
+  return fixed6(first.value + secondValue)
+}
+
+export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
+  return first.value > secondValue
 }
