@@ -51,6 +51,22 @@ You can also run `npm run oxlint` from the `web/` directory.
 
 Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
+## Task completion and communication
+
+**Important**: Every time you finish a task, include a short commit message in your response. The commit message should:
+- Be concise and descriptive
+- Summarize the main changes made
+- Use imperative mood (e.g., "Add feature" not "Added feature")
+- Optionally include a brief bullet list of key changes if the task was complex
+
+Example:
+
+```text
+Reorganize components into logical subdirectories
+
+Group related components and move utility functions to component-specific files
+```
+
 ## Tech stack
 
 This project uses following technologies:
