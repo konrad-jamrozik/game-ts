@@ -10,7 +10,7 @@ import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSite
 import { getModelPalette } from '../../styling/modelPaletteUtils'
 import { MyChip } from '../MyChip'
 import type { AgentRow } from './AgentsDataGrid'
-import { effectiveSkill } from '../../lib/domain_utils/actorUtils'
+import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function

@@ -1,5 +1,10 @@
+import type { Actor, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId } from '../model/model'
+
+// Type guard function to determine if an Actor is an Agent
+export function isAgent(actor: Actor): actor is Agent {
+  return 'turnHired' in actor
+}
 
 export function notTerminated(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state !== 'Terminated')

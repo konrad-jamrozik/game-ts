@@ -10,12 +10,13 @@ import {
 } from '../ruleset/constants'
 import { f6add } from '../utils/fixed6Utils'
 import { toF, type Fixed6 } from '../primitives/fixed6Primitives'
-import { getActorEffectiveSkill, isAgent } from '../domain_utils/actorUtils'
+import { isAgent } from '../model_utils/agentUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
 import { rollWeaponDamage } from '../ruleset/weaponRuleset'
 import { rollContest } from '../utils/rolls'
 import { fmtPctDec0 } from '../primitives/formatPrimitives'
+import { effectiveSkill } from '../ruleset/skillRuleset'
 
 export function evaluateAttack(
   attacker: Agent | Enemy,
@@ -28,8 +29,8 @@ export function evaluateAttack(
   // Calculate effective skills
 
   // KJA2 in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error
-  const attackerEffectiveSkill = toF(getActorEffectiveSkill(attacker))
-  const defenderEffectiveSkill = toF(getActorEffectiveSkill(defender))
+  const attackerEffectiveSkill = toF(effectiveSkill(attacker))
+  const defenderEffectiveSkill = toF(effectiveSkill(defender))
 
   if (isAgent(attacker)) {
     assertDefined(attackerStats)

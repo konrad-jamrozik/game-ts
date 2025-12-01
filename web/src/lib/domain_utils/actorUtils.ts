@@ -1,16 +1,9 @@
 import { f6add } from '../utils/fixed6Utils'
-import { f6cmp, f6eq, f6mult, type Fixed6, toF6r } from '../primitives/fixed6Primitives'
-import type { Actor, Enemy } from '../model/model'
+import { f6cmp, f6eq, type Fixed6 } from '../primitives/fixed6Primitives'
+import type { Actor } from '../model/model'
 import type { Agent } from '../model/agentModel'
-import { NO_IMPACT_EXHAUSTION } from '../ruleset/constants'
-import { assertNonNeg } from '../primitives/assertPrimitives'
-import { div, nonNeg } from '../primitives/mathPrimitives'
+import { effectiveSkill } from '../ruleset/skillRuleset'
 import { compareIdsNumeric } from '../primitives/stringPrimitives'
-
-// Type guard function to determine if an Actor is an Agent
-export function isAgent(actor: Actor): actor is Agent {
-  return 'turnHired' in actor
-}
 
 /**
  * Adds skill points to an agent.
@@ -29,9 +22,9 @@ export function addSkillFromTraining(agent: Agent, amount: Fixed6): void {
 }
 
 // Helper function to compare actors by effective skill descending (higher skill first), then by ID if skills are equal
-export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Agent | Enemy): number {
-  const skillA = getActorEffectiveSkill(actorA)
-  const skillB = getActorEffectiveSkill(actorB)
+export function compareActorsBySkillDescending(actorA: Actor, actorB: Actor): number {
+  const skillA = effectiveSkill(actorA)
+  const skillB = effectiveSkill(actorB)
   if (f6eq(skillA, skillB)) {
     return compareIdsNumeric(actorA.id, actorB.id)
   }
@@ -39,22 +32,4 @@ export function compareActorsBySkillDescending(actorA: Agent | Enemy, actorB: Ag
   // Explanation:
   // sort() will return actorA as first if output is negative, i.e. when skillB < skillA.
   return f6cmp(skillB, skillA)
-}
-
-// Helper function to get effective skill of an actor (agent or enemy)
-export function getActorEffectiveSkill(actor: Agent | Enemy): Fixed6 {
-  return effectiveSkill(actor)
-}
-
-// Calculates the effective skill of an actor based on hit points lost and exhaustion
-// Refer to about_agents.md for details
-export function effectiveSkill(actor: Actor): Fixed6 {
-  const hitPointsLost = actor.maxHitPoints - actor.hitPoints
-  const hitPointsMalus = div(hitPointsLost, actor.maxHitPoints)
-  const hitPointsMult = assertNonNeg(1 - hitPointsMalus)
-
-  const exhaustionMalus = nonNeg(actor.exhaustion - NO_IMPACT_EXHAUSTION) / 100
-  const exhaustionMult = nonNeg(1 - exhaustionMalus)
-
-  return toF6r(f6mult(actor.skill, hitPointsMult, exhaustionMult))
 }
