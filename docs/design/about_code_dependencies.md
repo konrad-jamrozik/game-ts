@@ -41,6 +41,7 @@ Directory import rules for dirs in `src/` dir:
 app             
 components      
 lib/domain_utils
+lib/turn_advancement
 lib/model_utils 
 lib/ruleset     
 lib/collections 
