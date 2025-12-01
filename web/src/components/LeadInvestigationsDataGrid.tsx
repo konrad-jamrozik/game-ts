@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
-import { agsV } from '../lib/model_utils/AgentsView'
+import { agentsWithIds } from '../lib/model_utils/gameStateUtils'
 import { f6floorToInt } from '../lib/primitives/fixed6Primitives'
 import type { Agent } from '../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
@@ -240,10 +240,10 @@ function buildAllInvestigationRows(
       // Apply decay first
       projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
       // Then accumulate new intel from assigned agents
-      const investigatingAgents = agsV(agents)
-        .withIds(investigation.agentIds)
-        .toAgentArray()
-        .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+      // KJA this should be in gameStateUtils
+      const investigatingAgents = agentsWithIds(agents, investigation.agentIds).filter(
+        (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+      )
       // This flooring strips any fractional intel from the total
       const intelFromAgents = f6floorToInt(sumAgentSkillBasedValuesV2(investigatingAgents, AGENT_ESPIONAGE_INTEL))
       projectedIntel += intelFromAgents

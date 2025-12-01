@@ -1,6 +1,6 @@
 import { getLeadById } from '../collections/leads'
 import { missions } from '../collections/missions'
-import { agsV } from '../model_utils/AgentsView'
+import { agentsWithIds, applyExhaustionToAgents } from '../model_utils/gameStateUtils'
 import type { LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
@@ -48,8 +48,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   const accumulatedIntel = getLeadAccumulatedIntel(investigatingAgents)
   investigation.accumulatedIntel += accumulatedIntel
 
-  const agents = agsV(investigatingAgents)
-  agents.applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  applyExhaustionToAgents(investigatingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
   const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
 
@@ -76,14 +75,13 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
   return { success: rollResult.success, successChance }
 }
 
-/** // KJA2 this should return AgentsView and simplified downstream
+/**
  * Gets agents that are actively investigating the lead
+ * // KJA this should be in gameStateUtils
  */
 function getInvestigatingAgents(state: GameState, investigation: LeadInvestigation): Agent[] {
-  const agents = agsV(state.agents).withIds(investigation.agentIds)
-  return agents
-    .toAgentArray()
-    .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+  const agents = agentsWithIds(state.agents, investigation.agentIds)
+  return agents.filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
 }
 
 /**

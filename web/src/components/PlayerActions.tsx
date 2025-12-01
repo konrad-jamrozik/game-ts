@@ -29,7 +29,8 @@ import {
 import { fmtAgentCount, fmtMissionTarget } from '../lib/domain_utils/formatDomainUtils'
 import { validateMissionSiteDeployment } from '../lib/domain_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { agsV } from '../lib/model_utils/AgentsView'
+import { agentsNotTerminated, agentsOnTrainingAssignmentFromArray } from '../lib/model_utils/gameStateUtils'
+import { validateAvailableAgentsV2, validateOnAssignmentAgentsV2 } from '../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../lib/ruleset/constants'
 
 // oxlint-disable-next-line max-lines-per-function
@@ -43,11 +44,10 @@ export function PlayerActions(): React.JSX.Element {
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const agents = agsV(gameState.agents)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
 
-  const selectedAgentIds = agentSelection.filter((id) => agents.some((agent) => agent.agent().id === id))
+  const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
 
   function handleHireAgent(): void {
     // Check if player has enough money to hire an agent
@@ -58,7 +58,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agent cap (only count non-terminated agents)
-    if (agents.notTerminated().length >= gameState.agentCap) {
+    if (agentsNotTerminated(gameState).length >= gameState.agentCap) {
       setAlertMessage(`Cannot hire more than ${gameState.agentCap} agents (agent cap reached)`)
       setShowAlert(true)
       return
@@ -70,7 +70,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleSackAgents(): void {
     // Validate that all selected agents are available
-    const validationResult = agents.validateAvailable(selectedAgentIds)
+    const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -85,7 +85,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToContracting(): void {
     // Validate that all selected agents are available
-    const validationResult = agents.validateAvailable(selectedAgentIds)
+    const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -100,7 +100,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToEspionage(): void {
     // Validate that all selected agents are available
-    const validationResult = agents.validateAvailable(selectedAgentIds)
+    const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -115,7 +115,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleAssignToTraining(): void {
     // Validate that all selected agents are available
-    const validationResult = agents.validateAvailable(selectedAgentIds)
+    const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -124,7 +124,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Count how many agents are already in training
-    const agentsInTraining = agents.onTrainingAssignment().length
+    const agentsInTraining = agentsOnTrainingAssignmentFromArray(gameState.agents).length
     const availableTrainingCap = gameState.trainingCap - agentsInTraining
 
     if (selectedAgentIds.length > availableTrainingCap) {
@@ -142,7 +142,7 @@ export function PlayerActions(): React.JSX.Element {
 
   function handleRecallAgents(): void {
     // Check if all selected agents are in "OnAssignment" state
-    const validationResult = agents.validateOnAssignment(selectedAgentIds)
+    const validationResult = validateOnAssignmentAgentsV2(gameState.agents, selectedAgentIds)
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
       setShowAlert(true)
@@ -171,7 +171,7 @@ export function PlayerActions(): React.JSX.Element {
       }
 
       // Validate that all selected agents are available
-      const validationResult = agents.validateAvailable(selectedAgentIds)
+      const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
       if (!validationResult.isValid) {
         setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -200,7 +200,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate that all selected agents are available
-    const validationResult = agents.validateAvailable(selectedAgentIds)
+    const validationResult = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
       setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
@@ -232,7 +232,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate agents are available
-    const agentValidation = agents.validateAvailable(selectedAgentIds)
+    const agentValidation = validateAvailableAgentsV2(gameState.agents, selectedAgentIds)
     if (!agentValidation.isValid) {
       setAlertMessage(agentValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)

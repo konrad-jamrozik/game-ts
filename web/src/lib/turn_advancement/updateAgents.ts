@@ -2,17 +2,23 @@ import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../ruleset/constants'
 import { assertEqual } from '../primitives/assertPrimitives'
 import { floor, div, ceil } from '../primitives/mathPrimitives'
 import type { GameState } from '../model/gameStateModel'
-import { agsV } from '../model_utils/AgentsView'
 import { addSkill, addSkillFromTraining } from '../domain_utils/actorUtils'
 import { getContractingIncomeV2 } from '../ruleset/moneyRuleset'
 import { getEspionageIntelV2 } from '../ruleset/intelRuleset'
+import {
+  agentsAvailable,
+  agentsOnContractingAssignment,
+  agentsOnEspionageAssignment,
+  agentsOnTrainingAssignmentFromArray,
+  applyExhaustionToAgents,
+} from '../model_utils/gameStateUtils'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
  */
 export function updateAvailableAgents(state: GameState): void {
-  const agents = agsV(state.agents)
-  agents.available().applyExhaustion(-state.exhaustionRecovery)
+  const availableAgents = agentsAvailable(state)
+  applyExhaustionToAgents(availableAgents, -state.exhaustionRecovery)
 }
 
 /**
@@ -62,29 +68,27 @@ export function updateRecoveringAgents(state: GameState): void {
 
 export function updateContractingAgents(state: GameState): { moneyEarned: number } {
   const moneyEarned = getContractingIncomeV2(state)
-  const agents = agsV(state.agents)
-  agents.onContractingAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  const contractingAgents = agentsOnContractingAssignment(state)
+  applyExhaustionToAgents(contractingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { moneyEarned }
 }
 
 export function updateEspionageAgents(state: GameState): { intelGathered: number } {
   const intelGathered = getEspionageIntelV2(state)
-  const agents = agsV(state.agents)
-  agents.onEspionageAssignment().applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  const espionageAgents = agentsOnEspionageAssignment(state)
+  applyExhaustionToAgents(espionageAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { intelGathered }
 }
 
 export function updateTrainingAgents(state: GameState): void {
-  const agents = agsV(state.agents)
-  const trainingAgents = agents.onTrainingAssignment()
+  const trainingAgents = agentsOnTrainingAssignmentFromArray(state.agents)
   // Increase both skill and skillFromTraining by trainingSkillGain for each agent
-  for (const agentView of trainingAgents) {
-    const agent = agentView.agent()
+  for (const agent of trainingAgents) {
     addSkill(agent, state.trainingSkillGain)
     addSkillFromTraining(agent, state.trainingSkillGain)
   }
   // Increase exhaustion by 1 for each training agent
-  trainingAgents.applyExhaustion(AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  applyExhaustionToAgents(trainingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 }
 
 export function updateInTransitAgents(state: GameState): void {

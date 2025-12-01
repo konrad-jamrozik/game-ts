@@ -1,7 +1,6 @@
 import pluralize from 'pluralize'
 import { sum } from 'radash'
 import type { AgentsView } from '../model_utils/AgentsView'
-import { agV, type AgentView } from '../model_utils/AgentView'
 import { toF6, f6fmtInt, f6fmtPctDec0 } from '../utils/fixed6Utils'
 import { f6div, f6sum, type Fixed6 } from '../primitives/fixed6Primitives'
 import type { Enemy } from '../model/model'
@@ -36,10 +35,14 @@ export type BattleReport = {
 
 export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): BattleReport {
   const agents = agentsView.toAgentArray()
+  return evaluateBattleV2(agents, enemies)
+}
+
+export function evaluateBattleV2(agents: Agent[], enemies: Enemy[]): BattleReport {
   assertNotEmpty(agents)
   assertNotEmpty(enemies)
 
-  const agentStats = newAgentsCombatStats(agentsView)
+  const agentStats = newAgentsCombatStatsV2(agents)
 
   const agentSkillUpdates: Record<string, Fixed6> = {}
 
@@ -167,10 +170,10 @@ export function evaluateBattle(agentsView: AgentsView, enemies: Enemy[]): Battle
   }
 }
 
-function newAgentsCombatStats(agentViews: AgentsView): AgentCombatStats[] {
-  return agentViews.map((agentView: AgentView) => ({
-    id: agentView.agent().id,
-    initialEffectiveSkill: agentView.effectiveSkill(),
+function newAgentsCombatStatsV2(agents: Agent[]): AgentCombatStats[] {
+  return agents.map((agent: Agent) => ({
+    id: agent.id,
+    initialEffectiveSkill: effectiveSkill(agent),
     skillGained: toF6(0),
   }))
 }
@@ -207,7 +210,7 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   const effectiveSkillsAtRoundStart = new Map<string, Fixed6>()
   for (const agent of agents) {
     if (agent.hitPoints > 0) {
-      effectiveSkillsAtRoundStart.set(agent.id, agV(agent).effectiveSkill())
+      effectiveSkillsAtRoundStart.set(agent.id, effectiveSkill(agent))
     }
   }
   for (const enemy of enemies) {
@@ -279,7 +282,7 @@ function showRoundStatus(
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
-  const currentAgentEffectiveSkill = f6sum(...activeAgents.map((agent) => agV(agent).effectiveSkill()))
+  const currentAgentEffectiveSkill = f6sum(...activeAgents.map((agent) => effectiveSkill(agent)))
   const currentAgentHitPoints = sum(activeAgents, (agent) => agent.hitPoints)
   const agentSkillPct = f6fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, initialAgentHitPoints)
