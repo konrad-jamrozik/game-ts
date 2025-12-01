@@ -212,6 +212,9 @@ function evaluateDeployedMissionSites(state: GameState): {
         rounds,
       } = battleReport
 
+      // KJA bug: here if all agents are casualties, it will display `All agents lost`, but
+      // this is incorrect: also wounded agents are casualties, so if all agents were wounded or terminated,
+      // but the mission was still won, here it will say `All agents lost`, which is incorrect.
       // Determine mission outcome
       const outcome: 'Successful' | 'Retreated' | 'All agents lost' = retreated
         ? 'Retreated'
