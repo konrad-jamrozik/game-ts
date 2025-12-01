@@ -4,7 +4,7 @@ import {
   fmtRollResultQuantized,
   rollAgainstProbabilityFloat,
   rollAgainstProbabilityQuantized,
-} from '../../src/lib/turn_advancement/rolls'
+} from '../../src/lib/utils/rolls'
 import { rand } from '../../src/lib/primitives/rand'
 
 /**

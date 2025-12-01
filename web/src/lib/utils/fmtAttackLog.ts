@@ -1,4 +1,4 @@
-import { fmtRollResultQuantized, type RollResultQuantized } from '../turn_advancement/rolls'
+import { fmtRollResultQuantized, type RollResultQuantized } from './rolls'
 import { fmtInt } from '../primitives/formatPrimitives'
 
 export type AttackLogKind =

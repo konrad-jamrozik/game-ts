@@ -6,7 +6,7 @@ import {
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../ruleset/constants'
-import { newWeapon } from '../../domain_utils/weaponUtils'
+import { newWeapon } from '../../ruleset/weaponRuleset'
 import { asPlayerAction } from './asPlayerAction'
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {

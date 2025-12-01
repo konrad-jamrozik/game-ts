@@ -14,8 +14,8 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/ruleset/constants'
-import { newWeapon } from '../../src/lib/domain_utils/weaponUtils'
-import { newEnemiesFromSpec } from '../../src/lib/domain_utils/enemyUtils'
+import { newWeapon } from '../../src/lib/ruleset/weaponRuleset'
+import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 
 describe(evaluateDeployedMissionSite, () => {
   test('evaluateDeployedMissionSite succeeds', () => {

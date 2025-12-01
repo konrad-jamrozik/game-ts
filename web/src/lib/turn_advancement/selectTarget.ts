@@ -5,7 +5,7 @@ import { assertDefined } from '../primitives/assertPrimitives'
 import { div } from '../primitives/mathPrimitives'
 import { rand } from '../primitives/rand'
 import { compareIdsNumeric } from '../primitives/stringPrimitives'
-import { rollRange } from './rolls'
+import { rollRange } from '../utils/rolls'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.

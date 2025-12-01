@@ -12,9 +12,9 @@ import { f6add } from '../utils/fixed6Utils'
 import { toF, type Fixed6 } from '../primitives/fixed6Primitives'
 import { getActorEffectiveSkill, isAgent } from '../domain_utils/actorUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { fmtAttackLog, type AttackLogKind } from '../domain_utils/fmtAttackLog'
-import { rollWeaponDamage } from '../domain_utils/weaponUtils'
-import { rollContest } from './rolls'
+import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
+import { rollWeaponDamage } from '../ruleset/weaponRuleset'
+import { rollContest } from '../utils/rolls'
 import { fmtPctDec0 } from '../primitives/formatPrimitives'
 
 export function evaluateAttack(

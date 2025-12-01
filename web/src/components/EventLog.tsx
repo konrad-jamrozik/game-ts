@@ -9,7 +9,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import type { GameEvent } from '../lib/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
-import { f6str } from '../lib/domain_utils/formatDomainUtils'
+import { f6str } from '../lib/model_utils/formatDomainUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event

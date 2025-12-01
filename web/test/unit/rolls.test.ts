@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getRollF4Probabilities, roll1to } from '../../src/lib/turn_advancement/rolls'
+import { getRollF4Probabilities, roll1to } from '../../src/lib/utils/rolls'
 import { rand } from '../../src/lib/primitives/rand'
 import { FIXED4_PRECISION } from '../../src/lib/primitives/fixed6Primitives'
 

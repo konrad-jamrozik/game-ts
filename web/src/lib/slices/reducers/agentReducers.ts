@@ -8,7 +8,7 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../ruleset/constants'
 import { toF6 } from '../../utils/fixed6Utils'
-import { newWeapon } from '../../domain_utils/weaponUtils'
+import { newWeapon } from '../../ruleset/weaponRuleset'
 import { asPlayerAction } from './asPlayerAction'
 import { onTrainingAssignment } from '../../model_utils/agentUtils'
 

@@ -1,5 +1,5 @@
 import type { Enemy } from '../../src/lib/model/model'
-import { newEnemy } from '../../src/lib/domain_utils/enemyUtils'
+import { newEnemy } from '../../src/lib/ruleset/enemyRuleset'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/ruleset/constants'
 

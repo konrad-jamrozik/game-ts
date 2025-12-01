@@ -8,8 +8,8 @@ import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../ruleset/constants'
 import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from '../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { newEnemiesFromSpec } from '../domain_utils/enemyUtils'
-import { fmtRollResultQuantized, rollAgainstProbabilityQuantized } from './rolls'
+import { newEnemiesFromSpec } from '../ruleset/enemyRuleset'
+import { fmtRollResultQuantized, rollAgainstProbabilityQuantized } from '../utils/rolls'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion

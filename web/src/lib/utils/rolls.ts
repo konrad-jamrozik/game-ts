@@ -2,7 +2,7 @@
  * Combat and dice rolling utilities for deployed mission site update.
  */
 
-import { toF6, f6fmtPctDec2, f6gt } from '../utils/fixed6Utils'
+import { toF6, f6fmtPctDec2, f6gt } from './fixed6Utils'
 import { FIXED4_PRECISION, f6fromF4, f6sub, roundToF4, type Fixed6 } from '../primitives/fixed6Primitives'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { fmtPctDec2 } from '../primitives/formatPrimitives'

@@ -23,7 +23,7 @@ import {
 } from '../lib/slices/selectionSlice'
 import { filterLeadInvestigationRows } from '../lib/component_utils/dataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../lib/primitives/formatPrimitives'
-import { getCompletedInvestigationIds } from '../lib/domain_utils/turnReportUtils'
+import { getCompletedInvestigationIds } from '../lib/model_utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'

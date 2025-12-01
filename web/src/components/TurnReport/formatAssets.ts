@@ -1,6 +1,6 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { AgentsReport, IntelBreakdown, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
-import { f6fmtValueChange } from '../../lib/domain_utils/formatDomainUtils'
+import { f6fmtValueChange } from '../../lib/model_utils/formatDomainUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**

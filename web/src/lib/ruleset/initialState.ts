@@ -16,7 +16,7 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { newWeapon } from '../domain_utils/weaponUtils'
+import { newWeapon } from './weaponRuleset'
 
 const initialState: GameState = makeInitialState()
 

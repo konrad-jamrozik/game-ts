@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { rollAgainstProbabilityQuantized, rollAgainstProbabilityFloat } from '../../src/lib/turn_advancement/rolls'
+import { rollAgainstProbabilityQuantized, rollAgainstProbabilityFloat } from '../../src/lib/utils/rolls'
 import { rand } from '../../src/lib/primitives/rand'
 
 /**

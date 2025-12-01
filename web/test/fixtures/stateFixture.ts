@@ -7,7 +7,7 @@ import { makeInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
-import { newEnemiesFromSpec } from '../../src/lib/domain_utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import {

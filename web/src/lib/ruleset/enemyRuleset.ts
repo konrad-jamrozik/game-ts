@@ -1,14 +1,10 @@
 import { ENEMY_STATS } from '../collections/enemyUnits'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
-import { newWeapon } from './weaponUtils'
+import { newWeapon } from './weaponRuleset'
 
 let idCounter = 0
 
 const VALID_ENEMY_TYPES = new Set<string>(ENEMY_TYPES)
-
-function isValidEnemyType(type: string): type is EnemyType {
-  return VALID_ENEMY_TYPES.has(type)
-}
 
 /**
  * Creates multiple enemies from a specification string
@@ -41,6 +37,10 @@ export function newEnemiesFromSpec(spec: string): Enemy[] {
   }
 
   return units
+}
+
+function isValidEnemyType(type: string): type is EnemyType {
+  return VALID_ENEMY_TYPES.has(type)
 }
 
 /**

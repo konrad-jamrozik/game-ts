@@ -26,8 +26,8 @@ import {
   clearInvestigationSelection,
   clearMissionSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../lib/domain_utils/formatDomainUtils'
-import { validateMissionSiteDeployment } from '../lib/domain_utils/missionSiteUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../lib/model_utils/formatDomainUtils'
+import { validateMissionSiteDeployment } from '../lib/model_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { notTerminated, onTrainingAssignment } from '../lib/model_utils/agentUtils'
 import { validateAvailableAgentsV2, validateOnAssignmentAgentsV2 } from '../lib/model_utils/validateAgents'

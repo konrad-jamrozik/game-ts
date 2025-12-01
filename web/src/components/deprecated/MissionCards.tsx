@@ -5,7 +5,7 @@ import { useAppSelector } from '../../app/hooks'
 import {
   getActiveOrDeployedMissionSites,
   sortActiveOrDeployedMissionSites,
-} from '../../lib/domain_utils/missionSiteUtils'
+} from '../../lib/model_utils/missionSiteUtils'
 import { ExpandableCard } from '../ExpandableCard'
 import { MissionCard } from './MissionCard'
 

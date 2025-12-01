@@ -17,7 +17,7 @@ import {
 } from '../lib/slices/gameStateSlice'
 import { isPlayerAction } from '../lib/slices/reducers/asPlayerAction'
 import type { RootState } from './store'
-import { fmtAgentCount } from '../lib/domain_utils/formatDomainUtils'
+import { fmtAgentCount } from '../lib/model_utils/formatDomainUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
