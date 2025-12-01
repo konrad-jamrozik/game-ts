@@ -1,4 +1,5 @@
-import type { Agent, GameState } from '../model/model'
+import type { Agent } from '../model/model'
+import type { GameState } from '../model/gameStateModel'
 import { toF6, f6fmtInt } from '../utils/fixed6Utils'
 import { f6lt } from '../primitives/fixed6Primitives'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'

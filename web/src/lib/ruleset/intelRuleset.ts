@@ -1,6 +1,6 @@
 import { agsV, type AgentsView } from '../model_utils/AgentsView'
 import { sumAgentSkillBasedValues } from './skillRuleset'
-import type { GameState } from '../model/model'
+import type { GameState } from '../model/gameStateModel'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
 import { f6floorToInt } from '../primitives/fixed6Primitives'
 

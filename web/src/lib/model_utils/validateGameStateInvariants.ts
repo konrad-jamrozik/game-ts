@@ -1,4 +1,4 @@
-import type { GameState } from '../model/model'
+import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from './validateAgentInvariants'
 
 /**
