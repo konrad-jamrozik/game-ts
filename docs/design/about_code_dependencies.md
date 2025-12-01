@@ -42,7 +42,7 @@ components       -> lib
 lib/collections  -> lib/model
 lib/model        -> lib/domain_utils
 lib/domain_utils -> lib/ruleset
-lib/ruleset      -> lib/utils
+lib/model        -> lib/utils
 lib/utils        -> lib/primitives
 ```
 
@@ -58,28 +58,3 @@ lib/ruleset      -> lib/collections
 lib/ruleset      -> lib/model
 lib/ruleset      -> lib/domain_utils
 ```
-
-# Proposed redesign
-
-Allow following dependencies:
-``` text
-lib/domain_utils -> lib/model
-lib/domain_utils -> lib/collections
-lib/ruleset      -> lib/model
-```
-
-I.e. push `model` and `collections` down.
-
-So it will become:
-
-``` text
-app              -> components
-components       -> lib
-lib/domain_utils -> lib/collections
-lib/collections  -> lib/ruleset
-lib/ruleset      -> lib/model
-lib/model        -> lib/utils
-lib/utils        -> lib/primitives
-```
-
-Maybe introduce model_utils?

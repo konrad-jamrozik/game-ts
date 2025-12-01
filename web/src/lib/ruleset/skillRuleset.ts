@@ -1,4 +1,4 @@
-import type { AgentView } from '../model/agents/AgentView'
+import type { AgentView } from '../model_utils/AgentView'
 import { f6sum, toF, toF6r, type Fixed6 } from '../primitives/fixed6Primitives'
 
 /**

@@ -1,4 +1,4 @@
-import { agsV, type AgentsView } from '../model/agents/AgentsView'
+import { agsV, type AgentsView } from '../model_utils/AgentsView'
 import { sumAgentSkillBasedValues } from './skillRuleset'
 import type { GameState } from '../model/model'
 import { AGENT_ESPIONAGE_INTEL } from './constants'

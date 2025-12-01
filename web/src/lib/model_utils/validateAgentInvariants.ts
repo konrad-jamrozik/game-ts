@@ -1,8 +1,8 @@
-import type { Agent, GameState } from '../model'
-import { toF6, f6fmtInt } from '../../utils/fixed6Utils'
-import { f6lt } from '../../primitives/fixed6Primitives'
-import { assertDefined, assertEqual, assertOneOf } from '../../primitives/assertPrimitives'
-import { ceil, div } from '../../primitives/mathPrimitives'
+import type { Agent, GameState } from '../model/model'
+import { toF6, f6fmtInt } from '../utils/fixed6Utils'
+import { f6lt } from '../primitives/fixed6Primitives'
+import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
+import { ceil, div } from '../primitives/mathPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)

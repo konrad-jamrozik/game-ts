@@ -1,7 +1,7 @@
 import { toF6 } from '../utils/fixed6Utils'
 import { factions } from '../collections/factions'
 import type { Agent, GameState } from '../model/model'
-import { validateAgentInvariants } from '../model/agents/validateAgentInvariants'
+import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
 import {
   AGENT_CAP,

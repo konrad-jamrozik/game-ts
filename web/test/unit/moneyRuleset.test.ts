@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { getContractingIncome } from '../../src/lib/ruleset/moneyRuleset'
-import { agsV } from '../../src/lib/model/agents/AgentsView'
+import { agsV } from '../../src/lib/model_utils/AgentsView'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import { agFix } from '../fixtures/agentFixture'
 

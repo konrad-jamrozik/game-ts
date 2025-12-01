@@ -1,4 +1,4 @@
-import type { Agent } from '../model'
+import type { Agent } from '../model/model'
 import type { AgentsView } from './AgentsView'
 
 export type ValidateAgentsResult = Readonly<{

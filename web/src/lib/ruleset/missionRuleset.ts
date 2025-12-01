@@ -1,6 +1,6 @@
 import type { AgentCombatStats } from '../turn_advancement/evaluateAttack'
 import { effectiveSkill } from '../domain_utils/actorUtils'
-import { agV } from '../model/agents/AgentView'
+import { agV } from '../model_utils/AgentView'
 import { toF6 } from '../utils/fixed6Utils'
 import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6Primitives'
 import type { Agent, Enemy, MissionSite } from '../model/model'

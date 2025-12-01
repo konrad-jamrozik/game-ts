@@ -1,5 +1,5 @@
-import type { GameState } from './model'
-import { validateAgentInvariants } from './agents/validateAgentInvariants'
+import type { GameState } from '../model/model'
+import { validateAgentInvariants } from './validateAgentInvariants'
 
 /**
  * Validates the entire game state invariants.

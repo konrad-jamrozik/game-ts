@@ -1,8 +1,8 @@
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
-import type { Agent, MissionSiteId } from '../model'
-import { f6cmp } from '../../primitives/fixed6Primitives'
-import { getAgentUpkeep, getContractingIncome } from '../../ruleset/moneyRuleset'
-import { getEspionageIntel } from '../../ruleset/intelRuleset'
+import type { Agent, MissionSiteId } from '../model/model'
+import { f6cmp } from '../primitives/fixed6Primitives'
+import { getAgentUpkeep, getContractingIncome } from '../ruleset/moneyRuleset'
+import { getEspionageIntel } from '../ruleset/intelRuleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
 

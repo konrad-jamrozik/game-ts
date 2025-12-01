@@ -1,5 +1,5 @@
 import { getMissionById } from '../collections/missions'
-import { agsV } from '../model/agents/AgentsView'
+import { agsV } from '../model_utils/AgentsView'
 import { toF6, f6add } from '../utils/fixed6Utils'
 import { f6max, f6sub, f6sum } from '../primitives/fixed6Primitives'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
@@ -17,7 +17,7 @@ import {
   type PanicReport,
   type TurnReport,
 } from '../model/turnReportModel'
-import { validateGameStateInvariants } from '../model/validateGameStateInvariants'
+import { validateGameStateInvariants } from '../model_utils/validateGameStateInvariants'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,

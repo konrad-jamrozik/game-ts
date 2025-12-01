@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { agsV } from '../../src/lib/model/agents/AgentsView'
+import { agsV } from '../../src/lib/model_utils/AgentsView'
 import { toF6, f6add } from '../../src/lib/utils/fixed6Utils'
 import { f6mult } from '../../src/lib/primitives/fixed6Primitives'
 import {

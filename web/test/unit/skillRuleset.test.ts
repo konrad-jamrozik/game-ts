@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { agV } from '../../src/lib/model/agents/AgentView'
+import { agV } from '../../src/lib/model_utils/AgentView'
 import { getAgentSkillBasedValue } from '../../src/lib/ruleset/skillRuleset'
 import { toF6 } from '../../src/lib/utils/fixed6Utils'
 import { agFix } from '../fixtures/agentFixture'

@@ -29,7 +29,7 @@ import {
 import { fmtAgentCount, fmtMissionTarget } from '../lib/domain_utils/formatDomainUtils'
 import { validateMissionSiteDeployment } from '../lib/domain_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
-import { agsV } from '../lib/model/agents/AgentsView'
+import { agsV } from '../lib/model_utils/AgentsView'
 import { AGENT_HIRE_COST } from '../lib/ruleset/constants'
 
 // oxlint-disable-next-line max-lines-per-function

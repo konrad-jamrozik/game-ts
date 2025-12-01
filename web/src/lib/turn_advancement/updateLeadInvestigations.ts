@@ -1,6 +1,6 @@
 import { getLeadById } from '../collections/leads'
 import { missions } from '../collections/missions'
-import { agsV } from '../model/agents/AgentsView'
+import { agsV } from '../model_utils/AgentsView'
 import type { Agent, GameState, LeadInvestigation, MissionSite, MissionSiteId } from '../model/model'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../ruleset/constants'
 import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from '../ruleset/leadRuleset'

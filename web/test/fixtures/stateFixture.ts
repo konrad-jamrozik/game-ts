@@ -1,6 +1,6 @@
 import { expect } from 'vitest'
 import { store } from '../../src/app/store'
-import { agsV, type AgentsView } from '../../src/lib/model/agents/AgentsView'
+import { agsV, type AgentsView } from '../../src/lib/model_utils/AgentsView'
 import {
   isActivityAssignment,
   type Agent,

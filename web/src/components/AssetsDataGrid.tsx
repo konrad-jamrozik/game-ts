@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance } from '../lib/ruleset/moneyRuleset'
 import { getIntelNewBalance } from '../lib/ruleset/intelRuleset'
-import { agsV } from '../lib/model/agents/AgentsView'
+import { agsV } from '../lib/model_utils/AgentsView'
 import { StyledDataGrid } from './StyledDataGrid'
 import { MyChip } from './MyChip'
 
