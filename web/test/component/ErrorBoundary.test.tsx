@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, test, expect, vi } from 'vitest'
-import { ErrorBoundary } from '../../src/components/ErrorBoundary'
+import { ErrorBoundary } from '../../src/components/Error/ErrorBoundary'
 
 // Mock the wipeStorage function - must be defined outside to avoid hoisting issues
 vi.mock(import('../../src/app/persist'), () => ({

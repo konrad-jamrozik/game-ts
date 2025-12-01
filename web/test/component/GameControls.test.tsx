@@ -3,7 +3,7 @@ import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
 import { store } from '../../src/app/store'
-import { GameControls } from '../../src/components/GameControls'
+import { GameControls } from '../../src/components/GameControls/GameControls'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 
 describe(GameControls, () => {
