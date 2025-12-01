@@ -8,7 +8,7 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../model/ruleset/constants'
 import { toF6 } from '../../primitives/fixed6Primitives'
-import { newWeapon } from '../../utils/weaponUtils'
+import { newWeapon } from '../../domain_utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
 
 export const hireAgent = asPlayerAction((state: GameState) => {

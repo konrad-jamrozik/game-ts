@@ -26,8 +26,8 @@ import {
   clearInvestigationSelection,
   clearMissionSelection,
 } from '../lib/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../lib/utils/formatDomainUtils'
-import { validateMissionSiteDeployment } from '../lib/utils/missionSiteUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../lib/domain_utils/formatDomainUtils'
+import { validateMissionSiteDeployment } from '../lib/domain_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/styleUtils'
 import { agsV } from '../lib/model/agents/AgentsView'
 import { AGENT_HIRE_COST } from '../lib/model/ruleset/constants'

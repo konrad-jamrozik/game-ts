@@ -3,7 +3,7 @@ import { assertEqual } from '../primitives/assertPrimitives'
 import { floor, div, ceil } from '../primitives/mathPrimitives'
 import type { GameState } from '../model/model'
 import { agsV } from '../model/agents/AgentsView'
-import { addSkill, addSkillFromTraining } from '../utils/actorUtils'
+import { addSkill, addSkillFromTraining } from '../domain_utils/actorUtils'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery

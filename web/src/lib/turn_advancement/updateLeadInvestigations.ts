@@ -6,7 +6,7 @@ import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
 import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from '../model/ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../model/turnReportModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { newEnemiesFromSpec } from '../utils/enemyUtils'
+import { newEnemiesFromSpec } from '../domain_utils/enemyUtils'
 import { fmtRollResultQuantized, rollAgainstProbabilityQuantized } from './rolls'
 
 /**

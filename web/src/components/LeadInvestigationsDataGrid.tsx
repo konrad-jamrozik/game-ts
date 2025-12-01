@@ -21,9 +21,9 @@ import {
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
-import { filterLeadInvestigationRows } from '../lib/utils/dataGridUtils'
+import { filterLeadInvestigationRows } from '../lib/component_utils/dataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../lib/primitives/formatPrimitives'
-import { getCompletedInvestigationIds } from '../lib/utils/turnReportUtils'
+import { getCompletedInvestigationIds } from '../lib/domain_utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { MyChip } from './MyChip'

@@ -3,7 +3,7 @@ import type { Actor, Agent, Enemy } from '../model/model'
 import { NO_IMPACT_EXHAUSTION } from '../model/ruleset/constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { div, nonNeg } from '../primitives/mathPrimitives'
-import { compareIdsNumeric } from './stringUtils'
+import { compareIdsNumeric } from '../utils/stringUtils'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {

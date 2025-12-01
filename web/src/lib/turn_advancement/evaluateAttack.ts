@@ -8,10 +8,10 @@ import {
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../model/ruleset/constants'
 import { toF, f6add, type Fixed6 } from '../primitives/fixed6Primitives'
-import { getActorEffectiveSkill, isAgent } from '../utils/actorUtils'
+import { getActorEffectiveSkill, isAgent } from '../domain_utils/actorUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { fmtAttackLog, type AttackLogKind } from '../utils/fmtAttackLog'
-import { rollWeaponDamage } from '../utils/weaponUtils'
+import { fmtAttackLog, type AttackLogKind } from '../domain_utils/fmtAttackLog'
+import { rollWeaponDamage } from '../domain_utils/weaponUtils'
 import { rollContest } from './rolls'
 import { fmtPctDec0 } from '../primitives/formatPrimitives'
 

@@ -1,7 +1,7 @@
 import type { Agent, GameState, MissionSiteId } from '../model'
 import { toF6 } from '../../primitives/fixed6Primitives'
-import { newWeapon } from '../../utils/weaponUtils'
-import { newEnemiesFromSpec } from '../../utils/enemyUtils'
+import { newWeapon } from '../../domain_utils/weaponUtils'
+import { newEnemiesFromSpec } from '../../domain_utils/enemyUtils'
 import { getMissionById } from '../../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 

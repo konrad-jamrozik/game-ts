@@ -1,4 +1,4 @@
-import { effectiveSkill } from '../../utils/actorUtils'
+import { effectiveSkill } from '../../domain_utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent, MissionSiteId } from '../model'
 import type { Fixed6 } from '../../primitives/fixed6Primitives'

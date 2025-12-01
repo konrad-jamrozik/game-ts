@@ -6,7 +6,7 @@ import { f6div, f6fmtInt, f6fmtPctDec0, f6sum, toF6, type Fixed6 } from '../prim
 import type { Agent, Enemy } from '../model/model'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../model/ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../model/ruleset/missionRuleset'
-import { compareActorsBySkillDescending, effectiveSkill } from '../utils/actorUtils'
+import { compareActorsBySkillDescending, effectiveSkill } from '../domain_utils/actorUtils'
 import { assertNotEmpty } from '../primitives/assertPrimitives'
 import { fmtPctDec0 } from '../primitives/formatPrimitives'
 import { evaluateAttack, type AgentCombatStats } from './evaluateAttack'

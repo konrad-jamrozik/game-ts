@@ -1,6 +1,6 @@
 import type { GameState, MissionSite, MissionSiteId } from '../../model/model'
 import { missions } from '../../collections/missions'
-import { newEnemiesFromSpec } from '../../utils/enemyUtils'
+import { newEnemiesFromSpec } from '../../domain_utils/enemyUtils'
 import { asPlayerAction } from './asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>(

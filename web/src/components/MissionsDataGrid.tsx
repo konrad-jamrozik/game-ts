@@ -18,10 +18,10 @@ import {
   getArchivedMissionSites,
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
-} from '../lib/utils/missionSiteUtils'
+} from '../lib/domain_utils/missionSiteUtils'
 import { fmtDec1, fmtNoPrefix } from '../lib/primitives/formatPrimitives'
 import { div } from '../lib/primitives/mathPrimitives'
-import { getCompletedMissionSiteIds } from '../lib/utils/turnReportUtils'
+import { getCompletedMissionSiteIds } from '../lib/domain_utils/turnReportUtils'
 import { DataGridCard } from './DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { MyChip } from './MyChip'

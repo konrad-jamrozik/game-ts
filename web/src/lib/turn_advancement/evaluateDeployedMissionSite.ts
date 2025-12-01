@@ -7,7 +7,7 @@ import { getRecoveryTurns } from '../model/ruleset/recoveryRuleset'
 import { agsV } from '../model/agents/AgentsView'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { addSkill } from '../utils/actorUtils'
+import { addSkill } from '../domain_utils/actorUtils'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
