@@ -18,15 +18,6 @@ export type Weapon = {
 export type MissionSiteId = `mission-site-${string}`
 export type LeadInvestigationId = `investigation-${string}`
 
-// Re-export agent-related types for backward compatibility
-export type { Agent, AgentState, ActivityId, AgentAssignmentState, AgentAssignment } from './agentModel'
-export {
-  isActivityAssignment,
-  isMissionSiteAssignment,
-  isLeadInvestigationAssignment,
-  isAssignmentState,
-} from './agentModel'
-
 export type Lead = {
   id: string
   title: string

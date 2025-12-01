@@ -3,7 +3,8 @@ import { effectiveSkill } from '../domain_utils/actorUtils'
 import { agV } from '../model_utils/AgentView'
 import { toF6 } from '../utils/fixed6Utils'
 import { f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6Primitives'
-import type { Agent, Enemy, MissionSite } from '../model/model'
+import type { Enemy, MissionSite } from '../model/model'
+import type { Agent } from '../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
 export function isMissionSiteConcluded(missionSite: MissionSite): boolean {

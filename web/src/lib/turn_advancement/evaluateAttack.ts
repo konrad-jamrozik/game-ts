@@ -1,4 +1,5 @@
-import type { Agent, Enemy } from '../model/model'
+import type { Enemy } from '../model/model'
+import type { Agent } from '../model/agentModel'
 import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,

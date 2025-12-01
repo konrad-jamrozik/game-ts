@@ -1,6 +1,7 @@
 import { effectiveSkill } from '../domain_utils/actorUtils'
 import { validateAgentLocalInvariants } from './validateAgentInvariants'
-import type { Agent, MissionSiteId } from '../model/model'
+import type { Agent } from '../model/agentModel'
+import type { MissionSiteId } from '../model/model'
 import type { Fixed6 } from '../primitives/fixed6Primitives'
 
 export type AgentView = Readonly<{

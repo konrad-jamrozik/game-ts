@@ -1,4 +1,5 @@
-import type { Agent, MissionSiteId } from '../model/model'
+import type { Agent } from '../model/agentModel'
+import type { MissionSiteId } from '../model/model'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../utils/fixed6Utils'
 import { newWeapon } from '../domain_utils/weaponUtils'
