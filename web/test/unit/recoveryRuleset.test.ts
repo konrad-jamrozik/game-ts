@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getRecoveryTurns } from '../../src/lib/model/ruleset/recoveryRuleset'
+import { getRecoveryTurns } from '../../src/lib/ruleset/recoveryRuleset'
 
 describe(getRecoveryTurns, () => {
   // prettier-ignore

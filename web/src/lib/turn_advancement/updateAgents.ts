@@ -1,4 +1,4 @@
-import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../model/ruleset/constants'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../ruleset/constants'
 import { assertEqual } from '../primitives/assertPrimitives'
 import { floor, div, ceil } from '../primitives/mathPrimitives'
 import type { GameState } from '../model/model'

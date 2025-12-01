@@ -1,5 +1,5 @@
 import type { Weapon } from '../../src/lib/model/model'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/model/ruleset/constants'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/ruleset/constants'
 
 export const wpnFix = {
   default(): Weapon {

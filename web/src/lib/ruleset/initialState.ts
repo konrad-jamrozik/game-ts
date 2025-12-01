@@ -1,7 +1,7 @@
-import { toF6 } from '../../utils/fixed6Utils'
-import { factions } from '../../collections/factions'
-import type { Agent, GameState } from '../model'
-import { validateAgentInvariants } from '../agents/validateAgentInvariants'
+import { toF6 } from '../utils/fixed6Utils'
+import { factions } from '../collections/factions'
+import type { Agent, GameState } from '../model/model'
+import { validateAgentInvariants } from '../model/agents/validateAgentInvariants'
 import { makeDebugInitialOverrides } from './debugInitialState'
 import {
   AGENT_CAP,
@@ -15,7 +15,7 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { newWeapon } from '../../domain_utils/weaponUtils'
+import { newWeapon } from '../domain_utils/weaponUtils'
 
 const initialState: GameState = makeInitialState()
 

@@ -9,7 +9,7 @@ import { reset } from '../../src/lib/slices/gameStateSlice'
 import { clearEvents } from '../../src/lib/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/lib/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
-import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
+import { makeInitialState } from '../../src/lib/ruleset/initialState'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {

@@ -3,7 +3,7 @@ import { agsV } from '../model/agents/AgentsView'
 import { toF6, f6add } from '../utils/fixed6Utils'
 import { f6max, f6sub, f6sum } from '../primitives/fixed6Primitives'
 import type { AgentState, Faction, FactionRewards, GameState, MissionRewards } from '../model/model'
-import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../model/ruleset/panicRuleset'
+import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../ruleset/panicRuleset'
 import {
   newValueChange,
   type AgentsReport,

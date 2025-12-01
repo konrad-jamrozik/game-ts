@@ -4,7 +4,7 @@ import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../../model/ruleset/constants'
+} from '../../ruleset/constants'
 import { newWeapon } from '../../domain_utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'
 

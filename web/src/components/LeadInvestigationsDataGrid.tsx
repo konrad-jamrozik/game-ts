@@ -13,9 +13,9 @@ import { agsV } from '../lib/model/agents/AgentsView'
 import { agV } from '../lib/model/agents/AgentView'
 import { f6floorToInt } from '../lib/primitives/fixed6Primitives'
 import type { Agent, LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
-import { AGENT_ESPIONAGE_INTEL } from '../lib/model/ruleset/constants'
-import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../lib/model/ruleset/leadRuleset'
-import { sumAgentSkillBasedValues } from '../lib/model/ruleset/skillRuleset'
+import { AGENT_ESPIONAGE_INTEL } from '../lib/ruleset/constants'
+import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../lib/ruleset/leadRuleset'
+import { sumAgentSkillBasedValues } from '../lib/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,

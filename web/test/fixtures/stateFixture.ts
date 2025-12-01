@@ -11,7 +11,7 @@ import {
   type MissionSite,
   type MissionSiteId,
 } from '../../src/lib/model/model'
-import { makeInitialState } from '../../src/lib/model/ruleset/initialState'
+import { makeInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/lib/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/lib/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'

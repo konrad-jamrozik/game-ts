@@ -6,7 +6,7 @@ import {
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../../model/ruleset/constants'
+} from '../../ruleset/constants'
 import { toF6 } from '../../utils/fixed6Utils'
 import { newWeapon } from '../../domain_utils/weaponUtils'
 import { asPlayerAction } from './asPlayerAction'

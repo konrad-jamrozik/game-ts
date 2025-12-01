@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { getLeadIntelDecayPct } from '../../src/lib/model/ruleset/leadRuleset'
+import { getLeadIntelDecayPct } from '../../src/lib/ruleset/leadRuleset'
 
 describe(getLeadIntelDecayPct, () => {
   // prettier-ignore

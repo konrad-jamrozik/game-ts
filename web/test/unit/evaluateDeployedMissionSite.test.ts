@@ -11,7 +11,7 @@ import {
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
-} from '../../src/lib/model/ruleset/constants'
+} from '../../src/lib/ruleset/constants'
 import { newWeapon } from '../../src/lib/domain_utils/weaponUtils'
 import { newEnemiesFromSpec } from '../../src/lib/domain_utils/enemyUtils'
 

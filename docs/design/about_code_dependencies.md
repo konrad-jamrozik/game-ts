@@ -12,7 +12,7 @@ which files can `import` which symbols from other files.
 
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
-- By default, code in any given directory `dir`:
+- By default, code in files being directly (not in child dirs) in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
   - Cannot import any other code from other directories than itself.
@@ -38,9 +38,13 @@ Directory import rules for dirs in `app/` dir:
 app              -> components
 app              -> lib
 components       -> lib
+lib/model        -> lib/ruleset
 lib/model        -> lib/domain_utils
 lib/model        -> lib/utils
 lib/model        -> lib/primitives
+lib/ruleset      -> lib/domain_utils
+lib/ruleset      -> lib/utils
+lib/ruleset      -> lib/primitives
 lib/domain_utils -> lib/utils
 lib/domain_utils -> lib/primitives
 ```

@@ -1,6 +1,6 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
 import type { GameState } from '../../model/model'
-import { makeInitialState } from '../../model/ruleset/initialState'
+import { makeInitialState } from '../../ruleset/initialState'
 import evaluateTurn from '../../turn_advancement/evaluateTurn'
 
 export function advanceTurn(state: GameState): void {

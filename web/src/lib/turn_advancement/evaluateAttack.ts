@@ -6,7 +6,7 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
-} from '../model/ruleset/constants'
+} from '../ruleset/constants'
 import { f6add } from '../utils/fixed6Utils'
 import { toF, type Fixed6 } from '../primitives/fixed6Primitives'
 import { getActorEffectiveSkill, isAgent } from '../domain_utils/actorUtils'

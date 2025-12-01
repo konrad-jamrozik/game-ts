@@ -1,8 +1,8 @@
-import type { Agent, GameState, MissionSiteId } from '../model'
-import { toF6 } from '../../utils/fixed6Utils'
-import { newWeapon } from '../../domain_utils/weaponUtils'
-import { newEnemiesFromSpec } from '../../domain_utils/enemyUtils'
-import { getMissionById } from '../../collections/missions'
+import type { Agent, GameState, MissionSiteId } from '../model/model'
+import { toF6 } from '../utils/fixed6Utils'
+import { newWeapon } from '../domain_utils/weaponUtils'
+import { newEnemiesFromSpec } from '../domain_utils/enemyUtils'
+import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
 function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMissionAgentIds: string[] } {

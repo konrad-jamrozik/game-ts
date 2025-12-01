@@ -1,4 +1,4 @@
-import { WEAPON_DAMAGE_RANGE_FACTOR } from '../model/ruleset/constants'
+import { WEAPON_DAMAGE_RANGE_FACTOR } from '../ruleset/constants'
 import type { Weapon } from '../model/model'
 import { rollRange } from '../turn_advancement/rolls'
 import { ceil, floor } from '../primitives/mathPrimitives'
