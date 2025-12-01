@@ -1,4 +1,4 @@
-import { floor } from './mathUtils'
+import { hasAtMostDecimals } from './mathUtils'
 
 export function assertDefined<T>(
   value: T,
@@ -114,11 +114,7 @@ export function assertMax2Dec(
   value: number,
   errMsg = `Value must have at most 2 decimal places, got: ${value}`,
 ): asserts value is number {
-  const multiplied = Math.abs(value * 100)
-  const floored = floor(multiplied)
-  // Use a tolerance to handle floating point precision issues
-  // If the difference is less than 1e-8, consider them equal
-  if (Math.abs(multiplied - floored) > 1e-8) {
+  if (!hasAtMostDecimals(value, 2)) {
     throw new Error(errMsg)
   }
 }
@@ -127,11 +123,7 @@ export function assertMax4Dec(
   value: number,
   errMsg = `Value must have at most 4 decimal places, got: ${value}`,
 ): asserts value is number {
-  const multiplied = Math.abs(value * 10_000)
-  const floored = floor(multiplied)
-  // Use a tolerance to handle floating point precision issues
-  // If the difference is less than 1e-8, consider them equal
-  if (Math.abs(multiplied - floored) > 1e-8) {
+  if (!hasAtMostDecimals(value, 4)) {
     throw new Error(errMsg)
   }
 }
@@ -140,11 +132,7 @@ export function assertMax6Dec(
   value: number,
   errMsg = `Value must have at most 6 decimal places, got: ${value}`,
 ): asserts value is number {
-  const multiplied = Math.abs(value * 1_000_000)
-  const floored = floor(multiplied)
-  // Use a tolerance to handle floating point precision issues
-  // If the difference is less than 1e-8, consider them equal
-  if (Math.abs(multiplied - floored) > 1e-8) {
+  if (!hasAtMostDecimals(value, 6)) {
     throw new Error(errMsg)
   }
 }

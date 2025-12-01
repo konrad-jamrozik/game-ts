@@ -68,3 +68,19 @@ export function floorToDec6(value: number): number {
 export function roundToDec4(value: number): number {
   return Math.round(value * 10_000) / 10_000
 }
+
+/**
+ * Checks if a number has at most X decimal places.
+ * Uses a tolerance to handle floating point precision issues.
+ * @param value - The number to check
+ * @param decimalPlaces - Maximum number of decimal places allowed
+ * @returns true if the value has at most X decimal places, false otherwise
+ */
+export function hasAtMostDecimals(value: number, decimalPlaces: number): boolean {
+  const multiplier = 10 ** decimalPlaces
+  const multiplied = Math.abs(value * multiplier)
+  const floored = floor(multiplied)
+  // Use a tolerance to handle floating point precision issues
+  // If the difference is less than 1e-8, consider them equal
+  return Math.abs(multiplied - floored) <= 1e-8
+}
