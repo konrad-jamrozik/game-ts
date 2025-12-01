@@ -1,4 +1,4 @@
-import { toF6, type Fixed6 } from '../primitives/fixed6'
+import { toF6, type Fixed6 } from '../primitives/fixed6Primitives'
 
 export const ENEMY_STATS: Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> = {
   Initiate: { skill: toF6(40), hp: 20, damage: 8, isOfficer: false },

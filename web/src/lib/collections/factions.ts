@@ -1,4 +1,4 @@
-import { toF6 } from '../primitives/fixed6'
+import { toF6 } from '../primitives/fixed6Primitives'
 import type { Faction } from '../model/model'
 
 export const factions: Faction[] = [

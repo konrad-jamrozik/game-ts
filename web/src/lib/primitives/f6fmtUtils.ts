@@ -1,5 +1,5 @@
 import { floorToDec2 } from './mathPrimitives'
-import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6'
+import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6Primitives'
 import type { ValueChange } from '../model/turnReportModel'
 
 /**

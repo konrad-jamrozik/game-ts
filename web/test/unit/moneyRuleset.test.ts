@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { getContractingIncome } from '../../src/lib/model/ruleset/moneyRuleset'
 import { agsV } from '../../src/lib/model/agents/AgentsView'
-import { toF6 } from '../../src/lib/primitives/fixed6'
+import { toF6 } from '../../src/lib/primitives/fixed6Primitives'
 import { agFix } from '../fixtures/agentFixture'
 
 describe(getContractingIncome, () => {

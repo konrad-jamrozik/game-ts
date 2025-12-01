@@ -1,4 +1,4 @@
-import { toF6 } from '../primitives/fixed6'
+import { toF6 } from '../primitives/fixed6Primitives'
 import type { Mission } from '../model/model'
 import { assertDefined } from '../primitives/assertPrimitives'
 

@@ -1,5 +1,5 @@
 import type { Agent, GameState } from '../model'
-import { toF6, f6fmtInt, f6lt } from '../../primitives/fixed6'
+import { toF6, f6fmtInt, f6lt } from '../../primitives/fixed6Primitives'
 import { assertDefined, assertEqual, assertOneOf } from '../../primitives/assertPrimitives'
 import { ceil, div } from '../../primitives/mathPrimitives'
 

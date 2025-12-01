@@ -1,6 +1,6 @@
 import { ceil, div } from '../../primitives/mathPrimitives'
 import { agV } from '../agents/AgentView'
-import { f6floorToInt } from '../../primitives/fixed6'
+import { f6floorToInt } from '../../primitives/fixed6Primitives'
 import type { Agent } from '../model'
 import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
 import { sumAgentSkillBasedValues } from './skillRuleset'

@@ -1,5 +1,5 @@
 import type { Agent, GameState } from '../../model/model'
-import { toF6 } from '../../primitives/fixed6'
+import { toF6 } from '../../primitives/fixed6Primitives'
 import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,

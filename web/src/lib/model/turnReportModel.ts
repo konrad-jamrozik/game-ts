@@ -1,4 +1,4 @@
-import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
+import { isF6, type Fixed6, f6sub } from '../primitives/fixed6Primitives'
 import type { MissionRewards } from './model'
 
 export type TurnReport = BaseReport & {

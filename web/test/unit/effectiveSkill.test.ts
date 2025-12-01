@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { Agent } from '../../src/lib/model/model'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/utils/actorUtils'
-import { toF6 } from '../../src/lib/primitives/fixed6'
+import { toF6 } from '../../src/lib/primitives/fixed6Primitives'
 
 describe(effectiveSkill, () => {
   // prettier-ignore

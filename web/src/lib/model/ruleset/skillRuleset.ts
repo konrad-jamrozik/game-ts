@@ -1,5 +1,5 @@
 import type { AgentView } from '../agents/AgentView'
-import { f6sum, toF, toF6r, type Fixed6 } from '../../primitives/fixed6'
+import { f6sum, toF, toF6r, type Fixed6 } from '../../primitives/fixed6Primitives'
 
 /**
  * Calculates the value contribution from an agent based on their effective skill and a constant multiplier.

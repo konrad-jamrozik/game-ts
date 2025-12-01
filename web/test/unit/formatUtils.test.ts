@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { f6div, toF6 } from '../../src/lib/primitives/fixed6'
+import { f6div, toF6 } from '../../src/lib/primitives/fixed6Primitives'
 import { fmtPctDec0, fmtPctDec2 } from '../../src/lib/primitives/formatPrimitives'
 
 describe('formatUtils', () => {

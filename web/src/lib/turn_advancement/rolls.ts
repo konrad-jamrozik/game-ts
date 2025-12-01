@@ -11,7 +11,7 @@ import {
   roundToF4,
   toF6,
   type Fixed6,
-} from '../primitives/fixed6'
+} from '../primitives/fixed6Primitives'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { fmtPctDec2 } from '../primitives/formatPrimitives'
 import { div } from '../primitives/mathPrimitives'

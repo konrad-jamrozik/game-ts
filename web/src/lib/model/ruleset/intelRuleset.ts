@@ -2,7 +2,7 @@ import { agsV, type AgentsView } from '../agents/AgentsView'
 import { sumAgentSkillBasedValues } from './skillRuleset'
 import type { GameState } from '../model'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
-import { f6floorToInt } from '../../primitives/fixed6'
+import { f6floorToInt } from '../../primitives/fixed6Primitives'
 
 export function getEspionageIntel(agents: AgentsView): number {
   const espionageAgents = agents.onEspionageAssignment()
