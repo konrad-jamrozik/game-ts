@@ -29,33 +29,22 @@ of the `src/` directory. This means that:
 
 # Directory import rules
 
-We define the notation `foo -> bar` as denoting a rule that means that code in `foo/` can import code from `bar/`,
-as well as any other code that `bar/` can import.
+The list below defines the directory import rules for the codebase.
+Any directory listed can depend on all directories listed below it.
+As such:
+- The first listed directory can depend on all other listed directories.
+- The last listed directory can not depend on any other listed directories.
 
-This is in addition to the general import rules listed above.
-
-Directory import rules for dirs in `app/` dir:
+Directory import rules for dirs in `src/` dir:
 
 ``` text
-app              -> components
-components       -> lib
-lib/domain_utils -> lib/model_utils
-lib/model_utils  -> lib/ruleset
-lib/ruleset      -> lib/collections
-lib/collections  -> lib/model
-lib/model        -> lib/utils
-lib/utils        -> lib/primitives
-```
-
-# Forbidden dependencies
-
-Following dependencies are FORBIDDEN ❌ by design:
-
-```text
-lib/model        -> lib/collections
-lib/domain_utils -> lib/collections
-lib/domain_utils -> lib/model
-lib/ruleset      -> lib/collections
-lib/ruleset      -> lib/model
-lib/ruleset      -> lib/domain_utils
+app             
+components      
+lib/domain_utils
+lib/model_utils 
+lib/ruleset     
+lib/collections 
+lib/model       
+lib/utils       
+lib/primitives
 ```
