@@ -5,7 +5,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import { clearAgentSelection, setAgentSelection } from '../../lib/slices/selectionSlice'
 import { DataGridCard } from '../DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
-import { filterAgentRows, filterVisibleAgentColumns } from '../../lib/component_utils/dataGridUtils'
+import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
 import { createAgentColumns } from './createAgentColumns'
 
 // KJA2 add "SkillFromTraining" to 'stats' view, and also show precise skill in this view.

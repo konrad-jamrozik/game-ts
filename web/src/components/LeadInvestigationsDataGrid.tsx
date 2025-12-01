@@ -21,7 +21,7 @@ import {
   clearLeadSelection,
   setInvestigationSelection,
 } from '../lib/slices/selectionSlice'
-import { filterLeadInvestigationRows } from '../lib/component_utils/dataGridUtils'
+import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../lib/model_utils/turnReportUtils'
 import { ExpandableCard } from './ExpandableCard'
