@@ -48,3 +48,10 @@ lib/model
 lib/utils
 lib/primitives
 ```
+
+Plus there are special import rules for the following directories:
+
+``` text
+lib/slices --> lib/turn_advancement
+lib/selectors --> lib/model
+```
