@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ceil, floor } from '../../src/lib/utils/mathPrimitives'
+import { ceil, floor } from '../../src/lib/primitives/mathPrimitives'
 
 describe(floor, () => {
   // prettier-ignore

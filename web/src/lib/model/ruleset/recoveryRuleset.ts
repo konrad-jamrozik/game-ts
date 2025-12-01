@@ -1,4 +1,4 @@
-import { ceil, div } from '../../utils/mathPrimitives'
+import { ceil, div } from '../../primitives/mathPrimitives'
 import { assertAboveZero, assertInteger, assertLessThan } from '../../primitives/assertPrimitives'
 
 export function getRecoveryTurns(hitPoints: number, damage: number, hitPointsRecoveryPct: number): number {

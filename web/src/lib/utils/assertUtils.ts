@@ -1,4 +1,4 @@
-import { hasAtMostDecimals } from './mathPrimitives'
+import { hasAtMostDecimals } from '../primitives/mathPrimitives'
 
 /**
  * Asserts that a number has at most 2 decimal places.

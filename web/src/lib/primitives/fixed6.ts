@@ -2,7 +2,7 @@ import { sum } from 'radash'
 import { assertInRange, assertInteger } from './assertPrimitives'
 import { assertMax6Dec } from '../utils/assertUtils'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from '../utils/formatUtils'
-import { dist, div, floor } from '../utils/mathPrimitives'
+import { dist, div, floor } from './mathPrimitives'
 
 export const FIXED4_PRECISION = 10_000
 

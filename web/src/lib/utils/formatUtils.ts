@@ -1,6 +1,6 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
-import { floor, floorToDec1, floorToDec2, floorToDec4, toPct } from './mathPrimitives'
+import { floor, floorToDec1, floorToDec2, floorToDec4, toPct } from '../primitives/mathPrimitives'
 
 export function fmtPctDec0(nominator: number, denominator = 1): string {
   if (denominator === 0) {

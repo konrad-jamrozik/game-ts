@@ -13,7 +13,7 @@ import { rand } from '../../src/lib/utils/rand'
 import { agFix } from '../fixtures/agentFixture'
 import { enFix } from '../fixtures/enemyFixture'
 import { st } from '../fixtures/stateFixture'
-import { ceil } from '../../src/lib/utils/mathPrimitives'
+import { ceil } from '../../src/lib/primitives/mathPrimitives'
 
 describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {

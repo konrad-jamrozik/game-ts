@@ -1,4 +1,4 @@
-import { floorToDec2 } from '../utils/mathPrimitives'
+import { floorToDec2 } from './mathPrimitives'
 import { f6fmtPctDec2, isF6, type Fixed6 } from './fixed6'
 import type { ValueChange } from '../model/turnReportModel'
 
