@@ -11,8 +11,8 @@ import {
   onTrainingAssignment,
   applyExhaustion,
 } from '../model_utils/agentUtils'
-import { getContractingIncomeV2 } from '../ruleset/moneyRuleset'
-import { getEspionageIntelV2 } from '../ruleset/intelRuleset'
+import { getContractingIncome } from '../ruleset/moneyRuleset'
+import { getEspionageIntel } from '../ruleset/intelRuleset'
 
 /** // KJA there should be ruleset call somewhere here, but there isn't
  * Updates agents in Available state - apply exhaustion recovery
@@ -68,14 +68,14 @@ export function updateRecoveringAgents(state: GameState): void {
 }
 
 export function updateContractingAgents(state: GameState): { moneyEarned: number } {
-  const moneyEarned = getContractingIncomeV2(state)
+  const moneyEarned = getContractingIncome(state)
   const contractingAgents = onContractingAssignment(state.agents)
   applyExhaustion(contractingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { moneyEarned }
 }
 
 export function updateEspionageAgents(state: GameState): { intelGathered: number } {
-  const intelGathered = getEspionageIntelV2(state)
+  const intelGathered = getEspionageIntel(state)
   const espionageAgents = onEspionageAssignment(state.agents)
   applyExhaustion(espionageAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
   return { intelGathered }

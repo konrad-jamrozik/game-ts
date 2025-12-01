@@ -15,7 +15,7 @@ import type { Agent } from '../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/ruleset/constants'
 import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../lib/ruleset/leadRuleset'
-import { sumAgentSkillBasedValuesV2 } from '../lib/ruleset/skillRuleset'
+import { sumAgentSkillBasedValues } from '../lib/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -245,7 +245,7 @@ function buildAllInvestigationRows(
         (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
       )
       // This flooring strips any fractional intel from the total
-      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValuesV2(investigatingAgents, AGENT_ESPIONAGE_INTEL))
+      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(investigatingAgents, AGENT_ESPIONAGE_INTEL))
       projectedIntel += intelFromAgents
 
       // Calculate diff for chip display

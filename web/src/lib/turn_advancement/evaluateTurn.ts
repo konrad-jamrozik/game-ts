@@ -30,7 +30,7 @@ import {
   updateTrainingAgents,
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
-import { getAgentUpkeepV2 } from '../ruleset/moneyRuleset'
+import { getAgentUpkeep } from '../ruleset/moneyRuleset'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -48,7 +48,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   state.actionsCount = 0
 
   // 2. Compute agent upkeep
-  const agentUpkeep = getAgentUpkeepV2(state)
+  const agentUpkeep = getAgentUpkeep(state)
 
   // Capture agent counts and agents list before turn advancement
   const previousAgentCounts = getAgentCounts(state.agents)

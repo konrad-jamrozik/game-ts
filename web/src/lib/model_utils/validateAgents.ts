@@ -7,9 +7,7 @@ export type ValidateAgentsResult = Readonly<{
   invalidAgents: readonly Agent[]
 }>
 
-// V2 versions that work with Agent[] directly
-
-export function validateAgentsV2(
+export function validateAgents(
   agents: Agent[],
   selectedAgentIds: string[],
   getInvalidSubset: (agents: Agent[]) => Agent[],
@@ -36,8 +34,8 @@ export function validateAgentsV2(
   return { isValid, ...(errorMessage !== undefined ? { errorMessage } : {}), invalidAgents }
 }
 
-export function validateAvailableAgentsV2(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
-  return validateAgentsV2(
+export function validateAvailableAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
+  return validateAgents(
     agents,
     selectedAgentIds,
     (selectedAgents) => notAvailable(selectedAgents),
@@ -45,8 +43,8 @@ export function validateAvailableAgentsV2(agents: Agent[], selectedAgentIds: str
   )
 }
 
-export function validateOnAssignmentAgentsV2(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
-  return validateAgentsV2(
+export function validateOnAssignmentAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
+  return validateAgents(
     agents,
     selectedAgentIds,
     (selectedAgents) => notOnAssignment(selectedAgents),

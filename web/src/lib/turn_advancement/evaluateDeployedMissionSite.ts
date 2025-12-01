@@ -7,7 +7,7 @@ import type { GameState } from '../model/gameStateModel'
 import { f6add, f6fmtInt } from '../utils/fixed6Utils'
 import { getRecoveryTurns } from '../ruleset/recoveryRuleset'
 import { addSkill, notTerminated, withIds } from '../model_utils/agentUtils'
-import { evaluateBattleV2, type BattleReport } from './evaluateBattle'
+import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../primitives/assertPrimitives'
 
 /**
@@ -25,7 +25,7 @@ export function evaluateDeployedMissionSite(
   // Get agents deployed to this mission site
   const deployedAgents = withIds(state.agents, missionSite.agentIds)
 
-  const battleReport = evaluateBattleV2(deployedAgents, missionSite.enemies)
+  const battleReport = evaluateBattle(deployedAgents, missionSite.enemies)
 
   const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(
     deployedAgents,
