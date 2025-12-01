@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../../app/hooks'
 import { getArchivedMissionSites, sortMissionSitesByIdDesc } from '../../lib/model_utils/missionSiteUtils'
-import { ExpandableCard } from '../ExpandableCard'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { MissionCard } from './MissionCard'
 
 export function ArchivedMissionCards(): React.JSX.Element {

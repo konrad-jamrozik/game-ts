@@ -24,10 +24,10 @@ import {
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../lib/model_utils/turnReportUtils'
-import { ExpandableCard } from './ExpandableCard'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
-import { MyChip } from './MyChip'
-import { StyledDataGrid } from './StyledDataGrid'
+import { MyChip } from '../Common/MyChip'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
 
 export type LeadInvestigationRow = {
   id: LeadInvestigationId

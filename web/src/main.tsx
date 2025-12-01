@@ -4,7 +4,7 @@ import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './app/App.tsx'
 import { store } from './app/store'
-import { ErrorBoundary } from './components/ErrorBoundary'
+import { ErrorBoundary } from './components/Error/ErrorBoundary'
 import theme from './styling/theme.tsx'
 
 // Global error handler for unhandled promise rejections

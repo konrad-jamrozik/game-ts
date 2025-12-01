@@ -8,7 +8,7 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { getModelPalette } from '../../styling/modelPaletteUtils'
-import { MyChip } from '../MyChip'
+import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 

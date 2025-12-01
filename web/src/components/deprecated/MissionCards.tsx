@@ -6,7 +6,7 @@ import {
   getActiveOrDeployedMissionSites,
   sortActiveOrDeployedMissionSites,
 } from '../../lib/model_utils/missionSiteUtils'
-import { ExpandableCard } from '../ExpandableCard'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { MissionCard } from './MissionCard'
 
 export function MissionCards(): React.JSX.Element {

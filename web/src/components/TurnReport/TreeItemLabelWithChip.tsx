@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { MyChip, type MyChipProps } from '../MyChip'
+import { MyChip, type MyChipProps } from '../Common/MyChip'
 
 export type TreeItemLabelWithChipProps = MyChipProps & {
   // Note: 'children' property is required, and it denotes the plain textual label,

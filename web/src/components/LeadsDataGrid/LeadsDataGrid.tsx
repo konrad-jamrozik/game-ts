@@ -10,7 +10,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { leads } from '../lib/collections/leads'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../lib/slices/selectionSlice'
-import { DataGridCard } from './DataGridCard'
+import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 
 export type LeadRow = {

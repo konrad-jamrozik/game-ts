@@ -4,8 +4,8 @@ import { useAppSelector } from '../app/hooks'
 import { getMoneyNewBalance } from '../lib/ruleset/moneyRuleset'
 import { getIntelNewBalance } from '../lib/ruleset/intelRuleset'
 import { notTerminated } from '../lib/model_utils/agentUtils'
-import { StyledDataGrid } from './StyledDataGrid'
-import { MyChip } from './MyChip'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
+import { MyChip } from '../Common/MyChip'
 
 export type AssetRow = {
   id: number

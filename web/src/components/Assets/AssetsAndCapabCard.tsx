@@ -1,6 +1,6 @@
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { ExpandableCard } from './ExpandableCard'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { AssetsDataGrid } from './AssetsDataGrid'
 import { CapabilitiesDataGrid } from './CapabilitiesDataGrid'
 

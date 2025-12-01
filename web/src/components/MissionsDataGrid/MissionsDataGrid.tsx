@@ -22,9 +22,9 @@ import {
 import { fmtDec1, fmtNoPrefix } from '../lib/primitives/formatPrimitives'
 import { div } from '../lib/primitives/mathPrimitives'
 import { getCompletedMissionSiteIds } from '../lib/model_utils/turnReportUtils'
-import { DataGridCard } from './DataGridCard'
+import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
-import { MyChip } from './MyChip'
+import { MyChip } from '../Common/MyChip'
 
 export type MissionRow = MissionSite & {
   rowId: number

@@ -2,7 +2,7 @@ import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch } from '../app/hooks'
-import { ExpandableCard } from './ExpandableCard'
+import { ExpandableCard } from './Common/ExpandableCard'
 import {
   debugSpawnMissionSites,
   debugSetPanicToZero,

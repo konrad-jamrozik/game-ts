@@ -11,7 +11,7 @@ import { getMissionById } from '../../lib/collections/missions'
 import { setMissionSiteSelection } from '../../lib/slices/selectionSlice'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
-import { LabeledValue } from '../LabeledValue'
+import { LabeledValue } from '../Common/LabeledValue'
 
 export type MissionCardProps = { missionSiteId: MissionSiteId }
 

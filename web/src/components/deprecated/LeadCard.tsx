@@ -9,7 +9,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import { setLeadSelection, clearInvestigationSelection } from '../../lib/slices/selectionSlice'
-import { LabeledValue } from '../LabeledValue'
+import { LabeledValue } from '../Common/LabeledValue'
 
 export type LeadCardProps = {
   leadId: string

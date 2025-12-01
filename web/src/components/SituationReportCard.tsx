@@ -11,9 +11,9 @@ import { SUPPRESSION_DECAY } from '../lib/ruleset/constants'
 import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/ruleset/panicRuleset'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 import { fmtPctDec0 } from '../lib/primitives/formatPrimitives'
-import { ExpandableCard } from './ExpandableCard'
-import { MyChip } from './MyChip'
-import { StyledDataGrid } from './StyledDataGrid'
+import { ExpandableCard } from './Common/ExpandableCard'
+import { MyChip } from './Common/MyChip'
+import { StyledDataGrid } from './Common/StyledDataGrid'
 
 export type SituationReportRow = {
   id: number
