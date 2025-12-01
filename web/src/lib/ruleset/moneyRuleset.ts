@@ -3,11 +3,7 @@ import { f6floorToInt } from '../primitives/fixed6Primitives'
 import type { GameState } from '../model/gameStateModel'
 import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from './constants'
 import { sumAgentSkillBasedValues } from './skillRuleset'
-import { nonTerminatedAgents } from '../model_utils/gameStateUtils'
-
-export function getAgentUpkeep(agents: AgentsView): number {
-  return agents.notTerminated().length * AGENT_UPKEEP_COST
-}
+import { agentsNotTerminated } from '../model_utils/gameStateUtils'
 
 export function getContractingIncome(agents: AgentsView): number {
   const contractingAgents = agents.onContractingAssignment()
@@ -16,7 +12,7 @@ export function getContractingIncome(agents: AgentsView): number {
 }
 
 export function getAgentUpkeepV2(gameState: GameState): number {
-  return nonTerminatedAgents(gameState).length * AGENT_UPKEEP_COST
+  return agentsNotTerminated(gameState).length * AGENT_UPKEEP_COST
 }
 
 export function getMoneyTurnDiff(gameState: GameState): number {

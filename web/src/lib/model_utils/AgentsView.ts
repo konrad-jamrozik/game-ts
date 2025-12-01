@@ -2,7 +2,7 @@ import { validateAgentLocalInvariants } from './validateAgentInvariants'
 import type { Agent } from '../model/agentModel'
 import type { MissionSiteId } from '../model/model'
 import { f6cmp } from '../primitives/fixed6Primitives'
-import { getAgentUpkeep, getContractingIncome } from '../ruleset/moneyRuleset'
+import { getContractingIncome } from '../ruleset/moneyRuleset'
 import { getEspionageIntel } from '../ruleset/intelRuleset'
 import { agV, type AgentView } from './AgentView'
 import { validateAvailableAgents, validateOnAssignmentAgents, type ValidateAgentsResult } from './validateAgents'
@@ -39,7 +39,6 @@ type AgentsViewMethods = Readonly<{
   notTerminated(): AgentsView
   inTransit(): AgentsView
   sortedByEffectiveSkill(): AgentsView
-  agentUpkeep(): number
   contractingIncome(): number
   espionageIntel(): number
   applyExhaustion(exhaustion: number): void
@@ -73,7 +72,6 @@ function getAgentsViewMethods(
     inTransit: (): AgentsView => toAgsV(agVArr.filter((agentView) => agentView.isInTransit())),
     sortedByEffectiveSkill: (): AgentsView =>
       toAgsV(agVArr.toSorted((ag1, ag2) => f6cmp(ag1.effectiveSkill(), ag2.effectiveSkill()))),
-    agentUpkeep: (): number => getAgentUpkeep(toAgsV(agVArr)),
     contractingIncome: (): number => getContractingIncome(toAgsV(agVArr)),
     espionageIntel: (): number => getEspionageIntel(toAgsV(agVArr)),
     applyExhaustion: (exhaustion: number): void => {
