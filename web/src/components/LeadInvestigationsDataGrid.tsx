@@ -10,13 +10,12 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../app/hooks'
 import { getLeadById } from '../lib/collections/leads'
 import { agsV } from '../lib/model_utils/AgentsView'
-import { agV } from '../lib/model_utils/AgentView'
 import { f6floorToInt } from '../lib/primitives/fixed6Primitives'
 import type { Agent } from '../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../lib/ruleset/constants'
 import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../lib/ruleset/leadRuleset'
-import { sumAgentSkillBasedValues } from '../lib/ruleset/skillRuleset'
+import { sumAgentSkillBasedValuesV2 } from '../lib/ruleset/skillRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -245,9 +244,8 @@ function buildAllInvestigationRows(
         .withIds(investigation.agentIds)
         .toAgentArray()
         .filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
-      const agentViews = investigatingAgents.map((agent) => agV(agent))
       // This flooring strips any fractional intel from the total
-      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(agentViews, AGENT_ESPIONAGE_INTEL))
+      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValuesV2(investigatingAgents, AGENT_ESPIONAGE_INTEL))
       projectedIntel += intelFromAgents
 
       // Calculate diff for chip display
