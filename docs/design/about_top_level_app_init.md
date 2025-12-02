@@ -29,8 +29,8 @@ the app loads the `main.tsx` file.
 The `main.tsx` file does this:
 
 ``` tsx
-import App from './app/App.tsx'
-import { store } from './app/store'
+import App from './redux/App.tsx'
+import { store } from './redux/store'
 import theme from './styling/theme.tsx'
 
 const rootElement = document.querySelector('#root')

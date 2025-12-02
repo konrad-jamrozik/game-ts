@@ -7,7 +7,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import { withIds } from '../../lib/model_utils/agentUtils'
 import { f6floorToInt } from '../../lib/primitives/fixed6Primitives'
@@ -20,7 +20,7 @@ import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
-} from '../../app/slices/selectionSlice'
+} from '../../redux/slices/selectionSlice'
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'

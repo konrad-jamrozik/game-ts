@@ -1,7 +1,7 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch } from '../app/hooks'
+import { useAppDispatch } from '../redux/hooks'
 import { ExpandableCard } from './Common/ExpandableCard'
 import {
   debugSpawnMissionSites,
@@ -9,7 +9,7 @@ import {
   debugSetAllFactionsSuppressionTo1000Percent,
   debugAddMoney,
   debugSpawn10Agents,
-} from '../app/slices/gameStateSlice'
+} from '../redux/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()

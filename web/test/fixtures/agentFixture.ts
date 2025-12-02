@@ -1,5 +1,5 @@
 import type { Agent } from '../../src/lib/model/agentModel'
-import { newHiredAgent } from '../../src/app/reducers/agentReducers'
+import { newHiredAgent } from '../../src/redux/reducers/agentReducers'
 import { wpnFix } from './weaponFixture'
 
 export const agFix = (() => {

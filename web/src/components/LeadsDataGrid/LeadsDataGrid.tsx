@@ -7,9 +7,9 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { leads } from '../../lib/collections/leads'
-import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../app/slices/selectionSlice'
+import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 

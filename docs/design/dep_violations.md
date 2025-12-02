@@ -14,7 +14,7 @@ This document lists violations of the dependency constraints defined in `about_c
 
 **Line**: Line 2
 ```typescript
-import type { RootState } from '../../app/store'
+import type { RootState } from '../../redux/store'
 ```
 
 **Fix**: `RootState` should be moved to a location that `lib/selectors` can access (e.g., `lib/model` or a shared types location), or the selector should be refactored to not depend on `RootState`.

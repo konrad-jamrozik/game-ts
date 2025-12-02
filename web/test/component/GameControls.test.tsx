@@ -2,9 +2,9 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
-import { store } from '../../src/app/store'
+import { store } from '../../src/redux/store'
 import { GameControls } from '../../src/components/GameControls/GameControls'
-import { setResetControlsExpanded } from '../../src/app/slices/settingsSlice'
+import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 
 describe(GameControls, () => {
   // This is commented out because I want to for the tests to reuse state.

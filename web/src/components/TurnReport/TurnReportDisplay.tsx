@@ -1,6 +1,6 @@
 import { Box } from '@mui/material'
 import * as React from 'react'
-import { useAppSelector } from '../../app/hooks'
+import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { formatAssets } from './formatAssets'
 import { formatSituationReport } from './formatSituationReport'

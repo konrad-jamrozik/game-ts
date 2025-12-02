@@ -155,7 +155,7 @@ Create `test/App.test.tsx`:
 ```tsx
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import App from './App'
+import App from './redux'
 
 describe('App', () => {
   it('should have a button "Add agents" and respond to click', async () => {
@@ -169,12 +169,12 @@ describe('App', () => {
 
 # Performance bottlenecks
 
-This is slow `import App from '../src/app/App'`
+This is slow `import App from '../src/redux/App'`
 
 A file like this:
 
 ``` ts
-import App from '../src/app/App'
+import App from '../src/redux/App'
 describe(App, () => {
 })
 ```
@@ -184,7 +184,7 @@ takes:
 
 But a file like this:
 ``` ts
-// import App from '../src/app/App'
+// import App from '../src/redux/App'
 describe(App, () => {
 })
 ```

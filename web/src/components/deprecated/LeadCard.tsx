@@ -6,9 +6,9 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
-import { setLeadSelection, clearInvestigationSelection } from '../../app/slices/selectionSlice'
+import { setLeadSelection, clearInvestigationSelection } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 
 export type LeadCardProps = {

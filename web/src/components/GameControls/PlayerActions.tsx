@@ -6,7 +6,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import {
   assignAgentsToContracting,
@@ -19,13 +19,13 @@ import {
   addAgentsToInvestigation,
   recallAgents,
   sackAgents,
-} from '../../app/slices/gameStateSlice'
+} from '../../redux/slices/gameStateSlice'
 import {
   clearAgentSelection,
   clearLeadSelection,
   clearInvestigationSelection,
   clearMissionSelection,
-} from '../../app/slices/selectionSlice'
+} from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
 import { validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'

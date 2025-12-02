@@ -1,10 +1,10 @@
 import { render, screen } from '@testing-library/react'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
-import { store } from '../../src/app/store'
+import { store } from '../../src/redux/store'
 import { EventLog } from '../../src/components/EventLog'
-import { clearEvents } from '../../src/app/slices/eventsSlice'
-import { reset } from '../../src/app/slices/gameStateSlice'
+import { clearEvents } from '../../src/redux/slices/eventsSlice'
+import { reset } from '../../src/redux/slices/gameStateSlice'
 
 function renderEventLog(): void {
   render(
@@ -33,7 +33,7 @@ describe(EventLog, () => {
   test('happy path: events', async () => {
     expect.hasAssertions()
 
-    const { hireAgent } = await import('../../src/app/slices/gameStateSlice')
+    const { hireAgent } = await import('../../src/redux/slices/gameStateSlice')
     store.dispatch(hireAgent())
 
     renderEventLog()
@@ -45,7 +45,7 @@ describe(EventLog, () => {
   test('happy path: new game started', async () => {
     expect.hasAssertions()
 
-    const { addTextEvent: addEvent } = await import('../../src/app/slices/eventsSlice')
+    const { addTextEvent: addEvent } = await import('../../src/redux/slices/eventsSlice')
     const state = store.getState()
     const { gameState } = state.undoable.present
 

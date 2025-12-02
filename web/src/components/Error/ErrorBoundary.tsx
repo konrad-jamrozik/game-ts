@@ -1,5 +1,5 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react'
-import { wipeStorage } from '../../app/persist'
+import { wipeStorage } from '../../redux/persist'
 
 type ErrorBoundaryState = {
   hasError: boolean

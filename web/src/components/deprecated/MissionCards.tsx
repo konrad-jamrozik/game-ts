@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppSelector } from '../../app/hooks'
+import { useAppSelector } from '../../redux/hooks'
 import {
   getActiveOrDeployedMissionSites,
   sortActiveOrDeployedMissionSites,
