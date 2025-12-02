@@ -81,17 +81,16 @@ store.subscribe(() => {
 //
 //  export type RootReducerState = ReturnType<typeof rootReducer>
 //  const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
-//  export type RootState = RootReducerState
+//  export type RootState = ReturnType<typeof store.getState>
 //
 // This way we avoid following circular dependency:
-//  KJA2 unclear, explain this better
 //
-//                configureStore
+//                RootState
+// --depends_on-> ReturnType<typeof store.getState> # <- here we broke the circular dependency chain
+// --depends_on-> configureStore
 // --depends_on-> maybePersistedState
 // --depends_on-> loadPersistedState
 // --depends_on-> RootState
-// --depends_on-> ReturnType<typeof store>
-// --depends_on-> configureStore
 //
 // See also here:
 // https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
