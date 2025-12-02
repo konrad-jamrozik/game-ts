@@ -43,30 +43,58 @@ Directory import rules for dirs in `src/` dir:
 ```mermaid
 graph TD
     IndexH[index.html] --> MainTs[main.tsx]
-    MainTs --> CompApp[components/App.tsx]
-    MainTs --> RdxStr[redux/store.ts]
-    MainTs --> CompTheme[components/styling/theme.tsx]
+
+    subgraph components
+        CompApp[comp/App.tsx]
+        CompTheme[comp/styling/theme.tsx]
+        CompErr[comp/Error]
+        Comp__[comp/*]
+        CompSt[comp/styling]
+    end
+
+    subgraph redux
+        RdxStr["rdx/(store.ts + persist.ts)"]
+        RdxEvt[rdx/eventsMiddleware.ts]
+        RdxRed[rdx/reducers]
+        RdxSli[rdx/slices]
+        RdxHook[rdx/hooks.ts]
+        RdxSel[rdx/selectors]
+    end
+
+    subgraph lib
+        LibGam[lib/game_utils]
+        LibRul[lib/ruleset]
+        LibMUt[lib/model_utils]
+        LibCol[lib/collections]
+        LibMod[lib/model]
+        LibUti[lib/utils]
+        LibPri[lib/primitives]
+    end
+
+    MainTs --> CompApp
+    MainTs --> CompTheme
+    MainTs --> CompErr
+    MainTs --> RdxStr
     CompTheme --> CompSt
-    MainTs --> CompErr[components/Error]
-    CompApp --> Comp__[components]
-    RdxStr --> RdxEvt[redux/eventsMiddleware.ts]
-    RdxEvt --> RdxRed[redux/reducers]
+    CompApp --> Comp__
     CompErr --> Comp__
-    Comp__ --> RdxHook[redux/hooks.ts]
-    Comp__ --> RdxSel[redux/selectors]
-    Comp__ --> CompSt[components/styling]
-    Comp__ --> LibGam[lib/game_utils]
-    RdxHook --> RdxStr[redux/store.ts + persist.ts]
-    RdxSel --> RdxStr
-    RdxRed --> RdxSli[redux/slices]
+    Comp__ --> RdxHook
+    Comp__ --> RdxSel
+    Comp__ --> CompTheme
+    Comp__ --> LibGam
+    CompSt --> LibMod
+    RdxStr --> RdxEvt
+    RdxEvt --> RdxRed
+    RdxRed --> RdxSli
     RdxSli --> LibGam
-    CompSt --> LibMod[lib/model]
-    LibGam --> LibRul[lib/ruleset]
-    LibRul --> LibMUt[lib/model_utils]
-    LibMUt --> LibCol[lib/collections]
-    LibCol --> LibMod[lib/model]
-    LibMod --> LibUti[lib/utils]
-    LibUti --> LibPri[lib/primitives]
+    RdxHook --> RdxStr
+    RdxSel --> RdxStr
+    LibGam --> LibRul
+    LibRul --> LibMUt
+    LibMUt --> LibCol
+    LibCol --> LibMod
+    LibMod --> LibUti
+    LibUti --> LibPri
 ```
 
 # See also
