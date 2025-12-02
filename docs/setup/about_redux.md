@@ -52,6 +52,9 @@ Then use it in Dev tools. That's it!
 - useSelector subscribes
   https://react-redux.js.org/api/hooks#useselector
 
+- code structure
+  https://redux.js.org/faq/code-structure
+
 # Caveats
 
 ## Randomness goes into action creators, not reducers. Use `prepare` callback
