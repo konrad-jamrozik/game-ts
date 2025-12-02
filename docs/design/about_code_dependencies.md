@@ -28,36 +28,31 @@ of the `src/` directory. This means that:
 
 # Directory import rules
 
-The list below defines the directory import rules for the codebase.
-Any directory listed can depend on all directories listed below it.
+The diagram below defines the directory import rules for the codebase.
+
+An entry `Foo --> Bar` means that directory or file `Foo` can depend on directory or file `Bar`
+and on all directories or files on which `Bar` can depend, recursively.
+
 As such:
 - The first listed directory can depend on all other listed directories.
 - The last listed directory can not depend on any other listed directories.
 
 Directory import rules for dirs in `src/` dir:
 
-``` text
-index.html
-main.tsx
-app
-components
-lib/game_utils
-lib/ruleset
-lib/model_utils
-lib/collections
-lib/model
-lib/utils
-lib/primitives
-```
-
-In addition:
-
-``` text
-main.tsx
-app/store
-app/reducers
-app/slices
-app/slices
-lib/game_utils
-
+```mermaid
+graph TD
+    IndexH[index.html] --> MainTs[main.tsx]
+    MainTs --> AppApp[app/app]
+    MainTs --> AppStr[app/store]
+    AppApp --> Comp__[components]
+    AppStr --> AppRed[app/reducers]
+    Comp__ --> LibGam[lib/game_utils]
+    AppRed --> AppSli[app/slices]
+    AppSli --> LibGam
+    LibGam --> LibRul[lib/ruleset]
+    LibRul --> LibMUt[lib/model_utils]
+    LibMUt --> LibCol[lib/collections]
+    LibCol --> LibMod[lib/model]
+    LibMod --> LibUti[lib/utils]
+    LibUti --> LibPri[lib/primitives]
 ```
