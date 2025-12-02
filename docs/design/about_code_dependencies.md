@@ -13,6 +13,7 @@ which files can `import` which symbols from other files.
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
 - The code in `src/lib/` can not depend on `react` nor `@mui` external code.
+- Only code in `src/redux/` can depend on `@reduxjs` external code.
 - By default, code in files being directly in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
@@ -55,10 +56,10 @@ graph TD
     subgraph redux
         RdxStore[rdx/store.ts]
         RdxPers[rdx/persist.ts]
-        RdxType[rdx/types.ts]
         RdxRedu[rdx/rootReducer.ts]
         RdxEvt[rdx/eventsMiddleware.ts]
         RdxRed[rdx/reducers]
+        RdxRedUtils[rdx/reducer_utils]
         RdxSli[rdx/slices]
         RdxHook[rdx/hooks.ts]
         RdxSel[rdx/selectors]
@@ -87,21 +88,23 @@ graph TD
     Comp__ --> LibGam
     CompSt --> LibMod
     RdxStore --> RdxRedu
-    RdxStore --> RdxType
     RdxStore --> RdxEvt
     RdxStore --> RdxPers
-    RdxPers --> RdxType
-    RdxType --> RdxRedu
-    RdxEvt --> RdxType
+    RdxPers --> RdxRedu
+    RdxEvt --> RdxRedu
     RdxEvt --> RdxRed
+    RdxEvt --> RdxRedUtils
     RdxRedu --> RdxRed
     RdxRedu --> RdxSli
+    RdxRedu --> RdxRedUtils
     RdxSli --> RdxRed
+    RdxRed --> RdxRedUtils
     RdxRed --> LibGam
+    RdxRedUtils --> LibMod
     RdxSli --> LibGam
     RdxHook --> RdxStore
-    RdxHook --> RdxType
-    RdxSel --> RdxType
+    RdxHook --> RdxRedu
+    RdxSel --> RdxRedu
     LibGam --> LibRul
     LibRul --> LibMUt
     LibMUt --> LibCol

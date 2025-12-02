@@ -9,7 +9,7 @@ import {
 } from '../../lib/ruleset/constants'
 import { toF6 } from '../../lib/utils/fixed6Utils'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
-import { asPlayerAction } from './asPlayerAction'
+import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 
 export const hireAgent = asPlayerAction((state: GameState) => {

@@ -7,7 +7,7 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../lib/ruleset/constants'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
-import { asPlayerAction } from './asPlayerAction'
+import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
   state.panic = toF6(0)

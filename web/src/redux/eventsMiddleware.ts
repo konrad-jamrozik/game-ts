@@ -15,8 +15,8 @@ import {
   reset,
   sackAgents,
 } from './slices/gameStateSlice'
-import { isPlayerAction } from './reducers/asPlayerAction'
-import type { RootState } from './types'
+import { isPlayerAction } from './reducer_utils/asPlayerAction'
+import type { RootState } from './rootReducer'
 import { fmtAgentCount } from '../lib/model_utils/formatModelUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 

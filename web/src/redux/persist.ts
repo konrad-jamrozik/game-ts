@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import type { RootState } from './types'
+import type { RootState } from './rootReducer'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'

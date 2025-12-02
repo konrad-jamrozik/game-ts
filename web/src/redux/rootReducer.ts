@@ -2,7 +2,7 @@ import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import eventsReducer from './slices/eventsSlice'
 import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
-import { isPlayerAction } from './reducers/asPlayerAction'
+import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import selectionReducer from './slices/selectionSlice'
 import settingsReducer from './slices/settingsSlice'
 
@@ -35,3 +35,5 @@ export const rootReducer = combineReducers({
   settings: settingsReducer, // Settings are not wrapped in undoable
   selection: selectionReducer, // Selection state is not wrapped in undoable
 })
+
+export type RootState = ReturnType<typeof rootReducer>

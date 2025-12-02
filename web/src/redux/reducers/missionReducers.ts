@@ -2,7 +2,7 @@ import type { GameState } from '../../lib/model/gameStateModel'
 import type { MissionSite, MissionSiteId } from '../../lib/model/model'
 import { missions } from '../../lib/collections/missions'
 import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
-import { asPlayerAction } from './asPlayerAction'
+import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>(
   (state: GameState, action) => {

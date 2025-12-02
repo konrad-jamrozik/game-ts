@@ -6,7 +6,7 @@ import {
   type UpgradeName,
 } from '../../lib/collections/upgrades'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { asPlayerAction } from './asPlayerAction'
+import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {
   const upgradeName = action.payload

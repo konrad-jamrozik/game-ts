@@ -1,9 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
-import { rootReducer } from './rootReducer'
+import { rootReducer, type RootState } from './rootReducer'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
-import type { RootState } from './types'
 
 const maybePersistedState: RootState | undefined = await loadPersistedState()
 
@@ -37,7 +36,6 @@ store.subscribe(() => {
   debouncedSave()
 })
 
-// RootState is now defined in types.ts to break the circular dependency between store.ts and persist.ts
-// See types.ts for the type definition
+// RootState is now defined in rootReducer.ts to break the circular dependency between store.ts and persist.ts
 
 export type AppDispatch = typeof store.dispatch
