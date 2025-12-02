@@ -1,14 +1,5 @@
 import { assertInRange } from './assertPrimitives'
-import {
-  FIXED4_PRECISION,
-  f6fmtPctDec2,
-  f6fromF4,
-  f6gt,
-  f6sub,
-  roundToF4,
-  toF6,
-  type Fixed6,
-} from './fixed6'
+import { FIXED4_PRECISION, f6fmtPctDec2, f6fromF4, f6gt, f6sub, roundToF4, toF6, type Fixed6 } from './fixed6'
 import { fmtPctDec2 } from './formatPrimitives'
 import { div } from './mathPrimitives'
 import { rand } from './rand'
@@ -231,4 +222,3 @@ export function fmtRollResultQuantized(rollResult: RollResultQuantized): string 
   const thresholdPctStr = f6fmtPctDec2(rollResult.failureProbF4).padStart(7)
   return `[${icon} roll ${rollPctStr} is ${relation} ${thresholdPctStr} threshold]`
 }
-
