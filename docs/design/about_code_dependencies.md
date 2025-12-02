@@ -12,7 +12,7 @@ which files can `import` which symbols from other files.
 
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
-- The code in `src/lib/` can not depend on `@mui` external code.
+- The code in `src/lib/` can not depend on `react` nor `@mui` external code.
 - By default, code in files being directly in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
@@ -43,19 +43,23 @@ Directory import rules for dirs in `src/` dir:
 ```mermaid
 graph TD
     IndexH[index.html] --> MainTs[main.tsx]
-    MainTs --> AppApp[components/App.tsx]
-    MainTs --> AppStr[redux/store.ts]
-    AppApp --> Comp__[components]
-    AppStr --> AppEvt[redux/eventsMiddleware.ts]
-    AppEvt --> AppRed[redux/reducers]
-    Comp__ --> AppHook[redux/hooks.ts]
-    Comp__ --> AppSel[redux/selectors]
+    MainTs --> CompApp[components/App.tsx]
+    MainTs --> RdxStr[redux/store.ts]
+    MainTs --> CompTheme[components/styling/theme.tsx]
+    CompTheme --> CompSt
+    MainTs --> CompErr[components/Error]
+    CompApp --> Comp__[components]
+    RdxStr --> RdxEvt[redux/eventsMiddleware.ts]
+    RdxEvt --> RdxRed[redux/reducers]
+    CompErr --> Comp__
+    Comp__ --> RdxHook[redux/hooks.ts]
+    Comp__ --> RdxSel[redux/selectors]
     Comp__ --> CompSt[components/styling]
     Comp__ --> LibGam[lib/game_utils]
-    AppHook --> AppStr[redux/store.ts + persist.ts]
-    AppSel --> AppStr
-    AppRed --> AppSli[redux/slices]
-    AppSli --> LibGam
+    RdxHook --> RdxStr[redux/store.ts + persist.ts]
+    RdxSel --> RdxStr
+    RdxRed --> RdxSli[redux/slices]
+    RdxSli --> LibGam
     CompSt --> LibMod[lib/model]
     LibGam --> LibRul[lib/ruleset]
     LibRul --> LibMUt[lib/model_utils]

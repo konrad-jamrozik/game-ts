@@ -46,11 +46,6 @@ if (rootElement) {
 
 which makes React inject `App` into the `#root` DOM element, and it injects into `theme` and `store` into the `App` component.
 
-Then, the app loads the `main.tsx` file.
-Then, the app loads the `App.tsx` file.
-Then, the app loads the `store.ts` file.
-Then, the app loads the `persist.ts` file.
-Then, the app loads the `theme.tsx` file.
-Then, the app loads the `ErrorBoundary.tsx` file.
-Then, the app loads the `Error.tsx` file.
-Then, the app loads the `ErrorBoundary.tsx` file.
+# See also
+
+- [About code dependencies](about_code_dependencies.md)
