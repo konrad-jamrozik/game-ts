@@ -1,5 +1,5 @@
-import { fmtRollResultQuantized, type RollResultQuantized } from './rolls'
-import { fmtInt } from '../primitives/formatPrimitives'
+import { fmtRollResultQuantized, type RollResultQuantized } from '../../primitives/rolls'
+import { fmtInt } from '../../primitives/formatPrimitives'
 
 export type AttackLogKind =
   | 'agent misses'

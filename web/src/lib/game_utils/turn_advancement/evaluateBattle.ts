@@ -1,7 +1,6 @@
 import pluralize from 'pluralize'
 import { sum } from 'radash'
-import { toF6, f6fmtInt, f6fmtPctDec0 } from '../../utils/fixed6Utils'
-import { f6cmp, f6div, f6eq, f6sum, type Fixed6 } from '../../primitives/fixed6Primitives'
+import { toF6, f6fmtInt, f6fmtPctDec0, f6cmp, f6div, f6eq, f6sum, type Fixed6 } from '../../primitives/fixed6'
 import type { Actor, Enemy } from '../../model/model'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../ruleset/constants'

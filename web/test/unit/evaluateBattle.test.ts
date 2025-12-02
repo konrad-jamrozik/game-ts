@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6add } from '../../src/lib/utils/fixed6Utils'
-import { f6mult } from '../../src/lib/primitives/fixed6Primitives'
+import { toF6, f6add, f6mult } from '../../src/lib/primitives/fixed6'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,

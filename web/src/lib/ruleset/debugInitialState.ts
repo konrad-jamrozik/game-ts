@@ -1,7 +1,7 @@
 import type { Agent } from '../model/agentModel'
 import type { MissionSiteId } from '../model/model'
 import type { GameState } from '../model/gameStateModel'
-import { toF6 } from '../utils/fixed6Utils'
+import { toF6 } from '../primitives/fixed6'
 import { newWeapon } from './weaponRuleset'
 import { newEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'

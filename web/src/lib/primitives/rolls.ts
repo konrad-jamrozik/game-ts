@@ -1,13 +1,17 @@
-/**
- * Combat and dice rolling utilities for deployed mission site update.
- */
-
-import { toF6, f6fmtPctDec2, f6gt } from './fixed6Utils'
-import { FIXED4_PRECISION, f6fromF4, f6sub, roundToF4, type Fixed6 } from '../primitives/fixed6Primitives'
-import { assertInRange } from '../primitives/assertPrimitives'
-import { fmtPctDec2 } from '../primitives/formatPrimitives'
-import { div } from '../primitives/mathPrimitives'
-import { rand } from '../primitives/rand'
+import { assertInRange } from './assertPrimitives'
+import {
+  FIXED4_PRECISION,
+  f6fmtPctDec2,
+  f6fromF4,
+  f6gt,
+  f6sub,
+  roundToF4,
+  toF6,
+  type Fixed6,
+} from './fixed6'
+import { fmtPctDec2 } from './formatPrimitives'
+import { div } from './mathPrimitives'
+import { rand } from './rand'
 
 export type ContestRollResult = {
   attackerValue: number
@@ -227,3 +231,4 @@ export function fmtRollResultQuantized(rollResult: RollResultQuantized): string 
   const thresholdPctStr = f6fmtPctDec2(rollResult.failureProbF4).padStart(7)
   return `[${icon} roll ${rollPctStr} is ${relation} ${thresholdPctStr} threshold]`
 }
+

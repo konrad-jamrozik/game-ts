@@ -7,7 +7,7 @@ import {
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../lib/ruleset/constants'
-import { toF6 } from '../../lib/utils/fixed6Utils'
+import { toF6 } from '../../lib/primitives/fixed6'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'

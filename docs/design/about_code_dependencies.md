@@ -1,5 +1,13 @@
 # About code dependencies
 
+- [About code dependencies](#about-code-dependencies)
+- [General import rules](#general-import-rules)
+- [Import rules for the test directory](#import-rules-for-the-test-directory)
+- [Directory import rules](#directory-import-rules)
+  - [Redux directory import rules](#redux-directory-import-rules)
+  - [Primitives directory import rules](#primitives-directory-import-rules)
+- [See also](#see-also)
+
 This document explains what are the code dependencies rules, i.e. rules about
 which files can `import` which symbols from other files.
 
@@ -63,7 +71,6 @@ graph TD
         LibMUt[lib/model_utils]
         LibCol[lib/collections]
         LibMod[lib/model]
-        LibUti[lib/utils]
         LibPri[lib/primitives]
     end
 
@@ -89,13 +96,12 @@ graph TD
     LibRul --> LibMUt
     LibMUt --> LibCol
     LibCol --> LibMod
-    LibMod --> LibUti
-    LibUti --> LibPri
+    LibMod --> LibPri
 ```
 
 ## Redux directory import rules
 
-Detailed dependency rules within the `src/redux/` directory:
+Detailed dependency rules within the `web/src/redux/` directory:
 
 ```mermaid
 graph TD
@@ -138,6 +144,36 @@ graph TD
     RdxHook --> RdxStore
     RdxHook --> RdxRedu
     RdxSel --> RdxRedu
+```
+
+## Primitives directory import rules
+
+Detailed dependency rules within the `web/src/lib/primitives/` directory:
+
+```mermaid
+graph LR
+    subgraph "web/src/lib/primitives"
+        MathPrim[prim/mathPrimitives.ts]
+        AssertPrim[prim/assertPrimitives.ts]
+        Fixed6Prim[prim/fixed6.ts]
+        FormatPrim[prim/formatPrimitives.ts]
+        RandPrim[prim/rand.ts]
+        StringPrim[prim/stringPrimitives.ts]
+        RollsPrim[prim/rolls.ts]
+    end
+
+    AssertPrim --> MathPrim
+    Fixed6Prim --> AssertPrim
+    Fixed6Prim --> MathPrim
+    Fixed6Prim --> FormatPrim
+    FormatPrim --> MathPrim
+    RandPrim --> AssertPrim
+    StringPrim --> AssertPrim
+    RollsPrim --> AssertPrim
+    RollsPrim --> Fixed6Prim
+    RollsPrim --> FormatPrim
+    RollsPrim --> MathPrim
+    RollsPrim --> RandPrim
 ```
 
 # See also

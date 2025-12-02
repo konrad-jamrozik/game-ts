@@ -1,4 +1,4 @@
-import { toF6 } from '../utils/fixed6Utils'
+import { toF6 } from '../primitives/fixed6'
 import { factions } from '../collections/factions'
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'

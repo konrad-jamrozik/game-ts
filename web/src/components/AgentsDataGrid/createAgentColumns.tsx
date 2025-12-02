@@ -1,7 +1,6 @@
 import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { toF6, f6fmtInt, f6fmtPctDec0 } from '../../lib/utils/fixed6Utils'
-import { f6cmp, f6eq, type Fixed6 } from '../../lib/primitives/fixed6Primitives'
+import { toF6, f6fmtInt, f6fmtPctDec0, f6cmp, f6eq, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'

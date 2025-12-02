@@ -1,4 +1,4 @@
-import { toF6 } from '../utils/fixed6Utils'
+import { toF6 } from '../primitives/fixed6'
 
 export const AGENT_UPKEEP_COST = 5
 export const AGENT_CONTRACTING_INCOME = AGENT_UPKEEP_COST * 3

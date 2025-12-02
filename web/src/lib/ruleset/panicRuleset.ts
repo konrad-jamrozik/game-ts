@@ -1,5 +1,4 @@
-import { toF6, f6add } from '../utils/fixed6Utils'
-import { f6ge, f6max, f6min, f6mult, f6sub, toF, toF6r, type Fixed6 } from '../primitives/fixed6Primitives'
+import { toF6, f6add, f6ge, f6max, f6min, f6mult, f6sub, toF, toF6r, type Fixed6 } from '../primitives/fixed6'
 import type { GameState } from '../model/gameStateModel'
 import { SUPPRESSION_DECAY } from './constants'
 

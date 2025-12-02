@@ -1,4 +1,4 @@
-import type { Fixed6 } from '../primitives/fixed6Primitives'
+import type { Fixed6 } from '../primitives/fixed6'
 import type { Actor, MissionSiteId, LeadInvestigationId } from './model'
 
 export type AgentState =

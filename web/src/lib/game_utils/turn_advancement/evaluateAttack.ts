@@ -8,13 +8,12 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../../ruleset/constants'
-import { f6add } from '../../utils/fixed6Utils'
-import { toF } from '../../primitives/fixed6Primitives'
+import { f6add, toF } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
-import { fmtAttackLog, type AttackLogKind } from '../../utils/fmtAttackLog'
+import { fmtAttackLog, type AttackLogKind } from './fmtAttackLog'
 import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
-import { rollContest } from '../../utils/rolls'
+import { rollContest } from '../../primitives/rolls'
 import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
 

@@ -1,4 +1,4 @@
-import type { Fixed6 } from '../primitives/fixed6Primitives'
+import type { Fixed6 } from '../primitives/fixed6'
 import type { TurnReport } from './turnReportModel'
 import type { Agent } from './agentModel'
 import type { Faction, LeadInvestigation, MissionSite } from './model'

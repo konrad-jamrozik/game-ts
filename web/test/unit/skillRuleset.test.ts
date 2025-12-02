@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { getAgentSkillBasedValue } from '../../src/lib/ruleset/skillRuleset'
-import { toF6 } from '../../src/lib/utils/fixed6Utils'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 import { agFix } from '../fixtures/agentFixture'
 
 describe(getAgentSkillBasedValue, () => {

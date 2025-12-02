@@ -10,8 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { isF6, type Fixed6 } from '../../lib/primitives/fixed6Primitives'
-import { f6fmtDec2 } from '../../lib/utils/fixed6Utils'
+import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 
 export type UpgradeRow = {
   id: number

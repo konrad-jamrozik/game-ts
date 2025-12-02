@@ -9,7 +9,7 @@ import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '..
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
-import { toF6 } from '../../src/lib/utils/fixed6Utils'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 import {
   terminated,
   onContractingAssignment,

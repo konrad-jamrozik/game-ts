@@ -1,5 +1,3 @@
-import { assertNotZero } from './assertPrimitives'
-
 /**
  * A floor that adds a small tolerance to handle floating point precision issues before flooring.
  * Refer to tests for this function for details.
@@ -33,7 +31,12 @@ export function round6(value: number): number {
 }
 
 export function div(nominator: number, denominator: number): number {
-  assertNotZero(denominator)
+  if (denominator === 0) {
+    // Note: cannot use a function from assertPrimitives.ts here. This would cause a circular dependency:
+    // mathPrimitives depends on assertPrimitives for assertNotZero
+    // assertPrimitives depends on mathPrimitives for hasAtMostDecimals
+    throw new Error('Denominator must not be zero')
+  }
   return nominator / denominator
 }
 

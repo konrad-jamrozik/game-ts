@@ -3,7 +3,7 @@ import type { Agent } from '../model/agentModel'
 import { NO_IMPACT_EXHAUSTION } from './constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { div, nonNeg } from '../primitives/mathPrimitives'
-import { f6mult, f6sum, toF, toF6r, type Fixed6 } from '../primitives/fixed6Primitives'
+import { f6mult, f6sum, toF, toF6r, type Fixed6 } from '../primitives/fixed6'
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details

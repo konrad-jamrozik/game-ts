@@ -1,5 +1,4 @@
-import { toF6 } from '../utils/fixed6Utils'
-import { type Fixed6, isF6 } from '../primitives/fixed6Primitives'
+import { toF6, type Fixed6, isF6 } from '../primitives/fixed6'
 
 export type UpgradeName =
   | 'Agent cap'

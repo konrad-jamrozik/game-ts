@@ -1,6 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, f6fmtInt, f6fmtPctDec0 } from '../../lib/utils/fixed6Utils'
-import { toF } from '../../lib/primitives/fixed6Primitives'
+import { toF6, f6fmtInt, f6fmtPctDec0, toF } from '../../lib/primitives/fixed6'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'

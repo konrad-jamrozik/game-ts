@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getMissionById } from '../../lib/collections/missions'
-import { f6sum, toF } from '../../lib/primitives/fixed6Primitives'
+import { f6sum, toF } from '../../lib/primitives/fixed6'
 import type { MissionSite } from '../../lib/model/model'
 import { clearMissionSelection, setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import {

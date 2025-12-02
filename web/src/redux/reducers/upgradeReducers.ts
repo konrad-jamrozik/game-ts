@@ -1,4 +1,4 @@
-import { f6add } from '../../lib/utils/fixed6Utils'
+import { f6add } from '../../lib/primitives/fixed6'
 import {
   getUpgradePrice,
   getUpgradeIncrement,

@@ -1,7 +1,6 @@
 import { getMissionById } from '../../collections/missions'
 import { withIds } from '../../model_utils/agentUtils'
-import { toF6, f6add } from '../../utils/fixed6Utils'
-import { f6max, f6sub, f6sum } from '../../primitives/fixed6Primitives'
+import { toF6, f6add, f6max, f6sub, f6sum } from '../../primitives/fixed6'
 import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'

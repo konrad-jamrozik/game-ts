@@ -1,7 +1,7 @@
 import { sumAgentSkillBasedValues } from './skillRuleset'
 import type { GameState } from '../model/gameStateModel'
 import { AGENT_ESPIONAGE_INTEL } from './constants'
-import { f6floorToInt } from '../primitives/fixed6Primitives'
+import { f6floorToInt } from '../primitives/fixed6'
 import { onEspionageAssignment } from '../model_utils/agentUtils'
 
 export function getEspionageIntel(gameState: GameState): number {

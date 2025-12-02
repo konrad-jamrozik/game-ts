@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6gt } from '../../src/lib/utils/fixed6Utils'
+import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { MissionSite } from '../../src/lib/model/model'

@@ -1,7 +1,6 @@
 import type { Actor, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
-import { f6add } from '../utils/fixed6Utils'
-import type { Fixed6 } from '../primitives/fixed6Primitives'
+import { f6add, type Fixed6 } from '../primitives/fixed6'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {

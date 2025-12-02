@@ -1,9 +1,8 @@
 import pluralize from 'pluralize'
 import type { MissionSiteId } from '../model/model'
 import { floorToDec2 } from '../primitives/mathPrimitives'
-import { isF6, type Fixed6 } from '../primitives/fixed6Primitives'
+import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
-import { f6fmtPctDec2 } from '../utils/fixed6Utils'
 
 /**
  * Formats mission site target for display (removes '-site-' patterns)

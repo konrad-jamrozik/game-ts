@@ -1,19 +1,5 @@
 import { assertNotNaN } from './assertPrimitives'
 
-// Extract numeric suffix from IDs.
-// Handles formats:
-// - "enemy-initiate-123" -> 123
-// - "agent-011" -> 11
-export function extractNumberFromId(id: string): number {
-  const regex = /-(?<number>\d+)$/u
-  const match = regex.exec(id)
-  const numberStr = match?.groups?.['number']
-  if (numberStr === undefined || numberStr === '') {
-    return Number.NaN
-  }
-  return Number.parseInt(numberStr, 10)
-}
-
 export function compareIdsNumeric(idA: string, idB: string): number {
   const numA = extractNumberFromId(idA)
   const numB = extractNumberFromId(idB)
@@ -33,4 +19,18 @@ export function compareIdsNumeric(idA: string, idB: string): number {
   }
 
   return numA - numB
+}
+
+// Extract numeric suffix from IDs.
+// Handles formats:
+// - "enemy-initiate-123" -> 123
+// - "agent-011" -> 11
+export function extractNumberFromId(id: string): number {
+  const regex = /-(?<number>\d+)$/u
+  const match = regex.exec(id)
+  const numberStr = match?.groups?.['number']
+  if (numberStr === undefined || numberStr === '') {
+    return Number.NaN
+  }
+  return Number.parseInt(numberStr, 10)
 }

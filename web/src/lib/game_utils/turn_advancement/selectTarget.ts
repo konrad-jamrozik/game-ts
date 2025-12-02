@@ -1,11 +1,11 @@
-import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, type Fixed6 } from '../../primitives/fixed6Primitives'
+import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, type Fixed6 } from '../../primitives/fixed6'
 import type { Enemy } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { div } from '../../primitives/mathPrimitives'
 import { rand } from '../../primitives/rand'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
-import { rollRange } from '../../utils/rolls'
+import { rollRange } from '../../primitives/rolls'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.

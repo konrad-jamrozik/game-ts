@@ -1,6 +1,6 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { toF6 } from '../../lib/utils/fixed6Utils'
+import { toF6 } from '../../lib/primitives/fixed6'
 import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
