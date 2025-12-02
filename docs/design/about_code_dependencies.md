@@ -37,6 +37,8 @@ As such:
 Directory import rules for dirs in `src/` dir:
 
 ``` text
+index.html
+main.tsx
 app
 components
 lib/game_utils
@@ -48,9 +50,14 @@ lib/utils
 lib/primitives
 ```
 
-Plus there are special import rules for the following directories:
+In addition:
 
 ``` text
-lib/slices --> lib/game_utils
-lib/selectors --> lib/model
+main.tsx
+app/store
+app/reducers
+app/slices
+app/slices
+lib/game_utils
+
 ```

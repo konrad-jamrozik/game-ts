@@ -72,15 +72,33 @@ store.subscribe(() => {
   debouncedSave()
 })
 
-// Infer the `RootState` and `AppDispatch` types from the store itself
-// Using rootReducer for type source to avoid circular dependency that would otherwise be caused by
+// Here we do
+//
+//  const maybePersistedState: RootState | undefined = await loadPersistedState()
+//  export type RootState = ReturnType<typeof rootReducer>
+//
+// Instead of:
+//
+//  export type RootReducerState = ReturnType<typeof rootReducer>
+//  const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
+//  export type RootState = RootReducerState
+//
+// This way we avoid following circular dependency:
+//  KJA2 unclear, explain this better
+//
 //                configureStore
+// --depends_on-> maybePersistedState
 // --depends_on-> loadPersistedState
 // --depends_on-> RootState
 // --depends_on-> ReturnType<typeof store>
 // --depends_on-> configureStore
-// See also:
+//
+// See also here:
 // https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
+// This:
+//   In cases where type RootState = ReturnType<typeof store.getState> is used,
+//   a circular type reference between the middleware and store definitions can be avoided by switching
+//   the type definition of RootState to (..)
 export type RootState = ReturnType<typeof rootReducer>
 // Inferred type: e.g. {posts: PostsState, comments: CommentsState, users: UsersState}
 

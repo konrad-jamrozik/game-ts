@@ -2,10 +2,10 @@ import { CssBaseline, ThemeProvider } from '@mui/material'
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
-import App from './app/App.tsx'
+import App from './app/App'
 import { store } from './app/store'
 import { ErrorBoundary } from './components/Error/ErrorBoundary'
-import theme from './styling/theme.tsx'
+import theme from './styling/theme'
 
 // Global error handler for unhandled promise rejections
 globalThis.addEventListener('unhandledrejection', (event) => {
