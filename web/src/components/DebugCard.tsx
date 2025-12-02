@@ -9,7 +9,7 @@ import {
   debugSetAllFactionsSuppressionTo1000Percent,
   debugAddMoney,
   debugSpawn10Agents,
-} from '../lib/slices/gameStateSlice'
+} from '../app/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()

@@ -20,7 +20,7 @@ import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
-} from '../../lib/slices/selectionSlice'
+} from '../../app/slices/selectionSlice'
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { fmtNoPrefix, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'

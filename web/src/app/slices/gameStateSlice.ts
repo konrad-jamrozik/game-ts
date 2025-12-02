@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import initialState from '../ruleset/initialState'
+import initialState from '../../lib/ruleset/initialState'
 import {
   hireAgent as hireAgentReducer,
   sackAgents as sackAgentsReducer,
@@ -7,23 +7,23 @@ import {
   assignAgentsToEspionage as assignAgentsToEspionageReducer,
   assignAgentsToTraining as assignAgentsToTrainingReducer,
   recallAgents as recallAgentsReducer,
-} from './reducers/agentReducers'
+} from '../reducers/agentReducers'
 import {
   createLeadInvestigation as createLeadInvestigationReducer,
   addAgentsToInvestigation as addAgentsToInvestigationReducer,
-} from './reducers/leadReducers'
+} from '../reducers/leadReducers'
 import {
   deployAgentsToMission as deployAgentsToMissionReducer,
   debugSpawnMissionSites as debugSpawnMissionSitesReducer,
-} from './reducers/missionReducers'
-import { buyUpgrade as buyUpgradeReducer } from './reducers/upgradeReducers'
-import { advanceTurn as advanceTurnReducer, reset as resetReducer } from './reducers/gameControlsReducers'
+} from '../reducers/missionReducers'
+import { buyUpgrade as buyUpgradeReducer } from '../reducers/upgradeReducers'
+import { advanceTurn as advanceTurnReducer, reset as resetReducer } from '../reducers/gameControlsReducers'
 import {
   debugSetPanicToZero as debugSetPanicToZeroReducer,
   debugSetAllFactionsSuppressionTo1000Percent as debugSetAllFactionsSuppressionTo1000PercentReducer,
   debugAddMoney as debugAddMoneyReducer,
   debugSpawn10Agents as debugSpawn10AgentsReducer,
-} from './reducers/debugReducers'
+} from '../reducers/debugReducers'
 
 // Relevant docs on createSlice:
 // https://redux.js.org/style-guide/#allow-many-reducers-to-respond-to-the-same-action

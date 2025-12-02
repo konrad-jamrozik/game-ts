@@ -1,16 +1,16 @@
-import type { Agent } from '../../model/agentModel'
-import type { GameState } from '../../model/gameStateModel'
+import type { Agent } from '../../lib/model/agentModel'
+import type { GameState } from '../../lib/model/gameStateModel'
 import {
   AGENT_HIRE_COST,
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../../ruleset/constants'
-import { toF6 } from '../../utils/fixed6Utils'
-import { newWeapon } from '../../ruleset/weaponRuleset'
+} from '../../lib/ruleset/constants'
+import { toF6 } from '../../lib/utils/fixed6Utils'
+import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { asPlayerAction } from './asPlayerAction'
-import { onTrainingAssignment } from '../../model_utils/agentUtils'
+import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length

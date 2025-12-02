@@ -1,7 +1,7 @@
-import type { GameState } from '../../model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../../model/model'
-import { missions } from '../../collections/missions'
-import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
+import type { GameState } from '../../lib/model/gameStateModel'
+import type { MissionSite, MissionSiteId } from '../../lib/model/model'
+import { missions } from '../../lib/collections/missions'
+import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
 import { asPlayerAction } from './asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>(

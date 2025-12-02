@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { leads } from '../../lib/collections/leads'
-import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../lib/slices/selectionSlice'
+import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../app/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 

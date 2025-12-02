@@ -1,11 +1,11 @@
-import { f6add } from '../../utils/fixed6Utils'
+import { f6add } from '../../lib/utils/fixed6Utils'
 import {
   getUpgradePrice,
   getUpgradeIncrement,
   getUpgradeIncrementFixed6,
   type UpgradeName,
-} from '../../collections/upgrades'
-import type { GameState } from '../../model/gameStateModel'
+} from '../../lib/collections/upgrades'
+import type { GameState } from '../../lib/model/gameStateModel'
 import { asPlayerAction } from './asPlayerAction'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {

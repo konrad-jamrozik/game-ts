@@ -19,13 +19,13 @@ import {
   addAgentsToInvestigation,
   recallAgents,
   sackAgents,
-} from '../../lib/slices/gameStateSlice'
+} from '../../app/slices/gameStateSlice'
 import {
   clearAgentSelection,
   clearLeadSelection,
   clearInvestigationSelection,
   clearMissionSelection,
-} from '../../lib/slices/selectionSlice'
+} from '../../app/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
 import { validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../../styling/styleUtils'

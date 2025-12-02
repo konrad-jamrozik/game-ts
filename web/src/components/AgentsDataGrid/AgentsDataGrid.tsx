@@ -2,7 +2,7 @@ import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel }
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import type { Agent } from '../../lib/model/agentModel'
-import { clearAgentSelection, setAgentSelection } from '../../lib/slices/selectionSlice'
+import { clearAgentSelection, setAgentSelection } from '../../app/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'

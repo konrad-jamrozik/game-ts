@@ -7,7 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../app/hooks'
-import type { GameEvent } from '../lib/slices/eventsSlice'
+import type { GameEvent } from '../app/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatModelUtils'
 

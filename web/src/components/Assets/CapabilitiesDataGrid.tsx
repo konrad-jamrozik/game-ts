@@ -8,7 +8,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrades'
-import { setUpgradeSelection, clearUpgradeSelection } from '../../lib/slices/selectionSlice'
+import { setUpgradeSelection, clearUpgradeSelection } from '../../app/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6 } from '../../lib/primitives/fixed6Primitives'
 import { f6fmtDec2 } from '../../lib/utils/fixed6Utils'

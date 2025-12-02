@@ -1,12 +1,12 @@
-import type { Agent } from '../../model/agentModel'
-import type { GameState } from '../../model/gameStateModel'
-import { toF6 } from '../../utils/fixed6Utils'
+import type { Agent } from '../../lib/model/agentModel'
+import type { GameState } from '../../lib/model/gameStateModel'
+import { toF6 } from '../../lib/utils/fixed6Utils'
 import {
   AGENT_INITIAL_EXHAUSTION,
   AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../../ruleset/constants'
-import { newWeapon } from '../../ruleset/weaponRuleset'
+} from '../../lib/ruleset/constants'
+import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { asPlayerAction } from './asPlayerAction'
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {

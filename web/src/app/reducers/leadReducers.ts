@@ -1,6 +1,6 @@
-import type { GameState } from '../../model/gameStateModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../../model/model'
-import { assertDefined, assertNotIn } from '../../primitives/assertPrimitives'
+import type { GameState } from '../../lib/model/gameStateModel'
+import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
+import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { asPlayerAction } from './asPlayerAction'
 
 export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(

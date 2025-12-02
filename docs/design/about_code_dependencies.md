@@ -15,9 +15,8 @@ which files can `import` which symbols from other files.
 - By default, code in files being directly in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
-  - Cannot import any code from other directories than itself.
-- However, each subdirectory may have more restrictive rules applied to it than the default rules.
-- The rules for deeper directory take precedence over the rules for shallower directories.
+  - Cannot import any code from other directories than itself, unless state otherwise by other rules.
+- Defaults can be overridden by more rules for specific directories.
 
 # Import rules for the test directory
 

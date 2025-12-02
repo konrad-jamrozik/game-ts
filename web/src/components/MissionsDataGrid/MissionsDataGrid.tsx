@@ -11,7 +11,7 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks'
 import { getMissionById } from '../../lib/collections/missions'
 import { f6sum, toF } from '../../lib/primitives/fixed6Primitives'
 import type { MissionSite } from '../../lib/model/model'
-import { clearMissionSelection, setMissionSiteSelection } from '../../lib/slices/selectionSlice'
+import { clearMissionSelection, setMissionSiteSelection } from '../../app/slices/selectionSlice'
 import {
   fmtMissionSiteIdWithMissionId,
   getActiveOrDeployedMissionSites,

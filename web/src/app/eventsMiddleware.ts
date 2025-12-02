@@ -1,7 +1,7 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
 import { getMissionById } from '../lib/collections/missions'
-import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from '../lib/slices/eventsSlice'
+import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -14,8 +14,8 @@ import {
   recallAgents,
   reset,
   sackAgents,
-} from '../lib/slices/gameStateSlice'
-import { isPlayerAction } from '../lib/slices/reducers/asPlayerAction'
+} from './slices/gameStateSlice'
+import { isPlayerAction } from './reducers/asPlayerAction'
 import type { RootState } from './store'
 import { fmtAgentCount } from '../lib/model_utils/formatModelUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
