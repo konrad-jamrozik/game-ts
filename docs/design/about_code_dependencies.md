@@ -179,3 +179,4 @@ graph LR
 # See also
 
 - [About top-level app initialization](about_top_level_app_init.md)
+- [About game state initialization](about_game_state_init.md)

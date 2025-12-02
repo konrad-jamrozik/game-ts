@@ -49,3 +49,4 @@ which makes React inject `App` into the `#root` DOM element, and it injects into
 # See also
 
 - [About code dependencies](about_code_dependencies.md)
+- [About game state initialization](about_game_state_init.md)
