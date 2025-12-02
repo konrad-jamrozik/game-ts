@@ -28,7 +28,7 @@ import {
 } from '../../app/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
 import { validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
-import { destructiveButtonSx } from '../../styling/styleUtils'
+import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { validateAvailableAgents, validateOnAssignmentAgents } from '../../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'

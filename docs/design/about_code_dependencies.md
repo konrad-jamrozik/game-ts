@@ -12,6 +12,7 @@ which files can `import` which symbols from other files.
 
 - No import cycles are allowed.
 - Any code in this codebase can import external code, unless explicitly stated otherwise.
+- The code in `src/lib/` can not depend on `@mui` external code.
 - By default, code in files being directly in any given directory `dir`:
   - Can import `external code`, referenced in `package.json`.
   - Can import any other code from the same directory and all its subdirectories.
@@ -42,13 +43,20 @@ Directory import rules for dirs in `src/` dir:
 ```mermaid
 graph TD
     IndexH[index.html] --> MainTs[main.tsx]
-    MainTs --> AppApp[app/app]
-    MainTs --> AppStr[app/store]
+    MainTs --> AppApp[app/App.tsx]
+    MainTs --> AppStr[app/store.ts]
     AppApp --> Comp__[components]
-    AppStr --> AppRed[app/reducers]
+    AppStr --> AppEvt[app/eventsMiddleware.ts]
+    AppEvt --> AppRed[app/reducers]
+    Comp__ --> AppHook[app/hooks.ts]
+    Comp__ --> AppSel[app/selectors]
+    Comp__ --> CompSt[components/styling]
     Comp__ --> LibGam[lib/game_utils]
+    AppHook --> AppStr[app/store.ts]
+    AppSel --> AppStr[app/store.ts]
     AppRed --> AppSli[app/slices]
     AppSli --> LibGam
+    CompSt --> LibMod[lib/model]
     LibGam --> LibRul[lib/ruleset]
     LibRul --> LibMUt[lib/model_utils]
     LibMUt --> LibCol[lib/collections]

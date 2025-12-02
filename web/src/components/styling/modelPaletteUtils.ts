@@ -1,5 +1,5 @@
 import type { ChipPropsColorOverrides } from '@mui/material'
-import type { AgentState } from '../lib/model/agentModel'
+import type { AgentState } from '../../lib/model/agentModel'
 import type { OverridableStringUnion } from '@mui/types'
 
 export type MyPaletteColor = OverridableStringUnion<

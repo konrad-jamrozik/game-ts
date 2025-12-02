@@ -14,7 +14,7 @@ import { truncateEventsTo } from '../../app/slices/eventsSlice'
 import { reset } from '../../app/slices/gameStateSlice'
 import { clearAllSelection } from '../../app/slices/selectionSlice'
 import { setResetControlsExpanded } from '../../app/slices/settingsSlice'
-import { destructiveButtonSx } from '../../styling/styleUtils'
+import { destructiveButtonSx } from '../styling/stylePrimitives'
 
 function handleWipeStorageClick(): void {
   wipeStorage()

@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import App from './app/App'
 import { store } from './app/store'
 import { ErrorBoundary } from './components/Error/ErrorBoundary'
-import theme from './styling/theme'
+import theme from './components/styling/theme'
 
 // Global error handler for unhandled promise rejections
 globalThis.addEventListener('unhandledrejection', (event) => {

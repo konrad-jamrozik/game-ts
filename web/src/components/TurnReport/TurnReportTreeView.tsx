@@ -4,7 +4,7 @@ import { TreeItem, type TreeItemProps, type TreeItemSlotProps, type TreeItemSlot
 import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks'
 import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '@mui/x-tree-view/models'
 import * as React from 'react'
-import theme from '../../styling/theme'
+import theme from '../styling/theme'
 import { TreeItemLabelWithChip, type TreeItemLabelWithChipProps } from './TreeItemLabelWithChip'
 
 type TurnReportTreeViewProps = {
