@@ -75,6 +75,6 @@ Key components of it:
     - Make good decision about:
       - agents: when to fire, hire, what to assign them to, including
         lead investigations and mission deployments.
-    - which lead to investigate, which mission to deploy agents to, how much, and so on.
-    - which capabilities to upgrade and when.
-    - on which factions to focus, to suppress them enough so panic doesn't reach 100% and thus game ends.
+      - Which lead to investigate, which mission to deploy agents to, how much, and so on.
+      - Which capabilities to upgrade and when.
+      - Which factions to focus on, to suppress them enough so panic doesn't reach 100% and thus game ends.
