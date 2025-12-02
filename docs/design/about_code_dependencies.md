@@ -43,18 +43,18 @@ Directory import rules for dirs in `src/` dir:
 ```mermaid
 graph TD
     IndexH[index.html] --> MainTs[main.tsx]
-    MainTs --> AppApp[app/App.tsx]
-    MainTs --> AppStr[app/store.ts]
+    MainTs --> AppApp[components/App.tsx]
+    MainTs --> AppStr[redux/store.ts]
     AppApp --> Comp__[components]
-    AppStr --> AppEvt[app/eventsMiddleware.ts]
-    AppEvt --> AppRed[app/reducers]
-    Comp__ --> AppHook[app/hooks.ts]
-    Comp__ --> AppSel[app/selectors]
+    AppStr --> AppEvt[redux/eventsMiddleware.ts]
+    AppEvt --> AppRed[redux/reducers]
+    Comp__ --> AppHook[redux/hooks.ts]
+    Comp__ --> AppSel[redux/selectors]
     Comp__ --> CompSt[components/styling]
     Comp__ --> LibGam[lib/game_utils]
-    AppHook --> AppStr[app/store.ts]
-    AppSel --> AppStr[app/store.ts]
-    AppRed --> AppSli[app/slices]
+    AppHook --> AppStr[redux/store.ts + persist.ts]
+    AppSel --> AppStr
+    AppRed --> AppSli[redux/slices]
     AppSli --> LibGam
     CompSt --> LibMod[lib/model]
     LibGam --> LibRul[lib/ruleset]
@@ -64,3 +64,7 @@ graph TD
     LibMod --> LibUti[lib/utils]
     LibUti --> LibPri[lib/primitives]
 ```
+
+# See also
+
+- [About top-level app initialization](about_top_level_app_init.md)
