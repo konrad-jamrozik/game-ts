@@ -1,6 +1,5 @@
-// src/store/persist.ts
 import Dexie from 'dexie'
-import type { RootState } from './store'
+import type { RootState } from './types'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'

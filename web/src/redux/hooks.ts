@@ -7,7 +7,8 @@
 // mentioned from: https://redux.js.org/tutorials/essentials/part-2-app-structure
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import { useDispatch, useSelector } from 'react-redux'
-import type { RootState, AppDispatch } from './store'
+import type { AppDispatch } from './store'
+import type { RootState } from './types'
 
 // Use throughout your app instead of plain `useDispatch` and `useSelector`
 export const useAppDispatch = useDispatch.withTypes<AppDispatch>()

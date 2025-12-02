@@ -53,7 +53,10 @@ graph TD
     end
 
     subgraph redux
-        RdxStr["rdx/(store.ts + persist.ts)"]
+        RdxStore[rdx/store.ts]
+        RdxPers[rdx/persist.ts]
+        RdxType[rdx/types.ts]
+        RdxRedu[rdx/rootReducer.ts]
         RdxEvt[rdx/eventsMiddleware.ts]
         RdxRed[rdx/reducers]
         RdxSli[rdx/slices]
@@ -74,7 +77,7 @@ graph TD
     MainTs --> CompApp
     MainTs --> CompTheme
     MainTs --> CompErr
-    MainTs --> RdxStr
+    MainTs --> RdxStore
     CompTheme --> CompSt
     CompApp --> Comp__
     CompErr --> Comp__
@@ -83,12 +86,22 @@ graph TD
     Comp__ --> CompTheme
     Comp__ --> LibGam
     CompSt --> LibMod
-    RdxStr --> RdxEvt
+    RdxStore --> RdxRedu
+    RdxStore --> RdxType
+    RdxStore --> RdxEvt
+    RdxStore --> RdxPers
+    RdxPers --> RdxType
+    RdxType --> RdxRedu
+    RdxEvt --> RdxType
     RdxEvt --> RdxRed
-    RdxRed --> RdxSli
+    RdxRedu --> RdxRed
+    RdxRedu --> RdxSli
+    RdxSli --> RdxRed
+    RdxRed --> LibGam
     RdxSli --> LibGam
-    RdxHook --> RdxStr
-    RdxSel --> RdxStr
+    RdxHook --> RdxStore
+    RdxHook --> RdxType
+    RdxSel --> RdxType
     LibGam --> LibRul
     LibRul --> LibMUt
     LibMUt --> LibCol

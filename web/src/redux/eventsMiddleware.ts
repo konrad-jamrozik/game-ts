@@ -16,7 +16,7 @@ import {
   sackAgents,
 } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducers/asPlayerAction'
-import type { RootState } from './store'
+import type { RootState } from './types'
 import { fmtAgentCount } from '../lib/model_utils/formatModelUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
