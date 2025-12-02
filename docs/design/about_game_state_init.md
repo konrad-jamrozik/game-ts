@@ -1,5 +1,13 @@
 # About state initialization
 
+- [About state initialization](#about-state-initialization)
+- [How the initial state is built](#how-the-initial-state-is-built)
+- [How the game state is accessed from components](#how-the-game-state-is-accessed-from-components)
+- [How the game state is reset](#how-the-game-state-is-reset)
+  - [Reset with a custom initial state](#reset-with-a-custom-initial-state)
+  - [Reset with a debug initial state](#reset-with-a-debug-initial-state)
+- [See also](#see-also)
+
 This document explains how the game state is initialized and reset.
 
 # How the initial state is built
@@ -27,7 +35,7 @@ const combinedReducer = combineReducers({
 })
 ```
 
-It is wrapped in `undoable` reducer, and then added to the final `rootReducer.
+It is wrapped in `undoable` reducer, and then added to the final `rootReducer`.
 
 This is then used in `web/src/redux/store.ts` to create the store:
 
@@ -37,7 +45,7 @@ export const store = configureStore({
 })
 ```
 
-And the `store` is injected into the `App` component in `web/src/redux/App.tsx`:
+And the `store` is injected into the `App` component in `web/src/main.tsx`:
 
 ``` typescript
 <Provider store={store}>
@@ -45,17 +53,19 @@ And the `store` is injected into the `App` component in `web/src/redux/App.tsx`:
 </Provider>
 ```
 
-# How the game state is accessed from the components
+# How the game state is accessed from components
 
-Any component like `GameControls` can access the game state using the `useAppSelector` hook:
+Any component like `GameControls.tsx` can access the game state using the `useAppSelector` hook:
 
 ``` typescript
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 const gameState = useAppSelector((state) => state.undoable.present.gameState)
 ```
 
 The hook itself is defined in `web/src/redux/hooks.ts`:
 
 ``` typescript
+import { useDispatch, useSelector } from 'react-redux'
 export const useAppSelector = useSelector.withTypes<RootState>()
 ```
 
@@ -70,6 +80,10 @@ type RootState = ReturnType<typeof rootReducer>
 The game state can be reset using the `reset` action. From `GameControls` component, it can be done like this:
 
 ``` typescript
+import { ActionCreators } from 'redux-undo'
+import { reset } from '../../redux/slices/gameStateSlice'
+import { clearAllSelection } from '../../redux/slices/selectionSlice'
+
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
@@ -77,28 +91,6 @@ The game state can be reset using the `reset` action. From `GameControls` compon
     dispatch(ActionCreators.clearHistory())
   }
 ```
-
-For tests, if you need custom initial state, you can use the `reset` action with the `customState` option,
-e.g. from `App.test.tsx`:
-
-``` typescript
-  const debugState = makeInitialState({ debug: true })
-  store.dispatch(reset({ customState: { ...debugState, money: 200 } }))
-  store.dispatch(clearEvents()) // Clear the reset event
-```
-
-The `makeInitialState` function is defined in `web/src/lib/ruleset/initialState.ts`.
-
-If you pass `debug: true` to the `makeInitialState` function, it will return a debug initial state.
-
-It is done like that, in the `makeInitialState` function:
-
-``` typescript
-  if (useDebug) {
-    const debugOverrides = makeDebugInitialOverrides()
-    gameState = { ...gameState, ...debugOverrides }
-  }
-```  
 
 The `reset` action is defined in `web/src/redux/reducers/gameControlsReducers.ts`, as follows:
 
@@ -111,6 +103,36 @@ export function reset(
   Object.assign(state, stateAfterReset)
 }
 ```
+
+The `makeInitialState` function is defined in `web/src/lib/ruleset/initialState.ts`.
+
+## Reset with a custom initial state
+
+For tests, if you need custom initial state, you can use the `reset` action with the `customState` option,
+e.g. from `App.test.tsx`:
+
+``` typescript
+import { reset } from '../../src/redux/slices/gameStateSlice'
+import { clearEvents } from '../../src/redux/slices/eventsSlice'
+import { makeInitialState } from '../../src/lib/ruleset/initialState'
+
+  const debugState = makeInitialState({ debug: true })
+  store.dispatch(reset({ customState: { ...debugState, money: 200 } }))
+  store.dispatch(clearEvents()) // Clear the reset event
+```
+
+## Reset with a debug initial state
+
+If you pass `debug: true` to the `makeInitialState` function, it will return a debug initial state.
+
+It is done like that, in the `makeInitialState` function:
+
+``` typescript
+  if (useDebug) {
+    const debugOverrides = makeDebugInitialOverrides()
+    gameState = { ...gameState, ...debugOverrides }
+  }
+```  
 
 # See also
 
