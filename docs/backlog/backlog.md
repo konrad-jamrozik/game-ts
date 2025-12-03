@@ -4,21 +4,23 @@ KJA3 backlog:
 
 # Brainstorming
 
-- KJA3 Add to assets: Agent weapon damage range min-max
-  
-- KJA3 fix up the assets prices, and make their cost increase
-  
-- KJA3 make buying training skill gain and health recov. % fractional
+- Win criteria - defeat all enemy factions
+  - Raiding each HQ should unlock new lead
+  - Unlocking all HQ raids leads should unlock the final "game victory" lead
+  - Researching that lead should win the game.
 
-- KJA3 funding increase reward for missions
+- Add to assets: Agent weapon damage range min-max
+  - make buying training skill gain and health recov. % fractional
 
-- KJA3 funding penalty for expired missions
+- Funding increase reward for missions
+
+- Funding penalty for expired missions
 
 - Add "Details" button to completed missions that show the combat log
 - For combat reports, add dedicated data grid with columns same as console.log i.e.:
-  - round,
-  - attacker & effective skill & % of initial,
-  - defender & effective skill & % of initial,
+  - round
+  - attacker & effective skill & % of initial
+  - defender & effective skill & % of initial
   - roll & result & threshold & diff to threshold
   - damage inflicted (if any) & % of weapon range & min & max
   - hit points remaining & percentage of total & total
@@ -30,11 +32,6 @@ KJA3 backlog:
   - Intel lump sum.
   - What if there is currently no eligible lead investigation?
     - Maybe decrease lead difficulty by some amount?
-
-- Win criteria - defeat all enemy factions
-  - Raiding each HQ should unlock new lead
-  - Unlocking all HQ raids leads should unlock the final "game victory" lead
-  - Researching that lead should win the game.
 
 - Add more factions
 
@@ -53,19 +50,14 @@ KJA3 backlog:
 
 # Domain model
 
-- maybe just abandon agentsView and use plain functions instead.
-
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
-  there should be LeadsView akin to AgentsView, that has functions withId and isInvestigated()
-  - create `LeadsView` class in collections/views
-    - Implement methods:
-      - `withId(id: string): Lead`
-      - `isInvestigated(id: string): boolean`
-      - `getInvestigationCount(id: string): number`
-    - Replace idioms like `leadInvestigationCounts[lead.id] ?? 0` with LeadsView methods
-    - Replace `getLeadById(leadId)` calls with LeadsView
-    - Update selectors to use LeadsView
-  - OR do the opposite, get rid of AgentsView, use utils instead
+  do it the same way as `agentUtils`
+  - `withId(id: string): Lead`
+  - `isInvestigated(id: string): boolean`
+  - `getInvestigationCount(id: string): number`
+  - Replace idioms like `leadInvestigationCounts[lead.id] ?? 0`
+  - Replace `getLeadById(leadId)` calls
+  - Update selectors
 - hierarchize the game state per the comments and use more fine-grained selectors.
   `export type GameState = {`
   - Log (turn counter, action tracking)
@@ -137,6 +129,8 @@ KJA3 backlog:
 - Add ESLint server MCP: https://eslint.org/docs/latest/use/mcp
 
 # Maybe, future
+
+- See `prompts.md` and `.cursor/plans` for more ideas.
 
 - Allow State column filtering:
   Per LLM, how to make MUI use enum for filtering:
