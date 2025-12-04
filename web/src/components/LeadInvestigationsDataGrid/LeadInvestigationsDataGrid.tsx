@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
-import { withIds } from '../../lib/model_utils/agentUtils'
+import { withIds, onAssignmentWithAssignmentId, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import { f6floorToInt } from '../../lib/primitives/fixed6'
 import type { Agent } from '../../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
@@ -216,14 +216,10 @@ function buildAllInvestigationRows(
     const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
     // Count agents actively working on this investigation (OnAssignment state)
-    const activeAgents = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
-    ).length
+    const activeAgents = onAssignmentWithAssignmentId(agents, investigation.id).length
 
     // Count agents in transit to this investigation
-    const agentsInTransit = agents.filter(
-      (agent) => agent.assignment === investigation.id && agent.state === 'InTransit',
-    ).length
+    const agentsInTransit = inTransitWithAssignmentId(agents, investigation.id).length
 
     // For Successful investigations, skip projected intel calculations
     let intelDecayPct = 0
@@ -240,9 +236,9 @@ function buildAllInvestigationRows(
       // Apply decay first
       projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
       // Then accumulate new intel from assigned agents
-      // KJA this should be in gameStateUtils
-      const investigatingAgents = withIds(agents, investigation.agentIds).filter(
-        (agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment',
+      const investigatingAgents = onAssignmentWithAssignmentId(
+        withIds(agents, investigation.agentIds),
+        investigation.id,
       )
       // This flooring strips any fractional intel from the total
       const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(investigatingAgents, AGENT_ESPIONAGE_INTEL))

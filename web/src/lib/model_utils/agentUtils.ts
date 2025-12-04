@@ -85,3 +85,23 @@ export function applyExhaustion(agents: Agent[], exhaustion: number): void {
     agent.exhaustion = Math.max(0, agent.exhaustion + exhaustion)
   }
 }
+
+export function onAssignmentWithAssignmentId(agents: Agent[], assignmentId: string): Agent[] {
+  return agents.filter((agent) => agent.assignment === assignmentId && agent.state === 'OnAssignment')
+}
+
+export function inTransitWithAssignmentId(agents: Agent[], assignmentId: string): Agent[] {
+  return agents.filter((agent) => agent.assignment === assignmentId && agent.state === 'InTransit')
+}
+
+export function onStandbyAssignment(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => agent.assignment === 'Standby')
+}
+
+export function recovering(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => agent.state === 'Recovering')
+}
+
+export function onRecoveryAssignment(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => agent.assignment === 'Recovery')
+}

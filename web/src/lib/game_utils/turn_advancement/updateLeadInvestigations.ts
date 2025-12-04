@@ -1,6 +1,6 @@
 import { getLeadById } from '../../collections/leads'
 import { missions } from '../../collections/missions'
-import { withIds, applyExhaustion } from '../../model_utils/agentUtils'
+import { withIds, applyExhaustion, onAssignmentWithAssignmentId } from '../../model_utils/agentUtils'
 import type { LeadInvestigation, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
@@ -81,7 +81,7 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
  */
 function getInvestigatingAgents(state: GameState, investigation: LeadInvestigation): Agent[] {
   const agents = withIds(state.agents, investigation.agentIds)
-  return agents.filter((agent) => agent.assignment === investigation.id && agent.state === 'OnAssignment')
+  return onAssignmentWithAssignmentId(agents, investigation.id)
 }
 
 /**

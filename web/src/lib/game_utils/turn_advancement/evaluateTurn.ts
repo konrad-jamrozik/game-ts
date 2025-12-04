@@ -1,5 +1,5 @@
 import { getMissionById } from '../../collections/missions'
-import { withIds } from '../../model_utils/agentUtils'
+import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum } from '../../primitives/fixed6'
 import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
 import type { AgentState } from '../../model/agentModel'
@@ -141,9 +141,9 @@ function getAgentCounts(agents: GameState['agents']): {
     total: agents.filter((agent) => agent.state !== 'Terminated').length,
     available: agents.filter((agent) => agent.state === 'Available').length,
     inTransit: agents.filter((agent) => agent.state === 'InTransit').length,
-    standby: agents.filter((agent) => agent.assignment === 'Standby').length,
-    recovering: agents.filter((agent) => agent.state === 'Recovering').length,
-    wounded: agents.filter((agent) => agent.state === 'Recovering').length,
+    standby: onStandbyAssignment(agents).length,
+    recovering: recovering(agents).length,
+    wounded: recovering(agents).length,
     terminated: agents.filter((agent) => agent.state === 'Terminated').length,
   }
 }
