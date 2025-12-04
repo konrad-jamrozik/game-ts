@@ -20,9 +20,6 @@
 			"label": "test",
 			"command": "npm run test",
 			"args": [],
-			// Per [custom tasks]:
-			// Tasks that belong to the test group can be executed by running "Run Test Task" from the Command Palette.
-			// Apparently the same applies to "Run Build Task".
 			"group": "test",
 			"isBackground": false,
 			"problemMatcher": [
@@ -32,6 +29,47 @@
 				"cwd": "web"
 			}
 		},
+		{
+			"label": "Dev server",
+			"type": "shell",
+			"command": "dev",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Test UI",
+			"type": "shell",
+			"command": "testui",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always",
+				"panel": "new"
+			}
+		},
+		{
+			"label": "Terminal",
+			"type": "shell",
+			"command": "qcheck",
+			"isBackground": true,
+			"presentation": {
+				"reveal": "always",
+				"panel": "new",
+				"close": false
+			}
+		},
+		{
+			"label": "Setup terminals",
+			"dependsOn": [
+				"Dev server",
+				"Test UI",
+				"Terminal"
+			],
+			"dependsOrder": "parallel",
+			"problemMatcher": []
+		}
 	]
 }
 

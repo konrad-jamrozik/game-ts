@@ -8,7 +8,7 @@
     "node": ">=24.3.0"
   },
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --no-open",
     "tsc": "tsc --build",
     "vite_build": "vite build",
     "build": "tsc --build && vite build",
@@ -26,7 +26,7 @@
     "test:e2e": "vitest --run --project e2e",
     "test:all": "vitest --run --project unit --project component --project e2e",
     "test:watch": "vitest --watch",
-    "test:ui": "vitest --ui --api.port=6174",
+    "test:ui": "vitest --ui --api.port=6174 --no-open",
     "test:cov": "vitest --coverage",
     "test:uicov": "vitest --ui --coverage.enabled=true",
     "qcheck": "npm run oxlint && npm run tsc && npm run test",
