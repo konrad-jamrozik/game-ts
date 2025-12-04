@@ -1,4 +1,4 @@
-import type { Actor, MissionSiteId } from '../model/model'
+import type { Actor, LeadInvestigation, MissionSiteId } from '../model/model'
 import type { Agent } from '../model/agentModel'
 import { f6add, type Fixed6 } from '../primitives/fixed6'
 
@@ -104,4 +104,9 @@ export function recovering(agents: Agent[]): Agent[] {
 
 export function onRecoveryAssignment(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.assignment === 'Recovery')
+}
+
+export function investigatingAgents(agents: Agent[], investigation: LeadInvestigation): Agent[] {
+  const filteredAgents = withIds(agents, investigation.agentIds)
+  return onAssignmentWithAssignmentId(filteredAgents, investigation.id)
 }

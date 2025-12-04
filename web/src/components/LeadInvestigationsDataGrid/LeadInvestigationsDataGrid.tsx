@@ -9,7 +9,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
-import { withIds, onAssignmentWithAssignmentId, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
+import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import { f6floorToInt } from '../../lib/primitives/fixed6'
 import type { Agent } from '../../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
@@ -216,7 +216,7 @@ function buildAllInvestigationRows(
     const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
     // Count agents actively working on this investigation (OnAssignment state)
-    const activeAgents = onAssignmentWithAssignmentId(agents, investigation.id).length
+    const activeAgents = investigatingAgents(agents, investigation).length
 
     // Count agents in transit to this investigation
     const agentsInTransit = inTransitWithAssignmentId(agents, investigation.id).length
@@ -236,12 +236,9 @@ function buildAllInvestigationRows(
       // Apply decay first
       projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
       // Then accumulate new intel from assigned agents
-      const investigatingAgents = onAssignmentWithAssignmentId(
-        withIds(agents, investigation.agentIds),
-        investigation.id,
-      )
+      const agentsInvestigating = investigatingAgents(agents, investigation)
       // This flooring strips any fractional intel from the total
-      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(investigatingAgents, AGENT_ESPIONAGE_INTEL))
+      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(agentsInvestigating, AGENT_ESPIONAGE_INTEL))
       projectedIntel += intelFromAgents
 
       // Calculate diff for chip display

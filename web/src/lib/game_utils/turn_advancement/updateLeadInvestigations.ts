@@ -1,6 +1,6 @@
 import { getLeadById } from '../../collections/leads'
 import { missions } from '../../collections/missions'
-import { withIds, applyExhaustion, onAssignmentWithAssignmentId } from '../../model_utils/agentUtils'
+import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
@@ -44,13 +44,13 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
 
   // Accumulate new intel from assigned agents (same formula as espionage)
-  const investigatingAgents = getInvestigatingAgents(state, investigation)
-  const accumulatedIntel = getLeadAccumulatedIntel(investigatingAgents)
+  const agentsInvestigating = investigatingAgents(state.agents, investigation)
+  const accumulatedIntel = getLeadAccumulatedIntel(agentsInvestigating)
   investigation.accumulatedIntel += accumulatedIntel
 
-  applyExhaustion(investigatingAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
+  applyExhaustion(agentsInvestigating, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
-  const createdMissionSites = success ? completeInvestigation(state, investigation, investigatingAgents) : undefined
+  const createdMissionSites = success ? completeInvestigation(state, investigation, agentsInvestigating) : undefined
 
   return {
     investigationId: investigation.id,
@@ -76,22 +76,13 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
 }
 
 /**
- * Gets agents that are actively investigating the lead
- * // KJA this should be in gameStateUtils
- */
-function getInvestigatingAgents(state: GameState, investigation: LeadInvestigation): Agent[] {
-  const agents = withIds(state.agents, investigation.agentIds)
-  return onAssignmentWithAssignmentId(agents, investigation.id)
-}
-
-/**
  * Completes a successful investigation: creates mission sites, updates agents, marks investigation as successful
  * Returns created mission sites
  */
 function completeInvestigation(
   state: GameState,
   investigation: LeadInvestigation,
-  investigatingAgents: Agent[],
+  agentsInvestigating: Agent[],
 ): string[] {
   // Increment lead investigation count
   const currentCount = state.leadInvestigationCounts[investigation.leadId] ?? 0
@@ -106,7 +97,7 @@ function completeInvestigation(
   investigation.agentIds = []
 
   // Return agents to InTransit state (they will transition to Available on next turn)
-  for (const agent of investigatingAgents) {
+  for (const agent of agentsInvestigating) {
     agent.assignment = 'Standby'
     agent.state = 'StartingTransit'
   }
