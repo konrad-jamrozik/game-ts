@@ -14,7 +14,7 @@ import {
 import { getContractingIncome } from '../../ruleset/moneyRuleset'
 import { getEspionageIntel } from '../../ruleset/intelRuleset'
 
-/** // KJA there should be ruleset call somewhere here, but there isn't
+/**
  * Updates agents in Available state - apply exhaustion recovery
  */
 export function updateAvailableAgents(state: GameState): void {
