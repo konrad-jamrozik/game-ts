@@ -7,7 +7,7 @@ import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import { useState } from 'react'
-import theme from '../styling/theme'
+import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
 
 type ExpandableCardProps = {
   title: string
@@ -30,9 +30,8 @@ export function ExpandableCard({
   sx = defaultSx,
 }: ExpandableCardProps): React.JSX.Element {
   const [expanded, setExpanded] = useState(defaultExpanded)
-  // KJA2 dedup this padding 1 here with `'&:last-child': { paddingBottom: 1 },` in theme.tsx
   const cardContentSx: SxProps<Theme> = {
-    padding: 1,
+    padding: CARD_CONTENT_PADDING,
     ...(nested && { backgroundColor: theme.palette.background.nestedCardContent }),
   }
 

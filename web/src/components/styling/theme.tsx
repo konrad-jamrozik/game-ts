@@ -67,6 +67,9 @@ declare module '@mui/material/Chip' {
 
 const defaultTheme = createTheme()
 
+// Card content padding constant used across card components
+export const CARD_CONTENT_PADDING = 1
+
 const colorSystemOptions: ColorSystemOptions = {
   palette: {
     primary: {
@@ -187,7 +190,7 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
         backgroundColor: theme.palette.background.cardContent,
         ...theme.unstable_sx({
           // https://stackoverflow.com/a/71251997/986533
-          '&:last-child': { paddingBottom: 1 },
+          '&:last-child': { paddingBottom: CARD_CONTENT_PADDING },
         }),
       },
     },
