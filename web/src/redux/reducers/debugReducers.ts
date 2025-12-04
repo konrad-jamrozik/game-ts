@@ -8,6 +8,7 @@ import {
 } from '../../lib/ruleset/constants'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
+import { formatAgentId } from '../reducer_utils/agentIdUtils'
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
   state.panic = toF6(0)
@@ -29,8 +30,7 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
 
   for (let index = 0; index < 10; index += 1) {
     const agentNumericId = nextAgentNumericId + index
-    // KJA2 dedup agent ID with agent reducers
-    const agentId = `agent-${agentNumericId.toString().padStart(3, '0')}`
+    const agentId = formatAgentId(agentNumericId)
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
     const skill = toF6(120 + index * 20)
 

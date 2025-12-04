@@ -10,11 +10,12 @@ import {
 import { toF6 } from '../../lib/primitives/fixed6'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
+import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
-  const newAgentId = `agent-${nextAgentNumericId.toString().padStart(3, '0')}`
+  const newAgentId = formatAgentId(nextAgentNumericId)
 
   const newAgent = newHiredAgent(newAgentId, state.turn)
   state.agents.push(newAgent)
