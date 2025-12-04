@@ -62,6 +62,7 @@
         "modelcontextprotocol",
         "Mult",
         "multiplicatively",
+        "npmr",
         "ntee",
         "Oper",
         "oxlint",
@@ -124,11 +125,12 @@
     "oxc.configPath": "web/.oxlintrc.json",
     "oxc.tsConfigPath": "web/tsconfig.json",
     "oxc.unusedDisableDirectives": "allow",
-    // end of oxlint / oxc extension settings
-    
-    // https://code.visualstudio.com/docs/copilot/chat/mcp-servers
-    "chat.mcp.enabled": true,
-    "chat.mcp.discovery.enabled": true,
+    "chat.mcp.discovery.enabled": {
+        "claude-desktop": true,
+        "windsurf": true,
+        "cursor-global": true,
+        "cursor-workspace": true
+    },
     "todo-tree.filtering.excludeGlobs": [
         "**/*.d.ts"
     ],
@@ -142,5 +144,6 @@
     "github.copilot.chat.languageContext.typescript.enabled": true,
     "files.trimFinalNewlines": true,
     "markdown-preview-enhanced.enableExtendedTableSyntax": true,
+    "chat.mcp.access": "all",
     
 }
