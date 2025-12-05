@@ -1,6 +1,6 @@
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
-import { toF6, f6fmtInt, f6lt } from '../primitives/fixed6'
+import { toF6, f6fmtInt, f6lt, toF } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
 import { ceil, div } from '../primitives/mathPrimitives'
 
@@ -103,8 +103,9 @@ function validateRecoveryMath(agent: Agent, state: GameState): void {
   }
 
   const { hitPointsRecoveryPct } = state
+  const hitPointsRecoveryPctNum = toF(hitPointsRecoveryPct)
   const expectedTotalRecoveryTurns = ceil(
-    (div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / hitPointsRecoveryPct,
+    (div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
   )
 
   // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
@@ -116,7 +117,7 @@ function validateRecoveryMath(agent: Agent, state: GameState): void {
       `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${expectedImmediateLost} at start of recovery`,
     )
     const expectedImmediateRecoveryTurns = ceil(
-      (div(expectedImmediateLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPct,
+      (div(expectedImmediateLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
     )
     assertEqual(
       agent.recoveryTurns,

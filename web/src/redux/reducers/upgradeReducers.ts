@@ -37,7 +37,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       break
     }
     case 'Hit points recovery %': {
-      state.hitPointsRecoveryPct += getUpgradeIncrement(upgradeName)
+      state.hitPointsRecoveryPct = f6add(state.hitPointsRecoveryPct, getUpgradeIncrementFixed6(upgradeName))
       break
     }
   }

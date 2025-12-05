@@ -1,6 +1,7 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
 import { assertEqual } from '../../primitives/assertPrimitives'
 import { floor, div, ceil } from '../../primitives/mathPrimitives'
+import { toF } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
@@ -22,6 +23,9 @@ export function updateAvailableAgents(state: GameState): void {
   applyExhaustion(availableAgents, -state.exhaustionRecovery)
 }
 
+// KJA fix recovery logic: just recover by fractional hit points, don't keep track of starting turns. Need hit points to be fractional.
+// KJA current bug: if HP recov. % changed during recovery, throws assertion error on turn advancement like:
+// installHook.js:1 Uncaught error: Error: Agent agent-007 recovering HP mismatch: expected 14, got 15
 /**
  * Updates agents in Recovering state - apply hit point restoration and exhaustion recovery
  */
@@ -37,8 +41,9 @@ export function updateRecoveringAgents(state: GameState): void {
 
         // Calculate total recovery turns originally needed
         const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
+        const hitPointsRecoveryPctNum = toF(state.hitPointsRecoveryPct)
         const totalRecoveryTurns = ceil(
-          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / state.hitPointsRecoveryPct,
+          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
         )
 
         // Calculate which turn of recovery we just completed

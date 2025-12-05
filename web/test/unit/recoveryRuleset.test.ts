@@ -1,5 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { getRecoveryTurns } from '../../src/lib/ruleset/recoveryRuleset'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 
 describe(getRecoveryTurns, () => {
   // prettier-ignore
@@ -31,7 +32,7 @@ describe(getRecoveryTurns, () => {
   ])(
     '%s: hitPoints=%s, damage=%s, hitPointsRecoveryPct=%s -> %s',
     (_testName, hitPoints, damage, hitPointsRecoveryPct, expected) => {
-      const result = getRecoveryTurns(hitPoints, damage, hitPointsRecoveryPct)
+      const result = getRecoveryTurns(hitPoints, damage, toF6(hitPointsRecoveryPct))
       expect(result).toBe(expected)
     }
   )

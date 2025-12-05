@@ -23,7 +23,7 @@ export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
   'Training cap': 1,
   'Training skill gain': toF6(0.1),
   'Exhaustion recovery': 1,
-  'Hit points recovery %': 1,
+  'Hit points recovery %': toF6(0.2),
 }
 
 export function getUpgradePrice(upgradeName: UpgradeName): number {

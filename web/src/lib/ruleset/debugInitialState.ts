@@ -121,10 +121,10 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       assignment: 'Recovery',
       skill: toF6(100),
       exhaustion: 8,
-      hitPoints: 28,
+      hitPoints: 10,
       maxHitPoints: 30,
-      recoveryTurns: 3,
-      hitPointsLostBeforeRecovery: 10,
+      recoveryTurns: 34,
+      hitPointsLostBeforeRecovery: 20,
       missionsTotal: 2,
     }),
     makeAgent({

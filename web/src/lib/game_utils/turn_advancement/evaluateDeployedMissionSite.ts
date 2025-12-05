@@ -4,7 +4,7 @@ import { MISSION_SURVIVAL_SKILL_GAIN } from '../../ruleset/constants'
 import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { f6add, f6fmtInt } from '../../primitives/fixed6'
+import { f6add, f6fmtInt, type Fixed6 } from '../../primitives/fixed6'
 import { getRecoveryTurns } from '../../ruleset/recoveryRuleset'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -75,7 +75,7 @@ function updateAgentsAfterBattle(
   currentTurn: number,
   missionSiteId: MissionSiteId,
   exhaustionRecovery: number,
-  hitPointsRecoveryPct: number,
+  hitPointsRecoveryPct: Fixed6,
 ): {
   agentsWounded: number
   agentsUnscathed: number
@@ -109,7 +109,7 @@ function updateSurvivingAgent(
   agent: Agent,
   battleReport: BattleReport,
   exhaustionRecovery: number,
-  hitPointsRecoveryPct: number,
+  hitPointsRecoveryPct: Fixed6,
 ): boolean {
   // ----------------------------------------
   // Update exhaustion

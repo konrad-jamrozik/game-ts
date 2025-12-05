@@ -20,7 +20,7 @@ export type GameState = {
   trainingCap: number
   trainingSkillGain: Fixed6
   exhaustionRecovery: number
-  hitPointsRecoveryPct: number
+  hitPointsRecoveryPct: Fixed6
   // Liabilities // KJA3 to remove, should be unused
   currentTurnTotalHireCost: number
   // Archive

@@ -79,7 +79,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       name: 'Hit points recovery %',
       id: 9,
-      value: gameState.hitPointsRecoveryPct,
+      value: f6fmtDec2(gameState.hitPointsRecoveryPct),
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Hit points recovery %']),
       displayedName: 'Hit points recov. %',
       price: UPGRADE_PRICES['Hit points recovery %'],
