@@ -84,7 +84,6 @@ function buildInitialAgents(): Agent[] {
       exhaustion: AGENT_INITIAL_EXHAUSTION,
       hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-      recoveryTurns: 0,
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       skillFromTraining: toF6(0),

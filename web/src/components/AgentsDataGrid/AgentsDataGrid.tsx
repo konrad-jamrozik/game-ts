@@ -85,7 +85,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  const columns = createAgentColumns(rows, gameState.missionSites, gameState.turn)
+  const columns = createAgentColumns(rows, gameState.missionSites, gameState.turn, gameState.hitPointsRecoveryPct)
   const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {

@@ -1,6 +1,5 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
-import { assertEqual } from '../../primitives/assertPrimitives'
-import { toF6, floorToF6, f6add, f6min } from '../../primitives/fixed6'
+import { toF6, floorToF6, f6add, f6min, f6lt, f6eq, toF } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
@@ -31,31 +30,23 @@ export function updateRecoveringAgents(state: GameState): void {
       // Apply exhaustion recovery
       agent.exhaustion = Math.max(0, agent.exhaustion - state.exhaustionRecovery)
 
-      // KJA recoveryTurns should not be a field, it instead should be derived by helper function to display where appropriate
-      // Handle recovery countdown and hit point restoration
-      if (agent.recoveryTurns > 0) {
-        agent.recoveryTurns -= 1
+      const maxHitPointsF6 = toF6(agent.maxHitPoints)
+      const isRecovering = f6lt(agent.hitPoints, maxHitPointsF6)
 
+      if (isRecovering) {
         // Calculate recovery per turn: maxHitPoints * recoveryPct / 100, rounded down to 6 decimal places
-        // KJA should use some fixed6 func here
-        const recoveryPctDecimal = state.hitPointsRecoveryPct.value / 1_000_000 / 100
+        const recoveryPctDecimal = toF(state.hitPointsRecoveryPct) / 100
         const recoveryPerTurn = floorToF6(agent.maxHitPoints * recoveryPctDecimal)
 
         // Add recovered hit points
         agent.hitPoints = f6add(agent.hitPoints, recoveryPerTurn)
 
         // Cap hit points at maxHitPoints
-        const maxHitPointsF6 = toF6(agent.maxHitPoints)
         agent.hitPoints = f6min(agent.hitPoints, maxHitPointsF6)
       }
 
-      if (agent.recoveryTurns <= 0) {
-        const maxHitPointsF6 = toF6(agent.maxHitPoints)
-        assertEqual(
-          agent.hitPoints.value,
-          maxHitPointsF6.value,
-          'Agent hit points should be fully restored on recovery completion',
-        )
+      // Check if recovery is complete
+      if (f6eq(agent.hitPoints, maxHitPointsF6)) {
         // Reset recovery state
         agent.hitPointsLostBeforeRecovery = toF6(0)
         agent.state = 'Available'

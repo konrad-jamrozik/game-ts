@@ -10,6 +10,7 @@ import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
+import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
@@ -17,6 +18,7 @@ export function createAgentColumns(
   rows: AgentRow[],
   missionSites: GameState['missionSites'],
   currentTurn: number,
+  hitPointsRecoveryPct: Fixed6,
 ): GridColDef[] {
   // Return all columns - visibility will be controlled by filterVisibleAgentColumns
   return [
@@ -115,7 +117,7 @@ export function createAgentColumns(
       field: 'hitPoints',
       headerName: 'HP',
       minWidth: 80,
-      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>) => {
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         if (params.value === undefined) {
           return <span />
         }
@@ -141,11 +143,14 @@ export function createAgentColumns(
       field: 'recoveryTurns',
       headerName: 'Recovery',
       minWidth: 90,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-recovery-${params.id}`}>
-          {(params.value ?? 0) > 0 ? `${params.value} turns` : '-'}
-        </span>
-      ),
+      renderCell: (params: GridRenderCellParams<AgentRow>): React.JSX.Element => {
+        const remainingTurns = getRemainingRecoveryTurns(params.row, hitPointsRecoveryPct)
+        return (
+          <span aria-label={`agents-row-recovery-${params.id}`}>
+            {remainingTurns > 0 ? `${remainingTurns} turns` : '-'}
+          </span>
+        )
+      },
     },
     {
       field: 'exhaustion',

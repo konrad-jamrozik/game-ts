@@ -5,7 +5,6 @@ import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/mod
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
-import { getRecoveryTurns } from '../../ruleset/recoveryRuleset'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined } from '../../primitives/assertPrimitives'
@@ -109,7 +108,7 @@ function updateSurvivingAgent(
   agent: Agent,
   battleReport: BattleReport,
   exhaustionRecovery: number,
-  hitPointsRecoveryPct: Fixed6,
+  _hitPointsRecoveryPct: Fixed6,
 ): boolean {
   // ----------------------------------------
   // Update exhaustion
@@ -155,7 +154,6 @@ function updateSurvivingAgent(
     agent.assignment = 'Recovery'
     const damage = f6sub(maxHitPointsF6, agent.hitPoints)
     agent.hitPointsLostBeforeRecovery = damage
-    agent.recoveryTurns = getRecoveryTurns(agent.maxHitPoints, damage, hitPointsRecoveryPct)
     return true // Agent was wounded
   }
   agent.assignment = 'Standby'

@@ -1,8 +1,7 @@
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
-import { toF6, f6fmtInt, f6lt, f6gt, f6le, f6eq, toF, f6sub, f6div } from '../primitives/fixed6'
+import { toF6, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
-import { ceil } from '../primitives/mathPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)
@@ -15,7 +14,7 @@ export function validateAgentLocalInvariants(agent: Agent, state?: GameState): v
   validateInjuryAndAssignment(agent)
   validateRecoveryStateConsistency(agent)
   if (state !== undefined) {
-    validateRecoveryMath(agent, state)
+    validateRecoveryMath(agent)
   }
 }
 
@@ -36,10 +35,9 @@ function validateBasicStatRanges(agent: Agent): void {
     throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
   }
   if (f6lt(agent.hitPointsLostBeforeRecovery, zeroF6)) {
-    throw new Error(`Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${f6fmtInt(agent.hitPointsLostBeforeRecovery)}`)
-  }
-  if (agent.recoveryTurns < 0) {
-    throw new Error(`Agent ${agent.id} has negative recoveryTurns: ${agent.recoveryTurns}`)
+    throw new Error(
+      `Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${f6fmtInt(agent.hitPointsLostBeforeRecovery)}`,
+    )
   }
   if (agent.maxHitPoints <= 0) {
     throw new Error(`Agent ${agent.id} has non-positive maxHitPoints: ${agent.maxHitPoints}`)
@@ -64,7 +62,6 @@ function validateTermination(agent: Agent): void {
         maxHitPointsF6.value,
         `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
       )
-      assertEqual(agent.recoveryTurns, 0, `Sacked agent ${agent.id} must have no recovery turns`)
       assertEqual(
         agent.hitPointsLostBeforeRecovery.value,
         zeroF6.value,
@@ -99,7 +96,7 @@ function validateRecoveryStateConsistency(agent: Agent): void {
   }
 }
 
-function validateRecoveryMath(agent: Agent, state: GameState): void {
+function validateRecoveryMath(agent: Agent): void {
   const maxHitPointsF6 = toF6(agent.maxHitPoints)
   const lostHitPoints = f6sub(maxHitPointsF6, agent.hitPoints)
   if (!(agent.assignment === 'Recovery' || agent.state === 'Recovering')) {
@@ -110,13 +107,7 @@ function validateRecoveryMath(agent: Agent, state: GameState): void {
     return
   }
 
-  const { hitPointsRecoveryPct } = state
-  const hitPointsRecoveryPctNum = toF(hitPointsRecoveryPct)
-  const expectedTotalRecoveryTurns = ceil(
-    (f6div(agent.hitPointsLostBeforeRecovery, maxHitPointsF6) * 100) / hitPointsRecoveryPctNum,
-  )
-
-  // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
+  // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP
   if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
     const expectedImmediateLost = lostHitPoints
     assertEqual(
@@ -124,31 +115,13 @@ function validateRecoveryMath(agent: Agent, state: GameState): void {
       expectedImmediateLost.value,
       `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${f6fmtInt(expectedImmediateLost)} at start of recovery`,
     )
-    const expectedImmediateRecoveryTurns = ceil(
-      (f6div(expectedImmediateLost, maxHitPointsF6) * 100) / hitPointsRecoveryPctNum,
-    )
-    assertEqual(
-      agent.recoveryTurns,
-      expectedImmediateRecoveryTurns,
-      `Agent ${agent.id} should set recoveryTurns=${expectedImmediateRecoveryTurns} at start of recovery`,
-    )
     return
   }
 
-  if (agent.state === 'Recovering') {
-    if (agent.recoveryTurns <= 0 || agent.recoveryTurns > expectedTotalRecoveryTurns) {
-      throw new Error(
-        `Agent ${agent.id} has invalid recoveryTurns=${agent.recoveryTurns} (expected 1..${expectedTotalRecoveryTurns})`,
-      )
-    }
-
-    // With the new recovery algorithm, we just check that hitPoints <= maxHitPoints
-    // The exact recovery per turn is calculated dynamically based on current recoveryPct
-    if (f6gt(agent.hitPoints, maxHitPointsF6)) {
-      throw new Error(
-        `Agent ${agent.id} recovering HP exceeds max: ${f6fmtInt(agent.hitPoints)} > ${agent.maxHitPoints}`,
-      )
-    }
+  // We just check that hitPoints <= maxHitPoints
+  // The exact recovery per turn is calculated dynamically based on current recoveryPct
+  if (agent.state === 'Recovering' && f6gt(agent.hitPoints, maxHitPointsF6)) {
+    throw new Error(`Agent ${agent.id} recovering HP exceeds max: ${f6fmtInt(agent.hitPoints)} > ${agent.maxHitPoints}`)
   }
 }
 
