@@ -26,8 +26,6 @@ export function evaluateAttack(
   attackCount = 0,
 ): void {
   // Calculate effective skills
-
-  // KJA2 in theory here we can reach 105+ exhaustion, resulting in 0 effective skill, resulting in div by 0 error in rollContest
   const attackerEffectiveSkill = toF(effectiveSkill(attacker))
   const defenderEffectiveSkill = toF(effectiveSkill(defender))
 

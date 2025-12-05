@@ -25,9 +25,11 @@ describe(effectiveSkill, () => {
 
     ['high exhaustion', agFix.exhausted(85), 20],  // effective_skill = 100 * (1 - 0/30) * (1 - 80/100) = 100 * 1 * 0.2 = 20
 
-    ['100% exhaustion', agFix.exhausted(100), 5],  // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
+    ['100% exhaustion', agFix.exhausted(100), 5],  // exhaustion capped at 100, subtract 5 = 95 effective; effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
 
-    ['105% exhaustion', agFix.exhausted(105), 0],  // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0 = 0
+    ['105% exhaustion', agFix.exhausted(105), 5],  // exhaustion capped at 100, subtract 5 = 95 effective; effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
+
+    ['exhaustion above 100 capped at 100', agFix.exhausted(150), 5],  // exhaustion capped at 100, subtract 5 = 95 effective; effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
 
     ['zero hit points', agFix.new({
       hitPoints: toF6(0),

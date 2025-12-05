@@ -13,7 +13,9 @@ export function effectiveSkill(actor: Actor): Fixed6 {
   const hitPointsMalus = f6div(hitPointsLost, maxHitPointsF6)
   const hitPointsMult = assertNonNeg(1 - hitPointsMalus)
 
-  const exhaustionMalus = nonNeg(actor.exhaustion - NO_IMPACT_EXHAUSTION) / 100
+  const cappedExhaustion = Math.min(100, actor.exhaustion)
+  const effectiveExhaustion = nonNeg(cappedExhaustion - NO_IMPACT_EXHAUSTION)
+  const exhaustionMalus = effectiveExhaustion / 100
   const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
   return toF6r(f6mult(actor.skill, hitPointsMult, exhaustionMult))
