@@ -1,8 +1,20 @@
 # Backlog
 
-KJA3 backlog:
+KJA backlog:
 
 # Brainstorming
+
+- Debug button for upgrades
+
+- Debug button for everything: agents, upgrades, mission sites, money
+
+- Assign agents to training
+
+- Add stats
+  - Combat stats (Killed / Damage Inflicted / Damage Taken)
+    - Column names: "Kills", "Damage", "Wounds"
+  - Skill: Total / from missions / from training
+    - Colum name: "Skill (Mis/Trn)"
 
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
