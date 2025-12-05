@@ -29,6 +29,41 @@ export function isF6(value: unknown): value is Fixed6 {
 }
 
 /**
+ * Creates a Fixed6 value from a number.
+ * Use this when you have a raw number that represents a fixed-point value in this format.
+ * For example:
+ * fixed6(7_000_000) represents 7.000000
+ * fixed6(70_000_000) represents 70.000000
+ * fixed6(7) represents 0.000007
+ * fixed6(7.7) throws an error
+ * @internal
+ */
+export function fixed6(value: number): Fixed6 {
+  assertInteger(value)
+  return { value, kind: 'Fixed6' }
+}
+
+/**
+ * Converts a decimal value to Fixed6 format.
+ * It asserts the converted value has no more decimal places than 6.
+ * As such, it guarantees no loss of precision.
+ * If you need to convert a value to Fixed6 format with rounding,
+ * use toF6r instead.
+ *
+ * For example:
+ * asF6(7) creates fixed6(7_000_000), which represents 7.000000.
+ * asF6(1.1) creates fixed6(1_100_000), which represents 1.100000.
+ * asF6(21.75) creates fixed6(21_750_000), which represents 21.750000.
+ * asF6(21.758123456) creates fixed6(21_758_123), which represents 21.758123 (floored to 6 decimals).
+ */
+export function toF6(value: number): Fixed6 {
+  assertMax6Dec(value)
+  // We still round here instead of doing toF6 because assertMax6Dec allows for a tolerance of 1e-8,
+  // which should be removed by this rounding.
+  return roundToF6(value)
+}
+
+/**
  * Converts a decimal value to Fixed6 format by rounding to 6 decimal places.
  * If you want to conversion that guarantees no loss of precision, use toF6 instead.
  */
@@ -49,6 +84,16 @@ export function toF(fixed: Fixed6): number {
 
 export function f6sub(first: Fixed6, second: Fixed6): Fixed6 {
   return fixed6(first.value - second.value)
+}
+
+/**
+ * Adds two Fixed6 values together.
+ * For example:
+ * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
+ */
+export function f6add(first: Fixed6, second: Fixed6 | number): Fixed6 {
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
+  return fixed6(first.value + secondValue)
 }
 
 export function f6abs(value: Fixed6): Fixed6 {
@@ -144,6 +189,11 @@ export function f6le(first: Fixed6, second: Fixed6): boolean {
   return first.value <= second.value
 }
 
+export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
+  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
+  return first.value > secondValue
+}
+
 /**
  * Checks if the first Fixed6 value is greater than or equal to the second.
  * For example:
@@ -202,38 +252,19 @@ export function f6floorToInt(value: Fixed6): number {
 }
 
 /**
- * Creates a Fixed6 value from a number.
- * Use this when you have a raw number that represents a fixed-point value in this format.
+ * Formats a Fixed6 value as a percentage with 2 decimal places, after dividing it by the denominator.
  * For example:
- * fixed6(7_000_000) represents 7.000000
- * fixed6(70_000_000) represents 70.000000
- * fixed6(7) represents 0.000007
- * fixed6(7.7) throws an error
- * @internal
+ * f6fmtPctDec2(asF6(75), asF6(100)) = "75.00" (representing 75.00%)
+ * f6fmtPctDec2(asF6(98.5), asF6(52)) = "189.42" (representing 189.42%)
  */
-export function fixed6(value: number): Fixed6 {
-  assertInteger(value)
-  return { value, kind: 'Fixed6' }
+export function f6fmtPctDec2(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
+  return fmtPctDec2(nominator.value, denominatorValue)
 }
 
-/**
- * Converts a decimal value to Fixed6 format.
- * It asserts the converted value has no more decimal places than 6.
- * As such, it guarantees no loss of precision.
- * If you need to convert a value to Fixed6 format with rounding,
- * use toF6r instead.
- *
- * For example:
- * asF6(7) creates fixed6(7_000_000), which represents 7.000000.
- * asF6(1.1) creates fixed6(1_100_000), which represents 1.100000.
- * asF6(21.75) creates fixed6(21_750_000), which represents 21.750000.
- * asF6(21.758123456) creates fixed6(21_758_123), which represents 21.758123 (floored to 6 decimals).
- */
-export function toF6(value: number): Fixed6 {
-  assertMax6Dec(value)
-  // We still round here instead of doing toF6 because assertMax6Dec allows for a tolerance of 1e-8,
-  // which should be removed by this rounding.
-  return roundToF6(value)
+export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
+  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
+  return fmtPctDec0(nominator.value, denominatorValue)
 }
 
 /**
@@ -255,35 +286,4 @@ export function f6fmtDec1(value: Fixed6): string {
 
 export function f6fmtDec2(value: Fixed6): string {
   return fmtDec2(toF(value))
-}
-
-/**
- * Formats a Fixed6 value as a percentage with 2 decimal places, after dividing it by the denominator.
- * For example:
- * f6fmtPctDec2(asF6(75), asF6(100)) = "75.00" (representing 75.00%)
- * f6fmtPctDec2(asF6(98.5), asF6(52)) = "189.42" (representing 189.42%)
- */
-export function f6fmtPctDec2(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
-  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
-  return fmtPctDec2(nominator.value, denominatorValue)
-}
-
-export function f6fmtPctDec0(nominator: Fixed6, denominator: Fixed6 | number = 1): string {
-  const denominatorValue = isF6(denominator) ? denominator.value : toF6(denominator).value
-  return fmtPctDec0(nominator.value, denominatorValue)
-}
-
-/**
- * Adds two Fixed6 values together.
- * For example:
- * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
- */
-export function f6add(first: Fixed6, second: Fixed6 | number): Fixed6 {
-  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
-  return fixed6(first.value + secondValue)
-}
-
-export function f6gt(first: Fixed6, second: Fixed6 | number): boolean {
-  const secondValue = typeof second === 'number' ? toF6(second).value : second.value
-  return first.value > secondValue
 }
