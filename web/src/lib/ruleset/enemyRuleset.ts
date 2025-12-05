@@ -1,5 +1,6 @@
 import { ENEMY_STATS } from '../collections/enemyUnits'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
+import { toF6 } from '../primitives/fixed6'
 import { newWeapon } from './weaponRuleset'
 
 let idCounter = 0
@@ -59,7 +60,7 @@ export function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     type,
     skill: stats.skill,
     exhaustion: 0, // Enemies start with 0 exhaustion
-    hitPoints: stats.hp,
+    hitPoints: toF6(stats.hp),
     maxHitPoints: stats.hp,
     weapon: newWeapon(stats.damage),
     isOfficer: stats.isOfficer,

@@ -1,7 +1,7 @@
 import type { Enemy, MissionSite } from '../model/model'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
-import { toF6, f6div, f6ge, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6'
+import { toF6, f6div, f6ge, f6gt, f6lt, f6mult, f6sum, type Fixed6, toF, toF6r } from '../primitives/fixed6'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
 export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
@@ -35,7 +35,8 @@ export type RetreatResult = {
  * @returns RetreatResult containing the retreat decision and calculated values for logging
  */
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
-  const aliveAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const zeroF6 = toF6(0)
+  const aliveAgents = agents.filter((agent) => f6gt(agent.hitPoints, zeroF6))
   const agentsTotalOriginalEffectiveSkill = f6sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
   const agentsTotalCurrentEffectiveSkill = f6sum(...aliveAgents.map((agent) => effectiveSkill(agent)))
 
@@ -45,7 +46,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
 
   // Check if enemy effective skill is at least 80% of agents' current effective skill
-  const aliveEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const aliveEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, zeroF6))
   const enemyTotalCurrentEffectiveSkill = f6sum(...aliveEnemies.map((enemy) => effectiveSkill(enemy)))
   const enemyToAgentsSkillRatio = toF6r(f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill))
   const enemyToAgentsSkillThreshold = toF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)

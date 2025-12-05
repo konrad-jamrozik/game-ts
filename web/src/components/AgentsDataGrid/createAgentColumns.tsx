@@ -115,22 +115,27 @@ export function createAgentColumns(
       field: 'hitPoints',
       headerName: 'HP',
       minWidth: 80,
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <div
-          aria-label={`agents-row-hit-points-${params.id}`}
-          style={{
-            display: 'grid',
-            gridTemplateColumns: '2ch 1ch 2ch',
-            gap: '2px',
-            alignItems: 'center',
-            width: '100%',
-          }}
-        >
-          <span style={{ textAlign: 'right' }}>{params.value}</span>
-          <span style={{ textAlign: 'center' }}>/</span>
-          <span style={{ textAlign: 'right' }}>{params.row.maxHitPoints}</span>
-        </div>
-      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>) => {
+        if (params.value === undefined) {
+          return <span />
+        }
+        return (
+          <div
+            aria-label={`agents-row-hit-points-${params.id}`}
+            style={{
+              display: 'grid',
+              gridTemplateColumns: '2ch 1ch 2ch',
+              gap: '2px',
+              alignItems: 'center',
+              width: '100%',
+            }}
+          >
+            <span style={{ textAlign: 'right' }}>{f6fmtInt(params.value)}</span>
+            <span style={{ textAlign: 'center' }}>/</span>
+            <span style={{ textAlign: 'right' }}>{params.row.maxHitPoints}</span>
+          </div>
+        )
+      },
     },
     {
       field: 'recoveryTurns',

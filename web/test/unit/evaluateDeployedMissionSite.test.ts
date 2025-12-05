@@ -28,10 +28,10 @@ describe(evaluateDeployedMissionSite, () => {
       skill: toF6(200), // High skill to ensure success
       skillFromTraining: toF6(0),
       exhaustion: 0,
-      hitPoints: AGENT_INITIAL_HIT_POINTS,
+      hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
-      hitPointsLostBeforeRecovery: 0,
+      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -105,10 +105,10 @@ describe(evaluateDeployedMissionSite, () => {
       skill: toF6(50), // Low skill
       skillFromTraining: toF6(0),
       exhaustion: 0,
-      hitPoints: 10, // Low hit points
+      hitPoints: toF6(10), // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       recoveryTurns: 0,
-      hitPointsLostBeforeRecovery: 0,
+      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -159,7 +159,7 @@ describe(evaluateDeployedMissionSite, () => {
       evaluateDeployedMissionSite(gameState, testMissionSite)
 
       // Verify agent was terminated
-      expect(testAgent.hitPoints).toBe(0)
+      expect(testAgent.hitPoints.value).toBe(0)
       expect(testAgent.state).toBe('Terminated')
       expect(testAgent.assignment).toBe('KIA')
 
@@ -180,10 +180,10 @@ describe(evaluateDeployedMissionSite, () => {
       skill: toF6(60),
       skillFromTraining: toF6(0),
       exhaustion: 0,
-      hitPoints: 20,
+      hitPoints: toF6(20),
       maxHitPoints: 20,
       recoveryTurns: 0,
-      hitPointsLostBeforeRecovery: 0,
+      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -196,10 +196,10 @@ describe(evaluateDeployedMissionSite, () => {
       skill: toF6(50),
       skillFromTraining: toF6(0),
       exhaustion: 0,
-      hitPoints: 15,
+      hitPoints: toF6(15),
       maxHitPoints: 15,
       recoveryTurns: 0,
-      hitPointsLostBeforeRecovery: 0,
+      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }

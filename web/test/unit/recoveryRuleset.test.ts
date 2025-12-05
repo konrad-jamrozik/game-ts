@@ -4,10 +4,8 @@ import { toF6 } from '../../src/lib/primitives/fixed6'
 
 describe(getRecoveryTurns, () => {
   // prettier-ignore
-  // All inputs must be whole integers (no fractional parts)
-  // Float precision issues are tested via intermediate calculations (hitPointsLostPct)
   test.each<[string, number, number, number, number]>([
-    // Columns: testName, hitPoints, damage, hitPointsRecoveryPct, expected
+    // Columns: testName, maxHitPoints, damage, hitPointsRecoveryPct, expected
 
     // Boundary cases
     ['  1/ 30 hp left -> 96.66% damage -> 49 turns ', 30, 29, 2, 49],
@@ -28,11 +26,19 @@ describe(getRecoveryTurns, () => {
     [' 10/100 hp left -> 90.00% damage -> 30 turns @ 3% ', 100,  90, 3,  30],
     [' 20/100 hp left -> 80.00% damage -> 27 turns @ 3% ', 100,  80, 3,  27],
     [' 50/100 hp left -> 50.00% damage -> 17 turns @ 3% ', 100,  50, 3,  17],
-    [' 90/100 hp left -> 10.00% damage ->  4 turns @ 3% ', 100,  10, 3,   4],    
+    [' 90/100 hp left -> 10.00% damage ->  4 turns @ 3% ', 100,  10, 3,   4],
+
+    // New test cases with fractional recovery percentages
+    [' Total HP = 30, current hp = 20, recovery % = 2 -> 17 turns ', 30, 10, 2, 17],
+    [' Total HP = 30, current hp = 20, recovery % = 2.2 -> 16 turns ', 30, 10, 2.2, 16],
+    [' Total HP = 31, current hp = 10, recovery % = 2 -> 34 turns ', 31, 21, 2, 34],
+    [' Total HP = 31, current hp = 10, recovery % = 2.2 -> 31 turns ', 31, 21, 2.2, 31],
+    [' Total HP = 31, current hp = 10, recovery % = 2.4 -> 29 turns ', 31, 21, 2.4, 29],
   ])(
-    '%s: hitPoints=%s, damage=%s, hitPointsRecoveryPct=%s -> %s',
-    (_testName, hitPoints, damage, hitPointsRecoveryPct, expected) => {
-      const result = getRecoveryTurns(hitPoints, damage, toF6(hitPointsRecoveryPct))
+    '%s: maxHitPoints=%s, damage=%s, hitPointsRecoveryPct=%s -> %s',
+    (_testName, maxHitPoints, damage, hitPointsRecoveryPct, expected) => {
+      const damageF6 = toF6(damage)
+      const result = getRecoveryTurns(maxHitPoints, damageF6, toF6(hitPointsRecoveryPct))
       expect(result).toBe(expected)
     }
   )

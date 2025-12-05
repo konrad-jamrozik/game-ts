@@ -1,6 +1,19 @@
 import pluralize from 'pluralize'
 import { sum } from 'radash'
-import { toF6, f6fmtInt, f6fmtPctDec0, f6cmp, f6div, f6eq, f6sum, type Fixed6 } from '../../primitives/fixed6'
+import {
+  toF6,
+  f6fmtInt,
+  f6fmtPctDec0,
+  f6cmp,
+  f6div,
+  f6eq,
+  f6sum,
+  f6gt,
+  f6lt,
+  f6le,
+  toF,
+  type Fixed6,
+} from '../../primitives/fixed6'
 import type { Actor, Enemy } from '../../model/model'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../ruleset/constants'
@@ -54,8 +67,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   }
 
   // Track initial hit points for calculating damage
-  const initialAgentHitPointsMap = new Map(agents.map((agent) => [agent.id, agent.hitPoints]))
-  const initialEnemyHitPointsMap = new Map(enemies.map((enemy) => [enemy.id, enemy.hitPoints]))
+  const initialAgentHitPointsMap = new Map<string, Fixed6>(agents.map((agent) => [agent.id, agent.hitPoints]))
+  const initialEnemyHitPointsMap = new Map<string, Fixed6>(enemies.map((enemy) => [enemy.id, enemy.hitPoints]))
 
   let roundIdx = 0
   let retreated = false
@@ -90,17 +103,18 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   } while (!battleEnded)
 
   // Count casualties - terminated and wounded
-  const agentsTerminated = agents.filter((agent) => agent.hitPoints <= 0).length
+  const zeroF6 = toF6(0)
+  const agentsTerminated = agents.filter((agent) => f6le(agent.hitPoints, zeroF6)).length
   const agentsWounded = agents.filter((agent) => {
-    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? agent.maxHitPoints
-    return agent.hitPoints > 0 && agent.hitPoints < initialHp
+    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? toF6(agent.maxHitPoints)
+    return f6gt(agent.hitPoints, zeroF6) && f6lt(agent.hitPoints, initialHp)
   }).length
   const agentCasualties = agentsWounded + agentsTerminated
 
-  const enemiesTerminated = enemies.filter((enemy) => enemy.hitPoints <= 0).length
+  const enemiesTerminated = enemies.filter((enemy) => f6le(enemy.hitPoints, zeroF6)).length
   const enemiesWounded = enemies.filter((enemy) => {
-    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? enemy.maxHitPoints
-    return enemy.hitPoints > 0 && enemy.hitPoints < initialHp
+    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? toF6(enemy.maxHitPoints)
+    return f6gt(enemy.hitPoints, zeroF6) && f6lt(enemy.hitPoints, initialHp)
   }).length
   const enemyCasualties = enemiesWounded + enemiesTerminated
 
@@ -112,15 +126,15 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   // Calculate total damage inflicted (by agents to enemies)
   let totalDamageInflicted = 0
   for (const enemy of enemies) {
-    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? enemy.maxHitPoints
-    totalDamageInflicted += initialHp - enemy.hitPoints
+    const initialHp = initialEnemyHitPointsMap.get(enemy.id) ?? toF6(enemy.maxHitPoints)
+    totalDamageInflicted += toF(initialHp) - toF(enemy.hitPoints)
   }
 
   // Calculate total damage taken (by agents from enemies)
   let totalDamageTaken = 0
   for (const agent of agents) {
-    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? agent.maxHitPoints
-    totalDamageTaken += initialHp - agent.hitPoints
+    const initialHp = initialAgentHitPointsMap.get(agent.id) ?? toF6(agent.maxHitPoints)
+    totalDamageTaken += toF(initialHp) - toF(agent.hitPoints)
   }
 
   // agentExhaustionAfterBattle will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
@@ -173,8 +187,9 @@ function newAgentsCombatStats(agents: Agent[]): AgentCombatStats[] {
 }
 
 function isSideEliminated(agents: Agent[], enemies: Enemy[]): boolean {
-  const allAgentsTerminated = agents.every((agent) => agent.hitPoints <= 0)
-  const allEnemiesTerminated = enemies.every((enemy) => enemy.hitPoints <= 0)
+  const zeroF6 = toF6(0)
+  const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, zeroF6))
+  const allEnemiesTerminated = enemies.every((enemy) => f6le(enemy.hitPoints, zeroF6))
   return allAgentsTerminated || allEnemiesTerminated
 }
 
@@ -201,14 +216,15 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
 
   // Calculate effective skills at round start to prevent targets from becoming more attractive
   // as they take damage during the round
+  const zeroF6 = toF6(0)
   const effectiveSkillsAtRoundStart = new Map<string, Fixed6>()
   for (const agent of agents) {
-    if (agent.hitPoints > 0) {
+    if (f6gt(agent.hitPoints, zeroF6)) {
       effectiveSkillsAtRoundStart.set(agent.id, effectiveSkill(agent))
     }
   }
   for (const enemy of enemies) {
-    if (enemy.hitPoints > 0) {
+    if (f6gt(enemy.hitPoints, zeroF6)) {
       effectiveSkillsAtRoundStart.set(enemy.id, effectiveSkill(enemy))
     }
   }
@@ -216,14 +232,14 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
-  const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, zeroF6))
   activeAgents.sort(compareActorsBySkillDescending)
 
   // Each agent attacks
   for (const agent of activeAgents) {
     // Skip if terminated during this round
-    if (agent.hitPoints > 0) {
-      const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+    if (f6gt(agent.hitPoints, zeroF6)) {
+      const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, zeroF6))
       const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
@@ -238,13 +254,13 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
   console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
 
   // Enemies attack back
-  const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, zeroF6))
   activeEnemies.sort(compareActorsBySkillDescending)
 
   for (const enemy of activeEnemies) {
     // Skip if terminated during this round
-    if (enemy.hitPoints > 0) {
-      const currentActiveAgents = agents.filter((agent) => agent.hitPoints > 0)
+    if (f6gt(enemy.hitPoints, zeroF6)) {
+      const currentActiveAgents = agents.filter((agent) => f6gt(agent.hitPoints, zeroF6))
       const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
@@ -275,16 +291,16 @@ function showRoundStatus(
   }
 
   // Current agent statistics
-  const activeAgents = agents.filter((agent) => agent.hitPoints > 0)
+  const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)))
   const currentAgentEffectiveSkill = f6sum(...activeAgents.map((agent) => effectiveSkill(agent)))
-  const currentAgentHitPoints = sum(activeAgents, (agent) => agent.hitPoints)
+  const currentAgentHitPoints = sum(activeAgents, (agent) => toF(agent.hitPoints))
   const agentSkillPct = f6fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, initialAgentHitPoints)
 
   // Current enemy statistics
-  const activeEnemies = enemies.filter((enemy) => enemy.hitPoints > 0)
+  const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, toF6(0)))
   const currentEnemySkill = f6sum(...activeEnemies.map((enemy) => effectiveSkill(enemy)))
-  const currentEnemyHitPoints = sum(activeEnemies, (enemy) => enemy.hitPoints)
+  const currentEnemyHitPoints = sum(activeEnemies, (enemy) => toF(enemy.hitPoints))
   const enemySkillPct = f6fmtPctDec0(currentEnemySkill, initialEnemySkill)
   const enemyHpPct = fmtPctDec0(currentEnemyHitPoints, initialEnemyHitPoints)
 

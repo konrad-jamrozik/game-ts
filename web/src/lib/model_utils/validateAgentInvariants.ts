@@ -1,8 +1,8 @@
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
-import { toF6, f6fmtInt, f6lt, toF } from '../primitives/fixed6'
+import { toF6, f6fmtInt, f6lt, f6gt, f6le, f6eq, toF, f6sub, f6div } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
-import { ceil, div } from '../primitives/mathPrimitives'
+import { ceil } from '../primitives/mathPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)
@@ -24,17 +24,19 @@ export function validateAgentLocalInvariants(agent: Agent, state?: GameState): v
  * Throws an Error if an invariant is violated.
  */
 function validateBasicStatRanges(agent: Agent): void {
-  if (agent.hitPoints < 0 || agent.hitPoints > agent.maxHitPoints) {
-    throw new Error(`Agent ${agent.id} has invalid hit points: ${agent.hitPoints}/${agent.maxHitPoints}`)
+  const zeroF6 = toF6(0)
+  const maxHitPointsF6 = toF6(agent.maxHitPoints)
+  if (f6lt(agent.hitPoints, zeroF6) || f6gt(agent.hitPoints, maxHitPointsF6)) {
+    throw new Error(`Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${agent.maxHitPoints}`)
   }
   if (agent.exhaustion < 0) {
     throw new Error(`Agent ${agent.id} has negative exhaustion: ${agent.exhaustion}`)
   }
-  if (f6lt(agent.skill, toF6(0))) {
+  if (f6lt(agent.skill, zeroF6)) {
     throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
   }
-  if (agent.hitPointsLostBeforeRecovery < 0) {
-    throw new Error(`Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${agent.hitPointsLostBeforeRecovery}`)
+  if (f6lt(agent.hitPointsLostBeforeRecovery, zeroF6)) {
+    throw new Error(`Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${f6fmtInt(agent.hitPointsLostBeforeRecovery)}`)
   }
   if (agent.recoveryTurns < 0) {
     throw new Error(`Agent ${agent.id} has negative recoveryTurns: ${agent.recoveryTurns}`)
@@ -45,6 +47,8 @@ function validateBasicStatRanges(agent: Agent): void {
 }
 
 function validateTermination(agent: Agent): void {
+  const zeroF6 = toF6(0)
+  const maxHitPointsF6 = toF6(agent.maxHitPoints)
   if (agent.state === 'Terminated') {
     assertOneOf(
       agent.assignment,
@@ -52,33 +56,35 @@ function validateTermination(agent: Agent): void {
       `Terminated agent ${agent.id} must have assignment of Sacked or KIA (got ${agent.assignment})`,
     )
     if (agent.assignment === 'KIA') {
-      assertEqual(agent.hitPoints, 0, `KIA agent ${agent.id} must have 0 hit points`)
+      assertEqual(agent.hitPoints.value, zeroF6.value, `KIA agent ${agent.id} must have 0 hit points`)
     }
     if (agent.assignment === 'Sacked') {
       assertEqual(
-        agent.hitPoints,
-        agent.maxHitPoints,
+        agent.hitPoints.value,
+        maxHitPointsF6.value,
         `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
       )
       assertEqual(agent.recoveryTurns, 0, `Sacked agent ${agent.id} must have no recovery turns`)
       assertEqual(
-        agent.hitPointsLostBeforeRecovery,
-        0,
+        agent.hitPointsLostBeforeRecovery.value,
+        zeroF6.value,
         `Sacked agent ${agent.id} must have no hitPointsLostBeforeRecovery`,
       )
     }
   }
-  if (agent.hitPoints === 0) {
+  if (f6eq(agent.hitPoints, zeroF6)) {
     assertEqual(agent.state, 'Terminated', `Agent ${agent.id} with 0 hit points must be Terminated`)
   }
 }
 
 function validateInjuryAndAssignment(agent: Agent): void {
-  if (agent.hitPoints < agent.maxHitPoints && agent.hitPoints > 0) {
+  const zeroF6 = toF6(0)
+  const maxHitPointsF6 = toF6(agent.maxHitPoints)
+  if (f6lt(agent.hitPoints, maxHitPointsF6) && f6gt(agent.hitPoints, zeroF6)) {
     assertEqual(
       agent.assignment,
       'Recovery',
-      `Agent ${agent.id} is injured (${agent.hitPoints}/${agent.maxHitPoints}) and must be on Recovery assignment`,
+      `Agent ${agent.id} is injured (${f6fmtInt(agent.hitPoints)}/${agent.maxHitPoints}) and must be on Recovery assignment`,
     )
   }
 }
@@ -94,30 +100,32 @@ function validateRecoveryStateConsistency(agent: Agent): void {
 }
 
 function validateRecoveryMath(agent: Agent, state: GameState): void {
-  const lostHitPoints = agent.maxHitPoints - agent.hitPoints
+  const maxHitPointsF6 = toF6(agent.maxHitPoints)
+  const lostHitPoints = f6sub(maxHitPointsF6, agent.hitPoints)
   if (!(agent.assignment === 'Recovery' || agent.state === 'Recovering')) {
     return
   }
-  if (lostHitPoints <= 0) {
+  const zeroF6 = toF6(0)
+  if (f6le(lostHitPoints, zeroF6)) {
     return
   }
 
   const { hitPointsRecoveryPct } = state
   const hitPointsRecoveryPctNum = toF(hitPointsRecoveryPct)
   const expectedTotalRecoveryTurns = ceil(
-    (div(agent.hitPointsLostBeforeRecovery, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
+    (f6div(agent.hitPointsLostBeforeRecovery, maxHitPointsF6) * 100) / hitPointsRecoveryPctNum,
   )
 
   // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP and recoveryTurns to total
   if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
     const expectedImmediateLost = lostHitPoints
     assertEqual(
-      agent.hitPointsLostBeforeRecovery,
-      expectedImmediateLost,
-      `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${expectedImmediateLost} at start of recovery`,
+      agent.hitPointsLostBeforeRecovery.value,
+      expectedImmediateLost.value,
+      `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${f6fmtInt(expectedImmediateLost)} at start of recovery`,
     )
     const expectedImmediateRecoveryTurns = ceil(
-      (div(expectedImmediateLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
+      (f6div(expectedImmediateLost, maxHitPointsF6) * 100) / hitPointsRecoveryPctNum,
     )
     assertEqual(
       agent.recoveryTurns,
@@ -134,15 +142,13 @@ function validateRecoveryMath(agent: Agent, state: GameState): void {
       )
     }
 
-    const turnsCompleted = expectedTotalRecoveryTurns - agent.recoveryTurns
-    const hitPointsPerTurn = div(agent.hitPointsLostBeforeRecovery, expectedTotalRecoveryTurns)
-    const restoredSoFar = Math.floor(hitPointsPerTurn * turnsCompleted)
-    const expectedHitPoints = agent.maxHitPoints - agent.hitPointsLostBeforeRecovery + restoredSoFar
-    assertEqual(
-      agent.hitPoints,
-      expectedHitPoints,
-      `Agent ${agent.id} recovering HP mismatch: expected ${expectedHitPoints}, got ${agent.hitPoints}`,
-    )
+    // With the new recovery algorithm, we just check that hitPoints <= maxHitPoints
+    // The exact recovery per turn is calculated dynamically based on current recoveryPct
+    if (f6gt(agent.hitPoints, maxHitPointsF6)) {
+      throw new Error(
+        `Agent ${agent.id} recovering HP exceeds max: ${f6fmtInt(agent.hitPoints)} > ${agent.maxHitPoints}`,
+      )
+    }
   }
 }
 

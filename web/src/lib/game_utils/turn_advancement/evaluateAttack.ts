@@ -8,7 +8,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../../ruleset/constants'
-import { f6add, toF } from '../../primitives/fixed6'
+import { f6add, toF, toF6, f6sub, f6max, f6gt } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from './fmtAttackLog'
@@ -58,8 +58,9 @@ export function evaluateAttack(
       damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100
     const damagePct = `${Math.round(50 + damageRangePct)}%`
 
-    const hpRemaining = defender.hitPoints - damage
-    defender.hitPoints = Math.max(0, hpRemaining)
+    const damageF6 = toF6(damage)
+    const hpRemaining = f6sub(defender.hitPoints, damageF6)
+    defender.hitPoints = f6max(hpRemaining, toF6(0))
 
     // Update skill gains from battle combat
     if (attackerStats) {
@@ -69,13 +70,14 @@ export function evaluateAttack(
       defenderStats.skillGained = f6add(defenderStats.skillGained, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     }
 
-    if (hpRemaining <= 0) {
+    const hpRemainingNum = toF(hpRemaining)
+    if (hpRemainingNum <= 0) {
       // If an enemy terminated an agent, track which enemy did it
       if (defenderIsAgent && !attackerIsAgent) {
         defender.terminatedBy = attacker.id
       }
       const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
-      const hpPct = fmtPctDec0(hpRemaining, defender.maxHitPoints)
+      const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
       console.log(
         fmtAttackLog({
           kind,
@@ -87,12 +89,12 @@ export function evaluateAttack(
           rollResult,
           attackCount,
           damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: hpRemaining, max: defender.maxHitPoints, percentage: hpPct },
+          hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
     } else {
       const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
-      const hpPct = fmtPctDec0(defender.hitPoints, defender.maxHitPoints)
+      const hpPct = fmtPctDec0(toF(defender.hitPoints), defender.maxHitPoints)
       console.log(
         fmtAttackLog({
           kind,
@@ -104,13 +106,13 @@ export function evaluateAttack(
           rollResult,
           attackCount,
           damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: defender.hitPoints, max: defender.maxHitPoints, percentage: hpPct },
+          hpRemainingInfo: { current: toF(defender.hitPoints), max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
     }
 
     // Apply defender exhaustion only if not terminated
-    if (defender.hitPoints > 0) {
+    if (f6gt(defender.hitPoints, toF6(0))) {
       defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
   } else {

@@ -4,7 +4,7 @@ import { MISSION_SURVIVAL_SKILL_GAIN } from '../../ruleset/constants'
 import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { f6add, f6fmtInt, type Fixed6 } from '../../primitives/fixed6'
+import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
 import { getRecoveryTurns } from '../../ruleset/recoveryRuleset'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -44,7 +44,7 @@ export function evaluateDeployedMissionSite(
   )
 
   // Determine mission outcome
-  const allEnemiesNeutralized = missionSite.enemies.every((enemy) => enemy.hitPoints <= 0)
+  const allEnemiesNeutralized = missionSite.enemies.every((enemy) => f6le(enemy.hitPoints, toF6(0)))
   missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
 
   // Return mission rewards to be applied later, don't apply them immediately
@@ -86,7 +86,7 @@ function updateAgentsAfterBattle(
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
 
-    const isTerminated = agent.hitPoints <= 0
+    const isTerminated = f6le(agent.hitPoints, toF6(0))
 
     if (!isTerminated) {
       const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, hitPointsRecoveryPct)
@@ -149,10 +149,11 @@ function updateSurvivingAgent(
   agent.state = 'InTransit'
 
   // If agent took damage they need to recover
-  const tookDamage = agent.hitPoints < agent.maxHitPoints
+  const maxHitPointsF6 = toF6(agent.maxHitPoints)
+  const tookDamage = f6lt(agent.hitPoints, maxHitPointsF6)
   if (tookDamage) {
     agent.assignment = 'Recovery'
-    const damage = agent.maxHitPoints - agent.hitPoints
+    const damage = f6sub(maxHitPointsF6, agent.hitPoints)
     agent.hitPointsLostBeforeRecovery = damage
     agent.recoveryTurns = getRecoveryTurns(agent.maxHitPoints, damage, hitPointsRecoveryPct)
     return true // Agent was wounded

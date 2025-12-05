@@ -62,7 +62,7 @@ describe(getAgentSkillBasedValue, () => {
     const agent = agFix.new({
       skill: toF6(effectiveSkill),
       exhaustion: 0,
-      hitPoints: 30,
+      hitPoints: toF6(30),
       maxHitPoints: 30,
     })
     const multiplier = 5 // Using AGENT_ESPIONAGE_INTEL as a realistic multiplier

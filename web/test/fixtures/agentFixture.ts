@@ -1,5 +1,6 @@
 import type { Agent } from '../../src/lib/model/agentModel'
 import { newHiredAgent } from '../../src/redux/reducers/agentReducers'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
 
 export const agFix = (() => {
@@ -37,7 +38,7 @@ export const agFix = (() => {
     wounded(hitPointsLost = 10): Agent {
       const maxHitPoints = 30
       return this.new({
-        hitPoints: Math.max(0, maxHitPoints - hitPointsLost),
+        hitPoints: toF6(Math.max(0, maxHitPoints - hitPointsLost)),
         maxHitPoints,
       })
     },

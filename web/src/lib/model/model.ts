@@ -3,7 +3,7 @@ import type { Fixed6 } from '../primitives/fixed6'
 export type Actor = {
   id: string
   skill: Fixed6
-  hitPoints: number
+  hitPoints: Fixed6
   maxHitPoints: number
   exhaustion: number
   weapon: Weapon

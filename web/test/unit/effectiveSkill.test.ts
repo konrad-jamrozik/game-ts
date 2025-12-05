@@ -19,7 +19,7 @@ describe(effectiveSkill, () => {
     ['exhaustion and hit points lost', agFix.new({
       skill: toF6(150),
       exhaustion: 20,
-      hitPoints: 23,
+      hitPoints: toF6(23),
       maxHitPoints: 30,
     }), 97.75],  // hit points lost = 30 - 23 = 7; effective_skill = 150 * (1 - 7/30) * (1 - 15/100) = 150 * 0.76666... * 0.85 = 97.75
 
@@ -30,7 +30,7 @@ describe(effectiveSkill, () => {
     ['105% exhaustion', agFix.exhausted(105), 0],  // effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0 = 0
 
     ['zero hit points', agFix.new({
-      hitPoints: 0,
+      hitPoints: toF6(0),
       maxHitPoints: 30,
     }), 0],  // hit points lost = 30 - 0 = 30; effective_skill = 100 * (1 - 30/30) * (1 - 0/100) = 100 * 0 * 1 = 0
   ])('%s', (_testName, agent, expected) => {

@@ -1,7 +1,6 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
 import { assertEqual } from '../../primitives/assertPrimitives'
-import { floor, div, ceil } from '../../primitives/mathPrimitives'
-import { toF } from '../../primitives/fixed6'
+import { toF6, floorToF6, f6add, f6min } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
@@ -23,9 +22,6 @@ export function updateAvailableAgents(state: GameState): void {
   applyExhaustion(availableAgents, -state.exhaustionRecovery)
 }
 
-// KJA fix recovery logic: just recover by fractional hit points, don't keep track of starting turns. Need hit points to be fractional.
-// KJA current bug: if HP recov. % changed during recovery, throws assertion error on turn advancement like:
-// installHook.js:1 Uncaught error: Error: Agent agent-007 recovering HP mismatch: expected 14, got 15
 /**
  * Updates agents in Recovering state - apply hit point restoration and exhaustion recovery
  */
@@ -35,36 +31,33 @@ export function updateRecoveringAgents(state: GameState): void {
       // Apply exhaustion recovery
       agent.exhaustion = Math.max(0, agent.exhaustion - state.exhaustionRecovery)
 
+      // KJA recoveryTurns should not be a field, it instead should be derived by helper function to display where appropriate
       // Handle recovery countdown and hit point restoration
       if (agent.recoveryTurns > 0) {
         agent.recoveryTurns -= 1
 
-        // Calculate total recovery turns originally needed
-        const originalHitPointsLost = agent.hitPointsLostBeforeRecovery
-        const hitPointsRecoveryPctNum = toF(state.hitPointsRecoveryPct)
-        const totalRecoveryTurns = ceil(
-          (div(originalHitPointsLost, agent.maxHitPoints) * 100) / hitPointsRecoveryPctNum,
-        )
+        // Calculate recovery per turn: maxHitPoints * recoveryPct / 100, rounded down to 6 decimal places
+        // KJA should use some fixed6 func here
+        const recoveryPctDecimal = state.hitPointsRecoveryPct.value / 1_000_000 / 100
+        const recoveryPerTurn = floorToF6(agent.maxHitPoints * recoveryPctDecimal)
 
-        // Calculate which turn of recovery we just completed
-        const turnsCompletedSoFar = totalRecoveryTurns - agent.recoveryTurns
+        // Add recovered hit points
+        agent.hitPoints = f6add(agent.hitPoints, recoveryPerTurn)
 
-        // Calculate cumulative hit points to restore based on linear progression
-        const hitPointsPerTurn = div(originalHitPointsLost, totalRecoveryTurns)
-        const totalHitPointsToRestoreSoFar = floor(hitPointsPerTurn * turnsCompletedSoFar)
-
-        // Set current hit points based on cumulative restoration
-        agent.hitPoints = agent.maxHitPoints - originalHitPointsLost + totalHitPointsToRestoreSoFar
+        // Cap hit points at maxHitPoints
+        const maxHitPointsF6 = toF6(agent.maxHitPoints)
+        agent.hitPoints = f6min(agent.hitPoints, maxHitPointsF6)
       }
 
       if (agent.recoveryTurns <= 0) {
+        const maxHitPointsF6 = toF6(agent.maxHitPoints)
         assertEqual(
-          agent.hitPoints,
-          agent.maxHitPoints,
+          agent.hitPoints.value,
+          maxHitPointsF6.value,
           'Agent hit points should be fully restored on recovery completion',
         )
         // Reset recovery state
-        agent.hitPointsLostBeforeRecovery = 0
+        agent.hitPointsLostBeforeRecovery = toF6(0)
         agent.state = 'Available'
         agent.assignment = 'Standby'
       }

@@ -1,8 +1,7 @@
-import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, type Fixed6 } from '../../primitives/fixed6'
+import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, f6sub, f6div, f6le, type Fixed6 } from '../../primitives/fixed6'
 import type { Enemy } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
-import { div } from '../../primitives/mathPrimitives'
 import { rand } from '../../primitives/rand'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
 import { rollRange } from '../../primitives/rolls'
@@ -146,11 +145,13 @@ function isInValidSkillRange(
 function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T[]): T[] {
   // Filter out targets that randomly remove themselves based on HP lost percentage
   let availableTargets = potentialTargets.filter((target) => {
-    const hitPointsLost = target.maxHitPoints - target.hitPoints
-    if (hitPointsLost <= 0) {
+    const maxHitPointsF6 = toF6r(target.maxHitPoints)
+    const hitPointsLost = f6sub(maxHitPointsF6, target.hitPoints)
+    const zeroF6 = toF6r(0)
+    if (f6le(hitPointsLost, zeroF6)) {
       return true // No HP lost, target stays available
     }
-    const hpLostPercentage = div(hitPointsLost, target.maxHitPoints)
+    const hpLostPercentage = f6div(hitPointsLost, maxHitPointsF6)
     const roll = rand.get()
 
     // If roll is less than HP lost percentage, target removes itself
