@@ -1,5 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react'
 import { wipeStorage } from '../../redux/persist'
+import { showErrorToast } from '../../lib/utils/errorToast'
 
 type ErrorBoundaryState = {
   hasError: boolean
@@ -36,6 +37,7 @@ export class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundarySt
   // eslint-disable-next-line @typescript-eslint/class-methods-use-this
   public override componentDidCatch(error: Error, errorInfo: ErrorInfo): void {
     console.error('Uncaught error:', error, errorInfo)
+    showErrorToast(error.message)
   }
 
   public override render(): ReactNode {

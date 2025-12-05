@@ -2,6 +2,7 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
 import { DebugCard } from './DebugCard'
+import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { LeadInvestigationsDataGrid } from './LeadInvestigationsDataGrid/LeadInvestigationsDataGrid'
@@ -48,6 +49,7 @@ function App(): React.JSX.Element {
           <TurnReportDisplay />
         </Stack>
       </Grid>
+      <ErrorToast />
     </Grid>
   )
 }
