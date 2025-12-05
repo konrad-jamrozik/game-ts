@@ -74,7 +74,7 @@ export function ErrorToast(): React.JSX.Element {
     <Snackbar
       key={messageInfo ? messageInfo.id : undefined}
       open={open}
-      autoHideDuration={6000}
+      //   autoHideDuration={6000}
       onClose={handleClose}
       anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
       slotProps={{ transition: { onExited: handleExited } }}
