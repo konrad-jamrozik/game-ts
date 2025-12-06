@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, toF, type Fixed6, f6sub } from '../../lib/primitives/fixed6'
+import { toF6, toF, type Fixed6, f4fmtPctDec2Diff } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
 import { getPanicIncrease } from '../../lib/ruleset/panicRuleset'
 import {
@@ -57,7 +57,7 @@ function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnRepor
   return {
     id: 'panic-summary',
     label: `Panic: ${f6fmtValueChange(panicReport.change)}`,
-    chipValue: panicReport.change.delta,
+    chipValue: f4fmtPctDec2Diff(panicReport.change.previous, panicReport.change.current),
     reverseColor: true, // Panic increase is bad
     children: formatPanicBreakdown(panicReport.breakdown),
   }
@@ -94,26 +94,25 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
   const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
-  const panicIncreaseDelta = f6sub(currentPanicIncrease, previousPanicIncrease)
 
   const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: fct.factionId,
     label: `${fct.factionName}. Panic contrib.: ${f6fmtValueChange(panicIncrease)}`,
-    chipValue: panicIncreaseDelta,
+    chipValue: f4fmtPctDec2Diff(previousPanicIncrease, currentPanicIncrease),
     reverseColor: true, // Panic increase is bad
     children: [
       {
         id: `faction-${fct.factionId}-threat-level`,
         label: `Threat level: ${f6fmtValueChange(fct.threatLevel)}`,
-        chipValue: fct.threatLevel.delta,
+        chipValue: f4fmtPctDec2Diff(fct.threatLevel.previous, fct.threatLevel.current),
         reverseColor: true, // Threat increase is bad
         children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
       },
       {
         id: `faction-${fct.factionId}-suppression`,
         label: `Suppression: ${f6fmtValueChange(fct.suppression)}`,
-        chipValue: fct.suppression.delta,
+        chipValue: f4fmtPctDec2Diff(fct.suppression.previous, fct.suppression.current),
         reverseColor: false, // Suppression increase is good (default)
         children: formatSuppressionChildren(fct.factionId, fct.suppressionDecay, fct.missionImpacts),
       },
