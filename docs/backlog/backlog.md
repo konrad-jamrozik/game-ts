@@ -2,6 +2,11 @@
 
 KJA backlog:
 
+KJA bug: transport cap is not being taken away by mission deployment.
+So e.g. 6 transport cap means that multiple missions can be deployed at once,
+and all of them can deploy up to 6 agents each.
+Also need to take care of displaying th currently taken transport cap.
+
 # Brainstorming
 
 - Assign agents to training
