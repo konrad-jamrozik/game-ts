@@ -11,6 +11,7 @@ import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrad
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
+import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
 
 export type UpgradeRow = {
   id: number
@@ -39,6 +40,8 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     return increment
   }
 
+  const remainingTransportCap = getRemainingTransportCap(gameState.missionSites, gameState.transportCap)
+
   const upgradeRows: UpgradeRow[] = [
     {
       name: 'Agent cap',
@@ -50,7 +53,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       name: 'Transport cap',
       id: 5,
-      value: gameState.transportCap,
+      value: `${remainingTransportCap} / ${gameState.transportCap}`,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Transport cap']),
       price: UPGRADE_PRICES['Transport cap'],
     },

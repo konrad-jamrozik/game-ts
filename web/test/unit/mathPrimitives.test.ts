@@ -87,7 +87,7 @@ describe('Common floating point precision pitfalls', () => {
     const scaled = subFromFloat * 10
     expect(scaled).toBe(1.999_999_999_999_999_6)
 
-    // act
+    // Act
     const mathFloor = Math.floor(scaled)
     const myFloor = floor(scaled)
 
@@ -100,7 +100,7 @@ describe('Common floating point precision pitfalls', () => {
     const cents = price * 100
     expect(cents).toBe(28.999_999_999_999_996)
 
-    // act
+    // Act
     const mathFloor = Math.floor(cents)
     const myFloor = floor(cents)
 

@@ -4,6 +4,7 @@ import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
 import { getMoneyNewBalance } from '../../src/lib/ruleset/moneyRuleset'
 import { AGENT_HIRE_COST } from '../../src/lib/ruleset/constants'
+import { agFix } from '../fixtures/agentFixture'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1'
@@ -187,5 +188,38 @@ describe(PlayerActions, () => {
 
     ui.expectPlayerActionsAlert('This action can be done only on available agents!')
     st.expectAgentsOnAssignment([agentId], 'Contracting') // Expect unchanged
+  })
+
+  test("click 'deploy agents to active mission site' button -> alert: transport cap exceeded by deployed missions", async () => {
+    const deployedMissionSiteId = 'mission-site-1'
+    const newMissionSiteId = 'mission-site-2'
+    const deployedAgents = ['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'].map((id) =>
+      agFix.new({ id, state: 'OnMission', assignment: deployedMissionSiteId }),
+    )
+    const availableAgentIds = ['agent-200', 'agent-201']
+    const availableAgents = availableAgentIds.map((id) => st.newAgentInStandby(id))
+    st.arrangeGameState({
+      agents: [...deployedAgents, ...availableAgents],
+      missionSites: [
+        {
+          ...st.newMissionSite(deployedMissionSiteId),
+          state: 'Deployed',
+          agentIds: deployedAgents.map((agent) => agent.id),
+        },
+        st.newMissionSite(newMissionSiteId),
+      ],
+    })
+    st.arrangeSelection({ agents: availableAgentIds, missionSite: newMissionSiteId })
+    ui.renderPlayerActions()
+    ui.expectPlayerActionsAlert({ hidden: true })
+
+    await ui.deployAgents() // Act
+
+    ui.expectPlayerActionsAlert('Cannot deploy 2 agents. Only 1 transport slots available.')
+    availableAgentIds.forEach((availableAgentId) => {
+      st.expectAgentState(availableAgentId, 'Available')
+      st.expectAgentAssignment(availableAgentId, 'Standby')
+    })
+    st.expectAgentsOnMissionSite(newMissionSiteId, [])
   })
 })

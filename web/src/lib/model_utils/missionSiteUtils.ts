@@ -17,6 +17,23 @@ export function getActiveOrDeployedMissionSites(missionSites: MissionSite[]): Mi
 }
 
 /**
+ * Counts unique agents deployed across all mission sites currently in Deployed state.
+ */
+export function getDeployedAgentsCount(missionSites: MissionSite[]): number {
+  const deployedMissionSites = missionSites.filter((site) => site.state === 'Deployed')
+  const deployedAgentIds = deployedMissionSites.flatMap((site) => site.agentIds)
+  return new Set(deployedAgentIds).size
+}
+
+/**
+ * Calculates remaining transport capacity after accounting for deployed agents.
+ */
+export function getRemainingTransportCap(missionSites: MissionSite[], transportCap: number): number {
+  const deployedAgentsCount = getDeployedAgentsCount(missionSites)
+  return Math.max(transportCap - deployedAgentsCount, 0)
+}
+
+/**
  * Gets archived mission sites (Successful, Failed, or Expired)
  */
 export function getArchivedMissionSites(missionSites: MissionSite[]): MissionSite[] {

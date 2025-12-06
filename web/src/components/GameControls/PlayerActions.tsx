@@ -27,7 +27,7 @@ import {
   clearMissionSelection,
 } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
-import { validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
+import { getRemainingTransportCap, validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { validateAvailableAgents, validateOnAssignmentAgents } from '../../lib/model_utils/validateAgents'
@@ -240,8 +240,11 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate transport cap
-    if (selectedAgentIds.length > gameState.transportCap) {
-      setAlertMessage(`Cannot deploy more than ${gameState.transportCap} agents (transport cap exceeded)`)
+    const remainingTransportCap = getRemainingTransportCap(gameState.missionSites, gameState.transportCap)
+    if (selectedAgentIds.length > remainingTransportCap) {
+      setAlertMessage(
+        `Cannot deploy ${selectedAgentIds.length} agents. Only ${remainingTransportCap} transport slots available.`,
+      )
       setShowAlert(true)
       return
     }
