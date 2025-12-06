@@ -1,5 +1,15 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6fmtPctDec2, f6gt, f6lt, floorToF6, roundToF6, f6mult } from '../../src/lib/primitives/fixed6'
+import {
+  fixed6,
+  fmtDiffStr,
+  f6fmtPctDec2,
+  f6gt,
+  f6lt,
+  floorToF6,
+  roundToF6,
+  f6mult,
+  toF6,
+} from '../../src/lib/primitives/fixed6'
 
 describe('Common floating point precision pitfalls', () => {
   test('Imprecise division may result in incorrect threshold checks', () => {
@@ -53,5 +63,33 @@ describe('Common floating point precision pitfalls', () => {
     expect(res2).toBeCloseTo(148.08, 10)
     const res3 = f6mult(toF6(1234), 0.000_000_05)
     expect(res3).toBeCloseTo(0.000_061_7, 10)
+  })
+})
+
+describe(fmtDiffStr, () => {
+  test('Diff from 0.11% to 0.10% displays as -0.01%', () => {
+    // Current:   fixed6(1160), displayed as 0.11%
+    // Projected: fixed6(1020), displayed as 0.10%
+    // Diff:      fixed6(-140), should be displayed as -0.01%
+    const current = fixed6(1160)
+    const projected = fixed6(1020)
+    const diff = fixed6(projected.value - current.value)
+
+    expect(f6fmtPctDec2(current)).toBe('0.11%')
+    expect(f6fmtPctDec2(projected)).toBe('0.10%')
+    expect(fmtDiffStr(diff)).toBe('-0.01%')
+  })
+
+  test('Diff from 0.11% to 0.09% displays as -0.02%', () => {
+    // Current:   fixed6(1120), displayed as 0.11%
+    // Projected: fixed6(980), displayed as 0.09%
+    // Diff:      fixed6(-140), should be displayed as -0.02%
+    const current = fixed6(1120)
+    const projected = fixed6(980)
+    const diff = fixed6(projected.value - current.value)
+
+    expect(f6fmtPctDec2(current)).toBe('0.11%')
+    expect(f6fmtPctDec2(projected)).toBe('0.09%')
+    expect(fmtDiffStr(diff)).toBe('-0.02%')
   })
 })
