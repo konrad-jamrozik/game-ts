@@ -345,6 +345,5 @@ export function f6fmtDec2(value: Fixed6): string {
  * @returns
  */
 export function fmtDiffStr(diff: Fixed6): string {
-  const roundedDiff = f6roundToZeroDec4(diff)
-  return f6fmtPctDec2(roundedDiff)
+  return `TODO: implement fmtDiffStr ${diff.value}`
 }
