@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import {
   fixed6,
-  fmtDiffStr,
+  f4fmtDiffStr,
   f6fmtPctDec2,
   f6gt,
   f6lt,
@@ -66,10 +66,16 @@ describe('Common floating point precision pitfalls', () => {
   })
 })
 
-describe(fmtDiffStr, () => {
+describe(f4fmtDiffStr, () => {
   // prettier-ignore
   test.each<[string, number, number, string, string, string]>([
+    // Displayed value change of 200, but diff almost 300
+    // Ceil or round on diff would incorrectly make it 300
+    // Diff must be floored.
     ['Diff from 0.25% to 0.27% displays as  0.02% (diff:  298)', 2501, 2799, '0.25%', '0.27%',  '0.02%'],
+    // Displayed value change of 200, but diff barely above 100.
+    // Floor or round on diff would incorrectly make it 100.
+    // Diff must be ceiled.
     ['Diff from 0.25% to 0.27% displays as  0.02% (diff:  102)', 2599, 2701, '0.25%', '0.27%',  '0.02%'],
     
     ['Diff from 0.25% to 0.26% displays as  0.01% (diff:  198)', 2501, 2699, '0.25%', '0.26%',  '0.01%'],
@@ -79,22 +85,21 @@ describe(fmtDiffStr, () => {
     ['Diff from 0.25% to 0.25% displays as  0.00% (diff:   98)', 2501, 2599, '0.25%', '0.25%',  '0.00%'],
     ['Diff from 0.25% to 0.25% displays as  0.00% (diff:    0)', 2550, 2550, '0.25%', '0.25%',  '0.00%'],
     ['Diff from 0.25% to 0.25% displays as -0.00% (diff:  -98)', 2599, 2501, '0.25%', '0.25%', '-0.00%'],
-
+    
     ['Diff from 0.25% to 0.24% displays as -0.01% (diff:   -2)', 2501, 2499, '0.25%', '0.24%', '-0.01%'],
     ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -100)', 2500, 2400, '0.25%', '0.24%', '-0.01%'],
     ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -198)', 2599, 2401, '0.25%', '0.24%', '-0.01%'],
     
     ['Diff from 0.25% to 0.23% displays as -0.02% (diff: -102)', 2501, 2399, '0.25%', '0.23%', '-0.02%'],
     ['Diff from 0.25% to 0.23% displays as -0.02% (diff: -298)', 2599, 2301, '0.25%', '0.23%', '-0.02%'],
-    // ['Diff from 0.11% to 0.10% displays as -0.01%', 1160, 1020, '0.11%', '0.10%', '-0.01%'],
-    // ['Diff from 0.11% to 0.09% displays as -0.02%', 1120, 980, '0.11%', '0.09%', '-0.02%'],
+    ['Diff from 30.00% to 30.01% displays as 1% (diff: 40)', 300_080, 300_120, '30.00%', '30.01%', '0.01%'],
+    ['Diff from 30.00% to 30.00% displays as 0% (diff: 40)', 300_020, 300_060, '30.00%', '30.00%', '0.00%'],
   ])('%s', (_testName, current, projected, currentDisplay, projectedDisplay, expectedDiff) => {
     const currentF6 = fixed6(current)
     const projectedF6 = fixed6(projected)
-    const diff = fixed6(projectedF6.value - currentF6.value)
 
     expect(f6fmtPctDec2(currentF6)).toBe(currentDisplay)
     expect(f6fmtPctDec2(projectedF6)).toBe(projectedDisplay)
-    expect(fmtDiffStr(diff)).toBe(expectedDiff)
+    expect(f4fmtDiffStr(currentF6, projectedF6)).toBe(expectedDiff)
   })
 })

@@ -330,20 +330,24 @@ export function f6fmtDec2(value: Fixed6): string {
 }
 
 /**
- * Consider following cases where diff = projected - current.
+ * Formats the displayed difference between two Fixed6 values as a percentage string.
  *
- * Current:   fixed6(1_160), displayed as 0.11%
- * Projected: fixed6(1_020), displayed as 0.10%
- * Diff:      fixed6( -140), should be displayed as -0.01%
- *                           floor would display as -0.02%
+ * The displayed difference is computed as the difference between the floored
+ * display values, not the raw difference. This ensures the formatted diff
+ * matches what users see when comparing the displayed current and projected values.
  *
- * Current:   fixed6(1_120), displayed as 0.11%
- * Projected: fixed6(  980), displayed as 0.09%
- * Diff:      fixed6( -140), should be displayed as -0.02%
- *                           ceil  would display as -0.01%
- * @param diff
- * @returns
  */
-export function fmtDiffStr(diff: Fixed6): string {
-  return `TODO: implement fmtDiffStr ${diff.value}`
+export function f4fmtDiffStr(prev: Fixed6, succ: Fixed6): string {
+  const displayUnit = 100 // 0.01% in fixed6 units
+  const prevDisplay = floor(prev.value / displayUnit)
+  const succDisplay = floor(succ.value / displayUnit)
+  const displayedDiff = succDisplay - prevDisplay
+
+  // Preserve negative sign even when displayed diff is 0
+  const rawDiff = succ.value - prev.value
+  const negativeZero = rawDiff < 0 && displayedDiff === 0
+
+  const pctValue = Math.abs(displayedDiff) * 0.01
+  const sign = displayedDiff < 0 || negativeZero ? '-' : ''
+  return `${sign}${pctValue.toFixed(2)}%`
 }
