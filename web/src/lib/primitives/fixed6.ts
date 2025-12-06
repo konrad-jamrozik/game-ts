@@ -1,6 +1,6 @@
 import { sum } from 'radash'
-import { assertInRange, assertInteger, assertMax6Dec } from './assertPrimitives'
-import { dist, div, floor } from './mathPrimitives'
+import { assertInRange, assertInteger, assertMax4Dec, assertMax6Dec } from './assertPrimitives'
+import { ceil, dist, div, floor, hasAtMostDecimals } from './mathPrimitives'
 import { fmtDec0, fmtDec1, fmtDec2, fmtPctDec0, fmtPctDec2 } from './formatPrimitives'
 
 export const FIXED4_PRECISION = 10_000
@@ -252,6 +252,47 @@ export function f6floorToInt(value: Fixed6): number {
 }
 
 /**
+ * If given Fixed6 value has more than 4 decimal places, then:
+ * - If it is >= 0, it floors it to 4 decimal places
+ * - If it is < 0, it ceils it to 4 decimal places
+ * @param value
+ * @returns
+ */
+export function f6roundToZeroDec4(value: Fixed6): Fixed6 {
+  if (hasAtMostDecimals(toF(value), 4)) {
+    // Already has at most 4 decimal places
+    return value
+  }
+
+  if (value.value >= 0) {
+    return f6floorToF4(value)
+  }
+  return f6ceilToF4(value)
+}
+
+/**
+ * Floors a Fixed6 value to 4 decimal places by converting to F4 format and back.
+ * For example:
+ * f6floorToF4(fixed6(1_234_567)) = fixed6(1_234_000) (1.2340)
+ */
+export function f6floorToF4(value: Fixed6): Fixed6 {
+  const f4Value = floor(value.value / 100)
+  assertMax4Dec(f4Value)
+  return fixed6(f4Value * 100)
+}
+
+/**
+ * Ceils a Fixed6 value to 4 decimal places by converting to F4 format and back.
+ * For example:
+ * f6ceilToF4(fixed6(1_234_567)) = fixed6(1_235_000) (1.2346)
+ */
+export function f6ceilToF4(value: Fixed6): Fixed6 {
+  const f4Value = ceil(value.value / 100)
+  assertMax4Dec(f4Value)
+  return fixed6(f4Value * 100)
+}
+
+/**
  * Formats a Fixed6 value as a percentage with 2 decimal places, after dividing it by the denominator.
  * For example:
  * f6fmtPctDec2(asF6(75), asF6(100)) = "75.00" (representing 75.00%)
@@ -286,4 +327,24 @@ export function f6fmtDec1(value: Fixed6): string {
 
 export function f6fmtDec2(value: Fixed6): string {
   return fmtDec2(toF(value))
+}
+
+/**
+ * Consider following cases where diff = projected - current.
+ *
+ * Current:   fixed6(1_160), displayed as 0.11%
+ * Projected: fixed6(1_020), displayed as 0.10%
+ * Diff:      fixed6( -140), should be displayed as -0.01%
+ *                           floor would display as -0.02%
+ *
+ * Current:   fixed6(1_120), displayed as 0.11%
+ * Projected: fixed6(  980), displayed as 0.09%
+ * Diff:      fixed6( -140), should be displayed as -0.02%
+ *                           ceil  would display as -0.01%
+ * @param diff
+ * @returns
+ */
+export function fmtDiffStr(diff: Fixed6): string {
+  const roundedDiff = f6roundToZeroDec4(diff)
+  return f6fmtPctDec2(roundedDiff)
 }
