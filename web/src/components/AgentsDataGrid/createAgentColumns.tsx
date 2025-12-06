@@ -25,7 +25,7 @@ export function createAgentColumns(
     {
       field: 'id',
       headerName: 'ID',
-      minWidth: 120,
+      width: 120,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
       ),
@@ -50,7 +50,7 @@ export function createAgentColumns(
     {
       field: 'assignment',
       headerName: 'Assignment',
-      minWidth: 140,
+      width: 140,
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
       ),
@@ -58,7 +58,7 @@ export function createAgentColumns(
     {
       field: 'skill',
       headerName: 'Skill',
-      minWidth: 140,
+      width: 140,
       sortComparator: (
         _v1: string,
         _v2: string,
@@ -116,7 +116,7 @@ export function createAgentColumns(
     {
       field: 'hitPoints',
       headerName: 'HP',
-      minWidth: 80,
+      width: 80,
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         if (params.value === undefined) {
           return <span />
@@ -142,7 +142,7 @@ export function createAgentColumns(
     {
       field: 'recoveryTurns',
       headerName: 'Recovery',
-      minWidth: 90,
+      width: 90,
       renderCell: (params: GridRenderCellParams<AgentRow>): React.JSX.Element => {
         const remainingTurns = getRemainingRecoveryTurns(params.row, hitPointsRecoveryPct)
         return (
@@ -155,7 +155,7 @@ export function createAgentColumns(
     {
       field: 'exhaustion',
       headerName: 'Exhaustion',
-      minWidth: 100,
+      width: 100,
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>
       ),

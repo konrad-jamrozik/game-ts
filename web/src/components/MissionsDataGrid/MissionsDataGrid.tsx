@@ -147,7 +147,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     {
       field: 'id',
       headerName: 'Mission site ID',
-      minWidth: 240,
+      width: 240,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
         const displayValue = fmtMissionSiteIdWithMissionId(params.row)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
@@ -164,7 +164,7 @@ function createMissionColumns(): GridColDef<MissionRow>[] {
     {
       field: 'state',
       headerName: 'State',
-      minWidth: 120,
+      width: 120,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
         if (params.value === 'Successful' || params.value === 'Failed' || params.value === 'Expired') {
           return (

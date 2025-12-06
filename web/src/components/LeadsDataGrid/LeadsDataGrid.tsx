@@ -147,7 +147,7 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'id',
       headerName: 'Lead ID',
-      minWidth: 300,
+      width: 300,
       renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
         <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
       ),
@@ -155,7 +155,7 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'difficulty',
       headerName: 'Difficulty',
-      minWidth: 100,
+      width: 100,
       renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
         <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
       ),
@@ -163,7 +163,7 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'repeatable',
       headerName: 'Repeatable',
-      minWidth: 100,
+      width: 100,
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
         <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
       ),
@@ -171,7 +171,7 @@ function createLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'investigations',
       headerName: 'Investigations',
-      minWidth: 200,
+      width: 120,
       renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
         const { activeInvestigationCount, completedInvestigationCount } = params.row
         if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {
