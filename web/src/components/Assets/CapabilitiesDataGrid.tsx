@@ -12,6 +12,7 @@ import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/s
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
+import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 
 export type UpgradeRow = {
   id: number
@@ -40,13 +41,17 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     return increment
   }
 
+  const currentAgentCount = notTerminated(gameState.agents).length
+  const remainingAgentCap = Math.max(gameState.agentCap - currentAgentCount, 0)
   const remainingTransportCap = getRemainingTransportCap(gameState.missionSites, gameState.transportCap)
+  const agentsInTraining = onTrainingAssignment(gameState.agents).length
+  const remainingTrainingCap = Math.max(gameState.trainingCap - agentsInTraining, 0)
 
   const upgradeRows: UpgradeRow[] = [
     {
       name: 'Agent cap',
       id: 4,
-      value: gameState.agentCap,
+      value: `${remainingAgentCap} / ${gameState.agentCap}`,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Agent cap']),
       price: UPGRADE_PRICES['Agent cap'],
     },
@@ -60,7 +65,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       name: 'Training cap',
       id: 6,
-      value: gameState.trainingCap,
+      value: `${remainingTrainingCap} / ${gameState.trainingCap}`,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training cap']),
       price: UPGRADE_PRICES['Training cap'],
     },
