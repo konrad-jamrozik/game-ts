@@ -67,29 +67,17 @@ describe('Common floating point precision pitfalls', () => {
 })
 
 describe(fmtDiffStr, () => {
-  test('Diff from 0.11% to 0.10% displays as -0.01%', () => {
-    // Current:   fixed6(1160), displayed as 0.11%
-    // Projected: fixed6(1020), displayed as 0.10%
-    // Diff:      fixed6(-140), should be displayed as -0.01%
-    const current = fixed6(1160)
-    const projected = fixed6(1020)
-    const diff = fixed6(projected.value - current.value)
+  // prettier-ignore
+  test.each<[string, number, number, string, string, string]>([
+    ['Diff from 0.11% to 0.10% displays as -0.01%', 1160, 1020, '0.11%', '0.10%', '-0.01%'],
+    ['Diff from 0.11% to 0.09% displays as -0.02%', 1120, 980, '0.11%', '0.09%', '-0.02%'],
+  ])('%s', (_testName, current, projected, currentDisplay, projectedDisplay, expectedDiff) => {
+    const currentF6 = fixed6(current)
+    const projectedF6 = fixed6(projected)
+    const diff = fixed6(projectedF6.value - currentF6.value)
 
-    expect(f6fmtPctDec2(current)).toBe('0.11%')
-    expect(f6fmtPctDec2(projected)).toBe('0.10%')
-    expect(fmtDiffStr(diff)).toBe('-0.01%')
-  })
-
-  test('Diff from 0.11% to 0.09% displays as -0.02%', () => {
-    // Current:   fixed6(1120), displayed as 0.11%
-    // Projected: fixed6(980), displayed as 0.09%
-    // Diff:      fixed6(-140), should be displayed as -0.02%
-    const current = fixed6(1120)
-    const projected = fixed6(980)
-    const diff = fixed6(projected.value - current.value)
-
-    expect(f6fmtPctDec2(current)).toBe('0.11%')
-    expect(f6fmtPctDec2(projected)).toBe('0.09%')
-    expect(fmtDiffStr(diff)).toBe('-0.02%')
+    expect(f6fmtPctDec2(currentF6)).toBe(currentDisplay)
+    expect(f6fmtPctDec2(projectedF6)).toBe(projectedDisplay)
+    expect(fmtDiffStr(diff)).toBe(expectedDiff)
   })
 })
