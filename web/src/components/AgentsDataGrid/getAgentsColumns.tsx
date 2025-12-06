@@ -6,6 +6,7 @@ import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
+import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
@@ -259,13 +260,7 @@ export function getAgentsColumns(
   // Assert default view column width matches expected value
   // Default view shows: id, state, assignment, skill, exhaustion
   const defaultViewFields = new Set(['id', 'state', 'assignment', 'skill', 'exhaustion'])
-  const defaultViewColumns = columns.filter((col) => defaultViewFields.has(col.field))
-  const actualDefaultViewWidth = defaultViewColumns.reduce((sum, col) => sum + (col.width ?? 0), 0)
-  if (actualDefaultViewWidth !== EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH) {
-    throw new Error(
-      `Agents default view columns total width mismatch: expected ${EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH}, got ${actualDefaultViewWidth}`,
-    )
-  }
+  assertColumnWidth(columns, EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH, 'Agents default view', defaultViewFields)
 
   return columns
 }

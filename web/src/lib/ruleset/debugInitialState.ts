@@ -1,5 +1,5 @@
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId } from '../model/model'
+import type { MissionSiteId, LeadInvestigationId } from '../model/model'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { newWeapon } from './weaponRuleset'
@@ -7,7 +7,11 @@ import { newEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
-function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMissionAgentIds: string[] } {
+// eslint-disable-next-line max-lines-per-function
+function buildDebugAgents(
+  missionSiteId: MissionSiteId,
+  deepStateInvestigationId: LeadInvestigationId,
+): { agents: Agent[]; onMissionAgentIds: string[]; deepStateInvestigationAgentIds: string[] } {
   let agentCounter = 0
   function nextId(): string {
     const id = agentCounter.toString().padStart(3, '0')
@@ -164,9 +168,62 @@ function buildDebugAgents(missionSiteId: MissionSiteId): { agents: Agent[]; onMi
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
     }),
+    // 2 agents in training
+    makeAgent({
+      turnHired: 1,
+      state: 'InTraining',
+      assignment: 'Training',
+      skill: toF6(75),
+      exhaustion: 0,
+      hitPoints: toF6(30),
+      maxHitPoints: 30,
+      hitPointsLostBeforeRecovery: toF6(0),
+      missionsTotal: 0,
+    }),
+    makeAgent({
+      turnHired: 1,
+      state: 'InTraining',
+      assignment: 'Training',
+      skill: toF6(90),
+      exhaustion: 3,
+      hitPoints: toF6(30),
+      maxHitPoints: 30,
+      hitPointsLostBeforeRecovery: toF6(0),
+      missionsTotal: 1,
+    }),
+    // 2 agents investigating the deep state lead
+    makeAgent({
+      turnHired: 1,
+      state: 'OnAssignment',
+      assignment: deepStateInvestigationId,
+      skill: toF6(105),
+      exhaustion: 5,
+      hitPoints: toF6(30),
+      maxHitPoints: 30,
+      hitPointsLostBeforeRecovery: toF6(0),
+      missionsTotal: 2,
+    }),
+    makeAgent({
+      turnHired: 1,
+      state: 'OnAssignment',
+      assignment: deepStateInvestigationId,
+      skill: toF6(115),
+      exhaustion: 8,
+      hitPoints: toF6(30),
+      maxHitPoints: 30,
+      hitPointsLostBeforeRecovery: toF6(0),
+      missionsTotal: 3,
+    }),
   ]
 
-  return { agents, onMissionAgentIds }
+  const deepStateInvestigationAgentIds: string[] = []
+  for (const agent of agents) {
+    if (agent.assignment === deepStateInvestigationId) {
+      deepStateInvestigationAgentIds.push(agent.id)
+    }
+  }
+
+  return { agents, onMissionAgentIds, deepStateInvestigationAgentIds }
 }
 
 // Return only the overrides that should replace values in the normal initial state
@@ -181,9 +238,14 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   }
 
   const missionSiteId: MissionSiteId = 'mission-site-000'
+  const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
 
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
-  const { agents: debugAgents, onMissionAgentIds } = buildDebugAgents(missionSiteId)
+  const {
+    agents: debugAgents,
+    onMissionAgentIds,
+    deepStateInvestigationAgentIds,
+  } = buildDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
   const mission = getMissionById('mission-apprehend-red-dawn')
@@ -205,6 +267,18 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
     },
   ]
+
+  // Create lead investigation for deep state lead
+  stateBase.leadInvestigations = {
+    [deepStateInvestigationId]: {
+      id: deepStateInvestigationId,
+      leadId: 'lead-deep-state',
+      accumulatedIntel: 0,
+      agentIds: deepStateInvestigationAgentIds,
+      startTurn: 1,
+      state: 'Active',
+    },
+  }
 
   return stateBase
 }

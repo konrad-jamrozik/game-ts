@@ -4,6 +4,7 @@ import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSite
 import { f6sum, toF } from '../../lib/primitives/fixed6'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { div } from '../../lib/primitives/mathPrimitives'
+import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionsDataGrid'
 
@@ -73,12 +74,7 @@ export function getMissionsColumns(): GridColDef<MissionRow>[] {
     },
   ]
 
-  const actualTotalWidth = columns.reduce((sum, col) => sum + (col.width ?? 0), 0)
-  if (actualTotalWidth !== EXPECTED_TOTAL_COLUMN_WIDTH) {
-    throw new Error(
-      `Missions columns total width mismatch: expected ${EXPECTED_TOTAL_COLUMN_WIDTH}, got ${actualTotalWidth}`,
-    )
-  }
+  assertColumnWidth(columns, EXPECTED_TOTAL_COLUMN_WIDTH, 'Missions')
 
   return columns
 }

@@ -1,5 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
+import { assertColumnWidth } from '../Common/assertColumnWidth'
 import type { LeadRow } from './LeadsDataGrid'
 
 const EXPECTED_TOTAL_COLUMN_WIDTH = 620
@@ -51,12 +52,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
   ]
 
-  const actualTotalWidth = columns.reduce((sum, col) => sum + (col.width ?? 0), 0)
-  if (actualTotalWidth !== EXPECTED_TOTAL_COLUMN_WIDTH) {
-    throw new Error(
-      `Leads columns total width mismatch: expected ${EXPECTED_TOTAL_COLUMN_WIDTH}, got ${actualTotalWidth}`,
-    )
-  }
+  assertColumnWidth(columns, EXPECTED_TOTAL_COLUMN_WIDTH, 'Leads')
 
   return columns
 }
