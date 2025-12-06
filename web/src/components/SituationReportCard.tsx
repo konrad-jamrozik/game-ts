@@ -28,6 +28,11 @@ export function SituationReportCard(): React.JSX.Element {
   const { panic, factions, leadInvestigationCounts } = gameState
 
   const panicPercentage = f6str(panic)
+  // KJA sometimes it displays like that:
+  // Suppression: 0.11%
+  // Projected: 0.10% (-0.02%)
+  // When I advance the turn it is 0.10%.
+  // So the "-0.02%" is wrong. It should be "-0.01%. Why is that?
   const panicProjected = getPanicNewBalance(gameState)
   const panicProjectedStr = f6str(panicProjected)
   const panicDiff = f6sub(panicProjected, panic)

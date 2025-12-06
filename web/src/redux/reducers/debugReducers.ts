@@ -103,4 +103,10 @@ export const debugAddEverything = asPlayerAction((state: GameState) => {
   spawn10Agents(state)
   spawn10Agents(state)
   spawnMissionSites(state)
+  markLeadAsInvestigated(state, 'lead-red-dawn-profile')
 })
+
+function markLeadAsInvestigated(state: GameState, leadId: string): void {
+  const currentCount = state.leadInvestigationCounts[leadId] ?? 0
+  state.leadInvestigationCounts[leadId] = currentCount + 1
+}
