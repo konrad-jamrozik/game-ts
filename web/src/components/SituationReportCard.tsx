@@ -28,11 +28,6 @@ export function SituationReportCard(): React.JSX.Element {
   const { panic, factions, leadInvestigationCounts } = gameState
 
   const panicPercentage = f6str(panic)
-  // KJA sometimes it displays like that:
-  // Suppression: 0.11%
-  // Projected: 0.10% (-0.02%)
-  // When I advance the turn it is 0.10%.
-  // So the "-0.02%" is wrong. It should be "-0.01%. Why is that?
   const panicProjected = getPanicNewBalance(gameState)
   const panicProjectedStr = f6str(panicProjected)
   const panicDiff = f6sub(panicProjected, panic)
@@ -86,8 +81,32 @@ export function SituationReportCard(): React.JSX.Element {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
         const threatLevelDiff = redDawnFaction.threatIncrease
+        // KJA sometimes it displays like that:
+        // Suppression: 0.11%
+        // Projected: 0.10% (-0.02%)
+        // When I advance the turn it is 0.10%.
+        // So the "-0.02%" is wrong. It should be "-0.01%. Why is that?
+
+        // redDawnFaction.suppression {value: 1178, kind: 'Fixed6'}
+        // suppressionProjected {value: 1060, kind: 'Fixed6'}
+        // suppressionDiff {value: -118, kind: 'Fixed6'}
+
+        // Suppression: 0.13%
+        // Projected: 0.11% (-0.01%)
+        // When I advance the turn it is 0.11%.
+        // So the "-0.01%" is wrong. It should be "-0.02%. Why is that?
+        // redDawnFaction.suppression {value: 1454, kind: 'Fixed6'}
+        // suppressionProjected {value: 1309, kind: 'Fixed6'}
+        // suppressionDiff {value: -145, kind: 'Fixed6'}
+        // redDawnFaction.suppression {value: 1309, kind: 'Fixed6'}
+        // suppressionProjected {value: 1178, kind: 'Fixed6'}
+        // suppressionDiff {value: -131, kind: 'Fixed6'}
         const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
         const suppressionDiff = f6sub(suppressionProjected, redDawnFaction.suppression)
+        // Log here current suppression, projected, and diff. The raw fixed6 values
+        console.log('redDawnFaction.suppression', redDawnFaction.suppression)
+        console.log('suppressionProjected', suppressionProjected)
+        console.log('suppressionDiff', suppressionDiff)
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
         const panicIncreaseDiff = f6sub(panicIncreaseProjected, panicIncrease)
         return [
