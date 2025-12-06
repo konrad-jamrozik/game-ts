@@ -4,10 +4,6 @@ KJA backlog:
 
 # Brainstorming
 
-- Debug button for upgrades
-
-- Debug button for everything: agents, upgrades, mission sites, money
-
 - Assign agents to training
 
 - Add stats
