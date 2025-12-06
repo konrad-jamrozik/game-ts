@@ -52,3 +52,9 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
     state.agents.push(newAgent)
   }
 })
+
+export const debugAddCapabilities = asPlayerAction((state: GameState) => {
+  state.agentCap += 100
+  state.transportCap += 100
+  state.trainingCap += 100
+})

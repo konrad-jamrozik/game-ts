@@ -9,6 +9,7 @@ import {
   debugSetAllFactionsSuppressionTo1000Percent,
   debugAddMoney,
   debugSpawn10Agents,
+  debugAddCapabilities,
 } from '../redux/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
@@ -34,6 +35,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugSpawn10Agents())
   }
 
+  function handleAddCapabilities(): void {
+    dispatch(debugAddCapabilities())
+  }
+
   return (
     <ExpandableCard title="Debug" defaultExpanded={true}>
       <Stack spacing={1}>
@@ -51,6 +56,9 @@ export function DebugCard(): React.JSX.Element {
         </Button>
         <Button variant="contained" onClick={handleSpawn10Agents}>
           Spawn 10 agents
+        </Button>
+        <Button variant="contained" onClick={handleAddCapabilities}>
+          Add capabilities
         </Button>
       </Stack>
     </ExpandableCard>

@@ -23,6 +23,7 @@ import {
   debugSetAllFactionsSuppressionTo1000Percent as debugSetAllFactionsSuppressionTo1000PercentReducer,
   debugAddMoney as debugAddMoneyReducer,
   debugSpawn10Agents as debugSpawn10AgentsReducer,
+  debugAddCapabilities as debugAddCapabilitiesReducer,
 } from '../reducers/debugReducers'
 
 // Relevant docs on createSlice:
@@ -50,6 +51,7 @@ const gameStateSlice = createSlice({
     debugSetAllFactionsSuppressionTo1000Percent: debugSetAllFactionsSuppressionTo1000PercentReducer,
     debugAddMoney: debugAddMoneyReducer,
     debugSpawn10Agents: debugSpawn10AgentsReducer,
+    debugAddCapabilities: debugAddCapabilitiesReducer,
   },
 })
 
@@ -71,5 +73,6 @@ export const {
   debugSetAllFactionsSuppressionTo1000Percent,
   debugAddMoney,
   debugSpawn10Agents,
+  debugAddCapabilities,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer
