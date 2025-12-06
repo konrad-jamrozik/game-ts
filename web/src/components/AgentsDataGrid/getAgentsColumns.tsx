@@ -12,16 +12,18 @@ import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 
+const EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH = 640
+
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
-export function createAgentColumns(
+export function getAgentsColumns(
   rows: AgentRow[],
   missionSites: GameState['missionSites'],
   currentTurn: number,
   hitPointsRecoveryPct: Fixed6,
 ): GridColDef[] {
   // Return all columns - visibility will be controlled by filterVisibleAgentColumns
-  return [
+  const columns: GridColDef[] = [
     {
       field: 'id',
       headerName: 'ID',
@@ -253,4 +255,17 @@ export function createAgentColumns(
       },
     },
   ]
+
+  // Assert default view column width matches expected value
+  // Default view shows: id, state, assignment, skill, exhaustion
+  const defaultViewFields = new Set(['id', 'state', 'assignment', 'skill', 'exhaustion'])
+  const defaultViewColumns = columns.filter((col) => defaultViewFields.has(col.field))
+  const actualDefaultViewWidth = defaultViewColumns.reduce((sum, col) => sum + (col.width ?? 0), 0)
+  if (actualDefaultViewWidth !== EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH) {
+    throw new Error(
+      `Agents default view columns total width mismatch: expected ${EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH}, got ${actualDefaultViewWidth}`,
+    )
+  }
+
+  return columns
 }

@@ -1,7 +1,5 @@
 import {
   createRowSelectionManager,
-  type GridColDef,
-  type GridRenderCellParams,
   type GridRowId,
   type GridRowParams,
   type GridRowSelectionModel,
@@ -22,12 +20,12 @@ import {
   setInvestigationSelection,
 } from '../../redux/slices/selectionSlice'
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
-import { fmtNoPrefix, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
-import { MyChip } from '../Common/MyChip'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
+import { getLeadInvestigationsColumns } from './getLeadInvestigationsColumns'
 
 export type LeadInvestigationRow = {
   id: LeadInvestigationId
@@ -57,79 +55,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
 
   const completedThisTurnIds = getCompletedInvestigationIds(turnStartReport)
 
-  const leadInvestigationColumns: GridColDef<LeadInvestigationRow>[] = [
-    { field: 'leadInvestigationTitle', headerName: 'Investigation ID', width: 200 },
-    {
-      field: 'agents',
-      headerName: 'Ag#',
-      width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { agents: activeAgentCount, agentsInTransit } = params.row
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{activeAgentCount}</span>
-            {agentsInTransit > 0 && <MyChip chipValue={`+${agentsInTransit}`} />}
-          </div>
-        )
-      },
-    },
-    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
-    {
-      field: 'successChance',
-      headerName: 'Succ. %',
-      width: 80,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        if (params.row.state === 'Successful') {
-          return <MyChip chipValue="Done" />
-        }
-        if (params.row.state === 'Abandoned') {
-          return <MyChip chipValue="Failed" reverseColor={true} />
-        }
-        return <span>{fmtPctDec2(params.row.successChance)}</span>
-      },
-    },
-    {
-      field: 'intelDecay',
-      headerName: 'Intel decay',
-      width: 140,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intelDecayPct, intelDecay } = params.row
-        return (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: intelDecay > 0 ? 'auto auto auto auto' : 'auto',
-              gap: '5px',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <span style={{ textAlign: 'right' }}>{fmtPctDec2(intelDecayPct)}</span>
-            {intelDecay > 0 && (
-              <>
-                <span style={{ textAlign: 'center' }}>=</span>
-                <MyChip chipValue={-intelDecay} />
-              </>
-            )}
-          </div>
-        )
-      },
-    },
-    {
-      field: 'projectedIntel',
-      headerName: 'Proj. intel',
-      width: 120,
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { projectedIntel, intelDiff } = params.row
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{projectedIntel}</span>
-            {intelDiff !== 0 && <MyChip chipValue={intelDiff} />}
-          </div>
-        )
-      },
-    },
-  ]
+  const leadInvestigationColumns = getLeadInvestigationsColumns()
 
   // Create all rows from investigations
   const allInvestigationRows = buildAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds)

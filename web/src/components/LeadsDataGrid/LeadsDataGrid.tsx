@@ -1,7 +1,5 @@
 import {
   createRowSelectionManager,
-  type GridColDef,
-  type GridRenderCellParams,
   type GridRowId,
   type GridRowParams,
   type GridRowSelectionModel,
@@ -12,6 +10,7 @@ import { leads } from '../../lib/collections/leads'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
+import { getLeadsColumns } from './getLeadsColumns'
 
 export type LeadRow = {
   rowId: number
@@ -78,7 +77,7 @@ export function LeadsDataGrid(): React.JSX.Element {
   // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY non-archived when unchecked
   const rows: LeadRow[] = allRows.filter((row) => (showArchived ? row.isArchived : !row.isArchived))
 
-  const columns = createLeadColumns()
+  const columns = getLeadsColumns()
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -140,54 +139,6 @@ export function LeadsDataGrid(): React.JSX.Element {
       showToolbar
     />
   )
-}
-
-function createLeadColumns(): GridColDef<LeadRow>[] {
-  return [
-    {
-      field: 'id',
-      headerName: 'Lead ID',
-      width: 300,
-      renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
-        <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'difficulty',
-      headerName: 'Difficulty',
-      width: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
-        <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
-      field: 'repeatable',
-      headerName: 'Repeatable',
-      width: 100,
-      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
-      ),
-    },
-    {
-      field: 'investigations',
-      headerName: 'Investigations',
-      width: 120,
-      renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
-        const { activeInvestigationCount, completedInvestigationCount } = params.row
-        if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {
-          return <span aria-label={`leads-row-investigations-${params.id}`}>None</span>
-        }
-        const parts: string[] = []
-        if (activeInvestigationCount > 0) {
-          parts.push(`${activeInvestigationCount} active`)
-        }
-        if (completedInvestigationCount > 0) {
-          parts.push(`${completedInvestigationCount} completed`)
-        }
-        return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
-      },
-    },
-  ]
 }
 
 // Check if a row is disabled (same logic as LeadCard for normal displayMode)

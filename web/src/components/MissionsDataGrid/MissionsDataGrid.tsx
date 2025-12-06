@@ -1,7 +1,5 @@
 import {
   createRowSelectionManager,
-  type GridColDef,
-  type GridRenderCellParams,
   type GridRowId,
   type GridRowParams,
   type GridRowSelectionModel,
@@ -9,22 +7,19 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getMissionById } from '../../lib/collections/missions'
-import { f6sum, toF } from '../../lib/primitives/fixed6'
 import type { MissionSite } from '../../lib/model/model'
 import { clearMissionSelection, setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import {
-  fmtMissionSiteIdWithMissionId,
   getActiveOrDeployedMissionSites,
   getArchivedMissionSites,
   sortActiveOrDeployedMissionSites,
   sortMissionSitesByIdDesc,
 } from '../../lib/model_utils/missionSiteUtils'
-import { fmtDec1, fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import { div } from '../../lib/primitives/mathPrimitives'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedMissionSiteIds } from '../../lib/model_utils/turnReportUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
-import { MyChip } from '../Common/MyChip'
+import { getMissionsColumns } from './getMissionsColumns'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -80,7 +75,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
   const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
 
-  const columns = createMissionColumns()
+  const columns = getMissionsColumns()
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -140,90 +135,4 @@ export function MissionsDataGrid(): React.JSX.Element {
       showToolbar
     />
   )
-}
-
-function createMissionColumns(): GridColDef<MissionRow>[] {
-  return [
-    {
-      field: 'id',
-      headerName: 'Mission site ID',
-      width: 240,
-      renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        const displayValue = fmtMissionSiteIdWithMissionId(params.row)
-        return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
-      },
-    },
-    // {
-    //   field: 'title',
-    //   headerName: 'Title',
-    //   minWidth: 260,
-    //   renderCell: (params: GridRenderCellParams<MissionRow, string>) => (
-    //     <span aria-label={`missions-row-title-${params.id}`}>{params.value}</span>
-    //   ),
-    // },
-    {
-      field: 'state',
-      headerName: 'State',
-      width: 120,
-      renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        if (params.value === 'Successful' || params.value === 'Failed' || params.value === 'Expired') {
-          return (
-            <span aria-label={`missions-row-state-${params.id}`}>
-              <MyChip chipValue={params.value} />
-            </span>
-          )
-        }
-        return <span aria-label={`missions-row-state-${params.id}`}>{params.value}</span>
-      },
-    },
-    {
-      field: 'expiresIn',
-      headerName: 'Expires in',
-      width: 90,
-      renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
-        if (params.row.state === 'Active') {
-          return (
-            <span aria-label={`missions-row-expires-in-${params.id}`}>
-              {params.value === 'never' ? 'Never' : params.value}
-            </span>
-          )
-        }
-        return <span aria-label={`missions-row-expires-in-${params.id}`}>-</span>
-      },
-    },
-    {
-      field: 'enemies',
-      headerName: 'Enemies',
-      width: 80,
-      valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
-      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const enemyCount = getEnemyCount(params.row)
-        return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
-      },
-    },
-    {
-      field: 'avgSkill',
-      headerName: 'Avg. skill',
-      width: 80,
-      valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
-      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const avgSkill = getAverageSkill(params.row)
-        const displayValue = avgSkill === 0 ? '-' : fmtDec1(avgSkill)
-        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
-      },
-    },
-  ]
-}
-
-function getEnemyCount(row: MissionRow): number {
-  return row.enemies.length
-}
-
-function getAverageSkill(row: MissionRow): number {
-  const { enemies } = row
-  if (enemies.length === 0) {
-    return 0
-  }
-  const totalSkill = toF(f6sum(...enemies.map((enemy) => enemy.skill)))
-  return div(totalSkill, enemies.length)
 }

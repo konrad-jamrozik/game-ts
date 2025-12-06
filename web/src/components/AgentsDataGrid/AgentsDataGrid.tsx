@@ -6,7 +6,7 @@ import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selec
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
-import { createAgentColumns } from './createAgentColumns'
+import { getAgentsColumns } from './getAgentsColumns'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -83,7 +83,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  const columns = createAgentColumns(rows, gameState.missionSites, gameState.turn, gameState.hitPointsRecoveryPct)
+  const columns = getAgentsColumns(rows, gameState.missionSites, gameState.turn, gameState.hitPointsRecoveryPct)
   const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
