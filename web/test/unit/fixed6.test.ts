@@ -69,19 +69,23 @@ describe('Common floating point precision pitfalls', () => {
 describe(fmtDiffStr, () => {
   // prettier-ignore
   test.each<[string, number, number, string, string, string]>([
-    ['Diff from 0.25% to 0.27% displays as  0.01% (diff:  298)', 2501, 2799, '0.25%', '0.27%',  '0.02%'],
-    ['Diff from 0.25% to 0.27% displays as  0.01% (diff:  102)', 2599, 2701, '0.25%', '0.27%', ' 0.02%'],
-    ['Diff from 0.25% to 0.26% displays as  0.01% (diff:  100)', 2500, 2600, '0.25%', '0.26%', ' 0.01%'],
+    ['Diff from 0.25% to 0.27% displays as  0.02% (diff:  298)', 2501, 2799, '0.25%', '0.27%',  '0.02%'],
+    ['Diff from 0.25% to 0.27% displays as  0.02% (diff:  102)', 2599, 2701, '0.25%', '0.27%',  '0.02%'],
+    
     ['Diff from 0.25% to 0.26% displays as  0.01% (diff:  198)', 2501, 2699, '0.25%', '0.26%',  '0.01%'],
-    ['Diff from 0.25% to 0.26% displays as  0.01% (diff:    2)', 2599, 2601, '0.25%', '0.26%', ' 0.01%'],
+    ['Diff from 0.25% to 0.26% displays as  0.01% (diff:  100)', 2500, 2600, '0.25%', '0.26%',  '0.01%'],
+    ['Diff from 0.25% to 0.26% displays as  0.01% (diff:    2)', 2599, 2601, '0.25%', '0.26%',  '0.01%'],
+    
     ['Diff from 0.25% to 0.25% displays as  0.00% (diff:   98)', 2501, 2599, '0.25%', '0.25%',  '0.00%'],
+    ['Diff from 0.25% to 0.25% displays as  0.00% (diff:    0)', 2550, 2550, '0.25%', '0.25%',  '0.00%'],
     ['Diff from 0.25% to 0.25% displays as -0.00% (diff:  -98)', 2599, 2501, '0.25%', '0.25%', '-0.00%'],
-    ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -198)', 2599, 2401, '0.25%', '0.24%', '-0.01%'],
+
     ['Diff from 0.25% to 0.24% displays as -0.01% (diff:   -2)', 2501, 2499, '0.25%', '0.24%', '-0.01%'],
-    ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -198)', 2599, 2401, '0.25%', '0.24%', '-0.01%'],
     ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -100)', 2500, 2400, '0.25%', '0.24%', '-0.01%'],
-    ['Diff from 0.25% to 0.23% displays as -0.01% (diff: -102)', 2501, 2399, '0.25%', '0.23%', '-0.02%'],
-    ['Diff from 0.25% to 0.23% displays as -0.01% (diff: -298)', 2599, 2301, '0.25%', '0.23%', '-0.02%'],
+    ['Diff from 0.25% to 0.24% displays as -0.01% (diff: -198)', 2599, 2401, '0.25%', '0.24%', '-0.01%'],
+    
+    ['Diff from 0.25% to 0.23% displays as -0.02% (diff: -102)', 2501, 2399, '0.25%', '0.23%', '-0.02%'],
+    ['Diff from 0.25% to 0.23% displays as -0.02% (diff: -298)', 2599, 2301, '0.25%', '0.23%', '-0.02%'],
     // ['Diff from 0.11% to 0.10% displays as -0.01%', 1160, 1020, '0.11%', '0.10%', '-0.01%'],
     // ['Diff from 0.11% to 0.09% displays as -0.02%', 1120, 980, '0.11%', '0.09%', '-0.02%'],
   ])('%s', (_testName, current, projected, currentDisplay, projectedDisplay, expectedDiff) => {
