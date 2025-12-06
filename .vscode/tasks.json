@@ -50,22 +50,10 @@
 			}
 		},
 		{
-			"label": "Terminal",
-			"type": "shell",
-			"command": "qcheck",
-			"isBackground": true,
-			"presentation": {
-				"reveal": "always",
-				"panel": "new",
-				"close": false
-			}
-		},
-		{
 			"label": "Setup terminals",
 			"dependsOn": [
 				"Dev server",
 				"Test UI",
-				"Terminal"
 			],
 			"dependsOrder": "parallel",
 			"problemMatcher": []
