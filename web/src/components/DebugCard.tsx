@@ -10,6 +10,7 @@ import {
   debugAddMoney,
   debugSpawn10Agents,
   debugAddCapabilities,
+  debugAddEverything,
 } from '../redux/slices/gameStateSlice'
 
 export function DebugCard(): React.JSX.Element {
@@ -39,6 +40,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugAddCapabilities())
   }
 
+  function handleAddEverything(): void {
+    dispatch(debugAddEverything())
+  }
+
   return (
     <ExpandableCard title="Debug" defaultExpanded={true}>
       <Stack spacing={1}>
@@ -59,6 +64,9 @@ export function DebugCard(): React.JSX.Element {
         </Button>
         <Button variant="contained" onClick={handleAddCapabilities}>
           Add capabilities
+        </Button>
+        <Button variant="contained" onClick={handleAddEverything}>
+          Add everything
         </Button>
       </Stack>
     </ExpandableCard>

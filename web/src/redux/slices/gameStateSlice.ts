@@ -12,10 +12,7 @@ import {
   createLeadInvestigation as createLeadInvestigationReducer,
   addAgentsToInvestigation as addAgentsToInvestigationReducer,
 } from '../reducers/leadReducers'
-import {
-  deployAgentsToMission as deployAgentsToMissionReducer,
-  debugSpawnMissionSites as debugSpawnMissionSitesReducer,
-} from '../reducers/missionReducers'
+import { deployAgentsToMission as deployAgentsToMissionReducer } from '../reducers/missionReducers'
 import { buyUpgrade as buyUpgradeReducer } from '../reducers/upgradeReducers'
 import { advanceTurn as advanceTurnReducer, reset as resetReducer } from '../reducers/gameControlsReducers'
 import {
@@ -24,6 +21,8 @@ import {
   debugAddMoney as debugAddMoneyReducer,
   debugSpawn10Agents as debugSpawn10AgentsReducer,
   debugAddCapabilities as debugAddCapabilitiesReducer,
+  debugSpawnMissionSites as debugSpawnMissionSitesReducer,
+  debugAddEverything as debugAddEverythingReducer,
 } from '../reducers/debugReducers'
 
 // Relevant docs on createSlice:
@@ -52,6 +51,7 @@ const gameStateSlice = createSlice({
     debugAddMoney: debugAddMoneyReducer,
     debugSpawn10Agents: debugSpawn10AgentsReducer,
     debugAddCapabilities: debugAddCapabilitiesReducer,
+    debugAddEverything: debugAddEverythingReducer,
   },
 })
 
@@ -74,5 +74,6 @@ export const {
   debugAddMoney,
   debugSpawn10Agents,
   debugAddCapabilities,
+  debugAddEverything,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

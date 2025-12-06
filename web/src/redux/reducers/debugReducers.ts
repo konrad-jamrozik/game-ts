@@ -1,5 +1,6 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
+import type { MissionSite, MissionSiteId } from '../../lib/model/model'
 import { toF6 } from '../../lib/primitives/fixed6'
 import {
   AGENT_INITIAL_EXHAUSTION,
@@ -7,25 +8,16 @@ import {
   AGENT_INITIAL_WEAPON_DAMAGE,
 } from '../../lib/ruleset/constants'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
+import { missions } from '../../lib/collections/missions'
+import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
 
-export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
-  state.panic = toF6(0)
-})
-
-export const debugSetAllFactionsSuppressionTo1000Percent = asPlayerAction((state: GameState) => {
-  // 1000% = 100,000 basis points
-  for (const faction of state.factions) {
-    faction.suppression = toF6(10) // 1000% = 10.0
-  }
-})
-
-export const debugAddMoney = asPlayerAction((state: GameState) => {
+function addMoney(state: GameState): void {
   state.money += 10_000
-})
+}
 
-export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
+function spawn10Agents(state: GameState): void {
   const nextAgentNumericId = state.agents.length
 
   for (let index = 0; index < 10; index += 1) {
@@ -51,10 +43,64 @@ export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
 
     state.agents.push(newAgent)
   }
-})
+}
 
-export const debugAddCapabilities = asPlayerAction((state: GameState) => {
+function addCapabilities(state: GameState): void {
   state.agentCap += 100
   state.transportCap += 100
   state.trainingCap += 100
+}
+
+export function spawnMissionSites(state: GameState): void {
+  for (const mission of missions) {
+    // Invariant: next mission site numeric id is always the current number of mission sites
+    const nextMissionNumericId = state.missionSites.length
+    const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
+    const newMissionSite: MissionSite = {
+      id: missionSiteId,
+      missionId: mission.id,
+      agentIds: [],
+      state: 'Active',
+      expiresIn: mission.expiresIn,
+      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
+    }
+    state.missionSites.push(newMissionSite)
+  }
+}
+
+export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
+  state.panic = toF6(0)
+})
+
+export const debugSetAllFactionsSuppressionTo1000Percent = asPlayerAction((state: GameState) => {
+  // 1000% = 100,000 basis points
+  for (const faction of state.factions) {
+    faction.suppression = toF6(10) // 1000% = 10.0
+  }
+})
+
+export const debugAddMoney = asPlayerAction((state: GameState) => {
+  addMoney(state)
+})
+
+export const debugSpawn10Agents = asPlayerAction((state: GameState) => {
+  spawn10Agents(state)
+})
+
+export const debugAddCapabilities = asPlayerAction((state: GameState) => {
+  addCapabilities(state)
+})
+
+export const debugSpawnMissionSites = asPlayerAction((state: GameState) => {
+  spawnMissionSites(state)
+})
+
+export const debugAddEverything = asPlayerAction((state: GameState) => {
+  addMoney(state)
+  addCapabilities(state)
+  spawn10Agents(state)
+  spawn10Agents(state)
+  spawn10Agents(state)
+  spawn10Agents(state)
+  spawnMissionSites(state)
 })

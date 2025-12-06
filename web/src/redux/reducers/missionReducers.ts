@@ -1,7 +1,5 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../../lib/model/model'
-import { missions } from '../../lib/collections/missions'
-import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
+import type { MissionSiteId } from '../../lib/model/model'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSiteId; agentIds: string[] }>(
@@ -26,20 +24,3 @@ export const deployAgentsToMission = asPlayerAction<{ missionSiteId: MissionSite
     }
   },
 )
-
-export const debugSpawnMissionSites = asPlayerAction((state: GameState) => {
-  for (const mission of missions) {
-    // Invariant: next mission site numeric id is always the current number of mission sites
-    const nextMissionNumericId = state.missionSites.length
-    const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
-    const newMissionSite: MissionSite = {
-      id: missionSiteId,
-      missionId: mission.id,
-      agentIds: [],
-      state: 'Active',
-      expiresIn: mission.expiresIn,
-      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
-    }
-    state.missionSites.push(newMissionSite)
-  }
-})
