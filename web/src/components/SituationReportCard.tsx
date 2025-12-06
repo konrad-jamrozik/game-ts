@@ -4,7 +4,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
-import { f6add, f6fmtPctDec2, f6sub, f4fmtDiffStr } from '../lib/primitives/fixed6'
+import { f6add, f6fmtPctDec2, f6sub, f4fmtPctDec2Diff } from '../lib/primitives/fixed6'
 import { SUPPRESSION_DECAY } from '../lib/ruleset/constants'
 import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/ruleset/panicRuleset'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
@@ -29,7 +29,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPctStr = f6fmtPctDec2(panic)
   const panicProjected = getPanicNewBalance(gameState)
   const panicProjectedStr = f6fmtPctDec2(panicProjected)
-  const panicDiffStr = f4fmtDiffStr(panic, panicProjected)
+  const panicDiffStr = f4fmtPctDec2Diff(panic, panicProjected)
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -79,29 +79,16 @@ export function SituationReportCard(): React.JSX.Element {
     ? (() => {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
-        const threatLevelDiffStr = f4fmtDiffStr(redDawnFaction.threatLevel, threatLevelProjected)
-        // KJA sometimes it displays like that:
-        // Suppression: 0.11%
-        // Projected: 0.10% (-0.02%)
-        // When I advance the turn it is 0.10%.
-        // So the "-0.02%" is wrong. It should be "-0.01%. Why is that?
-
-        // redDawnFaction.suppression {value: 1178, kind: 'Fixed6'}
-        // suppressionProjected {value: 1060, kind: 'Fixed6'}
-        // suppressionDiff {value: -118, kind: 'Fixed6'}
-
-        // redDawnFaction.suppression {value: 1309, kind: 'Fixed6'}
-        // suppressionProjected {value: 1178, kind: 'Fixed6'}
-        // suppressionDiff {value: -131, kind: 'Fixed6'}
+        const threatLevelDiffStr = f4fmtPctDec2Diff(redDawnFaction.threatLevel, threatLevelProjected)
 
         const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
-        const suppressionDiffStr = f4fmtDiffStr(redDawnFaction.suppression, suppressionProjected)
+        const suppressionDiffStr = f4fmtPctDec2Diff(redDawnFaction.suppression, suppressionProjected)
         // Log here current suppression, projected, and diff. The raw fixed6 values
         console.log('redDawnFaction.suppression', redDawnFaction.suppression)
         console.log('suppressionProjected', suppressionProjected)
         console.log('suppressionDiff', f6sub(suppressionProjected, redDawnFaction.suppression))
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiffStr = f4fmtDiffStr(panicIncrease, panicIncreaseProjected)
+        const panicIncreaseDiffStr = f4fmtPctDec2Diff(panicIncrease, panicIncreaseProjected)
         return [
           {
             id: 1,

@@ -330,14 +330,15 @@ export function f6fmtDec2(value: Fixed6): string {
 }
 
 /**
- * Formats the displayed difference between two Fixed6 values as a percentage string.
+ * Formats the displayed difference between two Fixed6 values as a percentage string with 2 decimal places,
+ * e.g. "123.45%".
  *
  * The displayed difference is computed as the difference between the floored
  * display values, not the raw difference. This ensures the formatted diff
  * matches what users see when comparing the displayed current and projected values.
  *
  */
-export function f4fmtDiffStr(prev: Fixed6, succ: Fixed6): string {
+export function f4fmtPctDec2Diff(prev: Fixed6, succ: Fixed6): string {
   const displayUnit = 100 // 0.01% in fixed6 units
   const prevDisplay = floor(prev.value / displayUnit)
   const succDisplay = floor(succ.value / displayUnit)

@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import {
   fixed6,
-  f4fmtDiffStr,
+  f4fmtPctDec2Diff,
   f6fmtPctDec2,
   f6gt,
   f6lt,
@@ -66,7 +66,7 @@ describe('Common floating point precision pitfalls', () => {
   })
 })
 
-describe(f4fmtDiffStr, () => {
+describe(f4fmtPctDec2Diff, () => {
   // prettier-ignore
   test.each<[string, number, number, string, string, string]>([
     // Displayed value change of 200, but diff almost 300
@@ -100,6 +100,6 @@ describe(f4fmtDiffStr, () => {
 
     expect(f6fmtPctDec2(currentF6)).toBe(currentDisplay)
     expect(f6fmtPctDec2(projectedF6)).toBe(projectedDisplay)
-    expect(f4fmtDiffStr(currentF6, projectedF6)).toBe(expectedDiff)
+    expect(f4fmtPctDec2Diff(currentF6, projectedF6)).toBe(expectedDiff)
   })
 })
