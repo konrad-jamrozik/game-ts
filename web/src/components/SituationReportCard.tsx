@@ -4,8 +4,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
-import { f6str } from '../lib/model_utils/formatModelUtils'
-import { f6add, f6sub, type Fixed6 } from '../lib/primitives/fixed6'
+import { f6add, f6fmtPctDec2, f6sub } from '../lib/primitives/fixed6'
 import { SUPPRESSION_DECAY } from '../lib/ruleset/constants'
 import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/ruleset/panicRuleset'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
@@ -19,7 +18,7 @@ export type SituationReportRow = {
   metric: string
   value: string
   projected?: string
-  diff?: number | Fixed6
+  diff?: string
   reverseColor?: boolean
 }
 
@@ -27,10 +26,10 @@ export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
 
-  const panicPercentage = f6str(panic)
+  const panicPctStr = f6fmtPctDec2(panic)
   const panicProjected = getPanicNewBalance(gameState)
-  const panicProjectedStr = f6str(panicProjected)
-  const panicDiff = f6sub(panicProjected, panic)
+  const panicProjectedStr = f6fmtPctDec2(panicProjected)
+  const panicDiffStr = f6fmtPctDec2(f6sub(panicProjected, panic))
 
   const columns: GridColDef[] = [
     { field: 'metric', headerName: 'Metric', minWidth: 120 },
@@ -62,9 +61,9 @@ export function SituationReportCard(): React.JSX.Element {
     {
       id: 1,
       metric: 'Panic',
-      value: panicPercentage,
+      value: panicPctStr,
       projected: panicProjectedStr,
-      diff: panicDiff,
+      diff: panicDiffStr,
       reverseColor: true,
     },
   ]
@@ -80,7 +79,7 @@ export function SituationReportCard(): React.JSX.Element {
     ? (() => {
         const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
         const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
-        const threatLevelDiff = redDawnFaction.threatIncrease
+        const threatLevelDiffStr = f6fmtPctDec2(redDawnFaction.threatIncrease)
         // KJA sometimes it displays like that:
         // Suppression: 0.11%
         // Projected: 0.10% (-0.02%)
@@ -91,45 +90,35 @@ export function SituationReportCard(): React.JSX.Element {
         // suppressionProjected {value: 1060, kind: 'Fixed6'}
         // suppressionDiff {value: -118, kind: 'Fixed6'}
 
-        // Suppression: 0.13%
-        // Projected: 0.11% (-0.01%)
-        // When I advance the turn it is 0.11%.
-        // So the "-0.01%" is wrong. It should be "-0.02%. Why is that?
-        // redDawnFaction.suppression {value: 1454, kind: 'Fixed6'}
-        // suppressionProjected {value: 1309, kind: 'Fixed6'}
-        // suppressionDiff {value: -145, kind: 'Fixed6'}
-        // redDawnFaction.suppression {value: 1309, kind: 'Fixed6'}
-        // suppressionProjected {value: 1178, kind: 'Fixed6'}
-        // suppressionDiff {value: -131, kind: 'Fixed6'}
         const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
-        const suppressionDiff = f6sub(suppressionProjected, redDawnFaction.suppression)
+        const suppressionDiffStr = f6fmtPctDec2(f6sub(suppressionProjected, redDawnFaction.suppression))
         // Log here current suppression, projected, and diff. The raw fixed6 values
         console.log('redDawnFaction.suppression', redDawnFaction.suppression)
         console.log('suppressionProjected', suppressionProjected)
-        console.log('suppressionDiff', suppressionDiff)
+        console.log('suppressionDiff', suppressionDiffStr)
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiff = f6sub(panicIncreaseProjected, panicIncrease)
+        const panicIncreaseDiffStr = f6fmtPctDec2(f6sub(panicIncreaseProjected, panicIncrease))
         return [
           {
             id: 1,
             metric: 'Threat level',
-            value: f6str(redDawnFaction.threatLevel),
-            projected: f6str(threatLevelProjected),
-            diff: threatLevelDiff,
+            value: f6fmtPctDec2(redDawnFaction.threatLevel),
+            projected: f6fmtPctDec2(threatLevelProjected),
+            diff: threatLevelDiffStr,
             reverseColor: true,
           },
           {
             id: 2,
             metric: 'Threat increase',
-            value: f6str(redDawnFaction.threatIncrease),
+            value: f6fmtPctDec2(redDawnFaction.threatIncrease),
             reverseColor: true,
           },
           {
             id: 3,
             metric: 'Suppression',
-            value: f6str(redDawnFaction.suppression),
-            projected: f6str(suppressionProjected),
-            diff: suppressionDiff,
+            value: f6fmtPctDec2(redDawnFaction.suppression),
+            projected: f6fmtPctDec2(suppressionProjected),
+            diff: suppressionDiffStr,
           },
           {
             id: 4,
@@ -139,9 +128,9 @@ export function SituationReportCard(): React.JSX.Element {
           {
             id: 5,
             metric: 'Panic increase',
-            value: f6str(panicIncrease),
-            projected: f6str(panicIncreaseProjected),
-            diff: panicIncreaseDiff,
+            value: f6fmtPctDec2(panicIncrease),
+            projected: f6fmtPctDec2(panicIncreaseProjected),
+            diff: panicIncreaseDiffStr,
             reverseColor: true,
           },
         ]
