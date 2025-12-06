@@ -83,10 +83,6 @@ export function SituationReportCard(): React.JSX.Element {
 
         const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
         const suppressionDiffStr = f4fmtPctDec2Diff(redDawnFaction.suppression, suppressionProjected)
-        // Log here current suppression, projected, and diff. The raw fixed6 values
-        console.log('redDawnFaction.suppression', redDawnFaction.suppression)
-        console.log('suppressionProjected', suppressionProjected)
-        console.log('suppressionDiff', f6sub(suppressionProjected, redDawnFaction.suppression))
         const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
         const panicIncreaseDiffStr = f4fmtPctDec2Diff(panicIncrease, panicIncreaseProjected)
         return [
