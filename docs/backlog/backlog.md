@@ -2,25 +2,40 @@
 
 KJA backlog:
 
-# Brainstorming
+# P0 Game mechanics
 
-- Add stats
-  - Combat stats (Killed / Damage Inflicted / Damage Taken)
-    - Column names: "Kills", "Damage", "Wounds"
-  - Skill: Total / from missions / from training
-    - Colum name: "Skill (Mis/Trn)"
+- Funding increase reward for missions
+
+- Funding penalty for expired missions
 
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
   - Unlocking all HQ raids leads should unlock the final "game victory" lead
   - Researching that lead should win the game.
 
-- Add to assets: Agent weapon damage range min-max
-  - make buying training skill gain and health recov. % fractional
+# P1 Game mechanics
 
-- Funding increase reward for missions
+- Add AI player that can play the game for me
 
-- Funding penalty for expired missions
+- Enemy factions should generate missions themselves that player must counter to avoid penalties
+  - Offensive missions like "Red dawn terror" or "Red dawn assault" where someone called for help
+
+- Make each repeatable lead be investigated only once at a time.
+  - Make even allow one lead per faction at a time.
+
+- Interrogating captured enemies should provide bonus towards various lead investigations.
+  - Intel lump sum.
+  - What if there is currently no eligible lead investigation?
+    - Maybe decrease lead difficulty by some amount?
+
+- Accumulated generic intel ideas:
+  - Spend to discover enemy offensive missions faster
+  - Spend to reveal more details about existing mission sites
+  - Spend to give combat bonus to player's agents on missions
+  - It decays same as lead investigation intel
+- See also `2025-11-19 Intel ideas`
+
+# P0 UI refinement
 
 - Add "Details" button to completed missions that show the combat log
 - For combat reports, add dedicated data grid with columns same as console.log i.e.:
@@ -31,30 +46,35 @@ KJA backlog:
   - damage inflicted (if any) & % of weapon range & min & max
   - hit points remaining & percentage of total & total
 
-- Make each repeatable lead be investigated only once at a time.
-  - Make even allow one lead per faction at a time.
+- Add to assets: Agent weapon damage range min-max
+  - make buying training skill gain and health recov. % fractional
 
-- Interrogating captured enemies should provide bonus towards various lead investigations.
-  - Intel lump sum.
-  - What if there is currently no eligible lead investigation?
-    - Maybe decrease lead difficulty by some amount?
+# P1 UI refinement
+
+- Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
+
+- Add stats
+  - Combat stats (Killed / Damage Inflicted / Damage Taken)
+    - Column names: "Kills", "Damage", "Wounds"
+  - Skill: Total / from missions / from training
+    - Colum name: "Skill (Mis/Trn)"
+
+# P2 UI refinement
+
+- Charts for stats over time, at the bottom of the screen.
+  - Panic
+  - Each faction threat level, suppression, panic increase
+  - Money
+  - Cumulative missions completed successfully, failed, expired
+  - Hardest mission completed by total enemy skill
+  - Agents, and what they do: contracting, investigating leads, on missions, etc.
+  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+
+# P0 Game content
 
 - Add more factions
 
-- Add AI player that can play the game for me
-
-- Enemy factions should generate missions themselves that player must counter to avoid penalties
-  - Offensive missions like "Red dawn terror" or "Red dawn assault" where someone called for help
-
-- Accumulated generic intel ideas:
-  - Spend to discover enemy offensive missions faster
-  - Spend to reveal more details about existing mission sites
-  - Spend to give combat bonus to player's agents on missions
-  - It decays same as lead investigation intel
-
-# Game mechanics
-
-# Domain model
+# Domain model refactoring
 
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
   do it the same way as `agentUtils`
@@ -70,8 +90,7 @@ KJA backlog:
   - Situation (panic, faction threats, active missions, deployed missions)
   - Assets (money, intel, agents)
   - Archive (events, mission results)
-- migrate MissionSiteUtils to MissionSitesView
-- all cases of usage of `assertDefined` should be allowed only inside domain model collections like AgentsView.
+- all cases of usage of `assertDefined` should be allowed only inside domain model collections.
   Because all other places should not return undefined, so no need to use it.
   In case of finding single item, it will basically become dotnet .Single()
 
@@ -89,24 +108,6 @@ KJA backlog:
 - In tests, need a helper that does both `expect(X).toDefined()` and `assertDefined(X)`
 
 # UI improvements
-
-- Charts for stats over time, at the bottom of the screen.
-  - Panic
-  - Each faction threat level, suppression, panic increase
-  - Money
-  - Cumulative missions completed successfully, failed, expired
-  - Hardest mission completed by total enemy skill
-  - Agents, and what they do: contracting, investigating leads, on missions, etc.
-  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
-
-- Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
-
-# UI ideas
-
-- for mission evaluation, idea for a table: columns are combat rounds, and rows are units. Each cell tells what
-  interesting happened to that unit in that round.
-  E.g. Both damage inflicted and taken. Also units terminated and when terminated itself.
-  Cell background gradient may denote % of original effective skill.
 
 # Performance Optimizations
 
