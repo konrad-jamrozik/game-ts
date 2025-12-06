@@ -47,8 +47,8 @@ export function DebugCard(): React.JSX.Element {
   return (
     <ExpandableCard title="Debug" defaultExpanded={true}>
       <Stack spacing={1}>
-        <Button variant="contained" onClick={handleSpawnMissionSites}>
-          Spawn mission sites
+        <Button variant="contained" onClick={handleAddEverything}>
+          Add everything
         </Button>
         <Button variant="contained" onClick={handleSetPanicToZero}>
           Set panic to zero
@@ -59,14 +59,14 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleAddMoney}>
           Add 10000 money
         </Button>
+        <Button variant="contained" onClick={handleAddCapabilities}>
+          Add 100 to cap capabilities
+        </Button>
         <Button variant="contained" onClick={handleSpawn10Agents}>
           Spawn 10 agents
         </Button>
-        <Button variant="contained" onClick={handleAddCapabilities}>
-          Add capabilities
-        </Button>
-        <Button variant="contained" onClick={handleAddEverything}>
-          Add everything
+        <Button variant="contained" onClick={handleSpawnMissionSites}>
+          Spawn mission sites
         </Button>
       </Stack>
     </ExpandableCard>
