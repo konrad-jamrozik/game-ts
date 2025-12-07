@@ -262,12 +262,11 @@ function verifyMoneyCurrentValueIsNegative(): number {
  */
 async function step10AdvanceTurnToGameOver(): Promise<void> {
   // After hiring multiple agents, the balance is low enough that
-  // after advancing turns twice, agent upkeep costs will make money negative and trigger game over
-  await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+  // after advancing turn once, agent upkeep costs will make money negative and trigger game over
   await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
 
   const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
-  expect(turnValueAfterGameOver).toHaveTextContent('4')
+  expect(turnValueAfterGameOver).toHaveTextContent('3')
 
   const currentMoneyValue = getCurrentMoneyValue()
   // If money is still above zero, advance turn one more time
