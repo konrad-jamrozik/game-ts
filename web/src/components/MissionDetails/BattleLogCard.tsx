@@ -3,6 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
+import { MyChip } from '../Common/MyChip'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
@@ -51,7 +52,10 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     {
       field: 'status',
       headerName: 'Status',
-      width: 90,
+      width: 100,
+      renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
+        <MyChip chipValue={params.row.status} />
+      ),
     },
     {
       field: 'agentCount',
@@ -135,7 +139,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 50 + 90 + 70 + 150 + 140 + 70 + 150 + 140 + 60 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 100 + 70 + 150 + 140 + 70 + 150 + 140 + 60 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
