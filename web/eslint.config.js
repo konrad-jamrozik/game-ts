@@ -169,9 +169,9 @@ export default plugTypescriptEslint.config([
       // console is used for debugging
       // https://eslint.org/docs/latest/rules/no-console
       'no-console': 'off',
-      // https://eslint.org/docs/latest/rules/max-statements
       // Turned off as it just confuses AI agents
       //'max-statements': ['error', { max: 50 }],
+      // https://eslint.org/docs/latest/rules/max-statements
       'max-statements': 'off',
       // https://eslint.org/docs/latest/rules/func-style
       'func-style': [
@@ -234,6 +234,10 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/default-case
       'default-case': 'off',
 
+      // Turned off as it just confuses AI agents
+      // https://eslint.org/docs/latest/rules/complexity
+      complexity: 'off',
+
       // [ts-eslint] configs
       // --------------------
       // https://typescript-eslint.io/rules/no-magic-numbers/
@@ -281,8 +285,10 @@ export default plugTypescriptEslint.config([
       // https://typescript-eslint.io/rules/no-use-before-define/
       '@typescript-eslint/no-use-before-define': 'off',
       // Allow up to 8 parameters in a function.
+      // Turned off as it just confuses AI agents
+      // '@typescript-eslint/max-params': ['error', { max: 8 }],
       // https://typescript-eslint.io/rules/max-params/
-      '@typescript-eslint/max-params': ['error', { max: 8 }],
+      '@typescript-eslint/max-params': 'off',
       // I am allowing IIFEs to allow defining reusable values in ternary operations, e.g.:
       //
       //   const result =
