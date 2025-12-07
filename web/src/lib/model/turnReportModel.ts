@@ -133,6 +133,43 @@ export type MissionReport = {
   battleStats: BattleStats
 }
 
+export type RoundLog = {
+  roundNumber: number
+  status: 'Ongoing' | 'Retreated' | 'Won' | 'Lost'
+  agentCount: number
+  agentCountTotal: number
+  agentSkill: Fixed6
+  agentSkillTotal: Fixed6
+  agentHp: number
+  agentHpTotal: number
+  enemyCount: number
+  enemyCountTotal: number
+  enemySkill: Fixed6
+  enemySkillTotal: Fixed6
+  enemyHp: number
+  enemyHpTotal: number
+  skillRatio: Fixed6
+}
+
+export type AttackLog = {
+  roundNumber: number
+  agentId: string
+  enemyId: string
+  attackerType: 'Agent' | 'Enemy'
+  attackerSkill: Fixed6
+  attackerSkillAtStart: Fixed6
+  defenderSkill: Fixed6
+  defenderSkillAtStart: Fixed6
+  roll: number
+  threshold: number
+  outcome: 'Hit' | 'Miss' | 'Terminate'
+  damage: number | undefined
+  damageMin: number
+  damageMax: number
+  defenderHp: number
+  defenderHpMax: number
+}
+
 export type BattleStats = {
   agentsDeployed: number
   agentsUnscathed: number
@@ -150,6 +187,8 @@ export type BattleStats = {
   totalDamageTaken: number
   totalAgentSkillGain: Fixed6
   averageAgentExhaustionGain: number
+  roundLogs: RoundLog[]
+  attackLogs: AttackLog[]
 }
 
 export type LeadInvestigationReport = {

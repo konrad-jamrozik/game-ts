@@ -19,11 +19,12 @@ import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../ruleset/constants'
 import { shouldRetreat, type RetreatResult } from '../../ruleset/missionRuleset'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
-import { assertNotEmpty } from '../../primitives/assertPrimitives'
+import { assertDefined, assertNotEmpty } from '../../primitives/assertPrimitives'
 import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { evaluateAttack } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
+import type { RoundLog, AttackLog } from '../../model/turnReportModel'
 
 export type BattleReport = {
   rounds: number
@@ -43,6 +44,8 @@ export type BattleReport = {
   agentExhaustionAfterBattle: number
   agentsWounded: number
   agentsUnscathed: number
+  roundLogs: RoundLog[]
+  attackLogs: AttackLog[]
 }
 
 export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport {
@@ -70,12 +73,29 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const initialAgentHitPointsMap = new Map<string, Fixed6>(agents.map((agent) => [agent.id, agent.hitPoints]))
   const initialEnemyHitPointsMap = new Map<string, Fixed6>(enemies.map((enemy) => [enemy.id, enemy.hitPoints]))
 
+  // Track initial enemy effective skills (similar to agentStats for agents)
+  const initialEnemyEffectiveSkillMap = new Map<string, Fixed6>(
+    enemies.map((enemy) => [enemy.id, effectiveSkill(enemy)]),
+  )
+
+  const roundLogs: RoundLog[] = []
+  const attackLogs: AttackLog[] = []
+
   let roundIdx = 0
   let retreated = false
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let battleEnded: boolean
   do {
     roundIdx += 1
+
+    // Capture round state at start of round (before combat)
+    const activeAgentsAtRoundStart = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)))
+    const activeEnemiesAtRoundStart = enemies.filter((enemy) => f6gt(enemy.hitPoints, toF6(0)))
+    const agentSkillAtRoundStart = f6sum(...activeAgentsAtRoundStart.map((agent) => effectiveSkill(agent)))
+    const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
+    const enemySkillAtRoundStart = f6sum(...activeEnemiesAtRoundStart.map((enemy) => effectiveSkill(enemy)))
+    const enemyHpAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => toF(enemy.hitPoints))
+    const skillRatioAtRoundStart = f6div(enemySkillAtRoundStart, agentSkillAtRoundStart)
 
     // Show round status with detailed statistics
     showRoundStatus(
@@ -87,7 +107,9 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
       initialEnemySkill,
       initialEnemyHitPoints,
     )
-    evaluateCombatRound(agents, agentStats, enemies)
+
+    const roundAttackLogs = evaluateCombatRound(agents, agentStats, enemies, initialEnemyEffectiveSkillMap, roundIdx)
+    attackLogs.push(...roundAttackLogs)
 
     const sideEliminated = isSideEliminated(agents, enemies)
     if (!sideEliminated) {
@@ -98,6 +120,37 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
       }
     }
     battleEnded = sideEliminated || retreated
+
+    // Determine round status
+    let roundStatus: 'Ongoing' | 'Retreated' | 'Won' | 'Lost' = 'Ongoing'
+    if (battleEnded) {
+      if (retreated) {
+        roundStatus = 'Retreated'
+      } else {
+        const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
+        roundStatus = allAgentsTerminated ? 'Lost' : 'Won'
+      }
+    }
+
+    // Create round log entry
+    const roundLog: RoundLog = {
+      roundNumber: roundIdx,
+      status: roundStatus,
+      agentCount: activeAgentsAtRoundStart.length,
+      agentCountTotal: agents.length,
+      agentSkill: agentSkillAtRoundStart,
+      agentSkillTotal: initialAgentEffectiveSkill,
+      agentHp: agentHpAtRoundStart,
+      agentHpTotal: initialAgentHitPoints,
+      enemyCount: activeEnemiesAtRoundStart.length,
+      enemyCountTotal: enemies.length,
+      enemySkill: enemySkillAtRoundStart,
+      enemySkillTotal: initialEnemySkill,
+      enemyHp: enemyHpAtRoundStart,
+      enemyHpTotal: initialEnemyHitPoints,
+      skillRatio: skillRatioAtRoundStart,
+    }
+    roundLogs.push(roundLog)
 
     // Battle continues until one side is eliminated or agents retreat
   } while (!battleEnded)
@@ -175,6 +228,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     agentExhaustionAfterBattle: 0, // Will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
     agentsWounded: 0, // Will be set in updateAgentsAfterBattle
     agentsUnscathed: 0, // Will be set in updateAgentsAfterBattle
+    roundLogs,
+    attackLogs,
   }
 }
 
@@ -209,7 +264,15 @@ function logRetreat(retreatResult: RetreatResult): void {
   )
 }
 
-function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): void {
+function evaluateCombatRound(
+  agents: Agent[],
+  agentStats: AgentCombatStats[],
+  enemies: Enemy[],
+  initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
+  roundNumber: number,
+): AttackLog[] {
+  const attackLogs: AttackLog[] = []
+
   // Track attack counts per target for fair distribution
   const enemyAttackCounts = new Map<string, number>()
   const agentAttackCounts = new Map<string, number>()
@@ -243,8 +306,22 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
       const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
+        assertDefined(attackerStats)
+        const attackerSkillAtStart = attackerStats.initialEffectiveSkill
+        const defenderSkillAtStart = initialEnemyEffectiveSkillMap.get(target.id) ?? toF6(0)
         const currentAttackCount = enemyAttackCounts.get(target.id) ?? 0
-        evaluateAttack(agent, attackerStats, target, undefined, 'agent_attack_roll', currentAttackCount + 1)
+        const attackLog = evaluateAttack(
+          agent,
+          attackerStats,
+          target,
+          undefined,
+          attackerSkillAtStart,
+          defenderSkillAtStart,
+          roundNumber,
+          'agent_attack_roll',
+          currentAttackCount + 1,
+        )
+        attackLogs.push(attackLog)
         // Increment attack count for this enemy
         enemyAttackCounts.set(target.id, currentAttackCount + 1)
       }
@@ -264,13 +341,29 @@ function evaluateCombatRound(agents: Agent[], agentStats: AgentCombatStats[], en
       const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
+        assertDefined(defenderStats)
+        const attackerSkillAtStart = initialEnemyEffectiveSkillMap.get(enemy.id) ?? toF6(0)
+        const defenderSkillAtStart = defenderStats.initialEffectiveSkill
         const currentAttackCount = agentAttackCounts.get(target.id) ?? 0
-        evaluateAttack(enemy, undefined, target, defenderStats, 'enemy_attack_roll', currentAttackCount + 1)
+        const attackLog = evaluateAttack(
+          enemy,
+          undefined,
+          target,
+          defenderStats,
+          attackerSkillAtStart,
+          defenderSkillAtStart,
+          roundNumber,
+          'enemy_attack_roll',
+          currentAttackCount + 1,
+        )
+        attackLogs.push(attackLog)
         // Increment attack count for this agent
         agentAttackCounts.set(target.id, currentAttackCount + 1)
       }
     }
   }
+
+  return attackLogs
 }
 
 function showRoundStatus(

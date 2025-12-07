@@ -8,7 +8,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../../ruleset/constants'
-import { f6add, toF, toF6, f6sub, f6max, f6gt } from '../../primitives/fixed6'
+import { f6add, toF, toF6, f6sub, f6max, f6gt, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { fmtAttackLog, type AttackLogKind } from './fmtAttackLog'
@@ -16,18 +16,24 @@ import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
 import { rollContest } from '../../primitives/rolls'
 import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
+import type { AttackLog } from '../../model/turnReportModel'
 
 export function evaluateAttack(
   attacker: Agent | Enemy,
   attackerStats: AgentCombatStats | undefined,
   defender: Agent | Enemy,
-  defenderStats?: AgentCombatStats,
+  defenderStats: AgentCombatStats | undefined,
+  attackerSkillAtStart: Fixed6,
+  defenderSkillAtStart: Fixed6,
+  roundNumber: number,
   label?: string,
   attackCount = 0,
-): void {
+): AttackLog {
   // Calculate effective skills
-  const attackerEffectiveSkill = toF(effectiveSkill(attacker))
-  const defenderEffectiveSkill = toF(effectiveSkill(defender))
+  const attackerEffectiveSkill = effectiveSkill(attacker)
+  const defenderEffectiveSkill = effectiveSkill(defender)
+  const attackerEffectiveSkillNum = toF(attackerEffectiveSkill)
+  const defenderEffectiveSkillNum = toF(defenderEffectiveSkill)
 
   if (isAgent(attacker)) {
     assertDefined(attackerStats)
@@ -38,7 +44,7 @@ export function evaluateAttack(
   }
 
   // Contest roll
-  const rollResult = rollContest(attackerEffectiveSkill, defenderEffectiveSkill, label)
+  const rollResult = rollContest(attackerEffectiveSkillNum, defenderEffectiveSkillNum, label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
@@ -47,6 +53,18 @@ export function evaluateAttack(
   const defenderName = defender.id
   const attackerIsAgent = isAgent(attacker)
   const defenderIsAgent = isAgent(defender)
+
+  // Extract agent/enemy IDs for AttackLog
+  const agentId = attackerIsAgent ? attacker.id : defender.id
+  const enemyId = attackerIsAgent ? defender.id : attacker.id
+
+  // Calculate roll percentage and threshold
+  const rollPct = toF(rollResult.rollF4) * 100
+  const thresholdPct = toF(rollResult.failureProbF4) * 100
+
+  // oxlint-disable-next-line init-declarations
+  // eslint-disable-next-line @typescript-eslint/init-declarations
+  let attackLog: AttackLog
 
   if (rollResult.success) {
     // Successful attack - roll damage
@@ -80,9 +98,9 @@ export function evaluateAttack(
         fmtAttackLog({
           kind,
           attackerName,
-          attackerEffectiveSkill,
+          attackerEffectiveSkill: attackerEffectiveSkillNum,
           defenderName,
-          defenderEffectiveSkill,
+          defenderEffectiveSkill: defenderEffectiveSkillNum,
           defenderIsAgent,
           rollResult,
           attackCount,
@@ -90,6 +108,25 @@ export function evaluateAttack(
           hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
+
+      attackLog = {
+        roundNumber,
+        agentId,
+        enemyId,
+        attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
+        attackerSkill: attackerEffectiveSkill,
+        attackerSkillAtStart,
+        defenderSkill: defenderEffectiveSkill,
+        defenderSkillAtStart,
+        roll: rollPct,
+        threshold: thresholdPct,
+        outcome: 'Terminate',
+        damage,
+        damageMin: attacker.weapon.minDamage,
+        damageMax: attacker.weapon.maxDamage,
+        defenderHp: 0,
+        defenderHpMax: defender.maxHitPoints,
+      }
     } else {
       const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
       const hpPct = fmtPctDec0(toF(defender.hitPoints), defender.maxHitPoints)
@@ -97,9 +134,9 @@ export function evaluateAttack(
         fmtAttackLog({
           kind,
           attackerName,
-          attackerEffectiveSkill,
+          attackerEffectiveSkill: attackerEffectiveSkillNum,
           defenderName,
-          defenderEffectiveSkill,
+          defenderEffectiveSkill: defenderEffectiveSkillNum,
           defenderIsAgent,
           rollResult,
           attackCount,
@@ -107,6 +144,25 @@ export function evaluateAttack(
           hpRemainingInfo: { current: toF(defender.hitPoints), max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
+
+      attackLog = {
+        roundNumber,
+        agentId,
+        enemyId,
+        attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
+        attackerSkill: attackerEffectiveSkill,
+        attackerSkillAtStart,
+        defenderSkill: defenderEffectiveSkill,
+        defenderSkillAtStart,
+        roll: rollPct,
+        threshold: thresholdPct,
+        outcome: 'Hit',
+        damage,
+        damageMin: attacker.weapon.minDamage,
+        damageMax: attacker.weapon.maxDamage,
+        defenderHp: toF(defender.hitPoints),
+        defenderHpMax: defender.maxHitPoints,
+      }
     }
 
     // Apply defender exhaustion only if not terminated
@@ -120,9 +176,9 @@ export function evaluateAttack(
       fmtAttackLog({
         kind,
         attackerName,
-        attackerEffectiveSkill,
+        attackerEffectiveSkill: attackerEffectiveSkillNum,
         defenderName,
-        defenderEffectiveSkill,
+        defenderEffectiveSkill: defenderEffectiveSkillNum,
         defenderIsAgent,
         rollResult,
         attackCount,
@@ -139,5 +195,26 @@ export function evaluateAttack(
 
     // Apply defender exhaustion (both agents and enemies)
     defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
+
+    attackLog = {
+      roundNumber,
+      agentId,
+      enemyId,
+      attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
+      attackerSkill: attackerEffectiveSkill,
+      attackerSkillAtStart,
+      defenderSkill: defenderEffectiveSkill,
+      defenderSkillAtStart,
+      roll: rollPct,
+      threshold: thresholdPct,
+      outcome: 'Miss',
+      damage: undefined,
+      damageMin: attacker.weapon.minDamage,
+      damageMax: attacker.weapon.maxDamage,
+      defenderHp: toF(defender.hitPoints),
+      defenderHpMax: defender.maxHitPoints,
+    }
   }
+
+  return attackLog
 }

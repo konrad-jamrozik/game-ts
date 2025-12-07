@@ -61,8 +61,8 @@ export function MissionDetailsScreen(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <BattleLogCard />
-          <CombatLogCard />
+          <BattleLogCard missionSiteId={viewMissionDetailsId} />
+          <CombatLogCard missionSiteId={viewMissionDetailsId} />
         </Stack>
       </Grid>
     </Grid>

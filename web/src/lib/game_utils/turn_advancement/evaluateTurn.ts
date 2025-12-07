@@ -209,6 +209,8 @@ function evaluateDeployedMissionSites(state: GameState): {
         totalDamageInflicted,
         totalDamageTaken,
         rounds,
+        roundLogs,
+        attackLogs,
       } = battleReport
 
       // Determine mission outcome
@@ -263,6 +265,8 @@ function evaluateDeployedMissionSites(state: GameState): {
         totalDamageTaken,
         totalAgentSkillGain,
         averageAgentExhaustionGain,
+        roundLogs,
+        attackLogs,
       }
 
       const missionReport: MissionReport = {
