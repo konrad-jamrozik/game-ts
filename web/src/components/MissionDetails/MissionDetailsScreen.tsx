@@ -12,12 +12,29 @@ export function MissionDetailsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const viewMissionDetailsId = useAppSelector((state) => state.selection.viewMissionDetailsId)
 
+  const handleBackClick = React.useCallback((): void => {
+    dispatch(clearViewMissionDetails())
+  }, [dispatch])
+
+  React.useEffect(() => {
+    if (viewMissionDetailsId === undefined) {
+      return
+    }
+
+    function handleKeyDown(event: KeyboardEvent): void {
+      if (event.key === 'Escape') {
+        handleBackClick()
+      }
+    }
+
+    globalThis.addEventListener('keydown', handleKeyDown)
+    return (): void => {
+      globalThis.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [viewMissionDetailsId, handleBackClick])
+
   if (viewMissionDetailsId === undefined) {
     return <div>No mission selected</div>
-  }
-
-  function handleBackClick(): void {
-    dispatch(clearViewMissionDetails())
   }
 
   return (
