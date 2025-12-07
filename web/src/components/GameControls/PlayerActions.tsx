@@ -1,12 +1,10 @@
 import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { getLeadById } from '../../lib/collections/leads'
 import {
@@ -284,10 +282,8 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   return (
-    <Card sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
-      <CardHeader title="Player Actions" />
-      <CardContent>
-        <Stack direction="column" spacing={2}>
+    <ExpandableCard title="Player Actions" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+      <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={handleHireAgent} fullWidth>
               Hire Agent
@@ -346,7 +342,6 @@ export function PlayerActions(): React.JSX.Element {
             </Alert>
           </Collapse>
         </Stack>
-      </CardContent>
-    </Card>
+    </ExpandableCard>
   )
 }

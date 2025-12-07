@@ -1,12 +1,10 @@
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import List from '@mui/material/List'
 import ListItem from '@mui/material/ListItem'
 import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../redux/hooks'
+import { ExpandableCard } from './Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
@@ -53,47 +51,38 @@ export function EventLog(): React.JSX.Element {
   })
 
   return (
-    <React.Fragment>
-      <Card
-        sx={{
-          width: LEFT_COLUMN_CARD_WIDTH,
-        }}
-      >
-        <CardHeader title="Event Log" />
-        <CardContent>
-          {visibleEvents.length === 0 ? (
-            <Typography variant="body2" color="text.secondary">
-              No events yet
-            </Typography>
-          ) : (
-            <List dense>
-              {visibleEvents.map((event: GameEvent) => (
-                <ListItem key={event.id} disablePadding>
-                  <ListItemText
-                    primary={renderPrimaryListItemText(event)}
-                    secondary={`T ${event.turn} / A ${event.actionsCount}`}
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      px: 2,
-                    }}
-                    slotProps={{
-                      primary: {
-                        component: 'span',
-                      },
-                      secondary: {
-                        component: 'span',
-                        sx: { marginLeft: 2, flexShrink: 0 },
-                      },
-                    }}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          )}
-        </CardContent>
-      </Card>
-    </React.Fragment>
+    <ExpandableCard title="Event Log" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+      {visibleEvents.length === 0 ? (
+        <Typography variant="body2" color="text.secondary">
+          No events yet
+        </Typography>
+      ) : (
+        <List dense>
+          {visibleEvents.map((event: GameEvent) => (
+            <ListItem key={event.id} disablePadding>
+              <ListItemText
+                primary={renderPrimaryListItemText(event)}
+                secondary={`T ${event.turn} / A ${event.actionsCount}`}
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  px: 2,
+                }}
+                slotProps={{
+                  primary: {
+                    component: 'span',
+                  },
+                  secondary: {
+                    component: 'span',
+                    sx: { marginLeft: 2, flexShrink: 0 },
+                  },
+                }}
+              />
+            </ListItem>
+          ))}
+        </List>
+      )}
+    </ExpandableCard>
   )
 }

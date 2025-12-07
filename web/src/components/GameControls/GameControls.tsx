@@ -1,7 +1,4 @@
 import Button from '@mui/material/Button'
-import Card from '@mui/material/Card'
-import CardContent from '@mui/material/CardContent'
-import CardHeader from '@mui/material/CardHeader'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
@@ -9,6 +6,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
+import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
 import { toF6, f6ge } from '../../lib/primitives/fixed6'
@@ -37,60 +35,53 @@ export function GameControls(): React.JSX.Element {
 
   const labelWidthPx = 110
   return (
-    <Card
-      sx={{
-        width: LEFT_COLUMN_CARD_WIDTH,
-      }}
-    >
-      <CardHeader title="Game Controls" />
-      <CardContent>
-        <Stack>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
+    <ExpandableCard title="Game Controls" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+      <Stack>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
+          <Button
+            variant="contained"
+            onClick={handleAdvanceTurn}
+            sx={(theme) => ({
+              width: 156.86,
+              ...(isGameOver && {
+                '&.Mui-disabled': {
+                  backgroundColor: theme.palette.error.dark,
+                  color: theme.palette.error.contrastText,
+                },
+              }),
+            })}
+            disabled={isGameOver}
+          >
+            {isGameOver ? 'game over' : 'advance turn'}
+          </Button>
+          <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
+        </Stack>
+        <Stack direction="row" justifyContent="space-between" alignItems="center">
+          <Stack direction="row">
             <Button
               variant="contained"
-              onClick={handleAdvanceTurn}
-              sx={(theme) => ({
-                width: 156.86,
-                ...(isGameOver && {
-                  '&.Mui-disabled': {
-                    backgroundColor: theme.palette.error.dark,
-                    color: theme.palette.error.contrastText,
-                  },
-                }),
-              })}
-              disabled={isGameOver}
+              onClick={handleUndo}
+              disabled={!canUndo}
+              sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
             >
-              {isGameOver ? 'game over' : 'advance turn'}
+              Undo
             </Button>
-            <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
+            <Button
+              variant="contained"
+              onClick={() => dispatch(ActionCreators.redo())}
+              disabled={!canRedo}
+              sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
+            >
+              Redo
+            </Button>
           </Stack>
-          <Stack direction="row" justifyContent="space-between" alignItems="center">
-            <Stack direction="row">
-              <Button
-                variant="contained"
-                onClick={handleUndo}
-                disabled={!canUndo}
-                sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
-              >
-                Undo
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => dispatch(ActionCreators.redo())}
-                disabled={!canRedo}
-                sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
-              >
-                Redo
-              </Button>
-            </Stack>
-            <LabeledValue label="Actions" value={gameState.actionsCount} sx={{ width: labelWidthPx }} />
-          </Stack>
-          <Stack sx={{ paddingTop: 1 }}>
-            <ResetControls />
-          </Stack>
+          <LabeledValue label="Actions" value={gameState.actionsCount} sx={{ width: labelWidthPx }} />
         </Stack>
-      </CardContent>
-    </Card>
+        <Stack sx={{ paddingTop: 1 }}>
+          <ResetControls />
+        </Stack>
+      </Stack>
+    </ExpandableCard>
   )
 }
