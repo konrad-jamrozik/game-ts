@@ -90,7 +90,7 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
     {
       field: 'value',
       headerName: 'Value',
-      width: 240,
+      width: 260,
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
@@ -105,7 +105,7 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
 
   const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
     { field: 'key', headerName: 'Reward', width: 140 },
-    { field: 'value', headerName: 'Value', width: 240 },
+    { field: 'value', headerName: 'Value', width: 260 },
   ]
 
   return (
