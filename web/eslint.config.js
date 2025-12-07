@@ -238,6 +238,10 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/complexity
       complexity: 'off',
 
+      // It is fine, especially in lambda functions.
+      // https://eslint.org/docs/latest/rules/id-length
+      'id-length': 'off',
+
       // [ts-eslint] configs
       // --------------------
       // https://typescript-eslint.io/rules/no-magic-numbers/
