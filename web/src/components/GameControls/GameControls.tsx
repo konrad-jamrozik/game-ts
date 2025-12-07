@@ -4,6 +4,7 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
+import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
@@ -31,11 +32,24 @@ export function GameControls(): React.JSX.Element {
     dispatch(ActionCreators.undo())
   }
 
+  function handleExpandAll(): void {
+    dispatch(expandAllCards())
+  }
+
+  function handleCollapseAll(): void {
+    dispatch(collapseAllCards())
+  }
+
   const isGameOver = f6ge(gameState.panic, toF6(1)) || gameState.money < 0 // 100% panic OR negative money
 
   const labelWidthPx = 110
   return (
-    <ExpandableCard id="game-controls" title="Game Controls" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard
+      id="game-controls"
+      title="Game Controls"
+      defaultExpanded={true}
+      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
+    >
       <Stack>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
@@ -77,6 +91,14 @@ export function GameControls(): React.JSX.Element {
             </Button>
           </Stack>
           <LabeledValue label="Actions" value={gameState.actionsCount} sx={{ width: labelWidthPx }} />
+        </Stack>
+        <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
+          <Button variant="contained" onClick={handleExpandAll} fullWidth>
+            Expand all
+          </Button>
+          <Button variant="contained" onClick={handleCollapseAll} fullWidth>
+            Collapse all
+          </Button>
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
           <ResetControls />
