@@ -7,6 +7,7 @@ import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
 import { getAgentsColumns } from './getAgentsColumns'
+import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type AgentRow = Agent & {
   // row id for DataGrid (required by MUI DataGrid)
@@ -126,6 +127,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   return (
     <DataGridCard
       title="Agents"
+      width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={visibleColumns}
       getRowId={(row: AgentRow) => row.rowId}

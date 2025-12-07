@@ -7,7 +7,7 @@ import { CapabilitiesDataGrid } from './CapabilitiesDataGrid'
 
 export function AssetsAndCapabCard(): React.JSX.Element {
   return (
-    <ExpandableCard title="Assets" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard title="Assets" defaultExpanded={true} sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={2}>
         <AssetsDataGrid />
         <CapabilitiesDataGrid />

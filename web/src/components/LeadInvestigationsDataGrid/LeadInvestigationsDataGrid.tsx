@@ -108,7 +108,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
     <ExpandableCard
       title={`Lead Investigations (${leadInvestigationRows.length})`}
       defaultExpanded={true}
-      sx={{ minWidth: MIDDLE_COLUMN_CARD_WIDTH }}
+      sx={{ width: MIDDLE_COLUMN_CARD_WIDTH }}
     >
       <StyledDataGrid
         rows={leadInvestigationRows}

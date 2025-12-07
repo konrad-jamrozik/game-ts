@@ -20,6 +20,7 @@ import { getCompletedMissionSiteIds } from '../../lib/model_utils/turnReportUtil
 import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { getMissionsColumns } from './getMissionsColumns'
+import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type MissionRow = MissionSite & {
   rowId: number
@@ -117,6 +118,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   return (
     <DataGridCard
       title={`Missions (${rows.length})`}
+      width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: MissionRow) => row.rowId}

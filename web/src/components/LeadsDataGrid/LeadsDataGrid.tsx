@@ -11,6 +11,7 @@ import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } fro
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 import { getLeadsColumns } from './getLeadsColumns'
+import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type LeadRow = {
   rowId: number
@@ -121,6 +122,7 @@ export function LeadsDataGrid(): React.JSX.Element {
   return (
     <DataGridCard
       title={`Leads (${rows.length})`}
+      width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: LeadRow) => row.rowId}
