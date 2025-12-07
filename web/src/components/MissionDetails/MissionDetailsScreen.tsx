@@ -66,10 +66,10 @@ export function MissionDetailsScreen(): React.JSX.Element {
             <BattleLogCard missionSiteId={viewMissionDetailsId} />
           </Stack>
         </Grid>
+        <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+          <CombatLogCard missionSiteId={viewMissionDetailsId} />
+        </Grid>
       </Grid>
-      <Box sx={{ width: '100%', paddingX: 1, paddingBottom: 2 }}>
-        <CombatLogCard missionSiteId={viewMissionDetailsId} />
-      </Box>
     </Box>
   )
 }
