@@ -1,4 +1,4 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams, GridRowClassNameParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
@@ -173,7 +173,30 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
-      <StyledDataGrid rows={rows} columns={columns} aria-label="Combat Log" hideFooter disableColumnMenu={false} />
+      <StyledDataGrid
+        rows={rows}
+        columns={columns}
+        aria-label="Combat Log"
+        hideFooter
+        disableColumnMenu={false}
+        getRowClassName={(params: GridRowClassNameParams<CombatLogRow>) =>
+          params.row.attackerType === 'Agent' ? 'combat-log-row-agent' : 'combat-log-row-enemy'
+        }
+        sx={{
+          '& .combat-log-row-agent': {
+            backgroundColor: 'hsla(122, 39.40%, 49.20%, 0.10)',
+            '&:hover': {
+              backgroundColor: 'hsla(122, 39.40%, 49.20%, 0.15)',
+            },
+          },
+          '& .combat-log-row-enemy': {
+            backgroundColor: 'hsla(4, 89.60%, 58.40%, 0.10)',
+            '&:hover': {
+              backgroundColor: 'hsla(4, 89.60%, 58.40%, 0.15)',
+            },
+          },
+        }}
+      />
     </ExpandableCard>
   )
 }
