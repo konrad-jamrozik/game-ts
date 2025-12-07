@@ -179,6 +179,9 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
         aria-label="Combat Log"
         hideFooter
         disableColumnMenu={false}
+        // Error: MUI X: `pageSize` cannot exceed 100 in the MIT version of the DataGrid.
+        // You need to upgrade to DataGridPro or DataGridPremium component to unlock this feature.
+        paginationModel={{ page: 0, pageSize: 100 }}
         getRowClassName={(params: GridRowClassNameParams<CombatLogRow>) =>
           params.row.attackerType === 'Agent' ? 'combat-log-row-agent' : 'combat-log-row-enemy'
         }
