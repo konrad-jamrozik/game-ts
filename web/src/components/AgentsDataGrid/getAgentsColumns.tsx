@@ -7,13 +7,12 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
+import { EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH } from '../Common/constants'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
-
-const EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH = 640
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
@@ -260,7 +259,7 @@ export function getAgentsColumns(
   // Assert default view column width matches expected value
   // Default view shows: id, state, assignment, skill, exhaustion
   const defaultViewFields = new Set(['id', 'state', 'assignment', 'skill', 'exhaustion'])
-  assertColumnWidth(columns, EXPECTED_DEFAULT_VIEW_COLUMN_WIDTH, 'Agents default view', defaultViewFields)
+  assertColumnWidth(columns, EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH, 'Agents default view', defaultViewFields)
 
   return columns
 }

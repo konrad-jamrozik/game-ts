@@ -5,10 +5,9 @@ import { f6sum, toF } from '../../lib/primitives/fixed6'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { div } from '../../lib/primitives/mathPrimitives'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
+import { EXPECTED_MISSIONS_COLUMN_WIDTH } from '../Common/constants'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionsDataGrid'
-
-const EXPECTED_TOTAL_COLUMN_WIDTH = 610
 
 export function getMissionsColumns(): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
@@ -74,7 +73,7 @@ export function getMissionsColumns(): GridColDef<MissionRow>[] {
     },
   ]
 
-  assertColumnWidth(columns, EXPECTED_TOTAL_COLUMN_WIDTH, 'Missions')
+  assertColumnWidth(columns, EXPECTED_MISSIONS_COLUMN_WIDTH, 'Missions')
 
   return columns
 }

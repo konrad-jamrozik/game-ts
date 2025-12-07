@@ -22,6 +22,7 @@ import {
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'
+import { CARD_WIDTH } from '../Common/constants'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
@@ -104,7 +105,11 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
   return (
-    <ExpandableCard title={`Lead Investigations (${leadInvestigationRows.length})`} defaultExpanded={true}>
+    <ExpandableCard
+      title={`Lead Investigations (${leadInvestigationRows.length})`}
+      defaultExpanded={true}
+      sx={{ minWidth: CARD_WIDTH }}
+    >
       <StyledDataGrid
         rows={leadInvestigationRows}
         columns={leadInvestigationColumns}
