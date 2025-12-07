@@ -7,7 +7,10 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import { EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH } from '../Common/constants'
+import {
+  EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH,
+  EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
+} from '../Common/widthConstants'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
@@ -165,7 +168,7 @@ export function getAgentsColumns(
     {
       field: 'skillSimple',
       headerName: 'Skill',
-      width: 40,
+      width: 50,
       valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skill),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
@@ -174,7 +177,7 @@ export function getAgentsColumns(
     {
       field: 'hitPointsMax',
       headerName: 'HP',
-      width: 40,
+      width: 50,
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
       ),
@@ -221,7 +224,7 @@ export function getAgentsColumns(
     {
       field: 'mission',
       headerName: 'Mission',
-      width: 220,
+      width: 180,
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedOnMissionSiteId, assignment } = params.row
 
@@ -243,7 +246,7 @@ export function getAgentsColumns(
     {
       field: 'by',
       headerName: 'By',
-      width: 180,
+      width: 170,
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedBy } = params.row
         // If agent was terminated by an enemy, show the enemy ID without prefix
@@ -260,6 +263,24 @@ export function getAgentsColumns(
   // Default view shows: id, state, assignment, skill, exhaustion
   const defaultViewFields = new Set(['id', 'state', 'assignment', 'skill', 'exhaustion'])
   assertColumnWidth(columns, EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH, 'Agents default view', defaultViewFields)
+
+  // Assert terminated view column width matches expected value
+  // Terminated view shows: id, skillSimple, hitPointsMax, service, missionsTotal, mission, by
+  const terminatedViewFields = new Set([
+    'id',
+    'skillSimple',
+    'hitPointsMax',
+    'service',
+    'missionsTotal',
+    'mission',
+    'by',
+  ])
+  assertColumnWidth(
+    columns,
+    EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
+    'Agents terminated view',
+    terminatedViewFields,
+  )
 
   return columns
 }

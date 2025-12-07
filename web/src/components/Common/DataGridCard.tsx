@@ -1,6 +1,6 @@
 import type { GridColDef, DataGridProps, GridRowModel } from '@mui/x-data-grid'
 import * as React from 'react'
-import { CARD_WIDTH } from './constants'
+import { CARD_WIDTH } from './widthConstants'
 import { ExpandableCard } from './ExpandableCard'
 import { StyledDataGrid } from './StyledDataGrid'
 
@@ -12,11 +12,7 @@ type DataGridCardProps = {
 
 export function DataGridCard({ title, rows, columns, ...dataGridProps }: DataGridCardProps): React.JSX.Element {
   return (
-    <ExpandableCard
-      title={title}
-      defaultExpanded={true}
-      sx={{ minWidth: CARD_WIDTH }}
-    >
+    <ExpandableCard title={title} defaultExpanded={true} sx={{ minWidth: CARD_WIDTH }}>
       <StyledDataGrid rows={rows} columns={columns} aria-label={title} {...dataGridProps} />
     </ExpandableCard>
   )

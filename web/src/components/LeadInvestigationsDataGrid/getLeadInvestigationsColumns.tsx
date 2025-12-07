@@ -2,7 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import { EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH } from '../Common/constants'
+import { EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
 
@@ -23,7 +23,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
         )
       },
     },
-    { field: 'intel', headerName: 'Intel', width: 40, type: 'number' },
+    { field: 'intel', headerName: 'Intel', width: 50, type: 'number' },
     {
       field: 'successChance',
       headerName: 'Succ. %',

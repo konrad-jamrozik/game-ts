@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import { EXPECTED_LEADS_COLUMN_WIDTH } from '../Common/constants'
+import { EXPECTED_LEADS_COLUMN_WIDTH } from '../Common/widthConstants'
 import type { LeadRow } from './LeadsDataGrid'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {

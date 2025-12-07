@@ -5,7 +5,7 @@ import { f6sum, toF } from '../../lib/primitives/fixed6'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { div } from '../../lib/primitives/mathPrimitives'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import { EXPECTED_MISSIONS_COLUMN_WIDTH } from '../Common/constants'
+import { EXPECTED_MISSIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionsDataGrid'
 
