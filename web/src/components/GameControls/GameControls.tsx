@@ -54,7 +54,6 @@ export function GameControls(): React.JSX.Element {
             {isGameOver ? 'game over' : 'next turn'}
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
-          <LabeledValue label="Actions" value={gameState.actionsCount} sx={{ width: labelWidthPx }} />
         </Stack>
         <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
           <Button variant="contained" onClick={handleExpandAll} fullWidth>

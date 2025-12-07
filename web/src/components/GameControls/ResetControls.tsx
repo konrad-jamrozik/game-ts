@@ -15,6 +15,8 @@ import { reset } from '../../redux/slices/gameStateSlice'
 import { clearAllSelection } from '../../redux/slices/selectionSlice'
 import { setResetControlsExpanded } from '../../redux/slices/settingsSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
+import { LabeledValue } from '../Common/LabeledValue'
+import { useTheme, type SxProps } from '@mui/material/styles'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -41,6 +43,8 @@ export function ResetControls(): React.JSX.Element {
   const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
   const availableUndoSteps = useAppSelector((state: RootState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
+  const theme = useTheme()
+  const labelSx: SxProps = { backgroundColor: theme.palette.background.cardContent }
 
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
@@ -89,14 +93,15 @@ export function ResetControls(): React.JSX.Element {
       </AccordionSummary>
       <AccordionDetails>
         <Stack>
-          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
+          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} alignItems="center" justifyContent="center">
+            <LabeledValue label="Actions" value={actionsThisTurn} sx={labelSx} />
             <Button
               variant="contained"
               onClick={handleUndo}
               disabled={!canUndo}
               sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
             >
-              Undo action
+              Undo
             </Button>
             <Button
               variant="contained"
@@ -104,7 +109,7 @@ export function ResetControls(): React.JSX.Element {
               disabled={!canRedo}
               sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
             >
-              Redo action
+              Redo
             </Button>
           </Stack>
           <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
