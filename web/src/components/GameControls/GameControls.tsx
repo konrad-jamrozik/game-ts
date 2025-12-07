@@ -9,6 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
+import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
 import { toF6, f6ge } from '../../lib/primitives/fixed6'
 
@@ -38,7 +39,7 @@ export function GameControls(): React.JSX.Element {
   return (
     <Card
       sx={{
-        width: 330,
+        width: LEFT_COLUMN_CARD_WIDTH,
       }}
     >
       <CardHeader title="Game Controls" />

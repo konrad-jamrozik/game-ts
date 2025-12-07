@@ -7,6 +7,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { getLeadById } from '../../lib/collections/leads'
 import {
   assignAgentsToContracting,
@@ -283,7 +284,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   return (
-    <Card sx={{ width: 380 }}>
+    <Card sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <CardHeader title="Player Actions" />
       <CardContent>
         <Stack direction="column" spacing={2}>

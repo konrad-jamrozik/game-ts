@@ -7,6 +7,7 @@ import ListItemText from '@mui/material/ListItemText'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../redux/hooks'
+import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatModelUtils'
@@ -55,8 +56,7 @@ export function EventLog(): React.JSX.Element {
     <React.Fragment>
       <Card
         sx={{
-          minWidth: 300,
-          maxWidth: 380,
+          width: LEFT_COLUMN_CARD_WIDTH,
         }}
       >
         <CardHeader title="Event Log" />

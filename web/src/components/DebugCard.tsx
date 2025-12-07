@@ -3,6 +3,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch } from '../redux/hooks'
 import { ExpandableCard } from './Common/ExpandableCard'
+import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import {
   debugSpawnMissionSites,
   debugSetPanicToZero,
@@ -45,7 +46,7 @@ export function DebugCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard title="Debug" defaultExpanded={true}>
+    <ExpandableCard title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
         <Button variant="contained" onClick={handleAddEverything}>
           Add everything
