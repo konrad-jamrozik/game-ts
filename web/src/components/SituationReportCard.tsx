@@ -1,6 +1,5 @@
 import { Typography } from '@mui/material'
 import Stack from '@mui/material/Stack'
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
@@ -10,8 +9,9 @@ import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/r
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 import { fmtPctDec0 } from '../lib/primitives/formatPrimitives'
 import { ExpandableCard } from './Common/ExpandableCard'
-import { MyChip } from './Common/MyChip'
+import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
+import { getSituationReportColumns } from './SituationReport/getSituationReportColumns'
 
 export type SituationReportRow = {
   id: number
@@ -31,31 +31,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicProjectedStr = f6fmtPctDec2(panicProjected)
   const panicDiffStr = f4fmtPctDec2Diff(panic, panicProjected)
 
-  const columns: GridColDef[] = [
-    { field: 'metric', headerName: 'Metric', minWidth: 120 },
-    { field: 'value', headerName: 'Value', minWidth: 80 },
-    {
-      field: 'projected',
-      headerName: 'Projected',
-      width: 150,
-      renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
-        const { diff, metric, projected, reverseColor } = params.row
-
-        if (projected === undefined) {
-          return <span />
-        }
-
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span aria-label={`situation-report-row-${metric.toLowerCase().replaceAll(' ', '-')}-projected`}>
-              {projected}
-            </span>
-            {diff !== undefined && <MyChip chipValue={diff} reverseColor={reverseColor ?? false} />}
-          </div>
-        )
-      },
-    },
-  ]
+  const columns = getSituationReportColumns()
 
   const panicRows: SituationReportRow[] = [
     {
@@ -125,7 +101,7 @@ export function SituationReportCard(): React.JSX.Element {
     : []
 
   return (
-    <ExpandableCard title="Situation Report" defaultExpanded={true}>
+    <ExpandableCard title="Situation Report" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={2}>
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
         {isRedDawnDiscovered && (

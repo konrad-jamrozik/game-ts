@@ -1,10 +1,4 @@
-import {
-  createRowSelectionManager,
-  type GridColDef,
-  type GridRenderCellParams,
-  type GridRowId,
-  type GridRowSelectionModel,
-} from '@mui/x-data-grid'
+import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrades'
@@ -13,6 +7,7 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
+import { getCapabilitiesColumns } from './getCapabilitiesColumns'
 
 export type UpgradeRow = {
   id: number
@@ -116,32 +111,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     ids: selectedUpgradeRow ? new Set<GridRowId>([selectedUpgradeRow.id]) : new Set<GridRowId>(),
   }
 
-  const upgradeColumns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Capability',
-      width: 140,
-      renderCell: (params: GridRenderCellParams<UpgradeRow>): React.JSX.Element => {
-        const displayName = params.row.displayedName ?? params.row.name
-        return <span>{displayName}</span>
-      },
-    },
-    {
-      field: 'value',
-      headerName: 'Current',
-      minWidth: 100,
-    },
-    {
-      field: 'upgrade',
-      headerName: 'Upgrade',
-      minWidth: 100,
-    },
-    {
-      field: 'price',
-      headerName: 'Price',
-      minWidth: 100,
-    },
-  ]
+  const upgradeColumns = getCapabilitiesColumns()
 
   return (
     <StyledDataGrid

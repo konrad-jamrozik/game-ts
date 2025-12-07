@@ -2,6 +2,7 @@ import { Box } from '@mui/material'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
+import { RIGHT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { formatAssets } from './formatAssets'
 import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView } from './TurnReportTreeView'
@@ -32,7 +33,7 @@ export function TurnReportCard(): React.ReactElement {
     : []
 
   return (
-    <ExpandableCard title="Turn Report" defaultExpanded={true} sx={{ minWidth: '520px' }}>
+    <ExpandableCard title="Turn Report" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
       {report && (
         <Box
           sx={{

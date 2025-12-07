@@ -1,11 +1,10 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
 import { getIntelNewBalance } from '../../lib/ruleset/intelRuleset'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { MyChip } from '../Common/MyChip'
+import { getAssetsColumns } from './getAssetsColumns'
 
 export type AssetRow = {
   id: number
@@ -31,41 +30,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
   ]
 
-  const assetColumns: GridColDef[] = [
-    {
-      field: 'name',
-      headerName: 'Asset',
-      width: 160,
-      renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
-        const displayName = params.row.displayedName ?? params.row.name
-        return <span>{displayName}</span>
-      },
-    },
-    {
-      field: 'value',
-      headerName: 'Current',
-      minWidth: 100,
-    },
-    {
-      field: 'projected',
-      headerName: 'Projected',
-      minWidth: 120,
-      renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
-        const { diff, name, projected } = params.row
-
-        if (projected === undefined) {
-          return <span />
-        }
-
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span aria-label={`balance-sheet-row-${name.toLowerCase()}-projected`}>{projected}</span>
-            {diff !== undefined && <MyChip chipValue={diff} />}
-          </div>
-        )
-      },
-    },
-  ]
+  const assetColumns = getAssetsColumns()
 
   return <StyledDataGrid rows={assetRows} columns={assetColumns} aria-label="Assets" />
 }
