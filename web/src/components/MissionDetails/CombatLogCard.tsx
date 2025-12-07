@@ -123,7 +123,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const exceeded = params.row.roll > params.row.threshold
         return (
-          <span style={{ color: exceeded ? '#4caf50' : '#f44336' }}>
+          <span style={{ color: exceeded ? 'hsl(122, 39%, 49%)' : 'hsl(4, 90%, 58%)' }}>
             {exceeded ? '✅' : '❌'} {fmtDec2(params.row.threshold)}%
           </span>
         )
@@ -132,7 +132,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'damage',
       headerName: 'Damage',
-      width: 160,
+      width: 180,
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         if (params.row.damage === undefined) {
           return <span>-</span>
@@ -158,8 +158,9 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
       width: 110,
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.defenderHp, params.row.defenderHpMax)
+        const isZeroOrLess = params.row.defenderHp <= 0
         return (
-          <span>
+          <span style={{ color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined }}>
             {Math.round(params.row.defenderHp)}/{params.row.defenderHpMax} ({hpPct})
           </span>
         )
@@ -167,7 +168,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 50 + 50 + 100 + 150 + 80 + 80 + 130 + 130 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 50 + 100 + 150 + 80 + 80 + 130 + 130 + 70 + 110 + 180 + 110 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
@@ -185,15 +186,15 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
         }
         sx={{
           '& .combat-log-row-agent': {
-            backgroundColor: 'hsl(120, 6.70%, 16.70%)',
+            backgroundColor: 'hsl(120, 15.00%, 17.00%)',
             '&:hover': {
-              backgroundColor: 'hsl(120, 26.70%, 19.70%)',
+              backgroundColor: 'hsl(120, 30.00%, 22.00%)',
             },
           },
           '& .combat-log-row-enemy': {
-            backgroundColor: 'hsl(4, 6.70%, 16.70%)',
+            backgroundColor: 'hsl(4, 15.00%, 17.00%)',
             '&:hover': {
-              backgroundColor: 'hsl(4, 26.70%, 19.70%)',
+              backgroundColor: 'hsl(4, 30.00%, 22.00%)',
             },
           },
         }}
