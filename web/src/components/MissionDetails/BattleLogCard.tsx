@@ -44,19 +44,19 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
   const columns: GridColDef<BattleLogRow>[] = [
     {
       field: 'roundNumber',
-      headerName: 'Round',
-      width: 70,
+      headerName: 'R',
+      width: 50,
       type: 'number',
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: 100,
+      width: 90,
     },
     {
       field: 'agentCount',
       headerName: 'Agents',
-      width: 90,
+      width: 70,
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
         <span>
           {params.row.agentCount}/{params.row.agentCountTotal}
@@ -66,7 +66,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     {
       field: 'agentSkill',
       headerName: 'Agent Skill',
-      width: 130,
+      width: 150,
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.agentSkill, params.row.agentSkillTotal)
         return (
@@ -79,7 +79,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     {
       field: 'agentHp',
       headerName: 'Agent HP',
-      width: 110,
+      width: 140,
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.agentHp, params.row.agentHpTotal)
         return (
@@ -91,8 +91,8 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     },
     {
       field: 'enemyCount',
-      headerName: 'Enemies',
-      width: 90,
+      headerName: 'Enem.',
+      width: 70,
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
         <span>
           {params.row.enemyCount}/{params.row.enemyCountTotal}
@@ -102,7 +102,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     {
       field: 'enemySkill',
       headerName: 'Enemy Skill',
-      width: 130,
+      width: 150,
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.enemySkill, params.row.enemySkillTotal)
         return (
@@ -115,7 +115,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     {
       field: 'enemyHp',
       headerName: 'Enemy HP',
-      width: 110,
+      width: 140,
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.enemyHp, params.row.enemyHpTotal)
         return (
@@ -127,15 +127,15 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     },
     {
       field: 'skillRatio',
-      headerName: 'Skill Ratio',
-      width: 100,
+      headerName: 'Ratio',
+      width: 60,
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => (
         <span>{f6fmtPctDec0(params.row.skillRatio)}</span>
       ),
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 70 + 100 + 90 + 130 + 110 + 90 + 130 + 110 + 100 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 90 + 70 + 150 + 140 + 70 + 150 + 140 + 60 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>

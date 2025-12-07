@@ -53,22 +53,20 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
     {
       field: 'roundNumber',
-      headerName: 'Round',
-      width: 70,
+      headerName: 'R',
+      width: 50,
       type: 'number',
     },
     {
       field: 'agentId',
       headerName: 'Agent',
       width: 100,
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
-        <span>{fmtNoPrefix(params.row.agentId, 'agent-')}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => <span>{params.row.agentId}</span>,
     },
     {
       field: 'enemyId',
       headerName: 'Enemy',
-      width: 140,
+      width: 150,
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
         <span>{fmtNoPrefix(params.row.enemyId, 'enemy-')}</span>
       ),
@@ -169,7 +167,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 50 + 70 + 100 + 140 + 80 + 80 + 130 + 130 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 50 + 100 + 150 + 80 + 80 + 130 + 130 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
