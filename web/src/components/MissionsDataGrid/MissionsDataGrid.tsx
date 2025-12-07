@@ -117,6 +117,7 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   return (
     <DataGridCard
+      id="missions"
       title={`Missions (${rows.length})`}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}

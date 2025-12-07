@@ -121,6 +121,7 @@ export function LeadsDataGrid(): React.JSX.Element {
 
   return (
     <DataGridCard
+      id="leads"
       title={`Leads (${rows.length})`}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}

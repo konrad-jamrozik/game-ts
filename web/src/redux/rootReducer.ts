@@ -5,6 +5,7 @@ import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import selectionReducer from './slices/selectionSlice'
 import settingsReducer from './slices/settingsSlice'
+import expansionReducer from './slices/expansionSlice'
 
 export const UNDO_LIMIT = 100
 
@@ -37,6 +38,7 @@ export const rootReducer = combineReducers({
   events: eventsReducer, // Events are not wrapped in undoable
   settings: settingsReducer, // Settings are not wrapped in undoable
   selection: selectionReducer, // Selection state is not wrapped in undoable
+  expansion: expansionReducer, // Expansion state is not wrapped in undoable
 })
 
 export type RootState = ReturnType<typeof rootReducer>

@@ -282,7 +282,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard title="Player Actions" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="player-actions" title="Player Actions" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack direction="column" spacing={2}>
           <Stack direction="row" spacing={2}>
             <Button variant="contained" onClick={handleHireAgent} fullWidth>

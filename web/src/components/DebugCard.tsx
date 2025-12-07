@@ -46,7 +46,7 @@ export function DebugCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
         <Button variant="contained" onClick={handleAddEverything}>
           Add everything

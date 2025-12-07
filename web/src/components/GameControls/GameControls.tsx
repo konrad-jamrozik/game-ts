@@ -35,7 +35,7 @@ export function GameControls(): React.JSX.Element {
 
   const labelWidthPx = 110
   return (
-    <ExpandableCard title="Game Controls" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="game-controls" title="Game Controls" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
           {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}

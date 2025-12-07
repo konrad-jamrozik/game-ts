@@ -15,6 +15,7 @@ export function ArchivedMissionCards(): React.JSX.Element {
   const maxWidth = '800px'
   return (
     <ExpandableCard
+      id="deprecated-archived-missions"
       title={`Archived Missions (${sortedArchivedMissionSites.length})`}
       defaultExpanded={false}
       sx={{ maxWidth }}

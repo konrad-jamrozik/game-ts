@@ -33,7 +33,7 @@ export function TurnReportCard(): React.ReactElement {
     : []
 
   return (
-    <ExpandableCard title="Turn Report" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="turn-report" title="Turn Report" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
       {report && (
         <Box
           sx={{
@@ -47,11 +47,11 @@ export function TurnReportCard(): React.ReactElement {
             alignItems: 'start',
           }}
         >
-          <ExpandableCard title="Assets" defaultExpanded={true} nested={true}>
+          <ExpandableCard id="turn-report-assets" title="Assets" defaultExpanded={true} nested={true}>
             <TurnReportTreeView items={assetsTreeData} defaultExpandedItems={assetsDefaultExpandedItems} />
           </ExpandableCard>
 
-          <ExpandableCard title="Situation Report" defaultExpanded={true} nested={true}>
+          <ExpandableCard id="turn-report-situation" title="Situation Report" defaultExpanded={true} nested={true}>
             <TurnReportTreeView
               items={situationReportTreeData}
               defaultExpandedItems={situationReportDefaultExpandedItems}

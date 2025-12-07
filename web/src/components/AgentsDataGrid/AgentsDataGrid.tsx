@@ -126,6 +126,7 @@ export function AgentsDataGrid(): React.JSX.Element {
 
   return (
     <DataGridCard
+      id="agents"
       title="Agents"
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}

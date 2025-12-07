@@ -6,10 +6,12 @@ import CardContent from '@mui/material/CardContent'
 import CardHeader from '@mui/material/CardHeader'
 import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
-import { useState } from 'react'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { setCardExpanded } from '../../redux/slices/expansionSlice'
 import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
 
 type ExpandableCardProps = {
+  id: string
   title: string
   children: React.ReactNode
   nested?: boolean
@@ -23,20 +25,22 @@ const defaultSx: SxProps<Theme> = {}
  * Reusable expandable card component that encapsulates the expand/collapse logic
  */
 export function ExpandableCard({
+  id,
   title,
   children,
   nested = false,
   defaultExpanded = true,
   sx = defaultSx,
 }: ExpandableCardProps): React.JSX.Element {
-  const [expanded, setExpanded] = useState(defaultExpanded)
+  const dispatch = useAppDispatch()
+  const expanded = useAppSelector((state) => state.expansion.cards[id] ?? defaultExpanded)
   const cardContentSx: SxProps<Theme> = {
     padding: CARD_CONTENT_PADDING,
     ...(nested && { backgroundColor: theme.palette.background.nestedCardContent }),
   }
 
   function handleExpandClick(): void {
-    setExpanded(!expanded)
+    dispatch(setCardExpanded({ id, expanded: !expanded }))
   }
 
   return (

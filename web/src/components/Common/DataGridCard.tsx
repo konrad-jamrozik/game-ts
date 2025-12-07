@@ -4,15 +4,23 @@ import { ExpandableCard } from './ExpandableCard'
 import { StyledDataGrid } from './StyledDataGrid'
 
 type DataGridCardProps = {
+  id: string
   title: string
   width: number
   rows: GridRowModel[]
   columns: GridColDef[]
 } & Omit<DataGridProps, 'rows' | 'columns'>
 
-export function DataGridCard({ title, rows, columns, width, ...dataGridProps }: DataGridCardProps): React.JSX.Element {
+export function DataGridCard({
+  id,
+  title,
+  rows,
+  columns,
+  width,
+  ...dataGridProps
+}: DataGridCardProps): React.JSX.Element {
   return (
-    <ExpandableCard title={title} defaultExpanded={true} sx={{ width }}>
+    <ExpandableCard id={id} title={title} defaultExpanded={true} sx={{ width }}>
       <StyledDataGrid rows={rows} columns={columns} aria-label={title} {...dataGridProps} />
     </ExpandableCard>
   )
