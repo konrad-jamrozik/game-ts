@@ -184,15 +184,15 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
         }
         sx={{
           '& .combat-log-row-agent': {
-            backgroundColor: 'hsla(122, 39.40%, 49.20%, 0.10)',
+            backgroundColor: 'hsl(120, 6.70%, 16.70%)',
             '&:hover': {
-              backgroundColor: 'hsla(122, 39.40%, 49.20%, 0.15)',
+              backgroundColor: 'hsl(120, 26.70%, 19.70%)',
             },
           },
           '& .combat-log-row-enemy': {
-            backgroundColor: 'hsla(4, 89.60%, 58.40%, 0.10)',
+            backgroundColor: 'hsl(4, 6.70%, 16.70%)',
             '&:hover': {
-              backgroundColor: 'hsla(4, 89.60%, 58.40%, 0.15)',
+              backgroundColor: 'hsl(4, 26.70%, 19.70%)',
             },
           },
         }}
