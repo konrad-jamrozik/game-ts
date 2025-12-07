@@ -2,14 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import {
-  LEAD_INVESTIGATIONS_AGENTS_WIDTH,
-  LEAD_INVESTIGATIONS_INTEL_DECAY_WIDTH,
-  LEAD_INVESTIGATIONS_INTEL_WIDTH,
-  LEAD_INVESTIGATIONS_LEAD_INVESTIGATION_TITLE_WIDTH,
-  LEAD_INVESTIGATIONS_PROJECTED_INTEL_WIDTH,
-  LEAD_INVESTIGATIONS_SUCCESS_CHANCE_WIDTH,
-} from '../Common/columnWidths'
+import { columnWidths } from '../Common/columnWidths'
 import { EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
@@ -19,12 +12,12 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
     {
       field: 'leadInvestigationTitle',
       headerName: 'Investigation ID',
-      width: LEAD_INVESTIGATIONS_LEAD_INVESTIGATION_TITLE_WIDTH,
+      width: columnWidths['lead_investigations.lead_investigation_title_width'],
     },
     {
       field: 'agents',
       headerName: 'Ag#',
-      width: LEAD_INVESTIGATIONS_AGENTS_WIDTH,
+      width: columnWidths['lead_investigations.agents_width'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { agents: activeAgentCount, agentsInTransit } = params.row
         return (
@@ -35,11 +28,16 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
         )
       },
     },
-    { field: 'intel', headerName: 'Intel', width: LEAD_INVESTIGATIONS_INTEL_WIDTH, type: 'number' },
+    {
+      field: 'intel',
+      headerName: 'Intel',
+      width: columnWidths['lead_investigations.intel_width'],
+      type: 'number',
+    },
     {
       field: 'successChance',
       headerName: 'Succ. %',
-      width: LEAD_INVESTIGATIONS_SUCCESS_CHANCE_WIDTH,
+      width: columnWidths['lead_investigations.success_chance_width'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         if (params.row.state === 'Successful') {
           return <MyChip chipValue="Done" />
@@ -53,7 +51,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
     {
       field: 'intelDecay',
       headerName: 'Intel decay',
-      width: LEAD_INVESTIGATIONS_INTEL_DECAY_WIDTH,
+      width: columnWidths['lead_investigations.intel_decay_width'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { intelDecayPct, intelDecay } = params.row
         return (
@@ -80,7 +78,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
     {
       field: 'projectedIntel',
       headerName: 'Proj. intel',
-      width: LEAD_INVESTIGATIONS_PROJECTED_INTEL_WIDTH,
+      width: columnWidths['lead_investigations.projected_intel_width'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { projectedIntel, intelDiff } = params.row
         return (

@@ -7,21 +7,7 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import {
-  AGENTS_ASSIGNMENT_WIDTH,
-  AGENTS_BY_WIDTH,
-  AGENTS_EXHAUSTION_WIDTH,
-  AGENTS_HIT_POINTS_MAX_WIDTH,
-  AGENTS_HIT_POINTS_WIDTH,
-  AGENTS_ID_WIDTH,
-  AGENTS_MISSION_WIDTH,
-  AGENTS_MISSIONS_TOTAL_WIDTH,
-  AGENTS_RECOVERY_WIDTH,
-  AGENTS_SERVICE_WIDTH,
-  AGENTS_SKILL_SIMPLE_WIDTH,
-  AGENTS_SKILL_WIDTH,
-  AGENTS_STATE_WIDTH,
-} from '../Common/columnWidths'
+import { columnWidths } from '../Common/columnWidths'
 import {
   EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH,
   EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
@@ -45,7 +31,7 @@ export function getAgentsColumns(
     {
       field: 'id',
       headerName: 'ID',
-      width: AGENTS_ID_WIDTH,
+      width: columnWidths['agents.id_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
       ),
@@ -53,7 +39,7 @@ export function getAgentsColumns(
     {
       field: 'state',
       headerName: 'State',
-      width: AGENTS_STATE_WIDTH,
+      width: columnWidths['agents.state_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, AgentState>): React.JSX.Element => {
         const state = params.value
         if (state === undefined) {
@@ -70,7 +56,7 @@ export function getAgentsColumns(
     {
       field: 'assignment',
       headerName: 'Assignment',
-      width: AGENTS_ASSIGNMENT_WIDTH,
+      width: columnWidths['agents.assignment_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
       ),
@@ -78,7 +64,7 @@ export function getAgentsColumns(
     {
       field: 'skill',
       headerName: 'Skill',
-      width: AGENTS_SKILL_WIDTH,
+      width: columnWidths['agents.skill_width'],
       sortComparator: (
         _v1: string,
         _v2: string,
@@ -136,7 +122,7 @@ export function getAgentsColumns(
     {
       field: 'hitPoints',
       headerName: 'HP',
-      width: AGENTS_HIT_POINTS_WIDTH,
+      width: columnWidths['agents.hit_points_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         if (params.value === undefined) {
           return <span />
@@ -162,7 +148,7 @@ export function getAgentsColumns(
     {
       field: 'recoveryTurns',
       headerName: 'Recovery',
-      width: AGENTS_RECOVERY_WIDTH,
+      width: columnWidths['agents.recovery_width'],
       renderCell: (params: GridRenderCellParams<AgentRow>): React.JSX.Element => {
         const remainingTurns = getRemainingRecoveryTurns(params.row, hitPointsRecoveryPct)
         return (
@@ -175,7 +161,7 @@ export function getAgentsColumns(
     {
       field: 'exhaustion',
       headerName: 'Exhaustion',
-      width: AGENTS_EXHAUSTION_WIDTH,
+      width: columnWidths['agents.exhaustion_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>
       ),
@@ -183,7 +169,7 @@ export function getAgentsColumns(
     {
       field: 'skillSimple',
       headerName: 'Skill',
-      width: AGENTS_SKILL_SIMPLE_WIDTH,
+      width: columnWidths['agents.skill_simple_width'],
       valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skill),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
@@ -192,7 +178,7 @@ export function getAgentsColumns(
     {
       field: 'hitPointsMax',
       headerName: 'HP',
-      width: AGENTS_HIT_POINTS_MAX_WIDTH,
+      width: columnWidths['agents.hit_points_max_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
       ),
@@ -200,7 +186,7 @@ export function getAgentsColumns(
     {
       field: 'service',
       headerName: 'Service',
-      width: AGENTS_SERVICE_WIDTH,
+      width: columnWidths['agents.service_width'],
       valueGetter: (_value, row: AgentRow): number => {
         const { turnHired, turnTerminated } = row
         if (turnTerminated !== undefined) {
@@ -231,7 +217,7 @@ export function getAgentsColumns(
     {
       field: 'missionsTotal',
       headerName: 'Miss #',
-      width: AGENTS_MISSIONS_TOTAL_WIDTH,
+      width: columnWidths['agents.missions_total_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-missions-total-${params.id}`}>{params.row.missionsTotal}</span>
       ),
@@ -239,7 +225,7 @@ export function getAgentsColumns(
     {
       field: 'mission',
       headerName: 'Mission',
-      width: AGENTS_MISSION_WIDTH,
+      width: columnWidths['agents.mission_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedOnMissionSiteId, assignment } = params.row
 
@@ -261,7 +247,7 @@ export function getAgentsColumns(
     {
       field: 'by',
       headerName: 'By',
-      width: AGENTS_BY_WIDTH,
+      width: columnWidths['agents.by_width'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedBy } = params.row
         // If agent was terminated by an enemy, show the enemy ID without prefix

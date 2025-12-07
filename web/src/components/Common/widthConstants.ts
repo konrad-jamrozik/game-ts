@@ -1,28 +1,4 @@
-import {
-  BATTLE_LOG_AGENT_COUNT_WIDTH,
-  BATTLE_LOG_AGENT_HP_WIDTH,
-  BATTLE_LOG_AGENT_SKILL_WIDTH,
-  BATTLE_LOG_ENEMY_COUNT_WIDTH,
-  BATTLE_LOG_ENEMY_HP_WIDTH,
-  BATTLE_LOG_ENEMY_SKILL_WIDTH,
-  BATTLE_LOG_ROUND_NUMBER_WIDTH,
-  BATTLE_LOG_SKILL_RATIO_WIDTH,
-  BATTLE_LOG_STATUS_WIDTH,
-  COMBAT_LOG_AGENT_ID_WIDTH,
-  COMBAT_LOG_ATTACKER_SKILL_WIDTH,
-  COMBAT_LOG_ATTACKER_TYPE_WIDTH,
-  COMBAT_LOG_ATTACK_ID_WIDTH,
-  COMBAT_LOG_DAMAGE_WIDTH,
-  COMBAT_LOG_DEFENDER_HP_WIDTH,
-  COMBAT_LOG_DEFENDER_SKILL_WIDTH,
-  COMBAT_LOG_ENEMY_ID_WIDTH,
-  COMBAT_LOG_OUTCOME_WIDTH,
-  COMBAT_LOG_ROLL_WIDTH,
-  COMBAT_LOG_ROUND_NUMBER_WIDTH,
-  COMBAT_LOG_THRESHOLD_WIDTH,
-  MISSION_SITE_DETAILS_KEY_WIDTH,
-  MISSION_SITE_DETAILS_VALUE_WIDTH,
-} from './columnWidths'
+import { columnWidths } from './columnWidths'
 
 const CHECKMARK_COLUMN_WIDTH = 50
 const BORDER_WIDTH = 1
@@ -60,30 +36,32 @@ export const RIGHT_COLUMN_CARD_WIDTH =
 
 export const COMBAT_LOG_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  COMBAT_LOG_ATTACK_ID_WIDTH +
-  COMBAT_LOG_ROUND_NUMBER_WIDTH +
-  COMBAT_LOG_AGENT_ID_WIDTH +
-  COMBAT_LOG_ENEMY_ID_WIDTH +
-  COMBAT_LOG_ATTACKER_TYPE_WIDTH +
-  COMBAT_LOG_OUTCOME_WIDTH +
-  COMBAT_LOG_ATTACKER_SKILL_WIDTH +
-  COMBAT_LOG_DEFENDER_SKILL_WIDTH +
-  COMBAT_LOG_ROLL_WIDTH +
-  COMBAT_LOG_THRESHOLD_WIDTH +
-  COMBAT_LOG_DAMAGE_WIDTH +
-  COMBAT_LOG_DEFENDER_HP_WIDTH // borders + padding + filler + columns
+  columnWidths['combat_log.attack_id_width'] +
+  columnWidths['combat_log.round_number_width'] +
+  columnWidths['combat_log.agent_id_width'] +
+  columnWidths['combat_log.enemy_id_width'] +
+  columnWidths['combat_log.attacker_type_width'] +
+  columnWidths['combat_log.outcome_width'] +
+  columnWidths['combat_log.attacker_skill_width'] +
+  columnWidths['combat_log.defender_skill_width'] +
+  columnWidths['combat_log.roll_width'] +
+  columnWidths['combat_log.threshold_width'] +
+  columnWidths['combat_log.damage_width'] +
+  columnWidths['combat_log.defender_hp_width'] // borders + padding + filler + columns
 
 export const BATTLE_LOG_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  BATTLE_LOG_ROUND_NUMBER_WIDTH +
-  BATTLE_LOG_STATUS_WIDTH +
-  BATTLE_LOG_AGENT_COUNT_WIDTH +
-  BATTLE_LOG_AGENT_SKILL_WIDTH +
-  BATTLE_LOG_AGENT_HP_WIDTH +
-  BATTLE_LOG_ENEMY_COUNT_WIDTH +
-  BATTLE_LOG_ENEMY_SKILL_WIDTH +
-  BATTLE_LOG_ENEMY_HP_WIDTH +
-  BATTLE_LOG_SKILL_RATIO_WIDTH // borders + padding + filler + columns
+  columnWidths['battle_log.round_number_width'] +
+  columnWidths['battle_log.status_width'] +
+  columnWidths['battle_log.agent_count_width'] +
+  columnWidths['battle_log.agent_skill_width'] +
+  columnWidths['battle_log.agent_hp_width'] +
+  columnWidths['battle_log.enemy_count_width'] +
+  columnWidths['battle_log.enemy_skill_width'] +
+  columnWidths['battle_log.enemy_hp_width'] +
+  columnWidths['battle_log.skill_ratio_width'] // borders + padding + filler + columns
 
 export const MISSION_SITE_DETAILS_CARD_WIDTH =
-  DATA_GRID_BASE_WIDTH + MISSION_SITE_DETAILS_KEY_WIDTH + MISSION_SITE_DETAILS_VALUE_WIDTH // borders + padding + filler + columns
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['mission_site_details.key_width'] +
+  columnWidths['mission_site_details.value_width'] // borders + padding + filler + columns

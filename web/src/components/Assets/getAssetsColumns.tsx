@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import { ASSETS_NAME_WIDTH, ASSETS_PROJECTED_WIDTH, ASSETS_VALUE_WIDTH } from '../Common/columnWidths'
+import { columnWidths } from '../Common/columnWidths'
 import { EXPECTED_ASSETS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { AssetRow } from './AssetsDataGrid'
@@ -11,7 +11,7 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     {
       field: 'name',
       headerName: 'Asset',
-      width: ASSETS_NAME_WIDTH,
+      width: columnWidths['assets.name_width'],
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -20,12 +20,12 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     {
       field: 'value',
       headerName: 'Current',
-      width: ASSETS_VALUE_WIDTH,
+      width: columnWidths['assets.value_width'],
     },
     {
       field: 'projected',
       headerName: 'Projected',
-      width: ASSETS_PROJECTED_WIDTH,
+      width: columnWidths['assets.projected_width'],
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const { diff, name, projected } = params.row
 

@@ -1,12 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
-import {
-  LEADS_DIFFICULTY_WIDTH,
-  LEADS_ID_WIDTH,
-  LEADS_INVESTIGATIONS_WIDTH,
-  LEADS_REPEATABLE_WIDTH,
-} from '../Common/columnWidths'
+import { columnWidths } from '../Common/columnWidths'
 import { EXPECTED_LEADS_COLUMN_WIDTH } from '../Common/widthConstants'
 import type { LeadRow } from './LeadsDataGrid'
 
@@ -15,7 +10,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     {
       field: 'id',
       headerName: 'Lead ID',
-      width: LEADS_ID_WIDTH,
+      width: columnWidths['leads.id_width'],
       renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
         <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
       ),
@@ -23,7 +18,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     {
       field: 'difficulty',
       headerName: 'Difficulty',
-      width: LEADS_DIFFICULTY_WIDTH,
+      width: columnWidths['leads.difficulty_width'],
       renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
         <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
       ),
@@ -31,7 +26,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     {
       field: 'repeatable',
       headerName: 'Repeatable',
-      width: LEADS_REPEATABLE_WIDTH,
+      width: columnWidths['leads.repeatable_width'],
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
         <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
       ),
@@ -39,7 +34,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     {
       field: 'investigations',
       headerName: 'Investigations',
-      width: LEADS_INVESTIGATIONS_WIDTH,
+      width: columnWidths['leads.investigations_width'],
       renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
         const { activeInvestigationCount, completedInvestigationCount } = params.row
         if (activeInvestigationCount === 0 && completedInvestigationCount === 0) {

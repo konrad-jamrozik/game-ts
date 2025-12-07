@@ -1,84 +1,86 @@
 // Source of truth for all column widths across all data grids
 // All get*Columns.tsx files must use constants from this file, never define widths directly
 
-// Situation Report columns
-export const SITUATION_REPORT_METRIC_WIDTH = 120
-export const SITUATION_REPORT_VALUE_WIDTH = 80
-export const SITUATION_REPORT_PROJECTED_WIDTH = 150
+export const columnWidths = {
+  // Situation Report columns
+  'situation_report.metric_width': 120,
+  'situation_report.value_width': 80,
+  'situation_report.projected_width': 150,
 
-// Assets columns
-export const ASSETS_NAME_WIDTH = 160
-export const ASSETS_VALUE_WIDTH = 100
-export const ASSETS_PROJECTED_WIDTH = 120
+  // Assets columns
+  'assets.name_width': 160,
+  'assets.value_width': 100,
+  'assets.projected_width': 120,
 
-// Capabilities columns
-export const CAPABILITIES_NAME_WIDTH = 140
-export const CAPABILITIES_VALUE_WIDTH = 100
-export const CAPABILITIES_UPGRADE_WIDTH = 100
-export const CAPABILITIES_PRICE_WIDTH = 100
+  // Capabilities columns
+  'capabilities.name_width': 140,
+  'capabilities.value_width': 100,
+  'capabilities.upgrade_width': 100,
+  'capabilities.price_width': 100,
 
-// Missions columns
-export const MISSIONS_ID_WIDTH = 240
-export const MISSIONS_STATE_WIDTH = 120
-export const MISSIONS_EXPIRES_IN_WIDTH = 90
-export const MISSIONS_ENEMIES_WIDTH = 80
-export const MISSIONS_AVG_SKILL_WIDTH = 80
-export const MISSIONS_DETAILS_WIDTH = 100
+  // Missions columns
+  'missions.id_width': 240,
+  'missions.state_width': 120,
+  'missions.expires_in_width': 90,
+  'missions.enemies_width': 80,
+  'missions.avg_skill_width': 80,
+  'missions.details_width': 100,
 
-// Leads columns
-export const LEADS_ID_WIDTH = 300
-export const LEADS_DIFFICULTY_WIDTH = 100
-export const LEADS_REPEATABLE_WIDTH = 100
-export const LEADS_INVESTIGATIONS_WIDTH = 120
+  // Leads columns
+  'leads.id_width': 300,
+  'leads.difficulty_width': 100,
+  'leads.repeatable_width': 100,
+  'leads.investigations_width': 120,
 
-// Agents columns
-export const AGENTS_ID_WIDTH = 120
-export const AGENTS_STATE_WIDTH = 140
-export const AGENTS_ASSIGNMENT_WIDTH = 140
-export const AGENTS_SKILL_WIDTH = 140
-export const AGENTS_HIT_POINTS_WIDTH = 80
-export const AGENTS_RECOVERY_WIDTH = 90
-export const AGENTS_EXHAUSTION_WIDTH = 100
-export const AGENTS_SKILL_SIMPLE_WIDTH = 50
-export const AGENTS_HIT_POINTS_MAX_WIDTH = 50
-export const AGENTS_SERVICE_WIDTH = 80
-export const AGENTS_MISSIONS_TOTAL_WIDTH = 70
-export const AGENTS_MISSION_WIDTH = 180
-export const AGENTS_BY_WIDTH = 170
+  // Agents columns
+  'agents.id_width': 120,
+  'agents.state_width': 140,
+  'agents.assignment_width': 140,
+  'agents.skill_width': 140,
+  'agents.hit_points_width': 80,
+  'agents.recovery_width': 90,
+  'agents.exhaustion_width': 100,
+  'agents.skill_simple_width': 50,
+  'agents.hit_points_max_width': 50,
+  'agents.service_width': 80,
+  'agents.missions_total_width': 70,
+  'agents.mission_width': 180,
+  'agents.by_width': 170,
 
-// Lead Investigations columns
-export const LEAD_INVESTIGATIONS_LEAD_INVESTIGATION_TITLE_WIDTH = 200
-export const LEAD_INVESTIGATIONS_AGENTS_WIDTH = 80
-export const LEAD_INVESTIGATIONS_INTEL_WIDTH = 50
-export const LEAD_INVESTIGATIONS_SUCCESS_CHANCE_WIDTH = 80
-export const LEAD_INVESTIGATIONS_INTEL_DECAY_WIDTH = 140
-export const LEAD_INVESTIGATIONS_PROJECTED_INTEL_WIDTH = 120
+  // Lead Investigations columns
+  'lead_investigations.lead_investigation_title_width': 200,
+  'lead_investigations.agents_width': 80,
+  'lead_investigations.intel_width': 50,
+  'lead_investigations.success_chance_width': 80,
+  'lead_investigations.intel_decay_width': 140,
+  'lead_investigations.projected_intel_width': 120,
 
-// Combat Log columns
-export const COMBAT_LOG_ATTACK_ID_WIDTH = 50
-export const COMBAT_LOG_ROUND_NUMBER_WIDTH = 50
-export const COMBAT_LOG_AGENT_ID_WIDTH = 100
-export const COMBAT_LOG_ENEMY_ID_WIDTH = 150
-export const COMBAT_LOG_ATTACKER_TYPE_WIDTH = 80
-export const COMBAT_LOG_OUTCOME_WIDTH = 90
-export const COMBAT_LOG_ATTACKER_SKILL_WIDTH = 130
-export const COMBAT_LOG_DEFENDER_SKILL_WIDTH = 130
-export const COMBAT_LOG_ROLL_WIDTH = 70
-export const COMBAT_LOG_THRESHOLD_WIDTH = 110
-export const COMBAT_LOG_DAMAGE_WIDTH = 180
-export const COMBAT_LOG_DEFENDER_HP_WIDTH = 110
+  // Combat Log columns
+  'combat_log.attack_id_width': 50,
+  'combat_log.round_number_width': 50,
+  'combat_log.agent_id_width': 100,
+  'combat_log.enemy_id_width': 150,
+  'combat_log.attacker_type_width': 80,
+  'combat_log.outcome_width': 90,
+  'combat_log.attacker_skill_width': 130,
+  'combat_log.defender_skill_width': 130,
+  'combat_log.roll_width': 70,
+  'combat_log.threshold_width': 110,
+  'combat_log.damage_width': 180,
+  'combat_log.defender_hp_width': 110,
 
-// Battle Log columns
-export const BATTLE_LOG_ROUND_NUMBER_WIDTH = 50
-export const BATTLE_LOG_STATUS_WIDTH = 100
-export const BATTLE_LOG_AGENT_COUNT_WIDTH = 70
-export const BATTLE_LOG_AGENT_SKILL_WIDTH = 150
-export const BATTLE_LOG_AGENT_HP_WIDTH = 140
-export const BATTLE_LOG_ENEMY_COUNT_WIDTH = 70
-export const BATTLE_LOG_ENEMY_SKILL_WIDTH = 150
-export const BATTLE_LOG_ENEMY_HP_WIDTH = 140
-export const BATTLE_LOG_SKILL_RATIO_WIDTH = 60
+  // Battle Log columns
+  'battle_log.round_number_width': 50,
+  'battle_log.status_width': 100,
+  'battle_log.agent_count_width': 70,
+  'battle_log.agent_skill_width': 150,
+  'battle_log.agent_hp_width': 140,
+  'battle_log.enemy_count_width': 70,
+  'battle_log.enemy_skill_width': 150,
+  'battle_log.enemy_hp_width': 140,
+  'battle_log.skill_ratio_width': 60,
 
-// Mission Site Details columns
-export const MISSION_SITE_DETAILS_KEY_WIDTH = 140
-export const MISSION_SITE_DETAILS_VALUE_WIDTH = 240
+  // Mission Site Details columns
+  'mission_site_details.key_width': 140,
+  'mission_site_details.value_width': 240,
+} as const

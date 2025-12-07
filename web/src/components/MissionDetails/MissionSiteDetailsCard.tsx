@@ -9,7 +9,7 @@ import { div } from '../../lib/primitives/mathPrimitives'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
-import { MISSION_SITE_DETAILS_KEY_WIDTH, MISSION_SITE_DETAILS_VALUE_WIDTH } from '../Common/columnWidths'
+import { columnWidths } from '../Common/columnWidths'
 import { MISSION_SITE_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionSiteId } from '../../lib/model/model'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -88,11 +88,11 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Property', width: MISSION_SITE_DETAILS_KEY_WIDTH },
+    { field: 'key', headerName: 'Property', width: columnWidths['mission_site_details.key_width'] },
     {
       field: 'value',
       headerName: 'Value',
-      width: MISSION_SITE_DETAILS_VALUE_WIDTH,
+      width: columnWidths['mission_site_details.value_width'],
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
@@ -106,8 +106,8 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Reward', width: MISSION_SITE_DETAILS_KEY_WIDTH },
-    { field: 'value', headerName: 'Value', width: MISSION_SITE_DETAILS_VALUE_WIDTH },
+    { field: 'key', headerName: 'Reward', width: columnWidths['mission_site_details.key_width'] },
+    { field: 'value', headerName: 'Value', width: columnWidths['mission_site_details.value_width'] },
   ]
 
   return (
