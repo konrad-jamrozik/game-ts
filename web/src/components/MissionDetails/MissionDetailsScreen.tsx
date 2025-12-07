@@ -18,7 +18,9 @@ export function MissionDetailsScreen(): React.JSX.Element {
 
   React.useEffect(() => {
     if (viewMissionDetailsId === undefined) {
-      return
+      return (): void => {
+        // no-op cleanup when no mission is selected
+      }
     }
 
     function handleKeyDown(event: KeyboardEvent): void {
