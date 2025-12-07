@@ -282,66 +282,71 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard id="player-actions" title="Player Actions" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard
+      id="player-actions"
+      title="Player Actions"
+      defaultExpanded={true}
+      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
+    >
       <Stack direction="column" spacing={2}>
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={handleHireAgent} fullWidth>
-              Hire Agent
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleSackAgents}
-              disabled={selectedAgentIds.length === 0}
-              sx={destructiveButtonSx}
-              fullWidth
-            >
-              Sack {fmtAgentCount(selectedAgentIds.length)}
-            </Button>
-          </Stack>
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
-              Recall {fmtAgentCount(selectedAgentIds.length)}
-            </Button>
-          </Stack>
-          <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
-            Assign {fmtAgentCount(selectedAgentIds.length)} to contracting
-          </Button>
-          <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
-            Assign {fmtAgentCount(selectedAgentIds.length)} to espionage
-          </Button>
-          <Button variant="contained" onClick={handleAssignToTraining} disabled={selectedAgentIds.length === 0}>
-            Assign {fmtAgentCount(selectedAgentIds.length)} to training
+        <Stack direction="row" spacing={2}>
+          <Button variant="contained" onClick={handleHireAgent} fullWidth>
+            Hire Agent
           </Button>
           <Button
             variant="contained"
-            onClick={handleDeployAgents}
-            disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
+            onClick={handleSackAgents}
+            disabled={selectedAgentIds.length === 0}
+            sx={destructiveButtonSx}
+            fullWidth
           >
-            Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionSiteId)}
+            Sack {fmtAgentCount(selectedAgentIds.length)}
           </Button>
-          <Button
-            variant="contained"
-            onClick={handleInvestigateLead}
-            disabled={
-              (selectedLeadId === undefined && selectedInvestigationId === undefined) || selectedAgentIds.length === 0
-            }
-          >
-            Investigate lead
-          </Button>
-          <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined}>
-            Buy upgrade
-          </Button>
-          <Collapse in={showAlert}>
-            <Alert
-              severity="error"
-              onClose={() => setShowAlert(false)}
-              sx={{ textAlign: 'center', alignItems: 'center' }}
-              aria-label="player-actions-alert"
-            >
-              {alertMessage}
-            </Alert>
-          </Collapse>
         </Stack>
+        <Stack direction="row" spacing={2}>
+          <Button variant="contained" onClick={handleRecallAgents} disabled={selectedAgentIds.length === 0} fullWidth>
+            Recall {fmtAgentCount(selectedAgentIds.length)}
+          </Button>
+        </Stack>
+        <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
+          Assign {fmtAgentCount(selectedAgentIds.length)} to contracting
+        </Button>
+        <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
+          Assign {fmtAgentCount(selectedAgentIds.length)} to espionage
+        </Button>
+        <Button variant="contained" onClick={handleAssignToTraining} disabled={selectedAgentIds.length === 0}>
+          Assign {fmtAgentCount(selectedAgentIds.length)} to training
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleDeployAgents}
+          disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
+        >
+          Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionSiteId)}
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleInvestigateLead}
+          disabled={
+            (selectedLeadId === undefined && selectedInvestigationId === undefined) || selectedAgentIds.length === 0
+          }
+        >
+          Investigate lead
+        </Button>
+        <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined}>
+          Buy upgrade
+        </Button>
+        <Collapse in={showAlert}>
+          <Alert
+            severity="error"
+            onClose={() => setShowAlert(false)}
+            sx={{ textAlign: 'center', alignItems: 'center' }}
+            aria-label="player-actions-alert"
+          >
+            {alertMessage}
+          </Alert>
+        </Collapse>
+      </Stack>
     </ExpandableCard>
   )
 }

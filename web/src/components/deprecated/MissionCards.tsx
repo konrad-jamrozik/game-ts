@@ -18,7 +18,11 @@ export function MissionCards(): React.JSX.Element {
 
   const widthVal = '800px'
   return (
-    <ExpandableCard id="deprecated-missions" title={`Missions (${sortedActiveMissionSites.length})`} sx={{ width: widthVal }}>
+    <ExpandableCard
+      id="deprecated-missions"
+      title={`Missions (${sortedActiveMissionSites.length})`}
+      sx={{ width: widthVal }}
+    >
       <Stack
         direction="row"
         spacing={0}

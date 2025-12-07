@@ -33,7 +33,12 @@ export function TurnReportCard(): React.ReactElement {
     : []
 
   return (
-    <ExpandableCard id="turn-report" title="Turn Report" defaultExpanded={true} sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard
+      id="turn-report"
+      title="Turn Report"
+      defaultExpanded={true}
+      sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}
+    >
       {report && (
         <Box
           sx={{
