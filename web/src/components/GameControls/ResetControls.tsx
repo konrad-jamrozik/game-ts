@@ -30,8 +30,15 @@ function handleWipeStorageClick(): void {
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
-  const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
+  const undoable = useAppSelector((state: RootState) => state.undoable)
+  const canUndo = undoable.past.length > 0
+  const canRedo = undoable.future.length > 0
   const currentTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.turn)
+  const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
+  const nextEntryTurn = canRedo ? undoable.future.at(0)?.gameState.turn : undefined
+  const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
+  const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
+  const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
   const availableUndoSteps = useAppSelector((state: RootState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
 
@@ -40,6 +47,14 @@ export function ResetControls(): React.JSX.Element {
     dispatch(reset(useDebug ? { debug: true } : undefined))
     dispatch(clearAllSelection())
     dispatch(ActionCreators.clearHistory())
+  }
+
+  function handleUndo(): void {
+    dispatch(ActionCreators.undo())
+  }
+
+  function handleRedo(): void {
+    dispatch(ActionCreators.redo())
   }
 
   function handleResetTurn(): void {
@@ -74,7 +89,25 @@ export function ResetControls(): React.JSX.Element {
       </AccordionSummary>
       <AccordionDetails>
         <Stack>
-          <Stack direction="row" sx={{ paddingBottom: 1 }} justifyContent="space-between">
+          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
+            <Button
+              variant="contained"
+              onClick={handleUndo}
+              disabled={!canUndo}
+              sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
+            >
+              Undo action
+            </Button>
+            <Button
+              variant="contained"
+              onClick={handleRedo}
+              disabled={!canRedo}
+              sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
+            >
+              Redo action
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
             <Button
               variant="contained"
               onClick={handleResetTurn}
@@ -82,7 +115,7 @@ export function ResetControls(): React.JSX.Element {
               disabled={!canResetTurn}
               title={!canResetTurn ? 'No prior state at start of this turn' : undefined}
             >
-              Reset Turn
+              Reset turn
             </Button>
             <Button
               variant="contained"
@@ -90,12 +123,12 @@ export function ResetControls(): React.JSX.Element {
               sx={destructiveButtonSx}
               title="Ctrl+Click to reset with debug assets"
             >
-              reset game
+              Reset game
             </Button>
           </Stack>
           <Stack direction="row" justifyContent="center">
             <Button variant="contained" onClick={handleWipeStorageClick} sx={destructiveButtonSx}>
-              Wipe Storage & Reload
+              Wipe storage and reload
             </Button>
           </Stack>
         </Stack>

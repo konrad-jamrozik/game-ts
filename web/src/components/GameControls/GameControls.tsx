@@ -1,11 +1,9 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSlice'
-import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
@@ -15,21 +13,9 @@ import { toF6, f6ge } from '../../lib/primitives/fixed6'
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const undoable = useAppSelector((state) => state.undoable)
-  const canUndo = undoable.past.length > 0
-  const canRedo = undoable.future.length > 0
-  const currentTurn = undoable.present.gameState.turn
-  const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
-  const nextEntryTurn = canRedo ? undoable.future.at(0)?.gameState.turn : undefined
-  const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
-  const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())
-  }
-
-  function handleUndo(): void {
-    dispatch(ActionCreators.undo())
   }
 
   function handleExpandAll(): void {
@@ -52,12 +38,10 @@ export function GameControls(): React.JSX.Element {
     >
       <Stack>
         <Stack direction="row" justifyContent="space-between" alignItems="center">
-          {/* width 156.86 chosen to match exactly the width of "Undo Redo" below. */}
           <Button
             variant="contained"
             onClick={handleAdvanceTurn}
             sx={(theme) => ({
-              width: 156.86,
               ...(isGameOver && {
                 '&.Mui-disabled': {
                   backgroundColor: theme.palette.error.dark,
@@ -67,29 +51,9 @@ export function GameControls(): React.JSX.Element {
             })}
             disabled={isGameOver}
           >
-            {isGameOver ? 'game over' : 'advance turn'}
+            {isGameOver ? 'game over' : 'next turn'}
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
-        </Stack>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
-          <Stack direction="row">
-            <Button
-              variant="contained"
-              onClick={handleUndo}
-              disabled={!canUndo}
-              sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
-            >
-              Undo
-            </Button>
-            <Button
-              variant="contained"
-              onClick={() => dispatch(ActionCreators.redo())}
-              disabled={!canRedo}
-              sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
-            >
-              Redo
-            </Button>
-          </Stack>
           <LabeledValue label="Actions" value={gameState.actionsCount} sx={{ width: labelWidthPx }} />
         </Stack>
         <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
