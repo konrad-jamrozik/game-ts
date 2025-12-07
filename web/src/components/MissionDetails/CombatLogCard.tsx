@@ -9,6 +9,7 @@ import type { MissionSiteId } from '../../lib/model/model'
 
 type CombatLogRow = {
   id: number
+  attackId: number
   roundNumber: number
   agentId: string
   enemyId: string
@@ -39,10 +40,17 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
 
   const rows: CombatLogRow[] = attackLogs.map((log, index) => ({
     id: index,
+    attackId: index + 1,
     ...log,
   }))
 
   const columns: GridColDef<CombatLogRow>[] = [
+    {
+      field: 'attackId',
+      headerName: 'ID',
+      width: 50,
+      type: 'number',
+    },
     {
       field: 'roundNumber',
       headerName: 'Round',
@@ -161,11 +169,11 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 70 + 100 + 140 + 80 + 80 + 110 + 110 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 70 + 100 + 140 + 80 + 80 + 110 + 110 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
-      <StyledDataGrid rows={rows} columns={columns} aria-label="Combat Log" hideFooter />
+      <StyledDataGrid rows={rows} columns={columns} aria-label="Combat Log" hideFooter disableColumnMenu={false} />
     </ExpandableCard>
   )
 }
