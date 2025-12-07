@@ -78,3 +78,7 @@ export const BATTLE_LOG_ENEMY_COUNT_WIDTH = 70
 export const BATTLE_LOG_ENEMY_SKILL_WIDTH = 150
 export const BATTLE_LOG_ENEMY_HP_WIDTH = 140
 export const BATTLE_LOG_SKILL_RATIO_WIDTH = 60
+
+// Mission Site Details columns
+export const MISSION_SITE_DETAILS_KEY_WIDTH = 140
+export const MISSION_SITE_DETAILS_VALUE_WIDTH = 240

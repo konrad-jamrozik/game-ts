@@ -3,20 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import {
-  COMBAT_LOG_AGENT_ID_WIDTH,
-  COMBAT_LOG_ATTACKER_SKILL_WIDTH,
-  COMBAT_LOG_ATTACKER_TYPE_WIDTH,
-  COMBAT_LOG_ATTACK_ID_WIDTH,
-  COMBAT_LOG_DAMAGE_WIDTH,
-  COMBAT_LOG_DEFENDER_HP_WIDTH,
-  COMBAT_LOG_DEFENDER_SKILL_WIDTH,
-  COMBAT_LOG_ENEMY_ID_WIDTH,
-  COMBAT_LOG_OUTCOME_WIDTH,
-  COMBAT_LOG_ROLL_WIDTH,
-  COMBAT_LOG_ROUND_NUMBER_WIDTH,
-  COMBAT_LOG_THRESHOLD_WIDTH,
-} from '../Common/columnWidths'
+import { COMBAT_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionSiteId } from '../../lib/model/model'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
@@ -46,25 +33,8 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
 
   const columns = getCombatLogColumns()
 
-  const CARD_WIDTH =
-    2 +
-    16 +
-    19 +
-    COMBAT_LOG_ATTACK_ID_WIDTH +
-    COMBAT_LOG_ROUND_NUMBER_WIDTH +
-    COMBAT_LOG_AGENT_ID_WIDTH +
-    COMBAT_LOG_ENEMY_ID_WIDTH +
-    COMBAT_LOG_ATTACKER_TYPE_WIDTH +
-    COMBAT_LOG_OUTCOME_WIDTH +
-    COMBAT_LOG_ATTACKER_SKILL_WIDTH +
-    COMBAT_LOG_DEFENDER_SKILL_WIDTH +
-    COMBAT_LOG_ROLL_WIDTH +
-    COMBAT_LOG_THRESHOLD_WIDTH +
-    COMBAT_LOG_DAMAGE_WIDTH +
-    COMBAT_LOG_DEFENDER_HP_WIDTH // borders + padding + filler + columns
-
   return (
-    <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
+    <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: COMBAT_LOG_CARD_WIDTH }}>
       <StyledDataGrid
         rows={rows}
         columns={columns}

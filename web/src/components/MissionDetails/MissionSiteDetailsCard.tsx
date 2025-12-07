@@ -9,12 +9,11 @@ import { div } from '../../lib/primitives/mathPrimitives'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
+import { MISSION_SITE_DETAILS_KEY_WIDTH, MISSION_SITE_DETAILS_VALUE_WIDTH } from '../Common/columnWidths'
+import { MISSION_SITE_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionSiteId } from '../../lib/model/model'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
-
-const KEY_WIDTH = 140
-const VALUE_WIDTH = 240
 
 type MissionSiteDetailsRow = {
   id: number
@@ -89,11 +88,11 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Property', width: KEY_WIDTH },
+    { field: 'key', headerName: 'Property', width: MISSION_SITE_DETAILS_KEY_WIDTH },
     {
       field: 'value',
       headerName: 'Value',
-      width: VALUE_WIDTH,
+      width: MISSION_SITE_DETAILS_VALUE_WIDTH,
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
@@ -107,18 +106,16 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Reward', width: KEY_WIDTH },
-    { field: 'value', headerName: 'Value', width: VALUE_WIDTH },
+    { field: 'key', headerName: 'Reward', width: MISSION_SITE_DETAILS_KEY_WIDTH },
+    { field: 'value', headerName: 'Value', width: MISSION_SITE_DETAILS_VALUE_WIDTH },
   ]
-
-  const CARD_WIDTH = 2 + 16 + 19 + KEY_WIDTH + VALUE_WIDTH // borders + padding + filler + columns
 
   return (
     <ExpandableCard
       id="mission-site-details"
       title="Mission Site Details"
       defaultExpanded={true}
-      sx={{ width: CARD_WIDTH }}
+      sx={{ width: MISSION_SITE_DETAILS_CARD_WIDTH }}
     >
       <Stack spacing={2}>
         <StyledDataGrid rows={detailsRows} columns={detailsColumns} aria-label="Mission Site Details" hideFooter />
