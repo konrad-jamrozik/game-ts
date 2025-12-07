@@ -4,7 +4,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
-import { fmtPctDec0, fmtDec2, fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
+import { fmtPctDec0, fmtDec1, fmtDec2, fmtInt, fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
 
 type CombatLogRow = {
@@ -136,9 +136,12 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
             ? 50
             : ((params.row.damage - params.row.damageMin) / (params.row.damageMax - params.row.damageMin)) * 100
         const damagePct = Math.round(50 + damageRangePct)
+        const damageAverage = (params.row.damageMin + params.row.damageMax) / 2
+        const damageAverageFormatted = Number.isInteger(damageAverage) ? fmtInt(damageAverage) : fmtDec1(damageAverage)
         return (
           <span>
-            {params.row.damage} ({damagePct}% of {params.row.damageMin}-{params.row.damageMax})
+            {params.row.damage} ({params.row.damageMin}-{params.row.damageMax}, {damagePct}% of {damageAverageFormatted}
+            )
           </span>
         )
       },
