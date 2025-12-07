@@ -1,5 +1,6 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
+import { Fragment } from 'react'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
 import { DebugCard } from './DebugCard'
 import { ErrorToast } from './Error/ErrorToast'
@@ -12,8 +13,24 @@ import { PlayerActions } from './GameControls/PlayerActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
 import { AssetsAndCapabCard } from './Assets/AssetsAndCapabCard'
 import { SituationReportCard } from './SituationReportCard'
+import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
+import { useAppSelector } from '../redux/hooks'
+import type { MissionSiteId } from '../lib/model/model'
 
 function App(): React.JSX.Element {
+  const viewMissionDetailsId: MissionSiteId | undefined = useAppSelector(
+    (state) => state.selection.viewMissionDetailsId,
+  )
+
+  if (viewMissionDetailsId !== undefined) {
+    return (
+      <Fragment>
+        <MissionDetailsScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
   return (
     <Grid
       container

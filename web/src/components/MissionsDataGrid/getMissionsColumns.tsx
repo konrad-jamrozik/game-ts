@@ -1,5 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import Button from '@mui/material/Button'
 import * as React from 'react'
+import type { AppDispatch } from '../../redux/store'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { f6sum, toF } from '../../lib/primitives/fixed6'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
@@ -8,8 +10,9 @@ import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { EXPECTED_MISSIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionsDataGrid'
+import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 
-export function getMissionsColumns(): GridColDef<MissionRow>[] {
+export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
       field: 'id',
@@ -69,6 +72,28 @@ export function getMissionsColumns(): GridColDef<MissionRow>[] {
         const avgSkill = getAverageSkill(params.row)
         const displayValue = avgSkill === 0 ? '-' : fmtDec1(avgSkill)
         return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
+      },
+    },
+    {
+      field: 'details',
+      headerName: 'Details',
+      width: 100,
+      sortable: false,
+      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+        function handleDetailsClick(): void {
+          dispatch(setViewMissionDetails(params.row.id))
+        }
+        return (
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleDetailsClick}
+            aria-label={`missions-row-details-${params.id}`}
+            sx={{ paddingY: 0, paddingX: 0.5 }}
+          >
+            Details
+          </Button>
+        )
       },
     },
   ]

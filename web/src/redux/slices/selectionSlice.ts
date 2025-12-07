@@ -8,6 +8,7 @@ export type SelectionState = {
   selectedInvestigationId?: LeadInvestigationId
   selectedMissionSiteId?: MissionSiteId
   selectedUpgradeName?: UpgradeName
+  viewMissionDetailsId?: MissionSiteId
 }
 
 const initialState: SelectionState = {
@@ -55,6 +56,12 @@ const selectionSlice = createSlice({
       delete state.selectedMissionSiteId
       delete state.selectedUpgradeName
     },
+    setViewMissionDetails(state, action: PayloadAction<MissionSiteId>) {
+      state.viewMissionDetailsId = action.payload
+    },
+    clearViewMissionDetails(state) {
+      delete state.viewMissionDetailsId
+    },
   },
 })
 
@@ -70,5 +77,7 @@ export const {
   setUpgradeSelection,
   clearUpgradeSelection,
   clearAllSelection,
+  setViewMissionDetails,
+  clearViewMissionDetails,
 } = selectionSlice.actions
 export default selectionSlice.reducer

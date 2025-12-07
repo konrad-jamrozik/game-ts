@@ -1,5 +1,6 @@
 import { toF6 } from '../primitives/fixed6'
 import type { Faction } from '../model/model'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 export const factions: Faction[] = [
   {
@@ -11,3 +12,9 @@ export const factions: Faction[] = [
     discoveryPrerequisite: ['lead-red-dawn-profile'],
   },
 ]
+
+export function getFactionById(factionId: string): Faction {
+  const foundFaction = factions.find((faction) => faction.id === factionId)
+  assertDefined(foundFaction, `Faction with id ${factionId} not found`)
+  return foundFaction
+}
