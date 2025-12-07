@@ -8,6 +8,14 @@ import { f6sum, toF } from '../../lib/primitives/fixed6'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { div } from '../../lib/primitives/mathPrimitives'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
+import {
+  MISSIONS_AVG_SKILL_WIDTH,
+  MISSIONS_DETAILS_WIDTH,
+  MISSIONS_ENEMIES_WIDTH,
+  MISSIONS_EXPIRES_IN_WIDTH,
+  MISSIONS_ID_WIDTH,
+  MISSIONS_STATE_WIDTH,
+} from '../Common/columnWidths'
 import { EXPECTED_MISSIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionsDataGrid'
@@ -18,7 +26,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'id',
       headerName: 'Mission site ID',
-      width: 240,
+      width: MISSIONS_ID_WIDTH,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
         const displayValue = fmtMissionSiteIdWithMissionId(params.row)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
@@ -27,7 +35,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'state',
       headerName: 'State',
-      width: 120,
+      width: MISSIONS_STATE_WIDTH,
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
         if (params.value === 'Successful' || params.value === 'Failed' || params.value === 'Expired') {
           return (
@@ -42,7 +50,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'expiresIn',
       headerName: 'Expires in',
-      width: 90,
+      width: MISSIONS_EXPIRES_IN_WIDTH,
       renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
         if (params.row.state === 'Active') {
           return (
@@ -57,7 +65,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'enemies',
       headerName: 'Enemies',
-      width: 80,
+      width: MISSIONS_ENEMIES_WIDTH,
       valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const enemyCount = getEnemyCount(params.row)
@@ -67,7 +75,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'avgSkill',
       headerName: 'Avg. skill',
-      width: 80,
+      width: MISSIONS_AVG_SKILL_WIDTH,
       valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         const avgSkill = getAverageSkill(params.row)
@@ -78,7 +86,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     {
       field: 'details',
       headerName: 'Details',
-      width: 100,
+      width: MISSIONS_DETAILS_WIDTH,
       sortable: false,
       align: 'center',
       headerAlign: 'center',
