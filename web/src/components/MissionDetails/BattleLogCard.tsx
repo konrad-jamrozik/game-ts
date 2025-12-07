@@ -135,8 +135,10 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     },
   ]
 
+  const CARD_WIDTH = 2 + 16 + 19 + 70 + 100 + 90 + 130 + 110 + 90 + 130 + 110 + 100 // borders + padding + filler + columns
+
   return (
-    <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true}>
+    <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
       <StyledDataGrid rows={rows} columns={columns} aria-label="Battle Log" hideFooter />
     </ExpandableCard>
   )

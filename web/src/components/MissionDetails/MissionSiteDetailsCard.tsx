@@ -111,8 +111,15 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
     { field: 'value', headerName: 'Value', width: VALUE_WIDTH },
   ]
 
+  const CARD_WIDTH = 2 + 16 + 19 + KEY_WIDTH + VALUE_WIDTH // borders + padding + filler + columns
+
   return (
-    <ExpandableCard id="mission-site-details" title="Mission Site Details" defaultExpanded={true}>
+    <ExpandableCard
+      id="mission-site-details"
+      title="Mission Site Details"
+      defaultExpanded={true}
+      sx={{ width: CARD_WIDTH }}
+    >
       <Stack spacing={2}>
         <StyledDataGrid rows={detailsRows} columns={detailsColumns} aria-label="Mission Site Details" hideFooter />
         <StyledDataGrid rows={rewardRows} columns={rewardColumns} aria-label="Mission Rewards" hideFooter />
