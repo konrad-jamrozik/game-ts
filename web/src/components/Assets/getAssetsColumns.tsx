@@ -11,7 +11,7 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     {
       field: 'name',
       headerName: 'Asset',
-      width: columnWidths['assets.name_width'],
+      width: columnWidths['assets.name'],
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -20,12 +20,12 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     {
       field: 'value',
       headerName: 'Current',
-      width: columnWidths['assets.value_width'],
+      width: columnWidths['assets.value'],
     },
     {
       field: 'projected',
       headerName: 'Projected',
-      width: columnWidths['assets.projected_width'],
+      width: columnWidths['assets.projected'],
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const { diff, name, projected } = params.row
 

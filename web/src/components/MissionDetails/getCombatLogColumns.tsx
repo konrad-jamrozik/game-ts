@@ -30,19 +30,19 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'attackId',
       headerName: 'ID',
-      width: columnWidths['combat_log.attack_id_width'],
+      width: columnWidths['combat_log.attack_id'],
       type: 'number',
     },
     {
       field: 'roundNumber',
       headerName: 'R',
-      width: columnWidths['combat_log.round_number_width'],
+      width: columnWidths['combat_log.round_number'],
       type: 'number',
     },
     {
       field: 'agentId',
       headerName: 'Agent',
-      width: columnWidths['combat_log.agent_id_width'],
+      width: columnWidths['combat_log.agent_id'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const isDefenderDead = params.row.attackerType === 'Enemy' && params.row.defenderHp <= 0
         return <span style={{ color: isDefenderDead ? 'hsl(4, 90%, 58%)' : undefined }}>{params.row.agentId}</span>
@@ -51,7 +51,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'enemyId',
       headerName: 'Enemy',
-      width: columnWidths['combat_log.enemy_id_width'],
+      width: columnWidths['combat_log.enemy_id'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const isDefenderDead = params.row.attackerType === 'Agent' && params.row.defenderHp <= 0
         return (
@@ -64,17 +64,17 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'attackerType',
       headerName: 'Attacker',
-      width: columnWidths['combat_log.attacker_type_width'],
+      width: columnWidths['combat_log.attacker_type'],
     },
     {
       field: 'outcome',
       headerName: 'Outcome',
-      width: columnWidths['combat_log.outcome_width'],
+      width: columnWidths['combat_log.outcome'],
     },
     {
       field: 'attackerSkill',
       headerName: 'Att Skill',
-      width: columnWidths['combat_log.attacker_skill_width'],
+      width: columnWidths['combat_log.attacker_skill'],
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
         return (
@@ -87,7 +87,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'defenderSkill',
       headerName: 'Def Skill',
-      width: columnWidths['combat_log.defender_skill_width'],
+      width: columnWidths['combat_log.defender_skill'],
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
         return (
@@ -100,7 +100,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'roll',
       headerName: 'Att Roll',
-      width: columnWidths['combat_log.roll_width'],
+      width: columnWidths['combat_log.roll'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
         <span>{fmtDec2(params.row.roll)}%</span>
       ),
@@ -108,7 +108,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'threshold',
       headerName: '> Threshold',
-      width: columnWidths['combat_log.threshold_width'],
+      width: columnWidths['combat_log.threshold'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const exceeded = params.row.roll > params.row.threshold
         return (
@@ -121,7 +121,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'damage',
       headerName: 'Damage',
-      width: columnWidths['combat_log.damage_width'],
+      width: columnWidths['combat_log.damage'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         if (params.row.damage === undefined) {
           return <span>-</span>
@@ -144,7 +144,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
     {
       field: 'defenderHp',
       headerName: 'HP',
-      width: columnWidths['combat_log.defender_hp_width'],
+      width: columnWidths['combat_log.defender_hp'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.defenderHp, params.row.defenderHpMax)
         const isZeroOrLess = params.row.defenderHp <= 0

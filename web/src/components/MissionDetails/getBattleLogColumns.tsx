@@ -29,13 +29,13 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'roundNumber',
       headerName: 'R',
-      width: columnWidths['battle_log.round_number_width'],
+      width: columnWidths['battle_log.round_number'],
       type: 'number',
     },
     {
       field: 'status',
       headerName: 'Status',
-      width: columnWidths['battle_log.status_width'],
+      width: columnWidths['battle_log.status'],
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
         <MyChip chipValue={params.row.status} />
       ),
@@ -43,7 +43,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'agentCount',
       headerName: 'Agents',
-      width: columnWidths['battle_log.agent_count_width'],
+      width: columnWidths['battle_log.agent_count'],
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
         <span>
           {params.row.agentCount}/{params.row.agentCountTotal}
@@ -53,7 +53,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'agentSkill',
       headerName: 'Agent Skill',
-      width: columnWidths['battle_log.agent_skill_width'],
+      width: columnWidths['battle_log.agent_skill'],
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.agentSkill, params.row.agentSkillTotal)
         return (
@@ -66,7 +66,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'agentHp',
       headerName: 'Agent HP',
-      width: columnWidths['battle_log.agent_hp_width'],
+      width: columnWidths['battle_log.agent_hp'],
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.agentHp, params.row.agentHpTotal)
         return (
@@ -79,7 +79,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'enemyCount',
       headerName: 'Enem.',
-      width: columnWidths['battle_log.enemy_count_width'],
+      width: columnWidths['battle_log.enemy_count'],
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
         <span>
           {params.row.enemyCount}/{params.row.enemyCountTotal}
@@ -89,7 +89,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'enemySkill',
       headerName: 'Enemy Skill',
-      width: columnWidths['battle_log.enemy_skill_width'],
+      width: columnWidths['battle_log.enemy_skill'],
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.enemySkill, params.row.enemySkillTotal)
         return (
@@ -102,7 +102,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'enemyHp',
       headerName: 'Enemy HP',
-      width: columnWidths['battle_log.enemy_hp_width'],
+      width: columnWidths['battle_log.enemy_hp'],
       renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
         const hpPct = fmtPctDec0(params.row.enemyHp, params.row.enemyHpTotal)
         return (
@@ -115,7 +115,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
     {
       field: 'skillRatio',
       headerName: 'Ratio',
-      width: columnWidths['battle_log.skill_ratio_width'],
+      width: columnWidths['battle_log.skill_ratio'],
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => (
         <span>{f6fmtPctDec0(params.row.skillRatio)}</span>
       ),

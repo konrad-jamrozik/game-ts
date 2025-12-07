@@ -88,11 +88,11 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Property', width: columnWidths['mission_site_details.key_width'] },
+    { field: 'key', headerName: 'Property', width: columnWidths['mission_site_details.key'] },
     {
       field: 'value',
       headerName: 'Value',
-      width: columnWidths['mission_site_details.value_width'],
+      width: columnWidths['mission_site_details.value'],
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
@@ -106,8 +106,8 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Reward', width: columnWidths['mission_site_details.key_width'] },
-    { field: 'value', headerName: 'Value', width: columnWidths['mission_site_details.value_width'] },
+    { field: 'key', headerName: 'Reward', width: columnWidths['mission_site_details.key'] },
+    { field: 'value', headerName: 'Value', width: columnWidths['mission_site_details.value'] },
   ]
 
   return (

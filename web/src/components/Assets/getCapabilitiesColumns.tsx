@@ -10,7 +10,7 @@ export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
     {
       field: 'name',
       headerName: 'Capability',
-      width: columnWidths['capabilities.name_width'],
+      width: columnWidths['capabilities.name'],
       renderCell: (params: GridRenderCellParams<UpgradeRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -19,17 +19,17 @@ export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
     {
       field: 'value',
       headerName: 'Current',
-      width: columnWidths['capabilities.value_width'],
+      width: columnWidths['capabilities.value'],
     },
     {
       field: 'upgrade',
       headerName: 'Upgrade',
-      width: columnWidths['capabilities.upgrade_width'],
+      width: columnWidths['capabilities.upgrade'],
     },
     {
       field: 'price',
       headerName: 'Price',
-      width: columnWidths['capabilities.price_width'],
+      width: columnWidths['capabilities.price'],
     },
   ]
 

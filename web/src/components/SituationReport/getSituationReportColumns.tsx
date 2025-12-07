@@ -8,12 +8,12 @@ import type { SituationReportRow } from '../SituationReportCard'
 
 export function getSituationReportColumns(): GridColDef<SituationReportRow>[] {
   const columns: GridColDef<SituationReportRow>[] = [
-    { field: 'metric', headerName: 'Metric', width: columnWidths['situation_report.metric_width'] },
-    { field: 'value', headerName: 'Value', width: columnWidths['situation_report.value_width'] },
+    { field: 'metric', headerName: 'Metric', width: columnWidths['situation_report.metric'] },
+    { field: 'value', headerName: 'Value', width: columnWidths['situation_report.value'] },
     {
       field: 'projected',
       headerName: 'Projected',
-      width: columnWidths['situation_report.projected_width'],
+      width: columnWidths['situation_report.projected'],
       renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
         const { diff, metric, projected, reverseColor } = params.row
 
