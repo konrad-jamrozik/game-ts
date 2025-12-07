@@ -9,7 +9,7 @@ import { TurnReportTreeView } from './TurnReportTreeView'
 /**
  * CSS Grid component for displaying turn advancement reports
  */
-export function TurnReportDisplay(): React.ReactElement {
+export function TurnReportCard(): React.ReactElement {
   const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
 
   const assetsDefaultExpandedItems: readonly string[] = [

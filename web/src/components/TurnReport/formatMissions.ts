@@ -6,7 +6,7 @@ import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
  * Format missions report as a tree structure for the MUI Tree View,
- * for the TurnReportTreeView component, to display it as part of the TurnReportDisplay component.
+ * for the TurnReportTreeView component, to display it as part of the TurnReportCard component.
  */
 export function formatMissions(missions: readonly MissionReport[]): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return missions.map((mission) => formatMissionReport(mission))

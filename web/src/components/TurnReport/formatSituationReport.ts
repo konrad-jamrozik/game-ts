@@ -17,7 +17,7 @@ import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
 /**
  * Format situation report (panic, factions, and missions) as a tree structure for the MUI Tree View,
- * for the TurnReportTreeView component, to display it as part of the TurnReportDisplay component.
+ * for the TurnReportTreeView component, to display it as part of the TurnReportCard component.
  */
 export function formatSituationReport(
   panicReport: PanicReport,
