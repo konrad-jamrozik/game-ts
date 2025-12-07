@@ -202,7 +202,7 @@
         "@typescript-eslint/explicit-function-return-type": "error",
         "@typescript-eslint/explicit-module-boundary-types": "error",
         "init-declarations": "error",
-        "max-params": "error",
+        "max-params": "off",
         "no-array-constructor": "error",
         "@typescript-eslint/no-array-delete": "error",
         "@typescript-eslint/no-base-to-string": "error",
@@ -473,12 +473,6 @@
         "unicorn/no-negated-condition": "off",
         "unicorn/no-array-for-each": "off",
 
-        "max-params": [
-          "error",
-          {
-            "max": 8
-          }
-        ],
         "no-restricted-imports": [
           "error",
           {
