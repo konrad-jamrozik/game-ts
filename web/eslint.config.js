@@ -170,7 +170,9 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/no-console
       'no-console': 'off',
       // https://eslint.org/docs/latest/rules/max-statements
-      'max-statements': ['error', { max: 50 }],
+      // Turned off as it just confuses AI agents
+      //'max-statements': ['error', { max: 50 }],
+      'max-statements': 'off',
       // https://eslint.org/docs/latest/rules/func-style
       'func-style': [
         'error',

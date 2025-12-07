@@ -42,7 +42,7 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
 
   const agentsEffectiveSkillThreshold = toF6r(f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD))
 
-  // Check if agents' effective skill is below threshold
+  // Check if agents' effective skill is below threshold of 50% of original effective skill
   const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
 
   // Check if enemy effective skill is at least 80% of agents' current effective skill
