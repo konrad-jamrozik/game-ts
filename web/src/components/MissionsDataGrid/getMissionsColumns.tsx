@@ -1,5 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
@@ -79,20 +80,32 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
       headerName: 'Details',
       width: 100,
       sortable: false,
+      align: 'center',
+      headerAlign: 'center',
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
         function handleDetailsClick(): void {
           dispatch(setViewMissionDetails(params.row.id))
         }
         return (
-          <Button
-            variant="contained"
-            size="small"
-            onClick={handleDetailsClick}
-            aria-label={`missions-row-details-${params.id}`}
-            sx={{ paddingY: 0, paddingX: 0.5 }}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              height: '100%',
+              width: '100%',
+            }}
           >
-            Details
-          </Button>
+            <Button
+              variant="contained"
+              size="small"
+              onClick={handleDetailsClick}
+              aria-label={`missions-row-details-${params.id}`}
+              sx={{ paddingY: 0, paddingX: 0.5, textTransform: 'none' }}
+            >
+              Details
+            </Button>
+          </Box>
         )
       },
     },
