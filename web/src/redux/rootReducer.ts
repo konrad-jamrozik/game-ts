@@ -8,10 +8,12 @@ import settingsReducer from './slices/settingsSlice'
 
 export const UNDO_LIMIT = 100
 
+// 1. Start by creating a combined reducer having only one `gameState` reducer.
 const combinedReducer = combineReducers({
   gameState: gameStateReducer,
 })
 
+// 2. Now make the `gameState` undoable.
 // undoable is from https://github.com/omnidan/redux-undo
 const undoableReducer = undoable(combinedReducer, {
   // Up to UNDO_LIMIT player actions can be undone/redone.
@@ -28,6 +30,7 @@ const undoableReducer = undoable(combinedReducer, {
   filter: (action) => isPlayerAction(action) || advanceTurn.match(action),
 })
 
+// 3. Now actually combine the undoable `gameState` with all the other reducers.
 // Combine undoable and non-undoable reducers
 export const rootReducer = combineReducers({
   undoable: undoableReducer,
