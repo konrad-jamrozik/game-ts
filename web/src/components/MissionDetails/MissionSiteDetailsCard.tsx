@@ -61,14 +61,14 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
     { id: 5, item: 'Agents deployed', value: String(agentsDeployed) },
     { id: 6, item: 'Enemy faction', value: enemyFaction },
     { id: 7, item: 'Enemy count', value: String(enemyCount) },
-    { id: 8, item: 'Enemy average skill', value: enemyAverageSkill },
+    { id: 8, item: 'Enemy avg. skill', value: enemyAverageSkill },
     { id: 9, item: 'Reward money', value: String(rewardMoney) },
-    { id: 10, item: 'Reward suppression', value: rewardSuppressionStr },
+    { id: 10, item: 'Reward suppr.', value: rewardSuppressionStr },
   ]
 
   const columns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'item', headerName: 'Item', width: 180 },
-    { field: 'value', headerName: 'Value', width: 200 },
+    { field: 'item', headerName: 'Item', width: 140 },
+    { field: 'value', headerName: 'Value', width: 240 },
   ]
 
   return (

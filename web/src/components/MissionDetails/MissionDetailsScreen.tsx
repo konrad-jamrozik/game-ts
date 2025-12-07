@@ -7,7 +7,6 @@ import { clearViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { MissionSiteDetailsCard } from './MissionSiteDetailsCard'
 import { CombatLogCard } from './CombatLogCard'
 import { BattleLogCard } from './BattleLogCard'
-import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export function MissionDetailsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -31,11 +30,10 @@ export function MissionDetailsScreen(): React.JSX.Element {
       bgcolor={'#30303052'}
       flexWrap={'wrap'}
       justifyContent={'center'}
-      alignItems="stretch"
     >
       <Grid>
-        <Stack spacing={2} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
-          <Button variant="contained" onClick={handleBackClick} sx={{ alignSelf: 'flex-start' }}>
+        <Stack spacing={2} alignItems="center">
+          <Button variant="contained" onClick={handleBackClick}>
             Back to command center
           </Button>
           <MissionSiteDetailsCard missionSiteId={viewMissionDetailsId} />
