@@ -13,6 +13,9 @@ import type { MissionSiteId } from '../../lib/model/model'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
 
+const KEY_WIDTH = 140
+const VALUE_WIDTH = 240
+
 type MissionSiteDetailsRow = {
   id: number
   key: string
@@ -86,11 +89,11 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Property', width: 140 },
+    { field: 'key', headerName: 'Property', width: KEY_WIDTH },
     {
       field: 'value',
       headerName: 'Value',
-      width: 260,
+      width: VALUE_WIDTH,
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
@@ -104,8 +107,8 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   ]
 
   const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Reward', width: 140 },
-    { field: 'value', headerName: 'Value', width: 260 },
+    { field: 'key', headerName: 'Reward', width: KEY_WIDTH },
+    { field: 'value', headerName: 'Value', width: VALUE_WIDTH },
   ]
 
   return (

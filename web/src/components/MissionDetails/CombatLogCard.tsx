@@ -79,7 +79,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'attackerSkill',
       headerName: 'Att Skill',
-      width: 130,
+      width: 110,
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
         return (
@@ -92,7 +92,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'defenderSkill',
       headerName: 'Def Skill',
-      width: 130,
+      width: 110,
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
         return (
@@ -105,7 +105,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'roll',
       headerName: 'Att Roll',
-      width: 90,
+      width: 70,
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
         <span>{fmtDec2(params.row.roll)}%</span>
       ),
@@ -124,14 +124,9 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
       },
     },
     {
-      field: 'outcome',
-      headerName: 'Outcome',
-      width: 90,
-    },
-    {
       field: 'damage',
       headerName: 'Damage',
-      width: 120,
+      width: 160,
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         if (params.row.damage === undefined) {
           return <span>-</span>

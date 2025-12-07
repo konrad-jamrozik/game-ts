@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewMissionDetails } from '../../redux/slices/selectionSlice'
@@ -41,30 +42,34 @@ export function MissionDetailsScreen(): React.JSX.Element {
   }
 
   return (
-    <Grid
-      container
-      direction="row"
-      spacing={2}
-      padding={2}
-      paddingX={1}
-      bgcolor={'#30303052'}
-      flexWrap={'wrap'}
-      justifyContent={'center'}
-    >
-      <Grid>
-        <Stack spacing={2} alignItems="center">
-          <Button variant="contained" onClick={handleBackClick}>
-            Back to command center
-          </Button>
-          <MissionSiteDetailsCard missionSiteId={viewMissionDetailsId} />
-        </Stack>
+    <Box>
+      <Grid
+        container
+        direction="row"
+        spacing={2}
+        padding={2}
+        paddingX={1}
+        bgcolor={'#30303052'}
+        flexWrap={'wrap'}
+        justifyContent={'center'}
+      >
+        <Grid>
+          <Stack spacing={2} alignItems="center">
+            <Button variant="contained" onClick={handleBackClick}>
+              Back to command center
+            </Button>
+            <MissionSiteDetailsCard missionSiteId={viewMissionDetailsId} />
+          </Stack>
+        </Grid>
+        <Grid>
+          <Stack spacing={2}>
+            <BattleLogCard missionSiteId={viewMissionDetailsId} />
+          </Stack>
+        </Grid>
       </Grid>
-      <Grid>
-        <Stack spacing={2}>
-          <BattleLogCard missionSiteId={viewMissionDetailsId} />
-          <CombatLogCard missionSiteId={viewMissionDetailsId} />
-        </Stack>
-      </Grid>
-    </Grid>
+      <Box sx={{ width: '100%', paddingX: 1, paddingBottom: 2 }}>
+        <CombatLogCard missionSiteId={viewMissionDetailsId} />
+      </Box>
+    </Box>
   )
 }
