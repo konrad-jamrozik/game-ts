@@ -150,6 +150,14 @@ const colorSystemOptions: ColorSystemOptions = {
 }
 
 let theme = createTheme({
+  typography: {
+    fontFamily: '"JetBrains Mono"',
+    //fontFamily: 'monospace',
+    //fontFamily: 'Roboto',
+    //fontFamily: 'Calibri',
+    //fontFamily: 'Lekton',
+    //fontFamily: '"Fira Code"',
+  },
   colorSchemes: {
     dark: colorSystemOptions,
     // We set light to dark because we don't really support light, but the values
