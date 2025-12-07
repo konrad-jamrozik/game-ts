@@ -17,7 +17,7 @@ describe(GameControls, () => {
   //   store.dispatch(reset())
   // })
 
-  test("click 'advance turn' button -> happy path", async () => {
+  test("click 'next turn' button -> happy path", async () => {
     expect.hasAssertions()
 
     render(
@@ -30,8 +30,8 @@ describe(GameControls, () => {
 
     expect(turnValue).toHaveTextContent('1')
 
-    // Click the advance turn button
-    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+    // Click the next turn button
+    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
     // Check updated turn value
     expect(turnValue).toHaveTextContent('2')
@@ -49,8 +49,8 @@ describe(GameControls, () => {
       </Provider>,
     )
 
-    // First, click "Advance turn" to ensure the game state is "in progress"
-    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+    // First, click "next turn" to ensure the game state is "in progress"
+    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
     // Verify the button is accessible when expanded=true
     const resetButton = screen.getByRole('button', { name: /reset game/iu })
