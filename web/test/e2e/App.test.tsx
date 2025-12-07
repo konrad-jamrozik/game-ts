@@ -151,7 +151,7 @@ async function step4ClickCriminalOrganizationsLead(): Promise<void> {
 /**
  * Step 5: Click "Investigate lead" button
  * - Verify a new lead investigation appears in "Lead investigations"
- * - Verify the data grid in lead investigations card has a row containing "000 Criminal organizations"
+ * - Verify the data grid in lead investigations card has a row containing "001 Criminal organizations"
  */
 async function step5ClickInvestigateLeadButton(): Promise<void> {
   await userEvent.click(screen.getByRole('button', { name: /investigate lead/iu }))
@@ -159,9 +159,9 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
   // Verify a new lead investigation appears in "Lead investigations"
   expect(screen.getByText(/lead investigations/iu)).toBeInTheDocument()
 
-  // Verify the data grid in lead investigations card has a row containing "000 Criminal organizations"
+  // Verify the data grid in lead investigations card has a row containing "001 Criminal organizations"
   const gridRows = screen.getAllByRole('row')
-  const investigationRow = gridRows.find((row) => row.textContent.includes('000 Criminal organizations'))
+  const investigationRow = gridRows.find((row) => row.textContent.includes('001 Criminal organizations'))
   expect(investigationRow).toBeDefined()
 
   console.log('✅ Step 5 completed: Click "Investigate lead" button')
