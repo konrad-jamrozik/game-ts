@@ -3,23 +3,23 @@ import * as React from 'react'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 
-type CombatDetailsRow = {
+type CombatLogRow = {
   id: number
   item: string
   value: string
 }
 
-export function CombatDetailsCard(): React.JSX.Element {
-  const rows: CombatDetailsRow[] = []
+export function CombatLogCard(): React.JSX.Element {
+  const rows: CombatLogRow[] = []
 
-  const columns: GridColDef<CombatDetailsRow>[] = [
+  const columns: GridColDef<CombatLogRow>[] = [
     { field: 'item', headerName: 'Item', width: 180 },
     { field: 'value', headerName: 'Value', width: 200 },
   ]
 
   return (
-    <ExpandableCard id="combat-details" title="Combat details" defaultExpanded={true}>
-      <StyledDataGrid rows={rows} columns={columns} aria-label="Combat details" hideFooter />
+    <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true}>
+      <StyledDataGrid rows={rows} columns={columns} aria-label="Combat Log" hideFooter />
     </ExpandableCard>
   )
 }

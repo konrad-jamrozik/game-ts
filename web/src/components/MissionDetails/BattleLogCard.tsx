@@ -18,8 +18,8 @@ export function BattleLogCard(): React.JSX.Element {
   ]
 
   return (
-    <ExpandableCard id="battle-log" title="Battle log" defaultExpanded={true}>
-      <StyledDataGrid rows={rows} columns={columns} aria-label="Battle log" hideFooter />
+    <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true}>
+      <StyledDataGrid rows={rows} columns={columns} aria-label="Battle Log" hideFooter />
     </ExpandableCard>
   )
 }

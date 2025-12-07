@@ -5,9 +5,9 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { MissionSiteDetailsCard } from './MissionSiteDetailsCard'
-import { CombatDetailsCard } from './CombatDetailsCard'
+import { CombatLogCard } from './CombatLogCard'
 import { BattleLogCard } from './BattleLogCard'
-import { LEFT_COLUMN_CARD_WIDTH, RIGHT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export function MissionDetailsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -42,9 +42,9 @@ export function MissionDetailsScreen(): React.JSX.Element {
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={2} sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}>
+        <Stack spacing={2}>
           <BattleLogCard />
-          <CombatDetailsCard />
+          <CombatLogCard />
         </Stack>
       </Grid>
     </Grid>
