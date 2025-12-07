@@ -31,7 +31,22 @@ export function MyChip({
   const chipLabel = formatChipLabel(chipValue, noPlusSign)
   const chipColor: ChipColor = determineChipColor(chipLabel, noColor, reverseColor, useWarningColor, paletteColorName)
 
-  return <Chip label={chipLabel} size="small" sx={{ fontSize: '0.875rem', height: 18 }} color={chipColor} />
+  // Check if the value is numeric (number or Fixed6) or if the formatted label is numeric
+  const isNumericValue =
+    typeof chipValue === 'number' || isF6(chipValue) || (chipLabel !== undefined && /^[+-]?\d/u.test(chipLabel))
+
+  return (
+    <Chip
+      label={chipLabel}
+      size="small"
+      sx={{
+        fontSize: '0.875rem',
+        height: 18,
+        ...(isNumericValue && { fontFamily: 'Courier New' }),
+      }}
+      color={chipColor}
+    />
+  )
 }
 
 /**

@@ -21,9 +21,42 @@ export function TreeItemLabelWithChip({
   noColor = false,
   useWarningColor = false,
 }: TreeItemLabelWithChipProps): React.ReactElement {
+  // Check if children contains the arrow pattern (→) indicating a value change display
+  // Only process if children is a string
+  let labelContent: React.ReactNode = children
+  if (typeof children === 'string') {
+    const arrowIndex = children.indexOf('→')
+    if (arrowIndex !== -1) {
+      // Find the colon before the arrow to split label from value
+      // Format is "Label: previous → current", so we want "Label:" in default font
+      // and "previous → current" in Courier New
+      const colonIndex = children.lastIndexOf(':', arrowIndex)
+      if (colonIndex !== -1) {
+        const labelPart = children.slice(0, colonIndex + 1) // Include the colon
+        const valuePart = children.slice(colonIndex + 1) // Value part after colon (includes space)
+        labelContent = (
+          <>
+            <span>{labelPart}</span>
+            <span style={{ fontFamily: 'Courier New' }}>{valuePart}</span>
+          </>
+        )
+      } else {
+        // Fallback: if no colon found, just split at arrow
+        const labelPart = children.slice(0, arrowIndex)
+        const valuePart = children.slice(arrowIndex)
+        labelContent = (
+          <>
+            <span>{labelPart}</span>
+            <span style={{ fontFamily: 'Courier New' }}>{valuePart}</span>
+          </>
+        )
+      }
+    }
+  }
+
   return (
     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span>{children}</span>
+      <span>{labelContent}</span>
       {chipValue !== undefined && (
         <MyChip
           chipValue={chipValue}

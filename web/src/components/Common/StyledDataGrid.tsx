@@ -23,7 +23,7 @@ export function StyledDataGrid({ rows, columns, ...dataGridProps }: StyledDataGr
         rowHeight={30}
         sx={(theme) => ({
           bgcolor: theme.palette.background.default,
-          '& .MuiDataGrid-cell': { fontWeight: 100 },
+          '& .MuiDataGrid-cell': { fontWeight: 100, fontFamily: 'Courier New' },
           '& .MuiDataGrid-columnHeaders': { fontWeight: 700 },
           maxHeight: '80vh',
         })}

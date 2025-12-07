@@ -7,7 +7,14 @@ import type { SituationReportRow } from '../SituationReportCard'
 
 export function getSituationReportColumns(): GridColDef<SituationReportRow>[] {
   const columns: GridColDef<SituationReportRow>[] = [
-    { field: 'metric', headerName: 'Metric', width: 120 },
+    {
+      field: 'metric',
+      headerName: 'Metric',
+      width: 120,
+      renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => (
+        <span style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{params.row.metric}</span>
+      ),
+    },
     { field: 'value', headerName: 'Value', width: 80 },
     {
       field: 'projected',

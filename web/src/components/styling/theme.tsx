@@ -150,6 +150,10 @@ const colorSystemOptions: ColorSystemOptions = {
 }
 
 let theme = createTheme({
+  typography: {
+    //fontFamily: ['monospace'].join(','),
+    //fontFamily: ['SUSE Mono', 'Share Tech Mono', 'monospace'].join(','),
+  },
   colorSchemes: {
     dark: colorSystemOptions,
     // We set light to dark because we don't really support light, but the values

@@ -13,7 +13,7 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
       width: 160,
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
-        return <span>{displayName}</span>
+        return <span style={{ fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif' }}>{displayName}</span>
       },
     },
     {
