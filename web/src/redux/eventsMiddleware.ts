@@ -34,7 +34,7 @@ function hasType(obj: unknown): obj is { type: string } {
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
 export function eventsMiddleware(): Middleware<{}, RootState> {
-  // eslint-disable-next-line unicorn/consistent-function-scoping, complexity
+  // eslint-disable-next-line unicorn/consistent-function-scoping
   return (store) => (next) => (action) => {
     // Get the state before the action for comparison
     const previousState = store.getState()
