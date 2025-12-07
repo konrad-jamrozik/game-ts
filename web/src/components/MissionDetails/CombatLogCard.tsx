@@ -69,15 +69,23 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
       field: 'agentId',
       headerName: 'Agent',
       width: 100,
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => <span>{params.row.agentId}</span>,
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
+        const isDefenderDead = params.row.attackerType === 'Enemy' && params.row.defenderHp <= 0
+        return <span style={{ color: isDefenderDead ? 'hsl(4, 90%, 58%)' : undefined }}>{params.row.agentId}</span>
+      },
     },
     {
       field: 'enemyId',
       headerName: 'Enemy',
       width: 150,
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
-        <span>{fmtNoPrefix(params.row.enemyId, 'enemy-')}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
+        const isDefenderDead = params.row.attackerType === 'Agent' && params.row.defenderHp <= 0
+        return (
+          <span style={{ color: isDefenderDead ? 'hsl(4, 90%, 58%)' : undefined }}>
+            {fmtNoPrefix(params.row.enemyId, 'enemy-')}
+          </span>
+        )
+      },
     },
     {
       field: 'attackerType',
