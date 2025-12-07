@@ -2,6 +2,7 @@ import pluralize from 'pluralize'
 import { sum } from 'radash'
 import {
   toF6,
+  toF6r,
   f6fmtInt,
   f6fmtPctDec0,
   f6cmp,
@@ -95,7 +96,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
     const enemySkillAtRoundStart = f6sum(...activeEnemiesAtRoundStart.map((enemy) => effectiveSkill(enemy)))
     const enemyHpAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => toF(enemy.hitPoints))
-    const skillRatioAtRoundStart = f6div(enemySkillAtRoundStart, agentSkillAtRoundStart)
+    const skillRatioAtRoundStart = toF6r(f6div(enemySkillAtRoundStart, agentSkillAtRoundStart))
 
     // Show round status with detailed statistics
     showRoundStatus(
