@@ -87,7 +87,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'attackerSkill',
       headerName: 'Att Skill',
-      width: 110,
+      width: 130,
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
         return (
@@ -100,7 +100,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     {
       field: 'defenderSkill',
       headerName: 'Def Skill',
-      width: 110,
+      width: 130,
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
         return (
@@ -169,7 +169,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 50 + 70 + 100 + 140 + 80 + 80 + 110 + 110 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 70 + 100 + 140 + 80 + 80 + 130 + 130 + 70 + 110 + 160 + 110 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>

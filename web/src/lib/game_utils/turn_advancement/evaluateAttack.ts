@@ -124,12 +124,12 @@ export function evaluateAttack(
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,
-        defenderHp: 0,
+        defenderHp: hpRemainingNum,
         defenderHpMax: defender.maxHitPoints,
       }
     } else {
       const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
-      const hpPct = fmtPctDec0(toF(defender.hitPoints), defender.maxHitPoints)
+      const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
       console.log(
         fmtAttackLog({
           kind,
@@ -141,7 +141,7 @@ export function evaluateAttack(
           rollResult,
           attackCount,
           damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: toF(defender.hitPoints), max: defender.maxHitPoints, percentage: hpPct },
+          hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
         }),
       )
 
@@ -160,7 +160,7 @@ export function evaluateAttack(
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,
-        defenderHp: toF(defender.hitPoints),
+        defenderHp: hpRemainingNum,
         defenderHpMax: defender.maxHitPoints,
       }
     }
