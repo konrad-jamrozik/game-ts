@@ -93,10 +93,9 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
       width: 80,
     },
     {
-      field: 'defenderType',
-      headerName: 'Defender',
-      width: 80,
-      valueGetter: (_value, row: CombatLogRow): string => (row.attackerType === 'Agent' ? 'Enemy' : 'Agent'),
+      field: 'outcome',
+      headerName: 'Outcome',
+      width: 90,
     },
     {
       field: 'attackerSkill',
@@ -184,7 +183,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     },
   ]
 
-  const CARD_WIDTH = 2 + 16 + 19 + 50 + 50 + 100 + 150 + 80 + 80 + 130 + 130 + 70 + 110 + 180 + 110 // borders + padding + filler + columns
+  const CARD_WIDTH = 2 + 16 + 19 + 50 + 50 + 100 + 150 + 80 + 90 + 130 + 130 + 70 + 110 + 180 + 110 // borders + padding + filler + columns
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: CARD_WIDTH }}>
