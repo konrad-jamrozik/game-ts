@@ -6,6 +6,7 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtPctDec0, fmtDec1, fmtDec2, fmtInt, fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
+import { CombatLogToolbar } from './CombatLogToolbar'
 
 type CombatLogRow = {
   id: number
@@ -34,15 +35,22 @@ type CombatLogCardProps = {
 
 export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.Element {
   const turnStartReport = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
+  const [showAgentAttacks, setShowAgentAttacks] = React.useState(true)
+  const [showEnemyAttacks, setShowEnemyAttacks] = React.useState(true)
 
   const missionReport = turnStartReport?.missions.find((m) => m.missionSiteId === missionSiteId)
   const attackLogs = missionReport?.battleStats.attackLogs ?? []
 
-  const rows: CombatLogRow[] = attackLogs.map((log, index) => ({
+  const allRows: CombatLogRow[] = attackLogs.map((log, index) => ({
     id: index,
     attackId: index + 1,
     ...log,
   }))
+
+  // Filter rows based on checkbox states
+  const rows: CombatLogRow[] = allRows.filter((row) =>
+    row.attackerType === 'Agent' ? showAgentAttacks : showEnemyAttacks,
+  )
 
   const columns: GridColDef<CombatLogRow>[] = [
     {
@@ -184,6 +192,16 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
         getRowClassName={(params: GridRowClassNameParams<CombatLogRow>) =>
           params.row.attackerType === 'Agent' ? 'combat-log-row-agent' : 'combat-log-row-enemy'
         }
+        slots={{ toolbar: CombatLogToolbar }}
+        slotProps={{
+          toolbar: {
+            showAgentAttacks,
+            onToggleAgentAttacks: setShowAgentAttacks,
+            showEnemyAttacks,
+            onToggleEnemyAttacks: setShowEnemyAttacks,
+          },
+        }}
+        showToolbar
         sx={{
           '& .combat-log-row-agent': {
             backgroundColor: 'hsl(120, 15.00%, 17.00%)',
