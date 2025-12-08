@@ -40,7 +40,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     },
     {
       field: 'expiresIn',
-      headerName: 'Expires in',
+      headerName: 'ExpIn',
       width: columnWidths['missions.expires_in'],
       renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
         if (params.row.state === 'Active') {
@@ -55,7 +55,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     },
     {
       field: 'enemies',
-      headerName: 'Enemies',
+      headerName: 'Enem',
       width: columnWidths['missions.enemies'],
       valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
@@ -65,7 +65,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
     },
     {
       field: 'avgSkill',
-      headerName: 'Avg. skill',
+      headerName: 'AvgSk',
       width: columnWidths['missions.avg_skill'],
       valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
       renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {

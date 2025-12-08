@@ -76,7 +76,7 @@ export const SITUATION_REPORT_FACTION_DATA_GRID_WIDTH = SITUATION_REPORT_PANIC_D
 // Card widths
 // ========================================
 
-export const LEFT_COLUMN_CARD_WIDTH = 340
+export const LEFT_COLUMN_CARD_WIDTH = 360
 
 export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
   MISSIONS_DATA_GRID_WIDTH,

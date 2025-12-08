@@ -14,7 +14,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
     },
     {
       field: 'agents',
-      headerName: 'Ag#',
+      headerName: 'Ag #',
       width: columnWidths['lead_investigations.agents'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { agents: activeAgentCount, agentsInTransit } = params.row
@@ -27,14 +27,8 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       },
     },
     {
-      field: 'intel',
-      headerName: 'Intel',
-      width: columnWidths['lead_investigations.intel'],
-      type: 'number',
-    },
-    {
       field: 'successChance',
-      headerName: 'Succ. %',
+      headerName: 'Succ %',
       width: columnWidths['lead_investigations.success_chance'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         if (params.row.state === 'Successful') {
@@ -47,8 +41,15 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       },
     },
     {
+      field: 'intel',
+      headerName: 'Intel',
+      width: columnWidths['lead_investigations.intel'],
+      type: 'number',
+    },
+
+    {
       field: 'intelDecay',
-      headerName: 'Intel decay',
+      headerName: 'Decay',
       width: columnWidths['lead_investigations.intel_decay'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { intelDecayPct, intelDecay } = params.row
