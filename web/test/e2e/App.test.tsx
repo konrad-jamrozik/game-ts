@@ -172,7 +172,7 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
  */
 async function step6SelectMission001(): Promise<void> {
   // Select mission "001 (apprehend-red-dawn)" by clicking its checkbox
-  await selectMission('001 (apprehend-red-dawn)')
+  await selectMission('001 (apprehend)')
 
   console.log('✅ Step 6 completed: Select mission "001"')
 }

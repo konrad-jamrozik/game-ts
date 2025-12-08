@@ -1,3 +1,4 @@
+// KJA now mission sites grid doesn't display faction at all, so e.g. the ID is "001 (apprehend")
 import {
   createRowSelectionManager,
   type GridRowId,
