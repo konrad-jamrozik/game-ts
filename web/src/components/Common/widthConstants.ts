@@ -6,8 +6,6 @@ const PADDING_WIDTH = 8
 const MUI_DATA_GRID_COLUMN_FILLER = 19
 const DATA_GRID_BASE_WIDTH = 2 * BORDER_WIDTH + 2 * PADDING_WIDTH + MUI_DATA_GRID_COLUMN_FILLER
 
-export const LEFT_COLUMN_CARD_WIDTH = 340
-
 export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
   columnWidths['missions.id'] +
@@ -55,14 +53,6 @@ export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =
   columnWidths['agents.mission'] +
   columnWidths['agents.by']
 
-export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
-  MISSIONS_DATA_GRID_WIDTH,
-  LEADS_DATA_GRID_WIDTH,
-  LEAD_INVESTIGATIONS_DATA_GRID_WIDTH,
-  AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH,
-  AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH,
-)
-
 export const ASSETS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value'] + columnWidths['assets.projected']
 
@@ -74,8 +64,6 @@ export const CAPABILITIES_DATA_GRID_WIDTH =
   columnWidths['capabilities.price'] +
   CHECKMARK_COLUMN_WIDTH
 
-export const ASSETS_CARD_WIDTH = Math.max(ASSETS_DATA_GRID_WIDTH, CAPABILITIES_DATA_GRID_WIDTH)
-
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
   columnWidths['situation_report.metric'] +
@@ -83,6 +71,22 @@ export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
   columnWidths['situation_report.projected']
 
 export const SITUATION_REPORT_FACTION_DATA_GRID_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
+
+// ========================================
+// Card widths
+// ========================================
+
+export const LEFT_COLUMN_CARD_WIDTH = 340
+
+export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
+  MISSIONS_DATA_GRID_WIDTH,
+  LEADS_DATA_GRID_WIDTH,
+  LEAD_INVESTIGATIONS_DATA_GRID_WIDTH,
+  AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH,
+  AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH,
+)
+
+export const ASSETS_CARD_WIDTH = Math.max(ASSETS_DATA_GRID_WIDTH, CAPABILITIES_DATA_GRID_WIDTH)
 
 export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
 
