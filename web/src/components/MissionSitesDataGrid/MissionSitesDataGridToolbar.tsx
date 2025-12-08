@@ -12,7 +12,9 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function MissionSitesDataGridToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+export function MissionSitesDataGridToolbar(
+  props: NonNullable<GridSlotsComponentsProps['toolbar']>,
+): React.JSX.Element {
   const { showArchived, onToggleArchived } = props
   return (
     <Toolbar>
