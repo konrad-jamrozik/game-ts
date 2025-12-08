@@ -4,8 +4,6 @@ KJA backlog:
 
 # P0 Game mechanics
 
-- Funding increase reward for missions
-
 - Funding penalty for expired missions
 
 - Win criteria - defeat all enemy factions

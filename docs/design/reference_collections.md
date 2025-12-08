@@ -23,9 +23,9 @@ Newly hired agent has:
 | Commander      |   yes   | Cm Cmdr |  250  | 40  | 20 ( 10-30 ) |
 | High Commander |   yes   | HC HCmd |  400  | 50  | 30 ( 15-45 ) |
 
-# Missions
+# Offensive missions
 
-The table below shows some of the details of missions.
+The table below shows some of the details of player offensive missions.
 
 | Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR | IntelR | PanicR | ThreatR | SupprR |
 | ---------------------------- | --- | ------------------------- | ---------------------- | -----: | ----: | -----: | -----: | ------: | -----: |
@@ -42,9 +42,58 @@ Legend:
 `MoneyR` - Money reward.
 `FundR` - Funding reward.
 `IntelR` - Intel reward.
-`PanicR` - Panic reduction. 1% = 100.
-`ThreatR` - Threat reduction of given faction. 1% = 100.
-`SupprR` - Suppression reward (increase) of given faction. 1% = 100.
+`PanicR` - Panic reduction.
+`ThreatR` - Threat reduction of given faction.
+`SupprR` - Suppression reward (increase) of given faction.
+
+# Counter-offensive missions
+
+The table below shows some of the details of player counter-offensive missions against faction offensive missions.
+
+Level 1: soft operations
+- Foil recruitment push
+- Foil business extortion
+- Foil supply theft
+
+Level 2: violent but small-scale
+- Foil sabotage
+- Foil VIP assassination
+- Defend against office raid
+
+Level 3: strategic threats
+- Foil financial heist
+- Intercept arms deal
+- Defend against facility raid
+
+Level 4: regional destabilization
+- Defend against city government assault
+- Counter civilian terror
+- Defend against cult retaliation strike
+
+Level 5: global threats
+- Foil nuclear plant bombing
+- Defend against HQ assault
+
+TODO - update
+
+| Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR | IntelR | PanicR | ThreatR | SupprR |
+| ---------------------------- | --- | ------------------------- | ---------------------- | -----: | ----: | -----: | -----: | ------: | -----: |
+| Apprehend cult member        | 3   | 2 In,   1 Op              |                        |      5 |     0 |      0 | 0.05 % |  0.01 % |  0.1 % |
+| Raid cult safehouse          | 8   | 4 In,   3 Op              | 1 Hn                   |    100 |     5 |     10 |  0.2 % |   0.1 % |   10 % |
+| Raid cult outpost            | 10  | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    400 |    10 |     20 |    1 % |     1 % |   50 % |
+| Raid cult base of operations | 12  | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  1,000 |    20 |     50 |    5 % |     5 % |  100 % |
+| Raid cult HQ                 | 15  | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC |  5,000 |    50 |    100 |   20 % |   100 % |  100 % |
+
+Legend:
+`Exp` - In how many turns the mission expires.
+`Troops` - What troop-type enemies are present on the mission.
+`Officers` - What officer-type enemies are present on the mission.
+`Money` - Money reward / penalty.
+`Fund` - Funding reward / penalty.
+`Intel` - Intel reward / penalty.
+`Panic` - Panic reduction / penalty.
+`Threat` - Threat reduction / penalty of given faction.
+`Suppr` - Suppression reward / penalty of given faction.
 
 # Leads
 
