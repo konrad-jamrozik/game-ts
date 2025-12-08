@@ -1,8 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import { EXPECTED_CAPABILITIES_COLUMN_WIDTH } from '../Common/widthConstants'
 import type { UpgradeRow } from './CapabilitiesDataGrid'
 
 export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
@@ -32,8 +30,6 @@ export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
       width: columnWidths['capabilities.price'],
     },
   ]
-
-  assertColumnWidth(columns, EXPECTED_CAPABILITIES_COLUMN_WIDTH, 'Capabilities')
 
   return columns
 }

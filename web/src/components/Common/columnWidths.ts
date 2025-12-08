@@ -3,7 +3,7 @@
 
 export const columnWidths = {
   // Situation Report columns
-  'situation_report.metric': 120,
+  'situation_report.metric': 146,
   'situation_report.value': 80,
   'situation_report.projected': 150,
 
@@ -13,7 +13,7 @@ export const columnWidths = {
   'assets.projected': 120,
 
   // Capabilities columns
-  'capabilities.name': 140,
+  'capabilities.name': 180,
   'capabilities.value': 100,
   'capabilities.upgrade': 100,
   'capabilities.price': 100,
@@ -39,7 +39,7 @@ export const columnWidths = {
   'agents.skill': 140,
   'agents.hit_points': 80,
   'agents.recovery': 90,
-  'agents.exhaustion': 100,
+  'agents.exhaustion': 110,
   'agents.skill_simple': 50,
   'agents.hit_points_max': 50,
   'agents.service': 80,

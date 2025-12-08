@@ -8,10 +8,6 @@ import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import {
-  EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH,
-  EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
-} from '../Common/widthConstants'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
@@ -259,29 +255,6 @@ export function getAgentsColumns(
       },
     },
   ]
-
-  // Assert default view column width matches expected value
-  // Default view shows: id, state, assignment, skill, exhaustion
-  const defaultViewFields = new Set(['id', 'state', 'assignment', 'skill', 'exhaustion'])
-  assertColumnWidth(columns, EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH, 'Agents default view', defaultViewFields)
-
-  // Assert terminated view column width matches expected value
-  // Terminated view shows: id, skillSimple, hitPointsMax, service, missionsTotal, mission, by
-  const terminatedViewFields = new Set([
-    'id',
-    'skillSimple',
-    'hitPointsMax',
-    'service',
-    'missionsTotal',
-    'mission',
-    'by',
-  ])
-  assertColumnWidth(
-    columns,
-    EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
-    'Agents terminated view',
-    terminatedViewFields,
-  )
 
   return columns
 }

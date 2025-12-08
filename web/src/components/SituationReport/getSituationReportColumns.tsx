@@ -1,8 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import { EXPECTED_SITUATION_REPORT_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { SituationReportRow } from '../SituationReportCard'
 
@@ -32,8 +30,6 @@ export function getSituationReportColumns(): GridColDef<SituationReportRow>[] {
       },
     },
   ]
-
-  assertColumnWidth(columns, EXPECTED_SITUATION_REPORT_COLUMN_WIDTH, 'Situation Report')
 
   return columns
 }

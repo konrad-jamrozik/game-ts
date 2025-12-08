@@ -11,10 +11,8 @@ export const EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH = 670
 export const EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH = 640
 export const EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH = 720
 export const EXPECTED_ASSETS_COLUMN_WIDTH = 380
-export const EXPECTED_CAPABILITIES_COLUMN_WIDTH = 440
-export const EXPECTED_SITUATION_REPORT_COLUMN_WIDTH = 350
 
-export const LEFT_COLUMN_CARD_WIDTH = 380
+export const LEFT_COLUMN_CARD_WIDTH = 340
 
 export const MIDDLE_COLUMN_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +
@@ -26,13 +24,30 @@ export const MIDDLE_COLUMN_CARD_WIDTH =
     EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
   )
 
-export const RIGHT_COLUMN_CARD_WIDTH =
+export const ASSETS_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value'] + columnWidths['assets.projected']
+
+export const CAPABILITIES_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  Math.max(
-    EXPECTED_ASSETS_COLUMN_WIDTH,
-    EXPECTED_CAPABILITIES_COLUMN_WIDTH + CHECKMARK_COLUMN_WIDTH,
-    EXPECTED_SITUATION_REPORT_COLUMN_WIDTH,
-  )
+  columnWidths['capabilities.name'] +
+  columnWidths['capabilities.value'] +
+  columnWidths['capabilities.upgrade'] +
+  columnWidths['capabilities.price'] +
+  CHECKMARK_COLUMN_WIDTH
+
+export const ASSETS_CARD_WIDTH = Math.max(ASSETS_DATA_GRID_WIDTH, CAPABILITIES_DATA_GRID_WIDTH)
+
+export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['situation_report.metric'] +
+  columnWidths['situation_report.value'] +
+  columnWidths['situation_report.projected']
+
+export const SITUATION_REPORT_FACTION_DATA_GRID_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
+
+export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
+
+export const RIGHT_COLUMN_CARD_WIDTH = Math.max(ASSETS_CARD_WIDTH, SITUATION_REPORT_CARD_WIDTH)
 
 export const COMBAT_LOG_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +

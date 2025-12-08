@@ -242,7 +242,7 @@ function formatBattleStats(
       },
       {
         id: `mission-${missionSiteId}-battle-stats-total-agent-skill-gain`,
-        label: `Total agent skill gain (${skillGainPctStr} of initial skill)`,
+        label: `Total agent skill gain (${skillGainPctStr} of init. skill)`,
         chipValue: f6fmtInt(totalAgentSkillGain),
         noPlusSign: true,
       },
