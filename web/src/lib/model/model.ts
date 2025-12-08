@@ -53,6 +53,7 @@ export const ENEMY_TYPES = [
   'Elite',
   'Commander',
   'HighCommander',
+  'CultLeader',
 ] as const
 
 export type EnemyType = (typeof ENEMY_TYPES)[number]

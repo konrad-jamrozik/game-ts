@@ -9,4 +9,5 @@ export const ENEMY_STATS: Record<string, { skill: Fixed6; hp: number; damage: nu
   Elite: { skill: toF6(200), hp: 40, damage: 20, isOfficer: false },
   Commander: { skill: toF6(250), hp: 40, damage: 20, isOfficer: true },
   HighCommander: { skill: toF6(400), hp: 50, damage: 30, isOfficer: true },
+  CultLeader: { skill: toF6(800), hp: 80, damage: 40, isOfficer: true },
 }

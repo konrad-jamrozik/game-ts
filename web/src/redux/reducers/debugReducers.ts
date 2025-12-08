@@ -52,7 +52,12 @@ function addCapabilities(state: GameState): void {
 }
 
 export function spawnMissionSites(state: GameState): void {
-  for (const mission of missions) {
+  // Filter to only offensive missions (apprehend/raid missions)
+  const offensiveMissions = missions.filter(
+    (mission) => mission.id.startsWith('mission-apprehend') || mission.id.startsWith('mission-raid'),
+  )
+
+  for (const mission of offensiveMissions) {
     // Invariant: next mission site numeric id is always the current number of mission sites
     const nextMissionNumericId = state.missionSites.length
     const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
