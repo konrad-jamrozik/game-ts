@@ -8,12 +8,12 @@ const DATA_GRID_BASE_WIDTH = 2 * BORDER_WIDTH + 2 * PADDING_WIDTH + MUI_DATA_GRI
 
 export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  columnWidths['missions.id'] +
-  columnWidths['missions.state'] +
-  columnWidths['missions.expires_in'] +
-  columnWidths['missions.enemies'] +
-  columnWidths['missions.avg_skill'] +
-  columnWidths['missions.details'] +
+  columnWidths['mission_sites.id'] +
+  columnWidths['mission_sites.state'] +
+  columnWidths['mission_sites.expires_in'] +
+  columnWidths['mission_sites.enemies'] +
+  columnWidths['mission_sites.avg_skill'] +
+  columnWidths['mission_sites.details'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const LEADS_DATA_GRID_WIDTH =

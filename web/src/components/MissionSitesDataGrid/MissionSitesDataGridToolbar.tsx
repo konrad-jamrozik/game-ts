@@ -3,7 +3,7 @@ import FormControlLabel from '@mui/material/FormControlLabel'
 import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
 import * as React from 'react'
 
-// Allow passing custom props to the DataGrid toolbar slot for Missions grid
+// Allow passing custom props to the DataGrid toolbar slot for Mission Sites grid
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
@@ -12,7 +12,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function MissionsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+export function MissionSitesDataGridToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
   const { showArchived, onToggleArchived } = props
   return (
     <Toolbar>

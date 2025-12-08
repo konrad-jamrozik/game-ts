@@ -36,7 +36,7 @@ export function formatSituationReport(
       ? [
           {
             id: 'missions-summary',
-            label: 'Missions',
+            label: 'Mission sites',
             children: formatMissions(missions),
           },
         ]

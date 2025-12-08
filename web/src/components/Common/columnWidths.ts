@@ -18,13 +18,13 @@ export const columnWidths = {
   'capabilities.upgrade': 100,
   'capabilities.price': 100,
 
-  // Missions columns
-  'missions.id': 240,
-  'missions.state': 120,
-  'missions.expires_in': 90,
-  'missions.enemies': 80,
-  'missions.avg_skill': 80,
-  'missions.details': 100,
+  // Mission sites columns
+  'mission_sites.id': 260,
+  'mission_sites.state': 120,
+  'mission_sites.expires_in': 90,
+  'mission_sites.enemies': 80,
+  'mission_sites.avg_skill': 80,
+  'mission_sites.details': 100,
 
   // Leads columns
   'leads.id': 300,
@@ -37,7 +37,7 @@ export const columnWidths = {
   'lead_investigations.agents': 80,
   'lead_investigations.intel': 64,
   'lead_investigations.success_chance': 80,
-  'lead_investigations.intel_decay': 80,
+  'lead_investigations.intel_decay': 120,
   'lead_investigations.projected_intel': 120,
 
   // Agents columns

@@ -18,8 +18,8 @@ import {
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedMissionSiteIds } from '../../lib/model_utils/turnReportUtils'
 import { DataGridCard } from '../Common/DataGridCard'
-import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
-import { getMissionsColumns } from './getMissionsColumns'
+import { MissionSitesDataGridToolbar } from './MissionSitesDataGridToolbar'
+import { getMissionSitesColumns } from './getMissionSitesColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type MissionRow = MissionSite & {
@@ -28,7 +28,7 @@ export type MissionRow = MissionSite & {
   displayId: string
 }
 
-export function MissionsDataGrid(): React.JSX.Element {
+export function MissionSitesDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { missionSites, turnStartReport } = gameState
@@ -76,7 +76,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
   const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
 
-  const columns = getMissionsColumns(dispatch)
+  const columns = getMissionSitesColumns(dispatch)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -117,8 +117,8 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   return (
     <DataGridCard
-      id="missions"
-      title={`Missions (${rows.length})`}
+      id="mission-sites"
+      title={`Mission sites (${rows.length})`}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}
@@ -128,7 +128,7 @@ export function MissionsDataGrid(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<MissionRow>) => params.row.state === 'Active'}
-      slots={{ toolbar: MissionsDataGridToolbar }}
+      slots={{ toolbar: MissionSitesDataGridToolbar }}
       slotProps={{
         toolbar: {
           showArchived,

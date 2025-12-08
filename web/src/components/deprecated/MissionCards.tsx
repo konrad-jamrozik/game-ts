@@ -20,7 +20,7 @@ export function MissionCards(): React.JSX.Element {
   return (
     <ExpandableCard
       id="deprecated-missions"
-      title={`Missions (${sortedActiveMissionSites.length})`}
+      title={`Mission sites (${sortedActiveMissionSites.length})`}
       sx={{ width: widthVal }}
     >
       <Stack
