@@ -57,27 +57,35 @@ Each faction has different activity level profile:
 - When it stops being dormant for the first time
 - How quickly its activity level increases
 
-Having said that
+Generally speaking, the activity changes level as follows:
+
+- Activity level steadily increases over time.
+- When faction offensive operation is successful, their activity level increases.
+- When faction offensive operation fails due to player defensive mission, the faction
+  suppression usually increases, temporarily lowering effective activity level, but not baseline
+  activity level.
 
 # Faction operation roll probabilities
 
 Map from activity level to probabilities of faction operations:
 
-| Activity level | Freq. |    1  |    2 |    3 |    4 |    5 |
-| -------------- | ----- | ----- | ---- | ---- | ---- | ---- |
-| Dormant        | 0     |   0 % |  0 % |  0 % |  0 % |  0 % |
-| Faint          | 15-30 | 100 % |  0 % |  0 % |  0 % |  0 % |
-| Emerging       | 10-25 |  83 % | 17 % |  0 % |  0 % |  0 % |
-| Active         | 8-20  |  67 % | 22 % | 11 % |  0 % |  0 % |
-| Expanding      | 6-15  |  50 % | 25 % | 17 % |  8 % |  0 % |
-| Escalating     | 4-10  |  40 % | 27 % | 20 % | 11 % |  3 % |
-| War            | 3-8   |  28 % | 28 % | 22 % | 17 % |  6 % |
-| Total war      | 2-6   |  20 % | 25 % | 25 % | 20 % | 10 % |
+| Activity level | Freq. |    1  |    2 |    3 |    4 |    5 |    6 |
+| -------------- | ----- | ----- | ---- | ---- | ---- | ---- | ---- |
+| Dormant        | 0     |   0 % |  0 % |  0 % |  0 % |  0 % |  0 % |
+| Faint          | 20-40 |  80 % | 20 % |  0 % |  0 % |  0 % |  0 % |
+| Emerging       | 15-30 |  83 % | 17 % |  0 % |  0 % |  0 % |  0 % |
+| Active         | 10-20 |  67 % | 22 % | 11 % |  0 % |  0 % |  0 % |
+| Expanding      | 6-15  |  50 % | 25 % | 17 % |  8 % |  0 % |  0 % |
+| Escalating     | 4-10  |  37 % | 27 % | 20 % | 11 % |  3 % |  2 % |
+| War            | 3-8   |  27 % | 28 % | 22 % | 17 % |  5 % |  1 % |
+| Total war      | 2-6   |  20 % | 25 % | 25 % | 20 % |  8 % |  2 % |
 
 Legend:
-- `Freq.` - Frequency of the activity level in turns. Min to max.
-- `1` - `faction operation` level 1, soft operations.
-- `2` - `faction operation` level 2, violent but small-scale.
-- `3` - `faction operation` level 3, strategic threats.
-- `4` - `faction operation` level 4, regional destabilization.
-- `5` - `faction operation` level 5, existential.
+`Freq.` - Frequency of the activity level in turns. Min to max.
+`Faction operation levels`:
+`1`: soft operations.
+`2`: violent but small-scale.
+`3`: strategic threats.
+`4`: regional destabilization.
+`5`: global conflict.
+`6`: existential.
