@@ -83,11 +83,13 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const attackLogs: AttackLog[] = []
 
   let roundIdx = 0
+  let combatRounds = 0
   let retreated = false
   // eslint-disable-next-line @typescript-eslint/init-declarations
   let battleEnded: boolean
   do {
     roundIdx += 1
+    combatRounds += 1
 
     // Capture round state at start of round (before combat)
     const activeAgentsAtRoundStart = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)))
@@ -113,27 +115,15 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     attackLogs.push(...roundAttackLogs)
 
     const sideEliminated = isSideEliminated(agents, enemies)
-    if (!sideEliminated) {
-      const retreatResult = shouldRetreat(agents, agentStats, enemies)
-      retreated = retreatResult.shouldRetreat
-      if (retreated) {
-        logRetreat(retreatResult)
-      }
-    }
-    battleEnded = sideEliminated || retreated
 
-    // Determine round status
+    // Create round log entry for current round (before checking retreat)
+    // If battle ends due to elimination, mark it appropriately
     let roundStatus: 'Ongoing' | 'Retreated' | 'Won' | 'Lost' = 'Ongoing'
-    if (battleEnded) {
-      if (retreated) {
-        roundStatus = 'Retreated'
-      } else {
-        const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
-        roundStatus = allAgentsTerminated ? 'Lost' : 'Won'
-      }
+    if (sideEliminated) {
+      const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
+      roundStatus = allAgentsTerminated ? 'Lost' : 'Won'
     }
 
-    // Create round log entry
     const roundLog: RoundLog = {
       roundNumber: roundIdx,
       status: roundStatus,
@@ -152,6 +142,56 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
       skillRatio: skillRatioAtRoundStart,
     }
     roundLogs.push(roundLog)
+
+    // Check for retreat after logging current round
+    if (!sideEliminated) {
+      const retreatResult = shouldRetreat(agents, agentStats, enemies)
+      retreated = retreatResult.shouldRetreat
+      if (retreated) {
+        logRetreat(retreatResult)
+        // If retreat is needed, create a log entry for the next round showing retreat
+        roundIdx += 1
+
+        // Capture round state at start of next round (before combat, but retreat happens)
+        const activeAgentsAtRetreatRoundStart = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)))
+        const activeEnemiesAtRetreatRoundStart = enemies.filter((enemy) => f6gt(enemy.hitPoints, toF6(0)))
+        const agentSkillAtRetreatRoundStart = f6sum(
+          ...activeAgentsAtRetreatRoundStart.map((agent) => effectiveSkill(agent)),
+        )
+        const agentHpAtRetreatRoundStart = sum(activeAgentsAtRetreatRoundStart, (agent) => toF(agent.hitPoints))
+        const enemySkillAtRetreatRoundStart = f6sum(
+          ...activeEnemiesAtRetreatRoundStart.map((enemy) => effectiveSkill(enemy)),
+        )
+        const enemyHpAtRetreatRoundStart = sum(activeEnemiesAtRetreatRoundStart, (enemy) => toF(enemy.hitPoints))
+        const skillRatioAtRetreatRoundStart = toF6r(f6div(enemySkillAtRetreatRoundStart, agentSkillAtRetreatRoundStart))
+
+        // KJA here is second time we create round log in the code, to account for the special case that
+        // "if player retreated we need round log even though no round took place".
+        // Instead of this, there should be always "end of battle round" log. Basically all "round logs"
+        // are at turn start, and hence there has to be one extra log at the end of battle.
+
+        // Create round log entry for retreat round
+        const retreatRoundLog: RoundLog = {
+          roundNumber: roundIdx,
+          status: 'Retreated',
+          agentCount: activeAgentsAtRetreatRoundStart.length,
+          agentCountTotal: agents.length,
+          agentSkill: agentSkillAtRetreatRoundStart,
+          agentSkillTotal: initialAgentEffectiveSkill,
+          agentHp: agentHpAtRetreatRoundStart,
+          agentHpTotal: initialAgentHitPoints,
+          enemyCount: activeEnemiesAtRetreatRoundStart.length,
+          enemyCountTotal: enemies.length,
+          enemySkill: enemySkillAtRetreatRoundStart,
+          enemySkillTotal: initialEnemySkill,
+          enemyHp: enemyHpAtRetreatRoundStart,
+          enemyHpTotal: initialEnemyHitPoints,
+          skillRatio: skillRatioAtRetreatRoundStart,
+        }
+        roundLogs.push(retreatRoundLog)
+      }
+    }
+    battleEnded = sideEliminated || retreated
 
     // Battle continues until one side is eliminated or agents retreat
   } while (!battleEnded)
@@ -194,7 +234,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   // agentExhaustionAfterBattle will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
 
   showRoundStatus(
-    roundIdx,
+    combatRounds,
     agents,
     enemies,
     initialAgentEffectiveSkill,
@@ -212,7 +252,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   )
 
   return {
-    rounds: roundIdx,
+    rounds: combatRounds,
     agentCasualties,
     agentsTerminated,
     enemyCasualties,

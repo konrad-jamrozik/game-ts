@@ -10,6 +10,7 @@ export const missions: Mission[] = [
     expiresIn: 3,
     dependsOn: ['lead-red-dawn-location'],
     enemyUnitsSpec: '2 Initiate, 1 Operative',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 5,
       funding: 0,
@@ -31,6 +32,7 @@ export const missions: Mission[] = [
     expiresIn: 8,
     dependsOn: ['lead-red-dawn-safehouse'],
     enemyUnitsSpec: '4 Initiate, 4 Operative, 1 Handler',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 100,
       funding: 5,
@@ -52,6 +54,7 @@ export const missions: Mission[] = [
     expiresIn: 10,
     dependsOn: ['lead-red-dawn-outpost'],
     enemyUnitsSpec: '8 Initiate, 8 Operative, 4 Soldier, 2 Handler, 1 Lieutenant',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 400,
       funding: 10,
@@ -73,6 +76,7 @@ export const missions: Mission[] = [
     expiresIn: 12,
     dependsOn: ['lead-red-dawn-base'],
     enemyUnitsSpec: '30 Initiate, 16 Operative, 8 Soldier, 6 Handler, 2 Lieutenant',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 800,
       funding: 15,
@@ -94,6 +98,7 @@ export const missions: Mission[] = [
     expiresIn: 15,
     dependsOn: ['lead-red-dawn-interrogate-commander'],
     enemyUnitsSpec: '12 Initiate, 24 Operative, 10 Soldier, 2 Elite, 5 Handler, 2 Lieutenant, 1 Commander',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 2000,
       funding: 20,
@@ -115,6 +120,7 @@ export const missions: Mission[] = [
     expiresIn: 20,
     dependsOn: ['lead-red-dawn-interrogate-commander'],
     enemyUnitsSpec: '20 Operative, 20 Soldier, 6 Elite, 4 Handler, 4 Lieutenant, 3 Commander',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 3000,
       funding: 25,
@@ -130,12 +136,13 @@ export const missions: Mission[] = [
     },
   },
   {
-    id: 'mission-raid-red-dawn-regional-stronghold',
+    id: 'mission-raid-red-dawn-stronghold',
     title: 'Raid cult regional stronghold',
     description: 'Raid a Red Dawn regional stronghold.',
     expiresIn: 30,
     dependsOn: ['lead-red-dawn-interrogate-commander'],
     enemyUnitsSpec: '40 Soldier, 10 Elite, 8 Lieutenant, 3 Commander, 1 HighCommander',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 5000,
       funding: 50,
@@ -157,6 +164,7 @@ export const missions: Mission[] = [
     expiresIn: 40,
     dependsOn: ['lead-red-dawn-hq'],
     enemyUnitsSpec: '60 Soldier, 20 Elite, 12 Lieutenant, 6 Commander, 2 HighCommander, 1 CultLeader',
+    factionId: 'faction-red-dawn',
     rewards: {
       money: 10_000,
       funding: 100,

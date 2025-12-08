@@ -70,6 +70,7 @@ export type Mission = {
   expiresIn: number | 'never'
   dependsOn: string[]
   enemyUnitsSpec: string
+  factionId: FactionId
   rewards: MissionRewards
 }
 

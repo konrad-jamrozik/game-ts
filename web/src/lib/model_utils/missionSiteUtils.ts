@@ -89,11 +89,18 @@ export function validateMissionSiteDeployment(missionSite: MissionSite | undefin
 /**
  * Formats mission site ID with mission ID for display
  * @param missionSite - The mission site object
- * @returns Formatted string in the format "{siteId} ({missionId})" (e.g., "001 (001)")
+ * @returns Formatted string in the format "{siteId} ({missionId})" (e.g., "001 (apprehend)")
  */
 export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
   const mission = getMissionById(missionSite.missionId)
   const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
-  const missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
+  let missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
+
+  // Remove faction name from mission ID if present
+  const factionName = fmtNoPrefix(mission.factionId, 'faction-')
+  // Remove faction name from mission ID (e.g., "apprehend-red-dawn" -> "apprehend")
+  // Handle both cases: "-faction-name" and "-faction-name-" patterns
+  missionIdWithoutPrefix = missionIdWithoutPrefix.replace(new RegExp(`-${factionName}(?=-|$)`, 'u'), '')
+
   return `${missionSiteIdWithoutPrefix} (${missionIdWithoutPrefix})`
 }
