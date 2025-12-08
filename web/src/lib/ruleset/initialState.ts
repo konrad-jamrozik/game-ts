@@ -42,7 +42,6 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     trainingSkillGain: TRAINING_SKILL_GAIN,
     exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
     hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
-    currentTurnTotalHireCost: 0,
     agents: buildInitialAgents(),
     // Leads
     leadInvestigationCounts: {},
