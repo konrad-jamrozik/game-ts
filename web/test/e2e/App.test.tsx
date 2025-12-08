@@ -25,7 +25,7 @@ describe(App, () => {
    *
    * Manual reproduction steps:
    * 1. Start with debug initial state (200 money, agents "000", "001", "002" available, mission "000" deployed)
-   * 2. Click "Advance turn" button
+   * 2. Click "Next turn" button
    *    - Verify turn advances to 2
    *    - Verify mission "000" appears in "Archived missions"
    * 3. Select agent "002" by clicking its checkbox in the Agents DataGrid
@@ -38,7 +38,7 @@ describe(App, () => {
    *    - Verify mission shows "Status: Deployed"
    * 9. Click "Hire Agent" button 3 times
    *    - This hires 3 agents, spending 150 money total
-   * 10. Click "Advance turn" button twice
+   * 10. Click "Next turn" button twice
    *     - Verify turn advances to 4
    *     - Verify the "Current" column of "Assets" card for "Money" row has a negative value
    *     - Verify "Game over" button appears and is disabled (money goes negative due to upkeep)
@@ -112,12 +112,12 @@ function step1StartWithDebugInitialState(): void {
 }
 
 /**
- * Step 2: Click "Advance turn" button
+ * Step 2: Click "next turn" button
  * - Verify turn advances to 2
  * - Verify mission "000" is in "Successful" state.
  */
 async function step2AdvanceTurn(): Promise<void> {
-  await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+  await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
   const turnValue = screen.getByLabelText(/turn/iu)
   expect(turnValue).toHaveTextContent('2')
@@ -125,7 +125,7 @@ async function step2AdvanceTurn(): Promise<void> {
   // Verify mission "000" is in "Successful" state
   verifyMissionState('000', 'Successful')
 
-  console.log('✅ Step 2 completed: Advance turn')
+  console.log('✅ Step 2 completed: Next turn')
 }
 
 /**
@@ -255,7 +255,7 @@ function verifyMoneyCurrentValueIsNegative(): number {
 }
 
 /**
- * Step 10: Click "Advance turn" button twice
+ * Step 10: Click "next turn" button twice
  * - Verify turn advances to 4
  * - Verify the "Current" column of "Assets" card for "Money" row has a negative value
  * - Verify "Game over" button appears and is disabled (money goes negative due to upkeep)
@@ -263,24 +263,24 @@ function verifyMoneyCurrentValueIsNegative(): number {
 async function step10AdvanceTurnToGameOver(): Promise<void> {
   // After hiring multiple agents, the balance is low enough that
   // after advancing turn once, agent upkeep costs will make money negative and trigger game over
-  await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+  await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
   const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
   expect(turnValueAfterGameOver).toHaveTextContent('3')
 
   const currentMoneyValue = getCurrentMoneyValue()
-  // If money is still above zero, advance turn one more time
+  // If money is still above zero, next turn one more time
   // This may happen if e.g. the evaluation of completed mission site resulted in an agent being
   // terminated, hence lower upkeep, hence player still having sufficient funds.
   if (currentMoneyValue > 0) {
-    await userEvent.click(screen.getByRole('button', { name: /advance turn/iu }))
+    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
   }
   verifyMoneyCurrentValueIsNegative()
 
-  // Should show disabled "Game over" button instead of "Advance turn"
+  // Should show disabled "Game over" button instead of "Next turn"
   expect(screen.getByRole('button', { name: /game over/iu })).toBeDisabled()
 
-  console.log('✅ Step 10 completed: Advance turn to game over')
+  console.log('✅ Step 10 completed: Next turn to game over')
 }
 
 /**

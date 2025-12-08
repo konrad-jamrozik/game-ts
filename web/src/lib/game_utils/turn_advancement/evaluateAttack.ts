@@ -11,10 +11,8 @@ import {
 import { f6add, toF, toF6, f6sub, f6max, f6gt, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
-import { fmtAttackLog, type AttackLogKind } from './fmtAttackLog'
 import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
 import { rollContest } from '../../primitives/rolls'
-import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
 import type { AttackLog } from '../../model/turnReportModel'
 
@@ -27,7 +25,7 @@ export function evaluateAttack(
   defenderSkillAtStart: Fixed6,
   roundNumber: number,
   label?: string,
-  attackCount = 0,
+  _attackCount = 0,
 ): AttackLog {
   // Calculate effective skills
   const attackerEffectiveSkill = effectiveSkill(attacker)
@@ -49,8 +47,8 @@ export function evaluateAttack(
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
   attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
 
-  const attackerName = attacker.id
-  const defenderName = defender.id
+  // const attackerName = attacker.id
+  // const defenderName = defender.id
   const attackerIsAgent = isAgent(attacker)
   const defenderIsAgent = isAgent(defender)
 
@@ -69,10 +67,10 @@ export function evaluateAttack(
   if (rollResult.success) {
     // Successful attack - roll damage
     const damage = rollWeaponDamage(attacker.weapon, label)
-    const damageDenominator = attacker.weapon.maxDamage - attacker.weapon.minDamage
-    const damageRangePct =
-      damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100
-    const damagePct = `${Math.round(50 + damageRangePct)}%`
+    // const damageDenominator = attacker.weapon.maxDamage - attacker.weapon.minDamage
+    // const damageRangePct =
+    //   damageDenominator === 0 ? 50 : ((damage - attacker.weapon.minDamage) / damageDenominator) * 100
+    // const damagePct = `${Math.round(50 + damageRangePct)}%`
 
     const damageF6 = toF6(damage)
     const hpRemaining = f6sub(defender.hitPoints, damageF6)
@@ -92,22 +90,22 @@ export function evaluateAttack(
       if (defenderIsAgent && !attackerIsAgent) {
         defender.terminatedBy = attacker.id
       }
-      const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
-      const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
-      console.log(
-        fmtAttackLog({
-          kind,
-          attackerName,
-          attackerEffectiveSkill: attackerEffectiveSkillNum,
-          defenderName,
-          defenderEffectiveSkill: defenderEffectiveSkillNum,
-          defenderIsAgent,
-          rollResult,
-          attackCount,
-          damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
-        }),
-      )
+      // const kind: AttackLogKind = attackerIsAgent ? 'agent terminates' : 'enemy terminates'
+      // const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
+      // console.log(
+      //   fmtAttackLog({
+      //     kind,
+      //     attackerName,
+      //     attackerEffectiveSkill: attackerEffectiveSkillNum,
+      //     defenderName,
+      //     defenderEffectiveSkill: defenderEffectiveSkillNum,
+      //     defenderIsAgent,
+      //     rollResult,
+      //     attackCount,
+      //     damageInfo: { damage, damagePct },
+      //     hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
+      //   }),
+      // )
 
       attackLog = {
         roundNumber,
@@ -128,22 +126,22 @@ export function evaluateAttack(
         defenderHpMax: defender.maxHitPoints,
       }
     } else {
-      const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
-      const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
-      console.log(
-        fmtAttackLog({
-          kind,
-          attackerName,
-          attackerEffectiveSkill: attackerEffectiveSkillNum,
-          defenderName,
-          defenderEffectiveSkill: defenderEffectiveSkillNum,
-          defenderIsAgent,
-          rollResult,
-          attackCount,
-          damageInfo: { damage, damagePct },
-          hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
-        }),
-      )
+      // const kind: AttackLogKind = attackerIsAgent ? 'agent hits' : 'enemy hits'
+      // const hpPct = fmtPctDec0(hpRemainingNum, defender.maxHitPoints)
+      // console.log(
+      //   fmtAttackLog({
+      //     kind,
+      //     attackerName,
+      //     attackerEffectiveSkill: attackerEffectiveSkillNum,
+      //     defenderName,
+      //     defenderEffectiveSkill: defenderEffectiveSkillNum,
+      //     defenderIsAgent,
+      //     rollResult,
+      //     attackCount,
+      //     damageInfo: { damage, damagePct },
+      //     hpRemainingInfo: { current: hpRemainingNum, max: defender.maxHitPoints, percentage: hpPct },
+      //   }),
+      // )
 
       attackLog = {
         roundNumber,
@@ -171,19 +169,19 @@ export function evaluateAttack(
     }
   } else {
     // Failed attack - show roll details
-    const kind: AttackLogKind = attackerIsAgent ? 'agent misses' : 'enemy misses'
-    console.log(
-      fmtAttackLog({
-        kind,
-        attackerName,
-        attackerEffectiveSkill: attackerEffectiveSkillNum,
-        defenderName,
-        defenderEffectiveSkill: defenderEffectiveSkillNum,
-        defenderIsAgent,
-        rollResult,
-        attackCount,
-      }),
-    )
+    // const kind: AttackLogKind = attackerIsAgent ? 'agent misses' : 'enemy misses'
+    // console.log(
+    //   fmtAttackLog({
+    //     kind,
+    //     attackerName,
+    //     attackerEffectiveSkill: attackerEffectiveSkillNum,
+    //     defenderName,
+    //     defenderEffectiveSkill: defenderEffectiveSkillNum,
+    //     defenderIsAgent,
+    //     rollResult,
+    //     attackCount,
+    //   }),
+    // )
 
     // Update skill gains (postponed)
     if (attackerStats) {

@@ -11,7 +11,6 @@ describe('panicRuleset', () => {
       let suppression = toF6(0.005) // 0.5%
 
       for (let idx = 0; idx < 26; idx += 1) {
-        console.log(`Applying suppression decay ${idx + 1}`)
         const { decayedSuppression } = decaySuppression(suppression)
         suppression = decayedSuppression
 
