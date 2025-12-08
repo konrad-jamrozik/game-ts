@@ -118,7 +118,7 @@ export function evaluateAttack(
         defenderSkillAtStart,
         roll: rollPct,
         threshold: thresholdPct,
-        outcome: 'Terminate',
+        outcome: 'Terminated',
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,

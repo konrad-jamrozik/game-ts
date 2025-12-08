@@ -162,7 +162,7 @@ export type AttackLog = {
   defenderSkillAtStart: Fixed6
   roll: number
   threshold: number
-  outcome: 'Hit' | 'Miss' | 'Terminate'
+  outcome: 'Hit' | 'Miss' | 'Terminated'
   damage: number | undefined
   damageMin: number
   damageMax: number
