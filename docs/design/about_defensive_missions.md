@@ -23,9 +23,10 @@ Specifically, each `activity level` has a turn range within which next roll will
 Similarly, the `faction operation` is randomized from a pool of possible `faction operation levels`
 and then, from withing all possible `operation types` within given `faction operation level`.
 
-Having said that, there are safeguards / biases in place, to prevent extreme outcomes like:
-- Too many offensive operations spawned in a row, turn after turn.
-- Too many turns passed without any offensive operation.
+There is one special rule which is: no given `operation type` from given `operation level` can be randomized twice in a row,
+unless given `operation level` has only one `operation type` in it. Then yes, it can be randomized any amount
+of times in a row.
+
 - Given offensive operation type happened two or more times in a row.
 
 # Faction operations and player defensive missions
@@ -59,26 +60,43 @@ Each faction has different activity level profile:
 
 Generally speaking, the activity changes level as follows:
 
-- Activity level steadily increases over time.
-- When faction offensive operation is successful, their activity level increases.
-- When faction offensive operation fails due to player defensive mission, the faction
-  suppression usually increases, temporarily lowering effective activity level, but not baseline
-  activity level.
+- Activity level steadily increases over time - see table below.
+- When a player wins any kind of mission against the faction, whether defensive or offensive,
+  this suppresses the faction for some turns depending on the mission reward. See section on suppression for details.
+- Nothing else influences activity level progression.
+
+Typical activity level progression:
+
+| Faction  | Progression                 | Turns | Cumulative |
+| -------- | --------------------------- | ----- | ---------- |
+| Red Dawn | Dormant     -> Faint        |     0 |          0 |
+| Red Dawn | Faint       -> Emerging     | 60-90 |      60-90 |
+| Red Dawn | Emerging    -> Active       | 60-90 |    120-180 |
+| Red Dawn | Active      -> Expanding    | 60-90 |    180-270 |
+| Red Dawn | Expanding   -> Escalating   | 60-90 |    240-360 |
+| Red Dawn | Escalating  -> War          | 60-90 |    300-450 |
+| Red Dawn | War         -> Total war    | 60-90 |    360-540 |
+
+# Faction suppression
+
+One of the possible mission rewards is faction suppression.
+It manifests by delaying the next faction operation roll by a set number of turns,
+randomized from a range, depending on the mission reward.
 
 # Faction operation roll probabilities
 
 Map from activity level to probabilities of faction operations:
 
-| Activity level | Freq. |    1  |    2 |    3 |    4 |    5 |    6 |
-| -------------- | ----- | ----- | ---- | ---- | ---- | ---- | ---- |
-| Dormant        | 0     |   0 % |  0 % |  0 % |  0 % |  0 % |  0 % |
-| Faint          | 20-40 |  80 % | 20 % |  0 % |  0 % |  0 % |  0 % |
-| Emerging       | 15-30 |  83 % | 17 % |  0 % |  0 % |  0 % |  0 % |
-| Active         | 10-20 |  67 % | 22 % | 11 % |  0 % |  0 % |  0 % |
-| Expanding      | 6-15  |  50 % | 25 % | 17 % |  8 % |  0 % |  0 % |
-| Escalating     | 4-10  |  37 % | 27 % | 20 % | 11 % |  3 % |  2 % |
-| War            | 3-8   |  27 % | 28 % | 22 % | 17 % |  5 % |  1 % |
-| Total war      | 2-6   |  20 % | 25 % | 25 % | 20 % |  8 % |  2 % |
+| Activity level | Freq.      |    1  |    2 |    3 |    4 |    5 |    6 |
+| -------------- | ---------- | ----- | ---- | ---- | ---- | ---- | ---- |
+| Dormant        |          - |     - |    - |    - |    - |    - |    - |
+| Faint          | 15-25 (20) |  80 % | 20 % |    - |    - |    - |    - |
+| Emerging       | 13-23 (18) |  60 % | 30 % | 10 % |    - |    - |    - |
+| Active         | 11-21 (16) |  40 % | 40 % | 15 % |  5 % |    - |    - |
+| Expanding      | 10-20 (15) |  30 % | 30 % | 30 % | 10 % |    - |    - |
+| Escalating     |  9-19 (14) |  20 % | 25 % | 35 % | 15 % |  5 % |    - |
+| War            |  8-18 (13) |  15 % | 20 % | 30 % | 20 % | 10 % |  5 % |
+| Total war      |  7-17 (12) |  10 % | 15 % | 25 % | 25 % | 15 % | 10 % |
 
 Legend:
 `Freq.` - Frequency of the activity level in turns. Min to max.
