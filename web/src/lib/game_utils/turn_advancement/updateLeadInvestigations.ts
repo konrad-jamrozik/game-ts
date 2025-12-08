@@ -9,7 +9,7 @@ import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
-import { fmtRollResultQuantized, rollAgainstProbabilityQuantized } from '../../primitives/rolls'
+import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
