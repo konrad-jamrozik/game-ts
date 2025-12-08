@@ -1,3 +1,6 @@
+// KJA update the combat logic so that if a unit's effective skill falls below 10% of max, it no longer participates in battle.
+// This means it doesn't attack nor can it be attacked.
+// If given side has reached a state where none of its units can attack, that side has lost.
 import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, f6sub, f6div, f6le, type Fixed6 } from '../../primitives/fixed6'
 import type { Enemy } from '../../model/model'
 import type { Agent } from '../../model/agentModel'

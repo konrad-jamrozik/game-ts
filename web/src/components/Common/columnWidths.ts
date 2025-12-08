@@ -71,7 +71,7 @@ export const columnWidths = {
   'battle_log.skill_ratio': 70,
 
   // Combat Log columns
-  'combat_log.attack_id': 50,
+  'combat_log.attack_id': 70,
   'combat_log.round_number': 50,
   'combat_log.agent_id': 100,
   'combat_log.enemy_id': 170,
