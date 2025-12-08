@@ -63,9 +63,11 @@ The table below shows some of the details of player defensive missions, to count
 | Defend against facility raid             | 3   | 6   | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |     0 |   10 / -25 |    25 |     1.5 % / -3 % |     0.5 % / -1 % |   15 % |
 | Defend against city government assault   | 4   | 8   | -       8 Op,  6 Sl, 2 El | 3 Hn, 2 Lt, 1 Cm       |     0 |   15 / -30 |    40 |       3 % / -6 % |       2 % / -3 % |   30 % |
 | Counter civilian terror                  | 4   | 8   | -       6 Op,  8 Sl, 3 El | 2 Hn, 2 Lt             |     0 |   15 / -40 |    50 |     5 % / -10 %  |     2.5 % / -4 % |   35 % |
-| Defend against cult retaliation strike   | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |     0 |   20 / -50 |    60 |       4 % / -8 % |       3 % / -5 % |   45 % |
+| Defend against retaliation strike        | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |     0 |   20 / -50 |    60 |       4 % / -8 % |       3 % / -5 % |   45 % |
 | Foil nuclear plant bombing               | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
-| Defend against HQ assault                | 5   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |   100 |    20 % / -30 %  |    15 % / -20 %  |  100 % |
+| Foil coup attempt                        | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
+| Defend military installation             | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
+| Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |   100 |    20 % / -30 %  |    15 % / -20 %  |  100 % |
 
 Legend:
 `Lvl` - Mission level (1-5), indicating difficulty tier.
@@ -78,6 +80,15 @@ Legend:
 `Panic` - Panic reduction on success / penalty on failure (negative = panic increase).
 `Threat` - Threat reduction on success / penalty on failure (negative = threat increase).
 `Suppr` - Suppression reward (increase) of given faction.
+
+Level description:
+- Level 1 = soft operations
+- Level 2 = violent but small-scale
+- Level 3 = strategic threats
+- Level 4 = regional destabilization
+- Level 5 = global conflict
+- Level 6 = existential
+-
 
 # Leads
 
