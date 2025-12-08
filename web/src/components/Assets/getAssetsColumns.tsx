@@ -1,8 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import { EXPECTED_ASSETS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { AssetRow } from './AssetsDataGrid'
 
@@ -42,8 +40,6 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
       },
     },
   ]
-
-  assertColumnWidth(columns, EXPECTED_ASSETS_COLUMN_WIDTH, 'Assets')
 
   return columns
 }

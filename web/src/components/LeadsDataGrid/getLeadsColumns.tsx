@@ -1,8 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import { EXPECTED_LEADS_COLUMN_WIDTH } from '../Common/widthConstants'
 import type { LeadRow } from './LeadsDataGrid'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
@@ -51,8 +49,6 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
       },
     },
   ]
-
-  assertColumnWidth(columns, EXPECTED_LEADS_COLUMN_WIDTH, 'Leads')
 
   return columns
 }

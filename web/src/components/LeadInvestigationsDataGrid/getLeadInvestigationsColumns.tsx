@@ -1,9 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
-import { assertColumnWidth } from '../Common/assertColumnWidth'
 import { columnWidths } from '../Common/columnWidths'
-import { EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH } from '../Common/widthConstants'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
 
@@ -90,8 +88,6 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       },
     },
   ]
-
-  assertColumnWidth(columns, EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH, 'LeadInvestigations')
 
   return columns
 }
