@@ -34,6 +34,7 @@ export const AGENT_FAILED_DEFENSE_SKILL_REWARD = toF6(1)
 export const SUPPRESSION_DECAY = 0.1
 
 // Weapon damage ranges are +/- 50% of base damage
+// See also `Weapon damage roll` in docs.
 export const WEAPON_DAMAGE_RANGE_FACTOR = 0.5
 
 // Agent weapon stats

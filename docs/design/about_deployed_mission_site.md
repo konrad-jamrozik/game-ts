@@ -126,7 +126,7 @@ All weapon damage is +- 50%, rounded outside / to expand the damage range.
 
 For example:
 
-- A 7 damage weapon has damage range of 3-11 (3 is rounded outside / expanded from 3.5 and 11 from 10.5)
+- A 7 damage weapon has damage range of 3-11 (3 is rounded outside i.e. expanded from 3.5, and 11 is expanded from 10.5)
 - A 10 damage weapon has damage range of 5-15.
 
 # Mission site result and awards
