@@ -14,15 +14,60 @@ export const EXPECTED_ASSETS_COLUMN_WIDTH = 380
 
 export const LEFT_COLUMN_CARD_WIDTH = 340
 
-export const MIDDLE_COLUMN_CARD_WIDTH =
+export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  Math.max(
-    EXPECTED_MISSIONS_COLUMN_WIDTH + CHECKMARK_COLUMN_WIDTH,
-    EXPECTED_LEADS_COLUMN_WIDTH + CHECKMARK_COLUMN_WIDTH,
-    EXPECTED_LEAD_INVESTIGATIONS_COLUMN_WIDTH + CHECKMARK_COLUMN_WIDTH,
-    EXPECTED_AGENTS_DEFAULT_VIEW_COLUMN_WIDTH + CHECKMARK_COLUMN_WIDTH,
-    EXPECTED_AGENTS_TERMINATED_VIEW_COLUMN_WIDTH,
-  )
+  columnWidths['missions.id'] +
+  columnWidths['missions.state'] +
+  columnWidths['missions.expires_in'] +
+  columnWidths['missions.enemies'] +
+  columnWidths['missions.avg_skill'] +
+  columnWidths['missions.details'] +
+  CHECKMARK_COLUMN_WIDTH
+
+export const LEADS_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['leads.id'] +
+  columnWidths['leads.difficulty'] +
+  columnWidths['leads.repeatable'] +
+  columnWidths['leads.investigations'] +
+  CHECKMARK_COLUMN_WIDTH
+
+export const LEAD_INVESTIGATIONS_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['lead_investigations.lead_investigation_title'] +
+  columnWidths['lead_investigations.agents'] +
+  columnWidths['lead_investigations.intel'] +
+  columnWidths['lead_investigations.success_chance'] +
+  columnWidths['lead_investigations.intel_decay'] +
+  columnWidths['lead_investigations.projected_intel'] +
+  CHECKMARK_COLUMN_WIDTH
+
+export const AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['agents.id'] +
+  columnWidths['agents.state'] +
+  columnWidths['agents.assignment'] +
+  columnWidths['agents.skill'] +
+  columnWidths['agents.exhaustion'] +
+  CHECKMARK_COLUMN_WIDTH
+
+export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =
+  DATA_GRID_BASE_WIDTH +
+  columnWidths['agents.id'] +
+  columnWidths['agents.skill_simple'] +
+  columnWidths['agents.hit_points_max'] +
+  columnWidths['agents.service'] +
+  columnWidths['agents.missions_total'] +
+  columnWidths['agents.mission'] +
+  columnWidths['agents.by']
+
+export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
+  MISSIONS_DATA_GRID_WIDTH,
+  LEADS_DATA_GRID_WIDTH,
+  LEAD_INVESTIGATIONS_DATA_GRID_WIDTH,
+  AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH,
+  AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH,
+)
 
 export const ASSETS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value'] + columnWidths['assets.projected']
