@@ -46,33 +46,9 @@ Legend:
 `ThreatR` - Threat reduction of given faction.
 `SupprR` - Suppression reward (increase) of given faction.
 
-# Counter-offensive missions
+# Defensive missions
 
-The table below shows some of the details of player counter-offensive missions against faction offensive missions.
-
-Level 1: soft operations
-- Foil recruitment push
-- Foil business extortion
-- Foil supply theft
-
-Level 2: violent but small-scale
-- Foil sabotage
-- Foil VIP assassination
-- Defend against office raid
-
-Level 3: strategic threats
-- Foil financial heist
-- Intercept arms deal
-- Defend against facility raid
-
-Level 4: regional destabilization
-- Defend against city government assault
-- Counter civilian terror
-- Defend against cult retaliation strike
-
-Level 5: global threats
-- Foil nuclear plant bombing
-- Defend against HQ assault
+The table below shows some of the details of player defensive missions, to counter faction offensive operations.
 
 | Mission                                  | Lvl | Exp | Troops                    | Officers               | Money | Fund       | Intel | Panic            | Threat           | Suppr  |
 | ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- | ----: | ---------: | ----: | ---------------: | ---------------: | -----: |
