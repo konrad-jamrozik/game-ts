@@ -293,7 +293,7 @@ function evaluateCombatRound(
     }
   }
 
-  console.log('\n----- 👤🗡️ Agent Attack Phase -----')
+  // console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
   const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, zeroF6))
@@ -329,7 +329,7 @@ function evaluateCombatRound(
     }
   }
 
-  console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
+  // console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
 
   // Enemies attack back
   const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, zeroF6))

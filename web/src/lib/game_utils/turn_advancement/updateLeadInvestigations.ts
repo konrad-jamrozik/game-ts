@@ -70,8 +70,8 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
   const lead = getLeadById(investigation.leadId)
   const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
   const rollResult = rollAgainstProbabilityQuantized(successChance)
-  const rollResultStr = fmtRollResultQuantized(rollResult)
-  console.log(`${investigation.id} result: ${rollResultStr}`)
+  // const rollResultStr = fmtRollResultQuantized(rollResult)
+  // console.log(`${investigation.id} result: ${rollResultStr}`)
   return { success: rollResult.success, successChance }
 }
 

@@ -52,17 +52,17 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const enemyToAgentsSkillThreshold = toF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
   const enemyAboveThreshold = f6ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
 
-  console.log(
-    `Retreat evaluation: ` +
-      `agents current skill = ${toF(agentsTotalCurrentEffectiveSkill)}, ` +
-      `agents original skill = ${toF(agentsTotalOriginalEffectiveSkill)}, ` +
-      `agents threshold = ${toF(agentsEffectiveSkillThreshold)}, ` +
-      `agents below threshold = ${agentsBelowThreshold}, ` +
-      `enemy current skill = ${toF(enemyTotalCurrentEffectiveSkill)}, ` +
-      `enemy/agents ratio = ${toF(enemyToAgentsSkillRatio)}, ` +
-      `enemy/agents threshold = ${RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD}, ` +
-      `enemy above threshold = ${enemyAboveThreshold}`,
-  )
+  // console.log(
+  //   `Retreat evaluation: ` +
+  //     `agents current skill = ${toF(agentsTotalCurrentEffectiveSkill)}, ` +
+  //     `agents original skill = ${toF(agentsTotalOriginalEffectiveSkill)}, ` +
+  //     `agents threshold = ${toF(agentsEffectiveSkillThreshold)}, ` +
+  //     `agents below threshold = ${agentsBelowThreshold}, ` +
+  //     `enemy current skill = ${toF(enemyTotalCurrentEffectiveSkill)}, ` +
+  //     `enemy/agents ratio = ${toF(enemyToAgentsSkillRatio)}, ` +
+  //     `enemy/agents threshold = ${RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD}, ` +
+  //     `enemy above threshold = ${enemyAboveThreshold}`,
+  // )
   // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
   const result = {
     shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
