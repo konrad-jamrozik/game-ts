@@ -77,6 +77,14 @@ Typical activity level progression:
 | Red Dawn | Escalating  -> War          | 60-90 |    300-450 |
 | Red Dawn | War         -> Total war    | 60-90 |    360-540 |
 
+## Progression display
+
+It is shown to the player as "number_of_turns/minimal_possible_threshold",
+so e.g. 13/60 means the faction was at this activity level for 13 turns,
+at at least 60 turns are needed for increase. But it may actually be more,
+e.g. 78, so player may see e.g. 75/60. It must be explained in ufopaedia
+that the increase may be 60 up to +50% turns.
+
 # Faction suppression
 
 One of the possible mission rewards is faction suppression.
