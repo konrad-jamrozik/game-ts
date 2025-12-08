@@ -114,7 +114,12 @@ KJA backlog:
 
 # P0 Game content
 
-- Add more factions
+- Add more factions.
+- Mission sites can be reused for different factions.
+  It will be a a combination tuple of (faction, mission).
+  In other words, mission sites are parameterized by faction.
+  But of course the suppression, leads and activity level and progression are tracked
+  for each faction separately.
 
 # Domain model refactoring
 

@@ -22,21 +22,29 @@ Newly hired agent has:
 | Elite          |         | El Elit |  200  | 40  | 20 ( 10-30 ) |
 | Commander      |   yes   | Cm Cmdr |  250  | 40  | 20 ( 10-30 ) |
 | High Commander |   yes   | HC HCmd |  400  | 50  | 30 ( 15-45 ) |
+| Cult leader    |   yes   | CL CLdr |  800  | 80  | 40 ( 20-60 ) |
+
+Typical ratios:
+
+- 1 handler for 5-8 (initiates or operatives)
+- 1 lieutenant for 2-3 handlers and 4-5 soldiers
+- 1 commander for 2 lieutenants and 2 elites
+- 1 high commander for 3 commanders and 4 elites
 
 # Offensive missions
 
 The table below shows some of the details of player offensive missions.
 
-| Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR |  PanicR | Suppr. |
-| ---------------------------- | --- | -------------------------- | ---------------------- | -----: | ----: | ------: | -----: |
-| Apprehend cult member        | 3   |  2 In,   1 Op              |                        |      5 |     0 |  0.05 % |      0 |
-| Raid cult safehouse          | 8   |  4 In,   3 Op              | 1 Hn                   |    100 |     5 |  0.1  % |      1 |
-| Raid cult outpost            | 10  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    400 |    10 |  0.5  % |    1-3 |
-| Raid cult training facility  | 12  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    800 |    15 |    1  % |    3-9 |
-| Raid cult logistics hub      | 15  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |  2,000 |    20 |    2  % |   5-15 |
-| Raid cult command center     | 20  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |  3,000 |    25 |    5  % |  10-30 |
-| Raid cult sector stronghold  | 30  |  - In,  10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  5,000 |    50 |   10  % |  15-45 |
-| Raid cult HQ                 | 40  |  - In,   - Op, 20 Sl, 6 El | - Hn, 4 Lt, 2 Cm, 1 HC | 10,000 |   100 |   20  % |    N/A |
+| Mission                       | Exp | Troops                      | Officers                      | MoneyR | FundR |  PanicR | Suppr. |
+| ----------------------------- | --- | --------------------------- | ----------------------------- | -----: | ----: | ------: | -----: |
+| Apprehend cult member         |   3 |  2 In,   1 Op               |                               |      5 |     0 |  0.05 % |      0 |
+| Raid cult safehouse           |   8 |  4 In,   4 Op               | 1 Hn                          |    100 |     5 |  0.1  % |      1 |
+| Raid cult outpost             |  10 |  8 In,   8 Op,  4 Sl        | 2 Hn,  1 Lt                   |    400 |    10 |  0.5  % |    1-3 |
+| Raid cult training facility   |  12 | 30 In,  16 Op,  8 Sl        | 6 Hn,  2 Lt                   |    800 |    15 |    1  % |    3-9 |
+| Raid cult logistics hub       |  15 | 12 In,  24 Op, 10 Sl,  2 El | 5 Hn,  2 Lt, 1 Cm             |  2,000 |    20 |    2  % |   5-15 |
+| Raid cult command center      |  20 |  - In,  20 Op, 20 Sl,  6 El | 4 Hn,  4 Lt, 3 Cm             |  3,000 |    25 |    5  % |  10-30 |
+| Raid cult regional stronghold |  30 |  - In,   - Op, 40 Sl, 10 El | - Hn,  8 Lt, 3 Cm, 1 HC       |  5,000 |    50 |   10  % |  15-45 |
+| Raid cult HQ                  |  40 |  - In,   - Op, 60 Sl, 20 El | - Hn, 12 Lt, 6 Cm, 2 HC, 1 CL | 10,000 |   100 |   20  % |    N/A |
 
 For descriptions see https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
 
