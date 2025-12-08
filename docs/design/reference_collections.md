@@ -27,19 +27,20 @@ Newly hired agent has:
 
 The table below shows some of the details of missions.
 
-| Mission                      | Exp | Troops                    | Officers               | MoneyR | IntelR | PanicR | ThreatR | SupprR |
-| ---------------------------- | --- | ------------------------- | ---------------------- | -----: | -----: | -----: | ------: | -----: |
-| Apprehend cult member        | 3   | 2 In,  1 Op               |                        |      5 |      0 | 0.05 % |  0.01 % |  0.1 % |
-| Raid cult safehouse          | 8   | 4 In,  3 Op               | 1 Hn                   |    100 |     10 |  0.2 % |   0.1 % |   10 % |
-| Raid cult outpost            | 10  | 4 In,  6 Op,  4 Sl        | 2 Hn, 1 Lt             |    400 |     20 |    1 % |     1 % |   50 % |
-| Raid cult base of operations | 12  | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  1,000 |     50 |    5 % |     5 % |  100 % |
-| Raid cult HQ                 | 15  | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC | 10,000 |    100 |   20 % |   100 % |  100 % |
+| Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR | IntelR | PanicR | ThreatR | SupprR |
+| ---------------------------- | --- | ------------------------- | ---------------------- | -----: | ----: | -----: | -----: | ------: | -----: |
+| Apprehend cult member        | 3   | 2 In,   1 Op              |                        |      5 |     0 |      0 | 0.05 % |  0.01 % |  0.1 % |
+| Raid cult safehouse          | 8   | 4 In,   3 Op              | 1 Hn                   |    100 |     5 |     10 |  0.2 % |   0.1 % |   10 % |
+| Raid cult outpost            | 10  | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    400 |    10 |     20 |    1 % |     1 % |   50 % |
+| Raid cult base of operations | 12  | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  1,000 |    20 |     50 |    5 % |     5 % |  100 % |
+| Raid cult HQ                 | 15  | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC |  5,000 |    50 |    100 |   20 % |   100 % |  100 % |
 
 Legend:
 `Exp` - In how many turns the mission expires.
 `Troops` - What troop-type enemies are present on the mission.
 `Officers` - What officer-type enemies are present on the mission.
 `MoneyR` - Money reward.
+`FundR` - Funding reward.
 `IntelR` - Intel reward.
 `PanicR` - Panic reduction. 1% = 100.
 `ThreatR` - Threat reduction of given faction. 1% = 100.

@@ -12,13 +12,14 @@ export const missions: Mission[] = [
     enemyUnitsSpec: '2 Initiate, 1 Operative',
     rewards: {
       money: 5,
+      funding: 0,
       intel: 0,
-      panicReduction: toF6(0.0005), // 5 basis points = 0.05% = 0.0005
+      panicReduction: toF6(0.0005),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: toF6(0.0001), // 1 basis point = 0.01% = 0.0001
-          suppression: toF6(0.001), // 10 basis points = 0.1% = 0.001
+          threatReduction: toF6(0.0001),
+          suppression: toF6(0.001),
         },
       ],
     },
@@ -32,13 +33,14 @@ export const missions: Mission[] = [
     enemyUnitsSpec: '4 Initiate, 3 Operative, 1 Handler',
     rewards: {
       money: 100,
+      funding: 5,
       intel: 10,
-      panicReduction: toF6(0.002), // 20 basis points = 0.2% = 0.002
+      panicReduction: toF6(0.002),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: toF6(0.001), // 10 basis points = 0.1% = 0.001
-          suppression: toF6(0.1), // 1000 basis points = 10% = 0.1
+          threatReduction: toF6(0.001),
+          suppression: toF6(0.1),
         },
       ],
     },
@@ -52,13 +54,14 @@ export const missions: Mission[] = [
     enemyUnitsSpec: '4 Initiate, 6 Operative, 4 Soldier, 2 Handler, 1 Lieutenant',
     rewards: {
       money: 400,
+      funding: 10,
       intel: 20,
-      panicReduction: toF6(0.01), // 100 basis points = 1% = 0.01
+      panicReduction: toF6(0.01),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: toF6(0.02), // 200 basis points = 2% = 0.02
-          suppression: toF6(0.5), // 5000 basis points = 50% = 0.5
+          threatReduction: toF6(0.01),
+          suppression: toF6(0.5),
         },
       ],
     },
@@ -72,13 +75,14 @@ export const missions: Mission[] = [
     enemyUnitsSpec: '10 Operative, 10 Soldier, 2 Elite, 4 Handler, 2 Lieutenant, 1 Commander',
     rewards: {
       money: 1000,
+      funding: 20,
       intel: 50,
-      panicReduction: toF6(0.05), // 500 basis points = 5% = 0.05
+      panicReduction: toF6(0.05),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: toF6(0.1), // 1000 basis points = 10% = 0.1
-          suppression: toF6(1), // 10_000 basis points = 100% = 1.0
+          threatReduction: toF6(0.05),
+          suppression: toF6(1),
         },
       ],
     },
@@ -91,14 +95,15 @@ export const missions: Mission[] = [
     dependsOn: ['lead-red-dawn-hq'],
     enemyUnitsSpec: '20 Soldier, 6 Elite, 4 Lieutenant, 2 Commander, 1 HighCommander',
     rewards: {
-      money: 10_000,
+      money: 5000,
+      funding: 50,
       intel: 100,
-      panicReduction: toF6(0.2), // 2000 basis points = 20% = 0.2
+      panicReduction: toF6(0.2),
       factionRewards: [
         {
           factionId: 'faction-red-dawn',
-          threatReduction: toF6(1), // 10_000 basis points = 100% = 1.0
-          suppression: toF6(1), // 10_000 basis points = 100% = 1.0
+          threatReduction: toF6(1),
+          suppression: toF6(1),
         },
       ],
     },
