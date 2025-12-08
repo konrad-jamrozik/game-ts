@@ -98,16 +98,16 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     const enemyHpAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => toF(enemy.hitPoints))
     const skillRatioAtRoundStart = toF6r(f6div(enemySkillAtRoundStart, agentSkillAtRoundStart))
 
-    // Show round status with detailed statistics
-    showRoundStatus(
-      roundIdx,
-      agents,
-      enemies,
-      initialAgentEffectiveSkill,
-      initialAgentHitPoints,
-      initialEnemySkill,
-      initialEnemyHitPoints,
-    )
+    // // Show round status with detailed statistics
+    // showRoundStatus(
+    //   roundIdx,
+    //   agents,
+    //   enemies,
+    //   initialAgentEffectiveSkill,
+    //   initialAgentHitPoints,
+    //   initialEnemySkill,
+    //   initialEnemyHitPoints,
+    // )
 
     const roundAttackLogs = evaluateCombatRound(agents, agentStats, enemies, initialEnemyEffectiveSkillMap, roundIdx)
     attackLogs.push(...roundAttackLogs)
