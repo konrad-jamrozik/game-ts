@@ -74,7 +74,7 @@ export const leads: Lead[] = [
   },
   {
     id: 'lead-red-dawn-base',
-    title: 'Locate cult base of operations',
+    title: 'Locate cult base',
     description: 'Location of the Red Dawn base has been revealed.',
     difficulty: 500, // 500 intel for 100%, or 5 intel for 1%
     dependsOn: ['lead-red-dawn-interrogate-lieutenant'],

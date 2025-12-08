@@ -68,8 +68,8 @@ export const missions: Mission[] = [
   },
   {
     id: 'mission-raid-red-dawn-base',
-    title: 'Raid Red Dawn Base of Operations',
-    description: 'Assault the Red Dawn base of operations.',
+    title: 'Raid Red Dawn Base',
+    description: 'Assault the Red Dawn base.',
     expiresIn: 12,
     dependsOn: ['lead-red-dawn-base'],
     enemyUnitsSpec: '10 Operative, 10 Soldier, 2 Elite, 4 Handler, 2 Lieutenant, 1 Commander',

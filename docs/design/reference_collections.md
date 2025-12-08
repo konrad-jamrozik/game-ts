@@ -14,7 +14,7 @@ Newly hired agent has:
 
 | Cult unit      | Officer | Alias   | Skill | HP  |    Damage    |
 | -------------- | :-----: | ------- | :---: | :-: | :----------: |
-| Initiate       |         | In Init |  40   | 20  | 8 (  4-12 )  |
+| Initiate       |         | In Init |  40   | 20  | 8  (  4-12 ) |
 | Operative      |         | Op Oper |  60   | 20  | 10 (  5-15 ) |
 | Handler        |   yes   | Hn Hndl |  70   | 20  | 10 (  5-15 ) |
 | Soldier        |         | Sl Sldr |  100  | 30  | 14 (  7-21 ) |
@@ -27,13 +27,18 @@ Newly hired agent has:
 
 The table below shows some of the details of player offensive missions.
 
-| Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR | IntelR | PanicR | ThreatR | SupprR |
-| ---------------------------- | --- | ------------------------- | ---------------------- | -----: | ----: | -----: | -----: | ------: | -----: |
-| Apprehend cult member        | 3   | 2 In,   1 Op              |                        |      5 |     0 |      0 | 0.05 % |  0.01 % |  0.1 % |
-| Raid cult safehouse          | 8   | 4 In,   3 Op              | 1 Hn                   |    100 |     5 |     10 |  0.2 % |   0.1 % |   10 % |
-| Raid cult outpost            | 10  | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    400 |    10 |     20 |    1 % |     1 % |   50 % |
-| Raid cult base of operations | 12  | -      10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  1,000 |    20 |     50 |    5 % |     5 % |  100 % |
-| Raid cult HQ                 | 15  | -             20 Sl, 6 El | -     4 Lt, 2 Cm, 1 HC |  5,000 |    50 |    100 |   20 % |   100 % |  100 % |
+| Mission                      | Exp | Troops                    | Officers               | MoneyR | FundR |  PanicR | Suppr. |
+| ---------------------------- | --- | -------------------------- | ---------------------- | -----: | ----: | ------: | -----: |
+| Apprehend cult member        | 3   |  2 In,   1 Op              |                        |      5 |     0 |  0.05 % |      0 |
+| Raid cult safehouse          | 8   |  4 In,   3 Op              | 1 Hn                   |    100 |     5 |  0.1  % |      1 |
+| Raid cult outpost            | 10  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    400 |    10 |  0.5  % |    1-3 |
+| Raid cult training facility  | 12  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |    800 |    15 |    1  % |    3-9 |
+| Raid cult logistics hub      | 15  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |  2,000 |    20 |    2  % |   5-15 |
+| Raid cult command center     | 20  |  4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |  3,000 |    25 |    5  % |  10-30 |
+| Raid cult sector stronghold  | 30  |  - In,  10 Op, 10 Sl, 2 El | 4 Hn, 2 Lt, 1 Cm       |  5,000 |    50 |   10  % |  15-45 |
+| Raid cult HQ                 | 40  |  - In,   - Op, 20 Sl, 6 El | - Hn, 4 Lt, 2 Cm, 1 HC | 10,000 |   100 |   20  % |    N/A |
+
+For descriptions see https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
 
 Legend:
 `Exp` - In how many turns the mission expires.
@@ -101,7 +106,7 @@ The leads system follows a progression chain where completing missions unlocks n
 | Locate cult member              |         20 |    true    |
 | Locate cult safehouse           |         50 |    true    |
 | Locate cult outpost             |        100 |    true    |
-| Locate cult base of operations  |        200 |    true    |
+| Locate cult base  |        200 |    true    |
 | Locate cult HQ                  |        500 |    true    |
 | Interrogate cult member         |          0 |   false    |
 | Interrogate cult handler        |          0 |   false    |
@@ -123,7 +128,7 @@ graph TD;
         AppreMembr[Apprehend cult member]
         RaidSafhse[Raid cult safehouse]
         RaidOutpst[Raid cult outpost]
-        RaidBaseop[Raid cult base of operations]
+        RaidBaseop[Raid cult base]
         RaidHeadqr[Raid cult HQ]
     end
     
@@ -136,7 +141,7 @@ graph TD;
         IntrgHndlr[Interrogate cult handler]
         LocatOutpst[Locate cult outpost]
         IntrgLietn[Interrogate cult lieutenant]
-        LocatBaseop[Locate cult base of operations]
+        LocatBaseop[Locate cult base]
         IntrgCmndr[Interrogate cult commander]
         LocatHeadqr[Locate cult HQ]
         IntrgHiCmd[Interrogate cult high commander]
