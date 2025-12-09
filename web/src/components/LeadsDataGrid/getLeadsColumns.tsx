@@ -2,6 +2,8 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import type { LeadRow } from './LeadsDataGrid'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
+import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [
@@ -9,9 +11,11 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
       field: 'id',
       headerName: 'Lead ID',
       width: columnWidths['leads.id'],
-      renderCell: (params: GridRenderCellParams<LeadRow, string>) => (
-        <span aria-label={`leads-row-id-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<LeadRow, string>): React.JSX.Element => {
+        const leadId = params.value
+        assertDefined(leadId, `Lead ID not found for id: ${params.id}`)
+        return <span aria-label={`leads-row-id-${params.id}`}>{fmtNoPrefix(leadId, 'lead-')}</span>
+      },
     },
     {
       field: 'difficulty',
@@ -23,7 +27,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
     {
       field: 'repeatable',
-      headerName: 'Repeatable',
+      headerName: 'Rpt.',
       width: columnWidths['leads.repeatable'],
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
         <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>

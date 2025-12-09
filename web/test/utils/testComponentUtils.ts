@@ -50,7 +50,7 @@ export async function selectLead(leadId: string): Promise<void> {
 
 export async function selectMission(missionDisplayText: string): Promise<void> {
   // Find and click checkbox for the specified mission in the Mission Sites DataGrid
-  // The display text format is: "001 (apprehend-red-dawn)"
+  // The display text format is: "001 apprehend-red-dawn"
   // Only one mission can be selected at a time
   const targetRow = findRowById(missionDisplayText)
   if (targetRow) {

@@ -19,9 +19,9 @@ export const columnWidths = {
   'capabilities.price': 100,
 
   // Mission sites columns
-  'mission_sites.id': 260,
+  'mission_sites.id': 340,
   'mission_sites.state': 120,
-  'mission_sites.expires_in': 90,
+  'mission_sites.expires_in': 70,
   'mission_sites.enemies': 80,
   'mission_sites.avg_skill': 80,
   'mission_sites.details': 100,
@@ -29,12 +29,12 @@ export const columnWidths = {
   // Leads columns
   'leads.id': 300,
   'leads.difficulty': 120,
-  'leads.repeatable': 120,
+  'leads.repeatable': 60,
   'leads.investigations': 140,
 
   // Lead Investigations columns
   'lead_investigations.lead_investigation_title': 200,
-  'lead_investigations.agents': 80,
+  'lead_investigations.agents': 60,
   'lead_investigations.intel': 64,
   'lead_investigations.success_chance': 80,
   'lead_investigations.intel_decay': 120,
@@ -50,9 +50,9 @@ export const columnWidths = {
   'agents.exhaustion': 110,
   'agents.skill_simple': 70,
   'agents.hit_points_max': 50,
-  'agents.service': 120,
-  'agents.missions_total': 80,
-  'agents.mission': 180,
+  'agents.service': 100,
+  'agents.missions_total': 70,
+  'agents.mission': 80,
   'agents.by': 170,
 
   // Mission Site Details columns

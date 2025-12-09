@@ -11,8 +11,8 @@ export const MISSIONS_DATA_GRID_WIDTH =
   columnWidths['mission_sites.id'] +
   columnWidths['mission_sites.state'] +
   columnWidths['mission_sites.expires_in'] +
-  columnWidths['mission_sites.enemies'] +
-  columnWidths['mission_sites.avg_skill'] +
+  // columnWidths['mission_sites.enemies'] +
+  // columnWidths['mission_sites.avg_skill'] +
   columnWidths['mission_sites.details'] +
   CHECKMARK_COLUMN_WIDTH
 

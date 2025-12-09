@@ -4,9 +4,6 @@ import Box from '@mui/material/Box'
 import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
-import { f6sum, toF } from '../../lib/primitives/fixed6'
-import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
-import { div } from '../../lib/primitives/mathPrimitives'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionSitesDataGrid'
@@ -53,27 +50,27 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
         return <span aria-label={`missions-row-expires-in-${params.id}`}>-</span>
       },
     },
-    {
-      field: 'enemies',
-      headerName: 'Enem',
-      width: columnWidths['mission_sites.enemies'],
-      valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
-      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const enemyCount = getEnemyCount(params.row)
-        return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
-      },
-    },
-    {
-      field: 'avgSkill',
-      headerName: 'AvgSk',
-      width: columnWidths['mission_sites.avg_skill'],
-      valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
-      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        const avgSkill = getAverageSkill(params.row)
-        const displayValue = avgSkill === 0 ? '-' : fmtDec1(avgSkill)
-        return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
-      },
-    },
+    // {
+    //   field: 'enemies',
+    //   headerName: 'Enem',
+    //   width: columnWidths['mission_sites.enemies'],
+    //   valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
+    //   renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+    //     const enemyCount = getEnemyCount(params.row)
+    //     return <span aria-label={`missions-row-enemies-${params.id}`}>{enemyCount}</span>
+    //   },
+    // },
+    // {
+    //   field: 'avgSkill',
+    //   headerName: 'AvgSk',
+    //   width: columnWidths['mission_sites.avg_skill'],
+    //   valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
+    //   renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+    //     const avgSkill = getAverageSkill(params.row)
+    //     const displayValue = avgSkill === 0 ? '-' : fmtDec1(avgSkill)
+    //     return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
+    //   },
+    // },
     {
       field: 'details',
       headerName: 'Details',
@@ -113,15 +110,15 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
   return columns
 }
 
-function getEnemyCount(row: MissionRow): number {
-  return row.enemies.length
-}
+// function getEnemyCount(row: MissionRow): number {
+//   return row.enemies.length
+// }
 
-function getAverageSkill(row: MissionRow): number {
-  const { enemies } = row
-  if (enemies.length === 0) {
-    return 0
-  }
-  const totalSkill = toF(f6sum(...enemies.map((enemy) => enemy.skill)))
-  return div(totalSkill, enemies.length)
-}
+// function getAverageSkill(row: MissionRow): number {
+//   const { enemies } = row
+//   if (enemies.length === 0) {
+//     return 0
+//   }
+//   const totalSkill = toF(f6sum(...enemies.map((enemy) => enemy.skill)))
+//   return div(totalSkill, enemies.length)
+// }

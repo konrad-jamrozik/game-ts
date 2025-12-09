@@ -92,7 +92,7 @@ function step1StartWithDebugInitialState(): void {
 
   // Verify initial debug state
   // Should have a lead "Criminal organizations"
-  const criminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
+  const criminalOrgsLeads = screen.getAllByText(/criminal-orgs/iu)
   expect(criminalOrgsLeads.length).toBeGreaterThan(0)
 
   // Should have mission with ID "000" (in deployed state) - look for exact mission ID
@@ -143,7 +143,7 @@ async function step3SelectAgent002(): Promise<void> {
  */
 async function step4ClickCriminalOrganizationsLead(): Promise<void> {
   // Select the Criminal organizations lead by clicking its checkbox
-  await selectLead('lead-criminal-orgs')
+  await selectLead('criminal-orgs')
 
   console.log('✅ Step 4 completed: Select "Criminal organizations" lead')
 }
@@ -171,8 +171,8 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
  * Step 6: Select mission "001" by clicking its checkbox in the Mission Sites DataGrid
  */
 async function step6SelectMission001(): Promise<void> {
-  // Select mission "001 (apprehend-red-dawn)" by clicking its checkbox
-  await selectMission('001 (apprehend)')
+  // Select mission "001 apprehend-red-dawn" by clicking its checkbox
+  await selectMission('001 apprehend-red-dawn')
 
   console.log('✅ Step 6 completed: Select mission "001"')
 }
@@ -317,7 +317,7 @@ async function step12ClickResetGame(): Promise<void> {
   expect(resetTurnValue).toHaveTextContent('1')
 
   // Should have only "Criminal organizations" lead
-  const finalCriminalOrgsLeads = screen.getAllByText(/lead-criminal-orgs/iu)
+  const finalCriminalOrgsLeads = screen.getAllByText(/criminal-orgs/iu)
   expect(finalCriminalOrgsLeads.length).toBeGreaterThan(0)
 
   // Should have the 4 agents from the initial state only.

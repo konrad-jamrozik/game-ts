@@ -196,7 +196,7 @@ export function getAgentsColumns(
           const totalTurnsServed = turnTerminated - turnHired + 1
           return (
             <span aria-label={`agents-row-service-${params.id}`}>
-              {turnHired} - {turnTerminated} ({totalTurnsServed})
+              {turnHired}-{turnTerminated} ({totalTurnsServed})
             </span>
           )
         }
@@ -204,14 +204,14 @@ export function getAgentsColumns(
         const totalTurnsServed = currentTurn - turnHired + 1
         return (
           <span aria-label={`agents-row-service-${params.id}`}>
-            {turnHired} - {currentTurn} ({totalTurnsServed})
+            {turnHired}-{currentTurn} ({totalTurnsServed})
           </span>
         )
       },
     },
     {
       field: 'missionsTotal',
-      headerName: 'Miss #',
+      headerName: 'Mis #',
       width: columnWidths['agents.missions_total'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-missions-total-${params.id}`}>{params.row.missionsTotal}</span>
@@ -219,17 +219,16 @@ export function getAgentsColumns(
     },
     {
       field: 'mission',
-      headerName: 'Mission',
+      headerName: 'Mis',
       width: columnWidths['agents.mission'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedOnMissionSiteId, assignment } = params.row
 
         if (terminatedOnMissionSiteId !== undefined) {
           const missionSite = missionSites.find((site) => site.id === terminatedOnMissionSiteId)
-          if (missionSite !== undefined) {
-            const displayValue = fmtMissionSiteIdWithMissionId(missionSite)
-            return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
-          }
+          assertDefined(missionSite, `Mission site not found for id: ${terminatedOnMissionSiteId}`)
+          const displayValue = fmtNoPrefix(missionSite.id, 'mission-site-')
+          return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
         }
         // If agent was sacked (assignment is 'Sacked'), show "-"
         if (assignment === 'Sacked') {
