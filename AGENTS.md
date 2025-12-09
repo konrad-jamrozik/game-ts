@@ -129,6 +129,9 @@ This project uses following technologies:
 - Always use function declarations instead of function expressions if possible.
 - Tests go into `web/test/` dir and should follow the naming convention `${fileBasenameNoExtension}.test.tsx`.
 - Prefer `<Fragment>` over `<>`.
+- **Function layout**: Follow first-to-last call chain symbol definition order in files.
+  - Define entry point/top-level functions first, then define functions called downstream.
+  - If `foo()` calls `bar()`, then `foo()` should be defined before `bar()` in the file.
 
 ## MCP servers
 
