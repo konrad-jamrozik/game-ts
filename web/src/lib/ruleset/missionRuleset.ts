@@ -1,16 +1,19 @@
-import type { Enemy, MissionSite } from '../model/model'
+import type { Enemy, MissionSite, MissionSiteState } from '../model/model'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
 import { toF6, f6div, f6ge, f6gt, f6lt, f6mult, f6sum, type Fixed6, toF6r } from '../primitives/fixed6'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
 
+/**
+ * Checks if a mission site state represents a concluded mission.
+ * Concluded states: Won, Wiped, Retreated, Expired
+ */
+export function isConcludedMissionSiteState(state: MissionSiteState): boolean {
+  return state === 'Won' || state === 'Wiped' || state === 'Retreated' || state === 'Expired'
+}
+
 export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
-  return (
-    missionSite.state === 'Won' ||
-    missionSite.state === 'Wiped' ||
-    missionSite.state === 'Retreated' ||
-    missionSite.state === 'Expired'
-  )
+  return isConcludedMissionSiteState(missionSite.state)
 }
 
 /**

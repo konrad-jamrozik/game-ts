@@ -11,15 +11,16 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
 import { MISSION_SITE_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
-import type { MissionSiteId } from '../../lib/model/model'
+import type { MissionSiteId, MissionSiteState } from '../../lib/model/model'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
+import { isConcludedMissionSiteState } from '../../lib/ruleset/missionRuleset'
 
 type MissionSiteDetailsRow = {
   id: number
   key: string
   value: string
-  state?: string
+  state?: MissionSiteState
 }
 
 type MissionSiteDetailsCardProps = {
@@ -95,15 +96,8 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
       width: columnWidths['mission_site_details.value'],
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
-          const stateValue = params.row.state
-
-          // KJA reuse here isMissionSiteConcluded
-          if (
-            stateValue === 'Won' ||
-            stateValue === 'Wiped' ||
-            stateValue === 'Retreated' ||
-            stateValue === 'Expired'
-          ) {
+          const { state: stateValue } = params.row
+          if (isConcludedMissionSiteState(stateValue)) {
             return <MyChip chipValue={stateValue} />
           }
         }

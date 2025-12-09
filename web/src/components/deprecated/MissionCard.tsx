@@ -12,6 +12,7 @@ import { setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/model'
 import { LabeledValue } from '../Common/LabeledValue'
+import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
 
 export type MissionCardProps = { missionSiteId: MissionSiteId }
 
@@ -30,13 +31,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'
-  // KJA reuse here isMissionSiteConcluded
-  const disabled =
-    missionSite.state === 'Won' ||
-    missionSite.state === 'Wiped' ||
-    missionSite.state === 'Retreated' ||
-    missionSite.state === 'Expired' ||
-    isDeployed
+  const disabled = isMissionSiteConcluded(missionSite) || isDeployed
 
   // Remove the "mission-site-" prefix from the ID for display
   const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')

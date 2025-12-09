@@ -8,6 +8,7 @@ import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import type { MissionRow } from './MissionSitesDataGrid'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
+import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
 
 export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
@@ -25,13 +26,7 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
       headerName: 'State',
       width: columnWidths['mission_sites.state'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        // KJA reuse here isMissionSiteConcluded
-        if (
-          params.value === 'Won' ||
-          params.value === 'Wiped' ||
-          params.value === 'Retreated' ||
-          params.value === 'Expired'
-        ) {
+        if (isMissionSiteConcluded(params.row)) {
           return (
             <span aria-label={`missions-row-state-${params.id}`}>
               <MyChip chipValue={params.value} />
