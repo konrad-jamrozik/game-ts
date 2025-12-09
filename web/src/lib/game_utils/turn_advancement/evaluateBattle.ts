@@ -116,17 +116,11 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
 
     const sideEliminated = isSideEliminated(agents, enemies)
 
-    // Create round log entry for current round (before checking retreat)
-    // If battle ends due to elimination, mark it appropriately
-    let roundStatus: 'Ongoing' | 'Retreated' | 'Won' | 'Lost' = 'Ongoing'
-    if (sideEliminated) {
-      const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
-      roundStatus = allAgentsTerminated ? 'Lost' : 'Won'
-    }
-
+    // Create round log entry for current round showing state at round START (before combat).
+    // Status is always 'Ongoing' here; the final battle outcome is recorded in the end-of-battle log.
     const roundLog: RoundLog = {
       roundNumber: roundIdx,
-      status: roundStatus,
+      status: 'Ongoing',
       agentCount: activeAgentsAtRoundStart.length,
       agentCountTotal: agents.length,
       agentSkill: agentSkillAtRoundStart,
@@ -149,46 +143,6 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
       retreated = retreatResult.shouldRetreat
       if (retreated) {
         logRetreat(retreatResult)
-        // If retreat is needed, create a log entry for the next round showing retreat
-        roundIdx += 1
-
-        // Capture round state at start of next round (before combat, but retreat happens)
-        const activeAgentsAtRetreatRoundStart = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)))
-        const activeEnemiesAtRetreatRoundStart = enemies.filter((enemy) => f6gt(enemy.hitPoints, toF6(0)))
-        const agentSkillAtRetreatRoundStart = f6sum(
-          ...activeAgentsAtRetreatRoundStart.map((agent) => effectiveSkill(agent)),
-        )
-        const agentHpAtRetreatRoundStart = sum(activeAgentsAtRetreatRoundStart, (agent) => toF(agent.hitPoints))
-        const enemySkillAtRetreatRoundStart = f6sum(
-          ...activeEnemiesAtRetreatRoundStart.map((enemy) => effectiveSkill(enemy)),
-        )
-        const enemyHpAtRetreatRoundStart = sum(activeEnemiesAtRetreatRoundStart, (enemy) => toF(enemy.hitPoints))
-        const skillRatioAtRetreatRoundStart = toF6r(f6div(enemySkillAtRetreatRoundStart, agentSkillAtRetreatRoundStart))
-
-        // KJA here is second time we create round log in the code, to account for the special case that
-        // "if player retreated we need round log even though no round took place".
-        // Instead of this, there should be always "end of battle round" log. Basically all "round logs"
-        // are at turn start, and hence there has to be one extra log at the end of battle.
-
-        // Create round log entry for retreat round
-        const retreatRoundLog: RoundLog = {
-          roundNumber: roundIdx,
-          status: 'Retreated',
-          agentCount: activeAgentsAtRetreatRoundStart.length,
-          agentCountTotal: agents.length,
-          agentSkill: agentSkillAtRetreatRoundStart,
-          agentSkillTotal: initialAgentEffectiveSkill,
-          agentHp: agentHpAtRetreatRoundStart,
-          agentHpTotal: initialAgentHitPoints,
-          enemyCount: activeEnemiesAtRetreatRoundStart.length,
-          enemyCountTotal: enemies.length,
-          enemySkill: enemySkillAtRetreatRoundStart,
-          enemySkillTotal: initialEnemySkill,
-          enemyHp: enemyHpAtRetreatRoundStart,
-          enemyHpTotal: initialEnemyHitPoints,
-          skillRatio: skillRatioAtRetreatRoundStart,
-        }
-        roundLogs.push(retreatRoundLog)
       }
     }
     battleEnded = sideEliminated || retreated
@@ -196,8 +150,45 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     // Battle continues until one side is eliminated or agents retreat
   } while (!battleEnded)
 
-  // Count casualties - terminated and wounded
+  // Create end-of-battle round log showing final state after all combat.
+  // This provides a consistent pattern: all combat round logs show state at round start,
+  // and this final log shows the state after the battle concludes.
   const zeroF6 = toF6(0)
+  const activeAgentsAtBattleEnd = agents.filter((agent) => f6gt(agent.hitPoints, zeroF6))
+  const activeEnemiesAtBattleEnd = enemies.filter((enemy) => f6gt(enemy.hitPoints, zeroF6))
+  const agentSkillAtBattleEnd = f6sum(...activeAgentsAtBattleEnd.map((agent) => effectiveSkill(agent)))
+  const agentHpAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => toF(agent.hitPoints))
+  const enemySkillAtBattleEnd = f6sum(...activeEnemiesAtBattleEnd.map((enemy) => effectiveSkill(enemy)))
+  const enemyHpAtBattleEnd = sum(activeEnemiesAtBattleEnd, (enemy) => toF(enemy.hitPoints))
+  // When all agents are terminated, skill ratio is undefined (division by zero).
+  // Use 0 as a placeholder - the 'Lost' status already conveys the battle outcome.
+  const skillRatioAtBattleEnd = f6eq(agentSkillAtBattleEnd, zeroF6)
+    ? zeroF6
+    : toF6r(f6div(enemySkillAtBattleEnd, agentSkillAtBattleEnd))
+
+  const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
+  const endOfBattleStatus: 'Retreated' | 'Won' | 'Lost' = retreated ? 'Retreated' : allAgentsTerminated ? 'Lost' : 'Won'
+
+  const endOfBattleLog: RoundLog = {
+    roundNumber: roundIdx + 1,
+    status: endOfBattleStatus,
+    agentCount: activeAgentsAtBattleEnd.length,
+    agentCountTotal: agents.length,
+    agentSkill: agentSkillAtBattleEnd,
+    agentSkillTotal: initialAgentEffectiveSkill,
+    agentHp: agentHpAtBattleEnd,
+    agentHpTotal: initialAgentHitPoints,
+    enemyCount: activeEnemiesAtBattleEnd.length,
+    enemyCountTotal: enemies.length,
+    enemySkill: enemySkillAtBattleEnd,
+    enemySkillTotal: initialEnemySkill,
+    enemyHp: enemyHpAtBattleEnd,
+    enemyHpTotal: initialEnemyHitPoints,
+    skillRatio: skillRatioAtBattleEnd,
+  }
+  roundLogs.push(endOfBattleLog)
+
+  // Count casualties - terminated and wounded
   const agentsTerminated = agents.filter((agent) => f6le(agent.hitPoints, zeroF6)).length
   const agentsWounded = agents.filter((agent) => {
     const initialHp = initialAgentHitPointsMap.get(agent.id) ?? toF6(agent.maxHitPoints)
