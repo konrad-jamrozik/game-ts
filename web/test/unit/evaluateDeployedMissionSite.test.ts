@@ -154,12 +154,13 @@ describe(evaluateDeployedMissionSite, () => {
     try {
       evaluateDeployedMissionSite(gameState, testMissionSite)
 
-      // Verify agent was terminated
-      expect(testAgent.hitPoints.value).toBe(0)
-      expect(testAgent.state).toBe('Terminated')
-      expect(testAgent.assignment).toBe('KIA')
+      // With incapacitation logic, agent becomes incapacitated (effective skill <= 10% base) before HP reaches 0
+      // Agent is still alive but wounded/unscathed, not terminated
+      expect(testAgent.hitPoints.value).toBeGreaterThan(0)
+      expect(testAgent.state).toBe('InTransit')
+      expect(['Recovery', 'Standby']).toContain(testAgent.assignment)
 
-      // Mission should be wiped since agent was terminated
+      // Mission should be wiped since agent cannot participate (incapacitated)
       expect(testMissionSite.state).toBe('Wiped')
     } finally {
       Math.random = originalRandom
@@ -204,7 +205,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('3 Soldier, 6 Elite'), // Strong enemies
+      enemies: newEnemiesFromSpec('3 CultLeader'), // Strong enemies
     }
 
     const gameState: GameState = {

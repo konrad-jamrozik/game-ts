@@ -4,7 +4,7 @@ overview: Create a helper hook to find mission reports from past turns, fixing t
 todos:
   - id: create-hook
     content: Create useMissionReport hook in web/src/redux/selectors/
-    status: pending
+    status: in_progress
   - id: update-combat-log
     content: Update CombatLogCard to use new hook
     status: pending

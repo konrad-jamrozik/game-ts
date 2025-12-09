@@ -1,9 +1,9 @@
 import type { Actor } from '../model/model'
 import type { Agent } from '../model/agentModel'
-import { NO_IMPACT_EXHAUSTION } from './constants'
+import { NO_IMPACT_EXHAUSTION, COMBAT_INCAPACITATION_THRESHOLD } from './constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { nonNeg } from '../primitives/mathPrimitives'
-import { f6mult, f6sum, toF, toF6r, toF6, f6sub, f6div, type Fixed6 } from '../primitives/fixed6'
+import { f6mult, f6sum, toF, toF6r, toF6, f6sub, f6div, f6gt, type Fixed6 } from '../primitives/fixed6'
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
@@ -19,6 +19,19 @@ export function effectiveSkill(actor: Actor): Fixed6 {
   const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
   return toF6r(f6mult(actor.skill, hitPointsMult, exhaustionMult))
+}
+
+/**
+ * Determines if an actor can participate in battle.
+ * A unit cannot participate if their effective skill falls below 10% of their base skill.
+ * Also implicitly checks that HP > 0 since HP loss reduces effective skill.
+ *
+ * @param actor - The actor to check
+ * @returns true if the actor can participate in battle, false otherwise
+ */
+export function canParticipateInBattle(actor: Actor): boolean {
+  const threshold = f6mult(actor.skill, COMBAT_INCAPACITATION_THRESHOLD)
+  return f6gt(effectiveSkill(actor), threshold)
 }
 
 /**
