@@ -7,14 +7,14 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
-  COMBAT_INCAPACITATION_THRESHOLD,
 } from '../../ruleset/constants'
-import { f6add, toF, toF6, f6sub, f6max, f6div, type Fixed6 } from '../../primitives/fixed6'
+import { f6add, toF, toF6, f6sub, f6max, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
 import { rollContest } from '../../primitives/rolls'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
+import { isIncapacitated } from '../../ruleset/missionRuleset'
 import type { AttackLog } from '../../model/turnReportModel'
 
 export function evaluateAttack(
@@ -154,10 +154,7 @@ export function evaluateAttack(
       // Calculate defender skill after damage and exhaustion
       const defenderSkillAfterAttack = effectiveSkill(defender)
 
-      // KJA need to dedup all places in code that check for inIncapacitated. This should be part of ruleset.
-      // Check if defender is incapacitated (effective skill <= 10% of base skill)
-      const skillRatio = f6div(defenderSkillAfterAttack, defenderSkillAtStart)
-      const isIncapacitated = skillRatio <= COMBAT_INCAPACITATION_THRESHOLD
+      const defenderIsIncapacitated = isIncapacitated(defender)
 
       attackLog = {
         roundNumber,
@@ -171,7 +168,7 @@ export function evaluateAttack(
         defenderSkillAfterAttack,
         roll: rollPct,
         threshold: thresholdPct,
-        outcome: isIncapacitated ? 'Incapacitated' : 'Hit',
+        outcome: defenderIsIncapacitated ? 'Incapacitated' : 'Hit',
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,

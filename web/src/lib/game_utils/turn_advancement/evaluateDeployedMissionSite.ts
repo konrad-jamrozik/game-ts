@@ -8,7 +8,7 @@ import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../pri
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
-import { canParticipateInBattle } from '../../ruleset/skillRuleset'
+import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.

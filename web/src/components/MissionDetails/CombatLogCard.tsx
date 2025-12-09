@@ -1,5 +1,3 @@
-// KJA when viewing details of archived mission site, 1 turn after it completed, combat log is empty. Probably because the combat log
-// lives not in current turn but in previous turn, and the logic always looks at current turn instead of the turn the mission site was completed on.
 import type { GridRowClassNameParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { ExpandableCard } from '../Common/ExpandableCard'

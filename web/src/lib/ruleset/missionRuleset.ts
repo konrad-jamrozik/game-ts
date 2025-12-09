@@ -1,8 +1,37 @@
-import type { Enemy, MissionSite, MissionSiteState } from '../model/model'
+import type { Actor, Enemy, MissionSite, MissionSiteState } from '../model/model'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
-import { toF6, f6div, f6ge, f6gt, f6lt, f6mult, f6sum, type Fixed6, toF6r } from '../primitives/fixed6'
-import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from './constants'
+import { toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sum, type Fixed6, toF6r } from '../primitives/fixed6'
+import {
+  AGENTS_SKILL_RETREAT_THRESHOLD,
+  COMBAT_INCAPACITATION_THRESHOLD,
+  RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
+} from './constants'
+
+/**
+ * Determines if an actor can participate in battle.
+ * A unit cannot participate if their effective skill falls below 10% of their base skill.
+ * Also implicitly checks that HP > 0 since HP loss reduces effective skill.
+ *
+ * @param actor - The actor to check
+ * @returns true if the actor can participate in battle, false otherwise
+ */
+export function canParticipateInBattle(actor: Actor): boolean {
+  return !isIncapacitated(actor)
+}
+
+/**
+ * Determines if an actor is incapacitated.
+ * A unit is incapacitated if their effective skill falls to 10% or less of their base skill.
+ * This is the source of truth for incapacitation checks.
+ *
+ * @param actor - The actor to check
+ * @returns true if the actor is incapacitated, false otherwise
+ */
+export function isIncapacitated(actor: Actor): boolean {
+  const threshold = toF6(f6mult(actor.skill, COMBAT_INCAPACITATION_THRESHOLD))
+  return f6le(effectiveSkill(actor), threshold)
+}
 
 /**
  * Checks if a mission site state represents a concluded mission.
