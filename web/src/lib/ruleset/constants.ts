@@ -44,6 +44,8 @@ export const AGENT_INITIAL_WEAPON_DAMAGE = 10
 export const AGENTS_SKILL_RETREAT_THRESHOLD = 0.5
 // Retreat also occurs when enemy effective skill is at least this percentage of agents' current effective skill.
 export const RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD = 0.8
+// Units with effective skill at or below this percentage of their base skill are incapacitated and cannot participate in battle.
+export const COMBAT_INCAPACITATION_THRESHOLD = 0.1
 
 /** The total accumulated lead intel decays by this amount per 1 accumulated intel.
  * Refer to getLeadIntelDecayPct and its test for examples.

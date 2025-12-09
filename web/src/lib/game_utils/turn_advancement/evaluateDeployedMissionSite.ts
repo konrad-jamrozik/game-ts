@@ -8,6 +8,7 @@ import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../pri
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
+import { canParticipateInBattle } from '../../ruleset/skillRuleset'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
@@ -43,7 +44,10 @@ export function evaluateDeployedMissionSite(
   )
 
   // Determine mission outcome
-  const allEnemiesNeutralized = missionSite.enemies.every((enemy) => f6le(enemy.hitPoints, toF6(0)))
+  // Enemies are neutralized if they are either terminated (HP <= 0) or incapacitated (effective skill <= 10% base)
+  const allEnemiesNeutralized = missionSite.enemies.every(
+    (enemy) => f6le(enemy.hitPoints, toF6(0)) || !canParticipateInBattle(enemy),
+  )
   assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
   if (allEnemiesNeutralized) {
     missionSite.state = 'Won'
@@ -94,18 +98,19 @@ function updateAgentsAfterBattle(
 
     const isTerminated = f6le(agent.hitPoints, toF6(0))
 
-    if (!isTerminated) {
+    if (isTerminated) {
+      agent.state = 'Terminated'
+      agent.assignment = 'KIA'
+      agent.turnTerminated = currentTurn
+      agent.terminatedOnMissionSiteId = missionSiteId
+    } else {
+      // Incapacitated agents are still alive and processed normally (wounded or unscathed)
       const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, hitPointsRecoveryPct)
       if (wasWounded) {
         agentsWounded += 1
       } else {
         agentsUnscathed += 1
       }
-    } else {
-      agent.state = 'Terminated'
-      agent.assignment = 'KIA'
-      agent.turnTerminated = currentTurn
-      agent.terminatedOnMissionSiteId = missionSiteId
     }
   })
   return { agentsWounded, agentsUnscathed }
@@ -138,7 +143,7 @@ function updateSurvivingAgent(
 
   // Skill from mission survival
   // missionsTotal was already incremented when agent was deployed to the mission
-  const survivalIndex = Math.min(agent.missionsTotal - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1)
+  const survivalIndex = Math.max(0, Math.min(agent.missionsTotal - 1, MISSION_SURVIVAL_SKILL_GAIN.length - 1))
   const survivalSkillGain = MISSION_SURVIVAL_SKILL_GAIN[survivalIndex]
   assertDefined(survivalSkillGain)
   addSkill(agent, survivalSkillGain)
