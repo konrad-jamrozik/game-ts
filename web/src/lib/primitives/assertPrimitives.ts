@@ -148,3 +148,13 @@ export function assertHasId(value: unknown, errMsg = 'Value must have a valid id
     throw new TypeError(errMsg)
   }
 }
+
+export function assertNotBothTrue(
+  condition1: boolean,
+  condition2: boolean,
+  errMsg = 'Both conditions cannot be true',
+): void {
+  if (condition1 && condition2) {
+    throw new Error(errMsg)
+  }
+}

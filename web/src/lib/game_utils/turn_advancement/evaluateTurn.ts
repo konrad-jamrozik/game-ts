@@ -18,6 +18,7 @@ import {
   type PanicReport,
   type TurnReport,
 } from '../../model/turnReportModel'
+import type { BattleOutcome } from '../../model/outcomeTypes'
 import { validateGameStateInvariants } from '../../model_utils/validateGameStateInvariants'
 import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
@@ -214,11 +215,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       } = battleReport
 
       // Determine mission outcome
-      const outcome: 'Successful' | 'Retreated' | 'All agents lost' = retreated
-        ? 'Retreated'
-        : agentsTerminated === agentsDeployed
-          ? 'All agents lost'
-          : 'Successful'
+      const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'
 
       // Get faction name from mission rewards
       let factionName = 'Unknown'

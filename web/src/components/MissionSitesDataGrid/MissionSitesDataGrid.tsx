@@ -41,7 +41,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   const activeMissionSites = getActiveOrDeployedMissionSites(missionSites)
   const archivedMissionSites = getArchivedMissionSites(missionSites)
 
-  // Include completed missions (Successful, Failed, Expired) in active rows if they completed this turn
+  // Include completed missions (Won, Wiped, Retreated, Expired) in active rows if they completed this turn
   const completedThisTurnSites = archivedMissionSites.filter((site) => completedThisTurnIds.has(site.id))
   const activeMissionSitesIncludingCompleted = [...activeMissionSites, ...completedThisTurnSites]
 

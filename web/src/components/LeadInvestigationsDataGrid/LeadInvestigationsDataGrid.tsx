@@ -10,7 +10,7 @@ import { getLeadById } from '../../lib/collections/leads'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import { f6floorToInt } from '../../lib/primitives/fixed6'
 import type { Agent } from '../../lib/model/agentModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
+import type { LeadInvestigation, LeadInvestigationId, LeadInvestigationState } from '../../lib/model/model'
 import { AGENT_ESPIONAGE_INTEL } from '../../lib/ruleset/constants'
 import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import { sumAgentSkillBasedValues } from '../../lib/ruleset/skillRuleset'
@@ -41,7 +41,7 @@ export type LeadInvestigationRow = {
   intelDecay: number
   projectedIntel: number
   intelDiff: number
-  state: 'Active' | 'Successful' | 'Abandoned'
+  state: LeadInvestigationState
   completedThisTurn: boolean
 }
 
@@ -177,8 +177,8 @@ function buildAllInvestigationRows(
       intelDiff = projectedIntel - investigation.accumulatedIntel
     }
 
-    const rowState: 'Active' | 'Successful' | 'Abandoned' =
-      investigation.state === 'Active' ? 'Active' : investigation.state === 'Successful' ? 'Successful' : 'Abandoned'
+    const rowState: 'Active' | 'Completed' | 'Abandoned' =
+      investigation.state === 'Active' ? 'Active' : investigation.state === 'Completed' ? 'Completed' : 'Abandoned'
     const completedThisTurn = completedThisTurnIds.has(investigation.id)
 
     return {

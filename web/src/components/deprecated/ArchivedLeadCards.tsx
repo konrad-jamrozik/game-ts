@@ -28,9 +28,9 @@ function getArchivedCardEntries(
       (investigation) => investigation.leadId === lead.id,
     )
 
-    const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+    const hasCompletedInvestigation = investigationsForLead.some((inv) => inv.state === 'Completed')
 
-    if (!lead.repeatable && hasSuccessfulInvestigation) {
+    if (!lead.repeatable && hasCompletedInvestigation) {
       // Non-repeatable leads with successful investigations go to archived
       archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
     } else if (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0) {
@@ -55,15 +55,13 @@ export function ArchivedLeadCards(): React.JSX.Element {
     setExpanded(!expanded)
   }
 
-  // Get mission IDs that have successful mission sites
-  const successfulMissionIds = new Set(
-    missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
-  )
+  // Get mission IDs that have won mission sites
+  const wonMissionIds = new Set(missionSites.filter((site) => site.state === 'Won').map((site) => site.missionId))
 
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || successfulMissionIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionIds.has(dependencyId),
     ),
   )
 

@@ -74,8 +74,8 @@ describe(evaluateDeployedMissionSite, () => {
       // Evaluate the mission site
       evaluateDeployedMissionSite(gameState, testMissionSite)
 
-      // Verify mission site is successful
-      expect(testMissionSite.state).toBe('Successful')
+      // Verify mission site is won
+      expect(testMissionSite.state).toBe('Won')
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
@@ -159,8 +159,8 @@ describe(evaluateDeployedMissionSite, () => {
       expect(testAgent.state).toBe('Terminated')
       expect(testAgent.assignment).toBe('KIA')
 
-      // Mission should fail since agent was terminated
-      expect(testMissionSite.state).toBe('Failed')
+      // Mission should be wiped since agent was terminated
+      expect(testMissionSite.state).toBe('Wiped')
     } finally {
       Math.random = originalRandom
     }
@@ -229,8 +229,8 @@ describe(evaluateDeployedMissionSite, () => {
 
     evaluateDeployedMissionSite(gameState, testMissionSite)
 
-    // Mission should fail
-    expect(testMissionSite.state).toBe('Failed')
+    // Mission should be wiped (all agents terminated)
+    expect(testMissionSite.state).toBe('Wiped')
 
     // All agents should be terminated
     const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'Terminated')

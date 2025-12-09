@@ -26,6 +26,7 @@ import { evaluateAttack } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
 import type { RoundLog, AttackLog } from '../../model/turnReportModel'
+import type { BattleOutcome } from '../../model/outcomeTypes'
 
 export type BattleReport = {
   rounds: number
@@ -161,13 +162,13 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const enemySkillAtBattleEnd = f6sum(...activeEnemiesAtBattleEnd.map((enemy) => effectiveSkill(enemy)))
   const enemyHpAtBattleEnd = sum(activeEnemiesAtBattleEnd, (enemy) => toF(enemy.hitPoints))
   // When all agents are terminated, skill ratio is undefined (division by zero).
-  // Use 0 as a placeholder - the 'Lost' status already conveys the battle outcome.
+  // Use 0 as a placeholder - the 'Wiped' status already conveys the battle outcome.
   const skillRatioAtBattleEnd = f6eq(agentSkillAtBattleEnd, zeroF6)
     ? zeroF6
     : toF6r(f6div(enemySkillAtBattleEnd, agentSkillAtBattleEnd))
 
   const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, toF6(0)))
-  const endOfBattleStatus: 'Retreated' | 'Won' | 'Lost' = retreated ? 'Retreated' : allAgentsTerminated ? 'Lost' : 'Won'
+  const endOfBattleStatus: BattleOutcome = retreated ? 'Retreated' : allAgentsTerminated ? 'Wiped' : 'Won'
 
   const endOfBattleLog: RoundLog = {
     roundNumber: roundIdx + 1,

@@ -96,7 +96,14 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
       renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const stateValue = params.row.state
-          if (stateValue === 'Successful' || stateValue === 'Failed' || stateValue === 'Expired') {
+
+          // KJA reuse here isMissionSiteConcluded
+          if (
+            stateValue === 'Won' ||
+            stateValue === 'Wiped' ||
+            stateValue === 'Retreated' ||
+            stateValue === 'Expired'
+          ) {
             return <MyChip chipValue={stateValue} />
           }
         }

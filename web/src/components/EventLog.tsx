@@ -30,10 +30,10 @@ function renderPrimaryListItemText(event: GameEvent): string {
     return `Turn ${event.turn} Report Available`
   }
   assertEqual(event.type, 'MissionCompleted')
-  const successful = event.finalState === 'Successful'
-  const rewardsSummary = successful ? formatMissionRewards(event) : ''
+  const won = event.finalState === 'Won'
+  const rewardsSummary = won ? formatMissionRewards(event) : ''
   const base = `Mission ${event.missionSiteId} "${event.missionTitle}"`
-  const msg = rewardsSummary ? `${base} successful: ${rewardsSummary}` : `${base} failed.`
+  const msg = rewardsSummary ? `${base} won: ${rewardsSummary}` : `${base} ${event.finalState.toLowerCase()}.`
   return msg
 }
 

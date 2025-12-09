@@ -30,9 +30,11 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
 
   const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'
+  // KJA reuse here isMissionSiteConcluded
   const disabled =
-    missionSite.state === 'Successful' ||
-    missionSite.state === 'Failed' ||
+    missionSite.state === 'Won' ||
+    missionSite.state === 'Wiped' ||
+    missionSite.state === 'Retreated' ||
     missionSite.state === 'Expired' ||
     isDeployed
 

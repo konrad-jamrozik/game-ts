@@ -114,7 +114,7 @@ function step1StartWithDebugInitialState(): void {
 /**
  * Step 2: Click "next turn" button
  * - Verify turn advances to 2
- * - Verify mission "000" is in "Successful" state.
+ * - Verify mission "000" is in "Won" state.
  */
 async function step2AdvanceTurn(): Promise<void> {
   await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
@@ -122,8 +122,8 @@ async function step2AdvanceTurn(): Promise<void> {
   const turnValue = screen.getByLabelText(/turn/iu)
   expect(turnValue).toHaveTextContent('2')
 
-  // Verify mission "000" is in "Successful" state
-  verifyMissionState('000', 'Successful')
+  // Verify mission "000" is in "Won" state
+  verifyMissionState('000', 'Won')
 
   console.log('✅ Step 2 completed: Next turn')
 }

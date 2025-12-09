@@ -1,4 +1,7 @@
 import type { Fixed6 } from '../primitives/fixed6'
+import type { MissionSiteState, LeadInvestigationState } from './outcomeTypes'
+
+export type { MissionSiteState, LeadInvestigationState } from './outcomeTypes'
 
 export type Actor = {
   id: string
@@ -74,8 +77,6 @@ export type Mission = {
   rewards: MissionRewards
 }
 
-export type MissionSiteState = 'Active' | 'Deployed' | 'Successful' | 'Failed' | 'Expired'
-
 export type MissionSite = {
   id: MissionSiteId
   missionId: string
@@ -93,8 +94,6 @@ export type Faction = {
   suppression: Fixed6
   discoveryPrerequisite: string[]
 }
-
-export type LeadInvestigationState = 'Active' | 'Abandoned' | 'Successful'
 
 export type LeadInvestigation = {
   id: LeadInvestigationId // unique investigation ID

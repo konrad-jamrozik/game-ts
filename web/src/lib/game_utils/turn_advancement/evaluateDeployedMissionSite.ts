@@ -7,7 +7,7 @@ import type { GameState } from '../../model/gameStateModel'
 import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
-import { assertDefined } from '../../primitives/assertPrimitives'
+import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
 
 /**
  * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
@@ -44,10 +44,17 @@ export function evaluateDeployedMissionSite(
 
   // Determine mission outcome
   const allEnemiesNeutralized = missionSite.enemies.every((enemy) => f6le(enemy.hitPoints, toF6(0)))
-  missionSite.state = allEnemiesNeutralized ? 'Successful' : 'Failed'
+  assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
+  if (allEnemiesNeutralized) {
+    missionSite.state = 'Won'
+  } else if (battleReport.retreated) {
+    missionSite.state = 'Retreated'
+  } else {
+    missionSite.state = 'Wiped'
+  }
 
   // Return mission rewards to be applied later, don't apply them immediately
-  const rewards = missionSite.state === 'Successful' ? mission.rewards : undefined
+  const rewards = missionSite.state === 'Won' ? mission.rewards : undefined
 
   return { rewards, battleReport }
 }

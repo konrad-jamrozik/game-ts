@@ -34,10 +34,10 @@ export function getRemainingTransportCap(missionSites: MissionSite[], transportC
 }
 
 /**
- * Gets archived mission sites (Successful, Failed, or Expired)
+ * Gets archived mission sites (Won, Wiped, Retreated, or Expired)
  */
 export function getArchivedMissionSites(missionSites: MissionSite[]): MissionSite[] {
-  return filterMissionSitesByState(missionSites, ['Successful', 'Failed', 'Expired'])
+  return filterMissionSitesByState(missionSites, ['Won', 'Wiped', 'Retreated', 'Expired'])
 }
 
 /**

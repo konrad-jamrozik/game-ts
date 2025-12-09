@@ -25,7 +25,13 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
       headerName: 'State',
       width: columnWidths['mission_sites.state'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        if (params.value === 'Successful' || params.value === 'Failed' || params.value === 'Expired') {
+        // KJA reuse here isMissionSiteConcluded
+        if (
+          params.value === 'Won' ||
+          params.value === 'Wiped' ||
+          params.value === 'Retreated' ||
+          params.value === 'Expired'
+        ) {
           return (
             <span aria-label={`missions-row-state-${params.id}`}>
               <MyChip chipValue={params.value} />

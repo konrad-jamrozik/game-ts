@@ -75,16 +75,9 @@ function determineChipColor(
     const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
 
     if (!isNumericLabel) {
-      if (chipLabel.includes('Success') || chipLabel.includes('Done') || chipLabel === 'Won') {
+      if (chipLabel.includes('Completed') || chipLabel.includes('Done') || chipLabel === 'Won') {
         returnedColor = 'success'
-      } else if (chipLabel.includes('Retreated')) {
-        returnedColor = 'error'
-      } else if (
-        chipLabel.includes('All agents lost') ||
-        chipLabel.includes('Failed') ||
-        chipLabel.includes('Expired') ||
-        chipLabel === 'Lost'
-      ) {
+      } else if (chipLabel.includes('Retreated') || chipLabel.includes('Wiped') || chipLabel.includes('Expired')) {
         returnedColor = 'error'
       } else {
         returnedColor = 'default'

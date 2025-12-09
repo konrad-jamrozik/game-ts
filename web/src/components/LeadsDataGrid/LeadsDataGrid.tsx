@@ -20,7 +20,7 @@ export type LeadRow = {
   difficulty: number
   repeatable: boolean
   hasActiveInvestigation: boolean
-  hasSuccessfulInvestigation: boolean
+  hasCompletedInvestigation: boolean
   isArchived: boolean
   activeInvestigationCount: number
   completedInvestigationCount: number
@@ -34,15 +34,13 @@ export function LeadsDataGrid(): React.JSX.Element {
   const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
   const [showArchived, setShowArchived] = React.useState(false)
 
-  // Get mission IDs that have successful mission sites
-  const successfulMissionIds = new Set(
-    missionSites.filter((site) => site.state === 'Successful').map((site) => site.missionId),
-  )
+  // Get mission IDs that have won mission sites
+  const wonMissionIds = new Set(missionSites.filter((site) => site.state === 'Won').map((site) => site.missionId))
 
   // Filter out leads that have unmet dependencies (same logic as LeadCards)
   const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || successfulMissionIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionIds.has(dependencyId),
     ),
   )
 
@@ -53,13 +51,13 @@ export function LeadsDataGrid(): React.JSX.Element {
     )
 
     const hasActiveInvestigation = investigationsForLead.some((inv) => inv.state === 'Active')
-    const hasSuccessfulInvestigation = investigationsForLead.some((inv) => inv.state === 'Successful')
+    const hasCompletedInvestigation = investigationsForLead.some((inv) => inv.state === 'Completed')
     const activeInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Active').length
-    const completedInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Successful').length
+    const completedInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Completed').length
 
     // Determine if lead is archived:
-    // - Only non-repeatable leads with successful investigations are archived
-    const isArchived = !lead.repeatable && hasSuccessfulInvestigation
+    // - Only non-repeatable leads with completed investigations are archived
+    const isArchived = !lead.repeatable && hasCompletedInvestigation
 
     return {
       rowId: index,
@@ -68,7 +66,7 @@ export function LeadsDataGrid(): React.JSX.Element {
       difficulty: lead.difficulty,
       repeatable: lead.repeatable,
       hasActiveInvestigation,
-      hasSuccessfulInvestigation,
+      hasCompletedInvestigation,
       isArchived,
       activeInvestigationCount,
       completedInvestigationCount,
@@ -148,6 +146,6 @@ export function LeadsDataGrid(): React.JSX.Element {
 function isRowDisabled(row: LeadRow): boolean {
   // For normal displayMode leads:
   // - Repeatable: never disabled
-  // - Non-repeatable: disabled if hasActiveInvestigation OR hasSuccessfulInvestigation
-  return !row.repeatable && (row.hasActiveInvestigation || row.hasSuccessfulInvestigation)
+  // - Non-repeatable: disabled if hasActiveInvestigation OR hasCompletedInvestigation
+  return !row.repeatable && (row.hasActiveInvestigation || row.hasCompletedInvestigation)
 }

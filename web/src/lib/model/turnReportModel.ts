@@ -1,5 +1,6 @@
 import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
 import type { MissionRewards } from './model'
+import type { BattleOutcome, BattleStatus } from './outcomeTypes'
 
 export type TurnReport = BaseReport & {
   assets: AssetsReport
@@ -127,7 +128,7 @@ export type MissionReport = {
   missionSiteId: string
   missionTitle: string
   faction: string
-  outcome: 'Successful' | 'Retreated' | 'All agents lost'
+  outcome: BattleOutcome
   rounds: number
   rewards?: MissionRewards
   battleStats: BattleStats
@@ -135,7 +136,7 @@ export type MissionReport = {
 
 export type RoundLog = {
   roundNumber: number
-  status: 'Ongoing' | 'Retreated' | 'Won' | 'Lost'
+  status: BattleStatus
   agentCount: number
   agentCountTotal: number
   agentSkill: Fixed6

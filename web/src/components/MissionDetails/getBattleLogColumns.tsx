@@ -5,11 +5,12 @@ import { MyChip } from '../Common/MyChip'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
+import type { BattleStatus } from '../../lib/model/outcomeTypes'
 
 export type BattleLogRow = {
   id: number
   roundNumber: number
-  status: 'Ongoing' | 'Retreated' | 'Won' | 'Lost'
+  status: BattleStatus
   agentCount: number
   agentCountTotal: number
   agentSkill: Fixed6
