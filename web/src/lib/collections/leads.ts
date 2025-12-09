@@ -1,8 +1,19 @@
 import type { Lead } from '../model/model'
 import { assertDefined } from '../primitives/assertPrimitives'
+import { factionDefinitions, type FactionDefinition } from './factions'
 
-export const leads: Lead[] = [
-  // Starting lead
+type LeadTemplate = {
+  id: string
+  title: string
+  description: string
+  difficulty: number
+  dependsOn: string[]
+  repeatable: boolean
+  enemyEstimate?: string
+}
+
+// Faction-agnostic leads
+const staticLeads: Lead[] = [
   {
     id: 'lead-criminal-orgs',
     title: 'Criminal organizations',
@@ -19,103 +30,126 @@ export const leads: Lead[] = [
     dependsOn: [],
     repeatable: false,
   },
+]
 
-  // Main progression chain
+// Faction-specific lead templates
+const leadTemplates: LeadTemplate[] = [
   {
-    id: 'lead-red-dawn-location',
-    title: 'Locate cult member',
-    description: 'Track down a Red Dawn cult member for apprehension.',
+    id: 'lead-{factionId}-location',
+    title: 'Locate {factionName} member',
+    description: 'Track down a {factionName} member for apprehension.',
     difficulty: 100, // 100 intel for 100%, or 1 intel for 1%
     dependsOn: ['lead-criminal-orgs'],
     repeatable: true,
-    enemyEstimate: 'Expect to encounter a single low-ranked cult member.',
+    enemyEstimate: 'Expect to encounter a single low-ranked member.',
   },
   {
-    id: 'lead-red-dawn-interrogate-member',
-    title: 'Interrogate cult member',
-    description: 'Extract information from the captured cult member.',
+    id: 'lead-{factionId}-interrogate-member',
+    title: 'Interrogate member',
+    description: 'Extract information from the captured member.',
     difficulty: 0, // Instant success (interrogation leads don't need investigation)
-    dependsOn: ['mission-apprehend-red-dawn'],
+    dependsOn: ['mission-apprehend-{factionId}'],
     repeatable: false,
   },
   {
-    id: 'lead-red-dawn-safehouse',
-    title: 'Locate cult safehouse',
-    description: 'Location of a Red Dawn safehouse has been revealed.',
+    id: 'lead-{factionId}-safehouse',
+    title: 'Locate safehouse',
+    description: 'Location of a {factionName} safehouse has been revealed.',
     difficulty: 200, // 200 intel for 100%, or 2 intel for 1%
-    dependsOn: ['lead-red-dawn-interrogate-member'],
+    dependsOn: ['lead-{factionId}-interrogate-member'],
     repeatable: true,
-    enemyEstimate: 'Expect safehouse to have a dozen low-ranked cult members.',
+    enemyEstimate: 'Expect safehouse to have a dozen low-ranked members.',
   },
   {
-    id: 'lead-red-dawn-interrogate-handler',
-    title: 'Interrogate cult handler',
-    description: 'Extract information from the captured cult handler.',
+    id: 'lead-{factionId}-interrogate-handler',
+    title: 'Interrogate handler',
+    description: 'Extract information from the captured handler.',
     difficulty: 0, // Instant success
-    dependsOn: ['mission-raid-red-dawn-safehouse'],
+    dependsOn: ['mission-raid-{factionId}-safehouse'],
     repeatable: false,
   },
   {
-    id: 'lead-red-dawn-outpost',
-    title: 'Locate cult outpost',
-    description: 'Location of a Red Dawn outpost has been revealed.',
+    id: 'lead-{factionId}-outpost',
+    title: 'Locate outpost',
+    description: 'Location of a {factionName} outpost has been revealed.',
     difficulty: 300, // 300 intel for 100%, or 3 intel for 1%
-    dependsOn: ['lead-red-dawn-interrogate-handler'],
+    dependsOn: ['lead-{factionId}-interrogate-handler'],
     repeatable: true,
     enemyEstimate: 'Expect outpost to have several operatives and handlers.',
   },
   {
-    id: 'lead-red-dawn-interrogate-lieutenant',
-    title: 'Interrogate cult lieutenant',
-    description: 'Extract information from the captured cult lieutenant.',
+    id: 'lead-{factionId}-interrogate-lieutenant',
+    title: 'Interrogate lieutenant',
+    description: 'Extract information from the captured lieutenant.',
     difficulty: 0, // Instant success
-    dependsOn: ['mission-raid-red-dawn-outpost'],
+    dependsOn: ['mission-raid-{factionId}-outpost'],
     repeatable: false,
   },
   {
-    id: 'lead-red-dawn-base',
-    title: 'Locate cult base',
-    description: 'Location of the Red Dawn base has been revealed.',
+    id: 'lead-{factionId}-base',
+    title: 'Locate base',
+    description: 'Location of the {factionName} base has been revealed.',
     difficulty: 500, // 500 intel for 100%, or 5 intel for 1%
-    dependsOn: ['lead-red-dawn-interrogate-lieutenant'],
+    dependsOn: ['lead-{factionId}-interrogate-lieutenant'],
     repeatable: true,
     enemyEstimate: 'Expect base to have soldiers, lieutenants, and possibly an elite.',
   },
   {
-    id: 'lead-red-dawn-interrogate-commander',
-    title: 'Interrogate cult commander',
-    description: 'Extract information from the captured cult commander.',
+    id: 'lead-{factionId}-interrogate-commander',
+    title: 'Interrogate commander',
+    description: 'Extract information from the captured commander.',
     difficulty: 0, // Instant success
-    dependsOn: ['mission-raid-red-dawn-base'],
+    dependsOn: ['mission-raid-{factionId}-base'],
     repeatable: false,
   },
   {
-    id: 'lead-red-dawn-hq',
-    title: 'Locate cult HQ',
-    description: 'Location of the Red Dawn headquarters has been revealed.',
+    id: 'lead-{factionId}-hq',
+    title: 'Locate HQ',
+    description: 'Location of the {factionName} headquarters has been revealed.',
     difficulty: 1000, // 1000 intel for 100%, or 10 intel for 1%
-    dependsOn: ['lead-red-dawn-interrogate-commander'],
+    dependsOn: ['lead-{factionId}-interrogate-commander'],
     repeatable: true,
     enemyEstimate: 'Expect HQ to be heavily defended with elites and commanders.',
   },
   {
-    id: 'lead-red-dawn-interrogate-high-commander',
-    title: 'Interrogate cult high commander',
-    description: 'Extract information from the captured cult high commander.',
+    id: 'lead-{factionId}-interrogate-high-commander',
+    title: 'Interrogate high commander',
+    description: 'Extract information from the captured high commander.',
     difficulty: 0, // Instant success
-    dependsOn: ['mission-raid-red-dawn-hq'],
+    dependsOn: ['mission-raid-{factionId}-hq'],
     repeatable: false,
   },
-
-  // Other leads
   {
-    id: 'lead-red-dawn-profile',
-    title: 'Cult profile',
-    description: 'Compile detailed intelligence profile on Red Dawn cult.',
+    id: 'lead-{factionId}-profile',
+    title: 'Organization profile',
+    description: 'Compile detailed intelligence profile on {factionName}.',
     difficulty: 0, // Instant success
-    dependsOn: ['lead-red-dawn-interrogate-member'],
+    dependsOn: ['lead-{factionId}-interrogate-member'],
     repeatable: false,
   },
+]
+
+function expandTemplateString(template: string, faction: FactionDefinition): string {
+  return template.replaceAll('{factionId}', faction.shortId).replaceAll('{factionName}', faction.name)
+}
+
+function generateLeadsForFaction(faction: FactionDefinition): Lead[] {
+  return leadTemplates.map((template) => ({
+    id: expandTemplateString(template.id, faction),
+    title: expandTemplateString(template.title, faction),
+    description: expandTemplateString(template.description, faction),
+    difficulty: template.difficulty,
+    dependsOn: template.dependsOn.map((dep) => expandTemplateString(dep, faction)),
+    repeatable: template.repeatable,
+    ...(template.enemyEstimate !== undefined && {
+      enemyEstimate: expandTemplateString(template.enemyEstimate, faction),
+    }),
+  }))
+}
+
+export const leads: Lead[] = [
+  ...staticLeads,
+  ...factionDefinitions.flatMap((faction) => generateLeadsForFaction(faction)),
 ]
 
 export function getLeadById(leadId: string): Lead {
