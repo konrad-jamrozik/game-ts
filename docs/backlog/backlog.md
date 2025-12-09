@@ -2,36 +2,50 @@
 
 KJA backlog:
 
-# P0 Game mechanics
+# Current milestone
 
-- Funding penalty for expired missions
+## Current Game mechanics
+
+- Sort out / fill up the mission progression chain, with interrogations
+- Interrogating captured enemies should provide bonus towards various lead investigations.
+  - Intel lump sum.
+  - What if there is currently no eligible lead investigation?
+    - Maybe decrease lead difficulty by some amount?
 
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
   - Unlocking all HQ raids leads should unlock the final "game victory" lead
   - Researching that lead should win the game.
 
-# P1 Game mechanics
+## Current UI refinement
 
-- Add AI player that can play the game for me
+- Add to assets: Agent weapon damage range min-max
+- Add capability to buy improved weapon damage
 
-- Enemy factions should generate missions themselves that player must counter to avoid penalties
-  - Offensive missions like "Red dawn terror" or "Red dawn assault" where someone called for help
+- Improve event log display
 
-- Make each repeatable lead be investigated only once at a time.
-  - Make even allow one lead per faction at a time.
+- Improve the combat log display
+  - Get rid of `(100%)` and instead apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
 
-- Interrogating captured enemies should provide bonus towards various lead investigations.
-  - Intel lump sum.
-  - What if there is currently no eligible lead investigation?
-    - Maybe decrease lead difficulty by some amount?
+- Show exhaustion % and HP % in combat log, as separate columns
 
-- Accumulated generic intel ideas:
-  - Spend to discover enemy offensive missions faster
-  - Spend to reveal more details about existing mission sites
-  - Spend to give combat bonus to player's agents on missions
-  - It decays same as lead investigation intel
-- See also `2025-11-19 Intel ideas`
+- Narrow exhaustion column in Agents data grid
+
+- Replace "Terminated" with "KIA".
+  - Note that then "Sacked" will no longer count as "Terminated" and it cannot count as "KIA"ed.
+
+# Next milestone
+
+## Next Game mechanics
+
+- Delete accumulated intel concept
+
+- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_defensive_missions.md](../design/about_defensive_missions.md)
+- Implement the faction operations system as documented
+  - Implement the panic increase penalty
+  - Implement the funding decrease penalty
+- Update suppression system as documented
+- Delete threat level and increase concepts
 
 - Change lead investigation intel formula:
   - Difficulty says how much intel must be accumulated, but actual length is 50% to 200% of that.
@@ -77,25 +91,20 @@ KJA backlog:
     - Note that because penalty is per agent, it is cumulative. So 2 agents will accumulate at 190% of 1 agent,
       not at 95% of 2 agents.
 
+# P0 Game mechanics
+
+# P1 Game mechanics
+
+- Add AI player that can play the game for me
+
+- Make each repeatable lead be investigated only once at a time.
+  - Make even allow one lead per faction at a time.
+
 # P0 UI refinement
-
-- Add "Details" button to completed missions that show the combat log
-- For combat reports, add dedicated data grid with columns same as console.log i.e.:
-  - round
-  - attacker & effective skill & % of initial
-  - defender & effective skill & % of initial
-  - roll & result & threshold & diff to threshold
-  - damage inflicted (if any) & % of weapon range & min & max
-  - hit points remaining & percentage of total & total
-
-- Add to assets: Agent weapon damage range min-max
-  - make buying training skill gain and health recov. % fractional
 
 # P1 UI refinement
 
-- Apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
-
-- Add stats
+- Add stats to agents data grid
   - Combat stats (Killed / Damage Inflicted / Damage Taken)
     - Column names: "Kills", "Damage", "Wounds"
   - Skill: Total / from missions / from training
@@ -113,13 +122,6 @@ KJA backlog:
   - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
 
 # P0 Game content
-
-- Add more factions.
-- Mission sites can be reused for different factions.
-  It will be a a combination tuple of (faction, mission).
-  In other words, mission sites are parameterized by faction.
-  But of course the suppression, leads and activity level and progression are tracked
-  for each faction separately.
 
 # Domain model refactoring
 
