@@ -17,10 +17,11 @@ KJA backlog:
   - Unlocking all HQ raids leads should unlock the final "game victory" lead
   - Researching that lead should win the game.
 
+- Add capability to buy improved weapon damage
+
 ## Current UI refinement
 
 - Add to assets: Agent weapon damage range min-max
-- Add capability to buy improved weapon damage
 
 - Improve event log display
 
@@ -91,14 +92,14 @@ KJA backlog:
     - Note that because penalty is per agent, it is cumulative. So 2 agents will accumulate at 190% of 1 agent,
       not at 95% of 2 agents.
 
+- Make each repeatable lead be investigated only once at a time.
+  - Maybe even allow one lead per faction at a time.
+
 # P0 Game mechanics
 
 # P1 Game mechanics
 
 - Add AI player that can play the game for me
-
-- Make each repeatable lead be investigated only once at a time.
-  - Make even allow one lead per faction at a time.
 
 # P0 UI refinement
 
