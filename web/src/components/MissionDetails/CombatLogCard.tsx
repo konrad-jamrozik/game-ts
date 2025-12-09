@@ -2,11 +2,11 @@
 // lives not in current turn but in previous turn, and the logic always looks at current turn instead of the turn the mission site was completed on.
 import type { GridRowClassNameParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { COMBAT_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionSiteId } from '../../lib/model/model'
+import { useMissionReport } from '../../redux/selectors/useMissionReport'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
 
@@ -15,11 +15,10 @@ type CombatLogCardProps = {
 }
 
 export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.Element {
-  const turnStartReport = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
   const [showAgentAttacks, setShowAgentAttacks] = React.useState(true)
   const [showEnemyAttacks, setShowEnemyAttacks] = React.useState(true)
 
-  const missionReport = turnStartReport?.missions.find((m) => m.missionSiteId === missionSiteId)
+  const missionReport = useMissionReport(missionSiteId)
   const attackLogs = missionReport?.battleStats.attackLogs ?? []
 
   const allRows: CombatLogRow[] = attackLogs.map((log, index) => ({
