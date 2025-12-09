@@ -75,10 +75,16 @@ function determineChipColor(
     const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
 
     if (!isNumericLabel) {
-      // KJA why this inconsistent includes check?
-      if (chipLabel.includes('Done') || chipLabel === 'Won') {
+      // Success states (from BattleOutcome and LeadInvestigationState)
+      if (chipLabel === 'Done' || chipLabel === 'Won') {
         returnedColor = 'success'
-      } else if (chipLabel.includes('Retreated') || chipLabel.includes('Wiped') || chipLabel.includes('Expired')) {
+      } else if (
+        chipLabel === 'Retreated' ||
+        chipLabel === 'Wiped' ||
+        chipLabel === 'Expired' ||
+        chipLabel === 'Abandoned'
+      ) {
+        // Error states (from BattleOutcome, MissionSiteState, LeadInvestigationState)
         returnedColor = 'error'
       } else {
         returnedColor = 'default'
