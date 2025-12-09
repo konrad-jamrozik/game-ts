@@ -1,6 +1,6 @@
-import type { GridColDef, GridRenderCellParams, GridSortCellParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { toF6, f6fmtInt, f6fmtPctDec0, f6cmp, f6eq, type Fixed6 } from '../../lib/primitives/fixed6'
+import { toF6, f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -11,6 +11,7 @@ import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
+import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
@@ -59,37 +60,12 @@ export function getAgentsColumns(
       field: 'skill',
       headerName: 'Skill',
       width: columnWidths['agents.skill'],
-      sortComparator: (
-        _v1: string,
-        _v2: string,
-        param1: GridSortCellParams<string>,
-        param2: GridSortCellParams<string>,
-      ): number => {
-        // Sort by effective skill instead of baseline skill
-        // Find the rows from our typed rows array using the row IDs
-        const row1 = rows.find((row) => row.rowId === param1.id)
-        const row2 = rows.find((row) => row.rowId === param2.id)
-
-        assertDefined(row1, `Row not found for id: ${param1.id}`)
-        assertDefined(row2, `Row not found for id: ${param2.id}`)
-
-        const effectiveSkill1 = effectiveSkill(row1)
-        const effectiveSkill2 = effectiveSkill(row2)
-
-        // Primary sort: effective skill (compare Fixed6 values)
-        if (!f6eq(effectiveSkill1, effectiveSkill2)) {
-          return f6cmp(effectiveSkill1, effectiveSkill2)
-        }
-
-        // Secondary sort: baseline skill (if effective skills are equal)
-        const comparison = f6cmp(row1.skill, row2.skill)
-        if (comparison !== 0) {
-          return comparison
-        }
-
-        // Tertiary sort: agent ID (for stable sorting)
-        return row1.id.localeCompare(row2.id)
-      },
+      sortComparator: createFixed6SortComparator(
+        rows,
+        (row) => effectiveSkill(row),
+        (row) => row.skill,
+        (row) => row.rowId, // agentId
+      ),
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         const effectiveSkillVal = effectiveSkill(params.row)
         const baselineSkill = params.value ?? toF6(0)

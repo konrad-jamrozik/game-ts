@@ -74,7 +74,11 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       field: 'attackerSkill',
       headerName: 'Att Skill',
       width: columnWidths['combat_log.attacker_skill'],
-      sortComparator: createFixed6SortComparator(rows, (row) => row.attackerSkill),
+      sortComparator: createFixed6SortComparator(
+        rows,
+        (row) => row.attackerSkill,
+        (row) => row.attackerSkillAtStart,
+      ),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
         return (
@@ -88,7 +92,11 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       field: 'defenderSkill',
       headerName: 'Def Skill',
       width: columnWidths['combat_log.defender_skill'],
-      sortComparator: createFixed6SortComparator(rows, (row) => row.defenderSkill),
+      sortComparator: createFixed6SortComparator(
+        rows,
+        (row) => row.defenderSkill,
+        (row) => row.defenderSkillAtStart,
+      ),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
         return (

@@ -55,7 +55,11 @@ export function getBattleLogColumns(rows: BattleLogRow[]): GridColDef<BattleLogR
       field: 'agentSkill',
       headerName: 'Agent Skill',
       width: columnWidths['battle_log.agent_skill'],
-      sortComparator: createFixed6SortComparator(rows, (row) => row.agentSkill),
+      sortComparator: createFixed6SortComparator(
+        rows,
+        (row) => row.agentSkill,
+        (row) => row.agentSkillTotal,
+      ),
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.agentSkill, params.row.agentSkillTotal)
         return (
@@ -92,7 +96,11 @@ export function getBattleLogColumns(rows: BattleLogRow[]): GridColDef<BattleLogR
       field: 'enemySkill',
       headerName: 'Enemy Skill',
       width: columnWidths['battle_log.enemy_skill'],
-      sortComparator: createFixed6SortComparator(rows, (row) => row.enemySkill),
+      sortComparator: createFixed6SortComparator(
+        rows,
+        (row) => row.enemySkill,
+        (row) => row.enemySkillTotal,
+      ),
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.enemySkill, params.row.enemySkillTotal)
         return (
