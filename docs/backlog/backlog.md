@@ -19,6 +19,10 @@ KJA backlog:
 
 - Add capability to buy improved weapon damage
 
+- Change effective skill for contracting scaling to not be
+  `effective_skill / 100` but `1 + (effective_skill - 100)/500`
+  i.e. each extra 100 effective skill adds 20% efficiency bonus.
+
 ## Current UI refinement
 
 - Add to assets: Agent weapon damage range min-max
