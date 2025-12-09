@@ -92,8 +92,8 @@ function completeInvestigation(
   const missionSites = createMissionSitesForLead(state, investigation.leadId)
   const createdMissionSites = missionSites.map((site) => site.id)
 
-  // Mark investigation as completed and clear agent assignments
-  investigation.state = 'Completed'
+  // Mark investigation as done and clear agent assignments
+  investigation.state = 'Done'
   investigation.agentIds = []
 
   // Return agents to InTransit state (they will transition to Available on next turn)

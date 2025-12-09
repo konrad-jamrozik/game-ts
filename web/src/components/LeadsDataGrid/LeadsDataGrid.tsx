@@ -20,10 +20,10 @@ export type LeadRow = {
   difficulty: number
   repeatable: boolean
   hasActiveInvestigation: boolean
-  hasCompletedInvestigation: boolean
+  hasDoneInvestigation: boolean
   isArchived: boolean
   activeInvestigationCount: number
-  completedInvestigationCount: number
+  doneInvestigationCount: number
 }
 
 export function LeadsDataGrid(): React.JSX.Element {
@@ -51,13 +51,13 @@ export function LeadsDataGrid(): React.JSX.Element {
     )
 
     const hasActiveInvestigation = investigationsForLead.some((inv) => inv.state === 'Active')
-    const hasCompletedInvestigation = investigationsForLead.some((inv) => inv.state === 'Completed')
+    const hasDoneInvestigation = investigationsForLead.some((inv) => inv.state === 'Done')
     const activeInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Active').length
-    const completedInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Completed').length
+    const doneInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Done').length
 
     // Determine if lead is archived:
-    // - Only non-repeatable leads with completed investigations are archived
-    const isArchived = !lead.repeatable && hasCompletedInvestigation
+    // - Only non-repeatable leads with done investigations are archived
+    const isArchived = !lead.repeatable && hasDoneInvestigation
 
     return {
       rowId: index,
@@ -66,10 +66,10 @@ export function LeadsDataGrid(): React.JSX.Element {
       difficulty: lead.difficulty,
       repeatable: lead.repeatable,
       hasActiveInvestigation,
-      hasCompletedInvestigation,
+      hasDoneInvestigation,
       isArchived,
       activeInvestigationCount,
-      completedInvestigationCount,
+      doneInvestigationCount,
     }
   })
 
@@ -146,6 +146,6 @@ export function LeadsDataGrid(): React.JSX.Element {
 function isRowDisabled(row: LeadRow): boolean {
   // For normal displayMode leads:
   // - Repeatable: never disabled
-  // - Non-repeatable: disabled if hasActiveInvestigation OR hasCompletedInvestigation
-  return !row.repeatable && (row.hasActiveInvestigation || row.hasCompletedInvestigation)
+  // - Non-repeatable: disabled if hasActiveInvestigation OR hasDoneInvestigation
+  return !row.repeatable && (row.hasActiveInvestigation || row.hasDoneInvestigation)
 }

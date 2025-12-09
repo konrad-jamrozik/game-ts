@@ -177,8 +177,8 @@ function buildAllInvestigationRows(
       intelDiff = projectedIntel - investigation.accumulatedIntel
     }
 
-    const rowState: 'Active' | 'Completed' | 'Abandoned' =
-      investigation.state === 'Active' ? 'Active' : investigation.state === 'Completed' ? 'Completed' : 'Abandoned'
+    const rowState: LeadInvestigationState =
+      investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
     const completedThisTurn = completedThisTurnIds.has(investigation.id)
 
     return {

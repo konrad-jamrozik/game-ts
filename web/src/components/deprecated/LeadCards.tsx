@@ -43,12 +43,12 @@ export function LeadCards(): React.JSX.Element {
       (investigation) => investigation.leadId === lead.id,
     )
 
-    const hasCompletedInvestigation = investigationsForLead.some((inv) => inv.state === 'Completed')
+    const hasDoneInvestigation = investigationsForLead.some((inv) => inv.state === 'Done')
 
     if (lead.repeatable) {
       // Repeatable leads: always show in LeadCards
       cardEntries.push({ leadId: lead.id, displayMode: 'normal' })
-    } else if (!hasCompletedInvestigation) {
+    } else if (!hasDoneInvestigation) {
       // Non-repeatable leads:
       // - Show if no investigations OR only abandoned investigations OR has active investigation (will be disabled by LeadCard)
       // - Don't show if has successful investigation (moved to archived)

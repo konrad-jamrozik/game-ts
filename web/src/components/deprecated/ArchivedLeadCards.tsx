@@ -28,9 +28,9 @@ function getArchivedCardEntries(
       (investigation) => investigation.leadId === lead.id,
     )
 
-    const hasCompletedInvestigation = investigationsForLead.some((inv) => inv.state === 'Completed')
+    const hasDoneInvestigation = investigationsForLead.some((inv) => inv.state === 'Done')
 
-    if (!lead.repeatable && hasCompletedInvestigation) {
+    if (!lead.repeatable && hasDoneInvestigation) {
       // Non-repeatable leads with successful investigations go to archived
       archivedCardEntries.push({ leadId: lead.id, displayMode: 'normal' })
     } else if (lead.repeatable && (leadInvestigationCounts[lead.id] ?? 0) > 0) {

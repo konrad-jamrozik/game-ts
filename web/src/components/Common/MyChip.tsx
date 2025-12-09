@@ -75,7 +75,8 @@ function determineChipColor(
     const isNumericLabel = /^[+-]?\d/u.test(chipLabel)
 
     if (!isNumericLabel) {
-      if (chipLabel.includes('Completed') || chipLabel.includes('Done') || chipLabel === 'Won') {
+      // KJA why this inconsistent includes check?
+      if (chipLabel.includes('Done') || chipLabel === 'Won') {
         returnedColor = 'success'
       } else if (chipLabel.includes('Retreated') || chipLabel.includes('Wiped') || chipLabel.includes('Expired')) {
         returnedColor = 'error'

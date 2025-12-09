@@ -29,16 +29,15 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
   const hasActiveInvestigation = Object.values(leadInvestigations).some(
     (investigation) => investigation.leadId === lead.id && investigation.state === 'Active',
   )
-  // Check for completed investigations (archived leads)
-  const hasCompletedInvestigation = Object.values(leadInvestigations).some(
-    (investigation) => investigation.leadId === lead.id && investigation.state === 'Completed',
+  // Check for done investigations (archived leads)
+  const hasDoneInvestigation = Object.values(leadInvestigations).some(
+    (investigation) => investigation.leadId === lead.id && investigation.state === 'Done',
   )
   // Disable if:
   // - displayMode is 'repeated' (repeatable leads that have been investigated)
   // - non-repeatable with active investigation (under investigation)
-  // - non-repeatable with completed investigation (archived)
-  const disabled =
-    displayMode === 'repeated' || (!lead.repeatable && (hasActiveInvestigation || hasCompletedInvestigation))
+  // - non-repeatable with done investigation (archived)
+  const disabled = displayMode === 'repeated' || (!lead.repeatable && (hasActiveInvestigation || hasDoneInvestigation))
 
   function handleClick(): void {
     if (!disabled) {

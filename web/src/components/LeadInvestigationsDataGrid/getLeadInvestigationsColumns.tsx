@@ -31,8 +31,8 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       headerName: 'Succ %',
       width: columnWidths['lead_investigations.success_chance'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        if (params.row.state === 'Completed') {
-          return <MyChip chipValue="Completed" />
+        if (params.row.state === 'Done') {
+          return <MyChip chipValue="Done" />
         }
         if (params.row.state === 'Abandoned') {
           return <MyChip chipValue="Abandoned" reverseColor={true} />

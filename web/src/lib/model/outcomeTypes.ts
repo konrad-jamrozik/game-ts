@@ -36,7 +36,7 @@ export type MissionSiteState = MissionSitePhase | BattleOutcome | 'Expired'
 /**
  * Lead investigation states.
  * - Active: Investigation ongoing
- * - Completed: Investigation succeeded, mission sites created
+ * - Done: Investigation succeeded, mission sites created
  * - Abandoned: Player cancelled the investigation
  */
-export type LeadInvestigationState = 'Active' | 'Completed' | 'Abandoned'
+export type LeadInvestigationState = 'Active' | 'Done' | 'Abandoned'
