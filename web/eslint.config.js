@@ -149,6 +149,7 @@ export default plugTypescriptEslint.config([
       // as this no longer works in "extends": "plugReactHooks.configs['recommended-latest']"
       ...plugReactHooks.configs['recommended-latest'].rules,
       // Rules with perf. issues:
+      // Turned off as they were eating 4323.078 ms / 33.6% of total run time
       // --------------------
       // '@typescript-eslint/no-deprecated': 'off',
       // '@typescript-eslint/no-misused-promises': 'off',
@@ -303,8 +304,9 @@ export default plugTypescriptEslint.config([
       //
       // https://typescript-eslint.io/rules/explicit-function-return-type/
       '@typescript-eslint/explicit-function-return-type': ['error', { allowIIFEs: true }],
-      // Turn off as it was eating  4323.078 ms / 33.6% of total run time
-
+      // Subsumed by tsc 'noImplicitReturns'
+      // https://typescript-eslint.io/rules/consistent-return/
+      '@typescript-eslint/consistent-return': 'off',
       // React configs
       // --------------------
       // See the dedicated config for 'react-refresh/only-export-components' below.

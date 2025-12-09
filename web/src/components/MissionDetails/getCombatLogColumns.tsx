@@ -191,7 +191,5 @@ function getDefenderColor(outcome: AttackOutcome, isDefender: boolean): string |
       return 'hsl(60, 90%, 58%)' // yellow
     case 'Miss':
       return 'hsl(0, 0.00%, 85%)' // light gray
-    default:
-      return undefined
   }
 }
