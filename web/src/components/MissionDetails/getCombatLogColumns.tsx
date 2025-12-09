@@ -1,10 +1,10 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
-import { f6fmtInt, f6fmtPctDec0, f6div, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtDec1, fmtDec2, fmtInt, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
-import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
+import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 
 export type CombatLogRow = {
   id: number
@@ -17,19 +17,15 @@ export type CombatLogRow = {
   attackerSkillAtStart: Fixed6
   defenderSkill: Fixed6
   defenderSkillAtStart: Fixed6
+  defenderSkillAfterAttack: Fixed6
   roll: number
   threshold: number
-  outcome: 'Hit' | 'Miss' | 'Terminated'
+  outcome: AttackOutcome
   damage: number | undefined
   damageMin: number
   damageMax: number
-  defenderHp: number
+  defenderHpAfterDamage: number
   defenderHpMax: number
-}
-
-function isDefenderIncapacitated(row: CombatLogRow): boolean {
-  const skillRatio = f6div(row.defenderSkill, row.defenderSkillAtStart)
-  return skillRatio <= COMBAT_INCAPACITATION_THRESHOLD
 }
 
 export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogRow>[] {
@@ -52,20 +48,7 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       width: columnWidths['combat_log.agent_id'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const isDefender = params.row.attackerType === 'Enemy'
-        const isHit = params.row.outcome === 'Hit'
-        const isTerminated = isDefender && params.row.defenderHp <= 0
-        const isIncapacitated = isDefender && isHit && !isTerminated && isDefenderIncapacitated(params.row)
-        const isHitButNotTerminatedOrIncapacitated = isDefender && isHit && !isTerminated && !isIncapacitated
-
-        let color: string | undefined = undefined
-        if (isTerminated) {
-          color = 'hsl(4, 90%, 58%)' // red
-        } else if (isIncapacitated) {
-          color = 'hsl(30, 90%, 58%)' // orange
-        } else if (isHitButNotTerminatedOrIncapacitated) {
-          color = 'hsl(60, 90%, 58%)' // yellow
-        }
-
+        const color = getDefenderColor(params.row.outcome, isDefender)
         return <span style={{ color }}>{params.row.agentId}</span>
       },
     },
@@ -76,20 +59,7 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       valueGetter: (_value, row: CombatLogRow): string => fmtNoPrefix(row.enemyId, 'enemy-'),
       renderCell: (params: GridRenderCellParams<CombatLogRow, string>): React.JSX.Element => {
         const isDefender = params.row.attackerType === 'Agent'
-        const isHit = params.row.outcome === 'Hit'
-        const isTerminated = isDefender && params.row.defenderHp <= 0
-        const isIncapacitated = isDefender && isHit && !isTerminated && isDefenderIncapacitated(params.row)
-        const isHitButNotTerminatedOrIncapacitated = isDefender && isHit && !isTerminated && !isIncapacitated
-
-        let color: string | undefined = undefined
-        if (isTerminated) {
-          color = 'hsl(4, 90%, 58%)' // red
-        } else if (isIncapacitated) {
-          color = 'hsl(30, 90%, 58%)' // orange
-        } else if (isHitButNotTerminatedOrIncapacitated) {
-          color = 'hsl(60, 90%, 58%)' // yellow
-        }
-
+        const color = getDefenderColor(params.row.outcome, isDefender)
         const displayValue = params.value ?? ''
         return <span style={{ color }}>{displayValue}</span>
       },
@@ -104,10 +74,7 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       headerName: 'Outcome',
       width: columnWidths['combat_log.outcome'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const isHit = params.row.outcome === 'Hit'
-        const isTerminated = params.row.defenderHp <= 0
-        const isIncapacitated = isHit && !isTerminated && isDefenderIncapacitated(params.row)
-        const displayValue = isIncapacitated ? 'Incap.' : params.row.outcome
+        const displayValue = params.row.outcome === 'Incapacitated' ? 'Incapac.' : params.row.outcome
         return <span>{displayValue}</span>
       },
     },
@@ -192,15 +159,15 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       },
     },
     {
-      field: 'defenderHp',
+      field: 'defenderHpAfterDamage',
       headerName: 'HP',
       width: columnWidths['combat_log.defender_hp'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const hpPct = fmtPctDec0(params.row.defenderHp, params.row.defenderHpMax)
-        const isZeroOrLess = params.row.defenderHp <= 0
+        const hpPct = fmtPctDec0(params.row.defenderHpAfterDamage, params.row.defenderHpMax)
+        const isZeroOrLess = params.row.defenderHpAfterDamage <= 0
         return (
           <span style={{ color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined }}>
-            {Math.round(params.row.defenderHp)}/{params.row.defenderHpMax} ({hpPct})
+            {Math.round(params.row.defenderHpAfterDamage)}/{params.row.defenderHpMax} ({hpPct})
           </span>
         )
       },
@@ -208,4 +175,23 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
   ]
 
   return columns
+}
+
+function getDefenderColor(outcome: AttackOutcome, isDefender: boolean): string | undefined {
+  if (!isDefender) {
+    return undefined
+  }
+  switch (outcome) {
+    case 'Terminated':
+      return 'hsl(4, 90%, 58%)' // red
+
+    case 'Incapacitated':
+      return 'hsl(30, 90%, 58%)' // orange
+    case 'Hit':
+      return 'hsl(60, 90%, 58%)' // yellow
+    case 'Miss':
+      return 'hsl(0, 0.00%, 85%)' // light gray
+    default:
+      return undefined
+  }
 }

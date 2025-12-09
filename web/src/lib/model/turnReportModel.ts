@@ -1,6 +1,6 @@
 import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
 import type { MissionRewards } from './model'
-import type { BattleOutcome, BattleStatus } from './outcomeTypes'
+import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
 
 export type TurnReport = BaseReport & {
   assets: AssetsReport
@@ -161,13 +161,14 @@ export type AttackLog = {
   attackerSkillAtStart: Fixed6
   defenderSkill: Fixed6
   defenderSkillAtStart: Fixed6
+  defenderSkillAfterAttack: Fixed6
   roll: number
   threshold: number
-  outcome: 'Hit' | 'Miss' | 'Terminated'
+  outcome: AttackOutcome
   damage: number | undefined
   damageMin: number
   damageMax: number
-  defenderHp: number
+  defenderHpAfterDamage: number
   defenderHpMax: number
 }
 

@@ -7,8 +7,9 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
+  COMBAT_INCAPACITATION_THRESHOLD,
 } from '../../ruleset/constants'
-import { f6add, toF, toF6, f6sub, f6max, f6gt, type Fixed6 } from '../../primitives/fixed6'
+import { f6add, toF, toF6, f6sub, f6max, f6div, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
@@ -107,6 +108,9 @@ export function evaluateAttack(
       //   }),
       // )
 
+      // Calculate defender skill after damage (exhaustion not applied for terminated)
+      const defenderSkillAfterAttack = effectiveSkill(defender)
+
       attackLog = {
         roundNumber,
         agentId,
@@ -116,13 +120,14 @@ export function evaluateAttack(
         attackerSkillAtStart,
         defenderSkill: defenderEffectiveSkill,
         defenderSkillAtStart,
+        defenderSkillAfterAttack,
         roll: rollPct,
         threshold: thresholdPct,
         outcome: 'Terminated',
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,
-        defenderHp: hpRemainingNum,
+        defenderHpAfterDamage: hpRemainingNum,
         defenderHpMax: defender.maxHitPoints,
       }
     } else {
@@ -143,6 +148,17 @@ export function evaluateAttack(
       //   }),
       // )
 
+      // Apply defender exhaustion before calculating skill after damage
+      defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
+
+      // Calculate defender skill after damage and exhaustion
+      const defenderSkillAfterAttack = effectiveSkill(defender)
+
+      // KJA need to dedup all places in code that check for inIncapacitated. This should be part of ruleset.
+      // Check if defender is incapacitated (effective skill <= 10% of base skill)
+      const skillRatio = f6div(defenderSkillAfterAttack, defenderSkillAtStart)
+      const isIncapacitated = skillRatio <= COMBAT_INCAPACITATION_THRESHOLD
+
       attackLog = {
         roundNumber,
         agentId,
@@ -152,20 +168,16 @@ export function evaluateAttack(
         attackerSkillAtStart,
         defenderSkill: defenderEffectiveSkill,
         defenderSkillAtStart,
+        defenderSkillAfterAttack,
         roll: rollPct,
         threshold: thresholdPct,
-        outcome: 'Hit',
+        outcome: isIncapacitated ? 'Incapacitated' : 'Hit',
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,
-        defenderHp: hpRemainingNum,
+        defenderHpAfterDamage: hpRemainingNum,
         defenderHpMax: defender.maxHitPoints,
       }
-    }
-
-    // Apply defender exhaustion only if not terminated
-    if (f6gt(defender.hitPoints, toF6(0))) {
-      defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
     }
   } else {
     // Failed attack - show roll details
@@ -194,6 +206,9 @@ export function evaluateAttack(
     // Apply defender exhaustion (both agents and enemies)
     defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
 
+    // Calculate defender skill after exhaustion (no damage for misses)
+    const defenderSkillAfterAttack = effectiveSkill(defender)
+
     attackLog = {
       roundNumber,
       agentId,
@@ -203,13 +218,14 @@ export function evaluateAttack(
       attackerSkillAtStart,
       defenderSkill: defenderEffectiveSkill,
       defenderSkillAtStart,
+      defenderSkillAfterAttack,
       roll: rollPct,
       threshold: thresholdPct,
       outcome: 'Miss',
       damage: undefined,
       damageMin: attacker.weapon.minDamage,
       damageMax: attacker.weapon.maxDamage,
-      defenderHp: toF(defender.hitPoints),
+      defenderHpAfterDamage: toF(defender.hitPoints),
       defenderHpMax: defender.maxHitPoints,
     }
   }

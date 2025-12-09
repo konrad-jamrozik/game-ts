@@ -9,6 +9,15 @@
 export type BattleOutcome = 'Won' | 'Retreated' | 'Wiped'
 
 /**
+ * Outcome of an individual attack during combat.
+ * - Hit: Attack succeeded, defender took damage
+ * - Miss: Attack failed, no damage dealt
+ * - Incapacitated: Attack succeeded and defender's effective skill dropped to 10% or less of base skill
+ * - Terminated: Attack succeeded and defender's HP reached 0 or below
+ */
+export type AttackOutcome = 'Hit' | 'Miss' | 'Incapacitated' | 'Terminated'
+
+/**
  * Round-by-round battle status (includes ongoing battles).
  */
 export type BattleStatus = 'Ongoing' | BattleOutcome

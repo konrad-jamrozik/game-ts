@@ -406,6 +406,9 @@ export default plugTypescriptEslint.config([
       // I like reduce
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/no-array-reduce.md
       'unicorn/no-array-reduce': 'off',
+      // I prefer minimalism
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/switch-case-braces.md
+      'unicorn/switch-case-braces': 'off',
     },
   },
   {
