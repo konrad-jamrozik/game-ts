@@ -52,13 +52,11 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
       field: 'enemyId',
       headerName: 'Enemy',
       width: columnWidths['combat_log.enemy_id'],
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
+      valueGetter: (_value, row: CombatLogRow): string => fmtNoPrefix(row.enemyId, 'enemy-'),
+      renderCell: (params: GridRenderCellParams<CombatLogRow, string>): React.JSX.Element => {
         const isDefenderDead = params.row.attackerType === 'Agent' && params.row.defenderHp <= 0
-        return (
-          <span style={{ color: isDefenderDead ? 'hsl(4, 90%, 58%)' : undefined }}>
-            {fmtNoPrefix(params.row.enemyId, 'enemy-')}
-          </span>
-        )
+        const displayValue = params.value ?? ''
+        return <span style={{ color: isDefenderDead ? 'hsl(4, 90%, 58%)' : undefined }}>{displayValue}</span>
       },
     },
     {

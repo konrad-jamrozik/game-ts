@@ -241,14 +241,17 @@ export function getAgentsColumns(
       field: 'by',
       headerName: 'By',
       width: columnWidths['agents.by'],
-      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
-        const { terminatedBy } = params.row
-        // If agent was terminated by an enemy, show the enemy ID without prefix
+      valueGetter: (_value, row: AgentRow): string => {
+        const { terminatedBy } = row
+        // Return display value without prefix for sorting and filtering
         if (terminatedBy !== undefined) {
-          const displayValue = fmtNoPrefix(terminatedBy, 'enemy-')
-          return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
+          return fmtNoPrefix(terminatedBy, 'enemy-')
         }
-        return <span aria-label={`agents-row-by-${params.id}`}>-</span>
+        return '-'
+      },
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
+        const displayValue = params.value ?? '-'
+        return <span aria-label={`agents-row-by-${params.id}`}>{displayValue}</span>
       },
     },
   ]

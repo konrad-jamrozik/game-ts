@@ -1,5 +1,3 @@
-// KJA sorting by "by" column doesn't work. And filters in combat log are also busted. E.g. because they see the "enemy-" prefix
-// while it doesn't actually display. Probably need value getter.
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
