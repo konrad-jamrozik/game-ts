@@ -9,7 +9,7 @@ export const ALL_CARD_IDS = [
   'player-actions',
   'event-log',
   'debug',
-  'missions',
+  'mission-sites',
   'leads',
   'lead-investigations',
   'agents',
