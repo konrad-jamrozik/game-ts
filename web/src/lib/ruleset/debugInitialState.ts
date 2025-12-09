@@ -234,6 +234,8 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     trainingCap: 4,
     leadInvestigationCounts: {
       'lead-red-dawn-profile': 1,
+      'lead-exalt-profile': 1,
+      'lead-black-lotus-profile': 1,
     },
   }
 

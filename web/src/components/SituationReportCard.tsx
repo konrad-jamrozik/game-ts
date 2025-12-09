@@ -6,7 +6,6 @@ import { useAppSelector } from '../redux/hooks'
 import { f6add, f6fmtPctDec2, f4fmtPctDec2Diff } from '../lib/primitives/fixed6'
 import { SUPPRESSION_DECAY } from '../lib/ruleset/constants'
 import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/ruleset/panicRuleset'
-import { assertDefined } from '../lib/primitives/assertPrimitives'
 import { fmtPctDec0 } from '../lib/primitives/formatPrimitives'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
@@ -20,6 +19,64 @@ export type SituationReportRow = {
   projected?: string
   diff?: string
   reverseColor?: boolean
+}
+
+function isFactionDiscovered(
+  faction: { discoveryPrerequisite: string[] },
+  leadInvestigationCounts: Record<string, number>,
+): boolean {
+  return faction.discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
+}
+
+function getFactionRows(faction: {
+  threatLevel: ReturnType<typeof f6add>
+  threatIncrease: ReturnType<typeof f6add>
+  suppression: ReturnType<typeof f6add>
+}): SituationReportRow[] {
+  const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
+  const threatLevelProjected = f6add(faction.threatLevel, faction.threatIncrease)
+  const threatLevelDiffStr = f4fmtPctDec2Diff(faction.threatLevel, threatLevelProjected)
+
+  const suppressionProjected = decaySuppression(faction.suppression).decayedSuppression
+  const suppressionDiffStr = f4fmtPctDec2Diff(faction.suppression, suppressionProjected)
+  const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
+  const panicIncreaseDiffStr = f4fmtPctDec2Diff(panicIncrease, panicIncreaseProjected)
+  return [
+    {
+      id: 1,
+      metric: 'Threat level',
+      value: f6fmtPctDec2(faction.threatLevel),
+      projected: f6fmtPctDec2(threatLevelProjected),
+      diff: threatLevelDiffStr,
+      reverseColor: true,
+    },
+    {
+      id: 2,
+      metric: 'Threat increase',
+      value: f6fmtPctDec2(faction.threatIncrease),
+      reverseColor: true,
+    },
+    {
+      id: 3,
+      metric: 'Suppression',
+      value: f6fmtPctDec2(faction.suppression),
+      projected: f6fmtPctDec2(suppressionProjected),
+      diff: suppressionDiffStr,
+    },
+    {
+      id: 4,
+      metric: 'Suppr. decay',
+      value: fmtPctDec0(SUPPRESSION_DECAY),
+    },
+    {
+      id: 5,
+      metric: 'Panic increase',
+      value: f6fmtPctDec2(panicIncrease),
+      projected: f6fmtPctDec2(panicIncreaseProjected),
+      diff: panicIncreaseDiffStr,
+      reverseColor: true,
+    },
+  ]
 }
 
 export function SituationReportCard(): React.JSX.Element {
@@ -44,61 +101,7 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
-  // Get Red Dawn faction data and check if it's discovered
-  const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
-  assertDefined(redDawnFaction, 'Red Dawn faction should be defined')
-  const isRedDawnDiscovered = redDawnFaction.discoveryPrerequisite.every(
-    (leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0,
-  )
-  // Only calculate faction-specific data if Red Dawn is discovered
-  const redDawnRows: SituationReportRow[] = isRedDawnDiscovered
-    ? (() => {
-        const panicIncrease = getPanicIncrease(redDawnFaction.threatLevel, redDawnFaction.suppression)
-        const threatLevelProjected = f6add(redDawnFaction.threatLevel, redDawnFaction.threatIncrease)
-        const threatLevelDiffStr = f4fmtPctDec2Diff(redDawnFaction.threatLevel, threatLevelProjected)
-
-        const suppressionProjected = decaySuppression(redDawnFaction.suppression).decayedSuppression
-        const suppressionDiffStr = f4fmtPctDec2Diff(redDawnFaction.suppression, suppressionProjected)
-        const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-        const panicIncreaseDiffStr = f4fmtPctDec2Diff(panicIncrease, panicIncreaseProjected)
-        return [
-          {
-            id: 1,
-            metric: 'Threat level',
-            value: f6fmtPctDec2(redDawnFaction.threatLevel),
-            projected: f6fmtPctDec2(threatLevelProjected),
-            diff: threatLevelDiffStr,
-            reverseColor: true,
-          },
-          {
-            id: 2,
-            metric: 'Threat increase',
-            value: f6fmtPctDec2(redDawnFaction.threatIncrease),
-            reverseColor: true,
-          },
-          {
-            id: 3,
-            metric: 'Suppression',
-            value: f6fmtPctDec2(redDawnFaction.suppression),
-            projected: f6fmtPctDec2(suppressionProjected),
-            diff: suppressionDiffStr,
-          },
-          {
-            id: 4,
-            metric: 'Suppr. decay',
-            value: fmtPctDec0(SUPPRESSION_DECAY),
-          },
-          {
-            id: 5,
-            metric: 'Panic increase',
-            value: f6fmtPctDec2(panicIncrease),
-            projected: f6fmtPctDec2(panicIncreaseProjected),
-            diff: panicIncreaseDiffStr,
-            reverseColor: true,
-          },
-        ]
-      })()
-    : []
+  const discoveredFactions = factions.filter((faction) => isFactionDiscovered(faction, leadInvestigationCounts))
 
   return (
     <ExpandableCard
@@ -109,12 +112,16 @@ export function SituationReportCard(): React.JSX.Element {
     >
       <Stack spacing={2}>
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
-        {isRedDawnDiscovered && (
-          <Fragment>
-            <Typography variant="h6">{redDawnFaction.name} faction</Typography>
-            <StyledDataGrid rows={redDawnRows} columns={columns} aria-label={`${redDawnFaction.name} Report data`} />
+        {discoveredFactions.map((faction) => (
+          <Fragment key={faction.id}>
+            <Typography variant="h6">{faction.name} faction</Typography>
+            <StyledDataGrid
+              rows={getFactionRows(faction)}
+              columns={columns}
+              aria-label={`${faction.name} Report data`}
+            />
           </Fragment>
-        )}
+        ))}
       </Stack>
     </ExpandableCard>
   )

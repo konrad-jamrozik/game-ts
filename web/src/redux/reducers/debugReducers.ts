@@ -109,6 +109,8 @@ export const debugAddEverything = asPlayerAction((state: GameState) => {
   spawn10Agents(state)
   spawnMissionSites(state)
   markLeadAsInvestigated(state, 'lead-red-dawn-profile')
+  markLeadAsInvestigated(state, 'lead-exalt-profile')
+  markLeadAsInvestigated(state, 'lead-black-lotus-profile')
 })
 
 function markLeadAsInvestigated(state: GameState, leadId: string): void {
