@@ -4,6 +4,7 @@ import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 
 export type BattleLogRow = {
   id: number
@@ -24,7 +25,7 @@ export type BattleLogRow = {
   skillRatio: Fixed6
 }
 
-export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
+export function getBattleLogColumns(rows: BattleLogRow[]): GridColDef<BattleLogRow>[] {
   const columns: GridColDef<BattleLogRow>[] = [
     {
       field: 'roundNumber',
@@ -54,6 +55,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
       field: 'agentSkill',
       headerName: 'Agent Skill',
       width: columnWidths['battle_log.agent_skill'],
+      sortComparator: createFixed6SortComparator(rows, (row) => row.agentSkill),
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.agentSkill, params.row.agentSkillTotal)
         return (
@@ -90,6 +92,7 @@ export function getBattleLogColumns(): GridColDef<BattleLogRow>[] {
       field: 'enemySkill',
       headerName: 'Enemy Skill',
       width: columnWidths['battle_log.enemy_skill'],
+      sortComparator: createFixed6SortComparator(rows, (row) => row.enemySkill),
       renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.enemySkill, params.row.enemySkillTotal)
         return (

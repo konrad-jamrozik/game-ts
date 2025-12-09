@@ -33,7 +33,7 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     row.attackerType === 'Agent' ? showAgentAttacks : showEnemyAttacks,
   )
 
-  const columns = getCombatLogColumns()
+  const columns = getCombatLogColumns(rows)
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: COMBAT_LOG_CARD_WIDTH }}>

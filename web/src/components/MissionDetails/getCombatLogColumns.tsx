@@ -3,6 +3,7 @@ import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtDec1, fmtDec2, fmtInt, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 
 export type CombatLogRow = {
   id: number
@@ -25,7 +26,7 @@ export type CombatLogRow = {
   defenderHpMax: number
 }
 
-export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
+export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogRow>[] {
   const columns: GridColDef<CombatLogRow>[] = [
     {
       field: 'attackId',
@@ -73,6 +74,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
       field: 'attackerSkill',
       headerName: 'Att Skill',
       width: columnWidths['combat_log.attacker_skill'],
+      sortComparator: createFixed6SortComparator(rows, (row) => row.attackerSkill),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
         return (
@@ -86,6 +88,7 @@ export function getCombatLogColumns(): GridColDef<CombatLogRow>[] {
       field: 'defenderSkill',
       headerName: 'Def Skill',
       width: columnWidths['combat_log.defender_skill'],
+      sortComparator: createFixed6SortComparator(rows, (row) => row.defenderSkill),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
         const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
         return (

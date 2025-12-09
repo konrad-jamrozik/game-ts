@@ -21,7 +21,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     ...log,
   }))
 
-  const columns = getBattleLogColumns()
+  const columns = getBattleLogColumns(rows)
 
   return (
     <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: BATTLE_LOG_CARD_WIDTH }}>
