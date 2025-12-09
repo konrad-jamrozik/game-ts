@@ -136,3 +136,15 @@ export function assertMax6Dec(
     throw new Error(errMsg)
   }
 }
+
+export type HasId = { id: number | string }
+
+export function assertHasId(value: unknown, errMsg = 'Value must have a valid id property'): asserts value is HasId {
+  if (typeof value !== 'object' || value === null || !('id' in value)) {
+    throw new TypeError(errMsg)
+  }
+  const { id } = value
+  if (typeof id !== 'string' && typeof id !== 'number') {
+    throw new TypeError(errMsg)
+  }
+}

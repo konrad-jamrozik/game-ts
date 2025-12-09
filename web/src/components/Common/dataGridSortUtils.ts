@@ -1,13 +1,6 @@
 import type { GridSortCellParams } from '@mui/x-data-grid'
 import { f6cmp, f6eq, type Fixed6 } from '../../lib/primitives/fixed6'
-import { assertDefined } from '../../lib/primitives/assertPrimitives'
-
-function getRowId<T>(row: T): number | string {
-  // When getId is not provided, assume T has an id property
-  // This is safe because callers either provide getId or ensure T extends { id: number | string }
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-type-assertion
-  return (row as any).id
-}
+import { assertDefined, assertHasId } from '../../lib/primitives/assertPrimitives'
 
 /**
  * Creates a sort comparator for Fixed6 skill columns in DataGrid.
@@ -67,4 +60,9 @@ export function createFixed6SortComparator<T>(
     }
     return String(id1).localeCompare(String(id2))
   }
+}
+
+function getRowId(row: unknown): number | string {
+  assertHasId(row)
+  return row.id
 }
