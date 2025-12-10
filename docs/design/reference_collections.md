@@ -109,27 +109,27 @@ Level description:
 
 The leads system follows a progression chain where completing missions unlocks new investigation opportunities.
 
-| ID                              | Intel Cost | Repeatable |
+| ID                              | Difficulty | Repeatable |
 | ------------------------------- | ---------: | :--------: |
-| Criminal organizations          |         20 |   false    |
-| Locate cult member              |         20 |    true    |
-| Interrogate cult member         |          5 |   false    |
-| Locate cult safehouse           |         30 |    true    |
-| Cult profile                    |         30 |   false    |
-| Interrogate cult handler        |         10 |   false    |
-| Locate cult outpost             |         50 |    true    |
-| Interrogate cult soldier        |         20 |   false    |
-| Locate cult training facility   |        100 |    true    |
+| Criminal organizations          |          1 |   false    |
+| Locate cult member              |          2 |    true    |
+| Interrogate cult member         |          2 |   false    |
+| Locate cult safehouse           |         10 |    true    |
+| Cult profile                    |         10 |   false    |
+| Interrogate cult handler        |          5 |   false    |
+| Locate cult outpost             |         20 |    true    |
+| Interrogate cult soldier        |         10 |   false    |
+| Locate cult training facility   |         25 |    true    |
 | Interrogate cult lieutenant     |         40 |   false    |
-| Locate cult logistics hub       |        150 |    true    |
-| Interrogate cult commander      |         60 |   false    |
-| Locate cult command center      |        200 |    true    |
-| Analyze command structure       |         80 |   false    |
-| Locate cult regional stronghold |        300 |    true    |
-| Interrogate cult high commander |        100 |   false    |
-| Locate cult HQ                  |        400 |   false    |
-| Interrogate cult leader         |        200 |   false    |
-| Terminate cult                  |        500 |   false    |
+| Locate cult logistics hub       |         30 |    true    |
+| Interrogate cult commander      |          - |   false    |
+| Locate cult command center      |          - |    true    |
+| Analyze command structure       |          - |   false    |
+| Locate cult regional stronghold |          - |    true    |
+| Interrogate cult high commander |          - |   false    |
+| Locate cult HQ                  |          - |   false    |
+| Interrogate cult leader         |          - |   false    |
+| Terminate cult                  |          - |   false    |
 
 # Dependency diagram
 
