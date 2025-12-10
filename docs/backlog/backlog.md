@@ -53,6 +53,12 @@ KJA backlog:
 - Delete threat level and increase concepts
 
 - Change lead investigation intel formula:
+  - DRAWBACK: In this system, there is too little unpredictability in completion time,
+    making it better for player to postpone investigation until they are ready for the mission.
+    Because missions expire.
+    Maybe leads should not be repeatable, and instead even offensive missions should be probabilistic?
+    E.g. "investigate cult" lead that accumulates intel, and the more intel accumulated, the better
+    chances it has to yield good lead. Interrogating captured enemies leads to better outcomes?
   - Difficulty says how much intel must be accumulated, but actual length is 50% to 200% of that.
   - Accumulated intel does not decay.
     - I was considering saying that "Intel does not decay as long as at least 1/4 of the accumulated intel is
