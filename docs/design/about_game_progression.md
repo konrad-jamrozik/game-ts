@@ -23,7 +23,7 @@ the start of player turn, after turn evaluation has concluded:
 
 # Faction visibility
 
-Once player unlock appropriate lead, typically `<faction name> profile`, the player gains
+Once player unlocks appropriate lead, typically `<faction name> profile`, the player gains
 the ability to see following information about the faction:
 
 - Threat level

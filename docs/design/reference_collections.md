@@ -39,8 +39,8 @@ The table below shows some of the details of player offensive missions.
 | ----------------------------- | --- | --------------------------- | ----------------------------- | -----: | ----: | ------: | -----: |
 | Apprehend cult member         |   3 |  2 In,   1 Op               |                               |      5 |     0 |  0.05 % |      0 |
 | Raid cult safehouse           |   8 |  4 In,   4 Op               | 1 Hn                          |    100 |     5 |  0.1  % |      1 |
-| Raid cult outpost             |  10 |  8 In,   8 Op,  4 Sl        | 2 Hn,  1 Lt                   |    400 |    10 |  0.5  % |    1-3 |
-| Raid cult training facility   |  12 | 30 In,  16 Op,  8 Sl        | 6 Hn,  2 Lt                   |    800 |    15 |    1  % |    3-9 |
+| Raid cult outpost             |  10 |  8 In,   8 Op,  2 Sl        | 3 Hn                          |    400 |    10 |  0.5  % |    1-3 |
+| Raid cult training facility   |  12 | 30 In,  16 Op,  4 Sl        | 6 Hn,  1 Lt                   |    800 |    15 |    1  % |    3-9 |
 | Raid cult logistics hub       |  15 | 12 In,  24 Op, 10 Sl,  2 El | 5 Hn,  2 Lt, 1 Cm             |  2,000 |    20 |    2  % |   5-15 |
 | Raid cult command center      |  20 |  - In,  20 Op, 20 Sl,  6 El | 4 Hn,  4 Lt, 3 Cm             |  3,000 |    25 |    5  % |  10-30 |
 | Raid cult regional stronghold |  30 |  - In,   - Op, 40 Sl, 10 El | - Hn,  8 Lt, 3 Cm, 1 HC       |  5,000 |    50 |   10  % |  15-45 |
@@ -59,9 +59,11 @@ Legend:
 `ThreatR` - Threat reduction of given faction.
 `SupprR` - Suppression reward (increase) of given faction.
 
-# Defensive missions
+# Defensive missions / Faction operations
 
-The table below shows some of the details of player defensive missions, to counter faction offensive operations.
+The table below shows some of the details of player defensive missions, to counter faction operations.
+
+KJA Update the values in the defensive missions table; now they are made up.
 
 | Mission                                  | Lvl | Exp | Troops                    | Officers               | Money | Fund       | Intel | Panic            | Threat           | Suppr  |
 | ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- | ----: | ---------: | ----: | ---------------: | ---------------: | -----: |
@@ -114,7 +116,7 @@ The leads system follows a progression chain where completing missions unlocks n
 | Locate cult member              |         20 |    true    |
 | Locate cult safehouse           |         50 |    true    |
 | Locate cult outpost             |        100 |    true    |
-| Locate cult base  |        200 |    true    |
+| Locate cult base                |        200 |    true    |
 | Locate cult HQ                  |        500 |    true    |
 | Interrogate cult member         |          0 |   false    |
 | Interrogate cult handler        |          0 |   false    |

@@ -1,4 +1,12 @@
-<!-- 423c1aa3-8d04-44fd-ac82-bfaba8ae5488 bf9e8c6b-7502-4339-b61f-e38a2708d1ac -->
+---
+name: Unity Conversion Plan
+overview: ""
+todos:
+  - id: 35dee2e7-2078-496f-a517-8d905b052896
+    content: Configure Unity build settings for Windows/Mac/Linux desktop builds
+    status: pending
+---
+
 # Unity Conversion Plan
 
 ## Overview
@@ -276,21 +284,3 @@ Convert the React-based web game to Unity desktop application (Windows/Mac/Linux
 4. **Testing**: Maintain test coverage parity with current codebase
 
 5. **Code Organization**: Keep similar folder structure to aid in porting and maintenance
-
-### To-dos
-
-- [ ] Create Unity project structure with proper folder organization and Assembly Definitions
-- [ ] Port Fixed6, math, format, and assertion primitives from TypeScript to C#
-- [ ] Convert all TypeScript model types (GameState, Agent, Faction, etc.) to C# classes/structs
-- [ ] Port reference data collections (factions, missions, leads, etc.) to C#
-- [ ] Port all ruleset files (constants, initialState, all ruleset files) to C#
-- [ ] Port game utility functions (turn evaluation, battle, agent updates, etc.) to C#
-- [ ] Convert Redux reducers to C# action methods (agent, lead, mission, upgrade, game control actions)
-- [ ] Create GameStateManager with undo/redo system and event logging to replace Redux
-- [ ] Create file-based save/load system to replace IndexedDB
-- [ ] Set up Unity Canvas hierarchy matching current React layout (three-column grid)
-- [ ] Port all React UI components to Unity uGUI views (GameControls, DataGrids, Cards, etc.)
-- [ ] Create Unity DataGrid component to replace MUI DataGrid functionality
-- [ ] Create Unity UI theme matching current MUI dark theme (colors, fonts, spacing)
-- [ ] Port unit tests from Vitest to Unity Test Framework
-- [ ] Configure Unity build settings for Windows/Mac/Linux desktop builds
