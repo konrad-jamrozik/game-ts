@@ -114,15 +114,21 @@ The leads system follows a progression chain where completing missions unlocks n
 | Criminal organizations          |         10 |   false    |
 | Cult profile                    |         50 |   false    |
 | Locate cult member              |         20 |    true    |
-| Locate cult safehouse           |         50 |    true    |
-| Locate cult outpost             |        100 |    true    |
-| Locate cult base                |        200 |    true    |
-| Locate cult HQ                  |        500 |    true    |
 | Interrogate cult member         |          0 |   false    |
+| Locate cult safehouse           |         50 |    true    |
 | Interrogate cult handler        |          0 |   false    |
+| Locate cult outpost             |        100 |    true    |
+| Interrogate cult soldier        |          0 |   false    |
+| Locate cult training facility   |        200 |    true    |
 | Interrogate cult lieutenant     |          0 |   false    |
+| Locate cult logistics hub       |        300 |    true    |
 | Interrogate cult commander      |          0 |   false    |
+| Locate cult command center      |        400 |    true    |
+| Analyze command structure      |        500 |   false    |
+| Locate cult regional stronghold |        600 |    true    |
 | Interrogate cult high commander |          0 |   false    |
+| Locate cult HQ                  |        800 |    true    |
+| Interrogate cult leader         |          0 |   false    |
 
 # Dependency diagram
 
@@ -138,8 +144,12 @@ graph TD;
         AppreMembr[Apprehend cult member]
         RaidSafhse[Raid cult safehouse]
         RaidOutpst[Raid cult outpost]
-        RaidBaseop[Raid cult base]
+        RaidTrainFac[Raid cult training facility]
+        RaidLogHub[Raid cult logistics hub]
+        RaidCmdCtr[Raid cult command center]
+        RaidRegStr[Raid cult regional stronghold]
         RaidHeadqr[Raid cult HQ]
+        TermCult[Terminate cult]
     end
     
     subgraph Leads
@@ -150,11 +160,17 @@ graph TD;
         LocatSafhse[Locate cult safehouse]
         IntrgHndlr[Interrogate cult handler]
         LocatOutpst[Locate cult outpost]
+        IntrgSoldr[Interrogate cult soldier]
+        LocatTrainFac[Locate cult training facility]
         IntrgLietn[Interrogate cult lieutenant]
-        LocatBaseop[Locate cult base]
+        LocatLogHub[Locate cult logistics hub]
         IntrgCmndr[Interrogate cult commander]
-        LocatHeadqr[Locate cult HQ]
+        LocatCmdCtr[Locate cult command center]
+        AnalyzCmdStr[Analyze command structure]
+        LocatRegStr[Locate cult regional stronghold]
         IntrgHiCmd[Interrogate cult high commander]
+        LocatHeadqr[Locate cult HQ]
+        IntrgCultLdr[Interrogate cult leader]
         CultProfil[Cult profile]
     end
 
@@ -167,12 +183,22 @@ graph TD;
     RaidSafhse --> IntrgHndlr
     IntrgHndlr --> LocatOutpst
     LocatOutpst --> RaidOutpst
-    RaidOutpst --> IntrgLietn
-    IntrgLietn --> LocatBaseop
-    LocatBaseop --> RaidBaseop
-    RaidBaseop --> IntrgCmndr
-    IntrgCmndr --> LocatHeadqr
+    RaidOutpst --> IntrgSoldr
+    IntrgSoldr --> LocatTrainFac
+    LocatTrainFac --> RaidTrainFac
+    RaidTrainFac --> IntrgLietn
+    IntrgLietn --> LocatLogHub
+    LocatLogHub --> RaidLogHub
+    RaidLogHub --> IntrgCmndr
+    IntrgCmndr --> LocatCmdCtr
+    LocatCmdCtr --> RaidCmdCtr
+    RaidCmdCtr --> AnalyzCmdStr
+    AnalyzCmdStr --> LocatRegStr
+    LocatRegStr --> RaidRegStr
+    RaidRegStr --> IntrgHiCmd
+    IntrgHiCmd --> LocatHeadqr
     LocatHeadqr --> RaidHeadqr
-    RaidHeadqr --> IntrgHiCmd
+    RaidHeadqr --> IntrgCultLdr
+    IntrgCultLdr --> TermCult
 ```
 <!-- cspell:enable -->
