@@ -10,10 +10,11 @@ The investigation system is based on the concept of **Probability Pressure**. Ag
 Probability Multiplier**.
 
 * **Unpredictability:** Success is determined by a random check against the accumulated Intel each
-  turn. This ensures the exact completion date is never predictable.
-* **Diminishing Returns:** Agents suffer reduced efficiency when working together, and when a lead is already heavily investigated.
-* **Decay Prevention:** Instead of passive decay, the system actively penalizes the removal of
-  agents, preventing the "parking" of an investigation.
+    turn. This ensures the exact completion date is never predictable.
+* **Diminishing Returns:** Agents suffer reduced efficiency when working together, and when a lead is already
+    heavily investigated.
+* **Investigation Recency:** The system actively penalizes the removal of agents to ensure accumulated knowledge
+    remains current and to prevent the "parking" of an investigation.
 
 ## 2. Calculating Intel Gain per Turn
 
@@ -76,30 +77,56 @@ The **Lead Difficulty ($D$)** represents the amount of Intel required for a **10
 
 ---
 
-## 4. Anti-Parking Mechanic (Proportional Loss)
+## 4. Agent Loss and Proportional Recalibration
 
-To prevent players from using a small team to maintain the large progress gained by a previous
-large team, the system employs an **Immediate Proportional Loss** mechanism.
+To ensure accumulated knowledge remains current and to prevent the exploitation of "parked" leads, the system
+employs an **Immediate Proportional Recalibration** (or Proportional Loss) mechanic.
 
-When one or more agents are removed from an investigation, the accumulated Intel is immediately
-reduced proportional to the loss of manpower.
+When one or more agents are removed from an investigation, the accumulated Intel is immediately reduced
+proportional to the loss of the team's total investigation skill. This models the loss of institutional memory
+and data becoming stale.
 
-$$\mathbf{I_{new}} = I_{old} \times \frac{\text{Count}_{new}}{\text{Count}_{old}}$$
+$$\mathbf{I_{new}} = I_{old} \times \frac{\sum \text{Skill}_{new}}{\sum \text{Skill}_{old}}$$
 
-| Scenario | Start State | Action | Intel After Loss | Intuition |
-| :--- | :--- | :--- | :--- | :--- |
-| **A** | 700 Intel, 7 Agents | 3 Agents removed (4 remain) | $700 \times \frac{4}{7} = \mathbf{400 \text{ Intel}}$ | "We lost the agents who knew 3/7 of the data, so that part of the investigation is now stale/lost." |
-| **B** | 500 Intel, 5 Agents | 4 Agents removed (1 remains) | $500 \times \frac{1}{5} = \mathbf{100 \text{ Intel}}$ | The remaining agent can only salvage 1/5 of the previous work. |
+| Variable | Description |
+| :--- | :--- |
+| $\mathbf{I_{new}}$ | Intel remaining after recalibration. |
+| $\mathbf{I_{old}}$ | Intel accumulated before agent removal. |
+| $\sum \text{Skill}_{new}$ | Sum of the skill of agents **remaining** on the investigation. |
+| $\sum \text{Skill}_{old}$ | Sum of the skill of agents **previously** on the investigation. |
 
-This forces the player to keep a strong commitment to a lead to maintain a high chance of success.
+**Example:** A lead has 700 Intel and is being worked by two agents: Agent Alpha (Skill 150) and Agent Bravo
+(Skill 50). Total Skill: 200.
+* **Action:** Agent Alpha (Skill 150) is removed.
+* **Recalculation:** $700 \times \frac{50}{200} = \mathbf{175 \text{ Intel}}$ remaining.
 
 ---
 
-## 5. Key Player Intuitions
+## 5. Agent Exhaustion and Mandatory Rotation
+
+Agents are unable to sustain intensive investigative work indefinitely. This introduces a natural time limit
+on how long a single team can remain dedicated to a lead.
+
+**The Mechanic:**
+* **Exhaustion Accumulation:** Each agent accumulates 1 **Exhaustion Point** per turn they spend on an investigation.
+* **Mandatory Withdrawal:** Once an agent's accumulated Exhaustion reaches 100, the agent is automatically
+    withdrawn from the investigation at the start of the next turn.
+
+**Impact:**
+The mandatory withdrawal of an exhausted agent triggers the **Proportional Recalibration** (Section 4),
+resulting in an immediate loss of accumulated Intel. This mechanic incentivizes the player to:
+1. Finish leads within approximately 100 turns, or
+2. Proactively rotate agents out before they hit 100 Exhaustion, ensuring fresh agents maintain momentum
+   and prevent sudden, avoidable loss of Intel.
+
+---
+
+## 6. Key Player Intuitions
 
 | Concept | Player Feedback/Intuition |
 | :--- | :--- |
 | **P(Success)** | **The higher this number, the faster the lead will be resolved.** This is the primary number to watch. |
 | **Count$^{0.8}$** | **The more agents, the faster the work, but each *additional* agent provides less benefit.** Going from 1 to 2 is a big gain; going from 10 to 11 is a small gain. |
 | **Logistic Resistance** | **It's easy to get 50% success chance, but very hard to push past 90%.** The investigation naturally "drags" at the end, ensuring unpredictability. |
-| **Proportional Loss** | **Never remove agents from a high-intel lead unless you absolutely have to.** The loss of Intel is immediate and severe. |
+| **Proportional Loss** | **The most skilled agents carry the most knowledge.** Removing a highly skilled agent causes a greater loss of accumulated Intel than removing a rookie. |
+| **Exhaustion** | **Don't let agents exhaust themselves on a long lead.** You must plan to finish a lead or swap agents before the 100-turn limit forces a costly loss of intel. |
