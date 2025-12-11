@@ -107,31 +107,39 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
     return 0
   }
 
-  // Calculate intel from skill sum: sum(agentLeadInvestigationSkill * AGENT_LEAD_INVESTIGATION_INTEL)
+  // Calculate intel from skill sum: sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
   const intelFromSkillSum = getLeadInvestigationIntelFromSkillSum(agents)
 
   // Calculate BaseAgentInput = intelFromSkillSum × AgentCount^0.8
   const count = agents.length
-  const efficiencyMultiplier = count ** 0.8
-  const baseAgentInput = intelFromSkillSum * efficiencyMultiplier
+  const agentEfficiency = count ** 0.8
+  const rawIntelFromAgents = intelFromSkillSum * (agentEfficiency / count)
 
   // Calculate Resistance = I_current / Difficulty
   const resistance = div(currentIntel, difficulty)
 
   // Calculate Efficiency Factor = 1 - Resistance
   // Clamp to prevent negative efficiency factor
-  const efficiencyFactor = nonNeg(1 - resistance)
+  const resistedEfficiency = nonNeg(1 - resistance)
 
   // Final gain = BaseAgentInput × EfficiencyFactor
-  const gain = baseAgentInput * efficiencyFactor
+  const gain = rawIntelFromAgents * resistedEfficiency
 
-  // Floor to integer (strip fractional intel)
-  return floor(gain)
+  // Log all calculation steps
+  console.log('getLeadAccumulatedIntel:', {
+    curr: currentIntel.toFixed(6),
+    eff: agentEfficiency.toFixed(6),
+    raw: rawIntelFromAgents.toFixed(6),
+    resEff: resistedEfficiency.toFixed(6),
+    gain: gain.toFixed(6),
+  })
+
+  return gain
 }
 
 /**
  *
- * @returns sum(agentLeadInvestigationSkill * AGENT_LEAD_INVESTIGATION_INTEL)
+ * @returns sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
  */
 export function getLeadInvestigationIntelFromSkillSum(agents: Agent[]): number {
   // This flooring strips any fractional intel from the total

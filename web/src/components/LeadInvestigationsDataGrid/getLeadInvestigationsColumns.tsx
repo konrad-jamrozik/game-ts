@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtInt, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
@@ -45,6 +45,9 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       headerName: 'Intel',
       width: columnWidths['lead_investigations.intel'],
       type: 'number',
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{fmtInt(params.row.intel)}</span>
+      ),
     },
 
     {
@@ -63,8 +66,8 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
         const { projectedIntel, intelDiff } = params.row
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{projectedIntel}</span>
-            {intelDiff !== 0 && <MyChip chipValue={intelDiff} />}
+            <span>{fmtInt(projectedIntel)}</span>
+            {intelDiff !== 0 && <MyChip chipValue={fmtInt(intelDiff)} />}
           </div>
         )
       },
