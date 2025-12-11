@@ -10,7 +10,7 @@ import { getLeadById } from '../../lib/collections/leads'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import type { Agent } from '../../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId, LeadInvestigationState } from '../../lib/model/model'
-import { getLeadAccumulatedIntel, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
+import { getLeadAccumulatedIntel, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -34,8 +34,7 @@ export type LeadInvestigationRow = {
   agents: number
   agentsInTransit: number
   startTurn: number
-  intelDecayPct: number
-  intelDecay: number
+  resistance: number
   projectedIntel: number
   intelDiff: number
   state: LeadInvestigationState
@@ -150,20 +149,15 @@ function buildAllInvestigationRows(
     // Count agents in transit to this investigation
     const agentsInTransit = inTransitWithAssignmentId(agents, investigation.id).length
 
+    // Calculate resistance for all investigations
+    const resistance = getLeadResistance(investigation.accumulatedIntel, lead.difficulty)
+
     // For Successful investigations, skip projected intel calculations
-    let intelDecayPct = 0
-    let intelDecay = 0
     let projectedIntel: number = investigation.accumulatedIntel
     let intelDiff = 0
 
     if (investigation.state === 'Active') {
-      // KJA completely remove intelDecay feature
-      // No passive decay - Intel only decreases when agents are removed (handled in agentReducers)
-      intelDecay = 0
-      intelDecayPct = 0
-
       // Calculate projected intel using Probability Pressure system
-      // No decay, just add intel gain from agents
       const agentsInvestigating = investigatingAgents(agents, investigation)
       const intelGain = getLeadAccumulatedIntel(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
       projectedIntel = investigation.accumulatedIntel + intelGain
@@ -185,8 +179,7 @@ function buildAllInvestigationRows(
       agents: activeAgents,
       agentsInTransit,
       startTurn: investigation.startTurn,
-      intelDecayPct,
-      intelDecay,
+      resistance,
       projectedIntel,
       intelDiff,
       state: rowState,

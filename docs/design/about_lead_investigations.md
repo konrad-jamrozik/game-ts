@@ -19,7 +19,7 @@ Probability Multiplier**.
 ## 2. Calculating Intel Gain per Turn
 
 The Intel a team of agents contributes in a single turn is governed by three factors: the **Base
-Input**, the **Efficiency Multiplier**, and the **Logistic Resistance**.
+Input**, the **Efficiency Multiplier**, and the **Resistance**.
 
 ### A. Base Agent Input
 
@@ -35,21 +35,23 @@ $$\text{BaseAgentInput} = \left( \sum \frac{\text{AgentSkill}}{100} \right) \tim
 | 5 | $\text{Intel per agent}$ (The base rate of Intel gained per normalized skill point). | 5 |
 | **Example Base Input** | | $3 \times 2.408 \times 5 = \mathbf{36.12}$ |
 
-### B. Logistic Resistance (Diminishing Returns on Knowledge)
+### B. Resistance (Diminishing Returns on Knowledge)
 
 The more Intel ($\mathbf{I_{current}}$) is already accumulated, the harder it is to find new
 information. This is calculated using the concept of a **Search Space**.
 
-$$\text{Resistance} = 1 - \left( \frac{I_{current}}{\text{Difficulty}} \right)$$
+$$\text{Resistance} = \frac{I_{current}}{\text{Difficulty}}$$
 
-* When $I_{current}$ is low (e.g., 0), the Resistance is $1.0$ (100% efficiency).
-* When $I_{current}$ is high (e.g., 900 out of 1000 Difficulty), the Resistance is $0.1$ (10% efficiency).
+$$\text{EfficiencyFactor} = 1 - \text{Resistance} = 1 - \left( \frac{I_{current}}{\text{Difficulty}} \right)$$
+
+* When $I_{current}$ is low (e.g., 0), the Resistance is $0.0$ (0% resistance), and the Efficiency Factor is $1.0$ (100% efficiency).
+* When $I_{current}$ is high (e.g., 900 out of 1000 Difficulty), the Resistance is $0.9$ (90% resistance), and the Efficiency Factor is $0.1$ (10% efficiency).
 
 ### C. Final Intel Gain and Accumulation
 
-The final Intel gained this turn is the Base Input multiplied by the Resistance.
+The final Intel gained this turn is the Base Input multiplied by the Efficiency Factor (which is $1 - \text{Resistance}$).
 
-$$\text{Gain} = \text{BaseAgentInput} \times \text{Resistance}$$
+$$\text{Gain} = \text{BaseAgentInput} \times \text{EfficiencyFactor} = \text{BaseAgentInput} \times (1 - \text{Resistance})$$
 $$\mathbf{I_{new}} = I_{current} + \text{Gain}$$
 
 ---
@@ -127,6 +129,6 @@ resulting in an immediate loss of accumulated Intel. This mechanic incentivizes 
 | :--- | :--- |
 | **P(Success)** | **The higher this number, the faster the lead will be resolved.** This is the primary number to watch. |
 | **Count$^{0.8}$** | **The more agents, the faster the work, but each *additional* agent provides less benefit.** Going from 1 to 2 is a big gain; going from 10 to 11 is a small gain. |
-| **Logistic Resistance** | **It's easy to get 50% success chance, but very hard to push past 90%.** The investigation naturally "drags" at the end, ensuring unpredictability. |
+| **Resistance** | **As Intel accumulates, resistance increases, making further progress harder.** The investigation naturally "drags" at the end, ensuring unpredictability. Resistance = Intel / Difficulty. |
 | **Proportional Loss** | **The most skilled agents carry the most knowledge.** Removing a highly skilled agent causes a greater loss of accumulated Intel than removing a rookie. |
 | **Exhaustion** | **Don't let agents exhaust themselves on a long lead.** You must plan to finish a lead or swap agents before the 100-turn limit forces a costly loss of intel. |

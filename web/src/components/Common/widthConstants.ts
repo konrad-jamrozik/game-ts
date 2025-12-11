@@ -30,7 +30,7 @@ export const LEAD_INVESTIGATIONS_DATA_GRID_WIDTH =
   columnWidths['lead_investigations.agents'] +
   columnWidths['lead_investigations.intel'] +
   columnWidths['lead_investigations.success_chance'] +
-  columnWidths['lead_investigations.intel_decay'] +
+  columnWidths['lead_investigations.resistance'] +
   columnWidths['lead_investigations.projected_intel'] +
   CHECKMARK_COLUMN_WIDTH
 

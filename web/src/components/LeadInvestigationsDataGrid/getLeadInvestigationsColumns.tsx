@@ -48,31 +48,12 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
     },
 
     {
-      field: 'intelDecay',
-      headerName: 'Decay',
-      width: columnWidths['lead_investigations.intel_decay'],
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intelDecayPct, intelDecay } = params.row
-        return (
-          <div
-            style={{
-              display: 'grid',
-              gridTemplateColumns: intelDecay > 0 ? 'auto auto auto auto' : 'auto',
-              gap: '5px',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <span style={{ textAlign: 'right' }}>{fmtPctDec2(intelDecayPct)}</span>
-            {intelDecay > 0 && (
-              <>
-                <span style={{ textAlign: 'center' }}>=</span>
-                <MyChip chipValue={-intelDecay} />
-              </>
-            )}
-          </div>
-        )
-      },
+      field: 'resistance',
+      headerName: 'Resistance',
+      width: columnWidths['lead_investigations.resistance'],
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
+        <span>{fmtPctDec2(params.row.resistance)}</span>
+      ),
     },
     {
       field: 'projectedIntel',

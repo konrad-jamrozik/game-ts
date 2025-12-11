@@ -37,7 +37,7 @@ export const columnWidths = {
   'lead_investigations.agents': 60,
   'lead_investigations.intel': 64,
   'lead_investigations.success_chance': 80,
-  'lead_investigations.intel_decay': 120,
+  'lead_investigations.resistance': 120,
   'lead_investigations.projected_intel': 120,
 
   // Agents columns

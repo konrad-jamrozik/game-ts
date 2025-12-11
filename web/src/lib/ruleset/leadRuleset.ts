@@ -39,6 +39,22 @@ export function getLeadSuccessChance(accumulatedIntel: number, difficulty: numbe
 }
 
 /**
+ * Calculates the resistance to progress based on accumulated intel and difficulty.
+ * Resistance represents how much of the search space has been explored.
+ * Formula: Resistance = I_current / Difficulty
+ *
+ * @param accumulatedIntel - The current accumulated intel value
+ * @param difficulty - The lead difficulty
+ * @returns The resistance value (0.0 to 1.0)
+ */
+export function getLeadResistance(accumulatedIntel: number, difficulty: number): number {
+  if (difficulty === 0) {
+    return accumulatedIntel > 0 ? 1 : 0
+  }
+  return Math.min(1, div(accumulatedIntel, difficulty))
+}
+
+/**
  * Calculates the proportional loss of Intel when agents are removed from an investigation.
  * Formula: I_new = I_old × (∑Skill_new / ∑Skill_old)
  * Loss = I_old - I_new = I_old × (1 - ∑Skill_new / ∑Skill_old)
@@ -77,8 +93,9 @@ export function sumAgentEffectiveSkills(agents: Agent[]): number {
  *
  * Formula:
  * BaseAgentInput = (sum AgentSkill/100) × Count^0.8 × 5
- * Resistance = 1 - (I_current / Difficulty)
- * Gain = BaseAgentInput × Resistance
+ * Resistance = I_current / Difficulty
+ * EfficiencyFactor = 1 - Resistance
+ * Gain = BaseAgentInput × EfficiencyFactor
  *
  * @param agents - The agents investigating the lead
  * @param currentIntel - The current accumulated intel value
@@ -98,12 +115,15 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
   const efficiencyMultiplier = count ** 0.8
   const baseAgentInput = intelFromSkillSum * efficiencyMultiplier
 
-  // Calculate Logistic Resistance = 1 - (I_current / Difficulty)
-  // Clamp to prevent negative resistance
-  const resistance = nonNeg(1 - div(currentIntel, difficulty))
+  // Calculate Resistance = I_current / Difficulty
+  const resistance = div(currentIntel, difficulty)
 
-  // Final gain = BaseAgentInput × Resistance
-  const gain = baseAgentInput * resistance
+  // Calculate Efficiency Factor = 1 - Resistance
+  // Clamp to prevent negative efficiency factor
+  const efficiencyFactor = nonNeg(1 - resistance)
+
+  // Final gain = BaseAgentInput × EfficiencyFactor
+  const gain = baseAgentInput * efficiencyFactor
 
   // Floor to integer (strip fractional intel)
   return floor(gain)
