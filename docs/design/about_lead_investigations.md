@@ -44,8 +44,10 @@ $$\text{Resistance} = \frac{I_{current}}{\text{Difficulty}}$$
 
 $$\text{EfficiencyFactor} = 1 - \text{Resistance} = 1 - \left( \frac{I_{current}}{\text{Difficulty}} \right)$$
 
-* When $I_{current}$ is low (e.g., 0), the Resistance is $0.0$ (0% resistance), and the Efficiency Factor is $1.0$ (100% efficiency).
-* When $I_{current}$ is high (e.g., 900 out of 1000 Difficulty), the Resistance is $0.9$ (90% resistance), and the Efficiency Factor is $0.1$ (10% efficiency).
+* When $I_{current}$ is low (e.g., 0), the Resistance is $0.0$ (0% resistance), and the Efficiency Factor is $1.0$
+  (100% efficiency).
+* When $I_{current}$ is high (e.g., 900 out of 1000 Difficulty), the Resistance is $0.9$ (90% resistance), and the
+  Efficiency Factor is $0.1$ (10% efficiency).
 
 ### C. Final Intel Gain and Accumulation
 
