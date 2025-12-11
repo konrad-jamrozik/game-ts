@@ -9,7 +9,7 @@ import {
 } from '../../lib/ruleset/constants'
 import { toF6 } from '../../lib/primitives/fixed6'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
-import { getLeadIntelDecay, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
+import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
@@ -66,11 +66,11 @@ export const assignAgentsToTraining = asPlayerAction<string[]>((state: GameState
 
 export const recallAgents = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToRecall = action.payload
-  
+
   // Track investigations that will lose agents to apply proportional loss
   // We need to calculate skill sums before and after removal
   const investigationsToUpdate = new Map<string, { oldSkillSum: number; newSkillSum: number }>()
-  
+
   for (const agent of state.agents) {
     if (agentIdsToRecall.includes(agent.id)) {
       // Check if agent is assigned to a lead investigation
@@ -83,14 +83,14 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
           // Calculate old skill sum before removing this agent
           const oldAgents = investigatingAgents(state.agents, investigation)
           const oldSkillSum = sumAgentEffectiveSkills(oldAgents)
-          
+
           // Remove agent from investigation
           investigation.agentIds = investigation.agentIds.filter((id) => id !== agent.id)
-          
+
           // Calculate new skill sum after removing this agent
           const newAgents = investigatingAgents(state.agents, investigation)
           const newSkillSum = sumAgentEffectiveSkills(newAgents)
-          
+
           // Track this investigation for proportional loss
           const existing = investigationsToUpdate.get(investigationId)
           if (existing === undefined) {
@@ -100,7 +100,7 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
             // (multiple agents recalled from same investigation)
             existing.newSkillSum = newSkillSum
           }
-          
+
           // If all agents are recalled, mark investigation as Abandoned
           if (investigation.agentIds.length === 0) {
             investigation.state = 'Abandoned'
@@ -120,12 +120,12 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
       }
     }
   }
-  
+
   // Apply proportional loss to investigations that lost agents
   for (const [investigationId, { oldSkillSum, newSkillSum }] of investigationsToUpdate) {
     const investigation = state.leadInvestigations[investigationId]
     if (investigation !== undefined && oldSkillSum > newSkillSum) {
-      const intelLoss = getLeadIntelDecay(investigation.accumulatedIntel, oldSkillSum, newSkillSum)
+      const intelLoss = getLeadIntelLoss(investigation.accumulatedIntel, oldSkillSum, newSkillSum)
       investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelLoss)
     }
   }

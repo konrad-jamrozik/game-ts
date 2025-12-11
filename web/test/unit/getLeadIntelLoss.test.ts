@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
-import { getLeadIntelDecay } from '../../src/lib/ruleset/leadRuleset'
+import { getLeadIntelLoss } from '../../src/lib/ruleset/leadRuleset'
 
-describe(getLeadIntelDecay, () => {
+describe(getLeadIntelLoss, () => {
   // prettier-ignore
   test.each([
     // Example from about_lead_investigations.md:
@@ -24,9 +24,9 @@ describe(getLeadIntelDecay, () => {
     [100, 200, 0, 100],     // All skill removed, lose all intel
     [200, 200, 100, 100],   // Half skill removed, lose half intel
   ])(
-    'should return correct decay for %d intel when skill sum %d reduced to %d',
-    (accumulatedIntel, oldSkillSum, newSkillSum, expectedDecay) => {
-      expect(getLeadIntelDecay(accumulatedIntel, oldSkillSum, newSkillSum)).toBe(expectedDecay)
+    'should return correct loss for %d intel when skill sum %d reduced to %d',
+    (accumulatedIntel, oldSkillSum, newSkillSum, expectedLoss) => {
+      expect(getLeadIntelLoss(accumulatedIntel, oldSkillSum, newSkillSum)).toBe(expectedLoss)
     },
   )
 })

@@ -38,7 +38,7 @@ export function getLeadSuccessChance(accumulatedIntel: number, difficulty: numbe
   return Math.min(1, div(accumulatedIntel, difficulty))
 }
 
-/** // KJA fix naming of this function
+/**
  * Calculates the proportional loss of Intel when agents are removed from an investigation.
  * Formula: I_new = I_old × (∑Skill_new / ∑Skill_old)
  * Loss = I_old - I_new = I_old × (1 - ∑Skill_new / ∑Skill_old)
@@ -48,29 +48,14 @@ export function getLeadSuccessChance(accumulatedIntel: number, difficulty: numbe
  * @param newSkillSum - Sum of effective skill of agents after removal
  * @returns The intel loss amount
  */
-export function getLeadIntelDecay(accumulatedIntel: number, oldSkillSum: number, newSkillSum: number): number {
+export function getLeadIntelLoss(accumulatedIntel: number, oldSkillSum: number, newSkillSum: number): number {
   if (oldSkillSum === 0) {
     return 0
   }
-  const lossPct = getLeadIntelDecayPct(oldSkillSum, newSkillSum)
+  const lossPct = nonNeg(1 - div(newSkillSum, oldSkillSum))
   const loss = accumulatedIntel * lossPct
   // Floor to integer since Intel is stored as integers
   return floor(loss)
-}
-
-/** // KJA fix naming of this function
- * Calculates the proportional loss percentage when agents are removed from an investigation.
- * Formula: Loss% = 1 - (∑Skill_new / ∑Skill_old)
- *
- * @param oldSkillSum - Sum of effective skill of agents before removal
- * @param newSkillSum - Sum of effective skill of agents after removal
- * @returns The loss percentage (0.0 to 1.0)
- */
-export function getLeadIntelDecayPct(oldSkillSum: number, newSkillSum: number): number {
-  if (oldSkillSum === 0) {
-    return 0
-  }
-  return nonNeg(1 - div(newSkillSum, oldSkillSum))
 }
 
 /**
