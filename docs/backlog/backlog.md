@@ -52,56 +52,6 @@ KJA backlog:
 - Update suppression system as documented
 - Delete threat level and increase concepts
 
-- Change lead investigation intel formula:
-  - DRAWBACK: In this system, there is too little unpredictability in completion time,
-    making it better for player to postpone investigation until they are ready for the mission.
-    Because missions expire.
-    Maybe leads should not be repeatable, and instead even offensive missions should be probabilistic?
-    E.g. "investigate cult" lead that accumulates intel, and the more intel accumulated, the better
-    chances it has to yield good lead. Interrogating captured enemies leads to better outcomes?
-  - Difficulty says how much intel must be accumulated, but actual length is 50% to 200% of that.
-  - Accumulated intel does not decay.
-    - I was considering saying that "Intel does not decay as long as at least 1/4 of the accumulated intel is
-    being accumulated per turn. So if in total 300 intel was accumulated, then as long as at least
-    75 extra intel is accumulated per turn, there is no intel decay".
-    But this would mean that each lead must be investigated in 4 turns, or decay.
-    E.g. 1000 intel must be accumulated. So decay will happen if less than 1000/4 =250 intel per turn
-    is accumulated.
-  - As agents accumulate intel per turn, the more agents are accumulating it at once, the less effective
-    each agent is. This motivates the player to have multiple lead investigations at once, to maximize
-    the overall intel accumulated.
-    - E.g. `Intel_accumulated_per_turn = Sum(agent_skills) * (no_of_agents ^ 0.9)`
-    - Note: I rejected a design where e.g.:
-      `Intel_accumulated_per_turn = Sum(agent_skills) * (no_of_agents * (100% - 2% * (no_of_agent - 1)))`
-      because it leads o a situation where beyond some point, adding more agents causes _less_
-      intel to be accumulated. E.g. if no_of_agents is 51 then total intel accumulated is 100-100% = 0%!.
-      For details, see https://chatgpt.com/share/693626cb-03e4-8011-98de-32d9a95abf66
-    - E.g. using the proposed formula with exponent `^ 0.8`:
-       (see https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69362838-c168-8328-96c0-0fbb72211c97)
-        1 agent  :  100%, 100% per agent
-        2 agents :  174%,  87% per agent
-        3 agents :  240%,  80% per agent
-        4 agents :  303%,  75% per agent
-        5 agents :  362%,  72% per agent
-        6 agents :  419%,  69% per agent
-        7 agents :  474%,  67% per agent
-        8 agents :  527%,  65% per agent
-        9 agents :  579%,  64% per agent
-       10 agents :  630%,  63% per agent
-       15 agents :  872%,  58% per agent
-       20 agents : 1098%,  54% per agent
-       25 agents : 1313%,  52% per agent
-       30 agents : 1519%,  50% per agent
-       40 agents : 1912%,  47% per agent
-       50 agents : 2286%,  45% per agent
-       60 agents : 2645%,  44% per agent
-       70 agents : 2992%,  42% per agent
-       80 agents : 3330%,  41% per agent
-       90 agents : 3659%,  40% per agent
-      100 agents : 3981%,  39% per agent
-    - Note that because penalty is per agent, it is cumulative. So 2 agents will accumulate at 190% of 1 agent,
-      not at 95% of 2 agents.
-
 - Make each repeatable lead be investigated only once at a time.
   - Maybe even allow one lead per faction at a time.
 
@@ -156,9 +106,6 @@ KJA backlog:
 
 # Docs
 
-- document the lead investigation mechanics: intel accumulation, difficulty, decay, rolling for success.
-  Clarify that decays grows super-linearly to disincentivize piling all agents into one lead, and thus
-  introducing a trade-off. Read more in OneNote for MLS4 intel page.
 - Add a reference doc listing critical code components, like `evalTurn`
 - Update the AI instructions to reference the new docs
 
