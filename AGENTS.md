@@ -55,7 +55,7 @@ Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
 **Important**: Every time you finish a task, include a short commit message in your response. The commit message should:
 - Be concise and descriptive
-- Summarize the main changes made
+- Summarize all changes made in the given agent chat session (not just the latest changes)
 - Use imperative mood (e.g., "Add feature" not "Added feature")
 - Optionally include a brief bullet list of key changes if the task was complex
 
