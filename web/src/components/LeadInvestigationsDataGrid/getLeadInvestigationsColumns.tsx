@@ -64,6 +64,8 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       width: columnWidths['lead_investigations.projected_intel'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         const { projectedIntel, intelDiff } = params.row
+        // KJA currently, due to rounding, the projectedIntel is completely off.
+        // Need here f4fmtPctDec2Diff or equivalent.
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
             <span>{fmtInt(projectedIntel)}</span>

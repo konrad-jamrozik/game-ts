@@ -107,6 +107,9 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
     return 0
   }
 
+  // KJA for one agent, this goes from 5 to 4 once exhaustion reaches 6.
+  // Looks like I have some rough rounding going on. Probs in 'function effectiveSkill'
+  // Need unit test.
   // Calculate intel from skill sum: sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
   const intelFromSkillSum = getLeadInvestigationIntelFromSkillSum(agents)
 
@@ -126,13 +129,9 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
   const gain = rawIntelFromAgents * resistedEfficiency
 
   // Log all calculation steps
-  console.log('getLeadAccumulatedIntel:', {
-    curr: currentIntel.toFixed(6),
-    eff: agentEfficiency.toFixed(6),
-    raw: rawIntelFromAgents.toFixed(6),
-    resEff: resistedEfficiency.toFixed(6),
-    gain: gain.toFixed(6),
-  })
+  console.log(
+    `getLeadAccumulatedIntel: curr=${currentIntel.toFixed(6)} sk=${intelFromSkillSum.toFixed(6)} eff=${agentEfficiency.toFixed(6)} raw=${rawIntelFromAgents.toFixed(6)} resEff=${resistedEfficiency.toFixed(6)} gain=${gain.toFixed(6)}`,
+  )
 
   return gain
 }
