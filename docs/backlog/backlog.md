@@ -6,6 +6,13 @@ KJA backlog:
 
 ## Current Game mechanics
 
+- Ensure that agents with exhaustion of 100 or more cannot be assigned to lead investigations,
+  or anywhere, really.
+
+- Prevent massive exhaustion gains from missions where many agents are killed.
+  Maybe exhaustion gains should be by % of agents lost, not absolute number.
+  See `battleReport.agentExhaustionAfterBattle = getAgentExhaustionAfterBattle(`
+
 - Sort out / fill up the mission progression chain, with interrogations
 - Interrogating captured enemies should provide bonus towards various lead investigations.
   - Intel lump sum.

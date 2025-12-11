@@ -49,7 +49,7 @@ export function getLeadSuccessChance(accumulatedIntel: number, difficulty: numbe
  */
 export function getLeadResistance(accumulatedIntel: number, difficulty: number): number {
   if (difficulty === 0) {
-    return accumulatedIntel > 0 ? 1 : 0
+    return 0
   }
   return Math.min(1, div(accumulatedIntel, difficulty))
 }
@@ -116,7 +116,7 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
   const rawIntelFromAgents = intelFromSkillSum * (agentEfficiency / count)
 
   // Calculate Resistance = I_current / Difficulty
-  const resistance = div(currentIntel, difficulty)
+  const resistance = getLeadResistance(currentIntel, difficulty)
 
   // Calculate Efficiency Factor = 1 - Resistance
   // Clamp to prevent negative efficiency factor
