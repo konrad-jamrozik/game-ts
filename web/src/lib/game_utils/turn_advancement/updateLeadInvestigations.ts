@@ -5,7 +5,7 @@ import type { LeadInvestigation, MissionSite, MissionSiteId } from '../../model/
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
-import { getLeadAccumulatedIntel, getLeadIntelDecay, getLeadSuccessChance } from '../../ruleset/leadRuleset'
+import { getLeadAccumulatedIntel, getLeadSuccessChance } from '../../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
@@ -37,16 +37,13 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
 function processActiveInvestigation(state: GameState, investigation: LeadInvestigation): LeadInvestigationReport {
   const { success, successChance } = rollAndLogInvestigationResult(investigation)
 
-  // Calculate intel decay before applying it
-  const intelDecay = getLeadIntelDecay(investigation.accumulatedIntel)
+  // No passive decay - Intel only decreases when agents are removed (handled in agentReducers)
 
-  // Apply intel decay (before accumulation)
-  investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
-
-  // Accumulate new intel from assigned agents (same formula as espionage)
+  // Accumulate new intel from assigned agents using Probability Pressure system
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
-  const accumulatedIntel = getLeadAccumulatedIntel(agentsInvestigating)
-  investigation.accumulatedIntel += accumulatedIntel
+  const lead = getLeadById(investigation.leadId)
+  const intelGain = getLeadAccumulatedIntel(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
+  investigation.accumulatedIntel += intelGain
 
   applyExhaustion(agentsInvestigating, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
@@ -58,7 +55,6 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
     completed: success,
     accumulatedIntel: investigation.accumulatedIntel,
     successChance,
-    intelDecay,
     ...(createdMissionSites !== undefined && { createdMissionSites }),
   }
 }

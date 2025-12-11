@@ -4,17 +4,28 @@ import { getLeadIntelDecayPct } from '../../src/lib/ruleset/leadRuleset'
 describe(getLeadIntelDecayPct, () => {
   // prettier-ignore
   test.each([
-    [1,   0.001],     // getLeadIntelDecayPct(  1) =   1 * 0.1% =  0.1% = 0.001
-    [5,   0.005],     // getLeadIntelDecayPct(  5) =   5 * 0.1% =  0.5% = 0.005
-    [10,  0.01 ],     // getLeadIntelDecayPct( 10) =  10 * 0.1% =  1%   = 0.01
-    [40,  0.04 ],     // getLeadIntelDecayPct( 40) =  40 * 0.1% =  4%   = 0.04
-    [100, 0.1  ],     // getLeadIntelDecayPct(100) = 100 * 0.1% = 10%   = 0.1
-    [250, 0.25 ],     // getLeadIntelDecayPct(250) = 250 * 0.1% = 25%   = 0.25
-    [300, 0.3  ],     // getLeadIntelDecayPct(300) = 300 * 0.1% = 30%   = 0.3
-    [500, 0.5  ],     // getLeadIntelDecayPct(500) = 500 * 0.1% = 50%   = 0.5
-    [600, 0.5  ],     // getLeadIntelDecayPct(600) = 600 * 0.1% = 50%   = 0.5 # not 60%, because of min(... , 50%) = 0.5
-  ])('should return correct decay percentage for %d intel', (accumulatedIntel, expectedPct) => {
-    const result = getLeadIntelDecayPct(accumulatedIntel)
-    expect(result).toBe(expectedPct)
-  })
+    // Example from about_lead_investigations.md:
+    // Agent Alpha (Skill 150) and Agent Bravo (Skill 50). Total Skill: 200.
+    // Agent Alpha (Skill 150) is removed, Skill 50 remains.
+    // Loss% = 1 - (50/200) = 1 - 0.25 = 0.75 = 75%
+    [200, 50, 0.75],
+    
+    // Another example: Skill 100 + Skill 50 = 150 total
+    // Remove Skill 100 agent, Skill 50 remains
+    // Loss% = 1 - (50/150) = 1 - 0.333... = 0.666... ≈ 66.67%
+    [150, 50, 2 / 3],
+    
+    // Edge cases
+    [0, 0, 0],        // No skill before, no loss
+    [200, 200, 0],    // No skill removed, no loss
+    [200, 0, 1],      // All skill removed, 100% loss
+    [200, 100, 0.5],  // Half skill removed, 50% loss
+    [100, 10, 0.9],   // 90% skill removed, 90% loss
+  ])(
+    'should return correct decay percentage when skill sum %d reduced to %d',
+    (oldSkillSum, newSkillSum, expectedPct) => {
+      const result = getLeadIntelDecayPct(oldSkillSum, newSkillSum)
+      expect(result).toBeCloseTo(expectedPct, 10)
+    },
+  )
 })

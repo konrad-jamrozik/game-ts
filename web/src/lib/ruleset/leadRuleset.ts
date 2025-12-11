@@ -1,8 +1,8 @@
-import { ceil, div } from '../primitives/mathPrimitives'
-import { f6floorToInt } from '../primitives/fixed6'
+import { div, floor, nonNeg } from '../primitives/mathPrimitives'
+import { f6floorToInt, toF } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
-import { AGENT_ESPIONAGE_INTEL, LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY } from './constants'
-import { sumAgentSkillBasedValues } from './skillRuleset'
+import { AGENT_LEAD_INVESTIGATION_INTEL } from './constants'
+import { effectiveSkill, sumAgentSkillBasedValues } from './skillRuleset'
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
@@ -38,54 +38,97 @@ export function getLeadSuccessChance(accumulatedIntel: number, difficulty: numbe
   return Math.min(1, div(accumulatedIntel, difficulty))
 }
 
-/**
- * Calculates intel decay amount based on accumulated intel.
- * Formula: ceil(accumulatedIntel * decayPct)
+/** // KJA fix naming of this function
+ * Calculates the proportional loss of Intel when agents are removed from an investigation.
+ * Formula: I_new = I_old × (∑Skill_new / ∑Skill_old)
+ * Loss = I_old - I_new = I_old × (1 - ∑Skill_new / ∑Skill_old)
  *
- * For example I/O pairs, refer to the test of this function.
- *
- * @param accumulatedIntel - The accumulated intel value
- * @returns The decay amount (rounded up)
+ * @param accumulatedIntel - The current accumulated intel value
+ * @param oldSkillSum - Sum of effective skill of agents before removal
+ * @param newSkillSum - Sum of effective skill of agents after removal
+ * @returns The intel loss amount
  */
-export function getLeadIntelDecay(accumulatedIntel: number): number {
-  const decayPct = getLeadIntelDecayPct(accumulatedIntel)
-  const decay = ceil(accumulatedIntel * decayPct)
-  return decay
+export function getLeadIntelDecay(accumulatedIntel: number, oldSkillSum: number, newSkillSum: number): number {
+  if (oldSkillSum === 0) {
+    return 0
+  }
+  const lossPct = getLeadIntelDecayPct(oldSkillSum, newSkillSum)
+  const loss = accumulatedIntel * lossPct
+  // Floor to integer since Intel is stored as integers
+  return floor(loss)
+}
+
+/** // KJA fix naming of this function
+ * Calculates the proportional loss percentage when agents are removed from an investigation.
+ * Formula: Loss% = 1 - (∑Skill_new / ∑Skill_old)
+ *
+ * @param oldSkillSum - Sum of effective skill of agents before removal
+ * @param newSkillSum - Sum of effective skill of agents after removal
+ * @returns The loss percentage (0.0 to 1.0)
+ */
+export function getLeadIntelDecayPct(oldSkillSum: number, newSkillSum: number): number {
+  if (oldSkillSum === 0) {
+    return 0
+  }
+  return nonNeg(1 - div(newSkillSum, oldSkillSum))
 }
 
 /**
- * Calculates intel decay based on accumulated intel.
+ * Calculates the sum of effective skills for a group of agents.
+ *
+ * @param agents - The agents to sum skills for
+ * @returns The sum of effective skills
+ */
+export function sumAgentEffectiveSkills(agents: Agent[]): number {
+  return agents.reduce((sum, agent) => {
+    const skill = toF(effectiveSkill(agent))
+    return sum + skill
+  }, 0)
+}
+
+/**
+ * Calculates Intel gain per turn from investigating agents.
+ * Implements the Probability Pressure system from about_lead_investigations.md.
+ *
  * Formula:
- * intelDecay = min(accumulatedIntel * INTEL_DECAY, MAX_INTEL_DECAY)
- *            = min(accumulatedIntel * 0.1%, 50%)
+ * BaseAgentInput = (sum AgentSkill/100) × Count^0.8 × 5
+ * Resistance = 1 - (I_current / Difficulty)
+ * Gain = BaseAgentInput × Resistance
  *
- * For example I/O pairs, refer to the test of this function.
-
- * Overall the values for equilibrium (== eq) are:
- *   k intel / turn: eq = sqrt(1000 * k) IF k <= 250, 2k otherwise.
- * This is because at 500 intel (which is == 2k) the max 50% decay kicks in.
- *   5 intel / turn: eq = 70.7 ( 70.7 * 0.1% =  7.07% decay. 70.7 * (1-0.0707) =  65.7 intel +   5 =  70.7)
- *  10 intel / turn: eq = 100  (100   * 0.1% = 10%    decay. 100  * (1-0.1)    =  90   intel +  10 = 100)
- *  40 intel / turn: eq = 200  (200   * 0.1% = 20%    decay. 200  * (1-0.2)    = 160   intel +  40 = 200)
- * 250 intel / turn: eq = 500  (500   * 0.1% = 50%    decay. 500  * (1-0.5)    = 250   intel + 250 = 500)
- * 300 intel / turn: eq = 600  (600   * 0.1% = 60%    decay. 600  * (1-0.5)    = 300   intel + 300 = 300)
- *
- * See also:
- * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/6918110b-7590-8325-8caa-62ae074491c6
- * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69111d90-db18-832b-bf78-813bb22fab30
- *
- * @param accumulatedIntel - The accumulated intel value
- * @returns The decay in basis points
+ * @param agents - The agents investigating the lead
+ * @param currentIntel - The current accumulated intel value
+ * @param difficulty - The lead difficulty
+ * @returns The intel gain for this turn
  */
-export function getLeadIntelDecayPct(accumulatedIntel: number): number {
-  const decayPct = Math.min(accumulatedIntel * LEAD_INTEL_DECAY_PER_ONE_INTEL, MAX_INTEL_DECAY)
-  return decayPct
+export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, difficulty: number): number {
+  if (agents.length === 0) {
+    return 0
+  }
+
+  // Calculate intel from skill sum: sum(agentLeadInvestigationSkill * AGENT_LEAD_INVESTIGATION_INTEL)
+  const intelFromSkillSum = getLeadInvestigationIntelFromSkillSum(agents)
+
+  // Calculate BaseAgentInput = intelFromSkillSum × AgentCount^0.8
+  const count = agents.length
+  const efficiencyMultiplier = count ** 0.8
+  const baseAgentInput = intelFromSkillSum * efficiencyMultiplier
+
+  // Calculate Logistic Resistance = 1 - (I_current / Difficulty)
+  // Clamp to prevent negative resistance
+  const resistance = nonNeg(1 - div(currentIntel, difficulty))
+
+  // Final gain = BaseAgentInput × Resistance
+  const gain = baseAgentInput * resistance
+
+  // Floor to integer (strip fractional intel)
+  return floor(gain)
 }
 
 /**
- * Calculates total intel accumulated from investigating agents
+ *
+ * @returns sum(agentLeadInvestigationSkill * AGENT_LEAD_INVESTIGATION_INTEL)
  */
-export function getLeadAccumulatedIntel(agents: Agent[]): number {
+export function getLeadInvestigationIntelFromSkillSum(agents: Agent[]): number {
   // This flooring strips any fractional intel from the total
-  return f6floorToInt(sumAgentSkillBasedValues(agents, AGENT_ESPIONAGE_INTEL))
+  return f6floorToInt(sumAgentSkillBasedValues(agents, AGENT_LEAD_INVESTIGATION_INTEL))
 }

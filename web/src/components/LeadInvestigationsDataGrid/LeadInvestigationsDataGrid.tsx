@@ -8,12 +8,9 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
-import { f6floorToInt } from '../../lib/primitives/fixed6'
 import type { Agent } from '../../lib/model/agentModel'
 import type { LeadInvestigation, LeadInvestigationId, LeadInvestigationState } from '../../lib/model/model'
-import { AGENT_ESPIONAGE_INTEL } from '../../lib/ruleset/constants'
-import { getLeadIntelDecay, getLeadIntelDecayPct, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
-import { sumAgentSkillBasedValues } from '../../lib/ruleset/skillRuleset'
+import { getLeadAccumulatedIntel, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -160,18 +157,16 @@ function buildAllInvestigationRows(
     let intelDiff = 0
 
     if (investigation.state === 'Active') {
-      // Calculate intel decay (using shared helper function)
-      intelDecay = getLeadIntelDecay(investigation.accumulatedIntel)
-      intelDecayPct = getLeadIntelDecayPct(investigation.accumulatedIntel)
+      // KJA completely remove intelDecay feature
+      // No passive decay - Intel only decreases when agents are removed (handled in agentReducers)
+      intelDecay = 0
+      intelDecayPct = 0
 
-      // Calculate projected intel (reusing logic from updateLeadInvestigations)
-      // Apply decay first
-      projectedIntel = Math.max(0, investigation.accumulatedIntel - intelDecay)
-      // Then accumulate new intel from assigned agents
+      // Calculate projected intel using Probability Pressure system
+      // No decay, just add intel gain from agents
       const agentsInvestigating = investigatingAgents(agents, investigation)
-      // This flooring strips any fractional intel from the total
-      const intelFromAgents = f6floorToInt(sumAgentSkillBasedValues(agentsInvestigating, AGENT_ESPIONAGE_INTEL))
-      projectedIntel += intelFromAgents
+      const intelGain = getLeadAccumulatedIntel(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
+      projectedIntel = investigation.accumulatedIntel + intelGain
 
       // Calculate diff for chip display
       intelDiff = projectedIntel - investigation.accumulatedIntel
