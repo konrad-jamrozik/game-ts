@@ -6,16 +6,6 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Make each repeatable lead be allowed to be investigated only once at a time.
-- Also update the leads data grid to say "Investigation" instead of "Investigations" and just "Active" instead of "1 Active"
-
-- In Agent Data grid, change investigation assignment display "invst-xxx" instead of "investigation-xxx"
-
-- Ensure that agents with exhaustion of 100 or more cannot be assigned to lead investigations,
-  or anywhere, really.
-
-- Bug: `updateSurvivingAgent` should not use `exhaustionRecovery` but the constant of `EXHAUSTION_PENALTY` equal to 5.
-
 - Prevent massive exhaustion gains from missions where many agents are killed.
   Maybe exhaustion gains should be by % of agents lost, not absolute number.
   `EXHAUSTION_PENALTY` for each 5% of all agents lost, rounded up. So if 7 out of 22 agents were lost,
@@ -23,11 +13,13 @@ KJA backlog:
   See `updateSurvivingAgent(`
 
 - Win criteria - defeat all enemy factions
-  - Raiding each HQ should unlock new lead
+  - Raiding each HQ should unlock new lead (already present: 'lead-{factionId}-terminate-cult')
   - Unlocking all HQ raids leads should unlock the final "peace on Earth" lead
   - Researching that lead should win the game.
+    - The next turn button changes to green "Game won" and is no longer clickable. Similar to "Game over" if game is lost.
 
-- Add capability to buy improved weapon damage
+- Add capability to buy improved weapon damage. Improves the "baseline" weapon damage by 1 point. Note
+  that at first agents have AGENT_INITIAL_WEAPON_DAMAGE = 10 points.
 
 - Change effective skill for contracting scaling to not be
   `effective_skill / 100` but `1 + (effective_skill - 100)/500`
@@ -35,7 +27,7 @@ KJA backlog:
 
 ## Current UI refinement
 
-- Add to assets: Agent weapon damage range min-max
+- Add to assets data grid: Agent weapon damage range min-max
 
 - Improve event log display
 
