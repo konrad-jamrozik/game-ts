@@ -2,6 +2,7 @@ import type { Agent } from '../../src/lib/model/agentModel'
 import { newHiredAgent } from '../../src/redux/reducers/agentReducers'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/ruleset/constants'
 
 export const agFix = (() => {
   let agentIdCounter = 0
@@ -13,7 +14,7 @@ export const agFix = (() => {
 
     default(): Agent {
       agentIdCounter += 1
-      return newHiredAgent(`agent-${agentIdCounter}`, 1)
+      return newHiredAgent(`agent-${agentIdCounter}`, 1, AGENT_INITIAL_WEAPON_DAMAGE)
     },
 
     withSuperWeapon(): Agent {

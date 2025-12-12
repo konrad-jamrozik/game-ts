@@ -8,7 +8,6 @@ import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getCapabilitiesColumns } from './getCapabilitiesColumns'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../lib/ruleset/constants'
 
 export type UpgradeRow = {
   id: number
@@ -92,7 +91,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       name: 'Weapon damage',
       id: 10,
-      value: AGENT_INITIAL_WEAPON_DAMAGE + gameState.weaponDamageImprovement,
+      value: gameState.weaponDamage,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Weapon damage']),
       price: UPGRADE_PRICES['Weapon damage'],
     },

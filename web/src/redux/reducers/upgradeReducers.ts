@@ -41,7 +41,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       break
     }
     case 'Weapon damage': {
-      state.weaponDamageImprovement += getUpgradeIncrement(upgradeName)
+      state.weaponDamage += getUpgradeIncrement(upgradeName)
       break
     }
   }

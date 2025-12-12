@@ -21,8 +21,7 @@ export type GameState = {
   trainingSkillGain: Fixed6
   exhaustionRecovery: number
   hitPointsRecoveryPct: Fixed6
-  // KJA just weapon damage, and merge it with baseline weapon damage
-  weaponDamageImprovement: number
+  weaponDamage: number
   // Archive
   leadInvestigationCounts: Record<string, number>
   leadInvestigations: Record<string, LeadInvestigation> // track ongoing investigations

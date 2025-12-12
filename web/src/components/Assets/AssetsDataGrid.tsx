@@ -2,14 +2,13 @@ import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
 import { getIntelNewBalance } from '../../lib/ruleset/intelRuleset'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../lib/ruleset/constants'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getAssetsColumns } from './getAssetsColumns'
 
 export type AssetRow = {
   id: number
-  name: 'Money' | 'Intel' | 'Agents' | 'Funding' | 'AgentWeaponDamageBaseline'
+  name: 'Money' | 'Intel' | 'Agents' | 'Funding'
   displayedName?: string
   value: number
   projected?: number
@@ -29,12 +28,6 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Funding', id: 4, value: gameState.funding },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
-    {
-      name: 'AgentWeaponDamageBaseline', // KJA just weapon damage
-      id: 5,
-      value: AGENT_INITIAL_WEAPON_DAMAGE,
-      displayedName: 'Agent weapon damage baseline',
-    },
   ]
 
   const assetColumns = getAssetsColumns()

@@ -9,6 +9,9 @@ export const AGENT_INITIAL_SKILL = toF6(100)
 export const AGENT_INITIAL_EXHAUSTION = 0
 export const AGENT_INITIAL_HIT_POINTS = 30
 
+// Divisor used in skill-based value calculations. Each extra 100 effective skill adds 20% efficiency bonus.
+export const AGENT_SKILL_VALUE_DIVISOR = 500
+
 // First 5 points of exhaustion have no impact
 export const NO_IMPACT_EXHAUSTION = 5
 

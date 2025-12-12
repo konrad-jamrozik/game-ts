@@ -1,6 +1,6 @@
 import type { Actor } from '../model/model'
 import type { Agent } from '../model/agentModel'
-import { NO_IMPACT_EXHAUSTION } from './constants'
+import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from './constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { nonNeg } from '../primitives/mathPrimitives'
 import { f6mult, f6sum, toF, toF6r, toF6, f6sub, f6div, type Fixed6 } from '../primitives/fixed6'
@@ -23,7 +23,7 @@ export function effectiveSkill(actor: Actor): Fixed6 {
 
 /**
  * Calculates the value contribution from an agent based on their effective skill and a constant multiplier.
- * Formula: (1 + (effectiveSkill - 100) / 500) * multiplier
+ * Formula: (1 + (effectiveSkill - 100) / AGENT_SKILL_VALUE_DIVISOR) * multiplier
  * Each extra 100 effective skill adds 20% efficiency bonus.
  *
  * This is the source of truth for skill-based value calculations.
@@ -34,8 +34,7 @@ export function effectiveSkill(actor: Actor): Fixed6 {
  */
 export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
   const effectiveSkillValue = toF(effectiveSkill(agent))
-  // KJA add constant for 500
-  const skillCoefficient = 1 + (effectiveSkillValue - 100) / 500
+  const skillCoefficient = 1 + (effectiveSkillValue - 100) / AGENT_SKILL_VALUE_DIVISOR
   return toF6r(skillCoefficient * value)
 }
 
