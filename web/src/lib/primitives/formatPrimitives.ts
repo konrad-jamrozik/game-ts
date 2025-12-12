@@ -41,6 +41,30 @@ export function fmtDec1(value: number): string {
 }
 
 /**
+ * Formats the displayed difference between two numbers to 1 decimal place.
+ *
+ * The displayed difference is computed as the difference between the floored
+ * display values, not the raw difference. This ensures the formatted diff
+ * matches what users see when comparing the displayed current and projected values.
+ *
+ * Returns `undefined` when the displayed diff is 0.0 (useful for hiding a "diff" chip).
+ */
+export function fmtDec1Diff(prev: number, succ: number): string | undefined {
+  const displayUnit = 10 // 0.1 in *10 units
+  const prevDisplay = floor(prev * displayUnit)
+  const succDisplay = floor(succ * displayUnit)
+  const displayedDiff = succDisplay - prevDisplay
+
+  if (displayedDiff === 0) {
+    return undefined
+  }
+
+  const sign = displayedDiff < 0 ? '-' : ''
+  const value = Math.abs(displayedDiff) / displayUnit
+  return `${sign}${value.toFixed(1)}`
+}
+
+/**
 /**
  * Formats a number to 2 decimal places, flooring at the 2nd decimal.
  * @param value - The number to format

@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { fmtInt, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtDec1, fmtDec1Diff, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
@@ -46,7 +46,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       width: columnWidths['lead_investigations.intel'],
       type: 'number',
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{fmtInt(params.row.intel)}</span>
+        <span>{fmtDec1(params.row.intel)}</span>
       ),
     },
 
@@ -63,13 +63,12 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       headerName: 'Proj. intel',
       width: columnWidths['lead_investigations.projected_intel'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { projectedIntel, intelDiff } = params.row
-        // KJA currently, due to rounding, the projectedIntel is completely off.
-        // Need here f4fmtPctDec2Diff or equivalent.
+        const { intel, projectedIntel } = params.row
+        const intelDiffFmt = fmtDec1Diff(intel, projectedIntel)
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{fmtInt(projectedIntel)}</span>
-            {intelDiff !== 0 && <MyChip chipValue={fmtInt(intelDiff)} />}
+            <span>{fmtDec1(projectedIntel)}</span>
+            {intelDiffFmt !== undefined && <MyChip chipValue={intelDiffFmt} />}
           </div>
         )
       },
