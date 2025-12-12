@@ -2,11 +2,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { MissionSite, MissionSiteId } from '../../lib/model/model'
 import { toF6 } from '../../lib/primitives/fixed6'
-import {
-  AGENT_INITIAL_EXHAUSTION,
-  AGENT_INITIAL_HIT_POINTS,
-  AGENT_INITIAL_WEAPON_DAMAGE,
-} from '../../lib/ruleset/constants'
+import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS } from '../../lib/ruleset/constants'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { missions } from '../../lib/collections/missions'
 import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
@@ -38,7 +34,7 @@ function spawn10Agents(state: GameState): void {
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       skillFromTraining: toF6(0),
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: newWeapon(state.weaponDamage),
     }
 
     state.agents.push(newAgent)
