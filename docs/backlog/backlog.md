@@ -6,7 +6,7 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Make each repeatable lead be investigated only once at a time.
+- Make each repeatable lead be allowed to be investigated only once at a time.
 - Also update the leads data grid to say "Investigation" instead of "Investigations" and just "Active" instead of "1 Active"
 
 - In Agent Data grid, change investigation assignment display "invst-xxx" instead of "investigation-xxx"
@@ -14,9 +14,13 @@ KJA backlog:
 - Ensure that agents with exhaustion of 100 or more cannot be assigned to lead investigations,
   or anywhere, really.
 
+- Bug: `updateSurvivingAgent` should not use `exhaustionRecovery` but the constant of `EXHAUSTION_PENALTY` equal to 5.
+
 - Prevent massive exhaustion gains from missions where many agents are killed.
   Maybe exhaustion gains should be by % of agents lost, not absolute number.
-  See `battleReport.agentExhaustionAfterBattle = getAgentExhaustionAfterBattle(`
+  `EXHAUSTION_PENALTY` for each 5% of all agents lost, rounded up. So if 7 out of 22 agents were lost,
+  the penalty is 7/22 = 0.31(81), rounded up to 0.35, divided by 5 is 7, times EXHAUSTION_PENALTY is 7 * 5 = 35.
+  See `updateSurvivingAgent(`
 
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
