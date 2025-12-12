@@ -35,7 +35,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
     {
       field: 'investigations',
-      headerName: 'Investigations',
+      headerName: 'Investigation',
       width: columnWidths['leads.investigations'],
       renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
         const { activeInvestigationCount, doneInvestigationCount } = params.row
@@ -44,10 +44,10 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
         }
         const parts: string[] = []
         if (activeInvestigationCount > 0) {
-          parts.push(`${activeInvestigationCount} active`)
+          parts.push(activeInvestigationCount === 1 ? 'Active' : `${activeInvestigationCount} Active`)
         }
         if (doneInvestigationCount > 0) {
-          parts.push(`${doneInvestigationCount} done`)
+          parts.push(doneInvestigationCount === 1 ? 'Done' : `${doneInvestigationCount} Done`)
         }
         return <span aria-label={`leads-row-investigations-${params.id}`}>{parts.join(', ')}</span>
       },
