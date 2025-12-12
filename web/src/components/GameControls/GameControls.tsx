@@ -8,7 +8,7 @@ import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
-import { toF6, f6ge } from '../../lib/primitives/fixed6'
+import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -26,7 +26,9 @@ export function GameControls(): React.JSX.Element {
     dispatch(collapseAllCards())
   }
 
-  const isGameOver = f6ge(gameState.panic, toF6(1)) || gameState.money < 0 // 100% panic OR negative money
+  const gameOver = isGameOver(gameState)
+  const gameWon = isGameWon(gameState)
+  const isGameEnded = gameOver || gameWon
 
   const labelWidthPx = 110
   return (
@@ -42,16 +44,22 @@ export function GameControls(): React.JSX.Element {
             variant="contained"
             onClick={handleAdvanceTurn}
             sx={(theme) => ({
-              ...(isGameOver && {
+              ...(gameOver && {
                 '&.Mui-disabled': {
                   backgroundColor: theme.palette.error.dark,
                   color: theme.palette.error.contrastText,
                 },
               }),
+              ...(gameWon && {
+                '&.Mui-disabled': {
+                  backgroundColor: theme.palette.success.dark,
+                  color: theme.palette.success.contrastText,
+                },
+              }),
             })}
-            disabled={isGameOver}
+            disabled={isGameEnded}
           >
-            {isGameOver ? 'game over' : 'next turn'}
+            {gameOver ? 'game over' : gameWon ? 'Game won' : 'next turn'}
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
         </Stack>

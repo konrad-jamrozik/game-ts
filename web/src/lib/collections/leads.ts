@@ -30,6 +30,14 @@ const staticLeads: Lead[] = [
     dependsOn: [],
     repeatable: false,
   },
+  {
+    id: 'lead-peace-on-earth',
+    title: 'Peace on Earth',
+    description: 'With all enemy factions defeated, coordinate the final operation to ensure lasting peace.',
+    difficulty: 200,
+    dependsOn: ['lead-red-dawn-terminate-cult', 'lead-exalt-terminate-cult', 'lead-black-lotus-terminate-cult'],
+    repeatable: false,
+  },
 ]
 
 // Faction-specific lead templates
