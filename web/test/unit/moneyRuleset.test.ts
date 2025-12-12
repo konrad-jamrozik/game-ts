@@ -16,22 +16,23 @@ describe(getContractingIncome, () => {
     st.arrangeGameState({ agents: [agent] })
 
     // With skill 110 and AGENT_CONTRACTING_INCOME = 15:
-    // income = (110 / 100) * 15 = 1.1 * 15 = 16.5
-    // Flooring strips the fractional part, so result is 16
-    expect(getContractingIncome(st.gameState)).toBe(16)
+    // coefficient = 1 + (110 - 100)/500 = 1 + 0.02 = 1.02
+    // income = 1.02 * 15 = 15.3
+    // Flooring strips the fractional part, so result is 15
+    expect(getContractingIncome(st.gameState)).toBe(15)
   })
 
   test('should floor fractional income from total', () => {
     // This flooring strips any fractional income from the total, which is the desired behavior
-    // Create 5 agents each with skill that produces 1.23 income per agent
-    // To get 1.23 income: (skill / 100) * 15 = 1.23, so skill = 8.2
-    // Each agent produces: (8.2 / 100) * 15 = 1.23 income
-    // Total: 5 * 1.23 = 6.15
-    // The fractional parts (0.23 each) sum to 1.15 (5 * 0.23)
-    // So the income is 6.15, floored to 6
+    // Create 5 agents each with skill 120 that produces 15.6 income per agent
+    // coefficient = 1 + (120 - 100)/500 = 1 + 0.04 = 1.04
+    // Each agent produces: 1.04 * 15 = 15.6 income
+    // Total: 5 * 15.6 = 78.0
+    // The fractional parts (0.6 each) sum to 3.0 (5 * 0.6)
+    // So the income is 78.0, floored to 78
     const agents = Array.from({ length: 5 }, () =>
       agFix.new({
-        skill: toF6(8.2),
+        skill: toF6(120),
         state: 'OnAssignment',
         assignment: 'Contracting',
       }),
@@ -40,7 +41,7 @@ describe(getContractingIncome, () => {
     st.arrangeGameState({ agents })
 
     const income = getContractingIncome(st.gameState)
-    expect(income).toBe(6) // Floored from 6.15 (5 * 1.23)
+    expect(income).toBe(78) // Floored from 78.0 (5 * 15.6)
     expect(Number.isInteger(income)).toBe(true) // Always returns an integer
   })
 })

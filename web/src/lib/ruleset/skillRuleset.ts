@@ -23,7 +23,8 @@ export function effectiveSkill(actor: Actor): Fixed6 {
 
 /**
  * Calculates the value contribution from an agent based on their effective skill and a constant multiplier.
- * Formula: (agent.effectiveSkill() / 100) * multiplier
+ * Formula: (1 + (effectiveSkill - 100) / 500) * multiplier
+ * Each extra 100 effective skill adds 20% efficiency bonus.
  *
  * This is the source of truth for skill-based value calculations.
  *
@@ -32,7 +33,8 @@ export function effectiveSkill(actor: Actor): Fixed6 {
  * @returns The calculated value contribution as a Fixed6
  */
 export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
-  const skillCoefficient = toF(effectiveSkill(agent)) / 100
+  const effectiveSkillValue = toF(effectiveSkill(agent))
+  const skillCoefficient = 1 + (effectiveSkillValue - 100) / 500
   return toF6r(skillCoefficient * value)
 }
 
