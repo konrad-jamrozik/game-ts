@@ -8,17 +8,14 @@ KJA backlog:
 
 ## Current UI refinement
 
-- Improve event log display
+- Narrow exhaustion column in Agents data grid
 
 - Improve the combat log display
   - Get rid of `(100%)` and instead apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
 
+- Improve mission site battle log display
+-
 - Show exhaustion % and HP % in combat log, as separate columns
-
-- Narrow exhaustion column in Agents data grid
-
-- Replace "Terminated" with "KIA".
-  - Note that then "Sacked" will no longer count as "Terminated" and it cannot count as "KIA"ed.
 
 # Next milestone
 
