@@ -34,6 +34,7 @@ export function effectiveSkill(actor: Actor): Fixed6 {
  */
 export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
   const effectiveSkillValue = toF(effectiveSkill(agent))
+  // KJA add constant for 500
   const skillCoefficient = 1 + (effectiveSkillValue - 100) / 500
   return toF6r(skillCoefficient * value)
 }

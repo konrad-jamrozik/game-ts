@@ -30,7 +30,7 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
     {
-      name: 'AgentWeaponDamageBaseline',
+      name: 'AgentWeaponDamageBaseline', // KJA just weapon damage
       id: 5,
       value: AGENT_INITIAL_WEAPON_DAMAGE,
       displayedName: 'Agent weapon damage baseline',
