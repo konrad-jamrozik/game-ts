@@ -90,6 +90,7 @@ function updateAgentsAfterBattle(
 } {
   let agentsWounded = 0
   let agentsUnscathed = 0
+  const totalAgents = deployedAgents.length
   deployedAgents.forEach((agent) => {
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
@@ -103,7 +104,7 @@ function updateAgentsAfterBattle(
       agent.terminatedOnMissionSiteId = missionSiteId
     } else {
       // Incapacitated agents are still alive and processed normally (wounded or unscathed)
-      const wasWounded = updateSurvivingAgent(agent, battleReport, hitPointsRecoveryPct)
+      const wasWounded = updateSurvivingAgent(agent, battleReport, hitPointsRecoveryPct, totalAgents)
       if (wasWounded) {
         agentsWounded += 1
       } else {
@@ -118,6 +119,7 @@ function updateSurvivingAgent(
   agent: Agent,
   battleReport: BattleReport,
   _hitPointsRecoveryPct: Fixed6,
+  totalAgents: number,
 ): boolean {
   // ----------------------------------------
   // Update exhaustion
@@ -126,8 +128,17 @@ function updateSurvivingAgent(
   // Apply mission conclusion exhaustion
   agent.exhaustion += EXHAUSTION_PENALTY
 
-  // Additional exhaustion for each terminated agent
-  agent.exhaustion += battleReport.agentsTerminated * EXHAUSTION_PENALTY
+  // Additional exhaustion based on percentage of agents lost
+  // Calculate percentage lost, round up to nearest 5%, then apply EXHAUSTION_PENALTY per 5% increment
+  if (battleReport.agentsTerminated > 0 && totalAgents > 0) {
+    const percentageLost = battleReport.agentsTerminated / totalAgents
+    // Round up to nearest 5% (0.05): multiply by 20, round up, divide by 20
+    const roundedPercentage = Math.ceil(percentageLost * 20) / 20
+    // Divide by 0.05 to get number of 5% increments
+    const increments = roundedPercentage / 0.05
+    // Multiply by EXHAUSTION_PENALTY
+    agent.exhaustion += Math.round(increments) * EXHAUSTION_PENALTY
+  }
 
   // ----------------------------------------
   // Update skill
