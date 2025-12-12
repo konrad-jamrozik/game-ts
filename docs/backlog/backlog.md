@@ -94,6 +94,8 @@ KJA backlog:
 
 # UI improvements
 
+- Use this for rich tree view? https://mui.com/blog/mui-x-v8/#new-customization-hook
+
 # Performance Optimizations
 
 - performance clue from dev console:
