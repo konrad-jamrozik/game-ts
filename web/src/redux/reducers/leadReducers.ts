@@ -1,11 +1,24 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
+import { getLeadById } from '../../lib/collections/leads'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
   (state: GameState, action) => {
     const { leadId, agentIds } = action.payload
+
+    // Ensure the lead exists (for clear error message + invariants)
+    getLeadById(leadId)
+
+    // Prevent starting a second active investigation for the same lead (repeatable or not).
+    // Repeatable leads can be investigated multiple times, but only one at a time.
+    const hasActiveInvestigationForLead = Object.values(state.leadInvestigations).some(
+      (investigation) => investigation.leadId === leadId && investigation.state === 'Active',
+    )
+    if (hasActiveInvestigationForLead) {
+      throw new Error(`Lead ${leadId} already has an active investigation`)
+    }
 
     // Generate unique investigation ID
     const nextInvestigationNumericId = Object.keys(state.leadInvestigations).length
