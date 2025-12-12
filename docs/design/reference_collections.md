@@ -103,7 +103,6 @@ Level description:
 - Level 4 = regional destabilization
 - Level 5 = global conflict
 - Level 6 = existential
--
 
 # Leads
 
@@ -115,21 +114,21 @@ The leads system follows a progression chain where completing missions unlocks n
 | Locate cult member              |          2 |    true    |
 | Interrogate cult member         |          2 |   false    |
 | Locate cult safehouse           |         10 |    true    |
-| Cult profile                    |         10 |   false    |
-| Interrogate cult handler        |          5 |   false    |
+| Cult profile                    |          5 |   false    |
+| Interrogate cult handler        |          2 |   false    |
 | Locate cult outpost             |         20 |    true    |
-| Interrogate cult soldier        |         10 |   false    |
-| Locate cult training facility   |         25 |    true    |
-| Interrogate cult lieutenant     |         40 |   false    |
-| Locate cult logistics hub       |         30 |    true    |
-| Interrogate cult commander      |          - |   false    |
-| Locate cult command center      |          - |    true    |
-| Analyze command structure       |          - |   false    |
-| Locate cult regional stronghold |          - |    true    |
-| Interrogate cult high commander |          - |   false    |
-| Locate cult HQ                  |          - |   false    |
-| Interrogate cult leader         |          - |   false    |
-| Terminate cult                  |          - |   false    |
+| Interrogate cult soldier        |          4 |   false    |
+| Locate cult training facility   |         30 |    true    |
+| Interrogate cult lieutenant     |          6 |   false    |
+| Locate cult logistics hub       |         40 |    true    |
+| Interrogate cult commander      |         10 |   false    |
+| Locate cult command center      |         60 |    true    |
+| Analyze command structure       |         15 |   false    |
+| Locate cult regional stronghold |         80 |    true    |
+| Interrogate cult high commander |         20 |   false    |
+| Locate cult HQ                  |        100 |   false    |
+| Interrogate cult leader         |         30 |   false    |
+| Terminate cult                  |        150 |   false    |
 
 # Dependency diagram
 
