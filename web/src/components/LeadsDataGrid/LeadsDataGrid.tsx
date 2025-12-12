@@ -145,7 +145,7 @@ export function LeadsDataGrid(): React.JSX.Element {
 // Check if a row is disabled (same logic as LeadCard for normal displayMode)
 function isRowDisabled(row: LeadRow): boolean {
   // For normal displayMode leads:
-  // - Repeatable: never disabled
+  // - Repeatable: disabled if hasActiveInvestigation (only 1 active investigation at a time)
   // - Non-repeatable: disabled if hasActiveInvestigation OR hasDoneInvestigation
-  return !row.repeatable && (row.hasActiveInvestigation || row.hasDoneInvestigation)
+  return row.hasActiveInvestigation || (!row.repeatable && row.hasDoneInvestigation)
 }
