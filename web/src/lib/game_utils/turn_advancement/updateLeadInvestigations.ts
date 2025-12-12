@@ -10,6 +10,7 @@ import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
+import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -47,7 +48,13 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 
   applyExhaustion(agentsInvestigating, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
-  const createdMissionSites = success ? completeInvestigation(state, investigation, agentsInvestigating) : undefined
+  // Unassign agents with exhaustion >= 100 (mandatory withdrawal)
+  unassignExhaustedAgents(state, investigation)
+
+  // Get updated list of agents after exhaustion-based unassignment
+  const remainingAgents = investigatingAgents(state.agents, investigation)
+
+  const createdMissionSites = success ? completeInvestigation(state, investigation, remainingAgents) : undefined
 
   return {
     investigationId: investigation.id,
@@ -56,6 +63,32 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
     accumulatedIntel: investigation.accumulatedIntel,
     successChance,
     ...(createdMissionSites !== undefined && { createdMissionSites }),
+  }
+}
+
+/**
+ * Unassigns agents with exhaustion >= 100 from the investigation.
+ * Applies proportional intel loss and sets agents to InTransit/Standby.
+ * Marks investigation as Abandoned if all agents are removed.
+ */
+function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigation): void {
+  const agentsInvestigating = investigatingAgents(state.agents, investigation)
+
+  // Find exhausted agents (exhaustion >= 100)
+  const exhaustedAgents = agentsInvestigating.filter((agent) => agent.exhaustion >= 100)
+
+  if (exhaustedAgents.length === 0) {
+    return
+  }
+
+  // Remove exhausted agents from investigation and apply proportional loss
+  const exhaustedAgentIds = exhaustedAgents.map((agent) => agent.id)
+  removeAgentsFromInvestigation(state, investigation, exhaustedAgentIds)
+
+  // Set agents to InTransit/Standby
+  for (const agent of exhaustedAgents) {
+    agent.assignment = 'Standby'
+    agent.state = 'InTransit'
   }
 }
 

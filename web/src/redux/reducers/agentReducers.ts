@@ -13,6 +13,7 @@ import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/lea
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
+import type { LeadInvestigation } from '../../lib/model/model'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
@@ -64,47 +65,54 @@ export const assignAgentsToTraining = asPlayerAction<string[]>((state: GameState
   }
 })
 
+/**
+ * Removes agents from an investigation and applies proportional intel loss.
+ * Marks investigation as Abandoned if all agents are removed.
+ * Returns the old and new skill sums for tracking purposes.
+ */
+export function removeAgentsFromInvestigation(
+  state: GameState,
+  investigation: LeadInvestigation,
+  agentIdsToRemove: readonly string[],
+): { oldSkillSum: number; newSkillSum: number } {
+  // Calculate old skill sum before removing agents
+  const oldAgents = investigatingAgents(state.agents, investigation)
+  const oldSkillSum = sumAgentEffectiveSkills(oldAgents)
+
+  // Remove agents from investigation
+  investigation.agentIds = investigation.agentIds.filter((id) => !agentIdsToRemove.includes(id))
+
+  // Calculate new skill sum after removing agents
+  const newAgents = investigatingAgents(state.agents, investigation)
+  const newSkillSum = sumAgentEffectiveSkills(newAgents)
+
+  // Apply proportional intel loss
+  if (oldSkillSum > newSkillSum) {
+    const intelLoss = getLeadIntelLoss(investigation.accumulatedIntel, oldSkillSum, newSkillSum)
+    investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelLoss)
+  }
+
+  // If all agents are removed, mark investigation as Abandoned
+  if (investigation.agentIds.length === 0) {
+    investigation.state = 'Abandoned'
+  }
+
+  return { oldSkillSum, newSkillSum }
+}
+
 export const recallAgents = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToRecall = action.payload
-
-  // Track investigations that will lose agents to apply proportional loss
-  // We need to calculate skill sums before and after removal
-  const investigationsToUpdate = new Map<string, { oldSkillSum: number; newSkillSum: number }>()
 
   for (const agent of state.agents) {
     if (agentIdsToRecall.includes(agent.id)) {
       // Check if agent is assigned to a lead investigation
       const isLeadInvestigation = typeof agent.assignment === 'string' && agent.assignment.startsWith('investigation-')
       if (isLeadInvestigation) {
-        // Track investigation for proportional loss calculation
         const investigationId = agent.assignment
         const investigation = state.leadInvestigations[investigationId]
         if (investigation !== undefined) {
-          // Calculate old skill sum before removing this agent
-          const oldAgents = investigatingAgents(state.agents, investigation)
-          const oldSkillSum = sumAgentEffectiveSkills(oldAgents)
-
-          // Remove agent from investigation
-          investigation.agentIds = investigation.agentIds.filter((id) => id !== agent.id)
-
-          // Calculate new skill sum after removing this agent
-          const newAgents = investigatingAgents(state.agents, investigation)
-          const newSkillSum = sumAgentEffectiveSkills(newAgents)
-
-          // Track this investigation for proportional loss
-          const existing = investigationsToUpdate.get(investigationId)
-          if (existing === undefined) {
-            investigationsToUpdate.set(investigationId, { oldSkillSum, newSkillSum })
-          } else {
-            // Update the newSkillSum if we've already seen this investigation
-            // (multiple agents recalled from same investigation)
-            existing.newSkillSum = newSkillSum
-          }
-
-          // If all agents are recalled, mark investigation as Abandoned
-          if (investigation.agentIds.length === 0) {
-            investigation.state = 'Abandoned'
-          }
+          // Remove agent from investigation and apply proportional loss
+          removeAgentsFromInvestigation(state, investigation, [agent.id])
         }
       }
       // Check if agent is in training before changing assignment
@@ -118,15 +126,6 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
         // Other assignments (Contracting, Espionage, Lead Investigation) go to InTransit
         agent.state = 'InTransit'
       }
-    }
-  }
-
-  // Apply proportional loss to investigations that lost agents
-  for (const [investigationId, { oldSkillSum, newSkillSum }] of investigationsToUpdate) {
-    const investigation = state.leadInvestigations[investigationId]
-    if (investigation !== undefined && oldSkillSum > newSkillSum) {
-      const intelLoss = getLeadIntelLoss(investigation.accumulatedIntel, oldSkillSum, newSkillSum)
-      investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelLoss)
     }
   }
 })
