@@ -8,6 +8,7 @@ import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getCapabilitiesColumns } from './getCapabilitiesColumns'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../lib/ruleset/constants'
 
 export type UpgradeRow = {
   id: number
@@ -18,6 +19,7 @@ export type UpgradeRow = {
     | 'Training skill gain'
     | 'Exhaustion recovery'
     | 'Hit points recovery %'
+    | 'Weapon damage'
   displayedName?: string
   value: number | string
   upgrade: number | string
@@ -86,6 +88,13 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Hit points recovery %']),
       displayedName: 'Hit points recov. %',
       price: UPGRADE_PRICES['Hit points recovery %'],
+    },
+    {
+      name: 'Weapon damage',
+      id: 10,
+      value: AGENT_INITIAL_WEAPON_DAMAGE + gameState.weaponDamageImprovement,
+      upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Weapon damage']),
+      price: UPGRADE_PRICES['Weapon damage'],
     },
   ]
 

@@ -21,6 +21,7 @@ export type GameState = {
   trainingSkillGain: Fixed6
   exhaustionRecovery: number
   hitPointsRecoveryPct: Fixed6
+  weaponDamageImprovement: number
   // Archive
   leadInvestigationCounts: Record<string, number>
   leadInvestigations: Record<string, LeadInvestigation> // track ongoing investigations

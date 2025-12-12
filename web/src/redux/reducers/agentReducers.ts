@@ -19,7 +19,7 @@ export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
   const newAgentId = formatAgentId(nextAgentNumericId)
 
-  const newAgent = newHiredAgent(newAgentId, state.turn)
+  const newAgent = newHiredAgent(newAgentId, state.turn, state.weaponDamageImprovement)
   state.agents.push(newAgent)
   state.money -= AGENT_HIRE_COST
 })
@@ -133,7 +133,8 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
 /**
  * Creates a new hired agent with the standard initial values used in the hiring process.
  */
-export function newHiredAgent(id: string, turnHired: number): Agent {
+export function newHiredAgent(id: string, turnHired: number, weaponDamageImprovement = 0): Agent {
+  const baselineWeaponDamage = AGENT_INITIAL_WEAPON_DAMAGE + weaponDamageImprovement
   return {
     id,
     turnHired,
@@ -146,6 +147,6 @@ export function newHiredAgent(id: string, turnHired: number): Agent {
     hitPointsLostBeforeRecovery: toF6(0),
     missionsTotal: 0,
     skillFromTraining: toF6(0),
-    weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    weapon: newWeapon(baselineWeaponDamage),
   }
 }

@@ -40,5 +40,9 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       state.hitPointsRecoveryPct = f6add(state.hitPointsRecoveryPct, getUpgradeIncrementFixed6(upgradeName))
       break
     }
+    case 'Weapon damage': {
+      state.weaponDamageImprovement += getUpgradeIncrement(upgradeName)
+      break
+    }
   }
 })
