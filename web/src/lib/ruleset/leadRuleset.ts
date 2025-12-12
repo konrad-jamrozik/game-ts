@@ -1,47 +1,56 @@
 import { div, floor, nonNeg } from '../primitives/mathPrimitives'
 import { f6floorToInt, toF } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
-import { AGENT_LEAD_INVESTIGATION_INTEL } from './constants'
+import {
+  AGENT_LEAD_INVESTIGATION_INTEL,
+  LEAD_DIFFICULTY_MULTIPLIER,
+  LEAD_RESISTANCE_EXPONENT,
+  LEAD_SCALING_EXPONENT,
+} from './constants'
 import { effectiveSkill, sumAgentSkillBasedValues } from './skillRuleset'
 
 /**
  * Calculates lead success chance based on accumulated intel and difficulty.
- * Difficulty of X means the player must accumulate X intel to have a 100% chance of success.
- * Hence difficulty of 100 means the player must accumulate 100 intel to have a 100% chance of success,
- * or 1 intel = 1% success chance.
+ * The stored lead difficulty is scaled by LEAD_DIFFICULTY_MULTIPLIER.
+ * Difficulty of D means the player must accumulate (D × LEAD_DIFFICULTY_MULTIPLIER) intel to have a 100% chance of success.
+ * Hence difficulty of 5 means the player must accumulate 500 intel to have a 100% chance of success,
+ * or 5 intel = 1% success chance.
  *
  * Formula:
- * successChance = MIN(100%, accumulatedIntel / difficulty)
+ * successChance = MIN(100%, accumulatedIntel / (difficulty × LEAD_DIFFICULTY_MULTIPLIER))
  *
  * @param accumulatedIntel - The accumulated intel value
- * @param difficulty - The difficulty in basis points
+ * @param difficulty - The lead difficulty (before multiplier)
  * @returns The success chance
  */
 export function getLeadSuccessChance(accumulatedIntel: number, difficulty: number): number {
   // Example 1:
-  // accumulatedIntel = 1, difficulty = 100
-  // successChance = 1/100 = 1%
+  // accumulatedIntel = 5, difficulty = 5
+  // successChance = 5/(5*100) = 1%
   //
   // Example 2:
-  // accumulatedIntel = 10, difficulty = 200
-  // successChance = 10/200 = 5%
+  // accumulatedIntel = 10, difficulty = 2
+  // successChance = 10/(2*100) = 5%
   //
   // Example 3
-  // accumulatedIntel = 100, difficulty = 300
-  // successChance = 100/300 = 1/3 = 33.(3)%
+  // accumulatedIntel = 100, difficulty = 3
+  // successChance = 100/(3*100) = 1/3 = 33.(3)%
   if (difficulty === 0) {
     if (accumulatedIntel > 0) {
       return 1
     }
     return 0
   }
-  return Math.min(1, div(accumulatedIntel, difficulty))
+  return Math.min(1, div(accumulatedIntel, difficulty * LEAD_DIFFICULTY_MULTIPLIER))
 }
 
 /**
  * Calculates the resistance to progress based on accumulated intel and difficulty.
  * Resistance represents how much of the search space has been explored.
- * Formula: Resistance = I_current / Difficulty
+ *
+ * Formula:
+ * resistanceRatio = I_current / (difficulty × LEAD_DIFFICULTY_MULTIPLIER)
+ * Resistance = MIN(1, resistanceRatio ^ LEAD_RESISTANCE_EXPONENT)
  *
  * @param accumulatedIntel - The current accumulated intel value
  * @param difficulty - The lead difficulty
@@ -51,7 +60,9 @@ export function getLeadResistance(accumulatedIntel: number, difficulty: number):
   if (difficulty === 0) {
     return 0
   }
-  return Math.min(1, div(accumulatedIntel, difficulty))
+  const ratio = div(accumulatedIntel, difficulty * LEAD_DIFFICULTY_MULTIPLIER)
+  const clampedRatio = Math.min(1, nonNeg(ratio))
+  return Math.min(1, clampedRatio ** LEAD_RESISTANCE_EXPONENT)
 }
 
 /**
@@ -92,8 +103,8 @@ export function sumAgentEffectiveSkills(agents: Agent[]): number {
  * Implements the Probability Pressure system from about_lead_investigations.md.
  *
  * Formula:
- * BaseAgentInput = (sum AgentSkill/100) × Count^0.8 × 5
- * Resistance = I_current / Difficulty
+ * BaseAgentInput = (sum AgentSkill/100) × (Count^LEAD_SCALING_EXPONENT / Count) × AGENT_LEAD_INVESTIGATION_INTEL
+ * Resistance = (I_current / (difficulty × LEAD_DIFFICULTY_MULTIPLIER)) ^ LEAD_RESISTANCE_EXPONENT
  * EfficiencyFactor = 1 - Resistance
  * Gain = BaseAgentInput × EfficiencyFactor
  *
@@ -107,15 +118,15 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
     return 0
   }
 
-  // KJA for one agent, this goes from 5 to 4 once exhaustion reaches 6.
+  // KJA for one agent, this goes from 10 to 9 once exhaustion reaches 6.
   // Looks like I have some rough rounding going on. Probs in 'function effectiveSkill'
   // Need unit test.
   // Calculate intel from skill sum: sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
   const intelFromSkillSum = getLeadInvestigationIntelFromSkillSum(agents)
 
-  // Calculate BaseAgentInput = intelFromSkillSum × AgentCount^0.8
+  // Calculate BaseAgentInput = intelFromSkillSum × AgentCount^LEAD_SCALING_EXPONENT
   const count = agents.length
-  const agentEfficiency = count ** 0.8
+  const agentEfficiency = count ** LEAD_SCALING_EXPONENT
   const rawIntelFromAgents = intelFromSkillSum * (agentEfficiency / count)
 
   // Calculate Resistance = I_current / Difficulty

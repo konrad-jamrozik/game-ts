@@ -21,33 +21,50 @@ Probability Multiplier**.
 The Intel a team of agents contributes in a single turn is governed by three factors: the **Base
 Input**, the **Efficiency Multiplier**, and the **Resistance**.
 
+### Constants
+
+| Constant | Meaning | Value |
+| :--- | :--- | :--- |
+| **Intel per agent** | Base Intel gained per turn per normalized skill point | **10** |
+| **Difficulty multiplier** | Scales the stored lead difficulty into “Intel required for 100%” | **100** |
+| **Scaling exponent** | Controls diminishing returns from adding more agents \(used in \(\text{Count}^{0.8}\)\) | **0.8** |
+| **Resistance exponent** | Controls how quickly resistance ramps up | **0.5** |
+
 ### A. Base Agent Input
 
 This step calculates the maximum theoretical Intel your team could gather, factoring in their
 skill and the diminished returns from working together.
 
-$$\text{BaseAgentInput} = \left( \sum \frac{\text{AgentSkill}}{100} \right) \times \text{Count}^{0.8} \times 5$$
+$$\text{BaseAgentInput} = \left( \sum \frac{\text{AgentSkill}}{100} \right) \times \frac{\text{Count}^{0.8}}{\text{Count}}
+ \times 10$$
 
 | Variable | Description | Default Value/Example |
 | :--- | :--- | :--- |
 | $\sum \frac{\text{AgentSkill}}{100}$ | Sum of all agents' skill scores, normalized to 100. | 3 agents of Skill 100: $3$ |
 | $\text{Count}^{0.8}$ | **Efficiency Multiplier:** Agent count to 0.8 power. Creates **diminishing returns** for larger teams. | $3^{0.8} \approx 2.408$ |
-| 5 | $\text{Intel per agent}$ (The base rate of Intel gained per normalized skill point). | 5 |
-| **Example Base Input** | | $3 \times 2.408 \times 5 = \mathbf{36.12}$ |
+| $\text{Count}$ | Agent count (used to normalize the skill sum into an average). | $3$ |
+| 10 | $\text{Intel per agent}$ (The base rate of Intel gained per normalized skill point). | 10 |
+| **Example Base Input** | | $3 \times \frac{2.408}{3} \times 10 = \mathbf{24.08}$ |
 
 ### B. Resistance (Diminishing Returns on Knowledge)
 
 The more Intel ($\mathbf{I_{current}}$) is already accumulated, the harder it is to find new
 information. This is calculated using the concept of a **Search Space**.
 
-$$\text{Resistance} = \frac{I_{current}}{\text{Difficulty}}$$
+First define an **effective difficulty** (scaled by the **Difficulty multiplier**):
 
-$$\text{EfficiencyFactor} = 1 - \text{Resistance} = 1 - \left( \frac{I_{current}}{\text{Difficulty}} \right)$$
+$$\text{EffectiveDifficulty} = \text{Difficulty} \times 100$$
+
+Then compute the fraction of the search space already explored and apply the **Resistance exponent**:
+
+$$\text{Resistance} = \left(\frac{I_{current}}{\text{EffectiveDifficulty}}\right)^{0.5}$$
+
+$$\text{EfficiencyFactor} = 1 - \text{Resistance}$$
 
 * When $I_{current}$ is low (e.g., 0), the Resistance is $0.0$ (0% resistance), and the Efficiency Factor is $1.0$
   (100% efficiency).
-* When $I_{current}$ is high (e.g., 900 out of 1000 Difficulty), the Resistance is $0.9$ (90% resistance), and the
-  Efficiency Factor is $0.1$ (10% efficiency).
+* When $I_{current}$ is high (e.g., 900 out of 1000 EffectiveDifficulty), the Resistance is $\sqrt{0.9} \approx 0.949$
+  (94.9% resistance), and the Efficiency Factor is $1 - 0.949 \approx 0.051$ (5.1% efficiency).
 
 ### C. Final Intel Gain and Accumulation
 
@@ -67,7 +84,11 @@ determine the probability of success.
 
 The probability ($P$) is a simple ratio of the accumulated Intel to the Lead Difficulty.
 
-$$P(\text{Success}) = \frac{I_{current}}{\text{Difficulty}}$$
+Using the same effective difficulty definition as above:
+
+$$\text{EffectiveDifficulty} = \text{Difficulty} \times 100$$
+
+$$P(\text{Success}) = \frac{I_{current}}{\text{EffectiveDifficulty}}$$
 
 **Success Check:** A random number between 0.0 and 1.0 is generated. If the random number is less
 than $P(\text{Success})$, the investigation is complete.
@@ -76,8 +97,10 @@ than $P(\text{Success})$, the investigation is complete.
 
 The **Lead Difficulty ($D$)** represents the amount of Intel required for a **100% chance** of success in a single turn.
 
-* If $D = 200$, you need 200 Intel accumulated to have a $200/200 = 100\%$ chance of success.
-* If $D = 1000$, you need 1000 Intel to have a $1000/1000 = 100\%$ chance of success.
+With a **Difficulty multiplier** of 100:
+
+* If $D = 5$, you need $5 \times 100 = 500$ Intel accumulated to have a $500/500 = 100\%$ chance of success.
+* If $D = 10$, you need $10 \times 100 = 1000$ Intel accumulated to have a $1000/1000 = 100\%$ chance of success.
 
 ---
 
@@ -128,9 +151,9 @@ resulting in an immediate loss of accumulated Intel. This mechanic incentivizes 
 ## 6. Key Player Intuitions
 
 | Concept | Player Feedback/Intuition |
-| :--- | :--- |
+| :--- |:--- |
 | **P(Success)** | **The higher this number, the faster the lead will be resolved.** This is the primary number to watch. |
 | **Count$^{0.8}$** | **The more agents, the faster the work, but each *additional* agent provides less benefit.** Going from 1 to 2 is a big gain; going from 10 to 11 is a small gain. |
-| **Resistance** | **As Intel accumulates, resistance increases, making further progress harder.** The investigation naturally "drags" at the end, ensuring unpredictability. Resistance = Intel / Difficulty. |
+| **Resistance** | **As Intel accumulates, resistance increases, making further progress harder.** The investigation naturally "drags" at the end, ensuring unpredictability. `Resistance = (Intel / EffectiveDifficulty)^0.5`. |
 | **Proportional Loss** | **The most skilled agents carry the most knowledge.** Removing a highly skilled agent causes a greater loss of accumulated Intel than removing a rookie. |
 | **Exhaustion** | **Don't let agents exhaust themselves on a long lead.** You must plan to finish a lead or swap agents before the 100-turn limit forces a costly loss of intel. |

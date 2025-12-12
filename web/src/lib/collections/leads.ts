@@ -26,7 +26,7 @@ const staticLeads: Lead[] = [
     id: 'lead-deep-state',
     title: 'Deep state',
     description: 'Investigate the deep state',
-    difficulty: 1000, // 1000 intel for 100%, or 10 intel for 1%
+    difficulty: 10, // 10 difficulty = 10 × 100 intel for 100%, or 10 intel for 1%
     dependsOn: [],
     repeatable: false,
   },
@@ -38,7 +38,7 @@ const leadTemplates: LeadTemplate[] = [
     id: 'lead-{factionId}-location',
     title: 'Locate {factionName} member',
     description: 'Track down a {factionName} member for apprehension.',
-    difficulty: 100, // 100 intel for 100%, or 1 intel for 1%
+    difficulty: 1, // 1 × 100 intel for 100%, or 1 intel for 1%
     dependsOn: ['lead-criminal-orgs'],
     repeatable: true,
     enemyEstimate: 'Expect to encounter a single low-ranked member.',
@@ -55,7 +55,7 @@ const leadTemplates: LeadTemplate[] = [
     id: 'lead-{factionId}-safehouse',
     title: 'Locate safehouse',
     description: 'Location of a {factionName} safehouse has been revealed.',
-    difficulty: 200, // 200 intel for 100%, or 2 intel for 1%
+    difficulty: 2, // 2 × 100 intel for 100%, or 2 intel for 1%
     dependsOn: ['lead-{factionId}-interrogate-member'],
     repeatable: true,
     enemyEstimate: 'Expect safehouse to have a dozen low-ranked members.',
@@ -72,7 +72,7 @@ const leadTemplates: LeadTemplate[] = [
     id: 'lead-{factionId}-outpost',
     title: 'Locate outpost',
     description: 'Location of a {factionName} outpost has been revealed.',
-    difficulty: 300, // 300 intel for 100%, or 3 intel for 1%
+    difficulty: 3, // 3 × 100 intel for 100%, or 3 intel for 1%
     dependsOn: ['lead-{factionId}-interrogate-handler'],
     repeatable: true,
     enemyEstimate: 'Expect outpost to have several operatives and handlers.',
@@ -89,7 +89,7 @@ const leadTemplates: LeadTemplate[] = [
     id: 'lead-{factionId}-base',
     title: 'Locate base',
     description: 'Location of the {factionName} base has been revealed.',
-    difficulty: 500, // 500 intel for 100%, or 5 intel for 1%
+    difficulty: 5, // 5 × 100 intel for 100%, or 5 intel for 1%
     dependsOn: ['lead-{factionId}-interrogate-lieutenant'],
     repeatable: true,
     enemyEstimate: 'Expect base to have soldiers, lieutenants, and possibly an elite.',
@@ -106,7 +106,7 @@ const leadTemplates: LeadTemplate[] = [
     id: 'lead-{factionId}-hq',
     title: 'Locate HQ',
     description: 'Location of the {factionName} headquarters has been revealed.',
-    difficulty: 1000, // 1000 intel for 100%, or 10 intel for 1%
+    difficulty: 10, // 10 × 100 intel for 100%, or 10 intel for 1%
     dependsOn: ['lead-{factionId}-interrogate-commander'],
     repeatable: true,
     enemyEstimate: 'Expect HQ to be heavily defended with elites and commanders.',

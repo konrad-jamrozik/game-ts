@@ -20,8 +20,10 @@
   // Do not include headings. One cannot break lines in headings, and we sometimes need long ones, e.g. for FAQs.
   //
   // "codeblock": false
-  // Do not include code blocks. We sometimes need long code blocks, e.g. for CLI command lines.
-  "MD013": { "line_length": 120, "tables": false, "headings": false, "code_blocks": false },
+  // Do not include code blocks. We sometimes need long code blocks, e.g. for CLI command lines
+  // TURNED OFF as it appears to be buggy and still tried to lint tables.
+  "MD013": false,
+  //"MD013": { "line_length": 120, "tables": false, "headings": false, "code_blocks": false },
 
   // MD025 - Multiple top-level headings in the same document
   // https://github.com/DavidAnson/markdownlint/blob/main/doc/md025.md

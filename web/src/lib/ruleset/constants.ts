@@ -3,7 +3,6 @@ import { toF6 } from '../primitives/fixed6'
 export const AGENT_UPKEEP_COST = 5
 export const AGENT_CONTRACTING_INCOME = AGENT_UPKEEP_COST * 3
 export const AGENT_ESPIONAGE_INTEL = 5
-export const AGENT_LEAD_INVESTIGATION_INTEL = 5
 export const AGENT_HIRE_COST = 50
 
 export const AGENT_INITIAL_SKILL = toF6(100)
@@ -56,3 +55,9 @@ export const LEAD_INTEL_DECAY_PER_ONE_INTEL = 0.001 // 0.1% decay per intel poin
  * This cap exists to prevent intel decaying too fast.
  */
 export const MAX_INTEL_DECAY = 0.5
+
+// Lead investigation tuning constants
+export const AGENT_LEAD_INVESTIGATION_INTEL = 10
+export const LEAD_DIFFICULTY_MULTIPLIER = 100
+export const LEAD_RESISTANCE_EXPONENT = 0.5
+export const LEAD_SCALING_EXPONENT = 0.8
