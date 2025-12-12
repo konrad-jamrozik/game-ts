@@ -52,7 +52,7 @@ export function getAgentsColumns(
       field: 'assignment',
       headerName: 'Assignment',
       width: columnWidths['agents.assignment'],
-      renderCell: (params: GridRenderCellParams<AgentRow, string>) => {
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const assignment = params.value ?? ''
         const displayValue = assignment.startsWith('investigation-')
           ? assignment.replace('investigation-', 'invst-')
