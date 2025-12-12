@@ -1,5 +1,5 @@
 import { div, floor, nonNeg } from '../primitives/mathPrimitives'
-import { f6floorToInt, toF } from '../primitives/fixed6'
+import { toF } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
 import {
   AGENT_LEAD_INVESTIGATION_INTEL,
@@ -118,9 +118,6 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
     return 0
   }
 
-  // KJA for one agent, this goes from 10 to 9 once exhaustion reaches 6.
-  // Looks like I have some rough rounding going on. Probs in 'function effectiveSkill'
-  // Need unit test.
   // Calculate intel from skill sum: sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
   const intelFromSkillSum = getLeadInvestigationIntelFromSkillSum(agents)
 
@@ -152,6 +149,5 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
  * @returns sum(agentLeadInvestigationSkill/100) * AGENT_LEAD_INVESTIGATION_INTEL
  */
 export function getLeadInvestigationIntelFromSkillSum(agents: Agent[]): number {
-  // This flooring strips any fractional intel from the total
-  return f6floorToInt(sumAgentSkillBasedValues(agents, AGENT_LEAD_INVESTIGATION_INTEL))
+  return toF(sumAgentSkillBasedValues(agents, AGENT_LEAD_INVESTIGATION_INTEL))
 }
