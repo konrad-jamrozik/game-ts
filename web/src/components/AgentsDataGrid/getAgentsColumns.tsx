@@ -52,9 +52,13 @@ export function getAgentsColumns(
       field: 'assignment',
       headerName: 'Assignment',
       width: columnWidths['agents.assignment'],
-      renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-        <span aria-label={`agents-row-assignment-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, string>) => {
+        const assignment = params.value ?? ''
+        const displayValue = assignment.startsWith('investigation-')
+          ? assignment.replace('investigation-', 'invst-')
+          : assignment
+        return <span aria-label={`agents-row-assignment-${params.id}`}>{displayValue}</span>
+      },
     },
     {
       field: 'skill',
