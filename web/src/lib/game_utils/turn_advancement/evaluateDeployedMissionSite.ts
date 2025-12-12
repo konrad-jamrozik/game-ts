@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import { getMissionById } from '../../collections/missions'
-import { MISSION_SURVIVAL_SKILL_GAIN } from '../../ruleset/constants'
+import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
 import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
@@ -32,7 +32,6 @@ export function evaluateDeployedMissionSite(
     battleReport,
     state.turn,
     missionSite.id,
-    state.exhaustionRecovery,
     state.hitPointsRecoveryPct,
   )
   battleReport.agentsWounded = agentsWounded
@@ -84,7 +83,6 @@ function updateAgentsAfterBattle(
   battleReport: BattleReport,
   currentTurn: number,
   missionSiteId: MissionSiteId,
-  exhaustionRecovery: number,
   hitPointsRecoveryPct: Fixed6,
 ): {
   agentsWounded: number
@@ -105,7 +103,7 @@ function updateAgentsAfterBattle(
       agent.terminatedOnMissionSiteId = missionSiteId
     } else {
       // Incapacitated agents are still alive and processed normally (wounded or unscathed)
-      const wasWounded = updateSurvivingAgent(agent, battleReport, exhaustionRecovery, hitPointsRecoveryPct)
+      const wasWounded = updateSurvivingAgent(agent, battleReport, hitPointsRecoveryPct)
       if (wasWounded) {
         agentsWounded += 1
       } else {
@@ -119,7 +117,6 @@ function updateAgentsAfterBattle(
 function updateSurvivingAgent(
   agent: Agent,
   battleReport: BattleReport,
-  exhaustionRecovery: number,
   _hitPointsRecoveryPct: Fixed6,
 ): boolean {
   // ----------------------------------------
@@ -127,10 +124,10 @@ function updateSurvivingAgent(
   // ----------------------------------------
 
   // Apply mission conclusion exhaustion
-  agent.exhaustion += exhaustionRecovery
+  agent.exhaustion += EXHAUSTION_PENALTY
 
   // Additional exhaustion for each terminated agent
-  agent.exhaustion += battleReport.agentsTerminated * exhaustionRecovery
+  agent.exhaustion += battleReport.agentsTerminated * EXHAUSTION_PENALTY
 
   // ----------------------------------------
   // Update skill
