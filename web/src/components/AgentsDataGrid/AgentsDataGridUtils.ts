@@ -12,13 +12,15 @@ export function filterAgentRows(
     return allRows.filter((agent) => agent.state === 'Available')
   }
   if (showOnlyTerminated) {
-    return allRows.filter((agent) => agent.state === 'Terminated')
+    return allRows.filter((agent) => agent.state === 'KIA' || agent.state === 'Sacked')
   }
   if (showOnlyRecovering) {
     return allRows.filter((agent) => agent.assignment === 'Recovery')
   }
   // Default: show all non-terminated agents, plus agents terminated this turn
-  return allRows.filter((agent) => agent.state !== 'Terminated' || agentsTerminatedThisTurnIds.has(agent.id))
+  return allRows.filter(
+    (agent) => (agent.state !== 'KIA' && agent.state !== 'Sacked') || agentsTerminatedThisTurnIds.has(agent.id),
+  )
 }
 
 export function filterVisibleAgentColumns(

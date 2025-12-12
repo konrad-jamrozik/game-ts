@@ -12,7 +12,7 @@ Agent costs `AGENT_HIRE_COST` to hire.
 
 When an agent is first hired their state is `InTransit` and their assignment is `Standby`.
 
-When an agent is sacked, their state becomes `Terminated` and assignment becomes `Sacked`.
+When an agent is sacked, their state becomes `Sacked` and assignment becomes `Sacked`.
 Sacked agents retain full hit points (their `hitPoints` equals `maxHitPoints`).
 
 Only agents in `Available` state can be sacked.
@@ -211,7 +211,8 @@ terminated (if any).
 - **Recovering** - Agent is recovering from lost hit points and cannot be assigned.
 - **OnAssignment** - Agent is actively working on contracting or espionage assignments.
 - **OnMission** - Agent is deployed to a mission site.
-- **Terminated** - Agent has died, was sacked, or otherwise lost.
+- **KIA** - Agent was killed in action (died during a mission).
+- **Sacked** - Agent has been sacked by the player.
 
 # Reference: agent assignments
 

@@ -98,7 +98,7 @@ function updateAgentsAfterBattle(
     const isTerminated = f6le(agent.hitPoints, toF6(0))
 
     if (isTerminated) {
-      agent.state = 'Terminated'
+      agent.state = 'KIA'
       agent.assignment = 'KIA'
       agent.turnTerminated = currentTurn
       agent.terminatedOnMissionSiteId = missionSiteId

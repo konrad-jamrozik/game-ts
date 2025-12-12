@@ -24,7 +24,7 @@ export function addSkillFromTraining(agent: Agent, amount: Fixed6): void {
 }
 
 export function notTerminated(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state !== 'Terminated')
+  return agents.filter((agent) => agent.state !== 'KIA' && agent.state !== 'Sacked')
 }
 
 export function inTransit(agents: Agent[]): Agent[] {
@@ -32,7 +32,7 @@ export function inTransit(agents: Agent[]): Agent[] {
 }
 
 export function terminated(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state === 'Terminated')
+  return agents.filter((agent) => agent.state === 'KIA')
 }
 
 export function available(agents: Agent[]): Agent[] {

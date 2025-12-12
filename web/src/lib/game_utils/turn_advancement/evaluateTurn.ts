@@ -139,13 +139,13 @@ function getAgentCounts(agents: GameState['agents']): {
   terminated: number
 } {
   return {
-    total: agents.filter((agent) => agent.state !== 'Terminated').length,
+    total: agents.filter((agent) => agent.state !== 'KIA' && agent.state !== 'Sacked').length,
     available: agents.filter((agent) => agent.state === 'Available').length,
     inTransit: agents.filter((agent) => agent.state === 'InTransit').length,
     standby: onStandbyAssignment(agents).length,
     recovering: recovering(agents).length,
     wounded: recovering(agents).length,
-    terminated: agents.filter((agent) => agent.state === 'Terminated').length,
+    terminated: agents.filter((agent) => agent.state === 'KIA').length,
   }
 }
 
@@ -411,7 +411,7 @@ function getAgentsReport(
   const terminatedAgentIds: string[] = []
   for (const currentAgent of state.agents) {
     const previousAgent = previousAgentsById.get(currentAgent.id)
-    if (currentAgent.state === 'Terminated' && previousAgent && previousAgent.state !== 'Terminated') {
+    if (currentAgent.state === 'KIA' && previousAgent && previousAgent.state !== 'KIA') {
       terminatedAgentIds.push(currentAgent.id)
     }
   }

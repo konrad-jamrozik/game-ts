@@ -190,7 +190,7 @@ Depending on the agent update as part of the mission site evaluation, the agent 
 - If agent survived the mission with hit points lost:
   - Their state is set to `InTransit` and assignment set to `Recovery`.
 - If agent was terminated during the mission:
-  - Their state is set to `Terminated` and assignment set to `N/A`.
+  - Their state is set to `KIA` and assignment set to `KIA`.
 
 # Implementation details
 
@@ -201,7 +201,7 @@ in which order the evaluation of deployed mission sites and agents deployed on t
 
 `effective_skill` is defined in [About agents / effective skill](about_agents.md#effective-skill).
 
-**Agent termination**: A termination of agent means settings both their state and assignment to `Terminated`.
+**Agent termination**: A termination of agent means setting both their state and assignment to `KIA`.
 
 # Python interactive
 

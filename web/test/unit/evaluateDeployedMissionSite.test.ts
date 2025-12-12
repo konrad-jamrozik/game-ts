@@ -234,7 +234,7 @@ describe(evaluateDeployedMissionSite, () => {
     expect(testMissionSite.state).toBe('Wiped')
 
     // All agents should be terminated
-    const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'Terminated')
+    const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'KIA')
 
     expect(terminatedAgents).toHaveLength(2)
   })

@@ -9,7 +9,8 @@ export type AgentState =
   | 'OnAssignment'
   | 'OnMission'
   | 'InTraining'
-  | 'Terminated'
+  | 'KIA'
+  | 'Sacked'
 
 // Assignment types for agents
 export type ActivityId = 'Contracting' | 'Espionage' | 'Training'

@@ -15,7 +15,8 @@ export type MyPaletteColor = OverridableStringUnion<
 export function getModelPalette(): Record<AgentState, MyPaletteColor> {
   return {
     Available: 'agentStateAvailable',
-    Terminated: 'agentStateTerminated',
+    KIA: 'agentStateTerminated',
+    Sacked: 'agentStateTerminated',
     Recovering: 'agentStateRecovering',
     StartingTransit: 'agentStateInTransit',
     InTransit: 'agentStateInTransit',

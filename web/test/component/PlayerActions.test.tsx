@@ -46,8 +46,8 @@ describe(PlayerActions, () => {
     await ui.sackAgents() // Act
 
     st.expectAgentCount(1)
-    st.expectTerminatedAgentCount(1)
-    st.expectAgentState(agentId, 'Terminated')
+    st.expectTerminatedAgentCount(0) // Sacked agents are not KIA
+    st.expectAgentState(agentId, 'Sacked')
     st.expectAgentAssignment(agentId, 'Sacked')
   })
 

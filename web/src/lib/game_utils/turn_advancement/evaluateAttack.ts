@@ -123,7 +123,7 @@ export function evaluateAttack(
         defenderSkillAfterAttack,
         roll: rollPct,
         threshold: thresholdPct,
-        outcome: 'Terminated',
+        outcome: 'KIA',
         damage,
         damageMin: attacker.weapon.minDamage,
         damageMax: attacker.weapon.maxDamage,

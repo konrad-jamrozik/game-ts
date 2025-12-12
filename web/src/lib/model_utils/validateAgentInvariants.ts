@@ -47,30 +47,33 @@ function validateBasicStatRanges(agent: Agent): void {
 function validateTermination(agent: Agent): void {
   const zeroF6 = toF6(0)
   const maxHitPointsF6 = toF6(agent.maxHitPoints)
-  if (agent.state === 'Terminated') {
-    assertOneOf(
+  if (agent.state === 'KIA') {
+    assertEqual(
       agent.assignment,
-      ['Sacked', 'KIA'],
-      `Terminated agent ${agent.id} must have assignment of Sacked or KIA (got ${agent.assignment})`,
+      'KIA',
+      `KIA agent ${agent.id} must have assignment of KIA (got ${agent.assignment})`,
     )
-    if (agent.assignment === 'KIA') {
-      assertEqual(agent.hitPoints.value, zeroF6.value, `KIA agent ${agent.id} must have 0 hit points`)
-    }
-    if (agent.assignment === 'Sacked') {
-      assertEqual(
-        agent.hitPoints.value,
-        maxHitPointsF6.value,
-        `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
-      )
-      assertEqual(
-        agent.hitPointsLostBeforeRecovery.value,
-        zeroF6.value,
-        `Sacked agent ${agent.id} must have no hitPointsLostBeforeRecovery`,
-      )
-    }
+    assertEqual(agent.hitPoints.value, zeroF6.value, `KIA agent ${agent.id} must have 0 hit points`)
+  }
+  if (agent.state === 'Sacked') {
+    assertEqual(
+      agent.assignment,
+      'Sacked',
+      `Sacked agent ${agent.id} must have assignment of Sacked (got ${agent.assignment})`,
+    )
+    assertEqual(
+      agent.hitPoints.value,
+      maxHitPointsF6.value,
+      `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
+    )
+    assertEqual(
+      agent.hitPointsLostBeforeRecovery.value,
+      zeroF6.value,
+      `Sacked agent ${agent.id} must have no hitPointsLostBeforeRecovery`,
+    )
   }
   if (f6eq(agent.hitPoints, zeroF6)) {
-    assertEqual(agent.state, 'Terminated', `Agent ${agent.id} with 0 hit points must be Terminated`)
+    assertEqual(agent.state, 'KIA', `Agent ${agent.id} with 0 hit points must be KIA`)
   }
 }
 

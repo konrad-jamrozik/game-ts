@@ -137,7 +137,7 @@ function buildDebugAgents(
     makeAgent({
       turnHired: 1,
       turnTerminated: 1,
-      state: 'Terminated',
+      state: 'Sacked',
       assignment: 'Sacked',
       skill: toF6(70),
       exhaustion: 0,

@@ -110,7 +110,7 @@ function formatAgentsBreakdown(agentsReport: AgentsReport): TurnReportTreeViewMo
     },
     {
       id: 'agents-terminated',
-      label: 'Terminated',
+      label: 'KIA',
       chipValue: terminated.delta,
       reverseColor: true,
       noPlusSign: true,

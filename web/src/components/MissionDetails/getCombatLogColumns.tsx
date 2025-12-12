@@ -182,7 +182,7 @@ function getDefenderColor(outcome: AttackOutcome, isDefender: boolean): string |
     return undefined
   }
   switch (outcome) {
-    case 'Terminated':
+    case 'KIA':
       return 'hsl(4, 90%, 58%)' // red
 
     case 'Incapacitated':
