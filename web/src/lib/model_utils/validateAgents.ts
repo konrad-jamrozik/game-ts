@@ -51,3 +51,16 @@ export function validateOnAssignmentAgents(agents: Agent[], selectedAgentIds: st
     'This action can be done only on OnAssignment or InTraining agents!',
   )
 }
+
+export function exhaustedAgents(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => agent.exhaustion >= 100)
+}
+
+export function validateNotExhaustedAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
+  return validateAgents(
+    agents,
+    selectedAgentIds,
+    (selectedAgents) => exhaustedAgents(selectedAgents),
+    'Agents with exhaustion of 100 or more cannot be assigned!',
+  )
+}
