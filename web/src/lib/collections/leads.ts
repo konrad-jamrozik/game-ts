@@ -48,7 +48,7 @@ const leadTemplates: LeadTemplate[] = [
     title: 'Interrogate member',
     description: 'Extract information from the captured member.',
     difficulty: 2,
-    dependsOn: ['mission-apprehend-{factionId}'],
+    dependsOn: ['mission-apprehend-{factionId}-member'],
     repeatable: false,
   },
   {
@@ -99,7 +99,7 @@ const leadTemplates: LeadTemplate[] = [
     title: 'Interrogate lieutenant',
     description: 'Extract information from the captured lieutenant.',
     difficulty: 6,
-    dependsOn: ['mission-raid-{factionId}-base'],
+    dependsOn: ['mission-raid-{factionId}-trainfac'],
     repeatable: false,
   },
   {

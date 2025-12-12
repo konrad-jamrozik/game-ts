@@ -250,11 +250,11 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   } = buildDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const mission = getMissionById('mission-apprehend-red-dawn')
+  const mission = getMissionById('mission-apprehend-red-dawn-member')
   stateBase.missionSites = [
     {
       id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn',
+      missionId: 'mission-apprehend-red-dawn-member',
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
@@ -262,7 +262,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     },
     {
       id: 'mission-site-001' as MissionSiteId,
-      missionId: 'mission-apprehend-red-dawn',
+      missionId: 'mission-apprehend-red-dawn-member',
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,

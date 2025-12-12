@@ -24,7 +24,7 @@ type MissionTemplate = {
 
 const missionTemplates: MissionTemplate[] = [
   {
-    id: 'mission-apprehend-{factionId}',
+    id: 'mission-apprehend-{factionId}-member',
     title: 'Apprehend {factionName} member',
     description: 'Apprehend a member of {factionName}.',
     expiresIn: 3,
@@ -84,7 +84,7 @@ const missionTemplates: MissionTemplate[] = [
     },
   },
   {
-    id: 'mission-raid-{factionId}-base',
+    id: 'mission-raid-{factionId}-trainfac',
     title: 'Raid training facility',
     description: 'Raid a {factionName} training facility.',
     expiresIn: 12,

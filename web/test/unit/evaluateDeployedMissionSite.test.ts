@@ -38,7 +38,7 @@ describe(evaluateDeployedMissionSite, () => {
     // Create a test mission site with weak enemies
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-red-dawn',
+      missionId: 'mission-apprehend-red-dawn-member',
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -112,7 +112,7 @@ describe(evaluateDeployedMissionSite, () => {
 
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-red-dawn',
+      missionId: 'mission-apprehend-red-dawn-member',
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -201,7 +201,7 @@ describe(evaluateDeployedMissionSite, () => {
 
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-red-dawn',
+      missionId: 'mission-apprehend-red-dawn-member',
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
