@@ -6,28 +6,7 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Prevent massive exhaustion gains from missions where many agents are killed.
-  Maybe exhaustion gains should be by % of agents lost, not absolute number.
-  `EXHAUSTION_PENALTY` for each 5% of all agents lost, rounded up. So if 7 out of 22 agents were lost,
-  the penalty is 7/22 = 0.31(81), rounded up to 0.35, divided by 5 is 7, times EXHAUSTION_PENALTY is 7 * 5 = 35.
-  See `updateSurvivingAgent(`
-
-- Win criteria - defeat all enemy factions
-  - Raiding each HQ should unlock new lead (already present: 'lead-{factionId}-terminate-cult')
-  - Unlocking all HQ raids leads should unlock the final "peace on Earth" lead
-  - Researching that lead should win the game.
-    - The next turn button changes to green "Game won" and is no longer clickable. Similar to "Game over" if game is lost.
-
-- Add capability to buy improved weapon damage. Improves the "baseline" weapon damage by 1 point. Note
-  that at first agents have AGENT_INITIAL_WEAPON_DAMAGE = 10 points.
-
-- Change effective skill for contracting scaling to not be
-  `effective_skill / 100` but `1 + (effective_skill - 100)/500`
-  i.e. each extra 100 effective skill adds 20% efficiency bonus.
-
 ## Current UI refinement
-
-- Add to assets data grid: Agent weapon damage range min-max
 
 - Improve event log display
 
