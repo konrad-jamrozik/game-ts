@@ -9,6 +9,7 @@ import { reset } from '../../src/redux/slices/gameStateSlice'
 import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
+import { rand } from '../../src/lib/primitives/rand'
 import { makeInitialState } from '../../src/lib/ruleset/initialState'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
@@ -80,6 +81,9 @@ function step1StartWithDebugInitialState(): void {
   const debugState = makeInitialState({ debug: true })
   store.dispatch(reset({ customState: { ...debugState, money: 200 } }))
   store.dispatch(clearEvents()) // Clear the reset event
+
+  // Override enemy attack rolls to always fail (roll low) so missions end in 'Won' state
+  rand.set('enemy_attack_roll', 0)
 
   // Set reset controls to collapsed by default for this test
   store.dispatch(setResetControlsExpanded(false))
