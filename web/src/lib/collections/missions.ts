@@ -38,7 +38,7 @@ const missionTemplates: MissionTemplate[] = [
       factionRewards: [
         {
           threatReduction: toF6(0.0001),
-          suppression: toF6(0.001),
+          suppression: toF6(0),
         },
       ],
     },
@@ -69,7 +69,7 @@ const missionTemplates: MissionTemplate[] = [
     description: 'Raid a fortified {factionName} outpost.',
     expiresIn: 10,
     dependsOn: ['lead-{factionId}-outpost'],
-    enemyUnitsSpec: '8 Initiate, 8 Operative, 4 Soldier, 2 Handler, 1 Lieutenant',
+    enemyUnitsSpec: '8 Initiate, 8 Operative, 2 Soldier, 3 Handler',
     rewards: {
       money: 400,
       funding: 10,
@@ -88,8 +88,8 @@ const missionTemplates: MissionTemplate[] = [
     title: 'Raid training facility',
     description: 'Raid a {factionName} training facility.',
     expiresIn: 12,
-    dependsOn: ['lead-{factionId}-base'],
-    enemyUnitsSpec: '30 Initiate, 16 Operative, 8 Soldier, 6 Handler, 2 Lieutenant',
+    dependsOn: ['lead-{factionId}-training-facility'],
+    enemyUnitsSpec: '30 Initiate, 16 Operative, 4 Soldier, 6 Handler, 1 Lieutenant',
     rewards: {
       money: 800,
       funding: 15,
@@ -108,7 +108,7 @@ const missionTemplates: MissionTemplate[] = [
     title: 'Raid logistics hub',
     description: 'Raid a {factionName} logistics hub.',
     expiresIn: 15,
-    dependsOn: ['lead-{factionId}-interrogate-commander'],
+    dependsOn: ['lead-{factionId}-logistics-hub'],
     enemyUnitsSpec: '12 Initiate, 24 Operative, 10 Soldier, 2 Elite, 5 Handler, 2 Lieutenant, 1 Commander',
     rewards: {
       money: 2000,
@@ -128,7 +128,7 @@ const missionTemplates: MissionTemplate[] = [
     title: 'Raid command center',
     description: 'Raid a {factionName} command center.',
     expiresIn: 20,
-    dependsOn: ['lead-{factionId}-interrogate-commander'],
+    dependsOn: ['lead-{factionId}-command-center'],
     enemyUnitsSpec: '20 Operative, 20 Soldier, 6 Elite, 4 Handler, 4 Lieutenant, 3 Commander',
     rewards: {
       money: 3000,
@@ -148,7 +148,7 @@ const missionTemplates: MissionTemplate[] = [
     title: 'Raid regional stronghold',
     description: 'Raid a {factionName} regional stronghold.',
     expiresIn: 30,
-    dependsOn: ['lead-{factionId}-interrogate-commander'],
+    dependsOn: ['lead-{factionId}-regional-stronghold'],
     enemyUnitsSpec: '40 Soldier, 10 Elite, 8 Lieutenant, 3 Commander, 1 HighCommander',
     rewards: {
       money: 5000,
