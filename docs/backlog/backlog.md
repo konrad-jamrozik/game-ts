@@ -6,6 +6,11 @@ KJA backlog:
 
 ## Current Game mechanics
 
+- Make each repeatable lead be investigated only once at a time.
+- Also update the leads data grid to say "Investigation" instead of "Investigations" and just "Active" instead of "1 Active"
+
+- In Agent Data grid, change investigation assignment display "invst-xxx" instead of "investigation-xxx"
+
 - Ensure that agents with exhaustion of 100 or more cannot be assigned to lead investigations,
   or anywhere, really.
 
@@ -13,15 +18,9 @@ KJA backlog:
   Maybe exhaustion gains should be by % of agents lost, not absolute number.
   See `battleReport.agentExhaustionAfterBattle = getAgentExhaustionAfterBattle(`
 
-- Sort out / fill up the mission progression chain, with interrogations
-- Interrogating captured enemies should provide bonus towards various lead investigations.
-  - Intel lump sum.
-  - What if there is currently no eligible lead investigation?
-    - Maybe decrease lead difficulty by some amount?
-
 - Win criteria - defeat all enemy factions
   - Raiding each HQ should unlock new lead
-  - Unlocking all HQ raids leads should unlock the final "game victory" lead
+  - Unlocking all HQ raids leads should unlock the final "peace on Earth" lead
   - Researching that lead should win the game.
 
 - Add capability to buy improved weapon damage
@@ -58,9 +57,6 @@ KJA backlog:
   - Implement the funding decrease penalty
 - Update suppression system as documented
 - Delete threat level and increase concepts
-
-- Make each repeatable lead be investigated only once at a time.
-  - Maybe even allow one lead per faction at a time.
 
 # P0 Game mechanics
 
