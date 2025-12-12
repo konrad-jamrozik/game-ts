@@ -29,7 +29,12 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Funding', id: 4, value: gameState.funding },
     { name: 'Money', id: 2, value: gameState.money, projected: moneyProjected, diff: moneyDiff },
     { name: 'Intel', id: 3, value: gameState.intel, projected: intelProjected, diff: intelDiff },
-    { name: 'AgentWeaponDamageBaseline', id: 5, value: AGENT_INITIAL_WEAPON_DAMAGE, displayedName: 'Agent weapon damage baseline' },
+    {
+      name: 'AgentWeaponDamageBaseline',
+      id: 5,
+      value: AGENT_INITIAL_WEAPON_DAMAGE,
+      displayedName: 'Agent weapon damage baseline',
+    },
   ]
 
   const assetColumns = getAssetsColumns()

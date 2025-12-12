@@ -48,11 +48,7 @@ function validateTermination(agent: Agent): void {
   const zeroF6 = toF6(0)
   const maxHitPointsF6 = toF6(agent.maxHitPoints)
   if (agent.state === 'KIA') {
-    assertEqual(
-      agent.assignment,
-      'KIA',
-      `KIA agent ${agent.id} must have assignment of KIA (got ${agent.assignment})`,
-    )
+    assertEqual(agent.assignment, 'KIA', `KIA agent ${agent.id} must have assignment of KIA (got ${agent.assignment})`)
     assertEqual(agent.hitPoints.value, zeroF6.value, `KIA agent ${agent.id} must have 0 hit points`)
   }
   if (agent.state === 'Sacked') {
