@@ -2,7 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import Box from '@mui/material/Box'
 import { columnWidths } from '../Common/columnWidths'
-import { f6fmtInt, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
@@ -369,7 +369,7 @@ function renderSkillCell(
           zIndex: 1,
         }}
       >
-        {f6fmtInt(currentSkill)}
+        {f6fmtInt(currentSkill)} ({f6fmtPctDec0(currentSkill, skillAtStart)})
       </Box>
     </Box>
   )
