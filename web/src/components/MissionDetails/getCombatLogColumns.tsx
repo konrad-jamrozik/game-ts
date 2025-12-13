@@ -83,8 +83,10 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       headerName: 'Effect',
       width: columnWidths['combat_log.effect'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
+        // Outcome always applies to the defender, so isDefender = true
+        const color = getDefenderColor(params.row.outcome, true)
         const displayValue = params.row.outcome === 'Incapacitated' ? 'Incap' : params.row.outcome
-        return <span>{displayValue}</span>
+        return <span style={{ color }}>{displayValue}</span>
       },
     },
     {
@@ -144,12 +146,12 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       field: 'damage',
       headerName: 'Damage',
       width: columnWidths['combat_log.damage'],
+      cellClassName: 'combat-log-skill-cell',
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         if (params.row.damage === undefined) {
           return <span></span>
         }
-        const formatted = fmtDamageComparison(params.row.damage, params.row.baseDamage)
-        return <span style={{ whiteSpace: 'pre' }}>{formatted}</span>
+        return renderDamageCell(params.row.damage, params.row.damageMin, params.row.damageMax, params.row.baseDamage)
       },
     },
     {
@@ -295,6 +297,21 @@ function renderRollCell(roll: number, threshold: number): React.JSX.Element {
         {formatted}
       </Box>
     </Box>
+  )
+}
+
+function renderDamageCell(damage: number, damageMin: number, damageMax: number, baseDamage: number): React.JSX.Element {
+  // Calculate fill percentage: 0% at damageMin, 100% at damageMax
+  const damageRange = damageMax - damageMin
+  const fillPct = damageRange > 0 ? Math.min(100, Math.max(0, ((damage - damageMin) / damageRange) * 100)) : 0
+
+  // Use ColorBar with colorPct=0 to get red color (same as Diff red)
+  const formatted = fmtDamageComparison(damage, baseDamage)
+
+  return (
+    <ColorBar fillPct={fillPct} colorPct={0}>
+      <span style={{ whiteSpace: 'pre' }}>{formatted}</span>
+    </ColorBar>
   )
 }
 
