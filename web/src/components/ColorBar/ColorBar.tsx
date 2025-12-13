@@ -48,6 +48,10 @@ export function ColorBar({
         sx={{
           position: 'relative',
           zIndex: 1,
+          display: 'flex',
+          alignItems: 'center',
+          lineHeight: 1,
+          transform: 'translateY(0.3px)',
         }}
       >
         {children}
