@@ -61,6 +61,24 @@ KJA backlog:
 
 # P0 Game content
 
+# Ideas
+
+- Add some mechanism that influences how long missions sites will last until expiration.
+  Conceptually it denotes how early player learned about them. Maybe:
+  - Have some kind of "Threat detection" repeatable lead that when completed, gives turn-limited benefits of form:
+    - Increased expiration time of missions
+    - More precise insight when will the next offensive operation happen and what it will be.
+  - Or "Reveal operation" lead just tells you about current op.
+  - Note that conceptually "expires in" should elongate BEFORE, not AFTER. What does it mean?
+    If on turn 10 faction planned a mission for turn 18, then that mission site should still expire by turn 20.
+    If player wants to have "expires in" longer, they must discover the mission site earlier.
+    But then this is stupid in this sense that early detection doesn't mean the mission has started yet.
+    So need a new concept of "mission didn't start but we know when it will happen".
+    Expirations probably must remain very strict.
+  - Maybe agents could also gather intel against specific faction, and that intel will decay. So the more
+    intel gathered at any given turn, the more player knows the factions whereabouts.
+  - Interrogating could give similar benefits
+
 # Domain model refactoring
 
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
