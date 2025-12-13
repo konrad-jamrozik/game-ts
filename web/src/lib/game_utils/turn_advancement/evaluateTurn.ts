@@ -174,13 +174,13 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
         const factionName = faction?.name ?? 'Unknown'
 
         // Calculate penalties based on operation level
-        const { operationLevel } = missionSite
-        assertDefined(operationLevel, `Operation level is required. missionSite: ${missionSite.id}`)
+        const { operationLevel, id } = missionSite
+        assertDefined(operationLevel, `Operation level is required. missionSite: ${id}`)
         const panicPenalty = getPanicIncreaseForOperation(operationLevel)
         const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
 
         expiredReports.push({
-          missionSiteId: missionSite.id,
+          missionSiteId: id,
           missionTitle: mission.title,
           factionId,
           factionName,
