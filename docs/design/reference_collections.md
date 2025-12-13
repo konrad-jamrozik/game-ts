@@ -106,7 +106,7 @@ When a faction operation succeeds (defensive mission expires or fails), rewards 
 
 | Level | Description                | Panic increase | Money | Fund R/P   |
 | :---: | -------------------------- | :------------: | :---: | :--------: |
-| 0*    | SolPar offensive missions  |     0    %     |    0  |            |
+| -     | SolPar offensive missions  |     0    %     |    0  |            |
 | 1     | Soft operations            |     0.05 %     |    0  |   0 /    0 |
 | 2     | Violent but small-scale    |     0.2  %     |    0  |   5 /   -1 |
 | 3     | Strategic threats          |     1    %     |   50  |  10 /   -2 |
@@ -119,7 +119,7 @@ Legend:
 `Money` - Money reward if the player completes the defensive mission.
 `Fund R/P` - Funding reward or penalty depending on whether the player completes the defensive mission.
 
-*Note that all player offensive missions have operation level of 0.
+*Note that all player offensive missions have undefined operation level (no operation level).
 
 # Leads
 

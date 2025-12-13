@@ -145,7 +145,7 @@ function createMissionSitesForLead(state: GameState, leadId: string): MissionSit
     // Invariant: next mission site numeric id is always the current number of mission sites
     const nextMissionNumericId = state.missionSites.length
     const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
-    // All missions created from leads are offensive missions (apprehend/raid), so they have operationLevel 0
+    // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
     const newMissionSite: MissionSite = {
       id: missionSiteId,
       missionId: mission.id,
@@ -153,7 +153,6 @@ function createMissionSitesForLead(state: GameState, leadId: string): MissionSit
       state: 'Active',
       expiresIn: mission.expiresIn,
       enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
-      operationLevel: 0, // Offensive missions have operationLevel 0
     }
     state.missionSites.push(newMissionSite)
     createdMissionSites.push(newMissionSite)

@@ -207,7 +207,8 @@ export function rollOperationLevel(activityLevel: ActivityLevel): number {
 
 /**
  * Get panic increase for a given operation level.
- * Level 0 (offensive missions) returns 0 (no panic increase).
+ * Only called for defensive missions (operationLevel 1-6).
+ * Level 0 check is kept for safety but should not occur in practice.
  */
 export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
   if (operationLevel === 0) {
@@ -218,7 +219,8 @@ export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
 
 /**
  * Get funding decrease for a given operation level.
- * Level 0 (offensive missions) returns 0 (no funding decrease).
+ * Only called for defensive missions (operationLevel 1-6).
+ * Level 0 check is kept for safety but should not occur in practice.
  */
 export function getFundingDecreaseForOperation(operationLevel: number): number {
   if (operationLevel === 0) {

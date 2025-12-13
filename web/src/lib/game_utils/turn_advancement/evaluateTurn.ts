@@ -36,7 +36,6 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
-import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -167,27 +166,30 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
         missionSite.state = 'Expired'
         const mission = getMissionById(missionSite.missionId)
 
-        // Get faction info for the report
-        const factionReward = mission.rewards.factionRewards?.[0]
-        const factionId = factionReward?.factionId ?? ''
-        const faction = state.factions.find((f) => f.id === factionId)
-        const factionName = faction?.name ?? 'Unknown'
-
-        // Calculate penalties based on operation level
+        // Only defensive missions (faction operations) have operationLevel and apply penalties
+        // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
         const { operationLevel, id } = missionSite
-        assertDefined(operationLevel, `Operation level is required. missionSite: ${id}`)
-        const panicPenalty = getPanicIncreaseForOperation(operationLevel)
-        const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
+        if (typeof operationLevel === 'number') {
+          // Get faction info for the report
+          const factionReward = mission.rewards.factionRewards?.[0]
+          const factionId = factionReward?.factionId ?? ''
+          const faction = state.factions.find((f) => f.id === factionId)
+          const factionName = faction?.name ?? 'Unknown'
 
-        expiredReports.push({
-          missionSiteId: id,
-          missionTitle: mission.title,
-          factionId,
-          factionName,
-          operationLevel,
-          panicPenalty,
-          fundingPenalty,
-        })
+          // Calculate penalties based on operation level
+          const panicPenalty = getPanicIncreaseForOperation(operationLevel)
+          const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
+
+          expiredReports.push({
+            missionSiteId: id,
+            missionTitle: mission.title,
+            factionId,
+            factionName,
+            operationLevel,
+            panicPenalty,
+            fundingPenalty,
+          })
+        }
       }
     }
   }

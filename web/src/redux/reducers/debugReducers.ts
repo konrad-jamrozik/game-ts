@@ -64,7 +64,6 @@ export function spawnMissionSites(state: GameState): void {
       state: 'Active',
       expiresIn: mission.expiresIn,
       enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
-      operationLevel: 0, // Offensive missions have operationLevel 0
     }
     state.missionSites.push(newMissionSite)
   }

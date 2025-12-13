@@ -43,7 +43,6 @@ describe(evaluateDeployedMissionSite, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemies: newEnemiesFromSpec('1 Initiate'),
-      operationLevel: 0,
     }
 
     // Create a minimal game state
@@ -118,7 +117,6 @@ describe(evaluateDeployedMissionSite, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemies: newEnemiesFromSpec('2 Soldier'),
-      operationLevel: 0,
     }
 
     const gameState: GameState = {
@@ -208,7 +206,6 @@ describe(evaluateDeployedMissionSite, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemies: newEnemiesFromSpec('3 CultLeader'),
-      operationLevel: 0,
     }
 
     const gameState: GameState = {

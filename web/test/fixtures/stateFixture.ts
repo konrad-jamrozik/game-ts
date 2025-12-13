@@ -51,7 +51,6 @@ export const st = {
       state: 'Active',
       expiresIn: 3,
       enemies: [],
-      operationLevel: 0,
     }
   },
 
