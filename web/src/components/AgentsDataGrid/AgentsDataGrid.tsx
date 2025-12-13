@@ -2,7 +2,9 @@ import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel }
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { Agent } from '../../lib/model/agentModel'
+import { f6max, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
+import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
@@ -84,7 +86,14 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  const columns = getAgentsColumns(rows, gameState.missionSites, gameState.turn, gameState.hitPointsRecoveryPct)
+  const maxSkillNonTerminated = getMaxSkillNonTerminated(allRows)
+  const columns = getAgentsColumns(
+    rows,
+    maxSkillNonTerminated,
+    gameState.missionSites,
+    gameState.turn,
+    gameState.hitPointsRecoveryPct,
+  )
   const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
@@ -149,6 +158,16 @@ export function AgentsDataGrid(): React.JSX.Element {
         },
       }}
       showToolbar
+      sx={{
+        '& .agents-color-bar-cell': {
+          padding: '4px',
+        },
+      }}
     />
   )
+}
+
+function getMaxSkillNonTerminated(rows: AgentRow[]): Fixed6 {
+  const activeRows = notTerminated(rows)
+  return activeRows.reduce((max, row) => f6max(max, row.skill), toF6(0))
 }

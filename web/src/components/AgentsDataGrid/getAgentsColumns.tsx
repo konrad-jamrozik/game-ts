@@ -12,11 +12,13 @@ import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
+import { AGENTS_SKILL_BAR_GREY, ColorBar } from '../ColorBar/ColorBar'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
 export function getAgentsColumns(
   rows: AgentRow[],
+  maxSkillNonTerminated: Fixed6,
   missionSites: GameState['missionSites'],
   currentTurn: number,
   hitPointsRecoveryPct: Fixed6,
@@ -64,6 +66,7 @@ export function getAgentsColumns(
       field: 'skill',
       headerName: 'Skill',
       width: columnWidths['agents.skill'],
+      cellClassName: 'agents-color-bar-cell',
       sortComparator: createFixed6SortComparator(
         rows,
         (row) => effectiveSkill(row),
@@ -74,22 +77,29 @@ export function getAgentsColumns(
         const effectiveSkillVal = effectiveSkill(params.row)
         const baselineSkill = params.value ?? toF6(0)
         const percentage = f6fmtPctDec0(effectiveSkillVal, baselineSkill)
+        const { fillPct, colorPct, backgroundOverride } = getSkillBarDisplay(
+          effectiveSkillVal,
+          baselineSkill,
+          maxSkillNonTerminated,
+        )
         return (
-          <div
-            aria-label={`agents-row-skill-${params.id}`}
-            style={{
-              display: 'grid',
-              gridTemplateColumns: '3ch 1ch 3ch 7ch',
-              gap: '5px',
-              alignItems: 'center',
-              width: '100%',
-            }}
-          >
-            <span style={{ textAlign: 'right' }}>{f6fmtInt(effectiveSkillVal)}</span>
-            <span style={{ textAlign: 'center' }}>/</span>
-            <span style={{ textAlign: 'right' }}>{f6fmtInt(baselineSkill)}</span>
-            <span style={{ textAlign: 'right' }}>({percentage})</span>
-          </div>
+          <ColorBar fillPct={fillPct} colorPct={colorPct} backgroundOverride={backgroundOverride}>
+            <div
+              aria-label={`agents-row-skill-${params.id}`}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '3ch 1ch 3ch 7ch',
+                gap: '5px',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <span style={{ textAlign: 'right' }}>{f6fmtInt(effectiveSkillVal)}</span>
+              <span style={{ textAlign: 'center' }}>/</span>
+              <span style={{ textAlign: 'right' }}>{f6fmtInt(baselineSkill)}</span>
+              <span style={{ textAlign: 'right' }}>({percentage})</span>
+            </div>
+          </ColorBar>
         )
       },
     },
@@ -136,9 +146,16 @@ export function getAgentsColumns(
       field: 'exhaustion',
       headerName: 'Exh.',
       width: columnWidths['agents.exhaustion'],
-      renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
-        <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>
-      ),
+      cellClassName: 'agents-color-bar-cell',
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
+        const exhaustion = params.value ?? 0
+        const { fillPct, colorPct } = getExhaustionBarPcts(exhaustion)
+        return (
+          <ColorBar fillPct={fillPct} colorPct={colorPct}>
+            <span aria-label={`agents-row-exhaustion-${params.id}`}>{exhaustion}</span>
+          </ColorBar>
+        )
+      },
     },
     {
       field: 'skillSimple',
@@ -237,4 +254,39 @@ export function getAgentsColumns(
   ]
 
   return columns
+}
+
+function getSkillBarDisplay(
+  effective: Fixed6,
+  baseline: Fixed6,
+  maxSkillNonTerminated: Fixed6,
+): { fillPct: number; colorPct: number; backgroundOverride: string } {
+  const maxDenom = maxSkillNonTerminated.value
+  const effectiveFillPct = maxDenom > 0 ? Math.min(100, (effective.value / maxDenom) * 100) : 0
+  const baselineFillPct = maxDenom > 0 ? Math.min(100, (baseline.value / maxDenom) * 100) : 0
+
+  if (baseline.value <= 0) {
+    const backgroundOverride = `linear-gradient(90deg, ${AGENTS_SKILL_BAR_GREY} 0%, ${AGENTS_SKILL_BAR_GREY} ${effectiveFillPct}%, transparent ${effectiveFillPct}%, transparent 100%)`
+    return { fillPct: effectiveFillPct, colorPct: 0, backgroundOverride }
+  }
+
+  const ratio = effective.value / baseline.value
+  const colorPct = Math.max(0, Math.min(1, ratio))
+
+  const fillHue = colorPct * 120
+  const fillColor = `hsla(${fillHue}, 90%, 58%, 0.5)`
+  const greyEndPct = Math.max(effectiveFillPct, baselineFillPct)
+
+  // Colored portion: effective skill vs max roster skill.
+  // Grey portion: missing to reach baseline skill for this agent (still vs max roster skill).
+  const backgroundOverride = `linear-gradient(90deg, ${fillColor} 0%, ${fillColor} ${effectiveFillPct}%, ${AGENTS_SKILL_BAR_GREY} ${effectiveFillPct}%, ${AGENTS_SKILL_BAR_GREY} ${greyEndPct}%, transparent ${greyEndPct}%, transparent 100%)`
+
+  return { fillPct: effectiveFillPct, colorPct, backgroundOverride }
+}
+
+function getExhaustionBarPcts(exhaustion: number): { fillPct: number; colorPct: number } {
+  const fillPct = Math.max(0, Math.min(100, exhaustion))
+  // Exhaustion: green at 0, red at 100+ (ColorBar maps 0->red, 1->green, so invert)
+  const colorPct = 1 - fillPct / 100
+  return { fillPct, colorPct }
 }
