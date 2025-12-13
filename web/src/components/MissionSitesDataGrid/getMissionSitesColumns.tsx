@@ -117,8 +117,9 @@ function renderExpiresInCell(expiresIn: number | 'never', rowId: string | number
   // Calculate fill percentage: 100% width = 10+ turns, shorten by 10% for each turn less
   const fillPct = Math.min(100, (expiresIn / 10) * 100)
 
-  // Calculate color percentage: 1.0 = green (10+ turns), 0.0 = red (0 turns)
-  const colorPct = Math.min(1, expiresIn / 10)
+  // Calculate color percentage: 1.0 = green (10+ turns), 0.0 = red (1 turn or less)
+  // Map expiresIn from [1, 10+] to [0, 1] for color gradient
+  const colorPct = Math.min(1, Math.max(0, (expiresIn - 1) / 9))
 
   return (
     <ColorBar fillPct={fillPct} colorPct={colorPct}>
