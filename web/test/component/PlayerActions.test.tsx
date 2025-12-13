@@ -2,7 +2,6 @@ import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/GameControls/PlayerActions'
 import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
-import { getMoneyNewBalance } from '../../src/lib/ruleset/moneyRuleset'
 import { AGENT_HIRE_COST } from '../../src/lib/ruleset/constants'
 import { agFix } from '../fixtures/agentFixture'
 
@@ -25,7 +24,7 @@ describe(PlayerActions, () => {
 
   test("click 'hire agent' button -> alert: insufficient funds", async () => {
     st.arrangeGameState({ money: 0 })
-    expect(getMoneyNewBalance(st.gameState)).toBe(0)
+    expect(st.gameState.money).toBe(0)
     st.expectAgentCount(4)
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
