@@ -49,9 +49,9 @@ export function sortMissionSitesByIdDesc(missionSites: MissionSite[]): MissionSi
 }
 
 /**
- * Sorts mission sites by state priority and then by ID
- * Completed missions (Won, Wiped, Retreated) come first, then Active, then Deployed
- * Within each group by ID (newest first)
+ * Sorts mission sites by state priority, then by secondary criteria:
+ * - Active sites: by expiresIn ascending (expiring soonest first, 'never' last)
+ * - Other states: by ID descending (newest first)
  */
 export function sortActiveOrDeployedMissionSites(missionSites: MissionSite[]): MissionSite[] {
   return missionSites.toSorted((siteA, siteB) => {
@@ -62,9 +62,25 @@ export function sortActiveOrDeployedMissionSites(missionSites: MissionSite[]): M
     if (priorityA !== priorityB) {
       return priorityA - priorityB
     }
-    // Within same state, sort by ID (newest first)
+
+    // Within Active state, sort by expiresIn ascending
+    if (siteA.state === 'Active') {
+      return compareExpiresIn(siteA.expiresIn, siteB.expiresIn)
+    }
+
+    // Within other states, sort by ID (newest first)
     return siteB.id.localeCompare(siteA.id)
   })
+}
+
+/**
+ * Compares expiresIn values for ascending sort ('never' is treated as infinity)
+ */
+function compareExpiresIn(a: number | 'never', b: number | 'never'): number {
+  if (a === 'never' && b === 'never') return 0
+  if (a === 'never') return 1
+  if (b === 'never') return -1
+  return a - b
 }
 
 /**
