@@ -6,7 +6,23 @@ KJA backlog:
 
 ## Current Game mechanics
 
+- Implement defensive missions
+  - First, update the reference spec table: review all aspects of the defensive missions
+  - Then, implement in model
+  - Then, spawn when counter of next operation goes down
+
 ## Current UI refinement
+
+- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
+
+- Test and refine the new activity level
+  - Stylize with color bars
+  - Get rid of "projected" column
+- Turn report:
+  - "Turns at level: should not be displayed
+
+- Undoing/redoing turn and clicking next seems to change by when exactly activity level of faction goes up.
+  This is unexpected, this should have been pre-rolled at game start.
 
 # Next milestone
 
