@@ -80,6 +80,6 @@ export const columnWidths = {
   'combat_log.attacker_skill': 150,
   'combat_log.defender_skill': 150,
   'combat_log.roll': 190,
-  'combat_log.damage': 90,
-  'combat_log.defender_hp': 130,
+  'combat_log.damage': 100,
+  'combat_log.defender_hp': 100,
 } as const

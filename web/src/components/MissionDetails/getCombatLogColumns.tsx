@@ -3,7 +3,7 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import { columnWidths } from '../Common/columnWidths'
 import { f6fmtInt, type Fixed6 } from '../../lib/primitives/fixed6'
-import { fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
@@ -129,13 +129,10 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       width: columnWidths['combat_log.damage'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         if (params.row.damage === undefined) {
-          return <span>-</span>
+          return <span></span>
         }
-        return (
-          <span>
-            {params.row.damage}/{params.row.baseDamage}
-          </span>
-        )
+        const formatted = fmtDamageComparison(params.row.damage, params.row.baseDamage)
+        return <span style={{ whiteSpace: 'pre' }}>{formatted}</span>
       },
     },
     {
@@ -143,12 +140,10 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       headerName: 'HP',
       width: columnWidths['combat_log.defender_hp'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const hpPct = fmtPctDec0(params.row.defenderHpAfterDamage, params.row.defenderHpMax)
         const isZeroOrLess = params.row.defenderHpAfterDamage <= 0
+        const formatted = fmtHpComparison(Math.round(params.row.defenderHpAfterDamage), params.row.defenderHpMax)
         return (
-          <span style={{ color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined }}>
-            {Math.round(params.row.defenderHpAfterDamage)}/{params.row.defenderHpMax} ({hpPct})
-          </span>
+          <span style={{ color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined, whiteSpace: 'pre' }}>{formatted}</span>
         )
       },
     },
@@ -167,6 +162,22 @@ function fmtRollComparison(roll: number, threshold: number, operator: '>' | '<='
   // Remove one space after <= to account for the extra character in the operator
   const operatorSpacing = operator === '<=' ? '' : ' '
   return `${rollFormatted} % ${operator}${operatorSpacing} ${thresholdFormatted} %`
+}
+
+function fmtDamageComparison(damage: number, baseDamage: number): string {
+  // Format damage as XXX (3 digits), padded to 3 characters
+  const damageFormatted = Math.floor(damage).toString().padStart(3, ' ')
+  // Format baseDamage as XXX (3 digits), padded to 3 characters
+  const baseDamageFormatted = Math.floor(baseDamage).toString().padStart(3, ' ')
+  return `${damageFormatted} / ${baseDamageFormatted}`
+}
+
+function fmtHpComparison(currentHp: number, maxHp: number): string {
+  // Format currentHp as XXX (3 digits), padded to 3 characters
+  const currentHpFormatted = currentHp.toString().padStart(3, ' ')
+  // Format maxHp as XXX (3 digits), padded to 3 characters
+  const maxHpFormatted = maxHp.toString().padStart(3, ' ')
+  return `${currentHpFormatted} / ${maxHpFormatted}`
 }
 
 function renderSkillCell(
