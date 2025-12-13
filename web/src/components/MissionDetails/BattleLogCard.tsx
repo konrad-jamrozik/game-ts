@@ -32,7 +32,10 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
   // Compute battle-wide max count from all rows
   const maxCount = rows.reduce((max, row) => Math.max(max, Math.max(row.agentCountTotal, row.enemyCountTotal)), 0)
 
-  const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount })
+  // Compute battle-wide max ratio from all rows (ratio can go up and down, so we need the max across all rounds)
+  const maxRatio = rows.reduce((max, row) => f6max(max, row.skillRatio), toF6(0))
+
+  const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount, maxRatio })
 
   return (
     <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: BATTLE_LOG_CARD_WIDTH }}>

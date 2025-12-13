@@ -59,6 +59,7 @@ type GetBattleLogColumnsParams = {
   maxInitialSkill: Fixed6
   maxHp: number
   maxCount: number
+  maxRatio: Fixed6
 }
 
 export function getBattleLogColumns({
@@ -66,6 +67,7 @@ export function getBattleLogColumns({
   maxInitialSkill,
   maxHp,
   maxCount,
+  maxRatio,
 }: GetBattleLogColumnsParams): GridColDef<BattleLogRow>[] {
   const columns: GridColDef<BattleLogRow>[] = [
     {
@@ -144,9 +146,9 @@ export function getBattleLogColumns({
       field: 'skillRatio',
       headerName: 'Ratio',
       width: columnWidths['battle_log.skill_ratio'],
-      renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element => (
-        <span>{f6fmtPctDec0(params.row.skillRatio)}</span>
-      ),
+      cellClassName: 'battle-log-skill-cell',
+      renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element =>
+        renderRatioCell(params.row.skillRatio, maxRatio),
     },
   ]
 
@@ -247,6 +249,56 @@ function renderBattleHpCell(currentHp: number, maxHp: number, battleMaxHp: numbe
         }}
       >
         {formatted}
+      </Box>
+    </Box>
+  )
+}
+
+function renderRatioCell(currentRatio: Fixed6, maxRatio: Fixed6): React.JSX.Element {
+  // Calculate fill percentage: current ratio normalized to max ratio (0-100%)
+  const fillPct = maxRatio.value > 0 ? Math.min(100, (currentRatio.value / maxRatio.value) * 100) : 0
+
+  // Calculate color percentage: current ratio vs 100% ratio (1.0)
+  // 0% ratio (0.0) = green, 100% ratio (1.0) = red, >100% ratio (>1.0) = red (clamped to 1.0)
+  // Fixed6 stores 1.0 as 1_000_000, so divide by 1_000_000 to get the ratio value
+  const ratioValue = currentRatio.value / 1_000_000
+  const colorPct = Math.max(0, Math.min(1, ratioValue))
+
+  // Convert color percentage to HSL hue: interpolate between green (120°) and red (0°)
+  // Note: We reverse the order - 0% ratio = green, 100% ratio = red
+  const { hue: redHue, alpha: redAlpha } = skillBarRedComponents
+  const { hue: greenHue, saturation, lightness, alpha: greenAlpha } = skillBarGreenComponents
+  const hue = greenHue + colorPct * (redHue - greenHue)
+  // Interpolate alpha between green and red
+  const alpha = Number.parseFloat(greenAlpha) + colorPct * (Number.parseFloat(redAlpha) - Number.parseFloat(greenAlpha))
+
+  // Create gradient background: filled portion with color, rest transparent
+  const background = `linear-gradient(90deg, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 0%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background,
+        overflow: 'hidden',
+        position: 'relative',
+        border: '1px solid rgba(128, 128, 128, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {f6fmtPctDec0(currentRatio)}
       </Box>
     </Box>
   )
