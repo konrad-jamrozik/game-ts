@@ -42,7 +42,8 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('1 Initiate'), // Single weak enemy
+      enemies: newEnemiesFromSpec('1 Initiate'),
+      operationLevel: 0,
     }
 
     // Create a minimal game state
@@ -116,7 +117,8 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('2 Soldier'), // Strong enemies
+      enemies: newEnemiesFromSpec('2 Soldier'),
+      operationLevel: 0,
     }
 
     const gameState: GameState = {
@@ -205,7 +207,8 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('3 CultLeader'), // Strong enemies
+      enemies: newEnemiesFromSpec('3 CultLeader'),
+      operationLevel: 0,
     }
 
     const gameState: GameState = {
