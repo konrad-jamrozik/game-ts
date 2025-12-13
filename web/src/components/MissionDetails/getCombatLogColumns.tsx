@@ -3,7 +3,8 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import { columnWidths } from '../Common/columnWidths'
 import { f6fmtInt, type Fixed6 } from '../../lib/primitives/fixed6'
-import { fmtDec2, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 
@@ -115,21 +116,11 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       field: 'roll',
       headerName: 'Att Roll',
       width: columnWidths['combat_log.roll'],
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => (
-        <span>{fmtDec2(params.row.roll)}%</span>
-      ),
-    },
-    {
-      field: 'threshold',
-      headerName: '> Threshold',
-      width: columnWidths['combat_log.threshold'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
         const exceeded = params.row.roll > params.row.threshold
-        return (
-          <span style={{ color: exceeded ? 'hsl(122, 39%, 49%)' : 'hsl(4, 90%, 58%)' }}>
-            {exceeded ? '✅' : '❌'} {fmtDec2(params.row.threshold)}%
-          </span>
-        )
+        const operator = exceeded ? '>' : '<='
+        const formatted = fmtRollComparison(params.row.roll, params.row.threshold, operator)
+        return <span style={{ whiteSpace: 'pre' }}>{formatted}</span>
       },
     },
     {
@@ -164,6 +155,18 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
   ]
 
   return columns
+}
+
+function fmtRollComparison(roll: number, threshold: number, operator: '>' | '<='): string {
+  // Format roll as XXX.XX (3 digits before decimal, 2 after), padded to 6 characters
+  const rollValue = floorToDec2(roll).toFixed(2)
+  const rollFormatted = rollValue.padStart(6, ' ')
+  // Format threshold as XXX.XX (3 digits before decimal, 2 after), padded to 6 characters
+  const thresholdValue = floorToDec2(threshold).toFixed(2)
+  const thresholdFormatted = thresholdValue.padStart(6, ' ')
+  // Remove one space after <= to account for the extra character in the operator
+  const operatorSpacing = operator === '<=' ? '' : ' '
+  return `${rollFormatted} % ${operator}${operatorSpacing} ${thresholdFormatted} %`
 }
 
 function renderSkillCell(
