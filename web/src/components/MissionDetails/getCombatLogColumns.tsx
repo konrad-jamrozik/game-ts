@@ -13,6 +13,9 @@ const SKILL_BAR_GREEN = 'hsla(120, 90%, 58%, 0.5)'
 const SKILL_BAR_RED = 'hsla(0, 90%, 58%, 0.5)'
 const HP_BAR_GREEN = 'hsla(120, 90%, 58%, 0.5)'
 const HP_BAR_RED = 'hsla(0, 90%, 58%, 0.5)'
+const ROLL_BAR_GREY = 'hsla(0, 0%, 50%, 0.3)'
+const ROLL_BAR_GREEN = 'hsla(120, 90%, 58%, 0.3)'
+const ROLL_BAR_RED = 'hsla(0, 90%, 58%, 0.4)'
 
 // Extract color components from constants
 function parseHslaColor(color: string): { hue: number; saturation: string; lightness: string; alpha: string } {
@@ -145,12 +148,9 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       field: 'roll',
       headerName: 'Att Roll',
       width: columnWidths['combat_log.roll'],
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const exceeded = params.row.roll > params.row.threshold
-        const operator = exceeded ? '>' : '<='
-        const formatted = fmtRollComparison(params.row.roll, params.row.threshold, operator)
-        return <span style={{ whiteSpace: 'pre' }}>{formatted}</span>
-      },
+      cellClassName: 'combat-log-skill-cell',
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element =>
+        renderRollCell(params.row.roll, params.row.threshold),
     },
     {
       field: 'damage',
@@ -187,6 +187,64 @@ function fmtRollComparison(roll: number, threshold: number, operator: '>' | '<='
   // Remove one space after <= to account for the extra character in the operator
   const operatorSpacing = operator === '<=' ? '' : ' '
   return `${rollFormatted} % ${operator}${operatorSpacing} ${thresholdFormatted} %`
+}
+
+function renderRollCell(roll: number, threshold: number): React.JSX.Element {
+  const exceeded = roll > threshold
+  const operator = exceeded ? '>' : '<='
+  const formatted = fmtRollComparison(roll, threshold, operator)
+
+  // Normalize to 100% for the bar (assuming max roll is 100%)
+  const maxRoll = 100
+  const rollPct = Math.min(100, (roll / maxRoll) * 100)
+  const thresholdPct = Math.min(100, (threshold / maxRoll) * 100)
+
+  const background = exceeded
+    ? // Success: grey up to threshold, then green from threshold to roll
+      `linear-gradient(90deg, 
+      ${ROLL_BAR_GREY} 0%, 
+      ${ROLL_BAR_GREY} ${thresholdPct}%, 
+      ${ROLL_BAR_GREEN} ${thresholdPct}%, 
+      ${ROLL_BAR_GREEN} ${rollPct}%, 
+      transparent ${rollPct}%, 
+      transparent 100%)`
+    : // Failure: grey up to roll, then red from roll to threshold
+      `linear-gradient(90deg, 
+      ${ROLL_BAR_GREY} 0%, 
+      ${ROLL_BAR_GREY} ${rollPct}%, 
+      ${ROLL_BAR_RED} ${rollPct}%, 
+      ${ROLL_BAR_RED} ${thresholdPct}%, 
+      transparent ${thresholdPct}%, 
+      transparent 100%)`
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background,
+        overflow: 'hidden',
+        position: 'relative',
+        border: '1px solid rgba(128, 128, 128, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          whiteSpace: 'pre',
+        }}
+      >
+        {formatted}
+      </Box>
+    </Box>
+  )
 }
 
 function fmtDamageComparison(damage: number, baseDamage: number): string {
