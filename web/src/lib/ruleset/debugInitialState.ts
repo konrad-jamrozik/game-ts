@@ -113,6 +113,17 @@ function buildDebugAgents(
     }),
     makeAgent({
       turnHired: 1,
+      state: 'Recovering',
+      assignment: 'Recovery',
+      skill: toF6(100),
+      exhaustionPct: 120,
+      hitPoints: toF6(1),
+      maxHitPoints: 30,
+      hitPointsLostBeforeRecovery: toF6(29),
+      missionsTotal: 1,
+    }),
+    makeAgent({
+      turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
       skill: toF6(95),

@@ -1,12 +1,13 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import { getColorBarFillColor } from './colorBarUtils'
+import { getColorBarFillColor, getLinearYellowToRedColor } from './colorBarUtils'
 
 export type ColorBarProps = {
   fillPct: number
   colorPct: number
   fillFromRight?: boolean
   backgroundOverride?: string | undefined
+  linearYellowToRed?: boolean
   children: React.ReactNode
 }
 
@@ -15,9 +16,10 @@ export function ColorBar({
   colorPct,
   fillFromRight = false,
   backgroundOverride,
+  linearYellowToRed = false,
   children,
 }: ColorBarProps): React.JSX.Element {
-  const fillColor = getColorBarFillColor(colorPct)
+  const fillColor = linearYellowToRed ? getLinearYellowToRedColor(colorPct) : getColorBarFillColor(colorPct)
 
   // Create gradient background: filled portion with color, rest transparent
   // If fillFromRight is true, fill from right to left; otherwise fill from left to right

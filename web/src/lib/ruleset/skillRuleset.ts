@@ -18,7 +18,15 @@ export function effectiveSkill(actor: Actor): Fixed6 {
   const exhaustionMalus = effectiveExhaustion / 100
   const exhaustionMult = nonNeg(1 - exhaustionMalus)
 
-  return toF6r(f6mult(actor.skill, hitPointsMult, exhaustionMult))
+  const output = toF6r(f6mult(actor.skill, hitPointsMult, exhaustionMult))
+  // console.log(
+  //   `effectiveSkill: actor=${actor.id}, output=${toF(output)}, output_mult=${f6mult(actor.skill, hitPointsMult, exhaustionMult)}, ` +
+  //     `skill=${toF(actor.skill)}, hitPoints=${toF(actor.hitPoints)}/${toF(maxHitPointsF6)}, ` +
+  //     `hitPointsMalus=${hitPointsMalus}, hitPointsMult=${hitPointsMult}, ` +
+  //     `exhaustion=${cappedExhaustion}%, effectiveExhaustion=${effectiveExhaustion}%, ` +
+  //     `exhaustionMalus=${exhaustionMalus}, exhaustionMult=${exhaustionMult}`,
+  // )
+  return output
 }
 
 /**

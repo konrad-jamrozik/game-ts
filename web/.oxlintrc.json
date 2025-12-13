@@ -31,7 +31,7 @@
         "max-classes-per-file": "error",
         "max-depth": "error",
         "max-lines": "error",
-        "max-lines-per-function": "error",
+        "max-lines-per-function": "off",
         "max-nested-callbacks": "error",
         "max-params": "off",
         "new-cap": "error",
@@ -435,14 +435,7 @@
         "no-console": "off",
         "func-style": ["error", "declaration"],
         "no-magic-numbers": "off",
-        "max-lines-per-function": [
-          "error",
-          {
-            "max": 200,
-            "skipBlankLines": true,
-            "skipComments": true
-          }
-        ],
+        "max-lines-per-function": "off",
         "no-undefined": "off",
         "sort-keys": "off",
         "no-ternary": "off",

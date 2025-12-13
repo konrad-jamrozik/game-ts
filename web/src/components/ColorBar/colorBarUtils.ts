@@ -62,3 +62,15 @@ function parseHslaColor(color: string): { hue: number; saturation: string; light
 
 const skillBarGreenComponents = parseHslaColor(SKILL_BAR_GREEN)
 const skillBarRedComponents = parseHslaColor(SKILL_BAR_RED)
+
+export function getLinearYellowToRedColor(colorPct: number): string {
+  const clampedColorPct = Math.max(0, Math.min(1, colorPct))
+  const { saturation, lightness, alpha: redAlpha } = skillBarRedComponents
+
+  // Linear mapping from yellow (60°) to red (0°)
+  // colorPct = 0 → yellow (60°), colorPct = 1 → red (0°)
+  const yellowHue = 60
+  const hue = yellowHue - clampedColorPct * yellowHue
+
+  return `hsla(${hue}, ${saturation}, ${lightness}, ${redAlpha})`
+}

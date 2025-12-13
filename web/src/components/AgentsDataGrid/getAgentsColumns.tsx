@@ -15,8 +15,6 @@ import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { AGENTS_SKILL_BAR_GREY, getColorBarFillColor } from '../ColorBar/colorBarUtils'
 
-// oxlint-disable-next-line max-lines-per-function
-// eslint-disable-next-line max-lines-per-function
 export function getAgentsColumns(
   rows: AgentRow[],
   maxSkillNonTerminated: Fixed6,
@@ -57,9 +55,12 @@ export function getAgentsColumns(
       width: columnWidths['agents.assignment'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const assignment = params.value ?? ''
-        const displayValue = assignment.startsWith('investigation-')
-          ? assignment.replace('investigation-', 'invst-')
-          : assignment
+        let displayValue = assignment
+        if (assignment.startsWith('investigation-')) {
+          displayValue = assignment.replace('investigation-', 'invst-')
+        } else if (assignment.startsWith('mission-')) {
+          displayValue = fmtNoPrefix(assignment, 'mission-')
+        }
         return <span aria-label={`agents-row-assignment-${params.id}`}>{displayValue}</span>
       },
     },
@@ -152,7 +153,7 @@ export function getAgentsColumns(
         const exhaustionPct = params.value ?? 0
         const { fillPct, colorPct } = getExhaustionBarPcts(exhaustionPct)
         return (
-          <ColorBar fillPct={fillPct} colorPct={colorPct}>
+          <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
             <span aria-label={`agents-row-exhaustion-${params.id}`}>{exhaustionPct}%</span>
           </ColorBar>
         )
@@ -286,7 +287,7 @@ function getSkillBarDisplay(
 
 function getExhaustionBarPcts(exhaustion: number): { fillPct: number; colorPct: number } {
   const fillPct = Math.max(0, Math.min(100, exhaustion))
-  // Exhaustion: green at 0, red at 100+ (ColorBar maps 0->red, 1->green, so invert)
-  const colorPct = 1 - fillPct / 100
+  // Exhaustion: yellow at 0%, red at 100% (linearYellowToRed maps 0->yellow, 1->red)
+  const colorPct = fillPct / 100
   return { fillPct, colorPct }
 }

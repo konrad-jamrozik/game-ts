@@ -35,8 +35,6 @@ import {
 } from '../../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'
 
-// oxlint-disable-next-line max-lines-per-function
-// eslint-disable-next-line max-lines-per-function
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const agentSelection = useAppSelector((state) => state.selection.agents)
