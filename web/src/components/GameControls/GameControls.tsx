@@ -4,6 +4,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSlice'
+import { setViewCharts } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
@@ -24,6 +25,10 @@ export function GameControls(): React.JSX.Element {
 
   function handleCollapseAll(): void {
     dispatch(collapseAllCards())
+  }
+
+  function handleCharts(): void {
+    dispatch(setViewCharts())
   }
 
   const gameOver = isGameOver(gameState)
@@ -69,6 +74,11 @@ export function GameControls(): React.JSX.Element {
           </Button>
           <Button variant="contained" onClick={handleCollapseAll} fullWidth>
             Collapse all
+          </Button>
+        </Stack>
+        <Stack sx={{ paddingTop: 1, alignItems: 'center' }}>
+          <Button variant="contained" onClick={handleCharts} sx={{ width: '60%' }}>
+            Charts
           </Button>
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
