@@ -1,6 +1,7 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
-import { Fragment } from 'react'
+import { Fragment, useEffect } from 'react'
+import { runAppInitChecks } from '../lib/utils/appInitChecks'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
 import { DebugCard } from './DebugCard'
 import { ErrorToast } from './Error/ErrorToast'
@@ -21,6 +22,10 @@ function App(): React.JSX.Element {
   const viewMissionDetailsId: MissionSiteId | undefined = useAppSelector(
     (state) => state.selection.viewMissionDetailsId,
   )
+
+  useEffect(() => {
+    runAppInitChecks()
+  }, [])
 
   if (viewMissionDetailsId !== undefined) {
     return (

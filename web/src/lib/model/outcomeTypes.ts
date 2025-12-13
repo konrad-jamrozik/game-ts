@@ -6,7 +6,8 @@
  * - Retreated: Withdrew from battle before completion
  * - Wiped: All agents were terminated
  */
-export type BattleOutcome = 'Won' | 'Retreated' | 'Wiped'
+export const BATTLE_OUTCOMES = ['Won', 'Retreated', 'Wiped'] as const
+export type BattleOutcome = (typeof BATTLE_OUTCOMES)[number]
 
 /**
  * Outcome of an individual attack during combat.
@@ -15,7 +16,8 @@ export type BattleOutcome = 'Won' | 'Retreated' | 'Wiped'
  * - Incapacitated: Attack succeeded and defender's effective skill dropped to 10% or less of base skill
  * - KIA: Attack succeeded and defender's HP reached 0 or below
  */
-export type AttackOutcome = 'Hit' | 'Miss' | 'Incapacitated' | 'KIA'
+export const ATTACK_OUTCOMES = ['Hit', 'Miss', 'Incapacitated', 'KIA'] as const
+export type AttackOutcome = (typeof ATTACK_OUTCOMES)[number]
 
 /**
  * Round-by-round battle status (includes ongoing battles).
@@ -27,7 +29,8 @@ export type BattleStatus = 'Ongoing' | BattleOutcome
 /**
  * Mission site phases before completion.
  */
-export type MissionSitePhase = 'Active' | 'Deployed'
+export const MISSION_SITE_PHASES = ['Active', 'Deployed'] as const
+export type MissionSitePhase = (typeof MISSION_SITE_PHASES)[number]
 
 /**
  * Complete mission site state, combining phase and outcome.
@@ -38,7 +41,8 @@ export type MissionSitePhase = 'Active' | 'Deployed'
  * - Wiped: All agents lost
  * - Expired: Time ran out before deployment
  */
-export type MissionSiteState = MissionSitePhase | BattleOutcome | 'Expired'
+export const ALL_MISSION_SITE_STATES = [...MISSION_SITE_PHASES, ...BATTLE_OUTCOMES, 'Expired'] as const
+export type MissionSiteState = (typeof ALL_MISSION_SITE_STATES)[number]
 
 // ===== LEAD INVESTIGATION LIFECYCLE =====
 
@@ -48,4 +52,5 @@ export type MissionSiteState = MissionSitePhase | BattleOutcome | 'Expired'
  * - Done: Investigation succeeded, mission sites created
  * - Abandoned: Player cancelled the investigation
  */
-export type LeadInvestigationState = 'Active' | 'Done' | 'Abandoned'
+export const LEAD_INVESTIGATION_STATES = ['Active', 'Done', 'Abandoned'] as const
+export type LeadInvestigationState = (typeof LEAD_INVESTIGATION_STATES)[number]

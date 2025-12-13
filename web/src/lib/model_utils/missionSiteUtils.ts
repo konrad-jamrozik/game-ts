@@ -1,6 +1,7 @@
 import { getMissionById } from '../collections/missions'
 import type { MissionSite, MissionSiteState } from '../model/model'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
+import { getStatePriority } from './missionSiteStatePriority'
 
 /**
  * Filters mission sites by their state
@@ -49,13 +50,17 @@ export function sortMissionSitesByIdDesc(missionSites: MissionSite[]): MissionSi
 
 /**
  * Sorts mission sites by state priority and then by ID
- * Active missions come before Deployed, within each group by ID (newest first)
+ * Completed missions (Won, Wiped, Retreated) come first, then Active, then Deployed
+ * Within each group by ID (newest first)
  */
 export function sortActiveOrDeployedMissionSites(missionSites: MissionSite[]): MissionSite[] {
   return missionSites.toSorted((siteA, siteB) => {
-    // First sort by state: Active missions come before Deployed
-    if (siteA.state !== siteB.state) {
-      return siteA.state === 'Active' ? -1 : 1
+    const priorityA = getStatePriority(siteA.state)
+    const priorityB = getStatePriority(siteB.state)
+
+    // First sort by state priority
+    if (priorityA !== priorityB) {
+      return priorityA - priorityB
     }
     // Within same state, sort by ID (newest first)
     return siteB.id.localeCompare(siteA.id)
