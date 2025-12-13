@@ -96,7 +96,7 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
         (row) => row.attackerSkillAtStart,
       ),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
-        renderSkillCell(params.row.attackerSkill, params.row.attackerSkillAtStart, combatMaxSkill),
+        renderSkillCell(params.row.attackerSkill, params.row.attackerSkillAtStart, combatMaxSkill, true),
     },
     {
       field: 'defenderSkill',
@@ -109,7 +109,7 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
         (row) => row.defenderSkillAtStart,
       ),
       renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
-        renderSkillCell(params.row.defenderSkill, params.row.defenderSkillAtStart, combatMaxSkill),
+        renderSkillCell(params.row.defenderSkill, params.row.defenderSkillAtStart, combatMaxSkill, false),
     },
     {
       field: 'roll',
@@ -166,7 +166,12 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
   return columns
 }
 
-function renderSkillCell(currentSkill: Fixed6, skillAtStart: Fixed6, combatMaxSkill: Fixed6): React.JSX.Element {
+function renderSkillCell(
+  currentSkill: Fixed6,
+  skillAtStart: Fixed6,
+  combatMaxSkill: Fixed6,
+  fillFromRight: boolean,
+): React.JSX.Element {
   // Calculate fill percentage: current skill normalized to combat max (0-100%)
   const fillPct = combatMaxSkill.value > 0 ? Math.min(100, (currentSkill.value / combatMaxSkill.value) * 100) : 0
 
@@ -177,7 +182,13 @@ function renderSkillCell(currentSkill: Fixed6, skillAtStart: Fixed6, combatMaxSk
   const hue = colorPct * 120
 
   // Create gradient background: filled portion with color, rest transparent
-  const background = `linear-gradient(90deg, hsla(${hue}, 90%, 45%, 0.3) 0%, hsla(${hue}, 90%, 45%, 0.3) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
+  // If fillFromRight is true, fill from right to left; otherwise fill from left to right
+  const saturation = '90%'
+  const lightness = '58%'
+  const alpha = '0.5'
+  const background = fillFromRight
+    ? `linear-gradient(90deg, transparent 0%, transparent ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 100%)`
+    : `linear-gradient(90deg, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 0%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
 
   return (
     <Box
