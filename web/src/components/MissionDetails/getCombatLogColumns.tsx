@@ -243,6 +243,9 @@ function renderHpCell(hpAfterDamage: number, maxHp: number, damage: number | und
         background,
         overflow: 'hidden',
         position: 'relative',
+        border: '1px solid rgba(128, 128, 128, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
       }}
     >
       <Box
@@ -295,6 +298,9 @@ function renderSkillCell(
         background,
         overflow: 'hidden',
         position: 'relative',
+        border: '1px solid rgba(128, 128, 128, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
       }}
     >
       <Box
