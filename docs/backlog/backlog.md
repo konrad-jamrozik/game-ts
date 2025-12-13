@@ -10,6 +10,20 @@ KJA backlog:
 
 - Narrow exhaustion column in Agents data grid
 
+- The MUI page https://mui.com/x/react-data-grid/style/#styling-rows
+  has example data grid with "Filled Quality" column that has colorful rectangle behind it.
+  Apply such styling to combat log data grid, to the column Att Skill and Def Skill.
+  Normalize the range so that 100% / fully filled bar is when the attacker or defender had max effective skill ever used in the combat.
+  So e.g. if in first turn the highest skill ever was by cult leader, and it was 800, then 100% is 800.
+  Furthermore, remove the full skill and percentage display from both columns. So instead of 400/800 (50%) it should be just 400.
+  Finally the bar should change color depending what percentage of the initial effective skill is the current effective skill of
+  the attacker defender. From green to red.
+  So if max skill in entire combat was 200, and an attacker has 100 effective skill and it is his 100%, then the bar will be half filled,
+  and fully green.
+  But if the defender has 90 but it is 90/200 of their initial skill, then it will yellow-ish, tinted towards red (per the gradient),
+  as it is below 50% of their initial skill.  
+  The background bar should fill out the entire cell with its color. No border.
+
 - Improve the combat log display
   - Get rid of `(100%)` and instead apply skill, exhaustion and HP styling with colorful bar from: https://mui.com/x/react-data-grid/style/#styling-rows
 
