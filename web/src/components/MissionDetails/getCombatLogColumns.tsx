@@ -8,7 +8,15 @@ import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 import { ColorBar } from '../ColorBar/ColorBar'
-import { ROLL_BAR_GREY, ROLL_BAR_GREEN, ROLL_BAR_RED, HP_BAR_GREEN, HP_BAR_RED } from '../ColorBar/colorBarUtils'
+import {
+  ROLL_BAR_GREY,
+  ROLL_BAR_GREEN,
+  ROLL_BAR_RED,
+  HP_BAR_GREEN,
+  HP_BAR_RED,
+  AGENTS_SKILL_BAR_GREY,
+  getColorBarFillColor,
+} from '../ColorBar/colorBarUtils'
 import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
 
 export type CombatLogRow = {
@@ -398,7 +406,10 @@ function renderSkillCell(
   fillFromRight: boolean,
 ): React.JSX.Element {
   // Calculate fill percentage: current skill normalized to combat max (0-100%)
-  const fillPct = combatMaxSkill.value > 0 ? Math.min(100, (currentSkill.value / combatMaxSkill.value) * 100) : 0
+  const currentSkillFillPct =
+    combatMaxSkill.value > 0 ? Math.min(100, (currentSkill.value / combatMaxSkill.value) * 100) : 0
+  const skillAtStartFillPct =
+    combatMaxSkill.value > 0 ? Math.min(100, (skillAtStart.value / combatMaxSkill.value) * 100) : 0
 
   // Calculate color percentage: current skill vs initial skill
   // Red (0.0) at COMBAT_INCAPACITATION_THRESHOLD, green (1.0) at 100% of initial skill
@@ -414,8 +425,34 @@ function renderSkillCell(
     }
   }
 
+  // Create background override with grey bar for 100% skill (similar to agents data grid)
+  // Grey bar extends to show the full baseline skill (skillAtStart)
+  let backgroundOverride: string | undefined
+  if (skillAtStart.value > 0) {
+    const fillColor = getColorBarFillColor(colorPct)
+    const greyEndPct = Math.max(currentSkillFillPct, skillAtStartFillPct)
+
+    if (fillFromRight) {
+      // Fill from right: transparent -> grey -> color (right to left)
+      // Color fills from right (100%) to (100 - currentSkillFillPct)%
+      // Grey fills from (100 - currentSkillFillPct)% to (100 - skillAtStartFillPct)%
+      // Transparent from (100 - skillAtStartFillPct)% to 0%
+      const colorStart = 100 - currentSkillFillPct
+      const greyStart = 100 - skillAtStartFillPct
+      backgroundOverride = `linear-gradient(90deg, transparent 0%, transparent ${greyStart}%, ${AGENTS_SKILL_BAR_GREY} ${greyStart}%, ${AGENTS_SKILL_BAR_GREY} ${colorStart}%, ${fillColor} ${colorStart}%, ${fillColor} 100%)`
+    } else {
+      // Fill from left: color -> grey -> transparent (left to right)
+      backgroundOverride = `linear-gradient(90deg, ${fillColor} 0%, ${fillColor} ${currentSkillFillPct}%, ${AGENTS_SKILL_BAR_GREY} ${currentSkillFillPct}%, ${AGENTS_SKILL_BAR_GREY} ${greyEndPct}%, transparent ${greyEndPct}%, transparent 100%)`
+    }
+  }
+
   return (
-    <ColorBar fillPct={fillPct} colorPct={colorPct} fillFromRight={fillFromRight}>
+    <ColorBar
+      fillPct={currentSkillFillPct}
+      colorPct={colorPct}
+      fillFromRight={fillFromRight}
+      backgroundOverride={backgroundOverride}
+    >
       {f6fmtInt(currentSkill)} ({f6fmtPctDec0(currentSkill, skillAtStart)})
     </ColorBar>
   )
