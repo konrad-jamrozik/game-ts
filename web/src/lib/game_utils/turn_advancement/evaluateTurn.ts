@@ -221,8 +221,10 @@ function evaluateDeployedMissionSites(state: GameState): {
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      const mission = getMissionById(missionSite.missionId)
-      const deployedAgents = withIds(state.agents, missionSite.agentIds)
+      const { id: missionSiteId, missionId, agentIds, enemies } = missionSite
+      const mission = getMissionById(missionId)
+      const { title: missionTitle } = mission
+      const deployedAgents = withIds(state.agents, agentIds)
 
       // Capture agent states before battle
       const agentsDeployed = deployedAgents.length
@@ -267,7 +269,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       // Calculate battle stats
 
       // Calculate enemy stats
-      const enemiesTotal = missionSite.enemies.length
+      const enemiesTotal = enemies.length
       const enemiesTerminated = enemyCasualties
       const enemiesWounded = enemiesTotal - enemiesTerminated
       const enemiesUnscathed = enemiesTotal - enemiesTerminated
@@ -325,8 +327,8 @@ function evaluateDeployedMissionSites(state: GameState): {
       }
 
       const missionReport: MissionReport = {
-        missionSiteId: missionSite.id,
-        missionTitle: mission.title,
+        missionSiteId,
+        missionTitle,
         faction: factionName,
         outcome,
         rounds,
@@ -339,8 +341,8 @@ function evaluateDeployedMissionSites(state: GameState): {
       if (finalRewards !== undefined) {
         missionRewards.push({
           rewards: finalRewards,
-          missionSiteId: missionSite.id,
-          missionTitle: mission.title,
+          missionSiteId,
+          missionTitle,
         })
       }
       totalAgentsWounded += agentsWounded
