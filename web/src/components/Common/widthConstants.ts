@@ -99,7 +99,7 @@ export const COMBAT_LOG_CARD_WIDTH =
   columnWidths['combat_log.agent_id'] +
   columnWidths['combat_log.enemy_id'] +
   columnWidths['combat_log.attacker_type'] +
-  columnWidths['combat_log.outcome'] +
+  columnWidths['combat_log.effect'] +
   columnWidths['combat_log.attacker_skill'] +
   columnWidths['combat_log.defender_skill'] +
   columnWidths['combat_log.roll'] +

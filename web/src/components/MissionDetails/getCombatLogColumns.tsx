@@ -78,10 +78,10 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
     },
     {
       field: 'outcome',
-      headerName: 'Outcome',
-      width: columnWidths['combat_log.outcome'],
+      headerName: 'Effect',
+      width: columnWidths['combat_log.effect'],
       renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const displayValue = params.row.outcome === 'Incapacitated' ? 'Incapac.' : params.row.outcome
+        const displayValue = params.row.outcome === 'Incapacitated' ? 'Incap' : params.row.outcome
         return <span>{displayValue}</span>
       },
     },

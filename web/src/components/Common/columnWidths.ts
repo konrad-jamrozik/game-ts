@@ -76,7 +76,7 @@ export const columnWidths = {
   'combat_log.agent_id': 100,
   'combat_log.enemy_id': 170,
   'combat_log.attacker_type': 90,
-  'combat_log.outcome': 110,
+  'combat_log.effect': 70,
   'combat_log.attacker_skill': 150,
   'combat_log.defender_skill': 150,
   'combat_log.roll': 90,
