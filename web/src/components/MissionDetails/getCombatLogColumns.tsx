@@ -334,13 +334,14 @@ function renderSkillCell(
   const colorPct = skillAtStart.value > 0 ? Math.max(0, Math.min(1, currentSkill.value / skillAtStart.value)) : 0
 
   // Convert color percentage to HSL hue: interpolate between red (0°) and green (120°)
-  const { hue: redHue } = skillBarRedComponents
-  const { hue: greenHue } = skillBarGreenComponents
+  const { hue: redHue, alpha: redAlpha } = skillBarRedComponents
+  const { hue: greenHue, saturation, lightness, alpha: greenAlpha } = skillBarGreenComponents
   const hue = redHue + colorPct * (greenHue - redHue)
+  // Interpolate alpha between red and green
+  const alpha = Number.parseFloat(redAlpha) + colorPct * (Number.parseFloat(greenAlpha) - Number.parseFloat(redAlpha))
 
   // Create gradient background: filled portion with color, rest transparent
   // If fillFromRight is true, fill from right to left; otherwise fill from left to right
-  const { saturation, lightness, alpha } = skillBarGreenComponents
   const background = fillFromRight
     ? `linear-gradient(90deg, transparent 0%, transparent ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 100%)`
     : `linear-gradient(90deg, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 0%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
