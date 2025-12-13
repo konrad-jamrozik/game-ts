@@ -7,14 +7,7 @@ import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
-import {
-  ColorBar,
-  ROLL_BAR_GREY,
-  ROLL_BAR_GREEN,
-  ROLL_BAR_RED,
-  HP_BAR_GREEN,
-  HP_BAR_RED,
-} from '../Common/colorBarUtils'
+import { ColorBar, ROLL_BAR_GREY, ROLL_BAR_GREEN, ROLL_BAR_RED, HP_BAR_GREEN, HP_BAR_RED } from '../ColorBar/ColorBar'
 
 export type CombatLogRow = {
   id: number

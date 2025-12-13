@@ -6,7 +6,7 @@ import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { BattleStatus } from '../../lib/model/outcomeTypes'
-import { ColorBar } from '../Common/colorBarUtils'
+import { ColorBar } from '../ColorBar/ColorBar'
 
 export type BattleLogRow = {
   id: number

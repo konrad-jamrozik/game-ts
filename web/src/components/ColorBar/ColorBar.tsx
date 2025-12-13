@@ -10,29 +10,6 @@ export const ROLL_BAR_GREY = 'hsla(0, 0%, 50%, 0.3)'
 export const ROLL_BAR_GREEN = 'hsla(120, 90%, 58%, 0.3)'
 export const ROLL_BAR_RED = 'hsla(0, 90%, 58%, 0.4)'
 
-// Extract color components from constants
-function parseHslaColor(color: string): { hue: number; saturation: string; lightness: string; alpha: string } {
-  const regex = /hsla\((?<hue>\d+),\s*(?<saturation>\d+%),\s*(?<lightness>\d+%),\s*(?<alpha>[\d.]+)\)/u
-  const match = regex.exec(color)
-  const groups = match?.groups
-  const hueStr = groups?.['hue']
-  const saturationStr = groups?.['saturation']
-  const lightnessStr = groups?.['lightness']
-  const alphaStr = groups?.['alpha']
-  if (hueStr === undefined || saturationStr === undefined || lightnessStr === undefined || alphaStr === undefined) {
-    throw new Error(`Invalid HSLA color format: ${color}`)
-  }
-  return {
-    hue: Number.parseInt(hueStr, 10),
-    saturation: saturationStr,
-    lightness: lightnessStr,
-    alpha: alphaStr,
-  }
-}
-
-const skillBarGreenComponents = parseHslaColor(SKILL_BAR_GREEN)
-const skillBarRedComponents = parseHslaColor(SKILL_BAR_RED)
-
 export type ColorBarProps = {
   fillPct: number
   colorPct: number
@@ -82,3 +59,26 @@ export function ColorBar({ fillPct, colorPct, fillFromRight = false, children }:
     </Box>
   )
 }
+
+// Extract color components from constants
+function parseHslaColor(color: string): { hue: number; saturation: string; lightness: string; alpha: string } {
+  const regex = /hsla\((?<hue>\d+),\s*(?<saturation>\d+%),\s*(?<lightness>\d+%),\s*(?<alpha>[\d.]+)\)/u
+  const match = regex.exec(color)
+  const groups = match?.groups
+  const hueStr = groups?.['hue']
+  const saturationStr = groups?.['saturation']
+  const lightnessStr = groups?.['lightness']
+  const alphaStr = groups?.['alpha']
+  if (hueStr === undefined || saturationStr === undefined || lightnessStr === undefined || alphaStr === undefined) {
+    throw new Error(`Invalid HSLA color format: ${color}`)
+  }
+  return {
+    hue: Number.parseInt(hueStr, 10),
+    saturation: saturationStr,
+    lightness: lightnessStr,
+    alpha: alphaStr,
+  }
+}
+
+const skillBarGreenComponents = parseHslaColor(SKILL_BAR_GREEN)
+const skillBarRedComponents = parseHslaColor(SKILL_BAR_RED)
