@@ -95,16 +95,16 @@ randomized from a range, depending on the mission reward.
 
 Map from activity level to probabilities of faction operations:
 
-| Activity level | Freq.      |    1  |    2 |    3 |    4 |    5 |    6 |
-| -------------- | ---------- | ----- | ---- | ---- | ---- | ---- | ---- |
-| Dormant        |          - |     - |    - |    - |    - |    - |    - |
-| Faint          | 15-25 (20) |  80 % | 20 % |    - |    - |    - |    - |
-| Emerging       | 13-23 (18) |  60 % | 30 % | 10 % |    - |    - |    - |
-| Active         | 11-21 (16) |  40 % | 40 % | 15 % |  5 % |    - |    - |
-| Expanding      | 10-20 (15) |  30 % | 30 % | 30 % | 10 % |    - |    - |
-| Escalating     |  9-19 (14) |  20 % | 25 % | 35 % | 15 % |  5 % |    - |
-| War            |  8-18 (13) |  15 % | 20 % | 30 % | 20 % | 10 % |  5 % |
-| Total war      |  7-17 (12) |  10 % | 15 % | 25 % | 25 % | 15 % | 10 % |
+| Activity level   | Freq.      |    1  |    2 |    3 |    4 |    5 |    6 |
+| ---------------- | ---------- | ----- | ---- | ---- | ---- | ---- | ---- |
+| 0 Dormant        |          - |     - |    - |    - |    - |    - |    - |
+| 1 Faint          | 15-25 (20) |  80 % | 20 % |    - |    - |    - |    - |
+| 2 Emerging       | 13-23 (18) |  60 % | 30 % | 10 % |    - |    - |    - |
+| 3 Active         | 11-21 (16) |  40 % | 40 % | 15 % |  5 % |    - |    - |
+| 4 Expanding      | 10-20 (15) |  30 % | 30 % | 30 % | 10 % |    - |    - |
+| 5 Escalating     |  9-19 (14) |  20 % | 25 % | 35 % | 15 % |  5 % |    - |
+| 6 War            |  8-18 (13) |  15 % | 20 % | 30 % | 20 % | 10 % |  5 % |
+| 7 Total war      |  7-17 (12) |  10 % | 15 % | 25 % | 25 % | 15 % | 10 % |
 
 Legend:
 `Freq.` - Frequency of the activity level in turns. Min to max.

@@ -1,5 +1,6 @@
 import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/model'
 import { assertInRange } from '../primitives/assertPrimitives'
+import { toF6, type Fixed6 } from '../primitives/fixed6'
 
 /**
  * Activity level progression configuration.
@@ -92,13 +93,13 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
 /**
  * Panic increase per operation level when a faction operation succeeds (mission not completed).
  */
-export const PANIC_INCREASE_BY_OPERATION_LEVEL: Record<number, number> = {
-  1: 1, // Soft operations
-  2: 2, // Violent but small-scale
-  3: 4, // Strategic threats
-  4: 8, // Regional destabilization
-  5: 16, // Global conflict
-  6: 32, // Existential
+export const PANIC_INCREASE_BY_OPERATION_LEVEL: Record<number, Fixed6> = {
+  1: toF6(0.0005), // Soft operations - 0.05%
+  2: toF6(0.002), // Violent but small-scale - 0.2%
+  3: toF6(0.01), // Strategic threats - 1%
+  4: toF6(0.03), // Regional destabilization - 3%
+  5: toF6(0.1), // Global conflict - 10%
+  6: toF6(0.3), // Existential - 30%
 }
 
 /**
@@ -207,8 +208,8 @@ export function rollOperationLevel(activityLevel: ActivityLevel): number {
 /**
  * Get panic increase for a given operation level.
  */
-export function getPanicIncreaseForOperation(operationLevel: number): number {
-  return PANIC_INCREASE_BY_OPERATION_LEVEL[operationLevel] ?? 1
+export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
+  return PANIC_INCREASE_BY_OPERATION_LEVEL[operationLevel] ?? toF6(0.001)
 }
 
 /**

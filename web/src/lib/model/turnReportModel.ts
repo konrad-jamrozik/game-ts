@@ -86,7 +86,7 @@ export type PanicBreakdown = {
     factionId: string
     factionName: string
     operationLevel: number
-    panicIncrease: number
+    panicIncrease: Fixed6
   }[]
   /**
    * Panic reductions from completed missions
@@ -232,7 +232,7 @@ export type ExpiredMissionSiteReport = {
   /**
    * Panic increase penalty from this expired mission
    */
-  panicPenalty?: number
+  panicPenalty?: Fixed6
   /**
    * Funding decrease penalty from this expired mission
    */

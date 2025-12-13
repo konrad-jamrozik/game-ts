@@ -65,24 +65,24 @@ The table below shows some of the details of player defensive missions, to count
 
 KJA Update the values in the defensive missions table; now they are made up.
 
-| Mission                                  | Lvl | Exp | Troops                    | Officers               | Money | Fund       | Intel | Panic            | Threat           | Suppr  |
-| ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- | ----: | ---------: | ----: | ---------------: | ---------------: | -----: |
-| Foil recruitment push                    | 1   | 2   | 1 In,   1 Op              |                        |     0 |    0 / -0  |     5 |   0.1 % / -0.2 % |  0.02 % / -0.1 % |  0.2 % |
-| Foil business extortion                  | 1   | 2   | 2 In                      |                        |     0 |    0 / -0  |     5 |  0.15 % / -0.3 % |  0.02 % / -0.1 % |  0.2 % |
-| Foil supply theft                        | 1   | 3   | 2 In,   1 Op              |                        |    10 |    0 / -5  |    10 |   0.2 % / -0.4 % | 0.05 % / -0.15 % |  0.5 % |
-| Foil sabotage                            | 2   | 3   | 2 In,   2 Op              |                        |     0 |    2 / -5  |    10 |   0.3 % / -0.6 % |  0.05 % / -0.2 % |    1 % |
-| Foil VIP assassination                   | 2   | 4   | 3 In,   2 Op              | 1 Hn                   |     0 |   5 / -10  |    15 |     0.5 % / -1 % |   0.1 % / -0.3 % |    2 % |
-| Defend against office raid               | 2   | 4   | 4 In,   3 Op              | 1 Hn                   |     0 |   5 / -10  |    15 |   0.8 % / -1.5 % |   0.1 % / -0.5 % |    3 % |
-| Foil financial heist                     | 3   | 5   | 3 In,   4 Op,  2 Sl       | 1 Hn, 1 Lt             |    50 |   10 / -20 |    25 |       1 % / -2 % |   0.3 % / -0.8 % |    8 % |
-| Intercept arms deal                      | 3   | 6   | 2 In,   5 Op,  3 Sl       | 2 Hn                   |   150 |   10 / -20 |    30 |     0.8 % / -2 % |     0.4 % / -1 % |   12 % |
-| Defend against facility raid             | 3   | 6   | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |     0 |   10 / -25 |    25 |     1.5 % / -3 % |     0.5 % / -1 % |   15 % |
-| Defend against city government assault   | 4   | 8   | -       8 Op,  6 Sl, 2 El | 3 Hn, 2 Lt, 1 Cm       |     0 |   15 / -30 |    40 |       3 % / -6 % |       2 % / -3 % |   30 % |
-| Counter civilian terror                  | 4   | 8   | -       6 Op,  8 Sl, 3 El | 2 Hn, 2 Lt             |     0 |   15 / -40 |    50 |     5 % / -10 %  |     2.5 % / -4 % |   35 % |
-| Defend against retaliation strike        | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |     0 |   20 / -50 |    60 |       4 % / -8 % |       3 % / -5 % |   45 % |
-| Foil nuclear plant bombing               | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
-| Foil coup attempt                        | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
-| Defend military installation             | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |    80 |    15 % / -25 %  |    10 % / -15 %  |   80 % |
-| Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |   100 |    20 % / -30 %  |    15 % / -20 %  |  100 % |
+| Mission                                  | Lvl | Exp | Troops                    | Officers               | Money | Fund       |
+| ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- | ----: | ---------: |
+| Foil recruitment push                    | 1   | 2   | 1 In,   1 Op              |                        |     0 |    0 / -0  |
+| Foil business extortion                  | 1   | 2   | 2 In                      |                        |     0 |    0 / -0  |
+| Foil supply theft                        | 1   | 3   | 2 In,   1 Op              |                        |    10 |    0 / -5  |
+| Foil sabotage                            | 2   | 3   | 2 In,   2 Op              |                        |     0 |    2 / -5  |
+| Foil VIP assassination                   | 2   | 4   | 3 In,   2 Op              | 1 Hn                   |     0 |   5 / -10  |
+| Defend against office raid               | 2   | 4   | 4 In,   3 Op              | 1 Hn                   |     0 |   5 / -10  |
+| Foil financial heist                     | 3   | 5   | 3 In,   4 Op,  2 Sl       | 1 Hn, 1 Lt             |    50 |   10 / -20 |
+| Intercept arms deal                      | 3   | 6   | 2 In,   5 Op,  3 Sl       | 2 Hn                   |   150 |   10 / -20 |
+| Defend against facility raid             | 3   | 6   | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |     0 |   10 / -25 |
+| Defend against city government assault   | 4   | 8   | -       8 Op,  6 Sl, 2 El | 3 Hn, 2 Lt, 1 Cm       |     0 |   15 / -30 |
+| Counter civilian terror                  | 4   | 8   | -       6 Op,  8 Sl, 3 El | 2 Hn, 2 Lt             |     0 |   15 / -40 |
+| Defend against retaliation strike        | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |     0 |   20 / -50 |
+| Foil nuclear plant bombing               | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
+| Foil coup attempt                        | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
+| Defend military installation             | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
+| Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |
 
 Legend:
 `Lvl` - Mission level (1-5), indicating difficulty tier.
@@ -103,6 +103,19 @@ Level description:
 - Level 4 = regional destabilization
 - Level 5 = global conflict
 - Level 6 = existential
+
+# Faction operation panic penalties
+
+When a faction operation succeeds (defensive mission expires or fails), panic increases based on the operation level.
+
+| Level | Description                | Panic Increase |
+| :---: | -------------------------- | :------------: |
+| 1     | Soft operations            |     0.05 %     |
+| 2     | Violent but small-scale    |     0.2  %     |
+| 3     | Strategic threats          |     1    %     |
+| 4     | Regional destabilization   |     3    %     |
+| 5     | Global conflict            |    10    %     |
+| 6     | Existential                |    30    %     |
 
 # Leads
 
