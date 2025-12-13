@@ -2,7 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
-import { fmtDec1, fmtDec2, fmtInt, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { fmtDec2, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 
@@ -22,6 +22,7 @@ export type CombatLogRow = {
   threshold: number
   outcome: AttackOutcome
   damage: number | undefined
+  baseDamage: number
   damageMin: number
   damageMax: number
   defenderHpAfterDamage: number
@@ -143,17 +144,9 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
         if (params.row.damage === undefined) {
           return <span>-</span>
         }
-        const damageRangePct =
-          params.row.damageMax === params.row.damageMin
-            ? 50
-            : ((params.row.damage - params.row.damageMin) / (params.row.damageMax - params.row.damageMin)) * 100
-        const damagePct = Math.round(50 + damageRangePct)
-        const damageAverage = (params.row.damageMin + params.row.damageMax) / 2
-        const damageAverageFormatted = Number.isInteger(damageAverage) ? fmtInt(damageAverage) : fmtDec1(damageAverage)
         return (
           <span>
-            {params.row.damage} ({params.row.damageMin}-{params.row.damageMax}, {damagePct}% of {damageAverageFormatted}
-            )
+            {params.row.damage}/{params.row.baseDamage}
           </span>
         )
       },

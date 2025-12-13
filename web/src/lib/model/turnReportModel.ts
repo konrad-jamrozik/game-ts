@@ -166,6 +166,7 @@ export type AttackLog = {
   threshold: number
   outcome: AttackOutcome
   damage: number | undefined
+  baseDamage: number
   damageMin: number
   damageMax: number
   defenderHpAfterDamage: number
