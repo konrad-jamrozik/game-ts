@@ -8,6 +8,8 @@ import {
   getActivityLevelConfig,
   getPanicIncreaseForOperation,
   getFundingDecreaseForOperation,
+  getMoneyRewardForOperation,
+  getFundingRewardForOperation,
   calculateOperationTurns,
   calculateProgressionTurns,
   nextActivityLevel,
@@ -170,6 +172,12 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
         const { operationLevel, id } = missionSite
         if (typeof operationLevel === 'number') {
+          // Level 6 existential mission expired - game over
+          if (operationLevel === 6) {
+            // Set panic to 1.0 (100%) to trigger game over condition
+            state.panic = toF6(1)
+          }
+
           // Get faction info for the report
           const factionReward = mission.rewards.factionRewards?.[0]
           const factionId = factionReward?.factionId ?? ''
@@ -291,21 +299,46 @@ function evaluateDeployedMissionSites(state: GameState): {
         attackLogs,
       }
 
+      // For defensive missions (with operationLevel), add operation-level rewards on success
+      // or check for game over on level 6 failure
+      const { operationLevel } = missionSite
+      let finalRewards = rewards
+
+      if (typeof operationLevel === 'number') {
+        // Defensive mission
+        const missionWon = outcome === 'Won'
+        if (missionWon && rewards !== undefined) {
+          // Mission succeeded - add operation-level money and funding rewards
+          const moneyReward = getMoneyRewardForOperation(operationLevel)
+          const fundingReward = getFundingRewardForOperation(operationLevel)
+
+          finalRewards = {
+            ...rewards,
+            money: (rewards.money ?? 0) + moneyReward,
+            funding: (rewards.funding ?? 0) + fundingReward,
+          }
+        } else if (operationLevel === 6 && !missionWon) {
+          // Level 6 existential mission failed - game over
+          // Set panic to 1.0 (100%) to trigger game over condition
+          state.panic = toF6(1)
+        }
+      }
+
       const missionReport: MissionReport = {
         missionSiteId: missionSite.id,
         missionTitle: mission.title,
         faction: factionName,
         outcome,
         rounds,
-        ...(rewards !== undefined && { rewards }),
+        ...(finalRewards !== undefined && { rewards: finalRewards }),
         battleStats,
       }
 
       missionReports.push(missionReport)
 
-      if (rewards !== undefined) {
+      if (finalRewards !== undefined) {
         missionRewards.push({
-          rewards,
+          rewards: finalRewards,
           missionSiteId: missionSite.id,
           missionTitle: mission.title,
         })

@@ -94,24 +94,49 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
  * Panic increase per operation level when a faction operation succeeds (mission not completed).
  */
 export const PANIC_INCREASE_BY_OPERATION_LEVEL: Record<number, Fixed6> = {
-  1: toF6(0.0005), // Soft operations - 0.05%
-  2: toF6(0.002), // Violent but small-scale - 0.2%
-  3: toF6(0.01), // Strategic threats - 1%
-  4: toF6(0.03), // Regional destabilization - 3%
-  5: toF6(0.1), // Global conflict - 10%
-  6: toF6(0.3), // Existential - 30%
+  1: toF6(0.0002), // Soft operations - 0.02%
+  2: toF6(0.001), // Violent but small-scale - 0.1%
+  3: toF6(0.003), // Strategic threats - 0.3%
+  4: toF6(0.01), // Regional destabilization - 1%
+  5: toF6(0.03), // Global conflict - 3%
+  6: toF6(0), // Existential - 0% (no panic increase, but game over on failure)
 }
 
 /**
- * Funding decrease per operation level when a faction operation succeeds (mission not completed).
+ * Money reward per operation level when a defensive mission is completed successfully.
  */
-export const FUNDING_DECREASE_BY_OPERATION_LEVEL: Record<number, number> = {
-  1: 1,
-  2: 2,
+export const MONEY_REWARD_BY_OPERATION_LEVEL: Record<number, number> = {
+  1: 10,
+  2: 30,
+  3: 100,
+  4: 300,
+  5: 1000,
+  6: 0, // Level 6 has no rewards
+}
+
+/**
+ * Funding reward per operation level when a defensive mission is completed successfully.
+ * Funding penalty per operation level when a defensive mission fails (expires or is lost).
+ */
+export const FUNDING_REWARD_BY_OPERATION_LEVEL: Record<number, number> = {
+  1: 0,
+  2: 5,
+  3: 20,
+  4: 40,
+  5: 80,
+  6: 0, // Level 6 has no rewards
+}
+
+/**
+ * Funding penalty per operation level when a faction operation succeeds (mission not completed).
+ */
+export const FUNDING_PENALTY_BY_OPERATION_LEVEL: Record<number, number> = {
+  1: 0,
+  2: 1,
   3: 4,
-  4: 6,
-  5: 10,
-  6: 15,
+  4: 8,
+  5: 16,
+  6: 0, // Level 6 has no penalties (but game over on failure)
 }
 
 /**
@@ -218,7 +243,7 @@ export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
 }
 
 /**
- * Get funding decrease for a given operation level.
+ * Get funding penalty for a given operation level when mission fails.
  * Only called for defensive missions (operationLevel 1-6).
  * Level 0 check is kept for safety but should not occur in practice.
  */
@@ -226,7 +251,29 @@ export function getFundingDecreaseForOperation(operationLevel: number): number {
   if (operationLevel === 0) {
     return 0
   }
-  return FUNDING_DECREASE_BY_OPERATION_LEVEL[operationLevel] ?? 1
+  return FUNDING_PENALTY_BY_OPERATION_LEVEL[operationLevel] ?? 0
+}
+
+/**
+ * Get money reward for a given operation level when defensive mission succeeds.
+ * Only called for defensive missions (operationLevel 1-6).
+ */
+export function getMoneyRewardForOperation(operationLevel: number): number {
+  if (operationLevel === 0) {
+    return 0
+  }
+  return MONEY_REWARD_BY_OPERATION_LEVEL[operationLevel] ?? 0
+}
+
+/**
+ * Get funding reward for a given operation level when defensive mission succeeds.
+ * Only called for defensive missions (operationLevel 1-6).
+ */
+export function getFundingRewardForOperation(operationLevel: number): number {
+  if (operationLevel === 0) {
+    return 0
+  }
+  return FUNDING_REWARD_BY_OPERATION_LEVEL[operationLevel] ?? 0
 }
 
 /**

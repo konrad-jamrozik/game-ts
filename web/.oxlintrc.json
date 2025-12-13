@@ -263,7 +263,7 @@
         "no-throw-literal": "off",
         "@typescript-eslint/only-throw-error": "error",
         "@typescript-eslint/prefer-as-const": "error",
-        "prefer-destructuring": "off",
+        "prefer-destructuring": "error",
         "@typescript-eslint/prefer-enum-initializers": "error",
         "@typescript-eslint/prefer-for-of": "error",
         "@typescript-eslint/prefer-function-type": "error",

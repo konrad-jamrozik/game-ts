@@ -65,24 +65,24 @@ The table below shows some of the details of player defensive missions, to count
 
 KJA Update the values in the defensive missions table; now they are made up.
 
-| Mission                                  | Lvl | Exp | Troops                    | Officers               | Money | Fund       |
-| ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- | ----: | ---------: |
-| Foil recruitment push                    | 1   | 2   | 1 In,   1 Op              |                        |     0 |    0 / -0  |
-| Foil business extortion                  | 1   | 2   | 2 In                      |                        |     0 |    0 / -0  |
-| Foil supply theft                        | 1   | 3   | 2 In,   1 Op              |                        |    10 |    0 / -5  |
-| Foil sabotage                            | 2   | 3   | 2 In,   2 Op              |                        |     0 |    2 / -5  |
-| Foil VIP assassination                   | 2   | 4   | 3 In,   2 Op              | 1 Hn                   |     0 |   5 / -10  |
-| Defend against office raid               | 2   | 4   | 4 In,   3 Op              | 1 Hn                   |     0 |   5 / -10  |
-| Foil financial heist                     | 3   | 5   | 3 In,   4 Op,  2 Sl       | 1 Hn, 1 Lt             |    50 |   10 / -20 |
-| Intercept arms deal                      | 3   | 6   | 2 In,   5 Op,  3 Sl       | 2 Hn                   |   150 |   10 / -20 |
-| Defend against facility raid             | 3   | 6   | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |     0 |   10 / -25 |
-| Defend against city government assault   | 4   | 8   | -       8 Op,  6 Sl, 2 El | 3 Hn, 2 Lt, 1 Cm       |     0 |   15 / -30 |
-| Counter civilian terror                  | 4   | 8   | -       6 Op,  8 Sl, 3 El | 2 Hn, 2 Lt             |     0 |   15 / -40 |
-| Defend against retaliation strike        | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |     0 |   20 / -50 |
-| Foil nuclear plant bombing               | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
-| Foil coup attempt                        | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
-| Defend military installation             | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |     0 |  40 / -75  |
-| Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |
+| Mission                                  | Lvl | Exp | Troops                    | Officers               |
+| ---------------------------------------- | :-: | --- | ------------------------- | ---------------------- |
+| Foil recruitment push                    | 1   | 2   | 1 In,   1 Op              |                        |
+| Foil business extortion                  | 1   | 2   | 2 In                      |                        |
+| Foil supply theft                        | 1   | 3   | 2 In,   1 Op              |                        |
+| Foil sabotage                            | 2   | 3   | 2 In,   2 Op              |                        |
+| Foil VIP assassination                   | 2   | 4   | 3 In,   2 Op              | 1 Hn                   |
+| Defend against office raid               | 2   | 4   | 4 In,   3 Op              | 1 Hn                   |
+| Foil financial heist                     | 3   | 5   | 3 In,   4 Op,  2 Sl       | 1 Hn, 1 Lt             |
+| Intercept arms deal                      | 3   | 6   | 2 In,   5 Op,  3 Sl       | 2 Hn                   |
+| Defend against facility raid             | 3   | 6   | 4 In,   6 Op,  4 Sl       | 2 Hn, 1 Lt             |
+| Defend against city government assault   | 4   | 8   | -       8 Op,  6 Sl, 2 El | 3 Hn, 2 Lt, 1 Cm       |
+| Counter civilian terror                  | 4   | 8   | -       6 Op,  8 Sl, 3 El | 2 Hn, 2 Lt             |
+| Defend against retaliation strike        | 4   | 10  | -      10 Op, 10 Sl, 4 El | 4 Hn, 3 Lt, 1 Cm       |
+| Foil nuclear plant bombing               | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |
+| Foil coup attempt                        | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |
+| Defend military installation             | 5   | 12  | -             15 Sl, 5 El | -     3 Lt, 2 Cm       |
+| Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |
 
 Legend:
 `Lvl` - Mission level (1-6), indicating difficulty tier.
@@ -106,20 +106,22 @@ When a faction operation succeeds (defensive mission expires or fails), rewards 
 
 | Level | Description                | Panic increase | Money | Fund R/P   |
 | :---: | -------------------------- | :------------: | :---: | :--------: |
-| -     | SolPar offensive missions  |     0    %     |    0  |            |
-| 1     | Soft operations            |     0.05 %     |    0  |   0 /    0 |
-| 2     | Violent but small-scale    |     0.2  %     |    0  |   5 /   -1 |
-| 3     | Strategic threats          |     1    %     |   50  |  10 /   -2 |
-| 4     | Regional destabilization   |     3    %     |  150  |  20 /   -4 |
-| 5     | Global conflict            |    10    %     |  400  |  40 /   -8 |
-| 6     | Existential                |    30    %     | 1000  |  80 /  -16 |
+| 1     | Soft operations            |     0.02 %     |   10  |   0 /    0 |
+| 2     | Violent but small-scale    |     0.1  %     |   30  |   5 /   -1 |
+| 3     | Strategic threats          |     0.3  %     |  100  |  20 /   -4 |
+| 4     | Regional destabilization   |     1    %     |  300  |  40 /   -8 |
+| 5     | Global conflict            |     3    %     | 1000  |  80 /  -16 |
+| 6     | Existential                |     0    %     |   0   |   0 /    0 |
+| -     | SolPar offensive missions  |     0    %     |   0   |   0 /    0 |
+
+Note:
+- All player offensive missions have undefined operation level (no operation level).
+- Level 6 existential has no penalties or rewards except: if the player fails to complete the mission, it is game over.
 
 Legend:
 `Panic increase` - Panic increase if the player fails to complete the defensive mission.
 `Money` - Money reward if the player completes the defensive mission.
 `Fund R/P` - Funding reward or penalty depending on whether the player completes the defensive mission.
-
-*Note that all player offensive missions have undefined operation level (no operation level).
 
 # Leads
 
