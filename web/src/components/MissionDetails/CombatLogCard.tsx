@@ -7,6 +7,7 @@ import type { MissionSiteId } from '../../lib/model/model'
 import { useMissionReport } from './useMissionReport'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
+import { f6max, toF6 } from '../../lib/primitives/fixed6'
 
 type CombatLogCardProps = {
   missionSiteId: MissionSiteId
@@ -25,12 +26,18 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
     ...log,
   }))
 
+  // Compute combat-wide max effective skill from all rows (unfiltered)
+  const combatMaxSkill = allRows.reduce((max, row) => {
+    const maxAttackerDefender = f6max(row.attackerSkill, row.defenderSkill)
+    return f6max(max, maxAttackerDefender)
+  }, toF6(0))
+
   // Filter rows based on checkbox states
   const rows: CombatLogRow[] = allRows.filter((row) =>
     row.attackerType === 'Agent' ? showAgentAttacks : showEnemyAttacks,
   )
 
-  const columns = getCombatLogColumns(rows)
+  const columns = getCombatLogColumns({ rows, combatMaxSkill })
 
   return (
     <ExpandableCard id="combat-log" title="Combat Log" defaultExpanded={true} sx={{ width: COMBAT_LOG_CARD_WIDTH }}>
@@ -68,6 +75,9 @@ export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.
             '&:hover': {
               backgroundColor: 'hsl(4, 30.00%, 22.00%)',
             },
+          },
+          '& .combat-log-skill-cell': {
+            padding: '4px',
           },
         }}
       />

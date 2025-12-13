@@ -1,7 +1,8 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
+import Box from '@mui/material/Box'
 import { columnWidths } from '../Common/columnWidths'
-import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6fmtInt, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtDec2, fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
@@ -29,7 +30,12 @@ export type CombatLogRow = {
   defenderHpMax: number
 }
 
-export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogRow>[] {
+type GetCombatLogColumnsParams = {
+  rows: CombatLogRow[]
+  combatMaxSkill: Fixed6
+}
+
+export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumnsParams): GridColDef<CombatLogRow>[] {
   const columns: GridColDef<CombatLogRow>[] = [
     {
       field: 'attackId',
@@ -83,37 +89,27 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
       field: 'attackerSkill',
       headerName: 'Att Skill',
       width: columnWidths['combat_log.attacker_skill'],
+      cellClassName: 'combat-log-skill-cell',
       sortComparator: createFixed6SortComparator(
         rows,
         (row) => row.attackerSkill,
         (row) => row.attackerSkillAtStart,
       ),
-      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
-        const skillPct = f6fmtPctDec0(params.row.attackerSkill, params.row.attackerSkillAtStart)
-        return (
-          <span>
-            {f6fmtInt(params.row.attackerSkill)}/{f6fmtInt(params.row.attackerSkillAtStart)} ({skillPct})
-          </span>
-        )
-      },
+      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
+        renderSkillCell(params.row.attackerSkill, params.row.attackerSkillAtStart, combatMaxSkill),
     },
     {
       field: 'defenderSkill',
       headerName: 'Def Skill',
       width: columnWidths['combat_log.defender_skill'],
+      cellClassName: 'combat-log-skill-cell',
       sortComparator: createFixed6SortComparator(
         rows,
         (row) => row.defenderSkill,
         (row) => row.defenderSkillAtStart,
       ),
-      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
-        const skillPct = f6fmtPctDec0(params.row.defenderSkill, params.row.defenderSkillAtStart)
-        return (
-          <span>
-            {f6fmtInt(params.row.defenderSkill)}/{f6fmtInt(params.row.defenderSkillAtStart)} ({skillPct})
-          </span>
-        )
-      },
+      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
+        renderSkillCell(params.row.defenderSkill, params.row.defenderSkillAtStart, combatMaxSkill),
     },
     {
       field: 'roll',
@@ -168,6 +164,45 @@ export function getCombatLogColumns(rows: CombatLogRow[]): GridColDef<CombatLogR
   ]
 
   return columns
+}
+
+function renderSkillCell(currentSkill: Fixed6, skillAtStart: Fixed6, combatMaxSkill: Fixed6): React.JSX.Element {
+  // Calculate fill percentage: current skill normalized to combat max (0-100%)
+  const fillPct = combatMaxSkill.value > 0 ? Math.min(100, (currentSkill.value / combatMaxSkill.value) * 100) : 0
+
+  // Calculate color percentage: current skill vs initial skill (0.0 = red, 1.0 = green)
+  const colorPct = skillAtStart.value > 0 ? Math.max(0, Math.min(1, currentSkill.value / skillAtStart.value)) : 0
+
+  // Convert color percentage to HSL hue: 0 = red (0°), 1.0 = green (120°)
+  const hue = colorPct * 120
+
+  // Create gradient background: filled portion with color, rest transparent
+  const background = `linear-gradient(90deg, hsla(${hue}, 90%, 45%, 0.3) 0%, hsla(${hue}, 90%, 45%, 0.3) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background,
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {f6fmtInt(currentSkill)}
+      </Box>
+    </Box>
+  )
 }
 
 function getDefenderColor(outcome: AttackOutcome, isDefender: boolean): string | undefined {
