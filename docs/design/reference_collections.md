@@ -85,7 +85,7 @@ KJA Update the values in the defensive missions table; now they are made up.
 | Defend against HQ assault                | 6   | 15  | -             20 Sl, 8 El | -     4 Lt, 3 Cm, 1 HC |     0 |  50 / -150 |
 
 Legend:
-`Lvl` - Mission level (1-5), indicating difficulty tier.
+`Lvl` - Mission level (1-6), indicating difficulty tier.
 `Exp` - In how many turns the mission expires.
 `Troops` - What troop-type enemies are present on the mission.
 `Officers` - What officer-type enemies are present on the mission.
@@ -110,12 +110,15 @@ When a faction operation succeeds (defensive mission expires or fails), panic in
 
 | Level | Description                | Panic Increase |
 | :---: | -------------------------- | :------------: |
+| 0*    | SolPar offensive missions  |     0    %     |
 | 1     | Soft operations            |     0.05 %     |
 | 2     | Violent but small-scale    |     0.2  %     |
 | 3     | Strategic threats          |     1    %     |
 | 4     | Regional destabilization   |     3    %     |
 | 5     | Global conflict            |    10    %     |
 | 6     | Existential                |    30    %     |
+
+*Note that all player offensive missions have operation level of 0.
 
 # Leads
 

@@ -36,6 +36,7 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
+import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -173,7 +174,8 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
         const factionName = faction?.name ?? 'Unknown'
 
         // Calculate penalties based on operation level
-        const operationLevel = missionSite.operationLevel ?? 1
+        const { operationLevel } = missionSite
+        assertDefined(operationLevel, `Operation level is required. missionSite: ${missionSite.id}`)
         const panicPenalty = getPanicIncreaseForOperation(operationLevel)
         const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
 

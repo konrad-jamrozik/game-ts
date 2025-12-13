@@ -246,12 +246,14 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       state: 'Deployed',
       expiresIn: mission.expiresIn,
       enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
+      operationLevel: 0, // Offensive mission
     },
     {
       id: 'mission-site-001' as MissionSiteId,
       missionId: 'mission-apprehend-red-dawn-member',
       agentIds: [],
       state: 'Active',
+      operationLevel: 0, // Offensive mission
       expiresIn: mission.expiresIn,
       enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
     },

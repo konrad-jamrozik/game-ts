@@ -207,15 +207,23 @@ export function rollOperationLevel(activityLevel: ActivityLevel): number {
 
 /**
  * Get panic increase for a given operation level.
+ * Level 0 (offensive missions) returns 0 (no panic increase).
  */
 export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
+  if (operationLevel === 0) {
+    return toF6(0)
+  }
   return PANIC_INCREASE_BY_OPERATION_LEVEL[operationLevel] ?? toF6(0.001)
 }
 
 /**
  * Get funding decrease for a given operation level.
+ * Level 0 (offensive missions) returns 0 (no funding decrease).
  */
 export function getFundingDecreaseForOperation(operationLevel: number): number {
+  if (operationLevel === 0) {
+    return 0
+  }
   return FUNDING_DECREASE_BY_OPERATION_LEVEL[operationLevel] ?? 1
 }
 

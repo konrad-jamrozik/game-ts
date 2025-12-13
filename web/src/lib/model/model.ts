@@ -87,11 +87,12 @@ export type MissionSite = {
   expiresIn: number | 'never'
   enemies: Enemy[] // Enemies present at the mission site
   /**
-   * The operation level that spawned this mission site (1-6).
+   * The operation level that spawned this mission site.
+   * - 0 = Offensive missions (apprehend/raid) - no penalties on expiration
+   * - 1-6 = Defensive missions (faction operations) - penalties apply on expiration
    * Used to calculate penalties when mission expires.
-   * Optional for backward compatibility with existing mission sites.
    */
-  operationLevel?: number
+  operationLevel: number
 }
 
 /**
