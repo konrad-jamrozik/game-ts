@@ -164,14 +164,12 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       field: 'rollDiff',
       headerName: 'Diff',
       width: columnWidths['combat_log.roll_diff'],
+      cellClassName: 'combat-log-skill-cell',
       type: 'number',
       valueGetter: (_value, row: CombatLogRow): number => row.roll - row.threshold,
       sortComparator: (v1: number, v2: number): number => v1 - v2,
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const diff = params.row.roll - params.row.threshold
-        const diffFormatted = diff >= 0 ? floorToDec2(diff).toFixed(2) : floorToDec2(diff).toFixed(2)
-        return <span>{diffFormatted} %</span>
-      },
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element =>
+        renderDiffCell(params.row.roll, params.row.threshold, rows),
     },
     {
       field: 'damage',
@@ -208,6 +206,69 @@ function fmtRollComparison(roll: number, threshold: number, operator: '>' | '<='
   // Remove one space after <= to account for the extra character in the operator
   const operatorSpacing = operator === '<=' ? '' : ' '
   return `${rollFormatted} % ${operator}${operatorSpacing} ${thresholdFormatted} %`
+}
+
+function renderDiffCell(roll: number, threshold: number, allRows: CombatLogRow[]): React.JSX.Element {
+  const diff = roll - threshold
+  const diffFormatted = diff >= 0 ? floorToDec2(diff).toFixed(2) : floorToDec2(diff).toFixed(2)
+
+  // Calculate max absolute diff for normalization
+  const maxAbsDiff = Math.max(
+    ...allRows.map((row) => Math.abs(row.roll - row.threshold)),
+    1, // fallback to 1 to avoid division by zero
+  )
+
+  // Normalize diff to percentage (0-100%)
+  const absDiff = Math.abs(diff)
+  const fillPct = Math.min(100, (absDiff / maxAbsDiff) * 100)
+
+  // Create background: green for positive diff, red for negative diff
+  const background =
+    diff > 0
+      ? `linear-gradient(90deg, 
+        ${ROLL_BAR_GREEN} 0%, 
+        ${ROLL_BAR_GREEN} ${fillPct}%, 
+        transparent ${fillPct}%, 
+        transparent 100%)`
+      : diff < 0
+        ? `linear-gradient(90deg, 
+        ${ROLL_BAR_RED} 0%, 
+        ${ROLL_BAR_RED} ${fillPct}%, 
+        transparent ${fillPct}%, 
+        transparent 100%)`
+        : `linear-gradient(90deg, 
+        ${ROLL_BAR_GREY} 0%, 
+        ${ROLL_BAR_GREY} ${fillPct}%, 
+        transparent ${fillPct}%, 
+        transparent 100%)`
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background,
+        overflow: 'hidden',
+        position: 'relative',
+        border: '1px solid rgba(128, 128, 128, 0.3)',
+        boxSizing: 'border-box',
+        backgroundClip: 'padding-box',
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+        }}
+      >
+        {diffFormatted}%
+      </Box>
+    </Box>
+  )
 }
 
 function renderRollCell(roll: number, threshold: number): React.JSX.Element {
