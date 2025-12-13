@@ -119,30 +119,38 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       },
     },
     {
-      field: 'attackerSkill',
-      headerName: 'Att Skill',
+      field: 'agentSkill',
+      headerName: 'Agent Skill',
       width: columnWidths['combat_log.attacker_skill'],
       cellClassName: 'combat-log-skill-cell',
       sortComparator: createFixed6SortComparator(
         rows,
-        (row) => row.attackerSkill,
-        (row) => row.attackerSkillAtStart,
+        (row) => (row.attackerType === 'Agent' ? row.attackerSkill : row.defenderSkill),
+        (row) => (row.attackerType === 'Agent' ? row.attackerSkillAtStart : row.defenderSkillAtStart),
       ),
-      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
-        renderSkillCell(params.row.attackerSkill, params.row.attackerSkillAtStart, combatMaxSkill, true),
+      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
+        const agentSkill = params.row.attackerType === 'Agent' ? params.row.attackerSkill : params.row.defenderSkill
+        const agentSkillAtStart =
+          params.row.attackerType === 'Agent' ? params.row.attackerSkillAtStart : params.row.defenderSkillAtStart
+        return renderSkillCell(agentSkill, agentSkillAtStart, combatMaxSkill, true)
+      },
     },
     {
-      field: 'defenderSkill',
-      headerName: 'Def Skill',
+      field: 'enemySkill',
+      headerName: 'Enemy Skill',
       width: columnWidths['combat_log.defender_skill'],
       cellClassName: 'combat-log-skill-cell',
       sortComparator: createFixed6SortComparator(
         rows,
-        (row) => row.defenderSkill,
-        (row) => row.defenderSkillAtStart,
+        (row) => (row.attackerType === 'Agent' ? row.defenderSkill : row.attackerSkill),
+        (row) => (row.attackerType === 'Agent' ? row.defenderSkillAtStart : row.attackerSkillAtStart),
       ),
-      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element =>
-        renderSkillCell(params.row.defenderSkill, params.row.defenderSkillAtStart, combatMaxSkill, false),
+      renderCell: (params: GridRenderCellParams<CombatLogRow, Fixed6>): React.JSX.Element => {
+        const enemySkill = params.row.attackerType === 'Agent' ? params.row.defenderSkill : params.row.attackerSkill
+        const enemySkillAtStart =
+          params.row.attackerType === 'Agent' ? params.row.defenderSkillAtStart : params.row.attackerSkillAtStart
+        return renderSkillCell(enemySkill, enemySkillAtStart, combatMaxSkill, false)
+      },
     },
     {
       field: 'roll',
