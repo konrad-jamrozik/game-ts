@@ -1,5 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, f6fmtInt, f6fmtPctDec0, toF } from '../../lib/primitives/fixed6'
+import { f6fmtInt, f6fmtPctDec0, toF, toF6 } from '../../lib/primitives/fixed6'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
@@ -58,14 +58,6 @@ function formatRewards(
     })
   }
 
-  if (rewards.intel !== undefined) {
-    children.push({
-      id: `mission-${missionSiteId}-reward-intel`,
-      label: 'Intel',
-      chipValue: rewards.intel,
-    })
-  }
-
   if (rewards.funding !== undefined) {
     children.push({
       id: `mission-${missionSiteId}-reward-funding`,
@@ -86,23 +78,13 @@ function formatRewards(
   // Faction rewards - assume single faction (the one the mission is against)
   if (rewards.factionRewards !== undefined && rewards.factionRewards.length > 0) {
     const [factionReward] = rewards.factionRewards
-    if (factionReward !== undefined) {
-      if (factionReward.threatReduction !== undefined) {
-        children.push({
-          id: `mission-${missionSiteId}-reward-faction-threat-reduction`,
-          label: 'Faction threat',
-          chipValue: toF6(-toF(factionReward.threatReduction)),
-          reverseColor: true, // Negative values (reductions) should be green
-        })
-      }
-      if (factionReward.suppression !== undefined) {
-        children.push({
-          id: `mission-${missionSiteId}-reward-faction-suppression`,
-          label: 'Faction suppression',
-          chipValue: factionReward.suppression,
-          reverseColor: false, // Suppression increase is good (default)
-        })
-      }
+    if (factionReward?.suppression !== undefined) {
+      children.push({
+        id: `mission-${missionSiteId}-reward-faction-suppression`,
+        label: 'Faction suppression',
+        chipValue: `+${factionReward.suppression} turns`,
+        reverseColor: false, // Suppression increase is good (default)
+      })
     }
   }
 

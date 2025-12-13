@@ -219,7 +219,6 @@ function buildDebugAgents(
 export function makeDebugInitialOverrides(): Partial<GameState> {
   const stateBase: Partial<GameState> = {
     money: 1000,
-    intel: 500,
     trainingCap: 4,
     leadInvestigationCounts: {
       'lead-red-dawn-profile': 1,

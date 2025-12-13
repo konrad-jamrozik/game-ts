@@ -4,7 +4,14 @@ import { toF6, f6add, f6max, f6sub, f6sum } from '../../primitives/fixed6'
 import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { decaySuppression, getPanicIncrease, getTotalPanicIncrease } from '../../ruleset/panicRuleset'
+import {
+  getActivityLevelConfig,
+  getPanicIncreaseForOperation,
+  getFundingDecreaseForOperation,
+  calculateOperationTurns,
+  calculateProgressionTurns,
+  nextActivityLevel,
+} from '../../ruleset/activityLevelRuleset'
 import {
   newValueChange,
   type AgentsReport,
@@ -12,7 +19,6 @@ import {
   type BattleStats,
   type ExpiredMissionSiteReport,
   type FactionReport,
-  type IntelBreakdown,
   type MissionReport,
   type MoneyBreakdown,
   type PanicReport,
@@ -62,7 +68,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 5. Update all agents on Contracting assignment
   const contractingResults = updateContractingAgents(state)
 
-  // 6. Update all agents in Training
+  // 6.5. Update all agents in Training
   updateTrainingAgents(state)
 
   // 7. Update lead investigations (agents completing investigations go to InTransit)
@@ -86,7 +92,6 @@ export default function evaluateTurn(state: GameState): TurnReport {
   const assetsReportPartial = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
-    intelGathered: 0,
     missionRewards,
   })
 
@@ -99,11 +104,14 @@ export default function evaluateTurn(state: GameState): TurnReport {
     agentsReport,
   }
 
-  // 13. Update panic
-  const panicReport = updatePanic(state, missionRewards)
+  // 13. Update panic (from expired missions and mission rewards)
+  const panicReport = updatePanic(state, missionRewards, expiredMissionSiteReports)
 
-  // 14. Update factions
+  // 14. Update factions (activity levels, suppression, etc.)
   const factionsReport = updateFactions(state, missionRewards)
+
+  // 15. Apply funding penalties from expired missions
+  applyFundingPenalties(state, expiredMissionSiteReports)
 
   validateGameStateInvariants(state)
 
@@ -147,7 +155,7 @@ function getAgentCounts(agents: GameState['agents']): {
 
 /**
  * Updates active non-deployed mission sites - apply expiration countdown
- * Returns reports for mission sites that expired this turn
+ * Returns reports for mission sites that expired this turn, including penalties
  */
 function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] {
   const expiredReports: ExpiredMissionSiteReport[] = []
@@ -157,9 +165,26 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
       if (missionSite.expiresIn <= 0) {
         missionSite.state = 'Expired'
         const mission = getMissionById(missionSite.missionId)
+
+        // Get faction info for the report
+        const factionReward = mission.rewards.factionRewards?.[0]
+        const factionId = factionReward?.factionId ?? ''
+        const faction = state.factions.find((f) => f.id === factionId)
+        const factionName = faction?.name ?? 'Unknown'
+
+        // Calculate penalties based on operation level
+        const operationLevel = missionSite.operationLevel ?? 1
+        const panicPenalty = getPanicIncreaseForOperation(operationLevel)
+        const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
+
         expiredReports.push({
           missionSiteId: missionSite.id,
           missionTitle: mission.title,
+          factionId,
+          factionName,
+          operationLevel,
+          panicPenalty,
+          fundingPenalty,
         })
       }
     }
@@ -296,24 +321,21 @@ function evaluateDeployedMissionSites(state: GameState): {
 
 /**
  * Updates player assets based on the results of agent assignments and mission rewards
- * Returns partial AssetsReport without agentsReport (money, intel, and breakdowns only)
+ * Returns partial AssetsReport without agentsReport (money and breakdowns only)
  */
 function updatePlayerAssets(
   state: GameState,
   income: {
     agentUpkeep: number
     moneyEarned: number
-    intelGathered: number
     missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
   },
 ): Omit<AssetsReport, 'agentsReport'> {
   // Capture previous values
   const previousMoney = state.money
-  const previousIntel = state.intel
 
   // Track mission reward amounts for breakdown
   let missionMoneyRewards = 0
-  let missionIntelRewards = 0
 
   // Subtract agent upkeep costs (calculated at turn start before any agents were terminated)
   state.money -= income.agentUpkeep
@@ -324,16 +346,12 @@ function updatePlayerAssets(
   // Add funding income
   state.money += state.funding
 
-  // Apply mission rewards for money, intel, and funding only
+  // Apply mission rewards for money and funding only
   // Panic and faction rewards are applied in their respective update functions
   for (const { rewards } of income.missionRewards) {
     if (rewards.money !== undefined) {
       state.money += rewards.money
       missionMoneyRewards += rewards.money
-    }
-    if (rewards.intel !== undefined) {
-      state.intel += rewards.intel
-      missionIntelRewards += rewards.intel
     }
     if (rewards.funding !== undefined) {
       state.funding += rewards.funding
@@ -341,7 +359,6 @@ function updatePlayerAssets(
   }
 
   const moneyChange = newValueChange(previousMoney, state.money)
-  const intelChange = newValueChange(previousIntel, state.intel)
 
   // Create detailed breakdowns
   const moneyDetails: MoneyBreakdown = {
@@ -351,15 +368,9 @@ function updatePlayerAssets(
     missionRewards: missionMoneyRewards,
   }
 
-  const intelDetails: IntelBreakdown = {
-    missionRewards: missionIntelRewards,
-  }
-
   return {
     moneyChange,
-    intelChange,
     moneyBreakdown: moneyDetails,
-    intelBreakdown: intelDetails,
   }
 }
 
@@ -422,28 +433,30 @@ function getAgentsReport(
 }
 
 /**
- * Updates panic based on faction threat levels and suppression, and applies panic reduction from mission rewards
+ * Updates panic based on expired mission penalties and mission rewards
  * Returns detailed PanicReport tracking all changes
  */
 function updatePanic(
   state: GameState,
   missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[],
+  expiredMissionSites: ExpiredMissionSiteReport[],
 ): PanicReport {
   const previousPanic = state.panic
 
-  // Track faction contributions
-  const factionPanicIncreases = state.factions.map((faction) => {
-    const factionPanicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
-    return {
-      factionId: faction.id,
-      factionName: faction.name,
-      factionPanicIncrease,
-    }
-  })
+  // Track faction operation penalties (from expired missions)
+  const factionOperationPenalties = expiredMissionSites
+    .filter((expired) => expired.panicPenalty !== undefined && expired.panicPenalty > 0)
+    .map((expired) => ({
+      factionId: expired.factionId,
+      factionName: expired.factionName,
+      operationLevel: expired.operationLevel ?? 1,
+      panicIncrease: expired.panicPenalty ?? 0,
+    }))
 
-  // Increase panic by the sum of (threat level - suppression) for all factions
-  const totalPanicIncrease = getTotalPanicIncrease(state)
-  state.panic = f6add(state.panic, totalPanicIncrease)
+  // Apply panic increases from expired missions
+  for (const penalty of factionOperationPenalties) {
+    state.panic = f6add(state.panic, penalty.panicIncrease)
+  }
 
   // Track mission reductions and apply them
   const missionReductions = []
@@ -461,26 +474,34 @@ function updatePanic(
   return {
     change: newValueChange(previousPanic, state.panic),
     breakdown: {
-      factionPanicIncreases,
+      factionOperationPenalties,
       missionReductions,
     },
   }
 }
 
 /**
- * Apply faction rewards to a target faction
+ * Apply funding penalties from expired missions
  */
-function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
-  if (factionReward.threatReduction !== undefined) {
-    targetFaction.threatLevel = f6max(toF6(0), f6sub(targetFaction.threatLevel, factionReward.threatReduction))
-  }
-  if (factionReward.suppression !== undefined) {
-    targetFaction.suppression = f6add(targetFaction.suppression, factionReward.suppression)
+function applyFundingPenalties(state: GameState, expiredMissionSites: ExpiredMissionSiteReport[]): void {
+  for (const expired of expiredMissionSites) {
+    if (expired.fundingPenalty !== undefined && expired.fundingPenalty > 0) {
+      state.funding = Math.max(0, state.funding - expired.fundingPenalty)
+    }
   }
 }
 
 /**
- * Updates factions - apply threat level increases and suppression decay, and applies faction rewards from missions
+ * Apply faction reward (suppression) to a target faction
+ */
+function applyFactionReward(targetFaction: Faction, factionReward: FactionRewards): void {
+  if (factionReward.suppression !== undefined) {
+    targetFaction.suppressionTurns += factionReward.suppression
+  }
+}
+
+/**
+ * Updates factions - activity level progression and suppression
  * Returns detailed FactionReport[] tracking all changes
  */
 function updateFactions(
@@ -491,16 +512,10 @@ function updateFactions(
 
   for (const faction of state.factions) {
     // Capture previous values
-    const previousThreatLevel = faction.threatLevel
-    const previousThreatIncrease = faction.threatIncrease
-    const previousSuppression = faction.suppression
-
-    // Increment faction threat levels
-    faction.threatLevel = f6sum(faction.threatLevel, faction.threatIncrease)
-
-    // Apply suppression decay AFTER panic calculation and threat increase
-    const { decayedSuppression, suppressionDecay } = decaySuppression(faction.suppression)
-    faction.suppression = decayedSuppression
+    const previousActivityLevel = faction.activityLevel
+    const previousTurnsAtCurrentLevel = faction.turnsAtCurrentLevel
+    const previousTurnsUntilNextOperation = faction.turnsUntilNextOperation
+    const previousSuppressionTurns = faction.suppressionTurns
 
     // Track mission impacts on this faction
     const missionImpacts = []
@@ -511,16 +526,12 @@ function updateFactions(
             const impact: {
               missionSiteId: string
               missionTitle: string
-              threatReduction?: typeof factionReward.threatReduction
-              suppressionAdded?: typeof factionReward.suppression
+              suppressionAdded?: number
             } = {
               missionSiteId,
               missionTitle,
             }
 
-            if (factionReward.threatReduction !== undefined) {
-              impact.threatReduction = factionReward.threatReduction
-            }
             if (factionReward.suppression !== undefined) {
               impact.suppressionAdded = factionReward.suppression
             }
@@ -530,6 +541,35 @@ function updateFactions(
           }
         }
       }
+    }
+
+    // Update activity level progression (only for non-dormant factions)
+    let activityLevelIncreased = false
+    if (faction.activityLevel > 0) {
+      faction.turnsAtCurrentLevel += 1
+
+      // Check if faction should advance to next activity level
+      const config = getActivityLevelConfig(faction.activityLevel)
+      if (faction.activityLevel < 7 && config.minTurns !== Infinity) {
+        // Calculate the target turns for this faction if not already calculated
+        const targetTurns = calculateProgressionTurns(faction.activityLevel)
+        if (faction.turnsAtCurrentLevel >= targetTurns) {
+          faction.activityLevel = nextActivityLevel(faction.activityLevel)
+          faction.turnsAtCurrentLevel = 0
+          faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
+          activityLevelIncreased = true
+        }
+      }
+    }
+
+    // Update suppression (decay by 1 each turn if > 0)
+    if (faction.suppressionTurns > 0) {
+      faction.suppressionTurns -= 1
+    }
+
+    // Update turns until next operation (only if not suppressed and not dormant)
+    if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
+      faction.turnsUntilNextOperation -= 1
     }
 
     // Check if faction is discovered by verifying all discovery prerequisites are met
@@ -542,12 +582,12 @@ function updateFactions(
       factionId: faction.id,
       factionName: faction.name,
       isDiscovered,
-      threatLevel: newValueChange(previousThreatLevel, faction.threatLevel),
-      threatIncrease: newValueChange(previousThreatIncrease, faction.threatIncrease),
-      suppression: newValueChange(previousSuppression, faction.suppression),
-      baseThreatIncrease: faction.threatIncrease,
+      activityLevel: newValueChange(previousActivityLevel, faction.activityLevel),
+      turnsAtCurrentLevel: newValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),
+      turnsUntilNextOperation: newValueChange(previousTurnsUntilNextOperation, faction.turnsUntilNextOperation),
+      suppressionTurns: newValueChange(previousSuppressionTurns, faction.suppressionTurns),
       missionImpacts,
-      suppressionDecay,
+      activityLevelIncreased,
     })
   }
 

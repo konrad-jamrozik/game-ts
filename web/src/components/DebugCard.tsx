@@ -7,7 +7,7 @@ import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import {
   debugSpawnMissionSites,
   debugSetPanicToZero,
-  debugSetAllFactionsSuppressionTo1000Percent,
+  debugSetAllFactionsSuppression,
   debugAddMoney,
   debugSpawn10Agents,
   debugAddCapabilities,
@@ -25,8 +25,8 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugSetPanicToZero())
   }
 
-  function handleSetAllFactionsSuppressionTo1000Percent(): void {
-    dispatch(debugSetAllFactionsSuppressionTo1000Percent())
+  function handleSetAllFactionsSuppression(): void {
+    dispatch(debugSetAllFactionsSuppression())
   }
 
   function handleAddMoney(): void {
@@ -54,7 +54,7 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleSetPanicToZero}>
           Set panic to zero
         </Button>
-        <Button variant="contained" onClick={handleSetAllFactionsSuppressionTo1000Percent}>
+        <Button variant="contained" onClick={handleSetAllFactionsSuppression}>
           Set all factions suppression to 1000%
         </Button>
         <Button variant="contained" onClick={handleAddMoney}>

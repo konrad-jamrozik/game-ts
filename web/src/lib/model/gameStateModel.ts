@@ -12,7 +12,6 @@ export type GameState = {
   factions: Faction[]
   // Assets
   money: number
-  intel: number // global intel (unused for leads, kept for backward compatibility)
   funding: number
   agents: Agent[]
   agentCap: number

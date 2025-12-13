@@ -57,16 +57,13 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
       : '-'
 
   const rewardMoney = rewards.money ?? 0
-  const rewardIntel = rewards.intel
   const rewardFunding = rewards.funding
   const rewardPanicReduction = rewards.panicReduction
   const rewardPanicReductionStr = rewardPanicReduction ? f6fmtPctDec2(rewardPanicReduction) : '-'
 
   const factionReward = rewards.factionRewards?.[0]
-  const rewardThreatReduction = factionReward?.threatReduction
-  const rewardThreatReductionStr = rewardThreatReduction ? f6fmtPctDec2(rewardThreatReduction) : '-'
   const rewardSuppression = factionReward?.suppression
-  const rewardSuppressionStr = rewardSuppression ? f6fmtPctDec2(rewardSuppression) : '-'
+  const rewardSuppressionStr = rewardSuppression !== undefined ? `${rewardSuppression} turns` : '-'
 
   const detailsRows: MissionSiteDetailsRow[] = [
     { id: 1, key: 'ID', value: displayId },
@@ -81,11 +78,9 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
 
   const rewardRows: MissionSiteDetailsRow[] = [
     { id: 1, key: 'Money', value: rewardMoney !== 0 ? String(rewardMoney) : '-' },
-    { id: 2, key: 'Intel', value: rewardIntel !== undefined ? String(rewardIntel) : '-' },
-    { id: 3, key: 'Funding', value: rewardFunding !== undefined ? String(rewardFunding) : '-' },
-    { id: 4, key: 'Panic reduction', value: rewardPanicReductionStr },
-    { id: 5, key: 'Threat reduction', value: rewardThreatReductionStr },
-    { id: 6, key: 'Suppression', value: rewardSuppressionStr },
+    { id: 2, key: 'Funding', value: rewardFunding !== undefined ? String(rewardFunding) : '-' },
+    { id: 3, key: 'Panic reduction', value: rewardPanicReductionStr },
+    { id: 4, key: 'Suppression', value: rewardSuppressionStr },
   ]
 
   const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [

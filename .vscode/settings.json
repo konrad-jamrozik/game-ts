@@ -92,7 +92,8 @@
         "uicov",
         "undoable",
         "vite",
-        "vitest"
+        "vitest",
+        "worktree"
     ],
     // https://colors.artyclick.com/color-names-dictionary/color-names/rhino-color
     "peacock.color": "#19426d",

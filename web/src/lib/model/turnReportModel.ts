@@ -18,10 +18,8 @@ export type BaseReport = {
 
 export type AssetsReport = {
   moneyChange: ValueChange
-  intelChange: ValueChange
   agentsReport: AgentsReport
   moneyBreakdown: MoneyBreakdown
-  intelBreakdown: IntelBreakdown
 }
 
 export type ValueChange<TNumber extends number | Fixed6 = number> = {
@@ -63,10 +61,6 @@ export type MoneyBreakdown = {
   missionRewards: number
 }
 
-export type IntelBreakdown = {
-  missionRewards: number
-}
-
 export type AgentsReport = {
   total: ValueChange
   available: ValueChange
@@ -85,11 +79,18 @@ export type PanicReport = {
 }
 
 export type PanicBreakdown = {
-  factionPanicIncreases: {
+  /**
+   * Panic increases from faction operations that succeeded (expired mission sites)
+   */
+  factionOperationPenalties: {
     factionId: string
     factionName: string
-    factionPanicIncrease: Fixed6
+    operationLevel: number
+    panicIncrease: number
   }[]
+  /**
+   * Panic reductions from completed missions
+   */
   missionReductions: {
     missionSiteId: string
     missionTitle: string
@@ -97,30 +98,45 @@ export type PanicBreakdown = {
   }[]
 }
 
-// export type Faction = {
-//   id: FactionId
-//   name: string
-//   threatLevel: number
-//   threatIncrease: number
-//   suppression: number
-//   discoveryPrerequisite: string[]
-// }
-
 export type FactionReport = {
   factionId: string
   factionName: string
   isDiscovered: boolean
-  threatLevel: ValueChange<Fixed6>
-  threatIncrease: ValueChange<Fixed6>
-  suppression: ValueChange<Fixed6>
-  baseThreatIncrease: Fixed6
+  /**
+   * Activity level change (0-7)
+   */
+  activityLevel: ValueChange
+  /**
+   * Turns spent at current activity level
+   */
+  turnsAtCurrentLevel: ValueChange
+  /**
+   * Turns until next faction operation
+   */
+  turnsUntilNextOperation: ValueChange
+  /**
+   * Suppression turns remaining
+   */
+  suppressionTurns: ValueChange
+  /**
+   * Mission impacts on this faction
+   */
   missionImpacts: {
     missionSiteId: string
     missionTitle: string
-    threatReduction?: Fixed6
-    suppressionAdded?: Fixed6
+    suppressionAdded?: number
   }[]
-  suppressionDecay: Fixed6
+  /**
+   * If a faction operation occurred this turn
+   */
+  operationOccurred?: {
+    operationLevel: number
+    missionSiteId: string
+  }
+  /**
+   * If activity level increased this turn
+   */
+  activityLevelIncreased?: boolean
 }
 
 export type MissionReport = {
@@ -206,4 +222,19 @@ export type LeadInvestigationReport = {
 export type ExpiredMissionSiteReport = {
   missionSiteId: string
   missionTitle: string
+  factionId: string
+  factionName: string
+  /**
+   * The operation level that spawned this mission site.
+   * Used to calculate panic/funding penalties when mission expires.
+   */
+  operationLevel?: number
+  /**
+   * Panic increase penalty from this expired mission
+   */
+  panicPenalty?: number
+  /**
+   * Funding decrease penalty from this expired mission
+   */
+  fundingPenalty?: number
 }

@@ -34,7 +34,11 @@ export const AGENT_FAILED_ATTACK_SKILL_REWARD = toF6(2)
 export const AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD = toF6(2)
 export const AGENT_FAILED_DEFENSE_SKILL_REWARD = toF6(1)
 
-export const SUPPRESSION_DECAY = 0.1
+/**
+ * Base suppression turns gained per mission reward level.
+ * The actual suppression from missions is specified in mission rewards directly.
+ */
+export const BASE_SUPPRESSION_TURNS = 5
 
 // Weapon damage ranges are +/- 50% of base damage
 // See also `Weapon damage roll` in docs.

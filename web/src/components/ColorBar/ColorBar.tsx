@@ -6,7 +6,7 @@ export type ColorBarProps = {
   fillPct: number
   colorPct: number
   fillFromRight?: boolean
-  backgroundOverride?: string
+  backgroundOverride?: string | undefined
   children: React.ReactNode
 }
 

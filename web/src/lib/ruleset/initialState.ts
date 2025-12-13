@@ -34,7 +34,6 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     factions,
     // Assets
     money: 500,
-    intel: 0,
     funding: 20,
     agentCap: AGENT_CAP,
     transportCap: TRANSPORT_CAP,

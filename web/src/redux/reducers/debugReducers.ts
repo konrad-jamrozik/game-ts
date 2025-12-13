@@ -73,10 +73,10 @@ export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
   state.panic = toF6(0)
 })
 
-export const debugSetAllFactionsSuppressionTo1000Percent = asPlayerAction((state: GameState) => {
-  // 1000% = 100,000 basis points
+export const debugSetAllFactionsSuppression = asPlayerAction((state: GameState) => {
+  // Set suppression to 100 turns for all factions
   for (const faction of state.factions) {
-    faction.suppression = toF6(10) // 1000% = 10.0
+    faction.suppressionTurns = 100
   }
 })
 

@@ -10,11 +10,7 @@ import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/primitives/fixed6'
-import {
-  terminated,
-  onContractingAssignment,
-  available,
-} from '../../src/lib/model_utils/agentUtils'
+import { terminated, onContractingAssignment, available } from '../../src/lib/model_utils/agentUtils'
 
 export const st = {
   get gameState(): GameState {
@@ -75,10 +71,6 @@ export const st = {
     }
   },
 
-  expectIntelAmount(expectedAmount: number): void {
-    expect(st.gameState.intel).toBe(expectedAmount)
-  },
-
   expectLeadInvestigatedOnce(leadId: string): void {
     st.expectLeadInvestigated(leadId, 1)
   },
@@ -124,7 +116,6 @@ export const st = {
     const contractingAgents = onContractingAssignment(st.gameState.agents)
     expect(contractingAgents).toHaveLength(count)
   },
-
 
   expectAgentsAvailable(count: number): void {
     const availableAgents = available(st.gameState.agents)

@@ -427,7 +427,7 @@ function renderSkillCell(
 
   // Create background override with grey bar for 100% skill (similar to agents data grid)
   // Grey bar extends to show the full baseline skill (skillAtStart)
-  let backgroundOverride: string | undefined
+  let backgroundOverride: string | undefined = undefined
   if (skillAtStart.value > 0) {
     const fillColor = getColorBarFillColor(colorPct)
     const greyEndPct = Math.max(currentSkillFillPct, skillAtStartFillPct)

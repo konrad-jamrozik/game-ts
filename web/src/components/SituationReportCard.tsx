@@ -3,10 +3,12 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
-import { f6add, f6fmtPctDec2, f4fmtPctDec2Diff } from '../lib/primitives/fixed6'
-import { SUPPRESSION_DECAY } from '../lib/ruleset/constants'
-import { decaySuppression, getPanicIncrease, getPanicNewBalance } from '../lib/ruleset/panicRuleset'
-import { fmtPctDec0 } from '../lib/primitives/formatPrimitives'
+import { f6fmtPctDec2 } from '../lib/primitives/fixed6'
+import {
+  getActivityLevelName,
+  getActivityLevelConfig,
+  assertIsActivityLevel,
+} from '../lib/ruleset/activityLevelRuleset'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
@@ -29,52 +31,48 @@ function isFactionDiscovered(
 }
 
 function getFactionRows(faction: {
-  threatLevel: ReturnType<typeof f6add>
-  threatIncrease: ReturnType<typeof f6add>
-  suppression: ReturnType<typeof f6add>
+  activityLevel: number
+  turnsAtCurrentLevel: number
+  turnsUntilNextOperation: number
+  suppressionTurns: number
 }): SituationReportRow[] {
-  const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
-  const threatLevelProjected = f6add(faction.threatLevel, faction.threatIncrease)
-  const threatLevelDiffStr = f4fmtPctDec2Diff(faction.threatLevel, threatLevelProjected)
+  assertIsActivityLevel(faction.activityLevel)
+  const config = getActivityLevelConfig(faction.activityLevel)
+  const levelName = getActivityLevelName(faction.activityLevel)
 
-  const suppressionProjected = decaySuppression(faction.suppression).decayedSuppression
-  const suppressionDiffStr = f4fmtPctDec2Diff(faction.suppression, suppressionProjected)
-  const panicIncreaseProjected = getPanicIncrease(threatLevelProjected, suppressionProjected)
-  const panicIncreaseDiffStr = f4fmtPctDec2Diff(panicIncrease, panicIncreaseProjected)
+  // Format progression display as "current/min" (see about_defensive_missions.md)
+  const progressionDisplay = config.minTurns === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.minTurns}`
+
+  // Format next operation display
+  const nextOpDisplay =
+    faction.activityLevel === 0
+      ? '-'
+      : faction.suppressionTurns > 0
+        ? `${faction.turnsUntilNextOperation} (supp: ${faction.suppressionTurns})`
+        : String(faction.turnsUntilNextOperation)
+
   return [
     {
       id: 1,
-      metric: 'Threat level',
-      value: f6fmtPctDec2(faction.threatLevel),
-      projected: f6fmtPctDec2(threatLevelProjected),
-      diff: threatLevelDiffStr,
-      reverseColor: true,
+      metric: 'Activity level',
+      value: `${faction.activityLevel} - ${levelName}`,
     },
     {
       id: 2,
-      metric: 'Threat increase',
-      value: f6fmtPctDec2(faction.threatIncrease),
-      reverseColor: true,
+      metric: 'Level progress',
+      value: progressionDisplay,
+      reverseColor: true, // Progress towards higher activity is bad
     },
     {
       id: 3,
-      metric: 'Suppression',
-      value: f6fmtPctDec2(faction.suppression),
-      projected: f6fmtPctDec2(suppressionProjected),
-      diff: suppressionDiffStr,
+      metric: 'Next operation',
+      value: nextOpDisplay,
+      reverseColor: true, // Lower is worse for player
     },
     {
       id: 4,
-      metric: 'Suppr. decay',
-      value: fmtPctDec0(SUPPRESSION_DECAY),
-    },
-    {
-      id: 5,
-      metric: 'Panic increase',
-      value: f6fmtPctDec2(panicIncrease),
-      projected: f6fmtPctDec2(panicIncreaseProjected),
-      diff: panicIncreaseDiffStr,
-      reverseColor: true,
+      metric: 'Suppression',
+      value: faction.suppressionTurns > 0 ? `${faction.suppressionTurns} turns` : '-',
     },
   ]
 }
@@ -84,9 +82,6 @@ export function SituationReportCard(): React.JSX.Element {
   const { panic, factions, leadInvestigationCounts } = gameState
 
   const panicPctStr = f6fmtPctDec2(panic)
-  const panicProjected = getPanicNewBalance(gameState)
-  const panicProjectedStr = f6fmtPctDec2(panicProjected)
-  const panicDiffStr = f4fmtPctDec2Diff(panic, panicProjected)
 
   const columns = getSituationReportColumns()
 
@@ -95,8 +90,6 @@ export function SituationReportCard(): React.JSX.Element {
       id: 1,
       metric: 'Panic',
       value: panicPctStr,
-      projected: panicProjectedStr,
-      diff: panicDiffStr,
       reverseColor: true,
     },
   ]

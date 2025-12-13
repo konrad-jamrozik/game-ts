@@ -1,15 +1,14 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { toF6, toF, type Fixed6, f4fmtPctDec2Diff } from '../../lib/primitives/fixed6'
+import { toF6, toF, f4fmtPctDec2Diff } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
-import { getPanicIncrease } from '../../lib/ruleset/panicRuleset'
-import {
-  newValueChange,
-  type ExpiredMissionSiteReport,
-  type FactionReport,
-  type MissionReport,
-  type PanicBreakdown,
-  type PanicReport,
+import { getActivityLevelName, assertIsActivityLevel } from '../../lib/ruleset/activityLevelRuleset'
+import type {
+  ExpiredMissionSiteReport,
+  FactionReport,
+  MissionReport,
+  PanicBreakdown,
+  PanicReport,
 } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { formatMissions } from './formatMissions'
@@ -68,14 +67,16 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
   const anyMissionReductionExists = toF(totalMissionReduction) > 0
 
   const rows: TurnReportTreeViewModelProps[] = [
-    ...breakdown.factionPanicIncreases
-      .filter((faction) => toF(faction.factionPanicIncrease) !== 0)
-      .map((faction) => ({
-        id: `panic-faction-${faction.factionId}`,
-        label: `Caused by ${faction.factionName}`,
-        chipValue: faction.factionPanicIncrease,
+    // Faction operation penalties (from expired missions)
+    ...breakdown.factionOperationPenalties
+      .filter((penalty) => penalty.panicIncrease > 0)
+      .map((penalty) => ({
+        id: `panic-faction-op-${penalty.factionId}`,
+        label: `${penalty.factionName} operation (lvl ${penalty.operationLevel})`,
+        chipValue: penalty.panicIncrease,
         reverseColor: true, // Panic increase is bad
       })),
+    // Mission reductions
     ...(anyMissionReductionExists
       ? [
           {
@@ -92,93 +93,73 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 }
 
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  const previousPanicIncrease = getPanicIncrease(fct.threatLevel.previous, fct.suppression.previous)
-  const currentPanicIncrease = getPanicIncrease(fct.threatLevel.current, fct.suppression.current)
+  assertIsActivityLevel(fct.activityLevel.previous)
+  assertIsActivityLevel(fct.activityLevel.current)
+  const prevLevelName = getActivityLevelName(fct.activityLevel.previous)
+  const currLevelName = getActivityLevelName(fct.activityLevel.current)
+  const levelChanged = fct.activityLevel.previous !== fct.activityLevel.current
 
-  const panicIncrease = newValueChange(previousPanicIncrease, currentPanicIncrease)
   return {
     id: fct.factionId,
-    label: `${fct.factionName}. Panic contrib.: ${f6fmtValueChange(panicIncrease)}`,
-    chipValue: f4fmtPctDec2Diff(previousPanicIncrease, currentPanicIncrease),
-    reverseColor: true, // Panic increase is bad
+    label: `${fct.factionName}. Activity: ${currLevelName}${levelChanged ? ` (was ${prevLevelName})` : ''}`,
+    chipValue: levelChanged ? 'Level up!' : undefined,
+    reverseColor: true, // Activity increase is bad
     children: [
       {
-        id: `faction-${fct.factionId}-threat-level`,
-        label: `Threat level: ${f6fmtValueChange(fct.threatLevel)}`,
-        chipValue: f4fmtPctDec2Diff(fct.threatLevel.previous, fct.threatLevel.current),
-        reverseColor: true, // Threat increase is bad
-        children: formatThreatLevelChildren(fct.factionId, fct.baseThreatIncrease, fct.missionImpacts),
+        id: `faction-${fct.factionId}-activity-level`,
+        label: `Activity level: ${fct.activityLevel.current} - ${currLevelName}`,
+        chipValue: fct.activityLevelIncreased === true ? '+1' : undefined,
+        reverseColor: true, // Activity increase is bad
+      },
+      {
+        id: `faction-${fct.factionId}-turns-at-level`,
+        label: `Turns at level: ${fct.turnsAtCurrentLevel.current}`,
+        chipValue: fct.turnsAtCurrentLevel.delta !== 0 ? (fct.turnsAtCurrentLevel.delta > 0 ? '+1' : '-1') : undefined,
+        noColor: true,
+      },
+      {
+        id: `faction-${fct.factionId}-next-operation`,
+        label: `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
+        chipValue:
+          fct.turnsUntilNextOperation.delta !== 0
+            ? fct.turnsUntilNextOperation.delta > 0
+              ? `+${fct.turnsUntilNextOperation.delta}`
+              : String(fct.turnsUntilNextOperation.delta)
+            : undefined,
+        reverseColor: false, // Lower is worse, but showing the number is neutral
       },
       {
         id: `faction-${fct.factionId}-suppression`,
-        label: `Suppression: ${f6fmtValueChange(fct.suppression)}`,
-        chipValue: f4fmtPctDec2Diff(fct.suppression.previous, fct.suppression.current),
-        reverseColor: false, // Suppression increase is good (default)
-        children: formatSuppressionChildren(fct.factionId, fct.suppressionDecay, fct.missionImpacts),
+        label: `Suppression: ${fct.suppressionTurns.current} turns`,
+        chipValue:
+          fct.suppressionTurns.delta !== 0
+            ? fct.suppressionTurns.delta > 0
+              ? `+${fct.suppressionTurns.delta}`
+              : String(fct.suppressionTurns.delta)
+            : undefined,
+        reverseColor: false, // Suppression increase is good
+        children: formatSuppressionChildren(fct.factionId, fct.missionImpacts),
       },
     ],
   }
 }
 
-function formatThreatLevelChildren(
-  factionId: string,
-  baseThreatIncrease: Fixed6,
-  missionImpacts: FactionReport['missionImpacts'],
-): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalThreatReduction = toF6(
-    sum(missionImpacts, (impact) => (impact.threatReduction ? toF(impact.threatReduction) : 0)),
-  )
-
-  return [
-    {
-      id: `faction-${factionId}-baseThreatIncrease`,
-      label: 'Base threat',
-      chipValue: baseThreatIncrease,
-      reverseColor: true, // Threat increase is bad
-    },
-    ...(toF(totalThreatReduction) !== 0
-      ? [
-          {
-            id: `faction-${factionId}-mission-threat-reductions`,
-            label: 'Mission reduction',
-            chipValue: toF6(-toF(totalThreatReduction)),
-            reverseColor: true, // Threat reduction is good (default)
-          },
-        ]
-      : []),
-  ]
-}
-
 function formatSuppressionChildren(
   factionId: string,
-  suppressionDecay: Fixed6,
   missionImpacts: FactionReport['missionImpacts'],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  const totalSuppressionAdded = toF6(
-    sum(missionImpacts, (impact) => (impact.suppressionAdded ? toF(impact.suppressionAdded) : 0)),
-  )
+  const totalSuppressionAdded = sum(missionImpacts, (impact) => impact.suppressionAdded ?? 0)
 
-  return [
-    ...(toF(suppressionDecay) !== 0
-      ? [
-          {
-            id: `faction-${factionId}-suppressionDecay`,
-            label: 'Suppression decay',
-            chipValue: toF6(-toF(suppressionDecay)),
-          },
-        ]
-      : []),
-    ...(toF(totalSuppressionAdded) !== 0
-      ? [
-          {
-            id: `faction-${factionId}-mission-suppression`,
-            label: 'Mission suppression',
-            chipValue: totalSuppressionAdded,
-            reverseColor: false, // Suppression increase is good (default)
-          },
-        ]
-      : []),
-  ]
+  return totalSuppressionAdded !== 0
+    ? [
+        {
+          id: `faction-${factionId}-mission-suppression`,
+          label: 'Mission suppression',
+          chipValue: `+${totalSuppressionAdded} turns`,
+          reverseColor: false, // Suppression increase is good
+        },
+      ]
+    : []
 }
 
 function formatExpiredMissionSites(
@@ -186,10 +167,31 @@ function formatExpiredMissionSites(
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return expiredMissionSites.map((expired) => {
     const displayId = fmtNoPrefix(expired.missionSiteId, 'mission-site-')
+    const children: TurnReportTreeViewModelProps[] = []
+
+    if (expired.panicPenalty !== undefined && expired.panicPenalty > 0) {
+      children.push({
+        id: `expired-mission-${expired.missionSiteId}-panic`,
+        label: 'Panic penalty',
+        chipValue: `+${expired.panicPenalty}`,
+        reverseColor: true, // Panic increase is bad
+      })
+    }
+
+    if (expired.fundingPenalty !== undefined && expired.fundingPenalty > 0) {
+      children.push({
+        id: `expired-mission-${expired.missionSiteId}-funding`,
+        label: 'Funding penalty',
+        chipValue: `-${expired.fundingPenalty}`,
+        reverseColor: true, // Funding decrease is bad
+      })
+    }
+
     return {
       id: `expired-mission-${expired.missionSiteId}`,
       label: `${expired.missionTitle} (id: ${displayId})`,
       chipValue: 'Expired',
+      ...(children.length > 0 && { children }),
     }
   })
 }

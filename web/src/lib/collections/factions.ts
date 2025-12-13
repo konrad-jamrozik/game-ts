@@ -1,25 +1,31 @@
-import { toF6 } from '../primitives/fixed6'
-import type { Faction, FactionId } from '../model/model'
+import type { ActivityLevel, Faction, FactionId } from '../model/model'
 import { assertDefined } from '../primitives/assertPrimitives'
+import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 
 export type FactionDefinition = {
   id: FactionId
   name: string
   shortId: string
+  /**
+   * Initial activity level when game starts.
+   * 0 = Dormant, 1 = Faint, etc.
+   */
+  initialActivityLevel: ActivityLevel
 }
 
 export const factionDefinitions: FactionDefinition[] = [
-  { id: 'faction-red-dawn', name: 'Red Dawn', shortId: 'red-dawn' },
-  { id: 'faction-exalt', name: 'Exalt', shortId: 'exalt' },
-  { id: 'faction-black-lotus', name: 'Black Lotus', shortId: 'black-lotus' },
+  { id: 'faction-red-dawn', name: 'Red Dawn', shortId: 'red-dawn', initialActivityLevel: 1 },
+  { id: 'faction-exalt', name: 'Exalt', shortId: 'exalt', initialActivityLevel: 0 },
+  { id: 'faction-black-lotus', name: 'Black Lotus', shortId: 'black-lotus', initialActivityLevel: 0 },
 ]
 
 export const factions: Faction[] = factionDefinitions.map((def) => ({
   id: def.id,
   name: def.name,
-  threatLevel: toF6(0.01),
-  threatIncrease: toF6(0.0005), // 0.05%
-  suppression: toF6(0),
+  activityLevel: def.initialActivityLevel,
+  turnsAtCurrentLevel: 0,
+  turnsUntilNextOperation: calculateOperationTurns(def.initialActivityLevel),
+  suppressionTurns: 0,
   discoveryPrerequisite: [`lead-${def.shortId}-profile`],
 }))
 

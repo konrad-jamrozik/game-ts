@@ -14,7 +14,6 @@ function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionComplete
   const { rewards } = event
   const parts: string[] = []
   if (rewards.money !== undefined) parts.push(`+$${rewards.money}`)
-  if (rewards.intel !== undefined) parts.push(`+${rewards.intel} intel`)
   if (rewards.funding !== undefined) parts.push(`+${rewards.funding} funding`)
   if (rewards.panicReduction !== undefined) {
     parts.push(`-${f6str(rewards.panicReduction)}% panic`)

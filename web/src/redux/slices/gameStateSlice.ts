@@ -16,7 +16,7 @@ import { buyUpgrade as buyUpgradeReducer } from '../reducers/upgradeReducers'
 import { advanceTurn as advanceTurnReducer, reset as resetReducer } from '../reducers/gameControlsReducers'
 import {
   debugSetPanicToZero as debugSetPanicToZeroReducer,
-  debugSetAllFactionsSuppressionTo1000Percent as debugSetAllFactionsSuppressionTo1000PercentReducer,
+  debugSetAllFactionsSuppression as debugSetAllFactionsSuppressionReducer,
   debugAddMoney as debugAddMoneyReducer,
   debugSpawn10Agents as debugSpawn10AgentsReducer,
   debugAddCapabilities as debugAddCapabilitiesReducer,
@@ -45,7 +45,7 @@ const gameStateSlice = createSlice({
     debugSpawnMissionSites: debugSpawnMissionSitesReducer,
     buyUpgrade: buyUpgradeReducer,
     debugSetPanicToZero: debugSetPanicToZeroReducer,
-    debugSetAllFactionsSuppressionTo1000Percent: debugSetAllFactionsSuppressionTo1000PercentReducer,
+    debugSetAllFactionsSuppression: debugSetAllFactionsSuppressionReducer,
     debugAddMoney: debugAddMoneyReducer,
     debugSpawn10Agents: debugSpawn10AgentsReducer,
     debugAddCapabilities: debugAddCapabilitiesReducer,
@@ -67,7 +67,7 @@ export const {
   debugSpawnMissionSites,
   buyUpgrade,
   debugSetPanicToZero,
-  debugSetAllFactionsSuppressionTo1000Percent,
+  debugSetAllFactionsSuppression,
   debugAddMoney,
   debugSpawn10Agents,
   debugAddCapabilities,

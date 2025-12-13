@@ -13,11 +13,12 @@ type MissionTemplate = {
   rewards: {
     money: number
     funding: number
-    intel: number
     panicReduction: ReturnType<typeof toF6>
     factionRewards: {
-      threatReduction: ReturnType<typeof toF6>
-      suppression: ReturnType<typeof toF6>
+      /**
+       * Suppression turns - delays the next faction operation by this many turns.
+       */
+      suppression: number
     }[]
   }
 }
@@ -33,12 +34,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 5,
       funding: 0,
-      intel: 0,
       panicReduction: toF6(0.0005),
       factionRewards: [
         {
-          threatReduction: toF6(0.0001),
-          suppression: toF6(0),
+          suppression: 2, // 2 turns of suppression
         },
       ],
     },
@@ -53,12 +52,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 100,
       funding: 5,
-      intel: 10,
       panicReduction: toF6(0.001),
       factionRewards: [
         {
-          threatReduction: toF6(0.001),
-          suppression: toF6(0.01),
+          suppression: 5, // 5 turns of suppression
         },
       ],
     },
@@ -73,12 +70,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 400,
       funding: 10,
-      intel: 20,
       panicReduction: toF6(0.005),
       factionRewards: [
         {
-          threatReduction: toF6(0.01),
-          suppression: toF6(0.02),
+          suppression: 10, // 10 turns of suppression
         },
       ],
     },
@@ -93,12 +88,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 800,
       funding: 15,
-      intel: 30,
       panicReduction: toF6(0.01),
       factionRewards: [
         {
-          threatReduction: toF6(0.03),
-          suppression: toF6(0.03),
+          suppression: 15, // 15 turns of suppression
         },
       ],
     },
@@ -113,12 +106,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 2000,
       funding: 20,
-      intel: 40,
       panicReduction: toF6(0.02),
       factionRewards: [
         {
-          threatReduction: toF6(0.05),
-          suppression: toF6(0.05),
+          suppression: 20, // 20 turns of suppression
         },
       ],
     },
@@ -133,12 +124,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 3000,
       funding: 25,
-      intel: 50,
       panicReduction: toF6(0.05),
       factionRewards: [
         {
-          threatReduction: toF6(0.1),
-          suppression: toF6(0.1),
+          suppression: 30, // 30 turns of suppression
         },
       ],
     },
@@ -153,12 +142,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 5000,
       funding: 50,
-      intel: 80,
       panicReduction: toF6(0.1),
       factionRewards: [
         {
-          threatReduction: toF6(0.15),
-          suppression: toF6(0.15),
+          suppression: 45, // 45 turns of suppression
         },
       ],
     },
@@ -173,12 +160,10 @@ const missionTemplates: MissionTemplate[] = [
     rewards: {
       money: 10_000,
       funding: 100,
-      intel: 150,
       panicReduction: toF6(0.2),
       factionRewards: [
         {
-          threatReduction: toF6(1),
-          suppression: toF6(1),
+          suppression: 90, // 90 turns of suppression - essentially defeats the faction
         },
       ],
     },
@@ -202,7 +187,6 @@ function generateMissionsForFaction(faction: FactionDefinition): Mission[] {
       ...template.rewards,
       factionRewards: template.rewards.factionRewards.map((fr) => ({
         factionId: faction.id,
-        threatReduction: fr.threatReduction,
         suppression: fr.suppression,
       })),
     },

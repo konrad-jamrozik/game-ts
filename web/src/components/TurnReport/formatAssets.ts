@@ -1,5 +1,5 @@
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import type { AgentsReport, IntelBreakdown, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
+import type { AgentsReport, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
 
@@ -9,14 +9,11 @@ import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
  */
 export function formatAssets(assetsReport: {
   moneyChange: ValueChange
-  intelChange: ValueChange
   agentsReport: AgentsReport
   moneyBreakdown: MoneyBreakdown
-  intelBreakdown: IntelBreakdown
 }): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return [
     formatMoneyReport(assetsReport.moneyChange, assetsReport.moneyBreakdown),
-    formatIntelReport(assetsReport.intelChange, assetsReport.intelBreakdown),
     formatAgentsReport(assetsReport.agentsReport),
   ]
 }
@@ -30,18 +27,6 @@ function formatMoneyReport(
     label: `Money: ${f6fmtValueChange(moneyChange)}`,
     chipValue: moneyChange.delta,
     children: formatMoneyBreakdown(moneyBreakdown),
-  }
-}
-
-function formatIntelReport(
-  intelChange: ValueChange,
-  intelBreakdown: IntelBreakdown,
-): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  return {
-    id: 'intel-summary',
-    label: `Intel: ${f6fmtValueChange(intelChange)}`,
-    chipValue: intelChange.delta,
-    children: formatIntelBreakdown(intelBreakdown),
   }
 }
 
@@ -59,12 +44,6 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): TurnReportTreeViewMode
     { id: 'contractingEarnings', label: 'Contracting earnings', chipValue: breakdown.contractingEarnings },
     { id: 'missionRewards', label: 'Mission rewards', chipValue: breakdown.missionRewards },
     { id: 'agentUpkeep', label: 'Agent upkeep', chipValue: breakdown.agentUpkeep },
-  ]
-}
-
-function formatIntelBreakdown(breakdown: IntelBreakdown): TurnReportTreeViewModelProps[] {
-  return [
-    { id: 'intel-missionRewards', label: 'Mission rewards', chipValue: breakdown.missionRewards },
   ]
 }
 

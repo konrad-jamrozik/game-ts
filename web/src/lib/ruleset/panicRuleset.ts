@@ -1,60 +1,41 @@
-import { toF6, f6add, f6ge, f6max, f6min, f6mult, f6sub, toF, toF6r, type Fixed6 } from '../primitives/fixed6'
+import { toF6, f6add, f6max, f6sub, type Fixed6 } from '../primitives/fixed6'
 import type { GameState } from '../model/gameStateModel'
-import { SUPPRESSION_DECAY } from './constants'
 
 /**
- * Calculates panic increase from faction threat level and suppression.
+ * Panic ruleset module.
  *
- * Formula: Math.max(0, threatLevel - suppression)
- *
- * This is the source of truth for panic increase calculation.
- *
- * @param threatLevel - The faction's threat level (as Fixed6)
- * @param suppression - The faction's suppression value (as Fixed6)
- * @returns The panic increase (never negative, as Fixed6)
+ * In the new faction operations system:
+ * - Panic only increases when enemy faction operations succeed (mission not completed or failed)
+ * - Panic is reduced by mission rewards (panicReduction)
+ * - There is no automatic panic increase from threat levels anymore
  */
-export function getPanicIncrease(threatLevel: Fixed6, suppression: Fixed6): Fixed6 {
-  return f6max(toF6(0), f6sub(threatLevel, suppression))
-}
-
-export function getSuppressionToDecay(suppression: Fixed6): Fixed6 {
-  const standardDecay = toF6r(f6mult(suppression, SUPPRESSION_DECAY))
-  // If suppression is greater than or equal to 0.02%, then decay by at least 0.01%,
-  // otherwise decay all of the remaining suppression.
-  const minDecay = f6ge(suppression, toF6(0.0002)) ? toF6(0.0001) : suppression
-  const decay = f6min(f6max(standardDecay, minDecay), suppression)
-  return decay
-}
-
-export function decaySuppression(suppression: Fixed6): { decayedSuppression: Fixed6; suppressionDecay: Fixed6 } {
-  const suppressionToDecay = getSuppressionToDecay(suppression)
-  const decayedSuppression = f6sub(suppression, suppressionToDecay)
-  return { decayedSuppression, suppressionDecay: suppressionToDecay }
-}
 
 /**
- * Calculates the total panic increase from all factions in the game state.
- *
- * @param gameState - The current game state
- * @returns Total panic increase value (as a number)
+ * Apply panic reduction to the game state.
+ * Panic cannot go below 0.
  */
-export function getTotalPanicIncrease(gameState: GameState): number {
-  let totalPanicIncrease = 0
-  for (const faction of gameState.factions) {
-    const panicIncrease = getPanicIncrease(faction.threatLevel, faction.suppression)
-    totalPanicIncrease += toF(panicIncrease)
-  }
-  return totalPanicIncrease
+export function applyPanicReduction(state: GameState, reduction: Fixed6): Fixed6 {
+  const newPanic = f6max(toF6(0), f6sub(state.panic, reduction))
+  const actualReduction = f6sub(state.panic, newPanic)
+  state.panic = newPanic
+  return actualReduction
 }
 
 /**
- * Calculates projected panic value after turn advancement (without mission panic reductions).
- * Panic increases by the sum of panic increases from all factions.
- *
- * @param gameState - The current game state
- * @returns Projected panic value (as Fixed6)
+ * Apply panic increase to the game state.
+ */
+export function applyPanicIncrease(state: GameState, increase: number): void {
+  state.panic = f6add(state.panic, increase)
+}
+
+/**
+ * Get the projected panic after turn advancement.
+ * In the new system, panic only changes from faction operations (which happen unpredictably)
+ * and mission rewards, so we can't project an exact value.
+ * Returns current panic as the baseline.
  */
 export function getPanicNewBalance(gameState: GameState): Fixed6 {
-  const totalPanicIncrease = getTotalPanicIncrease(gameState)
-  return f6add(gameState.panic, totalPanicIncrease)
+  // In the new system, we can't predict panic changes since they depend on
+  // whether faction operations occur and whether missions succeed
+  return gameState.panic
 }
