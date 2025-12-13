@@ -9,7 +9,6 @@ import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { getLeadById } from '../../lib/collections/leads'
 import {
   assignAgentsToContracting,
-  assignAgentsToEspionage,
   assignAgentsToTraining,
   buyUpgrade,
   deployAgentsToMission,
@@ -107,30 +106,6 @@ export function PlayerActions(): React.JSX.Element {
 
     setShowAlert(false) // Hide alert on successful action
     dispatch(assignAgentsToContracting(selectedAgentIds))
-    dispatch(clearAgentSelection())
-  }
-
-  function handleAssignToEspionage(): void {
-    // Validate that all selected agents are available
-    const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
-    if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
-      setShowAlert(true)
-      return
-    }
-
-    // Validate that agents are not exhausted
-    const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
-    if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
-      setShowAlert(true)
-      return
-    }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(assignAgentsToEspionage(selectedAgentIds))
     dispatch(clearAgentSelection())
   }
 
@@ -377,9 +352,6 @@ export function PlayerActions(): React.JSX.Element {
         </Stack>
         <Button variant="contained" onClick={handleAssignToContracting} disabled={selectedAgentIds.length === 0}>
           Assign {fmtAgentCount(selectedAgentIds.length)} to contracting
-        </Button>
-        <Button variant="contained" onClick={handleAssignToEspionage} disabled={selectedAgentIds.length === 0}>
-          Assign {fmtAgentCount(selectedAgentIds.length)} to espionage
         </Button>
         <Button variant="contained" onClick={handleAssignToTraining} disabled={selectedAgentIds.length === 0}>
           Assign {fmtAgentCount(selectedAgentIds.length)} to training

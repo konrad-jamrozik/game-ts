@@ -29,7 +29,7 @@ export function effectiveSkill(actor: Actor): Fixed6 {
  * This is the source of truth for skill-based value calculations.
  *
  * @param agent - The agent view to calculate the contribution for
- * @param value - The value to multiply the skill coefficient by (e.g., AGENT_CONTRACTING_INCOME or AGENT_ESPIONAGE_INTEL)
+ * @param value - The value to multiply the skill coefficient by (e.g., AGENT_CONTRACTING_INCOME)
  * @returns The calculated value contribution as a Fixed6
  */
 export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
@@ -43,7 +43,7 @@ export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
  * Iterates over agents and accumulates their skill-based contributions.
  *
  * @param agents - Array of agent views to sum values from
- * @param value - The value (e.g., AGENT_CONTRACTING_INCOME or AGENT_ESPIONAGE_INTEL)
+ * @param value - The value (e.g., AGENT_CONTRACTING_INCOME)
  * @returns The total sum as a number
  */
 export function sumAgentSkillBasedValues(agents: readonly Agent[], value: number): Fixed6 {

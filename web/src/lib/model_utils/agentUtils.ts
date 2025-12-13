@@ -47,10 +47,6 @@ export function onContractingAssignment(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'OnAssignment' && agent.assignment === 'Contracting')
 }
 
-export function onEspionageAssignment(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state === 'OnAssignment' && agent.assignment === 'Espionage')
-}
-
 export function deployedOnMissionSite(agents: Agent[], missionSiteId: MissionSiteId): Agent[] {
   return agents.filter((agent) => agent.assignment === missionSiteId && agent.state === 'OnMission')
 }

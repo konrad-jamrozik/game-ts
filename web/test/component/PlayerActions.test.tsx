@@ -78,35 +78,12 @@ describe(PlayerActions, () => {
   })
 
   test("click 'assign agents to contracting' button -> alert: agents in invalid states", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInEspionage(agentId)] })
-    st.arrangeSelection({ agents: [agentId] })
-    ui.renderPlayerActions()
-    ui.expectPlayerActionsAlert({ hidden: true })
-
-    await ui.assignToContracting() // Act
-
-    ui.expectPlayerActionsAlert('This action can be done only on available agents!')
-    st.expectAgentAssignment(agentId, 'Espionage') // Expect unchanged
-  })
-
-  test("click 'assign agents to espionage' button -> happy path", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInStandby(agentId)] })
-    st.arrangeSelection({ agents: [agentId] })
-    ui.renderPlayerActions()
-
-    await ui.assignToEspionage() // Act
-
-    st.expectAgentState(agentId, 'InTransit')
-    st.expectAgentAssignment(agentId, 'Espionage')
-  })
-
-  test("click 'assign agents to espionage' button -> alert: agents in invalid states", async () => {
     st.arrangeGameState({ agents: [st.newAgentInContracting(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
 
-    await ui.assignToEspionage() // Act
+    await ui.assignToContracting() // Act
 
     ui.expectPlayerActionsAlert('This action can be done only on available agents!')
     st.expectAgentAssignment(agentId, 'Contracting') // Expect unchanged

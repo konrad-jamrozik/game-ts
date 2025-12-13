@@ -26,10 +26,6 @@ export const ui = {
     await userEvent.click(screen.getByRole('button', { name: /assign.*to contracting/iu }))
   },
 
-  async assignToEspionage(): Promise<void> {
-    await userEvent.click(screen.getByRole('button', { name: /assign.*to espionage/iu }))
-  },
-
   async recallAgents(): Promise<void> {
     await userEvent.click(screen.getByRole('button', { name: /recall.*agent/iu }))
   },

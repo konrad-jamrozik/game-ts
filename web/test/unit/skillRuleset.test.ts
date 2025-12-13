@@ -60,7 +60,7 @@ describe(getAgentSkillBasedValue, () => {
       hitPoints: toF6(30),
       maxHitPoints: 30,
     })
-    const multiplier = 5 // Using AGENT_ESPIONAGE_INTEL as a realistic multiplier
+    const multiplier = 5 // Using a realistic multiplier value
     const result = getAgentSkillBasedValue(agent, multiplier)
     expect(result).toStrictEqual(expectedF6)
   })

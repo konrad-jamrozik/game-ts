@@ -24,7 +24,6 @@ import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
 import {
   updateAvailableAgents,
   updateContractingAgents,
-  updateEspionageAgents,
   updateInTransitAgents,
   updateRecoveringAgents,
   updateTrainingAgents,
@@ -63,10 +62,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 5. Update all agents on Contracting assignment
   const contractingResults = updateContractingAgents(state)
 
-  // 6. Update all agents on Espionage assignment
-  const espionageResults = updateEspionageAgents(state)
-
-  // 6.5. Update all agents in Training
+  // 6. Update all agents in Training
   updateTrainingAgents(state)
 
   // 7. Update lead investigations (agents completing investigations go to InTransit)
@@ -90,7 +86,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   const assetsReportPartial = updatePlayerAssets(state, {
     agentUpkeep,
     moneyEarned: contractingResults.moneyEarned,
-    intelGathered: espionageResults.intelGathered,
+    intelGathered: 0,
     missionRewards,
   })
 
@@ -328,9 +324,6 @@ function updatePlayerAssets(
   // Add funding income
   state.money += state.funding
 
-  // Add intel gathered by espionage agents
-  state.intel += income.intelGathered
-
   // Apply mission rewards for money, intel, and funding only
   // Panic and faction rewards are applied in their respective update functions
   for (const { rewards } of income.missionRewards) {
@@ -359,7 +352,6 @@ function updatePlayerAssets(
   }
 
   const intelDetails: IntelBreakdown = {
-    espionageGathered: income.intelGathered,
     missionRewards: missionIntelRewards,
   }
 

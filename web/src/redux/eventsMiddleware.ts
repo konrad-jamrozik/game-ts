@@ -5,7 +5,6 @@ import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } 
 import {
   advanceTurn,
   assignAgentsToContracting,
-  assignAgentsToEspionage,
   assignAgentsToTraining,
   buyUpgrade,
   deployAgentsToMission,
@@ -78,10 +77,6 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const agentIds = action.payload
       const agentCount = agentIds.length
       postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to contracting`)
-    } else if (assignAgentsToEspionage.match(action)) {
-      const agentIds = action.payload
-      const agentCount = agentIds.length
-      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to espionage`)
     } else if (assignAgentsToTraining.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length

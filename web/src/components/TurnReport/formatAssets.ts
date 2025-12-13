@@ -64,7 +64,6 @@ function formatMoneyBreakdown(breakdown: MoneyBreakdown): TurnReportTreeViewMode
 
 function formatIntelBreakdown(breakdown: IntelBreakdown): TurnReportTreeViewModelProps[] {
   return [
-    { id: 'intel-espionageGathered', label: 'Espionage gathered', chipValue: breakdown.espionageGathered },
     { id: 'intel-missionRewards', label: 'Mission rewards', chipValue: breakdown.missionRewards },
   ]
 }

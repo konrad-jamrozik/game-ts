@@ -4,7 +4,6 @@ import {
   hireAgent as hireAgentReducer,
   sackAgents as sackAgentsReducer,
   assignAgentsToContracting as assignAgentsToContractingReducer,
-  assignAgentsToEspionage as assignAgentsToEspionageReducer,
   assignAgentsToTraining as assignAgentsToTrainingReducer,
   recallAgents as recallAgentsReducer,
 } from '../reducers/agentReducers'
@@ -37,7 +36,6 @@ const gameStateSlice = createSlice({
     hireAgent: hireAgentReducer,
     sackAgents: sackAgentsReducer,
     assignAgentsToContracting: assignAgentsToContractingReducer,
-    assignAgentsToEspionage: assignAgentsToEspionageReducer,
     assignAgentsToTraining: assignAgentsToTrainingReducer,
     recallAgents: recallAgentsReducer,
     reset: resetReducer,
@@ -60,7 +58,6 @@ export const {
   hireAgent,
   sackAgents,
   assignAgentsToContracting,
-  assignAgentsToEspionage,
   assignAgentsToTraining,
   recallAgents,
   reset,

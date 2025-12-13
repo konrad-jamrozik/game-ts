@@ -13,7 +13,6 @@ import { toF6 } from '../../src/lib/primitives/fixed6'
 import {
   terminated,
   onContractingAssignment,
-  onEspionageAssignment,
   available,
 } from '../../src/lib/model_utils/agentUtils'
 
@@ -25,8 +24,6 @@ export const st = {
   newAgentInStandby: (id: string): Agent => st.newAgent(id, 'Standby'),
 
   newAgentInContracting: (id: string): Agent => st.newAgent(id, 'Contracting'),
-
-  newAgentInEspionage: (id: string): Agent => st.newAgent(id, 'Espionage'),
 
   newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState =
@@ -128,10 +125,6 @@ export const st = {
     expect(contractingAgents).toHaveLength(count)
   },
 
-  expectAgentsOnEspionage(count: number): void {
-    const espionageAgents = onEspionageAssignment(st.gameState.agents)
-    expect(espionageAgents).toHaveLength(count)
-  },
 
   expectAgentsAvailable(count: number): void {
     const availableAgents = available(st.gameState.agents)

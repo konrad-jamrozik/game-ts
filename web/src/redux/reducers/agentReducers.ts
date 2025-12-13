@@ -44,16 +44,6 @@ export const assignAgentsToContracting = asPlayerAction<string[]>((state: GameSt
   }
 })
 
-export const assignAgentsToEspionage = asPlayerAction<string[]>((state: GameState, action) => {
-  const agentIdsToAssign = action.payload
-  for (const agent of state.agents) {
-    if (agentIdsToAssign.includes(agent.id)) {
-      agent.assignment = 'Espionage'
-      agent.state = 'InTransit'
-    }
-  }
-})
-
 export const assignAgentsToTraining = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToAssign = action.payload
   for (const agent of state.agents) {
@@ -122,7 +112,7 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
       if (isTraining) {
         agent.state = 'Available'
       } else {
-        // Other assignments (Contracting, Espionage, Lead Investigation) go to InTransit
+        // Other assignments (Contracting, Lead Investigation) go to InTransit
         agent.state = 'InTransit'
       }
     }

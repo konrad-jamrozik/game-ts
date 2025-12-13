@@ -2,7 +2,6 @@ import { toF6 } from '../primitives/fixed6'
 
 export const AGENT_UPKEEP_COST = 5
 export const AGENT_CONTRACTING_INCOME = AGENT_UPKEEP_COST * 3
-export const AGENT_ESPIONAGE_INTEL = 5
 export const AGENT_HIRE_COST = 50
 
 export const AGENT_INITIAL_SKILL = toF6(100)

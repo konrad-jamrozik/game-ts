@@ -6,12 +6,10 @@ import {
   addSkillFromTraining,
   available,
   onContractingAssignment,
-  onEspionageAssignment,
   onTrainingAssignment,
   applyExhaustion,
 } from '../../model_utils/agentUtils'
 import { getContractingIncome } from '../../ruleset/moneyRuleset'
-import { getEspionageIntel } from '../../ruleset/intelRuleset'
 
 /**
  * Updates agents in Available state - apply exhaustion recovery
@@ -63,13 +61,6 @@ export function updateContractingAgents(state: GameState): { moneyEarned: number
   return { moneyEarned }
 }
 
-export function updateEspionageAgents(state: GameState): { intelGathered: number } {
-  const intelGathered = getEspionageIntel(state)
-  const espionageAgents = onEspionageAssignment(state.agents)
-  applyExhaustion(espionageAgents, AGENT_EXHAUSTION_INCREASE_PER_TURN)
-  return { intelGathered }
-}
-
 export function updateTrainingAgents(state: GameState): void {
   const trainingAgents = onTrainingAssignment(state.agents)
   // Increase both skill and skillFromTraining by trainingSkillGain for each agent
@@ -84,7 +75,7 @@ export function updateTrainingAgents(state: GameState): void {
 export function updateInTransitAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'InTransit') {
-      if (agent.assignment === 'Contracting' || agent.assignment === 'Espionage') {
+      if (agent.assignment === 'Contracting') {
         agent.state = 'OnAssignment'
       } else if (agent.assignment === 'Recovery') {
         agent.state = 'Recovering'

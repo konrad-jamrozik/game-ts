@@ -64,7 +64,6 @@ export type MoneyBreakdown = {
 }
 
 export type IntelBreakdown = {
-  espionageGathered: number
   missionRewards: number
 }
 
