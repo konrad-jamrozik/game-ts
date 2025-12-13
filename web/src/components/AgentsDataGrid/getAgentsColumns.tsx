@@ -134,7 +134,7 @@ export function getAgentsColumns(
     },
     {
       field: 'exhaustion',
-      headerName: 'Exhaustion',
+      headerName: 'Exh.',
       width: columnWidths['agents.exhaustion'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>) => (
         <span aria-label={`agents-row-exhaustion-${params.id}`}>{params.value}</span>

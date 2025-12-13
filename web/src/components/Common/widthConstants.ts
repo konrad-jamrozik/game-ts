@@ -103,7 +103,6 @@ export const COMBAT_LOG_CARD_WIDTH =
   columnWidths['combat_log.attacker_skill'] +
   columnWidths['combat_log.defender_skill'] +
   columnWidths['combat_log.roll'] +
-  columnWidths['combat_log.threshold'] +
   columnWidths['combat_log.damage'] +
   columnWidths['combat_log.defender_hp'] // borders + padding + filler + columns
 
