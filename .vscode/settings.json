@@ -156,5 +156,6 @@
     "files.trimFinalNewlines": true,
     "markdown-preview-enhanced.enableExtendedTableSyntax": true,
     "chat.mcp.access": "all",
+    "git.showCursorWorktrees": true,
     
 }
