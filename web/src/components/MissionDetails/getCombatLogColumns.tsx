@@ -153,6 +153,19 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
         renderRollCell(params.row.roll, params.row.threshold),
     },
     {
+      field: 'rollDiff',
+      headerName: 'Diff',
+      width: columnWidths['combat_log.roll_diff'],
+      type: 'number',
+      valueGetter: (_value, row: CombatLogRow): number => row.roll - row.threshold,
+      sortComparator: (v1: number, v2: number): number => v1 - v2,
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
+        const diff = params.row.roll - params.row.threshold
+        const diffFormatted = diff >= 0 ? floorToDec2(diff).toFixed(2) : floorToDec2(diff).toFixed(2)
+        return <span>{diffFormatted} %</span>
+      },
+    },
+    {
       field: 'damage',
       headerName: 'Damage',
       width: columnWidths['combat_log.damage'],
