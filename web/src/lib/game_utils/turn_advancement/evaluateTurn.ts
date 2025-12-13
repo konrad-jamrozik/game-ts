@@ -572,6 +572,13 @@ function updateFactions(
     // Update turns until next operation (only if not suppressed and not dormant)
     if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
       faction.turnsUntilNextOperation -= 1
+
+      // Check if it's time to perform an operation
+      if (faction.turnsUntilNextOperation <= 0) {
+        // KJA TODO: Spawn defensive mission site here when defensive missions are implemented
+        // For now, reset the counter to prevent it from going negative
+        faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
+      }
     }
 
     // Check if faction is discovered by verifying all discovery prerequisites are met
