@@ -59,7 +59,7 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
     const enemyToAgentRatioFmt = fmtPctDec0(enemyToAgentRatio)
     const enemyToAgentThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
 
-    retreatExplanation = `The mission commander ordered a retreat because the agents' combat effectiveness had dropped to ${agentSkillPctFmt} of their original strength (below the ${agentSkillThresholdFmt} threshold), while the enemy force remained at ${enemyToAgentRatioFmt} of the agents' current strength (above the ${enemyToAgentThresholdFmt} threshold).`
+    retreatExplanation = `The mission commander ordered a retreat because the agents' combat effectiveness had dropped to ${agentSkillPctFmt} of their original strength (below the ${agentSkillThresholdFmt} threshold), while the enemy force remained at ${enemyToAgentRatioFmt} of the agents' current strength (at or above the ${enemyToAgentThresholdFmt} threshold).`
   }
 
   return (
