@@ -6,6 +6,7 @@ import type { AppDispatch } from '../../redux/store'
 import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
+import { ColorBar } from '../Common/colorBarUtils'
 import type { MissionRow } from './MissionSitesDataGrid'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
@@ -40,13 +41,10 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
       field: 'expiresIn',
       headerName: 'ExpIn',
       width: columnWidths['mission_sites.expires_in'],
+      cellClassName: 'mission-sites-expires-in-cell',
       renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
-        if (params.row.state === 'Active') {
-          return (
-            <span aria-label={`missions-row-expires-in-${params.id}`}>
-              {params.value === 'never' ? 'Never' : params.value}
-            </span>
-          )
+        if (params.row.state === 'Active' && params.value !== undefined) {
+          return renderExpiresInCell(params.value, params.id)
         }
         return <span aria-label={`missions-row-expires-in-${params.id}`}>-</span>
       },
@@ -109,6 +107,24 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
   ]
 
   return columns
+}
+
+function renderExpiresInCell(expiresIn: number | 'never', rowId: string | number): React.JSX.Element {
+  if (expiresIn === 'never') {
+    return <span aria-label={`missions-row-expires-in-${rowId}`}>Never</span>
+  }
+
+  // Calculate fill percentage: 100% width = 10+ turns, shorten by 10% for each turn less
+  const fillPct = Math.min(100, (expiresIn / 10) * 100)
+
+  // Calculate color percentage: 1.0 = green (10+ turns), 0.0 = red (0 turns)
+  const colorPct = Math.min(1, expiresIn / 10)
+
+  return (
+    <ColorBar fillPct={fillPct} colorPct={colorPct}>
+      <span aria-label={`missions-row-expires-in-${rowId}`}>{expiresIn}</span>
+    </ColorBar>
+  )
 }
 
 // function getEnemyCount(row: MissionRow): number {

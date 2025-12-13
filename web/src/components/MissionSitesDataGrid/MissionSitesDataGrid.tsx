@@ -136,6 +136,11 @@ export function MissionSitesDataGrid(): React.JSX.Element {
         },
       }}
       showToolbar
+      sx={{
+        '& .mission-sites-expires-in-cell': {
+          padding: '4px',
+        },
+      }}
     />
   )
 }
