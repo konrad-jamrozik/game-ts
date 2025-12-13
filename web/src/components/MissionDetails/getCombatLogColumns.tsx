@@ -8,6 +8,35 @@ import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 
+// Color constants for skill and HP bars
+const SKILL_BAR_GREEN = 'hsla(120, 90%, 58%, 0.5)'
+const SKILL_BAR_RED = 'hsla(0, 90%, 58%, 0.5)'
+const HP_BAR_GREEN = 'hsla(120, 90%, 58%, 0.5)'
+const HP_BAR_RED = 'hsla(0, 90%, 58%, 0.5)'
+
+// Extract color components from constants
+function parseHslaColor(color: string): { hue: number; saturation: string; lightness: string; alpha: string } {
+  const regex = /hsla\((?<hue>\d+),\s*(?<saturation>\d+%),\s*(?<lightness>\d+%),\s*(?<alpha>[\d.]+)\)/u
+  const match = regex.exec(color)
+  const groups = match?.groups
+  const hueStr = groups?.['hue']
+  const saturationStr = groups?.['saturation']
+  const lightnessStr = groups?.['lightness']
+  const alphaStr = groups?.['alpha']
+  if (hueStr === undefined || saturationStr === undefined || lightnessStr === undefined || alphaStr === undefined) {
+    throw new Error(`Invalid HSLA color format: ${color}`)
+  }
+  return {
+    hue: Number.parseInt(hueStr, 10),
+    saturation: saturationStr,
+    lightness: lightnessStr,
+    alpha: alphaStr,
+  }
+}
+
+const skillBarGreenComponents = parseHslaColor(SKILL_BAR_GREEN)
+const skillBarRedComponents = parseHslaColor(SKILL_BAR_RED)
+
 export type CombatLogRow = {
   id: number
   attackId: number
@@ -139,13 +168,9 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       field: 'defenderHpAfterDamage',
       headerName: 'HP',
       width: columnWidths['combat_log.defender_hp'],
-      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element => {
-        const isZeroOrLess = params.row.defenderHpAfterDamage <= 0
-        const formatted = fmtHpComparison(Math.round(params.row.defenderHpAfterDamage), params.row.defenderHpMax)
-        return (
-          <span style={{ color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined, whiteSpace: 'pre' }}>{formatted}</span>
-        )
-      },
+      cellClassName: 'combat-log-skill-cell',
+      renderCell: (params: GridRenderCellParams<CombatLogRow>): React.JSX.Element =>
+        renderHpCell(params.row.defenderHpAfterDamage, params.row.defenderHpMax, params.row.damage),
     },
   ]
 
@@ -180,6 +205,61 @@ function fmtHpComparison(currentHp: number, maxHp: number): string {
   return `${currentHpFormatted} / ${maxHpFormatted}`
 }
 
+function renderHpCell(hpAfterDamage: number, maxHp: number, damage: number | undefined): React.JSX.Element {
+  const currentHp = Math.round(hpAfterDamage)
+  const isZeroOrLess = currentHp <= 0
+
+  // Calculate percentages (all relative to max HP)
+  const remainingHpPct = (currentHp / maxHp) * 100
+  const damagePct = damage !== undefined ? (damage / maxHp) * 100 : 0
+
+  // Create gradient with three segments:
+  // 1. Left: green (remaining HP)
+  // 2. Middle: red (damage)
+  // 3. Right: transparent (previously lost HP)
+  const greenEnd = remainingHpPct
+  const redStart = remainingHpPct
+  const redEnd = remainingHpPct + damagePct
+  const transparentStart = redEnd
+
+  const background = `linear-gradient(90deg, 
+    ${HP_BAR_GREEN} 0%, 
+    ${HP_BAR_GREEN} ${greenEnd}%, 
+    ${HP_BAR_RED} ${redStart}%, 
+    ${HP_BAR_RED} ${redEnd}%, 
+    transparent ${transparentStart}%, 
+    transparent 100%)`
+
+  const formatted = fmtHpComparison(currentHp, maxHp)
+
+  return (
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background,
+        overflow: 'hidden',
+        position: 'relative',
+      }}
+    >
+      <Box
+        component="span"
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          whiteSpace: 'pre',
+          color: isZeroOrLess ? 'hsl(4, 90%, 58%)' : undefined,
+        }}
+      >
+        {formatted}
+      </Box>
+    </Box>
+  )
+}
+
 function renderSkillCell(
   currentSkill: Fixed6,
   skillAtStart: Fixed6,
@@ -192,14 +272,14 @@ function renderSkillCell(
   // Calculate color percentage: current skill vs initial skill (0.0 = red, 1.0 = green)
   const colorPct = skillAtStart.value > 0 ? Math.max(0, Math.min(1, currentSkill.value / skillAtStart.value)) : 0
 
-  // Convert color percentage to HSL hue: 0 = red (0°), 1.0 = green (120°)
-  const hue = colorPct * 120
+  // Convert color percentage to HSL hue: interpolate between red (0°) and green (120°)
+  const { hue: redHue } = skillBarRedComponents
+  const { hue: greenHue } = skillBarGreenComponents
+  const hue = redHue + colorPct * (greenHue - redHue)
 
   // Create gradient background: filled portion with color, rest transparent
   // If fillFromRight is true, fill from right to left; otherwise fill from left to right
-  const saturation = '90%'
-  const lightness = '58%'
-  const alpha = '0.5'
+  const { saturation, lightness, alpha } = skillBarGreenComponents
   const background = fillFromRight
     ? `linear-gradient(90deg, transparent 0%, transparent ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${100 - fillPct}%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 100%)`
     : `linear-gradient(90deg, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) 0%, hsla(${hue}, ${saturation}, ${lightness}, ${alpha}) ${fillPct}%, transparent ${fillPct}%, transparent 100%)`
