@@ -26,7 +26,7 @@ export function updateRecoveringAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'Recovering') {
       // Apply exhaustion recovery
-      agent.exhaustion = Math.max(0, agent.exhaustion - state.exhaustionRecovery)
+      agent.exhaustionPct = Math.max(0, agent.exhaustionPct - state.exhaustionRecovery)
 
       const maxHitPointsF6 = toF6(agent.maxHitPoints)
       const isRecovering = f6lt(agent.hitPoints, maxHitPointsF6)

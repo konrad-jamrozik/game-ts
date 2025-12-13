@@ -46,7 +46,7 @@ export function evaluateAttack(
   const rollResult = rollContest(attackerEffectiveSkillNum, defenderEffectiveSkillNum, label)
 
   // Apply exhaustion to attacker immediately (both agents and enemies get exhausted)
-  attacker.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
+  attacker.exhaustionPct += AGENT_EXHAUSTION_INCREASE_PER_ATTACK
 
   // const attackerName = attacker.id
   // const defenderName = defender.id
@@ -150,7 +150,7 @@ export function evaluateAttack(
       // )
 
       // Apply defender exhaustion before calculating skill after damage
-      defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
+      defender.exhaustionPct += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
 
       // Calculate defender skill after damage and exhaustion
       const defenderSkillAfterAttack = effectiveSkill(defender)
@@ -203,7 +203,7 @@ export function evaluateAttack(
     }
 
     // Apply defender exhaustion (both agents and enemies)
-    defender.exhaustion += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
+    defender.exhaustionPct += AGENT_EXHAUSTION_INCREASE_PER_DEFENSE
 
     // Calculate defender skill after exhaustion (no damage for misses)
     const defenderSkillAfterAttack = effectiveSkill(defender)

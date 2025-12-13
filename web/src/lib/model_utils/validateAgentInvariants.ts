@@ -28,8 +28,8 @@ function validateBasicStatRanges(agent: Agent): void {
   if (f6lt(agent.hitPoints, zeroF6) || f6gt(agent.hitPoints, maxHitPointsF6)) {
     throw new Error(`Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${agent.maxHitPoints}`)
   }
-  if (agent.exhaustion < 0) {
-    throw new Error(`Agent ${agent.id} has negative exhaustion: ${agent.exhaustion}`)
+  if (agent.exhaustionPct < 0) {
+    throw new Error(`Agent ${agent.id} has negative exhaustionPct: ${agent.exhaustionPct}`)
   }
   if (f6lt(agent.skill, zeroF6)) {
     throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)

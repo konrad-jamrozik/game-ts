@@ -74,8 +74,8 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigation): void {
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
 
-  // Find exhausted agents (exhaustion >= 100)
-  const exhaustedAgents = agentsInvestigating.filter((agent) => agent.exhaustion >= 100)
+  // Find exhausted agents (exhaustionPct >= 100)
+  const exhaustedAgents = agentsInvestigating.filter((agent) => agent.exhaustionPct >= 100)
 
   if (exhaustedAgents.length === 0) {
     return

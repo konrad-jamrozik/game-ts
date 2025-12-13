@@ -27,7 +27,7 @@ describe(evaluateDeployedMissionSite, () => {
       assignment: 'mission-site-001',
       skill: toF6(200), // High skill to ensure success
       skillFromTraining: toF6(0),
-      exhaustion: 0,
+      exhaustionPct: 0,
       hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       hitPointsLostBeforeRecovery: toF6(0),
@@ -83,7 +83,7 @@ describe(evaluateDeployedMissionSite, () => {
       expect(f6gt(testAgent.skill, 200)).toBe(true)
 
       // Verify agent gained exhaustion from combat
-      expect(testAgent.exhaustion).toBeGreaterThan(0)
+      expect(testAgent.exhaustionPct).toBeGreaterThan(0)
 
       // Verify agent survived
       expect(testAgent.state).toBe('InTransit')
@@ -103,7 +103,7 @@ describe(evaluateDeployedMissionSite, () => {
       assignment: 'mission-site-001',
       skill: toF6(50), // Low skill
       skillFromTraining: toF6(0),
-      exhaustion: 0,
+      exhaustionPct: 0,
       hitPoints: toF6(10), // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       hitPointsLostBeforeRecovery: toF6(0),
@@ -178,7 +178,7 @@ describe(evaluateDeployedMissionSite, () => {
       assignment: 'mission-site-001',
       skill: toF6(60),
       skillFromTraining: toF6(0),
-      exhaustion: 0,
+      exhaustionPct: 0,
       hitPoints: toF6(20),
       maxHitPoints: 20,
       hitPointsLostBeforeRecovery: toF6(0),
@@ -193,7 +193,7 @@ describe(evaluateDeployedMissionSite, () => {
       assignment: 'mission-site-001',
       skill: toF6(50),
       skillFromTraining: toF6(0),
-      exhaustion: 0,
+      exhaustionPct: 0,
       hitPoints: toF6(15),
       maxHitPoints: 15,
       hitPointsLostBeforeRecovery: toF6(0),

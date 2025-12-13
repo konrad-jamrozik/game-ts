@@ -13,6 +13,8 @@ KJA backlog:
 
 ## Current UI refinement
 
+- Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
+
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
 
 - Test and refine the new activity level

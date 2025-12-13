@@ -129,7 +129,7 @@ export function newHiredAgent(id: string, turnHired: number, weaponDamage: numbe
     state: 'InTransit',
     assignment: 'Standby',
     skill: AGENT_INITIAL_SKILL,
-    exhaustion: AGENT_INITIAL_EXHAUSTION,
+    exhaustionPct: AGENT_INITIAL_EXHAUSTION,
     hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
     maxHitPoints: AGENT_INITIAL_HIT_POINTS,
     hitPointsLostBeforeRecovery: toF6(0),

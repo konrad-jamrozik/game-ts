@@ -11,14 +11,14 @@ describe(effectiveSkill, () => {
 
     ['exhaustion only', agFix.new({
       skill: toF6(116),
-      exhaustion: 20,
+      exhaustionPct: 20,
     }), 98.6],  // effective_skill = 116 * (1 - 0/30) * (1 - 15/100) = 116 * 1 * 0.85 = 98.6
 
     ['hit points lost only', agFix.wounded(7), 76.666_667],  // hit points lost = 30 - 23 = 7; effective_skill = 100 * (1 - 7/30) * (1 - 0/100) = 100 * 0.76666... * 1 = 76.666...
 
     ['exhaustion and hit points lost', agFix.new({
       skill: toF6(150),
-      exhaustion: 20,
+      exhaustionPct: 20,
       hitPoints: toF6(23),
       maxHitPoints: 30,
     }), 97.75],  // hit points lost = 30 - 23 = 7; effective_skill = 150 * (1 - 7/30) * (1 - 15/100) = 150 * 0.76666... * 0.85 = 97.75

@@ -144,16 +144,16 @@ export function getAgentsColumns(
       },
     },
     {
-      field: 'exhaustion',
+      field: 'exhaustionPct',
       headerName: 'Exh.',
-      width: columnWidths['agents.exhaustion'],
+      width: columnWidths['agents.exhaustionPct'],
       cellClassName: 'agents-color-bar-cell',
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
-        const exhaustion = params.value ?? 0
-        const { fillPct, colorPct } = getExhaustionBarPcts(exhaustion)
+        const exhaustionPct = params.value ?? 0
+        const { fillPct, colorPct } = getExhaustionBarPcts(exhaustionPct)
         return (
           <ColorBar fillPct={fillPct} colorPct={colorPct}>
-            <span aria-label={`agents-row-exhaustion-${params.id}`}>{exhaustion}</span>
+            <span aria-label={`agents-row-exhaustion-${params.id}`}>{exhaustionPct}%</span>
           </ColorBar>
         )
       },

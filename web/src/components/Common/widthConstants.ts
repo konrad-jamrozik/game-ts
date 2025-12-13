@@ -40,7 +40,7 @@ export const AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH =
   columnWidths['agents.state'] +
   columnWidths['agents.assignment'] +
   columnWidths['agents.skill'] +
-  columnWidths['agents.exhaustion'] +
+  columnWidths['agents.exhaustionPct'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =

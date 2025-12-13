@@ -47,7 +47,7 @@ export function filterVisibleAgentColumns(
         col.field === 'id' ||
         col.field === 'state' ||
         col.field === 'recoveryTurns' ||
-        col.field === 'exhaustion' ||
+        col.field === 'exhaustionPct' ||
         col.field === 'hitPoints' ||
         col.field === 'skillSimple',
     )
@@ -69,6 +69,6 @@ export function filterVisibleAgentColumns(
       col.field === 'state' ||
       col.field === 'assignment' ||
       col.field === 'skill' ||
-      col.field === 'exhaustion',
+      col.field === 'exhaustionPct',
   )
 }

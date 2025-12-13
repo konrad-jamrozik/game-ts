@@ -56,7 +56,7 @@ describe(getAgentSkillBasedValue, () => {
     // so that effectiveSkill(agent) = skill
     const agent = agFix.new({
       skill: toF6(effectiveSkill),
-      exhaustion: 0,
+      exhaustionPct: 0,
       hitPoints: toF6(30),
       maxHitPoints: 30,
     })

@@ -32,7 +32,7 @@ export const agFix = (() => {
 
     exhausted(exhaustion = 50): Agent {
       return this.new({
-        exhaustion,
+        exhaustionPct: exhaustion,
       })
     },
 

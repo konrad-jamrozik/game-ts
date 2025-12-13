@@ -91,10 +91,6 @@ Legend:
 `Officers` - What officer-type enemies are present on the mission.
 `Money` - Money reward.
 `Fund` - Funding reward on success / penalty on failure (negative = funding loss).
-`Intel` - Intel reward.
-`Panic` - Panic reduction on success / penalty on failure (negative = panic increase).
-`Threat` - Threat reduction on success / penalty on failure (negative = threat increase).
-`Suppr` - Suppression reward (increase) of given faction.
 
 Level description:
 - Level 1 = soft operations
@@ -104,19 +100,24 @@ Level description:
 - Level 5 = global conflict
 - Level 6 = existential
 
-# Faction operation panic penalties
+# Faction operation level rewards and penalties
 
-When a faction operation succeeds (defensive mission expires or fails), panic increases based on the operation level.
+When a faction operation succeeds (defensive mission expires or fails), rewards and penalties are applied based on the operation level.
 
-| Level | Description                | Panic Increase |
-| :---: | -------------------------- | :------------: |
-| 0*    | SolPar offensive missions  |     0    %     |
-| 1     | Soft operations            |     0.05 %     |
-| 2     | Violent but small-scale    |     0.2  %     |
-| 3     | Strategic threats          |     1    %     |
-| 4     | Regional destabilization   |     3    %     |
-| 5     | Global conflict            |    10    %     |
-| 6     | Existential                |    30    %     |
+| Level | Description                | Panic increase | Money | Fund R/P   |
+| :---: | -------------------------- | :------------: | :---: | :--------: |
+| 0*    | SolPar offensive missions  |     0    %     |    0  |            |
+| 1     | Soft operations            |     0.05 %     |    0  |   0 /    0 |
+| 2     | Violent but small-scale    |     0.2  %     |    0  |   5 /   -1 |
+| 3     | Strategic threats          |     1    %     |   50  |  10 /   -2 |
+| 4     | Regional destabilization   |     3    %     |  150  |  20 /   -4 |
+| 5     | Global conflict            |    10    %     |  400  |  40 /   -8 |
+| 6     | Existential                |    30    %     | 1000  |  80 /  -16 |
+
+Legend:
+`Panic increase` - Panic increase if the player fails to complete the defensive mission.
+`Money` - Money reward if the player completes the defensive mission.
+`Fund R/P` - Funding reward or penalty depending on whether the player completes the defensive mission.
 
 *Note that all player offensive missions have operation level of 0.
 

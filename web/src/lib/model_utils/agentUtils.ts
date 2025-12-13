@@ -78,7 +78,7 @@ export function notOnAssignment(agents: Agent[]): Agent[] {
 
 export function applyExhaustion(agents: Agent[], exhaustion: number): void {
   for (const agent of agents) {
-    agent.exhaustion = Math.max(0, agent.exhaustion + exhaustion)
+    agent.exhaustionPct = Math.max(0, agent.exhaustionPct + exhaustion)
   }
 }
 

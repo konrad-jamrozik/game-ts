@@ -69,7 +69,7 @@ function getAgentExhaustionAfterBattle(
   // Calculate final exhaustion gain AFTER updateAgentsAfterBattle (which includes casualty penalty)
   // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
   const survivingAgents = notTerminated(deployedAgents)
-  const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustion)
+  const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustionPct)
   // Calculate initial exhaustion for only the surviving agents
   const initialSurvivingAgentExhaustion = sum(
     survivingAgents,
@@ -126,7 +126,7 @@ function updateSurvivingAgent(
   // ----------------------------------------
 
   // Apply mission conclusion exhaustion
-  agent.exhaustion += EXHAUSTION_PENALTY
+  agent.exhaustionPct += EXHAUSTION_PENALTY
 
   // Additional exhaustion based on percentage of agents lost
   // Calculate percentage lost, round up to nearest 5%, then apply EXHAUSTION_PENALTY per 5% increment
@@ -137,7 +137,7 @@ function updateSurvivingAgent(
     // Divide by 0.05 to get number of 5% increments
     const increments = roundedPercentage / 0.05
     // Multiply by EXHAUSTION_PENALTY
-    agent.exhaustion += Math.round(increments) * EXHAUSTION_PENALTY
+    agent.exhaustionPct += Math.round(increments) * EXHAUSTION_PENALTY
   }
 
   // ----------------------------------------

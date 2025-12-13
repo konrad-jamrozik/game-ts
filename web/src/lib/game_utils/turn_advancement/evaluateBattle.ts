@@ -65,10 +65,10 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const initialEnemyHitPoints = sum(enemies, (enemy) => enemy.maxHitPoints)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
-  const initialAgentExhaustion = sum(agents, (agent) => agent.exhaustion)
+  const initialAgentExhaustion = sum(agents, (agent) => agent.exhaustionPct)
   const initialAgentExhaustionByAgentId: Record<string, number> = {}
   for (const agent of agents) {
-    initialAgentExhaustionByAgentId[agent.id] = agent.exhaustion
+    initialAgentExhaustionByAgentId[agent.id] = agent.exhaustionPct
   }
 
   // Track initial hit points for calculating damage

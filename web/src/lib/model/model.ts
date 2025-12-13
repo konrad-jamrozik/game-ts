@@ -8,7 +8,7 @@ export type Actor = {
   skill: Fixed6
   hitPoints: Fixed6
   maxHitPoints: number
-  exhaustion: number
+  exhaustionPct: number
   weapon: Weapon
 }
 

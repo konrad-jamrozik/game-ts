@@ -59,7 +59,7 @@ export function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     id,
     type,
     skill: stats.skill,
-    exhaustion: 0, // Enemies start with 0 exhaustion
+    exhaustionPct: 0, // Enemies start with 0 exhaustion
     hitPoints: toF6(stats.hp),
     maxHitPoints: stats.hp,
     weapon: newWeapon(stats.damage),

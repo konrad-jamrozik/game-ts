@@ -53,7 +53,7 @@ export function validateOnAssignmentAgents(agents: Agent[], selectedAgentIds: st
 }
 
 export function exhaustedAgents(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.exhaustion >= 100)
+  return agents.filter((agent) => agent.exhaustionPct >= 100)
 }
 
 export function validateNotExhaustedAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
