@@ -80,6 +80,7 @@ function determineChipColor(
         returnedColor = 'success'
       } else if (
         chipLabel === 'Retreated' ||
+        chipLabel === 'Retreat' ||
         chipLabel === 'Wiped' ||
         chipLabel === 'Expired' ||
         chipLabel === 'Abandoned'

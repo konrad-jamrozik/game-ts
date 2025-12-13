@@ -80,9 +80,11 @@ export function getBattleLogColumns({
       field: 'status',
       headerName: 'Status',
       width: columnWidths['battle_log.status'],
-      renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => (
-        <MyChip chipValue={params.row.status} />
-      ),
+      renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
+        // Display "Retreat" instead of "Retreated" in battle log
+        const displayStatus = params.row.status === 'Retreated' ? 'Retreat' : params.row.status
+        return <MyChip chipValue={displayStatus} />
+      },
     },
     {
       field: 'agentCount',
