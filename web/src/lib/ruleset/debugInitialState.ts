@@ -7,7 +7,6 @@ import { newEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 
-// eslint-disable-next-line max-lines-per-function
 function buildDebugAgents(
   missionSiteId: MissionSiteId,
   deepStateInvestigationId: LeadInvestigationId,
