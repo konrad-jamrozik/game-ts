@@ -7,6 +7,7 @@ import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { BattleStatus } from '../../lib/model/outcomeTypes'
 import { ColorBar } from '../ColorBar/ColorBar'
+import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
 
 export type BattleLogRow = {
   id: number
@@ -193,8 +194,19 @@ function renderBattleSkillCell(
   // Calculate fill percentage: current skill normalized to max initial skill (0-100%)
   const fillPct = maxInitialSkill.value > 0 ? Math.min(100, (currentSkill.value / maxInitialSkill.value) * 100) : 0
 
-  // Calculate color percentage: current skill vs initial skill (0.0 = red, 1.0 = green)
-  const colorPct = skillAtStart.value > 0 ? Math.max(0, Math.min(1, currentSkill.value / skillAtStart.value)) : 0
+  // Calculate color percentage: current skill vs initial skill
+  // Red (0.0) at COMBAT_INCAPACITATION_THRESHOLD, green (1.0) at 100% of initial skill
+  let colorPct = 0
+  if (skillAtStart.value > 0) {
+    const skillRatio = currentSkill.value / skillAtStart.value
+    if (skillRatio <= COMBAT_INCAPACITATION_THRESHOLD) {
+      colorPct = 0
+    } else {
+      // Map [COMBAT_INCAPACITATION_THRESHOLD, 1.0] to [0.0, 1.0]
+      colorPct = (skillRatio - COMBAT_INCAPACITATION_THRESHOLD) / (1 - COMBAT_INCAPACITATION_THRESHOLD)
+      colorPct = Math.max(0, Math.min(1, colorPct))
+    }
+  }
 
   return (
     <ColorBar fillPct={fillPct} colorPct={colorPct} fillFromRight={fillFromRight}>
