@@ -4,7 +4,7 @@
 export const columnWidths = {
   // Situation Report columns
   'situation_report.metric': 146,
-  'situation_report.value': 80,
+  'situation_report.value': 160,
   'situation_report.projected': 150,
 
   // Assets columns

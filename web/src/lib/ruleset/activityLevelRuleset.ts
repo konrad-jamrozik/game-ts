@@ -25,8 +25,8 @@ export type ActivityLevelConfig = {
 export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> = {
   0: {
     // Dormant - no operations
-    minTurns: Infinity,
-    maxTurns: Infinity,
+    minTurns: 15,
+    maxTurns: 30,
     operationFrequencyMin: Infinity,
     operationFrequencyMax: Infinity,
     operationLevelWeights: [0, 0, 0, 0, 0, 0],
@@ -139,7 +139,7 @@ export function getActivityLevelThreshold(level: ActivityLevel): number {
  * Get the next activity level, clamped at 7 (Total War).
  */
 export function nextActivityLevel(level: ActivityLevel): ActivityLevel {
-  assertInRange(level, 1, 6)
+  assertInRange(level, 0, 6)
   const next = level + 1
   assertIsActivityLevel(next)
   return next

@@ -119,9 +119,12 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
       },
       {
         id: `faction-${fct.factionId}-next-operation`,
-        label: `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
+        label:
+          !Number.isFinite(fct.turnsUntilNextOperation.current) || fct.activityLevel.current === 0
+            ? 'Next operation in: Never'
+            : `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
         chipValue:
-          fct.turnsUntilNextOperation.delta !== 0
+          Number.isFinite(fct.turnsUntilNextOperation.delta) && fct.turnsUntilNextOperation.delta !== 0
             ? fct.turnsUntilNextOperation.delta > 0
               ? `+${fct.turnsUntilNextOperation.delta}`
               : String(fct.turnsUntilNextOperation.delta)

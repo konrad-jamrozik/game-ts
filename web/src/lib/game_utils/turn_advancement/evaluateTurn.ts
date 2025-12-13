@@ -545,7 +545,7 @@ function updateFactions(
 
     // Update activity level progression (only for non-dormant factions)
     let activityLevelIncreased = false
-    if (faction.activityLevel > 0) {
+    if (faction.activityLevel >= 0) {
       faction.turnsAtCurrentLevel += 1
 
       // Check if faction should advance to next activity level

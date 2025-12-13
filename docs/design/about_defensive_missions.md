@@ -69,7 +69,7 @@ Typical activity level progression:
 
 | Faction  | Progression                 | Turns | Cumulative |
 | -------- | --------------------------- | ----- | ---------- |
-| Red Dawn | Dormant     -> Faint        |     0 |          0 |
+| Red Dawn | Dormant     -> Faint        | 15-30 |          0 |
 | Red Dawn | Faint       -> Emerging     | 60-90 |      60-90 |
 | Red Dawn | Emerging    -> Active       | 60-90 |    120-180 |
 | Red Dawn | Active      -> Expanding    | 60-90 |    180-270 |

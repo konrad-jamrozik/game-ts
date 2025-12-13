@@ -6,54 +6,6 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Delete the intel espionage gathering. I.e. ensure that agents can no longer be assigned to espionage / intel gathering missions.
-  Delete all related code symbols: reducer, model, all of that.
-  Do not touch lead investigation accumulated intel concept or related symbols needed for it. This stays in the code.
-
-- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_defensive_missions.md](../design/about_defensive_missions.md)
-- Implement the faction operations system as documented
-  - Implement the panic increase penalty
-  - Implement the funding decrease penalty
-- Update suppression system as documented
-- Delete threat level and threat increase concepts
-
-The agents data grid "Skill" column color bar shows grey bar to denote 100% of agent skill. Apply the same for the Skill column in the combat log.
-
-Create "Charts" button in Game Controls, under the "Expand all" and "Collapse all" buttons. Center the button.
-The button will open a new screen, similar as the mission details screen. It will also have "Back to Command Center" button,
-in the center top.
-Below it there will be series of MUI line charts (use MUI MCP to learn about them). Each chart will be plotting various values, over all the available game states,
-starting from the first available, to the current one. So on the X axis it will be turn number of given state.
-Now I will tell you what will be plotted on these charts, from left to right:
-- Chart 1: Assets
-  - Agent count, Funding, Money
-- Chart 2: Agent skill
-  - Min, average, median and top 10% (90th percentile), and sum total of the following:
-    - Agent max effective skill
-  - Sum total of the following:
-    - Agent current effective skill
-- Chart 3: Agent readiness
-  - avg per agent, and max over all agents, of the following:
-    - Max hit points, current hit points
-    - Exhaustion
-    - Recovery turns
-- Chart 4: Missions
-  - Total missions ever:
-    - spawned
-    - expired
-    - completed successfully
-    - retreated
-    - resulting in wipe
-- Chart 5: Battle stats
-  - Total (over missions, so e.g. each mission deployment counts as one)
-    - Agents deployed on missions
-    - Agents KIAed during missions
-    - Agents wounded during missions
-    - Agents unscathed from missions
-    - Enemies KIAed during missions
-- Chart 5: Situation report
-  - Panic level
-
 ## Current UI refinement
 
 # Next milestone
@@ -171,3 +123,55 @@ Now I will tell you what will be plotted on these charts, from left to right:
       width: 150,
     },  
   ```
+
+# DONE MLS5
+
+## 2025-12-12
+
+- Delete the intel espionage gathering. I.e. ensure that agents can no longer be assigned to espionage / intel gathering missions.
+  Delete all related code symbols: reducer, model, all of that.
+  Do not touch lead investigation accumulated intel concept or related symbols needed for it. This stays in the code.
+
+- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_defensive_missions.md](../design/about_defensive_missions.md)
+- Implement the faction operations system as documented
+  - Implement the panic increase penalty
+  - Implement the funding decrease penalty
+- Update suppression system as documented
+- Delete threat level and threat increase concepts
+
+The agents data grid "Skill" column color bar shows grey bar to denote 100% of agent skill. Apply the same for the Skill column in the combat log.
+
+Create "Charts" button in Game Controls, under the "Expand all" and "Collapse all" buttons. Center the button.
+The button will open a new screen, similar as the mission details screen. It will also have "Back to Command Center" button,
+in the center top.
+Below it there will be series of MUI line charts (use MUI MCP to learn about them). Each chart will be plotting various values, over all the available game states,
+starting from the first available, to the current one. So on the X axis it will be turn number of given state.
+Now I will tell you what will be plotted on these charts, from left to right:
+- Chart 1: Assets
+  - Agent count, Funding, Money
+- Chart 2: Agent skill
+  - Min, average, median and top 10% (90th percentile), and sum total of the following:
+    - Agent max effective skill
+  - Sum total of the following:
+    - Agent current effective skill
+- Chart 3: Agent readiness
+  - avg per agent, and max over all agents, of the following:
+    - Max hit points, current hit points
+    - Exhaustion
+    - Recovery turns
+- Chart 4: Missions
+  - Total missions ever:
+    - spawned
+    - expired
+    - completed successfully
+    - retreated
+    - resulting in wipe
+- Chart 5: Battle stats
+  - Total (over missions, so e.g. each mission deployment counts as one)
+    - Agents deployed on missions
+    - Agents KIAed during missions
+    - Agents wounded during missions
+    - Agents unscathed from missions
+    - Enemies KIAed during missions
+- Chart 5: Situation report
+  - Panic level
