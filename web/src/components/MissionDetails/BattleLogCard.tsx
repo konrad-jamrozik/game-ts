@@ -5,7 +5,11 @@ import { BATTLE_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionSiteId } from '../../lib/model/model'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
-import { f6max, toF6 } from '../../lib/primitives/fixed6'
+import { f6max, toF6, f6div } from '../../lib/primitives/fixed6'
+import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../lib/ruleset/constants'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
+import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 
 type BattleLogCardProps = {
   missionSiteId: MissionSiteId
@@ -37,6 +41,27 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
 
   const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount, maxRatio })
 
+  // Check if battle ended in retreat and calculate explanation
+  const lastRoundLog = roundLogs.at(-1)
+  let retreatExplanation: string | undefined = undefined
+  if (lastRoundLog?.status === 'Retreated') {
+    const agentSkillCurrent = lastRoundLog.agentSkill
+    const agentSkillOriginal = lastRoundLog.agentSkillTotal
+    const enemySkillCurrent = lastRoundLog.enemySkill
+
+    // Calculate agent skill percentage (current vs original)
+    const agentSkillPct = f6div(agentSkillCurrent, agentSkillOriginal)
+    const agentSkillPctFmt = fmtPctDec0(agentSkillPct)
+    const agentSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
+
+    // Calculate enemy to agent skill ratio
+    const enemyToAgentRatio = f6div(enemySkillCurrent, agentSkillCurrent)
+    const enemyToAgentRatioFmt = fmtPctDec0(enemyToAgentRatio)
+    const enemyToAgentThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+
+    retreatExplanation = `The mission commander ordered a retreat because the agents' combat effectiveness had dropped to ${agentSkillPctFmt} of their original strength (below the ${agentSkillThresholdFmt} threshold), while the enemy force remained at ${enemyToAgentRatioFmt} of the agents' current strength (above the ${enemyToAgentThresholdFmt} threshold).`
+  }
+
   return (
     <ExpandableCard id="battle-log" title="Battle Log" defaultExpanded={true} sx={{ width: BATTLE_LOG_CARD_WIDTH }}>
       <StyledDataGrid
@@ -50,6 +75,13 @@ export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.
           },
         }}
       />
+      {retreatExplanation !== undefined && (
+        <Box sx={{ mt: 2, mb: 1, px: 1 }}>
+          <Typography variant="body2" color="text.secondary">
+            {retreatExplanation}
+          </Typography>
+        </Box>
+      )}
     </ExpandableCard>
   )
 }
