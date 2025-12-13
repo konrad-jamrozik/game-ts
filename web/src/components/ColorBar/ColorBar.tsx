@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Box from '@mui/material/Box'
-import { getSkillBarFillColor } from './colorBarUtils'
+import { getColorBarFillColor } from './colorBarUtils'
 
 export type ColorBarProps = {
   fillPct: number
@@ -17,8 +17,7 @@ export function ColorBar({
   backgroundOverride,
   children,
 }: ColorBarProps): React.JSX.Element {
-  // KJA "Skill" should be decoupled from ColorBar
-  const fillColor = getSkillBarFillColor(colorPct)
+  const fillColor = getColorBarFillColor(colorPct)
 
   // Create gradient background: filled portion with color, rest transparent
   // If fillFromRight is true, fill from right to left; otherwise fill from left to right

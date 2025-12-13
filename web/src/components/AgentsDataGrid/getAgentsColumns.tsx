@@ -13,7 +13,7 @@ import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
 import { ColorBar } from '../ColorBar/ColorBar'
-import { AGENTS_SKILL_BAR_GREY, getSkillBarFillColor } from '../ColorBar/colorBarUtils'
+import { AGENTS_SKILL_BAR_GREY, getColorBarFillColor } from '../ColorBar/colorBarUtils'
 
 // oxlint-disable-next-line max-lines-per-function
 // eslint-disable-next-line max-lines-per-function
@@ -274,7 +274,7 @@ function getSkillBarDisplay(
   const ratio = effective.value / baseline.value
   const colorPct = Math.max(0, Math.min(1, ratio))
 
-  const fillColor = getSkillBarFillColor(colorPct)
+  const fillColor = getColorBarFillColor(colorPct)
   const greyEndPct = Math.max(effectiveFillPct, baselineFillPct)
 
   // Colored portion: effective skill vs max roster skill.

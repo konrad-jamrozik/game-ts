@@ -10,7 +10,7 @@ export const ROLL_BAR_RED = 'hsla(0, 90%, 58%, 0.4)'
 // Agents-specific grey for the "missing to baseline" segment in the Agents skill bar
 export const AGENTS_SKILL_BAR_GREY = 'hsla(0, 0%, 70%, 0.45)'
 
-export function getSkillBarFillColor(colorPct: number): string {
+export function getColorBarFillColor(colorPct: number): string {
   const clampedColorPct = Math.max(0, Math.min(1, colorPct))
   const adjustedColorPct = adjustColorPctForAggressiveRedness(clampedColorPct)
 
