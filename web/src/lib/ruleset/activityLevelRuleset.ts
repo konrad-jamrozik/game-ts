@@ -1,4 +1,4 @@
-import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/model'
+import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 
