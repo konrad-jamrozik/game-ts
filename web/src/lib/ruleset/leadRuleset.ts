@@ -137,9 +137,9 @@ export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, d
   const gain = rawIntelFromAgents * resistedEfficiency
 
   // Log all calculation steps
-  console.log(
-    `getLeadAccumulatedIntel: curr=${currentIntel.toFixed(6)} sk=${intelFromSkillSum.toFixed(6)} eff=${agentEfficiency.toFixed(6)} raw=${rawIntelFromAgents.toFixed(6)} resEff=${resistedEfficiency.toFixed(6)} gain=${gain.toFixed(6)}`,
-  )
+  // console.log(
+  //   `getLeadAccumulatedIntel: curr=${currentIntel.toFixed(6)} sk=${intelFromSkillSum.toFixed(6)} eff=${agentEfficiency.toFixed(6)} raw=${rawIntelFromAgents.toFixed(6)} resEff=${resistedEfficiency.toFixed(6)} gain=${gain.toFixed(6)}`,
+  // )
 
   return gain
 }

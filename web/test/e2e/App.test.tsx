@@ -175,8 +175,8 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
  * Step 6: Select mission "001" by clicking its checkbox in the Mission Sites DataGrid
  */
 async function step6SelectMission001(): Promise<void> {
-  // Select mission "001 apprehend-red-dawn" by clicking its checkbox
-  await selectMission('001 apprehend-red-dawn')
+  // Select mission "001 apprehend-cult-member-red-dawn" by clicking its checkbox
+  await selectMission('001 apprehend-cult-member-red-dawn')
 
   console.log('✅ Step 6 completed: Select mission "001"')
 }

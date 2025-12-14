@@ -1,3 +1,4 @@
+// KJA looks like "Investigation ID" actually shows Name, not ID. E.g. "000 Deep state" instead of "000 deep-state".
 import {
   createRowSelectionManager,
   type GridRowId,
