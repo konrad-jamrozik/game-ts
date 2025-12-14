@@ -40,7 +40,7 @@ function getFactionRows(faction: {
   const config = getActivityLevelConfig(faction.activityLevel)
   const levelName = getActivityLevelName(faction.activityLevel)
 
-  // Format progression display as "current/min" (see about_defensive_missions.md)
+  // Format progression display as "current/min" (see about_faction_activity_level.md)
   const progressionDisplay = config.minTurns === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.minTurns}`
 
   // Format next operation display

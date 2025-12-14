@@ -21,7 +21,7 @@ export type ActivityLevelConfig = {
 
 /**
  * Activity level configurations indexed by activity level (0-7).
- * Based on the documentation in about_defensive_missions.md
+ * Based on the documentation in about_faction_activity_level.md
  */
 export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> = {
   0: {

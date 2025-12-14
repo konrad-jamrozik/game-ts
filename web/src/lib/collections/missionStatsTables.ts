@@ -6,12 +6,12 @@
  *
  * Legend:
  * - Name: Mission name/title.
- * - ExpiresIn: Number of turns before the mission expires.
+ * - ExpIn: Number of turns before the mission expires.
  * - Enemy counts (Init, Oper, Hndl, etc.): Number of each enemy type present on the mission.
- * - MoneyReward: Money reward for completing the mission.
- * - FundingReward: Funding reward for completing the mission.
- * - PanicReductionPct: Panic reduction percentage (as decimal, e.g., 0.05 = 0.05%).
- * - Suppression: Suppression reward range (e.g., "1-3" or "N/A" for final mission).
+ * - MoneyR: Money reward for completing the mission.
+ * - FundR: Funding reward for completing the mission.
+ * - PanicR%: Panic reduction percentage (as decimal, e.g., 0.05 = 0.05%).
+ * - Suppr.: Suppression reward range (e.g., "1-3" or "N/A" for final mission).
  *
  * For mission descriptions, refer to:
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af

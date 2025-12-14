@@ -168,7 +168,7 @@ KJA backlog:
   Delete all related code symbols: reducer, model, all of that.
   Do not touch lead investigation accumulated intel concept or related symbols needed for it. This stays in the code.
 
-- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_defensive_missions.md](../design/about_defensive_missions.md)
+- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_faction_activity_level.md](../design/about_faction_activity_level.md)
 - Implement the faction operations system as documented
   - Implement the panic increase penalty
   - Implement the funding decrease penalty

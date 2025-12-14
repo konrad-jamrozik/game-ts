@@ -1,6 +1,6 @@
-# About defensive missions
+# About faction activity level
 
-This document explains how player defensive missions work.
+This document explains how faction activity levels work and how they relate to faction operations and player defensive missions.
 
 # Faction operations overview
 
@@ -8,7 +8,7 @@ At set turns each enemy faction conducts an `faction operation roll`
 that results in a `defensive mission site` spawning for the player.
 
 If the player doesn't launch a mission on the mission site before it expires,
-or fails the mission, they will suffer a `panic increase` and other penalties.
+or fails the mission, they will suffer a `panic increase` and possibly other penalties.
 
 When exactly the `faction operation roll` happens and what `faction operation`
 it exactly results in both depend on current faction `activity level`.
@@ -80,6 +80,9 @@ that the increase may be 60 up to +50% turns.
 One of the possible mission rewards is faction suppression.
 It manifests by delaying the next faction operation roll by a set number of turns,
 randomized from a range, depending on the mission reward.
+
+Refer to [missionStatsTables.ts](../../web/src/lib/collections/missionStatsTables.ts)
+for suppression rewards.
 
 # Faction operation roll probabilities
 
