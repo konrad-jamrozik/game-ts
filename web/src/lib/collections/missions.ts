@@ -5,7 +5,7 @@ import { factionDefinitions, type FactionDefinition } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
-  type OffensiveMissionRow,
+  type OffensiveMissionStats,
   type DefensiveMissionRow,
 } from './missionStatsTables'
 
@@ -47,56 +47,17 @@ export function enemyCountsToSpec(counts: EnemyCounts): string {
   return parts.join(', ')
 }
 
-function offensiveMissionRowToEnemySpec(row: OffensiveMissionRow): string {
-  const [
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _name,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _level,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _expiresIn,
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _moneyReward,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _fundingReward,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _panicReductionPct,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _suppression,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _dependsOn,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _description,
-  ] = row
-
+function offensiveMissionStatsToEnemySpec(stats: OffensiveMissionStats): string {
   return enemyCountsToSpec({
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
+    initiate: stats.initiate,
+    operative: stats.operative,
+    soldier: stats.soldier,
+    elite: stats.elite,
+    handler: stats.handler,
+    lieutenant: stats.lieutenant,
+    commander: stats.commander,
+    highCommander: stats.highCommander,
+    cultLeader: stats.cultLeader,
   })
 }
 
@@ -118,17 +79,17 @@ export function generateMissionId(name: string, faction: FactionDefinition): str
 }
 
 function generateMissionsForFaction(faction: FactionDefinition): MissionSiteTemplate[] {
-  return OFFENSIVE_MISSIONS_DATA.map((row: OffensiveMissionRow) => {
-    const name = row[0]
-    const expiresIn = row[2]
-    const moneyReward = row[11]
-    const fundingReward = row[12]
-    const panicReductionPct = row[13]
-    const suppression = row[15]
-    const dependsOn = row[16]
-    const description = row[17]
+  return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
+    const name = stats.name
+    const expiresIn = stats.expiresIn
+    const moneyReward = stats.moneyReward
+    const fundingReward = stats.fundingReward
+    const panicReductionPct = stats.panicReductionPct
+    const suppression = stats.suppression
+    const dependsOn = stats.dependsOn
+    const description = stats.description
 
-    const enemyUnitsSpec = offensiveMissionRowToEnemySpec(row)
+    const enemyUnitsSpec = offensiveMissionStatsToEnemySpec(stats)
     const suppressionValue = parseSuppression(suppression)
 
     return {

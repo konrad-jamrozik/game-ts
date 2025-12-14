@@ -13,12 +13,6 @@ import { toF6, type Fixed6 } from '../primitives/fixed6'
  * - HP: Hit points (health) for the enemy unit.
  * - Weapon: Base weapon damage value.
  * - IsOfficer: Whether this unit type is an officer (affects mission composition).
- *
- * Typical ratios:
- * - 1 handler for 5-8 initiates or operatives
- * - 1 lieutenant for 2-3 handlers and 4-5 soldiers
- * - 1 commander for 2 lieutenants and 2-4 elites
- * - 1 high commander for 3-4 commanders and 4-8 elites
  */
 
 type EnemyStatsRow = [name: string, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]

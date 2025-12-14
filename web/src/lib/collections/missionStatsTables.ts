@@ -20,31 +20,31 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
-// KJA need key-value type and wrap the table with rows into a row-to-key-value-map func.
-export type OffensiveMissionRow = [
-  name: string,
-  level: number,
-  expiresIn: number,
-  initiate: number,
-  operative: number,
-  soldier: number,
-  elite: number,
-  handler: number,
-  lieutenant: number,
-  commander: number,
-  highCommander: number,
-  cultLeader: number,
-  moneyReward: number,
-  fundingReward: number,
-  panicReductionPct: number,
-  suppression: string,
-  dependsOn: string[],
-  description: string,
-]
+export type OffensiveMissionStats = {
+  name: string
+  level: number
+  expiresIn: number
+  initiate: number
+  operative: number
+  soldier: number
+  elite: number
+  handler: number
+  lieutenant: number
+  commander: number
+  highCommander: number
+  cultLeader: number
+  moneyReward: number
+  fundingReward: number
+  panicReductionPct: number
+  suppression: string
+  dependsOn: string[]
+  description: string
+}
 
 // KJA replace the placeholder from {factionName} to {facId}, and same for {factionId}.
+// KJA have such toOffensiveMissionStats for other types too
 // prettier-ignore
-export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
+export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissionStats([
   // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
   ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{factionId}-member'], 'Apprehend a member of {factionName}.'],
   ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{factionId}-safehouse'], 'Raid cult safehouse of {factionName}.'],
@@ -54,7 +54,7 @@ export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
   ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{factionId}-command-center'], 'Raid cult command center of {factionName}.'],
   ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{factionId}-regional-stronghold'], 'Raid cult regional stronghold of {factionName}.'],
   ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{factionId}-hq'], 'Final assault on {factionName} headquarters.'],
-]
+])
 
 /**
  * Defensive mission statistics
@@ -122,3 +122,48 @@ export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionRow[] = [
   
   ['Defend against HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
 ]
+
+type OffensiveMissionRow = [
+  name: string,
+  level: number,
+  expiresIn: number,
+  initiate: number,
+  operative: number,
+  soldier: number,
+  elite: number,
+  handler: number,
+  lieutenant: number,
+  commander: number,
+  highCommander: number,
+  cultLeader: number,
+  moneyReward: number,
+  fundingReward: number,
+  panicReductionPct: number,
+  suppression: string,
+  dependsOn: string[],
+  description: string,
+]
+
+// oxlint-disable-next-line prefer-destructuring
+function toOffensiveMissionStats(rows: OffensiveMissionRow[]): OffensiveMissionStats[] {
+  return rows.map((row) => ({
+    name: row[0],
+    level: row[1],
+    expiresIn: row[2],
+    initiate: row[3],
+    operative: row[4],
+    soldier: row[5],
+    elite: row[6],
+    handler: row[7],
+    lieutenant: row[8],
+    commander: row[9],
+    highCommander: row[10],
+    cultLeader: row[11],
+    moneyReward: row[12],
+    fundingReward: row[13],
+    panicReductionPct: row[14],
+    suppression: row[15],
+    dependsOn: row[16],
+    description: row[17],
+  }))
+}
