@@ -15,7 +15,14 @@ KJA backlog:
 
 ## Current UI refinement
 
-- Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
+- In UI, don't display the IDs, like "Mission site ID" or "Lead ID"; instead, just say "Mission site" or "Lead"
+  and display a simplified `<Idx> <abbreviated_name>`
+- Remove `-cult-` to shorten e.g. from `apprehend-cult-member-red-dawn`
+- looks like "Investigation ID" actually shows Name, not ID. E.g. "000 Deep state" instead of "000 deep-state".
+
+- Add color bars to assets and capab
+
+- display in capab Exhaustion recov. with %
 
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
 
@@ -164,8 +171,6 @@ KJA backlog:
 
 # DONE in MLS-5
 
-## 2025-12-12
-
 - Delete the intel espionage gathering. I.e. ensure that agents can no longer be assigned to espionage / intel gathering missions.
   Delete all related code symbols: reducer, model, all of that.
   Do not touch lead investigation accumulated intel concept or related symbols needed for it. This stays in the code.
@@ -213,3 +218,5 @@ Now I will tell you what will be plotted on these charts, from left to right:
     - Enemies KIAed during missions
 - Chart 5: Situation report
   - Panic level
+
+- Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
