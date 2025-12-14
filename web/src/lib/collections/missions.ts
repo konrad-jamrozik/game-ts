@@ -76,6 +76,7 @@ export function generateMissionId(name: string, faction: FactionTemplate): strin
   return `mission-${baseId}-${shortId}`
 }
 
+// KJA should be called bldMissionSiteTemplates
 function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
