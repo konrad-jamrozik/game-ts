@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { MissionSiteTemplate } from '../model/missionSiteModel'
-import { factionDefinitions, type FactionDefinition, expandTemplateString } from './factions'
+import { factionDefinitions, type FactionDefinition, expandTemplateString, getFactionShortId } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
@@ -71,7 +71,8 @@ function parseSuppression(suppression: string): number {
 
 export function generateMissionId(name: string, faction: FactionDefinition): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
-  return `mission-${baseId}-${faction.shortId}`
+  const shortId = getFactionShortId(faction.id)
+  return `mission-${baseId}-${shortId}`
 }
 
 function generateMissionsForFaction(faction: FactionDefinition): MissionSiteTemplate[] {

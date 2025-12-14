@@ -6,7 +6,6 @@ import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 export type FactionDefinition = {
   id: FactionId
   name: string
-  shortId: string
   /**
    * Initial activity level when game starts.
    * 0 = Dormant, 1 = Faint, etc.
@@ -15,10 +14,14 @@ export type FactionDefinition = {
 }
 
 export const factionDefinitions: FactionDefinition[] = [
-  { id: 'faction-red-dawn', name: 'Red Dawn', shortId: 'red-dawn', initialActivityLevel: 1 },
-  { id: 'faction-exalt', name: 'Exalt', shortId: 'exalt', initialActivityLevel: 0 },
-  { id: 'faction-black-lotus', name: 'Black Lotus', shortId: 'black-lotus', initialActivityLevel: 0 },
+  { id: 'faction-red-dawn', name: 'Red Dawn', initialActivityLevel: 1 },
+  { id: 'faction-exalt', name: 'Exalt', initialActivityLevel: 0 },
+  { id: 'faction-black-lotus', name: 'Black Lotus', initialActivityLevel: 0 },
 ]
+
+export function getFactionShortId(factionId: FactionId): string {
+  return factionId.replace(/^faction-/u, '')
+}
 
 export const factions: Faction[] = factionDefinitions.map((def) => ({
   id: def.id,
@@ -28,7 +31,7 @@ export const factions: Faction[] = factionDefinitions.map((def) => ({
   turnsUntilNextOperation: calculateOperationTurns(def.initialActivityLevel),
   suppressionTurns: 0,
   lastOperationTypeName: undefined,
-  discoveryPrerequisite: [`lead-${def.shortId}-profile`],
+  discoveryPrerequisite: [`lead-${getFactionShortId(def.id)}-profile`],
 }))
 
 export function getFactionById(factionId: string): Faction {
@@ -38,5 +41,6 @@ export function getFactionById(factionId: string): Faction {
 }
 
 export function expandTemplateString(template: string, faction: FactionDefinition): string {
-  return template.replaceAll('{faction.shortId}', faction.shortId).replaceAll('{faction.name}', faction.name)
+  const shortId = getFactionShortId(faction.id)
+  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }

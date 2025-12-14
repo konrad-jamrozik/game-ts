@@ -14,7 +14,7 @@
  * - PanicR%: Panic reduction percentage (as decimal, e.g., 0.05 = 0.05%).
  * - Suppr.: Suppression reward range (e.g., "1-3" or "N/A" for final mission).
  * - DependsOn: List of lead IDs that must be completed before this mission can be spawned.
- * - Description: Mission description text (may contain {faction.name} template string).
+ * - Description: Mission description text (may contain {facName} template string).
  *
  * For mission descriptions, refer to:
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
@@ -46,14 +46,14 @@ export type OffensiveMissionStats = {
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissionStats([
   // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
-  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{faction.shortId}-member'], 'Apprehend a member of {faction.name}.'],
-  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{faction.shortId}-safehouse'], 'Raid cult safehouse of {faction.name}.'],
-  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3', ['lead-{faction.shortId}-outpost'], 'Raid cult outpost of {faction.name}.'],
-  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9', ['lead-{faction.shortId}-training-facility'], 'Raid cult training facility of {faction.name}.'],
-  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15', ['lead-{faction.shortId}-logistics-hub'], 'Raid cult logistics hub of {faction.name}.'],
-  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{faction.shortId}-command-center'], 'Raid cult command center of {faction.name}.'],
-  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{faction.shortId}-regional-stronghold'], 'Raid cult regional stronghold of {faction.name}.'],
-  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{faction.shortId}-hq'], 'Final assault on {faction.name} headquarters.'],
+  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
+  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
+  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3', ['lead-{facId}-outpost'], 'Raid cult outpost of {facName}.'],
+  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9', ['lead-{facId}-training-facility'], 'Raid cult training facility of {facName}.'],
+  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15', ['lead-{facId}-logistics-hub'], 'Raid cult logistics hub of {facName}.'],
+  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{facId}-command-center'], 'Raid cult command center of {facName}.'],
+  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
+  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
 ])
 
 /**
