@@ -1,4 +1,4 @@
-import { ENEMY_STATS } from '../collections/enemyUnits'
+import { ENEMY_STATS } from '../collections/enemyStatsTables'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
 import { toF6 } from '../primitives/fixed6'
 import { newWeapon } from './weaponRuleset'

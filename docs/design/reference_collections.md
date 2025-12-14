@@ -12,7 +12,7 @@ Newly hired agent has:
 
 # Enemy units
 
-See [enemyUnits.ts](../../web/src/lib/collections/enemyUnits.ts).
+See [enemyStatsTables.ts](../../web/src/lib/collections/enemyStatsTables.ts).
 
 # Offensive missions
 
