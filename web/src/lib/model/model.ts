@@ -1,100 +1,25 @@
-import type { Fixed6 } from '../primitives/fixed6'
-import type { MissionSiteState, LeadInvestigationState } from './outcomeTypes'
+// Import types needed for local definitions
+import type { FactionId } from './missionSiteModel'
+
+// Re-export types from mission site and lead models for backward compatibility
+export type {
+  Actor,
+  Enemy,
+  EnemyType,
+  FactionId,
+  FactionRewards,
+  MissionRewards,
+  MissionSite,
+  MissionSiteId,
+  MissionSiteTemplate,
+  Weapon,
+} from './missionSiteModel'
+
+export { ENEMY_TYPES } from './missionSiteModel'
+
+export type { Lead, LeadInvestigation, LeadInvestigationId } from './leadModel'
 
 export type { MissionSiteState, LeadInvestigationState } from './outcomeTypes'
-
-export type Actor = {
-  id: string
-  skill: Fixed6
-  hitPoints: Fixed6
-  maxHitPoints: number
-  exhaustionPct: number
-  weapon: Weapon
-}
-
-export type Weapon = {
-  damage: number
-  minDamage: number
-  maxDamage: number
-}
-
-export type MissionSiteId = `mission-site-${string}`
-export type LeadInvestigationId = `investigation-${string}`
-
-export type Lead = {
-  id: string
-  // KJA lead should have name instead of title
-  title: string
-  difficulty: number
-  description: string
-  dependsOn: string[]
-  repeatable: boolean
-  enemyEstimate?: string // For observability, e.g., "Expect safehouse to have a dozen low-ranked cult members"
-}
-
-export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
-
-export type FactionRewards = {
-  factionId: FactionId
-  /**
-   * Suppression delays the next faction operation roll by a set number of turns.
-   * E.g., suppression: 5 means delay by 5 turns.
-   */
-  suppression?: number
-}
-
-export type MissionRewards = {
-  money?: number
-  funding?: number
-  panicReduction?: Fixed6
-  factionRewards?: FactionRewards[]
-}
-
-export const ENEMY_TYPES = [
-  'Initiate',
-  'Operative',
-  'Handler',
-  'Soldier',
-  'Lieutenant',
-  'Elite',
-  'Commander',
-  'HighCommander',
-  'CultLeader',
-] as const
-
-export type EnemyType = (typeof ENEMY_TYPES)[number]
-
-export type Enemy = Actor & {
-  type: EnemyType
-  isOfficer: boolean
-}
-
-export type MissionSiteTemplate = {
-  id: string
-  name: string
-  description: string
-  expiresIn: number | 'never'
-  dependsOn: string[]
-  enemyUnitsSpec: string
-  factionId: FactionId
-  rewards: MissionRewards
-}
-
-export type MissionSite = {
-  id: MissionSiteId
-  missionId: string
-  agentIds: string[]
-  state: MissionSiteState
-  expiresIn: number | 'never'
-  enemies: Enemy[] // Enemies present at the mission site
-  /**
-   * The operation level that spawned this mission site.
-   * - undefined = Offensive missions (apprehend/raid) - no penalties on expiration
-   * - 1-6 = Defensive missions (faction operations) - penalties apply on expiration
-   * Used to calculate penalties when mission expires.
-   */
-  operationLevel?: number | undefined
-}
 
 /**
  * Activity level progression values.
@@ -144,13 +69,4 @@ export type Faction = {
    */
   lastOperationTypeName?: string | undefined
   discoveryPrerequisite: string[]
-}
-
-export type LeadInvestigation = {
-  id: LeadInvestigationId // unique investigation ID
-  leadId: string
-  accumulatedIntel: number
-  agentIds: string[] // agents currently investigating this lead
-  startTurn: number // turn when investigation started
-  state: LeadInvestigationState
 }
