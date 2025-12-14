@@ -2,8 +2,6 @@
 
 This document explains how player defensive missions work.
 
-🚧 WIP 🚧
-
 # Faction operations overview
 
 At set turns each enemy faction conducts an `faction operation roll`
@@ -67,15 +65,7 @@ Generally speaking, the activity changes level as follows:
 
 Typical activity level progression:
 
-| Faction  | Progression                 | Turns | Cumulative |
-| -------- | --------------------------- | ----- | ---------- |
-| Red Dawn | Dormant     -> Faint        | 15-30 |          0 |
-| Red Dawn | Faint       -> Emerging     | 60-90 |      60-90 |
-| Red Dawn | Emerging    -> Active       | 60-90 |    120-180 |
-| Red Dawn | Active      -> Expanding    | 60-90 |    180-270 |
-| Red Dawn | Expanding   -> Escalating   | 60-90 |    240-360 |
-| Red Dawn | Escalating  -> War          | 60-90 |    300-450 |
-| Red Dawn | War         -> Total war    | 60-90 |    360-540 |
+Refer to [activityLevelStatsTables.ts](../../web/src/lib/collections/activityLevelStatsTables.ts).
 
 ## Progression display
 
@@ -93,25 +83,4 @@ randomized from a range, depending on the mission reward.
 
 # Faction operation roll probabilities
 
-Map from activity level to probabilities of faction operations:
-
-| Activity level   | Freq.      |    1  |    2 |    3 |    4 |    5 |    6 |
-| ---------------- | ---------- | ----- | ---- | ---- | ---- | ---- | ---- |
-| 0 Dormant        |          - |     - |    - |    - |    - |    - |    - |
-| 1 Faint          | 15-25 (20) |  80 % | 20 % |    - |    - |    - |    - |
-| 2 Emerging       | 13-23 (18) |  60 % | 30 % | 10 % |    - |    - |    - |
-| 3 Active         | 11-21 (16) |  40 % | 40 % | 15 % |  5 % |    - |    - |
-| 4 Expanding      | 10-20 (15) |  30 % | 30 % | 30 % | 10 % |    - |    - |
-| 5 Escalating     |  9-19 (14) |  20 % | 25 % | 35 % | 15 % |  5 % |    - |
-| 6 War            |  8-18 (13) |  15 % | 20 % | 30 % | 20 % | 10 % |  5 % |
-| 7 Total war      |  7-17 (12) |  10 % | 15 % | 25 % | 25 % | 15 % | 10 % |
-
-Legend:
-`Freq.` - Frequency of the activity level in turns. Min to max.
-`Faction operation levels`:
-`1`: soft operations.
-`2`: violent but small-scale.
-`3`: strategic threats.
-`4`: regional destabilization.
-`5`: global conflict.
-`6`: existential.
+Refer to [activityLevelStatsTables.ts](../../web/src/lib/collections/activityLevelStatsTables.ts).
