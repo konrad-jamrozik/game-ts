@@ -3,6 +3,9 @@ import type { Mission } from '../model/model'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { factionDefinitions, type FactionDefinition } from './factions'
 
+// KJA migrate missions here to be created based on the mission stats in missionStatsTables.ts
+// Need to think what to do with {factionId}. Probably add as string to mission stats table names.
+
 type MissionTemplate = {
   id: string
   title: string
