@@ -1,6 +1,6 @@
 import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { factionDefinitions, type FactionDefinition } from './factions'
+import { factionDefinitions, type FactionDefinition, expandTemplateString } from './factions'
 
 type LeadTemplate = {
   id: string
@@ -196,10 +196,6 @@ const leadTemplates: LeadTemplate[] = [
     repeatable: false,
   },
 ]
-
-function expandTemplateString(template: string, faction: FactionDefinition): string {
-  return template.replaceAll('{faction.shortId}', faction.shortId).replaceAll('{faction.name}', faction.name)
-}
 
 function generateLeadsForFaction(faction: FactionDefinition): Lead[] {
   return leadTemplates.map((template) => ({

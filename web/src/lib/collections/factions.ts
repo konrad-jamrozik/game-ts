@@ -36,3 +36,7 @@ export function getFactionById(factionId: string): Faction {
   assertDefined(foundFaction, `Faction with id ${factionId} not found`)
   return foundFaction
 }
+
+export function expandTemplateString(template: string, faction: FactionDefinition): string {
+  return template.replaceAll('{faction.shortId}', faction.shortId).replaceAll('{faction.name}', faction.name)
+}

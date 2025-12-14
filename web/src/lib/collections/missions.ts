@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { MissionSiteTemplate } from '../model/missionSiteModel'
-import { factionDefinitions, type FactionDefinition } from './factions'
+import { factionDefinitions, type FactionDefinition, expandTemplateString } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
@@ -10,10 +10,6 @@ import {
 } from './missionStatsTables'
 
 // KJA lots of duplicate code in this file.
-
-function expandTemplateString(template: string, faction: FactionDefinition): string {
-  return template.replaceAll('{faction.shortId}', faction.shortId).replaceAll('{faction.name}', faction.name)
-}
 
 type EnemyCounts = {
   initiate: number
