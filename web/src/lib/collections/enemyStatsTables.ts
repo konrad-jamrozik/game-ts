@@ -1,5 +1,26 @@
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 
+/**
+ * Enemy unit statistics
+ *
+ * This table defines the core statistics for all enemy unit types in the game.
+ * Each enemy type has skill, hit points, weapon damage, and officer status.
+ *
+ * Legend:
+ * - Name: Full name of the enemy unit type.
+ * - Aliases: Short aliases used in mission specifications (format: "Short Full").
+ * - Skill: Combat skill value for the enemy unit.
+ * - HP: Hit points (health) for the enemy unit.
+ * - Weapon: Base weapon damage value.
+ * - IsOfficer: Whether this unit type is an officer (affects mission composition).
+ *
+ * Typical ratios:
+ * - 1 handler for 5-8 initiates or operatives
+ * - 1 lieutenant for 2-3 handlers and 4-5 soldiers
+ * - 1 commander for 2 lieutenants and 2-4 elites
+ * - 1 high commander for 3-4 commanders and 4-8 elites
+ */
+
 type EnemyStatsRow = [name: string, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 
 // prettier-ignore

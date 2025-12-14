@@ -1,3 +1,22 @@
+/**
+ * Offensive mission statistics
+ *
+ * This table defines player offensive missions - missions where the player actively
+ * attacks faction locations and operations.
+ *
+ * Legend:
+ * - Name: Mission name/title.
+ * - ExpiresIn: Number of turns before the mission expires.
+ * - Enemy counts (Init, Oper, Hndl, etc.): Number of each enemy type present on the mission.
+ * - MoneyReward: Money reward for completing the mission.
+ * - FundingReward: Funding reward for completing the mission.
+ * - PanicReductionPct: Panic reduction percentage (as decimal, e.g., 0.05 = 0.05%).
+ * - Suppression: Suppression reward range (e.g., "1-3" or "N/A" for final mission).
+ *
+ * For mission descriptions, refer to:
+ * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
+ */
+
 type OffensiveMissionRow = [
   name: string,
   expiresIn: number,
@@ -16,10 +35,6 @@ type OffensiveMissionRow = [
   suppression: string,
 ]
 
-/**
- * For offensive missions descriptions, refer to:
- * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
- */
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
   // Name,                         ExpIn, Init, Oper, Hndl, Sldr, Ltnt, Elit, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr.
@@ -32,6 +47,32 @@ export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
   ['Raid cult regional stronghold',   30,    0,    0,    0,   40,    8,   10,    3,     1,    0,   5000,    50,     10    , '15-45'],
   ['Raid cult HQ',                    40,    0,    0,    0,   60,   12,   20,    6,     2,    1, 10_000,   100,     20    ,   'N/A'],
 ]
+
+/**
+ * Defensive mission statistics
+ *
+ * This table defines player defensive missions - missions where the player counters
+ * faction operations to prevent negative consequences.
+ *
+ * Legend:
+ * - Name: Mission name/title.
+ * - Level: Mission level (1-6), indicating difficulty tier:
+ *   - Level 1 = soft operations
+ *   - Level 2 = violent but small-scale
+ *   - Level 3 = strategic threats
+ *   - Level 4 = regional destabilization
+ *   - Level 5 = global conflict
+ *   - Level 6 = existential
+ * - ExpiresIn: Number of turns before the mission expires.
+ * - Enemy counts (Init, Oper, Hndl, etc.): Number of each enemy type present on the mission.
+ *
+ * Notes:
+ * - Defensive missions have operation levels that determine rewards/penalties on success/failure.
+ * - Level 6 existential missions result in game over if the player fails to complete them.
+ *
+ * For mission descriptions, refer to:
+ * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
+ */
 
 type DefensiveMissionRow = [
   name: string,
@@ -48,10 +89,6 @@ type DefensiveMissionRow = [
   cultLeader: number,
 ]
 
-/**
- * For defensive missions descriptions, refer to:
- * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
- */
 // prettier-ignore
 export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionRow[] = [
   // Name,                                 Lvl,  ExpIn, Init, Oper, Hndl, Sldr, Ltnt, Elit, Cmdr, HCmd, CLdr
