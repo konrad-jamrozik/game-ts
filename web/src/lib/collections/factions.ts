@@ -1,6 +1,6 @@
 import type { ActivityLevel, Faction } from '../model/factionModel'
 import type { FactionId } from '../model/missionSiteModel'
-import { assertDefined } from '../primitives/assertPrimitives'
+import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 
 export type FactionTemplate = {
@@ -40,7 +40,14 @@ export function getFactionById(factionId: string): Faction {
   return foundFaction
 }
 
-export function expandTemplateString(template: string, faction: FactionTemplate): string {
+export function expandTemplateString(template: string, faction?: FactionTemplate): string {
+  if (faction === undefined) {
+    assertTrue(
+      !template.includes('{facId}') && !template.includes('{facName}'),
+      `Template string "${template}" contains faction placeholders but no faction was provided`,
+    )
+    return template
+  }
   const shortId = getFactionShortId(faction.id)
   return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }

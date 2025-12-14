@@ -1,5 +1,11 @@
 import { hasAtMostDecimals } from './mathPrimitives'
 
+export function assertTrue(condition: boolean, errMsg = 'Condition must be true'): void {
+  if (!condition) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertDefined<T>(
   value: T,
   errMsg = 'Value must be defined (not null or undefined)',
