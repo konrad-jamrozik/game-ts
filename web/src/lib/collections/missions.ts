@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteMother } from '../model/missionSiteModel'
-import { factionMothers, type FactionMother, expandTemplateString, getFactionShortId } from './factions'
+import type { MissionSiteTemplate } from '../model/missionSiteModel'
+import { factionTemplates, type FactionTemplate, expandTemplateString, getFactionShortId } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
@@ -69,13 +69,13 @@ function parseSuppression(suppression: string): number {
   return 0
 }
 
-export function generateMissionId(name: string, faction: FactionMother): string {
+export function generateMissionId(name: string, faction: FactionTemplate): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)
   return `mission-${baseId}-${shortId}`
 }
 
-function generateMissionsForFaction(faction: FactionMother): MissionSiteMother[] {
+function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -115,7 +115,7 @@ function generateMissionsForFaction(faction: FactionMother): MissionSiteMother[]
   })
 }
 
-export const offensiveMissions: MissionSiteMother[] = factionMothers.flatMap((faction) =>
+export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap((faction) =>
   generateMissionsForFaction(faction),
 )
 
@@ -154,7 +154,7 @@ function defensiveMissionRowToEnemySpec(row: DefensiveMissionRow): string {
   })
 }
 
-function generateDefensiveMissionsForFaction(faction: FactionMother): MissionSiteMother[] {
+function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
   return DEFENSIVE_MISSIONS_DATA.map((row) => {
     const name: string = row[0]
     const expiresIn: number = row[2]
@@ -178,11 +178,11 @@ function generateDefensiveMissionsForFaction(faction: FactionMother): MissionSit
   })
 }
 
-export const defensiveMissions: MissionSiteMother[] = factionMothers.flatMap((faction) =>
+export const defensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap((faction) =>
   generateDefensiveMissionsForFaction(faction),
 )
 
-export function getMissionById(missionId: string): MissionSiteMother {
+export function getMissionById(missionId: string): MissionSiteTemplate {
   const foundOffensiveMission = offensiveMissions.find((mission) => mission.id === missionId)
   if (foundOffensiveMission) {
     return foundOffensiveMission

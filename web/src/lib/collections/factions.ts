@@ -3,7 +3,7 @@ import type { FactionId } from '../model/missionSiteModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 
-export type FactionMother = {
+export type FactionTemplate = {
   id: FactionId
   name: string
   /**
@@ -13,7 +13,7 @@ export type FactionMother = {
   initialActivityLevel: ActivityLevel
 }
 
-export const factionMothers: FactionMother[] = [
+export const factionTemplates: FactionTemplate[] = [
   { id: 'faction-red-dawn', name: 'Red Dawn', initialActivityLevel: 1 },
   { id: 'faction-exalt', name: 'Exalt', initialActivityLevel: 0 },
   { id: 'faction-black-lotus', name: 'Black Lotus', initialActivityLevel: 0 },
@@ -23,7 +23,7 @@ export function getFactionShortId(factionId: FactionId): string {
   return factionId.replace(/^faction-/u, '')
 }
 
-export const factions: Faction[] = factionMothers.map((def) => ({
+export const factions: Faction[] = factionTemplates.map((def) => ({
   id: def.id,
   name: def.name,
   activityLevel: def.initialActivityLevel,
@@ -40,7 +40,7 @@ export function getFactionById(factionId: string): Faction {
   return foundFaction
 }
 
-export function expandTemplateString(template: string, faction: FactionMother): string {
+export function expandTemplateString(template: string, faction: FactionTemplate): string {
   const shortId = getFactionShortId(faction.id)
   return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }

@@ -1,8 +1,8 @@
 import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { factionMothers, type FactionMother, expandTemplateString } from './factions'
+import { factionTemplates, type FactionTemplate, expandTemplateString } from './factions'
 
-type LeadMother = {
+type LeadTemplate = {
   id: string
   name: string
   description: string
@@ -41,8 +41,8 @@ const staticLeads: Lead[] = [
   },
 ]
 
-// Faction-specific lead mothers
-const leadMothers: LeadMother[] = [
+// Faction-specific lead templates
+const leadTemplates: LeadTemplate[] = [
   {
     id: 'lead-{facId}-member',
     name: 'Locate {facName} member',
@@ -198,8 +198,8 @@ const leadMothers: LeadMother[] = [
   },
 ]
 
-function generateLeadsForFaction(faction: FactionMother): Lead[] {
-  return leadMothers.map((template) => ({
+function generateLeadsForFaction(faction: FactionTemplate): Lead[] {
+  return leadTemplates.map((template) => ({
     id: expandTemplateString(template.id, faction),
     name: expandTemplateString(template.name, faction),
     description: expandTemplateString(template.description, faction),
@@ -212,7 +212,10 @@ function generateLeadsForFaction(faction: FactionMother): Lead[] {
   }))
 }
 
-export const leads: Lead[] = [...staticLeads, ...factionMothers.flatMap((faction) => generateLeadsForFaction(faction))]
+export const leads: Lead[] = [
+  ...staticLeads,
+  ...factionTemplates.flatMap((faction) => generateLeadsForFaction(faction)),
+]
 
 export function getLeadById(leadId: string): Lead {
   const foundLead = leads.find((lead) => lead.id === leadId)
