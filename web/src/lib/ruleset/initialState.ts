@@ -3,7 +3,7 @@ import { factions } from '../collections/factions'
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
-import { makeDebugInitialOverrides } from './debugInitialState'
+import { makeDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
@@ -22,6 +22,7 @@ const initialState: GameState = makeInitialState()
 
 export default initialState
 
+// KJA change everywhere make -> bld
 export function makeInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
 
@@ -31,7 +32,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     actionsCount: 0,
     // Situation
     panic: toF6(0),
-    factions,
+    factions: factions.map((faction) => ({ ...faction })), // Deep copy, so it is mutable, not readonly.
     // Assets
     money: 500,
     funding: 20,
@@ -56,6 +57,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
   if (useDebug) {
     const debugOverrides = makeDebugInitialOverrides()
     gameState = { ...gameState, ...debugOverrides }
+    gameState = overwriteWithDebugOverrides(gameState)
   }
 
   gameState.agents.forEach((agent) => validateAgentInvariants(agent, gameState))

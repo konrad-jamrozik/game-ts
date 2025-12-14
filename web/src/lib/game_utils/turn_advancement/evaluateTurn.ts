@@ -41,6 +41,8 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
+import { factionDefinitions } from '../../collections/factions'
+import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -636,11 +638,13 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   const nextMissionNumericId = state.missionSites.length
   const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
 
-  // Create mission site (defensive missions don't have a missionId in the missions collection,
-  // so we use a generated ID based on faction and mission name)
-  // KJA linter failure on String
-  const missionNameString = String(missionName)
-  const missionId = `mission-defensive-${faction.id}-${missionNameString.toLowerCase().replaceAll(' ', '-')}`
+  // Generate missionId using the same pattern as offensive missions
+  // Pattern: mission-${baseId}-${faction.shortId}
+  const baseId = missionName.toLowerCase().replaceAll(' ', '-')
+  const factionDefinition = factionDefinitions.find((def) => def.id === faction.id)
+  assertDefined(factionDefinition, `Faction definition not found for ${faction.id}`)
+  const missionId = `mission-${baseId}-${factionDefinition.shortId}`
+
   const newMissionSite: MissionSite = {
     id: missionSiteId,
     missionId,
@@ -654,7 +658,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   state.missionSites.push(newMissionSite)
 
   // Update faction's last operation type name
-  faction.lastOperationTypeName = missionNameString
+  faction.lastOperationTypeName = missionName
 }
 
 /**

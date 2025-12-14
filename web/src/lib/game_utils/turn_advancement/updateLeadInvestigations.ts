@@ -1,5 +1,5 @@
 import { getLeadById } from '../../collections/leads'
-import { missions } from '../../collections/missions'
+import { offensiveMissions } from '../../collections/missions'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation, MissionSite, MissionSiteId } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
@@ -138,7 +138,7 @@ function completeInvestigation(
  * Creates mission sites for all missions that depend on the completed lead
  */
 function createMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
-  const dependentMissions = missions.filter((mission) => mission.dependsOn.includes(leadId))
+  const dependentMissions = offensiveMissions.filter((mission) => mission.dependsOn.includes(leadId))
   const createdMissionSites: MissionSite[] = []
 
   for (const mission of dependentMissions) {

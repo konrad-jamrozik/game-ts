@@ -6,6 +6,7 @@ import { newWeapon } from './weaponRuleset'
 import { newEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 function buildDebugAgents(
   missionSiteId: MissionSiteId,
@@ -248,11 +249,11 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   } = buildDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const mission = getMissionById('mission-apprehend-red-dawn-member')
+  const mission = getMissionById('mission-apprehend-cult-member-red-dawn')
   stateBase.missionSites = [
     {
       id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn-member',
+      missionId: 'mission-apprehend-cult-member-red-dawn',
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
@@ -260,7 +261,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     },
     {
       id: 'mission-site-001' as MissionSiteId,
-      missionId: 'mission-apprehend-red-dawn-member',
+      missionId: 'mission-apprehend-cult-member-red-dawn',
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
@@ -281,4 +282,14 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
   }
 
   return stateBase
+}
+
+export function overwriteWithDebugOverrides(gameState: GameState): GameState {
+  // Modify Red Dawn faction so next operation happens in 3 turns
+  assertDefined(gameState.factions)
+  const redDawnFaction = gameState.factions.find((faction) => faction.id === 'faction-red-dawn')
+  if (redDawnFaction) {
+    redDawnFaction.turnsUntilNextOperation = 3
+  }
+  return gameState
 }

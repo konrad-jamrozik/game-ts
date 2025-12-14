@@ -68,6 +68,8 @@ export type Enemy = Actor & {
   isOfficer: boolean
 }
 
+// KJA rename to MissionSiteTemplate
+// KJA rename title to name
 export type Mission = {
   id: string
   title: string

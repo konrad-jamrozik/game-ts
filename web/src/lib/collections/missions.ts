@@ -1,205 +1,209 @@
+/* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { Mission } from '../model/model'
-import { assertDefined } from '../primitives/assertPrimitives'
 import { factionDefinitions, type FactionDefinition } from './factions'
+import {
+  OFFENSIVE_MISSIONS_DATA,
+  DEFENSIVE_MISSIONS_DATA,
+  type OffensiveMissionRow,
+  type DefensiveMissionRow,
+} from './missionStatsTables'
 
-// KJA migrate missions here to be created based on the mission stats in missionStatsTables.ts
-// Need to think what to do with {factionId}. Probably add as string to mission stats table names.
-
-type MissionTemplate = {
-  id: string
-  title: string
-  description: string
-  expiresIn: number | 'never'
-  dependsOn: string[]
-  enemyUnitsSpec: string
-  rewards: {
-    money: number
-    funding: number
-    panicReduction: ReturnType<typeof toF6>
-    factionRewards: {
-      /**
-       * Suppression turns - delays the next faction operation by this many turns.
-       */
-      suppression: number
-    }[]
-  }
-}
-
-const missionTemplates: MissionTemplate[] = [
-  {
-    id: 'mission-apprehend-{factionId}-member',
-    title: 'Apprehend {factionName} member',
-    description: 'Apprehend a member of {factionName}.',
-    expiresIn: 5,
-    dependsOn: ['lead-{factionId}-location'],
-    enemyUnitsSpec: '2 Initiate, 1 Operative',
-    rewards: {
-      money: 5,
-      funding: 0,
-      panicReduction: toF6(0.0005),
-      factionRewards: [
-        {
-          suppression: 2, // 2 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-safehouse',
-    title: 'Raid safehouse',
-    description: 'Raid a {factionName} safehouse.',
-    expiresIn: 8,
-    dependsOn: ['lead-{factionId}-safehouse'],
-    enemyUnitsSpec: '4 Initiate, 4 Operative, 1 Handler',
-    rewards: {
-      money: 100,
-      funding: 5,
-      panicReduction: toF6(0.001),
-      factionRewards: [
-        {
-          suppression: 5, // 5 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-outpost',
-    title: 'Raid outpost',
-    description: 'Raid a fortified {factionName} outpost.',
-    expiresIn: 10,
-    dependsOn: ['lead-{factionId}-outpost'],
-    enemyUnitsSpec: '8 Initiate, 8 Operative, 2 Soldier, 3 Handler',
-    rewards: {
-      money: 400,
-      funding: 10,
-      panicReduction: toF6(0.005),
-      factionRewards: [
-        {
-          suppression: 10, // 10 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-trainfac',
-    title: 'Raid training facility',
-    description: 'Raid a {factionName} training facility.',
-    expiresIn: 12,
-    dependsOn: ['lead-{factionId}-training-facility'],
-    enemyUnitsSpec: '30 Initiate, 16 Operative, 4 Soldier, 6 Handler, 1 Lieutenant',
-    rewards: {
-      money: 800,
-      funding: 15,
-      panicReduction: toF6(0.01),
-      factionRewards: [
-        {
-          suppression: 15, // 15 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-logistics-hub',
-    title: 'Raid logistics hub',
-    description: 'Raid a {factionName} logistics hub.',
-    expiresIn: 15,
-    dependsOn: ['lead-{factionId}-logistics-hub'],
-    enemyUnitsSpec: '12 Initiate, 24 Operative, 10 Soldier, 2 Elite, 5 Handler, 2 Lieutenant, 1 Commander',
-    rewards: {
-      money: 2000,
-      funding: 20,
-      panicReduction: toF6(0.02),
-      factionRewards: [
-        {
-          suppression: 20, // 20 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-command-center',
-    title: 'Raid command center',
-    description: 'Raid a {factionName} command center.',
-    expiresIn: 20,
-    dependsOn: ['lead-{factionId}-command-center'],
-    enemyUnitsSpec: '20 Operative, 20 Soldier, 6 Elite, 4 Handler, 4 Lieutenant, 3 Commander',
-    rewards: {
-      money: 3000,
-      funding: 25,
-      panicReduction: toF6(0.05),
-      factionRewards: [
-        {
-          suppression: 30, // 30 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-stronghold',
-    title: 'Raid regional stronghold',
-    description: 'Raid a {factionName} regional stronghold.',
-    expiresIn: 30,
-    dependsOn: ['lead-{factionId}-regional-stronghold'],
-    enemyUnitsSpec: '40 Soldier, 10 Elite, 8 Lieutenant, 3 Commander, 1 HighCommander',
-    rewards: {
-      money: 5000,
-      funding: 50,
-      panicReduction: toF6(0.1),
-      factionRewards: [
-        {
-          suppression: 45, // 45 turns of suppression
-        },
-      ],
-    },
-  },
-  {
-    id: 'mission-raid-{factionId}-hq',
-    title: 'Raid HQ',
-    description: 'Final assault on {factionName} headquarters.',
-    expiresIn: 40,
-    dependsOn: ['lead-{factionId}-hq'],
-    enemyUnitsSpec: '60 Soldier, 20 Elite, 12 Lieutenant, 6 Commander, 2 HighCommander, 1 CultLeader',
-    rewards: {
-      money: 10_000,
-      funding: 100,
-      panicReduction: toF6(0.2),
-      factionRewards: [
-        {
-          suppression: 90, // 90 turns of suppression - essentially defeats the faction
-        },
-      ],
-    },
-  },
-]
+// KJA lots of duplicate code in this file.
 
 function expandTemplateString(template: string, faction: FactionDefinition): string {
   return template.replaceAll('{factionId}', faction.shortId).replaceAll('{factionName}', faction.name)
 }
 
-function generateMissionsForFaction(faction: FactionDefinition): Mission[] {
-  return missionTemplates.map((template) => ({
-    id: expandTemplateString(template.id, faction),
-    title: expandTemplateString(template.title, faction),
-    description: expandTemplateString(template.description, faction),
-    expiresIn: template.expiresIn,
-    dependsOn: template.dependsOn.map((dep) => expandTemplateString(dep, faction)),
-    enemyUnitsSpec: template.enemyUnitsSpec,
-    factionId: faction.id,
-    rewards: {
-      ...template.rewards,
-      factionRewards: template.rewards.factionRewards.map((fr) => ({
-        factionId: faction.id,
-        suppression: fr.suppression,
-      })),
-    },
-  }))
+function offensiveMissionRowToEnemySpec(row: OffensiveMissionRow): string {
+  const [
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _name,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _level,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _expiresIn,
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _moneyReward,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _fundingReward,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _panicReductionPct,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _suppression,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _dependsOn,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _description,
+  ] = row
+
+  const parts: string[] = []
+
+  if (initiate > 0) parts.push(`${initiate} Initiate`)
+  if (operative > 0) parts.push(`${operative} Operative`)
+  if (soldier > 0) parts.push(`${soldier} Soldier`)
+  if (elite > 0) parts.push(`${elite} Elite`)
+  if (handler > 0) parts.push(`${handler} Handler`)
+  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
+  if (commander > 0) parts.push(`${commander} Commander`)
+  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
+  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
+
+  return parts.join(', ')
 }
 
-export const missions: Mission[] = factionDefinitions.flatMap((faction) => generateMissionsForFaction(faction))
+function parseSuppression(suppression: string): number {
+  if (suppression === 'N/A') {
+    return 0
+  }
+  const match = /^(?<value>\d+)/u.exec(suppression)
+  const value = match?.groups?.['value']
+  if (value !== undefined && value !== '') {
+    return Number.parseInt(value, 10)
+  }
+  return 0
+}
+
+function generateMissionId(name: string, faction: FactionDefinition): string {
+  const baseId = name.toLowerCase().replaceAll(' ', '-')
+  return `mission-${baseId}-${faction.shortId}`
+}
+
+function generateMissionsForFaction(faction: FactionDefinition): Mission[] {
+  return OFFENSIVE_MISSIONS_DATA.map((row: OffensiveMissionRow) => {
+    const name = row[0]
+    const expiresIn = row[2]
+    const moneyReward = row[11]
+    const fundingReward = row[12]
+    const panicReductionPct = row[13]
+    const suppression = row[15]
+    const dependsOn = row[16]
+    const description = row[17]
+
+    const enemyUnitsSpec = offensiveMissionRowToEnemySpec(row)
+    const suppressionValue = parseSuppression(suppression)
+
+    return {
+      id: generateMissionId(name, faction),
+      title: name,
+      description: expandTemplateString(description, faction),
+      expiresIn,
+      dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
+      enemyUnitsSpec,
+      factionId: faction.id,
+      rewards: {
+        money: moneyReward,
+        funding: fundingReward,
+        panicReduction: toF6(panicReductionPct / 100),
+        factionRewards:
+          suppressionValue > 0
+            ? [
+                {
+                  factionId: faction.id,
+                  suppression: suppressionValue,
+                },
+              ]
+            : [],
+      },
+    }
+  })
+}
+
+export const offensiveMissions: Mission[] = factionDefinitions.flatMap((faction) => generateMissionsForFaction(faction))
+
+function defensiveMissionRowToEnemySpec(row: DefensiveMissionRow): string {
+  const [
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _name,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _level,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _expiresIn,
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  ] = row
+
+  const parts: string[] = []
+
+  if (initiate > 0) parts.push(`${initiate} Initiate`)
+  if (operative > 0) parts.push(`${operative} Operative`)
+  if (soldier > 0) parts.push(`${soldier} Soldier`)
+  if (elite > 0) parts.push(`${elite} Elite`)
+  if (handler > 0) parts.push(`${handler} Handler`)
+  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
+  if (commander > 0) parts.push(`${commander} Commander`)
+  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
+  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
+
+  return parts.join(', ')
+}
+
+function generateDefensiveMissionsForFaction(faction: FactionDefinition): Mission[] {
+  return DEFENSIVE_MISSIONS_DATA.map((row) => {
+    const name: string = row[0]
+    const expiresIn: number = row[2]
+
+    const enemyUnitsSpec = defensiveMissionRowToEnemySpec(row)
+
+    return {
+      id: generateMissionId(name, faction),
+      title: name,
+      description: '', // Defensive missions don't have descriptions in the data
+      expiresIn,
+      dependsOn: [], // Defensive missions don't depend on leads
+      enemyUnitsSpec,
+      factionId: faction.id,
+      rewards: {
+        money: 0, // Rewards are calculated dynamically based on operation level
+        panicReduction: toF6(0),
+        factionRewards: [],
+      },
+    }
+  })
+}
+
+export const defensiveMissions: Mission[] = factionDefinitions.flatMap((faction) =>
+  generateDefensiveMissionsForFaction(faction),
+)
 
 export function getMissionById(missionId: string): Mission {
-  const foundMission = missions.find((mission) => mission.id === missionId)
-  assertDefined(foundMission, `Mission with id ${missionId} not found`)
-  return foundMission
+  const foundOffensiveMission = offensiveMissions.find((mission) => mission.id === missionId)
+  if (foundOffensiveMission) {
+    return foundOffensiveMission
+  }
+
+  const foundDefensiveMission = defensiveMissions.find((mission) => mission.id === missionId)
+  if (foundDefensiveMission) {
+    return foundDefensiveMission
+  }
+
+  throw new Error(`Mission with id ${missionId} not found`)
 }

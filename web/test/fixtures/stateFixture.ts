@@ -46,7 +46,7 @@ export const st = {
   newMissionSite(missionSiteId: MissionSiteId): MissionSite {
     return {
       id: missionSiteId,
-      missionId: 'mission-apprehend-red-dawn-member',
+      missionId: 'mission-apprehend-cult-member-red-dawn',
       agentIds: [],
       state: 'Active',
       expiresIn: 3,

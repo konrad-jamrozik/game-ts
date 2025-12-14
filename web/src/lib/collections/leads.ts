@@ -43,7 +43,7 @@ const staticLeads: Lead[] = [
 // Faction-specific lead templates
 const leadTemplates: LeadTemplate[] = [
   {
-    id: 'lead-{factionId}-location',
+    id: 'lead-{factionId}-member',
     title: 'Locate {factionName} member',
     description: 'Track down a {factionName} member for apprehension.',
     difficulty: 2,
@@ -56,7 +56,7 @@ const leadTemplates: LeadTemplate[] = [
     title: 'Interrogate member',
     description: 'Extract information from the captured member.',
     difficulty: 2,
-    dependsOn: ['mission-apprehend-{factionId}-member'],
+    dependsOn: ['mission-apprehend-cult-member-{factionId}'],
     repeatable: false,
   },
   {
