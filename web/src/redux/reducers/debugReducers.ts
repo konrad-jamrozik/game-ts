@@ -1,42 +1,27 @@
-import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS } from '../../lib/ruleset/constants'
-import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
 import { offensiveMissions } from '../../lib/collections/missions'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { bldMissionSite } from '../../lib/game_utils/missionSiteFactory'
+import { bldAgent } from '../../lib/game_utils/agentFactory'
 
 function addMoney(state: GameState): void {
   state.money += 10_000
 }
 
 function spawn10Agents(state: GameState): void {
-  const nextAgentNumericId = state.agents.length
-
   for (let index = 0; index < 10; index += 1) {
-    const agentNumericId = nextAgentNumericId + index
-    const agentId = formatAgentId(agentNumericId)
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
     const skill = toF6(120 + index * 20)
 
-    const newAgent: Agent = {
-      id: agentId,
+    bldAgent({
+      state,
       turnHired: state.turn,
-      state: 'Available',
+      weaponDamage: state.weaponDamage,
+      agentState: 'Available',
       assignment: 'Standby',
       skill,
-      exhaustionPct: AGENT_INITIAL_EXHAUSTION,
-      hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
-      maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
-      skillFromTraining: toF6(0),
-      weapon: bldWeapon(state.weaponDamage),
-    }
-
-    state.agents.push(newAgent)
+    })
   }
 }
 

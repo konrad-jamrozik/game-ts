@@ -1,13 +1,15 @@
+/* eslint-disable unicorn/prefer-single-call */
+/* eslint-disable unicorn/no-immediate-mutation */
 import type { Agent } from '../model/agentModel'
 import type { MissionSiteId } from '../model/missionSiteModel'
 import type { LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
-import { bldWeapon } from './weaponRuleset'
 import { bldEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
+import { bldAgentWithoutState } from '../game_utils/agentFactory'
 
 function bldDebugAgents(
   missionSiteId: MissionSiteId,
@@ -21,201 +23,203 @@ function bldDebugAgents(
   }
 
   const onMissionAgentIds: string[] = []
-  function bldAgent(agent: Omit<Agent, 'id' | 'weapon' | 'skillFromTraining'>): Agent {
-    const id = `agent-${nextId()}`
-    const built: Agent = {
-      id,
-      skillFromTraining: toF6(0),
-      ...agent,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
-    }
-    if (built.state === 'OnMission' && built.assignment.startsWith('mission-site-')) {
-      onMissionAgentIds.push(built.id)
-    }
-    return built
-  }
+  const agents: Agent[] = []
 
-  const agents: Agent[] = [
-    bldAgent({
+  // Create agents using factory function
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'Available',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Available',
       assignment: 'Standby',
       skill: toF6(60),
       exhaustionPct: 0,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'Available',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Available',
       assignment: 'Standby',
       skill: toF6(140),
       exhaustionPct: 10,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 3,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'Available',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Available',
       assignment: 'Standby',
       skill: toF6(100),
-      exhaustionPct: 0,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'InTransit',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(80),
       exhaustionPct: 20,
       hitPoints: toF6(28),
-      maxHitPoints: 30,
       hitPointsLostBeforeRecovery: toF6(2),
       missionsTotal: 1,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'InTransit',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'InTransit',
       assignment: 'Contracting',
       skill: toF6(90),
-      exhaustionPct: 0,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 2,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'OnAssignment',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'OnAssignment',
       assignment: 'Contracting',
       skill: toF6(110),
       exhaustionPct: 5,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 4,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'Recovering',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
       exhaustionPct: 8,
       hitPoints: toF6(10),
-      maxHitPoints: 30,
       hitPointsLostBeforeRecovery: toF6(20),
       missionsTotal: 2,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'Recovering',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
       exhaustionPct: 120,
       hitPoints: toF6(1),
-      maxHitPoints: 30,
       hitPointsLostBeforeRecovery: toF6(29),
       missionsTotal: 1,
     }),
-    bldAgent({
+  )
+  const agent9 = bldAgentWithoutState({
+    id: `agent-${nextId()}`,
+    turnHired: 1,
+    weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+    agentState: 'OnMission',
+    assignment: missionSiteId,
+    skill: toF6(95),
+    exhaustionPct: 15,
+    missionsTotal: 1,
+  })
+  agents.push(agent9)
+  onMissionAgentIds.push(agent9.id)
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'OnMission',
-      assignment: missionSiteId,
-      skill: toF6(95),
-      exhaustionPct: 15,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 1,
-    }),
-    bldAgent({
-      turnHired: 1,
-      turnTerminated: 1,
-      state: 'Sacked',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'Sacked',
       assignment: 'Sacked',
       skill: toF6(70),
-      exhaustionPct: 0,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
+      turnTerminated: 1,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'InTransit',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(30),
       exhaustionPct: 25,
       hitPoints: toF6(18),
-      maxHitPoints: 30,
       hitPointsLostBeforeRecovery: toF6(12),
-      missionsTotal: 0,
     }),
-    bldAgent({
+  )
+  const agent12 = bldAgentWithoutState({
+    id: `agent-${nextId()}`,
+    turnHired: 1,
+    weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+    agentState: 'OnMission',
+    assignment: missionSiteId,
+    skill: toF6(85),
+    exhaustionPct: 7,
+    missionsTotal: 1,
+  })
+  agents.push(agent12)
+  onMissionAgentIds.push(agent12.id)
+  // 2 agents in training
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'OnMission',
-      assignment: missionSiteId,
-      skill: toF6(85),
-      exhaustionPct: 7,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 1,
-    }),
-    // 2 agents in training
-    bldAgent({
-      turnHired: 1,
-      state: 'InTraining',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'InTraining',
       assignment: 'Training',
       skill: toF6(75),
-      exhaustionPct: 0,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'InTraining',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'InTraining',
       assignment: 'Training',
       skill: toF6(90),
       exhaustionPct: 3,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
     }),
-    // 2 agents investigating the deep state lead
-    bldAgent({
+  )
+  // 2 agents investigating the deep state lead
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'OnAssignment',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(105),
       exhaustionPct: 5,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 2,
     }),
-    bldAgent({
+  )
+  agents.push(
+    bldAgentWithoutState({
+      id: `agent-${nextId()}`,
       turnHired: 1,
-      state: 'OnAssignment',
+      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      agentState: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(115),
       exhaustionPct: 8,
-      hitPoints: toF6(30),
-      maxHitPoints: 30,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 3,
     }),
-  ]
+  )
 
   const deepStateInvestigationAgentIds: string[] = []
   for (const agent of agents) {

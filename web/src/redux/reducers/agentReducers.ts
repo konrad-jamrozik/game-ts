@@ -1,25 +1,20 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
-import {
-  AGENT_HIRE_COST,
-  AGENT_INITIAL_EXHAUSTION,
-  AGENT_INITIAL_HIT_POINTS,
-  AGENT_INITIAL_SKILL,
-} from '../../lib/ruleset/constants'
-import { toF6 } from '../../lib/primitives/fixed6'
-import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
+import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'
 import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
+import { bldAgent } from '../../lib/game_utils/agentFactory'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
-  const nextAgentNumericId = state.agents.length
-  const newAgentId = formatAgentId(nextAgentNumericId)
-
-  const newAgent = bldHiredAgent(newAgentId, state.turn, state.weaponDamage)
-  state.agents.push(newAgent)
+  bldAgent({
+    state,
+    turnHired: state.turn,
+    weaponDamage: state.weaponDamage,
+    agentState: 'InTransit',
+    assignment: 'Standby',
+  })
   state.money -= AGENT_HIRE_COST
 })
 
@@ -118,23 +113,3 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
     }
   }
 })
-
-/**
- * Creates a new hired agent with the standard initial values used in the hiring process.
- */
-export function bldHiredAgent(id: string, turnHired: number, weaponDamage: number): Agent {
-  return {
-    id,
-    turnHired,
-    state: 'InTransit',
-    assignment: 'Standby',
-    skill: AGENT_INITIAL_SKILL,
-    exhaustionPct: AGENT_INITIAL_EXHAUSTION,
-    hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
-    maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-    hitPointsLostBeforeRecovery: toF6(0),
-    missionsTotal: 0,
-    skillFromTraining: toF6(0),
-    weapon: bldWeapon(weaponDamage),
-  }
-}

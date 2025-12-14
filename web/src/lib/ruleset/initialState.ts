@@ -1,22 +1,18 @@
 import { toF6 } from '../primitives/fixed6'
 import { factions } from '../collections/factions'
-import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
 import { bldDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
-  AGENT_INITIAL_EXHAUSTION,
-  AGENT_INITIAL_HIT_POINTS,
-  AGENT_INITIAL_SKILL,
   AGENT_INITIAL_WEAPON_DAMAGE,
   AGENT_HIT_POINTS_RECOVERY_PCT,
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { bldWeapon } from './weaponRuleset'
+import { bldAgentWithoutState } from '../game_utils/agentFactory'
 
 const initialState: GameState = bldInitialState()
 
@@ -64,31 +60,20 @@ export function bldInitialState(options?: { debug?: boolean }): GameState {
   return gameState
 }
 
-function bldInitialAgents(): Agent[] {
-  let agentCounter = 0
-  function nextId(): string {
-    const id = agentCounter.toString().padStart(3, '0')
-    agentCounter += 1
-    return id
-  }
+function bldInitialAgents(): GameState['agents'] {
+  const agents: GameState['agents'] = []
 
-  const agents: Agent[] = []
   for (let index = 0; index < 4; index += 1) {
-    const agentId = `agent-${nextId()}`
-    agents.push({
-      id: agentId,
-      turnHired: 1,
-      state: 'Available',
-      assignment: 'Standby',
-      skill: AGENT_INITIAL_SKILL,
-      exhaustionPct: AGENT_INITIAL_EXHAUSTION,
-      hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
-      maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-      hitPointsLostBeforeRecovery: toF6(0),
-      missionsTotal: 0,
-      skillFromTraining: toF6(0),
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
-    })
+    const agentId = `agent-${index.toString().padStart(3, '0')}`
+    agents.push(
+      bldAgentWithoutState({
+        id: agentId,
+        turnHired: 1,
+        weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+        agentState: 'Available',
+        assignment: 'Standby',
+      }),
+    )
   }
 
   return agents
