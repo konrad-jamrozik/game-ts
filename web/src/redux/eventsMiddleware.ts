@@ -9,7 +9,7 @@ import {
   buyUpgrade,
   deployAgentsToMission,
   hireAgent,
-  bldLeadInvestigation,
+  startLeadInvestigation,
   recallAgents,
   reset,
   sackAgents,
@@ -85,7 +85,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const agentIds = action.payload
       const agentCount = agentIds.length
       postTextEvent(`Recalled ${fmtAgentCount(agentCount)}`)
-    } else if (bldLeadInvestigation.match(action)) {
+    } else if (startLeadInvestigation.match(action)) {
       const { leadId, agentIds } = action.payload
       const agentCount = agentIds.length
       postTextEvent(`Started investigating lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
