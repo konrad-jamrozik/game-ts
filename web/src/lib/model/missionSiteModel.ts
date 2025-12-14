@@ -57,7 +57,7 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type MissionSiteTemplate = {
+export type MissionSiteMother = {
   id: string
   name: string
   description: string

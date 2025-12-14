@@ -42,7 +42,7 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
-import { factionDefinitions } from '../../collections/factions'
+import { factionMothers } from '../../collections/factions'
 import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
@@ -618,9 +618,9 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   })
 
   // Generate missionId using the same pattern as offensive missions
-  const factionDefinition = factionDefinitions.find((def) => def.id === faction.id)
-  assertDefined(factionDefinition, `Faction definition not found for ${faction.id}`)
-  const missionId = generateMissionId(missionName, factionDefinition)
+  const factionMother = factionMothers.find((def) => def.id === faction.id)
+  assertDefined(factionMother, `Faction mother not found for ${faction.id}`)
+  const missionId = generateMissionId(missionName, factionMother)
 
   bldMissionSite({
     state,

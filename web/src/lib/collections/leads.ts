@@ -1,10 +1,10 @@
 import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { factionDefinitions, type FactionDefinition, expandTemplateString } from './factions'
+import { factionMothers, type FactionMother, expandTemplateString } from './factions'
 
-type LeadTemplate = {
+type LeadMother = {
   id: string
-  title: string
+  title: string // KJA lead title -> name
   description: string
   difficulty: number
   dependsOn: string[]
@@ -12,6 +12,7 @@ type LeadTemplate = {
   enemyEstimate?: string
 }
 
+// KJA move this to *statsTable.ts setup
 // Faction-agnostic leads
 const staticLeads: Lead[] = [
   {
@@ -40,8 +41,8 @@ const staticLeads: Lead[] = [
   },
 ]
 
-// Faction-specific lead templates
-const leadTemplates: LeadTemplate[] = [
+// Faction-specific lead mothers
+const leadMothers: LeadMother[] = [
   {
     id: 'lead-{facId}-member',
     title: 'Locate {facName} member',
@@ -197,8 +198,8 @@ const leadTemplates: LeadTemplate[] = [
   },
 ]
 
-function generateLeadsForFaction(faction: FactionDefinition): Lead[] {
-  return leadTemplates.map((template) => ({
+function generateLeadsForFaction(faction: FactionMother): Lead[] {
+  return leadMothers.map((template) => ({
     id: expandTemplateString(template.id, faction),
     title: expandTemplateString(template.title, faction),
     description: expandTemplateString(template.description, faction),
@@ -211,10 +212,7 @@ function generateLeadsForFaction(faction: FactionDefinition): Lead[] {
   }))
 }
 
-export const leads: Lead[] = [
-  ...staticLeads,
-  ...factionDefinitions.flatMap((faction) => generateLeadsForFaction(faction)),
-]
+export const leads: Lead[] = [...staticLeads, ...factionMothers.flatMap((faction) => generateLeadsForFaction(faction))]
 
 export function getLeadById(leadId: string): Lead {
   const foundLead = leads.find((lead) => lead.id === leadId)
