@@ -11,6 +11,8 @@ KJA backlog:
   - Then, implement in model
   - Then, spawn when counter of next operation goes down
 
+- Implement the enemy unit scoring formula from the spreadsheet, and display it in the mission site UI as "threat assessment".
+
 ## Current UI refinement
 
 - Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
