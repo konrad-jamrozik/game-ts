@@ -46,4 +46,5 @@ function bldEnemyStats(): Record<string, { skill: Fixed6; hp: number; damage: nu
   return stats
 }
 
+// KJA review and refactor construction and usage
 export const ENEMY_STATS = bldEnemyStats()
