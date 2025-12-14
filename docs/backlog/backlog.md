@@ -72,6 +72,9 @@ KJA backlog:
 
 # Ideas
 
+- At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
+  how quickly they go through activity levels.
+
 - Add some mechanism that influences how long missions sites will last until expiration.
   Conceptually it denotes how early player learned about them. Maybe:
   - Have some kind of "Threat detection" repeatable lead that when completed, gives turn-limited benefits of form:

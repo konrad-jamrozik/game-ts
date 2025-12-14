@@ -36,14 +36,14 @@
  */
 // prettier-ignore
 export const FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA: ActivityLevelProgressionStats[] = toActivityLevelProgressionStats([
-  // Faction,   FromLevel,    ToLevel,      TurnsMin, TurnsMax, CumulativeMin, CumulativeMax
-  ['Red Dawn',  'Dormant',    'Faint',            15,      30,              0,            0],
-  ['Red Dawn',  'Faint',      'Emerging',         60,      90,             60,           90],
-  ['Red Dawn',  'Emerging',   'Active',           60,      90,            120,          180],
-  ['Red Dawn',  'Active',     'Expanding',        60,      90,            180,          270],
-  ['Red Dawn',  'Expanding',  'Escalating',       60,      90,            240,          360],
-  ['Red Dawn',  'Escalating', 'War',              60,      90,            300,          450],
-  ['Red Dawn',  'War',        'Total war',        60,      90,            360,          540],
+  // Faction,   FromLevel,    ToLevel,      TurnsMin, TurnsMax,
+  ['Red Dawn',  'Dormant',    'Faint',            15,       30],
+  ['Red Dawn',  'Faint',      'Emerging',         60,       90],
+  ['Red Dawn',  'Emerging',   'Active',           60,       90],
+  ['Red Dawn',  'Active',     'Expanding',        60,       90],
+  ['Red Dawn',  'Expanding',  'Escalating',       60,       90],
+  ['Red Dawn',  'Escalating', 'War',              60,       90],
+  ['Red Dawn',  'War',        'Total war',        60,       90],
 ])
 
 /**
@@ -74,15 +74,15 @@ export const FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA: ActivityLevelProgressionSt
  */
 // prettier-ignore
 export const FACTION_OPERATION_ROLL_PROBABILITY_DATA: FactionOperationRollProbabilityStats[] = toFactionOperationRollProbabilityStats([
-  // Level, Name,        FreqMin, FreqMax, FreqTyp, L1%,  L2%,  L3%,  L4%,  L5%,  L6%
-  [0,       'Dormant',   '',       '',      '',      '',   '',   '',   '',   '',   ''],
-  [1,       'Faint',     15,       25,      20,      80,   20,   '',   '',   '',   ''],
-  [2,       'Emerging',  13,       23,      18,      60,   30,   10,   '',   '',   ''],
-  [3,       'Active',    11,       21,      16,      40,   40,   15,    5,   '',   ''],
-  [4,       'Expanding', 10,       20,      15,      30,   30,   30,   10,   '',   ''],
-  [5,       'Escalating', 9,       19,      14,      20,   25,   35,   15,    5,   ''],
-  [6,       'War',        8,       18,      13,      15,   20,   30,   20,   10,    5],
-  [7,       'Total war',  7,       17,      12,      10,   15,   25,   25,   15,   10],
+  // Level, Name,        FreqMin, FreqMax, L1%,  L2%,  L3%,  L4%,  L5%,  L6%
+  [0,       'Dormant',   '',       '',      '',   '',   '',   '',   '',   ''],
+  [1,       'Faint',     15,       25,      80,   20,   '',   '',   '',   ''],
+  [2,       'Emerging',  13,       23,      60,   30,   10,   '',   '',   ''],
+  [3,       'Active',    11,       21,      40,   40,   15,    5,   '',   ''],
+  [4,       'Expanding', 10,       20,      30,   30,   30,   10,   '',   ''],
+  [5,       'Escalating', 9,       19,      20,   25,   35,   15,    5,   ''],
+  [6,       'War',        8,       18,      15,   20,   30,   20,   10,    5],
+  [7,       'Total war',  7,       17,      10,   15,   25,   25,   15,   10],
 ])
 
 export type ActivityLevelProgressionStats = {
@@ -91,8 +91,6 @@ export type ActivityLevelProgressionStats = {
   toLevel: string
   turnsMin: number
   turnsMax: number
-  cumulativeMin: number
-  cumulativeMax: number
 }
 
 export type FactionOperationRollProbabilityStats = {
@@ -100,7 +98,6 @@ export type FactionOperationRollProbabilityStats = {
   activityLevelName: string
   frequencyMin: number | ''
   frequencyMax: number | ''
-  frequencyTypical: number | ''
   level1ProbPct: number | ''
   level2ProbPct: number | ''
   level3ProbPct: number | ''
@@ -115,8 +112,6 @@ type ActivityLevelProgressionRow = [
   toLevel: string,
   turnsMin: number,
   turnsMax: number,
-  cumulativeMin: number,
-  cumulativeMax: number,
 ]
 
 type FactionOperationRollProbabilityRow = [
@@ -124,7 +119,6 @@ type FactionOperationRollProbabilityRow = [
   activityLevelName: string,
   frequencyMin: number | '',
   frequencyMax: number | '',
-  frequencyTypical: number | '',
   level1ProbPct: number | '',
   level2ProbPct: number | '',
   level3ProbPct: number | '',
@@ -140,8 +134,6 @@ function toActivityLevelProgressionStats(rows: ActivityLevelProgressionRow[]): A
     toLevel: row[2],
     turnsMin: row[3],
     turnsMax: row[4],
-    cumulativeMin: row[5],
-    cumulativeMax: row[6],
   }))
 }
 
@@ -153,12 +145,11 @@ function toFactionOperationRollProbabilityStats(
     activityLevelName: row[1],
     frequencyMin: row[2],
     frequencyMax: row[3],
-    frequencyTypical: row[4],
-    level1ProbPct: row[5],
-    level2ProbPct: row[6],
-    level3ProbPct: row[7],
-    level4ProbPct: row[8],
-    level5ProbPct: row[9],
-    level6ProbPct: row[10],
+    level1ProbPct: row[4],
+    level2ProbPct: row[5],
+    level3ProbPct: row[6],
+    level4ProbPct: row[7],
+    level5ProbPct: row[8],
+    level6ProbPct: row[9],
   }))
 }
