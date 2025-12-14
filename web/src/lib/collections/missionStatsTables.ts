@@ -62,7 +62,7 @@ export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissi
 
 // prettier-ignore
 export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionStats[] = toDefensiveMissionStats([
-  // Name,                                 Lvl,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
+  // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
   ['Foil business extortion',                1,      3,    6,    2,    0,    0,    1,    0,     0,    0,    0],
@@ -158,7 +158,6 @@ type OffensiveMissionRow = [
   description: string,
 ]
 
-// oxlint-disable-next-line prefer-destructuring
 function toOffensiveMissionStats(rows: OffensiveMissionRow[]): OffensiveMissionStats[] {
   return rows.map((row) => ({
     name: row[0],
@@ -182,7 +181,6 @@ function toOffensiveMissionStats(rows: OffensiveMissionRow[]): OffensiveMissionS
   }))
 }
 
-// oxlint-disable-next-line prefer-destructuring
 function toDefensiveMissionStats(rows: DefensiveMissionRow[]): DefensiveMissionStats[] {
   return rows.map((row) => ({
     name: row[0],
