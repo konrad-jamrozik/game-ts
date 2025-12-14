@@ -2,7 +2,6 @@ import type { GameState } from '../model/gameStateModel'
 import type { MissionSite, MissionSiteId } from '../model/missionSiteModel'
 import { bldEnemiesFromSpec } from '../ruleset/enemyRuleset'
 
-// KJA rename to BldMissionSiteParams
 type CreateMissionSiteParams = {
   state: GameState
   missionId: string

@@ -1,7 +1,8 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
+import type { LeadInvestigationId } from '../../lib/model/leadModel'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { getLeadById } from '../../lib/collections/leads'
+import { bldLeadInvestigation } from '../../lib/game_utils/leadInvestigationFactory'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
@@ -20,22 +21,13 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: string; agentIds:
       throw new Error(`Lead ${leadId} already has an active investigation`)
     }
 
-    // Generate unique investigation ID
-    const nextInvestigationNumericId = Object.keys(state.leadInvestigations).length
-    const investigationId: LeadInvestigationId = `investigation-${nextInvestigationNumericId.toString().padStart(3, '0')}`
-
-    // KJA create bld Method
     // Create new investigation
-    const newInvestigation: LeadInvestigation = {
-      id: investigationId,
+    const newInvestigation = bldLeadInvestigation({
+      state,
       leadId,
-      accumulatedIntel: 0,
       agentIds,
-      startTurn: state.turn,
-      state: 'Active',
-    }
-
-    state.leadInvestigations[investigationId] = newInvestigation
+    })
+    const investigationId = newInvestigation.id
 
     // Assign agents to investigation (they enter InTransit state)
     for (const agent of state.agents) {
