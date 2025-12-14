@@ -1,13 +1,12 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../../lib/model/model'
 import { toF6 } from '../../lib/primitives/fixed6'
 import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS } from '../../lib/ruleset/constants'
 import { newWeapon } from '../../lib/ruleset/weaponRuleset'
 import { offensiveMissions } from '../../lib/collections/missions'
-import { newEnemiesFromSpec } from '../../lib/ruleset/enemyRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
+import { createMissionSite } from '../../lib/game_utils/missionSiteFactory'
 
 function addMoney(state: GameState): void {
   state.money += 10_000
@@ -54,18 +53,12 @@ export function spawnMissionSites(state: GameState): void {
   )
 
   for (const mission of filteredOffensiveMissions) {
-    // Invariant: next mission site numeric id is always the current number of mission sites
-    const nextMissionNumericId = state.missionSites.length
-    const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
-    const newMissionSite: MissionSite = {
-      id: missionSiteId,
+    createMissionSite({
+      state,
       missionId: mission.id,
-      agentIds: [],
-      state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
-    }
-    state.missionSites.push(newMissionSite)
+      enemyUnitsSpec: mission.enemyUnitsSpec,
+    })
   }
 }
 

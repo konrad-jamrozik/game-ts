@@ -1,16 +1,16 @@
 import { getLeadById } from '../../collections/leads'
 import { offensiveMissions } from '../../collections/missions'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
-import type { LeadInvestigation, MissionSite, MissionSiteId } from '../../model/model'
+import type { LeadInvestigation, MissionSite } from '../../model/model'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
 import { getLeadAccumulatedIntel, getLeadSuccessChance } from '../../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
-import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
+import { createMissionSite } from '../missionSiteFactory'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -142,19 +142,13 @@ function createMissionSitesForLead(state: GameState, leadId: string): MissionSit
   const createdMissionSites: MissionSite[] = []
 
   for (const mission of dependentMissions) {
-    // Invariant: next mission site numeric id is always the current number of mission sites
-    const nextMissionNumericId = state.missionSites.length
-    const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
-    const newMissionSite: MissionSite = {
-      id: missionSiteId,
+    const newMissionSite = createMissionSite({
+      state,
       missionId: mission.id,
-      agentIds: [],
-      state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
-    }
-    state.missionSites.push(newMissionSite)
+      enemyUnitsSpec: mission.enemyUnitsSpec,
+    })
     createdMissionSites.push(newMissionSite)
   }
 

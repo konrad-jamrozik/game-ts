@@ -1,8 +1,8 @@
-import { getMissionById } from '../../collections/missions'
+import { getMissionById, generateMissionId, enemyCountsToSpec } from '../../collections/missions'
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
-import type { Faction, FactionRewards, MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
+import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import {
@@ -16,7 +16,7 @@ import {
   nextActivityLevel,
   rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
-import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
+import { createMissionSite } from '../missionSiteFactory'
 import {
   newValueChange,
   type AgentsReport,
@@ -545,49 +545,6 @@ function applyFactionReward(targetFaction: Faction, factionReward: FactionReward
 }
 
 /**
- * Converts a defensive mission row to an enemy units spec string.
- * Example: [name, level, expiresIn, 4, 1, 0, 0, 0, 0, 0, 0] -> "4 Initiate, 1 Operative"
- */
-function defensiveMissionRowToEnemySpec(row: (typeof DEFENSIVE_MISSIONS_DATA)[number]): string {
-  // KJA deal with all those oxlint/eslint disable-next added to this file.
-  const [
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _name,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _level,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _expiresIn,
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
-  ] = row
-
-  const parts: string[] = []
-
-  // KJA probably should simplify the "enemy spec string" approach.
-  if (initiate > 0) parts.push(`${initiate} Initiate`)
-  if (operative > 0) parts.push(`${operative} Operative`)
-  if (soldier > 0) parts.push(`${soldier} Soldier`)
-  if (elite > 0) parts.push(`${elite} Elite`)
-  if (handler > 0) parts.push(`${handler} Handler`)
-  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
-  if (commander > 0) parts.push(`${commander} Commander`)
-  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
-  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
-
-  return parts.join(', ')
-}
-
-/**
  * Spawns a defensive mission site for a faction when their operation counter reaches 0.
  * Picks the mission based on activity level probabilities and avoids repeating the same operation type.
  */
@@ -628,34 +585,49 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     return
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [missionName, _level, expiresIn] = selectedMission
+  const [
+    missionName,
+    // KJA review lint issues
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _level,
+    expiresIn,
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  ] = selectedMission
 
   // Convert mission row to enemy units spec string
-  const enemyUnitsSpec = defensiveMissionRowToEnemySpec(selectedMission)
-
-  // Create mission site ID
-  const nextMissionNumericId = state.missionSites.length
-  const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
+  const enemyUnitsSpec = enemyCountsToSpec({
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  })
 
   // Generate missionId using the same pattern as offensive missions
-  // Pattern: mission-${baseId}-${faction.shortId}
-  const baseId = missionName.toLowerCase().replaceAll(' ', '-')
   const factionDefinition = factionDefinitions.find((def) => def.id === faction.id)
   assertDefined(factionDefinition, `Faction definition not found for ${faction.id}`)
-  const missionId = `mission-${baseId}-${factionDefinition.shortId}`
+  const missionId = generateMissionId(missionName, factionDefinition)
 
-  const newMissionSite: MissionSite = {
-    id: missionSiteId,
+  createMissionSite({
+    state,
     missionId,
-    agentIds: [],
-    state: 'Active',
     expiresIn,
-    enemies: newEnemiesFromSpec(enemyUnitsSpec),
+    enemyUnitsSpec,
     operationLevel,
-  }
-
-  state.missionSites.push(newMissionSite)
+  })
 
   // Update faction's last operation type name
   faction.lastOperationTypeName = missionName

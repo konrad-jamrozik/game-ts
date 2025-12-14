@@ -15,6 +15,38 @@ function expandTemplateString(template: string, faction: FactionDefinition): str
   return template.replaceAll('{factionId}', faction.shortId).replaceAll('{factionName}', faction.name)
 }
 
+type EnemyCounts = {
+  initiate: number
+  operative: number
+  soldier: number
+  elite: number
+  handler: number
+  lieutenant: number
+  commander: number
+  highCommander: number
+  cultLeader: number
+}
+
+/**
+ * Converts enemy counts to a spec string format.
+ * Example: { initiate: 4, operative: 1, ... } -> "4 Initiate, 1 Operative"
+ */
+export function enemyCountsToSpec(counts: EnemyCounts): string {
+  const parts: string[] = []
+
+  if (counts.initiate > 0) parts.push(`${counts.initiate} Initiate`)
+  if (counts.operative > 0) parts.push(`${counts.operative} Operative`)
+  if (counts.soldier > 0) parts.push(`${counts.soldier} Soldier`)
+  if (counts.elite > 0) parts.push(`${counts.elite} Elite`)
+  if (counts.handler > 0) parts.push(`${counts.handler} Handler`)
+  if (counts.lieutenant > 0) parts.push(`${counts.lieutenant} Lieutenant`)
+  if (counts.commander > 0) parts.push(`${counts.commander} Commander`)
+  if (counts.highCommander > 0) parts.push(`${counts.highCommander} HighCommander`)
+  if (counts.cultLeader > 0) parts.push(`${counts.cultLeader} CultLeader`)
+
+  return parts.join(', ')
+}
+
 function offensiveMissionRowToEnemySpec(row: OffensiveMissionRow): string {
   const [
     // oxlint-disable-next-line no-unused-vars
@@ -55,19 +87,17 @@ function offensiveMissionRowToEnemySpec(row: OffensiveMissionRow): string {
     _description,
   ] = row
 
-  const parts: string[] = []
-
-  if (initiate > 0) parts.push(`${initiate} Initiate`)
-  if (operative > 0) parts.push(`${operative} Operative`)
-  if (soldier > 0) parts.push(`${soldier} Soldier`)
-  if (elite > 0) parts.push(`${elite} Elite`)
-  if (handler > 0) parts.push(`${handler} Handler`)
-  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
-  if (commander > 0) parts.push(`${commander} Commander`)
-  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
-  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
-
-  return parts.join(', ')
+  return enemyCountsToSpec({
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  })
 }
 
 function parseSuppression(suppression: string): number {
@@ -82,7 +112,7 @@ function parseSuppression(suppression: string): number {
   return 0
 }
 
-function generateMissionId(name: string, faction: FactionDefinition): string {
+export function generateMissionId(name: string, faction: FactionDefinition): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   return `mission-${baseId}-${faction.shortId}`
 }
@@ -151,19 +181,17 @@ function defensiveMissionRowToEnemySpec(row: DefensiveMissionRow): string {
     cultLeader,
   ] = row
 
-  const parts: string[] = []
-
-  if (initiate > 0) parts.push(`${initiate} Initiate`)
-  if (operative > 0) parts.push(`${operative} Operative`)
-  if (soldier > 0) parts.push(`${soldier} Soldier`)
-  if (elite > 0) parts.push(`${elite} Elite`)
-  if (handler > 0) parts.push(`${handler} Handler`)
-  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
-  if (commander > 0) parts.push(`${commander} Commander`)
-  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
-  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
-
-  return parts.join(', ')
+  return enemyCountsToSpec({
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  })
 }
 
 function generateDefensiveMissionsForFaction(faction: FactionDefinition): Mission[] {
