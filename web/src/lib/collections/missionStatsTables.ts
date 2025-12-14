@@ -13,6 +13,7 @@
  * - FundR: Funding reward for completing the mission.
  * - PanicR%: Panic reduction percentage (as decimal, e.g., 0.05 = 0.05%).
  * - Suppr.: Suppression reward range (e.g., "1-3" or "N/A" for final mission).
+ * - DependsOn: List of lead IDs that must be completed before this mission can be spawned.
  *
  * For mission descriptions, refer to:
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
@@ -35,19 +36,20 @@ type OffensiveMissionRow = [
   fundingReward: number,
   panicReductionPct: number,
   suppression: string,
+  dependsOn: string[],
 ]
 
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
-  // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr.
-  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0'],
-  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1'],
-  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3'],
-  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9'],
-  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15'],
-  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30'],
-  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45'],
-  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A'],
+  // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn
+  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{factionId}-location']],
+  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{factionId}-safehouse']],
+  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3', ['lead-{factionId}-outpost']],
+  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9', ['lead-{factionId}-training-facility']],
+  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15', ['lead-{factionId}-logistics-hub']],
+  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{factionId}-command-center']],
+  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{factionId}-regional-stronghold']],
+  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{factionId}-hq']],
 ]
 
 /**
