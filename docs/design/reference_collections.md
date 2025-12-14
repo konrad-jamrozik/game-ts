@@ -15,14 +15,14 @@ Newly hired agent has:
 | Cult unit      | Officer | Alias   | Skill | HP  | Wpn |
 | -------------- | :-----: | ------- | :---: | :-: | :-: |
 | Initiate       |         | In Init |  40   | 20  |  8  |
-| Operative      |         | Op Oper |  60   | 20  | 10  |
-| Handler        |   yes   | Hn Hndl |  70   | 20  | 10  |
-| Soldier        |         | Sl Sldr |  100  | 30  | 14  |
-| Lieutenant     |   yes   | Lt Ltnt |  120  | 30  | 14  |
-| Elite          |         | El Elit |  200  | 40  | 20  |
-| Commander      |   yes   | Cm Cmdr |  250  | 40  | 20  |
-| High Commander |   yes   | HC HCmd |  400  | 50  | 30  |
-| Cult leader    |   yes   | CL CLdr |  800  | 80  | 40  |
+| Operative      |         | Op Oper |  60   | 25  | 10  |
+| Handler        |   yes   | Hn Hndl |  80   | 25  | 10  |
+| Soldier        |         | Sl Sldr |  120  | 30  | 14  |
+| Lieutenant     |   yes   | Lt Ltnt |  140  | 30  | 16  |
+| Elite          |         | El Elit |  250  | 40  | 20  |
+| Commander      |   yes   | Cm Cmdr |  300  | 40  | 22  |
+| High Commander |   yes   | HC HCmd |  500  | 50  | 28  |
+| Cult leader    |   yes   | CL CLdr |  800  | 80  | 32  |
 
 Typical ratios:
 
