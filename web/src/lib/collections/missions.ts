@@ -28,7 +28,7 @@ const missionTemplates: MissionTemplate[] = [
     id: 'mission-apprehend-{factionId}-member',
     title: 'Apprehend {factionName} member',
     description: 'Apprehend a member of {factionName}.',
-    expiresIn: 3,
+    expiresIn: 5,
     dependsOn: ['lead-{factionId}-location'],
     enemyUnitsSpec: '2 Initiate, 1 Operative',
     rewards: {
