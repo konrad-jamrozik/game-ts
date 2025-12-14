@@ -22,6 +22,25 @@
  *   The increase may be the minimum threshold up to +50% turns (e.g., 60-90 turns).
  */
 
+import type { ActivityLevel } from '../model/factionModel'
+import type { FactionId } from '../model/missionSiteModel'
+
+/**
+ * Faction definitions.
+ *
+ * Legend:
+ * - Id: Faction ID (e.g., 'faction-red-dawn').
+ * - Name: Faction name (e.g., 'Red Dawn').
+ * - InitialActivityLevel: Initial activity level when game starts (0 = Dormant, 1 = Faint, etc.).
+ */
+// prettier-ignore
+export const FACTION_DATA: FactionStats[] = toFactionStats([
+  // Id,                    Name,        InitialActivityLevel
+  ['faction-red-dawn',      'Red Dawn',    1],
+  ['faction-exalt',         'Exalt',       0],
+  ['faction-black-lotus',   'Black Lotus', 0],
+])
+
 /**
  * Typical activity level progression for factions.
  *
@@ -85,6 +104,12 @@ export const FACTION_OPERATION_ROLL_PROBABILITY_DATA: FactionOperationRollProbab
   [7,       'Total war',  7,       17,      10,   15,   25,   25,   15,   10],
 ])
 
+export type FactionStats = {
+  id: FactionId
+  name: string
+  initialActivityLevel: ActivityLevel
+}
+
 export type ActivityLevelProgressionStats = {
   faction: string
   fromLevel: string
@@ -106,6 +131,8 @@ export type FactionOperationRollProbabilityStats = {
   level6ProbPct: number | ''
 }
 
+type FactionStatsRow = [id: FactionId, name: string, initialActivityLevel: ActivityLevel]
+
 type ActivityLevelProgressionRow = [
   faction: string,
   fromLevel: string,
@@ -126,6 +153,14 @@ type FactionOperationRollProbabilityRow = [
   level5ProbPct: number | '',
   level6ProbPct: number | '',
 ]
+
+function toFactionStats(rows: FactionStatsRow[]): FactionStats[] {
+  return rows.map((row) => ({
+    id: row[0],
+    name: row[1],
+    initialActivityLevel: row[2],
+  }))
+}
 
 function toActivityLevelProgressionStats(rows: ActivityLevelProgressionRow[]): ActivityLevelProgressionStats[] {
   return rows.map((row) => ({

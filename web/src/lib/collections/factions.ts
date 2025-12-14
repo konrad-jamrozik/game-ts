@@ -2,6 +2,7 @@ import type { ActivityLevel, Faction } from '../model/factionModel'
 import type { FactionId } from '../model/missionSiteModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
+import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 
 export type FactionTemplate = {
   id: FactionId
@@ -13,25 +14,33 @@ export type FactionTemplate = {
   initialActivityLevel: ActivityLevel
 }
 
-export const factionTemplates: FactionTemplate[] = [
-  { id: 'faction-red-dawn', name: 'Red Dawn', initialActivityLevel: 1 },
-  { id: 'faction-exalt', name: 'Exalt', initialActivityLevel: 0 },
-  { id: 'faction-black-lotus', name: 'Black Lotus', initialActivityLevel: 0 },
-]
-
 export function getFactionShortId(factionId: FactionId): string {
   return factionId.replace(/^faction-/u, '')
 }
 
-export const factions: Faction[] = factionTemplates.map((def) => ({
-  id: def.id,
-  name: def.name,
-  activityLevel: def.initialActivityLevel,
-  turnsAtCurrentLevel: 0,
-  turnsUntilNextOperation: calculateOperationTurns(def.initialActivityLevel),
-  suppressionTurns: 0,
-  lastOperationTypeName: undefined,
-  discoveryPrerequisite: [`lead-${getFactionShortId(def.id)}-profile`],
+function toFactions(stats: FactionStats[]): Faction[] {
+  return stats.map((stat) => bldFaction(stat))
+}
+
+function bldFaction(stat: FactionStats): Faction {
+  return {
+    id: stat.id,
+    name: stat.name,
+    activityLevel: stat.initialActivityLevel,
+    turnsAtCurrentLevel: 0,
+    turnsUntilNextOperation: calculateOperationTurns(stat.initialActivityLevel),
+    suppressionTurns: 0,
+    lastOperationTypeName: undefined,
+    discoveryPrerequisite: [`lead-${getFactionShortId(stat.id)}-profile`],
+  }
+}
+
+export const factions: Faction[] = toFactions(FACTION_DATA)
+
+export const factionTemplates: FactionTemplate[] = FACTION_DATA.map((stat) => ({
+  id: stat.id,
+  name: stat.name,
+  initialActivityLevel: stat.initialActivityLevel,
 }))
 
 export function getFactionById(factionId: string): Faction {
