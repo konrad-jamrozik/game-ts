@@ -137,6 +137,11 @@ export type Faction = {
    * Delays the next faction operation roll.
    */
   suppressionTurns: number
+  /**
+   * Name of the last defensive mission type spawned for this faction.
+   * Used to prevent repeating the same operation type twice in a row.
+   */
+  lastOperationTypeName?: string | undefined
   discoveryPrerequisite: string[]
 }
 

@@ -26,6 +26,7 @@ export const factions: Faction[] = factionDefinitions.map((def) => ({
   turnsAtCurrentLevel: 0,
   turnsUntilNextOperation: calculateOperationTurns(def.initialActivityLevel),
   suppressionTurns: 0,
+  lastOperationTypeName: undefined,
   discoveryPrerequisite: [`lead-${def.shortId}-profile`],
 }))
 

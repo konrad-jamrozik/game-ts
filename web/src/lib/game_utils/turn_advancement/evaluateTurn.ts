@@ -1,7 +1,8 @@
 import { getMissionById } from '../../collections/missions'
+import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
-import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
+import type { Faction, FactionRewards, MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import {
@@ -13,7 +14,9 @@ import {
   calculateOperationTurns,
   calculateProgressionTurns,
   nextActivityLevel,
+  rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
+import { newEnemiesFromSpec } from '../../ruleset/enemyRuleset'
 import {
   newValueChange,
   type AgentsReport,
@@ -540,6 +543,121 @@ function applyFactionReward(targetFaction: Faction, factionReward: FactionReward
 }
 
 /**
+ * Converts a defensive mission row to an enemy units spec string.
+ * Example: [name, level, expiresIn, 4, 1, 0, 0, 0, 0, 0, 0] -> "4 Initiate, 1 Operative"
+ */
+function defensiveMissionRowToEnemySpec(row: (typeof DEFENSIVE_MISSIONS_DATA)[number]): string {
+  // KJA deal with all those oxlint/eslint disable-next added to this file.
+  const [
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _name,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _level,
+    // oxlint-disable-next-line no-unused-vars
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _expiresIn,
+    initiate,
+    operative,
+    soldier,
+    elite,
+    handler,
+    lieutenant,
+    commander,
+    highCommander,
+    cultLeader,
+  ] = row
+
+  const parts: string[] = []
+
+  // KJA probably should simplify the "enemy spec string" approach.
+  if (initiate > 0) parts.push(`${initiate} Initiate`)
+  if (operative > 0) parts.push(`${operative} Operative`)
+  if (soldier > 0) parts.push(`${soldier} Soldier`)
+  if (elite > 0) parts.push(`${elite} Elite`)
+  if (handler > 0) parts.push(`${handler} Handler`)
+  if (lieutenant > 0) parts.push(`${lieutenant} Lieutenant`)
+  if (commander > 0) parts.push(`${commander} Commander`)
+  if (highCommander > 0) parts.push(`${highCommander} HighCommander`)
+  if (cultLeader > 0) parts.push(`${cultLeader} CultLeader`)
+
+  return parts.join(', ')
+}
+
+/**
+ * Spawns a defensive mission site for a faction when their operation counter reaches 0.
+ * Picks the mission based on activity level probabilities and avoids repeating the same operation type.
+ */
+function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
+  // Roll for operation level based on activity level probabilities
+  const operationLevel = rollOperationLevel(faction.activityLevel)
+
+  // Filter defensive missions by operation level
+  const availableMissions = DEFENSIVE_MISSIONS_DATA.filter((row) => {
+    const [, level] = row
+    return level === operationLevel
+  })
+
+  if (availableMissions.length === 0) {
+    // No missions available for this operation level - should not happen, but handle gracefully
+    return
+  }
+
+  // Filter out the last operation type if there are multiple options
+  let candidateMissions = availableMissions
+  if (availableMissions.length > 1 && faction.lastOperationTypeName !== undefined) {
+    candidateMissions = availableMissions.filter((row) => {
+      const [name] = row
+      return name !== faction.lastOperationTypeName
+    })
+    // If filtering removed all options, use all available missions (can repeat if only one option)
+    if (candidateMissions.length === 0) {
+      candidateMissions = availableMissions
+    }
+  }
+
+  // Pick a random mission from candidates
+  // KJA put this random into an until function
+  const selectedMission = candidateMissions[Math.floor(Math.random() * candidateMissions.length)]
+  if (selectedMission === undefined) {
+    // KJA should assert fail
+    // Should not happen, but handle gracefully
+    return
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const [missionName, _level, expiresIn] = selectedMission
+
+  // Convert mission row to enemy units spec string
+  const enemyUnitsSpec = defensiveMissionRowToEnemySpec(selectedMission)
+
+  // Create mission site ID
+  const nextMissionNumericId = state.missionSites.length
+  const missionSiteId: MissionSiteId = `mission-site-${nextMissionNumericId.toString().padStart(3, '0')}`
+
+  // Create mission site (defensive missions don't have a missionId in the missions collection,
+  // so we use a generated ID based on faction and mission name)
+  // KJA linter failure on String
+  const missionNameString = String(missionName)
+  const missionId = `mission-defensive-${faction.id}-${missionNameString.toLowerCase().replaceAll(' ', '-')}`
+  const newMissionSite: MissionSite = {
+    id: missionSiteId,
+    missionId,
+    agentIds: [],
+    state: 'Active',
+    expiresIn,
+    enemies: newEnemiesFromSpec(enemyUnitsSpec),
+    operationLevel,
+  }
+
+  state.missionSites.push(newMissionSite)
+
+  // Update faction's last operation type name
+  faction.lastOperationTypeName = missionNameString
+}
+
+/**
  * Updates factions - activity level progression and suppression
  * Returns detailed FactionReport[] tracking all changes
  */
@@ -608,12 +726,13 @@ function updateFactions(
 
     // Update turns until next operation (only if not suppressed and not dormant)
     if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
+      // KJA Why I need turnsUntilNextOperationBeforeDecrement?
+      const turnsUntilNextOperationBeforeDecrement = faction.turnsUntilNextOperation
       faction.turnsUntilNextOperation -= 1
 
-      // Check if it's time to perform an operation
-      if (faction.turnsUntilNextOperation <= 0) {
-        // KJA TODO: Spawn defensive mission site here when defensive missions are implemented
-        // For now, reset the counter to prevent it from going negative
+      // Check if it's time to perform an operation (when counter goes from 1 to 0)
+      if (turnsUntilNextOperationBeforeDecrement === 1 && faction.turnsUntilNextOperation === 0) {
+        spawnDefensiveMissionSite(state, faction)
         faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
       }
     }
@@ -639,3 +758,5 @@ function updateFactions(
 
   return factionReports
 }
+
+// KJA review which functions should be moved out from evaluateTurn.s
