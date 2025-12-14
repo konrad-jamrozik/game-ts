@@ -24,10 +24,10 @@ type OffensiveMissionRow = [
   expiresIn: number,
   initiate: number,
   operative: number,
-  handler: number,
   soldier: number,
-  lieutenant: number,
   elite: number,
+  handler: number,
+  lieutenant: number,
   commander: number,
   highCommander: number,
   cultLeader: number,
@@ -39,15 +39,15 @@ type OffensiveMissionRow = [
 
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionRow[] = [
-  // Name,                         Level, ExpIn, Init, Oper, Hndl, Sldr, Ltnt, Elit, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr.
-  ['Apprehend cult member',            1,     5,    2,    1,    0,    0,    0,    0,    0,     0,    0,      5,     0,      0.05 ,     '0'],
-  ['Raid cult safehouse',              2,     8,    4,    4,    1,    0,    0,    0,    0,     0,    0,    100,     5,      0.1  ,     '1'],
-  ['Raid cult outpost',                3,    10,    8,    8,    3,    2,    0,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3'],
-  ['Raid cult training facility',      4,    12,   30,   16,    6,    4,    1,    0,    0,     0,    0,    800,    15,      1    ,   '3-9'],
-  ['Raid cult logistics hub',          5,    15,   12,   24,    5,   10,    2,    2,    1,     0,    0,   2000,    20,      2    ,  '5-15'],
-  ['Raid cult command center',         6,    20,    0,   20,    4,   20,    4,    6,    3,     0,    0,   3000,    25,      5    , '10-30'],
-  ['Raid cult regional stronghold',    7,    30,    0,    0,    0,   40,    8,   10,    3,     1,    0,   5000,    50,     10    , '15-45'],
-  ['Raid cult HQ',                     8,    40,    0,    0,    0,   60,   12,   20,    6,     2,    1, 10_000,   100,     20    ,   'N/A'],
+  // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr.
+  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0'],
+  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1'],
+  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3'],
+  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9'],
+  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15'],
+  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30'],
+  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45'],
+  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A'],
 ]
 
 /**
@@ -82,10 +82,10 @@ type DefensiveMissionRow = [
   expiresIn: number,
   initiate: number,
   operative: number,
-  handler: number,
   soldier: number,
-  lieutenant: number,
   elite: number,
+  handler: number,
+  lieutenant: number,
   commander: number,
   highCommander: number,
   cultLeader: number,
@@ -93,21 +93,26 @@ type DefensiveMissionRow = [
 
 // prettier-ignore
 export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionRow[] = [
-  // Name,                                 Lvl,  ExpIn, Init, Oper, Hndl, Sldr, Ltnt, Elit, Cmdr, HCmd, CLdr
-  ['Foil recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,    0,    0,    0],
-  ['Foil supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,    0,    0,    0],
-  ['Foil business extortion',                1,      3,    6,    2,    1,    0,    0,    0,    0,    0,    0],
-  ['Foil sabotage',                          2,      4,    2,    2,    1,    1,    0,    0,    0,    0,    0],
-  ['Foil VIP assassination',                 2,      4,    4,    4,    1,    2,    0,    0,    0,    0,    0],
-  ['Defend against office raid',             2,      4,   10,    6,    2,    4,    1,    0,    0,    0,    0],
-  ['Foil financial heist',                   3,      5,   10,   10,    4,    8,    2,    0,    0,    0,    0],
-  ['Intercept arms deal',                    3,      5,   12,   12,    4,   10,    2,    2,    1,    0,    0],
-  ['Defend against facility raid',           3,      5,   16,   12,    6,   12,    3,    2,    1,    0,    0],
-  ['Counter civilian terror',                4,      6,   30,   24,   10,   15,    3,    2,    1,    0,    0],
-  ['Defend against city government assault', 4,      6,   20,   16,    6,   20,    4,    4,    2,    0,    0],
-  ['Defend against retaliation strike',      4,      6,   10,    6,    2,   24,    6,    6,    3,    0,    0],
-  ['Foil nuclear plant bombing',             5,      7,    0,    0,    0,    0,    0,    8,    3,    1,    0],
-  ['Foil coup attempt',                      5,      7,    0,    0,    0,    0,    0,    0,    0,    1,    0],
-  ['Defend military installation',           5,      7,    0,    0,    0,    0,    0,    0,    0,    1,    0],
-  ['Defend against HQ assault',              6,      8,    0,    0,    0,    0,    0,    0,    0,    1,    0],
+  // Name,                                 Lvl,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
+  ['Foil recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
+  ['Foil supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
+  ['Foil business extortion',                1,      3,    6,    2,    0,    0,    1,    0,     0,    0,    0],
+  
+  ['Foil sabotage',                          2,      4,    2,    2,    2,    0,    1,    1,     0,    0,    0],
+  ['Foil VIP assassination',                 2,      4,    4,    4,    2,    0,    1,    0,     0,    0,    0],
+  ['Defend against office raid',             2,      4,    4,    4,    4,    0,    1,    1,     0,    0,    0],
+  
+  ['Foil financial heist',                   3,      5,   10,   10,    8,    0,    4,    2,     0,    0,    0],
+  ['Intercept arms deal',                    3,      5,   12,   12,   10,    2,    4,    2,     1,    0,    0],
+  ['Defend against facility raid',           3,      5,   16,   12,   12,    2,    6,    3,     1,    0,    0],
+  
+  ['Counter civilian terror',                4,      6,   30,   24,   15,    4,   10,    3,     1,    0,    0],
+  ['Defend against city government assault', 4,      6,   24,   24,   20,    8,    6,    4,     2,    0,    0],
+  ['Defend against retaliation strike',      4,      6,   24,    8,   24,    8,    4,    6,     3,    0,    0],
+  
+  ['Foil coup attempt',                      5,      7,    0,   20,   20,   20,    0,    5,     5,    1,    0],
+  ['Foil nuclear plant bombing',             5,      7,   28,   24,   20,   12,   10,    5,     3,    1,    0],
+  ['Defend military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
+  
+  ['Defend against HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
 ]
