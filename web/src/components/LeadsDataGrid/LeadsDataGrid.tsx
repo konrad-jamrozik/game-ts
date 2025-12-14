@@ -16,7 +16,7 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 export type LeadRow = {
   rowId: number
   id: string
-  title: string
+  name: string
   difficulty: number
   repeatable: boolean
   hasActiveInvestigation: boolean
@@ -62,7 +62,7 @@ export function LeadsDataGrid(): React.JSX.Element {
     return {
       rowId: index,
       id: lead.id,
-      title: lead.title,
+      name: lead.name,
       difficulty: lead.difficulty,
       repeatable: lead.repeatable,
       hasActiveInvestigation,

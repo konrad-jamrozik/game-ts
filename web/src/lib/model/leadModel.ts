@@ -6,8 +6,7 @@ export type LeadInvestigationId = `investigation-${string}`
 
 export type Lead = {
   id: string
-  // KJA lead should have name instead of title
-  title: string
+  name: string
   difficulty: number
   description: string
   dependsOn: string[]

@@ -64,7 +64,7 @@ export function LeadCard({ leadId, displayMode = 'normal' }: LeadCardProps): Rea
       >
         {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win in specificity over the styleOverrides in theme.tsx. */}
-        <CardHeader title={lead.title} sx={combinedHeaderSx} />
+        <CardHeader title={lead.name} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" sx={{ paddingTop: 0.5 }}>

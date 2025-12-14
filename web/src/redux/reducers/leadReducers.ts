@@ -24,6 +24,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: string; agentIds:
     const nextInvestigationNumericId = Object.keys(state.leadInvestigations).length
     const investigationId: LeadInvestigationId = `investigation-${nextInvestigationNumericId.toString().padStart(3, '0')}`
 
+    // KJA create bld Method
     // Create new investigation
     const newInvestigation: LeadInvestigation = {
       id: investigationId,
