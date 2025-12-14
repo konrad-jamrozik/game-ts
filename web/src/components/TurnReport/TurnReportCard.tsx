@@ -7,6 +7,7 @@ import { formatAssets } from './formatAssets'
 import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView } from './TurnReportTreeView'
 
+// KJA I saw in turn report "Unknown operation (lvl 2) +0.10%" when "002 foil-sabotage-red-dawn" expired
 /**
  * CSS Grid component for displaying turn advancement reports
  */
