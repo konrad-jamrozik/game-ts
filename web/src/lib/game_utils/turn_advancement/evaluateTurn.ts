@@ -554,10 +554,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
   // Filter defensive missions by operation level
-  const availableMissions = DEFENSIVE_MISSIONS_DATA.filter((row) => {
-    const [, level] = row
-    return level === operationLevel
-  })
+  const availableMissions = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
 
   if (availableMissions.length === 0) {
     // No missions available for this operation level - should not happen, but handle gracefully
@@ -567,10 +564,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   // Filter out the last operation type if there are multiple options
   let candidateMissions = availableMissions
   if (availableMissions.length > 1 && faction.lastOperationTypeName !== undefined) {
-    candidateMissions = availableMissions.filter((row) => {
-      const [name] = row
-      return name !== faction.lastOperationTypeName
-    })
+    candidateMissions = availableMissions.filter((stats) => stats.name !== faction.lastOperationTypeName)
     // If filtering removed all options, use all available missions (can repeat if only one option)
     if (candidateMissions.length === 0) {
       candidateMissions = availableMissions
@@ -586,52 +580,34 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     return
   }
 
-  const [
-    missionName,
-    // KJA review lint issues; probably just not use rows but k-v; see todo in relevant file.
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _level,
-    expiresIn,
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
-  ] = selectedMission
-
-  // Convert mission row to enemy units spec string
+  // Convert mission stats to enemy units spec string
   const enemyUnitsSpec = enemyCountsToSpec({
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
+    initiate: selectedMission.initiate,
+    operative: selectedMission.operative,
+    soldier: selectedMission.soldier,
+    elite: selectedMission.elite,
+    handler: selectedMission.handler,
+    lieutenant: selectedMission.lieutenant,
+    commander: selectedMission.commander,
+    highCommander: selectedMission.highCommander,
+    cultLeader: selectedMission.cultLeader,
   })
 
   // Generate missionId using the same pattern as offensive missions
   const factionTemplate = factionTemplates.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
-  const missionId = generateMissionId(missionName, factionTemplate)
+  const missionId = generateMissionId(selectedMission.name, factionTemplate)
 
   bldMissionSite({
     state,
     missionId,
-    expiresIn,
+    expiresIn: selectedMission.expiresIn,
     enemyUnitsSpec,
     operationLevel,
   })
 
   // Update faction's last operation type name
-  faction.lastOperationTypeName = missionName
+  faction.lastOperationTypeName = selectedMission.name
 }
 
 /**

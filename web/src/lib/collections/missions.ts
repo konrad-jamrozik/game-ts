@@ -6,7 +6,7 @@ import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
   type OffensiveMissionStats,
-  type DefensiveMissionRow,
+  type DefensiveMissionStats,
 } from './missionStatsTables'
 
 // KJA lots of duplicate code in this file.
@@ -23,6 +23,7 @@ type EnemyCounts = {
   cultLeader: number
 }
 
+// KJA inline this function, i.e. avoid having to have an "enemy spec"
 /**
  * Converts enemy counts to a spec string format.
  * Example: { initiate: 4, operative: 1, ... } -> "4 Initiate, 1 Operative"
@@ -119,47 +120,26 @@ export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap
   generateMissionsForFaction(faction),
 )
 
-function defensiveMissionRowToEnemySpec(row: DefensiveMissionRow): string {
-  const [
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _name,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _level,
-    // oxlint-disable-next-line no-unused-vars
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    _expiresIn,
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
-  ] = row
-
+function defensiveMissionStatsToEnemySpec(stats: DefensiveMissionStats): string {
   return enemyCountsToSpec({
-    initiate,
-    operative,
-    soldier,
-    elite,
-    handler,
-    lieutenant,
-    commander,
-    highCommander,
-    cultLeader,
+    initiate: stats.initiate,
+    operative: stats.operative,
+    soldier: stats.soldier,
+    elite: stats.elite,
+    handler: stats.handler,
+    lieutenant: stats.lieutenant,
+    commander: stats.commander,
+    highCommander: stats.highCommander,
+    cultLeader: stats.cultLeader,
   })
 }
 
 function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
-  return DEFENSIVE_MISSIONS_DATA.map((row) => {
-    const name: string = row[0]
-    const expiresIn: number = row[2]
+  return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
+    const name = stats.name
+    const expiresIn = stats.expiresIn
 
-    const enemyUnitsSpec = defensiveMissionRowToEnemySpec(row)
+    const enemyUnitsSpec = defensiveMissionStatsToEnemySpec(stats)
 
     return {
       id: generateMissionId(name, faction),

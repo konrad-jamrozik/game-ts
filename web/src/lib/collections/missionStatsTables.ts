@@ -20,28 +20,6 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
-export type OffensiveMissionStats = {
-  name: string
-  level: number
-  expiresIn: number
-  initiate: number
-  operative: number
-  soldier: number
-  elite: number
-  handler: number
-  lieutenant: number
-  commander: number
-  highCommander: number
-  cultLeader: number
-  moneyReward: number
-  fundingReward: number
-  panicReductionPct: number
-  suppression: string
-  dependsOn: string[]
-  description: string
-}
-
-// KJA replace the placeholder from {factionName} to {facId}, and same for {factionId}.
 // KJA have such toOffensiveMissionStats for other types too
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissionStats([
@@ -82,23 +60,8 @@ export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissi
  * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
  */
 
-export type DefensiveMissionRow = [
-  name: string,
-  level: number,
-  expiresIn: number,
-  initiate: number,
-  operative: number,
-  soldier: number,
-  elite: number,
-  handler: number,
-  lieutenant: number,
-  commander: number,
-  highCommander: number,
-  cultLeader: number,
-]
-
 // prettier-ignore
-export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionRow[] = [
+export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionStats[] = toDefensiveMissionStats([
   // Name,                                 Lvl,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
@@ -121,6 +84,57 @@ export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionRow[] = [
   ['Defend military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
   
   ['Defend against HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
+])
+
+export type OffensiveMissionStats = {
+  name: string
+  level: number
+  expiresIn: number
+  initiate: number
+  operative: number
+  soldier: number
+  elite: number
+  handler: number
+  lieutenant: number
+  commander: number
+  highCommander: number
+  cultLeader: number
+  moneyReward: number
+  fundingReward: number
+  panicReductionPct: number
+  suppression: string
+  dependsOn: string[]
+  description: string
+}
+
+export type DefensiveMissionStats = {
+  name: string
+  level: number
+  expiresIn: number
+  initiate: number
+  operative: number
+  soldier: number
+  elite: number
+  handler: number
+  lieutenant: number
+  commander: number
+  highCommander: number
+  cultLeader: number
+}
+
+type DefensiveMissionRow = [
+  name: string,
+  level: number,
+  expiresIn: number,
+  initiate: number,
+  operative: number,
+  soldier: number,
+  elite: number,
+  handler: number,
+  lieutenant: number,
+  commander: number,
+  highCommander: number,
+  cultLeader: number,
 ]
 
 type OffensiveMissionRow = [
@@ -165,5 +179,23 @@ function toOffensiveMissionStats(rows: OffensiveMissionRow[]): OffensiveMissionS
     suppression: row[15],
     dependsOn: row[16],
     description: row[17],
+  }))
+}
+
+// oxlint-disable-next-line prefer-destructuring
+function toDefensiveMissionStats(rows: DefensiveMissionRow[]): DefensiveMissionStats[] {
+  return rows.map((row) => ({
+    name: row[0],
+    level: row[1],
+    expiresIn: row[2],
+    initiate: row[3],
+    operative: row[4],
+    soldier: row[5],
+    elite: row[6],
+    handler: row[7],
+    lieutenant: row[8],
+    commander: row[9],
+    highCommander: row[10],
+    cultLeader: row[11],
   }))
 }
