@@ -12,7 +12,7 @@ import {
 // KJA lots of duplicate code in this file.
 
 function expandTemplateString(template: string, faction: FactionDefinition): string {
-  return template.replaceAll('{factionId}', faction.shortId).replaceAll('{factionName}', faction.name)
+  return template.replaceAll('{faction.shortId}', faction.shortId).replaceAll('{faction.name}', faction.name)
 }
 
 type EnemyCounts = {
