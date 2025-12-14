@@ -37,7 +37,7 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   const mission = getMissionById(missionSite.missionId)
 
   const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
-  const missionName = mission.title
+  const missionName = mission.name
   const { state, expiresIn: expiresInValue, agentIds, enemies } = missionSite
   const expiresIn = state === 'Active' ? (expiresInValue === 'never' ? 'Never' : String(expiresInValue)) : '-'
   const agentsDeployed = agentIds.length

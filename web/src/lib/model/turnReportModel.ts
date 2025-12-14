@@ -93,7 +93,7 @@ export type PanicBreakdown = {
    */
   missionReductions: {
     missionSiteId: string
-    missionTitle: string
+    missionName: string
     reduction: Fixed6
   }[]
 }
@@ -123,7 +123,7 @@ export type FactionReport = {
    */
   missionImpacts: {
     missionSiteId: string
-    missionTitle: string
+    missionName: string
     suppressionAdded?: number
   }[]
   /**
@@ -141,7 +141,7 @@ export type FactionReport = {
 
 export type MissionReport = {
   missionSiteId: string
-  missionTitle: string
+  missionName: string
   faction: string
   outcome: BattleOutcome
   rounds: number
@@ -221,7 +221,7 @@ export type LeadInvestigationReport = {
 
 export type ExpiredMissionSiteReport = {
   missionSiteId: string
-  missionTitle: string
+  missionName: string
   factionId: string
   factionName: string
   /**

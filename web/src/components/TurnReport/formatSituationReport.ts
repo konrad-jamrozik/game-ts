@@ -192,7 +192,7 @@ function formatExpiredMissionSites(
 
     return {
       id: `expired-mission-${expired.missionSiteId}`,
-      label: `${expired.missionTitle} (id: ${displayId})`,
+      label: `${expired.missionName} (id: ${displayId})`,
       chipValue: 'Expired',
       ...(children.length > 0 && { children }),
     }

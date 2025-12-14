@@ -16,7 +16,7 @@ function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnRepor
   const displayId = fmtNoPrefix(mission.missionSiteId, 'mission-site-')
   return {
     id: `mission-${mission.missionSiteId}`,
-    label: `${mission.missionTitle} (id: ${displayId})`,
+    label: `${mission.missionName} (id: ${displayId})`,
     chipValue: mission.outcome,
     children: [
       {

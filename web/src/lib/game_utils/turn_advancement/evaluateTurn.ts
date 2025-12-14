@@ -195,7 +195,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
 
           expiredReports.push({
             missionSiteId: id,
-            missionTitle: mission.title,
+            missionName: mission.name,
             factionId,
             factionName,
             operationLevel,
@@ -214,12 +214,12 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
  * Returns collected mission rewards with site information, count of agents wounded, and mission reports
  */
 function evaluateDeployedMissionSites(state: GameState): {
-  rewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
+  rewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[]
   agentsWounded: number
   agentsUnscathed: number
   missionReports: MissionReport[]
 } {
-  const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[] = []
+  const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[] = []
   const missionReports: MissionReport[] = []
   let totalAgentsWounded = 0
   let totalAgentsUnscathed = 0
@@ -228,7 +228,7 @@ function evaluateDeployedMissionSites(state: GameState): {
     if (missionSite.state === 'Deployed') {
       const { id: missionSiteId, missionId, agentIds, enemies } = missionSite
       const mission = getMissionById(missionId)
-      const { title: missionTitle } = mission
+      const { name: missionName } = mission
       const deployedAgents = withIds(state.agents, agentIds)
 
       // Capture agent states before battle
@@ -333,7 +333,7 @@ function evaluateDeployedMissionSites(state: GameState): {
 
       const missionReport: MissionReport = {
         missionSiteId,
-        missionTitle,
+        missionName,
         faction: factionName,
         outcome,
         rounds,
@@ -347,7 +347,7 @@ function evaluateDeployedMissionSites(state: GameState): {
         missionRewards.push({
           rewards: finalRewards,
           missionSiteId,
-          missionTitle,
+          missionName,
         })
       }
       totalAgentsWounded += agentsWounded
@@ -372,7 +372,7 @@ function updatePlayerAssets(
   income: {
     agentUpkeep: number
     moneyEarned: number
-    missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[]
+    missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[]
   },
 ): Omit<AssetsReport, 'agentsReport'> {
   // Capture previous values
@@ -482,7 +482,7 @@ function getAgentsReport(
  */
 function updatePanic(
   state: GameState,
-  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[],
+  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[],
   expiredMissionSites: ExpiredMissionSiteReport[],
 ): PanicReport {
   const previousPanic = state.panic
@@ -504,11 +504,11 @@ function updatePanic(
 
   // Track mission reductions and apply them
   const missionReductions = []
-  for (const { rewards, missionSiteId, missionTitle } of missionRewards) {
+  for (const { rewards, missionSiteId, missionName } of missionRewards) {
     if (rewards.panicReduction !== undefined) {
       missionReductions.push({
         missionSiteId,
-        missionTitle,
+        missionName,
         reduction: rewards.panicReduction,
       })
       state.panic = f6max(toF6(0), f6sub(state.panic, rewards.panicReduction))
@@ -587,7 +587,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
 
   const [
     missionName,
-    // KJA review lint issues
+    // KJA review lint issues; probably just not use rows but k-v; see todo in relevant file.
     // oxlint-disable-next-line no-unused-vars
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     _level,
@@ -639,7 +639,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
  */
 function updateFactions(
   state: GameState,
-  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionTitle: string }[],
+  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[],
 ): FactionReport[] {
   const factionReports: FactionReport[] = []
 
@@ -652,17 +652,17 @@ function updateFactions(
 
     // Track mission impacts on this faction
     const missionImpacts = []
-    for (const { rewards, missionSiteId, missionTitle } of missionRewards) {
+    for (const { rewards, missionSiteId, missionName } of missionRewards) {
       if (rewards.factionRewards) {
         for (const factionReward of rewards.factionRewards) {
           if (factionReward.factionId === faction.id) {
             const impact: {
               missionSiteId: string
-              missionTitle: string
+              missionName: string
               suppressionAdded?: number
             } = {
               missionSiteId,
-              missionTitle,
+              missionName,
             }
 
             if (factionReward.suppression !== undefined) {

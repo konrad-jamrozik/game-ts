@@ -15,7 +15,7 @@ export type TextEvent = BaseEventFields & {
 
 export type MissionCompletedEvent = BaseEventFields & {
   type: 'MissionCompleted'
-  missionTitle: string
+  missionName: string
   rewards: MissionRewards
   missionSiteId: MissionSiteId
   finalState: MissionSiteState
@@ -65,7 +65,7 @@ const eventsSlice = createSlice({
       action: PayloadAction<{
         turn: number
         actionsCount: number
-        missionTitle: string
+        missionName: string
         rewards: MissionRewards
         missionSiteId: MissionSiteId
         finalState: MissionSiteState
@@ -74,7 +74,7 @@ const eventsSlice = createSlice({
       const event: MissionCompletedEvent = {
         id: state.nextEventId,
         type: 'MissionCompleted',
-        missionTitle: action.payload.missionTitle,
+        missionName: action.payload.missionName,
         rewards: action.payload.rewards,
         missionSiteId: action.payload.missionSiteId,
         finalState: action.payload.finalState,

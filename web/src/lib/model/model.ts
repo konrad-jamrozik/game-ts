@@ -23,6 +23,7 @@ export type LeadInvestigationId = `investigation-${string}`
 
 export type Lead = {
   id: string
+  // KJA lead should have name instead of title
   title: string
   difficulty: number
   description: string
@@ -68,11 +69,9 @@ export type Enemy = Actor & {
   isOfficer: boolean
 }
 
-// KJA rename to MissionSiteTemplate
-// KJA rename title to name
-export type Mission = {
+export type MissionSiteTemplate = {
   id: string
-  title: string
+  name: string
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]

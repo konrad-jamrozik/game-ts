@@ -24,7 +24,7 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type MissionRow = MissionSite & {
   rowId: number
-  title: string
+  name: string
   displayId: string
 }
 
@@ -56,7 +56,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
     return {
       ...site,
       rowId: index,
-      title: mission.title,
+      name: mission.name,
       displayId,
     }
   })
@@ -68,7 +68,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
     return {
       ...site,
       rowId: allActiveRows.length + index,
-      title: mission.title,
+      name: mission.name,
       displayId,
     }
   })

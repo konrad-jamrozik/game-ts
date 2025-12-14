@@ -59,7 +59,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
       >
         {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win in specificity over the styleOverrides in theme.tsx. */}
-        <CardHeader title={mission.title} sx={combinedHeaderSx} />
+        <CardHeader title={mission.name} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
