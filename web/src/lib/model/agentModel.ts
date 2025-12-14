@@ -1,5 +1,6 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { Actor, MissionSiteId, LeadInvestigationId } from './model'
+import type { Actor, MissionSiteId } from './missionSiteModel'
+import type { LeadInvestigationId } from './leadModel'
 
 export type AgentState =
   | 'Available'

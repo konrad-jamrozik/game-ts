@@ -1,7 +1,7 @@
 import { sum } from 'radash'
 import { getMissionById } from '../../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
-import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/model'
+import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/missionSiteModel'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'

@@ -1,4 +1,5 @@
-import type { ActivityLevel, Faction, FactionId } from '../model/model'
+import type { ActivityLevel, Faction } from '../model/model'
+import type { FactionId } from '../model/missionSiteModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 

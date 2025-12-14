@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { MissionSite } from '../../src/lib/model/model'
+import type { MissionSite } from '../../src/lib/model/missionSiteModel'
 import { evaluateDeployedMissionSite } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMissionSite'
 import {
   AGENT_CAP,

@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { LeadInvestigationId, MissionSiteId } from '../../lib/model/model'
+import type { LeadInvestigationId } from '../../lib/model/leadModel'
+import type { MissionSiteId } from '../../lib/model/missionSiteModel'
 import type { UpgradeName } from '../../lib/collections/upgrades'
 
 export type SelectionState = {

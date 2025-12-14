@@ -10,7 +10,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getMissionById } from '../../lib/collections/missions'
 import { setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import type { MissionSiteId } from '../../lib/model/model'
+import type { MissionSiteId } from '../../lib/model/missionSiteModel'
 import { LabeledValue } from '../Common/LabeledValue'
 import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
 

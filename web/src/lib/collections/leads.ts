@@ -1,4 +1,4 @@
-import type { Lead } from '../model/model'
+import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { factionDefinitions, type FactionDefinition } from './factions'
 

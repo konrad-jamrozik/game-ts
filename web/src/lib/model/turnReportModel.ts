@@ -1,5 +1,5 @@
 import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
-import type { MissionRewards } from './model'
+import type { MissionRewards } from './missionSiteModel'
 import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
 
 export type TurnReport = BaseReport & {

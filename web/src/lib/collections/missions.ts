@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteTemplate } from '../model/model'
+import type { MissionSiteTemplate } from '../model/missionSiteModel'
 import { factionDefinitions, type FactionDefinition } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,

@@ -1,5 +1,5 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/model'
+import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { getLeadById } from '../../lib/collections/leads'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'

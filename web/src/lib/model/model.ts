@@ -1,25 +1,4 @@
-// Import types needed for local definitions
 import type { FactionId } from './missionSiteModel'
-
-// Re-export types from mission site and lead models for backward compatibility
-export type {
-  Actor,
-  Enemy,
-  EnemyType,
-  FactionId,
-  FactionRewards,
-  MissionRewards,
-  MissionSite,
-  MissionSiteId,
-  MissionSiteTemplate,
-  Weapon,
-} from './missionSiteModel'
-
-export { ENEMY_TYPES } from './missionSiteModel'
-
-export type { Lead, LeadInvestigation, LeadInvestigationId } from './leadModel'
-
-export type { MissionSiteState, LeadInvestigationState } from './outcomeTypes'
 
 /**
  * Activity level progression values.

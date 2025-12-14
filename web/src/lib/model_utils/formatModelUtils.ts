@@ -1,5 +1,5 @@
 import pluralize from 'pluralize'
-import type { MissionSiteId } from '../model/model'
+import type { MissionSiteId } from '../model/missionSiteModel'
 import { floorToDec2 } from '../primitives/mathPrimitives'
 import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'

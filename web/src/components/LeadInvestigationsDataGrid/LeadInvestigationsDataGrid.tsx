@@ -9,7 +9,8 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import type { Agent } from '../../lib/model/agentModel'
-import type { LeadInvestigation, LeadInvestigationId, LeadInvestigationState } from '../../lib/model/model'
+import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
+import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { getLeadAccumulatedIntel, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,

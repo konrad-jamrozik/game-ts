@@ -1,5 +1,6 @@
 import { getMissionById } from '../collections/missions'
-import type { MissionSite, MissionSiteState } from '../model/model'
+import type { MissionSite } from '../model/missionSiteModel'
+import type { MissionSiteState } from '../model/outcomeTypes'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { getStatePriority } from './missionSiteStatePriority'
 

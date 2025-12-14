@@ -1,5 +1,4 @@
-import type { MissionSiteState } from '../model/model'
-import { ALL_MISSION_SITE_STATES } from '../model/outcomeTypes'
+import { ALL_MISSION_SITE_STATES, type MissionSiteState } from '../model/outcomeTypes'
 
 /**
  * Helper to get state priority (lower number = higher priority)

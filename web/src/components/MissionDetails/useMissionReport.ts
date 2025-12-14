@@ -1,5 +1,5 @@
 import { useAppSelector } from '../../redux/hooks'
-import type { MissionSiteId } from '../../lib/model/model'
+import type { MissionSiteId } from '../../lib/model/missionSiteModel'
 import type { MissionReport } from '../../lib/model/turnReportModel'
 
 export function useMissionReport(missionSiteId: MissionSiteId): MissionReport | undefined {

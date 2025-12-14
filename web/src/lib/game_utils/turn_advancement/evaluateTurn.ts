@@ -2,7 +2,8 @@ import { getMissionById, generateMissionId, enemyCountsToSpec } from '../../coll
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
-import type { Faction, FactionRewards, MissionRewards } from '../../model/model'
+import type { Faction } from '../../model/model'
+import type { FactionRewards, MissionRewards } from '../../model/missionSiteModel'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import {

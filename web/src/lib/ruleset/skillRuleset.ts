@@ -1,4 +1,4 @@
-import type { Actor } from '../model/model'
+import type { Actor } from '../model/missionSiteModel'
 import type { Agent } from '../model/agentModel'
 import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from './constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'

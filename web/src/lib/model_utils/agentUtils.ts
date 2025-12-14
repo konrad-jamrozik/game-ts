@@ -1,4 +1,5 @@
-import type { Actor, LeadInvestigation, MissionSiteId } from '../model/model'
+import type { Actor, MissionSiteId } from '../model/missionSiteModel'
+import type { LeadInvestigation } from '../model/leadModel'
 import type { Agent } from '../model/agentModel'
 import { f6add, type Fixed6 } from '../primitives/fixed6'
 

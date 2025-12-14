@@ -7,7 +7,7 @@ import {
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getMissionById } from '../../lib/collections/missions'
-import type { MissionSite } from '../../lib/model/model'
+import type { MissionSite } from '../../lib/model/missionSiteModel'
 import { clearMissionSelection, setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import {
   getActiveOrDeployedMissionSites,

@@ -1,5 +1,6 @@
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId, LeadInvestigationId } from '../model/model'
+import type { MissionSiteId } from '../model/missionSiteModel'
+import type { LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponRuleset'

@@ -1,7 +1,7 @@
 import { expect } from 'vitest'
 import { store } from '../../src/redux/store'
 import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
-import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/model'
+import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/missionSiteModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'

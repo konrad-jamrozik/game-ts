@@ -12,7 +12,7 @@ import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/lea
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
-import type { LeadInvestigation } from '../../lib/model/model'
+import type { LeadInvestigation } from '../../lib/model/leadModel'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length

@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import type { LeadInvestigation } from '../../lib/model/model'
+import type { LeadInvestigation } from '../../lib/model/leadModel'
 import { leads } from '../../lib/collections/leads'
 import { LeadCard } from './LeadCard'
 

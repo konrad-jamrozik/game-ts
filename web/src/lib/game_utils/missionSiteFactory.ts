@@ -1,5 +1,5 @@
 import type { GameState } from '../model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../model/model'
+import type { MissionSite, MissionSiteId } from '../model/missionSiteModel'
 import { bldEnemiesFromSpec } from '../ruleset/enemyRuleset'
 
 type CreateMissionSiteParams = {

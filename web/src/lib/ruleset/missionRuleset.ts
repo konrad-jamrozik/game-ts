@@ -1,4 +1,5 @@
-import type { Actor, Enemy, MissionSite, MissionSiteState } from '../model/model'
+import type { Actor, Enemy, MissionSite } from '../model/missionSiteModel'
+import type { MissionSiteState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
 import { toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sum, type Fixed6, toF6r } from '../primitives/fixed6'
