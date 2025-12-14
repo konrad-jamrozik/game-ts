@@ -14,8 +14,8 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/ruleset/constants'
-import { newWeapon } from '../../src/lib/ruleset/weaponRuleset'
-import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
+import { bldWeapon } from '../../src/lib/ruleset/weaponRuleset'
+import { bldEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 
 describe(evaluateDeployedMissionSite, () => {
   test('evaluateDeployedMissionSite succeeds', () => {
@@ -32,7 +32,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     // Create a test mission site with weak enemies
@@ -42,7 +42,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('1 Initiate'),
+      enemies: bldEnemiesFromSpec('1 Initiate'),
     }
 
     // Create a minimal game state
@@ -107,7 +107,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const testMissionSite: MissionSite = {
@@ -116,7 +116,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('2 Soldier'),
+      enemies: bldEnemiesFromSpec('2 Soldier'),
     }
 
     const gameState: GameState = {
@@ -181,7 +181,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: 10,
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const agent2: Agent = {
@@ -196,7 +196,7 @@ describe(evaluateDeployedMissionSite, () => {
       maxHitPoints: 10,
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
     const testMissionSite: MissionSite = {
@@ -205,7 +205,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: newEnemiesFromSpec('3 CultLeader'),
+      enemies: bldEnemiesFromSpec('3 CultLeader'),
     }
 
     const gameState: GameState = {

@@ -103,10 +103,10 @@ export function selectChartsDatasets(state: RootState): ChartsDatasets {
     })
 
     // --- Agent skill (derived)
-    agentSkill.push(buildAgentSkillRow(gameState))
+    agentSkill.push(bldAgentSkillRow(gameState))
 
     // --- Agent readiness (derived)
-    agentReadiness.push(buildAgentReadinessRow(gameState))
+    agentReadiness.push(bldAgentReadinessRow(gameState))
 
     // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
     const missionBattleDeltas = updateMissionAndBattleAccumulators({
@@ -169,7 +169,7 @@ function selectTurnSnapshotsForCharts(state: RootState): GameState[] {
   return turnsAscending.map((turn) => byTurn.get(turn)).filter((x) => x !== undefined)
 }
 
-function buildAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
+function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
   const agents = notTerminated(gameState.agents)
   const maxEffSkills = agents.map((agent) => getMaxEffectiveSkill(agent))
   const currentEffSkills = agents.map((agent) => toF(effectiveSkill(agent)))
@@ -189,7 +189,7 @@ function buildAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
   }
 }
 
-function buildAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
+function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
   const agents = notTerminated(gameState.agents)
 
   const maxHitPoints = agents.map((agent) => agent.maxHitPoints)

@@ -13,7 +13,7 @@ import {
   buyUpgrade,
   deployAgentsToMission,
   hireAgent,
-  createLeadInvestigation,
+  bldLeadInvestigation,
   addAgentsToInvestigation,
   recallAgents,
   sackAgents,
@@ -249,7 +249,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     setShowAlert(false) // Hide alert on successful action
-    dispatch(createLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
+    dispatch(bldLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
     dispatch(clearLeadSelection())
     dispatch(clearAgentSelection())
   }

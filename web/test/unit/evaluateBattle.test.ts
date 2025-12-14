@@ -18,7 +18,7 @@ describe(evaluateBattle, () => {
   test('1 agent defeats 1 enemy in 1 attack', () => {
     rand.set('agent_attack_roll', 1)
     const agent = agFix.withSuperWeapon()
-    const enemy = st.newEnemyInitiate()
+    const enemy = st.bldEnemyInitiate()
 
     const report = evaluateBattle([agent], [enemy]) // Act
 
@@ -34,7 +34,7 @@ describe(evaluateBattle, () => {
   test('1 enemy defeats 1 agent in 1 attack', () => {
     rand.set('agent_attack_roll', 0)
     rand.set('enemy_attack_roll', 1)
-    const agent = agFix.new()
+    const agent = agFix.bld()
     const enemy = enFix.withSuperWeapon()
 
     const report = evaluateBattle([agent], [enemy]) // Act
@@ -53,7 +53,7 @@ describe(evaluateBattle, () => {
   test('1 enemy causes 1 agent to retreat', () => {
     rand.set('enemy_attack_roll', 1)
     rand.set('agent_attack_roll', 0)
-    const agent = agFix.new()
+    const agent = agFix.bld()
     const enemy = enFix.withWeakWeapon()
 
     const report = evaluateBattle([agent], [enemy]) // Act

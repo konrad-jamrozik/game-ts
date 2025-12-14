@@ -1,5 +1,5 @@
 import type { Enemy } from '../../src/lib/model/model'
-import { newEnemy } from '../../src/lib/ruleset/enemyRuleset'
+import { bldEnemy } from '../../src/lib/ruleset/enemyRuleset'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/ruleset/constants'
 
@@ -12,24 +12,24 @@ export const enFix = (() => {
     },
 
     default(): Enemy {
-      const enemy = newEnemy('Initiate', enemyIdCounter)
+      const enemy = bldEnemy('Initiate', enemyIdCounter)
       return enemy
     },
 
     withWeakWeapon(): Enemy {
       const weakDamage = Math.floor(AGENT_INITIAL_HIT_POINTS / 4) // 30 / 4 = 7.5, floor to 7
-      return this.new({
-        weapon: wpnFix.new({ constDamage: weakDamage }),
+      return this.bld({
+        weapon: wpnFix.bld({ constDamage: weakDamage }),
       })
     },
 
     withSuperWeapon(): Enemy {
-      return this.new({
-        weapon: wpnFix.new({ constDamage: 100 }),
+      return this.bld({
+        weapon: wpnFix.bld({ constDamage: 100 }),
       })
     },
 
-    new(overrides?: Partial<Enemy>): Enemy {
+    bld(overrides?: Partial<Enemy>): Enemy {
       enemyIdCounter += 1
       const baseEnemy = this.default()
       return {

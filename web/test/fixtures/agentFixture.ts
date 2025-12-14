@@ -1,5 +1,5 @@
 import type { Agent } from '../../src/lib/model/agentModel'
-import { newHiredAgent } from '../../src/redux/reducers/agentReducers'
+import { bldHiredAgent } from '../../src/redux/reducers/agentReducers'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/ruleset/constants'
@@ -14,16 +14,16 @@ export const agFix = (() => {
 
     default(): Agent {
       agentIdCounter += 1
-      return newHiredAgent(`agent-${agentIdCounter}`, 1, AGENT_INITIAL_WEAPON_DAMAGE)
+      return bldHiredAgent(`agent-${agentIdCounter}`, 1, AGENT_INITIAL_WEAPON_DAMAGE)
     },
 
     withSuperWeapon(): Agent {
-      return this.new({
-        weapon: wpnFix.new({ constDamage: 100 }),
+      return this.bld({
+        weapon: wpnFix.bld({ constDamage: 100 }),
       })
     },
 
-    new(overrides?: Partial<Agent>): Agent {
+    bld(overrides?: Partial<Agent>): Agent {
       return {
         ...this.default(),
         ...overrides,
@@ -31,14 +31,14 @@ export const agFix = (() => {
     },
 
     exhausted(exhaustion = 50): Agent {
-      return this.new({
+      return this.bld({
         exhaustionPct: exhaustion,
       })
     },
 
     wounded(hitPointsLost = 10): Agent {
       const maxHitPoints = 30
-      return this.new({
+      return this.bld({
         hitPoints: toF6(Math.max(0, maxHitPoints - hitPointsLost)),
         maxHitPoints,
       })

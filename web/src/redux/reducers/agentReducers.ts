@@ -7,7 +7,7 @@ import {
   AGENT_INITIAL_SKILL,
 } from '../../lib/ruleset/constants'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { newWeapon } from '../../lib/ruleset/weaponRuleset'
+import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
 import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
@@ -18,7 +18,7 @@ export const hireAgent = asPlayerAction((state: GameState) => {
   const nextAgentNumericId = state.agents.length
   const newAgentId = formatAgentId(nextAgentNumericId)
 
-  const newAgent = newHiredAgent(newAgentId, state.turn, state.weaponDamage)
+  const newAgent = bldHiredAgent(newAgentId, state.turn, state.weaponDamage)
   state.agents.push(newAgent)
   state.money -= AGENT_HIRE_COST
 })
@@ -122,7 +122,7 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
 /**
  * Creates a new hired agent with the standard initial values used in the hiring process.
  */
-export function newHiredAgent(id: string, turnHired: number, weaponDamage: number): Agent {
+export function bldHiredAgent(id: string, turnHired: number, weaponDamage: number): Agent {
   return {
     id,
     turnHired,
@@ -135,6 +135,6 @@ export function newHiredAgent(id: string, turnHired: number, weaponDamage: numbe
     hitPointsLostBeforeRecovery: toF6(0),
     missionsTotal: 0,
     skillFromTraining: toF6(0),
-    weapon: newWeapon(weaponDamage),
+    weapon: bldWeapon(weaponDamage),
   }
 }

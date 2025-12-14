@@ -10,7 +10,7 @@ export const wpnFix = {
     }
   },
 
-  new(overrides?: Partial<Weapon> & { constDamage?: number }): Weapon {
+  bld(overrides?: Partial<Weapon> & { constDamage?: number }): Weapon {
     const { constDamage, ...weaponOverrides } = overrides ?? {}
 
     if (constDamage !== undefined) {

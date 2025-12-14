@@ -12,7 +12,7 @@ import { assertDefined, assertHasId } from '../../lib/primitives/assertPrimitive
  * @param getId - Optional function to extract the row ID from a row. Defaults to `(row) => row.id` when T has an id property
  * @returns A sort comparator function for use in GridColDef.sortComparator
  */
-export function createFixed6SortComparator<T>(
+export function bldFixed6SortComparator<T>(
   rows: T[],
   getValue: (row: T) => Fixed6,
   getSecondaryValue?: (row: T) => Fixed6,

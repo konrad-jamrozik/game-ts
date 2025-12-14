@@ -5,7 +5,7 @@ import { columnWidths } from '../Common/columnWidths'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { floorToDec2 } from '../../lib/primitives/mathPrimitives'
-import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
+import { bldFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { AttackOutcome } from '../../lib/model/outcomeTypes'
 import { ColorBar } from '../ColorBar/ColorBar'
 import {
@@ -104,7 +104,7 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       headerName: 'Agent Skill',
       width: columnWidths['combat_log.attacker_skill'],
       cellClassName: 'combat-log-skill-cell',
-      sortComparator: createFixed6SortComparator(
+      sortComparator: bldFixed6SortComparator(
         rows,
         (row) => (row.attackerType === 'Agent' ? row.attackerSkill : row.defenderSkill),
         (row) => (row.attackerType === 'Agent' ? row.attackerSkillAtStart : row.defenderSkillAtStart),
@@ -121,7 +121,7 @@ export function getCombatLogColumns({ rows, combatMaxSkill }: GetCombatLogColumn
       headerName: 'Enemy Skill',
       width: columnWidths['combat_log.defender_skill'],
       cellClassName: 'combat-log-skill-cell',
-      sortComparator: createFixed6SortComparator(
+      sortComparator: bldFixed6SortComparator(
         rows,
         (row) => (row.attackerType === 'Agent' ? row.defenderSkill : row.attackerSkill),
         (row) => (row.attackerType === 'Agent' ? row.defenderSkillAtStart : row.attackerSkillAtStart),

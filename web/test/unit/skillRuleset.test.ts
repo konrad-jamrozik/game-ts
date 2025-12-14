@@ -54,7 +54,7 @@ describe(getAgentSkillBasedValue, () => {
     const expectedF6 = toF6(expected)
     // Create agent with skill set to effectiveSkill, no exhaustion, full hit points
     // so that effectiveSkill(agent) = skill
-    const agent = agFix.new({
+    const agent = agFix.bld({
       skill: toF6(effectiveSkill),
       exhaustionPct: 0,
       hitPoints: toF6(30),

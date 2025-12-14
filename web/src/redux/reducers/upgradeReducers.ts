@@ -7,7 +7,7 @@ import {
 } from '../../lib/collections/upgrades'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { newWeapon } from '../../lib/ruleset/weaponRuleset'
+import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {
@@ -47,7 +47,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       // Upgrade weapons for all non-terminated agents
       const agentsToUpgrade = notTerminated(state.agents)
       for (const agent of agentsToUpgrade) {
-        agent.weapon = newWeapon(state.weaponDamage)
+        agent.weapon = bldWeapon(state.weaponDamage)
       }
       break
     }

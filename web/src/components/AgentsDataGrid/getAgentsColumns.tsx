@@ -11,7 +11,7 @@ import { MyChip } from '../Common/MyChip'
 import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
-import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
+import { bldFixed6SortComparator } from '../Common/dataGridSortUtils'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { AGENTS_SKILL_BAR_GREY, getColorBarFillColor } from '../ColorBar/colorBarUtils'
 
@@ -69,7 +69,7 @@ export function getAgentsColumns(
       headerName: 'Skill',
       width: columnWidths['agents.skill'],
       cellClassName: 'agents-color-bar-cell',
-      sortComparator: createFixed6SortComparator(
+      sortComparator: bldFixed6SortComparator(
         rows,
         (row) => effectiveSkill(row),
         (row) => row.skill,

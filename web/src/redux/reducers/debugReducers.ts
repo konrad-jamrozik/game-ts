@@ -2,11 +2,11 @@ import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
 import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS } from '../../lib/ruleset/constants'
-import { newWeapon } from '../../lib/ruleset/weaponRuleset'
+import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
 import { offensiveMissions } from '../../lib/collections/missions'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { formatAgentId } from '../reducer_utils/agentIdUtils'
-import { createMissionSite } from '../../lib/game_utils/missionSiteFactory'
+import { bldMissionSite } from '../../lib/game_utils/missionSiteFactory'
 
 function addMoney(state: GameState): void {
   state.money += 10_000
@@ -33,7 +33,7 @@ function spawn10Agents(state: GameState): void {
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       skillFromTraining: toF6(0),
-      weapon: newWeapon(state.weaponDamage),
+      weapon: bldWeapon(state.weaponDamage),
     }
 
     state.agents.push(newAgent)
@@ -53,7 +53,7 @@ export function spawnMissionSites(state: GameState): void {
   )
 
   for (const mission of filteredOffensiveMissions) {
-    createMissionSite({
+    bldMissionSite({
       state,
       missionId: mission.id,
       expiresIn: mission.expiresIn,

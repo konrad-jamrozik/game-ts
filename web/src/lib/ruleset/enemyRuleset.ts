@@ -1,7 +1,7 @@
 import { ENEMY_STATS } from '../collections/enemyStatsTables'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/model'
 import { toF6 } from '../primitives/fixed6'
-import { newWeapon } from './weaponRuleset'
+import { bldWeapon } from './weaponRuleset'
 
 let idCounter = 0
 
@@ -11,7 +11,7 @@ const VALID_ENEMY_TYPES = new Set<string>(ENEMY_TYPES)
  * Creates multiple enemies from a specification string
  * Example: "2 Initiate, 1 Operative" creates 2 Initiates and 1 Operative
  */
-export function newEnemiesFromSpec(spec: string): Enemy[] {
+export function bldEnemiesFromSpec(spec: string): Enemy[] {
   // Reset enemy ID counter for each mission site
   idCounter = 1
 
@@ -31,7 +31,7 @@ export function newEnemiesFromSpec(spec: string): Enemy[] {
       const { type } = match.groups
 
       for (let index = 0; index < count; index += 1) {
-        units.push(newEnemy(type, idCounter))
+        units.push(bldEnemy(type, idCounter))
         idCounter += 1
       }
     }
@@ -47,7 +47,7 @@ function isValidEnemyType(type: string): type is EnemyType {
 /**
  * Creates an enemy of the specified type
  */
-export function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
+export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
   const stats = ENEMY_STATS[type]
   if (!stats) {
     throw new Error(`Unknown enemy type: ${type}`)
@@ -62,7 +62,7 @@ export function newEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     exhaustionPct: 0, // Enemies start with 0 exhaustion
     hitPoints: toF6(stats.hp),
     maxHitPoints: stats.hp,
-    weapon: newWeapon(stats.damage),
+    weapon: bldWeapon(stats.damage),
     isOfficer: stats.isOfficer,
   }
 }

@@ -10,7 +10,7 @@ import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { rand } from '../../src/lib/primitives/rand'
-import { makeInitialState } from '../../src/lib/ruleset/initialState'
+import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {
@@ -78,7 +78,7 @@ function step1StartWithDebugInitialState(): void {
   // Set up debug initial state
   // Start with 200 money so we can hire 4 agents (costs 200 total)
   // This leaves 0 money, and with high agent upkeep, projected balance will be negative
-  const debugState = makeInitialState({ debug: true })
+  const debugState = bldInitialState({ debug: true })
   store.dispatch(reset({ customState: { ...debugState, money: 200 } }))
   store.dispatch(clearEvents()) // Clear the reset event
 

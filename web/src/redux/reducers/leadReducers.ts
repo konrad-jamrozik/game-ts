@@ -4,7 +4,7 @@ import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitive
 import { getLeadById } from '../../lib/collections/leads'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
-export const createLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
+export const bldLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
   (state: GameState, action) => {
     const { leadId, agentIds } = action.payload
 

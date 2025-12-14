@@ -3,7 +3,7 @@ import { factions } from '../collections/factions'
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
-import { makeDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
+import { bldDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
@@ -16,14 +16,13 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { newWeapon } from './weaponRuleset'
+import { bldWeapon } from './weaponRuleset'
 
-const initialState: GameState = makeInitialState()
+const initialState: GameState = bldInitialState()
 
 export default initialState
 
-// KJA change everywhere make -> bld
-export function makeInitialState(options?: { debug?: boolean }): GameState {
+export function bldInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
 
   const normalGameState: GameState = {
@@ -43,7 +42,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
     exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
     hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
     weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
-    agents: buildInitialAgents(),
+    agents: bldInitialAgents(),
     // Leads
     leadInvestigationCounts: {},
     leadInvestigations: {},
@@ -55,7 +54,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
 
   let gameState: GameState = normalGameState
   if (useDebug) {
-    const debugOverrides = makeDebugInitialOverrides()
+    const debugOverrides = bldDebugInitialOverrides()
     gameState = { ...gameState, ...debugOverrides }
     gameState = overwriteWithDebugOverrides(gameState)
   }
@@ -65,7 +64,7 @@ export function makeInitialState(options?: { debug?: boolean }): GameState {
   return gameState
 }
 
-function buildInitialAgents(): Agent[] {
+function bldInitialAgents(): Agent[] {
   let agentCounter = 0
   function nextId(): string {
     const id = agentCounter.toString().padStart(3, '0')
@@ -88,7 +87,7 @@ function buildInitialAgents(): Agent[] {
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       skillFromTraining: toF6(0),
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     })
   }
 

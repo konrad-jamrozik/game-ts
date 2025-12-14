@@ -4,7 +4,7 @@ import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
-import { createFixed6SortComparator } from '../Common/dataGridSortUtils'
+import { bldFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { BattleStatus } from '../../lib/model/outcomeTypes'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
@@ -73,7 +73,7 @@ export function getBattleLogColumns({
       headerName: 'Agent Skill',
       width: columnWidths['battle_log.agent_skill'],
       cellClassName: 'battle-log-skill-cell',
-      sortComparator: createFixed6SortComparator(
+      sortComparator: bldFixed6SortComparator(
         rows,
         (row) => row.agentSkill,
         (row) => row.agentSkillTotal,
@@ -102,7 +102,7 @@ export function getBattleLogColumns({
       headerName: 'Enemy Skill',
       width: columnWidths['battle_log.enemy_skill'],
       cellClassName: 'battle-log-skill-cell',
-      sortComparator: createFixed6SortComparator(
+      sortComparator: bldFixed6SortComparator(
         rows,
         (row) => row.enemySkill,
         (row) => row.enemySkillTotal,

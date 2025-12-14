@@ -37,7 +37,7 @@ const ENEMY_STATS_DATA: EnemyStatsRow[] = [
   ['CultLeader',    'CL CLdr',   800,  80,     32, true  ],
 ]
 
-function buildEnemyStats(): Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> {
+function bldEnemyStats(): Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> {
   const stats: Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> = {}
 
   for (const [name, , skill, hp, damage, isOfficer] of ENEMY_STATS_DATA) {
@@ -52,4 +52,4 @@ function buildEnemyStats(): Record<string, { skill: Fixed6; hp: number; damage: 
   return stats
 }
 
-export const ENEMY_STATS = buildEnemyStats()
+export const ENEMY_STATS = bldEnemyStats()

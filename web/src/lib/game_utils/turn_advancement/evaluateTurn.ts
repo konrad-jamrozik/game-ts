@@ -16,9 +16,9 @@ import {
   nextActivityLevel,
   rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
-import { createMissionSite } from '../missionSiteFactory'
+import { bldMissionSite } from '../missionSiteFactory'
 import {
-  newValueChange,
+  bldValueChange,
   type AgentsReport,
   type AssetsReport,
   type BattleStats,
@@ -402,7 +402,7 @@ function updatePlayerAssets(
     }
   }
 
-  const moneyChange = newValueChange(previousMoney, state.money)
+  const moneyChange = bldValueChange(previousMoney, state.money)
 
   // Create detailed breakdowns
   const moneyDetails: MoneyBreakdown = {
@@ -464,14 +464,14 @@ function getAgentsReport(
   }
 
   return {
-    total: newValueChange(previousAgentCounts.total, currentAgentCounts.total),
-    available: newValueChange(previousAgentCounts.available, currentAgentCounts.available),
-    inTransit: newValueChange(previousAgentCounts.inTransit, currentAgentCounts.inTransit),
-    standby: newValueChange(previousAgentCounts.standby, currentAgentCounts.standby),
-    recovering: newValueChange(previousAgentCounts.recovering, currentAgentCounts.recovering),
-    wounded: newValueChange(previousWounded, currentWounded),
-    unscathed: newValueChange(previousUnscathed, currentUnscathed),
-    terminated: newValueChange(previousAgentCounts.terminated, currentAgentCounts.terminated),
+    total: bldValueChange(previousAgentCounts.total, currentAgentCounts.total),
+    available: bldValueChange(previousAgentCounts.available, currentAgentCounts.available),
+    inTransit: bldValueChange(previousAgentCounts.inTransit, currentAgentCounts.inTransit),
+    standby: bldValueChange(previousAgentCounts.standby, currentAgentCounts.standby),
+    recovering: bldValueChange(previousAgentCounts.recovering, currentAgentCounts.recovering),
+    wounded: bldValueChange(previousWounded, currentWounded),
+    unscathed: bldValueChange(previousUnscathed, currentUnscathed),
+    terminated: bldValueChange(previousAgentCounts.terminated, currentAgentCounts.terminated),
     terminatedAgentIds,
   }
 }
@@ -516,7 +516,7 @@ function updatePanic(
   }
 
   return {
-    change: newValueChange(previousPanic, state.panic),
+    change: bldValueChange(previousPanic, state.panic),
     breakdown: {
       factionOperationPenalties,
       missionReductions,
@@ -580,7 +580,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   // KJA put this random into an until function
   const selectedMission = candidateMissions[Math.floor(Math.random() * candidateMissions.length)]
   if (selectedMission === undefined) {
-    // KJA should assert fail
+    // KJA should assert fail. Also search for other palaces like that and update Agents.md
     // Should not happen, but handle gracefully
     return
   }
@@ -621,7 +621,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   assertDefined(factionDefinition, `Faction definition not found for ${faction.id}`)
   const missionId = generateMissionId(missionName, factionDefinition)
 
-  createMissionSite({
+  bldMissionSite({
     state,
     missionId,
     expiresIn,
@@ -723,10 +723,10 @@ function updateFactions(
       factionId: faction.id,
       factionName: faction.name,
       isDiscovered,
-      activityLevel: newValueChange(previousActivityLevel, faction.activityLevel),
-      turnsAtCurrentLevel: newValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),
-      turnsUntilNextOperation: newValueChange(previousTurnsUntilNextOperation, faction.turnsUntilNextOperation),
-      suppressionTurns: newValueChange(previousSuppressionTurns, faction.suppressionTurns),
+      activityLevel: bldValueChange(previousActivityLevel, faction.activityLevel),
+      turnsAtCurrentLevel: bldValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),
+      turnsUntilNextOperation: bldValueChange(previousTurnsUntilNextOperation, faction.turnsUntilNextOperation),
+      suppressionTurns: bldValueChange(previousSuppressionTurns, faction.suppressionTurns),
       missionImpacts,
       activityLevelIncreased,
     })

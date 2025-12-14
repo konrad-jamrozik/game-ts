@@ -3,11 +3,11 @@ import { store } from '../../src/redux/store'
 import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
 import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/model'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import { makeInitialState } from '../../src/lib/ruleset/initialState'
+import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/redux/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
-import { newEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
+import { bldEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { terminated, onContractingAssignment, available } from '../../src/lib/model_utils/agentUtils'
@@ -17,33 +17,33 @@ export const st = {
     return store.getState().undoable.present.gameState
   },
 
-  newAgentInStandby: (id: string): Agent => st.newAgent(id, 'Standby'),
+  bldAgentInStandby: (id: string): Agent => st.bldAgent(id, 'Standby'),
 
-  newAgentInContracting: (id: string): Agent => st.newAgent(id, 'Contracting'),
+  bldAgentInContracting: (id: string): Agent => st.bldAgent(id, 'Contracting'),
 
-  newAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
+  bldAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState =
       assignment === 'Training' ? 'InTraining' : isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
-    return agFix.new({ id, state, assignment })
+    return agFix.bld({ id, state, assignment })
   },
 
-  newAgents(options: { count?: number; skill?: number } = {}): Agent[] {
+  bldAgents(options: { count?: number; skill?: number } = {}): Agent[] {
     const { count = 3, skill } = options
     const agents: Agent[] = []
     for (let index = 0; index < count; index += 1) {
-      const agent = agFix.new(skill !== undefined ? { skill: toF6(skill) } : {})
+      const agent = agFix.bld(skill !== undefined ? { skill: toF6(skill) } : {})
       agents.push(agent)
     }
     return agents
   },
 
-  newEnemyInitiate(): Enemy {
-    const [enemy] = newEnemiesFromSpec('1 Initiate')
+  bldEnemyInitiate(): Enemy {
+    const [enemy] = bldEnemiesFromSpec('1 Initiate')
     assertDefined(enemy)
     return enemy
   },
 
-  newMissionSite(missionSiteId: MissionSiteId): MissionSite {
+  bldMissionSite(missionSiteId: MissionSiteId): MissionSite {
     return {
       id: missionSiteId,
       missionId: 'mission-apprehend-cult-member-red-dawn',
@@ -55,7 +55,7 @@ export const st = {
   },
 
   arrangeGameState(updates: Partial<GameState>): void {
-    const customState = { ...makeInitialState(), ...updates }
+    const customState = { ...bldInitialState(), ...updates }
     store.dispatch(reset({ customState }))
   },
 

@@ -7,7 +7,7 @@ import { st } from '../fixtures/stateFixture'
 describe(getContractingIncome, () => {
   test('should handle agent with effective skill that results in fractional income', () => {
     // Create an agent with skill 110
-    const agent = agFix.new({
+    const agent = agFix.bld({
       skill: toF6(110),
       state: 'OnAssignment',
       assignment: 'Contracting',
@@ -30,7 +30,7 @@ describe(getContractingIncome, () => {
     // Total: 3 * 31.2 = 93.6
     // Flooring strips the fractional part, so result is 93
     const agents = Array.from({ length: 3 }, () =>
-      agFix.new({
+      agFix.bld({
         skill: toF6(120),
         state: 'OnAssignment',
         assignment: 'Contracting',

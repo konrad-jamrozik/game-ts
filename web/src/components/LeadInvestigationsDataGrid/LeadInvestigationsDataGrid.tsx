@@ -55,7 +55,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const leadInvestigationColumns = getLeadInvestigationsColumns()
 
   // Create all rows from investigations
-  const allInvestigationRows = buildAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds)
+  const allInvestigationRows = bldAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds)
 
   // Filter rows based on checkbox states
   const leadInvestigationRows: LeadInvestigationRow[] = filterLeadInvestigationRows(
@@ -134,7 +134,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   )
 }
 
-function buildAllInvestigationRows(
+function bldAllInvestigationRows(
   leadInvestigations: Record<string, LeadInvestigation>,
   agents: Agent[],
   completedThisTurnIds: Set<string>,

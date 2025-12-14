@@ -29,11 +29,11 @@ export type ValueChange<TNumber extends number | Fixed6 = number> = {
 }
 
 // --- Overloads ---
-export function newValueChange(previous: Fixed6, current: Fixed6): ValueChange<Fixed6>
-export function newValueChange(previous: number, current: number): ValueChange
+export function bldValueChange(previous: Fixed6, current: Fixed6): ValueChange<Fixed6>
+export function bldValueChange(previous: number, current: number): ValueChange
 
 // --- Implementation ---
-export function newValueChange(previous: Fixed6 | number, current: Fixed6 | number): ValueChange<Fixed6> | ValueChange {
+export function bldValueChange(previous: Fixed6 | number, current: Fixed6 | number): ValueChange<Fixed6> | ValueChange {
   if (isF6(previous) && isF6(current)) {
     return {
       previous,
@@ -51,7 +51,7 @@ export function newValueChange(previous: Fixed6 | number, current: Fixed6 | numb
   }
 
   // Exhaustive guard: disallow mixing number with Fixed6
-  throw new TypeError('newValueChange: mixed types (number vs Fixed6) are not allowed.')
+  throw new TypeError('bldValueChange: mixed types (number vs Fixed6) are not allowed.')
 }
 
 export type MoneyBreakdown = {

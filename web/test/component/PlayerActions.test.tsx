@@ -36,7 +36,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'sack agents' button -> happy path", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInStandby(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInStandby(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     st.expectAgentCount(1)
     st.expectTerminatedAgentCount(0)
@@ -51,7 +51,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'sack agents' button -> alert: agents in invalid states", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInContracting(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInContracting(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     st.expectAgentCount(1)
     st.expectTerminatedAgentCount(0)
@@ -66,7 +66,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'assign agents to contracting' button -> happy path", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInStandby(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInStandby(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     ui.renderPlayerActions()
 
@@ -77,7 +77,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'assign agents to contracting' button -> alert: agents in invalid states", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInContracting(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInContracting(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
@@ -89,7 +89,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'recall agents' button -> happy path", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInContracting(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInContracting(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     ui.renderPlayerActions()
 
@@ -100,7 +100,7 @@ describe(PlayerActions, () => {
   })
 
   test("click 'recall agents' button -> alert: agents in invalid states", async () => {
-    st.arrangeGameState({ agents: [st.newAgentInStandby(agentId)] })
+    st.arrangeGameState({ agents: [st.bldAgentInStandby(agentId)] })
     st.arrangeSelection({ agents: [agentId] })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
@@ -114,7 +114,7 @@ describe(PlayerActions, () => {
   test("click 'investigate lead' button -> happy path", async () => {
     const leadId = 'lead-criminal-orgs'
     st.arrangeGameState({
-      agents: [st.newAgent('agent-000', 'Standby')],
+      agents: [st.bldAgent('agent-000', 'Standby')],
     })
     st.arrangeSelection({ lead: leadId, agents: ['agent-000'] })
 
@@ -139,8 +139,8 @@ describe(PlayerActions, () => {
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
     const missionSiteId = 'mission-site-1'
     st.arrangeGameState({
-      agents: [st.newAgentInStandby(agentId)],
-      missionSites: [st.newMissionSite(missionSiteId)],
+      agents: [st.bldAgentInStandby(agentId)],
+      missionSites: [st.bldMissionSite(missionSiteId)],
     })
     st.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
     ui.renderPlayerActions()
@@ -153,8 +153,8 @@ describe(PlayerActions, () => {
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
     const missionSiteId = 'mission-site-1'
     st.arrangeGameState({
-      agents: [st.newAgentInContracting(agentId)],
-      missionSites: [st.newMissionSite(missionSiteId)],
+      agents: [st.bldAgentInContracting(agentId)],
+      missionSites: [st.bldMissionSite(missionSiteId)],
     })
     st.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
     ui.renderPlayerActions()
@@ -170,19 +170,19 @@ describe(PlayerActions, () => {
     const deployedMissionSiteId = 'mission-site-1'
     const newMissionSiteId = 'mission-site-2'
     const deployedAgents = ['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'].map((id) =>
-      agFix.new({ id, state: 'OnMission', assignment: deployedMissionSiteId }),
+      agFix.bld({ id, state: 'OnMission', assignment: deployedMissionSiteId }),
     )
     const availableAgentIds = ['agent-200', 'agent-201']
-    const availableAgents = availableAgentIds.map((id) => st.newAgentInStandby(id))
+    const availableAgents = availableAgentIds.map((id) => st.bldAgentInStandby(id))
     st.arrangeGameState({
       agents: [...deployedAgents, ...availableAgents],
       missionSites: [
         {
-          ...st.newMissionSite(deployedMissionSiteId),
+          ...st.bldMissionSite(deployedMissionSiteId),
           state: 'Deployed',
           agentIds: deployedAgents.map((agent) => agent.id),
         },
-        st.newMissionSite(newMissionSiteId),
+        st.bldMissionSite(newMissionSiteId),
       ],
     })
     st.arrangeSelection({ agents: availableAgentIds, missionSite: newMissionSiteId })

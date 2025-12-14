@@ -2,13 +2,13 @@ import type { Agent } from '../model/agentModel'
 import type { MissionSiteId, LeadInvestigationId } from '../model/model'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
-import { newWeapon } from './weaponRuleset'
-import { newEnemiesFromSpec } from './enemyRuleset'
+import { bldWeapon } from './weaponRuleset'
+import { bldEnemiesFromSpec } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
 
-function buildDebugAgents(
+function bldDebugAgents(
   missionSiteId: MissionSiteId,
   deepStateInvestigationId: LeadInvestigationId,
 ): { agents: Agent[]; onMissionAgentIds: string[]; deepStateInvestigationAgentIds: string[] } {
@@ -20,13 +20,13 @@ function buildDebugAgents(
   }
 
   const onMissionAgentIds: string[] = []
-  function makeAgent(agent: Omit<Agent, 'id' | 'weapon' | 'skillFromTraining'>): Agent {
+  function bldAgent(agent: Omit<Agent, 'id' | 'weapon' | 'skillFromTraining'>): Agent {
     const id = `agent-${nextId()}`
     const built: Agent = {
       id,
       skillFromTraining: toF6(0),
       ...agent,
-      weapon: newWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
+      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE), // Add default weapon to all agents
     }
     if (built.state === 'OnMission' && built.assignment.startsWith('mission-site-')) {
       onMissionAgentIds.push(built.id)
@@ -35,7 +35,7 @@ function buildDebugAgents(
   }
 
   const agents: Agent[] = [
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
@@ -46,7 +46,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
@@ -57,7 +57,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 3,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'Available',
       assignment: 'Standby',
@@ -68,7 +68,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
@@ -79,7 +79,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(2),
       missionsTotal: 1,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Contracting',
@@ -90,7 +90,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 2,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'OnAssignment',
       assignment: 'Contracting',
@@ -101,7 +101,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 4,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'Recovering',
       assignment: 'Recovery',
@@ -112,7 +112,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(20),
       missionsTotal: 2,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'Recovering',
       assignment: 'Recovery',
@@ -123,7 +123,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(29),
       missionsTotal: 1,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
@@ -134,7 +134,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       turnTerminated: 1,
       state: 'Sacked',
@@ -146,7 +146,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'InTransit',
       assignment: 'Recovery',
@@ -157,7 +157,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(12),
       missionsTotal: 0,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'OnMission',
       assignment: missionSiteId,
@@ -169,7 +169,7 @@ function buildDebugAgents(
       missionsTotal: 1,
     }),
     // 2 agents in training
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'InTraining',
       assignment: 'Training',
@@ -180,7 +180,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'InTraining',
       assignment: 'Training',
@@ -192,7 +192,7 @@ function buildDebugAgents(
       missionsTotal: 1,
     }),
     // 2 agents investigating the deep state lead
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
@@ -203,7 +203,7 @@ function buildDebugAgents(
       hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 2,
     }),
-    makeAgent({
+    bldAgent({
       turnHired: 1,
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
@@ -227,7 +227,7 @@ function buildDebugAgents(
 }
 
 // Return only the overrides that should replace values in the normal initial state
-export function makeDebugInitialOverrides(): Partial<GameState> {
+export function bldDebugInitialOverrides(): Partial<GameState> {
   const stateBase: Partial<GameState> = {
     money: 1000,
     trainingCap: 4,
@@ -246,7 +246,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
     agents: debugAgents,
     onMissionAgentIds,
     deepStateInvestigationAgentIds,
-  } = buildDebugAgents(missionSiteId, deepStateInvestigationId)
+  } = bldDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
   const mission = getMissionById('mission-apprehend-cult-member-red-dawn')
@@ -257,7 +257,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
-      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: bldEnemiesFromSpec(mission.enemyUnitsSpec),
     },
     {
       id: 'mission-site-001' as MissionSiteId,
@@ -265,7 +265,7 @@ export function makeDebugInitialOverrides(): Partial<GameState> {
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: newEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: bldEnemiesFromSpec(mission.enemyUnitsSpec),
     },
   ]
 

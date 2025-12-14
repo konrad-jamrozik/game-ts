@@ -54,7 +54,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   assertNotEmpty(agents)
   assertNotEmpty(enemies)
 
-  const agentStats = newAgentsCombatStats(agents)
+  const agentStats = bldAgentsCombatStats(agents)
 
   const agentSkillUpdates: Record<string, Fixed6> = {}
 
@@ -274,7 +274,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   }
 }
 
-function newAgentsCombatStats(agents: Agent[]): AgentCombatStats[] {
+function bldAgentsCombatStats(agents: Agent[]): AgentCombatStats[] {
   return agents.map((agent: Agent) => ({
     id: agent.id,
     initialEffectiveSkill: effectiveSkill(agent),

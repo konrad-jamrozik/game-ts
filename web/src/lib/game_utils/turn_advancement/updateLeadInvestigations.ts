@@ -10,7 +10,7 @@ import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
-import { createMissionSite } from '../missionSiteFactory'
+import { bldMissionSite } from '../missionSiteFactory'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -118,7 +118,7 @@ function completeInvestigation(
   state.leadInvestigationCounts[investigation.leadId] = currentCount + 1
 
   // Create mission sites for dependent missions
-  const missionSites = createMissionSitesForLead(state, investigation.leadId)
+  const missionSites = bldMissionSitesForLead(state, investigation.leadId)
   const createdMissionSites = missionSites.map((site) => site.id)
 
   // Mark investigation as done and clear agent assignments
@@ -137,13 +137,13 @@ function completeInvestigation(
 /**
  * Creates mission sites for all missions that depend on the completed lead
  */
-function createMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
+function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
   const dependentMissions = offensiveMissions.filter((mission) => mission.dependsOn.includes(leadId))
   const createdMissionSites: MissionSite[] = []
 
   for (const mission of dependentMissions) {
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
-    const newMissionSite = createMissionSite({
+    const newMissionSite = bldMissionSite({
       state,
       missionId: mission.id,
       expiresIn: mission.expiresIn,
