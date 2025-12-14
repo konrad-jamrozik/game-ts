@@ -10,15 +10,15 @@
  *   the mission, it is game over.
  *
  * Legend:
- * - Panic increase: Panic increase if the player fails to complete the defensive mission.
+ * - Panic increase (Panic %): Panic increase if the player fails to complete the defensive mission.
  * - Money: Money reward if the player completes the defensive mission.
- * - Funding reward: Funding reward if the player completes the defensive mission.
- * - Funding penalty: Funding penalty if the player fails to complete the defensive mission
+ * - Funding reward (Fund+): Funding reward if the player completes the defensive mission.
+ * - Funding penalty (Fund-): Funding penalty if the player fails to complete the defensive mission
  *   (negative = funding loss).
  */
 
 type OperationLevelRow = [
-  level: number | string,
+  level: number,
   description: string,
   panicIncreasePct: number,
   moneyReward: number,
