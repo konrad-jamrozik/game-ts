@@ -65,6 +65,7 @@ For example:
 - `factions DataTable`
 - `factionOperationRoll DataTable`
 - `factionActivityLevel DataTable`
+- `factionActivityLevelProgression DataTable`
 
 # Full list of prototypes
 

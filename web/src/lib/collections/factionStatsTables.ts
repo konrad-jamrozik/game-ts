@@ -55,14 +55,15 @@ export const FACTION_DATA: FactionStats[] = toFactionStats([
  */
 // prettier-ignore
 export const FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA: ActivityLevelProgressionStats[] = toActivityLevelProgressionStats([
-  // Faction,   FromLevel,    ToLevel,      TurnsMin, TurnsMax,
-  ['Red Dawn',  'Dormant',    'Faint',            15,       30],
-  ['Red Dawn',  'Faint',      'Emerging',         60,       90],
-  ['Red Dawn',  'Emerging',   'Active',           60,       90],
-  ['Red Dawn',  'Active',     'Expanding',        60,       90],
-  ['Red Dawn',  'Expanding',  'Escalating',       60,       90],
-  ['Red Dawn',  'Escalating', 'War',              60,       90],
-  ['Red Dawn',  'War',        'Total war',        60,       90],
+  //TurnsMin, TurnsMax,
+  [      15,       30],
+  [      60,       90],
+  [      60,       90],
+  [      60,       90],
+  [      60,       90],
+  [      60,       90],
+  [      60,       90],
+  [Infinity, Infinity],
 ])
 
 /**
@@ -111,9 +112,6 @@ export type FactionStats = {
 }
 
 export type ActivityLevelProgressionStats = {
-  faction: string
-  fromLevel: string
-  toLevel: string
   turnsMin: number
   turnsMax: number
 }
@@ -133,13 +131,7 @@ export type FactionOperationRollProbabilityStats = {
 
 type FactionStatsRow = [id: FactionId, name: string, initialActivityLevel: ActivityLevel]
 
-type ActivityLevelProgressionRow = [
-  faction: string,
-  fromLevel: string,
-  toLevel: string,
-  turnsMin: number,
-  turnsMax: number,
-]
+type ActivityLevelProgressionRow = [turnsMin: number, turnsMax: number]
 
 type FactionOperationRollProbabilityRow = [
   activityLevel: number,
@@ -164,11 +156,8 @@ function toFactionStats(rows: FactionStatsRow[]): FactionStats[] {
 
 function toActivityLevelProgressionStats(rows: ActivityLevelProgressionRow[]): ActivityLevelProgressionStats[] {
   return rows.map((row) => ({
-    faction: row[0],
-    fromLevel: row[1],
-    toLevel: row[2],
-    turnsMin: row[3],
-    turnsMax: row[4],
+    turnsMin: row[0],
+    turnsMax: row[1],
   }))
 }
 
