@@ -125,10 +125,10 @@ function validateRecoveryMath(agent: Agent): void {
 }
 
 function validateMissionAssignment(agent: Agent, state: GameState): void {
-  if (!agent.assignment.startsWith('mission-site-')) {
+  if (!agent.assignment.startsWith('mission-')) {
     return
   }
-  const missionSiteId = agent.assignment
-  const site = state.missionSites.find((missionSite) => missionSite.id === missionSiteId)
-  assertDefined(site, `Agent ${agent.id} is assigned to ${missionSiteId}, but the mission site does not exist`)
+  const missionId = agent.assignment
+  const mission = state.missions.find((m) => m.id === missionId)
+  assertDefined(mission, `Agent ${agent.id} is assigned to ${missionId}, but the mission does not exist`)
 }

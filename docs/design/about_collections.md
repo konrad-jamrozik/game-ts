@@ -61,8 +61,8 @@ For example:
 
 - `leads DataTable`
 - `enemiesData Table`
-- `defensiveMissionSites DataTable`
-- `offensiveMissionSites DataTable`
+- `defensiveMissions DataTable`
+- `offensiveMissions DataTable`
 - `factions DataTable`
 - `factionOperationLevel DataTable`
 - `factionOperationRoll DataTable`
@@ -73,7 +73,7 @@ For example:
 
 - `initial GameState Prototype`
 - `debug GameState Prototype`
-- `missionSite Prototype`
+- `mission Prototype`
 - `leadInvestigation Prototype`
 - `agent Prototype`
 - `weapon Prototype`

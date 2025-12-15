@@ -30,7 +30,7 @@ export function TurnReportCard(): React.ReactElement {
 
   // Format situation report (panic, factions, and missions) for tree view
   const situationReportTreeData = report
-    ? formatSituationReport(report.panic, report.factions, report.missions, report.expiredMissionSites)
+    ? formatSituationReport(report.panic, report.factions, report.missions, report.expiredMissions)
     : []
 
   return (

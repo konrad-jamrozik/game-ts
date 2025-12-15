@@ -1,12 +1,12 @@
 import { showErrorToast } from './errorToast'
-import { assertExhaustiveStatePriorityMap } from '../model_utils/missionSiteStatePriority'
+import { assertExhaustiveMissionStatePriorityMap } from '../model_utils/missionStatePriority'
 
 /**
  * Runs all app initialization checks. Call this once after React mounts
  * so that errors are caught and displayed via the error toast snackbar.
  */
 export function runAppInitChecks(): void {
-  runCheck('MissionSiteState priority map', assertExhaustiveStatePriorityMap)
+  runCheck('MissionState priority map', assertExhaustiveMissionStatePriorityMap)
 }
 
 function runCheck(name: string, check: () => void): void {

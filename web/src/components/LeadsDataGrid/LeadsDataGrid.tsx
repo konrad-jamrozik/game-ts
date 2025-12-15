@@ -31,13 +31,11 @@ export function LeadsDataGrid(): React.JSX.Element {
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
   const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
-  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+  const missions = useAppSelector((state) => state.undoable.present.gameState.missions)
   const [showArchived, setShowArchived] = React.useState(false)
 
-  // Get mission definition IDs that have won mission sites
-  const wonMissionDefIds = new Set<string>(
-    missionSites.filter((site) => site.state === 'Won').map((site) => site.missionSiteDefinitionId),
-  )
+  // Get mission definition IDs that have won missions
+  const wonMissionDefIds = new Set<string>(missions.filter((m) => m.state === 'Won').map((m) => m.missionDefId))
 
   // Filter out leads that have unmet dependencies (same logic as LeadCards)
   const discoveredLeads = leads.filter((lead) =>

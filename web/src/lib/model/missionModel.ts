@@ -1,13 +1,13 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { MissionSiteState } from './outcomeTypes'
+import type { MissionState } from './outcomeTypes'
 import type { EnemyCounts } from '../collections/missionStatsTables'
 
-export type { MissionSiteState } from './outcomeTypes'
+export type { MissionState } from './outcomeTypes'
 
 // KJA3 add type for "agent-" and see if I need any other types like that
-export type MissionSiteId = `mission-site-${string}`
+export type MissionId = `mission-${string}`
 
-export type MissionSiteDefinitionId = `mission-def-${string}`
+export type MissionDefId = `mission-def-${string}`
 
 export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
 
@@ -61,8 +61,8 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type MissionSiteDefinition = {
-  id: MissionSiteDefinitionId
+export type MissionDef = {
+  id: MissionDefId
   name: string
   description: string
   expiresIn: number | 'never'
@@ -72,15 +72,15 @@ export type MissionSiteDefinition = {
   rewards: MissionRewards
 }
 
-export type MissionSite = {
-  id: MissionSiteId
-  missionSiteDefinitionId: MissionSiteDefinitionId
+export type Mission = {
+  id: MissionId
+  missionDefId: MissionDefId
   agentIds: string[]
-  state: MissionSiteState
+  state: MissionState
   expiresIn: number | 'never'
-  enemies: Enemy[] // Enemies present at the mission site
+  enemies: Enemy[] // Enemies present at the mission
   /**
-   * The operation level that spawned this mission site.
+   * The operation level that spawned this mission.
    * - undefined = Offensive missions (apprehend/raid) - no penalties on expiration
    * - 1-6 = Defensive missions (faction operations) - penalties apply on expiration
    * Used to calculate penalties when mission expires.

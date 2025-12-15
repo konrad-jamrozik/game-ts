@@ -137,26 +137,26 @@ describe(PlayerActions, () => {
   })
 
   test("click 'deploy agents to active mission site' button -> happy path", async () => {
-    const missionSiteId = 'mission-site-1'
+    const missionId = 'mission-1'
     st.arrangeGameState({
       agents: [st.bldAgentInStandby(agentId)],
-      missionSites: [st.bldMissionSite(missionSiteId)],
+      missions: [st.bldMission(missionId)],
     })
-    st.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
+    st.arrangeSelection({ agents: [agentId], mission: missionId })
     ui.renderPlayerActions()
 
     await ui.deployAgents() // Act
 
-    st.expectAgentsDeployed([agentId], missionSiteId)
+    st.expectAgentsDeployed([agentId], missionId)
   })
 
   test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
-    const missionSiteId = 'mission-site-1'
+    const missionId = 'mission-1'
     st.arrangeGameState({
       agents: [st.bldAgentInContracting(agentId)],
-      missionSites: [st.bldMissionSite(missionSiteId)],
+      missions: [st.bldMission(missionId)],
     })
-    st.arrangeSelection({ agents: [agentId], missionSite: missionSiteId })
+    st.arrangeSelection({ agents: [agentId], mission: missionId })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
 
@@ -167,25 +167,25 @@ describe(PlayerActions, () => {
   })
 
   test("click 'deploy agents to active mission site' button -> alert: transport cap exceeded by deployed missions", async () => {
-    const deployedMissionSiteId = 'mission-site-1'
-    const newMissionSiteId = 'mission-site-2'
+    const deployedMissionId = 'mission-1'
+    const newMissionId = 'mission-2'
     const deployedAgents = ['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'].map((id) =>
-      agFix.bld({ id, state: 'OnMission', assignment: deployedMissionSiteId }),
+      agFix.bld({ id, state: 'OnMission', assignment: deployedMissionId }),
     )
     const availableAgentIds = ['agent-200', 'agent-201']
     const availableAgents = availableAgentIds.map((id) => st.bldAgentInStandby(id))
     st.arrangeGameState({
       agents: [...deployedAgents, ...availableAgents],
-      missionSites: [
+      missions: [
         {
-          ...st.bldMissionSite(deployedMissionSiteId),
+          ...st.bldMission(deployedMissionId),
           state: 'Deployed',
           agentIds: deployedAgents.map((agent) => agent.id),
         },
-        st.bldMissionSite(newMissionSiteId),
+        st.bldMission(newMissionId),
       ],
     })
-    st.arrangeSelection({ agents: availableAgentIds, missionSite: newMissionSiteId })
+    st.arrangeSelection({ agents: availableAgentIds, mission: newMissionId })
     ui.renderPlayerActions()
     ui.expectPlayerActionsAlert({ hidden: true })
 
@@ -196,6 +196,6 @@ describe(PlayerActions, () => {
       st.expectAgentState(availableAgentId, 'Available')
       st.expectAgentAssignment(availableAgentId, 'Standby')
     })
-    st.expectAgentsOnMissionSite(newMissionSiteId, [])
+    st.expectAgentsOnMission(newMissionId, [])
   })
 })

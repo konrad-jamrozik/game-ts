@@ -3,31 +3,31 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
-import { fmtMissionSiteIdWithMissionId } from '../../lib/model_utils/missionSiteUtils'
+import { fmtMissionIdWithMissionDefId } from '../../lib/model_utils/missionUtils'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
-import type { MissionRow } from './MissionSitesDataGrid'
+import type { MissionRow } from './MissionsDataGrid'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
-import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
+import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
 
-export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<MissionRow>[] {
+export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
       field: 'id',
-      headerName: 'Mission site ID',
-      width: columnWidths['mission_sites.id'],
+      headerName: 'Mission ID',
+      width: columnWidths['missions.id'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        const displayValue = fmtMissionSiteIdWithMissionId(params.row)
+        const displayValue = fmtMissionIdWithMissionDefId(params.row)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },
     },
     {
       field: 'state',
       headerName: 'State',
-      width: columnWidths['mission_sites.state'],
+      width: columnWidths['missions.state'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        if (isMissionSiteConcluded(params.row)) {
+        if (isMissionConcluded(params.row)) {
           return (
             <span aria-label={`missions-row-state-${params.id}`}>
               <MyChip chipValue={params.value} />
@@ -40,8 +40,8 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
     {
       field: 'expiresIn',
       headerName: 'ExpIn',
-      width: columnWidths['mission_sites.expires_in'],
-      cellClassName: 'mission-sites-expires-in-cell',
+      width: columnWidths['missions.expires_in'],
+      cellClassName: 'missions-expires-in-cell',
       renderCell: (params: GridRenderCellParams<MissionRow, number | 'never'>): React.JSX.Element => {
         if (params.row.state === 'Active' && params.value !== undefined) {
           return renderExpiresInCell(params.value, params.id)
@@ -52,7 +52,7 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
     // {
     //   field: 'enemies',
     //   headerName: 'Enem',
-    //   width: columnWidths['mission_sites.enemies'],
+    //   width: columnWidths['missions.enemies'],
     //   valueGetter: (_value, row: MissionRow) => getEnemyCount(row),
     //   renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
     //     const enemyCount = getEnemyCount(params.row)
@@ -62,7 +62,7 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
     // {
     //   field: 'avgSkill',
     //   headerName: 'AvgSk',
-    //   width: columnWidths['mission_sites.avg_skill'],
+    //   width: columnWidths['missions.avg_skill'],
     //   valueGetter: (_value, row: MissionRow) => getAverageSkill(row),
     //   renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
     //     const avgSkill = getAverageSkill(params.row)
@@ -73,7 +73,7 @@ export function getMissionSitesColumns(dispatch: AppDispatch): GridColDef<Missio
     {
       field: 'details',
       headerName: 'Details',
-      width: columnWidths['mission_sites.details'],
+      width: columnWidths['missions.details'],
       sortable: false,
       align: 'center',
       headerAlign: 'center',

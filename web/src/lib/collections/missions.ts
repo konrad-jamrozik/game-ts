@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteDefinition, MissionSiteDefinitionId } from '../model/missionSiteModel'
+import type { MissionDef, MissionDefId } from '../model/missionModel'
 import { expandTemplateString, getFactionShortId } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
@@ -25,19 +25,19 @@ function parseSuppression(suppression: string): number {
 }
 
 /**
- * Generates a mission site definition ID from a mission name and faction.
+ * Generates a mission definition ID from a mission name and faction.
  * @param name - The mission name (e.g., "Apprehend Cult Member")
  * @param faction - The faction stats
- * @returns A mission site definition ID (e.g., "mission-def-apprehend-cult-member-rd")
+ * @returns A mission definition ID (e.g., "mission-def-apprehend-cult-member-rd")
  */
-export function generateMissionSiteDefinitionId(name: string, faction: FactionStats): MissionSiteDefinitionId {
+export function generateMissionDefId(name: string, faction: FactionStats): MissionDefId {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)
-  return `mission-def-${baseId}-${shortId}` as MissionSiteDefinitionId
+  return `mission-def-${baseId}-${shortId}` as MissionDefId
 }
 
-// KJA3 should be called bldMissionSiteDefinitions
-function generateMissionSiteDefinitionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
+// KJA3 should be called bldMissionDefs
+function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -51,7 +51,7 @@ function generateMissionSiteDefinitionsForFaction(faction: FactionStats): Missio
     const suppressionValue = parseSuppression(suppression)
 
     return {
-      id: generateMissionSiteDefinitionId(name, faction),
+      id: generateMissionDefId(name, faction),
       name,
       description: expandTemplateString(description, faction),
       expiresIn,
@@ -76,18 +76,18 @@ function generateMissionSiteDefinitionsForFaction(faction: FactionStats): Missio
   })
 }
 
-export const offensiveMissionSiteDefinitions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
-  generateMissionSiteDefinitionsForFaction(faction),
+export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
+  generateMissionDefsForFaction(faction),
 )
 
 // kja rename, bld
-function generateDefensiveMissionSiteDefinitionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
+function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
 
     return {
-      id: generateMissionSiteDefinitionId(name, faction),
+      id: generateMissionDefId(name, faction),
       name,
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
@@ -103,24 +103,20 @@ function generateDefensiveMissionSiteDefinitionsForFaction(faction: FactionStats
   })
 }
 
-export const defensiveMissionSiteDefinitions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
-  generateDefensiveMissionSiteDefinitionsForFaction(faction),
+export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
+  generateDefensiveMissionDefsForFaction(faction),
 )
 
-export function getMissionSiteDefinitionById(missionSiteDefinitionId: MissionSiteDefinitionId): MissionSiteDefinition {
-  const foundOffensiveMissionSiteDefinition = offensiveMissionSiteDefinitions.find(
-    (missionSiteDefinition) => missionSiteDefinition.id === missionSiteDefinitionId,
-  )
-  if (foundOffensiveMissionSiteDefinition) {
-    return foundOffensiveMissionSiteDefinition
+export function getMissionDefById(missionDefId: MissionDefId): MissionDef {
+  const foundOffensiveMissionDef = offensiveMissionDefs.find((missionDef) => missionDef.id === missionDefId)
+  if (foundOffensiveMissionDef) {
+    return foundOffensiveMissionDef
   }
 
-  const foundDefensiveMissionSiteDefinition = defensiveMissionSiteDefinitions.find(
-    (missionSiteDefinition) => missionSiteDefinition.id === missionSiteDefinitionId,
-  )
-  if (foundDefensiveMissionSiteDefinition) {
-    return foundDefensiveMissionSiteDefinition
+  const foundDefensiveMissionDef = defensiveMissionDefs.find((missionDef) => missionDef.id === missionDefId)
+  if (foundDefensiveMissionDef) {
+    return foundDefensiveMissionDef
   }
 
-  throw new Error(`Mission site definition with id ${missionSiteDefinitionId} not found`)
+  throw new Error(`Mission definition with id ${missionDefId} not found`)
 }

@@ -1,11 +1,11 @@
 import { expect } from 'vitest'
 import { store } from '../../src/redux/store'
 import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
-import type { Enemy, MissionSite, MissionSiteId, MissionSiteDefinitionId } from '../../src/lib/model/missionSiteModel'
+import type { Enemy, Mission, MissionId, MissionDefId } from '../../src/lib/model/missionModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/redux/slices/selectionSlice'
+import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
@@ -43,11 +43,11 @@ export const st = {
     return enemy
   },
 
-  bldMissionSite(missionSiteId: MissionSiteId): MissionSite {
-    const missionSiteDefinitionId = 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId
+  bldMission(missionId: MissionId): Mission {
+    const missionDefId = 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId
     return {
-      id: missionSiteId,
-      missionSiteDefinitionId,
+      id: missionId,
+      missionDefId,
       agentIds: [],
       state: 'Active',
       expiresIn: 3,
@@ -60,15 +60,15 @@ export const st = {
     store.dispatch(reset({ customState }))
   },
 
-  arrangeSelection(options: { agents?: string[]; lead?: string; missionSite?: MissionSiteId }): void {
+  arrangeSelection(options: { agents?: string[]; lead?: string; mission?: MissionId }): void {
     if (options.agents) {
       store.dispatch(setAgentSelection(options.agents))
     }
     if (options.lead !== undefined) {
       store.dispatch(setLeadSelection(options.lead))
     }
-    if (options.missionSite !== undefined) {
-      store.dispatch(setMissionSiteSelection(options.missionSite))
+    if (options.mission !== undefined) {
+      store.dispatch(setMissionSelection(options.mission))
     }
   },
 
@@ -132,22 +132,22 @@ export const st = {
     })
   },
 
-  expectAgentsOnMissionSite(missionSiteId: MissionSiteId, agentIds: string[]): void {
-    const missionSite = st.gameState.missionSites.find((ms) => ms.id === missionSiteId)
-    expect(missionSite).toBeDefined()
-    if (missionSite) {
-      expect(missionSite.agentIds).toStrictEqual(expect.arrayContaining(agentIds))
-      expect(missionSite.agentIds).toHaveLength(agentIds.length)
+  expectAgentsOnMission(missionId: MissionId, agentIds: string[]): void {
+    const mission = st.gameState.missions.find((m) => m.id === missionId)
+    expect(mission).toBeDefined()
+    if (mission) {
+      expect(mission.agentIds).toStrictEqual(expect.arrayContaining(agentIds))
+      expect(mission.agentIds).toHaveLength(agentIds.length)
     }
   },
 
-  expectAgentsDeployed(agentIds: string[], missionSiteId: MissionSiteId): void {
+  expectAgentsDeployed(agentIds: string[], missionId: MissionId): void {
     // Check each agent has OnMission state and correct assignment
     agentIds.forEach((agentId) => {
       st.expectAgentState(agentId, 'OnMission')
-      st.expectAgentAssignment(agentId, missionSiteId)
+      st.expectAgentAssignment(agentId, missionId)
     })
-    // Check mission site has all the agents
-    st.expectAgentsOnMissionSite(missionSiteId, agentIds)
+    // Check mission has all the agents
+    st.expectAgentsOnMission(missionId, agentIds)
   },
 }

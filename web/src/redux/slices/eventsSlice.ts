@@ -1,6 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { MissionRewards, MissionSiteId } from '../../lib/model/missionSiteModel'
-import type { MissionSiteState } from '../../lib/model/outcomeTypes'
+import type { MissionRewards, MissionId } from '../../lib/model/missionModel'
+import type { MissionState } from '../../lib/model/outcomeTypes'
 
 export type BaseEventFields = {
   id: number
@@ -18,8 +18,8 @@ export type MissionCompletedEvent = BaseEventFields & {
   type: 'MissionCompleted'
   missionName: string
   rewards: MissionRewards
-  missionSiteId: MissionSiteId
-  finalState: MissionSiteState
+  missionId: MissionId
+  finalState: MissionState
 }
 
 export type TurnAdvancementEvent = BaseEventFields & {
@@ -68,8 +68,8 @@ const eventsSlice = createSlice({
         actionsCount: number
         missionName: string
         rewards: MissionRewards
-        missionSiteId: MissionSiteId
-        finalState: MissionSiteState
+        missionId: MissionId
+        finalState: MissionState
       }>,
     ) {
       const event: MissionCompletedEvent = {
@@ -77,7 +77,7 @@ const eventsSlice = createSlice({
         type: 'MissionCompleted',
         missionName: action.payload.missionName,
         rewards: action.payload.rewards,
-        missionSiteId: action.payload.missionSiteId,
+        missionId: action.payload.missionId,
         finalState: action.payload.finalState,
         timestamp: Date.now(),
         turn: action.payload.turn,

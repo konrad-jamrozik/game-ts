@@ -7,38 +7,38 @@ import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
-import { setMissionSiteSelection } from '../../redux/slices/selectionSlice'
+import { getMissionDefById } from '../../lib/collections/missions'
+import { setMissionSelection } from '../../redux/slices/selectionSlice'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import type { MissionSiteId } from '../../lib/model/missionSiteModel'
+import type { MissionId } from '../../lib/model/missionModel'
 import { LabeledValue } from '../Common/LabeledValue'
-import { isMissionSiteConcluded } from '../../lib/ruleset/missionRuleset'
+import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
 
-export type MissionCardProps = { missionSiteId: MissionSiteId }
+export type MissionCardProps = { missionSiteId: MissionId }
 
 export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const theme = useTheme()
-  const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
-  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
+  const missions = useAppSelector((state) => state.undoable.present.gameState.missions)
 
-  const missionSite = missionSites.find((site) => site.id === missionSiteId)
-  if (!missionSite) {
+  const mission = missions.find((m) => m.id === missionSiteId)
+  if (!mission) {
     return <div>Mission site not found</div>
   }
 
-  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
+  const missionDef = getMissionDefById(mission.missionDefId)
 
-  const selected = selectedMissionSiteId === missionSite.id
-  const isDeployed = missionSite.state === 'Deployed'
-  const disabled = isMissionSiteConcluded(missionSite) || isDeployed
+  const selected = selectedMissionId === mission.id
+  const isDeployed = mission.state === 'Deployed'
+  const disabled = isMissionConcluded(mission) || isDeployed
 
-  // Remove the "mission-site-" prefix from the ID for display
-  const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
+  // Remove the "mission-" prefix from the ID for display
+  const displayId = fmtNoPrefix(mission.id, 'mission-')
 
   function handleClick(): void {
-    if (!disabled && missionSite) {
-      dispatch(setMissionSiteSelection(missionSite.id))
+    if (!disabled && mission) {
+      dispatch(setMissionSelection(mission.id))
     }
   }
 
@@ -59,26 +59,26 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
       >
         {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win in specificity over the styleOverrides in theme.tsx. */}
-        <CardHeader title={missionSiteDefinition.name} sx={combinedHeaderSx} />
+        <CardHeader title={missionDef.name} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
               <LabeledValue label="ID" value={displayId} sx={{ width: 100 }} />
-              {missionSite.state === 'Active' ? (
-                // For active mission sites, only show expiration info
-                missionSite.expiresIn !== 'never' ? (
-                  <LabeledValue label="Expires in" value={missionSite.expiresIn} sx={{ width: 138 }} />
+              {mission.state === 'Active' ? (
+                // For active missions, only show expiration info
+                mission.expiresIn !== 'never' ? (
+                  <LabeledValue label="Expires in" value={mission.expiresIn} sx={{ width: 138 }} />
                 ) : (
                   <LabeledValue label="Does not expire" sx={{ width: 142 }} />
                 )
               ) : (
-                // For non-active mission sites, only show status
-                <LabeledValue label="Status" value={missionSite.state} sx={{ width: 180 }} />
+                // For non-active missions, only show status
+                <LabeledValue label="Status" value={mission.state} sx={{ width: 180 }} />
               )}
             </Stack>
           </Stack>
           <Typography sx={{ paddingTop: 1.7 }} variant="body1">
-            {missionSiteDefinition.description}
+            {missionDef.description}
           </Typography>
         </CardContent>
       </CardActionArea>

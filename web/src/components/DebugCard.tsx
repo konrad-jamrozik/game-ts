@@ -5,7 +5,7 @@ import { useAppDispatch } from '../redux/hooks'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import {
-  debugSpawnMissionSites,
+  debugSpawnMissions,
   debugSetPanicToZero,
   debugSetAllFactionsSuppression,
   debugAddMoney,
@@ -17,8 +17,8 @@ import {
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
 
-  function handleSpawnMissionSites(): void {
-    dispatch(debugSpawnMissionSites())
+  function handleSpawnMissions(): void {
+    dispatch(debugSpawnMissions())
   }
 
   function handleSetPanicToZero(): void {
@@ -66,8 +66,8 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleSpawn10Agents}>
           Spawn 10 agents
         </Button>
-        <Button variant="contained" onClick={handleSpawnMissionSites}>
-          Spawn mission sites
+        <Button variant="contained" onClick={handleSpawnMissions}>
+          Spawn missions
         </Button>
       </Stack>
     </ExpandableCard>

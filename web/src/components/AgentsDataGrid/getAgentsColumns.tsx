@@ -18,7 +18,7 @@ import { AGENTS_SKILL_BAR_GREY, getColorBarFillColor } from '../ColorBar/colorBa
 export function getAgentsColumns(
   rows: AgentRow[],
   maxSkillNonTerminated: Fixed6,
-  missionSites: GameState['missionSites'],
+  missions: GameState['missions'],
   currentTurn: number,
   hitPointsRecoveryPct: Fixed6,
 ): GridColDef[] {
@@ -220,12 +220,12 @@ export function getAgentsColumns(
       headerName: 'Mis',
       width: columnWidths['agents.mission'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
-        const { terminatedOnMissionSiteId, assignment } = params.row
+        const { terminatedOnMissionId, assignment } = params.row
 
-        if (terminatedOnMissionSiteId !== undefined) {
-          const missionSite = missionSites.find((site) => site.id === terminatedOnMissionSiteId)
-          assertDefined(missionSite, `Mission site not found for id: ${terminatedOnMissionSiteId}`)
-          const displayValue = fmtNoPrefix(missionSite.id, 'mission-site-')
+        if (terminatedOnMissionId !== undefined) {
+          const mission = missions.find((m) => m.id === terminatedOnMissionId)
+          assertDefined(mission, `Mission not found for id: ${terminatedOnMissionId}`)
+          const displayValue = fmtNoPrefix(mission.id, 'mission-')
           return <span aria-label={`agents-row-mission-${params.id}`}>{displayValue}</span>
         }
         // If agent was sacked (assignment is 'Sacked'), show "-"

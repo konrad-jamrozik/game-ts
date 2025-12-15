@@ -9,7 +9,7 @@ import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { LeadInvestigationsDataGrid } from './LeadInvestigationsDataGrid/LeadInvestigationsDataGrid'
 import { LeadsDataGrid } from './LeadsDataGrid/LeadsDataGrid'
-import { MissionSitesDataGrid } from './MissionSitesDataGrid/MissionSitesDataGrid'
+import { MissionsDataGrid } from './MissionsDataGrid/MissionsDataGrid'
 import { PlayerActions } from './GameControls/PlayerActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
 import { AssetsAndCapabCard } from './Assets/AssetsAndCapabCard'
@@ -17,12 +17,10 @@ import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
 import { useAppSelector } from '../redux/hooks'
-import type { MissionSiteId } from '../lib/model/missionSiteModel'
+import type { MissionId } from '../lib/model/missionModel'
 
 function App(): React.JSX.Element {
-  const viewMissionDetailsId: MissionSiteId | undefined = useAppSelector(
-    (state) => state.selection.viewMissionDetailsId,
-  )
+  const viewMissionDetailsId: MissionId | undefined = useAppSelector((state) => state.selection.viewMissionDetailsId)
   const viewCharts = useAppSelector((state) => state.selection.viewCharts)
 
   useEffect(() => {
@@ -69,7 +67,7 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <MissionSitesDataGrid />
+          <MissionsDataGrid />
           <LeadsDataGrid />
           <LeadInvestigationsDataGrid />
           <AgentsDataGrid />

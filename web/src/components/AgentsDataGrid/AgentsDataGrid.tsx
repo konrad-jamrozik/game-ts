@@ -90,7 +90,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const columns = getAgentsColumns(
     rows,
     maxSkillNonTerminated,
-    gameState.missionSites,
+    gameState.missions,
     gameState.turn,
     gameState.hitPointsRecoveryPct,
   )

@@ -1,5 +1,5 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { Actor, MissionSiteId } from './missionSiteModel'
+import type { Actor, MissionId } from './missionModel'
 import type { LeadInvestigationId } from './leadModel'
 
 export type AgentState =
@@ -16,15 +16,15 @@ export type AgentState =
 // Assignment types for agents
 export type ActivityId = 'Contracting' | 'Training'
 export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
-export type AgentAssignment = ActivityId | MissionSiteId | LeadInvestigationId | AgentAssignmentState
+export type AgentAssignment = ActivityId | MissionId | LeadInvestigationId | AgentAssignmentState
 
 // Type guard functions for agent assignments
 export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
   return assignment === 'Contracting' || assignment === 'Training'
 }
 
-export function isMissionSiteAssignment(assignment: AgentAssignment): assignment is MissionSiteId {
-  return typeof assignment === 'string' && assignment.startsWith('mission-site-')
+export function isMissionAssignment(assignment: AgentAssignment): assignment is MissionId {
+  return typeof assignment === 'string' && assignment.startsWith('mission-')
 }
 
 export function isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId {
@@ -38,7 +38,7 @@ export function isAssignmentState(assignment: AgentAssignment): assignment is Ag
 export type Agent = Actor & {
   turnHired: number
   turnTerminated?: number
-  terminatedOnMissionSiteId?: MissionSiteId
+  terminatedOnMissionId?: MissionId
   terminatedBy?: string
   hitPointsLostBeforeRecovery: Fixed6
   missionsTotal: number

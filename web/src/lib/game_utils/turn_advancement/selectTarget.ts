@@ -1,5 +1,5 @@
 import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, f6sub, f6div, f6le, type Fixed6 } from '../../primitives/fixed6'
-import type { Enemy } from '../../model/missionSiteModel'
+import type { Enemy } from '../../model/missionModel'
 import type { Agent } from '../../model/agentModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rand } from '../../primitives/rand'

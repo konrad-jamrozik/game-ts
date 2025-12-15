@@ -1,4 +1,4 @@
-import type { Enemy } from '../../src/lib/model/missionSiteModel'
+import type { Enemy } from '../../src/lib/model/missionModel'
 import { bldEnemy } from '../../src/lib/ruleset/enemyRuleset'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/ruleset/constants'

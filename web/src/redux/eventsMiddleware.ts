@@ -1,6 +1,6 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
-import { getMissionSiteDefinitionById } from '../lib/collections/missions'
+import { getMissionDefById } from '../lib/collections/missions'
 import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
 import {
   advanceTurn,
@@ -90,16 +90,14 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       const agentCount = agentIds.length
       postTextEvent(`Started investigating lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
     } else if (deployAgentsToMission.match(action)) {
-      const { missionSiteId, agentIds } = action.payload
+      const { missionId, agentIds } = action.payload
       const agentCount = agentIds.length
 
-      // Find the mission site to get the mission info for logging
-      const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
-      const missionSiteDefinitionId = missionSite
-        ? getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId).name
-        : 'Unknown Mission'
+      // Find the mission to get the mission info for logging
+      const mission = gameState.missions.find((m) => m.id === missionId)
+      const missionName = mission ? getMissionDefById(mission.missionDefId).name : 'Unknown Mission'
 
-      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionSiteDefinitionId}`)
+      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
     } else if (buyUpgrade.match(action)) {
       const upgradeName = action.payload
       postTextEvent(`Bought upgrade: ${upgradeName}`)

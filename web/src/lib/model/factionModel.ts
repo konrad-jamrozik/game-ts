@@ -1,4 +1,4 @@
-import type { FactionId } from './missionSiteModel'
+import type { FactionId } from './missionModel'
 
 /**
  * Activity level progression values.

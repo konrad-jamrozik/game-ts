@@ -5,7 +5,7 @@ import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrad
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
-import { getRemainingTransportCap } from '../../lib/model_utils/missionSiteUtils'
+import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getCapabilitiesColumns } from './getCapabilitiesColumns'
 
@@ -39,7 +39,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
 
   const currentAgentCount = notTerminated(gameState.agents).length
   const remainingAgentCap = Math.max(gameState.agentCap - currentAgentCount, 0)
-  const remainingTransportCap = getRemainingTransportCap(gameState.missionSites, gameState.transportCap)
+  const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
   const agentsInTraining = onTrainingAssignment(gameState.agents).length
   const remainingTrainingCap = Math.max(gameState.trainingCap - agentsInTraining, 0)
 

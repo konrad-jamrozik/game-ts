@@ -2,8 +2,8 @@ import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { MissionSite, MissionSiteDefinitionId } from '../../src/lib/model/missionSiteModel'
-import { evaluateDeployedMissionSite } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMissionSite'
+import type { Mission, MissionDefId } from '../../src/lib/model/missionModel'
+import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
@@ -17,14 +17,14 @@ import {
 import { bldWeapon } from '../../src/lib/ruleset/weaponRuleset'
 import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
 
-describe(evaluateDeployedMissionSite, () => {
-  test('evaluateDeployedMissionSite succeeds', () => {
+describe(evaluateDeployedMission, () => {
+  test('evaluateDeployedMission succeeds', () => {
     // Create a test agent with high skill
     const testAgent: Agent = {
       id: 'agent-001',
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-001',
+      assignment: 'mission-001',
       skill: toF6(200), // High skill to ensure success
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
@@ -35,10 +35,10 @@ describe(evaluateDeployedMissionSite, () => {
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
-    // Create a test mission site with weak enemies
-    const testMissionSite: MissionSite = {
-      id: 'mission-site-001',
-      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+    // Create a test mission with weak enemies
+    const testMission: Mission = {
+      id: 'mission-001',
+      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -61,7 +61,7 @@ describe(evaluateDeployedMissionSite, () => {
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
       leadInvestigationCounts: {},
       leadInvestigations: {},
-      missionSites: [testMissionSite],
+      missions: [testMission],
       panic: toF6(0),
       factions: [],
     }
@@ -71,11 +71,11 @@ describe(evaluateDeployedMissionSite, () => {
     Math.random = (): number => 0.1 // Low values for successful contest rolls
 
     try {
-      // Evaluate the mission site
-      evaluateDeployedMissionSite(gameState, testMissionSite)
+      // Evaluate the mission
+      evaluateDeployedMission(gameState, testMission)
 
-      // Verify mission site is won
-      expect(testMissionSite.state).toBe('Won')
+      // Verify mission is won
+      expect(testMission.state).toBe('Won')
 
       // Verify agent gained experience
       expect(testAgent.missionsTotal).toBe(1)
@@ -99,7 +99,7 @@ describe(evaluateDeployedMissionSite, () => {
       id: 'agent-001',
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-001',
+      assignment: 'mission-001',
       skill: toF6(50), // Low skill
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
@@ -110,9 +110,9 @@ describe(evaluateDeployedMissionSite, () => {
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
-    const testMissionSite: MissionSite = {
-      id: 'mission-site-001',
-      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+    const testMission: Mission = {
+      id: 'mission-001',
+      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -134,7 +134,7 @@ describe(evaluateDeployedMissionSite, () => {
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
       leadInvestigationCounts: {},
       leadInvestigations: {},
-      missionSites: [testMissionSite],
+      missions: [testMission],
       panic: toF6(0),
       factions: [],
     }
@@ -152,7 +152,7 @@ describe(evaluateDeployedMissionSite, () => {
     }
 
     try {
-      evaluateDeployedMissionSite(gameState, testMissionSite)
+      evaluateDeployedMission(gameState, testMission)
 
       // With incapacitation logic, agent becomes incapacitated (effective skill <= 10% base) before HP reaches 0
       // Agent is still alive but wounded/unscathed, not terminated
@@ -161,7 +161,7 @@ describe(evaluateDeployedMissionSite, () => {
       expect(['Recovery', 'Standby']).toContain(testAgent.assignment)
 
       // Mission should be wiped since agent cannot participate (incapacitated)
-      expect(testMissionSite.state).toBe('Wiped')
+      expect(testMission.state).toBe('Wiped')
     } finally {
       Math.random = originalRandom
     }
@@ -173,7 +173,7 @@ describe(evaluateDeployedMissionSite, () => {
       id: 'agent-001',
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-001',
+      assignment: 'mission-001',
       skill: toF6(60),
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
@@ -188,7 +188,7 @@ describe(evaluateDeployedMissionSite, () => {
       id: 'agent-002',
       turnHired: 1,
       state: 'OnMission',
-      assignment: 'mission-site-001',
+      assignment: 'mission-001',
       skill: toF6(50),
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
@@ -199,9 +199,9 @@ describe(evaluateDeployedMissionSite, () => {
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
 
-    const testMissionSite: MissionSite = {
-      id: 'mission-site-001',
-      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+    const testMission: Mission = {
+      id: 'mission-001',
+      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
@@ -223,15 +223,15 @@ describe(evaluateDeployedMissionSite, () => {
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
       leadInvestigationCounts: {},
       leadInvestigations: {},
-      missionSites: [testMissionSite],
+      missions: [testMission],
       panic: toF6(0),
       factions: [],
     }
 
-    evaluateDeployedMissionSite(gameState, testMissionSite)
+    evaluateDeployedMission(gameState, testMission)
 
     // Mission should be wiped (all agents terminated)
-    expect(testMissionSite.state).toBe('Wiped')
+    expect(testMission.state).toBe('Wiped')
 
     // All agents should be terminated
     const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'KIA')

@@ -1,5 +1,5 @@
 import { ENEMY_STATS } from '../collections/enemyStatsTables'
-import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionSiteModel'
+import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionModel'
 import type { EnemyCounts } from '../collections/missionStatsTables'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponRuleset'
@@ -11,7 +11,7 @@ let idCounter = 0
  * Example: { initiate: 2, operative: 1 } creates 2 Initiates and 1 Operative
  */
 export function bldEnemies(enemyCounts: Partial<EnemyCounts>): Enemy[] {
-  // Reset enemy ID counter for each mission site
+  // Reset enemy ID counter for each mission
   idCounter = 1
 
   const units: Enemy[] = []

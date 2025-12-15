@@ -1,18 +1,18 @@
 /* eslint-disable unicorn/prefer-single-call */
 /* eslint-disable unicorn/no-immediate-mutation */
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId, MissionSiteDefinitionId } from '../model/missionSiteModel'
+import type { MissionId, MissionDefId } from '../model/missionModel'
 import type { LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyRuleset'
-import { getMissionSiteDefinitionById } from '../collections/missions'
+import { getMissionDefById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { bldAgentWithoutState } from '../game_utils/agentFactory'
 
 function bldDebugAgents(
-  missionSiteId: MissionSiteId,
+  missionId: MissionId,
   deepStateInvestigationId: LeadInvestigationId,
 ): { agents: Agent[]; onMissionAgentIds: string[]; deepStateInvestigationAgentIds: string[] } {
   let agentCounter = 0
@@ -129,7 +129,7 @@ function bldDebugAgents(
     turnHired: 1,
     weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
     agentState: 'OnMission',
-    assignment: missionSiteId,
+    assignment: missionId,
     skill: toF6(95),
     exhaustionPct: 15,
     missionsTotal: 1,
@@ -165,7 +165,7 @@ function bldDebugAgents(
     turnHired: 1,
     weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
     agentState: 'OnMission',
-    assignment: missionSiteId,
+    assignment: missionId,
     skill: toF6(85),
     exhaustionPct: 7,
     missionsTotal: 1,
@@ -243,7 +243,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
     },
   }
 
-  const missionSiteId: MissionSiteId = 'mission-site-000'
+  const missionId: MissionId = 'mission-000'
   const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
 
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
@@ -251,29 +251,27 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
     agents: debugAgents,
     onMissionAgentIds,
     deepStateInvestigationAgentIds,
-  } = bldDebugAgents(missionSiteId, deepStateInvestigationId)
+  } = bldDebugAgents(missionId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const missionSiteDefinition = getMissionSiteDefinitionById(
-    'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
-  )
-  // KJA3 use the factory instead, bldMissionSite. But avoid having to have tempState just for next ID.
-  stateBase.missionSites = [
+  const missionDef = getMissionDefById('mission-def-apprehend-cult-member-red-dawn' as MissionDefId)
+  // KJA3 use the factory instead, bldMission. But avoid having to have tempState just for next ID.
+  stateBase.missions = [
     {
-      id: missionSiteId,
-      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+      id: missionId,
+      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
-      expiresIn: missionSiteDefinition.expiresIn,
-      enemies: bldEnemies(missionSiteDefinition.enemyCounts),
+      expiresIn: missionDef.expiresIn,
+      enemies: bldEnemies(missionDef.enemyCounts),
     },
     {
-      id: 'mission-site-001' as MissionSiteId,
-      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+      id: 'mission-001' as MissionId,
+      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
       agentIds: [],
       state: 'Active',
-      expiresIn: missionSiteDefinition.expiresIn,
-      enemies: bldEnemies(missionSiteDefinition.enemyCounts),
+      expiresIn: missionDef.expiresIn,
+      enemies: bldEnemies(missionDef.enemyCounts),
     },
   ]
 

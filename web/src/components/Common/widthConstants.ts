@@ -8,12 +8,12 @@ const DATA_GRID_BASE_WIDTH = 2 * BORDER_WIDTH + 2 * PADDING_WIDTH + MUI_DATA_GRI
 
 export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  columnWidths['mission_sites.id'] +
-  columnWidths['mission_sites.state'] +
-  columnWidths['mission_sites.expires_in'] +
-  // columnWidths['mission_sites.enemies'] +
-  // columnWidths['mission_sites.avg_skill'] +
-  columnWidths['mission_sites.details'] +
+  columnWidths['missions.id'] +
+  columnWidths['missions.state'] +
+  columnWidths['missions.expires_in'] +
+  // columnWidths['missions.enemies'] +
+  // columnWidths['missions.avg_skill'] +
+  columnWidths['missions.details'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const LEADS_DATA_GRID_WIDTH =
@@ -119,5 +119,5 @@ export const BATTLE_LOG_CARD_WIDTH =
   columnWidths['battle_log.enemy_hp'] +
   columnWidths['battle_log.skill_ratio'] // borders + padding + filler + columns
 
-export const MISSION_SITE_DETAILS_CARD_WIDTH =
-  DATA_GRID_BASE_WIDTH + columnWidths['mission_site_details.key'] + columnWidths['mission_site_details.value'] // borders + padding + filler + columns
+export const MISSION_DETAILS_CARD_WIDTH =
+  DATA_GRID_BASE_WIDTH + columnWidths['mission_details.key'] + columnWidths['mission_details.value'] // borders + padding + filler + columns

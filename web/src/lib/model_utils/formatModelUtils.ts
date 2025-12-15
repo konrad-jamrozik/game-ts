@@ -1,17 +1,17 @@
 import pluralize from 'pluralize'
-import type { MissionSiteId } from '../model/missionSiteModel'
+import type { MissionId } from '../model/missionModel'
 import { floorToDec2 } from '../primitives/mathPrimitives'
 import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
 
 /**
- * Formats mission site target for display (removes '-site-' patterns)
+ * Formats mission target for display
  */
-export function fmtMissionTarget(missionSiteId: MissionSiteId | undefined): string {
-  if (missionSiteId === undefined) {
+export function fmtMissionTarget(missionId: MissionId | undefined): string {
+  if (missionId === undefined) {
     return 'mission ?'
   }
-  const displayId = missionSiteId.replaceAll('-site-', ' ')
+  const displayId = missionId.replaceAll('mission-', '')
   return ` on ${displayId}`
 }
 

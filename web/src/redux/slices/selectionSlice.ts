@@ -1,15 +1,15 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { LeadInvestigationId } from '../../lib/model/leadModel'
-import type { MissionSiteId } from '../../lib/model/missionSiteModel'
+import type { MissionId } from '../../lib/model/missionModel'
 import type { UpgradeName } from '../../lib/collections/upgrades'
 
 export type SelectionState = {
   agents: string[]
   selectedLeadId?: string
   selectedInvestigationId?: LeadInvestigationId
-  selectedMissionSiteId?: MissionSiteId
+  selectedMissionId?: MissionId
   selectedUpgradeName?: UpgradeName
-  viewMissionDetailsId?: MissionSiteId
+  viewMissionDetailsId?: MissionId
   viewCharts?: true
 }
 
@@ -39,11 +39,11 @@ const selectionSlice = createSlice({
     clearInvestigationSelection(state) {
       delete state.selectedInvestigationId
     },
-    setMissionSiteSelection(state, action: PayloadAction<MissionSiteId>) {
-      state.selectedMissionSiteId = action.payload
+    setMissionSelection(state, action: PayloadAction<MissionId>) {
+      state.selectedMissionId = action.payload
     },
     clearMissionSelection(state) {
-      delete state.selectedMissionSiteId
+      delete state.selectedMissionId
     },
     setUpgradeSelection(state, action: PayloadAction<UpgradeName>) {
       state.selectedUpgradeName = action.payload
@@ -55,12 +55,12 @@ const selectionSlice = createSlice({
       state.agents = []
       delete state.selectedLeadId
       delete state.selectedInvestigationId
-      delete state.selectedMissionSiteId
+      delete state.selectedMissionId
       delete state.selectedUpgradeName
       delete state.viewMissionDetailsId
       delete state.viewCharts
     },
-    setViewMissionDetails(state, action: PayloadAction<MissionSiteId>) {
+    setViewMissionDetails(state, action: PayloadAction<MissionId>) {
       state.viewMissionDetailsId = action.payload
     },
     clearViewMissionDetails(state) {
@@ -82,7 +82,7 @@ export const {
   clearLeadSelection,
   setInvestigationSelection,
   clearInvestigationSelection,
-  setMissionSiteSelection,
+  setMissionSelection,
   clearMissionSelection,
   setUpgradeSelection,
   clearUpgradeSelection,

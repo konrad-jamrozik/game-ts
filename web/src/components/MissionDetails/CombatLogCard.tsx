@@ -3,21 +3,21 @@ import * as React from 'react'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { COMBAT_LOG_CARD_WIDTH } from '../Common/widthConstants'
-import type { MissionSiteId } from '../../lib/model/missionSiteModel'
+import type { MissionId } from '../../lib/model/missionModel'
 import { useMissionReport } from './useMissionReport'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
 import { f6max, toF6 } from '../../lib/primitives/fixed6'
 
 type CombatLogCardProps = {
-  missionSiteId: MissionSiteId
+  missionId: MissionId
 }
 
-export function CombatLogCard({ missionSiteId }: CombatLogCardProps): React.JSX.Element {
+export function CombatLogCard({ missionId }: CombatLogCardProps): React.JSX.Element {
   const [showAgentAttacks, setShowAgentAttacks] = React.useState(true)
   const [showEnemyAttacks, setShowEnemyAttacks] = React.useState(true)
 
-  const missionReport = useMissionReport(missionSiteId)
+  const missionReport = useMissionReport(missionId)
   const attackLogs = missionReport?.battleStats.attackLogs ?? []
 
   const allRows: CombatLogRow[] = attackLogs.map((log, index) => ({

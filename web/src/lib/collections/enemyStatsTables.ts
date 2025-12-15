@@ -1,5 +1,5 @@
 import { toF6, type Fixed6 } from '../primitives/fixed6'
-import type { EnemyType } from '../model/missionSiteModel'
+import type { EnemyType } from '../model/missionModel'
 
 /**
  * Enemy unit statistics

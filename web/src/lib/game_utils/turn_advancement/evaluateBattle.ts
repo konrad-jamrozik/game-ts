@@ -15,7 +15,7 @@ import {
   toF,
   type Fixed6,
 } from '../../primitives/fixed6'
-import type { Actor, Enemy } from '../../model/missionSiteModel'
+import type { Actor, Enemy } from '../../model/missionModel'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../ruleset/constants'
 import { shouldRetreat, canParticipateInBattle, type RetreatResult } from '../../ruleset/missionRuleset'
@@ -231,7 +231,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     totalDamageTaken += toF(initialHp) - toF(agent.hitPoints)
   }
 
-  // agentExhaustionAfterBattle will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
+  // agentExhaustionAfterBattle will be calculated in evaluateDeployedMission after casualty penalty is applied
 
   showRoundStatus(
     combatRounds,
@@ -266,7 +266,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     totalDamageTaken,
     initialAgentExhaustion,
     initialAgentExhaustionByAgentId,
-    agentExhaustionAfterBattle: 0, // Will be calculated in evaluateDeployedMissionSite after casualty penalty is applied
+    agentExhaustionAfterBattle: 0, // Will be calculated in evaluateDeployedMission after casualty penalty is applied
     agentsWounded: 0, // Will be set in updateAgentsAfterBattle
     agentsUnscathed: 0, // Will be set in updateAgentsAfterBattle
     roundLogs,

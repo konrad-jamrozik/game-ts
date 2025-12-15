@@ -3,7 +3,7 @@ import type { TurnReport } from './turnReportModel'
 import type { Agent } from './agentModel'
 import type { Faction } from './factionModel'
 import type { LeadInvestigation } from './leadModel'
-import type { MissionSite } from './missionSiteModel'
+import type { Mission } from './missionModel'
 
 export type GameState = {
   // Session
@@ -26,7 +26,7 @@ export type GameState = {
   // Archive
   leadInvestigationCounts: Record<string, number>
   leadInvestigations: Record<string, LeadInvestigation> // track ongoing investigations
-  missionSites: MissionSite[]
+  missions: Mission[]
   // TurnReport of turn advancement from previous to current turn.
   turnStartReport?: TurnReport | undefined
 }

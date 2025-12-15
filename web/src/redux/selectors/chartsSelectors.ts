@@ -71,13 +71,13 @@ export type SituationReportDatasetRow = {
 export function selectChartsDatasets(state: RootState): ChartsDatasets {
   const statesByTurn = selectTurnSnapshotsForCharts(state)
 
-  const missionSiteIds = new Set<string>()
-  const expiredMissionSiteIds = new Set<string>()
-  const wonMissionSiteIds = new Set<string>()
-  const retreatedMissionSiteIds = new Set<string>()
-  const wipedMissionSiteIds = new Set<string>()
+  const missionIds = new Set<string>()
+  const expiredMissionIds = new Set<string>()
+  const wonMissionIds = new Set<string>()
+  const retreatedMissionIds = new Set<string>()
+  const wipedMissionIds = new Set<string>()
 
-  const processedBattleMissionSiteIds = new Set<string>()
+  const processedBattleMissionIds = new Set<string>()
   let agentsDeployed = 0
   let agentsKia = 0
   let agentsWounded = 0
@@ -111,12 +111,12 @@ export function selectChartsDatasets(state: RootState): ChartsDatasets {
     // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
     const missionBattleDeltas = updateMissionAndBattleAccumulators({
       gameState,
-      missionSiteIds,
-      expiredMissionSiteIds,
-      wonMissionSiteIds,
-      retreatedMissionSiteIds,
-      wipedMissionSiteIds,
-      processedBattleMissionSiteIds,
+      missionIds,
+      expiredMissionIds,
+      wonMissionIds,
+      retreatedMissionIds,
+      wipedMissionIds,
+      processedBattleMissionIds,
     })
 
     agentsDeployed += missionBattleDeltas.agentsDeployed
@@ -127,11 +127,11 @@ export function selectChartsDatasets(state: RootState): ChartsDatasets {
 
     missions.push({
       turn,
-      spawned: missionSiteIds.size,
-      expired: expiredMissionSiteIds.size,
-      won: wonMissionSiteIds.size,
-      retreated: retreatedMissionSiteIds.size,
-      wiped: wipedMissionSiteIds.size,
+      spawned: missionIds.size,
+      expired: expiredMissionIds.size,
+      won: wonMissionIds.size,
+      retreated: retreatedMissionIds.size,
+      wiped: wipedMissionIds.size,
     })
 
     battleStats.push({
@@ -212,12 +212,12 @@ function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
 
 function updateMissionAndBattleAccumulators(args: {
   gameState: GameState
-  missionSiteIds: Set<string>
-  expiredMissionSiteIds: Set<string>
-  wonMissionSiteIds: Set<string>
-  retreatedMissionSiteIds: Set<string>
-  wipedMissionSiteIds: Set<string>
-  processedBattleMissionSiteIds: Set<string>
+  missionIds: Set<string>
+  expiredMissionIds: Set<string>
+  wonMissionIds: Set<string>
+  retreatedMissionIds: Set<string>
+  wipedMissionIds: Set<string>
+  processedBattleMissionIds: Set<string>
 }): {
   agentsDeployed: number
   agentsTerminated: number
@@ -227,12 +227,12 @@ function updateMissionAndBattleAccumulators(args: {
 } {
   const {
     gameState,
-    missionSiteIds,
-    expiredMissionSiteIds,
-    wonMissionSiteIds,
-    retreatedMissionSiteIds,
-    wipedMissionSiteIds,
-    processedBattleMissionSiteIds,
+    missionIds,
+    expiredMissionIds,
+    wonMissionIds,
+    retreatedMissionIds,
+    wipedMissionIds,
+    processedBattleMissionIds,
   } = args
 
   const deltas = {
@@ -243,8 +243,8 @@ function updateMissionAndBattleAccumulators(args: {
     enemiesTerminated: 0,
   }
 
-  for (const missionSite of gameState.missionSites) {
-    missionSiteIds.add(missionSite.id)
+  for (const mission of gameState.missions) {
+    missionIds.add(mission.id)
   }
 
   const report = gameState.turnStartReport
@@ -252,27 +252,27 @@ function updateMissionAndBattleAccumulators(args: {
     return deltas
   }
 
-  for (const expired of report.expiredMissionSites) {
-    const id = normalizeMissionSiteId(expired.missionSiteId)
+  for (const expired of report.expiredMissions) {
+    const id = normalizeMissionId(expired.missionId)
     if (id !== undefined) {
-      missionSiteIds.add(id)
-      expiredMissionSiteIds.add(id)
+      missionIds.add(id)
+      expiredMissionIds.add(id)
     }
   }
 
   for (const mission of report.missions) {
-    const id = normalizeMissionSiteId(mission.missionSiteId)
+    const id = normalizeMissionId(mission.missionId)
     if (id !== undefined) {
-      missionSiteIds.add(id)
+      missionIds.add(id)
 
       applyBattleOutcomeToSets(mission.outcome, id, {
-        wonMissionSiteIds,
-        retreatedMissionSiteIds,
-        wipedMissionSiteIds,
+        wonMissionIds,
+        retreatedMissionIds,
+        wipedMissionIds,
       })
 
-      if (!processedBattleMissionSiteIds.has(id)) {
-        processedBattleMissionSiteIds.add(id)
+      if (!processedBattleMissionIds.has(id)) {
+        processedBattleMissionIds.add(id)
         deltas.agentsDeployed += mission.battleStats.agentsDeployed
         deltas.agentsTerminated += mission.battleStats.agentsTerminated
         deltas.agentsWounded += mission.battleStats.agentsWounded
@@ -287,22 +287,22 @@ function updateMissionAndBattleAccumulators(args: {
 
 function applyBattleOutcomeToSets(
   outcome: BattleOutcome,
-  missionSiteId: string,
+  missionId: string,
   sets: {
-    wonMissionSiteIds: Set<string>
-    retreatedMissionSiteIds: Set<string>
-    wipedMissionSiteIds: Set<string>
+    wonMissionIds: Set<string>
+    retreatedMissionIds: Set<string>
+    wipedMissionIds: Set<string>
   },
 ): void {
   if (outcome === 'Won') {
-    sets.wonMissionSiteIds.add(missionSiteId)
+    sets.wonMissionIds.add(missionId)
     return
   }
   if (outcome === 'Retreated') {
-    sets.retreatedMissionSiteIds.add(missionSiteId)
+    sets.retreatedMissionIds.add(missionId)
     return
   }
-  sets.wipedMissionSiteIds.add(missionSiteId)
+  sets.wipedMissionIds.add(missionId)
 }
 
 function getMaxEffectiveSkill(agent: Agent): number {
@@ -332,11 +332,11 @@ function getSummaryStats(values: readonly number[]): {
   }
 }
 
-function normalizeMissionSiteId(value: string): string | undefined {
+function normalizeMissionId(value: string): string | undefined {
   if (value === '') {
     return undefined
   }
-  if (!value.startsWith('mission-site-')) {
+  if (!value.startsWith('mission-')) {
     return undefined
   }
   return value

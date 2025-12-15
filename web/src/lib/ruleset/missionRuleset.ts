@@ -1,5 +1,5 @@
-import type { Actor, Enemy, MissionSite } from '../model/missionSiteModel'
-import type { MissionSiteState } from '../model/outcomeTypes'
+import type { Actor, Enemy, Mission } from '../model/missionModel'
+import type { MissionState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
 import { toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sum, type Fixed6, toF6r } from '../primitives/fixed6'
@@ -35,15 +35,15 @@ export function isIncapacitated(actor: Actor): boolean {
 }
 
 /**
- * Checks if a mission site state represents a concluded mission.
+ * Checks if a mission state represents a concluded mission.
  * Concluded states: Won, Wiped, Retreated, Expired
  */
-export function isConcludedMissionSiteState(state: MissionSiteState): boolean {
+export function isConcludedMissionState(state: MissionState): boolean {
   return state === 'Won' || state === 'Wiped' || state === 'Retreated' || state === 'Expired'
 }
 
-export function isMissionSiteConcluded(missionSite: MissionSite): boolean {
-  return isConcludedMissionSiteState(missionSite.state)
+export function isMissionConcluded(mission: Mission): boolean {
+  return isConcludedMissionState(mission.state)
 }
 
 /**

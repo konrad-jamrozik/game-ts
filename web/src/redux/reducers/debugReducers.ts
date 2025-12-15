@@ -1,8 +1,8 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { offensiveMissionSiteDefinitions } from '../../lib/collections/missions'
+import { offensiveMissionDefs } from '../../lib/collections/missions'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { bldMissionSite } from '../../lib/game_utils/missionSiteFactory'
+import { bldMission } from '../../lib/game_utils/missionFactory'
 import { bldAgent } from '../../lib/game_utils/agentFactory'
 
 function addMoney(state: GameState): void {
@@ -31,20 +31,18 @@ function addCapabilities(state: GameState): void {
   state.trainingCap += 100
 }
 
-export function spawnMissionSites(state: GameState): void {
-  // Filter to only offensive mission site definitions (apprehend/raid missions)
-  const filteredOffensiveMissionSiteDefinitions = offensiveMissionSiteDefinitions.filter(
-    (missionSiteDefinition) =>
-      missionSiteDefinition.id.startsWith('mission-apprehend') ||
-      missionSiteDefinition.id.startsWith('mission-raid'),
+export function spawnMissions(state: GameState): void {
+  // Filter to only offensive mission definitions (apprehend/raid missions)
+  const filteredOffensiveMissionDefs = offensiveMissionDefs.filter(
+    (missionDef) => missionDef.id.startsWith('mission-def-apprehend') || missionDef.id.startsWith('mission-def-raid'),
   )
 
-  for (const missionSiteDefinition of filteredOffensiveMissionSiteDefinitions) {
-    bldMissionSite({
+  for (const missionDef of filteredOffensiveMissionDefs) {
+    bldMission({
       state,
-      missionSiteDefinitionId: missionSiteDefinition.id,
-      expiresIn: missionSiteDefinition.expiresIn,
-      enemyCounts: missionSiteDefinition.enemyCounts,
+      missionDefId: missionDef.id,
+      expiresIn: missionDef.expiresIn,
+      enemyCounts: missionDef.enemyCounts,
     })
   }
 }
@@ -72,8 +70,8 @@ export const debugAddCapabilities = asPlayerAction((state: GameState) => {
   addCapabilities(state)
 })
 
-export const debugSpawnMissionSites = asPlayerAction((state: GameState) => {
-  spawnMissionSites(state)
+export const debugSpawnMissions = asPlayerAction((state: GameState) => {
+  spawnMissions(state)
 })
 
 export const debugAddEverything = asPlayerAction((state: GameState) => {
@@ -83,7 +81,7 @@ export const debugAddEverything = asPlayerAction((state: GameState) => {
   spawn10Agents(state)
   spawn10Agents(state)
   spawn10Agents(state)
-  spawnMissionSites(state)
+  spawnMissions(state)
   markLeadAsInvestigated(state, 'lead-red-dawn-profile')
   markLeadAsInvestigated(state, 'lead-exalt-profile')
   markLeadAsInvestigated(state, 'lead-black-lotus-profile')

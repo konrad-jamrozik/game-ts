@@ -1,4 +1,4 @@
-import type { Weapon } from '../../src/lib/model/missionSiteModel'
+import type { Weapon } from '../../src/lib/model/missionModel'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/ruleset/constants'
 
 export const wpnFix = {

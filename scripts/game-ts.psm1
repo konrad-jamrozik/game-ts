@@ -7,6 +7,14 @@
 
 Set-StrictMode -Version Latest
 
+function format {
+    npmr format:fix
+}
+
+function eslint {
+    npmr eslint:cached
+}
+
 function qcheck {
     npmr qcheck
 }

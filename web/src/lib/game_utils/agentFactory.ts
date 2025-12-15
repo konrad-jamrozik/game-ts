@@ -21,7 +21,7 @@ type CreateAgentParams = {
   missionsTotal?: number // Optional: defaults to 0
   skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to 0
   turnTerminated?: number // Optional
-  terminatedOnMissionSiteId?: Agent['terminatedOnMissionSiteId'] // Optional
+  terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
   terminatedBy?: string // Optional
 }
 
@@ -45,7 +45,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
     missionsTotal = 0,
     skillFromTraining = toF6(0),
     turnTerminated,
-    terminatedOnMissionSiteId,
+    terminatedOnMissionId,
     terminatedBy,
   } = params
 
@@ -78,7 +78,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
     skillFromTraining,
     weapon: bldWeapon(weaponDamage),
     ...(turnTerminated !== undefined && { turnTerminated }),
-    ...(terminatedOnMissionSiteId !== undefined && { terminatedOnMissionSiteId }),
+    ...(terminatedOnMissionId !== undefined && { terminatedOnMissionId }),
     ...(terminatedBy !== undefined && { terminatedBy }),
   }
 
@@ -111,7 +111,7 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
     missionsTotal = 0,
     skillFromTraining = toF6(0),
     turnTerminated,
-    terminatedOnMissionSiteId,
+    terminatedOnMissionId,
     terminatedBy,
   } = params
 
@@ -141,7 +141,7 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
     skillFromTraining,
     weapon: bldWeapon(weaponDamage),
     ...(turnTerminated !== undefined && { turnTerminated }),
-    ...(terminatedOnMissionSiteId !== undefined && { terminatedOnMissionSiteId }),
+    ...(terminatedOnMissionId !== undefined && { terminatedOnMissionId }),
     ...(terminatedBy !== undefined && { terminatedBy }),
   }
 }

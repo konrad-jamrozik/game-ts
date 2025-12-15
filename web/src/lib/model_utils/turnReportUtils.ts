@@ -12,17 +12,17 @@ export function getCompletedInvestigationIds(turnReport: TurnReport | undefined)
   return completedIds
 }
 
-export function getCompletedMissionSiteIds(turnReport: TurnReport | undefined): Set<string> {
+export function getCompletedMissionIds(turnReport: TurnReport | undefined): Set<string> {
   const completedIds = new Set<string>()
   if (turnReport?.missions) {
     for (const missionReport of turnReport.missions) {
-      completedIds.add(missionReport.missionSiteId)
+      completedIds.add(missionReport.missionId)
     }
   }
-  // Also include expired mission sites
-  if (turnReport?.expiredMissionSites) {
-    for (const expiredMissionSite of turnReport.expiredMissionSites) {
-      completedIds.add(expiredMissionSite.missionSiteId)
+  // Also include expired missions
+  if (turnReport?.expiredMissions) {
+    for (const expiredMission of turnReport.expiredMissions) {
+      completedIds.add(expiredMission.missionId)
     }
   }
   return completedIds

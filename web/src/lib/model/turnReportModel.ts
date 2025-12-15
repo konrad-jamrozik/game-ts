@@ -1,5 +1,5 @@
 import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
-import type { MissionRewards } from './missionSiteModel'
+import type { MissionRewards } from './missionModel'
 import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
 
 export type TurnReport = BaseReport & {
@@ -8,7 +8,7 @@ export type TurnReport = BaseReport & {
   factions: FactionReport[]
   missions: MissionReport[]
   leadInvestigations?: LeadInvestigationReport[]
-  expiredMissionSites: ExpiredMissionSiteReport[]
+  expiredMissions: ExpiredMissionReport[]
 }
 
 export type BaseReport = {
@@ -80,7 +80,7 @@ export type PanicReport = {
 
 export type PanicBreakdown = {
   /**
-   * Panic increases from faction operations that succeeded (expired mission sites)
+   * Panic increases from faction operations that succeeded (expired missions)
    */
   factionOperationPenalties: {
     factionId: string
@@ -92,7 +92,7 @@ export type PanicBreakdown = {
    * Panic reductions from completed missions
    */
   missionReductions: {
-    missionSiteId: string
+    missionId: string
     missionName: string
     reduction: Fixed6
   }[]
@@ -122,7 +122,7 @@ export type FactionReport = {
    * Mission impacts on this faction
    */
   missionImpacts: {
-    missionSiteId: string
+    missionId: string
     missionName: string
     suppressionAdded?: number
   }[]
@@ -131,7 +131,7 @@ export type FactionReport = {
    */
   operationOccurred?: {
     operationLevel: number
-    missionSiteId: string
+    missionId: string
   }
   /**
    * If activity level increased this turn
@@ -140,7 +140,7 @@ export type FactionReport = {
 }
 
 export type MissionReport = {
-  missionSiteId: string
+  missionId: string
   missionName: string
   faction: string
   outcome: BattleOutcome
@@ -216,16 +216,16 @@ export type LeadInvestigationReport = {
   accumulatedIntel: number
   successChance: number
   intelDecay?: number
-  createdMissionSites?: string[]
+  createdMissions?: string[]
 }
 
-export type ExpiredMissionSiteReport = {
-  missionSiteId: string
+export type ExpiredMissionReport = {
+  missionId: string
   missionName: string
   factionId: string
   factionName: string
   /**
-   * The operation level that spawned this mission site.
+   * The operation level that spawned this mission.
    * Used to calculate panic/funding penalties when mission expires.
    */
   operationLevel?: number

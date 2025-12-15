@@ -1,4 +1,4 @@
-import type { Actor, MissionSiteId } from '../model/missionSiteModel'
+import type { Actor, MissionId } from '../model/missionModel'
 import type { LeadInvestigation } from '../model/leadModel'
 import type { Agent } from '../model/agentModel'
 import { f6add, type Fixed6 } from '../primitives/fixed6'
@@ -48,8 +48,8 @@ export function onContractingAssignment(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'OnAssignment' && agent.assignment === 'Contracting')
 }
 
-export function deployedOnMissionSite(agents: Agent[], missionSiteId: MissionSiteId): Agent[] {
-  return agents.filter((agent) => agent.assignment === missionSiteId && agent.state === 'OnMission')
+export function deployedOnMission(agents: Agent[], missionId: MissionId): Agent[] {
+  return agents.filter((agent) => agent.assignment === missionId && agent.state === 'OnMission')
 }
 
 export function withIds(agents: Agent[], ids: readonly string[]): Agent[] {

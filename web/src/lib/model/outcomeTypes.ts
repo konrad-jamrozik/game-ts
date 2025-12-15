@@ -24,16 +24,16 @@ export type AttackOutcome = (typeof ATTACK_OUTCOMES)[number]
  */
 export type BattleStatus = 'Ongoing' | BattleOutcome
 
-// ===== MISSION SITE LIFECYCLE =====
+// ===== MISSION LIFECYCLE =====
 
 /**
- * Mission site phases before completion.
+ * Mission phases before completion.
  */
-export const MISSION_SITE_PHASES = ['Active', 'Deployed'] as const
-export type MissionSitePhase = (typeof MISSION_SITE_PHASES)[number]
+export const MISSION_PHASES = ['Active', 'Deployed'] as const
+export type MissionPhase = (typeof MISSION_PHASES)[number]
 
 /**
- * Complete mission site state, combining phase and outcome.
+ * Complete mission state, combining phase and outcome.
  * - Active: Discovered but not engaged
  * - Deployed: Combat in progress
  * - Won: Mission completed successfully
@@ -41,8 +41,8 @@ export type MissionSitePhase = (typeof MISSION_SITE_PHASES)[number]
  * - Wiped: All agents lost
  * - Expired: Time ran out before deployment
  */
-export const ALL_MISSION_SITE_STATES = [...MISSION_SITE_PHASES, ...BATTLE_OUTCOMES, 'Expired'] as const
-export type MissionSiteState = (typeof ALL_MISSION_SITE_STATES)[number]
+export const ALL_MISSION_STATES = [...MISSION_PHASES, ...BATTLE_OUTCOMES, 'Expired'] as const
+export type MissionState = (typeof ALL_MISSION_STATES)[number]
 
 // ===== LEAD INVESTIGATION LIFECYCLE =====
 

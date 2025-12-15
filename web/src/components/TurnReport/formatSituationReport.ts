@@ -4,7 +4,7 @@ import { toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
 import { getActivityLevelName, assertIsActivityLevel } from '../../lib/ruleset/activityLevelRuleset'
 import type {
-  ExpiredMissionSiteReport,
+  ExpiredMissionReport,
   FactionReport,
   MissionReport,
   PanicBreakdown,
@@ -22,7 +22,7 @@ export function formatSituationReport(
   panicReport: PanicReport,
   factions: readonly FactionReport[],
   missions?: readonly MissionReport[],
-  expiredMissionSites?: readonly ExpiredMissionSiteReport[],
+  expiredMissions?: readonly ExpiredMissionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
   return [
     formatPanicReport(panicReport),
@@ -35,17 +35,17 @@ export function formatSituationReport(
       ? [
           {
             id: 'missions-summary',
-            label: 'Mission sites',
+            label: 'Missions',
             children: formatMissions(missions),
           },
         ]
       : []),
-    ...(expiredMissionSites !== undefined && expiredMissionSites.length > 0
+    ...(expiredMissions !== undefined && expiredMissions.length > 0
       ? [
           {
             id: 'expired-missions-summary',
-            label: 'Expired Mission Sites',
-            children: formatExpiredMissionSites(expiredMissionSites),
+            label: 'Expired Missions',
+            children: formatExpiredMissions(expiredMissions),
           },
         ]
       : []),
@@ -165,16 +165,16 @@ function formatSuppressionChildren(
     : []
 }
 
-function formatExpiredMissionSites(
-  expiredMissionSites: readonly ExpiredMissionSiteReport[],
+function formatExpiredMissions(
+  expiredMissions: readonly ExpiredMissionReport[],
 ): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
-  return expiredMissionSites.map((expired) => {
-    const displayId = fmtNoPrefix(expired.missionSiteId, 'mission-site-')
+  return expiredMissions.map((expired) => {
+    const displayId = fmtNoPrefix(expired.missionId, 'mission-')
     const children: TurnReportTreeViewModelProps[] = []
 
     if (expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, toF6(0))) {
       children.push({
-        id: `expired-mission-${expired.missionSiteId}-panic`,
+        id: `expired-mission-${expired.missionId}-panic`,
         label: 'Panic penalty',
         chipValue: expired.panicPenalty,
         reverseColor: true, // Panic increase is bad
@@ -183,7 +183,7 @@ function formatExpiredMissionSites(
 
     if (expired.fundingPenalty !== undefined && expired.fundingPenalty > 0) {
       children.push({
-        id: `expired-mission-${expired.missionSiteId}-funding`,
+        id: `expired-mission-${expired.missionId}-funding`,
         label: 'Funding penalty',
         chipValue: `-${expired.fundingPenalty}`,
         reverseColor: true, // Funding decrease is bad
@@ -191,7 +191,7 @@ function formatExpiredMissionSites(
     }
 
     return {
-      id: `expired-mission-${expired.missionSiteId}`,
+      id: `expired-mission-${expired.missionId}`,
       label: `${expired.missionName} (id: ${displayId})`,
       chipValue: 'Expired',
       ...(children.length > 0 && { children }),

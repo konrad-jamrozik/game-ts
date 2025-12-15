@@ -85,7 +85,7 @@ function determineChipColor(
         chipLabel === 'Expired' ||
         chipLabel === 'Abandoned'
       ) {
-        // Error states (from BattleOutcome, MissionSiteState, LeadInvestigationState)
+        // Error states (from BattleOutcome, MissionState, LeadInvestigationState)
         returnedColor = 'error'
       } else {
         returnedColor = 'default'

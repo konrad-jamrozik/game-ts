@@ -20,7 +20,7 @@ import {
   debugAddMoney as debugAddMoneyReducer,
   debugSpawn10Agents as debugSpawn10AgentsReducer,
   debugAddCapabilities as debugAddCapabilitiesReducer,
-  debugSpawnMissionSites as debugSpawnMissionSitesReducer,
+  debugSpawnMissions as debugSpawnMissionsReducer,
   debugAddEverything as debugAddEverythingReducer,
 } from '../reducers/debugReducers'
 
@@ -42,7 +42,7 @@ const gameStateSlice = createSlice({
     startLeadInvestigation: startLeadInvestigationReducer,
     addAgentsToInvestigation: addAgentsToInvestigationReducer,
     deployAgentsToMission: deployAgentsToMissionReducer,
-    debugSpawnMissionSites: debugSpawnMissionSitesReducer,
+    debugSpawnMissions: debugSpawnMissionsReducer,
     buyUpgrade: buyUpgradeReducer,
     debugSetPanicToZero: debugSetPanicToZeroReducer,
     debugSetAllFactionsSuppression: debugSetAllFactionsSuppressionReducer,
@@ -64,7 +64,7 @@ export const {
   startLeadInvestigation,
   addAgentsToInvestigation,
   deployAgentsToMission,
-  debugSpawnMissionSites,
+  debugSpawnMissions,
   buyUpgrade,
   debugSetPanicToZero,
   debugSetAllFactionsSuppression,

@@ -42,8 +42,8 @@ export function bldInitialState(options?: { debug?: boolean }): GameState {
     // Leads
     leadInvestigationCounts: {},
     leadInvestigations: {},
-    // Mission sites
-    missionSites: [],
+    // Missions
+    missions: [],
     // Turn start report
     turnStartReport: undefined,
   }

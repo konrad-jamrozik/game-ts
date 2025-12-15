@@ -28,7 +28,7 @@ as dictated by the assignment:
 
 - `Standby` assignment → `Available` state
 - `Contracting` assignment → `OnAssignment` state
-- `mission-site-id` assignment → `OnMission` state
+- `mission-id` assignment → `OnMission` state
 - `Espionage` assignment → `OnAssignment` state
 - `Recovery` assignment → `Recovering` state
 
@@ -224,4 +224,4 @@ Agent assignments represent the orders given to agents:
 - **Recovery** - Agent is recovering from lost hit points.
 - **Sacked** - Agent has been sacked by the player.
 - **KIA** - Agent was killed in action (terminated due to mission damage).
-- **mission-site-id** - Agent is deployed to a specific mission site (where `mission-site-id` is its ID)
+- **mission-id** - Agent is deployed to a specific mission (where `mission-id` is its ID)

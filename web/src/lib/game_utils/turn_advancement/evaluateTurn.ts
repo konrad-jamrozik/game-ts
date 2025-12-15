@@ -1,9 +1,9 @@
-import { getMissionSiteDefinitionById, generateMissionSiteDefinitionId } from '../../collections/missions'
+import { getMissionDefById, generateMissionDefId } from '../../collections/missions'
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
-import type { FactionRewards, MissionRewards } from '../../model/missionSiteModel'
+import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import {
@@ -17,13 +17,13 @@ import {
   nextActivityLevel,
   rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
-import { bldMissionSite } from '../missionSiteFactory'
+import { bldMission } from '../missionFactory'
 import {
   bldValueChange,
   type AgentsReport,
   type AssetsReport,
   type BattleStats,
-  type ExpiredMissionSiteReport,
+  type ExpiredMissionReport,
   type FactionReport,
   type MissionReport,
   type MoneyBreakdown,
@@ -32,7 +32,7 @@ import {
 } from '../../model/turnReportModel'
 import type { BattleOutcome } from '../../model/outcomeTypes'
 import { validateGameStateInvariants } from '../../model_utils/validateGameStateInvariants'
-import { evaluateDeployedMissionSite } from './evaluateDeployedMissionSite'
+import { evaluateDeployedMission } from './evaluateDeployedMission'
 import {
   updateAvailableAgents,
   updateContractingAgents,
@@ -85,16 +85,11 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 8. Update all agents in InTransit state (after investigations complete)
   updateInTransitAgents(state)
 
-  // 9. Update active non-deployed mission sites
-  const expiredMissionSiteReports = updateActiveMissionSites(state)
+  // 9. Update active non-deployed missions
+  const expiredMissionReports = updateActiveMissions(state)
 
-  // 10. Evaluate deployed mission sites (and agents deployed to them)
-  const {
-    rewards: missionRewards,
-    agentsWounded,
-    agentsUnscathed,
-    missionReports,
-  } = evaluateDeployedMissionSites(state)
+  // 10. Evaluate deployed missions (and agents deployed to them)
+  const { rewards: missionRewards, agentsWounded, agentsUnscathed, missionReports } = evaluateDeployedMissions(state)
 
   // 11. Update player assets
   const assetsReportPartial = updatePlayerAssets(state, {
@@ -113,13 +108,13 @@ export default function evaluateTurn(state: GameState): TurnReport {
   }
 
   // 13. Update panic (from expired missions and mission rewards)
-  const panicReport = updatePanic(state, missionRewards, expiredMissionSiteReports)
+  const panicReport = updatePanic(state, missionRewards, expiredMissionReports)
 
   // 14. Update factions (activity levels, suppression, etc.)
   const factionsReport = updateFactions(state, missionRewards)
 
   // 15. Apply funding penalties from expired missions
-  applyFundingPenalties(state, expiredMissionSiteReports)
+  applyFundingPenalties(state, expiredMissionReports)
 
   validateGameStateInvariants(state)
 
@@ -132,7 +127,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
     factions: factionsReport,
     missions: missionReports,
     leadInvestigations: leadInvestigationReports,
-    expiredMissionSites: expiredMissionSiteReports,
+    expiredMissions: expiredMissionReports,
   }
 
   return turnReport
@@ -162,21 +157,21 @@ function getAgentCounts(agents: GameState['agents']): {
 }
 
 /**
- * Updates active non-deployed mission sites - apply expiration countdown
- * Returns reports for mission sites that expired this turn, including penalties
+ * Updates active non-deployed missions - apply expiration countdown
+ * Returns reports for missions that expired this turn, including penalties
  */
-function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] {
-  const expiredReports: ExpiredMissionSiteReport[] = []
-  for (const missionSite of state.missionSites) {
-    if (missionSite.state === 'Active' && missionSite.expiresIn !== 'never') {
-      missionSite.expiresIn -= 1
-      if (missionSite.expiresIn <= 0) {
-        missionSite.state = 'Expired'
-        const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
+function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
+  const expiredReports: ExpiredMissionReport[] = []
+  for (const mission of state.missions) {
+    if (mission.state === 'Active' && mission.expiresIn !== 'never') {
+      mission.expiresIn -= 1
+      if (mission.expiresIn <= 0) {
+        mission.state = 'Expired'
+        const missionDef = getMissionDefById(mission.missionDefId)
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
-        const { operationLevel, id: missionSiteId } = missionSite
+        const { operationLevel, id: missionId } = mission
         if (typeof operationLevel === 'number') {
           // Level 6 existential mission expired - game over
           if (operationLevel === 6) {
@@ -185,7 +180,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
           }
 
           // Get faction info for the report
-          const factionReward = missionSiteDefinition.rewards.factionRewards?.[0]
+          const factionReward = missionDef.rewards.factionRewards?.[0]
           const factionId = factionReward?.factionId ?? ''
           const faction = state.factions.find((f) => f.id === factionId)
           const factionName = faction?.name ?? 'Unknown'
@@ -195,8 +190,8 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
           const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
 
           expiredReports.push({
-            missionSiteId,
-            missionName: missionSiteDefinition.name,
+            missionId,
+            missionName: missionDef.name,
             factionId,
             factionName,
             operationLevel,
@@ -211,31 +206,31 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
 }
 
 /**
- * Evaluates deployed mission sites and their agents
- * Returns collected mission rewards with site information, count of agents wounded, and mission reports
+ * Evaluates deployed missions and their agents
+ * Returns collected mission rewards with mission information, count of agents wounded, and mission reports
  */
-function evaluateDeployedMissionSites(state: GameState): {
-  rewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[]
+function evaluateDeployedMissions(state: GameState): {
+  rewards: { rewards: MissionRewards; missionId: string; missionName: string }[]
   agentsWounded: number
   agentsUnscathed: number
   missionReports: MissionReport[]
 } {
-  const missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[] = []
+  const missionRewards: { rewards: MissionRewards; missionId: string; missionName: string }[] = []
   const missionReports: MissionReport[] = []
   let totalAgentsWounded = 0
   let totalAgentsUnscathed = 0
 
-  for (const missionSite of state.missionSites) {
-    if (missionSite.state === 'Deployed') {
-      const { id: missionSiteId, missionSiteDefinitionId, agentIds, enemies } = missionSite
-      const missionSiteDefinition = getMissionSiteDefinitionById(missionSiteDefinitionId)
-      const { name: missionName } = missionSiteDefinition
+  for (const mission of state.missions) {
+    if (mission.state === 'Deployed') {
+      const { id: missionId, missionDefId, agentIds, enemies } = mission
+      const missionDef = getMissionDefById(missionDefId)
+      const { name: missionName } = missionDef
       const deployedAgents = withIds(state.agents, agentIds)
 
       // Capture agent states before battle
       const agentsDeployed = deployedAgents.length
 
-      const { battleReport, rewards } = evaluateDeployedMissionSite(state, missionSite)
+      const { battleReport, rewards } = evaluateDeployedMission(state, mission)
       const {
         agentsWounded,
         agentsUnscathed,
@@ -258,9 +253,9 @@ function evaluateDeployedMissionSites(state: GameState): {
       // Determine mission outcome
       const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'
 
-      // Get faction name from mission site definition rewards
+      // Get faction name from mission definition rewards
       let factionName = 'Unknown'
-      const { factionRewards } = missionSiteDefinition.rewards
+      const { factionRewards } = missionDef.rewards
       if (factionRewards !== undefined && factionRewards.length > 0) {
         const [firstReward] = factionRewards
         if (firstReward !== undefined) {
@@ -309,7 +304,7 @@ function evaluateDeployedMissionSites(state: GameState): {
 
       // For defensive missions (with operationLevel), add operation-level rewards on success
       // or check for game over on level 6 failure
-      const { operationLevel } = missionSite
+      const { operationLevel } = mission
       let finalRewards = rewards
 
       if (typeof operationLevel === 'number') {
@@ -333,7 +328,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       }
 
       const missionReport: MissionReport = {
-        missionSiteId,
+        missionId,
         missionName,
         faction: factionName,
         outcome,
@@ -347,7 +342,7 @@ function evaluateDeployedMissionSites(state: GameState): {
       if (finalRewards !== undefined) {
         missionRewards.push({
           rewards: finalRewards,
-          missionSiteId,
+          missionId,
           missionName,
         })
       }
@@ -373,7 +368,7 @@ function updatePlayerAssets(
   income: {
     agentUpkeep: number
     moneyEarned: number
-    missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[]
+    missionRewards: { rewards: MissionRewards; missionId: string; missionName: string }[]
   },
 ): Omit<AssetsReport, 'agentsReport'> {
   // Capture previous values
@@ -483,13 +478,13 @@ function getAgentsReport(
  */
 function updatePanic(
   state: GameState,
-  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[],
-  expiredMissionSites: ExpiredMissionSiteReport[],
+  missionRewards: { rewards: MissionRewards; missionId: string; missionName: string }[],
+  expiredMissions: ExpiredMissionReport[],
 ): PanicReport {
   const previousPanic = state.panic
 
   // Track faction operation penalties (from expired missions)
-  const factionOperationPenalties = expiredMissionSites
+  const factionOperationPenalties = expiredMissions
     .filter((expired) => expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, toF6(0)))
     .map((expired) => ({
       factionId: expired.factionId,
@@ -505,10 +500,10 @@ function updatePanic(
 
   // Track mission reductions and apply them
   const missionReductions = []
-  for (const { rewards, missionSiteId, missionName } of missionRewards) {
+  for (const { rewards, missionId, missionName } of missionRewards) {
     if (rewards.panicReduction !== undefined) {
       missionReductions.push({
-        missionSiteId,
+        missionId,
         missionName,
         reduction: rewards.panicReduction,
       })
@@ -528,8 +523,8 @@ function updatePanic(
 /**
  * Apply funding penalties from expired missions
  */
-function applyFundingPenalties(state: GameState, expiredMissionSites: ExpiredMissionSiteReport[]): void {
-  for (const expired of expiredMissionSites) {
+function applyFundingPenalties(state: GameState, expiredMissions: ExpiredMissionReport[]): void {
+  for (const expired of expiredMissions) {
     if (expired.fundingPenalty !== undefined && expired.fundingPenalty > 0) {
       state.funding = Math.max(0, state.funding - expired.fundingPenalty)
     }
@@ -546,61 +541,58 @@ function applyFactionReward(targetFaction: Faction, factionReward: FactionReward
 }
 
 /**
- * Spawns a defensive mission site for a faction when their operation counter reaches 0.
+ * Spawns a defensive mission for a faction when their operation counter reaches 0.
  * Picks the mission based on activity level probabilities and avoids repeating the same operation type.
  */
-function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
+function spawnDefensiveMission(state: GameState, faction: Faction): void {
   // Roll for operation level based on activity level probabilities
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
-  // Filter defensive mission site definitions by operation level
-  const availableMissionSiteDefinitions = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
+  // Filter defensive mission definitions by operation level
+  const availableMissionDefs = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
 
-  if (availableMissionSiteDefinitions.length === 0) {
-    // No mission site definitions available for this operation level - should not happen, but handle gracefully
+  if (availableMissionDefs.length === 0) {
+    // No mission definitions available for this operation level - should not happen, but handle gracefully
     return
   }
 
   // Filter out the last operation type if there are multiple options
-  let candidateMissionSiteDefinitions = availableMissionSiteDefinitions
-  if (availableMissionSiteDefinitions.length > 1 && faction.lastOperationTypeName !== undefined) {
-    candidateMissionSiteDefinitions = availableMissionSiteDefinitions.filter(
-      (stats) => stats.name !== faction.lastOperationTypeName,
-    )
-    // If filtering removed all options, use all available mission site definitions (can repeat if only one option)
-    if (candidateMissionSiteDefinitions.length === 0) {
-      candidateMissionSiteDefinitions = availableMissionSiteDefinitions
+  let candidateMissionDefs = availableMissionDefs
+  if (availableMissionDefs.length > 1 && faction.lastOperationTypeName !== undefined) {
+    candidateMissionDefs = availableMissionDefs.filter((stats) => stats.name !== faction.lastOperationTypeName)
+    // If filtering removed all options, use all available mission definitions (can repeat if only one option)
+    if (candidateMissionDefs.length === 0) {
+      candidateMissionDefs = availableMissionDefs
     }
   }
 
-  // Pick a random mission site definition from candidates
+  // Pick a random mission definition from candidates
   // KJA3 put this random into an until function
-  const selectedMissionSiteDefinition =
-    candidateMissionSiteDefinitions[Math.floor(Math.random() * candidateMissionSiteDefinitions.length)]
-  if (selectedMissionSiteDefinition === undefined) {
+  const selectedMissionDef = candidateMissionDefs[Math.floor(Math.random() * candidateMissionDefs.length)]
+  if (selectedMissionDef === undefined) {
     // KJA3 should assert fail. Also search for other palaces like that and update Agents.md
     // Should not happen, but handle gracefully
     return
   }
 
-  // Convert mission site definition stats to enemy counts object
-  const enemyCounts = selectedMissionSiteDefinition
+  // Convert mission definition stats to enemy counts object
+  const enemyCounts = selectedMissionDef
 
-  // Generate missionSiteDefinitionId using the same pattern as offensive missions
+  // Generate missionDefId using the same pattern as offensive missions
   const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
-  const missionSiteDefinitionId = generateMissionSiteDefinitionId(selectedMissionSiteDefinition.name, factionTemplate)
+  const missionDefId = generateMissionDefId(selectedMissionDef.name, factionTemplate)
 
-  bldMissionSite({
+  bldMission({
     state,
-    missionSiteDefinitionId,
-    expiresIn: selectedMissionSiteDefinition.expiresIn,
+    missionDefId,
+    expiresIn: selectedMissionDef.expiresIn,
     enemyCounts,
     operationLevel,
   })
 
   // Update faction's last operation type name
-  faction.lastOperationTypeName = selectedMissionSiteDefinition.name
+  faction.lastOperationTypeName = selectedMissionDef.name
 }
 
 /**
@@ -609,7 +601,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
  */
 function updateFactions(
   state: GameState,
-  missionRewards: { rewards: MissionRewards; missionSiteId: string; missionName: string }[],
+  missionRewards: { rewards: MissionRewards; missionId: string; missionName: string }[],
 ): FactionReport[] {
   const factionReports: FactionReport[] = []
 
@@ -622,16 +614,16 @@ function updateFactions(
 
     // Track mission impacts on this faction
     const missionImpacts = []
-    for (const { rewards, missionSiteId, missionName } of missionRewards) {
+    for (const { rewards, missionId, missionName } of missionRewards) {
       if (rewards.factionRewards) {
         for (const factionReward of rewards.factionRewards) {
           if (factionReward.factionId === faction.id) {
             const impact: {
-              missionSiteId: string
+              missionId: string
               missionName: string
               suppressionAdded?: number
             } = {
-              missionSiteId,
+              missionId,
               missionName,
             }
 
@@ -678,7 +670,7 @@ function updateFactions(
 
       // Check if it's time to perform an operation (when counter goes from 1 to 0)
       if (turnsUntilNextOperationBeforeDecrement === 1 && faction.turnsUntilNextOperation === 0) {
-        spawnDefensiveMissionSite(state, faction)
+        spawnDefensiveMission(state, faction)
         faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
       }
     }

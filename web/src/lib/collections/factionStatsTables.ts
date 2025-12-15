@@ -23,7 +23,7 @@
  */
 
 import type { ActivityLevel } from '../model/factionModel'
-import type { FactionId } from '../model/missionSiteModel'
+import type { FactionId } from '../model/missionModel'
 
 /**
  * Faction definitions.

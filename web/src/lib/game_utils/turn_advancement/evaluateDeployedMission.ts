@@ -1,7 +1,7 @@
 import { sum } from 'radash'
-import { getMissionSiteDefinitionById } from '../../collections/missions'
+import { getMissionDefById } from '../../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
-import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/missionSiteModel'
+import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
@@ -11,27 +11,27 @@ import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimiti
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 
 /**
- * Evaluates a deployed mission site according to about_deployed_mission_sites.md.
- * This includes the mission site battle, agent updates, and rewards.
+ * Evaluates a deployed mission according to about_deployed_mission.md.
+ * This includes the mission battle, agent updates, and rewards.
  * Returns the mission rewards to be applied later in the turn advancement process, count of agents wounded, and battle report.
  */
-export function evaluateDeployedMissionSite(
+export function evaluateDeployedMission(
   state: GameState,
-  missionSite: MissionSite,
+  mission: Mission,
 ): { rewards: MissionRewards | undefined; battleReport: BattleReport } {
-  // Get the mission site definition to access enemy units
-  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
+  // Get the mission definition to access enemy units
+  const missionDef = getMissionDefById(mission.missionDefId)
 
-  // Get agents deployed to this mission site
-  const deployedAgents = withIds(state.agents, missionSite.agentIds)
+  // Get agents deployed to this mission
+  const deployedAgents = withIds(state.agents, mission.agentIds)
 
-  const battleReport = evaluateBattle(deployedAgents, missionSite.enemies)
+  const battleReport = evaluateBattle(deployedAgents, mission.enemies)
 
   const { agentsWounded, agentsUnscathed } = updateAgentsAfterBattle(
     deployedAgents,
     battleReport,
     state.turn,
-    missionSite.id,
+    mission.id,
     state.hitPointsRecoveryPct,
   )
   battleReport.agentsWounded = agentsWounded
@@ -44,20 +44,20 @@ export function evaluateDeployedMissionSite(
 
   // Determine mission outcome
   // Enemies are neutralized if they are either terminated (HP <= 0) or incapacitated (effective skill <= 10% base)
-  const allEnemiesNeutralized = missionSite.enemies.every(
+  const allEnemiesNeutralized = mission.enemies.every(
     (enemy) => f6le(enemy.hitPoints, toF6(0)) || !canParticipateInBattle(enemy),
   )
   assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
   if (allEnemiesNeutralized) {
-    missionSite.state = 'Won'
+    mission.state = 'Won'
   } else if (battleReport.retreated) {
-    missionSite.state = 'Retreated'
+    mission.state = 'Retreated'
   } else {
-    missionSite.state = 'Wiped'
+    mission.state = 'Wiped'
   }
 
   // Return mission rewards to be applied later, don't apply them immediately
-  const rewards = missionSite.state === 'Won' ? missionSiteDefinition.rewards : undefined
+  const rewards = mission.state === 'Won' ? missionDef.rewards : undefined
 
   return { rewards, battleReport }
 }
@@ -82,7 +82,7 @@ function updateAgentsAfterBattle(
   deployedAgents: Agent[],
   battleReport: BattleReport,
   currentTurn: number,
-  missionSiteId: MissionSiteId,
+  missionId: MissionId,
   hitPointsRecoveryPct: Fixed6,
 ): {
   agentsWounded: number
@@ -101,7 +101,7 @@ function updateAgentsAfterBattle(
       agent.state = 'KIA'
       agent.assignment = 'KIA'
       agent.turnTerminated = currentTurn
-      agent.terminatedOnMissionSiteId = missionSiteId
+      agent.terminatedOnMissionId = missionId
     } else {
       // Incapacitated agents are still alive and processed normally (wounded or unscathed)
       const wasWounded = updateSurvivingAgent(agent, battleReport, hitPointsRecoveryPct, totalAgents)

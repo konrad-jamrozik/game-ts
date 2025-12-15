@@ -18,7 +18,7 @@ This file specifies the unit and component test suite for the project.
   - [Unit tests](#unit-tests)
     - [`unit/effectiveSkill.test.ts`](#uniteffectiveskilltestts)
     - [`unit/evaluateBattle.test.ts`](#unitevaluatebattletestts)
-    - [`unit/evaluateDeployedMissionSite.test.ts`](#unitevaluatedeployedmissionsitetestts)
+    - [`unit/evaluateDeployedMission.test.ts`](#unitevaluatedeployedmissiontestts)
     - [`unit/evaluateTurn.test.ts`](#unitevaluateturntestts)
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
@@ -67,8 +67,8 @@ Tests that directly test the logic, without depending on react or simulating it.
 
 Tests that test directly the function powering the `GameControls.tsx` component:
 - (🚧 stub) Tests for `evaluateTurn.ts`
-- (🚧 needs review) Tests for `evaluateDeployedMissionSite.ts`, which is invoked from `evaluateTurn.ts`
-- Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMissionSite.ts`
+- (🚧 needs review) Tests for `evaluateDeployedMission.ts`, which is invoked from `evaluateTurn.ts`
+- Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMission.ts`
 
 Tests that verify correctness of select ruleset:
 
@@ -140,7 +140,7 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 - _(TODO - write)_ happy path
 - _(TODO - write)_ happy path: player lost
 
-### `unit/evaluateDeployedMissionSite.test.ts`
+### `unit/evaluateDeployedMission.test.ts`
 
 - _(TODO - review)_ success
 - _(TODO - review)_ agent KIA

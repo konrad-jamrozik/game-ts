@@ -1,5 +1,5 @@
 import { WEAPON_DAMAGE_RANGE_FACTOR } from './constants'
-import type { Weapon } from '../model/missionSiteModel'
+import type { Weapon } from '../model/missionModel'
 import { rollRange } from '../primitives/rolls'
 import { ceil, floor } from '../primitives/mathPrimitives'
 

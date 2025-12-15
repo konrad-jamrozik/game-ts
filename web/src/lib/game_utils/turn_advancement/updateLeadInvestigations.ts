@@ -1,8 +1,8 @@
 import { getLeadById } from '../../collections/leads'
-import { offensiveMissionSiteDefinitions } from '../../collections/missions'
+import { offensiveMissionDefs } from '../../collections/missions'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
-import type { MissionSite } from '../../model/missionSiteModel'
+import type { Mission } from '../../model/missionModel'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
@@ -11,7 +11,7 @@ import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
-import { bldMissionSite } from '../missionSiteFactory'
+import { bldMission } from '../missionFactory'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -55,7 +55,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   // Get updated list of agents after exhaustion-based unassignment
   const remainingAgents = investigatingAgents(state.agents, investigation)
 
-  const createdMissionSites = success ? completeInvestigation(state, investigation, remainingAgents) : undefined
+  const createdMissions = success ? completeInvestigation(state, investigation, remainingAgents) : undefined
 
   return {
     investigationId: investigation.id,
@@ -63,7 +63,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
     completed: success,
     accumulatedIntel: investigation.accumulatedIntel,
     successChance,
-    ...(createdMissionSites !== undefined && { createdMissionSites }),
+    ...(createdMissions !== undefined && { createdMissions }),
   }
 }
 
@@ -106,8 +106,8 @@ function rollAndLogInvestigationResult(investigation: LeadInvestigation): { succ
 }
 
 /**
- * Completes a successful investigation: creates mission sites, updates agents, marks investigation as successful
- * Returns created mission sites
+ * Completes a successful investigation: creates missions, updates agents, marks investigation as successful
+ * Returns created mission IDs
  */
 function completeInvestigation(
   state: GameState,
@@ -118,9 +118,9 @@ function completeInvestigation(
   const currentCount = state.leadInvestigationCounts[investigation.leadId] ?? 0
   state.leadInvestigationCounts[investigation.leadId] = currentCount + 1
 
-  // Create mission sites for dependent missions
-  const missionSites = bldMissionSitesForLead(state, investigation.leadId)
-  const createdMissionSites = missionSites.map((site) => site.id)
+  // Create missions for dependent missions
+  const missions = bldMissionsForLead(state, investigation.leadId)
+  const createdMissionIds = missions.map((m) => m.id)
 
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
@@ -132,29 +132,27 @@ function completeInvestigation(
     agent.state = 'StartingTransit'
   }
 
-  return createdMissionSites
+  return createdMissionIds
 }
 
 /**
- * Creates mission sites for all missions that depend on the completed lead
+ * Creates missions for all missions that depend on the completed lead
  */
-// KJA2 rename to bldMissionSitesFromLeadCompletion
-function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
-  const dependentMissionSiteDefinitions = offensiveMissionSiteDefinitions.filter((missionSiteDefinition) =>
-    missionSiteDefinition.dependsOn.includes(leadId),
-  )
-  const createdMissionSites: MissionSite[] = []
+// KJA2 rename to bldMissionsFromLeadCompletion
+function bldMissionsForLead(state: GameState, leadId: string): Mission[] {
+  const dependentMissionDefs = offensiveMissionDefs.filter((missionDef) => missionDef.dependsOn.includes(leadId))
+  const createdMissions: Mission[] = []
 
-  for (const missionSiteDefinition of dependentMissionSiteDefinitions) {
+  for (const missionDef of dependentMissionDefs) {
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
-    const newMissionSite = bldMissionSite({
+    const newMission = bldMission({
       state,
-      missionSiteDefinitionId: missionSiteDefinition.id,
-      expiresIn: missionSiteDefinition.expiresIn,
-      enemyCounts: missionSiteDefinition.enemyCounts,
+      missionDefId: missionDef.id,
+      expiresIn: missionDef.expiresIn,
+      enemyCounts: missionDef.enemyCounts,
     })
-    createdMissionSites.push(newMissionSite)
+    createdMissions.push(newMission)
   }
 
-  return createdMissionSites
+  return createdMissions
 }

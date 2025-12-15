@@ -5,7 +5,7 @@ import Box from '@mui/material/Box'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewMissionDetails } from '../../redux/slices/selectionSlice'
-import { MissionSiteDetailsCard } from './MissionSiteDetailsCard'
+import { MissionDetailsCard } from './MissionDetailsCard'
 import { CombatLogCard } from './CombatLogCard'
 import { BattleLogCard } from './BattleLogCard'
 
@@ -58,16 +58,16 @@ export function MissionDetailsScreen(): React.JSX.Element {
             <Button variant="contained" onClick={handleBackClick}>
               Back to command center
             </Button>
-            <MissionSiteDetailsCard missionSiteId={viewMissionDetailsId} />
+            <MissionDetailsCard missionId={viewMissionDetailsId} />
           </Stack>
         </Grid>
         <Grid>
           <Stack spacing={2}>
-            <BattleLogCard missionSiteId={viewMissionDetailsId} />
+            <BattleLogCard missionId={viewMissionDetailsId} />
           </Stack>
         </Grid>
         <Grid sx={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
-          <CombatLogCard missionSiteId={viewMissionDetailsId} />
+          <CombatLogCard missionId={viewMissionDetailsId} />
         </Grid>
       </Grid>
     </Box>

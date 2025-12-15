@@ -31,7 +31,7 @@ function renderPrimaryListItemText(event: GameEvent): string {
   assertEqual(event.type, 'MissionCompleted')
   const won = event.finalState === 'Won'
   const rewardsSummary = won ? formatMissionRewards(event) : ''
-  const base = `Mission ${event.missionSiteId} "${event.missionName}"`
+  const base = `Mission ${event.missionId} "${event.missionName}"`
   const msg = rewardsSummary ? `${base} won: ${rewardsSummary}` : `${base} ${event.finalState.toLowerCase()}.`
   return msg
 }

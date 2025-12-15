@@ -1,5 +1,5 @@
 import type { Faction } from '../model/factionModel'
-import type { FactionId } from '../model/missionSiteModel'
+import type { FactionId } from '../model/missionModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'

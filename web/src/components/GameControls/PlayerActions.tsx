@@ -25,7 +25,7 @@ import {
   clearMissionSelection,
 } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatModelUtils'
-import { getRemainingTransportCap, validateMissionSiteDeployment } from '../../lib/model_utils/missionSiteUtils'
+import { getRemainingTransportCap, validateMissionDeployment } from '../../lib/model_utils/missionUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import {
@@ -40,7 +40,7 @@ export function PlayerActions(): React.JSX.Element {
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
-  const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
+  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
@@ -257,7 +257,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleDeployAgents(): void {
-    if (selectedMissionSiteId === undefined) {
+    if (selectedMissionId === undefined) {
       setAlertMessage('No mission selected!')
       setShowAlert(true)
       return
@@ -281,7 +281,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     // Validate transport cap
-    const remainingTransportCap = getRemainingTransportCap(gameState.missionSites, gameState.transportCap)
+    const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
     if (selectedAgentIds.length > remainingTransportCap) {
       setAlertMessage(
         `Cannot deploy ${selectedAgentIds.length} agents. Only ${remainingTransportCap} transport slots available.`,
@@ -290,9 +290,9 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Validate mission site is available for deployment
-    const selectedMissionSite = gameState.missionSites.find((site) => site.id === selectedMissionSiteId)
-    const missionValidation = validateMissionSiteDeployment(selectedMissionSite)
+    // Validate mission is available for deployment
+    const selectedMission = gameState.missions.find((m) => m.id === selectedMissionId)
+    const missionValidation = validateMissionDeployment(selectedMission)
     if (!missionValidation.isValid) {
       setAlertMessage(missionValidation.errorMessage ?? 'Unknown error')
       setShowAlert(true)
@@ -300,7 +300,7 @@ export function PlayerActions(): React.JSX.Element {
     }
 
     setShowAlert(false) // Hide alert on successful action
-    dispatch(deployAgentsToMission({ missionSiteId: selectedMissionSiteId, agentIds: selectedAgentIds }))
+    dispatch(deployAgentsToMission({ missionId: selectedMissionId, agentIds: selectedAgentIds }))
     dispatch(clearAgentSelection())
     dispatch(clearMissionSelection())
   }
@@ -359,9 +359,9 @@ export function PlayerActions(): React.JSX.Element {
         <Button
           variant="contained"
           onClick={handleDeployAgents}
-          disabled={selectedMissionSiteId === undefined || selectedAgentIds.length === 0}
+          disabled={selectedMissionId === undefined || selectedAgentIds.length === 0}
         >
-          Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionSiteId)}
+          Deploy {fmtAgentCount(selectedAgentIds.length)} on {fmtMissionTarget(selectedMissionId)}
         </Button>
         <Button
           variant="contained"

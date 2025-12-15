@@ -6,69 +6,69 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
-import type { MissionSite } from '../../lib/model/missionSiteModel'
-import { clearMissionSelection, setMissionSiteSelection } from '../../redux/slices/selectionSlice'
+import { getMissionDefById } from '../../lib/collections/missions'
+import type { Mission } from '../../lib/model/missionModel'
+import { clearMissionSelection, setMissionSelection } from '../../redux/slices/selectionSlice'
 import {
-  getActiveOrDeployedMissionSites,
-  getArchivedMissionSites,
-  sortActiveOrDeployedMissionSites,
-  sortMissionSitesByIdDesc,
-} from '../../lib/model_utils/missionSiteUtils'
+  getActiveOrDeployedMissions,
+  getArchivedMissions,
+  sortActiveOrDeployedMissions,
+  sortMissionsByIdDesc,
+} from '../../lib/model_utils/missionUtils'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import { getCompletedMissionSiteIds } from '../../lib/model_utils/turnReportUtils'
+import { getCompletedMissionIds } from '../../lib/model_utils/turnReportUtils'
 import { DataGridCard } from '../Common/DataGridCard'
-import { MissionSitesDataGridToolbar } from './MissionSitesDataGridToolbar'
-import { getMissionSitesColumns } from './getMissionSitesColumns'
+import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
+import { getMissionsColumns } from './getMissionsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
-export type MissionRow = MissionSite & {
+export type MissionRow = Mission & {
   rowId: number
   name: string
   displayId: string
 }
 
-export function MissionSitesDataGrid(): React.JSX.Element {
+export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { missionSites, turnStartReport } = gameState
-  const selectedMissionSiteId = useAppSelector((state) => state.selection.selectedMissionSiteId)
+  const { missions, turnStartReport } = gameState
+  const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const [showArchived, setShowArchived] = React.useState(false)
 
-  const completedThisTurnIds: Set<string> = getCompletedMissionSiteIds(turnStartReport)
+  const completedThisTurnIds: Set<string> = getCompletedMissionIds(turnStartReport)
 
-  // Get active and archived mission sites
-  const activeMissionSites = getActiveOrDeployedMissionSites(missionSites)
-  const archivedMissionSites = getArchivedMissionSites(missionSites)
+  // Get active and archived missions
+  const activeMissions = getActiveOrDeployedMissions(missions)
+  const archivedMissions = getArchivedMissions(missions)
 
   // Include completed missions (Won, Wiped, Retreated, Expired) in active rows if they completed this turn
-  const completedThisTurnSites = archivedMissionSites.filter((site) => completedThisTurnIds.has(site.id))
-  const activeMissionSitesIncludingCompleted = [...activeMissionSites, ...completedThisTurnSites]
+  const completedThisTurnMissions = archivedMissions.filter((mission) => completedThisTurnIds.has(mission.id))
+  const activeMissionsIncludingCompleted = [...activeMissions, ...completedThisTurnMissions]
 
-  const sortedActiveMissionSites = sortActiveOrDeployedMissionSites(activeMissionSitesIncludingCompleted)
-  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
+  const sortedActiveMissions = sortActiveOrDeployedMissions(activeMissionsIncludingCompleted)
+  const sortedArchivedMissions = sortMissionsByIdDesc(archivedMissions)
 
-  // Transform all mission sites to rows (both active and archived)
-  const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
-    const missionSiteDefinition = getMissionSiteDefinitionById(site.missionSiteDefinitionId)
-    const displayId = fmtNoPrefix(site.id, 'mission-site-')
+  // Transform all missions to rows (both active and archived)
+  const allActiveRows: MissionRow[] = sortedActiveMissions.map((mission, index) => {
+    const missionDef = getMissionDefById(mission.missionDefId)
+    const displayId = fmtNoPrefix(mission.id, 'mission-')
 
     return {
-      ...site,
+      ...mission,
       rowId: index,
-      name: missionSiteDefinition.name,
+      name: missionDef.name,
       displayId,
     }
   })
 
-  const allArchivedRows: MissionRow[] = sortedArchivedMissionSites.map((site, index) => {
-    const missionSiteDefinition = getMissionSiteDefinitionById(site.missionSiteDefinitionId)
-    const displayId = fmtNoPrefix(site.id, 'mission-site-')
+  const allArchivedRows: MissionRow[] = sortedArchivedMissions.map((mission, index) => {
+    const missionDef = getMissionDefById(mission.missionDefId)
+    const displayId = fmtNoPrefix(mission.id, 'mission-')
 
     return {
-      ...site,
+      ...mission,
       rowId: allActiveRows.length + index,
-      name: missionSiteDefinition.name,
+      name: missionDef.name,
       displayId,
     }
   })
@@ -76,7 +76,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
   const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
 
-  const columns = getMissionSitesColumns(dispatch)
+  const columns = getMissionsColumns(dispatch)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -90,20 +90,20 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       const [rowId] = selectedRowIds
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
       if (row && row.state === 'Active') {
-        // Only allow selection of Active mission sites
-        dispatch(setMissionSiteSelection(row.id))
+        // Only allow selection of Active missions
+        dispatch(setMissionSelection(row.id))
       } else {
-        // If trying to select any other mission site, clear selection
+        // If trying to select any other mission, clear selection
         dispatch(clearMissionSelection())
       }
     }
   }
 
-  // Convert selected mission site ID back to row ID for DataGrid
+  // Convert selected mission ID back to row ID for DataGrid
   // Clear selection if selected row is not in currently displayed rows
   const rowIds: GridRowId[] = []
-  if (selectedMissionSiteId !== undefined) {
-    const row = rows.find((rowCandidate) => rowCandidate.id === selectedMissionSiteId)
+  if (selectedMissionId !== undefined) {
+    const row = rows.find((rowCandidate) => rowCandidate.id === selectedMissionId)
     if (row) {
       rowIds.push(row.rowId)
     } else {
@@ -117,8 +117,8 @@ export function MissionSitesDataGrid(): React.JSX.Element {
 
   return (
     <DataGridCard
-      id="mission-sites"
-      title={`Mission sites (${rows.length})`}
+      id="missions"
+      title={`Missions (${rows.length})`}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}
@@ -128,7 +128,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<MissionRow>) => params.row.state === 'Active'}
-      slots={{ toolbar: MissionSitesDataGridToolbar }}
+      slots={{ toolbar: MissionsDataGridToolbar }}
       slotProps={{
         toolbar: {
           showArchived,
@@ -137,7 +137,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
       }}
       showToolbar
       sx={{
-        '& .mission-sites-expires-in-cell': {
+        '& .missions-expires-in-cell': {
           padding: '4px',
         },
       }}

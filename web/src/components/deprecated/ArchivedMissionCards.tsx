@@ -2,21 +2,21 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getArchivedMissionSites, sortMissionSitesByIdDesc } from '../../lib/model_utils/missionSiteUtils'
+import { getArchivedMissions, sortMissionsByIdDesc } from '../../lib/model_utils/missionUtils'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { MissionCard } from './MissionCard'
 
 export function ArchivedMissionCards(): React.JSX.Element {
-  const missionSites = useAppSelector((state) => state.undoable.present.gameState.missionSites)
+  const missions = useAppSelector((state) => state.undoable.present.gameState.missions)
 
-  const archivedMissionSites = getArchivedMissionSites(missionSites)
-  const sortedArchivedMissionSites = sortMissionSitesByIdDesc(archivedMissionSites)
+  const archivedMissions = getArchivedMissions(missions)
+  const sortedArchivedMissions = sortMissionsByIdDesc(archivedMissions)
 
   const maxWidth = '800px'
   return (
     <ExpandableCard
       id="deprecated-archived-missions"
-      title={`Archived Mission sites (${sortedArchivedMissionSites.length})`}
+      title={`Archived Mission sites (${sortedArchivedMissions.length})`}
       defaultExpanded={false}
       sx={{ maxWidth }}
     >
@@ -30,9 +30,9 @@ export function ArchivedMissionCards(): React.JSX.Element {
           },
         }}
       >
-        {sortedArchivedMissionSites.map((site) => (
-          <Box key={site.id} sx={{ padding: 1 }}>
-            <MissionCard missionSiteId={site.id} />
+        {sortedArchivedMissions.map((mission) => (
+          <Box key={mission.id} sx={{ padding: 1 }}>
+            <MissionCard missionSiteId={mission.id} />
           </Box>
         ))}
       </Stack>

@@ -2,7 +2,7 @@ import * as React from 'react'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { BATTLE_LOG_CARD_WIDTH } from '../Common/widthConstants'
-import type { MissionSiteId } from '../../lib/model/missionSiteModel'
+import type { MissionId } from '../../lib/model/missionModel'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
 import { f6max, toF6, f6div } from '../../lib/primitives/fixed6'
@@ -12,11 +12,11 @@ import Box from '@mui/material/Box'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 
 type BattleLogCardProps = {
-  missionSiteId: MissionSiteId
+  missionId: MissionId
 }
 
-export function BattleLogCard({ missionSiteId }: BattleLogCardProps): React.JSX.Element {
-  const missionReport = useMissionReport(missionSiteId)
+export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Element {
+  const missionReport = useMissionReport(missionId)
   const roundLogs = missionReport?.battleStats.roundLogs ?? []
 
   const rows: BattleLogRow[] = roundLogs.map((log, index) => ({

@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
+import { getMissionDefById } from '../../lib/collections/missions'
 import { getFactionById } from '../../lib/collections/factions'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { f6sum, toF, f6fmtPctDec2 } from '../../lib/primitives/fixed6'
@@ -10,40 +10,40 @@ import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
-import { MISSION_SITE_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
-import type { MissionSiteId } from '../../lib/model/missionSiteModel'
-import type { MissionSiteState } from '../../lib/model/outcomeTypes'
+import { MISSION_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
+import type { MissionId } from '../../lib/model/missionModel'
+import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
-import { isConcludedMissionSiteState } from '../../lib/ruleset/missionRuleset'
+import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
 
-type MissionSiteDetailsRow = {
+type MissionDetailsRow = {
   id: number
   key: string
   value: string
-  state?: MissionSiteState
+  state?: MissionState
 }
 
-type MissionSiteDetailsCardProps = {
-  missionSiteId: MissionSiteId
+type MissionDetailsCardProps = {
+  missionId: MissionId
 }
 
-export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCardProps): React.JSX.Element {
+export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { missionSites } = gameState
+  const { missions } = gameState
 
-  const missionSite = missionSites.find((site) => site.id === missionSiteId)
-  assertDefined(missionSite, `Mission site with id ${missionSiteId} not found`)
+  const mission = missions.find((m) => m.id === missionId)
+  assertDefined(mission, `Mission with id ${missionId} not found`)
 
-  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
+  const missionDef = getMissionDefById(mission.missionDefId)
 
-  const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
-  const { state, expiresIn: expiresInValue, agentIds, enemies } = missionSite
+  const displayId = fmtNoPrefix(mission.id, 'mission-')
+  const { state, expiresIn: expiresInValue, agentIds, enemies } = mission
   const expiresIn = state === 'Active' ? (expiresInValue === 'never' ? 'Never' : String(expiresInValue)) : '-'
   const agentsDeployed = agentIds.length
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
 
-  const { rewards } = missionSiteDefinition
+  const { rewards } = missionDef
   const enemyFactionId = rewards.factionRewards?.[0]?.factionId
   const enemyFaction = enemyFactionId ? getFactionById(enemyFactionId).name : '-'
   const enemyCount = enemies.length
@@ -65,9 +65,9 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   const rewardSuppression = factionReward?.suppression
   const rewardSuppressionStr = rewardSuppression !== undefined ? `${rewardSuppression} turns` : '-'
 
-  const detailsRows: MissionSiteDetailsRow[] = [
+  const detailsRows: MissionDetailsRow[] = [
     { id: 1, key: 'ID', value: displayId },
-    { id: 2, key: 'Name', value: missionSiteDefinition.name },
+    { id: 2, key: 'Name', value: missionDef.name },
     { id: 3, key: 'Faction', value: enemyFaction },
     { id: 4, key: 'State', value: state, state },
     { id: 5, key: 'Expires in', value: expiresIn },
@@ -76,23 +76,23 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
     { id: 8, key: 'Enemy avg. skill', value: enemyAverageSkill },
   ]
 
-  const rewardRows: MissionSiteDetailsRow[] = [
+  const rewardRows: MissionDetailsRow[] = [
     { id: 1, key: 'Money', value: rewardMoney !== 0 ? String(rewardMoney) : '-' },
     { id: 2, key: 'Funding', value: rewardFunding !== undefined ? String(rewardFunding) : '-' },
     { id: 3, key: 'Panic reduction', value: rewardPanicReductionStr },
     { id: 4, key: 'Suppression', value: rewardSuppressionStr },
   ]
 
-  const detailsColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Property', width: columnWidths['mission_site_details.key'] },
+  const detailsColumns: GridColDef<MissionDetailsRow>[] = [
+    { field: 'key', headerName: 'Property', width: columnWidths['mission_details.key'] },
     {
       field: 'value',
       headerName: 'Value',
-      width: columnWidths['mission_site_details.value'],
-      renderCell: (params: GridRenderCellParams<MissionSiteDetailsRow>): React.JSX.Element => {
+      width: columnWidths['mission_details.value'],
+      renderCell: (params: GridRenderCellParams<MissionDetailsRow>): React.JSX.Element => {
         if (params.row.key === 'State' && params.row.state !== undefined) {
           const { state: stateValue } = params.row
-          if (isConcludedMissionSiteState(stateValue)) {
+          if (isConcludedMissionState(stateValue)) {
             return <MyChip chipValue={stateValue} />
           }
         }
@@ -101,20 +101,20 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
     },
   ]
 
-  const rewardColumns: GridColDef<MissionSiteDetailsRow>[] = [
-    { field: 'key', headerName: 'Reward', width: columnWidths['mission_site_details.key'] },
-    { field: 'value', headerName: 'Value', width: columnWidths['mission_site_details.value'] },
+  const rewardColumns: GridColDef<MissionDetailsRow>[] = [
+    { field: 'key', headerName: 'Reward', width: columnWidths['mission_details.key'] },
+    { field: 'value', headerName: 'Value', width: columnWidths['mission_details.value'] },
   ]
 
   return (
     <ExpandableCard
-      id="mission-site-details"
-      title="Mission Site Details"
+      id="mission-details"
+      title="Mission Details"
       defaultExpanded={true}
-      sx={{ width: MISSION_SITE_DETAILS_CARD_WIDTH }}
+      sx={{ width: MISSION_DETAILS_CARD_WIDTH }}
     >
       <Stack spacing={2}>
-        <StyledDataGrid rows={detailsRows} columns={detailsColumns} aria-label="Mission Site Details" hideFooter />
+        <StyledDataGrid rows={detailsRows} columns={detailsColumns} aria-label="Mission Details" hideFooter />
         <StyledDataGrid rows={rewardRows} columns={rewardColumns} aria-label="Mission Rewards" hideFooter />
       </Stack>
     </ExpandableCard>
