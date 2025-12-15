@@ -11,9 +11,6 @@ export type MissionId = `mission-${string}`
 
 export type MissionDefId = `mission-def-${string}`
 
-// KJA1 fix: "Re-exported FactionId from missionModel.ts for backward compatibility"
-export type { FactionId }
-
 export type Actor = {
   id: string
   skill: Fixed6
@@ -90,3 +87,5 @@ export type Mission = {
    */
   operationLevel?: number | undefined
 }
+
+export { type FactionId } from './factionModel'
