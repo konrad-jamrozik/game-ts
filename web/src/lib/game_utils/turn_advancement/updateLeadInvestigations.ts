@@ -1,5 +1,5 @@
 import { getLeadById } from '../../collections/leads'
-import { offensiveMissions } from '../../collections/missions'
+import { offensiveMissionSiteDefinitions } from '../../collections/missions'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
 import type { MissionSite } from '../../model/missionSiteModel'
@@ -141,16 +141,18 @@ function completeInvestigation(
 // KJA3 rename to bldMissionSitesFromLeadCompletion
 function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
   // KJA1 naming confusion: there are no missions, just mission site definitions
-  const dependentMissions = offensiveMissions.filter((mission) => mission.dependsOn.includes(leadId))
+  const dependentMissionSiteDefinitions = offensiveMissionSiteDefinitions.filter((missionSiteDefinition) =>
+    missionSiteDefinition.dependsOn.includes(leadId),
+  )
   const createdMissionSites: MissionSite[] = []
 
-  for (const mission of dependentMissions) {
+  for (const missionSiteDefinition of dependentMissionSiteDefinitions) {
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
     const newMissionSite = bldMissionSite({
       state,
-      missionId: mission.id,
-      expiresIn: mission.expiresIn,
-      enemyCounts: mission.enemyCounts,
+      missionId: missionSiteDefinition.id,
+      expiresIn: missionSiteDefinition.expiresIn,
+      enemyCounts: missionSiteDefinition.enemyCounts,
     })
     createdMissionSites.push(newMissionSite)
   }

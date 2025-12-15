@@ -19,8 +19,8 @@ export function evaluateDeployedMissionSite(
   state: GameState,
   missionSite: MissionSite,
 ): { rewards: MissionRewards | undefined; battleReport: BattleReport } {
-  // Get the mission to access enemy units
-  const mission = getMissionById(missionSite.missionId)
+  // Get the mission site definition to access enemy units
+  const missionSiteDefinition = getMissionById(missionSite.missionId)
 
   // Get agents deployed to this mission site
   const deployedAgents = withIds(state.agents, missionSite.agentIds)
@@ -57,7 +57,7 @@ export function evaluateDeployedMissionSite(
   }
 
   // Return mission rewards to be applied later, don't apply them immediately
-  const rewards = missionSite.state === 'Won' ? mission.rewards : undefined
+  const rewards = missionSite.state === 'Won' ? missionSiteDefinition.rewards : undefined
 
   return { rewards, battleReport }
 }

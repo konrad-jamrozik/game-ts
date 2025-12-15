@@ -172,7 +172,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
       missionSite.expiresIn -= 1
       if (missionSite.expiresIn <= 0) {
         missionSite.state = 'Expired'
-        const mission = getMissionById(missionSite.missionId)
+        const missionSiteDefinition = getMissionById(missionSite.missionId)
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
@@ -185,7 +185,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
           }
 
           // Get faction info for the report
-          const factionReward = mission.rewards.factionRewards?.[0]
+          const factionReward = missionSiteDefinition.rewards.factionRewards?.[0]
           const factionId = factionReward?.factionId ?? ''
           const faction = state.factions.find((f) => f.id === factionId)
           const factionName = faction?.name ?? 'Unknown'
@@ -196,7 +196,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
 
           expiredReports.push({
             missionSiteId: id,
-            missionName: mission.name,
+            missionName: missionSiteDefinition.name,
             factionId,
             factionName,
             operationLevel,
@@ -228,8 +228,8 @@ function evaluateDeployedMissionSites(state: GameState): {
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
       const { id: missionSiteId, missionId, agentIds, enemies } = missionSite
-      const mission = getMissionById(missionId)
-      const { name: missionName } = mission
+      const missionSiteDefinition = getMissionById(missionId)
+      const { name: missionName } = missionSiteDefinition
       const deployedAgents = withIds(state.agents, agentIds)
 
       // Capture agent states before battle
@@ -258,9 +258,9 @@ function evaluateDeployedMissionSites(state: GameState): {
       // Determine mission outcome
       const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'
 
-      // Get faction name from mission rewards
+      // Get faction name from mission site definition rewards
       let factionName = 'Unknown'
-      const { factionRewards } = mission.rewards
+      const { factionRewards } = missionSiteDefinition.rewards
       if (factionRewards !== undefined && factionRewards.length > 0) {
         const [firstReward] = factionRewards
         if (firstReward !== undefined) {
@@ -553,51 +553,54 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   // Roll for operation level based on activity level probabilities
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
-  // Filter defensive missions by operation level
-  const availableMissions = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
+  // Filter defensive mission site definitions by operation level
+  const availableMissionSiteDefinitions = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
 
-  if (availableMissions.length === 0) {
-    // No missions available for this operation level - should not happen, but handle gracefully
+  if (availableMissionSiteDefinitions.length === 0) {
+    // No mission site definitions available for this operation level - should not happen, but handle gracefully
     return
   }
 
   // Filter out the last operation type if there are multiple options
-  let candidateMissions = availableMissions
-  if (availableMissions.length > 1 && faction.lastOperationTypeName !== undefined) {
-    candidateMissions = availableMissions.filter((stats) => stats.name !== faction.lastOperationTypeName)
-    // If filtering removed all options, use all available missions (can repeat if only one option)
-    if (candidateMissions.length === 0) {
-      candidateMissions = availableMissions
+  let candidateMissionSiteDefinitions = availableMissionSiteDefinitions
+  if (availableMissionSiteDefinitions.length > 1 && faction.lastOperationTypeName !== undefined) {
+    candidateMissionSiteDefinitions = availableMissionSiteDefinitions.filter(
+      (stats) => stats.name !== faction.lastOperationTypeName,
+    )
+    // If filtering removed all options, use all available mission site definitions (can repeat if only one option)
+    if (candidateMissionSiteDefinitions.length === 0) {
+      candidateMissionSiteDefinitions = availableMissionSiteDefinitions
     }
   }
 
-  // Pick a random mission from candidates
+  // Pick a random mission site definition from candidates
   // KJA3 put this random into an until function
-  const selectedMission = candidateMissions[Math.floor(Math.random() * candidateMissions.length)]
-  if (selectedMission === undefined) {
+  const selectedMissionSiteDefinition =
+    candidateMissionSiteDefinitions[Math.floor(Math.random() * candidateMissionSiteDefinitions.length)]
+  if (selectedMissionSiteDefinition === undefined) {
     // KJA3 should assert fail. Also search for other palaces like that and update Agents.md
     // Should not happen, but handle gracefully
     return
   }
 
-  // Convert mission stats to enemy counts object
-  const enemyCounts = selectedMission
+  // Convert mission site definition stats to enemy counts object
+  const enemyCounts = selectedMissionSiteDefinition
 
   // Generate missionId using the same pattern as offensive missions
   const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
-  const missionId = generateMissionId(selectedMission.name, factionTemplate)
+  const missionId = generateMissionId(selectedMissionSiteDefinition.name, factionTemplate)
 
   bldMissionSite({
     state,
     missionId,
-    expiresIn: selectedMission.expiresIn,
+    expiresIn: selectedMissionSiteDefinition.expiresIn,
     enemyCounts,
     operationLevel,
   })
 
   // Update faction's last operation type name
-  faction.lastOperationTypeName = selectedMission.name
+  faction.lastOperationTypeName = selectedMissionSiteDefinition.name
 }
 
 /**

@@ -114,15 +114,16 @@ export function validateMissionSiteDeployment(missionSite: MissionSite | undefin
  * @returns Formatted string in the format "{siteId} {missionId}" (e.g., "001 apprehend-red-dawn")
  */
 export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
-  const mission = getMissionById(missionSite.missionId)
+  // KJA1 make fmtNoPrefix generic, just rip out any common prefix
+  const missionSiteDefinition = getMissionById(missionSite.missionId)
   const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
-  let missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
+  let missionIdWithoutPrefix = fmtNoPrefix(missionSiteDefinition.id, 'mission-')
 
   const removeFactionName = false
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (removeFactionName) {
     // Remove faction name from mission ID if present
-    const factionName = fmtNoPrefix(mission.factionId, 'faction-')
+    const factionName = fmtNoPrefix(missionSiteDefinition.factionId, 'faction-')
     // Remove faction name from mission ID (e.g., "apprehend-red-dawn" -> "apprehend")
     // Handle both cases: "-faction-name" and "-faction-name-" patterns
     missionIdWithoutPrefix = missionIdWithoutPrefix.replace(new RegExp(`-${factionName}(?=-|$)`, 'u'), '')

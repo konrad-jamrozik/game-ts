@@ -35,16 +35,17 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   const missionSite = missionSites.find((site) => site.id === missionSiteId)
   assertDefined(missionSite, `Mission site with id ${missionSiteId} not found`)
 
-  const mission = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionById(missionSite.missionId)
 
   const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
-  const missionName = mission.name
+  // KJA1 missionSiteDefinitionName
+  const missionName = missionSiteDefinition.name
   const { state, expiresIn: expiresInValue, agentIds, enemies } = missionSite
   const expiresIn = state === 'Active' ? (expiresInValue === 'never' ? 'Never' : String(expiresInValue)) : '-'
   const agentsDeployed = agentIds.length
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
 
-  const { rewards } = mission
+  const { rewards } = missionSiteDefinition
   const enemyFactionId = rewards.factionRewards?.[0]?.factionId
   const enemyFaction = enemyFactionId ? getFactionById(enemyFactionId).name : '-'
   const enemyCount = enemies.length

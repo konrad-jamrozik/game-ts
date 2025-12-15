@@ -24,6 +24,8 @@ function parseSuppression(suppression: string): number {
   return 0
 }
 
+// KJA1 generateMissionSiteDefinitionId. Introduce export type MissionSiteDefinitionId = `mission-def-${string}`
+// CAREFUL also need to change fmtNoPrefix from mission- to mission-def-
 export function generateMissionId(name: string, faction: FactionStats): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)
@@ -31,7 +33,7 @@ export function generateMissionId(name: string, faction: FactionStats): string {
 }
 
 // KJA3 should be called bldMissionSiteDefinitions
-function generateMissionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
+function generateMissionSiteDefinitionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -70,12 +72,12 @@ function generateMissionsForFaction(faction: FactionStats): MissionSiteDefinitio
   })
 }
 
-export const offensiveMissions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
-  generateMissionsForFaction(faction),
+export const offensiveMissionSiteDefinitions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
+  generateMissionSiteDefinitionsForFaction(faction),
 )
 
 // kja rename, bld
-function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
+function generateDefensiveMissionSiteDefinitionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -97,19 +99,24 @@ function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSite
   })
 }
 
-export const defensiveMissions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
-  generateDefensiveMissionsForFaction(faction),
+export const defensiveMissionSiteDefinitions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
+  generateDefensiveMissionSiteDefinitionsForFaction(faction),
 )
 
+// KJA1 should be getMissionSiteDefinitionById and param should be missionSiteDefinitionId
 export function getMissionById(missionId: string): MissionSiteDefinition {
-  const foundOffensiveMission = offensiveMissions.find((mission) => mission.id === missionId)
-  if (foundOffensiveMission) {
-    return foundOffensiveMission
+  const foundOffensiveMissionSiteDefinition = offensiveMissionSiteDefinitions.find(
+    (missionSiteDefinition) => missionSiteDefinition.id === missionId,
+  )
+  if (foundOffensiveMissionSiteDefinition) {
+    return foundOffensiveMissionSiteDefinition
   }
 
-  const foundDefensiveMission = defensiveMissions.find((mission) => mission.id === missionId)
-  if (foundDefensiveMission) {
-    return foundDefensiveMission
+  const foundDefensiveMissionSiteDefinition = defensiveMissionSiteDefinitions.find(
+    (missionSiteDefinition) => missionSiteDefinition.id === missionId,
+  )
+  if (foundDefensiveMissionSiteDefinition) {
+    return foundDefensiveMissionSiteDefinition
   }
 
   throw new Error(`Mission with id ${missionId} not found`)

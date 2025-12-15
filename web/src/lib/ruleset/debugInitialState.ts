@@ -254,7 +254,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   } = bldDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const mission = getMissionById('mission-apprehend-cult-member-red-dawn')
+  const missionSiteDefinition = getMissionById('mission-apprehend-cult-member-red-dawn')
   // KJA1 use the factory instead, bldMissionSite. Ask AI where else.
   stateBase.missionSites = [
     {
@@ -262,16 +262,16 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
       missionId: 'mission-apprehend-cult-member-red-dawn',
       agentIds: onMissionAgentIds,
       state: 'Deployed',
-      expiresIn: mission.expiresIn,
-      enemies: bldEnemies(mission.enemyCounts),
+      expiresIn: missionSiteDefinition.expiresIn,
+      enemies: bldEnemies(missionSiteDefinition.enemyCounts),
     },
     {
       id: 'mission-site-001' as MissionSiteId,
       missionId: 'mission-apprehend-cult-member-red-dawn',
       agentIds: [],
       state: 'Active',
-      expiresIn: mission.expiresIn,
-      enemies: bldEnemies(mission.enemyCounts),
+      expiresIn: missionSiteDefinition.expiresIn,
+      enemies: bldEnemies(missionSiteDefinition.enemyCounts),
     },
   ]
 

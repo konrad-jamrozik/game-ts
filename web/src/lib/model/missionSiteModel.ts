@@ -71,7 +71,7 @@ export type MissionSiteDefinition = {
 
 export type MissionSite = {
   id: MissionSiteId
-  missionId: string
+  missionId: string // KJA1 should be missionSiteDefinitionId
   agentIds: string[]
   state: MissionSiteState
   expiresIn: number | 'never'

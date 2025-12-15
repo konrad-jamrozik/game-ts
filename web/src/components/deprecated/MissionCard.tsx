@@ -27,7 +27,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
     return <div>Mission site not found</div>
   }
 
-  const mission = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionById(missionSite.missionId)
 
   const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'
@@ -59,7 +59,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
       >
         {/* Note: the sx={combinedHeaderSx} and sx={combinedContentSx} must be defined on CardHeader and CardContent, not CardActionArea,
         to win in specificity over the styleOverrides in theme.tsx. */}
-        <CardHeader title={mission.name} sx={combinedHeaderSx} />
+        <CardHeader title={missionSiteDefinition.name} sx={combinedHeaderSx} />
         <CardContent sx={combinedContentSx}>
           <Stack>
             <Stack direction="row" justifyContent="space-between">
@@ -78,7 +78,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
             </Stack>
           </Stack>
           <Typography sx={{ paddingTop: 1.7 }} variant="body1">
-            {mission.description}
+            {missionSiteDefinition.description}
           </Typography>
         </CardContent>
       </CardActionArea>

@@ -50,25 +50,25 @@ export function MissionSitesDataGrid(): React.JSX.Element {
 
   // Transform all mission sites to rows (both active and archived)
   const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
-    const mission = getMissionById(site.missionId)
+    const missionSiteDefinition = getMissionById(site.missionId)
     const displayId = fmtNoPrefix(site.id, 'mission-site-')
 
     return {
       ...site,
       rowId: index,
-      name: mission.name,
+      name: missionSiteDefinition.name,
       displayId,
     }
   })
 
   const allArchivedRows: MissionRow[] = sortedArchivedMissionSites.map((site, index) => {
-    const mission = getMissionById(site.missionId)
+    const missionSiteDefinition = getMissionById(site.missionId)
     const displayId = fmtNoPrefix(site.id, 'mission-site-')
 
     return {
       ...site,
       rowId: allActiveRows.length + index,
-      name: mission.name,
+      name: missionSiteDefinition.name,
       displayId,
     }
   })
