@@ -15,7 +15,7 @@ type CreateMissionSiteParams = {
  * Creates a new mission site and adds it to the game state.
  * Returns the created mission site.
  */
-// KJA2 bldMissionSite should take missionSiteTemplateId as param
+// KJA2 bldMissionSite should take missionSiteDefinitionId as param
 export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
   const { state, missionId, expiresIn, enemyCounts, operationLevel } = params
 

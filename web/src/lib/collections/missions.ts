@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteTemplate } from '../model/missionSiteModel'
+import type { MissionSiteDefinition } from '../model/missionSiteModel'
 import { expandTemplateString, getFactionShortId } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
@@ -30,8 +30,8 @@ export function generateMissionId(name: string, faction: FactionStats): string {
   return `mission-${baseId}-${shortId}`
 }
 
-// KJA3 should be called bldMissionSiteTemplates
-function generateMissionsForFaction(faction: FactionStats): MissionSiteTemplate[] {
+// KJA3 should be called bldMissionSiteDefinitions
+function generateMissionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -70,12 +70,12 @@ function generateMissionsForFaction(faction: FactionStats): MissionSiteTemplate[
   })
 }
 
-export const offensiveMissions: MissionSiteTemplate[] = FACTION_DATA.flatMap((faction) =>
+export const offensiveMissions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
   generateMissionsForFaction(faction),
 )
 
 // kja rename, bld
-function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSiteTemplate[] {
+function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSiteDefinition[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -97,11 +97,11 @@ function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSite
   })
 }
 
-export const defensiveMissions: MissionSiteTemplate[] = FACTION_DATA.flatMap((faction) =>
+export const defensiveMissions: MissionSiteDefinition[] = FACTION_DATA.flatMap((faction) =>
   generateDefensiveMissionsForFaction(faction),
 )
 
-export function getMissionById(missionId: string): MissionSiteTemplate {
+export function getMissionById(missionId: string): MissionSiteDefinition {
   const foundOffensiveMission = offensiveMissions.find((mission) => mission.id === missionId)
   if (foundOffensiveMission) {
     return foundOffensiveMission
