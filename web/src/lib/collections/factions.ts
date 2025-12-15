@@ -1,19 +1,8 @@
-import type { ActivityLevel, Faction } from '../model/factionModel'
+import type { Faction } from '../model/factionModel'
 import type { FactionId } from '../model/missionSiteModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
-
-// KJA1 duplicates FactionStats
-export type FactionTemplate = {
-  id: FactionId
-  name: string
-  /**
-   * Initial activity level when game starts.
-   * 0 = Dormant, 1 = Faint, etc.
-   */
-  initialActivityLevel: ActivityLevel
-}
 
 export function getFactionShortId(factionId: FactionId): string {
   return factionId.replace(/^faction-/u, '')
@@ -37,12 +26,8 @@ function bldFaction(stat: FactionStats): Faction {
 }
 
 export const factions: Faction[] = toFactions(FACTION_DATA)
-
-export const factionTemplates: FactionTemplate[] = FACTION_DATA.map((stat) => ({
-  id: stat.id,
-  name: stat.name,
-  initialActivityLevel: stat.initialActivityLevel,
-}))
+// KJA1 inline, just use FACTION_DATA
+export const factionTemplates: FactionStats[] = FACTION_DATA
 
 export function getFactionById(factionId: string): Faction {
   const foundFaction = factions.find((faction) => faction.id === factionId)
@@ -50,7 +35,7 @@ export function getFactionById(factionId: string): Faction {
   return foundFaction
 }
 
-export function expandTemplateString(template: string, faction?: FactionTemplate): string {
+export function expandTemplateString(template: string, faction?: FactionStats): string {
   if (faction === undefined) {
     assertTrue(
       !template.includes('{facId}') && !template.includes('{facName}'),

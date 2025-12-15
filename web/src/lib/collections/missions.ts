@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { MissionSiteTemplate } from '../model/missionSiteModel'
-import { factionTemplates, type FactionTemplate, expandTemplateString, getFactionShortId } from './factions'
+import { factionTemplates, expandTemplateString, getFactionShortId } from './factions'
+import type { FactionStats } from './factionStatsTables'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
@@ -23,14 +24,14 @@ function parseSuppression(suppression: string): number {
   return 0
 }
 
-export function generateMissionId(name: string, faction: FactionTemplate): string {
+export function generateMissionId(name: string, faction: FactionStats): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)
   return `mission-${baseId}-${shortId}`
 }
 
 // KJA3 should be called bldMissionSiteTemplates
-function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
+function generateMissionsForFaction(faction: FactionStats): MissionSiteTemplate[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
@@ -74,7 +75,7 @@ export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap
 )
 
 // kja rename, bld
-function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
+function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSiteTemplate[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn

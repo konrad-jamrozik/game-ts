@@ -1,6 +1,7 @@
 import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { factionTemplates, type FactionTemplate, expandTemplateString } from './factions'
+import { factionTemplates, expandTemplateString } from './factions'
+import type { FactionStats } from './factionStatsTables'
 import { LEADS_DATA, type LeadStats } from './leadStatsTables'
 
 export const leads: Lead[] = toLeads(LEADS_DATA)
@@ -29,7 +30,7 @@ function toLeads(stats: LeadStats[]): Lead[] {
   return result
 }
 
-function bldLead(stat: LeadStats, faction?: FactionTemplate): Lead {
+function bldLead(stat: LeadStats, faction?: FactionStats): Lead {
   return {
     id: expandTemplateString(stat.id, faction),
     name: expandTemplateString(stat.name, faction),
