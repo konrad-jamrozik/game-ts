@@ -27,6 +27,16 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 - Never memoize values with `React.useMemo`. The project uses React Compiler.
 - Never memoize values with `React.useCallback`. The project uses React Compiler.
 - Helper functions should be always defined below the caller function.
+- Exported functions, types, consts and other types should be always defined first. Non-exported should be defined below.
+- When refactoring by renaming files or moving symbols around, never introduce import only to export, for backward compatibility.
+  Instead, always update the importing files to refer to the new file names.
+- **Fail fast, not gracefully**: Never try to "fail gracefully" by returning default values, empty arrays,
+  or silently ignoring unexpected conditions. If something unexpected happens that should not occur
+  assuming there is no bug, use the assert functions from `web/src/lib/primitives/assertPrimitives.ts`
+  to fail immediately. Available assertions include: `assertTrue`, `assertDefined`, `assertEqual`,
+  `assertNotZero`, `assertInRange`, `assertOneOf`, `assertNotIn`, `assertNotEmpty`, `assertNotNaN`,
+  `assertUnreachable`, `assertNonNeg`, `assertAboveZero`, `assertLessThan`, `assertInteger`,
+  `assertMax2Dec`, `assertMax4Dec`, `assertMax6Dec`, `assertHasId`, `assertNotBothTrue`.
 
 ## Key aspects and conventions of the project
 
