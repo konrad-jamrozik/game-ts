@@ -26,6 +26,7 @@ function parseSuppression(suppression: string): number {
 
 // KJA1 generateMissionSiteDefinitionId. Introduce export type MissionSiteDefinitionId = `mission-def-${string}`
 // CAREFUL also need to change fmtNoPrefix from mission- to mission-def-
+// KJA1 document here example values
 export function generateMissionId(name: string, faction: FactionStats): string {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)

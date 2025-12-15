@@ -38,8 +38,6 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   const missionSiteDefinition = getMissionById(missionSite.missionId)
 
   const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
-  // KJA1 missionSiteDefinitionName
-  const missionName = missionSiteDefinition.name
   const { state, expiresIn: expiresInValue, agentIds, enemies } = missionSite
   const expiresIn = state === 'Active' ? (expiresInValue === 'never' ? 'Never' : String(expiresInValue)) : '-'
   const agentsDeployed = agentIds.length
@@ -69,7 +67,7 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
 
   const detailsRows: MissionSiteDetailsRow[] = [
     { id: 1, key: 'ID', value: displayId },
-    { id: 2, key: 'Name', value: missionName },
+    { id: 2, key: 'Name', value: missionSiteDefinition.name },
     { id: 3, key: 'Faction', value: enemyFaction },
     { id: 4, key: 'State', value: state, state },
     { id: 5, key: 'Expires in', value: expiresIn },
