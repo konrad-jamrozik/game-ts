@@ -49,6 +49,8 @@ For example:
 # Full list of collections and objects
 
 - `factions`: `constant entity collection`
+- `faction activity levels`: `constant entity collection` (need to verify)
+- `faction operation levels`: `constant definition collection` (need to verify)
 - `mission site definitions`: `constant definition collection`
 - `mission sites`: `variable entity collection`
 - `leads`: `constant entity collection`

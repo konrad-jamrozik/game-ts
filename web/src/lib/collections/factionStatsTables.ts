@@ -177,3 +177,56 @@ function toFactionOperationRollProbabilityStats(
     level6ProbPct: row[9],
   }))
 }
+
+/**
+ * Faction operation data by operation level.
+ *
+ * Defines rewards, penalties, and panic effects for each operation level (1-6).
+ *
+ * Legend:
+ * - Level: Operation level (1-6).
+ * - PanicIncrease: Panic increase when the faction operation succeeds (mission not completed).
+ *   Values are fractions (e.g., 0.0002 = 0.02%).
+ * - MoneyReward: Money reward when defensive mission is completed successfully.
+ * - FundingReward: Funding reward when defensive mission is completed successfully.
+ * - FundingPenalty: Funding penalty when faction operation succeeds (mission not completed).
+ *
+ * Notes:
+ * - Level 6 (Existential) has no rewards or penalties - game over on failure instead.
+ */
+// prettier-ignore
+export const FACTION_OPERATION_DATA: FactionOperationStats[] = toFactionOperationStats([
+  // Level, PanicIncrease, MoneyReward, FundingReward, FundingPenalty
+  [1,       0.0002,        10,          0,              0],
+  [2,       0.001,         30,          5,              1],
+  [3,       0.003,         100,         20,             4],
+  [4,       0.01,          300,         40,             8],
+  [5,       0.03,          1000,        80,            16],
+  [6,       0,             0,           0,              0],
+])
+
+export type FactionOperationStats = {
+  level: number
+  panicIncrease: number
+  moneyReward: number
+  fundingReward: number
+  fundingPenalty: number
+}
+
+type FactionOperationRow = [
+  level: number,
+  panicIncrease: number,
+  moneyReward: number,
+  fundingReward: number,
+  fundingPenalty: number,
+]
+
+function toFactionOperationStats(rows: FactionOperationRow[]): FactionOperationStats[] {
+  return rows.map((row) => ({
+    level: row[0],
+    panicIncrease: row[1],
+    moneyReward: row[2],
+    fundingReward: row[3],
+    fundingPenalty: row[4],
+  }))
+}

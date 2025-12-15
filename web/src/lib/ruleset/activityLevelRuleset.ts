@@ -1,8 +1,10 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA,
+  FACTION_OPERATION_DATA,
   FACTION_OPERATION_ROLL_PROBABILITY_DATA,
   type FactionOperationRollProbabilityStats,
+  type FactionOperationStats,
 } from '../collections/factionStatsTables'
 import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
@@ -75,56 +77,6 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
   5: bldActivityLevelConfig(5),
   6: bldActivityLevelConfig(6),
   7: bldActivityLevelConfig(7),
-}
-
-// KJA1 these _BY_OPERATION_LEVEL constants should become a data table
-/**
- * Panic increase per operation level when a faction operation succeeds (mission not completed).
- */
-export const PANIC_INCREASE_BY_OPERATION_LEVEL: Record<number, Fixed6> = {
-  1: toF6(0.0002), // Soft operations - 0.02%
-  2: toF6(0.001), // Violent but small-scale - 0.1%
-  3: toF6(0.003), // Strategic threats - 0.3%
-  4: toF6(0.01), // Regional destabilization - 1%
-  5: toF6(0.03), // Global conflict - 3%
-  6: toF6(0), // Existential - 0% (no panic increase, but game over on failure)
-}
-
-/**
- * Money reward per operation level when a defensive mission is completed successfully.
- */
-export const MONEY_REWARD_BY_OPERATION_LEVEL: Record<number, number> = {
-  1: 10,
-  2: 30,
-  3: 100,
-  4: 300,
-  5: 1000,
-  6: 0, // Level 6 has no rewards
-}
-
-/**
- * Funding reward per operation level when a defensive mission is completed successfully.
- * Funding penalty per operation level when a defensive mission fails (expires or is lost).
- */
-export const FUNDING_REWARD_BY_OPERATION_LEVEL: Record<number, number> = {
-  1: 0,
-  2: 5,
-  3: 20,
-  4: 40,
-  5: 80,
-  6: 0, // Level 6 has no rewards
-}
-
-/**
- * Funding penalty per operation level when a faction operation succeeds (mission not completed).
- */
-export const FUNDING_PENALTY_BY_OPERATION_LEVEL: Record<number, number> = {
-  1: 0,
-  2: 1,
-  3: 4,
-  4: 8,
-  5: 16,
-  6: 0, // Level 6 has no penalties (but game over on failure)
 }
 
 /**
@@ -227,7 +179,8 @@ export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
   if (operationLevel === 0) {
     return toF6(0)
   }
-  return PANIC_INCREASE_BY_OPERATION_LEVEL[operationLevel] ?? toF6(0.001)
+  const stats = getFactionOperationStats(operationLevel)
+  return toF6(stats?.panicIncrease ?? 0.001) // KJA3 fail fast on ??. Same for the other functions.
 }
 
 /**
@@ -239,7 +192,8 @@ export function getFundingDecreaseForOperation(operationLevel: number): number {
   if (operationLevel === 0) {
     return 0
   }
-  return FUNDING_PENALTY_BY_OPERATION_LEVEL[operationLevel] ?? 0
+  const stats = getFactionOperationStats(operationLevel)
+  return stats?.fundingPenalty ?? 0
 }
 
 /**
@@ -250,7 +204,8 @@ export function getMoneyRewardForOperation(operationLevel: number): number {
   if (operationLevel === 0) {
     return 0
   }
-  return MONEY_REWARD_BY_OPERATION_LEVEL[operationLevel] ?? 0
+  const stats = getFactionOperationStats(operationLevel)
+  return stats?.moneyReward ?? 0
 }
 
 /**
@@ -261,7 +216,12 @@ export function getFundingRewardForOperation(operationLevel: number): number {
   if (operationLevel === 0) {
     return 0
   }
-  return FUNDING_REWARD_BY_OPERATION_LEVEL[operationLevel] ?? 0
+  const stats = getFactionOperationStats(operationLevel)
+  return stats?.fundingReward ?? 0
+}
+
+function getFactionOperationStats(operationLevel: number): FactionOperationStats | undefined {
+  return FACTION_OPERATION_DATA.find((stats) => stats.level === operationLevel)
 }
 
 /**
