@@ -78,6 +78,7 @@ export function fmtDec4(value: number): string {
   return floorToDec4(value).toFixed(4)
 }
 
+// KJA1 review all usages, should be only within proper util funcs
 /**
  * Formats string by removing common prefixes
  */

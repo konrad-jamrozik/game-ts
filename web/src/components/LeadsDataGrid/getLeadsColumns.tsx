@@ -12,6 +12,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
       headerName: 'Lead ID',
       width: columnWidths['leads.id'],
       renderCell: (params: GridRenderCellParams<LeadRow, string>): React.JSX.Element => {
+        // KJA1 use here fmtForDisplay
         const leadId = params.value
         assertDefined(leadId, `Lead ID not found for id: ${params.id}`)
         return <span aria-label={`leads-row-id-${params.id}`}>{fmtNoPrefix(leadId, 'lead-')}</span>

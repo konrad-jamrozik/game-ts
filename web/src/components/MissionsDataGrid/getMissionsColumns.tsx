@@ -18,6 +18,7 @@ export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow
       headerName: 'Mission ID',
       width: columnWidths['missions.id'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
+        // KJA1 use here fmtForDisplay, probs delete fmtMissionIdWithMissionDefId
         const displayValue = fmtMissionIdWithMissionDefId(params.row)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },

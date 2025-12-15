@@ -1,13 +1,18 @@
 import pluralize from 'pluralize'
-import { getLeadById } from '../collections/leads'
-import { getMissionDefById } from '../collections/missions'
-import type { LeadId, LeadInvestigation } from '../model/leadModel'
-import type { Mission, MissionId } from '../model/missionModel'
-import { assertDefined } from '../primitives/assertPrimitives'
+import { getLeadById, getLeadInvestigationById } from '../collections/leads'
+import { getMissionById, getMissionDefById } from '../collections/missions'
+import type { LeadId, LeadInvestigationId } from '../model/leadModel'
+import type { MissionDefId, MissionId } from '../model/missionModel'
+import type { FactionId } from '../model/factionModel'
+import type { AgentId } from '../model/agentModel'
+import { assertUnreachable } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { floorToDec2 } from '../primitives/mathPrimitives'
 import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
+import type { GameState } from '../model/gameStateModel'
+import { assertIsFactionId, assertIsLeadId, assertIsLeadInvestigationId, assertIsMissionId } from './assertModelUtils'
+import { getFactionById } from '../collections/factions'
 
 /**
  * Formats mission target for display
@@ -58,24 +63,34 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
  * - AgentId: "agent-007" (full agent ID as-is)
  * - MissionId: "007 Raid cult logistics hub" (numeric value + mission name)
  */
+// KJA3 ensure that all "get<concept>byId" functions have consistent home. E.g. in model utils, or somewhere else.
 export function fmtForDisplay(
-  id: string,
-  params: {
-    leadInvestigations: Record<string, LeadInvestigation>
-    missions: Mission[]
-  },
+  id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDefId | AgentId,
+  gameState: GameState,
 ): string {
+  if (id.startsWith('faction-')) {
+    assertIsFactionId(id)
+    const faction = getFactionById(id)
+    return faction.name
+  }
+
+  if (id.startsWith('lead-')) {
+    assertIsLeadId(id)
+    const lead = getLeadById(id)
+    return lead.name
+  }
+
   if (id.startsWith('investigation-')) {
-    const investigation = params.leadInvestigations[id]
-    assertDefined(investigation, `Investigation not found: ${id}`)
+    assertIsLeadInvestigationId(id)
+    const investigation = getLeadInvestigationById(id, gameState)
     const lead = getLeadById(investigation.leadId)
     const numericPart = fmtNoPrefix(id, 'investigation-')
     return `${numericPart} ${lead.name}`
   }
 
   if (id.startsWith('mission-')) {
-    const mission = params.missions.find((m) => m.id === id)
-    assertDefined(mission, `Mission not found: ${id}`)
+    assertIsMissionId(id)
+    const mission = getMissionById(id, gameState)
     const missionDef = getMissionDefById(mission.missionDefId)
     const numericPart = fmtNoPrefix(id, 'mission-')
     return `${numericPart} ${missionDef.name}`
@@ -85,14 +100,5 @@ export function fmtForDisplay(
     return id
   }
 
-  // LeadId case
-  const lead = getLeadById(id as LeadId)
-  // Try to extract numeric part from lead ID (e.g., "lead-003" -> "003")
-  // If no numeric part found, use ID without prefix
-  const numericMatch = /\d+/u.exec(id)
-  if (numericMatch) {
-    return `${numericMatch[0]} ${lead.name}`
-  }
-  const idWithoutPrefix = id.startsWith('lead-') ? fmtNoPrefix(id, 'lead-') : id
-  return `${idWithoutPrefix} ${lead.name}`
+  assertUnreachable(id)
 }

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionDef, MissionDefId } from '../model/missionModel'
+import type { Mission, MissionDef, MissionDefId, MissionId } from '../model/missionModel'
 import { expandTemplateString, getFactionShortId } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
@@ -9,6 +9,8 @@ import {
   type OffensiveMissionStats,
   type DefensiveMissionStats,
 } from './missionStatsTables'
+import type { GameState } from '../model/gameStateModel'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 // KJA3 lots of duplicate code in this file.
 
@@ -106,6 +108,12 @@ function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionD
 export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
   generateDefensiveMissionDefsForFaction(faction),
 )
+
+export function getMissionById(missionId: MissionId, gameState: GameState): Mission {
+  const foundMission = gameState.missions.find((mission) => mission.id === missionId)
+  assertDefined(foundMission, `Mission with id ${missionId} not found`)
+  return foundMission
+}
 
 export function getMissionDefById(missionDefId: MissionDefId): MissionDef {
   const foundOffensiveMissionDef = offensiveMissionDefs.find((missionDef) => missionDef.id === missionDefId)

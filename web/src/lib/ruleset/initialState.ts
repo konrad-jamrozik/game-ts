@@ -1,4 +1,3 @@
-import type { AgentId } from '../model/agentModel'
 import { toF6 } from '../primitives/fixed6'
 import { factions } from '../collections/factions'
 import type { GameState } from '../model/gameStateModel'
@@ -14,6 +13,7 @@ import {
   TRANSPORT_CAP,
 } from './constants'
 import { bldAgentWithoutState } from '../game_utils/agentFactory'
+import type { AgentId } from '../model/agentModel'
 
 const initialState: GameState = bldInitialState()
 
@@ -65,7 +65,7 @@ function bldInitialAgents(): GameState['agents'] {
   const agents: GameState['agents'] = []
 
   for (let index = 0; index < 4; index += 1) {
-    const agentId = `agent-${index.toString().padStart(3, '0')}` as AgentId
+    const agentId: AgentId = `agent-${index.toString().padStart(3, '0')}`
     agents.push(
       bldAgentWithoutState({
         id: agentId,

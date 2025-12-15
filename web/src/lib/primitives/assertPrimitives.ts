@@ -70,7 +70,7 @@ export function assertNotNaN(value: number, errMsg = 'Value must not be NaN'): a
   }
 }
 
-export function assertUnreachable(value: never): never {
+export function assertUnreachable(value?: unknown): never {
   throw new Error(`Unreachable code reached. Received: ${JSON.stringify(value)}`)
 }
 

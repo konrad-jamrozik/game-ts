@@ -28,6 +28,7 @@ export function getAgentsColumns(
       field: 'id',
       headerName: 'ID',
       width: columnWidths['agents.id'],
+      // KJA1 use here fmtForDisplay
       renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
         <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
       ),

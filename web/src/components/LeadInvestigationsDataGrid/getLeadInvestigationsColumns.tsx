@@ -11,6 +11,7 @@ export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>
       field: 'name',
       headerName: 'Investigation',
       width: columnWidths['lead_investigations.name'],
+      // KJA1 use here fmtForDisplay
     },
     {
       field: 'agents',

@@ -122,7 +122,7 @@ export function fmtMissionIdWithMissionDefId(mission: Mission): string {
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
   if (removeFactionName) {
     // Remove faction name from mission ID if present
-    const factionName = fmtNoPrefix(String(missionDef.factionId), 'faction-')
+    const factionName = fmtNoPrefix(missionDef.factionId, 'faction-')
     // Remove faction name from mission ID (e.g., "apprehend-red-dawn" -> "apprehend")
     // Handle both cases: "-faction-name" and "-faction-name-" patterns
     missionDefIdWithoutPrefix = missionDefIdWithoutPrefix.replace(new RegExp(`-${factionName}(?=-|$)`, 'u'), '')
