@@ -1,7 +1,7 @@
 import type { Lead } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { factionTemplates, expandTemplateString } from './factions'
-import type { FactionStats } from './factionStatsTables'
+import { expandTemplateString } from './factions'
+import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import { LEADS_DATA, type LeadStats } from './leadStatsTables'
 
 export const leads: Lead[] = toLeads(LEADS_DATA)
@@ -18,7 +18,7 @@ function toLeads(stats: LeadStats[]): Lead[] {
   for (const stat of stats) {
     if (stat.id.includes('{facId}')) {
       // Faction-specific lead: generate for each faction
-      for (const faction of factionTemplates) {
+      for (const faction of FACTION_DATA) {
         result.push(bldLead(stat, faction))
       }
     } else {

@@ -263,7 +263,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
-      enemies: bldEnemies(mission.enemyList),
+      enemies: bldEnemies(mission.enemyCounts),
     },
     {
       id: 'mission-site-001' as MissionSiteId,
@@ -271,7 +271,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: bldEnemies(mission.enemyList),
+      enemies: bldEnemies(mission.enemyCounts),
     },
   ]
 

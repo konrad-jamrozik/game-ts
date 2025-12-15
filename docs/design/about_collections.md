@@ -63,8 +63,8 @@ For example:
 - `enemiesData Table`
 - `defensiveMissionSites DataTable`
 - `offensiveMissionSites DataTable`
-- `factionOperationLevel DataTable`
 - `factions DataTable`
+- `factionOperationLevel DataTable`
 - `factionOperationRoll DataTable`
 - `factionActivityLevel DataTable`
 - `factionActivityLevelProgression DataTable`

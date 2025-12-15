@@ -64,7 +64,7 @@ export type MissionSiteTemplate = {
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
-  enemyList: Partial<EnemyCounts>
+  enemyCounts: Partial<EnemyCounts>
   factionId: FactionId
   rewards: MissionRewards
 }

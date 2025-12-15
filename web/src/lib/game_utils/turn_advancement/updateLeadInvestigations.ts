@@ -150,7 +150,7 @@ function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[]
       state,
       missionId: mission.id,
       expiresIn: mission.expiresIn,
-      enemyList: mission.enemyList,
+      enemyCounts: mission.enemyCounts,
     })
     createdMissionSites.push(newMissionSite)
   }

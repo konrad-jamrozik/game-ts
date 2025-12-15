@@ -42,7 +42,7 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
-import { factionTemplates } from '../../collections/factions'
+import { FACTION_DATA } from '../../collections/factionStatsTables'
 import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
@@ -580,11 +580,11 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     return
   }
 
-  // Convert mission stats to enemy list object
-  const enemyList = selectedMission
+  // Convert mission stats to enemy counts object
+  const enemyCounts = selectedMission
 
   // Generate missionId using the same pattern as offensive missions
-  const factionTemplate = factionTemplates.find((def) => def.id === faction.id)
+  const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
   const missionId = generateMissionId(selectedMission.name, factionTemplate)
 
@@ -592,7 +592,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     state,
     missionId,
     expiresIn: selectedMission.expiresIn,
-    enemyList,
+    enemyCounts,
     operationLevel,
   })
 

@@ -7,7 +7,7 @@ type CreateMissionSiteParams = {
   state: GameState
   missionId: string
   expiresIn: number | 'never'
-  enemyList: Partial<EnemyCounts> // KJA1 rename to enemyCounts
+  enemyCounts: Partial<EnemyCounts>
   operationLevel?: number
 }
 
@@ -17,7 +17,7 @@ type CreateMissionSiteParams = {
  */
 // KJA2 bldMissionSite should take missionSiteTemplateId as param
 export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
-  const { state, missionId, expiresIn, enemyList, operationLevel } = params
+  const { state, missionId, expiresIn, enemyCounts, operationLevel } = params
 
   // Invariant: next mission site numeric id is always the current number of mission sites
   const nextMissionNumericId = state.missionSites.length
@@ -29,7 +29,7 @@ export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
     agentIds: [],
     state: 'Active',
     expiresIn,
-    enemies: bldEnemies(enemyList),
+    enemies: bldEnemies(enemyCounts),
     ...(operationLevel !== undefined && { operationLevel }),
   }
 

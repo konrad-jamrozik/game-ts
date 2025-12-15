@@ -26,8 +26,6 @@ function bldFaction(stat: FactionStats): Faction {
 }
 
 export const factions: Faction[] = toFactions(FACTION_DATA)
-// KJA1 inline, just use FACTION_DATA
-export const factionTemplates: FactionStats[] = FACTION_DATA
 
 export function getFactionById(factionId: string): Faction {
   const foundFaction = factions.find((faction) => faction.id === factionId)

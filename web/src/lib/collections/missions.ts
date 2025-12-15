@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { MissionSiteTemplate } from '../model/missionSiteModel'
-import { factionTemplates, expandTemplateString, getFactionShortId } from './factions'
-import type { FactionStats } from './factionStatsTables'
+import { expandTemplateString, getFactionShortId } from './factions'
+import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
   OFFENSIVE_MISSIONS_DATA,
   DEFENSIVE_MISSIONS_DATA,
@@ -50,7 +50,7 @@ function generateMissionsForFaction(faction: FactionStats): MissionSiteTemplate[
       description: expandTemplateString(description, faction),
       expiresIn,
       dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
-      enemyList: stats,
+      enemyCounts: stats,
       factionId: faction.id,
       rewards: {
         money: moneyReward,
@@ -70,7 +70,7 @@ function generateMissionsForFaction(faction: FactionStats): MissionSiteTemplate[
   })
 }
 
-export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap((faction) =>
+export const offensiveMissions: MissionSiteTemplate[] = FACTION_DATA.flatMap((faction) =>
   generateMissionsForFaction(faction),
 )
 
@@ -86,7 +86,7 @@ function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSite
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
       dependsOn: [], // Defensive missions don't depend on leads
-      enemyList: stats,
+      enemyCounts: stats,
       factionId: faction.id,
       rewards: {
         money: 0, // Rewards are calculated dynamically based on operation level
@@ -97,7 +97,7 @@ function generateDefensiveMissionsForFaction(faction: FactionStats): MissionSite
   })
 }
 
-export const defensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap((faction) =>
+export const defensiveMissions: MissionSiteTemplate[] = FACTION_DATA.flatMap((faction) =>
   generateDefensiveMissionsForFaction(faction),
 )
 
