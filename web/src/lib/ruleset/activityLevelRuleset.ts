@@ -52,77 +52,32 @@ function getOperationLevelWeights(
   ]
 }
 
+function bldActivityLevelConfig(level: ActivityLevel): ActivityLevelConfig {
+  return {
+    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[level]!.turnsMin,
+    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[level]!.turnsMax,
+    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!.frequencyMin),
+    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!.frequencyMax),
+    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!),
+  }
+}
+
 /**
  * Activity level configurations indexed by activity level (0-7).
  * Based on the documentation in about_faction_activity_level.md
  */
 export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> = {
-  0: {
-    // Dormant - no operations
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[0]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[0]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[0]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[0]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[0]!),
-  },
-  1: {
-    // Faint
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[1]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[1]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[1]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[1]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[1]!),
-  },
-  2: {
-    // Emerging
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[2]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[2]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[2]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[2]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[2]!),
-  },
-  3: {
-    // Active
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[3]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[3]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[3]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[3]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[3]!),
-  },
-  4: {
-    // Expanding
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[4]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[4]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[4]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[4]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[4]!),
-  },
-  5: {
-    // Escalating
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[5]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[5]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[5]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[5]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[5]!),
-  },
-  6: {
-    // War
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[6]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[6]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[6]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[6]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[6]!),
-  },
-  7: {
-    // Total War
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[7]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[7]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[7]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[7]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[7]!),
-  },
+  0: bldActivityLevelConfig(0),
+  1: bldActivityLevelConfig(1),
+  2: bldActivityLevelConfig(2),
+  3: bldActivityLevelConfig(3),
+  4: bldActivityLevelConfig(4),
+  5: bldActivityLevelConfig(5),
+  6: bldActivityLevelConfig(6),
+  7: bldActivityLevelConfig(7),
 }
 
+// KJA1 these _BY_OPERATION_LEVEL constants should become a data table
 /**
  * Panic increase per operation level when a faction operation succeeds (mission not completed).
  */
