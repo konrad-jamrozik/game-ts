@@ -91,6 +91,7 @@ type CreateAgentWithoutStateParams = Omit<CreateAgentParams, 'state' | 'id'> & {
   id: string
 }
 
+// KJA3 silly duplication of bldAgent
 /**
  * Creates an agent object without adding it to state.
  * Useful for test fixtures and other cases where you need an agent object but don't want to modify state.

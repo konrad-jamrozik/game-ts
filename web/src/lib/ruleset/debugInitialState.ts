@@ -257,7 +257,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   const missionSiteDefinition = getMissionSiteDefinitionById(
     'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
   )
-  // KJA2 use the factory instead, bldMissionSite. Ask AI where else.
+  // KJA3 use the factory instead, bldMissionSite. But avoid having to have tempState just for next ID.
   stateBase.missionSites = [
     {
       id: missionSiteId,
