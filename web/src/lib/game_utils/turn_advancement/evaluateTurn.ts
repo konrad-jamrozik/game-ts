@@ -1,4 +1,4 @@
-import { getMissionById, generateMissionId, enemyCountsToSpec } from '../../collections/missions'
+import { getMissionById, generateMissionId, missionStatsToEnemyList } from '../../collections/missions'
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
@@ -580,18 +580,8 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     return
   }
 
-  // Convert mission stats to enemy units spec string
-  const enemyUnitsSpec = enemyCountsToSpec({
-    initiate: selectedMission.initiate,
-    operative: selectedMission.operative,
-    soldier: selectedMission.soldier,
-    elite: selectedMission.elite,
-    handler: selectedMission.handler,
-    lieutenant: selectedMission.lieutenant,
-    commander: selectedMission.commander,
-    highCommander: selectedMission.highCommander,
-    cultLeader: selectedMission.cultLeader,
-  })
+  // Convert mission stats to enemy list object
+  const enemyList = missionStatsToEnemyList(selectedMission)
 
   // Generate missionId using the same pattern as offensive missions
   const factionTemplate = factionTemplates.find((def) => def.id === faction.id)
@@ -602,7 +592,7 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
     state,
     missionId,
     expiresIn: selectedMission.expiresIn,
-    enemyUnitsSpec,
+    enemyList,
     operationLevel,
   })
 

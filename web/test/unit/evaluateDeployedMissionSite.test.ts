@@ -15,7 +15,7 @@ import {
   TRANSPORT_CAP,
 } from '../../src/lib/ruleset/constants'
 import { bldWeapon } from '../../src/lib/ruleset/weaponRuleset'
-import { bldEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
+import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
 
 describe(evaluateDeployedMissionSite, () => {
   test('evaluateDeployedMissionSite succeeds', () => {
@@ -42,7 +42,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemiesFromSpec('1 Initiate'),
+      enemies: bldEnemies({ Initiate: 1 }),
     }
 
     // Create a minimal game state
@@ -116,7 +116,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemiesFromSpec('2 Soldier'),
+      enemies: bldEnemies({ Soldier: 2 }),
     }
 
     const gameState: GameState = {
@@ -205,7 +205,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemiesFromSpec('3 CultLeader'),
+      enemies: bldEnemies({ CultLeader: 3 }),
     }
 
     const gameState: GameState = {

@@ -7,7 +7,7 @@ import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSiteSelection } from '../../src/redux/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
-import { bldEnemiesFromSpec } from '../../src/lib/ruleset/enemyRuleset'
+import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
 import { agFix } from './agentFixture'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { terminated, onContractingAssignment, available } from '../../src/lib/model_utils/agentUtils'
@@ -38,7 +38,7 @@ export const st = {
   },
 
   bldEnemyInitiate(): Enemy {
-    const [enemy] = bldEnemiesFromSpec('1 Initiate')
+    const [enemy] = bldEnemies({ Initiate: 1 })
     assertDefined(enemy)
     return enemy
   },

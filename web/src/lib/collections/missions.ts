@@ -1,6 +1,7 @@
+/* eslint-disable unicorn/no-immediate-mutation */
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteTemplate } from '../model/missionSiteModel'
+import type { EnemyType, MissionSiteTemplate } from '../model/missionSiteModel'
 import { factionTemplates, type FactionTemplate, expandTemplateString, getFactionShortId } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
@@ -23,39 +24,20 @@ type EnemyCounts = {
   cultLeader: number
 }
 
-// KJA inline this function, i.e. avoid having to have an "enemy spec"
-/**
- * Converts enemy counts to a spec string format.
- * Example: { initiate: 4, operative: 1, ... } -> "4 Initiate, 1 Operative"
- */
-export function enemyCountsToSpec(counts: EnemyCounts): string {
-  const parts: string[] = []
+export function missionStatsToEnemyList(stats: EnemyCounts): Partial<Record<EnemyType, number>> {
+  const enemyList: Partial<Record<EnemyType, number>> = {}
 
-  if (counts.initiate > 0) parts.push(`${counts.initiate} Initiate`)
-  if (counts.operative > 0) parts.push(`${counts.operative} Operative`)
-  if (counts.soldier > 0) parts.push(`${counts.soldier} Soldier`)
-  if (counts.elite > 0) parts.push(`${counts.elite} Elite`)
-  if (counts.handler > 0) parts.push(`${counts.handler} Handler`)
-  if (counts.lieutenant > 0) parts.push(`${counts.lieutenant} Lieutenant`)
-  if (counts.commander > 0) parts.push(`${counts.commander} Commander`)
-  if (counts.highCommander > 0) parts.push(`${counts.highCommander} HighCommander`)
-  if (counts.cultLeader > 0) parts.push(`${counts.cultLeader} CultLeader`)
+  enemyList.Initiate = stats.initiate
+  enemyList.Operative = stats.operative
+  enemyList.Soldier = stats.soldier
+  enemyList.Elite = stats.elite
+  enemyList.Handler = stats.handler
+  enemyList.Lieutenant = stats.lieutenant
+  enemyList.Commander = stats.commander
+  enemyList.HighCommander = stats.highCommander
+  enemyList.CultLeader = stats.cultLeader
 
-  return parts.join(', ')
-}
-
-function offensiveMissionStatsToEnemySpec(stats: OffensiveMissionStats): string {
-  return enemyCountsToSpec({
-    initiate: stats.initiate,
-    operative: stats.operative,
-    soldier: stats.soldier,
-    elite: stats.elite,
-    handler: stats.handler,
-    lieutenant: stats.lieutenant,
-    commander: stats.commander,
-    highCommander: stats.highCommander,
-    cultLeader: stats.cultLeader,
-  })
+  return enemyList
 }
 
 function parseSuppression(suppression: string): number {
@@ -88,7 +70,7 @@ function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTempla
     const dependsOn = stats.dependsOn
     const description = stats.description
 
-    const enemyUnitsSpec = offensiveMissionStatsToEnemySpec(stats)
+    const enemyList = missionStatsToEnemyList(stats)
     const suppressionValue = parseSuppression(suppression)
 
     return {
@@ -97,7 +79,7 @@ function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTempla
       description: expandTemplateString(description, faction),
       expiresIn,
       dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
-      enemyUnitsSpec,
+      enemyList,
       factionId: faction.id,
       rewards: {
         money: moneyReward,
@@ -121,26 +103,12 @@ export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap
   generateMissionsForFaction(faction),
 )
 
-function defensiveMissionStatsToEnemySpec(stats: DefensiveMissionStats): string {
-  return enemyCountsToSpec({
-    initiate: stats.initiate,
-    operative: stats.operative,
-    soldier: stats.soldier,
-    elite: stats.elite,
-    handler: stats.handler,
-    lieutenant: stats.lieutenant,
-    commander: stats.commander,
-    highCommander: stats.highCommander,
-    cultLeader: stats.cultLeader,
-  })
-}
-
 function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
 
-    const enemyUnitsSpec = defensiveMissionStatsToEnemySpec(stats)
+    const enemyList = missionStatsToEnemyList(stats)
 
     return {
       id: generateMissionId(name, faction),
@@ -148,7 +116,7 @@ function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionS
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
       dependsOn: [], // Defensive missions don't depend on leads
-      enemyUnitsSpec,
+      enemyList,
       factionId: faction.id,
       rewards: {
         money: 0, // Rewards are calculated dynamically based on operation level

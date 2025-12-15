@@ -8,8 +8,32 @@ let idCounter = 0
 const VALID_ENEMY_TYPES = new Set<string>(ENEMY_TYPES)
 
 /**
+ * Creates multiple enemies from an enemy list object
+ * Example: { Initiate: 2, Operative: 1 } creates 2 Initiates and 1 Operative
+ */
+export function bldEnemies(enemyList: Partial<Record<EnemyType, number>>): Enemy[] {
+  // Reset enemy ID counter for each mission site
+  idCounter = 1
+
+  const units: Enemy[] = []
+
+  for (const type of ENEMY_TYPES) {
+    const count = enemyList[type]
+    if (count !== undefined && count > 0) {
+      for (let index = 0; index < count; index += 1) {
+        units.push(bldEnemy(type, idCounter))
+        idCounter += 1
+      }
+    }
+  }
+
+  return units
+}
+
+/**
  * Creates multiple enemies from a specification string
  * Example: "2 Initiate, 1 Operative" creates 2 Initiates and 1 Operative
+ * @deprecated Use bldEnemies() with enemy list object instead
  */
 export function bldEnemiesFromSpec(spec: string): Enemy[] {
   // Reset enemy ID counter for each mission site

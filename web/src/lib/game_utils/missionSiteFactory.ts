@@ -1,12 +1,12 @@
 import type { GameState } from '../model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../model/missionSiteModel'
-import { bldEnemiesFromSpec } from '../ruleset/enemyRuleset'
+import type { EnemyType, MissionSite, MissionSiteId } from '../model/missionSiteModel'
+import { bldEnemies } from '../ruleset/enemyRuleset'
 
 type CreateMissionSiteParams = {
   state: GameState
   missionId: string
   expiresIn: number | 'never'
-  enemyUnitsSpec: string
+  enemyList: Partial<Record<EnemyType, number>>
   operationLevel?: number
 }
 
@@ -15,7 +15,7 @@ type CreateMissionSiteParams = {
  * Returns the created mission site.
  */
 export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
-  const { state, missionId, expiresIn, enemyUnitsSpec, operationLevel } = params
+  const { state, missionId, expiresIn, enemyList, operationLevel } = params
 
   // Invariant: next mission site numeric id is always the current number of mission sites
   const nextMissionNumericId = state.missionSites.length
@@ -27,7 +27,7 @@ export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
     agentIds: [],
     state: 'Active',
     expiresIn,
-    enemies: bldEnemiesFromSpec(enemyUnitsSpec),
+    enemies: bldEnemies(enemyList),
     ...(operationLevel !== undefined && { operationLevel }),
   }
 

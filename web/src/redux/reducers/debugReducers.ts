@@ -42,7 +42,7 @@ export function spawnMissionSites(state: GameState): void {
       state,
       missionId: mission.id,
       expiresIn: mission.expiresIn,
-      enemyUnitsSpec: mission.enemyUnitsSpec,
+      enemyList: mission.enemyList,
     })
   }
 }

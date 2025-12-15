@@ -5,7 +5,7 @@ import type { MissionSiteId } from '../model/missionSiteModel'
 import type { LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
-import { bldEnemiesFromSpec } from './enemyRuleset'
+import { bldEnemies } from './enemyRuleset'
 import { getMissionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
@@ -263,7 +263,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: mission.expiresIn,
-      enemies: bldEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: bldEnemies(mission.enemyList),
     },
     {
       id: 'mission-site-001' as MissionSiteId,
@@ -271,7 +271,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: [],
       state: 'Active',
       expiresIn: mission.expiresIn,
-      enemies: bldEnemiesFromSpec(mission.enemyUnitsSpec),
+      enemies: bldEnemies(mission.enemyList),
     },
   ]
 

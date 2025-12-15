@@ -57,13 +57,15 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
+// KJA1 simplify this type: Partial<Record<EnemyType, number>>
+
 export type MissionSiteTemplate = {
   id: string
   name: string
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
-  enemyUnitsSpec: string
+  enemyList: Partial<Record<EnemyType, number>>
   factionId: FactionId
   rewards: MissionRewards
 }
