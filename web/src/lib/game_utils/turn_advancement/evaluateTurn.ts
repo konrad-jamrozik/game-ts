@@ -572,10 +572,10 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   }
 
   // Pick a random mission from candidates
-  // KJA put this random into an until function
+  // KJA3 put this random into an until function
   const selectedMission = candidateMissions[Math.floor(Math.random() * candidateMissions.length)]
   if (selectedMission === undefined) {
-    // KJA should assert fail. Also search for other palaces like that and update Agents.md
+    // KJA3 should assert fail. Also search for other palaces like that and update Agents.md
     // Should not happen, but handle gracefully
     return
   }
@@ -669,7 +669,7 @@ function updateFactions(
 
     // Update turns until next operation (only if not suppressed and not dormant)
     if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
-      // KJA Why I need turnsUntilNextOperationBeforeDecrement?
+      // KJA3 Why I need turnsUntilNextOperationBeforeDecrement?
       const turnsUntilNextOperationBeforeDecrement = faction.turnsUntilNextOperation
       faction.turnsUntilNextOperation -= 1
 
@@ -702,4 +702,4 @@ function updateFactions(
   return factionReports
 }
 
-// KJA review which functions should be moved out from evaluateTurn.s
+// KJA3 review which functions should be moved out from evaluateTurn.s

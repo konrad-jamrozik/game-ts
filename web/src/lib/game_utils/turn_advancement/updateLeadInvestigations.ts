@@ -138,7 +138,9 @@ function completeInvestigation(
 /**
  * Creates mission sites for all missions that depend on the completed lead
  */
+// KJA3 rename to bldMissionSitesFromLeadCompletion
 function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[] {
+  // KJA1 naming confusion: there are no missions, just mission site definitions
   const dependentMissions = offensiveMissions.filter((mission) => mission.dependsOn.includes(leadId))
   const createdMissionSites: MissionSite[] = []
 

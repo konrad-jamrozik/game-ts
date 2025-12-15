@@ -4,6 +4,7 @@ import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 
+// KJA1 duplicates FactionStats
 export type FactionTemplate = {
   id: FactionId
   name: string

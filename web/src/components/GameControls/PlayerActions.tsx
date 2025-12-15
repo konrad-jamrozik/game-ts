@@ -232,7 +232,7 @@ export function PlayerActions(): React.JSX.Element {
     // Find the selected lead to get its properties
     const lead = getLeadById(selectedLeadId)
 
-    // KJA this is weird - above we add agents to investigation ("addAgentsToInvestigation"), but we check later if it exists.
+    // KJA3 this is weird - above we add agents to investigation ("addAgentsToInvestigation"), but we check later if it exists.
     // But we need to check BEFORE adding any agents.
     const hasActiveInvestigationForLead = Object.values(gameState.leadInvestigations).some(
       (investigation) => investigation.leadId === selectedLeadId && investigation.state === 'Active',

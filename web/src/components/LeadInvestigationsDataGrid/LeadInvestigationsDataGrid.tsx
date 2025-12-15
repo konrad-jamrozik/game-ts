@@ -171,7 +171,7 @@ function bldAllInvestigationRows(
       investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
     const completedThisTurn = completedThisTurnIds.has(investigation.id)
 
-    // KJA refactor and rename leadInvestigationTitle. Also need to rename relevant entry in column widths.
+    // KJA3 refactor and rename leadInvestigationTitle. Also need to rename relevant entry in column widths.
     return {
       id: investigation.id,
       rowId: index,

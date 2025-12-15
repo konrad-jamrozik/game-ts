@@ -19,7 +19,7 @@ export type ActivityLevelConfig = {
   operationLevelWeights: [number, number, number, number, number, number]
 }
 
-// KJA move it to activityLevelStatsTable.ts
+// KJA1 ACTIVITY_LEVEL_CONFIGS is obsolete. Use instead FACTION_OPERATION_ROLL_PROBABILITY_DATA and FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA
 /**
  * Activity level configurations indexed by activity level (0-7).
  * Based on the documentation in about_faction_activity_level.md

@@ -20,7 +20,7 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
-// KJA should this be in enemyStatsTables.ts?
+// KJA2 should this be in enemyStatsTables.ts?
 export type EnemyCounts = {
   initiate: number
   operative: number
@@ -33,7 +33,7 @@ export type EnemyCounts = {
   cultLeader: number
 }
 
-// KJA have such toOffensiveMissionStats for other types too
+// KJA2 have such toOffensiveMissionStats for other types too
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissionStats([
   // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description

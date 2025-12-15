@@ -255,7 +255,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
 
   stateBase.agents = debugAgents
   const mission = getMissionById('mission-apprehend-cult-member-red-dawn')
-  // KJA use the factory instead, bldMissionSite. Ask AI where else.
+  // KJA1 use the factory instead, bldMissionSite. Ask AI where else.
   stateBase.missionSites = [
     {
       id: missionSiteId,
