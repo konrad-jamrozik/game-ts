@@ -55,9 +55,9 @@ To verify your changes are correct, rely on the built-in IDE typescript compiler
 errors.
 
 **Important**: Every time any significant changes are made, correctness must be verified by running
-`npm run qcheck` from the `web/` directory.
+`qcheck`.
 
-If the changes are minor, you can instead only run `npm run oxlint` from the `web/` directory.
+If the changes are minor, you can instead only run `oxlint`.
 
 Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
