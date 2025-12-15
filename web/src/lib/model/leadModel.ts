@@ -2,6 +2,8 @@ import type { LeadInvestigationState } from './outcomeTypes'
 
 export type { LeadInvestigationState } from './outcomeTypes'
 
+// KJA1 add type LeadId = `lead-${string}`
+
 export type LeadInvestigationId = `investigation-${string}`
 
 export type Lead = {

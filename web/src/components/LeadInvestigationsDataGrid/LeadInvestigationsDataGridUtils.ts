@@ -21,5 +21,5 @@ export function filterLeadInvestigationRows(
       }
       return showAbandoned
     })
-    .toSorted((rowA, rowB) => rowB.leadInvestigationTitle.localeCompare(rowA.leadInvestigationTitle))
+    .toSorted((rowA, rowB) => rowB.name.localeCompare(rowA.name))
 }

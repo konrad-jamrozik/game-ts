@@ -9,6 +9,7 @@ export type MissionId = `mission-${string}`
 
 export type MissionDefId = `mission-def-${string}`
 
+// KJA1 move this to factionModel.ts
 export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
 
 export type Actor = {

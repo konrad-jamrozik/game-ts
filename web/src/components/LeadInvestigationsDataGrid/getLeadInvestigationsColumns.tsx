@@ -8,9 +8,9 @@ import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
 export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>[] {
   const columns: GridColDef<LeadInvestigationRow>[] = [
     {
-      field: 'leadInvestigationTitle',
-      headerName: 'Investigation ID',
-      width: columnWidths['lead_investigations.lead_investigation_title'],
+      field: 'name',
+      headerName: 'Investigation',
+      width: columnWidths['lead_investigations.name'],
     },
     {
       field: 'agents',

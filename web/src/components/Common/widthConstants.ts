@@ -26,7 +26,7 @@ export const LEADS_DATA_GRID_WIDTH =
 
 export const LEAD_INVESTIGATIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  columnWidths['lead_investigations.lead_investigation_title'] +
+  columnWidths['lead_investigations.name'] +
   columnWidths['lead_investigations.agents'] +
   columnWidths['lead_investigations.intel'] +
   columnWidths['lead_investigations.success_chance'] +

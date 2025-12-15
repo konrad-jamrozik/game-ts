@@ -2,6 +2,8 @@ import type { Fixed6 } from '../primitives/fixed6'
 import type { Actor, MissionId } from './missionModel'
 import type { LeadInvestigationId } from './leadModel'
 
+// KJA1 add type AgentId = `agent-${string}`
+
 export type AgentState =
   | 'Available'
   | 'StartingTransit'

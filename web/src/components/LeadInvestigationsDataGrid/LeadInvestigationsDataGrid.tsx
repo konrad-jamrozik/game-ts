@@ -29,7 +29,7 @@ import { getLeadInvestigationsColumns } from './getLeadInvestigationsColumns'
 export type LeadInvestigationRow = {
   id: LeadInvestigationId
   rowId: number
-  leadInvestigationTitle: string
+  name: string
   intel: number
   successChance: number
   agents: number
@@ -171,11 +171,11 @@ function bldAllInvestigationRows(
       investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
     const completedThisTurn = completedThisTurnIds.has(investigation.id)
 
-    // KJA3 refactor and rename leadInvestigationTitle. Also need to rename relevant entry in column widths.
     return {
       id: investigation.id,
       rowId: index,
-      leadInvestigationTitle: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.name}`,
+      // KJA1 this should use fmtForDisplay instead
+      name: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.name}`,
       intel: investigation.accumulatedIntel,
       successChance,
       agents: activeAgents,
