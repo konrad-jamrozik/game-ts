@@ -149,7 +149,7 @@ function bldMissionSitesForLead(state: GameState, leadId: string): MissionSite[]
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
     const newMissionSite = bldMissionSite({
       state,
-      missionId: missionSiteDefinition.id,
+      missionSiteDefinitionId: missionSiteDefinition.id,
       expiresIn: missionSiteDefinition.expiresIn,
       enemyCounts: missionSiteDefinition.enemyCounts,
     })

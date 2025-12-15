@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { MissionSiteDefinition } from '../model/missionSiteModel'
+import type { MissionSiteDefinition, MissionSiteDefinitionId } from '../model/missionSiteModel'
 import { expandTemplateString, getFactionShortId } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
@@ -24,13 +24,16 @@ function parseSuppression(suppression: string): number {
   return 0
 }
 
-// KJA1 generateMissionSiteDefinitionId. Introduce export type MissionSiteDefinitionId = `mission-def-${string}`
-// CAREFUL also need to change fmtNoPrefix from mission- to mission-def-
-// KJA1 document here example values
-export function generateMissionId(name: string, faction: FactionStats): string {
+/**
+ * Generates a mission site definition ID from a mission name and faction.
+ * @param name - The mission name (e.g., "Apprehend Cult Member")
+ * @param faction - The faction stats
+ * @returns A mission site definition ID (e.g., "mission-def-apprehend-cult-member-rd")
+ */
+export function generateMissionSiteDefinitionId(name: string, faction: FactionStats): MissionSiteDefinitionId {
   const baseId = name.toLowerCase().replaceAll(' ', '-')
   const shortId = getFactionShortId(faction.id)
-  return `mission-${baseId}-${shortId}`
+  return `mission-def-${baseId}-${shortId}` as MissionSiteDefinitionId
 }
 
 // KJA3 should be called bldMissionSiteDefinitions
@@ -48,7 +51,7 @@ function generateMissionSiteDefinitionsForFaction(faction: FactionStats): Missio
     const suppressionValue = parseSuppression(suppression)
 
     return {
-      id: generateMissionId(name, faction),
+      id: generateMissionSiteDefinitionId(name, faction),
       name,
       description: expandTemplateString(description, faction),
       expiresIn,
@@ -84,7 +87,7 @@ function generateDefensiveMissionSiteDefinitionsForFaction(faction: FactionStats
     const expiresIn = stats.expiresIn
 
     return {
-      id: generateMissionId(name, faction),
+      id: generateMissionSiteDefinitionId(name, faction),
       name,
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
@@ -104,21 +107,20 @@ export const defensiveMissionSiteDefinitions: MissionSiteDefinition[] = FACTION_
   generateDefensiveMissionSiteDefinitionsForFaction(faction),
 )
 
-// KJA1 should be getMissionSiteDefinitionById and param should be missionSiteDefinitionId
-export function getMissionById(missionId: string): MissionSiteDefinition {
+export function getMissionSiteDefinitionById(missionSiteDefinitionId: MissionSiteDefinitionId): MissionSiteDefinition {
   const foundOffensiveMissionSiteDefinition = offensiveMissionSiteDefinitions.find(
-    (missionSiteDefinition) => missionSiteDefinition.id === missionId,
+    (missionSiteDefinition) => missionSiteDefinition.id === missionSiteDefinitionId,
   )
   if (foundOffensiveMissionSiteDefinition) {
     return foundOffensiveMissionSiteDefinition
   }
 
   const foundDefensiveMissionSiteDefinition = defensiveMissionSiteDefinitions.find(
-    (missionSiteDefinition) => missionSiteDefinition.id === missionId,
+    (missionSiteDefinition) => missionSiteDefinition.id === missionSiteDefinitionId,
   )
   if (foundDefensiveMissionSiteDefinition) {
     return foundDefensiveMissionSiteDefinition
   }
 
-  throw new Error(`Mission with id ${missionId} not found`)
+  throw new Error(`Mission site definition with id ${missionSiteDefinitionId} not found`)
 }

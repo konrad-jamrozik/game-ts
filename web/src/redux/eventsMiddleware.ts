@@ -1,6 +1,6 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
-import { getMissionById } from '../lib/collections/missions'
+import { getMissionSiteDefinitionById } from '../lib/collections/missions'
 import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
 import {
   advanceTurn,
@@ -95,7 +95,8 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       // Find the mission site to get the mission info for logging
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
-      const missionName = missionSite ? getMissionById(missionSite.missionId).name : 'Unknown Mission'
+      // KJA1 bar var name
+      const missionName = missionSite ? getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId).name : 'Unknown Mission'
 
       postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
     } else if (buyUpgrade.match(action)) {

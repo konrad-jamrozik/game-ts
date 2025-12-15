@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/prefer-single-call */
 /* eslint-disable unicorn/no-immediate-mutation */
 import type { Agent } from '../model/agentModel'
-import type { MissionSiteId } from '../model/missionSiteModel'
+import type { MissionSiteId, MissionSiteDefinitionId } from '../model/missionSiteModel'
 import type { LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyRuleset'
-import { getMissionById } from '../collections/missions'
+import { getMissionSiteDefinitionById } from '../collections/missions'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { bldAgentWithoutState } from '../game_utils/agentFactory'
@@ -254,12 +254,14 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   } = bldDebugAgents(missionSiteId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const missionSiteDefinition = getMissionById('mission-apprehend-cult-member-red-dawn')
+  const missionSiteDefinition = getMissionSiteDefinitionById(
+    'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
+  )
   // KJA2 use the factory instead, bldMissionSite. Ask AI where else.
   stateBase.missionSites = [
     {
       id: missionSiteId,
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: missionSiteDefinition.expiresIn,
@@ -267,7 +269,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
     },
     {
       id: 'mission-site-001' as MissionSiteId,
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
       agentIds: [],
       state: 'Active',
       expiresIn: missionSiteDefinition.expiresIn,

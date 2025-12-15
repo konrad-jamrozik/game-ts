@@ -4,7 +4,10 @@ import type { EnemyCounts } from '../collections/missionStatsTables'
 
 export type { MissionSiteState } from './outcomeTypes'
 
+// KJA3 add type for "agent-" and see if I need any other types like that
 export type MissionSiteId = `mission-site-${string}`
+
+export type MissionSiteDefinitionId = `mission-def-${string}`
 
 export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
 
@@ -59,7 +62,7 @@ export type MissionRewards = {
 }
 
 export type MissionSiteDefinition = {
-  id: string
+  id: MissionSiteDefinitionId
   name: string
   description: string
   expiresIn: number | 'never'
@@ -71,7 +74,7 @@ export type MissionSiteDefinition = {
 
 export type MissionSite = {
   id: MissionSiteId
-  missionId: string // KJA1 should be missionSiteDefinitionId
+  missionSiteDefinitionId: MissionSiteDefinitionId
   agentIds: string[]
   state: MissionSiteState
   expiresIn: number | 'never'

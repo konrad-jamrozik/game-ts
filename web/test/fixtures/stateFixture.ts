@@ -1,7 +1,7 @@
 import { expect } from 'vitest'
 import { store } from '../../src/redux/store'
 import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
-import type { Enemy, MissionSite, MissionSiteId } from '../../src/lib/model/missionSiteModel'
+import type { Enemy, MissionSite, MissionSiteId, MissionSiteDefinitionId } from '../../src/lib/model/missionSiteModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
@@ -44,9 +44,10 @@ export const st = {
   },
 
   bldMissionSite(missionSiteId: MissionSiteId): MissionSite {
+    const missionSiteDefinitionId = 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId
     return {
       id: missionSiteId,
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId,
       agentIds: [],
       state: 'Active',
       expiresIn: 3,

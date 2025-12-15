@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionById } from '../../lib/collections/missions'
+import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
 import { getFactionById } from '../../lib/collections/factions'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { f6sum, toF, f6fmtPctDec2 } from '../../lib/primitives/fixed6'
@@ -35,7 +35,7 @@ export function MissionSiteDetailsCard({ missionSiteId }: MissionSiteDetailsCard
   const missionSite = missionSites.find((site) => site.id === missionSiteId)
   assertDefined(missionSite, `Mission site with id ${missionSiteId} not found`)
 
-  const missionSiteDefinition = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
 
   const displayId = fmtNoPrefix(missionSite.id, 'mission-site-')
   const { state, expiresIn: expiresInValue, agentIds, enemies } = missionSite

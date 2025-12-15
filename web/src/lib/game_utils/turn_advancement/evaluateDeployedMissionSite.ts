@@ -1,5 +1,5 @@
 import { sum } from 'radash'
-import { getMissionById } from '../../collections/missions'
+import { getMissionSiteDefinitionById } from '../../collections/missions'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
 import type { MissionRewards, MissionSite, MissionSiteId } from '../../model/missionSiteModel'
 import type { Agent } from '../../model/agentModel'
@@ -20,7 +20,7 @@ export function evaluateDeployedMissionSite(
   missionSite: MissionSite,
 ): { rewards: MissionRewards | undefined; battleReport: BattleReport } {
   // Get the mission site definition to access enemy units
-  const missionSiteDefinition = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
 
   // Get agents deployed to this mission site
   const deployedAgents = withIds(state.agents, missionSite.agentIds)

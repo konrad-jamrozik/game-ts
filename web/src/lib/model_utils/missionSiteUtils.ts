@@ -1,4 +1,4 @@
-import { getMissionById } from '../collections/missions'
+import { getMissionSiteDefinitionById } from '../collections/missions'
 import type { MissionSite } from '../model/missionSiteModel'
 import type { MissionSiteState } from '../model/outcomeTypes'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
@@ -114,10 +114,9 @@ export function validateMissionSiteDeployment(missionSite: MissionSite | undefin
  * @returns Formatted string in the format "{siteId} {missionId}" (e.g., "001 apprehend-red-dawn")
  */
 export function fmtMissionSiteIdWithMissionId(missionSite: MissionSite): string {
-  // KJA1 make fmtNoPrefix generic, just rip out any common prefix
-  const missionSiteDefinition = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
   const missionSiteIdWithoutPrefix = fmtNoPrefix(missionSite.id, 'mission-site-')
-  let missionIdWithoutPrefix = fmtNoPrefix(missionSiteDefinition.id, 'mission-')
+  let missionIdWithoutPrefix = fmtNoPrefix(missionSiteDefinition.id, 'mission-def-')
 
   const removeFactionName = false
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

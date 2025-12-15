@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionById } from '../../lib/collections/missions'
+import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
 import { setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import type { MissionSiteId } from '../../lib/model/missionSiteModel'
@@ -27,7 +27,7 @@ export function MissionCard({ missionSiteId }: MissionCardProps): React.JSX.Elem
     return <div>Mission site not found</div>
   }
 
-  const missionSiteDefinition = getMissionById(missionSite.missionId)
+  const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
 
   const selected = selectedMissionSiteId === missionSite.id
   const isDeployed = missionSite.state === 'Deployed'

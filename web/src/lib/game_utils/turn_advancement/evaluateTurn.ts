@@ -1,4 +1,4 @@
-import { getMissionById, generateMissionId } from '../../collections/missions'
+import { getMissionSiteDefinitionById, generateMissionSiteDefinitionId } from '../../collections/missions'
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
@@ -172,7 +172,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
       missionSite.expiresIn -= 1
       if (missionSite.expiresIn <= 0) {
         missionSite.state = 'Expired'
-        const missionSiteDefinition = getMissionById(missionSite.missionId)
+        const missionSiteDefinition = getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId)
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
@@ -227,8 +227,9 @@ function evaluateDeployedMissionSites(state: GameState): {
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      const { id: missionSiteId, missionId, agentIds, enemies } = missionSite
-      const missionSiteDefinition = getMissionById(missionId)
+      // KJA1 why id: and name: ?
+      const { id: missionSiteId, missionSiteDefinitionId, agentIds, enemies } = missionSite
+      const missionSiteDefinition = getMissionSiteDefinitionById(missionSiteDefinitionId)
       const { name: missionName } = missionSiteDefinition
       const deployedAgents = withIds(state.agents, agentIds)
 
@@ -586,14 +587,14 @@ function spawnDefensiveMissionSite(state: GameState, faction: Faction): void {
   // Convert mission site definition stats to enemy counts object
   const enemyCounts = selectedMissionSiteDefinition
 
-  // Generate missionId using the same pattern as offensive missions
+  // Generate missionSiteDefinitionId using the same pattern as offensive missions
   const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
-  const missionId = generateMissionId(selectedMissionSiteDefinition.name, factionTemplate)
+  const missionSiteDefinitionId = generateMissionSiteDefinitionId(selectedMissionSiteDefinition.name, factionTemplate)
 
   bldMissionSite({
     state,
-    missionId,
+    missionSiteDefinitionId,
     expiresIn: selectedMissionSiteDefinition.expiresIn,
     enemyCounts,
     operationLevel,

@@ -1,11 +1,11 @@
 import type { GameState } from '../model/gameStateModel'
-import type { MissionSite, MissionSiteId } from '../model/missionSiteModel'
+import type { MissionSite, MissionSiteId, MissionSiteDefinitionId } from '../model/missionSiteModel'
 import type { EnemyCounts } from '../collections/missionStatsTables'
 import { bldEnemies } from '../ruleset/enemyRuleset'
 
 type CreateMissionSiteParams = {
   state: GameState
-  missionId: string
+  missionSiteDefinitionId: MissionSiteDefinitionId
   expiresIn: number | 'never'
   enemyCounts: Partial<EnemyCounts>
   operationLevel?: number
@@ -15,9 +15,8 @@ type CreateMissionSiteParams = {
  * Creates a new mission site and adds it to the game state.
  * Returns the created mission site.
  */
-// KJA2 bldMissionSite should take missionSiteDefinitionId as param
 export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
-  const { state, missionId, expiresIn, enemyCounts, operationLevel } = params
+  const { state, missionSiteDefinitionId, expiresIn, enemyCounts, operationLevel } = params
 
   // Invariant: next mission site numeric id is always the current number of mission sites
   const nextMissionNumericId = state.missionSites.length
@@ -25,7 +24,7 @@ export function bldMissionSite(params: CreateMissionSiteParams): MissionSite {
 
   const newMissionSite: MissionSite = {
     id: missionSiteId,
-    missionId,
+    missionSiteDefinitionId,
     agentIds: [],
     state: 'Active',
     expiresIn,

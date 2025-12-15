@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionById } from '../../lib/collections/missions'
+import { getMissionSiteDefinitionById } from '../../lib/collections/missions'
 import type { MissionSite } from '../../lib/model/missionSiteModel'
 import { clearMissionSelection, setMissionSiteSelection } from '../../redux/slices/selectionSlice'
 import {
@@ -50,7 +50,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
 
   // Transform all mission sites to rows (both active and archived)
   const allActiveRows: MissionRow[] = sortedActiveMissionSites.map((site, index) => {
-    const missionSiteDefinition = getMissionById(site.missionId)
+    const missionSiteDefinition = getMissionSiteDefinitionById(site.missionSiteDefinitionId)
     const displayId = fmtNoPrefix(site.id, 'mission-site-')
 
     return {
@@ -62,7 +62,7 @@ export function MissionSitesDataGrid(): React.JSX.Element {
   })
 
   const allArchivedRows: MissionRow[] = sortedArchivedMissionSites.map((site, index) => {
-    const missionSiteDefinition = getMissionById(site.missionId)
+    const missionSiteDefinition = getMissionSiteDefinitionById(site.missionSiteDefinitionId)
     const displayId = fmtNoPrefix(site.id, 'mission-site-')
 
     return {

@@ -56,7 +56,13 @@ export function ArchivedLeadCards(): React.JSX.Element {
   }
 
   // Get mission IDs that have won mission sites
-  const wonMissionIds = new Set(missionSites.filter((site) => site.state === 'Won').map((site) => site.missionId))
+  // KJA1 why? there should be no mission- left
+  // Convert mission-def-X to mission-X format for comparison with lead dependencies
+  const wonMissionIds = new Set(
+    missionSites
+      .filter((site) => site.state === 'Won')
+      .map((site) => site.missionSiteDefinitionId.replace(/^mission-def-/u, 'mission-')),
+  )
 
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>

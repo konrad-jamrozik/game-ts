@@ -42,7 +42,7 @@ export function spawnMissionSites(state: GameState): void {
   for (const missionSiteDefinition of filteredOffensiveMissionSiteDefinitions) {
     bldMissionSite({
       state,
-      missionId: missionSiteDefinition.id,
+      missionSiteDefinitionId: missionSiteDefinition.id,
       expiresIn: missionSiteDefinition.expiresIn,
       enemyCounts: missionSiteDefinition.enemyCounts,
     })

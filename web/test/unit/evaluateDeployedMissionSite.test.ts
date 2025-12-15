@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { MissionSite } from '../../src/lib/model/missionSiteModel'
+import type { MissionSite, MissionSiteDefinitionId } from '../../src/lib/model/missionSiteModel'
 import { evaluateDeployedMissionSite } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMissionSite'
 import {
   AGENT_CAP,
@@ -38,7 +38,7 @@ describe(evaluateDeployedMissionSite, () => {
     // Create a test mission site with weak enemies
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -112,7 +112,7 @@ describe(evaluateDeployedMissionSite, () => {
 
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -201,7 +201,7 @@ describe(evaluateDeployedMissionSite, () => {
 
     const testMissionSite: MissionSite = {
       id: 'mission-site-001',
-      missionId: 'mission-apprehend-cult-member-red-dawn',
+      missionSiteDefinitionId: 'mission-def-apprehend-cult-member-red-dawn' as MissionSiteDefinitionId,
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
