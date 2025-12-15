@@ -22,19 +22,15 @@ export function LeadCards(): React.JSX.Element {
     setExpanded(!expanded)
   }
 
-  // Get mission IDs that have won mission sites
-  // KJA1 why? there should be no mission- left
-  // Convert mission-def-X to mission-X format for comparison with lead dependencies
-  const wonMissionIds = new Set(
-    missionSites
-      .filter((site) => site.state === 'Won')
-      .map((site) => site.missionSiteDefinitionId.replace(/^mission-def-/u, 'mission-')),
+  // Get mission definition IDs that have won mission sites
+  const wonMissionDefIds = new Set<string>(
+    missionSites.filter((site) => site.state === 'Won').map((site) => site.missionSiteDefinitionId),
   )
 
   // Filter out leads that have unmet dependencies
   const discoveredLeads = leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionDefIds.has(dependencyId),
     ),
   )
 

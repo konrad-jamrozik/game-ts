@@ -176,7 +176,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
-        const { operationLevel, id } = missionSite
+        const { operationLevel, id: missionSiteId } = missionSite
         if (typeof operationLevel === 'number') {
           // Level 6 existential mission expired - game over
           if (operationLevel === 6) {
@@ -195,7 +195,7 @@ function updateActiveMissionSites(state: GameState): ExpiredMissionSiteReport[] 
           const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
 
           expiredReports.push({
-            missionSiteId: id,
+            missionSiteId,
             missionName: missionSiteDefinition.name,
             factionId,
             factionName,
@@ -227,7 +227,6 @@ function evaluateDeployedMissionSites(state: GameState): {
 
   for (const missionSite of state.missionSites) {
     if (missionSite.state === 'Deployed') {
-      // KJA1 why id: and name: ?
       const { id: missionSiteId, missionSiteDefinitionId, agentIds, enemies } = missionSite
       const missionSiteDefinition = getMissionSiteDefinitionById(missionSiteDefinitionId)
       const { name: missionName } = missionSiteDefinition

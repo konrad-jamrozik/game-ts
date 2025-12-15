@@ -95,10 +95,11 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       // Find the mission site to get the mission info for logging
       const missionSite = gameState.missionSites.find((site) => site.id === missionSiteId)
-      // KJA1 bar var name
-      const missionName = missionSite ? getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId).name : 'Unknown Mission'
+      const missionSiteDefinitionId = missionSite
+        ? getMissionSiteDefinitionById(missionSite.missionSiteDefinitionId).name
+        : 'Unknown Mission'
 
-      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
+      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionSiteDefinitionId}`)
     } else if (buyUpgrade.match(action)) {
       const upgradeName = action.payload
       postTextEvent(`Bought upgrade: ${upgradeName}`)
