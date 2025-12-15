@@ -1,11 +1,12 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { LeadInvestigationId } from '../../lib/model/leadModel'
+import type { AgentId } from '../../lib/model/agentModel'
+import type { LeadId, LeadInvestigationId } from '../../lib/model/leadModel'
 import type { MissionId } from '../../lib/model/missionModel'
 import type { UpgradeName } from '../../lib/collections/upgrades'
 
 export type SelectionState = {
-  agents: string[]
-  selectedLeadId?: string
+  agents: AgentId[]
+  selectedLeadId?: LeadId
   selectedInvestigationId?: LeadInvestigationId
   selectedMissionId?: MissionId
   selectedUpgradeName?: UpgradeName
@@ -21,13 +22,13 @@ const selectionSlice = createSlice({
   name: 'selection',
   initialState,
   reducers: {
-    setAgentSelection(state, action: PayloadAction<string[]>) {
+    setAgentSelection(state, action: PayloadAction<AgentId[]>) {
       state.agents = action.payload
     },
     clearAgentSelection(state) {
       state.agents = []
     },
-    setLeadSelection(state, action: PayloadAction<string>) {
+    setLeadSelection(state, action: PayloadAction<LeadId>) {
       state.selectedLeadId = action.payload
     },
     clearLeadSelection(state) {

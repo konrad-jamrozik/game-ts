@@ -1,4 +1,4 @@
-import type { FactionId } from './missionModel'
+export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
 
 /**
  * Activity level progression values.

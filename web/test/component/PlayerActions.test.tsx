@@ -5,8 +5,10 @@ import { ui } from '../fixtures/uiFixture'
 import { AGENT_HIRE_COST } from '../../src/lib/ruleset/constants'
 import { agFix } from '../fixtures/agentFixture'
 
+import type { AgentId } from '../../src/lib/model/agentModel'
+
 describe(PlayerActions, () => {
-  const agentId = 'agent-1'
+  const agentId = 'agent-1' as AgentId
 
   test("click 'hire agent' button -> happy path", async () => {
     const initialMoney = 100
@@ -169,10 +171,10 @@ describe(PlayerActions, () => {
   test("click 'deploy agents to active mission site' button -> alert: transport cap exceeded by deployed missions", async () => {
     const deployedMissionId = 'mission-1'
     const newMissionId = 'mission-2'
-    const deployedAgents = ['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'].map((id) =>
-      agFix.bld({ id, state: 'OnMission', assignment: deployedMissionId }),
+    const deployedAgents = (['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'] as AgentId[]).map(
+      (id) => agFix.bld({ id, state: 'OnMission', assignment: deployedMissionId }),
     )
-    const availableAgentIds = ['agent-200', 'agent-201']
+    const availableAgentIds = ['agent-200', 'agent-201'] as AgentId[]
     const availableAgents = availableAgentIds.map((id) => st.bldAgentInStandby(id))
     st.arrangeGameState({
       agents: [...deployedAgents, ...availableAgents],

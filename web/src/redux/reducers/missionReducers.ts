@@ -1,8 +1,9 @@
 import type { GameState } from '../../lib/model/gameStateModel'
+import type { AgentId } from '../../lib/model/agentModel'
 import type { MissionId } from '../../lib/model/missionModel'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
-export const deployAgentsToMission = asPlayerAction<{ missionId: MissionId; agentIds: string[] }>(
+export const deployAgentsToMission = asPlayerAction<{ missionId: MissionId; agentIds: AgentId[] }>(
   (state: GameState, action) => {
     const { missionId, agentIds } = action.payload
 

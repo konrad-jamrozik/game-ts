@@ -1,4 +1,6 @@
 import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
+import type { FactionId } from './factionModel'
+import type { LeadId } from './leadModel'
 import type { MissionRewards } from './missionModel'
 import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
 
@@ -83,7 +85,7 @@ export type PanicBreakdown = {
    * Panic increases from faction operations that succeeded (expired missions)
    */
   factionOperationPenalties: {
-    factionId: string
+    factionId: FactionId
     factionName: string
     operationLevel: number
     panicIncrease: Fixed6
@@ -99,7 +101,7 @@ export type PanicBreakdown = {
 }
 
 export type FactionReport = {
-  factionId: string
+  factionId: FactionId
   factionName: string
   isDiscovered: boolean
   /**
@@ -211,7 +213,7 @@ export type BattleStats = {
 
 export type LeadInvestigationReport = {
   investigationId: string
-  leadId: string
+  leadId: LeadId
   completed: boolean
   accumulatedIntel: number
   successChance: number
@@ -222,7 +224,7 @@ export type LeadInvestigationReport = {
 export type ExpiredMissionReport = {
   missionId: string
   missionName: string
-  factionId: string
+  factionId: FactionId
   factionName: string
   /**
    * The operation level that spawned this mission.

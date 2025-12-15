@@ -180,8 +180,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           }
 
           // Get faction info for the report
-          const factionReward = missionDef.rewards.factionRewards?.[0]
-          const factionId = factionReward?.factionId ?? ''
+          const { factionId } = missionDef
           const faction = state.factions.find((f) => f.id === factionId)
           const factionName = faction?.name ?? 'Unknown'
 

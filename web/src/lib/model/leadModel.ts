@@ -1,13 +1,14 @@
 import type { LeadInvestigationState } from './outcomeTypes'
+import type { AgentId } from './agentModel'
 
 export type { LeadInvestigationState } from './outcomeTypes'
 
-// KJA1 add type LeadId = `lead-${string}`
+export type LeadId = `lead-${string}`
 
 export type LeadInvestigationId = `investigation-${string}`
 
 export type Lead = {
-  id: string
+  id: LeadId
   name: string
   difficulty: number
   description: string
@@ -18,9 +19,9 @@ export type Lead = {
 
 export type LeadInvestigation = {
   id: LeadInvestigationId // unique investigation ID
-  leadId: string
+  leadId: LeadId
   accumulatedIntel: number
-  agentIds: string[] // agents currently investigating this lead
+  agentIds: AgentId[] // agents currently investigating this lead
   startTurn: number // turn when investigation started
   state: LeadInvestigationState
 }

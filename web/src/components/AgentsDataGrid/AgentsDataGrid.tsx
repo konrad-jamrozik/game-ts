@@ -1,7 +1,7 @@
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import type { Agent } from '../../lib/model/agentModel'
+import type { Agent, AgentId } from '../../lib/model/agentModel'
 import { f6max, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
@@ -97,7 +97,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
-    const agentIds: string[] = []
+    const agentIds: AgentId[] = []
     const mgr = createRowSelectionManager(newSelectionModel)
 
     const existingRowIds = rows.map((row) => row.rowId)

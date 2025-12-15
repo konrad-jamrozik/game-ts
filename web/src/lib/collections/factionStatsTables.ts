@@ -22,8 +22,7 @@
  *   The increase may be the minimum threshold up to +50% turns (e.g., 60-90 turns).
  */
 
-import type { ActivityLevel } from '../model/factionModel'
-import type { FactionId } from '../model/missionModel'
+import type { ActivityLevel, FactionId } from '../model/factionModel'
 
 /**
  * Faction definitions.

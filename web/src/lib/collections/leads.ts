@@ -1,4 +1,4 @@
-import type { Lead } from '../model/leadModel'
+import type { Lead, LeadId } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { expandTemplateString } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
@@ -6,7 +6,7 @@ import { LEADS_DATA, type LeadStats } from './leadStatsTables'
 
 export const leads: Lead[] = toLeads(LEADS_DATA)
 
-export function getLeadById(leadId: string): Lead {
+export function getLeadById(leadId: LeadId): Lead {
   const foundLead = leads.find((lead) => lead.id === leadId)
   assertDefined(foundLead, `Lead with id ${leadId} not found`)
   return foundLead
@@ -32,7 +32,7 @@ function toLeads(stats: LeadStats[]): Lead[] {
 
 function bldLead(stat: LeadStats, faction?: FactionStats): Lead {
   return {
-    id: expandTemplateString(stat.id, faction),
+    id: expandTemplateString(stat.id, faction) as LeadId,
     name: expandTemplateString(stat.name, faction),
     description: expandTemplateString(stat.description, faction),
     difficulty: stat.difficulty,

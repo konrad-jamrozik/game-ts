@@ -80,7 +80,7 @@ export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction)
   generateMissionDefsForFaction(faction),
 )
 
-// kja rename, bld
+// KJA3 rename, bld
 function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name

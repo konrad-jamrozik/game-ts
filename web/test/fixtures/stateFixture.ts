@@ -1,6 +1,13 @@
 import { expect } from 'vitest'
 import { store } from '../../src/redux/store'
-import { isActivityAssignment, type Agent, type AgentAssignment, type AgentState } from '../../src/lib/model/agentModel'
+import {
+  isActivityAssignment,
+  type Agent,
+  type AgentAssignment,
+  type AgentId,
+  type AgentState,
+} from '../../src/lib/model/agentModel'
+import type { LeadId } from '../../src/lib/model/leadModel'
 import type { Enemy, Mission, MissionId, MissionDefId } from '../../src/lib/model/missionModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/ruleset/initialState'
@@ -17,11 +24,11 @@ export const st = {
     return store.getState().undoable.present.gameState
   },
 
-  bldAgentInStandby: (id: string): Agent => st.bldAgent(id, 'Standby'),
+  bldAgentInStandby: (id: AgentId): Agent => st.bldAgent(id, 'Standby'),
 
-  bldAgentInContracting: (id: string): Agent => st.bldAgent(id, 'Contracting'),
+  bldAgentInContracting: (id: AgentId): Agent => st.bldAgent(id, 'Contracting'),
 
-  bldAgent(id: string, assignment: AgentAssignment = 'Standby'): Agent {
+  bldAgent(id: AgentId, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState =
       assignment === 'Training' ? 'InTraining' : isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
     return agFix.bld({ id, state, assignment })
@@ -60,7 +67,7 @@ export const st = {
     store.dispatch(reset({ customState }))
   },
 
-  arrangeSelection(options: { agents?: string[]; lead?: string; mission?: MissionId }): void {
+  arrangeSelection(options: { agents?: AgentId[]; lead?: LeadId; mission?: MissionId }): void {
     if (options.agents) {
       store.dispatch(setAgentSelection(options.agents))
     }

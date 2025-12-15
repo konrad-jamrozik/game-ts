@@ -2,7 +2,7 @@ import type { Fixed6 } from '../primitives/fixed6'
 import type { Actor, MissionId } from './missionModel'
 import type { LeadInvestigationId } from './leadModel'
 
-// KJA1 add type AgentId = `agent-${string}`
+export type AgentId = `agent-${string}`
 
 export type AgentState =
   | 'Available'
@@ -38,6 +38,7 @@ export function isAssignmentState(assignment: AgentAssignment): assignment is Ag
 }
 
 export type Agent = Actor & {
+  id: AgentId
   turnHired: number
   turnTerminated?: number
   terminatedOnMissionId?: MissionId
@@ -50,7 +51,7 @@ export type Agent = Actor & {
 }
 
 export type AgentCombatStats = {
-  id: string
+  id: AgentId
   initialEffectiveSkill: Fixed6
   skillGained: Fixed6
 }

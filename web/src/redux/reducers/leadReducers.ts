@@ -1,11 +1,12 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { LeadInvestigationId } from '../../lib/model/leadModel'
+import type { AgentId } from '../../lib/model/agentModel'
+import type { LeadId, LeadInvestigationId } from '../../lib/model/leadModel'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { getLeadById } from '../../lib/collections/leads'
 import { bldLeadInvestigation } from '../../lib/game_utils/leadInvestigationFactory'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
-export const startLeadInvestigation = asPlayerAction<{ leadId: string; agentIds: string[] }>(
+export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
   (state: GameState, action) => {
     const { leadId, agentIds } = action.payload
 
@@ -39,7 +40,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: string; agentIds:
   },
 )
 
-export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: string[] }>(
+export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>(
   (state: GameState, action) => {
     const { investigationId, agentIds } = action.payload
 

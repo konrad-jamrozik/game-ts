@@ -11,8 +11,10 @@ import { getLeadById } from '../../lib/collections/leads'
 import { setLeadSelection, clearInvestigationSelection } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 
+import type { LeadId } from '../../lib/model/leadModel'
+
 export type LeadCardProps = {
-  leadId: string
+  leadId: LeadId
   displayMode?: 'normal' | 'repeated'
 }
 

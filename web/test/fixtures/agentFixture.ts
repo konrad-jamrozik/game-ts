@@ -1,4 +1,4 @@
-import type { Agent } from '../../src/lib/model/agentModel'
+import type { Agent, AgentId } from '../../src/lib/model/agentModel'
 import { bldAgentWithoutState } from '../../src/lib/game_utils/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
@@ -15,7 +15,7 @@ export const agFix = (() => {
     default(): Agent {
       agentIdCounter += 1
       return bldAgentWithoutState({
-        id: `agent-${agentIdCounter}`,
+        id: `agent-${agentIdCounter}` as AgentId,
         turnHired: 1,
         weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
         agentState: 'InTransit',

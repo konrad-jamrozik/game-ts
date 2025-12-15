@@ -1,10 +1,11 @@
 import type { GameState } from '../model/gameStateModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
+import type { AgentId } from '../model/agentModel'
+import type { LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
 
 type CreateLeadInvestigationParams = {
   state: GameState
-  leadId: string
-  agentIds: string[]
+  leadId: LeadId
+  agentIds: AgentId[]
 }
 
 /**

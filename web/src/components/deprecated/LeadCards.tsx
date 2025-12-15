@@ -8,9 +8,12 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
+import type { LeadId } from '../../lib/model/leadModel'
 import { useAppSelector } from '../../redux/hooks'
 import { leads } from '../../lib/collections/leads'
 import { LeadCard } from './LeadCard'
+
+type CardEntry = { leadId: LeadId; displayMode: 'normal' | 'repeated' }
 
 export function LeadCards(): React.JSX.Element {
   const [expanded, setExpanded] = React.useState(true)
@@ -33,7 +36,6 @@ export function LeadCards(): React.JSX.Element {
   )
 
   // Create card entries: only enabled normal cards for repeatable leads
-  type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
   const cardEntries: CardEntry[] = []
 
   // Add normal cards for all discovered leads

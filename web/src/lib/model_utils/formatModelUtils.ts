@@ -1,7 +1,7 @@
 import pluralize from 'pluralize'
 import { getLeadById } from '../collections/leads'
 import { getMissionDefById } from '../collections/missions'
-import type { LeadInvestigation } from '../model/leadModel'
+import type { LeadId, LeadInvestigation } from '../model/leadModel'
 import type { Mission, MissionId } from '../model/missionModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
@@ -49,7 +49,8 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
   return `${f6str(change.previous)} → ${f6str(change.current)}`
 }
 
-/**
+/** KJA1 the signature is busted. It should be only: id: LeadId | LeadInvestigationId | MissionId | FactionId AgentId
+ * And then, if any other info needs to be pulled up, it should be using getLeadById() etc. functions.
  * Formats IDs for display with their names.
  * Accepts LeadInvestigationId, LeadId, AgentId, or MissionId.
  * - LeadInvestigationId: "005 Deep state" (numeric value + lead name)
@@ -85,7 +86,7 @@ export function fmtForDisplay(
   }
 
   // LeadId case
-  const lead = getLeadById(id)
+  const lead = getLeadById(id as LeadId)
   // Try to extract numeric part from lead ID (e.g., "lead-003" -> "003")
   // If no numeric part found, use ID without prefix
   const numericMatch = /\d+/u.exec(id)

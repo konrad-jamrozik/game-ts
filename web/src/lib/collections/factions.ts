@@ -1,5 +1,4 @@
-import type { Faction } from '../model/factionModel'
-import type { FactionId } from '../model/missionModel'
+import type { Faction, FactionId } from '../model/factionModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
@@ -27,7 +26,7 @@ function bldFaction(stat: FactionStats): Faction {
 
 export const factions: Faction[] = toFactions(FACTION_DATA)
 
-export function getFactionById(factionId: string): Faction {
+export function getFactionById(factionId: FactionId): Faction {
   const foundFaction = factions.find((faction) => faction.id === factionId)
   assertDefined(foundFaction, `Faction with id ${factionId} not found`)
   return foundFaction

@@ -5,6 +5,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import * as React from 'react'
+import type { LeadId } from '../../lib/model/leadModel'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { leads } from '../../lib/collections/leads'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
@@ -15,7 +16,7 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 
 export type LeadRow = {
   rowId: number
-  id: string
+  id: LeadId
   name: string
   difficulty: number
   repeatable: boolean

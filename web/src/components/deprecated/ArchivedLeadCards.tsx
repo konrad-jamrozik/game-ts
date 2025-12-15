@@ -9,11 +9,11 @@ import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import type { LeadInvestigation } from '../../lib/model/leadModel'
+import type { LeadId, LeadInvestigation } from '../../lib/model/leadModel'
 import { leads } from '../../lib/collections/leads'
 import { LeadCard } from './LeadCard'
 
-type CardEntry = { leadId: string; displayMode: 'normal' | 'repeated' }
+type CardEntry = { leadId: LeadId; displayMode: 'normal' | 'repeated' }
 
 function getArchivedCardEntries(
   discoveredLeads: typeof leads,

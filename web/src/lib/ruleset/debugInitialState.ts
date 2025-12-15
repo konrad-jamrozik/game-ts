@@ -1,8 +1,8 @@
 /* eslint-disable unicorn/prefer-single-call */
 /* eslint-disable unicorn/no-immediate-mutation */
-import type { Agent } from '../model/agentModel'
+import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDefId } from '../model/missionModel'
-import type { LeadInvestigationId } from '../model/leadModel'
+import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyRuleset'
@@ -14,7 +14,7 @@ import { bldAgentWithoutState } from '../game_utils/agentFactory'
 function bldDebugAgents(
   missionId: MissionId,
   deepStateInvestigationId: LeadInvestigationId,
-): { agents: Agent[]; onMissionAgentIds: string[]; deepStateInvestigationAgentIds: string[] } {
+): { agents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
   let agentCounter = 0
   function nextId(): string {
     const id = agentCounter.toString().padStart(3, '0')
@@ -22,7 +22,7 @@ function bldDebugAgents(
     return id
   }
 
-  const onMissionAgentIds: string[] = []
+  const onMissionAgentIds: AgentId[] = []
   const agents: Agent[] = []
 
   // Create agents using factory function
@@ -221,7 +221,7 @@ function bldDebugAgents(
     }),
   )
 
-  const deepStateInvestigationAgentIds: string[] = []
+  const deepStateInvestigationAgentIds: AgentId[] = []
   for (const agent of agents) {
     if (agent.assignment === deepStateInvestigationId) {
       deepStateInvestigationAgentIds.push(agent.id)
@@ -279,7 +279,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   stateBase.leadInvestigations = {
     [deepStateInvestigationId]: {
       id: deepStateInvestigationId,
-      leadId: 'lead-deep-state',
+      leadId: 'lead-deep-state' as LeadId,
       accumulatedIntel: 0,
       agentIds: deepStateInvestigationAgentIds,
       startTurn: 1,

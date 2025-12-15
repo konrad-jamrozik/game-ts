@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/prefer-switch */
 import type { GameState } from '../model/gameStateModel'
-import type { Agent } from '../model/agentModel'
+import type { Agent, AgentId } from '../model/agentModel'
 import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../ruleset/constants'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from '../ruleset/weaponRuleset'
@@ -10,7 +10,7 @@ type CreateAgentParams = {
   state: GameState
   turnHired: number
   weaponDamage: number
-  id?: string // Optional: if not provided, will be auto-generated
+  id?: AgentId // Optional: if not provided, will be auto-generated
   agentState?: Agent['state'] // Optional: defaults based on assignment
   assignment?: Agent['assignment'] // Optional: defaults to 'Standby'
   skill?: Agent['skill'] // Optional: defaults to AGENT_INITIAL_SKILL
@@ -50,7 +50,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
   } = params
 
   // Generate ID if not provided
-  const agentId = providedId ?? formatAgentId(state.agents.length)
+  const agentId: AgentId = providedId ?? formatAgentId(state.agents.length)
 
   // Determine agent state if not provided
   let finalAgentState: Agent['state'] = 'Available'
@@ -88,7 +88,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
 }
 
 type CreateAgentWithoutStateParams = Omit<CreateAgentParams, 'state' | 'id'> & {
-  id: string
+  id: AgentId
 }
 
 // KJA3 silly duplication of bldAgent

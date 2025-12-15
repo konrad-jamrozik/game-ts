@@ -43,9 +43,9 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const agentsDeployed = agentIds.length
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
 
-  const { rewards } = missionDef
-  const enemyFactionId = rewards.factionRewards?.[0]?.factionId
-  const enemyFaction = enemyFactionId ? getFactionById(enemyFactionId).name : '-'
+  const { rewards, factionId } = missionDef
+  const enemyFactionId = rewards.factionRewards?.[0]?.factionId ?? factionId
+  const enemyFaction = getFactionById(enemyFactionId).name
   const enemyCount = enemies.length
 
   const enemyAverageSkill =

@@ -1,6 +1,8 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
 import type { EnemyCounts } from '../collections/missionStatsTables'
+import type { AgentId } from './agentModel'
+import type { FactionId } from './factionModel'
 
 export type { MissionState } from './outcomeTypes'
 
@@ -9,8 +11,8 @@ export type MissionId = `mission-${string}`
 
 export type MissionDefId = `mission-def-${string}`
 
-// KJA1 move this to factionModel.ts
-export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
+// KJA1 fix: "Re-exported FactionId from missionModel.ts for backward compatibility"
+export type { FactionId }
 
 export type Actor = {
   id: string
@@ -76,7 +78,7 @@ export type MissionDef = {
 export type Mission = {
   id: MissionId
   missionDefId: MissionDefId
-  agentIds: string[]
+  agentIds: AgentId[]
   state: MissionState
   expiresIn: number | 'never'
   enemies: Enemy[] // Enemies present at the mission
