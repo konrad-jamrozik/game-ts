@@ -38,7 +38,7 @@ export const st = {
   },
 
   bldEnemyInitiate(): Enemy {
-    const [enemy] = bldEnemies({ Initiate: 1 })
+    const [enemy] = bldEnemies({ initiate: 1 })
     assertDefined(enemy)
     return enemy
   },

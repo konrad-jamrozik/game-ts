@@ -1,17 +1,16 @@
 import { ENEMY_STATS } from '../collections/enemyStatsTables'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionSiteModel'
+import type { EnemyCounts } from '../collections/missionStatsTables'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponRuleset'
 
 let idCounter = 0
 
-const VALID_ENEMY_TYPES = new Set<string>(ENEMY_TYPES)
-
 /**
  * Creates multiple enemies from an enemy list object
- * Example: { Initiate: 2, Operative: 1 } creates 2 Initiates and 1 Operative
+ * Example: { initiate: 2, operative: 1 } creates 2 Initiates and 1 Operative
  */
-export function bldEnemies(enemyList: Partial<Record<EnemyType, number>>): Enemy[] {
+export function bldEnemies(enemyList: Partial<EnemyCounts>): Enemy[] {
   // Reset enemy ID counter for each mission site
   idCounter = 1
 
@@ -31,44 +30,6 @@ export function bldEnemies(enemyList: Partial<Record<EnemyType, number>>): Enemy
 }
 
 /**
- * Creates multiple enemies from a specification string
- * Example: "2 Initiate, 1 Operative" creates 2 Initiates and 1 Operative
- * @deprecated Use bldEnemies() with enemy list object instead
- */
-export function bldEnemiesFromSpec(spec: string): Enemy[] {
-  // Reset enemy ID counter for each mission site
-  idCounter = 1
-
-  const units: Enemy[] = []
-  const parts = spec.split(',').map((part) => part.trim())
-
-  for (const part of parts) {
-    const match = /^(?<count>\d+)\s+(?<type>.+)$/u.exec(part)
-    if (
-      match?.groups?.['count'] !== undefined &&
-      match.groups['count'] !== '' &&
-      match.groups['type'] !== undefined &&
-      match.groups['type'] !== '' &&
-      isValidEnemyType(match.groups['type'])
-    ) {
-      const count = Number.parseInt(match.groups['count'], 10)
-      const { type } = match.groups
-
-      for (let index = 0; index < count; index += 1) {
-        units.push(bldEnemy(type, idCounter))
-        idCounter += 1
-      }
-    }
-  }
-
-  return units
-}
-
-function isValidEnemyType(type: string): type is EnemyType {
-  return VALID_ENEMY_TYPES.has(type)
-}
-
-/**
  * Creates an enemy of the specified type
  */
 export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
@@ -77,7 +38,7 @@ export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     throw new Error(`Unknown enemy type: ${type}`)
   }
 
-  const id = `enemy-${type.toLowerCase()}-${currentIdCounter}`
+  const id = `enemy-${type}-${currentIdCounter}`
 
   return {
     id,

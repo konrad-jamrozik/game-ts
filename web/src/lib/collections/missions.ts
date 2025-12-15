@@ -1,7 +1,6 @@
-/* eslint-disable unicorn/no-immediate-mutation */
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
-import type { EnemyType, MissionSiteTemplate } from '../model/missionSiteModel'
+import type { MissionSiteTemplate } from '../model/missionSiteModel'
 import { factionTemplates, type FactionTemplate, expandTemplateString, getFactionShortId } from './factions'
 import {
   OFFENSIVE_MISSIONS_DATA,
@@ -11,34 +10,6 @@ import {
 } from './missionStatsTables'
 
 // KJA lots of duplicate code in this file.
-
-type EnemyCounts = {
-  initiate: number
-  operative: number
-  soldier: number
-  elite: number
-  handler: number
-  lieutenant: number
-  commander: number
-  highCommander: number
-  cultLeader: number
-}
-
-export function missionStatsToEnemyList(stats: EnemyCounts): Partial<Record<EnemyType, number>> {
-  const enemyList: Partial<Record<EnemyType, number>> = {}
-
-  enemyList.Initiate = stats.initiate
-  enemyList.Operative = stats.operative
-  enemyList.Soldier = stats.soldier
-  enemyList.Elite = stats.elite
-  enemyList.Handler = stats.handler
-  enemyList.Lieutenant = stats.lieutenant
-  enemyList.Commander = stats.commander
-  enemyList.HighCommander = stats.highCommander
-  enemyList.CultLeader = stats.cultLeader
-
-  return enemyList
-}
 
 function parseSuppression(suppression: string): number {
   if (suppression === 'N/A') {
@@ -70,7 +41,6 @@ function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTempla
     const dependsOn = stats.dependsOn
     const description = stats.description
 
-    const enemyList = missionStatsToEnemyList(stats)
     const suppressionValue = parseSuppression(suppression)
 
     return {
@@ -79,7 +49,7 @@ function generateMissionsForFaction(faction: FactionTemplate): MissionSiteTempla
       description: expandTemplateString(description, faction),
       expiresIn,
       dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
-      enemyList,
+      enemyList: stats,
       factionId: faction.id,
       rewards: {
         money: moneyReward,
@@ -103,12 +73,11 @@ export const offensiveMissions: MissionSiteTemplate[] = factionTemplates.flatMap
   generateMissionsForFaction(faction),
 )
 
+// kja rename, bld
 function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionSiteTemplate[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const name = stats.name
     const expiresIn = stats.expiresIn
-
-    const enemyList = missionStatsToEnemyList(stats)
 
     return {
       id: generateMissionId(name, faction),
@@ -116,7 +85,7 @@ function generateDefensiveMissionsForFaction(faction: FactionTemplate): MissionS
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
       dependsOn: [], // Defensive missions don't depend on leads
-      enemyList,
+      enemyList: stats,
       factionId: faction.id,
       rewards: {
         money: 0, // Rewards are calculated dynamically based on operation level

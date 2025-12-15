@@ -1,12 +1,13 @@
 import type { GameState } from '../model/gameStateModel'
-import type { EnemyType, MissionSite, MissionSiteId } from '../model/missionSiteModel'
+import type { MissionSite, MissionSiteId } from '../model/missionSiteModel'
+import type { EnemyCounts } from '../collections/missionStatsTables'
 import { bldEnemies } from '../ruleset/enemyRuleset'
 
 type CreateMissionSiteParams = {
   state: GameState
   missionId: string
   expiresIn: number | 'never'
-  enemyList: Partial<Record<EnemyType, number>>
+  enemyList: Partial<EnemyCounts> // KJA rename to enemyCounts
   operationLevel?: number
 }
 

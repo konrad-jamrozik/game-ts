@@ -16,6 +16,21 @@ import type { EnemyType } from '../model/missionSiteModel'
  * - IsOfficer: Whether this unit type is an officer (affects mission composition).
  */
 
+// prettier-ignore
+export const ENEMY_STATS_DATA: EnemyStats[] = toEnemyStats(
+  [
+    // Name,            Aliases, Skill,  HP, Weapon, IsOfficer
+    ['initiate',      'In Init',    40,  20,      8, false ],
+    ['operative',     'Op Oper',    60,  25,     10, false ],
+    ['handler',       'Hn Hndl',    80,  25,     10, true  ],
+    ['soldier',       'Sl Sldr',   120,  30,     14, false ],
+    ['lieutenant',    'Lt Ltnt',   140,  30,     16, true  ],
+    ['elite',         'El Elit',   250,  40,     20, false ],
+    ['commander',     'Cm Cmdr',   300,  40,     22, true  ],
+    ['highCommander', 'HC HCmd',   500,  50,     28, true  ],
+    ['cultLeader',    'CL CLdr',   800,  80,     32, true  ],
+  ])
+
 export const ENEMY_STATS = bldEnemyStats()
 
 export type EnemyStats = {
@@ -26,21 +41,6 @@ export type EnemyStats = {
   damage: number
   isOfficer: boolean
 }
-
-// prettier-ignore
-export const ENEMY_STATS_DATA: EnemyStats[] = toEnemyStats(
-  [
-    // Name,            Aliases, Skill,  HP, Weapon, IsOfficer
-    ['Initiate',      'In Init',    40,  20,      8, false ],
-    ['Operative',     'Op Oper',    60,  25,     10, false ],
-    ['Handler',       'Hn Hndl',    80,  25,     10, true  ],
-    ['Soldier',       'Sl Sldr',   120,  30,     14, false ],
-    ['Lieutenant',    'Lt Ltnt',   140,  30,     16, true  ],
-    ['Elite',         'El Elit',   250,  40,     20, false ],
-    ['Commander',     'Cm Cmdr',   300,  40,     22, true  ],
-    ['HighCommander', 'HC HCmd',   500,  50,     28, true  ],
-    ['CultLeader',    'CL CLdr',   800,  80,     32, true  ],
-  ])
 
 type EnemyStatsRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 
@@ -55,16 +55,11 @@ function toEnemyStats(rows: EnemyStatsRow[]): EnemyStats[] {
   }))
 }
 
-function bldEnemyStats(): Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> {
-  const stats: Record<string, { skill: Fixed6; hp: number; damage: number; isOfficer: boolean }> = {}
+function bldEnemyStats(): Record<string, EnemyStats> {
+  const stats: Record<string, EnemyStats> = {}
 
   for (const enemyStat of ENEMY_STATS_DATA) {
-    stats[enemyStat.name] = {
-      skill: enemyStat.skill,
-      hp: enemyStat.hp,
-      damage: enemyStat.damage,
-      isOfficer: enemyStat.isOfficer,
-    }
+    stats[enemyStat.name] = enemyStat
   }
 
   return stats

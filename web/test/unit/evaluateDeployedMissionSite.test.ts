@@ -42,7 +42,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ Initiate: 1 }),
+      enemies: bldEnemies({ initiate: 1 }),
     }
 
     // Create a minimal game state
@@ -116,7 +116,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ Soldier: 2 }),
+      enemies: bldEnemies({ soldier: 2 }),
     }
 
     const gameState: GameState = {
@@ -205,7 +205,7 @@ describe(evaluateDeployedMissionSite, () => {
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ CultLeader: 3 }),
+      enemies: bldEnemies({ cultLeader: 3 }),
     }
 
     const gameState: GameState = {

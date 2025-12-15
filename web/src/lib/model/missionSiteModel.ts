@@ -1,5 +1,6 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionSiteState } from './outcomeTypes'
+import type { EnemyCounts } from '../collections/missionStatsTables'
 
 export type { MissionSiteState } from './outcomeTypes'
 
@@ -23,15 +24,15 @@ export type Weapon = {
 }
 
 export const ENEMY_TYPES = [
-  'Initiate',
-  'Operative',
-  'Handler',
-  'Soldier',
-  'Lieutenant',
-  'Elite',
-  'Commander',
-  'HighCommander',
-  'CultLeader',
+  'initiate',
+  'operative',
+  'handler',
+  'soldier',
+  'lieutenant',
+  'elite',
+  'commander',
+  'highCommander',
+  'cultLeader',
 ] as const
 
 export type EnemyType = (typeof ENEMY_TYPES)[number]
@@ -57,15 +58,13 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-// KJA1 simplify this type: Partial<Record<EnemyType, number>>
-
 export type MissionSiteTemplate = {
   id: string
   name: string
   description: string
   expiresIn: number | 'never'
   dependsOn: string[]
-  enemyList: Partial<Record<EnemyType, number>>
+  enemyList: Partial<EnemyCounts>
   factionId: FactionId
   rewards: MissionRewards
 }

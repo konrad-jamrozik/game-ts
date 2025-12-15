@@ -12,7 +12,7 @@ export const enFix = (() => {
     },
 
     default(): Enemy {
-      const enemy = bldEnemy('Initiate', enemyIdCounter)
+      const enemy = bldEnemy('initiate', enemyIdCounter)
       return enemy
     },
 
