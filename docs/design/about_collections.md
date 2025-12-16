@@ -65,7 +65,7 @@ For example:
 export const leads: Lead[] = toLeadsCollection(CONCEPTS_DATA_TABLE)
 
 // OBSOLETE, TO BE REMOVED; Use Concept[] instead
-export const faction_activity_levels: ActivityLevel[] = toFactionActivityLevels(FACTION_ACTIVITY_LEVELS_DATA_TABLE)
+export const factionActivityLevelDefs: FactionActivityLevelDef[] = toFactionActivityLevelDefsCollection(FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE)
 ```
 
 Existing code that needs rework:

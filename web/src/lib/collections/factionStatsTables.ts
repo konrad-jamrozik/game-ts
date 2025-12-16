@@ -3,10 +3,10 @@
  *
  * This file contains tables related to factions.
  *
- * Note: Activity level data has been moved to factionActivityLevelDataTable.ts
+ * Note: Activity level data has been moved to factionActivityLevelDefsDataTable.ts
  */
 
-import type { ActivityLevelOrd, FactionId } from '../model/factionModel'
+import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'
 
 /**
  * Faction definitions.
@@ -27,10 +27,10 @@ export const FACTION_DATA: FactionStats[] = toFactionStats([
 export type FactionStats = {
   id: FactionId
   name: string
-  initialActivityLevel: ActivityLevelOrd
+  initialActivityLevel: FactionActivityLevelOrd
 }
 
-type FactionStatsRow = [id: FactionId, name: string, initialActivityLevel: ActivityLevelOrd]
+type FactionStatsRow = [id: FactionId, name: string, initialActivityLevel: FactionActivityLevelOrd]
 
 function toFactionStats(rows: FactionStatsRow[]): FactionStats[] {
   return rows.map((row) => ({

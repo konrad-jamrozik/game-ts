@@ -32,10 +32,10 @@
  *   any amount of times in a row.
  */
 
-import type { ActivityLevelName, ActivityLevelOrd } from '../model/factionModel'
+import type { FactionActivityLevelName, FactionActivityLevelOrd } from '../model/factionModel'
 
 // prettier-ignore
-export const FACTION_ACTIVITY_LEVELS_DATA_TABLE: ActivityLevelData[] = toActivityLevelData([
+export const FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE: FactionActivityLevelData[] = toFactionActivityLevelData([
   // Ord, Name,        TurnsMin, TurnsMax, FreqMin, FreqMax, L1%,  L2%,  L3%,  L4%,  L5%,  L6%
   [0,    'Dormant',    15,       30,       '',      '',      '',   '',   '',   '',   '',   ''],
   [1,    'Faint',      60,       90,       15,      25,      80,   20,   '',   '',   '',   ''],
@@ -47,9 +47,9 @@ export const FACTION_ACTIVITY_LEVELS_DATA_TABLE: ActivityLevelData[] = toActivit
   [7,    'Total war',  Infinity, Infinity,  7,      17,      10,   15,   25,   25,   15,   10],
 ])
 
-export type ActivityLevelData = {
-  ord: ActivityLevelOrd
-  name: ActivityLevelName
+export type FactionActivityLevelData = {
+  ord: FactionActivityLevelOrd
+  name: FactionActivityLevelName
   turnsMin: number
   turnsMax: number
   frequencyMin: number | ''
@@ -62,9 +62,9 @@ export type ActivityLevelData = {
   level6ProbPct: number | ''
 }
 
-type ActivityLevelDataRow = [
-  ord: ActivityLevelOrd,
-  name: ActivityLevelName,
+type FactionActivityLevelDataRow = [
+  ord: FactionActivityLevelOrd,
+  name: FactionActivityLevelName,
   turnsMin: number,
   turnsMax: number,
   frequencyMin: number | '',
@@ -77,7 +77,7 @@ type ActivityLevelDataRow = [
   level6ProbPct: number | '',
 ]
 
-function toActivityLevelData(rows: ActivityLevelDataRow[]): ActivityLevelData[] {
+function toFactionActivityLevelData(rows: FactionActivityLevelDataRow[]): FactionActivityLevelData[] {
   return rows.map((row) => ({
     ord: row[0],
     name: row[1],

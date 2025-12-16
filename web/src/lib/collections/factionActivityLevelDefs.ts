@@ -1,14 +1,13 @@
 import { assertDefined } from '../primitives/assertPrimitives'
-import type { ActivityLevelOrd } from '../model/factionModel'
-import { FACTION_ACTIVITY_LEVELS_DATA_TABLE, type ActivityLevelData } from './factionActivityLevelDataTable'
+import type { FactionActivityLevelOrd } from '../model/factionModel'
+import { FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE, type FactionActivityLevelData } from './factionActivityLevelDefsDataTable'
 
-// KJA1 rename to FactionActivityLevelDef
 /**
  * Activity level definition.
  * Contains all configuration data for a faction activity level.
  */
-export type ActivityLevel = {
-  ord: ActivityLevelOrd
+export type FactionActivityLevelDef = {
+  ord: FactionActivityLevelOrd
   name: string
   minTurns: number
   maxTurns: number
@@ -17,12 +16,12 @@ export type ActivityLevel = {
   operationLevelWeights: [number, number, number, number, number, number]
 }
 
-export const factionActivityLevels: ActivityLevel[] = toFactionActivityLevelsCollection(
-  FACTION_ACTIVITY_LEVELS_DATA_TABLE,
+export const factionActivityLevelDefs: FactionActivityLevelDef[] = toFactionActivityLevelDefsCollection(
+  FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE,
 )
 
-export function getActivityLevelByOrd(ord: ActivityLevelOrd): ActivityLevel {
-  const found = factionActivityLevels.find((level) => level.ord === ord)
+export function getFactionActivityLevelDefByOrd(ord: FactionActivityLevelOrd): FactionActivityLevelDef {
+  const found = factionActivityLevelDefs.find((level) => level.ord === ord)
   assertDefined(found, `Activity level with ord ${ord} not found`)
   return found
 }
@@ -41,7 +40,7 @@ function getOperationLevelWeight(weight: number | ''): number {
   return weight
 }
 
-function getOperationLevelWeights(data: ActivityLevelData): [number, number, number, number, number, number] {
+function getOperationLevelWeights(data: FactionActivityLevelData): [number, number, number, number, number, number] {
   return [
     getOperationLevelWeight(data.level1ProbPct),
     getOperationLevelWeight(data.level2ProbPct),
@@ -52,7 +51,7 @@ function getOperationLevelWeights(data: ActivityLevelData): [number, number, num
   ]
 }
 
-function toFactionActivityLevelsCollection(data: ActivityLevelData[]): ActivityLevel[] {
+function toFactionActivityLevelDefsCollection(data: FactionActivityLevelData[]): FactionActivityLevelDef[] {
   return data.map((row) => ({
     ord: row.ord,
     name: row.name,
