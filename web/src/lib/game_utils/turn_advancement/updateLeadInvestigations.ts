@@ -6,7 +6,7 @@ import type { Mission } from '../../model/missionModel'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../ruleset/constants'
-import { getLeadAccumulatedIntel, getLeadSuccessChance } from '../../ruleset/leadRuleset'
+import { getLeadIntelFromAgents, getLeadSuccessChance } from '../../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
@@ -44,7 +44,7 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
   // Accumulate new intel from assigned agents using Probability Pressure system
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
   const lead = getLeadById(investigation.leadId)
-  const intelGain = getLeadAccumulatedIntel(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
+  const intelGain = getLeadIntelFromAgents(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
   investigation.accumulatedIntel += intelGain
 
   applyExhaustion(agentsInvestigating, AGENT_EXHAUSTION_INCREASE_PER_TURN)

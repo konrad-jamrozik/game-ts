@@ -13,7 +13,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
 import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
-import { getLeadAccumulatedIntel, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
+import { getLeadIntelFromAgents, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -162,7 +162,7 @@ function bldAllInvestigationRows(
     if (investigation.state === 'Active') {
       // Calculate projected intel using Probability Pressure system
       const agentsInvestigating = investigatingAgents(agents, investigation)
-      const intelGain = getLeadAccumulatedIntel(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
+      const intelGain = getLeadIntelFromAgents(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
       projectedIntel = investigation.accumulatedIntel + intelGain
 
       // Calculate diff for chip display

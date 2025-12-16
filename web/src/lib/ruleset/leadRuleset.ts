@@ -113,8 +113,7 @@ export function sumAgentEffectiveSkills(agents: Agent[]): number {
  * @param difficulty - The lead difficulty
  * @returns The intel gain for this turn
  */
-// KJA3 rename to getLeadInvestigationIntelGain
-export function getLeadAccumulatedIntel(agents: Agent[], currentIntel: number, difficulty: number): number {
+export function getLeadIntelFromAgents(agents: Agent[], currentIntel: number, difficulty: number): number {
   if (agents.length === 0) {
     return 0
   }
