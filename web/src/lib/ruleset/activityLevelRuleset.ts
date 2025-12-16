@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import {
   FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA,
-  FACTION_OPERATION_DATA,
+  FACTION_OPERATION_LEVEL_DATA,
   FACTION_OPERATION_ROLL_PROBABILITY_DATA,
   type FactionOperationRollProbabilityStats,
   type FactionOperationStats,
 } from '../collections/factionStatsTables'
 import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/factionModel'
-import { assertInRange } from '../primitives/assertPrimitives'
+import { assertDefined, assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 
 /**
@@ -180,7 +180,7 @@ export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
     return toF6(0)
   }
   const stats = getFactionOperationStats(operationLevel)
-  return toF6(stats?.panicIncrease ?? 0.001) // KJA3 fail fast on ??. Same for the other functions.
+  return toF6(stats.panicIncreasePct / 100)
 }
 
 /**
@@ -193,7 +193,7 @@ export function getFundingDecreaseForOperation(operationLevel: number): number {
     return 0
   }
   const stats = getFactionOperationStats(operationLevel)
-  return stats?.fundingPenalty ?? 0
+  return stats.fundingPenalty
 }
 
 /**
@@ -205,7 +205,7 @@ export function getMoneyRewardForOperation(operationLevel: number): number {
     return 0
   }
   const stats = getFactionOperationStats(operationLevel)
-  return stats?.moneyReward ?? 0
+  return stats.moneyReward
 }
 
 /**
@@ -217,11 +217,13 @@ export function getFundingRewardForOperation(operationLevel: number): number {
     return 0
   }
   const stats = getFactionOperationStats(operationLevel)
-  return stats?.fundingReward ?? 0
+  return stats.fundingReward
 }
 
-function getFactionOperationStats(operationLevel: number): FactionOperationStats | undefined {
-  return FACTION_OPERATION_DATA.find((stats) => stats.level === operationLevel)
+function getFactionOperationStats(operationLevel: number): FactionOperationStats {
+  const result = FACTION_OPERATION_LEVEL_DATA.find((stats) => stats.level === operationLevel)
+  assertDefined(result)
+  return result
 }
 
 /**
