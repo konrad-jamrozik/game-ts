@@ -1,6 +1,9 @@
 import { assertDefined } from '../primitives/assertPrimitives'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
-import { FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE, type FactionActivityLevelData } from './factionActivityLevelDefsDataTable'
+import {
+  FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE,
+  type FactionActivityLevelData,
+} from './factionActivityLevelDefsDataTable'
 
 /**
  * Activity level definition.
