@@ -171,8 +171,8 @@ describe(PlayerActions, () => {
   test("click 'deploy agents to active mission site' button -> alert: transport cap exceeded by deployed missions", async () => {
     const deployedMissionId = 'mission-1'
     const newMissionId = 'mission-2'
-    const deployedAgents = (['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'] as AgentId[]).map(
-      (id) => agFix.bld({ id, state: 'OnMission', assignment: deployedMissionId }),
+    const deployedAgents = (['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'] as AgentId[]).map((id) =>
+      agFix.bld({ id, state: 'OnMission', assignment: deployedMissionId }),
     )
     const availableAgentIds = ['agent-200', 'agent-201'] as AgentId[]
     const availableAgents = availableAgentIds.map((id) => st.bldAgentInStandby(id))
