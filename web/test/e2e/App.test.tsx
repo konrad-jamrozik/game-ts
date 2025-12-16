@@ -147,7 +147,7 @@ async function step3SelectAgent002(): Promise<void> {
  */
 async function step4ClickCriminalOrganizationsLead(): Promise<void> {
   // Select the Criminal organizations lead by clicking its checkbox
-  await selectLead('criminal-orgs')
+  await selectLead('Criminal organizations')
 
   console.log('✅ Step 4 completed: Select "Criminal organizations" lead')
 }
@@ -175,8 +175,8 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
  * Step 6: Select mission "001" by clicking its checkbox in the Missions DataGrid
  */
 async function step6SelectMission001(): Promise<void> {
-  // Select mission "001 apprehend-cult-member-red-dawn" by clicking its checkbox
-  await selectMission('001 apprehend-cult-member-red-dawn')
+  // Select mission "001 Apprehend Red Dawn member" by clicking its checkbox
+  await selectMission('001 Apprehend Red Dawn member')
 
   console.log('✅ Step 6 completed: Select mission "001"')
 }
