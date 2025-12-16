@@ -138,7 +138,7 @@ describe(PlayerActions, () => {
     st.expectLeadNotInvestigated(leadId)
   })
 
-  test("click 'deploy agents to active mission site' button -> happy path", async () => {
+  test("click 'deploy agents to active mission' button -> happy path", async () => {
     const missionId = 'mission-1'
     st.arrangeGameState({
       agents: [st.bldAgentInStandby(agentId)],
@@ -152,7 +152,7 @@ describe(PlayerActions, () => {
     st.expectAgentsDeployed([agentId], missionId)
   })
 
-  test("click 'deploy agents to active mission site' button -> alert: agents in invalid states", async () => {
+  test("click 'deploy agents to active mission' button -> alert: agents in invalid states", async () => {
     const missionId = 'mission-1'
     st.arrangeGameState({
       agents: [st.bldAgentInContracting(agentId)],
@@ -168,7 +168,7 @@ describe(PlayerActions, () => {
     st.expectAgentsOnAssignment([agentId], 'Contracting') // Expect unchanged
   })
 
-  test("click 'deploy agents to active mission site' button -> alert: transport cap exceeded by deployed missions", async () => {
+  test("click 'deploy agents to active mission' button -> alert: transport cap exceeded by deployed missions", async () => {
     const deployedMissionId = 'mission-1'
     const newMissionId = 'mission-2'
     const deployedAgents = (['agent-100', 'agent-101', 'agent-102', 'agent-103', 'agent-104'] as AgentId[]).map((id) =>

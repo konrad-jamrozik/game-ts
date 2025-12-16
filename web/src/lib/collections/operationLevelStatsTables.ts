@@ -26,6 +26,7 @@ type OperationLevelRow = [
   fundingPenalty: number,
 ]
 
+// KJA1 unused?
 // prettier-ignore
 export const OPERATION_LEVEL_STATS_DATA: OperationLevelRow[] = [
   // Level, Description,               Panic %, Money, Fund+, Fund-

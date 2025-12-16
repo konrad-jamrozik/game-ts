@@ -172,7 +172,7 @@ async function step5ClickInvestigateLeadButton(): Promise<void> {
 }
 
 /**
- * Step 6: Select mission "001" by clicking its checkbox in the Mission Sites DataGrid
+ * Step 6: Select mission "001" by clicking its checkbox in the Missions DataGrid
  */
 async function step6SelectMission001(): Promise<void> {
   // Select mission "001 apprehend-cult-member-red-dawn" by clicking its checkbox
@@ -274,7 +274,7 @@ async function step10AdvanceTurnToGameOver(): Promise<void> {
 
   const currentMoneyValue = getCurrentMoneyValue()
   // If money is still above zero, next turn one more time
-  // This may happen if e.g. the evaluation of completed mission site resulted in an agent being
+  // This may happen if e.g. the evaluation of completed mission resulted in an agent being
   // terminated, hence lower upkeep, hence player still having sufficient funds.
   if (currentMoneyValue > 0) {
     await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))

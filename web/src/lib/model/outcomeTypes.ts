@@ -49,7 +49,7 @@ export type MissionState = (typeof ALL_MISSION_STATES)[number]
 /**
  * Lead investigation states.
  * - Active: Investigation ongoing
- * - Done: Investigation succeeded, mission sites created
+ * - Done: Investigation succeeded, missions created
  * - Abandoned: Player cancelled the investigation
  */
 export const LEAD_INVESTIGATION_STATES = ['Active', 'Done', 'Abandoned'] as const
