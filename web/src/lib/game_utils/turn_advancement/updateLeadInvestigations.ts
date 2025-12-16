@@ -119,7 +119,7 @@ function completeInvestigation(
   state.leadInvestigationCounts[investigation.leadId] = currentCount + 1
 
   // Create missions for dependent missions
-  const missions = bldMissionsForLead(state, investigation.leadId)
+  const missions = bldMissionsFromLeadCompletion(state, investigation.leadId)
   const createdMissionIds = missions.map((m) => m.id)
 
   // Mark investigation as done and clear agent assignments
@@ -138,8 +138,7 @@ function completeInvestigation(
 /**
  * Creates missions for all missions that depend on the completed lead
  */
-// KJA2 rename to bldMissionsFromLeadCompletion
-function bldMissionsForLead(state: GameState, leadId: string): Mission[] {
+function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Mission[] {
   const dependentMissionDefs = offensiveMissionDefs.filter((missionDef) => missionDef.dependsOn.includes(leadId))
   const createdMissions: Mission[] = []
 
