@@ -1,6 +1,5 @@
-import { ENEMY_STATS } from '../collections/enemyStatsTables'
+import { ENEMY_STATS, type EnemyCounts } from '../collections/enemyStatsTables'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionModel'
-import type { EnemyCounts } from '../collections/missionStatsTables'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponRuleset'
 

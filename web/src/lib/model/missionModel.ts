@@ -1,12 +1,11 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
-import type { EnemyCounts } from '../collections/missionStatsTables'
+import type { EnemyCounts } from '../collections/enemyStatsTables'
 import type { AgentId } from './agentModel'
 import type { FactionId } from './factionModel'
 
 export type { MissionState } from './outcomeTypes'
 
-// KJA3 add type for "agent-" and see if I need any other types like that
 export type MissionId = `mission-${string}`
 
 export type MissionDefId = `missiondef-${string}`

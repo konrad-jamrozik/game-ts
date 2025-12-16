@@ -31,15 +31,12 @@ function parseSuppression(suppression: string): number {
  * @param templatedName - The mission name with faction name already templated (e.g., "Apprehend Red Dawn member")
  * @returns A mission definition ID (e.g., "missiondef-apprehend-red-dawn-member")
  */
-export function generateMissionDefId(templatedName: string): MissionDefId {
+export function bldMissionDefId(templatedName: string): MissionDefId {
   const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
-  // Type assertion needed because MissionDefId is a branded type
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  return `missiondef-${baseId}` as MissionDefId
+  return `missiondef-${baseId}`
 }
 
-// KJA1 should be called bldMissionDefs
-function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
+function bldMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
     const templatedName = expandTemplateString(stats.name, faction)
     const expiresIn = stats.expiresIn
@@ -54,7 +51,7 @@ function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
 
     return {
       // Example: "Apprehend Red Dawn member" -> "missiondef-apprehend-red-dawn-member"
-      id: generateMissionDefId(templatedName),
+      id: bldMissionDefId(templatedName),
       name: templatedName,
       description: expandTemplateString(description, faction),
       expiresIn,
@@ -79,19 +76,16 @@ function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   })
 }
 
-export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
-  generateMissionDefsForFaction(faction),
-)
+export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) => bldMissionDefsForFaction(faction))
 
-// KJA3 rename, bld
-function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
+function bldDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
     const templatedName = expandTemplateString(stats.name, faction)
     const expiresIn = stats.expiresIn
 
     return {
       // Example: "Foil Red Dawn recruitment push" -> "missiondef-foil-red-dawn-recruitment-push"
-      id: generateMissionDefId(templatedName),
+      id: bldMissionDefId(templatedName),
       name: templatedName,
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
@@ -108,7 +102,7 @@ function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionD
 }
 
 export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
-  generateDefensiveMissionDefsForFaction(faction),
+  bldDefensiveMissionDefsForFaction(faction),
 )
 
 export function getMissionById(missionId: MissionId, gameState: GameState): Mission {

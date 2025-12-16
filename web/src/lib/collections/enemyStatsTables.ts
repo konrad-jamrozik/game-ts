@@ -42,6 +42,18 @@ export type EnemyStats = {
   isOfficer: boolean
 }
 
+export type EnemyCounts = {
+  initiate: number
+  operative: number
+  soldier: number
+  elite: number
+  handler: number
+  lieutenant: number
+  commander: number
+  highCommander: number
+  cultLeader: number
+}
+
 type EnemyStatsRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 
 function toEnemyStats(rows: EnemyStatsRow[]): EnemyStats[] {

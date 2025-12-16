@@ -1,4 +1,4 @@
-import { getMissionDefById, generateMissionDefId } from '../../collections/missions'
+import { getMissionDefById, bldMissionDefId } from '../../collections/missions'
 import { expandTemplateString } from '../../collections/factions'
 import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
@@ -582,7 +582,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
   const templatedName = expandTemplateString(selectedMissionDef.name, factionTemplate)
-  const missionDefId = generateMissionDefId(templatedName)
+  const missionDefId = bldMissionDefId(templatedName)
 
   bldMission({
     state,

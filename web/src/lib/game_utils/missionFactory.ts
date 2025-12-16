@@ -1,6 +1,6 @@
 import type { GameState } from '../model/gameStateModel'
 import type { Mission, MissionId, MissionDefId } from '../model/missionModel'
-import type { EnemyCounts } from '../collections/missionStatsTables'
+import type { EnemyCounts } from '../collections/enemyStatsTables'
 import { bldEnemies } from '../ruleset/enemyRuleset'
 
 type CreateMissionParams = {
