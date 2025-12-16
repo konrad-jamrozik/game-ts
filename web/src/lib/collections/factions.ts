@@ -1,10 +1,11 @@
 import type { Faction, FactionId } from '../model/factionModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
+import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 
 export function getFactionShortId(factionId: FactionId): string {
-  return factionId.replace(/^faction-/u, '')
+  return fmtNoPrefix(factionId, 'faction-')
 }
 
 function toFactions(stats: FactionStats[]): Faction[] {

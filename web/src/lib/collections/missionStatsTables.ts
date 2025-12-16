@@ -37,14 +37,14 @@ export type EnemyCounts = {
 // prettier-ignore
 export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissionStats([
   // Name,                         Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
-  ['Apprehend cult member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
-  ['Raid cult safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
-  ['Raid cult outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3', ['lead-{facId}-outpost'], 'Raid cult outpost of {facName}.'],
-  ['Raid cult training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9', ['lead-{facId}-training-facility'], 'Raid cult training facility of {facName}.'],
-  ['Raid cult logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15', ['lead-{facId}-logistics-hub'], 'Raid cult logistics hub of {facName}.'],
-  ['Raid cult command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{facId}-command-center'], 'Raid cult command center of {facName}.'],
-  ['Raid cult regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
-  ['Raid cult HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
+  ['Apprehend {facName} member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
+  ['Raid {facName} safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
+  ['Raid {facName} outpost',                3,    10,   12,    8,    3,     0,    4,    0,    0,     0,    0,    400,    10,      0.5  ,   '1-3', ['lead-{facId}-outpost'], 'Raid cult outpost of {facName}.'],
+  ['Raid {facName} training facility',      4,    12,   40,   20,    4,     0,   10,    1,    0,     0,    0,    800,    15,      1    ,   '3-9', ['lead-{facId}-training-facility'], 'Raid cult training facility of {facName}.'],
+  ['Raid {facName} logistics hub',          5,    15,   32,   16,   20,     4,    6,    4,    1,     0,    0,   2000,    20,      2    ,  '5-15', ['lead-{facId}-logistics-hub'], 'Raid cult logistics hub of {facName}.'],
+  ['Raid {facName} command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{facId}-command-center'], 'Raid cult command center of {facName}.'],
+  ['Raid {facName} regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
+  ['Raid {facName} HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
 ])
 
 /**
@@ -76,27 +76,27 @@ export const OFFENSIVE_MISSIONS_DATA: OffensiveMissionStats[] = toOffensiveMissi
 // prettier-ignore
 export const DEFENSIVE_MISSIONS_DATA: DefensiveMissionStats[] = toDefensiveMissionStats([
   // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
-  ['Foil recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
-  ['Foil supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
-  ['Foil business extortion',                1,      3,    6,    2,    0,    0,    1,    0,     0,    0,    0],
+  ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
+  ['Foil {facName} supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
+  ['Foil {facName} business extortion',                1,      3,    6,    2,    0,    0,    1,    0,     0,    0,    0],
   
-  ['Foil sabotage',                          2,      4,    2,    2,    2,    0,    1,    1,     0,    0,    0],
-  ['Foil VIP assassination',                 2,      4,    4,    4,    2,    0,    1,    0,     0,    0,    0],
-  ['Defend against office raid',             2,      4,    4,    4,    4,    0,    1,    1,     0,    0,    0],
+  ['Foil {facName} sabotage',                          2,      4,    2,    2,    2,    0,    1,    1,     0,    0,    0],
+  ['Foil {facName} VIP assassination',                 2,      4,    4,    4,    2,    0,    1,    0,     0,    0,    0],
+  ['Defend against {facName} office raid',             2,      4,    4,    4,    4,    0,    1,    1,     0,    0,    0],
   
-  ['Foil financial heist',                   3,      5,   10,   10,    8,    0,    4,    2,     0,    0,    0],
-  ['Intercept arms deal',                    3,      5,   12,   12,   10,    2,    4,    2,     1,    0,    0],
-  ['Defend against facility raid',           3,      5,   16,   12,   12,    2,    6,    3,     1,    0,    0],
+  ['Foil {facName} financial heist',                   3,      5,   10,   10,    8,    0,    4,    2,     0,    0,    0],
+  ['Intercept {facName} arms deal',                    3,      5,   12,   12,   10,    2,    4,    2,     1,    0,    0],
+  ['Defend against {facName} facility raid',           3,      5,   16,   12,   12,    2,    6,    3,     1,    0,    0],
   
-  ['Counter civilian terror',                4,      6,   30,   24,   15,    4,   10,    3,     1,    0,    0],
-  ['Defend against city government assault', 4,      6,   24,   24,   20,    8,    6,    4,     2,    0,    0],
-  ['Defend against retaliation strike',      4,      6,   24,    8,   24,    8,    4,    6,     3,    0,    0],
+  ['Counter {facName} civilian terror',                4,      6,   30,   24,   15,    4,   10,    3,     1,    0,    0],
+  ['Defend against {facName} city government assault', 4,      6,   24,   24,   20,    8,    6,    4,     2,    0,    0],
+  ['Defend against {facName} retaliation strike',      4,      6,   24,    8,   24,    8,    4,    6,     3,    0,    0],
   
-  ['Foil coup attempt',                      5,      7,    0,   20,   20,   20,    0,    5,     5,    1,    0],
-  ['Foil nuclear plant bombing',             5,      7,   28,   24,   20,   12,   10,    5,     3,    1,    0],
-  ['Defend military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
+  ['Foil {facName} coup attempt',                      5,      7,    0,   20,   20,   20,    0,    5,     5,    1,    0],
+  ['Foil {facName} nuclear plant bombing',             5,      7,   28,   24,   20,   12,   10,    5,     3,    1,    0],
+  ['Defend {facName} military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
   
-  ['Defend against HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
+  ['Defend against {facName} HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
 ])
 
 export type OffensiveMissionStats = {

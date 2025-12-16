@@ -51,7 +51,7 @@ export const st = {
   },
 
   bldMission(missionId: MissionId): Mission {
-    const missionDefId = 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId
+    const missionDefId = 'mission-def-apprehend-red-dawn-member' as MissionDefId
     return {
       id: missionId,
       missionDefId,

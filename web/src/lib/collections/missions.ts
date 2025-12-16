@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-destructuring */
 import { toF6 } from '../primitives/fixed6'
 import type { Mission, MissionDef, MissionDefId, MissionId } from '../model/missionModel'
-import { expandTemplateString, getFactionShortId } from './factions'
+import { expandTemplateString } from './factions'
 import { FACTION_DATA, type FactionStats } from './factionStatsTables'
 import {
   OFFENSIVE_MISSIONS_DATA,
@@ -27,21 +27,21 @@ function parseSuppression(suppression: string): number {
 }
 
 /**
- * Generates a mission definition ID from a mission name and faction.
- * @param name - The mission name (e.g., "Apprehend Cult Member")
- * @param faction - The faction stats
- * @returns A mission definition ID (e.g., "mission-def-apprehend-cult-member-rd")
+ * Generates a mission definition ID from a templated mission name.
+ * @param templatedName - The mission name with faction name already templated (e.g., "Apprehend Red Dawn member")
+ * @returns A mission definition ID (e.g., "mission-def-apprehend-red-dawn-member")
  */
-export function generateMissionDefId(name: string, faction: FactionStats): MissionDefId {
-  const baseId = name.toLowerCase().replaceAll(' ', '-')
-  const shortId = getFactionShortId(faction.id)
-  return `mission-def-${baseId}-${shortId}` as MissionDefId
+export function generateMissionDefId(templatedName: string): MissionDefId {
+  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
+  // Type assertion needed because MissionDefId is a branded type
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+  return `mission-def-${baseId}` as MissionDefId
 }
 
-// KJA3 should be called bldMissionDefs
+// KJA1 should be called bldMissionDefs
 function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
-    const name = stats.name
+    const templatedName = expandTemplateString(stats.name, faction)
     const expiresIn = stats.expiresIn
     const moneyReward = stats.moneyReward
     const fundingReward = stats.fundingReward
@@ -53,8 +53,9 @@ function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
     const suppressionValue = parseSuppression(suppression)
 
     return {
-      id: generateMissionDefId(name, faction),
-      name,
+      // Example: "Apprehend Red Dawn member" -> "mission-def-apprehend-red-dawn-member"
+      id: generateMissionDefId(templatedName),
+      name: templatedName,
       description: expandTemplateString(description, faction),
       expiresIn,
       dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
@@ -85,12 +86,13 @@ export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction)
 // KJA3 rename, bld
 function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
-    const name = stats.name
+    const templatedName = expandTemplateString(stats.name, faction)
     const expiresIn = stats.expiresIn
 
     return {
-      id: generateMissionDefId(name, faction),
-      name,
+      // Example: "Foil Red Dawn recruitment push" -> "mission-def-foil-red-dawn-recruitment-push"
+      id: generateMissionDefId(templatedName),
+      name: templatedName,
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
       dependsOn: [], // Defensive missions don't depend on leads

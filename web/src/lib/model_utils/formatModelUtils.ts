@@ -54,7 +54,7 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
   return `${f6str(change.previous)} → ${f6str(change.current)}`
 }
 
-/** KJA1 the signature is busted. It should be only: id: LeadId | LeadInvestigationId | MissionId | FactionId AgentId
+/**
  * And then, if any other info needs to be pulled up, it should be using getLeadById() etc. functions.
  * Formats IDs for display with their names.
  * Accepts LeadInvestigationId, LeadId, AgentId, or MissionId.
@@ -63,7 +63,6 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
  * - AgentId: "agent-007" (full agent ID as-is)
  * - MissionId: "007 Raid cult logistics hub" (numeric value + mission name)
  */
-// KJA3 ensure that all "get<concept>byId" functions have consistent home. E.g. in model utils, or somewhere else.
 export function fmtForDisplay(
   id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDefId | AgentId,
   gameState?: GameState,

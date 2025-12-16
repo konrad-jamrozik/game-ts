@@ -38,7 +38,7 @@ describe(evaluateDeployedMission, () => {
     // Create a test mission with weak enemies
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
+      missionDefId: 'mission-def-apprehend-red-dawn-member' as MissionDefId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -112,7 +112,7 @@ describe(evaluateDeployedMission, () => {
 
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
+      missionDefId: 'mission-def-apprehend-red-dawn-member' as MissionDefId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -201,7 +201,7 @@ describe(evaluateDeployedMission, () => {
 
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'mission-def-apprehend-cult-member-red-dawn' as MissionDefId,
+      missionDefId: 'mission-def-apprehend-red-dawn-member' as MissionDefId,
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
