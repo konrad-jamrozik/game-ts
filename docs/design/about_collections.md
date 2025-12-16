@@ -94,19 +94,19 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
 
 ## Pending refactoring
 
-| Name                              | Symbol                                      | TODO                |
-|-----------------------------------|---------------------------------------------|----------------------|
-| `leads`                           | LEADS_DATA                                  | Rename to LEADS_DATA_TABLE                     |
-| `enemies`                         | ENEMY_STATS_DATA                            | Rename to ENEMIES_DATA_TABLE                     |
-| `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     | Rename to DEFENSIVE_MISSIONS_DATA_TABLE                     |
-| `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE                     |
-| `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE                     |
-| `factionOperationLevel`           | OPERATION_LEVEL_STATS_DATA                  | Per operation level  |
-| `factionOperationRoll`            | FACTION_OPERATION_ROLL_PROBABILITY_DATA     | Per activity level   |
-| `factionActivityLevelConfig`      | ACTIVITY_LEVEL_CONFIGS                      | Per activity level   |
-| `factionActivityLevel`            | type ActivityLevel                          |                      |
-| `factionActivityLevelName`        | type ActivityLevelName                      | Per activity level   |
-| `factionActivityLevelProgression` | FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA     | Per activity level   |
+| Name                              | Symbol                                      | TODO                                    |
+|-----------------------------------|---------------------------------------------|-----------------------------------------|
+| `leads`                           | LEADS_DATA                                  | Rename to LEADS_DATA_TABLE              |
+| `enemies`                         | ENEMY_STATS_DATA                            | Rename to ENEMIES_DATA_TABLE            |
+| `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     | Rename to DEFENSIVE_MISSIONS_DATA_TABLE |
+| `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE |
+| `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE           |
+| `factionOperationLevel`           | FACTION_OPERATION_LEVEL_DATA                | Per operation level, make into defs     |
+| `factionOperationRoll`            | FACTION_OPERATION_ROLL_PROBABILITY_DATA     | Per activity level, add to act. defs    |
+| `factionActivityLevelConfig`      | ACTIVITY_LEVEL_CONFIGS                      | Per activity level, make into act. defs |
+| `factionActivityLevel`            | type ActivityLevel                          | Rename to ActivityLevelOrd              |
+| `factionActivityLevelName`        | type ActivityLevelName                      | Per activity level, derive from table?  |
+| `factionActivityLevelProgression` | FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA     | Per activity level, add to act. defs    |
 
 # Data tables
 
