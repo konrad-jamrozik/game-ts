@@ -76,7 +76,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
   const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
 
-  const columns = getMissionsColumns(dispatch)
+  const columns = getMissionsColumns(dispatch, gameState)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)

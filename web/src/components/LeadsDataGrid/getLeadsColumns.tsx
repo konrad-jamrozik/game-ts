@@ -2,8 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import type { LeadRow } from './LeadsDataGrid'
-import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import { assertDefined } from '../../lib/primitives/assertPrimitives'
+import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [
@@ -12,10 +11,8 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
       headerName: 'Lead ID',
       width: columnWidths['leads.id'],
       renderCell: (params: GridRenderCellParams<LeadRow, string>): React.JSX.Element => {
-        // KJA1 use here fmtForDisplay
-        const leadId = params.value
-        assertDefined(leadId, `Lead ID not found for id: ${params.id}`)
-        return <span aria-label={`leads-row-id-${params.id}`}>{fmtNoPrefix(leadId, 'lead-')}</span>
+        const displayValue = fmtForDisplay(params.row.id)
+        return <span aria-label={`leads-row-id-${params.id}`}>{displayValue}</span>
       },
     },
     {

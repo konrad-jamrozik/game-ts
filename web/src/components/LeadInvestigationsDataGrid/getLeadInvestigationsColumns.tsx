@@ -1,17 +1,22 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtDec1, fmtDec1Diff, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
+import type { GameState } from '../../lib/model/gameStateModel'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
 
-export function getLeadInvestigationsColumns(): GridColDef<LeadInvestigationRow>[] {
+export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<LeadInvestigationRow>[] {
   const columns: GridColDef<LeadInvestigationRow>[] = [
     {
       field: 'name',
       headerName: 'Investigation',
       width: columnWidths['lead_investigations.name'],
-      // KJA1 use here fmtForDisplay
+      renderCell: (params: GridRenderCellParams<LeadInvestigationRow, string>): React.JSX.Element => {
+        const displayValue = fmtForDisplay(params.row.id, gameState)
+        return <span aria-label={`lead-investigations-row-name-${params.id}`}>{displayValue}</span>
+      },
     },
     {
       field: 'agents',

@@ -5,7 +5,7 @@ import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { MissionDefId, MissionId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
 import type { AgentId } from '../model/agentModel'
-import { assertUnreachable } from '../primitives/assertPrimitives'
+import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { floorToDec2 } from '../primitives/mathPrimitives'
 import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
@@ -66,7 +66,7 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
 // KJA3 ensure that all "get<concept>byId" functions have consistent home. E.g. in model utils, or somewhere else.
 export function fmtForDisplay(
   id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDefId | AgentId,
-  gameState: GameState,
+  gameState?: GameState,
 ): string {
   if (id.startsWith('faction-')) {
     assertIsFactionId(id)
@@ -82,6 +82,7 @@ export function fmtForDisplay(
 
   if (id.startsWith('investigation-')) {
     assertIsLeadInvestigationId(id)
+    assertDefined(gameState, 'gameState is required')
     const investigation = getLeadInvestigationById(id, gameState)
     const lead = getLeadById(investigation.leadId)
     const numericPart = fmtNoPrefix(id, 'investigation-')
@@ -90,6 +91,7 @@ export function fmtForDisplay(
 
   if (id.startsWith('mission-')) {
     assertIsMissionId(id)
+    assertDefined(gameState, 'gameState is required')
     const mission = getMissionById(id, gameState)
     const missionDef = getMissionDefById(mission.missionDefId)
     const numericPart = fmtNoPrefix(id, 'mission-')

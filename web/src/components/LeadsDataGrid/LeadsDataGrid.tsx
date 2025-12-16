@@ -30,9 +30,8 @@ export type LeadRow = {
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
-  const leadInvestigationCounts = useAppSelector((state) => state.undoable.present.gameState.leadInvestigationCounts)
-  const leadInvestigations = useAppSelector((state) => state.undoable.present.gameState.leadInvestigations)
-  const missions = useAppSelector((state) => state.undoable.present.gameState.missions)
+  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const { leadInvestigationCounts, leadInvestigations, missions } = gameState
   const [showArchived, setShowArchived] = React.useState(false)
 
   // Get mission definition IDs that have won missions

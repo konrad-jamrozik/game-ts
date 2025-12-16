@@ -5,6 +5,7 @@ import type { AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
+import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
 import { columnWidths } from '../Common/columnWidths'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
@@ -28,10 +29,10 @@ export function getAgentsColumns(
       field: 'id',
       headerName: 'ID',
       width: columnWidths['agents.id'],
-      // KJA1 use here fmtForDisplay
-      renderCell: (params: GridRenderCellParams<AgentRow, string>) => (
-        <span aria-label={`agents-row-agent-id-${params.id}`}>{params.value}</span>
-      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
+        const displayValue = fmtForDisplay(params.row.id)
+        return <span aria-label={`agents-row-agent-id-${params.id}`}>{displayValue}</span>
+      },
     },
     {
       field: 'state',

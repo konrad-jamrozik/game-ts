@@ -3,7 +3,8 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
-import { fmtMissionIdWithMissionDefId } from '../../lib/model_utils/missionUtils'
+import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
+import type { GameState } from '../../lib/model/gameStateModel'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
@@ -11,15 +12,14 @@ import type { MissionRow } from './MissionsDataGrid'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
 
-export function getMissionsColumns(dispatch: AppDispatch): GridColDef<MissionRow>[] {
+export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
       field: 'id',
       headerName: 'Mission ID',
       width: columnWidths['missions.id'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        // KJA1 use here fmtForDisplay, probs delete fmtMissionIdWithMissionDefId
-        const displayValue = fmtMissionIdWithMissionDefId(params.row)
+        const displayValue = fmtForDisplay(params.row.id, gameState)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },
     },

@@ -8,7 +8,9 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/collections/leads'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
+import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
 import type { Agent } from '../../lib/model/agentModel'
+import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
 import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { getLeadAccumulatedIntel, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
@@ -18,7 +20,6 @@ import {
   setInvestigationSelection,
 } from '../../redux/slices/selectionSlice'
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
-import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ExpandableCard } from '../Common/ExpandableCard'
@@ -53,10 +54,10 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
 
   const completedThisTurnIds = getCompletedInvestigationIds(turnStartReport)
 
-  const leadInvestigationColumns = getLeadInvestigationsColumns()
+  const leadInvestigationColumns = getLeadInvestigationsColumns(gameState)
 
   // Create all rows from investigations
-  const allInvestigationRows = bldAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds)
+  const allInvestigationRows = bldAllInvestigationRows(leadInvestigations, agents, completedThisTurnIds, gameState)
 
   // Filter rows based on checkbox states
   const leadInvestigationRows: LeadInvestigationRow[] = filterLeadInvestigationRows(
@@ -139,6 +140,7 @@ function bldAllInvestigationRows(
   leadInvestigations: Record<string, LeadInvestigation>,
   agents: Agent[],
   completedThisTurnIds: Set<string>,
+  gameState: GameState,
 ): LeadInvestigationRow[] {
   return Object.values(leadInvestigations).map((investigation, index) => {
     const lead = getLeadById(investigation.leadId)
@@ -174,8 +176,7 @@ function bldAllInvestigationRows(
     return {
       id: investigation.id,
       rowId: index,
-      // KJA1 this should use fmtForDisplay instead
-      name: `${fmtNoPrefix(investigation.id, 'investigation-')} ${lead.name}`,
+      name: fmtForDisplay(investigation.id, gameState),
       intel: investigation.accumulatedIntel,
       successChance,
       agents: activeAgents,

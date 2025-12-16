@@ -96,7 +96,7 @@ function step1StartWithDebugInitialState(): void {
 
   // Verify initial debug state
   // Should have a lead "Criminal organizations"
-  const criminalOrgsLeads = screen.getAllByText(/criminal-orgs/iu)
+  const criminalOrgsLeads = screen.getAllByText(/Criminal organizations/iu)
   expect(criminalOrgsLeads.length).toBeGreaterThan(0)
 
   // Should have mission with ID "000" (in deployed state) - look for exact mission ID
