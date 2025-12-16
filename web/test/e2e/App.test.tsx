@@ -321,7 +321,7 @@ async function step12ClickResetGame(): Promise<void> {
   expect(resetTurnValue).toHaveTextContent('1')
 
   // Should have only "Criminal organizations" lead
-  const finalCriminalOrgsLeads = screen.getAllByText(/criminal-orgs/iu)
+  const finalCriminalOrgsLeads = screen.getAllByText(/Criminal organizations/iu)
   expect(finalCriminalOrgsLeads.length).toBeGreaterThan(0)
 
   // Should have the 4 agents from the initial state only.
