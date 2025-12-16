@@ -123,6 +123,8 @@ export const LEADS_DATA_TABLE: LeadData[] = toLeadsDataTable([
 ```
 
 The `toConceptsData` function takes as input `ConceptDataRow[]` and returns `ConceptData[]`.
+That functions is forbidden for running any custom logic - it only assigns row values to key values, nothing else.
+Any nontrivial transformations must be done by the `toConceptsCollection` function.
 
 The supporting symbols, like `toConceptsData` function or `type ConceptDataRow` are defined at the bottom of the same file.
 They are not exported.
