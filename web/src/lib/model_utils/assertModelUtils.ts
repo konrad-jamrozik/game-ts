@@ -28,7 +28,7 @@ export function assertIsMissionId(id: string): asserts id is MissionId {
 }
 
 export function assertIsMissionDefId(id: string): asserts id is MissionDefId {
-  if (!id.startsWith('mission-def-')) {
+  if (!id.startsWith('missiondef-')) {
     throw new Error(`Invalid mission definition ID: ${id}`)
   }
 }

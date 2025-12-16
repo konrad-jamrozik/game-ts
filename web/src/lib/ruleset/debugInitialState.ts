@@ -254,12 +254,12 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   } = bldDebugAgents(missionId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const missionDef = getMissionDefById('mission-def-apprehend-red-dawn-member' as MissionDefId)
+  const missionDef = getMissionDefById('missiondef-apprehend-red-dawn-member' as MissionDefId)
   // KJA3 use the factory instead, bldMission. But avoid having to have tempState just for next ID.
   stateBase.missions = [
     {
       id: missionId,
-      missionDefId: 'mission-def-apprehend-red-dawn-member' as MissionDefId,
+      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: missionDef.expiresIn,
@@ -267,7 +267,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
     },
     {
       id: 'mission-001' as MissionId,
-      missionDefId: 'mission-def-apprehend-red-dawn-member' as MissionDefId,
+      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
       agentIds: [],
       state: 'Active',
       expiresIn: missionDef.expiresIn,

@@ -9,7 +9,7 @@ export type { MissionState } from './outcomeTypes'
 // KJA3 add type for "agent-" and see if I need any other types like that
 export type MissionId = `mission-${string}`
 
-export type MissionDefId = `mission-def-${string}`
+export type MissionDefId = `missiondef-${string}`
 
 export type Actor = {
   id: string

@@ -34,7 +34,7 @@ function addCapabilities(state: GameState): void {
 export function spawnMissions(state: GameState): void {
   // Filter to only offensive mission definitions (apprehend/raid missions)
   const filteredOffensiveMissionDefs = offensiveMissionDefs.filter(
-    (missionDef) => missionDef.id.startsWith('mission-def-apprehend') || missionDef.id.startsWith('mission-def-raid'),
+    (missionDef) => missionDef.id.startsWith('missiondef-apprehend') || missionDef.id.startsWith('missiondef-raid'),
   )
 
   for (const missionDef of filteredOffensiveMissionDefs) {

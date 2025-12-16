@@ -116,7 +116,7 @@ export function validateMissionDeployment(mission: Mission | undefined): {
 export function fmtMissionIdWithMissionDefId(mission: Mission): string {
   const missionDef = getMissionDefById(mission.missionDefId)
   const missionIdWithoutPrefix = fmtNoPrefix(mission.id, 'mission-')
-  let missionDefIdWithoutPrefix = fmtNoPrefix(missionDef.id, 'mission-def-')
+  let missionDefIdWithoutPrefix = fmtNoPrefix(missionDef.id, 'missiondef-')
 
   const removeFactionName = false
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition

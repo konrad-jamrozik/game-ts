@@ -29,13 +29,13 @@ function parseSuppression(suppression: string): number {
 /**
  * Generates a mission definition ID from a templated mission name.
  * @param templatedName - The mission name with faction name already templated (e.g., "Apprehend Red Dawn member")
- * @returns A mission definition ID (e.g., "mission-def-apprehend-red-dawn-member")
+ * @returns A mission definition ID (e.g., "missiondef-apprehend-red-dawn-member")
  */
 export function generateMissionDefId(templatedName: string): MissionDefId {
   const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
   // Type assertion needed because MissionDefId is a branded type
   // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
-  return `mission-def-${baseId}` as MissionDefId
+  return `missiondef-${baseId}` as MissionDefId
 }
 
 // KJA1 should be called bldMissionDefs
@@ -53,7 +53,7 @@ function generateMissionDefsForFaction(faction: FactionStats): MissionDef[] {
     const suppressionValue = parseSuppression(suppression)
 
     return {
-      // Example: "Apprehend Red Dawn member" -> "mission-def-apprehend-red-dawn-member"
+      // Example: "Apprehend Red Dawn member" -> "missiondef-apprehend-red-dawn-member"
       id: generateMissionDefId(templatedName),
       name: templatedName,
       description: expandTemplateString(description, faction),
@@ -90,7 +90,7 @@ function generateDefensiveMissionDefsForFaction(faction: FactionStats): MissionD
     const expiresIn = stats.expiresIn
 
     return {
-      // Example: "Foil Red Dawn recruitment push" -> "mission-def-foil-red-dawn-recruitment-push"
+      // Example: "Foil Red Dawn recruitment push" -> "missiondef-foil-red-dawn-recruitment-push"
       id: generateMissionDefId(templatedName),
       name: templatedName,
       description: '', // Defensive missions don't have descriptions in the data
