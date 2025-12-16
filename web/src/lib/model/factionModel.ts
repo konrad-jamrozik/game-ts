@@ -4,7 +4,7 @@ export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-ex
  * Activity level progression values.
  * 0 = Dormant, 1 = Faint, 2 = Emerging, 3 = Active, 4 = Expanding, 5 = Escalating, 6 = War, 7 = Total War
  */
-export type ActivityLevel = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
+export type ActivityLevelOrd = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 
 export const ACTIVITY_LEVEL_NAMES = [
   'Dormant',
@@ -14,7 +14,7 @@ export const ACTIVITY_LEVEL_NAMES = [
   'Expanding',
   'Escalating',
   'War',
-  'Total War',
+  'Total war',
 ] as const
 
 export type ActivityLevelName = (typeof ACTIVITY_LEVEL_NAMES)[number]
@@ -26,7 +26,7 @@ export type Faction = {
    * Current activity level (0-7).
    * Determines faction operation frequency and strength.
    */
-  activityLevel: ActivityLevel
+  activityLevel: ActivityLevelOrd
   /**
    * Number of turns at current activity level.
    * When this reaches the threshold for current level, activity level increases.

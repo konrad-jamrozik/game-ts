@@ -1,117 +1,44 @@
-/* eslint-disable @typescript-eslint/no-non-null-assertion */
-import {
-  FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA,
-  FACTION_OPERATION_LEVEL_DATA,
-  FACTION_OPERATION_ROLL_PROBABILITY_DATA,
-  type FactionOperationRollProbabilityStats,
-  type FactionOperationStats,
-} from '../collections/factionStatsTables'
-import { ACTIVITY_LEVEL_NAMES, type ActivityLevel, type Faction } from '../model/factionModel'
+import { FACTION_OPERATION_LEVEL_DATA, type FactionOperationStats } from '../collections/factionStatsTables'
+import { ACTIVITY_LEVEL_NAMES, type ActivityLevelOrd, type Faction } from '../model/factionModel'
 import { assertDefined, assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
+import { getActivityLevelByOrd, type ActivityLevel } from '../collections/factionActivityLevels'
 
-/**
- * Activity level progression configuration.
- * Each level has:
- * - minTurns: minimum turns before progressing to next level
- * - maxTurns: maximum turns before progressing (randomized between min and max)
- * - operationFrequencyMin: minimum turns between faction operations
- * - operationFrequencyMax: maximum turns between faction operations
- * - operationLevelWeights: probability weights for operation levels 1-6
- */
-export type ActivityLevelConfig = {
-  minTurns: number
-  maxTurns: number
-  operationFrequencyMin: number
-  operationFrequencyMax: number
-  operationLevelWeights: [number, number, number, number, number, number]
-}
-
-function getFrequency(freq: number | ''): number {
-  if (freq === '') {
-    return Infinity
-  }
-  return freq
-}
-
-function getOperationLevelWeight(weight: number | ''): number {
-  if (weight === '') {
-    return 0
-  }
-  return weight
-}
-
-function getOperationLevelWeights(
-  data: FactionOperationRollProbabilityStats,
-): [number, number, number, number, number, number] {
-  return [
-    getOperationLevelWeight(data.level1ProbPct),
-    getOperationLevelWeight(data.level2ProbPct),
-    getOperationLevelWeight(data.level3ProbPct),
-    getOperationLevelWeight(data.level4ProbPct),
-    getOperationLevelWeight(data.level5ProbPct),
-    getOperationLevelWeight(data.level6ProbPct),
-  ]
-}
-
-function bldActivityLevelConfig(level: ActivityLevel): ActivityLevelConfig {
-  return {
-    minTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[level]!.turnsMin,
-    maxTurns: FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA[level]!.turnsMax,
-    operationFrequencyMin: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!.frequencyMin),
-    operationFrequencyMax: getFrequency(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!.frequencyMax),
-    operationLevelWeights: getOperationLevelWeights(FACTION_OPERATION_ROLL_PROBABILITY_DATA[level]!),
-  }
-}
-
-/**
- * Activity level configurations indexed by activity level (0-7).
- * Based on the documentation in about_faction_activity_level.md
- */
-export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> = {
-  0: bldActivityLevelConfig(0),
-  1: bldActivityLevelConfig(1),
-  2: bldActivityLevelConfig(2),
-  3: bldActivityLevelConfig(3),
-  4: bldActivityLevelConfig(4),
-  5: bldActivityLevelConfig(5),
-  6: bldActivityLevelConfig(6),
-  7: bldActivityLevelConfig(7),
-}
+// KJA1 activityLevelRuleset has tons of silly utils, move them to model utils
 
 /**
  * Get the display name for an activity level.
  */
-export function getActivityLevelName(level: ActivityLevel): string {
-  return ACTIVITY_LEVEL_NAMES[level]
+export function getActivityLevelName(level: ActivityLevelOrd): string {
+  return ACTIVITY_LEVEL_NAMES[level] as string
 }
 
 /**
  * Get the configuration for an activity level.
  */
-export function getActivityLevelConfig(level: ActivityLevel): ActivityLevelConfig {
-  return ACTIVITY_LEVEL_CONFIGS[level]
+export function getActivityLevelConfig(level: ActivityLevelOrd): ActivityLevel {
+  return getActivityLevelByOrd(level)
 }
 
 /**
  * Check if a faction should advance to the next activity level.
  * Returns the threshold turns for comparison (minimum turns needed).
  */
-export function getActivityLevelThreshold(level: ActivityLevel): number {
-  return ACTIVITY_LEVEL_CONFIGS[level].minTurns
+export function getActivityLevelThreshold(level: ActivityLevelOrd): number {
+  return getActivityLevelByOrd(level).minTurns
 }
 
 /**
  * Get the next activity level, clamped at 7 (Total War).
  */
-export function nextActivityLevel(level: ActivityLevel): ActivityLevel {
+export function nextActivityLevel(level: ActivityLevelOrd): ActivityLevelOrd {
   assertInRange(level, 0, 6)
   const next = level + 1
   assertIsActivityLevel(next)
   return next
 }
 
-export function assertIsActivityLevel(value: number): asserts value is ActivityLevel {
+export function assertIsActivityLevel(value: number): asserts value is ActivityLevelOrd {
   if (value < 0 || value > 7 || !Number.isInteger(value)) {
     throw new Error(`Invalid activity level: ${value}. Must be an integer 0-7.`)
   }
@@ -121,8 +48,8 @@ export function assertIsActivityLevel(value: number): asserts value is ActivityL
  * Calculate the actual turns needed to progress from current level.
  * Randomized between min and max turns.
  */
-export function calculateProgressionTurns(level: ActivityLevel): number {
-  const config = ACTIVITY_LEVEL_CONFIGS[level]
+export function calculateProgressionTurns(level: ActivityLevelOrd): number {
+  const config = getActivityLevelByOrd(level)
   if (config.minTurns === Infinity) {
     return Infinity
   }
@@ -133,8 +60,8 @@ export function calculateProgressionTurns(level: ActivityLevel): number {
  * Calculate the turns until next faction operation.
  * Randomized between min and max frequency.
  */
-export function calculateOperationTurns(level: ActivityLevel): number {
-  const config = ACTIVITY_LEVEL_CONFIGS[level]
+export function calculateOperationTurns(level: ActivityLevelOrd): number {
+  const config = getActivityLevelByOrd(level)
   if (config.operationFrequencyMin === Infinity) {
     return Infinity
   }
@@ -148,8 +75,8 @@ export function calculateOperationTurns(level: ActivityLevel): number {
  * Roll for an operation level based on current activity level weights.
  * Returns operation level 1-6.
  */
-export function rollOperationLevel(activityLevel: ActivityLevel): number {
-  const config = ACTIVITY_LEVEL_CONFIGS[activityLevel]
+export function rollOperationLevel(activityLevel: ActivityLevelOrd): number {
+  const config = getActivityLevelByOrd(activityLevel)
   const weights = config.operationLevelWeights
   const totalWeight = weights.reduce((sum, w) => sum + w, 0)
 
@@ -231,7 +158,7 @@ function getFactionOperationStats(operationLevel: number): FactionOperationStats
  * Also handles the random threshold check.
  */
 export function shouldAdvanceActivityLevel(faction: Faction, targetTurns: number): boolean {
-  const config = ACTIVITY_LEVEL_CONFIGS[faction.activityLevel]
+  const config = getActivityLevelByOrd(faction.activityLevel)
   if (config.minTurns === Infinity) {
     return false
   }

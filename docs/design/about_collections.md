@@ -55,6 +55,7 @@ In all cases they are constructed from appropriate input data tables, like that:
 ``` typescript
 export const concepts: Concept[] = toConceptsCollection(CONCEPTS_DATA_TABLE)
 
+// OBSOLETE, TO BE REMOVED; Use Concept[] instead
 export const concepts: Record<ConceptLevel, Concept> = toConceptsCollection(CONCEPTS_DATA_TABLE)
 ```
 
@@ -63,7 +64,8 @@ For example:
 ``` typescript
 export const leads: Lead[] = toLeadsCollection(CONCEPTS_DATA_TABLE)
 
-export const factionActivityLevelDefs: Record<ActivityLevelOrd, ActivityLevelDef> = toFactionActivityLevelDefsCollection(FACTION_ACTIVITY_LEVEL_DATA_TABLE)
+// OBSOLETE, TO BE REMOVED; Use Concept[] instead
+export const faction_activity_levels: ActivityLevel[] = toFactionActivityLevels(FACTION_ACTIVITY_LEVELS_DATA_TABLE)
 ```
 
 Existing code that needs rework:
@@ -79,16 +81,6 @@ export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction)
 
 export const leads: Lead[] = toLeads(LEADS_DATA)
 
-export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> = {
-  0: bldActivityLevelConfig(0),
-  1: bldActivityLevelConfig(1),
-  2: bldActivityLevelConfig(2),
-  3: bldActivityLevelConfig(3),
-  4: bldActivityLevelConfig(4),
-  5: bldActivityLevelConfig(5),
-  6: bldActivityLevelConfig(6),
-  7: bldActivityLevelConfig(7),
-}
 
 ```
 
@@ -102,11 +94,6 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
 | `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE |
 | `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE           |
 | `factionOperationLevel`           | FACTION_OPERATION_LEVEL_DATA                | Per operation level, make into defs     |
-| `factionOperationRoll`            | FACTION_OPERATION_ROLL_PROBABILITY_DATA     | Per activity level, add to act. defs    |
-| `factionActivityLevelConfig`      | ACTIVITY_LEVEL_CONFIGS                      | Per activity level, make into act. defs |
-| `factionActivityLevel`            | type ActivityLevel                          | Rename to ActivityLevelOrd              |
-| `factionActivityLevelName`        | type ActivityLevelName                      | Per activity level, derive from table?  |
-| `factionActivityLevelProgression` | FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA     | Per activity level, add to act. defs    |
 
 # Data tables
 
