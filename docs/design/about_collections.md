@@ -48,7 +48,25 @@ For example:
 
 ## Collections construction
 
-Collections are represented either as `Object[]` or `Record<Record
+Collections are represented either as `Concept[]` or `Record<ConceptLevel, Concept>`.
+
+In all cases they are constructed from appropriate input data tables, like that:
+
+``` typescript
+export const concepts: Concept[] = toConceptsCollection(CONCEPTS_DATA_TABLE)
+
+export const concepts: Record<ConceptLevel, Concept> = toConceptsCollection(CONCEPTS_DATA_TABLE)
+```
+
+For example:
+
+``` typescript
+export const leads: Lead[] = toLeadsCollection(CONCEPTS_DATA_TABLE)
+
+export const factionActivityLevelDefs: Record<ActivityLevelOrd, ActivityLevelDef> = toFactionActivityLevelDefsCollection(FACTION_ACTIVITY_LEVEL_DATA_TABLE)
+```
+
+Existing code that needs rework:
 
 ``` typescript
 export const factions: Faction[] = toFactions(FACTION_DATA)
@@ -74,6 +92,22 @@ export const ACTIVITY_LEVEL_CONFIGS: Record<ActivityLevel, ActivityLevelConfig> 
 
 ```
 
+## Pending refactoring
+
+| Name                              | Symbol                                      | TODO                |
+|-----------------------------------|---------------------------------------------|----------------------|
+| `leads`                           | LEADS_DATA                                  | Rename to LEADS_DATA_TABLE                     |
+| `enemies`                         | ENEMY_STATS_DATA                            | Rename to ENEMIES_DATA_TABLE                     |
+| `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     | Rename to DEFENSIVE_MISSIONS_DATA_TABLE                     |
+| `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE                     |
+| `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE                     |
+| `factionOperationLevel`           | OPERATION_LEVEL_STATS_DATA                  | Per operation level  |
+| `factionOperationRoll`            | FACTION_OPERATION_ROLL_PROBABILITY_DATA     | Per activity level   |
+| `factionActivityLevelConfig`      | ACTIVITY_LEVEL_CONFIGS                      | Per activity level   |
+| `factionActivityLevel`            | type ActivityLevel                          |                      |
+| `factionActivityLevelName`        | type ActivityLevelName                      | Per activity level   |
+| `factionActivityLevelProgression` | FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA     | Per activity level   |
+
 # Data tables
 
 The collections populated during game initialization are populated from hardcoded data tables.
@@ -86,7 +120,7 @@ e.g. `leadsDataTables.ts`.
 Each data table is constructed and exposed as a constant of form:
 
 ``` typescript
-export const CONCEPTS_DATA_TABLE: ConceptData[] = toConceptsData([
+export const CONCEPTS_DATA_TABLE: ConceptData[] = toConceptsDataTable([
   //  Col1 header,    Col2 header,     Col3 header,  ...
   [row1_col1_val], [row1_col2_val], [row1_col3_val], ...
   [row2_col1_val], [row2_col2_val], [row2_col3_val], ...
@@ -96,7 +130,7 @@ export const CONCEPTS_DATA_TABLE: ConceptData[] = toConceptsData([
 
 e.g.
 ``` typescript
-export const LEADS_DATA_TABLE: LeadData[] = toLeadsData([
+export const LEADS_DATA_TABLE: LeadData[] = toLeadsDataTable([
   ...
 ])
 ```
@@ -124,19 +158,7 @@ The first defined element is always the `export const CONCEPTS_DATA_TABLE: Conce
 
 # Full list of data tables
 
-| Name                              | Symbol                                      | Notes                |
-|-----------------------------------|---------------------------------------------|----------------------|
-| `leads`                           | LEADS_DATA                                  |                      |
-| `enemies`                         | ENEMY_STATS_DATA                            |                      |
-| `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     |                      |
-| `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     |                      |
-| `factions`                        | FACTION_DATA                                |                      |
-| `factionOperationLevel`           | OPERATION_LEVEL_STATS_DATA                  | Per operation level  |
-| `factionOperationRoll`            | FACTION_OPERATION_ROLL_PROBABILITY_DATA     | Per activity level   |
-| `factionActivityLevelConfig`      | ACTIVITY_LEVEL_CONFIGS                      | Per activity level   |
-| `factionActivityLevel`            | type ActivityLevel                          |                      |
-| `factionActivityLevelName`        | type ActivityLevelName                      | Per activity level   |
-| `factionActivityLevelProgression` | FACTION_ACTIVITY_LEVEL_PROGRESSION_DATA     | Per activity level   |
+TODO
 
 # Full list of prototypes
 
