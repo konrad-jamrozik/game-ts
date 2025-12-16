@@ -60,8 +60,6 @@ export function getAgentsColumns(
         let displayValue = assignment
         if (assignment.startsWith('investigation-')) {
           displayValue = assignment.replace('investigation-', 'invst-')
-        } else if (assignment.startsWith('mission-')) {
-          displayValue = fmtNoPrefix(assignment, 'mission-')
         }
         return <span aria-label={`agents-row-assignment-${params.id}`}>{displayValue}</span>
       },
