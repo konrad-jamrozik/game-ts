@@ -2,13 +2,9 @@
 import { toF6 } from '../primitives/fixed6'
 import type { Mission, MissionDef, MissionDefId, MissionId } from '../model/missionModel'
 import { expandTemplateString } from './factions'
-import { FACTION_DATA, type FactionStats } from './factionStatsTables'
-import {
-  OFFENSIVE_MISSIONS_DATA,
-  DEFENSIVE_MISSIONS_DATA,
-  type OffensiveMissionStats,
-  type DefensiveMissionStats,
-} from './missionStatsTables'
+import { FACTIONS_DATA_TABLE, type FactionData } from './factionsDataTable'
+import { OFFENSIVE_MISSIONS_DATA_TABLE, type OffensiveMissionData } from './offensiveMissionsDataTable'
+import { DEFENSIVE_MISSIONS_DATA_TABLE, type DefensiveMissionData } from './defensiveMissionsDataTable'
 import type { GameState } from '../model/gameStateModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 
@@ -36,16 +32,16 @@ export function bldMissionDefId(templatedName: string): MissionDefId {
   return `missiondef-${baseId}`
 }
 
-function bldMissionDefsForFaction(faction: FactionStats): MissionDef[] {
-  return OFFENSIVE_MISSIONS_DATA.map((stats: OffensiveMissionStats) => {
-    const templatedName = expandTemplateString(stats.name, faction)
-    const expiresIn = stats.expiresIn
-    const moneyReward = stats.moneyReward
-    const fundingReward = stats.fundingReward
-    const panicReductionPct = stats.panicReductionPct
-    const suppression = stats.suppression
-    const dependsOn = stats.dependsOn
-    const description = stats.description
+function bldMissionDefsForFaction(faction: FactionData): MissionDef[] {
+  return OFFENSIVE_MISSIONS_DATA_TABLE.map((data: OffensiveMissionData) => {
+    const templatedName = expandTemplateString(data.name, faction)
+    const expiresIn = data.expiresIn
+    const moneyReward = data.moneyReward
+    const fundingReward = data.fundingReward
+    const panicReductionPct = data.panicReductionPct
+    const suppression = data.suppression
+    const dependsOn = data.dependsOn
+    const description = data.description
 
     const suppressionValue = parseSuppression(suppression)
 
@@ -56,7 +52,7 @@ function bldMissionDefsForFaction(faction: FactionStats): MissionDef[] {
       description: expandTemplateString(description, faction),
       expiresIn,
       dependsOn: dependsOn.map((dep) => expandTemplateString(dep, faction)),
-      enemyCounts: stats,
+      enemyCounts: data,
       factionId: faction.id,
       rewards: {
         money: moneyReward,
@@ -76,12 +72,14 @@ function bldMissionDefsForFaction(faction: FactionStats): MissionDef[] {
   })
 }
 
-export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) => bldMissionDefsForFaction(faction))
+export const offensiveMissionDefs: MissionDef[] = FACTIONS_DATA_TABLE.flatMap((faction) =>
+  bldMissionDefsForFaction(faction),
+)
 
-function bldDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] {
-  return DEFENSIVE_MISSIONS_DATA.map((stats: DefensiveMissionStats) => {
-    const templatedName = expandTemplateString(stats.name, faction)
-    const expiresIn = stats.expiresIn
+function bldDefensiveMissionDefsForFaction(faction: FactionData): MissionDef[] {
+  return DEFENSIVE_MISSIONS_DATA_TABLE.map((data: DefensiveMissionData) => {
+    const templatedName = expandTemplateString(data.name, faction)
+    const expiresIn = data.expiresIn
 
     return {
       // Example: "Foil Red Dawn recruitment push" -> "missiondef-foil-red-dawn-recruitment-push"
@@ -90,7 +88,7 @@ function bldDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] 
       description: '', // Defensive missions don't have descriptions in the data
       expiresIn,
       dependsOn: [], // Defensive missions don't depend on leads
-      enemyCounts: stats,
+      enemyCounts: data,
       factionId: faction.id,
       rewards: {
         money: 0, // Rewards are calculated dynamically based on operation level
@@ -101,7 +99,7 @@ function bldDefensiveMissionDefsForFaction(faction: FactionStats): MissionDef[] 
   })
 }
 
-export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
+export const defensiveMissionDefs: MissionDef[] = FACTIONS_DATA_TABLE.flatMap((faction) =>
   bldDefensiveMissionDefsForFaction(faction),
 )
 

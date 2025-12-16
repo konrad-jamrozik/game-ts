@@ -1,6 +1,11 @@
-import { FACTION_OPERATION_LEVEL_DATA, type FactionOperationStats } from '../collections/factionStatsTables'
-import { ACTIVITY_LEVEL_NAMES, type FactionActivityLevelOrd, type Faction } from '../model/factionModel'
-import { assertDefined, assertInRange } from '../primitives/assertPrimitives'
+import { getFactionOperationByLevel } from '../collections/factionOperations'
+import {
+  ACTIVITY_LEVEL_NAMES,
+  type FactionActivityLevelOrd,
+  type Faction,
+  type FactionOperation,
+} from '../model/factionModel'
+import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 import { getFactionActivityLevelDefByOrd, type FactionActivityLevelDef } from '../collections/factionActivityLevelDefs'
 
@@ -147,10 +152,9 @@ export function getFundingRewardForOperation(operationLevel: number): number {
   return stats.fundingReward
 }
 
-function getFactionOperationStats(operationLevel: number): FactionOperationStats {
-  const result = FACTION_OPERATION_LEVEL_DATA.find((stats) => stats.level === operationLevel)
-  assertDefined(result)
-  return result
+// KJA1 inline; search all for such obsolete names with "Stats" etc
+function getFactionOperationStats(operationLevel: number): FactionOperation {
+  return getFactionOperationByLevel(operationLevel)
 }
 
 /**

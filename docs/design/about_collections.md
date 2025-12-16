@@ -93,7 +93,7 @@ export const leads: Lead[] = toLeads(LEADS_DATA)
 | `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     | Rename to DEFENSIVE_MISSIONS_DATA_TABLE |
 | `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE |
 | `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE           |
-| `factionOperationLevel`           | FACTION_OPERATION_LEVEL_DATA                | Per operation level, make into defs     |
+| `factionOperationLevel`           | FACTION_OPERATION_LEVEL_DATA                | Per operation level                     |
 
 # Data tables
 

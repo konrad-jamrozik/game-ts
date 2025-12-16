@@ -1,12 +1,12 @@
 import type { Lead, LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { expandTemplateString } from './factions'
-import { FACTION_DATA, type FactionStats } from './factionStatsTables'
-import { LEADS_DATA, type LeadStats } from './leadStatsTables'
+import { FACTIONS_DATA_TABLE, type FactionData } from './factionsDataTable'
+import { LEADS_DATA_TABLE, type LeadData } from './leadsDataTable'
 import { assertIsLeadId } from '../model_utils/assertModelUtils'
 import type { GameState } from '../model/gameStateModel'
 
-export const leads: Lead[] = toLeads(LEADS_DATA)
+export const leads: Lead[] = toLeadsCollection(LEADS_DATA_TABLE)
 
 export function getLeadById(leadId: LeadId): Lead {
   const foundLead = leads.find((lead) => lead.id === leadId)
@@ -23,34 +23,34 @@ export function getLeadInvestigationById(
   return investigation
 }
 
-function toLeads(stats: LeadStats[]): Lead[] {
+function toLeadsCollection(data: LeadData[]): Lead[] {
   const result: Lead[] = []
 
-  for (const stat of stats) {
-    if (stat.id.includes('{facId}')) {
+  for (const datum of data) {
+    if (datum.id.includes('{facId}')) {
       // Faction-specific lead: generate for each faction
-      for (const faction of FACTION_DATA) {
-        result.push(bldLead(stat, faction))
+      for (const faction of FACTIONS_DATA_TABLE) {
+        result.push(bldLead(datum, faction))
       }
     } else {
       // Static lead: generate once (expandTemplateString will be no-op)
-      result.push(bldLead(stat))
+      result.push(bldLead(datum))
     }
   }
 
   return result
 }
 
-function bldLead(stat: LeadStats, faction?: FactionStats): Lead {
-  const leadId = expandTemplateString(stat.id, faction)
+function bldLead(datum: LeadData, faction?: FactionData): Lead {
+  const leadId = expandTemplateString(datum.id, faction)
   assertIsLeadId(leadId)
   return {
     id: leadId,
-    name: expandTemplateString(stat.name, faction),
-    description: expandTemplateString(stat.description, faction),
-    difficulty: stat.difficulty,
-    dependsOn: stat.dependsOn.map((dep) => expandTemplateString(dep, faction)),
-    repeatable: stat.repeatable,
-    ...(stat.enemyEstimate !== undefined && { enemyEstimate: expandTemplateString(stat.enemyEstimate, faction) }),
+    name: expandTemplateString(datum.name, faction),
+    description: expandTemplateString(datum.description, faction),
+    difficulty: datum.difficulty,
+    dependsOn: datum.dependsOn.map((dep) => expandTemplateString(dep, faction)),
+    repeatable: datum.repeatable,
+    ...(datum.enemyEstimate !== undefined && { enemyEstimate: expandTemplateString(datum.enemyEstimate, faction) }),
   }
 }

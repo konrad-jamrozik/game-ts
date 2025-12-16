@@ -2,7 +2,7 @@ import { toF6, type Fixed6 } from '../primitives/fixed6'
 import type { EnemyType } from '../model/missionModel'
 
 /**
- * Enemy unit statistics
+ * Enemy units data table
  *
  * This table defines the core statistics for all enemy unit types in the game.
  * Each enemy type has skill, hit points, weapon damage, and officer status.
@@ -17,7 +17,7 @@ import type { EnemyType } from '../model/missionModel'
  */
 
 // prettier-ignore
-export const ENEMY_STATS_DATA: EnemyStats[] = toEnemyStats(
+export const ENEMIES_DATA_TABLE: EnemyData[] = toEnemiesDataTable(
   [
     // Name,            Aliases, Skill,  HP, Weapon, IsOfficer
     ['initiate',      'In Init',    40,  20,      8, false ],
@@ -33,7 +33,7 @@ export const ENEMY_STATS_DATA: EnemyStats[] = toEnemyStats(
 
 export const ENEMY_STATS = bldEnemyStats()
 
-export type EnemyStats = {
+export type EnemyData = {
   name: EnemyType
   aliases: string
   skill: Fixed6
@@ -54,9 +54,9 @@ export type EnemyCounts = {
   cultLeader: number
 }
 
-type EnemyStatsRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
+type EnemyDataRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 
-function toEnemyStats(rows: EnemyStatsRow[]): EnemyStats[] {
+function toEnemiesDataTable(rows: EnemyDataRow[]): EnemyData[] {
   return rows.map((row) => ({
     name: row[0],
     aliases: row[1],
@@ -67,10 +67,10 @@ function toEnemyStats(rows: EnemyStatsRow[]): EnemyStats[] {
   }))
 }
 
-function bldEnemyStats(): Record<string, EnemyStats> {
-  const stats: Record<string, EnemyStats> = {}
+function bldEnemyStats(): Record<string, EnemyData> {
+  const stats: Record<string, EnemyData> = {}
 
-  for (const enemyStat of ENEMY_STATS_DATA) {
+  for (const enemyStat of ENEMIES_DATA_TABLE) {
     stats[enemyStat.name] = enemyStat
   }
 

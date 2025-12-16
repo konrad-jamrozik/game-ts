@@ -2,30 +2,30 @@ import type { Faction, FactionId } from '../model/factionModel'
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
-import { FACTION_DATA, type FactionStats } from './factionStatsTables'
+import { FACTIONS_DATA_TABLE, type FactionData } from './factionsDataTable'
 
 export function getFactionShortId(factionId: FactionId): string {
   return fmtNoPrefix(factionId, 'faction-')
 }
 
-function toFactions(stats: FactionStats[]): Faction[] {
-  return stats.map((stat) => bldFaction(stat))
+function toFactionsCollection(data: FactionData[]): Faction[] {
+  return data.map((datum) => bldFaction(datum))
 }
 
-function bldFaction(stat: FactionStats): Faction {
+function bldFaction(datum: FactionData): Faction {
   return {
-    id: stat.id,
-    name: stat.name,
-    activityLevel: stat.initialActivityLevel,
+    id: datum.id,
+    name: datum.name,
+    activityLevel: datum.initialActivityLevel,
     turnsAtCurrentLevel: 0,
-    turnsUntilNextOperation: calculateOperationTurns(stat.initialActivityLevel),
+    turnsUntilNextOperation: calculateOperationTurns(datum.initialActivityLevel),
     suppressionTurns: 0,
     lastOperationTypeName: undefined,
-    discoveryPrerequisite: [`lead-${getFactionShortId(stat.id)}-profile`],
+    discoveryPrerequisite: [`lead-${getFactionShortId(datum.id)}-profile`],
   }
 }
 
-export const factions: Faction[] = toFactions(FACTION_DATA)
+export const factions: Faction[] = toFactionsCollection(FACTIONS_DATA_TABLE)
 
 export function getFactionById(factionId: FactionId): Faction {
   const foundFaction = factions.find((faction) => faction.id === factionId)
@@ -33,7 +33,7 @@ export function getFactionById(factionId: FactionId): Faction {
   return foundFaction
 }
 
-export function expandTemplateString(template: string, faction?: FactionStats): string {
+export function expandTemplateString(template: string, faction?: FactionData): string {
   if (faction === undefined) {
     assertTrue(
       !template.includes('{facId}') && !template.includes('{facName}'),

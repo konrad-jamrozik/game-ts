@@ -1,5 +1,5 @@
 /**
- * Lead statistics table
+ * Lead data table
  *
  * This table defines all leads in the game - both faction-agnostic static leads
  * and faction-specific leads that are generated from templates.
@@ -15,7 +15,7 @@
  */
 
 // prettier-ignore
-export const LEADS_DATA: LeadStats[] = toLeadStats([
+export const LEADS_DATA_TABLE: LeadData[] = toLeadsDataTable([
   // Static (faction-agnostic) leads
   // Id, Name, Description, Difficulty, DependsOn, Repeatable, EnemyEstimate
   ['lead-criminal-orgs', 'Criminal organizations', 'Investigate local criminal organizations to find cult connections.', 1, [], false],
@@ -44,7 +44,7 @@ export const LEADS_DATA: LeadStats[] = toLeadStats([
   ['lead-{facId}-profile', 'Cult profile', 'Compile detailed intelligence profile on {facName}.', 5, ['lead-{facId}-interrogate-member'], false],
 ])
 
-export type LeadStats = {
+export type LeadData = {
   id: string
   name: string
   description: string
@@ -54,7 +54,7 @@ export type LeadStats = {
   enemyEstimate?: string
 }
 
-type LeadStatsRow = [
+type LeadDataRow = [
   id: string,
   name: string,
   description: string,
@@ -64,7 +64,7 @@ type LeadStatsRow = [
   enemyEstimate?: string,
 ]
 
-function toLeadStats(rows: LeadStatsRow[]): LeadStats[] {
+function toLeadsDataTable(rows: LeadDataRow[]): LeadData[] {
   return rows.map((row) => ({
     id: row[0],
     name: row[1],

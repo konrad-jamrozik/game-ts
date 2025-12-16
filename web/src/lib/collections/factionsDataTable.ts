@@ -1,5 +1,5 @@
 /**
- * Faction statistics tables
+ * Faction data tables
  *
  * This file contains tables related to factions.
  *
@@ -17,22 +17,22 @@ import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'
  * - InitialActivityLevel: Initial activity level when game starts (0 = Dormant, 1 = Faint, etc.).
  */
 // prettier-ignore
-export const FACTION_DATA: FactionStats[] = toFactionStats([
+export const FACTIONS_DATA_TABLE: FactionData[] = toFactionsDataTable([
   // Id,                    Name,        InitialActivityLevel
   ['faction-red-dawn',      'Red Dawn',    1],
   ['faction-exalt',         'Exalt',       0],
   ['faction-black-lotus',   'Black Lotus', 0],
 ])
 
-export type FactionStats = {
+export type FactionData = {
   id: FactionId
   name: string
   initialActivityLevel: FactionActivityLevelOrd
 }
 
-type FactionStatsRow = [id: FactionId, name: string, initialActivityLevel: FactionActivityLevelOrd]
+type FactionDataRow = [id: FactionId, name: string, initialActivityLevel: FactionActivityLevelOrd]
 
-function toFactionStats(rows: FactionStatsRow[]): FactionStats[] {
+function toFactionsDataTable(rows: FactionDataRow[]): FactionData[] {
   return rows.map((row) => ({
     id: row[0],
     name: row[1],
@@ -61,7 +61,7 @@ function toFactionStats(rows: FactionStatsRow[]): FactionStats[] {
  *   (negative = funding loss).
  */
 // prettier-ignore
-export const FACTION_OPERATION_LEVEL_DATA: FactionOperationStats[] = toFactionOperationStats([
+export const FACTION_OPERATIONS_DATA_TABLE: FactionOperationData[] = toFactionOperationsDataTable([
   // Level, Description,               Panic %, Money, Fund+, Fund-
   [1,       'Soft operations'          , 0.02 ,    10,     0,     0],
   [2,       'Violent but small-scale'  , 0.1  ,    30,     5,     1],
@@ -71,7 +71,7 @@ export const FACTION_OPERATION_LEVEL_DATA: FactionOperationStats[] = toFactionOp
   [6,       'Existential'              , 0    ,     0,     0,     0],
 ])
 
-export type FactionOperationStats = {
+export type FactionOperationData = {
   level: number
   description: string
   panicIncreasePct: number
@@ -80,7 +80,7 @@ export type FactionOperationStats = {
   fundingPenalty: number
 }
 
-type FactionOperationRow = [
+type FactionOperationDataRow = [
   level: number,
   description: string,
   panicIncreasePct: number,
@@ -89,7 +89,7 @@ type FactionOperationRow = [
   fundingPenalty: number,
 ]
 
-function toFactionOperationStats(rows: FactionOperationRow[]): FactionOperationStats[] {
+function toFactionOperationsDataTable(rows: FactionOperationDataRow[]): FactionOperationData[] {
   return rows.map((row) => ({
     level: row[0],
     description: row[1],

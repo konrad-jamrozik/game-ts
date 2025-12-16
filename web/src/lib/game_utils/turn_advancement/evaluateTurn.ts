@@ -1,6 +1,6 @@
 import { getMissionDefById, bldMissionDefId } from '../../collections/missions'
 import { expandTemplateString } from '../../collections/factions'
-import { DEFENSIVE_MISSIONS_DATA } from '../../collections/missionStatsTables'
+import { DEFENSIVE_MISSIONS_DATA_TABLE } from '../../collections/defensiveMissionsDataTable'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
@@ -43,7 +43,7 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
-import { FACTION_DATA } from '../../collections/factionStatsTables'
+import { FACTIONS_DATA_TABLE } from '../../collections/factionsDataTable'
 import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
@@ -549,9 +549,11 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
   // Filter defensive mission definitions by operation level
-  const availableMissionDefs = DEFENSIVE_MISSIONS_DATA.filter((stats) => stats.level === operationLevel)
+  // KJA1 data table should not be read directly, only defensiveMissionDefs collection
+  const availableMissionDefs = DEFENSIVE_MISSIONS_DATA_TABLE.filter((data) => data.level === operationLevel)
 
   if (availableMissionDefs.length === 0) {
+    // KJA1, no assert failure
     // No mission definitions available for this operation level - should not happen, but handle gracefully
     return
   }
@@ -559,7 +561,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   // Filter out the last operation type if there are multiple options
   let candidateMissionDefs = availableMissionDefs
   if (availableMissionDefs.length > 1 && faction.lastOperationTypeName !== undefined) {
-    candidateMissionDefs = availableMissionDefs.filter((stats) => stats.name !== faction.lastOperationTypeName)
+    candidateMissionDefs = availableMissionDefs.filter((data) => data.name !== faction.lastOperationTypeName)
     // If filtering removed all options, use all available mission definitions (can repeat if only one option)
     if (candidateMissionDefs.length === 0) {
       candidateMissionDefs = availableMissionDefs
@@ -579,7 +581,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   const enemyCounts = selectedMissionDef
 
   // Generate missionDefId using the same pattern as offensive missions
-  const factionTemplate = FACTION_DATA.find((def) => def.id === faction.id)
+  const factionTemplate = FACTIONS_DATA_TABLE.find((datum) => datum.id === faction.id)
   assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
   const templatedName = expandTemplateString(selectedMissionDef.name, factionTemplate)
   const missionDefId = bldMissionDefId(templatedName)

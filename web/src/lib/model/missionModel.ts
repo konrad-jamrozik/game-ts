@@ -1,6 +1,6 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
-import type { EnemyCounts } from '../collections/enemyStatsTables'
+import type { EnemyCounts } from '../collections/enemiesDataTable'
 import type { AgentId } from './agentModel'
 import type { FactionId } from './factionModel'
 
