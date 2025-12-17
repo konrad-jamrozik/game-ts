@@ -1,6 +1,5 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
-import type { EnemyCounts } from '../collections/enemiesDataTable'
 import type { AgentId } from './agentModel'
 import type { FactionId } from './factionModel'
 
@@ -8,7 +7,10 @@ export type { MissionState } from './outcomeTypes'
 
 export type MissionId = `mission-${string}`
 
-export type MissionDefId = `missiondef-${string}`
+export type MissionDataId = `missiondata-${string}`
+
+// Legacy type alias for backward compatibility during migration
+export type MissionDefId = MissionDataId
 
 export type Actor = {
   id: string
@@ -60,20 +62,9 @@ export type MissionRewards = {
   factionRewards?: FactionRewards[]
 }
 
-export type MissionDef = {
-  id: MissionDefId
-  name: string
-  description: string
-  expiresIn: number | 'never'
-  dependsOn: string[]
-  enemyCounts: Partial<EnemyCounts>
-  factionId: FactionId
-  rewards: MissionRewards
-}
-
 export type Mission = {
   id: MissionId
-  missionDefId: MissionDefId
+  missionDataId: MissionDataId
   agentIds: AgentId[]
   state: MissionState
   expiresIn: number | 'never'

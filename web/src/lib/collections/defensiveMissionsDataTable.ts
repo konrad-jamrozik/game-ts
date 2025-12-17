@@ -24,8 +24,12 @@
  * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
  */
 
+import type { MissionDataId } from '../model/missionModel'
+import type { FactionId } from '../model/factionModel'
+
 // prettier-ignore
-export const DEFENSIVE_MISSIONS_DATA_TABLE: DefensiveMissionData[] = toDefensiveMissionsDataTable([
+export function bldDefensiveMissionsTable(): Omit<DefensiveMissionData, 'id' | 'factionId'>[] {
+  return toDefensiveMissionsDataTable([
   // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil {facName} supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
@@ -48,9 +52,11 @@ export const DEFENSIVE_MISSIONS_DATA_TABLE: DefensiveMissionData[] = toDefensive
   ['Defend {facName} military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
   
   ['Defend against {facName} HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
-])
+  ])
+}
 
 export type DefensiveMissionData = {
+  id: MissionDataId
   name: string
   level: number
   expiresIn: number
@@ -63,6 +69,7 @@ export type DefensiveMissionData = {
   commander: number
   highCommander: number
   cultLeader: number
+  factionId: FactionId
 }
 
 type DefensiveMissionRow = [
@@ -80,7 +87,7 @@ type DefensiveMissionRow = [
   cultLeader: number,
 ]
 
-function toDefensiveMissionsDataTable(rows: DefensiveMissionRow[]): DefensiveMissionData[] {
+function toDefensiveMissionsDataTable(rows: DefensiveMissionRow[]): Omit<DefensiveMissionData, 'id' | 'factionId'>[] {
   return rows.map((row) => ({
     name: row[0],
     level: row[1],

@@ -7,7 +7,7 @@ import {
 import * as React from 'react'
 import type { LeadId } from '../../lib/model/leadModel'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { leads } from '../../lib/collections/leads'
+import { dataTables } from '../../lib/collections/dataTables'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
@@ -34,13 +34,13 @@ export function LeadsDataGrid(): React.JSX.Element {
   const { leadInvestigationCounts, leadInvestigations, missions } = gameState
   const [showArchived, setShowArchived] = React.useState(false)
 
-  // Get mission definition IDs that have won missions
-  const wonMissionDefIds = new Set<string>(missions.filter((m) => m.state === 'Won').map((m) => m.missionDefId))
+  // Get mission data IDs that have won missions
+  const wonMissionDataIds = new Set<string>(missions.filter((m) => m.state === 'Won').map((m) => m.missionDataId))
 
   // Filter out leads that have unmet dependencies (same logic as LeadCards)
-  const discoveredLeads = leads.filter((lead) =>
+  const discoveredLeads = dataTables.leads.filter((lead) =>
     lead.dependsOn.every(
-      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionDefIds.has(dependencyId),
+      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionDataIds.has(dependencyId),
     ),
   )
 

@@ -1,8 +1,13 @@
 import pluralize from 'pluralize'
-import { getLeadById, getLeadInvestigationById } from '../collections/leads'
-import { getMissionById, getMissionDefById } from '../collections/missions'
+import {
+  getLeadById,
+  getLeadInvestigationById,
+  getMissionById,
+  getMissionDataById,
+  getFactionDataById,
+} from '../collections/dataTables'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import type { MissionDefId, MissionId } from '../model/missionModel'
+import type { MissionDataId, MissionId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
 import type { AgentId } from '../model/agentModel'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'
@@ -12,7 +17,6 @@ import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
 import type { GameState } from '../model/gameStateModel'
 import { assertIsFactionId, assertIsLeadId, assertIsLeadInvestigationId, assertIsMissionId } from './assertModelUtils'
-import { getFactionById } from '../collections/factions'
 
 /**
  * Formats mission target for display
@@ -64,13 +68,13 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
  * - MissionId: "007 Raid cult logistics hub" (numeric value + mission name)
  */
 export function fmtForDisplay(
-  id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDefId | AgentId,
+  id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDataId | AgentId,
   gameState?: GameState,
 ): string {
   if (id.startsWith('faction-')) {
     assertIsFactionId(id)
-    const faction = getFactionById(id)
-    return faction.name
+    const factionData = getFactionDataById(id)
+    return factionData.name
   }
 
   if (id.startsWith('lead-')) {
@@ -92,9 +96,9 @@ export function fmtForDisplay(
     assertIsMissionId(id)
     assertDefined(gameState, 'gameState is required')
     const mission = getMissionById(id, gameState)
-    const missionDef = getMissionDefById(mission.missionDefId)
+    const missionData = getMissionDataById(mission.missionDataId)
     const numericPart = fmtNoPrefix(id, 'mission-')
-    return `${numericPart} ${missionDef.name}`
+    return `${numericPart} ${missionData.name}`
   }
 
   if (id.startsWith('agent-')) {

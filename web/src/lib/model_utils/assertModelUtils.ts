@@ -1,5 +1,5 @@
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import type { MissionId, MissionDefId } from '../model/missionModel'
+import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { AgentId } from '../model/agentModel'
 import type { FactionId } from '../model/factionModel'
 
@@ -27,10 +27,15 @@ export function assertIsMissionId(id: string): asserts id is MissionId {
   }
 }
 
-export function assertIsMissionDefId(id: string): asserts id is MissionDefId {
-  if (!id.startsWith('missiondef-')) {
-    throw new Error(`Invalid mission definition ID: ${id}`)
+export function assertIsMissionDataId(id: string): asserts id is MissionDataId {
+  if (!id.startsWith('missiondata-')) {
+    throw new Error(`Invalid mission data ID: ${id}`)
   }
+}
+
+// Legacy function for backward compatibility during migration
+export function assertIsMissionDefId(id: string): asserts id is MissionDataId {
+  assertIsMissionDataId(id)
 }
 
 export function assertIsAgentId(id: string): asserts id is AgentId {

@@ -1,17 +1,69 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionDefById } from '../../lib/collections/missions'
-import { getFactionById } from '../../lib/collections/factions'
+import { getMissionDataById } from '../../lib/collections/dataTables'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
-import { f6sum, toF, f6fmtPctDec2 } from '../../lib/primitives/fixed6'
+import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
+import type { OffensiveMissionData } from '../../lib/collections/offensiveMissionsDataTable'
+import type { DefensiveMissionData } from '../../lib/collections/defensiveMissionsDataTable'
+import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../lib/ruleset/activityLevelRuleset'
+
+function parseSuppression(suppression: string): number {
+  if (suppression === 'N/A') {
+    return 0
+  }
+  const match = /^(?<value>\d+)/u.exec(suppression)
+  const value = match?.groups?.['value']
+  if (value !== undefined && value !== '') {
+    return Number.parseInt(value, 10)
+  }
+  return 0
+}
+
+function bldRewardsFromMissionData(
+  missionData: OffensiveMissionData | DefensiveMissionData,
+  operationLevel?: number,
+): MissionRewards {
+  // Defensive missions: rewards calculated from operation level
+  if (operationLevel !== undefined) {
+    return {
+      money: getMoneyRewardForOperation(operationLevel),
+      funding: getFundingRewardForOperation(operationLevel),
+      panicReduction: toF6(0),
+      factionRewards: [],
+    }
+  }
+
+  // Offensive missions: rewards from mission data
+  // Type guard: defensive missions don't have these fields
+  if (!('moneyReward' in missionData)) {
+    throw new Error('Expected offensive mission data but got defensive mission data')
+  }
+  const offensiveData = missionData
+  const suppressionValue = parseSuppression(offensiveData.suppression)
+
+  return {
+    money: offensiveData.moneyReward,
+    funding: offensiveData.fundingReward,
+    panicReduction: toF6(offensiveData.panicReductionPct / 100),
+    factionRewards:
+      suppressionValue > 0
+        ? [
+            {
+              factionId: offensiveData.factionId,
+              suppression: suppressionValue,
+            },
+          ]
+        : [],
+  }
+}
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
 import { MISSION_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
-import type { MissionId } from '../../lib/model/missionModel'
+import type { MissionId, MissionRewards } from '../../lib/model/missionModel'
 import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
@@ -35,7 +87,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const mission = missions.find((m) => m.id === missionId)
   assertDefined(mission, `Mission with id ${missionId} not found`)
 
-  const missionDef = getMissionDefById(mission.missionDefId)
+  const missionData = getMissionDataById(mission.missionDataId)
 
   const displayId = fmtNoPrefix(mission.id, 'mission-')
   const { state, expiresIn: expiresInValue, agentIds, enemies } = mission
@@ -43,9 +95,8 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const agentsDeployed = agentIds.length
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
 
-  const { rewards, factionId } = missionDef
-  const enemyFactionId = rewards.factionRewards?.[0]?.factionId ?? factionId
-  const enemyFaction = getFactionById(enemyFactionId).name
+  const { factionId } = missionData
+  const enemyFaction = gameState.factions.find((f) => f.id === factionId)?.name ?? 'Unknown'
   const enemyCount = enemies.length
 
   const enemyAverageSkill =
@@ -56,6 +107,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
         })()
       : '-'
 
+  const rewards = bldRewardsFromMissionData(missionData, mission.operationLevel)
   const rewardMoney = rewards.money ?? 0
   const rewardFunding = rewards.funding
   const rewardPanicReduction = rewards.panicReduction
@@ -67,7 +119,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
 
   const detailsRows: MissionDetailsRow[] = [
     { id: 1, key: 'ID', value: displayId },
-    { id: 2, key: 'Name', value: missionDef.name },
+    { id: 2, key: 'Name', value: missionData.name },
     { id: 3, key: 'Faction', value: enemyFaction },
     { id: 4, key: 'State', value: state, state },
     { id: 5, key: 'Expires in', value: expiresIn },

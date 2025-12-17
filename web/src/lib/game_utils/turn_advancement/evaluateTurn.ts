@@ -1,6 +1,4 @@
-import { getMissionDefById, bldMissionDefId } from '../../collections/missions'
-import { expandTemplateString } from '../../collections/factions'
-import { DEFENSIVE_MISSIONS_DATA_TABLE } from '../../collections/defensiveMissionsDataTable'
+import { getMissionDataById, dataTables } from '../../collections/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
@@ -43,8 +41,6 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
-import { FACTIONS_DATA_TABLE } from '../../collections/factionsDataTable'
-import { assertDefined } from '../../primitives/assertPrimitives'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -168,7 +164,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
       mission.expiresIn -= 1
       if (mission.expiresIn <= 0) {
         mission.state = 'Expired'
-        const missionDef = getMissionDefById(mission.missionDefId)
+        const missionData = getMissionDataById(mission.missionDataId)
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
@@ -181,7 +177,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           }
 
           // Get faction info for the report
-          const { factionId } = missionDef
+          const { factionId } = missionData
           const faction = state.factions.find((f) => f.id === factionId)
           const factionName = faction?.name ?? 'Unknown'
 
@@ -191,7 +187,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
 
           expiredReports.push({
             missionId,
-            missionName: missionDef.name,
+            missionName: missionData.name,
             factionId,
             factionName,
             operationLevel,
@@ -222,9 +218,9 @@ function evaluateDeployedMissions(state: GameState): {
 
   for (const mission of state.missions) {
     if (mission.state === 'Deployed') {
-      const { id: missionId, missionDefId, agentIds, enemies } = mission
-      const missionDef = getMissionDefById(missionDefId)
-      const { name: missionName } = missionDef
+      const { id: missionId, missionDataId, agentIds, enemies } = mission
+      const missionData = getMissionDataById(missionDataId)
+      const { name: missionName } = missionData
       const deployedAgents = withIds(state.agents, agentIds)
 
       // Capture agent states before battle
@@ -253,18 +249,12 @@ function evaluateDeployedMissions(state: GameState): {
       // Determine mission outcome
       const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'
 
-      // Get faction name from mission definition rewards
+      // Get faction name from mission data
       let factionName = 'Unknown'
-      const { factionRewards } = missionDef.rewards
-      if (factionRewards !== undefined && factionRewards.length > 0) {
-        const [firstReward] = factionRewards
-        if (firstReward !== undefined) {
-          const { factionId } = firstReward
-          const faction = state.factions.find((factionItem) => factionItem.id === factionId)
-          if (faction !== undefined) {
-            factionName = faction.name
-          }
-        }
+      const { factionId } = missionData
+      const faction = state.factions.find((factionItem) => factionItem.id === factionId)
+      if (faction !== undefined) {
+        factionName = faction.name
       }
 
       // Calculate battle stats
@@ -548,54 +538,47 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   // Roll for operation level based on activity level probabilities
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
-  // Filter defensive mission definitions by operation level
-  // KJA1 data table should not be read directly, only defensiveMissionDefs collection
-  const availableMissionDefs = DEFENSIVE_MISSIONS_DATA_TABLE.filter((data) => data.level === operationLevel)
+  // Filter defensive mission data by operation level
+  const availableMissionData = dataTables.defensiveMissions.filter((data) => data.level === operationLevel && data.factionId === faction.id)
 
-  if (availableMissionDefs.length === 0) {
+  if (availableMissionData.length === 0) {
     // KJA1, no assert failure
-    // No mission definitions available for this operation level - should not happen, but handle gracefully
+    // No mission data available for this operation level - should not happen, but handle gracefully
     return
   }
 
   // Filter out the last operation type if there are multiple options
-  let candidateMissionDefs = availableMissionDefs
-  if (availableMissionDefs.length > 1 && faction.lastOperationTypeName !== undefined) {
-    candidateMissionDefs = availableMissionDefs.filter((data) => data.name !== faction.lastOperationTypeName)
-    // If filtering removed all options, use all available mission definitions (can repeat if only one option)
-    if (candidateMissionDefs.length === 0) {
-      candidateMissionDefs = availableMissionDefs
+  let candidateMissionData = availableMissionData
+  if (availableMissionData.length > 1 && faction.lastOperationTypeName !== undefined) {
+    candidateMissionData = availableMissionData.filter((data) => data.name !== faction.lastOperationTypeName)
+    // If filtering removed all options, use all available mission data (can repeat if only one option)
+    if (candidateMissionData.length === 0) {
+      candidateMissionData = availableMissionData
     }
   }
 
-  // Pick a random mission definition from candidates
+  // Pick a random mission data from candidates
   // KJA3 put this random into an until function
-  const selectedMissionDef = candidateMissionDefs[Math.floor(Math.random() * candidateMissionDefs.length)]
-  if (selectedMissionDef === undefined) {
+  const selectedMissionData = candidateMissionData[Math.floor(Math.random() * candidateMissionData.length)]
+  if (selectedMissionData === undefined) {
     // KJA3 should assert fail. Also search for other palaces like that and update Agents.md
     // Should not happen, but handle gracefully
     return
   }
 
-  // Convert mission definition stats to enemy counts object
-  const enemyCounts = selectedMissionDef
-
-  // Generate missionDefId using the same pattern as offensive missions
-  const factionTemplate = FACTIONS_DATA_TABLE.find((datum) => datum.id === faction.id)
-  assertDefined(factionTemplate, `Faction template not found for ${faction.id}`)
-  const templatedName = expandTemplateString(selectedMissionDef.name, factionTemplate)
-  const missionDefId = bldMissionDefId(templatedName)
+  // Convert mission data stats to enemy counts object
+  const enemyCounts = selectedMissionData
 
   bldMission({
     state,
-    missionDefId,
-    expiresIn: selectedMissionDef.expiresIn,
+    missionDataId: selectedMissionData.id,
+    expiresIn: selectedMissionData.expiresIn,
     enemyCounts,
     operationLevel,
   })
 
   // Update faction's last operation type name
-  faction.lastOperationTypeName = selectedMissionDef.name
+  faction.lastOperationTypeName = selectedMissionData.name
 }
 
 /**

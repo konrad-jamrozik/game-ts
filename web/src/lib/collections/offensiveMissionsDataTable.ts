@@ -20,8 +20,12 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
+import type { MissionDataId } from '../model/missionModel'
+import type { FactionId } from '../model/factionModel'
+
 // prettier-ignore
-export const OFFENSIVE_MISSIONS_DATA_TABLE: OffensiveMissionData[] = toOffensiveMissionsDataTable([
+export function bldOffensiveMissionsTable(): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
+  return toOffensiveMissionsDataTable([
   // Name,                              Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
   ['Apprehend {facName} member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
   ['Raid {facName} safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
@@ -31,9 +35,11 @@ export const OFFENSIVE_MISSIONS_DATA_TABLE: OffensiveMissionData[] = toOffensive
   ['Raid {facName} command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{facId}-command-center'], 'Raid cult command center of {facName}.'],
   ['Raid {facName} regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
   ['Raid {facName} HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
-])
+  ])
+}
 
 export type OffensiveMissionData = {
+  id: MissionDataId
   name: string
   level: number
   expiresIn: number
@@ -52,6 +58,7 @@ export type OffensiveMissionData = {
   suppression: string
   dependsOn: string[]
   description: string
+  factionId: FactionId
 }
 
 type OffensiveMissionRow = [
@@ -75,7 +82,8 @@ type OffensiveMissionRow = [
   description: string,
 ]
 
-function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): OffensiveMissionData[] {
+// KJA1 why all these weird omits?
+function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
   return rows.map((row) => ({
     name: row[0],
     level: row[1],

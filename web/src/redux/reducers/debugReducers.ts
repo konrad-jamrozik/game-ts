@@ -1,6 +1,6 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { offensiveMissionDefs } from '../../lib/collections/missions'
+import { dataTables } from '../../lib/collections/dataTables'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldMission } from '../../lib/game_utils/missionFactory'
 import { bldAgent } from '../../lib/game_utils/agentFactory'
@@ -32,17 +32,17 @@ function addCapabilities(state: GameState): void {
 }
 
 export function spawnMissions(state: GameState): void {
-  // Filter to only offensive mission definitions (apprehend/raid missions)
-  const filteredOffensiveMissionDefs = offensiveMissionDefs.filter(
-    (missionDef) => missionDef.id.startsWith('missiondef-apprehend') || missionDef.id.startsWith('missiondef-raid'),
+  // Filter to only offensive mission data (apprehend/raid missions)
+  const filteredOffensiveMissionData = dataTables.offensiveMissions.filter(
+    (missionData) => missionData.id.startsWith('missiondata-apprehend') || missionData.id.startsWith('missiondata-raid'),
   )
 
-  for (const missionDef of filteredOffensiveMissionDefs) {
+  for (const missionData of filteredOffensiveMissionData) {
     bldMission({
       state,
-      missionDefId: missionDef.id,
-      expiresIn: missionDef.expiresIn,
-      enemyCounts: missionDef.enemyCounts,
+      missionDataId: missionData.id,
+      expiresIn: missionData.expiresIn,
+      enemyCounts: missionData,
     })
   }
 }

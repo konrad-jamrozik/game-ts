@@ -1,12 +1,12 @@
 /* eslint-disable unicorn/prefer-single-call */
 /* eslint-disable unicorn/no-immediate-mutation */
 import type { Agent, AgentId } from '../model/agentModel'
-import type { MissionId, MissionDefId } from '../model/missionModel'
+import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyRuleset'
-import { getMissionDefById } from '../collections/missions'
+import { getMissionDataById } from '../collections/dataTables'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { bldAgentWithoutState } from '../game_utils/agentFactory'
@@ -254,24 +254,24 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   } = bldDebugAgents(missionId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const missionDef = getMissionDefById('missiondef-apprehend-red-dawn-member' as MissionDefId)
+  const missionData = getMissionDataById('missiondata-apprehend-red-dawn-member' as MissionDataId)
   // KJA3 use the factory instead, bldMission. But avoid having to have tempState just for next ID.
   stateBase.missions = [
     {
       id: missionId,
-      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
-      expiresIn: missionDef.expiresIn,
-      enemies: bldEnemies(missionDef.enemyCounts),
+      expiresIn: missionData.expiresIn,
+      enemies: bldEnemies(missionData),
     },
     {
       id: 'mission-001' as MissionId,
-      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: [],
       state: 'Active',
-      expiresIn: missionDef.expiresIn,
-      enemies: bldEnemies(missionDef.enemyCounts),
+      expiresIn: missionData.expiresIn,
+      enemies: bldEnemies(missionData),
     },
   ]
 

@@ -1,5 +1,4 @@
-import { getLeadById } from '../../collections/leads'
-import { offensiveMissionDefs } from '../../collections/missions'
+import { getLeadById, dataTables } from '../../collections/dataTables'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
 import type { Mission } from '../../model/missionModel'
@@ -139,16 +138,16 @@ function completeInvestigation(
  * Creates missions for all missions that depend on the completed lead
  */
 function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Mission[] {
-  const dependentMissionDefs = offensiveMissionDefs.filter((missionDef) => missionDef.dependsOn.includes(leadId))
+  const dependentMissionData = dataTables.offensiveMissions.filter((missionData) => missionData.dependsOn.includes(leadId))
   const createdMissions: Mission[] = []
 
-  for (const missionDef of dependentMissionDefs) {
+  for (const missionData of dependentMissionData) {
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
     const newMission = bldMission({
       state,
-      missionDefId: missionDef.id,
-      expiresIn: missionDef.expiresIn,
-      enemyCounts: missionDef.enemyCounts,
+      missionDataId: missionData.id,
+      expiresIn: missionData.expiresIn,
+      enemyCounts: missionData,
     })
     createdMissions.push(newMission)
   }

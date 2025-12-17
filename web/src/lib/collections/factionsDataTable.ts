@@ -17,12 +17,14 @@ import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'
  * - InitialActivityLevel: Initial activity level when game starts (0 = Dormant, 1 = Faint, etc.).
  */
 // prettier-ignore
-export const FACTIONS_DATA_TABLE: FactionData[] = toFactionsDataTable([
+export function bldFactionsTable(): FactionData[] {
+  return toFactionsDataTable([
   // Id,                    Name,        InitialActivityLevel
   ['faction-red-dawn',      'Red Dawn',    1],
   ['faction-exalt',         'Exalt',       0],
   ['faction-black-lotus',   'Black Lotus', 0],
-])
+  ])
+}
 
 export type FactionData = {
   id: FactionId
@@ -61,7 +63,8 @@ function toFactionsDataTable(rows: FactionDataRow[]): FactionData[] {
  *   (negative = funding loss).
  */
 // prettier-ignore
-export const FACTION_OPERATIONS_DATA_TABLE: FactionOperationData[] = toFactionOperationsDataTable([
+export function bldFactionOperationsTable(): FactionOperationData[] {
+  return toFactionOperationsDataTable([
   // Level, Description,               Panic %, Money, Fund+, Fund-
   [1,       'Soft operations'          , 0.02 ,    10,     0,     0],
   [2,       'Violent but small-scale'  , 0.1  ,    30,     5,     1],
@@ -69,7 +72,8 @@ export const FACTION_OPERATIONS_DATA_TABLE: FactionOperationData[] = toFactionOp
   [4,       'Regional destabilization' , 1    ,   300,    40,     8],
   [5,       'Global conflict'          , 3    ,  1000,    80,    16],
   [6,       'Existential'              , 0    ,     0,     0,     0],
-])
+  ])
+}
 
 export type FactionOperationData = {
   level: number

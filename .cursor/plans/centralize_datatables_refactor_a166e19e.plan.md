@@ -4,28 +4,28 @@ overview: Refactor the collections architecture to use a single centralized `dat
 todos:
   - id: create-datatables-core
     content: Create dataTables.ts with DataTables type, bldDataTables(), and dataTables constant
-    status: pending
+    status: completed
   - id: create-mission-data-type
     content: Add MissionDataId type and update OffensiveMissionData/DefensiveMissionData with id field
-    status: pending
+    status: completed
   - id: convert-builders
     content: Convert all *DataTable.ts files to export builder functions instead of constants
-    status: pending
+    status: completed
   - id: delete-wrapper-files
     content: Delete redundant collection wrapper files (factions.ts, leads.ts, missions.ts, etc.)
-    status: pending
+    status: completed
   - id: update-mission-model
     content: "Update missionModel.ts: replace MissionDefId/MissionDef with MissionDataId"
-    status: pending
+    status: completed
   - id: delete-activity-level-def
     content: Delete FactionActivityLevelDef type, use FactionActivityLevelData directly
-    status: pending
+    status: completed
   - id: update-consumers
     content: Update all consuming files to use dataTables global and new types
-    status: pending
+    status: completed
   - id: add-lookup-utils
     content: Add lookup utility functions to dataTables.ts
-    status: pending
+    status: completed
 ---
 
 # Centralize Collections into `dataTables` Constant

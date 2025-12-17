@@ -1,5 +1,5 @@
 import { toF6 } from '../primitives/fixed6'
-import { factions } from '../collections/factions'
+import { bldFactions } from '../collections/dataTables'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
 import { bldDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
@@ -28,7 +28,7 @@ export function bldInitialState(options?: { debug?: boolean }): GameState {
     actionsCount: 0,
     // Situation
     panic: toF6(0),
-    factions: factions.map((faction) => ({ ...faction })), // Deep copy, so it is mutable, not readonly.
+    factions: bldFactions().map((faction) => ({ ...faction })), // Deep copy, so it is mutable, not readonly.
     // Assets
     money: 500,
     funding: 20,

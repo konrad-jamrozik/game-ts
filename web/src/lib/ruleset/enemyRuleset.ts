@@ -1,4 +1,4 @@
-import { ENEMY_STATS, type EnemyCounts } from '../collections/enemiesDataTable'
+import { bldEnemyStats, type EnemyCounts } from '../collections/enemiesDataTable'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponRuleset'
@@ -31,6 +31,8 @@ export function bldEnemies(enemyCounts: Partial<EnemyCounts>): Enemy[] {
 /**
  * Creates an enemy of the specified type
  */
+const ENEMY_STATS = bldEnemyStats()
+
 export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
   const stats = ENEMY_STATS[type]
   if (!stats) {

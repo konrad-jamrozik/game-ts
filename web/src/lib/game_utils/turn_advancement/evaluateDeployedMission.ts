@@ -1,7 +1,8 @@
 import { sum } from 'radash'
-import { getMissionDefById } from '../../collections/missions'
+import { getMissionDataById } from '../../collections/dataTables'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
 import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
+import type { OffensiveMissionData } from '../../collections/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
@@ -9,6 +10,58 @@ import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
+import type { DefensiveMissionData } from '../../collections/defensiveMissionsDataTable'
+import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/activityLevelRuleset'
+
+function parseSuppression(suppression: string): number {
+  if (suppression === 'N/A') {
+    return 0
+  }
+  const match = /^(?<value>\d+)/u.exec(suppression)
+  const value = match?.groups?.['value']
+  if (value !== undefined && value !== '') {
+    return Number.parseInt(value, 10)
+  }
+  return 0
+}
+
+function bldRewardsFromMissionData(
+  missionData: OffensiveMissionData | DefensiveMissionData,
+  operationLevel?: number,
+): MissionRewards {
+  // Defensive missions: rewards calculated from operation level
+  if (operationLevel !== undefined) {
+    return {
+      money: getMoneyRewardForOperation(operationLevel),
+      funding: getFundingRewardForOperation(operationLevel),
+      panicReduction: toF6(0),
+      factionRewards: [],
+    }
+  }
+
+  // Offensive missions: rewards from mission data
+  // Type guard: defensive missions don't have these fields
+  if (!('moneyReward' in missionData)) {
+    throw new Error('Expected offensive mission data but got defensive mission data')
+  }
+  const offensiveData = missionData
+  const suppressionValue = parseSuppression(offensiveData.suppression)
+
+  return {
+    money: offensiveData.moneyReward,
+    funding: offensiveData.fundingReward,
+    panicReduction: toF6(offensiveData.panicReductionPct / 100),
+    factionRewards:
+      suppressionValue > 0
+        ? [
+            {
+              factionId: offensiveData.factionId,
+              suppression: suppressionValue,
+            },
+          ]
+        : [],
+  }
+}
 
 /**
  * Evaluates a deployed mission according to about_deployed_mission.md.
@@ -19,8 +72,8 @@ export function evaluateDeployedMission(
   state: GameState,
   mission: Mission,
 ): { rewards: MissionRewards | undefined; battleReport: BattleReport } {
-  // Get the mission definition to access enemy units
-  const missionDef = getMissionDefById(mission.missionDefId)
+  // Get the mission data to access enemy units and rewards
+  const missionData = getMissionDataById(mission.missionDataId)
 
   // Get agents deployed to this mission
   const deployedAgents = withIds(state.agents, mission.agentIds)
@@ -57,7 +110,9 @@ export function evaluateDeployedMission(
   }
 
   // Return mission rewards to be applied later, don't apply them immediately
-  const rewards = mission.state === 'Won' ? missionDef.rewards : undefined
+  // For offensive missions, rewards come from mission data
+  // For defensive missions, rewards are calculated dynamically based on operation level
+  const rewards = mission.state === 'Won' ? bldRewardsFromMissionData(missionData, mission.operationLevel) : undefined
 
   return { rewards, battleReport }
 }

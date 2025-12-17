@@ -35,7 +35,8 @@
 import type { FactionActivityLevelName, FactionActivityLevelOrd } from '../model/factionModel'
 
 // prettier-ignore
-export const FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE: FactionActivityLevelData[] = toFactionActivityLevelData([
+export function bldActivityLevelsTable(): FactionActivityLevelData[] {
+  return toFactionActivityLevelData([
   // Ord, Name,        TurnsMin, TurnsMax, FreqMin, FreqMax, L1%,  L2%,  L3%,  L4%,  L5%,  L6%
   [0,    'Dormant',    15,       30,       '',      '',      '',   '',   '',   '',   '',   ''],
   [1,    'Faint',      60,       90,       15,      25,      80,   20,   '',   '',   '',   ''],
@@ -45,7 +46,8 @@ export const FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE: FactionActivityLevelData[] 
   [5,    'Escalating', 60,       90,        9,      19,      20,   25,   35,   15,    5,   ''],
   [6,    'War',        60,       90,        8,      18,      15,   20,   30,   20,   10,    5],
   [7,    'Total war',  Infinity, Infinity,  7,      17,      10,   15,   25,   25,   15,   10],
-])
+  ])
+}
 
 export type FactionActivityLevelData = {
   ord: FactionActivityLevelOrd

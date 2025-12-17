@@ -17,7 +17,8 @@ import type { EnemyType } from '../model/missionModel'
  */
 
 // prettier-ignore
-export const ENEMIES_DATA_TABLE: EnemyData[] = toEnemiesDataTable(
+export function bldEnemiesTable(): EnemyData[] {
+  return toEnemiesDataTable(
   [
     // Name,            Aliases, Skill,  HP, Weapon, IsOfficer
     ['initiate',      'In Init',    40,  20,      8, false ],
@@ -30,8 +31,18 @@ export const ENEMIES_DATA_TABLE: EnemyData[] = toEnemiesDataTable(
     ['highCommander', 'HC HCmd',   500,  50,     28, true  ],
     ['cultLeader',    'CL CLdr',   800,  80,     32, true  ],
   ])
+}
 
-export const ENEMY_STATS = bldEnemyStats()
+export function bldEnemyStats(): Record<string, EnemyData> {
+  const enemies = bldEnemiesTable()
+  const stats: Record<string, EnemyData> = {}
+
+  for (const enemyStat of enemies) {
+    stats[enemyStat.name] = enemyStat
+  }
+
+  return stats
+}
 
 export type EnemyData = {
   name: EnemyType
@@ -65,14 +76,4 @@ function toEnemiesDataTable(rows: EnemyDataRow[]): EnemyData[] {
     damage: row[4],
     isOfficer: row[5],
   }))
-}
-
-function bldEnemyStats(): Record<string, EnemyData> {
-  const stats: Record<string, EnemyData> = {}
-
-  for (const enemyStat of ENEMIES_DATA_TABLE) {
-    stats[enemyStat.name] = enemyStat
-  }
-
-  return stats
 }

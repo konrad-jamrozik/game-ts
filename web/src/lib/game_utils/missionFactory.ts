@@ -1,11 +1,11 @@
 import type { GameState } from '../model/gameStateModel'
-import type { Mission, MissionId, MissionDefId } from '../model/missionModel'
+import type { Mission, MissionId, MissionDataId } from '../model/missionModel'
 import type { EnemyCounts } from '../collections/enemiesDataTable'
 import { bldEnemies } from '../ruleset/enemyRuleset'
 
 type CreateMissionParams = {
   state: GameState
-  missionDefId: MissionDefId
+  missionDataId: MissionDataId
   expiresIn: number | 'never'
   enemyCounts: Partial<EnemyCounts>
   operationLevel?: number
@@ -16,7 +16,7 @@ type CreateMissionParams = {
  * Returns the created mission.
  */
 export function bldMission(params: CreateMissionParams): Mission {
-  const { state, missionDefId, expiresIn, enemyCounts, operationLevel } = params
+  const { state, missionDataId, expiresIn, enemyCounts, operationLevel } = params
 
   // Invariant: next mission numeric id is always the current number of missions
   const nextMissionNumericId = state.missions.length
@@ -24,7 +24,7 @@ export function bldMission(params: CreateMissionParams): Mission {
 
   const newMission: Mission = {
     id: missionId,
-    missionDefId,
+    missionDataId,
     agentIds: [],
     state: 'Active',
     expiresIn,

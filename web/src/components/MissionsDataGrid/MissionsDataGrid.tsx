@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionDefById } from '../../lib/collections/missions'
+import { getMissionDataById } from '../../lib/collections/dataTables'
 import type { Mission } from '../../lib/model/missionModel'
 import { clearMissionSelection, setMissionSelection } from '../../redux/slices/selectionSlice'
 import {
@@ -50,25 +50,25 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   // Transform all missions to rows (both active and archived)
   const allActiveRows: MissionRow[] = sortedActiveMissions.map((mission, index) => {
-    const missionDef = getMissionDefById(mission.missionDefId)
+    const missionData = getMissionDataById(mission.missionDataId)
     const displayId = fmtNoPrefix(mission.id, 'mission-')
 
     return {
       ...mission,
       rowId: index,
-      name: missionDef.name,
+      name: missionData.name,
       displayId,
     }
   })
 
   const allArchivedRows: MissionRow[] = sortedArchivedMissions.map((mission, index) => {
-    const missionDef = getMissionDefById(mission.missionDefId)
+    const missionData = getMissionDataById(mission.missionDataId)
     const displayId = fmtNoPrefix(mission.id, 'mission-')
 
     return {
       ...mission,
       rowId: allActiveRows.length + index,
-      name: missionDef.name,
+      name: missionData.name,
       displayId,
     }
   })

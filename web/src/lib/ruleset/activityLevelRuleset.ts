@@ -1,13 +1,12 @@
-import { getFactionOperationByLevel } from '../collections/factionOperations'
+import { getFactionOperationByLevel, getActivityLevelByOrd, type ProcessedFactionActivityLevelData } from '../collections/dataTables'
+import type { FactionOperationData } from '../collections/factionsDataTable'
 import {
   ACTIVITY_LEVEL_NAMES,
   type FactionActivityLevelOrd,
   type Faction,
-  type FactionOperation,
 } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
-import { getFactionActivityLevelDefByOrd, type FactionActivityLevelDef } from '../collections/factionActivityLevelDefs'
 
 // KJA1 activityLevelRuleset has tons of silly utils, move them to model utils
 
@@ -21,8 +20,8 @@ export function getActivityLevelName(level: FactionActivityLevelOrd): string {
 /**
  * Get the configuration for an activity level.
  */
-export function getActivityLevelConfig(level: FactionActivityLevelOrd): FactionActivityLevelDef {
-  return getFactionActivityLevelDefByOrd(level)
+export function getActivityLevelConfig(level: FactionActivityLevelOrd): ProcessedFactionActivityLevelData {
+  return getActivityLevelByOrd(level)
 }
 
 /**
@@ -30,7 +29,7 @@ export function getActivityLevelConfig(level: FactionActivityLevelOrd): FactionA
  * Returns the threshold turns for comparison (minimum turns needed).
  */
 export function getActivityLevelThreshold(level: FactionActivityLevelOrd): number {
-  return getFactionActivityLevelDefByOrd(level).minTurns
+  return getActivityLevelByOrd(level).minTurns
 }
 
 /**
@@ -54,7 +53,7 @@ export function assertIsActivityLevel(value: number): asserts value is FactionAc
  * Randomized between min and max turns.
  */
 export function calculateProgressionTurns(level: FactionActivityLevelOrd): number {
-  const config = getFactionActivityLevelDefByOrd(level)
+  const config = getActivityLevelByOrd(level)
   if (config.minTurns === Infinity) {
     return Infinity
   }
@@ -66,7 +65,7 @@ export function calculateProgressionTurns(level: FactionActivityLevelOrd): numbe
  * Randomized between min and max frequency.
  */
 export function calculateOperationTurns(level: FactionActivityLevelOrd): number {
-  const config = getFactionActivityLevelDefByOrd(level)
+  const config = getActivityLevelByOrd(level)
   if (config.operationFrequencyMin === Infinity) {
     return Infinity
   }
@@ -81,7 +80,7 @@ export function calculateOperationTurns(level: FactionActivityLevelOrd): number 
  * Returns operation level 1-6.
  */
 export function rollOperationLevel(activityLevel: FactionActivityLevelOrd): number {
-  const config = getFactionActivityLevelDefByOrd(activityLevel)
+  const config = getActivityLevelByOrd(activityLevel)
   const weights = config.operationLevelWeights
   const totalWeight = weights.reduce((sum, w) => sum + w, 0)
 
@@ -153,7 +152,7 @@ export function getFundingRewardForOperation(operationLevel: number): number {
 }
 
 // KJA1 inline; search all for such obsolete names with "Stats" etc
-function getFactionOperationStats(operationLevel: number): FactionOperation {
+function getFactionOperationStats(operationLevel: number): FactionOperationData {
   return getFactionOperationByLevel(operationLevel)
 }
 
@@ -162,7 +161,7 @@ function getFactionOperationStats(operationLevel: number): FactionOperation {
  * Also handles the random threshold check.
  */
 export function shouldAdvanceActivityLevel(faction: Faction, targetTurns: number): boolean {
-  const config = getFactionActivityLevelDefByOrd(faction.activityLevel)
+  const config = getActivityLevelByOrd(faction.activityLevel)
   if (config.minTurns === Infinity) {
     return false
   }
