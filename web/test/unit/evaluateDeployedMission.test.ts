@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { Mission, MissionDefId } from '../../src/lib/model/missionModel'
+import type { Mission, MissionDataId } from '../../src/lib/model/missionModel'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
 import {
   AGENT_CAP,
@@ -38,7 +38,7 @@ describe(evaluateDeployedMission, () => {
     // Create a test mission with weak enemies
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -112,7 +112,7 @@ describe(evaluateDeployedMission, () => {
 
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
@@ -201,7 +201,7 @@ describe(evaluateDeployedMission, () => {
 
     const testMission: Mission = {
       id: 'mission-001',
-      missionDefId: 'missiondef-apprehend-red-dawn-member' as MissionDefId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,

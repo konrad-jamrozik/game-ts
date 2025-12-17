@@ -8,7 +8,7 @@ import {
   type AgentState,
 } from '../../src/lib/model/agentModel'
 import type { LeadId } from '../../src/lib/model/leadModel'
-import type { Enemy, Mission, MissionId, MissionDefId } from '../../src/lib/model/missionModel'
+import type { Enemy, Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/ruleset/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
@@ -51,10 +51,10 @@ export const st = {
   },
 
   bldMission(missionId: MissionId): Mission {
-    const missionDefId = 'missiondef-apprehend-red-dawn-member' as MissionDefId
+    const missionDataId = 'missiondata-apprehend-red-dawn-member' as MissionDataId
     return {
       id: missionId,
-      missionDefId,
+      missionDataId,
       agentIds: [],
       state: 'Active',
       expiresIn: 3,

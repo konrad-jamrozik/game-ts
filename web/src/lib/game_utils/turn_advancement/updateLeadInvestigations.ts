@@ -138,7 +138,9 @@ function completeInvestigation(
  * Creates missions for all missions that depend on the completed lead
  */
 function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Mission[] {
-  const dependentMissionData = dataTables.offensiveMissions.filter((missionData) => missionData.dependsOn.includes(leadId))
+  const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
+    missionData.dependsOn.includes(leadId),
+  )
   const createdMissions: Mission[] = []
 
   for (const missionData of dependentMissionData) {
