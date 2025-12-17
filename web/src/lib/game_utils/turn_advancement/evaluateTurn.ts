@@ -539,10 +539,12 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   const operationLevel = rollOperationLevel(faction.activityLevel)
 
   // Filter defensive mission data by operation level
-  const availableMissionData = dataTables.defensiveMissions.filter((data) => data.level === operationLevel && data.factionId === faction.id)
+  const availableMissionData = dataTables.defensiveMissions.filter(
+    (data) => data.level === operationLevel && data.factionId === faction.id,
+  )
 
   if (availableMissionData.length === 0) {
-    // KJA1, no assert failure
+    // KJA2, no - should assert failure instead
     // No mission data available for this operation level - should not happen, but handle gracefully
     return
   }

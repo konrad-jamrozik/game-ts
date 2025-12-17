@@ -82,7 +82,7 @@ type OffensiveMissionRow = [
   description: string,
 ]
 
-// KJA1 why all these weird omits?
+// KJA1 why all these weird omits? Probabily for building dataTables const.
 function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
   return rows.map((row) => ({
     name: row[0],

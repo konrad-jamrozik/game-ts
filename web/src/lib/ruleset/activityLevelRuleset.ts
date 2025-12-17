@@ -1,14 +1,14 @@
-import { getFactionOperationByLevel, getActivityLevelByOrd, type ProcessedFactionActivityLevelData } from '../collections/dataTables'
-import type { FactionOperationData } from '../collections/factionsDataTable'
 import {
-  ACTIVITY_LEVEL_NAMES,
-  type FactionActivityLevelOrd,
-  type Faction,
-} from '../model/factionModel'
+  getFactionOperationByLevel,
+  getActivityLevelByOrd,
+  type ProcessedFactionActivityLevelData,
+} from '../collections/dataTables'
+import type { FactionOperationData } from '../collections/factionsDataTable'
+import { ACTIVITY_LEVEL_NAMES, type FactionActivityLevelOrd, type Faction } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 
-// KJA1 activityLevelRuleset has tons of silly utils, move them to model utils
+// KJA2 activityLevelRuleset has tons of silly utils, move them to model utils
 
 /**
  * Get the display name for an activity level.
@@ -151,7 +151,7 @@ export function getFundingRewardForOperation(operationLevel: number): number {
   return stats.fundingReward
 }
 
-// KJA1 inline; search all for such obsolete names with "Stats" etc
+// KJA2 inline; search all for such obsolete names with "Stats" etc
 function getFactionOperationStats(operationLevel: number): FactionOperationData {
   return getFactionOperationByLevel(operationLevel)
 }
