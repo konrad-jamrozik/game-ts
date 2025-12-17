@@ -202,4 +202,7 @@ I want to refactor how collections and data tables are organized. Here are the r
 
 8. **Data table files export builder functions**: Instead of `export const FACTIONS_DATA_TABLE = ...`, export `export function bldFactionsTable(): ...`. The constant is an implementation detail inside the builder.
 
+Notes: Delete `MissionDef` - its role now will play dataTables.missions of type `MissionData[]`.
+`Mission` entities shall reference them with `missionDataId: MissionDataId` where `type MissionDataId = 'missiondata-${string}'`.
+
 Please create an implementation plan for this refactoring.
