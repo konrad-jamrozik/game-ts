@@ -55,3 +55,9 @@ export type AgentCombatStats = {
   initialEffectiveSkill: Fixed6
   skillGained: Fixed6
 }
+
+export function assertIsAgentId(id: string): asserts id is AgentId {
+  if (!id.startsWith('agent-')) {
+    throw new Error(`Invalid agent ID: ${id}`)
+  }
+}

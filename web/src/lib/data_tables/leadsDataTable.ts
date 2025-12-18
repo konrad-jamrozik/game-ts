@@ -14,8 +14,7 @@
  * - EnemyEstimate: Optional enemy estimate text (may contain {facName} template)
  */
 
-import type { Lead } from '../model/leadModel'
-import { asLeadId } from '../model/modelAssertions'
+import { type Lead, asLeadId } from '../model/leadModel'
 
 // prettier-ignore
 export function bldLeadsTable(): LeadData[] {
