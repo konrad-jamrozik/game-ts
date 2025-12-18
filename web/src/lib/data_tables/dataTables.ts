@@ -25,9 +25,9 @@ export type DataTables = {
   readonly leads: readonly LeadData[]
   readonly offensiveMissions: readonly OffensiveMissionData[]
   readonly defensiveMissions: readonly DefensiveMissionData[]
-  readonly activityLevels: readonly FactionActivityLevelData[]
+  readonly factionActivityLevels: readonly FactionActivityLevelData[]
   readonly enemies: readonly EnemyData[]
-  readonly factionOperations: readonly FactionOperationLevelData[]
+  readonly factionOperationLevels: readonly FactionOperationLevelData[]
 }
 
 export const dataTables: DataTables = bldDataTables()
@@ -40,7 +40,7 @@ export function bldDataTables(): DataTables {
   const rawDefensiveMissions = bldDefensiveMissionsTable()
   const rawActivityLevels = bldActivityLevelsTable()
   const enemies = bldEnemiesTable()
-  const factionOperations = bldFactionOperationLevelsTable()
+  const factionOperationLevels = bldFactionOperationLevelsTable()
 
   // Expand templates using factions
   const factions = rawFactions as readonly FactionData[]
@@ -54,9 +54,9 @@ export function bldDataTables(): DataTables {
     leads,
     offensiveMissions,
     defensiveMissions,
-    activityLevels,
+    factionActivityLevels: activityLevels,
     enemies: enemies as readonly EnemyData[],
-    factionOperations: factionOperations as readonly FactionOperationLevelData[],
+    factionOperationLevels: factionOperationLevels as readonly FactionOperationLevelData[],
   }
 }
 
@@ -103,7 +103,7 @@ export function getFactionDataById(id: FactionId): FactionData {
 }
 
 export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): FactionActivityLevelData {
-  const found = dataTables.activityLevels.find((level) => level.ord === ord)
+  const found = dataTables.factionActivityLevels.find((level) => level.ord === ord)
   assertDefined(found, `Activity level with ord ${ord} not found`)
   return found
 }
@@ -115,7 +115,7 @@ export function getEnemyByType(type: EnemyType): EnemyData {
 }
 
 export function getFactionOperationByLevel(level: number): FactionOperationLevelData {
-  const found = dataTables.factionOperations.find((op) => op.ord === level)
+  const found = dataTables.factionOperationLevels.find((op) => op.ord === level)
   assertDefined(found, `Faction operation with level ${level} not found`)
   return found
 }
