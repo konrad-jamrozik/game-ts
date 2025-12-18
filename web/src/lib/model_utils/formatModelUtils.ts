@@ -1,11 +1,11 @@
 import pluralize from 'pluralize'
 import {
   getLeadById,
-  getLeadInvestigationById,
-  getMissionById,
   getMissionDataById,
   getFactionDataById,
 } from '../collections/dataTables'
+import { getMissionById } from './missionUtils'
+import { getLeadInvestigationById } from './leadInvestigationUtils'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { MissionDataId, MissionId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'

@@ -9,12 +9,10 @@
 
 import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
-import type { FactionId, FactionActivityLevelOrd, Faction } from '../model/factionModel'
-import type { MissionDataId, MissionId, Mission, EnemyType } from '../model/missionModel'
-import type { LeadId, LeadInvestigationId, LeadInvestigation, Lead } from '../model/leadModel'
-import type { GameState } from '../model/gameStateModel'
+import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
+import type { MissionDataId, EnemyType } from '../model/missionModel'
+import type { LeadId, Lead } from '../model/leadModel'
 import { assertIsLeadId } from '../model_utils/assertModelUtils'
-import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 import {
   bldFactionsTable,
   bldFactionOperationsTable,
@@ -268,8 +266,8 @@ export function bldDataTables(): DataTables {
 
 export const dataTables: DataTables = bldDataTables()
 
-// Lookup utilities
-// KJA1 probably move lookup utilities to a separate file.
+// Data table lookup utilities
+// These functions look up entities in the immutable dataTables constant.
 
 export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
   const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
@@ -323,37 +321,4 @@ export function getFactionOperationByLevel(level: number): FactionOperationData 
   const found = dataTables.factionOperations.find((op) => op.level === level)
   assertDefined(found, `Faction operation with level ${level} not found`)
   return found
-}
-
-export function getMissionById(missionId: MissionId, gameState: GameState): Mission {
-  const foundMission = gameState.missions.find((mission) => mission.id === missionId)
-  assertDefined(foundMission, `Mission with id ${missionId} not found`)
-  return foundMission
-}
-
-export function getLeadInvestigationById(
-  investigationId: LeadInvestigationId,
-  gameState: GameState,
-): LeadInvestigation {
-  const investigation = gameState.leadInvestigations[investigationId]
-  assertDefined(investigation, `Lead investigation with id ${investigationId} not found`)
-  return investigation
-}
-
-export function bldFaction(datum: FactionData): Faction {
-  return {
-    id: datum.id,
-    name: datum.name,
-    activityLevel: datum.initialActivityLevel,
-    turnsAtCurrentLevel: 0,
-    turnsUntilNextOperation: calculateOperationTurns(datum.initialActivityLevel),
-    suppressionTurns: 0,
-    lastOperationTypeName: undefined,
-    discoveryPrerequisite: [`lead-${getFactionShortId(datum.id)}-profile`],
-  }
-}
-
-// KJA1 wrong function order, this should be above.
-export function bldFactions(): Faction[] {
-  return dataTables.factions.map((datum) => bldFaction(datum))
 }

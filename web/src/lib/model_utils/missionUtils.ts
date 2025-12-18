@@ -1,6 +1,8 @@
 import { getMissionDataById } from '../collections/dataTables'
-import type { Mission } from '../model/missionModel'
+import type { Mission, MissionId } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
+import type { GameState } from '../model/gameStateModel'
+import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { getStatePriority } from './missionStatePriority'
 
@@ -129,4 +131,13 @@ export function fmtMissionIdWithMissionDefId(mission: Mission): string {
   }
 
   return `${missionIdWithoutPrefix} ${missionDataIdWithoutPrefix}`
+}
+
+/**
+ * Looks up a mission by ID in the game state
+ */
+export function getMissionById(missionId: MissionId, gameState: GameState): Mission {
+  const foundMission = gameState.missions.find((mission) => mission.id === missionId)
+  assertDefined(foundMission, `Mission with id ${missionId} not found`)
+  return foundMission
 }

@@ -1,5 +1,5 @@
 import { toF6 } from '../primitives/fixed6'
-import { bldFactions } from '../collections/dataTables'
+import { bldFactions } from '../game_utils/factionFactory'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
 import { bldDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
