@@ -96,7 +96,8 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
 
   const { factionId } = missionData
-  const enemyFaction = gameState.factions.find((f) => f.id === factionId)?.name ?? 'Unknown'
+  const { factions } = gameState
+  const enemyFaction = factions.find((f) => f.id === factionId)?.name ?? 'Unknown'
   const enemyCount = enemies.length
 
   const enemyAverageSkill =
@@ -107,7 +108,8 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
         })()
       : '-'
 
-  const rewards = bldRewardsFromMissionData(missionData, mission.operationLevel)
+  const { operationLevel } = mission
+  const rewards = bldRewardsFromMissionData(missionData, operationLevel)
   const rewardMoney = rewards.money ?? 0
   const rewardFunding = rewards.funding
   const rewardPanicReduction = rewards.panicReduction
