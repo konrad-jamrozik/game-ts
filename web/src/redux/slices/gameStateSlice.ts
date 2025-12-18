@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import initialState from '../../lib/factories/initialState'
+import { bldInitialState } from '../../lib/factories/gameStateFactory'
 import {
   hireAgent as hireAgentReducer,
   sackAgents as sackAgentsReducer,
@@ -30,7 +30,7 @@ import {
 // See https://redux.js.org/understanding/history-and-design/middleware
 const gameStateSlice = createSlice({
   name: 'gameState',
-  initialState,
+  initialState: bldInitialState(),
   reducers: {
     advanceTurn: advanceTurnReducer,
     hireAgent: hireAgentReducer,
