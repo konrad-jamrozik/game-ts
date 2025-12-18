@@ -11,7 +11,7 @@ import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
-import type { LeadId, Lead } from '../model/leadModel'
+import type { LeadId, LeadData } from '../model/leadModel'
 import { assertIsLeadId } from '../model/modelAssertions'
 import { bldFactionsTable, type FactionData } from './factionsDataTable'
 import { bldLeadsTable, type LeadData } from './leadsDataTable'
@@ -23,7 +23,7 @@ import { bldEnemiesTable, type EnemyData } from './enemiesDataTable'
 
 export type DataTables = {
   readonly factions: readonly FactionData[]
-  readonly leads: readonly Lead[]
+  readonly leads: readonly LeadData[]
   readonly offensiveMissions: readonly OffensiveMissionData[]
   readonly defensiveMissions: readonly DefensiveMissionData[]
   readonly activityLevels: readonly FactionActivityLevelData[]
@@ -45,7 +45,7 @@ export function bldDataTables(): DataTables {
 
   // Expand templates using factions
   const factions = rawFactions as readonly FactionData[]
-  const leads = expandLeads(rawLeads, factions) as readonly Lead[]
+  const leads = expandLeads(rawLeads, factions) as readonly LeadData[]
   const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
   const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
   const activityLevels = rawActivityLevels as readonly FactionActivityLevelData[]
@@ -91,7 +91,7 @@ export function getMissionDataById(id: MissionDataId): OffensiveMissionData | De
   throw new Error(`Mission data with id ${id} not found`)
 }
 
-export function getLeadById(id: LeadId): Lead {
+export function getLeadById(id: LeadId): LeadData {
   const found = dataTables.leads.find((lead) => lead.id === id)
   assertDefined(found, `Lead with id ${id} not found`)
   return found
@@ -191,8 +191,8 @@ function expandDefensiveMissions(
   return result
 }
 
-function expandLeads(rawLeads: LeadData[], factions: readonly FactionData[]): Lead[] {
-  const result: Lead[] = []
+function expandLeads(rawLeads: LeadData[], factions: readonly FactionData[]): LeadData[] {
+  const result: LeadData[] = []
 
   for (const datum of rawLeads) {
     if (datum.id.includes('{facId}')) {
