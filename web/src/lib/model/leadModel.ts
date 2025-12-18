@@ -7,7 +7,7 @@ export type LeadId = `lead-${string}`
 
 export type LeadInvestigationId = `investigation-${string}`
 
-export type LeadData = {
+export type Lead = {
   id: LeadId
   name: string
   difficulty: number

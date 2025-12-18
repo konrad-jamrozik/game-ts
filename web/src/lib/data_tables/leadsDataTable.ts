@@ -14,6 +14,9 @@
  * - EnemyEstimate: Optional enemy estimate text (may contain {facName} template)
  */
 
+import type { Lead } from '../model/leadModel'
+import { asLeadId } from '../model/modelAssertions'
+
 // prettier-ignore
 export function bldLeadsTable(): LeadData[] {
   return toLeadsDataTable([
@@ -46,15 +49,12 @@ export function bldLeadsTable(): LeadData[] {
   ])
 }
 
-export type LeadData = {
-  id: string
-  name: string
-  description: string
-  difficulty: number
-  dependsOn: string[]
-  repeatable: boolean
-  enemyEstimate?: string
-}
+/**
+ * LeadData is equal to Lead because Lead has no runtime-dependent values, unlike e.g. Faction.
+ * E.g. the amount of times given lead was investigated is kept in the game state, and perhaps it should
+ * instead be kept in Lead itself. Then distinction between Lead and LeadData would be more clear.
+ */
+export type LeadData = Lead
 
 type LeadDataRow = [
   id: string,
@@ -66,9 +66,9 @@ type LeadDataRow = [
   enemyEstimate?: string,
 ]
 
-function toLeadsDataTable(rows: LeadDataRow[]): LeadData[] {
+function toLeadsDataTable(rows: LeadDataRow[]): Lead[] {
   return rows.map((row) => ({
-    id: row[0],
+    id: asLeadId(row[0]),
     name: row[1],
     description: row[2],
     difficulty: row[3],

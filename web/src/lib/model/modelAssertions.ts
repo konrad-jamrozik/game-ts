@@ -9,6 +9,11 @@ export function assertIsFactionId(id: string): asserts id is FactionId {
   }
 }
 
+export function asLeadId(id: string): LeadId {
+  assertIsLeadId(id)
+  return id
+}
+
 export function assertIsLeadId(id: string): asserts id is LeadId {
   if (!id.startsWith('lead-')) {
     throw new Error(`Invalid lead ID: ${id}`)

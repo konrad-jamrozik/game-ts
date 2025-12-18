@@ -343,6 +343,9 @@ export default plugTypescriptEslint.config([
       // that just returns, but has to have right parameters as it will be replaced with
       // an overloaded function that uses them.
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      // Turned off as it just confuses AI agents
+      // https://typescript-eslint.io/rules/prefer-destructuring/
+      '@typescript-eslint/prefer-destructuring': 'off',
 
       // Note: per the performance note of typescript-eslint:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import

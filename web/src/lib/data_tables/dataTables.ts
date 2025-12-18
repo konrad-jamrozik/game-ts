@@ -11,8 +11,8 @@ import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
-import type { LeadId, LeadData } from '../model/leadModel'
-import { assertIsLeadId } from '../model/modelAssertions'
+import type { Lead, LeadId } from '../model/leadModel'
+import { asLeadId } from '../model/modelAssertions'
 import { bldFactionsTable, type FactionData } from './factionsDataTable'
 import { bldLeadsTable, type LeadData } from './leadsDataTable'
 import { bldOffensiveMissionsTable, type OffensiveMissionData } from './offensiveMissionsDataTable'
@@ -45,7 +45,7 @@ export function bldDataTables(): DataTables {
 
   // Expand templates using factions
   const factions = rawFactions as readonly FactionData[]
-  const leads = expandLeads(rawLeads, factions) as readonly LeadData[]
+  const leads = expandLeads(rawLeads, factions) as readonly Lead[]
   const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
   const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
   const activityLevels = rawActivityLevels as readonly FactionActivityLevelData[]
@@ -91,7 +91,7 @@ export function getMissionDataById(id: MissionDataId): OffensiveMissionData | De
   throw new Error(`Mission data with id ${id} not found`)
 }
 
-export function getLeadById(id: LeadId): LeadData {
+export function getLeadById(id: LeadId): Lead {
   const found = dataTables.leads.find((lead) => lead.id === id)
   assertDefined(found, `Lead with id ${id} not found`)
   return found
@@ -191,15 +191,14 @@ function expandDefensiveMissions(
   return result
 }
 
-function expandLeads(rawLeads: LeadData[], factions: readonly FactionData[]): LeadData[] {
-  const result: LeadData[] = []
+function expandLeads(rawLeads: Lead[], factions: readonly FactionData[]): Lead[] {
+  const result: Lead[] = []
 
   for (const datum of rawLeads) {
     if (datum.id.includes('{facId}')) {
       // Faction-specific lead: generate for each faction
       for (const faction of factions) {
-        const leadId = expandTemplateString(datum.id, faction)
-        assertIsLeadId(leadId)
+        const leadId = asLeadId(expandTemplateString(datum.id, faction))
         result.push({
           id: leadId,
           name: expandTemplateString(datum.name, faction),
@@ -214,8 +213,7 @@ function expandLeads(rawLeads: LeadData[], factions: readonly FactionData[]): Le
       }
     } else {
       // Static lead: generate once (expandTemplateString will be no-op)
-      const leadId = expandTemplateString(datum.id)
-      assertIsLeadId(leadId)
+      const leadId = asLeadId(expandTemplateString(datum.id))
       result.push({
         id: leadId,
         name: expandTemplateString(datum.name),
