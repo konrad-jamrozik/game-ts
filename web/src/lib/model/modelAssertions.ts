@@ -1,7 +1,7 @@
-import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import type { MissionId, MissionDataId } from '../model/missionModel'
-import type { AgentId } from '../model/agentModel'
-import type { FactionId } from '../model/factionModel'
+import type { LeadId, LeadInvestigationId } from './leadModel'
+import type { MissionId, MissionDataId } from './missionModel'
+import type { AgentId } from './agentModel'
+import type { FactionId } from './factionModel'
 
 export function assertIsFactionId(id: string): asserts id is FactionId {
   if (!id.startsWith('faction-')) {

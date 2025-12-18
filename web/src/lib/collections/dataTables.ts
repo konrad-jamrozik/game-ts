@@ -12,7 +12,7 @@ import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
 import type { LeadId, Lead } from '../model/leadModel'
-import { assertIsLeadId } from '../model_utils/assertModelUtils'
+import { assertIsLeadId } from '../model/modelAssertions'
 import {
   bldFactionsTable,
   bldFactionOperationsTable,

@@ -67,9 +67,10 @@ graph TD
 
     subgraph "web/src/lib"
         LibGam[lib/game_utils]
+        LibFac[lib/factories]
         LibRul[lib/ruleset]
         LibMUt[lib/model_utils]
-        LibCol[lib/collections]
+        LibDataT[lib/dataTables]
         LibMod[lib/model]
         LibPri[lib/primitives]
     end
@@ -90,12 +91,19 @@ graph TD
     RdxMid --> RdxSli
     RdxSli --> RdxRed
     RdxRed --> LibGam
+    RdxRed --> LibFac
     RdxHook --> RdxStore
     RdxSel --> RdxStore
+    LibGam --> LibFac
     LibGam --> LibRul
+    LibFac --> LibDataT
+    LibFac --> LibRul
+    LibRul --> LibFac
     LibRul --> LibMUt
-    LibMUt --> LibCol
-    LibCol --> LibMod
+    LibRul --> LibDataT
+    LibMUt --> LibDataT
+    LibMUt --> LibMod
+    LibDataT --> LibMod
     LibMod --> LibPri
 ```
 
@@ -123,6 +131,7 @@ graph TD
 
     subgraph "web/src/lib"
         LibGam[lib/game_utils]
+        LibFac[lib/factories]
         LibMod[lib/model]
     end
 
@@ -139,6 +148,7 @@ graph TD
     RdxSli --> RdxRed
     RdxRed --> RdxRedUtils
     RdxRed --> LibGam
+    RdxRed --> LibFac
     RdxRedUtils --> LibMod
     RdxSli --> LibGam
     RdxHook --> RdxStore

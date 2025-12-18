@@ -12,7 +12,12 @@ import { floorToDec2 } from '../primitives/mathPrimitives'
 import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
 import type { GameState } from '../model/gameStateModel'
-import { assertIsFactionId, assertIsLeadId, assertIsLeadInvestigationId, assertIsMissionId } from './assertModelUtils'
+import {
+  assertIsFactionId,
+  assertIsLeadId,
+  assertIsLeadInvestigationId,
+  assertIsMissionId,
+} from '../model/modelAssertions'
 
 /**
  * Formats mission target for display
