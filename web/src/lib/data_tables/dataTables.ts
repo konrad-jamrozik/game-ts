@@ -7,16 +7,19 @@
  * Template expansion (e.g., `{facId}`, `{facName}`) happens during initialization.
  */
 
-import { assertDefined, assertTrue } from '../primitives/assertPrimitives'
+import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
-import { type Lead, type LeadId, asLeadId } from '../model/leadModel'
+import type { Lead, LeadId } from '../model/leadModel'
 import { bldFactionsTable, type FactionData } from './factionsDataTable'
 import { bldLeadsTable, type LeadData } from './leadsDataTable'
 import { bldOffensiveMissionsTable, type OffensiveMissionData } from './offensiveMissionsDataTable'
 import { bldDefensiveMissionsTable, type DefensiveMissionData } from './defensiveMissionsDataTable'
-import { bldActivityLevelsTable, type FactionActivityLevelData } from './factionActivityLevelsDataTable'
+import {
+  bldActivityLevelsTable as bldFactionActivityLevelsTable,
+  type FactionActivityLevelData,
+} from './factionActivityLevelsDataTable'
 import { bldFactionOperationLevelsTable, type FactionOperationLevelData } from './factionOperationLevelsDataTable'
 import { bldEnemiesTable, type EnemyData } from './enemiesDataTable'
 
@@ -35,11 +38,10 @@ export const dataTables: DataTables = bldDataTables()
 export function bldDataTables(): DataTables {
   const enemies = bldEnemiesTable()
   const factionOperationLevels = bldFactionOperationLevelsTable()
-  const factionActivityLevels = bldActivityLevelsTable()
-
+  const factionActivityLevels = bldFactionActivityLevelsTable()
   const factions = bldFactionsTable()
-  const rawLeads = bldLeadsTable()
-  const leads = expandLeads(rawLeads, factions)
+
+  const leads = bldLeadsTable(factions)
   const offensiveMissions = bldOffensiveMissionsTable(factions)
   const defensiveMissions = bldDefensiveMissionsTable(factions)
 
@@ -112,54 +114,4 @@ export function getFactionOperationByLevel(level: number): FactionOperationLevel
   const found = dataTables.factionOperationLevels.find((op) => op.ord === level)
   assertDefined(found, `Faction operation with level ${level} not found`)
   return found
-}
-
-function expandLeads(rawLeads: readonly LeadData[], factions: readonly FactionData[]): readonly Lead[] {
-  const result: Lead[] = []
-
-  for (const datum of rawLeads) {
-    if (datum.id.includes('{facId}')) {
-      // Faction-specific lead: generate for each faction
-      for (const faction of factions) {
-        const leadId = asLeadId(expandTemplateString(datum.id, faction))
-        result.push({
-          id: leadId,
-          name: expandTemplateString(datum.name, faction),
-          description: expandTemplateString(datum.description, faction),
-          difficulty: datum.difficulty,
-          dependsOn: datum.dependsOn.map((dep) => expandTemplateString(dep, faction)),
-          repeatable: datum.repeatable,
-          ...(datum.enemyEstimate !== undefined && {
-            enemyEstimate: expandTemplateString(datum.enemyEstimate, faction),
-          }),
-        })
-      }
-    } else {
-      // Static lead: generate once (expandTemplateString will be no-op)
-      const leadId = asLeadId(expandTemplateString(datum.id))
-      result.push({
-        id: leadId,
-        name: expandTemplateString(datum.name),
-        description: expandTemplateString(datum.description),
-        difficulty: datum.difficulty,
-        dependsOn: datum.dependsOn.map((dep) => expandTemplateString(dep)),
-        repeatable: datum.repeatable,
-        ...(datum.enemyEstimate !== undefined && { enemyEstimate: expandTemplateString(datum.enemyEstimate) }),
-      })
-    }
-  }
-
-  return result
-}
-
-function expandTemplateString(template: string, faction?: FactionData): string {
-  if (faction === undefined) {
-    assertTrue(
-      !template.includes('{facId}') && !template.includes('{facName}'),
-      `Template string "${template}" contains faction placeholders but no faction was provided`,
-    )
-    return template
-  }
-  const shortId = getFactionShortId(faction.id)
-  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }

@@ -136,11 +136,13 @@ function toDefensiveMissionsDataTable(
   return result
 }
 
+// KJA1 dedup this and other funcs in dataTables construction
 function expandTemplateString(template: string, faction: FactionData): string {
   const shortId = fmtNoPrefix(faction.id, 'faction-')
   return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }
 
+// KJA1 dedup this and other funcs in dataTables construction
 function bldMissionDataId(templatedName: string): MissionDataId {
   const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
   return `missiondata-${baseId}`

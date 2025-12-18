@@ -206,3 +206,5 @@ Notes: Delete `MissionDef` - its role now will play dataTables.missions of type 
 `Mission` entities shall reference them with `missionDataId: MissionDataId` where `type MissionDataId = 'missiondata-${string}'`.
 
 Please create an implementation plan for this refactoring.
+
+// KJA1 overhaul this file with new code

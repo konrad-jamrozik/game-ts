@@ -14,10 +14,13 @@
  * - EnemyEstimate: Optional enemy estimate text (may contain {facName} template)
  */
 
+import { assertTrue } from '../primitives/assertPrimitives'
+import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { type Lead, asLeadId } from '../model/leadModel'
+import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
-export function bldLeadsTable(): LeadData[] {
+export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[] {
   return toLeadsDataTable([
   // Static (faction-agnostic) leads
   // Id, Name, Description, Difficulty, DependsOn, Repeatable, EnemyEstimate
@@ -45,7 +48,7 @@ export function bldLeadsTable(): LeadData[] {
   ['lead-{facId}-interrogate-leader', 'Interrogate cult leader', 'Extract information from the captured cult leader.', 30, ['missiondata-raid-{facId}-hq'], false],
   ['lead-{facId}-terminate-cult', 'Terminate cult', 'Final operation to terminate the {facName} cult.', 150, ['lead-{facId}-interrogate-leader'], false],
   ['lead-{facId}-profile', 'Cult profile', 'Compile detailed intelligence profile on {facName}.', 5, ['lead-{facId}-interrogate-member'], false],
-  ])
+  ], factions)
 }
 
 /**
@@ -65,14 +68,62 @@ type LeadDataRow = [
   enemyEstimate?: string,
 ]
 
-function toLeadsDataTable(rows: LeadDataRow[]): Lead[] {
-  return rows.map((row) => ({
-    id: asLeadId(row[0]),
-    name: row[1],
-    description: row[2],
-    difficulty: row[3],
-    dependsOn: row[4],
-    repeatable: row[5],
-    ...(row[6] !== undefined && { enemyEstimate: row[6] }),
-  }))
+function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[]): Lead[] {
+  const result: Lead[] = []
+
+  for (const row of rows) {
+    const rawLead = {
+      id: row[0],
+      name: row[1],
+      description: row[2],
+      difficulty: row[3],
+      dependsOn: row[4],
+      repeatable: row[5],
+      enemyEstimate: row[6],
+    }
+
+    if (rawLead.id.includes('{facId}')) {
+      // Faction-specific lead: generate for each faction
+      for (const faction of factions) {
+        const leadId = asLeadId(expandTemplateString(rawLead.id, faction))
+        result.push({
+          id: leadId,
+          name: expandTemplateString(rawLead.name, faction),
+          description: expandTemplateString(rawLead.description, faction),
+          difficulty: rawLead.difficulty,
+          dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep, faction)),
+          repeatable: rawLead.repeatable,
+          ...(rawLead.enemyEstimate !== undefined && {
+            enemyEstimate: expandTemplateString(rawLead.enemyEstimate, faction),
+          }),
+        })
+      }
+    } else {
+      // Static lead: generate once (expandTemplateString will be no-op)
+      const leadId = asLeadId(expandTemplateString(rawLead.id))
+      result.push({
+        id: leadId,
+        name: expandTemplateString(rawLead.name),
+        description: expandTemplateString(rawLead.description),
+        difficulty: rawLead.difficulty,
+        dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep)),
+        repeatable: rawLead.repeatable,
+        ...(rawLead.enemyEstimate !== undefined && { enemyEstimate: expandTemplateString(rawLead.enemyEstimate) }),
+      })
+    }
+  }
+
+  return result
+}
+
+function expandTemplateString(template: string, faction?: FactionData): string {
+  if (faction === undefined) {
+    assertTrue(
+      !template.includes('{facId}') && !template.includes('{facName}'),
+      `Template string "${template}" contains faction placeholders but no faction was provided`,
+    )
+    return template
+  }
+  const shortId = fmtNoPrefix(faction.id, 'faction-')
+  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }
