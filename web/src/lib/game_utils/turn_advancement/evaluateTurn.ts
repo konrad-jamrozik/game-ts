@@ -1,4 +1,4 @@
-import { getMissionDataById, dataTables } from '../../data_tables/dataTables'
+import { getMissionDataById, dataTables, getActivityLevelByOrd } from '../../data_tables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
@@ -6,7 +6,6 @@ import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import {
-  getActivityLevelConfig,
   getPanicIncreaseForOperation,
   getFundingDecreaseForOperation,
   getMoneyRewardForOperation,
@@ -632,7 +631,7 @@ function updateFactions(
       faction.turnsAtCurrentLevel += 1
 
       // Check if faction should advance to next activity level
-      const config = getActivityLevelConfig(faction.activityLevel)
+      const config = getActivityLevelByOrd(faction.activityLevel)
       if (faction.activityLevel < 7 && config.turnsMin !== Infinity) {
         // Calculate the target turns for this faction if not already calculated
         const targetTurns = calculateProgressionTurns(faction.activityLevel)

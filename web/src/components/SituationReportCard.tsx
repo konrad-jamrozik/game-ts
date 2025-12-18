@@ -4,11 +4,8 @@ import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2 } from '../lib/primitives/fixed6'
-import {
-  getActivityLevelName,
-  getActivityLevelConfig,
-  assertIsActivityLevel,
-} from '../lib/ruleset/activityLevelRuleset'
+import { getActivityLevelByOrd } from '../lib/data_tables/dataTables'
+import { getActivityLevelName, assertIsActivityLevel } from '../lib/ruleset/activityLevelRuleset'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
@@ -37,7 +34,7 @@ function getFactionRows(faction: {
   suppressionTurns: number
 }): SituationReportRow[] {
   assertIsActivityLevel(faction.activityLevel)
-  const config = getActivityLevelConfig(faction.activityLevel)
+  const config = getActivityLevelByOrd(faction.activityLevel)
   const levelName = getActivityLevelName(faction.activityLevel)
 
   // Format progression display as "current/min" (see about_faction_activity_level.md)

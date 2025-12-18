@@ -1,7 +1,11 @@
 import { getFactionOperationByLevel, getActivityLevelByOrd } from '../data_tables/dataTables'
-import type { FactionActivityLevelData } from '../data_tables/factionActivityLevelsDataTable'
 import type { FactionOperationData } from '../data_tables/factionOperationsDataTable'
-import { ACTIVITY_LEVEL_NAMES, type FactionActivityLevelOrd, type Faction } from '../model/factionModel'
+import {
+  ACTIVITY_LEVEL_NAMES,
+  type FactionActivityLevelOrd,
+  type Faction,
+  type FactionActivityLevelName,
+} from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 
@@ -10,15 +14,8 @@ import { toF6, type Fixed6 } from '../primitives/fixed6'
 /**
  * Get the display name for an activity level.
  */
-export function getActivityLevelName(level: FactionActivityLevelOrd): string {
-  return ACTIVITY_LEVEL_NAMES[level] as string
-}
-
-/**
- * Get the configuration for an activity level.
- */
-export function getActivityLevelConfig(level: FactionActivityLevelOrd): FactionActivityLevelData {
-  return getActivityLevelByOrd(level)
+export function getActivityLevelName(level: FactionActivityLevelOrd): FactionActivityLevelName {
+  return ACTIVITY_LEVEL_NAMES[level]
 }
 
 /**
