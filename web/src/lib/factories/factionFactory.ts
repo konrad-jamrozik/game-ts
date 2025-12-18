@@ -1,7 +1,7 @@
 import { dataTables, getFactionShortId } from '../data_tables/dataTables'
 import type { Faction } from '../model/factionModel'
 import type { FactionData } from '../data_tables/factionsDataTable'
-import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
+import { calculateOperationTurns } from '../ruleset/operationLevelRuleset'
 
 /**
  * Builds all factions from data tables

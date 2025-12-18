@@ -1,3 +1,4 @@
+// KJA rename to FactionOperationLevel
 /**
  * Faction operations data table
  *
@@ -33,7 +34,7 @@ export function bldFactionOperationsTable(): FactionOperationData[] {
 }
 
 export type FactionOperationData = {
-  level: number
+  level: number // KJA1 add FactionOperationLevelOrd
   description: string
   panicIncreasePct: number
   moneyReward: number

@@ -11,7 +11,7 @@ import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 import type { DefensiveMissionData } from '../../data_tables/defensiveMissionsDataTable'
-import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/activityLevelRuleset'
+import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/operationLevelRuleset'
 
 function parseSuppression(suppression: string): number {
   if (suppression === 'N/A') {
