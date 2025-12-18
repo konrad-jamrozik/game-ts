@@ -5,6 +5,7 @@ import {
   type FactionActivityLevelOrd,
   type Faction,
   type FactionActivityLevelName,
+  asActivityLevelOrd,
 } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
@@ -25,17 +26,6 @@ export function nextActivityLevelOrd(level: FactionActivityLevelOrd): FactionAct
   assertInRange(level, 0, 6)
   const next = level + 1
   return asActivityLevelOrd(next)
-}
-
-export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {
-  assertIsActivityLevelOrd(value)
-  return value
-}
-
-export function assertIsActivityLevelOrd(value: number): asserts value is FactionActivityLevelOrd {
-  if (value < 0 || value > 7 || !Number.isInteger(value)) {
-    throw new Error(`Invalid activity level: ${value}. Must be an integer 0-7.`)
-  }
 }
 
 /**

@@ -58,3 +58,14 @@ export type FactionOperation = {
   fundingReward: number
   fundingPenalty: number
 }
+
+export function assertIsActivityLevelOrd(value: number): asserts value is FactionActivityLevelOrd {
+  if (value < 0 || value > 7 || !Number.isInteger(value)) {
+    throw new Error(`Invalid activity level: ${value}. Must be an integer 0-7.`)
+  }
+}
+
+export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {
+  assertIsActivityLevelOrd(value)
+  return value
+}
