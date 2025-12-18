@@ -2,7 +2,7 @@ import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
-import { getActivityLevelName, assertIsActivityLevel } from '../../lib/ruleset/activityLevelRuleset'
+import { getActivityLevelName, asActivityLevelOrd } from '../../lib/ruleset/activityLevelRuleset'
 import type {
   ExpiredMissionReport,
   FactionReport,
@@ -93,11 +93,9 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 }
 
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
-  assertIsActivityLevel(fct.activityLevel.previous)
-  assertIsActivityLevel(fct.activityLevel.current)
-  const prevLevelName = getActivityLevelName(fct.activityLevel.previous)
-  const currLevelName = getActivityLevelName(fct.activityLevel.current)
-  const levelChanged = fct.activityLevel.previous !== fct.activityLevel.current
+  const prevLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.previous))
+  const currLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.current))
+  const levelChanged = prevLevelName !== currLevelName
 
   return {
     id: fct.factionId,
@@ -107,7 +105,7 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
     children: [
       {
         id: `faction-${fct.factionId}-activity-level`,
-        label: `Activity level: ${fct.activityLevel.current} - ${currLevelName}`,
+        label: `Activity level: ${currLevelName} - ${currLevelName}`,
         chipValue: fct.activityLevelIncreased === true ? '+1' : undefined,
         reverseColor: true, // Activity increase is bad
       },
@@ -120,7 +118,7 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
       {
         id: `faction-${fct.factionId}-next-operation`,
         label:
-          !Number.isFinite(fct.turnsUntilNextOperation.current) || fct.activityLevel.current === 0
+          !Number.isFinite(fct.turnsUntilNextOperation.current) || currLevelName === 'Dormant'
             ? 'Next operation in: Never'
             : `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
         chipValue:

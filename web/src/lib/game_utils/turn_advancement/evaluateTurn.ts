@@ -12,7 +12,7 @@ import {
   getFundingRewardForOperation,
   calculateOperationTurns,
   calculateProgressionTurns,
-  nextActivityLevel,
+  nextActivityLevelOrd,
   rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
 import { bldMission } from '../../factories/missionFactory'
@@ -636,7 +636,7 @@ function updateFactions(
         // Calculate the target turns for this faction if not already calculated
         const targetTurns = calculateProgressionTurns(faction.activityLevel)
         if (faction.turnsAtCurrentLevel >= targetTurns) {
-          faction.activityLevel = nextActivityLevel(faction.activityLevel)
+          faction.activityLevel = nextActivityLevelOrd(faction.activityLevel)
           faction.turnsAtCurrentLevel = 0
           faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
           activityLevelIncreased = true

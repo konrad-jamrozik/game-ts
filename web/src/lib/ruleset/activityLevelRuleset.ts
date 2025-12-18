@@ -19,24 +19,20 @@ export function getActivityLevelName(level: FactionActivityLevelOrd): FactionAct
 }
 
 /**
- * Check if a faction should advance to the next activity level.
- * Returns the threshold turns for comparison (minimum turns needed).
- */
-export function getActivityLevelThreshold(level: FactionActivityLevelOrd): number {
-  return getActivityLevelByOrd(level).turnsMin
-}
-
-/**
  * Get the next activity level, clamped at 7 (Total War).
  */
-export function nextActivityLevel(level: FactionActivityLevelOrd): FactionActivityLevelOrd {
+export function nextActivityLevelOrd(level: FactionActivityLevelOrd): FactionActivityLevelOrd {
   assertInRange(level, 0, 6)
   const next = level + 1
-  assertIsActivityLevel(next)
-  return next
+  return asActivityLevelOrd(next)
 }
 
-export function assertIsActivityLevel(value: number): asserts value is FactionActivityLevelOrd {
+export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {
+  assertIsActivityLevelOrd(value)
+  return value
+}
+
+export function assertIsActivityLevelOrd(value: number): asserts value is FactionActivityLevelOrd {
   if (value < 0 || value > 7 || !Number.isInteger(value)) {
     throw new Error(`Invalid activity level: ${value}. Must be an integer 0-7.`)
   }
