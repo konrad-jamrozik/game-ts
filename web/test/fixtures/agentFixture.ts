@@ -1,5 +1,5 @@
 import type { Agent, AgentId } from '../../src/lib/model/agentModel'
-import { bldAgentWithoutState } from '../../src/lib/game_utils/agentFactory'
+import { bldAgentWithoutState } from '../../src/lib/factories/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/ruleset/constants'

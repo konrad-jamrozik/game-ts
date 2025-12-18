@@ -1,4 +1,4 @@
-import { getLeadById, dataTables } from '../../collections/dataTables'
+import { getLeadById, dataTables } from '../../dataTables/dataTables'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
 import type { Mission } from '../../model/missionModel'
@@ -10,7 +10,7 @@ import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
-import { bldMission } from '../missionFactory'
+import { bldMission } from '../../factories/missionFactory'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion

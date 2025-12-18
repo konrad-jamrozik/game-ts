@@ -1,12 +1,12 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionDataById } from '../../lib/collections/dataTables'
+import { getMissionDataById } from '../../lib/dataTables/dataTables'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
-import type { OffensiveMissionData } from '../../lib/collections/offensiveMissionsDataTable'
-import type { DefensiveMissionData } from '../../lib/collections/defensiveMissionsDataTable'
+import type { OffensiveMissionData } from '../../lib/dataTables/offensiveMissionsDataTable'
+import type { DefensiveMissionData } from '../../lib/dataTables/defensiveMissionsDataTable'
 import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../lib/ruleset/activityLevelRuleset'
 
 function parseSuppression(suppression: string): number {

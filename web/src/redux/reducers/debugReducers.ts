@@ -1,9 +1,9 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { dataTables } from '../../lib/collections/dataTables'
+import { dataTables } from '../../lib/dataTables/dataTables'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { bldMission } from '../../lib/game_utils/missionFactory'
-import { bldAgent } from '../../lib/game_utils/agentFactory'
+import { bldMission } from '../../lib/factories/missionFactory'
+import { bldAgent } from '../../lib/factories/agentFactory'
 
 function addMoney(state: GameState): void {
   state.money += 10_000

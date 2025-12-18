@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { AgentId } from '../../lib/model/agentModel'
 import type { LeadId, LeadInvestigationId } from '../../lib/model/leadModel'
 import type { MissionId } from '../../lib/model/missionModel'
-import type { UpgradeName } from '../../lib/collections/upgrades'
+import type { UpgradeName } from '../../lib/dataTables/upgrades'
 
 export type SelectionState = {
   agents: AgentId[]

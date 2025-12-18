@@ -1,4 +1,4 @@
-import { getMissionDataById, dataTables } from '../../collections/dataTables'
+import { getMissionDataById, dataTables } from '../../dataTables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
@@ -16,7 +16,7 @@ import {
   nextActivityLevel,
   rollOperationLevel,
 } from '../../ruleset/activityLevelRuleset'
-import { bldMission } from '../missionFactory'
+import { bldMission } from '../../factories/missionFactory'
 import {
   bldValueChange,
   type AgentsReport,

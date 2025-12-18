@@ -2,8 +2,8 @@ import {
   getFactionOperationByLevel,
   getActivityLevelByOrd,
   type ProcessedFactionActivityLevelData,
-} from '../collections/dataTables'
-import type { FactionOperationData } from '../collections/factionsDataTable'
+} from '../dataTables/dataTables'
+import type { FactionOperationData } from '../dataTables/factionsDataTable'
 import { ACTIVITY_LEVEL_NAMES, type FactionActivityLevelOrd, type Faction } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
 import { toF6, type Fixed6 } from '../primitives/fixed6'

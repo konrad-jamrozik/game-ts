@@ -6,10 +6,10 @@ import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyRuleset'
-import { getMissionDataById } from '../collections/dataTables'
+import { getMissionDataById } from '../dataTables/dataTables'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { bldAgentWithoutState } from '../game_utils/agentFactory'
+import { bldAgentWithoutState } from '../factories/agentFactory'
 
 function bldDebugAgents(
   missionId: MissionId,

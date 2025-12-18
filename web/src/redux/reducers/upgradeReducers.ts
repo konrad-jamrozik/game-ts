@@ -4,7 +4,7 @@ import {
   getUpgradeIncrement,
   getUpgradeIncrementFixed6,
   type UpgradeName,
-} from '../../lib/collections/upgrades'
+} from '../../lib/dataTables/upgrades'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldWeapon } from '../../lib/ruleset/weaponRuleset'

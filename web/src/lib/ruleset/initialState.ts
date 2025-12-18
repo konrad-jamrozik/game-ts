@@ -1,5 +1,5 @@
 import { toF6 } from '../primitives/fixed6'
-import { bldFactions } from '../game_utils/factionFactory'
+import { bldFactions } from '../factories/factionFactory'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
 import { bldDebugInitialOverrides, overwriteWithDebugOverrides } from './debugInitialState'
@@ -12,7 +12,7 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from './constants'
-import { bldAgentWithoutState } from '../game_utils/agentFactory'
+import { bldAgentWithoutState } from '../factories/agentFactory'
 import type { AgentId } from '../model/agentModel'
 
 const initialState: GameState = bldInitialState()

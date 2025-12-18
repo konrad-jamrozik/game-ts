@@ -7,7 +7,7 @@ import {
 import * as React from 'react'
 import type { LeadId } from '../../lib/model/leadModel'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { dataTables } from '../../lib/collections/dataTables'
+import { dataTables } from '../../lib/dataTables/dataTables'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'

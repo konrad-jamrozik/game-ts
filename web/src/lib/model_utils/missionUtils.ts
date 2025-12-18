@@ -1,4 +1,4 @@
-import { getMissionDataById } from '../collections/dataTables'
+import { getMissionDataById } from '../dataTables/dataTables'
 import type { Mission, MissionId } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { GameState } from '../model/gameStateModel'

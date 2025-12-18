@@ -5,7 +5,7 @@ import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/lea
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
-import { bldAgent } from '../../lib/game_utils/agentFactory'
+import { bldAgent } from '../../lib/factories/agentFactory'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   bldAgent({

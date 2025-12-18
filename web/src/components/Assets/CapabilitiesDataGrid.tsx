@@ -1,7 +1,7 @@
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/collections/upgrades'
+import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/dataTables/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
