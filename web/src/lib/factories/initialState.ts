@@ -11,7 +11,7 @@ import {
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
-} from '../dataTables/constants'
+} from '../data_tables/constants'
 import { bldAgentWithoutState } from './agentFactory'
 import type { AgentId } from '../model/agentModel'
 

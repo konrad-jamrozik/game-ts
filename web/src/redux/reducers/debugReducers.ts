@@ -1,6 +1,6 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF6 } from '../../lib/primitives/fixed6'
-import { dataTables } from '../../lib/dataTables/dataTables'
+import { dataTables } from '../../lib/data_tables/dataTables'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldMission } from '../../lib/factories/missionFactory'
 import { bldAgent } from '../../lib/factories/agentFactory'

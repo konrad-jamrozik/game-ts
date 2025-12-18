@@ -1,5 +1,5 @@
 import pluralize from 'pluralize'
-import { getLeadById, getMissionDataById, getFactionDataById } from '../dataTables/dataTables'
+import { getLeadById, getMissionDataById, getFactionDataById } from '../data_tables/dataTables'
 import { getMissionById } from './missionUtils'
 import { getLeadInvestigationById } from './leadInvestigationUtils'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'

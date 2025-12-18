@@ -1,6 +1,6 @@
 import type { Actor } from '../model/missionModel'
 import type { Agent } from '../model/agentModel'
-import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from '../dataTables/constants'
+import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from '../data_tables/constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { nonNeg } from '../primitives/mathPrimitives'
 import { f6mult, f6sum, toF, toF6r, toF6, f6sub, f6div, type Fixed6 } from '../primitives/fixed6'

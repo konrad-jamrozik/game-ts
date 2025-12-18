@@ -1,6 +1,6 @@
-import { dataTables, getFactionShortId } from '../dataTables/dataTables'
+import { dataTables, getFactionShortId } from '../data_tables/dataTables'
 import type { Faction } from '../model/factionModel'
-import type { FactionData } from '../dataTables/factionsDataTable'
+import type { FactionData } from '../data_tables/factionsDataTable'
 import { calculateOperationTurns } from '../ruleset/activityLevelRuleset'
 
 /**

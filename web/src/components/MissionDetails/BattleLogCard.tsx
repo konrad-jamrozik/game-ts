@@ -6,7 +6,10 @@ import type { MissionId } from '../../lib/model/missionModel'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
 import { f6max, toF6, f6div } from '../../lib/primitives/fixed6'
-import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../lib/dataTables/constants'
+import {
+  AGENTS_SKILL_RETREAT_THRESHOLD,
+  RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
+} from '../../lib/data_tables/constants'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'

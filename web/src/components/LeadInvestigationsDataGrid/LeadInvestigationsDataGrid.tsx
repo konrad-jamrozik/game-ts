@@ -6,7 +6,7 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getLeadById } from '../../lib/dataTables/dataTables'
+import { getLeadById } from '../../lib/data_tables/dataTables'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
 import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
 import type { Agent } from '../../lib/model/agentModel'

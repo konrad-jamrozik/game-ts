@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { getLeadById } from '../../lib/dataTables/dataTables'
+import { getLeadById } from '../../lib/data_tables/dataTables'
 import {
   assignAgentsToContracting,
   assignAgentsToTraining,
@@ -33,7 +33,7 @@ import {
   validateOnAssignmentAgents,
   validateNotExhaustedAgents,
 } from '../../lib/model_utils/validateAgents'
-import { AGENT_HIRE_COST } from '../../lib/dataTables/constants'
+import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()

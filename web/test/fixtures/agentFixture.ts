@@ -2,7 +2,7 @@ import type { Agent, AgentId } from '../../src/lib/model/agentModel'
 import { bldAgentWithoutState } from '../../src/lib/factories/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/dataTables/constants'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/data_tables/constants'
 
 export const agFix = (() => {
   let agentIdCounter = 0

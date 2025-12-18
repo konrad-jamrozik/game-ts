@@ -6,7 +6,7 @@ import {
   LEAD_DIFFICULTY_MULTIPLIER,
   LEAD_RESISTANCE_EXPONENT,
   LEAD_SCALING_EXPONENT,
-} from '../dataTables/constants'
+} from '../data_tables/constants'
 import { effectiveSkill, sumAgentSkillBasedValues } from './skillRuleset'
 
 /**

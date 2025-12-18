@@ -7,7 +7,7 @@ import {
   AGENT_EXHAUSTION_INCREASE_PER_DEFENSE,
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
-} from '../../dataTables/constants'
+} from '../../data_tables/constants'
 import { f6add, toF, toF6, f6sub, f6max, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'

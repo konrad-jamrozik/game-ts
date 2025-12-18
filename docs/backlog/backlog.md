@@ -4,6 +4,8 @@ KJA backlog:
 
 # Current milestone
 
+- Use https://github.com/sverweij/dependency-cruiser
+
 ## Current Game mechanics
 
 - Implement defensive missions

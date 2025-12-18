@@ -13,7 +13,7 @@ import {
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
-} from '../../src/lib/dataTables/constants'
+} from '../../src/lib/data_tables/constants'
 import { bldWeapon } from '../../src/lib/ruleset/weaponRuleset'
 import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
 

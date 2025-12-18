@@ -1,4 +1,4 @@
-import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../dataTables/constants'
+import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../data_tables/constants'
 import { toF6, floorToF6, f6add, f6min, f6lt, f6eq, toF } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {

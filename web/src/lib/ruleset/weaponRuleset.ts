@@ -1,4 +1,4 @@
-import { WEAPON_DAMAGE_RANGE_FACTOR } from '../dataTables/constants'
+import { WEAPON_DAMAGE_RANGE_FACTOR } from '../data_tables/constants'
 import type { Weapon } from '../model/missionModel'
 import { rollRange } from '../primitives/rolls'
 import { ceil, floor } from '../primitives/mathPrimitives'
