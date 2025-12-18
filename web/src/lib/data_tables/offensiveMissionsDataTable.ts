@@ -20,12 +20,14 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
+import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { MissionDataId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
+import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
-export function bldOffensiveMissionsTable(): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
-  return toOffensiveMissionsDataTable([
+export function bldOffensiveMissionsTable(factions: readonly FactionData[]): OffensiveMissionData[] {
+  const rawMissions = toOffensiveMissionsDataTable([
   // Name,                              Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
   ['Apprehend {facName} member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
   ['Raid {facName} safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
@@ -36,6 +38,8 @@ export function bldOffensiveMissionsTable(): Omit<OffensiveMissionData, 'id' | '
   ['Raid {facName} regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
   ['Raid {facName} HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
   ])
+
+  return expandOffensiveMissions(rawMissions, factions)
 }
 
 export type OffensiveMissionData = {
@@ -82,7 +86,6 @@ type OffensiveMissionRow = [
   description: string,
 ]
 
-// KJA1 why all these weird omits? Probably for building dataTables const.
 function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
   return rows.map((row) => ({
     name: row[0],
@@ -104,4 +107,52 @@ function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): Omit<Offensi
     dependsOn: row[16],
     description: row[17],
   }))
+}
+
+function expandOffensiveMissions(
+  rawMissions: Omit<OffensiveMissionData, 'id' | 'factionId'>[],
+  factions: readonly FactionData[],
+): OffensiveMissionData[] {
+  const result: OffensiveMissionData[] = []
+
+  for (const faction of factions) {
+    for (const rawMission of rawMissions) {
+      const templatedName = expandTemplateString(rawMission.name, faction)
+
+      result.push({
+        id: bldMissionDataId(templatedName),
+        name: templatedName,
+        description: expandTemplateString(rawMission.description, faction),
+        level: rawMission.level,
+        expiresIn: rawMission.expiresIn,
+        initiate: rawMission.initiate,
+        operative: rawMission.operative,
+        soldier: rawMission.soldier,
+        elite: rawMission.elite,
+        handler: rawMission.handler,
+        lieutenant: rawMission.lieutenant,
+        commander: rawMission.commander,
+        highCommander: rawMission.highCommander,
+        cultLeader: rawMission.cultLeader,
+        moneyReward: rawMission.moneyReward,
+        fundingReward: rawMission.fundingReward,
+        panicReductionPct: rawMission.panicReductionPct,
+        suppression: rawMission.suppression,
+        dependsOn: rawMission.dependsOn.map((dep) => expandTemplateString(dep, faction)),
+        factionId: faction.id,
+      })
+    }
+  }
+
+  return result
+}
+
+function expandTemplateString(template: string, faction: FactionData): string {
+  const shortId = fmtNoPrefix(faction.id, 'faction-')
+  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
+}
+
+function bldMissionDataId(templatedName: string): MissionDataId {
+  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
+  return `missiondata-${baseId}`
 }

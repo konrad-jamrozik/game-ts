@@ -36,8 +36,7 @@ export function bldDataTables(): DataTables {
   // Build base data tables (no template expansion yet)
   const rawFactions = bldFactionsTable()
   const rawLeads = bldLeadsTable()
-  const rawOffensiveMissions = bldOffensiveMissionsTable()
-  const rawDefensiveMissions = bldDefensiveMissionsTable()
+
   const rawActivityLevels = bldActivityLevelsTable()
   const enemies = bldEnemiesTable()
   const factionOperationLevels = bldFactionOperationLevelsTable()
@@ -45,8 +44,8 @@ export function bldDataTables(): DataTables {
   // Expand templates using factions
   const factions = rawFactions as readonly FactionData[]
   const leads = expandLeads(rawLeads, factions) as readonly Lead[]
-  const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
-  const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
+  const offensiveMissions = bldOffensiveMissionsTable(factions) as readonly OffensiveMissionData[]
+  const defensiveMissions = bldDefensiveMissionsTable(factions) as readonly DefensiveMissionData[]
   const activityLevels = rawActivityLevels as readonly FactionActivityLevelData[]
 
   return {
@@ -120,76 +119,6 @@ export function getFactionOperationByLevel(level: number): FactionOperationLevel
   return found
 }
 
-function expandOffensiveMissions(
-  rawMissions: Omit<OffensiveMissionData, 'id' | 'factionId'>[],
-  factions: readonly FactionData[],
-): OffensiveMissionData[] {
-  const result: OffensiveMissionData[] = []
-
-  for (const faction of factions) {
-    for (const rawMission of rawMissions) {
-      const templatedName = expandTemplateString(rawMission.name, faction)
-
-      result.push({
-        id: bldMissionDataId(templatedName),
-        name: templatedName,
-        description: expandTemplateString(rawMission.description, faction),
-        level: rawMission.level,
-        expiresIn: rawMission.expiresIn,
-        initiate: rawMission.initiate,
-        operative: rawMission.operative,
-        soldier: rawMission.soldier,
-        elite: rawMission.elite,
-        handler: rawMission.handler,
-        lieutenant: rawMission.lieutenant,
-        commander: rawMission.commander,
-        highCommander: rawMission.highCommander,
-        cultLeader: rawMission.cultLeader,
-        moneyReward: rawMission.moneyReward,
-        fundingReward: rawMission.fundingReward,
-        panicReductionPct: rawMission.panicReductionPct,
-        suppression: rawMission.suppression,
-        dependsOn: rawMission.dependsOn.map((dep) => expandTemplateString(dep, faction)),
-        factionId: faction.id,
-      })
-    }
-  }
-
-  return result
-}
-
-function expandDefensiveMissions(
-  rawMissions: Omit<DefensiveMissionData, 'id' | 'factionId'>[],
-  factions: readonly FactionData[],
-): DefensiveMissionData[] {
-  const result: DefensiveMissionData[] = []
-
-  for (const faction of factions) {
-    for (const rawMission of rawMissions) {
-      const templatedName = expandTemplateString(rawMission.name, faction)
-
-      result.push({
-        id: bldMissionDataId(templatedName),
-        name: templatedName,
-        level: rawMission.level,
-        expiresIn: rawMission.expiresIn,
-        initiate: rawMission.initiate,
-        operative: rawMission.operative,
-        soldier: rawMission.soldier,
-        elite: rawMission.elite,
-        handler: rawMission.handler,
-        lieutenant: rawMission.lieutenant,
-        commander: rawMission.commander,
-        highCommander: rawMission.highCommander,
-        cultLeader: rawMission.cultLeader,
-        factionId: faction.id,
-      })
-    }
-  }
-
-  return result
-}
-
 function expandLeads(rawLeads: Lead[], factions: readonly FactionData[]): Lead[] {
   const result: Lead[] = []
 
@@ -238,9 +167,4 @@ function expandTemplateString(template: string, faction?: FactionData): string {
   }
   const shortId = getFactionShortId(faction.id)
   return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
-}
-
-function bldMissionDataId(templatedName: string): MissionDataId {
-  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
-  return `missiondata-${baseId}`
 }

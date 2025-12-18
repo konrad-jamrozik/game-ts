@@ -24,12 +24,14 @@
  * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
  */
 
+import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { MissionDataId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
+import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
-export function bldDefensiveMissionsTable(): Omit<DefensiveMissionData, 'id' | 'factionId'>[] {
-  return toDefensiveMissionsDataTable([
+export function bldDefensiveMissionsTable(factions: readonly FactionData[]): DefensiveMissionData[] {
+  const rawMissions = toDefensiveMissionsDataTable([
   // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil {facName} supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
@@ -53,6 +55,8 @@ export function bldDefensiveMissionsTable(): Omit<DefensiveMissionData, 'id' | '
   
   ['Defend against {facName} HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
   ])
+
+  return expandDefensiveMissions(rawMissions, factions)
 }
 
 export type DefensiveMissionData = {
@@ -102,4 +106,46 @@ function toDefensiveMissionsDataTable(rows: DefensiveMissionRow[]): Omit<Defensi
     highCommander: row[10],
     cultLeader: row[11],
   }))
+}
+
+function expandDefensiveMissions(
+  rawMissions: Omit<DefensiveMissionData, 'id' | 'factionId'>[],
+  factions: readonly FactionData[],
+): DefensiveMissionData[] {
+  const result: DefensiveMissionData[] = []
+
+  for (const faction of factions) {
+    for (const rawMission of rawMissions) {
+      const templatedName = expandTemplateString(rawMission.name, faction)
+
+      result.push({
+        id: bldMissionDataId(templatedName),
+        name: templatedName,
+        level: rawMission.level,
+        expiresIn: rawMission.expiresIn,
+        initiate: rawMission.initiate,
+        operative: rawMission.operative,
+        soldier: rawMission.soldier,
+        elite: rawMission.elite,
+        handler: rawMission.handler,
+        lieutenant: rawMission.lieutenant,
+        commander: rawMission.commander,
+        highCommander: rawMission.highCommander,
+        cultLeader: rawMission.cultLeader,
+        factionId: faction.id,
+      })
+    }
+  }
+
+  return result
+}
+
+function expandTemplateString(template: string, faction: FactionData): string {
+  const shortId = fmtNoPrefix(faction.id, 'faction-')
+  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
+}
+
+function bldMissionDataId(templatedName: string): MissionDataId {
+  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
+  return `missiondata-${baseId}`
 }
