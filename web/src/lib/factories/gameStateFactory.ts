@@ -1,15 +1,91 @@
 /* eslint-disable unicorn/prefer-single-call */
 /* eslint-disable unicorn/no-immediate-mutation */
+import { toF6 } from '../primitives/fixed6'
+import { bldFactions } from './factionFactory'
+import type { GameState } from '../model/gameStateModel'
+import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
+import {
+  AGENT_CAP,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+  AGENT_INITIAL_WEAPON_DAMAGE,
+  AGENT_HIT_POINTS_RECOVERY_PCT,
+  TRAINING_CAP,
+  TRAINING_SKILL_GAIN,
+  TRANSPORT_CAP,
+} from '../data_tables/constants'
+import { bldAgentWithoutState } from './agentFactory'
 import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import type { GameState } from '../model/gameStateModel'
-import { toF6 } from '../primitives/fixed6'
 import { bldEnemies } from './enemyFactory'
 import { getMissionDataById } from '../data_tables/dataTables'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../data_tables/constants'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { bldAgentWithoutState } from './agentFactory'
+
+/**
+ * Creates the initial game state
+ * @param options - Options for creating the initial state
+ * @param options.debug - If true, creates a debug state with diverse agents and missions
+ */
+export function bldInitialState(options?: { debug?: boolean }): GameState {
+  const useDebug = options?.debug === true
+
+  const normalGameState: GameState = {
+    // Session
+    turn: 1,
+    actionsCount: 0,
+    // Situation
+    panic: toF6(0),
+    factions: bldFactions().map((faction) => ({ ...faction })), // Deep copy, so it is mutable, not readonly.
+    // Assets
+    money: 500,
+    funding: 20,
+    agentCap: AGENT_CAP,
+    transportCap: TRANSPORT_CAP,
+    trainingCap: TRAINING_CAP,
+    trainingSkillGain: TRAINING_SKILL_GAIN,
+    exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+    hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
+    weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+    agents: bldInitialAgents(),
+    // Leads
+    leadInvestigationCounts: {},
+    leadInvestigations: {},
+    // Missions
+    missions: [],
+    // Turn start report
+    turnStartReport: undefined,
+  }
+
+  let gameState: GameState = normalGameState
+  if (useDebug) {
+    const debugOverrides = bldDebugInitialOverrides()
+    gameState = { ...gameState, ...debugOverrides }
+    gameState = overwriteWithDebugOverrides(gameState)
+  }
+
+  gameState.agents.forEach((agent) => validateAgentInvariants(agent, gameState))
+
+  return gameState
+}
+
+function bldInitialAgents(): GameState['agents'] {
+  const agents: GameState['agents'] = []
+
+  for (let index = 0; index < 4; index += 1) {
+    const agentId: AgentId = `agent-${index.toString().padStart(3, '0')}`
+    agents.push(
+      bldAgentWithoutState({
+        id: agentId,
+        turnHired: 1,
+        weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+        agentState: 'Available',
+        assignment: 'Standby',
+      }),
+    )
+  }
+
+  return agents
+}
 
 function bldDebugAgents(
   missionId: MissionId,
@@ -231,8 +307,10 @@ function bldDebugAgents(
   return { agents, onMissionAgentIds, deepStateInvestigationAgentIds }
 }
 
-// Return only the overrides that should replace values in the normal initial state
-export function bldDebugInitialOverrides(): Partial<GameState> {
+/**
+ * Return only the overrides that should replace values in the normal initial state
+ */
+function bldDebugInitialOverrides(): Partial<GameState> {
   const stateBase: Partial<GameState> = {
     money: 1000,
     trainingCap: 4,
@@ -290,7 +368,7 @@ export function bldDebugInitialOverrides(): Partial<GameState> {
   return stateBase
 }
 
-export function overwriteWithDebugOverrides(gameState: GameState): GameState {
+function overwriteWithDebugOverrides(gameState: GameState): GameState {
   // Modify Red Dawn faction so next operation happens in 3 turns
   assertDefined(gameState.factions)
   const redDawnFaction = gameState.factions.find((faction) => faction.id === 'faction-red-dawn')
