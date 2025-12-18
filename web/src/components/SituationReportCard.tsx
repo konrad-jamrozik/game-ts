@@ -41,7 +41,7 @@ function getFactionRows(faction: {
   const levelName = getActivityLevelName(faction.activityLevel)
 
   // Format progression display as "current/min" (see about_faction_activity_level.md)
-  const progressionDisplay = config.minTurns === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.minTurns}`
+  const progressionDisplay = config.turnsMin === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.turnsMin}`
 
   // Format next operation display
   const nextOpDisplay =

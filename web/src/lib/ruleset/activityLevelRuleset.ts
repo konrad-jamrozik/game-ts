@@ -1,8 +1,5 @@
-import {
-  getFactionOperationByLevel,
-  getActivityLevelByOrd,
-  type ProcessedFactionActivityLevelData,
-} from '../data_tables/dataTables'
+import { getFactionOperationByLevel, getActivityLevelByOrd } from '../data_tables/dataTables'
+import type { FactionActivityLevelData } from '../data_tables/factionActivityLevelsDataTable'
 import type { FactionOperationData } from '../data_tables/factionOperationsDataTable'
 import { ACTIVITY_LEVEL_NAMES, type FactionActivityLevelOrd, type Faction } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
@@ -20,7 +17,7 @@ export function getActivityLevelName(level: FactionActivityLevelOrd): string {
 /**
  * Get the configuration for an activity level.
  */
-export function getActivityLevelConfig(level: FactionActivityLevelOrd): ProcessedFactionActivityLevelData {
+export function getActivityLevelConfig(level: FactionActivityLevelOrd): FactionActivityLevelData {
   return getActivityLevelByOrd(level)
 }
 
@@ -29,7 +26,7 @@ export function getActivityLevelConfig(level: FactionActivityLevelOrd): Processe
  * Returns the threshold turns for comparison (minimum turns needed).
  */
 export function getActivityLevelThreshold(level: FactionActivityLevelOrd): number {
-  return getActivityLevelByOrd(level).minTurns
+  return getActivityLevelByOrd(level).turnsMin
 }
 
 /**
@@ -54,10 +51,10 @@ export function assertIsActivityLevel(value: number): asserts value is FactionAc
  */
 export function calculateProgressionTurns(level: FactionActivityLevelOrd): number {
   const config = getActivityLevelByOrd(level)
-  if (config.minTurns === Infinity) {
+  if (config.turnsMin === Infinity) {
     return Infinity
   }
-  return Math.floor(Math.random() * (config.maxTurns - config.minTurns + 1)) + config.minTurns
+  return Math.floor(Math.random() * (config.turnsMax - config.turnsMin + 1)) + config.turnsMin
 }
 
 /**
@@ -162,7 +159,7 @@ function getFactionOperationStats(operationLevel: number): FactionOperationData 
  */
 export function shouldAdvanceActivityLevel(faction: Faction, targetTurns: number): boolean {
   const config = getActivityLevelByOrd(faction.activityLevel)
-  if (config.minTurns === Infinity) {
+  if (config.turnsMin === Infinity) {
     return false
   }
   return faction.turnsAtCurrentLevel >= targetTurns

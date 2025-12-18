@@ -54,14 +54,17 @@ export type FactionActivityLevelData = {
   name: FactionActivityLevelName
   turnsMin: number
   turnsMax: number
-  frequencyMin: number | ''
-  frequencyMax: number | ''
-  level1ProbPct: number | ''
-  level2ProbPct: number | ''
-  level3ProbPct: number | ''
-  level4ProbPct: number | ''
-  level5ProbPct: number | ''
-  level6ProbPct: number | ''
+  frequencyMin: number
+  frequencyMax: number
+  level1ProbPct: number
+  level2ProbPct: number
+  level3ProbPct: number
+  level4ProbPct: number
+  level5ProbPct: number
+  level6ProbPct: number
+  operationFrequencyMin: number
+  operationFrequencyMax: number
+  operationLevelWeights: [number, number, number, number, number, number]
 }
 
 type FactionActivityLevelDataRow = [
@@ -80,18 +83,46 @@ type FactionActivityLevelDataRow = [
 ]
 
 function toFactionActivityLevelData(rows: FactionActivityLevelDataRow[]): FactionActivityLevelData[] {
-  return rows.map((row) => ({
-    ord: row[0],
-    name: row[1],
-    turnsMin: row[2],
-    turnsMax: row[3],
-    frequencyMin: row[4],
-    frequencyMax: row[5],
-    level1ProbPct: row[6],
-    level2ProbPct: row[7],
-    level3ProbPct: row[8],
-    level4ProbPct: row[9],
-    level5ProbPct: row[10],
-    level6ProbPct: row[11],
-  }))
+  return rows.map((row) => {
+    const frequencyMin = getFrequency(row[4])
+    const frequencyMax = getFrequency(row[5])
+    const level1ProbPct = getOperationLevelWeight(row[6])
+    const level2ProbPct = getOperationLevelWeight(row[7])
+    const level3ProbPct = getOperationLevelWeight(row[8])
+    const level4ProbPct = getOperationLevelWeight(row[9])
+    const level5ProbPct = getOperationLevelWeight(row[10])
+    const level6ProbPct = getOperationLevelWeight(row[11])
+
+    return {
+      ord: row[0],
+      name: row[1],
+      turnsMin: row[2],
+      turnsMax: row[3],
+      frequencyMin,
+      frequencyMax,
+      level1ProbPct,
+      level2ProbPct,
+      level3ProbPct,
+      level4ProbPct,
+      level5ProbPct,
+      level6ProbPct,
+      operationFrequencyMin: frequencyMin,
+      operationFrequencyMax: frequencyMax,
+      operationLevelWeights: [level1ProbPct, level2ProbPct, level3ProbPct, level4ProbPct, level5ProbPct, level6ProbPct],
+    }
+  })
+}
+
+function getFrequency(freq: number | ''): number {
+  if (freq === '') {
+    return Infinity
+  }
+  return freq
+}
+
+function getOperationLevelWeight(weight: number | ''): number {
+  if (weight === '') {
+    return 0
+  }
+  return weight
 }

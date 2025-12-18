@@ -633,7 +633,7 @@ function updateFactions(
 
       // Check if faction should advance to next activity level
       const config = getActivityLevelConfig(faction.activityLevel)
-      if (faction.activityLevel < 7 && config.minTurns !== Infinity) {
+      if (faction.activityLevel < 7 && config.turnsMin !== Infinity) {
         // Calculate the target turns for this faction if not already calculated
         const targetTurns = calculateProgressionTurns(faction.activityLevel)
         if (faction.turnsAtCurrentLevel >= targetTurns) {

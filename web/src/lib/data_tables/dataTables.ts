@@ -19,33 +19,6 @@ import { bldOffensiveMissionsTable, type OffensiveMissionData } from './offensiv
 import { bldDefensiveMissionsTable, type DefensiveMissionData } from './defensiveMissionsDataTable'
 import { bldActivityLevelsTable, type FactionActivityLevelData } from './factionActivityLevelsDataTable'
 import { bldFactionOperationsTable, type FactionOperationData } from './factionOperationsDataTable'
-
-// KJA1 why this type in addition to FactionActivityLevelData?
-export type ProcessedFactionActivityLevelData = Omit<
-  FactionActivityLevelData,
-  | 'frequencyMin'
-  | 'frequencyMax'
-  | 'level1ProbPct'
-  | 'level2ProbPct'
-  | 'level3ProbPct'
-  | 'level4ProbPct'
-  | 'level5ProbPct'
-  | 'level6ProbPct'
-> & {
-  frequencyMin: number
-  frequencyMax: number
-  level1ProbPct: number
-  level2ProbPct: number
-  level3ProbPct: number
-  level4ProbPct: number
-  level5ProbPct: number
-  level6ProbPct: number
-  minTurns: number
-  maxTurns: number
-  operationFrequencyMin: number
-  operationFrequencyMax: number
-  operationLevelWeights: [number, number, number, number, number, number]
-}
 import { bldEnemiesTable, type EnemyData } from './enemiesDataTable'
 
 export type DataTables = {
@@ -53,7 +26,7 @@ export type DataTables = {
   readonly leads: readonly Lead[]
   readonly offensiveMissions: readonly OffensiveMissionData[]
   readonly defensiveMissions: readonly DefensiveMissionData[]
-  readonly activityLevels: readonly ProcessedFactionActivityLevelData[]
+  readonly activityLevels: readonly FactionActivityLevelData[]
   readonly enemies: readonly EnemyData[]
   readonly factionOperations: readonly FactionOperationData[]
 }
@@ -75,7 +48,7 @@ export function bldDataTables(): DataTables {
   const leads = expandLeads(rawLeads, factions) as readonly Lead[]
   const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
   const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
-  const activityLevels = processActivityLevels(rawActivityLevels) as readonly ProcessedFactionActivityLevelData[]
+  const activityLevels = rawActivityLevels as readonly FactionActivityLevelData[]
 
   return {
     factions,
@@ -130,7 +103,7 @@ export function getFactionDataById(id: FactionId): FactionData {
   return found
 }
 
-export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): ProcessedFactionActivityLevelData {
+export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): FactionActivityLevelData {
   const found = dataTables.activityLevels.find((level) => level.ord === ord)
   assertDefined(found, `Activity level with ord ${ord} not found`)
   return found
@@ -146,23 +119,6 @@ export function getFactionOperationByLevel(level: number): FactionOperationData 
   const found = dataTables.factionOperations.find((op) => op.level === level)
   assertDefined(found, `Faction operation with level ${level} not found`)
   return found
-}
-
-function expandTemplateString(template: string, faction?: FactionData): string {
-  if (faction === undefined) {
-    assertTrue(
-      !template.includes('{facId}') && !template.includes('{facName}'),
-      `Template string "${template}" contains faction placeholders but no faction was provided`,
-    )
-    return template
-  }
-  const shortId = getFactionShortId(faction.id)
-  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
-}
-
-function bldMissionDataId(templatedName: string): MissionDataId {
-  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
-  return `missiondata-${baseId}`
 }
 
 function expandOffensiveMissions(
@@ -275,45 +231,19 @@ function expandLeads(rawLeads: LeadData[], factions: readonly FactionData[]): Le
   return result
 }
 
-function getFrequency(freq: number | ''): number {
-  if (freq === '') {
-    return Infinity
+function expandTemplateString(template: string, faction?: FactionData): string {
+  if (faction === undefined) {
+    assertTrue(
+      !template.includes('{facId}') && !template.includes('{facName}'),
+      `Template string "${template}" contains faction placeholders but no faction was provided`,
+    )
+    return template
   }
-  return freq
+  const shortId = getFactionShortId(faction.id)
+  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }
 
-function getOperationLevelWeight(weight: number | ''): number {
-  if (weight === '') {
-    return 0
-  }
-  return weight
-}
-
-function processActivityLevels(rawLevels: FactionActivityLevelData[]): ProcessedFactionActivityLevelData[] {
-  return rawLevels.map((level) => ({
-    ord: level.ord,
-    name: level.name,
-    turnsMin: level.turnsMin,
-    turnsMax: level.turnsMax,
-    frequencyMin: getFrequency(level.frequencyMin),
-    frequencyMax: getFrequency(level.frequencyMax),
-    level1ProbPct: getOperationLevelWeight(level.level1ProbPct),
-    level2ProbPct: getOperationLevelWeight(level.level2ProbPct),
-    level3ProbPct: getOperationLevelWeight(level.level3ProbPct),
-    level4ProbPct: getOperationLevelWeight(level.level4ProbPct),
-    level5ProbPct: getOperationLevelWeight(level.level5ProbPct),
-    level6ProbPct: getOperationLevelWeight(level.level6ProbPct),
-    minTurns: level.turnsMin,
-    maxTurns: level.turnsMax,
-    operationFrequencyMin: getFrequency(level.frequencyMin),
-    operationFrequencyMax: getFrequency(level.frequencyMax),
-    operationLevelWeights: [
-      getOperationLevelWeight(level.level1ProbPct),
-      getOperationLevelWeight(level.level2ProbPct),
-      getOperationLevelWeight(level.level3ProbPct),
-      getOperationLevelWeight(level.level4ProbPct),
-      getOperationLevelWeight(level.level5ProbPct),
-      getOperationLevelWeight(level.level6ProbPct),
-    ],
-  }))
+function bldMissionDataId(templatedName: string): MissionDataId {
+  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
+  return `missiondata-${baseId}`
 }
