@@ -13,16 +13,12 @@ import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
 import type { LeadId, Lead } from '../model/leadModel'
 import { assertIsLeadId } from '../model/modelAssertions'
-import {
-  bldFactionsTable,
-  bldFactionOperationsTable,
-  type FactionData,
-  type FactionOperationData,
-} from './factionsDataTable'
+import { bldFactionsTable, type FactionData } from './factionsDataTable'
 import { bldLeadsTable, type LeadData } from './leadsDataTable'
 import { bldOffensiveMissionsTable, type OffensiveMissionData } from './offensiveMissionsDataTable'
 import { bldDefensiveMissionsTable, type DefensiveMissionData } from './defensiveMissionsDataTable'
-import { bldActivityLevelsTable, type FactionActivityLevelData } from './factionActivityLevelDefsDataTable'
+import { bldActivityLevelsTable, type FactionActivityLevelData } from './factionActivityLevelsDataTable'
+import { bldFactionOperationsTable, type FactionOperationData } from './factionOperationsDataTable'
 
 // KJA1 why this type in addition to FactionActivityLevelData?
 export type ProcessedFactionActivityLevelData = Omit<
