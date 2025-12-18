@@ -91,7 +91,6 @@ graph TD
     RdxMid --> RdxSli
     RdxSli --> RdxRed
     RdxRed --> LibGam
-    RdxRed --> LibFac
     RdxHook --> RdxStore
     RdxSel --> RdxStore
     LibGam --> LibFac
@@ -126,7 +125,6 @@ graph TD
 
     subgraph "web/src/lib"
         LibGam[lib/game_utils]
-        LibFac[lib/factories]
         LibMod[lib/model]
     end
 
@@ -143,7 +141,6 @@ graph TD
     RdxSli --> RdxRed
     RdxRed --> RdxRedUtils
     RdxRed --> LibGam
-    RdxRed --> LibFac
     RdxRedUtils --> LibMod
     RdxSli --> LibGam
     RdxHook --> RdxStore
