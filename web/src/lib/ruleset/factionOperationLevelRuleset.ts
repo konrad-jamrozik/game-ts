@@ -1,4 +1,3 @@
-// KJA1 rename to factionOperationLevelRuleset
 import { getFactionOperationByLevel, getActivityLevelByOrd } from '../data_tables/dataTables'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { toF6, type Fixed6 } from '../primitives/fixed6'

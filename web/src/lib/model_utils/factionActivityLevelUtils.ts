@@ -1,4 +1,3 @@
-// KJA1 rename to factionActivityLevelUtils
 import {
   ACTIVITY_LEVEL_NAMES,
   type FactionActivityLevelOrd,

@@ -6,6 +6,17 @@ export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-ex
  */
 export type FactionActivityLevelOrd = 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7
 
+/**
+ * Operation level values.
+ * 1 = Soft operations,
+ * 2 = Violent but small-scale,
+ * 3 = Strategic threats,
+ * 4 = Regional destabilization,
+ * 5 = Global conflict,
+ * 6 = Existential
+ */
+export type FactionOperationLevelOrd = 1 | 2 | 3 | 4 | 5 | 6
+
 export const ACTIVITY_LEVEL_NAMES = [
   'Dormant',
   'Faint',
@@ -58,6 +69,17 @@ export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {
 export function assertIsActivityLevelOrd(value: number): asserts value is FactionActivityLevelOrd {
   if (value < 0 || value > 7 || !Number.isInteger(value)) {
     throw new Error(`Invalid activity level: ${value}. Must be an integer 0-7.`)
+  }
+}
+
+export function asOperationLevelOrd(value: number): FactionOperationLevelOrd {
+  assertIsOperationLevelOrd(value)
+  return value
+}
+
+export function assertIsOperationLevelOrd(value: number): asserts value is FactionOperationLevelOrd {
+  if (value < 1 || value > 6 || !Number.isInteger(value)) {
+    throw new Error(`Invalid operation level: ${value}. Must be an integer 1-6.`)
   }
 }
 

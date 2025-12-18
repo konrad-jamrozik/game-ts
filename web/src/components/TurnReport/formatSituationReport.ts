@@ -2,7 +2,7 @@ import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatModelUtils'
-import { getActivityLevelName } from '../../lib/model_utils/activityLevelUtils'
+import { getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
 import { asActivityLevelOrd } from '../../lib/model/factionModel'
 import type {
   ExpiredMissionReport,

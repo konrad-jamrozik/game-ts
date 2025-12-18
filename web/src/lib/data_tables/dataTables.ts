@@ -17,7 +17,7 @@ import { bldLeadsTable, type LeadData } from './leadsDataTable'
 import { bldOffensiveMissionsTable, type OffensiveMissionData } from './offensiveMissionsDataTable'
 import { bldDefensiveMissionsTable, type DefensiveMissionData } from './defensiveMissionsDataTable'
 import { bldActivityLevelsTable, type FactionActivityLevelData } from './factionActivityLevelsDataTable'
-import { bldFactionOperationsTable, type FactionOperationData } from './factionOperationsDataTable'
+import { bldFactionOperationLevelsTable, type FactionOperationLevelData } from './factionOperationLevelsDataTable'
 import { bldEnemiesTable, type EnemyData } from './enemiesDataTable'
 
 export type DataTables = {
@@ -27,7 +27,7 @@ export type DataTables = {
   readonly defensiveMissions: readonly DefensiveMissionData[]
   readonly activityLevels: readonly FactionActivityLevelData[]
   readonly enemies: readonly EnemyData[]
-  readonly factionOperations: readonly FactionOperationData[]
+  readonly factionOperations: readonly FactionOperationLevelData[]
 }
 
 export const dataTables: DataTables = bldDataTables()
@@ -40,7 +40,7 @@ export function bldDataTables(): DataTables {
   const rawDefensiveMissions = bldDefensiveMissionsTable()
   const rawActivityLevels = bldActivityLevelsTable()
   const enemies = bldEnemiesTable()
-  const factionOperations = bldFactionOperationsTable()
+  const factionOperations = bldFactionOperationLevelsTable()
 
   // Expand templates using factions
   const factions = rawFactions as readonly FactionData[]
@@ -56,7 +56,7 @@ export function bldDataTables(): DataTables {
     defensiveMissions,
     activityLevels,
     enemies: enemies as readonly EnemyData[],
-    factionOperations: factionOperations as readonly FactionOperationData[],
+    factionOperations: factionOperations as readonly FactionOperationLevelData[],
   }
 }
 
@@ -114,8 +114,8 @@ export function getEnemyByType(type: EnemyType): EnemyData {
   return found
 }
 
-export function getFactionOperationByLevel(level: number): FactionOperationData {
-  const found = dataTables.factionOperations.find((op) => op.level === level)
+export function getFactionOperationByLevel(level: number): FactionOperationLevelData {
+  const found = dataTables.factionOperations.find((op) => op.ord === level)
   assertDefined(found, `Faction operation with level ${level} not found`)
   return found
 }

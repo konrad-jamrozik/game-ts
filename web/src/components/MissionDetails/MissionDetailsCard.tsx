@@ -7,7 +7,10 @@ import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
 import type { OffensiveMissionData } from '../../lib/data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../../lib/data_tables/defensiveMissionsDataTable'
-import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../lib/ruleset/operationLevelRuleset'
+import {
+  getMoneyRewardForOperation,
+  getFundingRewardForOperation,
+} from '../../lib/ruleset/factionOperationLevelRuleset'
 
 function parseSuppression(suppression: string): number {
   if (suppression === 'N/A') {

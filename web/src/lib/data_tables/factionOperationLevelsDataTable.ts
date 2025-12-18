@@ -1,7 +1,7 @@
 /**
- * Faction operations data table
+ * Faction operation levels data table
  *
- * This file contains tables related to faction operations.
+ * This file contains tables related to faction operation levels.
  *
  * Legend for Operation Levels:
  * - Level: Operation level (1-6).
@@ -19,9 +19,11 @@
  * - When a faction operation succeeds (defensive mission expires or fails), rewards and penalties
  *   are applied based on the operation level.
  */
+import { asOperationLevelOrd, type FactionOperationLevelOrd } from '../model/factionModel'
+
 // prettier-ignore
-export function bldFactionOperationsTable(): FactionOperationData[] {
-  return toFactionOperationsDataTable([
+export function bldFactionOperationLevelsTable(): FactionOperationLevelData[] {
+  return toFactionOperationLevelsDataTable([
   // Level, Description,               Panic %, Money, Fund+, Fund-
   [1,       'Soft operations'          , 0.02 ,    10,     0,     0],
   [2,       'Violent but small-scale'  , 0.1  ,    30,     5,     1],
@@ -32,9 +34,8 @@ export function bldFactionOperationsTable(): FactionOperationData[] {
   ])
 }
 
-// KJA1 rename to FactionOperationLevelData
-export type FactionOperationData = {
-  level: number // KJA1 add FactionOperationLevelOrd
+export type FactionOperationLevelData = {
+  ord: FactionOperationLevelOrd
   description: string
   panicIncreasePct: number
   moneyReward: number
@@ -42,7 +43,7 @@ export type FactionOperationData = {
   fundingPenalty: number
 }
 
-type FactionOperationDataRow = [
+type FactionOperationLevelDataRow = [
   level: number,
   description: string,
   panicIncreasePct: number,
@@ -51,9 +52,9 @@ type FactionOperationDataRow = [
   fundingPenalty: number,
 ]
 
-function toFactionOperationsDataTable(rows: FactionOperationDataRow[]): FactionOperationData[] {
+function toFactionOperationLevelsDataTable(rows: FactionOperationLevelDataRow[]): FactionOperationLevelData[] {
   return rows.map((row) => ({
-    level: row[0],
+    ord: asOperationLevelOrd(row[0]),
     description: row[1],
     panicIncreasePct: row[2],
     moneyReward: row[3],

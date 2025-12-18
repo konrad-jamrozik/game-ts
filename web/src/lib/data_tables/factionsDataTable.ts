@@ -3,8 +3,6 @@
  *
  * This file contains tables related to factions.
  *
- * Note: Activity level data has been moved to factionActivityLevelsDataTable.ts
- * Note: Operation data has been moved to factionOperationsDataTable.ts
  */
 
 import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'

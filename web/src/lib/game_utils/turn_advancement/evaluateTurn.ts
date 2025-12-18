@@ -5,7 +5,7 @@ import type { Faction } from '../../model/factionModel'
 import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { calculateProgressionTurns, nextActivityLevelOrd } from '../../ruleset/activityLevelRuleset'
+import { calculateProgressionTurns, nextActivityLevelOrd } from '../../ruleset/factionActivityLevelRuleset'
 import {
   getPanicIncreaseForOperation,
   getFundingDecreaseForOperation,
@@ -13,7 +13,7 @@ import {
   getFundingRewardForOperation,
   calculateOperationTurns,
   rollOperationLevel,
-} from '../../ruleset/operationLevelRuleset'
+} from '../../ruleset/factionOperationLevelRuleset'
 import { bldMission } from '../../factories/missionFactory'
 import {
   bldValueChange,

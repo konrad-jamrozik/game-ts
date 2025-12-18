@@ -1,4 +1,3 @@
-// KJA1 rename to factionActivityLevelRuleset
 import { getActivityLevelByOrd } from '../data_tables/dataTables'
 import { type FactionActivityLevelOrd, asActivityLevelOrd } from '../model/factionModel'
 import { assertInRange } from '../primitives/assertPrimitives'
