@@ -35,7 +35,7 @@
 import type { FactionActivityLevelName, FactionActivityLevelOrd } from '../model/factionModel'
 
 // prettier-ignore
-export function bldActivityLevelsTable(): FactionActivityLevelData[] {
+export function bldActivityLevelsTable(): readonly FactionActivityLevelData[] {
   return toFactionActivityLevelData([
   // Ord, Name,        TurnsMin, TurnsMax, FreqMin, FreqMax, L1%,  L2%,  L3%,  L4%,  L5%,  L6%
   [0,    'Dormant',    15,       30,       '',      '',      '',   '',   '',   '',   '',   ''],

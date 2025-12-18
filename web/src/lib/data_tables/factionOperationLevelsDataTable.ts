@@ -22,7 +22,7 @@
 import { asOperationLevelOrd, type FactionOperationLevelOrd } from '../model/factionModel'
 
 // prettier-ignore
-export function bldFactionOperationLevelsTable(): FactionOperationLevelData[] {
+export function bldFactionOperationLevelsTable(): readonly FactionOperationLevelData[] {
   return toFactionOperationLevelsDataTable([
   // Level, Description,               Panic %, Money, Fund+, Fund-
   [1,       'Soft operations'          , 0.02 ,    10,     0,     0],

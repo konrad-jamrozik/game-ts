@@ -17,7 +17,7 @@ import type { EnemyType } from '../model/missionModel'
  */
 
 // prettier-ignore
-export function bldEnemiesTable(): EnemyData[] {
+export function bldEnemiesTable(): readonly EnemyData[] {
   return toEnemiesDataTable(
   [
     // Name,            Aliases, Skill,  HP, Weapon, IsOfficer

@@ -30,7 +30,7 @@ import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
-export function bldDefensiveMissionsTable(factions: readonly FactionData[]): DefensiveMissionData[] {
+export function bldDefensiveMissionsTable(factions: readonly FactionData[]): readonly DefensiveMissionData[] {
   return toDefensiveMissionsDataTable([
   // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],

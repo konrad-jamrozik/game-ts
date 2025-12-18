@@ -26,7 +26,7 @@ import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
-export function bldOffensiveMissionsTable(factions: readonly FactionData[]): OffensiveMissionData[] {
+export function bldOffensiveMissionsTable(factions: readonly FactionData[]): readonly OffensiveMissionData[] {
   return toOffensiveMissionsDataTable([
   // Name,                              Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
   ['Apprehend {facName} member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],

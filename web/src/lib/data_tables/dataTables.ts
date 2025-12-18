@@ -33,29 +33,24 @@ export type DataTables = {
 export const dataTables: DataTables = bldDataTables()
 
 export function bldDataTables(): DataTables {
-  // Build base data tables (no template expansion yet)
-  const rawFactions = bldFactionsTable()
-  const rawLeads = bldLeadsTable()
-
-  const rawActivityLevels = bldActivityLevelsTable()
   const enemies = bldEnemiesTable()
   const factionOperationLevels = bldFactionOperationLevelsTable()
+  const factionActivityLevels = bldActivityLevelsTable()
 
-  // Expand templates using factions
-  const factions = rawFactions as readonly FactionData[]
-  const leads = expandLeads(rawLeads, factions) as readonly Lead[]
-  const offensiveMissions = bldOffensiveMissionsTable(factions) as readonly OffensiveMissionData[]
-  const defensiveMissions = bldDefensiveMissionsTable(factions) as readonly DefensiveMissionData[]
-  const activityLevels = rawActivityLevels as readonly FactionActivityLevelData[]
+  const factions = bldFactionsTable()
+  const rawLeads = bldLeadsTable()
+  const leads = expandLeads(rawLeads, factions)
+  const offensiveMissions = bldOffensiveMissionsTable(factions)
+  const defensiveMissions = bldDefensiveMissionsTable(factions)
 
   return {
     factions,
     leads,
     offensiveMissions,
     defensiveMissions,
-    factionActivityLevels: activityLevels,
-    enemies: enemies as readonly EnemyData[],
-    factionOperationLevels: factionOperationLevels as readonly FactionOperationLevelData[],
+    factionActivityLevels,
+    enemies,
+    factionOperationLevels,
   }
 }
 
@@ -119,7 +114,7 @@ export function getFactionOperationByLevel(level: number): FactionOperationLevel
   return found
 }
 
-function expandLeads(rawLeads: Lead[], factions: readonly FactionData[]): Lead[] {
+function expandLeads(rawLeads: readonly LeadData[], factions: readonly FactionData[]): readonly Lead[] {
   const result: Lead[] = []
 
   for (const datum of rawLeads) {

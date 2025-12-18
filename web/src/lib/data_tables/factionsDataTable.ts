@@ -16,7 +16,7 @@ import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'
  * - InitialActivityLevel: Initial activity level when game starts (0 = Dormant, 1 = Faint, etc.).
  */
 // prettier-ignore
-export function bldFactionsTable(): FactionData[] {
+export function bldFactionsTable(): readonly FactionData[] {
   return toFactionsDataTable([
   // Id,                    Name,        InitialActivityLevel
   ['faction-red-dawn',      'Red Dawn',    1],
