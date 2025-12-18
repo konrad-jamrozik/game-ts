@@ -5,11 +5,11 @@ import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import type { GameState } from '../model/gameStateModel'
 import { toF6 } from '../primitives/fixed6'
-import { bldEnemies } from './enemyRuleset'
+import { bldEnemies } from '../ruleset/enemyRuleset'
 import { getMissionDataById } from '../dataTables/dataTables'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from './constants'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../dataTables/constants'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { bldAgentWithoutState } from '../factories/agentFactory'
+import { bldAgentWithoutState } from './agentFactory'
 
 function bldDebugAgents(
   missionId: MissionId,

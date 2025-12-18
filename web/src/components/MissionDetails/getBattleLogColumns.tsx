@@ -7,7 +7,7 @@ import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { bldFixed6SortComparator } from '../Common/dataGridSortUtils'
 import type { BattleStatus } from '../../lib/model/outcomeTypes'
 import { ColorBar } from '../ColorBar/ColorBar'
-import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
+import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/dataTables/constants'
 
 export type BattleLogRow = {
   id: number

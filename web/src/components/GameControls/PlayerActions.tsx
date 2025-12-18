@@ -33,7 +33,7 @@ import {
   validateOnAssignmentAgents,
   validateNotExhaustedAgents,
 } from '../../lib/model_utils/validateAgents'
-import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'
+import { AGENT_HIRE_COST } from '../../lib/dataTables/constants'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()

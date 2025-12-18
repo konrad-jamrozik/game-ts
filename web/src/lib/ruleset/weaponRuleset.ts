@@ -1,8 +1,9 @@
-import { WEAPON_DAMAGE_RANGE_FACTOR } from './constants'
+import { WEAPON_DAMAGE_RANGE_FACTOR } from '../dataTables/constants'
 import type { Weapon } from '../model/missionModel'
 import { rollRange } from '../primitives/rolls'
 import { ceil, floor } from '../primitives/mathPrimitives'
 
+// KJA1 belongs to factories
 /**
  * Creates a weapon with damage range calculated as +/- 50% of base damage
  * See also `Weapon damage roll` in docs.

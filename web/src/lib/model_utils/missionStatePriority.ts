@@ -1,5 +1,7 @@
 import { ALL_MISSION_STATES, type MissionState } from '../model/outcomeTypes'
 
+// KJA3 should be called missionStateDisplayOrd not missionStatePriority
+
 /**
  * Helper to get state priority (lower number = higher priority)
  */

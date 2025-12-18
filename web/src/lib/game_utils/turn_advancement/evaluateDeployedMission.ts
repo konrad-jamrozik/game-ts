@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import { getMissionDataById } from '../../dataTables/dataTables'
-import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../ruleset/constants'
+import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../dataTables/constants'
 import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
 import type { OffensiveMissionData } from '../../dataTables/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'

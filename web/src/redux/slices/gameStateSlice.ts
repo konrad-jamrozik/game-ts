@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
-import initialState from '../../lib/ruleset/initialState'
+import initialState from '../../lib/factories/initialState'
 import {
   hireAgent as hireAgentReducer,
   sackAgents as sackAgentsReducer,

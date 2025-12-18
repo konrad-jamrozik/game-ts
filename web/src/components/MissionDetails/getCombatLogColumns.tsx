@@ -17,7 +17,7 @@ import {
   AGENTS_SKILL_BAR_GREY,
   getColorBarFillColor,
 } from '../ColorBar/colorBarUtils'
-import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/ruleset/constants'
+import { COMBAT_INCAPACITATION_THRESHOLD } from '../../lib/dataTables/constants'
 
 export type CombatLogRow = {
   id: number

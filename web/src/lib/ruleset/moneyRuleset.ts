@@ -1,6 +1,6 @@
 import { f6floorToInt } from '../primitives/fixed6'
 import type { GameState } from '../model/gameStateModel'
-import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from './constants'
+import { AGENT_CONTRACTING_INCOME, AGENT_UPKEEP_COST } from '../dataTables/constants'
 import { sumAgentSkillBasedValues } from './skillRuleset'
 import { notTerminated, onContractingAssignment } from '../model_utils/agentUtils'
 

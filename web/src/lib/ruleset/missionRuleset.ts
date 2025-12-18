@@ -7,7 +7,7 @@ import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
   COMBAT_INCAPACITATION_THRESHOLD,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
-} from './constants'
+} from '../dataTables/constants'
 
 /**
  * Determines if an actor can participate in battle.

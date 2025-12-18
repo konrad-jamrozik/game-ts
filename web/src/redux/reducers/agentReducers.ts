@@ -1,6 +1,6 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { AGENT_HIRE_COST } from '../../lib/ruleset/constants'
+import { AGENT_HIRE_COST } from '../../lib/dataTables/constants'
 import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'

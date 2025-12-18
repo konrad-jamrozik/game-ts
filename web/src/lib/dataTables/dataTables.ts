@@ -66,6 +66,93 @@ export function getFactionShortId(factionId: FactionId): string {
   return fmtNoPrefix(factionId, 'faction-')
 }
 
+export function bldDataTables(): DataTables {
+  // Build base data tables (no template expansion yet)
+  const rawFactions = bldFactionsTable()
+  const rawLeads = bldLeadsTable()
+  const rawOffensiveMissions = bldOffensiveMissionsTable()
+  const rawDefensiveMissions = bldDefensiveMissionsTable()
+  const rawActivityLevels = bldActivityLevelsTable()
+  const enemies = bldEnemiesTable()
+  const factionOperations = bldFactionOperationsTable()
+
+  // Expand templates using factions
+  const factions = rawFactions as readonly FactionData[]
+  const leads = expandLeads(rawLeads, factions) as readonly Lead[]
+  const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
+  const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
+  const activityLevels = processActivityLevels(rawActivityLevels) as readonly ProcessedFactionActivityLevelData[]
+
+  return {
+    factions,
+    leads,
+    offensiveMissions,
+    defensiveMissions,
+    activityLevels,
+    enemies: enemies as readonly EnemyData[],
+    factionOperations: factionOperations as readonly FactionOperationData[],
+  }
+}
+
+export const dataTables: DataTables = bldDataTables()
+
+// Data table lookup utilities
+// These functions look up entities in the immutable dataTables constant.
+
+export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
+  const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
+  assertDefined(found, `Offensive mission data with id ${id} not found`)
+  return found
+}
+
+export function getDefensiveMissionDataById(id: MissionDataId): DefensiveMissionData {
+  const found = dataTables.defensiveMissions.find((mission) => mission.id === id)
+  assertDefined(found, `Defensive mission data with id ${id} not found`)
+  return found
+}
+
+export function getMissionDataById(id: MissionDataId): OffensiveMissionData | DefensiveMissionData {
+  const offensive = dataTables.offensiveMissions.find((mission) => mission.id === id)
+  if (offensive) {
+    return offensive
+  }
+  const defensive = dataTables.defensiveMissions.find((mission) => mission.id === id)
+  if (defensive) {
+    return defensive
+  }
+  throw new Error(`Mission data with id ${id} not found`)
+}
+
+export function getLeadById(id: LeadId): Lead {
+  const found = dataTables.leads.find((lead) => lead.id === id)
+  assertDefined(found, `Lead with id ${id} not found`)
+  return found
+}
+
+export function getFactionDataById(id: FactionId): FactionData {
+  const found = dataTables.factions.find((faction) => faction.id === id)
+  assertDefined(found, `Faction data with id ${id} not found`)
+  return found
+}
+
+export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): ProcessedFactionActivityLevelData {
+  const found = dataTables.activityLevels.find((level) => level.ord === ord)
+  assertDefined(found, `Activity level with ord ${ord} not found`)
+  return found
+}
+
+export function getEnemyByType(type: EnemyType): EnemyData {
+  const found = dataTables.enemies.find((enemy) => enemy.name === type)
+  assertDefined(found, `Enemy with type ${type} not found`)
+  return found
+}
+
+export function getFactionOperationByLevel(level: number): FactionOperationData {
+  const found = dataTables.factionOperations.find((op) => op.level === level)
+  assertDefined(found, `Faction operation with level ${level} not found`)
+  return found
+}
+
 function expandTemplateString(template: string, faction?: FactionData): string {
   if (faction === undefined) {
     assertTrue(
@@ -234,91 +321,4 @@ function processActivityLevels(rawLevels: FactionActivityLevelData[]): Processed
       getOperationLevelWeight(level.level6ProbPct),
     ],
   }))
-}
-
-export function bldDataTables(): DataTables {
-  // Build base data tables (no template expansion yet)
-  const rawFactions = bldFactionsTable()
-  const rawLeads = bldLeadsTable()
-  const rawOffensiveMissions = bldOffensiveMissionsTable()
-  const rawDefensiveMissions = bldDefensiveMissionsTable()
-  const rawActivityLevels = bldActivityLevelsTable()
-  const enemies = bldEnemiesTable()
-  const factionOperations = bldFactionOperationsTable()
-
-  // Expand templates using factions
-  const factions = rawFactions as readonly FactionData[]
-  const leads = expandLeads(rawLeads, factions) as readonly Lead[]
-  const offensiveMissions = expandOffensiveMissions(rawOffensiveMissions, factions) as readonly OffensiveMissionData[]
-  const defensiveMissions = expandDefensiveMissions(rawDefensiveMissions, factions) as readonly DefensiveMissionData[]
-  const activityLevels = processActivityLevels(rawActivityLevels) as readonly ProcessedFactionActivityLevelData[]
-
-  return {
-    factions,
-    leads,
-    offensiveMissions,
-    defensiveMissions,
-    activityLevels,
-    enemies: enemies as readonly EnemyData[],
-    factionOperations: factionOperations as readonly FactionOperationData[],
-  }
-}
-
-export const dataTables: DataTables = bldDataTables()
-
-// Data table lookup utilities
-// These functions look up entities in the immutable dataTables constant.
-
-export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
-  const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
-  assertDefined(found, `Offensive mission data with id ${id} not found`)
-  return found
-}
-
-export function getDefensiveMissionDataById(id: MissionDataId): DefensiveMissionData {
-  const found = dataTables.defensiveMissions.find((mission) => mission.id === id)
-  assertDefined(found, `Defensive mission data with id ${id} not found`)
-  return found
-}
-
-export function getMissionDataById(id: MissionDataId): OffensiveMissionData | DefensiveMissionData {
-  const offensive = dataTables.offensiveMissions.find((mission) => mission.id === id)
-  if (offensive) {
-    return offensive
-  }
-  const defensive = dataTables.defensiveMissions.find((mission) => mission.id === id)
-  if (defensive) {
-    return defensive
-  }
-  throw new Error(`Mission data with id ${id} not found`)
-}
-
-export function getLeadById(id: LeadId): Lead {
-  const found = dataTables.leads.find((lead) => lead.id === id)
-  assertDefined(found, `Lead with id ${id} not found`)
-  return found
-}
-
-export function getFactionDataById(id: FactionId): FactionData {
-  const found = dataTables.factions.find((faction) => faction.id === id)
-  assertDefined(found, `Faction data with id ${id} not found`)
-  return found
-}
-
-export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): ProcessedFactionActivityLevelData {
-  const found = dataTables.activityLevels.find((level) => level.ord === ord)
-  assertDefined(found, `Activity level with ord ${ord} not found`)
-  return found
-}
-
-export function getEnemyByType(type: EnemyType): EnemyData {
-  const found = dataTables.enemies.find((enemy) => enemy.name === type)
-  assertDefined(found, `Enemy with type ${type} not found`)
-  return found
-}
-
-export function getFactionOperationByLevel(level: number): FactionOperationData {
-  const found = dataTables.factionOperations.find((op) => op.level === level)
-  assertDefined(found, `Faction operation with level ${level} not found`)
-  return found
 }
