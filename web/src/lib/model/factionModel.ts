@@ -50,15 +50,6 @@ export type Faction = {
   discoveryPrerequisite: string[]
 }
 
-export type FactionOperation = {
-  level: number
-  description: string
-  panicIncreasePct: number
-  moneyReward: number
-  fundingReward: number
-  fundingPenalty: number
-}
-
 export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {
   assertIsActivityLevelOrd(value)
   return value
