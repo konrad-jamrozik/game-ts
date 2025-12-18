@@ -70,7 +70,7 @@ graph TD
         LibFac[lib/factories]
         LibRul[lib/ruleset]
         LibMUt[lib/model_utils]
-        LibDataT[lib/dataTables]
+        LibDataT[lib/data_tables]
         LibMod[lib/model]
         LibPri[lib/primitives]
     end

@@ -7,7 +7,7 @@ import {
 } from '../../lib/data_tables/upgrades'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { bldWeapon } from '../../lib/ruleset/weaponRuleset'
+import { bldWeapon } from '../../lib/factories/weaponFactory'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 
 export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action) => {

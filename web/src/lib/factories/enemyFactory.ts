@@ -1,7 +1,7 @@
 import { bldEnemyStats, type EnemyCounts } from '../data_tables/enemiesDataTable'
 import { ENEMY_TYPES, type Enemy, type EnemyType } from '../model/missionModel'
 import { toF6 } from '../primitives/fixed6'
-import { bldWeapon } from './weaponRuleset'
+import { bldWeapon } from './weaponFactory'
 
 let idCounter = 0
 

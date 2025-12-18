@@ -14,8 +14,8 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/data_tables/constants'
-import { bldWeapon } from '../../src/lib/ruleset/weaponRuleset'
-import { bldEnemies } from '../../src/lib/ruleset/enemyRuleset'
+import { bldWeapon } from '../../src/lib/factories/weaponFactory'
+import { bldEnemies } from '../../src/lib/factories/enemyFactory'
 
 describe(evaluateDeployedMission, () => {
   test('evaluateDeployedMission succeeds', () => {

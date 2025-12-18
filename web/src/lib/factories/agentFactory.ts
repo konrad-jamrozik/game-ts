@@ -3,7 +3,7 @@ import type { GameState } from '../model/gameStateModel'
 import type { Agent, AgentId } from '../model/agentModel'
 import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../data_tables/constants'
 import { toF6 } from '../primitives/fixed6'
-import { bldWeapon } from '../ruleset/weaponRuleset'
+import { bldWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
 
 type CreateAgentParams = {

@@ -62,9 +62,7 @@ export type DataTables = {
   readonly factionOperations: readonly FactionOperationData[]
 }
 
-export function getFactionShortId(factionId: FactionId): string {
-  return fmtNoPrefix(factionId, 'faction-')
-}
+export const dataTables: DataTables = bldDataTables()
 
 export function bldDataTables(): DataTables {
   // Build base data tables (no template expansion yet)
@@ -94,11 +92,12 @@ export function bldDataTables(): DataTables {
   }
 }
 
-export const dataTables: DataTables = bldDataTables()
-
 // Data table lookup utilities
 // These functions look up entities in the immutable dataTables constant.
 
+export function getFactionShortId(factionId: FactionId): string {
+  return fmtNoPrefix(factionId, 'faction-')
+}
 export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
   const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
   assertDefined(found, `Offensive mission data with id ${id} not found`)
