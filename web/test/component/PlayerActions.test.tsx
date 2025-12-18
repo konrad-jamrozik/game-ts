@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { PlayerActions } from '../../src/components/GameControls/PlayerActions'
 import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
-import { AGENT_HIRE_COST } from '../../src/lib/ruleset/constants'
+import { AGENT_HIRE_COST } from '../../src/lib/dataTables/constants'
 import { agFix } from '../fixtures/agentFixture'
 
 import type { AgentId } from '../../src/lib/model/agentModel'

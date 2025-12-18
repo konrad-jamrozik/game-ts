@@ -10,7 +10,7 @@ import {
 import type { LeadId } from '../../src/lib/model/leadModel'
 import type { Enemy, Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import { bldInitialState } from '../../src/lib/ruleset/initialState'
+import { bldInitialState } from '../../src/lib/factories/initialState'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'

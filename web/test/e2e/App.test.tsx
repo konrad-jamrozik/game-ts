@@ -10,7 +10,7 @@ import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { rand } from '../../src/lib/primitives/rand'
-import { bldInitialState } from '../../src/lib/ruleset/initialState'
+import { bldInitialState } from '../../src/lib/factories/initialState'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {

@@ -1,7 +1,7 @@
 import type { Enemy } from '../../src/lib/model/missionModel'
 import { bldEnemy } from '../../src/lib/ruleset/enemyRuleset'
 import { wpnFix } from './weaponFixture'
-import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/ruleset/constants'
+import { AGENT_INITIAL_HIT_POINTS } from '../../src/lib/dataTables/constants'
 
 export const enFix = (() => {
   let enemyIdCounter = 0
