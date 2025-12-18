@@ -31,7 +31,7 @@ import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
 export function bldDefensiveMissionsTable(factions: readonly FactionData[]): DefensiveMissionData[] {
-  const rawMissions = toDefensiveMissionsDataTable([
+  return toDefensiveMissionsDataTable([
   // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil {facName} supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
@@ -54,9 +54,7 @@ export function bldDefensiveMissionsTable(factions: readonly FactionData[]): Def
   ['Defend {facName} military installation',           5,      7,   20,   30,   24,   12,    7,    6,     3,    1,    0],
   
   ['Defend against {facName} HQ assault',              6,      8,   40,   40,   40,   10,   10,   10,     4,    1,    0],
-  ])
-
-  return expandDefensiveMissions(rawMissions, factions)
+  ], factions)
 }
 
 export type DefensiveMissionData = {
@@ -91,31 +89,29 @@ type DefensiveMissionRow = [
   cultLeader: number,
 ]
 
-function toDefensiveMissionsDataTable(rows: DefensiveMissionRow[]): Omit<DefensiveMissionData, 'id' | 'factionId'>[] {
-  return rows.map((row) => ({
-    name: row[0],
-    level: row[1],
-    expiresIn: row[2],
-    initiate: row[3],
-    operative: row[4],
-    soldier: row[5],
-    elite: row[6],
-    handler: row[7],
-    lieutenant: row[8],
-    commander: row[9],
-    highCommander: row[10],
-    cultLeader: row[11],
-  }))
-}
-
-function expandDefensiveMissions(
-  rawMissions: Omit<DefensiveMissionData, 'id' | 'factionId'>[],
+function toDefensiveMissionsDataTable(
+  rows: DefensiveMissionRow[],
   factions: readonly FactionData[],
 ): DefensiveMissionData[] {
   const result: DefensiveMissionData[] = []
 
-  for (const faction of factions) {
-    for (const rawMission of rawMissions) {
+  for (const row of rows) {
+    const rawMission = {
+      name: row[0],
+      level: row[1],
+      expiresIn: row[2],
+      initiate: row[3],
+      operative: row[4],
+      soldier: row[5],
+      elite: row[6],
+      handler: row[7],
+      lieutenant: row[8],
+      commander: row[9],
+      highCommander: row[10],
+      cultLeader: row[11],
+    }
+
+    for (const faction of factions) {
       const templatedName = expandTemplateString(rawMission.name, faction)
 
       result.push({

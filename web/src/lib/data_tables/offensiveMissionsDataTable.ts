@@ -27,7 +27,7 @@ import type { FactionData } from './factionsDataTable'
 
 // prettier-ignore
 export function bldOffensiveMissionsTable(factions: readonly FactionData[]): OffensiveMissionData[] {
-  const rawMissions = toOffensiveMissionsDataTable([
+  return toOffensiveMissionsDataTable([
   // Name,                              Level, ExpIn, Init, Oper, Sldr,  Elit, Hndl, Ltnt, Cmdr,  HCmd, CLdr, MoneyR, FundR,    PanicR%, Suppr., DependsOn, Description
   ['Apprehend {facName} member',            1,     5,    2,    1,    0,     0,    1,    0,    0,     0,    0,      5,     0,      0.05 ,     '0', ['lead-{facId}-member'], 'Apprehend a member of {facName}.'],
   ['Raid {facName} safehouse',              2,     8,    4,    4,    0,     0,    1,    0,    0,     0,    0,    100,     5,      0.1  ,     '1', ['lead-{facId}-safehouse'], 'Raid cult safehouse of {facName}.'],
@@ -37,9 +37,7 @@ export function bldOffensiveMissionsTable(factions: readonly FactionData[]): Off
   ['Raid {facName} command center',         6,    20,   20,   20,   30,    10,    8,    6,    3,     0,    0,   3000,    25,      5    , '10-30', ['lead-{facId}-command-center'], 'Raid cult command center of {facName}.'],
   ['Raid {facName} regional stronghold',    7,    30,   20,   40,   40,    12,   10,    8,    3,     1,    0,   5000,    50,     10    , '15-45', ['lead-{facId}-regional-stronghold'], 'Raid cult regional stronghold of {facName}.'],
   ['Raid {facName} HQ',                     8,    40,    0,    0,   60,    30,    0,   12,    6,     2,    1, 10_000,   100,     20    ,   'N/A', ['lead-{facId}-hq'], 'Final assault on {facName} headquarters.'],
-  ])
-
-  return expandOffensiveMissions(rawMissions, factions)
+  ], factions)
 }
 
 export type OffensiveMissionData = {
@@ -86,37 +84,35 @@ type OffensiveMissionRow = [
   description: string,
 ]
 
-function toOffensiveMissionsDataTable(rows: OffensiveMissionRow[]): Omit<OffensiveMissionData, 'id' | 'factionId'>[] {
-  return rows.map((row) => ({
-    name: row[0],
-    level: row[1],
-    expiresIn: row[2],
-    initiate: row[3],
-    operative: row[4],
-    soldier: row[5],
-    elite: row[6],
-    handler: row[7],
-    lieutenant: row[8],
-    commander: row[9],
-    highCommander: row[10],
-    cultLeader: row[11],
-    moneyReward: row[12],
-    fundingReward: row[13],
-    panicReductionPct: row[14],
-    suppression: row[15],
-    dependsOn: row[16],
-    description: row[17],
-  }))
-}
-
-function expandOffensiveMissions(
-  rawMissions: Omit<OffensiveMissionData, 'id' | 'factionId'>[],
+function toOffensiveMissionsDataTable(
+  rows: OffensiveMissionRow[],
   factions: readonly FactionData[],
 ): OffensiveMissionData[] {
   const result: OffensiveMissionData[] = []
 
-  for (const faction of factions) {
-    for (const rawMission of rawMissions) {
+  for (const row of rows) {
+    const rawMission = {
+      name: row[0],
+      level: row[1],
+      expiresIn: row[2],
+      initiate: row[3],
+      operative: row[4],
+      soldier: row[5],
+      elite: row[6],
+      handler: row[7],
+      lieutenant: row[8],
+      commander: row[9],
+      highCommander: row[10],
+      cultLeader: row[11],
+      moneyReward: row[12],
+      fundingReward: row[13],
+      panicReductionPct: row[14],
+      suppression: row[15],
+      dependsOn: row[16],
+      description: row[17],
+    }
+
+    for (const faction of factions) {
       const templatedName = expandTemplateString(rawMission.name, faction)
 
       result.push({
