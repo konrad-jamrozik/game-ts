@@ -16,6 +16,13 @@ The `objects` within collections are either `entities` or `definitions`.
 
 Examples of `entities` are `agents` or `missions`.
 An Example of a `definition` is a `mission definition`.
+// KJA1 drop the 'definition' and 'entity' concept. Instead of `constant definition collection` we have `data tables` and `game state collections`.
+// Clarify which `game state collections` are constructed from which `data tables`. Specifically:
+// -  `factions` are build from `dataTables.factions` by `bldFactions()` from `factionFactory.ts`
+// - `agents` are build from `dataTables.agents` by `bldAgents()` from `agentFactory.ts`
+// - `missions` are build from `dataTables.missions` by `bldMission()` from `missionFactory.ts`
+// - `lead investigations` are built by `bldLeadInvestigation()` from `leadInvestigationFactory.ts`, but they uniquely do not require `dataTables.leads`.
+//   This is because they just keep a reference to `leadId`, and the game state just keeps track of lead investigation counts, doesn't mutate any leads.
 
 # Collection kinds
 
@@ -30,9 +37,9 @@ Each `constant collection`:
   is marked as terminated, but not removed from the collection.
 
 For example:
-- `factions` is a `constant entity collection`.
-- `leads` is a `constant entity collection`.
-- `mission definitions` is a `constant definition collection`.
+- `factions` is a `constant entity collection` (stored in `dataTables.factions` as `FactionData[]`). // KJA1 this is not correct, the data tables do not store entities, as entities are mutable. The faction entities are in game state.
+- `leads` is a `constant definition collection` (stored in `dataTables.leads` as `LeadData[]`).
+- `mission definitions` (offensive and defensive) are `constant definition collections` (stored in `dataTables.offensiveMissions` and `dataTables.defensiveMissions`).
 
 ## Variable collections
 
@@ -48,104 +55,123 @@ For example:
 
 ## Collections construction
 
-Collections are represented either as `Concept[]` or `Record<ConceptLevel, Concept>`.
+Collections are represented as `Concept[]` arrays. // KJA1 this must be clarified that ConceptData[] is in dataTables while Concept[] is in game state.
 
-In all cases they are constructed from appropriate input data tables, like that:
-
-``` typescript
-export const concepts: Concept[] = toConceptsCollection(CONCEPTS_DATA_TABLE)
-
-// OBSOLETE, TO BE REMOVED; Use Concept[] instead
-export const concepts: Record<ConceptLevel, Concept> = toConceptsCollection(CONCEPTS_DATA_TABLE)
-```
+Constant definition collections are accessed via the global `dataTables` constant, which is initialized once during application startup.
+The `dataTables` constant contains all immutable game data and is never modified after initialization.
 
 For example:
 
 ``` typescript
-export const leads: Lead[] = toLeadsCollection(CONCEPTS_DATA_TABLE)
+import { dataTables } from '../lib/data_tables/dataTables'
 
-// OBSOLETE, TO BE REMOVED; Use Concept[] instead
-export const factionActivityLevelDefs: FactionActivityLevelDef[] = toFactionActivityLevelDefsCollection(FACTION_ACTIVITY_LEVEL_DEFS_DATA_TABLE)
+// Access constant definition collections
+const leads = dataTables.leads
+const factions = dataTables.factions
+const offensiveMissions = dataTables.offensiveMissions
 ```
 
-Existing code that needs rework:
-
-``` typescript
-export const factions: Faction[] = toFactions(FACTION_DATA)
-
-export const offensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) => bldMissionDefsForFaction(faction))
-
-export const defensiveMissionDefs: MissionDef[] = FACTION_DATA.flatMap((faction) =>
-  bldDefensiveMissionDefsForFaction(faction),
-)
-
-export const leads: Lead[] = toLeads(LEADS_DATA)
-
-
-```
-
-## Pending refactoring
-
-| Name                              | Symbol                                      | TODO                                    |
-|-----------------------------------|---------------------------------------------|-----------------------------------------|
-| `leads`                           | LEADS_DATA                                  | Rename to LEADS_DATA_TABLE              |
-| `enemies`                         | ENEMY_STATS_DATA                            | Rename to ENEMIES_DATA_TABLE            |
-| `defensiveMissions`               | DEFENSIVE_MISSIONS_DATA                     | Rename to DEFENSIVE_MISSIONS_DATA_TABLE |
-| `offensiveMissions`               | OFFENSIVE_MISSIONS_DATA                     | Rename to OFFENSIVE_MISSIONS_DATA_TABLE |
-| `factions`                        | FACTION_DATA                                | Rename to FACTIONS_DATA_TABLE           |
-| `factionOperationLevel`           | FACTION_OPERATION_LEVEL_DATA                | Per operation level                     |
+Entity collections with runtime state (like `Mission`, `Agent`, `LeadInvestigation`) are stored in Redux state and are built from data tables during game initialization or as the game progresses.
 
 # Data tables
 
 The collections populated during game initialization are populated from hardcoded data tables.
 
-Data tables are located in `web/src/lib/collections/<concepts>DataTable.ts` files,
-e.g. `leadsDataTables.ts`.
+Data tables are located in `web/src/lib/data_tables/<concepts>DataTable.ts` files,
+e.g. `leadsDataTable.ts`.
+
+## Centralized dataTables constant
+
+All data tables are centralized in a single `dataTables` constant defined in `web/src/lib/data_tables/dataTables.ts`. This constant is initialized once via `bldDataTables()` and contains all immutable game data. The data is never modified after initialization.
+
+``` typescript
+export const dataTables: DataTables = bldDataTables()
+
+export function bldDataTables(): DataTables {
+  const enemies = bldEnemiesTable()
+  const factionOperationLevels = bldFactionOperationLevelsTable()
+  const factionActivityLevels = bldFactionActivityLevelsTable()
+  const factions = bldFactionsTable()
+
+  const leads = bldLeadsTable(factions)
+  const offensiveMissions = bldOffensiveMissionsTable(factions)
+  const defensiveMissions = bldDefensiveMissionsTable(factions)
+
+  return {
+    factions,
+    leads,
+    offensiveMissions,
+    defensiveMissions,
+    factionActivityLevels,
+    enemies,
+    factionOperationLevels,
+  }
+}
+```
+
+Template expansion (e.g., `{facId}`, `{facName}`) happens during initialization in `bldDataTables()`. The function calls individual data table builders in the correct order, and those builders handle template expansion as needed.
 
 ## Data table construction
 
-Each data table is constructed and exposed as a constant of form:
+Each data table file exports a builder function of the form:
 
 ``` typescript
-export const CONCEPTS_DATA_TABLE: ConceptData[] = toConceptsDataTable([
-  //  Col1 header,    Col2 header,     Col3 header,  ...
-  [row1_col1_val], [row1_col2_val], [row1_col3_val], ...
-  [row2_col1_val], [row2_col2_val], [row2_col3_val], ...
-  ...
-])
+export function bldConceptsTable(...args): readonly ConceptData[] {
+  return toConceptsDataTable([
+    //  Col1 header,    Col2 header,     Col3 header,  ...
+    [row1_col1_val], [row1_col2_val], [row1_col3_val], ...
+    [row2_col1_val], [row2_col2_val], [row2_col3_val], ...
+    ...
+  ], ...args)
+}
 ```
 
 e.g.
 ``` typescript
-export const LEADS_DATA_TABLE: LeadData[] = toLeadsDataTable([
-  ...
-])
+export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[] {
+  return toLeadsDataTable([
+    ...
+  ], factions)
+}
 ```
 
-The `toConceptsData` function takes as input `ConceptDataRow[]` and returns `ConceptData[]`.
+The `toConceptsDataTable` function takes as input `ConceptDataRow[]` and returns `ConceptData[]`.
 
-The supporting symbols, like `toConceptsData` function or `type ConceptDataRow` are defined at the bottom of the same file.
+The supporting symbols, like `toConceptsDataTable` function or `type ConceptDataRow` are defined at the bottom of the same file.
 They are not exported.
 
-The first defined element is always the `export const CONCEPTS_DATA_TABLE: ConceptData[]` and below it, `export type ConceptData`.
+The first defined element is always the `export function bldConceptsTable(...)` builder function, followed by `export type ConceptData`, then the internal helper functions and types.
 
 # Full list of collections and objects
 
-| Collection                     | Variability | Object Type | Notes                    |
-|--------------------------------|-------------|-------------|--------------------------|
-| `faction operation level defs` | constant    | definition  |                          |
-| `offensive mission defs`       | constant    | definition  |                          |
-| `defensive mission defs`       | constant    | definition  |                          |
-| `faction activity level defs`  | constant    | definition  |                          |
-| `leads`                        | constant    | definition  |                          |
-| `factions`                     | constant    | entity      |                          |
-| `lead investigations`          | variable    | entity      |                          |
-| `agents`                       | variable    | entity      |                          |
-| `missions`                     | variable    | entity      |                          |
+| Collection                     | Variability | Object Type | Location                    |
+|--------------------------------|-------------|-------------|-----------------------------|
+| `faction operation level defs` | constant    | definition  | `dataTables.factionOperationLevels` |
+| `offensive mission defs`       | constant    | definition  | `dataTables.offensiveMissions` |
+| `defensive mission defs`       | constant    | definition  | `dataTables.defensiveMissions` |
+| `faction activity level defs`  | constant    | definition  | `dataTables.factionActivityLevels` |
+| `enemies`                      | constant    | definition  | `dataTables.enemies` |
+| `leads`                        | constant    | definition  | `dataTables.leads` |
+| `factions`                     | constant    | entity      | `dataTables.factions` |
+| `lead investigations`          | variable    | entity      | Redux `gameState` |
+| `agents`                       | variable    | entity      | Redux `gameState` |
+| `missions`                     | variable    | entity      | Redux `gameState` |
 
 # Full list of data tables
 
-TODO
+All data tables are accessible via the `dataTables` constant:
+
+| Data Table                    | Type                                    | Builder Function                    |
+|-------------------------------|-----------------------------------------|-------------------------------------|
+| `factions`                    | `FactionData[]`                        | `bldFactionsTable()`                |
+| `leads`                       | `LeadData[]`                           | `bldLeadsTable(factions)`           |
+| `offensiveMissions`           | `OffensiveMissionData[]`                | `bldOffensiveMissionsTable(factions)` |
+| `defensiveMissions`           | `DefensiveMissionData[]`                | `bldDefensiveMissionsTable(factions)` |
+| `factionActivityLevels`       | `FactionActivityLevelData[]`           | `bldActivityLevelsTable()`          |
+| `factionOperationLevels`      | `FactionOperationLevelData[]`          | `bldFactionOperationLevelsTable()`  |
+| `enemies`                     | `EnemyData[]`                          | `bldEnemiesTable()`                 |
+
+All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
 
 # Full list of prototypes
 
@@ -176,9 +202,9 @@ How about this: delete these redundant collections. Instead, let the code use th
 
 But key observation: everything in dataTables must be immutable. The arrays it has, what elements are in those arrays, and what is in those elements. All of this is initialized once during `const dataTables = ...` and never changed.
 
-When passing the data, use the global, do not pass. Re data tables and Entity collections: they do not belong to dataTables. Because they have runtime state, they are built based on data tables, but are not in data tables.  Effectively only constant definition collections are in data tables. So types like OffensiveMissionDef or MissionDef will go away, as they are no longer needed. Only OffensiveMissionDataTable and DefensiveMissionDataTable will remain, in case of missions.
+When accessing data, use the global `dataTables` constant directly - do not pass it as a parameter. Entity collections with runtime state (like `Faction`, `Mission`, `Agent`) do not belong in `dataTables`. They are built based on data tables but are stored separately in Redux `gameState`. Effectively only constant definition collections are in `dataTables`. Types like `OffensiveMissionDef`, `MissionDef`, and `MissionDefId` have been removed. Only the data table types remain (`OffensiveMissionData`, `DefensiveMissionData`, `FactionData`, etc.).
 
-Re construction of data tables: the "bldDataTables()" function will have all the complexity. It will call in the right order all the functions building specific data tables, and apply templates expansions as needed, e.g. to insert {facId}.
+The `bldDataTables()` function orchestrates the construction of all data tables. It calls individual data table builder functions in the correct order (e.g., `bldFactionsTable()` must be called before `bldLeadsTable()` since leads depend on factions). The individual builders handle template expansions (e.g., `{facId}`, `{facName}`) as needed.
 
 # Prompt v2
 
@@ -196,14 +222,11 @@ I want to refactor how collections and data tables are organized. Here are the r
 
 5. **Only constant definition collections go in `dataTables`**: Entity collections with runtime state (like `Faction`, `Mission`, `Agent`) do NOT belong in `dataTables`. They are built from data tables but stored separately in Redux state.
 
-6. **Eliminate intermediate "Def" types**: Types like `MissionDef`, `OffensiveMissionDef` go away. Only the data table types remain (`OffensiveMissionData`, `DefensiveMissionData`, `FactionData`, etc.).
+6. **Eliminate intermediate "Def" types**: Types like `MissionDef`, `OffensiveMissionDef`, and `MissionDefId` have been removed. Only the data table types remain (`OffensiveMissionData`, `DefensiveMissionData`, `FactionData`, etc.). `Mission` entities reference mission data with `missionDataId: MissionDataId` where `type MissionDataId = 'missiondata-${string}'`.
 
-7. **Template expansion happens in `bldDataTables()`**: The builder function handles all complexity - calling data table builders in the right order and applying template expansions (e.g., `{facId}`, `{facName}`) as needed to produce the final expanded data.
+7. **Template expansion happens in `bldDataTables()`**: The builder function handles all complexity - calling data table builders in the right order. The individual builders (e.g., `bldLeadsTable()`, `bldOffensiveMissionsTable()`) perform template expansions (e.g., `{facId}`, `{facName}`) as needed to produce the final expanded data.
 
-8. **Data table files export builder functions**: Instead of `export const FACTIONS_DATA_TABLE = ...`, export `export function bldFactionsTable(): ...`. The constant is an implementation detail inside the builder.
-
-Notes: Delete `MissionDef` - its role now will play dataTables.missions of type `MissionData[]`.
-`Mission` entities shall reference them with `missionDataId: MissionDataId` where `type MissionDataId = 'missiondata-${string}'`.
+8. **Data table files export builder functions**: Data table files export builder functions like `export function bldFactionsTable(): ...`. These builders are called from `bldDataTables()` to construct the centralized `dataTables` constant.
 
 Please create an implementation plan for this refactoring.
 

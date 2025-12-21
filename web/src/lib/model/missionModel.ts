@@ -9,9 +9,6 @@ export type MissionId = `mission-${string}`
 
 export type MissionDataId = `missiondata-${string}`
 
-// Legacy type alias for backward compatibility during migration
-export type MissionDefId = MissionDataId
-
 export type Actor = {
   id: string
   skill: Fixed6
