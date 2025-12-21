@@ -33,10 +33,8 @@ It has project-specific documentation for setup, linting, formatting, testing, M
 - **Fail fast, not gracefully**: Never try to "fail gracefully" by returning default values, empty arrays,
   or silently ignoring unexpected conditions. If something unexpected happens that should not occur
   assuming there is no bug, use the assert functions from `web/src/lib/primitives/assertPrimitives.ts`
-  to fail immediately. Available assertions include: `assertTrue`, `assertDefined`, `assertEqual`,
-  `assertNotZero`, `assertInRange`, `assertOneOf`, `assertNotIn`, `assertNotEmpty`, `assertNotNaN`,
-  `assertUnreachable`, `assertNonNeg`, `assertAboveZero`, `assertLessThan`, `assertInteger`,
-  `assertMax2Dec`, `assertMax4Dec`, `assertMax6Dec`, `assertHasId`, `assertNotBothTrue`.
+  to fail immediately, or from other assert files, like `web/src/lib/primitives/assertMathPrimitives.ts`.
+- **Do not violate dependency rules**: Obey the code dependencies rules as laid out in `docs/design/about_code_dependencies.md`.
 
 ## Key aspects and conventions of the project
 
