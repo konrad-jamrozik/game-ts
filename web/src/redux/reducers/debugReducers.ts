@@ -14,14 +14,15 @@ function spawn10Agents(state: GameState): void {
     // Skills: 120, 140, 160, 180, 200, 220, 240, 260, 280, 300 (incrementing by 20)
     const skill = toF6(120 + index * 20)
 
-    bldAgent({
-      state,
+    const newAgent = bldAgent({
+      agentCount: state.agents.length,
       turnHired: state.turn,
       weaponDamage: state.weaponDamage,
       agentState: 'Available',
       assignment: 'Standby',
       skill,
     })
+    state.agents.push(newAgent)
   }
 }
 

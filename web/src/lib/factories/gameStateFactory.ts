@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/prefer-single-call */
-/* eslint-disable unicorn/no-immediate-mutation */
 import { toF6 } from '../primitives/fixed6'
 import { bldFactions } from './factionFactory'
 import type { GameState } from '../model/gameStateModel'
@@ -13,7 +12,7 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../data_tables/constants'
-import { bldAgentWithoutState } from './agentFactory'
+import { bldAgent } from './agentFactory'
 import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
@@ -74,7 +73,8 @@ function bldInitialAgents(): GameState['agents'] {
   for (let index = 0; index < 4; index += 1) {
     const agentId: AgentId = `agent-${index.toString().padStart(3, '0')}`
     agents.push(
-      bldAgentWithoutState({
+      bldAgent({
+        agentCount: agents.length,
         id: agentId,
         turnHired: 1,
         weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -103,7 +103,8 @@ function bldDebugAgents(
 
   // Create agents using factory function
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -114,7 +115,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -126,7 +128,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -136,7 +139,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -149,7 +153,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -160,7 +165,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -172,7 +178,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -185,7 +192,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -197,7 +205,8 @@ function bldDebugAgents(
       missionsTotal: 1,
     }),
   )
-  const agent9 = bldAgentWithoutState({
+  const agent9 = bldAgent({
+    agentCount: agents.length,
     id: `agent-${nextId()}`,
     turnHired: 1,
     weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -210,7 +219,8 @@ function bldDebugAgents(
   agents.push(agent9)
   onMissionAgentIds.push(agent9.id)
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -221,7 +231,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -232,7 +243,8 @@ function bldDebugAgents(
       hitPoints: toF6(18),
     }),
   )
-  const agent12 = bldAgentWithoutState({
+  const agent12 = bldAgent({
+    agentCount: agents.length,
     id: `agent-${nextId()}`,
     turnHired: 1,
     weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -246,7 +258,8 @@ function bldDebugAgents(
   onMissionAgentIds.push(agent12.id)
   // 2 agents in training
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -256,7 +269,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -269,7 +283,8 @@ function bldDebugAgents(
   )
   // 2 agents investigating the deep state lead
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
@@ -281,7 +296,8 @@ function bldDebugAgents(
     }),
   )
   agents.push(
-    bldAgentWithoutState({
+    bldAgent({
+      agentCount: agents.length,
       id: `agent-${nextId()}`,
       turnHired: 1,
       weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,

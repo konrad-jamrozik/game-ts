@@ -8,13 +8,14 @@ import type { LeadInvestigation } from '../../lib/model/leadModel'
 import { bldAgent } from '../../lib/factories/agentFactory'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
-  bldAgent({
-    state,
+  const newAgent = bldAgent({
+    agentCount: state.agents.length,
     turnHired: state.turn,
     weaponDamage: state.weaponDamage,
     agentState: 'InTransit',
     assignment: 'Standby',
   })
+  state.agents.push(newAgent)
   state.money -= AGENT_HIRE_COST
 })
 

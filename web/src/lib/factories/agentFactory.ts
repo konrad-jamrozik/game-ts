@@ -1,5 +1,4 @@
 /* eslint-disable unicorn/prefer-switch */
-import type { GameState } from '../model/gameStateModel'
 import type { Agent, AgentId } from '../model/agentModel'
 import {
   AGENT_INITIAL_ASSIGNMENT,
@@ -12,12 +11,12 @@ import { bldWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
 
 /**
- * Creates a new agent and adds it to the game state.
- * Returns the created agent.
+ * Creates a new agent object.
+ * Returns the created agent. The caller is responsible for adding it to state.
  */
 export function bldAgent(params: CreateAgentParams): Agent {
   const {
-    state,
+    agentCount,
     turnHired,
     weaponDamage,
     id,
@@ -35,7 +34,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
   } = params
 
   // Generate ID if not provided
-  const agentId: AgentId = id ?? formatAgentId(state.agents.length)
+  const agentId: AgentId = id ?? formatAgentId(agentCount)
 
   // Determine agent state if not provided
   let finalAgentState: Agent['state'] = 'Available'
@@ -66,66 +65,11 @@ export function bldAgent(params: CreateAgentParams): Agent {
     ...(terminatedBy !== undefined && { terminatedBy }),
   }
 
-  state.agents.push(newAgent)
-
   return newAgent
 }
 
-// KJA3 silly duplication of bldAgent
-/**
- * Creates an agent object without adding it to state.
- * Useful for test fixtures and other cases where you need an agent object but don't want to modify state.
- */
-export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Agent {
-  const {
-    id,
-    turnHired,
-    weaponDamage,
-    agentState,
-    assignment = AGENT_INITIAL_ASSIGNMENT,
-    skill = AGENT_INITIAL_SKILL,
-    exhaustionPct = AGENT_INITIAL_EXHAUSTION,
-    hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
-    maxHitPoints = AGENT_INITIAL_HIT_POINTS,
-    missionsTotal = 0,
-    skillFromTraining = toF6(0),
-    turnTerminated,
-    terminatedOnMissionId,
-    terminatedBy,
-  } = params
-
-  // Determine agent state if not provided
-  let finalAgentState: Agent['state'] = 'Available'
-  if (agentState !== undefined) {
-    finalAgentState = agentState
-  } else if (assignment === 'Training') {
-    finalAgentState = 'InTraining'
-  } else if (assignment === 'Contracting') {
-    finalAgentState = 'InTransit'
-  } else if (assignment === 'Standby') {
-    finalAgentState = 'Available'
-  }
-
-  return {
-    id,
-    turnHired,
-    state: finalAgentState,
-    assignment,
-    skill,
-    exhaustionPct,
-    hitPoints,
-    maxHitPoints,
-    missionsTotal,
-    skillFromTraining,
-    weapon: bldWeapon(weaponDamage),
-    ...(turnTerminated !== undefined && { turnTerminated }),
-    ...(terminatedOnMissionId !== undefined && { terminatedOnMissionId }),
-    ...(terminatedBy !== undefined && { terminatedBy }),
-  }
-}
-
 type CreateAgentParams = {
-  state: GameState
+  agentCount: number
   turnHired: number
   weaponDamage: number
   id?: AgentId // Optional: if not provided, will be auto-generated
@@ -140,8 +84,4 @@ type CreateAgentParams = {
   turnTerminated?: number // Optional
   terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
   terminatedBy?: string // Optional
-}
-
-type CreateAgentWithoutStateParams = Omit<CreateAgentParams, 'state' | 'id'> & {
-  id: AgentId
 }
