@@ -46,7 +46,6 @@ export function updateRecoveringAgents(state: GameState): void {
       // Check if recovery is complete
       if (f6eq(agent.hitPoints, maxHitPointsF6)) {
         // Reset recovery state
-        agent.hitPointsLostBeforeRecovery = toF6(0)
         agent.state = 'Available'
         agent.assignment = 'Standby'
       }

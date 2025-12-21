@@ -194,9 +194,6 @@ end up with:
 
 **recoveryTurns** - The number of turns the agent needs to fully recover from lost hit points.
 
-**hitPointsLostBeforeRecovery** - The number of hit points the agent lost before starting recovery
-(used for calculating linear restoration).
-
 **missionsTotal** - The total number of missions the agent has been on, including the mission where they were
 terminated (if any).
 

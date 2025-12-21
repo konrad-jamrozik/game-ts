@@ -43,7 +43,6 @@ export type Agent = Actor & {
   turnTerminated?: number
   terminatedOnMissionId?: MissionId
   terminatedBy?: string
-  hitPointsLostBeforeRecovery: Fixed6
   missionsTotal: number
   skillFromTraining: Fixed6
   state: AgentState

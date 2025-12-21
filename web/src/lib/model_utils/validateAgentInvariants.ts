@@ -34,11 +34,6 @@ function validateBasicStatRanges(agent: Agent): void {
   if (f6lt(agent.skill, zeroF6)) {
     throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
   }
-  if (f6lt(agent.hitPointsLostBeforeRecovery, zeroF6)) {
-    throw new Error(
-      `Agent ${agent.id} has negative hitPointsLostBeforeRecovery: ${f6fmtInt(agent.hitPointsLostBeforeRecovery)}`,
-    )
-  }
   if (agent.maxHitPoints <= 0) {
     throw new Error(`Agent ${agent.id} has non-positive maxHitPoints: ${agent.maxHitPoints}`)
   }
@@ -61,11 +56,6 @@ function validateTermination(agent: Agent): void {
       agent.hitPoints.value,
       maxHitPointsF6.value,
       `Sacked agent ${agent.id} must have full hit points (${agent.maxHitPoints})`,
-    )
-    assertEqual(
-      agent.hitPointsLostBeforeRecovery.value,
-      zeroF6.value,
-      `Sacked agent ${agent.id} must have no hitPointsLostBeforeRecovery`,
     )
   }
   if (f6eq(agent.hitPoints, zeroF6)) {
@@ -106,14 +96,8 @@ function validateRecoveryMath(agent: Agent): void {
     return
   }
 
-  // At the start of recovery (InTransit -> Recovery), we set hitPointsLostBeforeRecovery to lost HP
+  // At the start of recovery (InTransit -> Recovery), agent should be in transit with Recovery assignment
   if (agent.state === 'InTransit' && agent.assignment === 'Recovery') {
-    const expectedImmediateLost = lostHitPoints
-    assertEqual(
-      agent.hitPointsLostBeforeRecovery.value,
-      expectedImmediateLost.value,
-      `Agent ${agent.id} should set hitPointsLostBeforeRecovery=${f6fmtInt(expectedImmediateLost)} at start of recovery`,
-    )
     return
   }
 

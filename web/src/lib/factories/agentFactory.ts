@@ -22,7 +22,6 @@ export function bldAgent(params: CreateAgentParams): Agent {
     exhaustionPct = AGENT_INITIAL_EXHAUSTION,
     hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
     maxHitPoints = AGENT_INITIAL_HIT_POINTS,
-    hitPointsLostBeforeRecovery = toF6(0),
     missionsTotal = 0,
     skillFromTraining = toF6(0),
     turnTerminated,
@@ -54,7 +53,6 @@ export function bldAgent(params: CreateAgentParams): Agent {
     exhaustionPct,
     hitPoints,
     maxHitPoints,
-    hitPointsLostBeforeRecovery,
     missionsTotal,
     skillFromTraining,
     weapon: bldWeapon(weaponDamage),
@@ -84,7 +82,6 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
     exhaustionPct = AGENT_INITIAL_EXHAUSTION,
     hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
     maxHitPoints = AGENT_INITIAL_HIT_POINTS,
-    hitPointsLostBeforeRecovery = toF6(0),
     missionsTotal = 0,
     skillFromTraining = toF6(0),
     turnTerminated,
@@ -113,7 +110,6 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
     exhaustionPct,
     hitPoints,
     maxHitPoints,
-    hitPointsLostBeforeRecovery,
     missionsTotal,
     skillFromTraining,
     weapon: bldWeapon(weaponDamage),
@@ -134,7 +130,6 @@ type CreateAgentParams = {
   exhaustionPct?: number // Optional: defaults to AGENT_INITIAL_EXHAUSTION
   hitPoints?: Agent['hitPoints'] // Optional: defaults to AGENT_INITIAL_HIT_POINTS
   maxHitPoints?: number // Optional: defaults to AGENT_INITIAL_HIT_POINTS
-  hitPointsLostBeforeRecovery?: Agent['hitPointsLostBeforeRecovery'] // Optional: defaults to 0
   missionsTotal?: number // Optional: defaults to 0
   skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to 0
   turnTerminated?: number // Optional

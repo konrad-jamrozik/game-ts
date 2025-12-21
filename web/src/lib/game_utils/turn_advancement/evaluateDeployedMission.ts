@@ -5,7 +5,7 @@ import type { MissionRewards, Mission, MissionId } from '../../model/missionMode
 import type { OffensiveMissionData } from '../../data_tables/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { f6add, f6fmtInt, toF6, f6sub, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
+import { f6add, f6fmtInt, toF6, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
@@ -227,8 +227,6 @@ function updateSurvivingAgent(
   const tookDamage = f6lt(agent.hitPoints, maxHitPointsF6)
   if (tookDamage) {
     agent.assignment = 'Recovery'
-    const damage = f6sub(maxHitPointsF6, agent.hitPoints)
-    agent.hitPointsLostBeforeRecovery = damage
     return true // Agent was wounded
   }
   agent.assignment = 'Standby'

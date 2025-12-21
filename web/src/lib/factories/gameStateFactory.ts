@@ -145,7 +145,6 @@ function bldDebugAgents(
       skill: toF6(80),
       exhaustionPct: 20,
       hitPoints: toF6(28),
-      hitPointsLostBeforeRecovery: toF6(2),
       missionsTotal: 1,
     }),
   )
@@ -182,7 +181,6 @@ function bldDebugAgents(
       skill: toF6(100),
       exhaustionPct: 8,
       hitPoints: toF6(10),
-      hitPointsLostBeforeRecovery: toF6(20),
       missionsTotal: 2,
     }),
   )
@@ -196,7 +194,6 @@ function bldDebugAgents(
       skill: toF6(100),
       exhaustionPct: 120,
       hitPoints: toF6(1),
-      hitPointsLostBeforeRecovery: toF6(29),
       missionsTotal: 1,
     }),
   )
@@ -233,7 +230,6 @@ function bldDebugAgents(
       skill: toF6(30),
       exhaustionPct: 25,
       hitPoints: toF6(18),
-      hitPointsLostBeforeRecovery: toF6(12),
     }),
   )
   const agent12 = bldAgentWithoutState({

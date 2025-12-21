@@ -30,7 +30,6 @@ describe(evaluateDeployedMission, () => {
       exhaustionPct: 0,
       hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 1,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -105,7 +104,6 @@ describe(evaluateDeployedMission, () => {
       exhaustionPct: 0,
       hitPoints: toF6(10), // Low hit points
       maxHitPoints: AGENT_INITIAL_HIT_POINTS,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -179,7 +177,6 @@ describe(evaluateDeployedMission, () => {
       exhaustionPct: 0,
       hitPoints: toF6(10),
       maxHitPoints: 10,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -194,7 +191,6 @@ describe(evaluateDeployedMission, () => {
       exhaustionPct: 0,
       hitPoints: toF6(10),
       maxHitPoints: 10,
-      hitPointsLostBeforeRecovery: toF6(0),
       missionsTotal: 0,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
