@@ -4,6 +4,7 @@ export const AGENT_UPKEEP_COST = 10
 export const AGENT_CONTRACTING_INCOME = AGENT_UPKEEP_COST * 3
 export const AGENT_HIRE_COST = 50
 
+export const AGENT_INITIAL_ASSIGNMENT = 'Standby'
 export const AGENT_INITIAL_SKILL = toF6(100)
 export const AGENT_INITIAL_EXHAUSTION = 0
 export const AGENT_INITIAL_HIT_POINTS = 30

@@ -1,7 +1,12 @@
 /* eslint-disable unicorn/prefer-switch */
 import type { GameState } from '../model/gameStateModel'
 import type { Agent, AgentId } from '../model/agentModel'
-import { AGENT_INITIAL_EXHAUSTION, AGENT_INITIAL_HIT_POINTS, AGENT_INITIAL_SKILL } from '../data_tables/constants'
+import {
+  AGENT_INITIAL_ASSIGNMENT,
+  AGENT_INITIAL_EXHAUSTION,
+  AGENT_INITIAL_HIT_POINTS,
+  AGENT_INITIAL_SKILL,
+} from '../data_tables/constants'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
@@ -15,9 +20,9 @@ export function bldAgent(params: CreateAgentParams): Agent {
     state,
     turnHired,
     weaponDamage,
-    id: providedId,
+    id,
     agentState,
-    assignment = 'Standby',
+    assignment = AGENT_INITIAL_ASSIGNMENT,
     skill = AGENT_INITIAL_SKILL,
     exhaustionPct = AGENT_INITIAL_EXHAUSTION,
     hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
@@ -30,7 +35,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
   } = params
 
   // Generate ID if not provided
-  const agentId: AgentId = providedId ?? formatAgentId(state.agents.length)
+  const agentId: AgentId = id ?? formatAgentId(state.agents.length)
 
   // Determine agent state if not provided
   let finalAgentState: Agent['state'] = 'Available'
@@ -73,11 +78,11 @@ export function bldAgent(params: CreateAgentParams): Agent {
  */
 export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Agent {
   const {
-    id: agentId,
+    id,
     turnHired,
     weaponDamage,
     agentState,
-    assignment = 'Standby',
+    assignment = AGENT_INITIAL_ASSIGNMENT,
     skill = AGENT_INITIAL_SKILL,
     exhaustionPct = AGENT_INITIAL_EXHAUSTION,
     hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
@@ -102,7 +107,7 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
   }
 
   return {
-    id: agentId,
+    id,
     turnHired,
     state: finalAgentState,
     assignment,
@@ -125,7 +130,7 @@ type CreateAgentParams = {
   weaponDamage: number
   id?: AgentId // Optional: if not provided, will be auto-generated
   agentState?: Agent['state'] // Optional: defaults based on assignment
-  assignment?: Agent['assignment'] // Optional: defaults to 'Standby'
+  assignment?: Agent['assignment'] // Optional: defaults to AGENT_INITIAL_ASSIGNMENT
   skill?: Agent['skill'] // Optional: defaults to AGENT_INITIAL_SKILL
   exhaustionPct?: number // Optional: defaults to AGENT_INITIAL_EXHAUSTION
   hitPoints?: Agent['hitPoints'] // Optional: defaults to AGENT_INITIAL_HIT_POINTS
