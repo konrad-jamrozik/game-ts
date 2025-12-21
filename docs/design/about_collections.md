@@ -7,73 +7,104 @@ There are several kind of collections in the game and the objects within them, w
 This document describes the collection kinds, the collections themselves, and what are their
 initialization conventions.
 
-# Object kinds
+# Collection types
 
-The `objects` within collections are either `entities` or `definitions`.
-- `entities` represent a game concept visible to the player and can be mutated over time as game progresses.
-- `definitions` are immutable objects that are used to instantiate entities during the game.
-  They are not visible to the player.
+The game has two main types of collections:
 
-Examples of `entities` are `agents` or `missions`.
-An Example of a `definition` is a `mission definition`.
-// KJA1 drop the 'definition' and 'entity' concept. Instead of `constant definition collection` we have `data tables` and `game state collections`.
-// Clarify which `game state collections` are constructed from which `data tables`. Specifically:
-// -  `factions` are build from `dataTables.factions` by `bldFactions()` from `factionFactory.ts`
-// - `agents` are build from `dataTables.agents` by `bldAgents()` from `agentFactory.ts`
-// - `missions` are build from `dataTables.missions` by `bldMission()` from `missionFactory.ts`
-// - `lead investigations` are built by `bldLeadInvestigation()` from `leadInvestigationFactory.ts`, but they uniquely do not require `dataTables.leads`.
-//   This is because they just keep a reference to `leadId`, and the game state just keeps track of lead investigation counts, doesn't mutate any leads.
+1. **Data tables**: Immutable collections of data that define game concepts. These are stored in the global `dataTables` constant and never change after initialization.
 
-# Collection kinds
+2. **Game state collections**: Mutable collections of entities that represent the current state of the game. These are stored in Redux `gameState` and change as the game progresses.
 
-## Constant collections
+## Game state collections and their data sources
 
-Each `constant collection`:
-- Can have either `entities` or `definitions` as elements.
-- Is populated with elements once and fully, during game initialization. From `data tables`.
-- Has static contents that cannot change over the course of the game.
-  I.e. once instantiated, no objects are ever added or removed. Albeit conceptually objects may be removed from the game,
-  e.g. when a player terminates a faction, the corresponding object in the `factions constant collection`
-  is marked as terminated, but not removed from the collection.
+Game state collections are constructed from data tables using factory functions:
 
-For example:
-- `factions` is a `constant entity collection` (stored in `dataTables.factions` as `FactionData[]`). // KJA1 this is not correct, the data tables do not store entities, as entities are mutable. The faction entities are in game state.
-- `leads` is a `constant definition collection` (stored in `dataTables.leads` as `LeadData[]`).
-- `mission definitions` (offensive and defensive) are `constant definition collections` (stored in `dataTables.offensiveMissions` and `dataTables.defensiveMissions`).
+- **`factions`**: Built from `dataTables.factions` by `bldFactions()` in `factionFactory.ts`. Each `Faction` entity is created from `FactionData`.
+// KJA1 factions should reference factionsData by ID, same as missions and lead investigations
 
-## Variable collections
+- **`agents`**: Built by `bldAgent()` in `agentFactory.ts`. Agents use constants (like `AGENT_INITIAL_SKILL`) rather than a data table, as they are created dynamically during gameplay.
+// KJA1 all the agent constants should be put into one data structure.
 
-Each `variable collection`:
-- Can have only `entities` as elements.
-- Is populated with some initial elements during game initialization. From `data tables`.
-- May have elements added to it during the course of the game, at various turns, but no elements are ever removed from it.
+- **`missions`**: Built by `bldMission()` in `missionFactory.ts`. Missions do not require `dataTables.offensiveMissions` or `dataTables.defensiveMissions` directly. They only keep a reference to `missionDataId`, which points to mission data in the data tables. The mission data is looked up when needed via the `missionDataId`.
+
+- **`lead investigations`**: Built by `bldLeadInvestigation()` in `leadInvestigationFactory.ts`. Lead investigations do not require `dataTables.leads` directly. They only keep a reference to `leadId`, and the game state tracks lead investigation counts without mutating the leads themselves.
+
+# Data tables
+
+Data tables are immutable collections of data that define game concepts. They are:
+- Populated once during application initialization
+- Never modified after initialization
+- Stored in the global `dataTables` constant
+
+Data tables contain only data types (like `FactionData`, `LeadData`, `OffensiveMissionData`), not mutable entities. The actual game entities (like `Faction`, `Mission`, `Agent`) are built from this data by `bld*` function in `*factory.ts` files and stored in Redux `gameState`.
 
 For example:
-- `agents` is a `variable entity collection`.
-- `missions` is a `variable entity collection`.
-- `lead investigations` is a `variable entity collection`.
+- `dataTables.factions` contains `FactionData[]` - immutable data that defines factions
+- `dataTables.leads` contains `LeadData[]` - immutable data that defines leads
+- `dataTables.offensiveMissions` and `dataTables.defensiveMissions` contain mission data types
 
-## Collections construction
+The actual `Faction` entities (which are mutable) are stored in `gameState.factions`, not in `dataTables`.
 
-Collections are represented as `Concept[]` arrays. // KJA1 this must be clarified that ConceptData[] is in dataTables while Concept[] is in game state.
+# Game state collections
 
-Constant definition collections are accessed via the global `dataTables` constant, which is initialized once during application startup.
-The `dataTables` constant contains all immutable game data and is never modified after initialization.
+Game state collections are mutable collections of entities that represent the current state of the game. They are:
+- Stored in Redux `gameState`
+- Modified as the game progresses
+- Built from data tables by `bld*` function in `*factory.ts` files during game initialization or as the game progresses
 
 For example:
+- `gameState.factions` contains `Faction[]` - mutable faction entities
+- `gameState.agents` contains `Agent[]` - mutable agent entities
+- `gameState.missions` contains `Mission[]` - mutable mission entities
+- `gameState.missions[x].enemies` contains `Enemy[]` - mutable enemy entities
+- `gameState.leadInvestigations` contains `LeadInvestigation[]` - mutable lead investigation entities
+
+## Collections representation
+
+Collections are represented as arrays:
+- **Data tables**: `ConceptData[]` arrays stored in `dataTables` (e.g., `FactionData[]`, `LeadData[]`)
+- **Game state collections**: `Concept[]` arrays stored in Redux `gameState` (e.g., `Faction[]`, `Mission[]`, `Agent[]`)
+
+## Accessing collections
+
+Data tables are accessed via the global `dataTables` constant, which is initialized once during application startup. The `dataTables` constant contains all immutable game data and is never modified after initialization.
 
 ``` typescript
 import { dataTables } from '../lib/data_tables/dataTables'
 
-// Access constant definition collections
-const leads = dataTables.leads
-const factions = dataTables.factions
-const offensiveMissions = dataTables.offensiveMissions
+// Access data tables
+const leads = dataTables.leads  // LeadData[]
+const factions = dataTables.factions  // FactionData[]
+const offensiveMissions = dataTables.offensiveMissions  // OffensiveMissionData[]
 ```
 
-Entity collections with runtime state (like `Mission`, `Agent`, `LeadInvestigation`) are stored in Redux state and are built from data tables during game initialization or as the game progresses.
+Game state collections are accessed via Redux state:
 
-# Data tables
+``` typescript
+import { useAppSelector } from '../redux/hooks'
+
+const gameState = useAppSelector((state) => state.undoable.present.gameState)
+
+// Access game state collections
+const factions = gameState.factions  // Faction[]
+const agents = gameState.agents  // Agent[]
+const missions = gameState.missions  // Mission[]
+```
+
+## Factory functions and prototypes
+
+Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept. These factory functions define how entities are constructed from data tables and game state:
+
+- `bldFaction(datum: FactionData): Faction` - builds a `Faction` entity from `FactionData`
+- `bldAgent(params: CreateAgentParams): Agent` - builds an `Agent` entity with customizable parameters
+- `bldMission(params: CreateMissionParams): Mission` - builds a `Mission` entity from mission data
+- `bldLeadInvestigation(params: CreateLeadInvestigationParams): LeadInvestigation` - builds a `LeadInvestigation` entity
+- `bldEnemy(type: EnemyType, currentIdCounter: number): Enemy` - builds an `Enemy` entity from enemy data
+- `bldWeapon(baseDamage: number): Weapon` - builds a `Weapon` entity from weapon data
+
+These factory functions serve as the "prototypes" that define the structure and default values for each entity type.
+
+# Data table implementation
 
 The collections populated during game initialization are populated from hardcoded data tables.
 
@@ -142,20 +173,31 @@ They are not exported.
 
 The first defined element is always the `export function bldConceptsTable(...)` builder function, followed by `export type ConceptData`, then the internal helper functions and types.
 
-# Full list of collections and objects
+# Full list of collections
 
-| Collection                     | Variability | Object Type | Location                    |
-|--------------------------------|-------------|-------------|-----------------------------|
-| `faction operation level defs` | constant    | definition  | `dataTables.factionOperationLevels` |
-| `offensive mission defs`       | constant    | definition  | `dataTables.offensiveMissions` |
-| `defensive mission defs`       | constant    | definition  | `dataTables.defensiveMissions` |
-| `faction activity level defs`  | constant    | definition  | `dataTables.factionActivityLevels` |
-| `enemies`                      | constant    | definition  | `dataTables.enemies` |
-| `leads`                        | constant    | definition  | `dataTables.leads` |
-| `factions`                     | constant    | entity      | `dataTables.factions` |
-| `lead investigations`          | variable    | entity      | Redux `gameState` |
-| `agents`                       | variable    | entity      | Redux `gameState` |
-| `missions`                     | variable    | entity      | Redux `gameState` |
+## Data tables (immutable)
+
+| Data Table                     | Type                                    | Location                    |
+|--------------------------------|-----------------------------------------|-----------------------------|
+| `faction operation level defs` | `FactionOperationLevelData[]`          | `dataTables.factionOperationLevels` |
+| `offensive mission defs`       | `OffensiveMissionData[]`                | `dataTables.offensiveMissions` |
+| `defensive mission defs`       | `DefensiveMissionData[]`                | `dataTables.defensiveMissions` |
+| `faction activity level defs` | `FactionActivityLevelData[]`            | `dataTables.factionActivityLevels` |
+| `enemies`                      | `EnemyData[]`                           | `dataTables.enemies` |
+| `leads`                        | `LeadData[]`                            | `dataTables.leads` |
+| `factions`                     | `FactionData[]`                         | `dataTables.factions` |
+
+## Game state collections (mutable)
+
+| Collection                     | Type                                    | Location                    | Built from                    |
+|--------------------------------|-----------------------------------------|-----------------------------|-------------------------------|
+| `factions`                     | `Faction[]`                             | Redux `gameState.factions`  | `dataTables.factions` via `bldFactions()` |
+| `agents`                       | `Agent[]`                               | Redux `gameState.agents`    | Constants via `bldAgent()` |
+| `missions`                     | `Mission[]`                              | Redux `gameState.missions`  | Built via `bldMission()` (references `missionDataId` from `dataTables.offensiveMissions` or `dataTables.defensiveMissions`) |
+| `lead investigations`          | `LeadInvestigation[]`                   | Redux `gameState.leadInvestigations` | Built via `bldLeadInvestigation()` (references `leadId` from `dataTables.leads`) |
+
+// KJA1 also need to mention here `enemies` per `mission[x]`
+// KJA1 also need to talk about `bldWeapon` and sort out the constants for it - for agents (part of the agent data structure, see the other todo), and enemies (part of data table)
 
 # Full list of data tables
 
@@ -173,4 +215,12 @@ All data tables are accessible via the `dataTables` constant:
 
 All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
 
-// KJA1 mention that each unit `bld` function in the `*factory.ts` files codify the customizable templates aka prototypes for each concept.
+Factory functions that build game state entities from data tables are located in `web/src/lib/factories/`:
+- `factionFactory.ts` - `bldFactions()`, `bldFaction()`
+- `agentFactory.ts` - `bldAgent()`
+- `missionFactory.ts` - `bldMission()`
+- `leadInvestigationFactory.ts` - `bldLeadInvestigation()`
+- `enemyFactory.ts` - `bldEnemies()`
+- `weaponFactory.ts` - `bldWeapon()`
+
+Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
