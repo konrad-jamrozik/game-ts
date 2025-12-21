@@ -161,15 +161,15 @@ The first defined element is always the `export function bldConceptsTable(...)` 
 
 All data tables are accessible via the `dataTables` constant:
 
-| Data Table                    | Type                                    | Builder Function                    |
-|-------------------------------|-----------------------------------------|-------------------------------------|
-| `factions`                    | `FactionData[]`                        | `bldFactionsTable()`                |
-| `leads`                       | `LeadData[]`                           | `bldLeadsTable(factions)`           |
+| Data Table                    | Type                                    | Builder Function                      |
+|-------------------------------|-----------------------------------------|---------------------------------------|
+| `factions`                    | `FactionData[]`                         | `bldFactionsTable()`                  |
+| `leads`                       | `LeadData[]`                            | `bldLeadsTable(factions)`             |
 | `offensiveMissions`           | `OffensiveMissionData[]`                | `bldOffensiveMissionsTable(factions)` |
 | `defensiveMissions`           | `DefensiveMissionData[]`                | `bldDefensiveMissionsTable(factions)` |
-| `factionActivityLevels`       | `FactionActivityLevelData[]`           | `bldActivityLevelsTable()`          |
-| `factionOperationLevels`      | `FactionOperationLevelData[]`          | `bldFactionOperationLevelsTable()`  |
-| `enemies`                     | `EnemyData[]`                          | `bldEnemiesTable()`                 |
+| `factionActivityLevels`       | `FactionActivityLevelData[]`            | `bldActivityLevelsTable()`            |
+| `factionOperationLevels`      | `FactionOperationLevelData[]`           | `bldFactionOperationLevelsTable()`    |
+| `enemies`                     | `EnemyData[]`                           | `bldEnemiesTable()`                   |
 
 All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
 
