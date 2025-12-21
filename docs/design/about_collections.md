@@ -35,6 +35,12 @@ const agents = gameState.agents  // Agent[]
 const missions = gameState.missions  // Mission[]
 ```
 
+# Construction of game state collections
+
+Game state collections are constructed by `web/src/lib/factories/<entity>Factory.ts` files, by `bld<entity>` functions.
+
+Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
+
 ## Game state collections and their data sources
 
 # Game state collections - construction
@@ -58,10 +64,6 @@ Factory functions that build game state entities based on data tables and curren
 - `leadInvestigationFactory.ts` - `bldLeadInvestigation()`
 - `enemyFactory.ts` - `bldEnemies()`
 - `weaponFactory.ts` - `bldWeapon()`
-
-Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
-
-All game state collections are located in `web/src/lib/game_state_collections/` and are built by `bldGameStateCollections()` in `gameStateCollections.ts`.
 
 # Game state collections
 

@@ -19,10 +19,6 @@ Refer to [`about_data.md`](about_data.md) for more details.
 Each `data table`:
 - Is a property of `dataTables`, e.g. `dataTables.factions`.
 - Is of type `<Concept>Data[]`, e.g. `FactionData[]`.
-- Is built in the `conceptsDataTable.ts` file by the `bld<concepts>Table()` function, e.g.:
-  - `bldEnemiesTable()` in `enemiesDataTable.ts`
-- The `bld<concepts>Table()` function is a factory function that builds the data table from a human-readable table layout.
-  It internally calls the `to<concepts>DataTable()` function to build the data table. E.e.g `toEnemiesDataTable()`.
 
 # Accessing `dataTables`
 
@@ -40,10 +36,14 @@ const offensiveMissions = dataTables.offensiveMissions  // OffensiveMissionData[
 # Construction of `dataTables`
 
 The `web/src/lib/data_tables/dataTables.ts / dataTables` is populated by the static `bldDataTables()` function.
-That function invokes various `bld*DataTable()` functions from `web/src/lib/data_tables/<concepts>DataTable.ts`
-to construct the `dataTables` constant.
+The `bldDataTables()` function builds each `data table`, i.e. each of its properties, as follows:
 
-Each such `<concepts>DataTable.ts` file exports a builder function of the form:
+- The `data table` is built in the `web/src/lib/data_tables/<concepts>DataTable.ts` file by the `bld<concepts>DataTable()` function.
+  E.g. `dataTable.enemies` is built by `bldEnemiesTable()` in `enemiesDataTable.ts`
+- The `bld<concepts>Table()` function is a factory function that builds the data table from a human-readable table layout.
+  It internally calls the `to<concepts>DataTable()` function to build the data table. E.g `toEnemiesDataTable()`.
+
+Each `<concepts>DataTable.ts` file exports a builder function of the form:
 
 ``` typescript
 export function bldConceptsTable(...args): readonly ConceptData[] {
@@ -65,10 +65,10 @@ export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[]
 }
 ```
 
-The `toConceptsDataTable` function takes as input `ConceptDataRow[]` and returns `ConceptData[]`.
+The `to<concepts>DataTable` function takes as input `>Concept>DataRow[]` and returns `<Concept>Data[]`.
 
-The supporting symbols, like `toConceptsDataTable` function or `type ConceptDataRow` are defined at the bottom of the same file.
+The supporting symbols, like `to<concepts>DataTable` function or `type <Concept>DataRow` are defined at the bottom of the same file.
 They are not exported.
 
-The first defined element is always the `export function bldConceptsTable(...)` builder function,
-followed by `export type ConceptData`, then the internal helper functions and types.
+The first defined element is always the `export function bld<concepts>Table(...)` builder function,
+followed by `export type <Concept>Data`, then the internal helper functions and types.
