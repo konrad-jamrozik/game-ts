@@ -1,19 +1,71 @@
-# About collections
+# About data
 
-The game has several important `collections` of `objects`.
+The game data is organized into two main categories:
+- The immutable data tables
+- The mutable game state collections
 
-There are several kind of collections in the game and the objects within them, with various properties.
+The `data tables` are immutable collections of data that define game concepts. They are:
+- Populated once during application initialization and stored in the global `dataTables` constant. See `dataTables.ts / dataTables`.
+- Never modified after initialization.
+- Built during initialization from a human-readable table layout in the `*DataTable.ts` files.
 
-This document describes the collection kinds, the collections themselves, and what are their
-initialization conventions.
+The `game state collections` are mutable collections of entities that represent the current state of the game. They are:
+- Stored in various properties of the `gameState`. See `gameStateModel.ts / GameState`.
+- Modified as the game progresses - the actual Redux game state is a series of undoable snapshots of the `gameState`, one per turn.
+  See `rootReducer.ts / rootReducer`.
+- Built from data tables by `bld*` function in `*factory.ts` files during game state initialization or as the game progresses
 
-# Collection types
+# Full list of collections
 
-The game has two main types of collections:
+# Data tables reference
 
-1. **Data tables**: Immutable collections of data that define game concepts. These are stored in the global `dataTables` constant and never change after initialization.
+| Data Table                     | Type                          | Location                            |
+| ------------------------------ | ----------------------------- | ----------------------------------- |
+| `faction operation level defs` | `FactionOperationLevelData[]` | `dataTables.factionOperationLevels` |
+| `offensive mission defs`       | `OffensiveMissionData[]`      | `dataTables.offensiveMissions`      |
+| `defensive mission defs`       | `DefensiveMissionData[]`      | `dataTables.defensiveMissions`      |
+| `faction activity level defs`  | `FactionActivityLevelData[]`  | `dataTables.factionActivityLevels`  |
+| `enemies`                      | `EnemyData[]`                 | `dataTables.enemies`                |
+| `leads`                        | `LeadData[]`                  | `dataTables.leads`                  |
+| `factions`                     | `FactionData[]`               | `dataTables.factions`               |
 
-2. **Game state collections**: Mutable collections of entities that represent the current state of the game. These are stored in Redux `gameState` and change as the game progresses.
+## Game state collections (mutable)
+
+| Collection            | Type                  | Location                       | Built from                                                                                                                  |
+| --------------------- | --------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
+| `factions`            | `Faction[]`           | `gameState.factions`           | `dataTables.factions` via `bldFactions()`                                                                                   |
+| `agents`              | `Agent[]`             | `gameState.agents`             | Constants via `bldAgent()`                                                                                                  |
+| `missions`            | `Mission[]`           | `gameState.missions`           | Built via `bldMission()` (references `missionDataId` from `dataTables.offensiveMissions` or `dataTables.defensiveMissions`) |
+| `lead investigations` | `LeadInvestigation[]` | `gameState.leadInvestigations` | Built via `bldLeadInvestigation()` (references `leadId` from `dataTables.leads`)                                            |
+
+// KJA1 also need to mention here `enemies` per `mission[x]`
+// KJA1 also need to talk about `bldWeapon` and sort out the constants for it - for agents (part of the agent data structure, see the other todo), and enemies (part of data table)
+
+# Full list of data tables
+
+All data tables are accessible via the `dataTables` constant:
+
+| Data Table               | Type                          | Builder Function                      |
+| ------------------------ | ----------------------------- | ------------------------------------- |
+| `factions`               | `FactionData[]`               | `bldFactionsTable()`                  |
+| `leads`                  | `LeadData[]`                  | `bldLeadsTable(factions)`             |
+| `offensiveMissions`      | `OffensiveMissionData[]`      | `bldOffensiveMissionsTable(factions)` |
+| `defensiveMissions`      | `DefensiveMissionData[]`      | `bldDefensiveMissionsTable(factions)` |
+| `factionActivityLevels`  | `FactionActivityLevelData[]`  | `bldActivityLevelsTable()`            |
+| `factionOperationLevels` | `FactionOperationLevelData[]` | `bldFactionOperationLevelsTable()`    |
+| `enemies`                | `EnemyData[]`                 | `bldEnemiesTable()`                   |
+
+All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
+
+Factory functions that build game state entities from data tables are located in `web/src/lib/factories/`:
+- `factionFactory.ts` - `bldFactions()`, `bldFaction()`
+- `agentFactory.ts` - `bldAgent()`
+- `missionFactory.ts` - `bldMission()`
+- `leadInvestigationFactory.ts` - `bldLeadInvestigation()`
+- `enemyFactory.ts` - `bldEnemies()`
+- `weaponFactory.ts` - `bldWeapon()`
+
+Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
 
 ## Game state collections and their data sources
 
@@ -172,55 +224,3 @@ The supporting symbols, like `toConceptsDataTable` function or `type ConceptData
 They are not exported.
 
 The first defined element is always the `export function bldConceptsTable(...)` builder function, followed by `export type ConceptData`, then the internal helper functions and types.
-
-# Full list of collections
-
-## Data tables (immutable)
-
-| Data Table                     | Type                                    | Location                    |
-|--------------------------------|-----------------------------------------|-----------------------------|
-| `faction operation level defs` | `FactionOperationLevelData[]`          | `dataTables.factionOperationLevels` |
-| `offensive mission defs`       | `OffensiveMissionData[]`                | `dataTables.offensiveMissions` |
-| `defensive mission defs`       | `DefensiveMissionData[]`                | `dataTables.defensiveMissions` |
-| `faction activity level defs` | `FactionActivityLevelData[]`            | `dataTables.factionActivityLevels` |
-| `enemies`                      | `EnemyData[]`                           | `dataTables.enemies` |
-| `leads`                        | `LeadData[]`                            | `dataTables.leads` |
-| `factions`                     | `FactionData[]`                         | `dataTables.factions` |
-
-## Game state collections (mutable)
-
-| Collection                     | Type                                    | Location                    | Built from                    |
-|--------------------------------|-----------------------------------------|-----------------------------|-------------------------------|
-| `factions`                     | `Faction[]`                             | Redux `gameState.factions`  | `dataTables.factions` via `bldFactions()` |
-| `agents`                       | `Agent[]`                               | Redux `gameState.agents`    | Constants via `bldAgent()` |
-| `missions`                     | `Mission[]`                              | Redux `gameState.missions`  | Built via `bldMission()` (references `missionDataId` from `dataTables.offensiveMissions` or `dataTables.defensiveMissions`) |
-| `lead investigations`          | `LeadInvestigation[]`                   | Redux `gameState.leadInvestigations` | Built via `bldLeadInvestigation()` (references `leadId` from `dataTables.leads`) |
-
-// KJA1 also need to mention here `enemies` per `mission[x]`
-// KJA1 also need to talk about `bldWeapon` and sort out the constants for it - for agents (part of the agent data structure, see the other todo), and enemies (part of data table)
-
-# Full list of data tables
-
-All data tables are accessible via the `dataTables` constant:
-
-| Data Table                    | Type                                    | Builder Function                      |
-|-------------------------------|-----------------------------------------|---------------------------------------|
-| `factions`                    | `FactionData[]`                         | `bldFactionsTable()`                  |
-| `leads`                       | `LeadData[]`                            | `bldLeadsTable(factions)`             |
-| `offensiveMissions`           | `OffensiveMissionData[]`                | `bldOffensiveMissionsTable(factions)` |
-| `defensiveMissions`           | `DefensiveMissionData[]`                | `bldDefensiveMissionsTable(factions)` |
-| `factionActivityLevels`       | `FactionActivityLevelData[]`            | `bldActivityLevelsTable()`            |
-| `factionOperationLevels`      | `FactionOperationLevelData[]`           | `bldFactionOperationLevelsTable()`    |
-| `enemies`                     | `EnemyData[]`                           | `bldEnemiesTable()`                   |
-
-All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
-
-Factory functions that build game state entities from data tables are located in `web/src/lib/factories/`:
-- `factionFactory.ts` - `bldFactions()`, `bldFaction()`
-- `agentFactory.ts` - `bldAgent()`
-- `missionFactory.ts` - `bldMission()`
-- `leadInvestigationFactory.ts` - `bldLeadInvestigation()`
-- `enemyFactory.ts` - `bldEnemies()`
-- `weaponFactory.ts` - `bldWeapon()`
-
-Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
