@@ -40,12 +40,13 @@ export function spawnMissions(state: GameState): void {
   )
 
   for (const missionData of filteredOffensiveMissionData) {
-    bldMission({
-      state,
+    const newMission = bldMission({
+      missionCount: state.missions.length,
       missionDataId: missionData.id,
       expiresIn: missionData.expiresIn,
       enemyCounts: missionData,
     })
+    state.missions.push(newMission)
   }
 }
 

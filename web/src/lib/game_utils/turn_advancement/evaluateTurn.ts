@@ -569,13 +569,14 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   // Convert mission data stats to enemy counts object
   const enemyCounts = selectedMissionData
 
-  bldMission({
-    state,
+  const newMission = bldMission({
+    missionCount: state.missions.length,
     missionDataId: selectedMissionData.id,
     expiresIn: selectedMissionData.expiresIn,
     enemyCounts,
     operationLevel,
   })
+  state.missions.push(newMission)
 
   // Update faction's last operation type name
   faction.lastOperationTypeName = selectedMissionData.name

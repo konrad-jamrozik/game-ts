@@ -23,12 +23,17 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
     }
 
     // Create new investigation
+    const investigationCount = Object.keys(state.leadInvestigations).length
     const newInvestigation = bldLeadInvestigation({
-      state,
+      investigationCount,
+      turn: state.turn,
       leadId,
       agentIds,
     })
     const investigationId = newInvestigation.id
+
+    // Add investigation to state
+    state.leadInvestigations[investigationId] = newInvestigation
 
     // Assign agents to investigation (they enter InTransit state)
     for (const agent of state.agents) {

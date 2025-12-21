@@ -121,6 +121,11 @@ function completeInvestigation(
   const missions = bldMissionsFromLeadCompletion(state, investigation.leadId)
   const createdMissionIds = missions.map((m) => m.id)
 
+  // Add missions to state
+  for (const mission of missions) {
+    state.missions.push(mission)
+  }
+
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
   investigation.agentIds = []
@@ -146,7 +151,7 @@ function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Missio
   for (const missionData of dependentMissionData) {
     // All missions created from leads are offensive missions (apprehend/raid), so they have undefined operationLevel
     const newMission = bldMission({
-      state,
+      missionCount: state.missions.length + createdMissions.length,
       missionDataId: missionData.id,
       expiresIn: missionData.expiresIn,
       enemyCounts: missionData,
