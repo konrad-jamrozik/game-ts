@@ -1,31 +1,29 @@
 # About data tables
 
 - [About data tables](#about-data-tables)
-- [Overview of `dataTables`](#overview-of-datatables)
 - [Accessing `dataTables`](#accessing-datatables)
 - [Reference of `dataTables`](#reference-of-datatables)
 - [Construction of `dataTables`](#construction-of-datatables)
 
 The `data tables` are immutable collections of data that define game concepts.
-They are one of the two main categories of game data. Refer to [`about_data.md`](about_data.md) for more details.
+
+They are one of the two main categories of game data, the other being game state collections.
+Refer to [`about_data.md`](about_data.md) for more details.
 
 `data tables` are:
-- Populated once during application initialization and stored in the global `dataTables` constant. See `dataTables.ts / dataTables`.
+- Populated once during application initialization and stored in the global `dataTables` constant.
+  See `dataTables.ts / dataTables`.
 - Never modified after initialization.
 - Populated from a human-readable table layout in the `*DataTable.ts` files.
 - Used as input to instantiate `game state collections` during game initialization and runtime.
 
-# Overview of `dataTables`
-
-All data tables are located in `web/src/lib/data_tables/` and are built by `bldDataTables()` in `web/src/lib/data_tables/dataTables.ts`.
-
-Each data table:
+Each `data table`:
 - Is a property of `dataTables`, e.g. `dataTables.factions`.
-- Is of type `ConceptData[]`, e.g. `FactionData[]`.
-- Is built in the `conceptsDataTable.ts` file by the `bld*Table()` function, e.g.:
+- Is of type `<Concept>Data[]`, e.g. `FactionData[]`.
+- Is built in the `conceptsDataTable.ts` file by the `bld<concepts>Table()` function, e.g.:
   - `bldEnemiesTable()` in `enemiesDataTable.ts`
-- The `bld*Table()` function is a factory function that builds the data table from a human-readable table layout.
-  It internally calls the `toConceptsDataTable()` function to build the data table. E.e.g `toEnemiesDataTable()`.
+- The `bld<concepts>Table()` function is a factory function that builds the data table from a human-readable table layout.
+  It internally calls the `to<concepts>DataTable()` function to build the data table. E.e.g `toEnemiesDataTable()`.
 
 # Accessing `dataTables`
 
