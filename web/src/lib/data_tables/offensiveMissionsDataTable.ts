@@ -20,10 +20,10 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
-import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { MissionDataId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
+import { bldMissionDataId, expandTemplateString } from './dataTablesUtils'
 
 // prettier-ignore
 export function bldOffensiveMissionsTable(factions: readonly FactionData[]): readonly OffensiveMissionData[] {
@@ -141,14 +141,4 @@ function toOffensiveMissionsDataTable(
   }
 
   return result
-}
-
-function expandTemplateString(template: string, faction: FactionData): string {
-  const shortId = fmtNoPrefix(faction.id, 'faction-')
-  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
-}
-
-function bldMissionDataId(templatedName: string): MissionDataId {
-  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
-  return `missiondata-${baseId}`
 }

@@ -14,10 +14,9 @@
  * - EnemyEstimate: Optional enemy estimate text (may contain {facName} template)
  */
 
-import { assertTrue } from '../primitives/assertPrimitives'
-import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { type Lead, asLeadId } from '../model/leadModel'
 import type { FactionData } from './factionsDataTable'
+import { expandTemplateString } from './dataTablesUtils'
 
 // prettier-ignore
 export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[] {
@@ -114,16 +113,4 @@ function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[])
   }
 
   return result
-}
-
-function expandTemplateString(template: string, faction?: FactionData): string {
-  if (faction === undefined) {
-    assertTrue(
-      !template.includes('{facId}') && !template.includes('{facName}'),
-      `Template string "${template}" contains faction placeholders but no faction was provided`,
-    )
-    return template
-  }
-  const shortId = fmtNoPrefix(faction.id, 'faction-')
-  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
 }

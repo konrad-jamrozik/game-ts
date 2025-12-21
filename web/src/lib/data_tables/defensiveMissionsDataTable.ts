@@ -24,10 +24,10 @@
  * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
  */
 
-import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { MissionDataId } from '../model/missionModel'
 import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
+import { bldMissionDataId, expandTemplateString } from './dataTablesUtils'
 
 // prettier-ignore
 export function bldDefensiveMissionsTable(factions: readonly FactionData[]): readonly DefensiveMissionData[] {
@@ -134,16 +134,4 @@ function toDefensiveMissionsDataTable(
   }
 
   return result
-}
-
-// KJA1 dedup this and other funcs in dataTables construction
-function expandTemplateString(template: string, faction: FactionData): string {
-  const shortId = fmtNoPrefix(faction.id, 'faction-')
-  return template.replaceAll('{facId}', shortId).replaceAll('{facName}', faction.name)
-}
-
-// KJA1 dedup this and other funcs in dataTables construction
-function bldMissionDataId(templatedName: string): MissionDataId {
-  const baseId = templatedName.toLowerCase().replaceAll(' ', '-')
-  return `missiondata-${baseId}`
 }
