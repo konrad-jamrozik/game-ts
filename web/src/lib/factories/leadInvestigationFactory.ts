@@ -2,12 +2,6 @@ import type { GameState } from '../model/gameStateModel'
 import type { AgentId } from '../model/agentModel'
 import type { LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
 
-type CreateLeadInvestigationParams = {
-  state: GameState
-  leadId: LeadId
-  agentIds: AgentId[]
-}
-
 /**
  * Creates a new lead investigation and adds it to the game state.
  * Returns the created lead investigation.
@@ -31,4 +25,10 @@ export function bldLeadInvestigation(params: CreateLeadInvestigationParams): Lea
   state.leadInvestigations[investigationId] = newInvestigation
 
   return newInvestigation
+}
+
+type CreateLeadInvestigationParams = {
+  state: GameState
+  leadId: LeadId
+  agentIds: AgentId[]
 }

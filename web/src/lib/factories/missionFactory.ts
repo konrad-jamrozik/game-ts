@@ -3,14 +3,6 @@ import type { Mission, MissionId, MissionDataId } from '../model/missionModel'
 import type { EnemyCounts } from '../data_tables/enemiesDataTable'
 import { bldEnemies } from './enemyFactory'
 
-type CreateMissionParams = {
-  state: GameState
-  missionDataId: MissionDataId
-  expiresIn: number | 'never'
-  enemyCounts: Partial<EnemyCounts>
-  operationLevel?: number
-}
-
 /**
  * Creates a new mission and adds it to the game state.
  * Returns the created mission.
@@ -35,4 +27,12 @@ export function bldMission(params: CreateMissionParams): Mission {
   state.missions.push(newMission)
 
   return newMission
+}
+
+type CreateMissionParams = {
+  state: GameState
+  missionDataId: MissionDataId
+  expiresIn: number | 'never'
+  enemyCounts: Partial<EnemyCounts>
+  operationLevel?: number
 }

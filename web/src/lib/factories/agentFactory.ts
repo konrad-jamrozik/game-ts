@@ -68,29 +68,6 @@ export function bldAgent(params: CreateAgentParams): Agent {
   return newAgent
 }
 
-type CreateAgentParams = {
-  state: GameState
-  turnHired: number
-  weaponDamage: number
-  id?: AgentId // Optional: if not provided, will be auto-generated
-  agentState?: Agent['state'] // Optional: defaults based on assignment
-  assignment?: Agent['assignment'] // Optional: defaults to 'Standby'
-  skill?: Agent['skill'] // Optional: defaults to AGENT_INITIAL_SKILL
-  exhaustionPct?: number // Optional: defaults to AGENT_INITIAL_EXHAUSTION
-  hitPoints?: Agent['hitPoints'] // Optional: defaults to AGENT_INITIAL_HIT_POINTS
-  maxHitPoints?: number // Optional: defaults to AGENT_INITIAL_HIT_POINTS
-  hitPointsLostBeforeRecovery?: Agent['hitPointsLostBeforeRecovery'] // Optional: defaults to 0
-  missionsTotal?: number // Optional: defaults to 0
-  skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to 0
-  turnTerminated?: number // Optional
-  terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
-  terminatedBy?: string // Optional
-}
-
-type CreateAgentWithoutStateParams = Omit<CreateAgentParams, 'state' | 'id'> & {
-  id: AgentId
-}
-
 // KJA3 silly duplication of bldAgent
 /**
  * Creates an agent object without adding it to state.
@@ -144,4 +121,27 @@ export function bldAgentWithoutState(params: CreateAgentWithoutStateParams): Age
     ...(terminatedOnMissionId !== undefined && { terminatedOnMissionId }),
     ...(terminatedBy !== undefined && { terminatedBy }),
   }
+}
+
+type CreateAgentParams = {
+  state: GameState
+  turnHired: number
+  weaponDamage: number
+  id?: AgentId // Optional: if not provided, will be auto-generated
+  agentState?: Agent['state'] // Optional: defaults based on assignment
+  assignment?: Agent['assignment'] // Optional: defaults to 'Standby'
+  skill?: Agent['skill'] // Optional: defaults to AGENT_INITIAL_SKILL
+  exhaustionPct?: number // Optional: defaults to AGENT_INITIAL_EXHAUSTION
+  hitPoints?: Agent['hitPoints'] // Optional: defaults to AGENT_INITIAL_HIT_POINTS
+  maxHitPoints?: number // Optional: defaults to AGENT_INITIAL_HIT_POINTS
+  hitPointsLostBeforeRecovery?: Agent['hitPointsLostBeforeRecovery'] // Optional: defaults to 0
+  missionsTotal?: number // Optional: defaults to 0
+  skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to 0
+  turnTerminated?: number // Optional
+  terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
+  terminatedBy?: string // Optional
+}
+
+type CreateAgentWithoutStateParams = Omit<CreateAgentParams, 'state' | 'id'> & {
+  id: AgentId
 }
