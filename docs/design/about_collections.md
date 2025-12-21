@@ -35,18 +35,6 @@ const agents = gameState.agents  // Agent[]
 const missions = gameState.missions  // Mission[]
 ```
 
-# Reference of game state collections
-
-| Collection            | Type                  | Location                       | Built from                                                                                                                  |
-| --------------------- | --------------------- | ------------------------------ | --------------------------------------------------------------------------------------------------------------------------- |
-| `factions`            | `Faction[]`           | `gameState.factions`           | `dataTables.factions` via `bldFactions()`                                                                                   |
-| `agents`              | `Agent[]`             | `gameState.agents`             | Constants via `bldAgent()`                                                                                                  |
-| `missions`            | `Mission[]`           | `gameState.missions`           | Built via `bldMission()` (references `missionDataId` from `dataTables.offensiveMissions` or `dataTables.defensiveMissions`) |
-| `lead investigations` | `LeadInvestigation[]` | `gameState.leadInvestigations` | Built via `bldLeadInvestigation()` (references `leadId` from `dataTables.leads`)                                            |
-
-// KJA1 also need to mention here `enemies` per `mission[x]`
-// KJA1 also need to talk about `bldWeapon` and sort out the constants for it - for agents (part of the agent data structure, see the other todo), and enemies (part of data table)
-
 ## Game state collections and their data sources
 
 # Game state collections - construction

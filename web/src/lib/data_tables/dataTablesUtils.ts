@@ -3,6 +3,8 @@ import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import type { MissionDataId } from '../model/missionModel'
 import type { FactionData } from './factionsDataTable'
 
+// KJA1 rename this to dataTablesPrivateUtils
+
 export function expandTemplateString(template: string, faction?: FactionData): string {
   if (faction === undefined) {
     assertTrue(

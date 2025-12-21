@@ -2,7 +2,6 @@
 
 - [About data tables](#about-data-tables)
 - [Accessing `dataTables`](#accessing-datatables)
-- [Reference of `dataTables`](#reference-of-datatables)
 - [Construction of `dataTables`](#construction-of-datatables)
 
 The `data tables` are immutable collections of data that define game concepts.
@@ -36,20 +35,6 @@ import { dataTables } from '../lib/data_tables/dataTables'
 const leads = dataTables.leads  // LeadData[]
 const factions = dataTables.factions  // FactionData[]
 const offensiveMissions = dataTables.offensiveMissions  // OffensiveMissionData[]
-```
-
-# Reference of `dataTables`
-
-Following data tables exist:
-
-```typescript
-dataTables.factionOperationLevels
-dataTables.offensiveMissions
-dataTables.defensiveMissions
-dataTables.factionActivityLevels
-dataTables.enemies
-dataTables.leads
-dataTables.factions
 ```
 
 # Construction of `dataTables`
