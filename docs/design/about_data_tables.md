@@ -3,6 +3,7 @@
 - [About data tables](#about-data-tables)
 - [Accessing `dataTables`](#accessing-datatables)
 - [Construction of `dataTables`](#construction-of-datatables)
+  - [Data table construction code pattern](#data-table-construction-code-pattern)
 
 The `data tables` are immutable collections of data that define game concepts.
 
@@ -42,6 +43,8 @@ The `bldDataTables()` function builds each `data table`, i.e. each of its proper
   E.g. `dataTable.enemies` is built by `bldEnemiesTable()` in `enemiesDataTable.ts`
 - The `bld<concepts>Table()` function is a factory function that builds the data table from a human-readable table layout.
   It internally calls the `to<concepts>DataTable()` function to build the data table. E.g `toEnemiesDataTable()`.
+
+## Data table construction code pattern
 
 Each `<concepts>DataTable.ts` file exports a builder function of the form:
 

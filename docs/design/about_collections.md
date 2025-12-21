@@ -1,6 +1,9 @@
 # About game state collections
 
 - [About game state collections](#about-game-state-collections)
+- [Accessing game state collections](#accessing-game-state-collections)
+- [Construction of game state collections](#construction-of-game-state-collections)
+  - [Game state collection construction code pattern](#game-state-collection-construction-code-pattern)
 
 The `game state collections` are mutable collections of entities that represent the current state of the game.
 
@@ -18,7 +21,6 @@ Each `game state collection`:
   E.g. `Agent` entity has hit points, state and few other properties mutable.
 - Is of variable length - entities can be added to them.
   The entities cannot be removed. Instead, existing entities must be mutated to mark they have been effectively removed.
-- Built from current turn `gameState` and optionally `data tables` by `bld<entity>` functions in `<entity>factory.ts` files.
 
 # Accessing game state collections
 
@@ -37,63 +39,45 @@ const missions = gameState.missions  // Mission[]
 
 # Construction of game state collections
 
-Game state collections are constructed by `web/src/lib/factories/<entity>Factory.ts` files, by `bld<entity>` functions.
+Each game state collection is constructed:
+- By using as input current turn `gameState` and optionally `data tables`.
+- By corresponding `web/src/lib/factories/<entity>Factory.ts` file `bld<entity>` function.
+  E.g. an `agent` entity added to `gameState.agents` is constructed by `bldAgent()` in `agentFactory.ts`.
 
-Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept, defining how entities are constructed from data tables and game state.
+Each `bld<entity>` function codifies the customizable templates (aka prototypes) for each entity type.
+As such, each entity is constructed using following components:
+- The customizable template codified in the `bld<entity>` function.
+- The construction logic in the `bld<entity>` function.
+- The input arguments passed to the function, derived from current turn `gameState`
+- Optionally relevant data table in `dataTables`
 
-## Game state collections and their data sources
+## Game state collection construction code pattern
 
-# Game state collections - construction
+Each `<entity>Factory.ts` file exports a builder function of the form:
+``` typescript
+export function bldEntity(params: CreateEntityParams): Entity {
+  return {
+    ...params,
+  }
+}
 
-Game state collections are constructed from data tables and current turn game state using factory functions:
+type CreateEntityParams = {
+  // ...values from current game state
+}
 
-- **`factions`**: Built from `dataTables.factions` by `bldFactions()` in `factionFactory.ts`. Each `Faction` entity is created from `FactionData`.
-// KJA1 factions should reference factionsData by ID, same as missions and lead investigations
+```
 
-- **`agents`**: Built by `bldAgent()` in `agentFactory.ts`. Agents use constants (like `AGENT_INITIAL_SKILL`) rather than a data table, as they are created dynamically during gameplay.
-// KJA1 all the agent constants should be put into one data structure.
+e.g.
 
-- **`missions`**: Built by `bldMission()` in `missionFactory.ts`. Missions do not require `dataTables.offensiveMissions` or `dataTables.defensiveMissions` directly. They only keep a reference to `missionDataId`, which points to mission data in the data tables. The mission data is looked up when needed via the `missionDataId`.
+``` typescript
+export function bldAgent(params: CreateAgentParams): Agent {
+  return {
+    ...params,
+  }
+}
 
-- **`lead investigations`**: Built by `bldLeadInvestigation()` in `leadInvestigationFactory.ts`. Lead investigations do not require `dataTables.leads` directly. They only keep a reference to `leadId`, and the game state tracks lead investigation counts without mutating the leads themselves.
+type CreateAgentParams = {
+  // ...
+}
 
-Factory functions that build game state entities based on data tables and current game state are located in `web/src/lib/factories/`:
-- `factionFactory.ts` - `bldFactions()`, `bldFaction()`
-- `agentFactory.ts` - `bldAgent()`
-- `missionFactory.ts` - `bldMission()`
-- `leadInvestigationFactory.ts` - `bldLeadInvestigation()`
-- `enemyFactory.ts` - `bldEnemies()`
-- `weaponFactory.ts` - `bldWeapon()`
-
-# Game state collections
-
-Game state collections are mutable collections of entities that represent the current state of the game. They are:
-- Stored in Redux `gameState`
-- Modified as the game progresses
-- Built from data tables by `bld*` function in `*factory.ts` files during game initialization or as the game progresses
-
-For example:
-- `gameState.factions` contains `Faction[]` - mutable faction entities
-- `gameState.agents` contains `Agent[]` - mutable agent entities
-- `gameState.missions` contains `Mission[]` - mutable mission entities
-- `gameState.missions[x].enemies` contains `Enemy[]` - mutable enemy entities
-- `gameState.leadInvestigations` contains `LeadInvestigation[]` - mutable lead investigation entities
-
-## Collections representation
-
-Collections are represented as arrays:
-- **Data tables**: `ConceptData[]` arrays stored in `dataTables` (e.g., `FactionData[]`, `LeadData[]`)
-- **Game state collections**: `Concept[]` arrays stored in Redux `gameState` (e.g., `Faction[]`, `Mission[]`, `Agent[]`)
-
-## Factory functions and prototypes
-
-Each unit `bld` function in the `*factory.ts` files codifies the customizable templates (aka prototypes) for each concept. These factory functions define how entities are constructed from data tables and game state:
-
-- `bldFaction(datum: FactionData): Faction` - builds a `Faction` entity from `FactionData`
-- `bldAgent(params: CreateAgentParams): Agent` - builds an `Agent` entity with customizable parameters
-- `bldMission(params: CreateMissionParams): Mission` - builds a `Mission` entity from mission data
-- `bldLeadInvestigation(params: CreateLeadInvestigationParams): LeadInvestigation` - builds a `LeadInvestigation` entity
-- `bldEnemy(type: EnemyType, currentIdCounter: number): Enemy` - builds an `Enemy` entity from enemy data
-- `bldWeapon(baseDamage: number): Weapon` - builds a `Weapon` entity from weapon data
-
-These factory functions serve as the "prototypes" that define the structure and default values for each entity type.
+```
