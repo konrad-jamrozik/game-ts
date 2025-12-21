@@ -53,31 +53,85 @@ As such, each entity is constructed using following components:
 
 ## Game state collection construction code pattern
 
-Each `<entity>Factory.ts` file exports a builder function of the form:
+Each `<entity>Factory.ts` file exports a builder function that constructs an entity.
+The pattern varies by entity type, but commonly includes:
+
+- ID generation (often based on the current collection length)
+- State mutation (adding the entity to the appropriate collection in `gameState`)
+- Data transformation (converting from data table format or combining multiple inputs)
+- Default value assignment
+
+// KJA1 currently the factory bld functions add the entity to the game state; this is wrong, need to fix impl.
+
+Example pattern:
+
 ``` typescript
 export function bldEntity(params: CreateEntityParams): Entity {
-  return {
-    ...params,
+  
+  // KJA1 this is current implementation but this is wrong. The implementation must be changes so the caller does not pass entire
+  // game state, only what's needed.
+  const { state, ...otherParams } = params
+
+  // Generate ID based on collection length
+  const nextNumericId = state.entities.length
+  const entityId: EntityId = `entity-${nextNumericId.toString().padStart(3, '0')}`
+
+  // Construct entity with generated ID and other properties
+  const newEntity: Entity = {
+    id: entityId,
+    ...otherParams,
+    // Additional properties with defaults or computed values
+    state: 'Active',
+    startTurn: state.turn,
   }
+
+  // KJA1 this is current implementation but this is wrong. The implementation must be changes so the caller does it instead.
+  // Mutate state by adding entity to collection
+  state.entities.push(newEntity)
+
+  return newEntity
 }
 
 type CreateEntityParams = {
-  // ...values from current game state
+  state: GameState
+  // ...other values from current game state or data tables
 }
 
 ```
 
-e.g.
+e.g. `bldMission()`:
 
 ``` typescript
-export function bldAgent(params: CreateAgentParams): Agent {
-  return {
-    ...params,
+export function bldMission(params: CreateMissionParams): Mission {
+  const { state, missionDataId, expiresIn, enemyCounts, operationLevel } = params
+
+  // Generate ID based on missions collection length
+  const nextMissionNumericId = state.missions.length
+  const missionId: MissionId = `mission-${nextMissionNumericId.toString().padStart(3, '0')}`
+
+  // Construct mission entity
+  const newMission: Mission = {
+    id: missionId,
+    missionDataId,
+    agentIds: [],
+    state: 'Active',
+    expiresIn,
+    enemies: bldEnemies(enemyCounts),
+    ...(operationLevel !== undefined && { operationLevel }),
   }
+
+  // Mutate state by adding mission to collection
+  state.missions.push(newMission)
+
+  return newMission
 }
 
-type CreateAgentParams = {
-  // ...
+type CreateMissionParams = {
+  state: GameState
+  missionDataId: MissionDataId
+  expiresIn: number | 'never'
+  enemyCounts: Partial<EnemyCounts>
+  operationLevel?: number
 }
 
 ```

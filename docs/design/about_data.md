@@ -26,7 +26,7 @@ dataTables.factions
 
 | Collection(s)         | Location                        | Data tables referenced by `bld<entity>` functions from `<entity>factory.ts` |
 | --------------------- | ------------------------------- | --------------------------------------------------------------------------- |
-| `factions`            | `gameState.factions`            | `dataTables.factions` (type reference)                                      |
+| `factions`            | `gameState.factions`            | `dataTables.factions` (copies properties from `FactionData`)                |
 | `agents`              | `gameState.agents`              | None                                                                        |
 | `missions`            | `gameState.missions`            | `dataTables.offensiveMissions`, `dataTables.defensiveMissions`              |
 | `lead investigations` | `gameState.leadInvestigations`  | `dataTables.leads` (ID-only reference)                                      |
