@@ -8,7 +8,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [
     {
       field: 'id',
-      headerName: 'Lead ID',
+      headerName: 'Lead',
       width: columnWidths['leads.id'],
       renderCell: (params: GridRenderCellParams<LeadRow, string>): React.JSX.Element => {
         const displayValue = fmtForDisplay(params.row.id)
