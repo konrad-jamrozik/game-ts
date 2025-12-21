@@ -68,7 +68,7 @@ export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[]
 }
 ```
 
-The `to<concepts>DataTable` function takes as input `>Concept>DataRow[]` and returns `<Concept>Data[]`.
+The `to<concepts>DataTable` function takes as input `<Concept>DataRow[]` and returns `<Concept>Data[]`.
 
 The supporting symbols, like `to<concepts>DataTable` function or `type <Concept>DataRow` are defined at the bottom of the same file.
 They are not exported.

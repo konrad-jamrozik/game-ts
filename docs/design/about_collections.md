@@ -135,3 +135,11 @@ type CreateMissionParams = {
 }
 
 ```
+
+The `Create<Entity>Params` type defines the input parameters required to construct an entity.
+
+The supporting symbols, like `Create<Entity>Params` type or any helper functions, are defined at the bottom of the same file.
+They are typically not exported unless they are used elsewhere.
+
+The first defined element is always the `export function bld<entity>(...)` builder function,
+followed by `type Create<Entity>Params`, then any internal helper functions and types.
