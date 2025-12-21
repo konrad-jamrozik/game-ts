@@ -3,10 +3,10 @@ import { toF6, f6add, f6mult } from '../../src/lib/primitives/fixed6'
 import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_FAILED_DEFENSE_SKILL_REWARD,
-  AGENT_INITIAL_HIT_POINTS,
   AGENT_SUCCESSFUL_ATTACK_SKILL_REWARD,
   AGENTS_SKILL_RETREAT_THRESHOLD,
 } from '../../src/lib/data_tables/constants'
+import { initialAgent } from '../../src/lib/factories/agentFactory'
 import { evaluateBattle, type BattleReport } from '../../src/lib/game_utils/turn_advancement/evaluateBattle'
 import { rand } from '../../src/lib/primitives/rand'
 import { agFix } from '../fixtures/agentFixture'
@@ -58,7 +58,7 @@ describe(evaluateBattle, () => {
 
     const report = evaluateBattle([agent], [enemy]) // Act
 
-    const expectedRounds = ceil((AGENT_INITIAL_HIT_POINTS * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
+    const expectedRounds = ceil((initialAgent.maxHitPoints * AGENTS_SKILL_RETREAT_THRESHOLD) / enemy.weapon.damage)
     const skillGainPerRound = f6add(AGENT_FAILED_ATTACK_SKILL_REWARD, AGENT_FAILED_DEFENSE_SKILL_REWARD)
     const expectedSkillUpdate = toF6(f6mult(skillGainPerRound, expectedRounds))
     expectReportToBe(report)({

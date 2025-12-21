@@ -7,13 +7,13 @@ import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advanceme
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
-  AGENT_INITIAL_HIT_POINTS,
   AGENT_INITIAL_WEAPON_DAMAGE,
   AGENT_HIT_POINTS_RECOVERY_PCT,
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/data_tables/constants'
+import { initialAgent } from '../../src/lib/factories/agentFactory'
 import { bldWeapon } from '../../src/lib/factories/weaponFactory'
 import { bldEnemies } from '../../src/lib/factories/enemyFactory'
 
@@ -28,8 +28,8 @@ describe(evaluateDeployedMission, () => {
       skill: toF6(200), // High skill to ensure success
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
-      hitPoints: toF6(AGENT_INITIAL_HIT_POINTS),
-      maxHitPoints: AGENT_INITIAL_HIT_POINTS,
+      hitPoints: initialAgent.hitPoints,
+      maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 1,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }
@@ -103,7 +103,7 @@ describe(evaluateDeployedMission, () => {
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
       hitPoints: toF6(10), // Low hit points
-      maxHitPoints: AGENT_INITIAL_HIT_POINTS,
+      maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 0,
       weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
     }

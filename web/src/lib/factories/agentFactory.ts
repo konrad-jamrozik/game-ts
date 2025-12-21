@@ -1,11 +1,6 @@
 /* eslint-disable unicorn/prefer-switch */
 import type { Agent, AgentId } from '../model/agentModel'
-import {
-  AGENT_INITIAL_ASSIGNMENT,
-  AGENT_INITIAL_EXHAUSTION,
-  AGENT_INITIAL_HIT_POINTS,
-  AGENT_INITIAL_SKILL,
-} from '../data_tables/constants'
+import { AGENT_INITIAL_WEAPON_DAMAGE } from '../data_tables/constants'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
@@ -21,13 +16,13 @@ export function bldAgent(params: CreateAgentParams): Agent {
     weaponDamage,
     id,
     agentState,
-    assignment = AGENT_INITIAL_ASSIGNMENT,
-    skill = AGENT_INITIAL_SKILL,
-    exhaustionPct = AGENT_INITIAL_EXHAUSTION,
-    hitPoints = toF6(AGENT_INITIAL_HIT_POINTS),
-    maxHitPoints = AGENT_INITIAL_HIT_POINTS,
-    missionsTotal = 0,
-    skillFromTraining = toF6(0),
+    assignment = initialAgent.assignment,
+    skill = initialAgent.skill,
+    exhaustionPct = initialAgent.exhaustionPct,
+    hitPoints = initialAgent.hitPoints,
+    maxHitPoints = initialAgent.maxHitPoints,
+    missionsTotal = initialAgent.missionsTotal,
+    skillFromTraining = initialAgent.skillFromTraining,
     turnTerminated,
     terminatedOnMissionId,
     terminatedBy,
@@ -68,19 +63,37 @@ export function bldAgent(params: CreateAgentParams): Agent {
   return newAgent
 }
 
+/**
+ * Prototype agent with all default values.
+ * Used as a reference for initial agent properties.
+ */
+export const initialAgent: Agent = {
+  id: 'agent-proto' as AgentId,
+  turnHired: 1,
+  state: 'Available',
+  assignment: 'Standby',
+  skill: toF6(100),
+  exhaustionPct: 0,
+  hitPoints: toF6(30),
+  maxHitPoints: 30,
+  missionsTotal: 0,
+  skillFromTraining: toF6(0),
+  weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+}
+
 type CreateAgentParams = {
   agentCount: number
   turnHired: number
   weaponDamage: number
   id?: AgentId // Optional: if not provided, will be auto-generated
   agentState?: Agent['state'] // Optional: defaults based on assignment
-  assignment?: Agent['assignment'] // Optional: defaults to AGENT_INITIAL_ASSIGNMENT
-  skill?: Agent['skill'] // Optional: defaults to AGENT_INITIAL_SKILL
-  exhaustionPct?: number // Optional: defaults to AGENT_INITIAL_EXHAUSTION
-  hitPoints?: Agent['hitPoints'] // Optional: defaults to AGENT_INITIAL_HIT_POINTS
-  maxHitPoints?: number // Optional: defaults to AGENT_INITIAL_HIT_POINTS
-  missionsTotal?: number // Optional: defaults to 0
-  skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to 0
+  assignment?: Agent['assignment'] // Optional: defaults to initialAgent.assignment
+  skill?: Agent['skill'] // Optional: defaults to initialAgent.skill
+  exhaustionPct?: number // Optional: defaults to initialAgent.exhaustionPct
+  hitPoints?: Agent['hitPoints'] // Optional: defaults to initialAgent.hitPoints
+  maxHitPoints?: number // Optional: defaults to initialAgent.maxHitPoints
+  missionsTotal?: number // Optional: defaults to initialAgent.missionsTotal
+  skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to initialAgent.skillFromTraining
   turnTerminated?: number // Optional
   terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
   terminatedBy?: string // Optional
