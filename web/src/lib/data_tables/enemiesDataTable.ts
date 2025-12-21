@@ -33,17 +33,6 @@ export function bldEnemiesTable(): readonly EnemyData[] {
   ])
 }
 
-export function bldEnemyStats(): Record<string, EnemyData> {
-  const enemies = bldEnemiesTable()
-  const stats: Record<string, EnemyData> = {}
-
-  for (const enemyStat of enemies) {
-    stats[enemyStat.name] = enemyStat
-  }
-
-  return stats
-}
-
 export type EnemyData = {
   name: EnemyType
   aliases: string
