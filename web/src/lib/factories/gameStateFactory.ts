@@ -17,6 +17,7 @@ import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import { bldMission } from './missionFactory'
 import { initialWeapon } from './weaponFactory'
+import { getFactionById } from '../model_utils/factionUtils'
 
 // KJA1 review / dedup gameStateFactory logic
 // Notably, do not pass default values overriding init prototypes.
@@ -78,16 +79,8 @@ export function bldInitialState(options?: { debug?: boolean }): GameState {
 
   if (useDebug) {
     const debugOverrides = bldDebugInitialOverrides()
-    // Apply faction mutation: modify Red Dawn faction so next operation happens in 3 turns
-    const factions = [...initialGameState.factions]
-    const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
-    if (redDawnFaction) {
-      redDawnFaction.turnsUntilNextOperation = 3
-    }
-    return bldGameState({
-      ...debugOverrides,
-      factions,
-    })
+
+    return bldGameState(debugOverrides)
   }
 
   return bldGameState()
@@ -110,10 +103,68 @@ function bldInitialAgents(): GameState['agents'] {
   return agents
 }
 
+/**
+ * Return only the overrides that should replace values in the normal initial state
+ */
+function bldDebugInitialOverrides(): Partial<GameState> {
+  const gameStateOverrides: Partial<GameState> & { factions: GameState['factions'] } = {
+    money: 1000,
+    trainingCap: 4,
+    leadInvestigationCounts: {
+      'lead-red-dawn-profile': 1,
+      'lead-exalt-profile': 1,
+      'lead-black-lotus-profile': 1,
+    },
+    factions: structuredClone(initialGameState.factions),
+  }
+
+  // Speed up when next Red Dawn operation happens
+  const redDawnFaction = getFactionById(gameStateOverrides, 'faction-red-dawn')
+  redDawnFaction.turnsUntilNextOperation = 3
+
+  // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
+  const missionId: MissionId = 'mission-000'
+  const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
+  const { debugAgents, onMissionAgentIds, deepStateInvestigationAgentIds } = bldDebugAgents(
+    missionId,
+    deepStateInvestigationId,
+  )
+  gameStateOverrides.agents = debugAgents
+
+  gameStateOverrides.missions = [
+    bldMission({
+      id: missionId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
+      agentIds: onMissionAgentIds,
+      state: 'Deployed',
+    }),
+    bldMission({
+      id: 'mission-001' as MissionId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
+      agentIds: [],
+      state: 'Active',
+    }),
+  ]
+
+  // Create lead investigation for deep state lead
+  gameStateOverrides.leadInvestigations = {
+    [deepStateInvestigationId]: {
+      id: deepStateInvestigationId,
+      leadId: 'lead-deep-state' as LeadId,
+      accumulatedIntel: 0,
+      agentIds: deepStateInvestigationAgentIds,
+      startTurn: 1,
+      state: 'Active',
+    },
+  }
+
+  return gameStateOverrides
+}
+
 function bldDebugAgents(
   missionId: MissionId,
   deepStateInvestigationId: LeadInvestigationId,
-): { agents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
+): { debugAgents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
   const onMissionAgentIds: AgentId[] = []
   const agents: Agent[] = []
 
@@ -284,60 +335,5 @@ function bldDebugAgents(
     }
   }
 
-  return { agents, onMissionAgentIds, deepStateInvestigationAgentIds }
-}
-
-/**
- * Return only the overrides that should replace values in the normal initial state
- */
-function bldDebugInitialOverrides(): Partial<GameState> {
-  const stateBase: Partial<GameState> = {
-    money: 1000,
-    trainingCap: 4,
-    leadInvestigationCounts: {
-      'lead-red-dawn-profile': 1,
-      'lead-exalt-profile': 1,
-      'lead-black-lotus-profile': 1,
-    },
-  }
-
-  const missionId: MissionId = 'mission-000'
-  const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
-
-  // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
-  const {
-    agents: debugAgents,
-    onMissionAgentIds,
-    deepStateInvestigationAgentIds,
-  } = bldDebugAgents(missionId, deepStateInvestigationId)
-
-  stateBase.agents = debugAgents
-  stateBase.missions = [
-    bldMission({
-      id: missionId,
-      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
-      agentIds: onMissionAgentIds,
-      state: 'Deployed',
-    }),
-    bldMission({
-      id: 'mission-001' as MissionId,
-      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
-      agentIds: [],
-      state: 'Active',
-    }),
-  ]
-
-  // Create lead investigation for deep state lead
-  stateBase.leadInvestigations = {
-    [deepStateInvestigationId]: {
-      id: deepStateInvestigationId,
-      leadId: 'lead-deep-state' as LeadId,
-      accumulatedIntel: 0,
-      agentIds: deepStateInvestigationAgentIds,
-      startTurn: 1,
-      state: 'Active',
-    },
-  }
-
-  return stateBase
+  return { debugAgents: agents, onMissionAgentIds, deepStateInvestigationAgentIds }
 }

@@ -54,7 +54,7 @@ export function assertIsMissionDataId(id: string): asserts id is MissionDataId {
   }
 }
 
-// Legacy function for backward compatibility during migration
+// Legacy function for backward compatibility during migration // KJA2 remove this
 export function assertIsMissionDefId(id: string): asserts id is MissionDataId {
   assertIsMissionDataId(id)
 }
