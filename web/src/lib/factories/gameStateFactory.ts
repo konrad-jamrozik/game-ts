@@ -15,7 +15,7 @@ import { bldAgent, initialAgent } from './agentFactory'
 import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import { bldEnemies } from './enemyFactory'
+import { bldMission } from './missionFactory'
 import { getMissionDataById } from '../data_tables/dataTables'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { initialWeapon } from './weaponFactory'
@@ -289,24 +289,23 @@ function bldDebugInitialOverrides(): Partial<GameState> {
 
   stateBase.agents = debugAgents
   const missionData = getMissionDataById('missiondata-apprehend-red-dawn-member' as MissionDataId)
-  // KJA3 use the factory instead, bldMission. But avoid having to have tempState just for next ID.
   stateBase.missions = [
-    {
+    bldMission({
       id: missionId,
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: missionData.expiresIn,
-      enemies: bldEnemies(missionData),
-    },
-    {
+      enemyCounts: missionData,
+    }),
+    bldMission({
       id: 'mission-001' as MissionId,
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: [],
       state: 'Active',
       expiresIn: missionData.expiresIn,
-      enemies: bldEnemies(missionData),
-    },
+      enemyCounts: missionData,
+    }),
   ]
 
   // Create lead investigation for deep state lead

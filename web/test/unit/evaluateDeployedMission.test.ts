@@ -1,7 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { Mission, MissionDataId } from '../../src/lib/model/missionModel'
+import type { MissionDataId } from '../../src/lib/model/missionModel'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
 import {
   AGENT_CAP,
@@ -12,7 +12,7 @@ import {
   TRANSPORT_CAP,
 } from '../../src/lib/data_tables/constants'
 import { bldAgent } from '../../src/lib/factories/agentFactory'
-import { bldEnemies } from '../../src/lib/factories/enemyFactory'
+import { bldMission } from '../../src/lib/factories/missionFactory'
 import { initialWeapon } from '../../src/lib/factories/weaponFactory'
 
 describe(evaluateDeployedMission, () => {
@@ -29,15 +29,14 @@ describe(evaluateDeployedMission, () => {
     })
 
     // Create a test mission with weak enemies
-    // KJA1 call bldMission here and in all other functions that create missions.
-    const testMission: Mission = {
+    const testMission = bldMission({
       id: 'mission-001',
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ initiate: 1 }),
-    }
+      enemyCounts: { initiate: 1 },
+    })
 
     // Create a minimal game state
     // KJA1 call bldGameState here and in all other functions that create gameState.
@@ -101,14 +100,14 @@ describe(evaluateDeployedMission, () => {
       missionsTotal: 0,
     })
 
-    const testMission: Mission = {
+    const testMission = bldMission({
       id: 'mission-001',
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ soldier: 2 }),
-    }
+      enemyCounts: { soldier: 2 },
+    })
 
     const gameState: GameState = {
       actionsCount: 0,
@@ -184,14 +183,14 @@ describe(evaluateDeployedMission, () => {
       missionsTotal: 0,
     })
 
-    const testMission: Mission = {
+    const testMission = bldMission({
       id: 'mission-001',
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: ['agent-001', 'agent-002'],
       state: 'Deployed',
       expiresIn: 3,
-      enemies: bldEnemies({ cultLeader: 3 }),
-    }
+      enemyCounts: { cultLeader: 3 },
+    })
 
     const gameState: GameState = {
       actionsCount: 0,
