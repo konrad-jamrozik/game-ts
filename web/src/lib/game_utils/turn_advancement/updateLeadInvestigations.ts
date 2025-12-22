@@ -154,7 +154,6 @@ function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Missio
       missionCount: state.missions.length + createdMissions.length,
       missionDataId: missionData.id,
       expiresIn: missionData.expiresIn,
-      enemyCounts: missionData.enemyCounts,
     })
     createdMissions.push(newMission)
   }

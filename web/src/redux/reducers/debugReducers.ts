@@ -44,8 +44,7 @@ export function spawnMissions(state: GameState): void {
     const newMission = bldMission({
       missionCount: state.missions.length,
       missionDataId: missionData.id,
-      expiresIn: missionData.expiresIn,
-      enemyCounts: missionData.enemyCounts,
+      expiresIn: missionData.expiresIn, // KJA1 should be deduced by default from mission data
     })
     state.missions.push(newMission)
   }
