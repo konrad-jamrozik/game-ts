@@ -576,7 +576,6 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   const newMission = bldMission({
     missionCount: state.missions.length,
     missionDataId: selectedMissionData.id,
-    expiresIn: selectedMissionData.expiresIn,
     operationLevel,
   })
   state.missions.push(newMission)

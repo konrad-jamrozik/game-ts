@@ -20,8 +20,8 @@ export const initialMission: Mission = {
 }
 
 /**
- * Note: enemyCounts are normally taken from mission data, deduced from missionDataId.
- * However, enemyCounts can be optionally provided (primarily for testing purposes).
+ * Note: enemyCounts and expiresIn are normally taken from mission data, deduced from missionDataId.
+ * However, they can be optionally provided (primarily for debug or testing purposes).
  * The caller is not responsible for creating the Enemy objects.
  * Instead, the bldMission function will look up mission data and invoke bldEnemies(enemyCounts).
  */
@@ -37,16 +37,21 @@ type BaseCreateMissionParams = {
 /**
  * Creates a new mission object.
  * Returns the created mission. The caller is responsible for adding it to state.
- * Enemy counts are automatically retrieved from mission data based on missionDataId,
- * unless explicitly provided (primarily for testing purposes).
+ * Enemy counts and expiresIn are automatically retrieved from mission data based on missionDataId,
+ * unless explicitly provided (primarily for debug or testing purposes).
  */
 export function bldMission(params: CreateMissionParams): Mission {
-  const { missionCount, enemyCounts, ...missionOverrides } = params
+  const { missionCount, enemyCounts, expiresIn, ...missionOverrides } = params
+
+  // Look up mission data early to get default values
+  const missionData = getMissionDataById(params.missionDataId)
 
   // Start with initialMission and override with provided values
   const mission: Mission = {
     ...initialMission,
     ...missionOverrides,
+    // Use provided expiresIn if available (for tests), otherwise use from mission data
+    expiresIn: expiresIn ?? missionData.expiresIn,
   }
 
   // Generate ID if not provided
@@ -55,8 +60,8 @@ export function bldMission(params: CreateMissionParams): Mission {
     mission.id = formatMissionId(missionCount)
   }
 
-  // Use provided enemyCounts if available (for tests), otherwise look up from mission data
-  const finalEnemyCounts = enemyCounts ?? getMissionDataById(mission.missionDataId).enemyCounts
+  // Use provided enemyCounts if available (for tests), otherwise use from mission data
+  const finalEnemyCounts = enemyCounts ?? missionData.enemyCounts
   mission.enemies = bldEnemies(finalEnemyCounts)
 
   return mission
