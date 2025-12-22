@@ -4,9 +4,9 @@ import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2 } from '../lib/primitives/fixed6'
-import { getActivityLevelByOrd, getFactionName, getFactionDiscoveryPrerequisite } from '../lib/data_tables/dataTables'
+import { getActivityLevelByOrd, getFactionName, isFactionDiscovered } from '../lib/data_tables/dataTables'
 import { getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
-import { assertIsActivityLevelOrd, type Faction } from '../lib/model/factionModel'
+import { assertIsActivityLevelOrd } from '../lib/model/factionModel'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
@@ -19,11 +19,6 @@ export type SituationReportRow = {
   projected?: string
   diff?: string
   reverseColor?: boolean
-}
-
-function isFactionDiscovered(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
-  const discoveryPrerequisite = getFactionDiscoveryPrerequisite(faction)
-  return discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
 }
 
 function getFactionRows(faction: {

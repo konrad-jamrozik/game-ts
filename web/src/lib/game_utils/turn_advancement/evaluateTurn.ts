@@ -3,7 +3,7 @@ import {
   dataTables,
   getActivityLevelByOrd,
   getFactionName,
-  getFactionDiscoveryPrerequisite,
+  isFactionDiscovered,
 } from '../../data_tables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
@@ -670,8 +670,7 @@ function updateFactions(
     }
 
     // Check if faction is discovered by verifying all discovery prerequisites are met
-    const discoveryPrerequisite = getFactionDiscoveryPrerequisite(faction)
-    const isDiscovered = discoveryPrerequisite.every((leadId) => (state.leadInvestigationCounts[leadId] ?? 0) > 0)
+    const isDiscovered = isFactionDiscovered(faction, state.leadInvestigationCounts)
 
     // Create faction report
     factionReports.push({

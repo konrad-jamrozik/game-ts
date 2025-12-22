@@ -56,7 +56,7 @@ export function bldDataTables(): DataTables {
   }
 }
 
-// KJA2 move this to dataTablesLookupUtils.ts
+// KJA2 move the many lookup functions to appropriate model_utils, e.g. for factions. Same as agentUtils
 // Data table lookup utilities
 // These functions look up entities in the immutable dataTables constant.
 
@@ -108,14 +108,15 @@ export function getFactionName(faction: Faction): string {
 }
 
 /**
- * Gets the discovery prerequisite lead IDs for a faction from its FactionData.
+ * Checks if a faction is discovered by verifying all discovery prerequisites are met.
  */
-export function getFactionDiscoveryPrerequisite(faction: Faction): string[] {
+export function isFactionDiscovered(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
   const factionData = getFactionDataByDataId(faction.factionDataId)
-  return factionData.discoveryPrerequisite
+  const discoveryPrerequisite = factionData.discoveryPrerequisite
+  return discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
 }
 
-export function getFactionDataByDataId(id: FactionDataId): FactionData {
+function getFactionDataByDataId(id: FactionDataId): FactionData {
   const found = dataTables.factions.find((faction) => faction.factionDataId === id)
   assertDefined(found, `Faction data with data id ${id} not found`)
   return found
