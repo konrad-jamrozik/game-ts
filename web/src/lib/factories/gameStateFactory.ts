@@ -16,7 +16,7 @@ import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import { bldMission } from './missionFactory'
-import { getMissionDataById } from '../data_tables/dataTables'
+import { getOffensiveMissionDataById } from '../data_tables/dataTables'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { initialWeapon } from './weaponFactory'
 
@@ -288,7 +288,7 @@ function bldDebugInitialOverrides(): Partial<GameState> {
   } = bldDebugAgents(missionId, deepStateInvestigationId)
 
   stateBase.agents = debugAgents
-  const missionData = getMissionDataById('missiondata-apprehend-red-dawn-member' as MissionDataId)
+  const missionData = getOffensiveMissionDataById('missiondata-apprehend-red-dawn-member' as MissionDataId)
   stateBase.missions = [
     bldMission({
       id: missionId,
@@ -296,7 +296,7 @@ function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: onMissionAgentIds,
       state: 'Deployed',
       expiresIn: missionData.expiresIn,
-      enemyCounts: missionData,
+      enemyCounts: missionData.enemyCounts,
     }),
     bldMission({
       id: 'mission-001' as MissionId,
@@ -304,7 +304,7 @@ function bldDebugInitialOverrides(): Partial<GameState> {
       agentIds: [],
       state: 'Active',
       expiresIn: missionData.expiresIn,
-      enemyCounts: missionData,
+      enemyCounts: missionData.enemyCounts,
     }),
   ]
 

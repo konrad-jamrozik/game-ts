@@ -24,10 +24,8 @@
  * https://chatgpt.com/c/693636b5-3d44-8329-8977-25046b501f31
  */
 
-import type { MissionDataId } from '../model/missionModel'
-import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
-import { bldMissionDataId, expandTemplateString } from './dataTablesUtils'
+import { bldMissionDataId, expandTemplateString, type BaseMissionData } from './dataTablesUtils'
 
 // prettier-ignore
 export function bldDefensiveMissionsTable(factions: readonly FactionData[]): readonly DefensiveMissionData[] {
@@ -57,22 +55,7 @@ export function bldDefensiveMissionsTable(factions: readonly FactionData[]): rea
   ], factions)
 }
 
-export type DefensiveMissionData = {
-  id: MissionDataId
-  name: string
-  level: number
-  expiresIn: number
-  initiate: number
-  operative: number
-  soldier: number
-  elite: number
-  handler: number
-  lieutenant: number
-  commander: number
-  highCommander: number
-  cultLeader: number
-  factionId: FactionId
-}
+export type DefensiveMissionData = BaseMissionData
 
 type DefensiveMissionRow = [
   name: string,
@@ -119,15 +102,17 @@ function toDefensiveMissionsDataTable(
         name: templatedName,
         level: rawMission.level,
         expiresIn: rawMission.expiresIn,
-        initiate: rawMission.initiate,
-        operative: rawMission.operative,
-        soldier: rawMission.soldier,
-        elite: rawMission.elite,
-        handler: rawMission.handler,
-        lieutenant: rawMission.lieutenant,
-        commander: rawMission.commander,
-        highCommander: rawMission.highCommander,
-        cultLeader: rawMission.cultLeader,
+        enemyCounts: {
+          initiate: rawMission.initiate,
+          operative: rawMission.operative,
+          soldier: rawMission.soldier,
+          elite: rawMission.elite,
+          handler: rawMission.handler,
+          lieutenant: rawMission.lieutenant,
+          commander: rawMission.commander,
+          highCommander: rawMission.highCommander,
+          cultLeader: rawMission.cultLeader,
+        },
         factionId: faction.id,
       })
     }

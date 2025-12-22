@@ -45,7 +45,7 @@ export function spawnMissions(state: GameState): void {
       missionCount: state.missions.length,
       missionDataId: missionData.id,
       expiresIn: missionData.expiresIn,
-      enemyCounts: missionData,
+      enemyCounts: missionData.enemyCounts,
     })
     state.missions.push(newMission)
   }

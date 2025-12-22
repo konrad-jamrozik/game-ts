@@ -27,6 +27,7 @@ type CreateMissionParams =
   | (BaseCreateMissionParams & { missionCount: number; id?: never })
   | (BaseCreateMissionParams & { id: Mission['id']; missionCount?: never })
 
+// KJA1 enemyCounts should be always taken from mission data, never passed in.
 type BaseCreateMissionParams = {
   enemyCounts: Partial<EnemyCounts>
   missionDataId: Mission['missionDataId']

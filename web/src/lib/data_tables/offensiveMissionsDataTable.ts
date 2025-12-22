@@ -20,10 +20,8 @@
  * https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/69367e41-e044-8332-baa8-f61660ca87af
  */
 
-import type { MissionDataId } from '../model/missionModel'
-import type { FactionId } from '../model/factionModel'
 import type { FactionData } from './factionsDataTable'
-import { bldMissionDataId, expandTemplateString } from './dataTablesUtils'
+import { bldMissionDataId, expandTemplateString, type BaseMissionData } from './dataTablesUtils'
 
 // prettier-ignore
 export function bldOffensiveMissionsTable(factions: readonly FactionData[]): readonly OffensiveMissionData[] {
@@ -40,27 +38,13 @@ export function bldOffensiveMissionsTable(factions: readonly FactionData[]): rea
   ], factions)
 }
 
-export type OffensiveMissionData = {
-  id: MissionDataId
-  name: string
-  level: number
-  expiresIn: number
-  initiate: number
-  operative: number
-  soldier: number
-  elite: number
-  handler: number
-  lieutenant: number
-  commander: number
-  highCommander: number
-  cultLeader: number
+export type OffensiveMissionData = BaseMissionData & {
   moneyReward: number
   fundingReward: number
   panicReductionPct: number
   suppression: string
   dependsOn: string[]
   description: string
-  factionId: FactionId
 }
 
 type OffensiveMissionRow = [
@@ -121,15 +105,17 @@ function toOffensiveMissionsDataTable(
         description: expandTemplateString(rawMission.description, faction),
         level: rawMission.level,
         expiresIn: rawMission.expiresIn,
-        initiate: rawMission.initiate,
-        operative: rawMission.operative,
-        soldier: rawMission.soldier,
-        elite: rawMission.elite,
-        handler: rawMission.handler,
-        lieutenant: rawMission.lieutenant,
-        commander: rawMission.commander,
-        highCommander: rawMission.highCommander,
-        cultLeader: rawMission.cultLeader,
+        enemyCounts: {
+          initiate: rawMission.initiate,
+          operative: rawMission.operative,
+          soldier: rawMission.soldier,
+          elite: rawMission.elite,
+          handler: rawMission.handler,
+          lieutenant: rawMission.lieutenant,
+          commander: rawMission.commander,
+          highCommander: rawMission.highCommander,
+          cultLeader: rawMission.cultLeader,
+        },
         moneyReward: rawMission.moneyReward,
         fundingReward: rawMission.fundingReward,
         panicReductionPct: rawMission.panicReductionPct,
