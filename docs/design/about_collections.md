@@ -56,8 +56,9 @@ for each entity type. As such, each entity is constructed using following compon
 - Returns the entity object (does NOT mutate state)
 
 The caller is responsible for:
-- If needed, passing the collection count to the builder function as a parameter (e.g., `state.agents.length`),
-  thus allowing it to derive the correct numeric ID of the to-be-built entity.
+- Either passing the collection count to the builder function as a parameter (e.g., `state.agents.length`),
+  which allows it to derive the correct numeric ID of the to-be-built entity, OR providing a custom ID.
+  The type system enforces that exactly one of these must be provided (XOR constraint).
 - Adding the returned entity to the appropriate collection in current turn `gameState`.
 
 ## Example: `bldAgent()`
@@ -75,13 +76,20 @@ export const initialAgent: Agent = {
   // ... all the other default values ...
 }
 
-type CreateAgentParams = {
-  agentCount: number
-} & Partial<Agent>
+type CreateAgentParams =
+  | (BaseCreateAgentParams & { agentCount: number; id?: never })
+  | (BaseCreateAgentParams & { id: Agent['id']; agentCount?: never })
+
+type BaseCreateAgentParams = Partial<Omit<Agent, 'id'>>
 
 /**
  * Creates a new agent object.
  * Returns the created agent. The caller is responsible for adding it to state.
+ *
+ * The `CreateAgentParams` type enforces an XOR constraint: either `agentCount` OR `id` must be provided,
+ * but not both. This ensures type safety at compile time:
+ * - If `agentCount` is provided, the ID will be auto-generated from the count
+ * - If `id` is provided, the count-based ID generation is disabled
  */
 export function bldAgent(params: CreateAgentParams): Agent {
   const { agentCount, ...agentOverrides } = params
@@ -94,6 +102,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
 
   // Generate ID if not provided
   if (agent.id === initialAgent.id) {
+    assertDefined(agentCount, 'Agent count must be provided if ID is not provided')
     agent.id = formatAgentId(agentCount)
   }
 
@@ -103,7 +112,9 @@ export function bldAgent(params: CreateAgentParams): Agent {
 }
 ```
 
-Usage:
+Usage examples:
+
+**Using count-based ID generation (most common):**
 ``` typescript
 const newAgent = bldAgent({
   agentCount: state.agents.length,
@@ -114,6 +125,20 @@ const newAgent = bldAgent({
 })
 state.agents.push(newAgent)
 ```
+
+**Using custom ID:**
+``` typescript
+const newAgent = bldAgent({
+  id: 'agent-9007' as AgentId,
+  turnHired: state.turn,
+  weapon: bldWeapon({ damage: state.weaponDamage }),
+  state: 'InTransit',
+  assignment: 'Standby',
+})
+state.agents.push(newAgent)
+```
+
+**Note:** The type system prevents providing both `agentCount` and `id` simultaneously, enforcing the XOR constraint at compile time.
 
 ## Symbol order in factory files
 
