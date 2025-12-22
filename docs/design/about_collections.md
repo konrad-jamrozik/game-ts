@@ -3,7 +3,8 @@
 - [About game state collections](#about-game-state-collections)
 - [Accessing game state collections](#accessing-game-state-collections)
 - [Construction of game state collections](#construction-of-game-state-collections)
-  - [Game state collection construction code pattern](#game-state-collection-construction-code-pattern)
+  - [Example: `bldAgent()`](#example-bldagent)
+  - [Symbol order in factory files](#symbol-order-in-factory-files)
 
 The `game state collections` are mutable collections of entities that represent the current state of the game.
 
@@ -40,106 +41,100 @@ const missions = gameState.missions  // Mission[]
 # Construction of game state collections
 
 Each game state collection is constructed:
-- By using as input current turn `gameState` and optionally `data tables`.
+- By using as input current turn `gameState` and optionally relevant `data tables`.
 - By corresponding `web/src/lib/factories/<entity>Factory.ts` file `bld<entity>` function.
   E.g. an `agent` entity added to `gameState.agents` is constructed by `bldAgent()` in `agentFactory.ts`.
 
-Each `bld<entity>` function codifies the customizable templates (aka prototypes) for each entity type.
-As such, each entity is constructed using following components:
-- The customizable template codified in the `bld<entity>` function.
-- The construction logic in the `bld<entity>` function.
-- The input arguments passed to the function, derived from current turn `gameState`
-- Optionally relevant data table in `dataTables`
+The factory function returns the entity object; the caller is responsible for adding it to state.
 
-## Game state collection construction code pattern
+Each `bld<entity>` function in the `<entity>Factory.ts` file codifies the customizable templates (aka prototypes)
+for each entity type. As such, each entity is constructed using following components:
+- A prototype constant (e.g., `initialAgent`) with all default values
+- The construction logic in the `bld<entity>` function that starts with the prototype and applies overrides,
+  coming from the `bld<entity>` function parameters, and possibly referencing relevant `data tables`.
+- Performs post-processing (ID generation, state derivation, invariant checks)
+- Returns the entity object (does NOT mutate state)
 
-Each `<entity>Factory.ts` file exports a builder function that constructs an entity.
-The pattern varies by entity type, but commonly includes:
+The caller is responsible for:
+- If needed, passing the collection count to the builder function as a parameter (e.g., `state.agents.length`),
+  thus allowing it to derive the correct numeric ID of the to-be-built entity.
+- Adding the returned entity to the appropriate collection in current turn `gameState`.
 
-- ID generation (often based on the current collection length)
-- State mutation (adding the entity to the appropriate collection in `gameState`)
-- Data transformation (converting from data table format or combining multiple inputs)
-- Default value assignment
-
-// KJA1 currently the factory bld functions add the entity to the game state; this is wrong, need to fix impl.
-
-Example pattern:
+## Example: `bldAgent()`
 
 ``` typescript
-export function bldEntity(params: CreateEntityParams): Entity {
-  
-  // KJA1 this is current implementation but this is wrong. The implementation must be changes so the caller does not pass entire
-  // game state, only what's needed.
-  const { state, ...otherParams } = params
+/**
+ * Prototype agent with all default values.
+ * Used as a reference for initial agent properties.
+ */
+export const initialAgent: Agent = {
+  id: 'agent-ini' as AgentId,
+  turnHired: 1,
+  state: 'Available',
+  assignment: 'Standby',
+  // ... all the other default values ...
+}
 
-  // Generate ID based on collection length
-  const nextNumericId = state.entities.length
-  const entityId: EntityId = `entity-${nextNumericId.toString().padStart(3, '0')}`
+type CreateAgentParams = {
+  agentCount: number
+} & Partial<Agent>
 
-  // Construct entity with generated ID and other properties
-  const newEntity: Entity = {
-    id: entityId,
-    ...otherParams,
-    // Additional properties with defaults or computed values
-    state: 'Active',
-    startTurn: state.turn,
+/**
+ * Creates a new agent object.
+ * Returns the created agent. The caller is responsible for adding it to state.
+ */
+export function bldAgent(params: CreateAgentParams): Agent {
+  const { agentCount, ...agentOverrides } = params
+
+  // Start with initialAgent and override with provided values
+  const agent: Agent = {
+    ...initialAgent,
+    ...agentOverrides,
   }
 
-  // KJA1 this is current implementation but this is wrong. The implementation must be changes so the caller does it instead.
-  // Mutate state by adding entity to collection
-  state.entities.push(newEntity)
+  // Generate ID if not provided
+  if (agent.id === initialAgent.id) {
+    agent.id = formatAgentId(agentCount)
+  }
 
-  return newEntity
+  // ... any other post-processing logic and invariant checks ...
+
+  return agent
 }
-
-type CreateEntityParams = {
-  state: GameState
-  // ...other values from current game state or data tables
-}
-
 ```
 
-e.g. `bldMission()`:
-
+Usage:
 ``` typescript
-export function bldMission(params: CreateMissionParams): Mission {
-  const { state, missionDataId, expiresIn, enemyCounts, operationLevel } = params
-
-  // Generate ID based on missions collection length
-  const nextMissionNumericId = state.missions.length
-  const missionId: MissionId = `mission-${nextMissionNumericId.toString().padStart(3, '0')}`
-
-  // Construct mission entity
-  const newMission: Mission = {
-    id: missionId,
-    missionDataId,
-    agentIds: [],
-    state: 'Active',
-    expiresIn,
-    enemies: bldEnemies(enemyCounts),
-    ...(operationLevel !== undefined && { operationLevel }),
-  }
-
-  // Mutate state by adding mission to collection
-  state.missions.push(newMission)
-
-  return newMission
-}
-
-type CreateMissionParams = {
-  state: GameState
-  missionDataId: MissionDataId
-  expiresIn: number | 'never'
-  enemyCounts: Partial<EnemyCounts>
-  operationLevel?: number
-}
-
+const newAgent = bldAgent({
+  agentCount: state.agents.length,
+  turnHired: state.turn,
+  weapon: bldWeapon({ damage: state.weaponDamage }),
+  state: 'InTransit',
+  assignment: 'Standby',
+})
+state.agents.push(newAgent)
 ```
 
-The `Create<Entity>Params` type defines the input parameters required to construct an entity.
+## Symbol order in factory files
 
-The supporting symbols, like `Create<Entity>Params` type or any helper functions, are defined at the bottom of the same file.
-They are typically not exported unless they are used elsewhere.
+Factory files follow a consistent symbol definition order:
 
-The first defined element is always the `export function bld<entity>(...)` builder function,
-followed by `type Create<Entity>Params`, then any internal helper functions and types.
+1. **Exported prototype constants** (if applicable) - e.g., `export const initialAgent`, `export const initialWeapon`
+2. **Type definitions** - e.g., `type CreateAgentParams`, `export type CreateWeaponParams`
+   - Defined before the builder function that uses them
+3. **Exported builder function** - `export function bld<Entity>()`
+   - The main exported function that constructs entities
+4. **Helper functions** (if any) - internal helper functions
+   - Defined below their callers (following the project's function layout convention)
+
+Example structure:
+``` typescript
+// 1. Prototype constant
+export const initialAgent: Agent = { ... }
+
+// 2. Param type definition
+type CreateAgentParams = { ... }
+
+// 3. Builder function using the param type and prototype constant
+export function bldAgent(params: CreateAgentParams): Agent { ... }
+```
