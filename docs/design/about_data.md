@@ -29,7 +29,7 @@ dataTables.factions
 
 # Reference of game state collections
 
-| Collection(s)         | Location                                  | Data tables referenced by `bld<entity>` functions              |
+| Collection(s)         | Location in `gameState`                   | Data tables referenced by `bld<entity>` functions              |
 | --------------------- | ----------------------------------------- | -------------------------------------------------------------- |
 | `factions`            | `gameState.factions`                      | `dataTables.factions`                                          |
 | `agents`              | `gameState.agents`                        | None                                                           |
@@ -47,14 +47,14 @@ This section documents when and how each collection item is instantiated during 
 
 When a new game starts, `bldInitialState()` in `gameStateFactory.ts` creates the initial game state:
 
-| Collection              | Instantiation                                                                                                                 |
-| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------- |
-| **Factions**            | All factions via `bldFactions()`, which maps over `dataTables.factions` and calls `bldFaction()` for each faction data entry. |
-| **Lead investigations** | Starts as empty object `{}`                                                                                                   |
-| **Missions**            | Starts as empty array `[]`                                                                                                    |
-| **Agents**              | Four initial agents via `bldInitialAgents()`                                                                                  |
-| **Enemies**             | Empty (no missions exist during initialization)                                                                               |
-| **Weapons**             | For agents: When initial agents are constructed via `bldInitialAgents()`                                                      |
+| Collection              | Instantiation                                                                                    |
+| ----------------------- | ------------------------------------------------------------------------------------------------ |
+| **Factions**            | All factions via `bldFactions()`, which maps over `dataTables.factions` and calls `bldFaction()` |
+| **Lead investigations** | Starts as empty object `{}`                                                                      |
+| **Missions**            | Starts as empty array `[]`                                                                       |
+| **Agents**              | Four initial agents via `bldInitialAgents()`                                                     |
+| **Enemies**             | Empty (no missions exist during initialization)                                                  |
+| **Weapons**             | For agents: When initial agents are constructed via `bldInitialAgents()`                         |
 
 Note: `Factions` collection does not mutate during game session - no factions added/removed. Only properties updated.
 
