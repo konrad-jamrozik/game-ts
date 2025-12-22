@@ -42,11 +42,6 @@ export type Mission = {
   operationLevel?: number | undefined
 }
 
-// KJA1 avoid re-exports
-export { type FactionId } from './factionModel'
-export { type Enemy } from './enemyModel'
-export { type EnemyId } from './actorModel'
-
 export function assertIsMissionId(id: string): asserts id is MissionId {
   if (!id.startsWith('mission-')) {
     throw new Error(`Invalid mission ID: ${id}`)
