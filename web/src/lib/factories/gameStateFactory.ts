@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-single-call */
 import { toF6 } from '../primitives/fixed6'
 import { bldFactions } from './factionFactory'
 import type { GameState } from '../model/gameStateModel'
@@ -168,165 +167,130 @@ function bldDebugAgents(
   const onMissionAgentIds: AgentId[] = []
   const agents: Agent[] = []
 
-  // Create agents using factory function
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+  type BaseCreateAgentParams = Partial<Omit<Agent, 'id'>>
+
+  const agentConfigs: BaseCreateAgentParams[] = [
+    {
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(60),
       exhaustionPct: 0,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(140),
       exhaustionPct: 10,
       missionsTotal: 3,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(100),
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(80),
       exhaustionPct: 20,
       hitPoints: toF6(28),
       missionsTotal: 1,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'InTransit',
       assignment: 'Contracting',
       skill: toF6(90),
       missionsTotal: 2,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'OnAssignment',
       assignment: 'Contracting',
       skill: toF6(110),
       exhaustionPct: 5,
       missionsTotal: 4,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
       exhaustionPct: 8,
       hitPoints: toF6(10),
       missionsTotal: 2,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
       exhaustionPct: 120,
       hitPoints: toF6(1),
       missionsTotal: 1,
-    }),
-  )
-  const agent9 = bldAgent({
-    agentCount: agents.length,
-    state: 'OnMission',
-    assignment: missionId,
-    skill: toF6(95),
-    exhaustionPct: 15,
-    missionsTotal: 1,
-  })
-  agents.push(agent9)
-  onMissionAgentIds.push(agent9.id)
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
+      state: 'OnMission',
+      assignment: missionId,
+      skill: toF6(95),
+      exhaustionPct: 15,
+      missionsTotal: 1,
+    },
+    {
       state: 'Sacked',
       assignment: 'Sacked',
       skill: toF6(70),
       turnTerminated: 1,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(30),
       exhaustionPct: 25,
       hitPoints: toF6(18),
-    }),
-  )
-  const agent12 = bldAgent({
-    agentCount: agents.length,
-    state: 'OnMission',
-    assignment: missionId,
-    skill: toF6(85),
-    exhaustionPct: 7,
-    missionsTotal: 1,
-  })
-  agents.push(agent12)
-  onMissionAgentIds.push(agent12.id)
-  // 2 agents in training
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
+      state: 'OnMission',
+      assignment: missionId,
+      skill: toF6(85),
+      exhaustionPct: 7,
+      missionsTotal: 1,
+    },
+    {
       state: 'InTraining',
       assignment: 'Training',
       skill: toF6(75),
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'InTraining',
       assignment: 'Training',
       skill: toF6(90),
       exhaustionPct: 3,
       missionsTotal: 1,
-    }),
-  )
-  // 2 agents investigating the deep state lead
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(105),
       exhaustionPct: 5,
       missionsTotal: 2,
-    }),
-  )
-  agents.push(
-    bldAgent({
-      agentCount: agents.length,
+    },
+    {
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(115),
       exhaustionPct: 8,
       missionsTotal: 3,
-    }),
-  )
+    },
+  ]
+
+  for (const config of agentConfigs) {
+    const agent = bldAgent({
+      ...config,
+      agentCount: agents.length,
+    })
+    agents.push(agent)
+
+    if (agent.assignment === missionId) {
+      onMissionAgentIds.push(agent.id)
+    }
+  }
 
   const deepStateInvestigationAgentIds: AgentId[] = []
   for (const agent of agents) {
