@@ -167,124 +167,71 @@ function bldDebugAgents(
   const onMissionAgentIds: AgentId[] = []
   const agents: Agent[] = []
 
-  type BaseCreateAgentParams = Partial<Omit<Agent, 'id'>>
-
-  const agentConfigs: BaseCreateAgentParams[] = [
-    {
-      state: 'Available',
-      assignment: 'Standby',
-      skill: toF6(60),
-      exhaustionPct: 0,
-    },
-    {
-      state: 'Available',
-      assignment: 'Standby',
-      skill: toF6(140),
-      exhaustionPct: 10,
-      missionsTotal: 3,
-    },
-    {
-      state: 'Available',
-      assignment: 'Standby',
-      skill: toF6(100),
-    },
-    {
-      state: 'InTransit',
-      assignment: 'Recovery',
-      skill: toF6(80),
-      exhaustionPct: 20,
-      hitPoints: toF6(28),
-      missionsTotal: 1,
-    },
-    {
-      state: 'InTransit',
-      assignment: 'Contracting',
-      skill: toF6(90),
-      missionsTotal: 2,
-    },
-    {
-      state: 'OnAssignment',
-      assignment: 'Contracting',
-      skill: toF6(110),
-      exhaustionPct: 5,
-      missionsTotal: 4,
-    },
-    {
-      state: 'Recovering',
-      assignment: 'Recovery',
-      skill: toF6(100),
-      exhaustionPct: 8,
-      hitPoints: toF6(10),
-      missionsTotal: 2,
-    },
-    {
-      state: 'Recovering',
-      assignment: 'Recovery',
-      skill: toF6(100),
-      exhaustionPct: 120,
-      hitPoints: toF6(1),
-      missionsTotal: 1,
-    },
-    {
-      state: 'OnMission',
-      assignment: missionId,
-      skill: toF6(95),
-      exhaustionPct: 15,
-      missionsTotal: 1,
-    },
-    {
-      state: 'Sacked',
-      assignment: 'Sacked',
-      skill: toF6(70),
-      turnTerminated: 1,
-    },
-    {
-      state: 'InTransit',
-      assignment: 'Recovery',
-      skill: toF6(30),
-      exhaustionPct: 25,
-      hitPoints: toF6(18),
-    },
-    {
-      state: 'OnMission',
-      assignment: missionId,
-      skill: toF6(85),
-      exhaustionPct: 7,
-      missionsTotal: 1,
-    },
-    {
-      state: 'InTraining',
-      assignment: 'Training',
-      skill: toF6(75),
-    },
-    {
-      state: 'InTraining',
-      assignment: 'Training',
-      skill: toF6(90),
-      exhaustionPct: 3,
-      missionsTotal: 1,
-    },
-    {
-      state: 'OnAssignment',
-      assignment: deepStateInvestigationId,
-      skill: toF6(105),
-      exhaustionPct: 5,
-      missionsTotal: 2,
-    },
-    {
-      state: 'OnAssignment',
-      assignment: deepStateInvestigationId,
-      skill: toF6(115),
-      exhaustionPct: 8,
-      missionsTotal: 3,
-    },
+  // prettier-ignore
+  type AgentRow = readonly [
+    state: Agent['state'],
+    assignmentType: 'Standby' | 'Recovery' | 'Contracting' | 'Training' | 'Sacked' | 'KIA' | 'MISSION' | 'DEEP_STATE',
+    skill: number,
+    exhaustionPct: number | '',
+    hitPoints: number | '',
+    missionsTotal: number | '',
+    turnTerminated: number | '',
   ]
 
-  for (const config of agentConfigs) {
-    const agent = bldAgent({
-      ...config,
+  // prettier-ignore
+  const agentRows: AgentRow[] = [
+    // State,             Assignment,     Skill, ExhPct, HitPts, Missions, TurnTerm
+    ['Available',        'Standby',       60,    0,      '',     '',       ''],
+    ['Available',        'Standby',       140,   10,     '',     3,        ''],
+    ['Available',        'Standby',       100,   '',     '',     '',       ''],
+    ['InTransit',        'Recovery',      80,    20,     28,     1,        ''],
+    ['InTransit',        'Contracting',   90,    '',     '',     2,        ''],
+    ['OnAssignment',     'Contracting',   110,   5,      '',     4,        ''],
+    ['Recovering',       'Recovery',      100,   8,      10,     2,        ''],
+    ['Recovering',       'Recovery',      100,   120,    1,      1,        ''],
+    ['OnMission',        'MISSION',       95,    15,     '',     1,        ''],
+    ['Sacked',           'Sacked',        70,    '',     '',     '',        1],
+    ['InTransit',        'Recovery',      30,    25,     18,     '',       ''],
+    ['OnMission',        'MISSION',       85,    7,      '',     1,        ''],
+    ['InTraining',       'Training',      75,    '',     '',     '',       ''],
+    ['InTraining',       'Training',      90,    3,      '',     1,        ''],
+    ['OnAssignment',     'DEEP_STATE',    105,   5,      '',     2,        ''],
+    ['KIA',              'KIA',           300,   '',      0,     '',       ''],
+    ['OnAssignment',     'DEEP_STATE',    115,   8,      '',     3,        ''],
+    
+  ]
+
+  for (const row of agentRows) {
+    const [state, assignmentType, skill, exhaustionPct, hitPoints, missionsTotal, turnTerminated] = row
+
+    const assignment: Agent['assignment'] =
+      assignmentType === 'MISSION'
+        ? missionId
+        : assignmentType === 'DEEP_STATE'
+          ? deepStateInvestigationId
+          : assignmentType
+
+    const agentParams: Parameters<typeof bldAgent>[0] = {
       agentCount: agents.length,
-    })
+      state,
+      assignment,
+      skill: toF6(skill),
+    }
+
+    if (exhaustionPct !== '') {
+      agentParams.exhaustionPct = exhaustionPct
+    }
+    if (hitPoints !== '') {
+      agentParams.hitPoints = toF6(hitPoints)
+    }
+    if (missionsTotal !== '') {
+      agentParams.missionsTotal = missionsTotal
+    }
+    if (turnTerminated !== '') {
+      agentParams.turnTerminated = turnTerminated
+    }
+
+    const agent = bldAgent(agentParams)
     agents.push(agent)
 
     if (agent.assignment === missionId) {

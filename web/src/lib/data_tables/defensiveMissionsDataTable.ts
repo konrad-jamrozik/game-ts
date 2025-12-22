@@ -30,7 +30,7 @@ import { bldMissionDataId, expandTemplateString, type BaseMissionData } from './
 // prettier-ignore
 export function bldDefensiveMissionsTable(factions: readonly FactionData[]): readonly DefensiveMissionData[] {
   return toDefensiveMissionsDataTable([
-  // Name,                               Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
+  // Name,                                         Level,  ExpIn, Init, Oper, Sldr, Elit, Hndl, Ltnt,  Cmdr, HCmd, CLdr
   ['Foil {facName} recruitment push',                  1,      3,    4,    1,    0,    0,    0,    0,     0,    0,    0],
   ['Foil {facName} supply theft',                      1,      3,    4,    3,    0,    0,    0,    0,     0,    0,    0],
   ['Foil {facName} business extortion',                1,      3,    6,    2,    0,    0,    1,    0,     0,    0,    0],
