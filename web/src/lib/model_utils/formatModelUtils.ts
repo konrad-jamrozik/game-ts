@@ -3,13 +3,9 @@ import { getLeadById, getMissionDataById, getFactionDataById } from '../data_tab
 import { getMissionById } from './missionUtils'
 import { getLeadInvestigationById } from './leadInvestigationUtils'
 import { type LeadId, type LeadInvestigationId, asLeadId, assertIsLeadInvestigationId } from '../model/leadModel'
-import {
-  type EnemyId,
-  type EnemyType,
-  type MissionDataId,
-  type MissionId,
-  assertIsMissionId,
-} from '../model/missionModel'
+import type { EnemyId } from '../model/actorModel'
+import type { EnemyType } from '../model/enemyModel'
+import { type MissionDataId, type MissionId, assertIsMissionId } from '../model/missionModel'
 import { type FactionId, assertIsFactionId } from '../model/factionModel'
 import type { AgentId } from '../model/agentModel'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'

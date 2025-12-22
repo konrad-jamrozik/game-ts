@@ -1,5 +1,6 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { Actor, MissionId } from './missionModel'
+import type { Actor } from './actorModel'
+import type { MissionId } from './missionModel'
 import type { LeadInvestigationId } from './leadModel'
 
 export type AgentId = `agent-${string}`
@@ -20,6 +21,7 @@ export type ActivityId = 'Contracting' | 'Training'
 export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
 export type AgentAssignment = ActivityId | MissionId | LeadInvestigationId | AgentAssignmentState
 
+// KJA2 these should be in agentUtils? Same as assert* functions. For all model files.
 // Type guard functions for agent assignments
 export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
   return assignment === 'Contracting' || assignment === 'Training'

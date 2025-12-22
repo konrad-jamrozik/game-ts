@@ -1,6 +1,7 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
 import type { AgentId } from './agentModel'
+import type { Enemy } from './enemyModel'
 import type { FactionId } from './factionModel'
 
 export type { MissionState } from './outcomeTypes'
@@ -8,44 +9,6 @@ export type { MissionState } from './outcomeTypes'
 export type MissionId = `mission-${string}`
 
 export type MissionDataId = `missiondata-${string}`
-
-export type Actor = {
-  id: EnemyId | AgentId
-  skill: Fixed6
-  hitPoints: Fixed6
-  // KJA3 maxHitPoints should be Fixed6
-  maxHitPoints: number
-  // KJA3 exhaustionPct should be Fixed6
-  exhaustionPct: number
-  weapon: Weapon
-}
-
-export type Weapon = {
-  damage: number
-  minDamage: number
-  maxDamage: number
-}
-
-export const ENEMY_TYPES = [
-  'initiate',
-  'operative',
-  'handler',
-  'soldier',
-  'lieutenant',
-  'elite',
-  'commander',
-  'highCommander',
-  'cultLeader',
-] as const
-
-export type EnemyType = (typeof ENEMY_TYPES)[number]
-
-export type Enemy = Actor & {
-  type: EnemyType
-  isOfficer: boolean
-}
-
-export type EnemyId = `enemy-${string}`
 
 export type FactionRewards = {
   factionId: FactionId
@@ -79,7 +42,10 @@ export type Mission = {
   operationLevel?: number | undefined
 }
 
+// KJA1 avoid re-exports
 export { type FactionId } from './factionModel'
+export { type Enemy } from './enemyModel'
+export { type EnemyId } from './actorModel'
 
 export function assertIsMissionId(id: string): asserts id is MissionId {
   if (!id.startsWith('mission-')) {

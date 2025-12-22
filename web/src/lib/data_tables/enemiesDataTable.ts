@@ -1,5 +1,5 @@
 import { toF6, type Fixed6 } from '../primitives/fixed6'
-import type { EnemyType } from '../model/missionModel'
+import type { EnemyType } from '../model/enemyModel'
 
 /**
  * Enemy units data table
@@ -41,8 +41,6 @@ export type EnemyData = {
   damage: number
   isOfficer: boolean
 }
-
-export type EnemyCounts = Record<EnemyType, number>
 
 type EnemyDataRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 

@@ -1,4 +1,4 @@
-import type { Weapon } from '../model/missionModel'
+import type { Weapon } from '../model/actorModel'
 import { rollRange } from '../primitives/rolls'
 
 /**

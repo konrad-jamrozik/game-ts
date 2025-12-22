@@ -1,5 +1,5 @@
 import type { Mission, MissionDataId, MissionId } from '../model/missionModel'
-import type { EnemyCounts } from '../data_tables/enemiesDataTable'
+import type { EnemyCounts } from '../model/enemyModel'
 import { bldEnemies } from './enemyFactory'
 import { formatMissionId } from '../model_utils/formatModelUtils'
 import { assertDefined } from '../primitives/assertPrimitives'

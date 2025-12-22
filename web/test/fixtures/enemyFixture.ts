@@ -1,4 +1,4 @@
-import type { Enemy } from '../../src/lib/model/missionModel'
+import type { Enemy } from '../../src/lib/model/enemyModel'
 import { bldEnemy } from '../../src/lib/factories/enemyFactory'
 import { wpnFix } from './weaponFixture'
 import { initialAgent } from '../../src/lib/factories/agentFactory'

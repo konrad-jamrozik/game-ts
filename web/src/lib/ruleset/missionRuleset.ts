@@ -1,4 +1,6 @@
-import type { Actor, Enemy, Mission } from '../model/missionModel'
+import type { Actor } from '../model/actorModel'
+import type { Enemy } from '../model/enemyModel'
+import type { Mission } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'

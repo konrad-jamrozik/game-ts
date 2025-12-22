@@ -15,7 +15,8 @@ import {
   toF,
   type Fixed6,
 } from '../../primitives/fixed6'
-import type { Actor, Enemy } from '../../model/missionModel'
+import type { Actor } from '../../model/actorModel'
+import type { Enemy } from '../../model/enemyModel'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../data_tables/constants'
 import { shouldRetreat, canParticipateInBattle, type RetreatResult } from '../../ruleset/missionRuleset'

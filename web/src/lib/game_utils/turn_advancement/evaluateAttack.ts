@@ -1,4 +1,4 @@
-import type { Enemy } from '../../model/missionModel'
+import type { Enemy } from '../../model/enemyModel'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
 import {
   AGENT_EXHAUSTION_INCREASE_PER_ATTACK,

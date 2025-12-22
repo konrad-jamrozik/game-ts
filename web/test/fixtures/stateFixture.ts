@@ -8,7 +8,8 @@ import {
   type AgentState,
 } from '../../src/lib/model/agentModel'
 import type { LeadId } from '../../src/lib/model/leadModel'
-import type { Enemy, Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'
+import type { Enemy } from '../../src/lib/model/enemyModel'
+import type { Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
 import { reset } from '../../src/redux/slices/gameStateSlice'

@@ -1,5 +1,5 @@
 import { WEAPON_DAMAGE_RANGE_FACTOR } from '../data_tables/constants'
-import type { Weapon } from '../model/missionModel'
+import type { Weapon } from '../model/actorModel'
 import { ceil, floor } from '../primitives/mathPrimitives'
 import { assertDefined, assertInRange } from '../primitives/assertPrimitives'
 
