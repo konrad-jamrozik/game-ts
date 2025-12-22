@@ -1,0 +1,156 @@
+import { toF6 } from '../primitives/fixed6'
+import type { GameState } from '../model/gameStateModel'
+import { bldAgent } from './agentFactory'
+import type { Agent, AgentId } from '../model/agentModel'
+import type { MissionId, MissionDataId } from '../model/missionModel'
+import type { LeadId, LeadInvestigationId } from '../model/leadModel'
+import { bldMission } from './missionFactory'
+import { getFactionById } from '../model_utils/factionUtils'
+import { initialGameState } from './gameStateFactory'
+
+/**
+ * Return only the overrides that should replace values in the normal initial state
+ */
+export function bldDebugGameStateOverrides(): Partial<GameState> {
+  const gameStateOverrides: Partial<GameState> & { factions: GameState['factions'] } = {
+    money: 1000,
+    trainingCap: 4,
+    leadInvestigationCounts: {
+      'lead-red-dawn-profile': 1,
+      'lead-exalt-profile': 1,
+      'lead-black-lotus-profile': 1,
+    },
+    factions: structuredClone(initialGameState.factions),
+  }
+
+  // Speed up when next Red Dawn operation happens
+  const redDawnFaction = getFactionById(gameStateOverrides, 'faction-red-dawn')
+  redDawnFaction.turnsUntilNextOperation = 3
+
+  // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
+  const missionId: MissionId = 'mission-000'
+  const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
+  const { debugAgents, onMissionAgentIds, deepStateInvestigationAgentIds } = bldDebugAgents(
+    missionId,
+    deepStateInvestigationId,
+  )
+  gameStateOverrides.agents = debugAgents
+
+  gameStateOverrides.missions = [
+    bldMission({
+      id: missionId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
+      agentIds: onMissionAgentIds,
+      state: 'Deployed',
+    }),
+    bldMission({
+      id: 'mission-001' as MissionId,
+      missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
+      agentIds: [],
+      state: 'Active',
+    }),
+  ]
+
+  // Create lead investigation for deep state lead
+  gameStateOverrides.leadInvestigations = {
+    [deepStateInvestigationId]: {
+      id: deepStateInvestigationId,
+      leadId: 'lead-deep-state' as LeadId,
+      accumulatedIntel: 0,
+      agentIds: deepStateInvestigationAgentIds,
+      startTurn: 1,
+      state: 'Active',
+    },
+  }
+
+  return gameStateOverrides
+}
+
+function bldDebugAgents(
+  missionId: MissionId,
+  deepStateInvestigationId: LeadInvestigationId,
+): { debugAgents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
+  const onMissionAgentIds: AgentId[] = []
+  const agents: Agent[] = []
+
+  // prettier-ignore
+  type AgentRow = readonly [
+    state: Agent['state'],
+    assignmentType: 'Standby' | 'Recovery' | 'Contracting' | 'Training' | 'Sacked' | 'KIA' | 'MISSION' | 'DEEP_STATE',
+    skill: number,
+    exhaustionPct: number | '',
+    hitPoints: number | '',
+    missionsTotal: number | '',
+    turnTerminated: number | '',
+  ]
+
+  // prettier-ignore
+  const agentRows: AgentRow[] = [
+    // State,             Assignment,     Skill, ExhPct, HitPts, Missions, TurnTerm
+    ['Available',        'Standby',       60,    0,      '',     '',       ''],
+    ['Available',        'Standby',       140,   10,     '',     3,        ''],
+    ['Available',        'Standby',       100,   '',     '',     '',       ''],
+    ['InTransit',        'Recovery',      80,    20,     28,     1,        ''],
+    ['InTransit',        'Contracting',   90,    '',     '',     2,        ''],
+    ['OnAssignment',     'Contracting',   110,   5,      '',     4,        ''],
+    ['Recovering',       'Recovery',      100,   8,      10,     2,        ''],
+    ['Recovering',       'Recovery',      100,   120,    1,      1,        ''],
+    ['OnMission',        'MISSION',       95,    15,     '',     1,        ''],
+    ['Sacked',           'Sacked',        70,    '',     '',     '',        1],
+    ['InTransit',        'Recovery',      30,    25,     18,     '',       ''],
+    ['OnMission',        'MISSION',       85,    7,      '',     1,        ''],
+    ['InTraining',       'Training',      75,    '',     '',     '',       ''],
+    ['InTraining',       'Training',      90,    3,      '',     1,        ''],
+    ['OnAssignment',     'DEEP_STATE',    105,   5,      '',     2,        ''],
+    ['KIA',              'KIA',           300,   '',      0,     '',       ''],
+    ['OnAssignment',     'DEEP_STATE',    115,   8,      '',     3,        ''],
+    
+  ]
+
+  for (const row of agentRows) {
+    const [state, assignmentType, skill, exhaustionPct, hitPoints, missionsTotal, turnTerminated] = row
+
+    const assignment: Agent['assignment'] =
+      assignmentType === 'MISSION'
+        ? missionId
+        : assignmentType === 'DEEP_STATE'
+          ? deepStateInvestigationId
+          : assignmentType
+
+    const agentParams: Parameters<typeof bldAgent>[0] = {
+      agentCount: agents.length,
+      state,
+      assignment,
+      skill: toF6(skill),
+    }
+
+    if (exhaustionPct !== '') {
+      agentParams.exhaustionPct = exhaustionPct
+    }
+    if (hitPoints !== '') {
+      agentParams.hitPoints = toF6(hitPoints)
+    }
+    if (missionsTotal !== '') {
+      agentParams.missionsTotal = missionsTotal
+    }
+    if (turnTerminated !== '') {
+      agentParams.turnTerminated = turnTerminated
+    }
+
+    const agent = bldAgent(agentParams)
+    agents.push(agent)
+
+    if (agent.assignment === missionId) {
+      onMissionAgentIds.push(agent.id)
+    }
+  }
+
+  const deepStateInvestigationAgentIds: AgentId[] = []
+  for (const agent of agents) {
+    if (agent.assignment === deepStateInvestigationId) {
+      deepStateInvestigationAgentIds.push(agent.id)
+    }
+  }
+
+  return { debugAgents: agents, onMissionAgentIds, deepStateInvestigationAgentIds }
+}
