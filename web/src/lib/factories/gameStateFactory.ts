@@ -73,11 +73,9 @@ function bldInitialAgents(): GameState['agents'] {
   const agents: GameState['agents'] = []
 
   for (let index = 0; index < 4; index += 1) {
-    // KJA1 custom ID unnecessary here
-    const agentId: AgentId = `agent-${index.toString().padStart(3, '0')}`
     agents.push(
       bldAgent({
-        id: agentId,
+        agentCount: index,
         weapon: initialAgent.weapon,
         state: 'Available',
         assignment: 'Standby',
