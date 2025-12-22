@@ -19,7 +19,9 @@ type CreateLeadInvestigationParams =
   | (BaseCreateLeadInvestigationParams & { investigationCount: number; id?: never })
   | (BaseCreateLeadInvestigationParams & { id: LeadInvestigation['id']; investigationCount?: never })
 
-type BaseCreateLeadInvestigationParams = Partial<Omit<LeadInvestigation, 'id'>>
+type BaseCreateLeadInvestigationParams = Partial<Omit<LeadInvestigation, 'id' | 'leadId'>> & {
+  leadId: LeadId
+}
 
 /**
  * Creates a new lead investigation object.

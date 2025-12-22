@@ -56,7 +56,7 @@ export function bldDataTables(): DataTables {
   }
 }
 
-// KJA1 move this to dataTablesLookupUtils.ts
+// KJA2 move this to dataTablesLookupUtils.ts
 // Data table lookup utilities
 // These functions look up entities in the immutable dataTables constant.
 

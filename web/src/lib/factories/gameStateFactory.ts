@@ -21,7 +21,8 @@ import { bldEnemies } from './enemyFactory'
 import { getMissionDataById } from '../data_tables/dataTables'
 import { assertDefined } from '../primitives/assertPrimitives'
 
-// KJA2 review / dedup gameStateFactory logic
+// KJA1 review / dedup gameStateFactory logic
+// Notably, do not pass default values overriding init prototypes.
 /**
  * Creates the initial game state
  * @param options - Options for creating the initial state
@@ -36,7 +37,7 @@ export function bldInitialState(options?: { debug?: boolean }): GameState {
     actionsCount: 0,
     // Situation
     panic: toF6(0),
-    factions: bldFactions().map((faction) => ({ ...faction })), // Deep copy, so it is mutable, not readonly.
+    factions: bldFactions(),
     // Assets
     money: 500,
     funding: 20,

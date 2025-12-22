@@ -29,7 +29,8 @@ type CreateMissionParams =
 
 type BaseCreateMissionParams = {
   enemyCounts: Partial<EnemyCounts>
-} & Partial<Omit<Mission, 'enemies' | 'id'>>
+  missionDataId: Mission['missionDataId']
+} & Partial<Omit<Mission, 'enemies' | 'id' | 'missionDataId'>>
 
 /**
  * Creates a new mission object.
