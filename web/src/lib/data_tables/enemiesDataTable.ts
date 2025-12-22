@@ -42,17 +42,7 @@ export type EnemyData = {
   isOfficer: boolean
 }
 
-export type EnemyCounts = {
-  initiate: number
-  operative: number
-  soldier: number
-  elite: number
-  handler: number
-  lieutenant: number
-  commander: number
-  highCommander: number
-  cultLeader: number
-}
+export type EnemyCounts = Record<EnemyType, number>
 
 type EnemyDataRow = [name: EnemyType, aliases: string, skill: number, hp: number, damage: number, isOfficer: boolean]
 

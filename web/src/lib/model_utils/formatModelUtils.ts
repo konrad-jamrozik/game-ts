@@ -3,7 +3,13 @@ import { getLeadById, getMissionDataById, getFactionDataById } from '../data_tab
 import { getMissionById } from './missionUtils'
 import { getLeadInvestigationById } from './leadInvestigationUtils'
 import { type LeadId, type LeadInvestigationId, asLeadId, assertIsLeadInvestigationId } from '../model/leadModel'
-import { type MissionDataId, type MissionId, assertIsMissionId } from '../model/missionModel'
+import {
+  type EnemyId,
+  type EnemyType,
+  type MissionDataId,
+  type MissionId,
+  assertIsMissionId,
+} from '../model/missionModel'
 import { type FactionId, assertIsFactionId } from '../model/factionModel'
 import type { AgentId } from '../model/agentModel'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'
@@ -38,6 +44,10 @@ export function formatMissionId(numericId: number): MissionId {
  */
 export function formatLeadInvestigationId(numericId: number): LeadInvestigationId {
   return `investigation-${numericId.toString().padStart(3, '0')}`
+}
+
+export function formatEnemyId(type: EnemyType, numericId: number): EnemyId {
+  return `enemy-${type}-${numericId.toString().padStart(3, '0')}`
 }
 
 /**

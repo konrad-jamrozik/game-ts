@@ -1,4 +1,4 @@
-import type { Mission, MissionId } from '../model/missionModel'
+import type { Mission, MissionDataId, MissionId } from '../model/missionModel'
 import type { EnemyCounts } from '../data_tables/enemiesDataTable'
 import { bldEnemies } from './enemyFactory'
 import { formatMissionId } from '../model_utils/formatModelUtils'
@@ -9,7 +9,7 @@ import { formatMissionId } from '../model_utils/formatModelUtils'
  */
 export const initialMission: Mission = {
   id: 'mission-ini' as MissionId,
-  missionDataId: 'missiondata-ini' as Mission['missionDataId'],
+  missionDataId: 'missiondata-ini' as MissionDataId,
   agentIds: [],
   state: 'Active',
   expiresIn: 'never',
@@ -17,12 +17,17 @@ export const initialMission: Mission = {
   operationLevel: undefined,
 }
 
-// KJA1 why enemyCounts needed? Why omit id?
+/**
+ * Note: passing enemyCounts, instead of enemies, because by design the caller
+ * is not responsible for creating the Enemy objects.
+ * Instead, the bldMission function will invoke bldEnemies(enemyCounts).
+ */
 type CreateMissionParams = {
   missionCount: number
-  enemyCounts?: Partial<EnemyCounts>
-} & Partial<Omit<Mission, 'id' | 'enemies'>>
+  enemyCounts: Partial<EnemyCounts>
+} & Partial<Omit<Mission, 'enemies'>>
 
+// KJA1 need to verify that either ID or count is passed, but not both. In all bld functions.
 /**
  * Creates a new mission object.
  * Returns the created mission. The caller is responsible for adding it to state.
@@ -41,10 +46,8 @@ export function bldMission(params: CreateMissionParams): Mission {
     mission.id = formatMissionId(missionCount)
   }
 
-  // Build enemies from enemyCounts if provided, otherwise use enemies from overrides (or default empty array)
-  if (enemyCounts !== undefined && !('enemies' in missionOverrides)) {
-    mission.enemies = bldEnemies(enemyCounts)
-  }
+  // Build enemies from enemyCounts
+  mission.enemies = bldEnemies(enemyCounts)
 
   return mission
 }

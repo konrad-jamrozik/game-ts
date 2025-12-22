@@ -10,7 +10,7 @@ export type MissionId = `mission-${string}`
 export type MissionDataId = `missiondata-${string}`
 
 export type Actor = {
-  id: string
+  id: EnemyId | AgentId
   skill: Fixed6
   hitPoints: Fixed6
   // KJA3 maxHitPoints should be Fixed6
@@ -44,6 +44,8 @@ export type Enemy = Actor & {
   type: EnemyType
   isOfficer: boolean
 }
+
+export type EnemyId = `enemy-${string}`
 
 export type FactionRewards = {
   factionId: FactionId
