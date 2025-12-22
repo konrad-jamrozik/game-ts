@@ -23,6 +23,24 @@ export function formatAgentId(numericId: number): AgentId {
 }
 
 /**
+ * Formats a numeric mission ID into the standard mission ID format.
+ * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)
+ * @returns The formatted mission ID (e.g., "mission-000", "mission-001", "mission-002")
+ */
+export function formatMissionId(numericId: number): MissionId {
+  return `mission-${numericId.toString().padStart(3, '0')}`
+}
+
+/**
+ * Formats a numeric lead investigation ID into the standard investigation ID format.
+ * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)
+ * @returns The formatted investigation ID (e.g., "investigation-000", "investigation-001", "investigation-002")
+ */
+export function formatLeadInvestigationId(numericId: number): LeadInvestigationId {
+  return `investigation-${numericId.toString().padStart(3, '0')}`
+}
+
+/**
  * Formats mission target for display
  */
 export function fmtMissionTarget(missionId: MissionId | undefined): string {
