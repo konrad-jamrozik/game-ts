@@ -2,7 +2,7 @@
 import type { Agent, AgentId } from '../model/agentModel'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
-import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
+import { formatAgentId } from '../model_utils/formatModelUtils'
 import { assertEqual } from '../primitives/assertPrimitives'
 
 /**
