@@ -47,7 +47,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       // Upgrade weapons for all non-terminated agents
       const agentsToUpgrade = notTerminated(state.agents)
       for (const agent of agentsToUpgrade) {
-        agent.weapon = bldWeapon(state.weaponDamage)
+        agent.weapon = bldWeapon({ damage: state.weaponDamage })
       }
       break
     }

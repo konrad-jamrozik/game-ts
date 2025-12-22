@@ -31,7 +31,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: initialAgent.hitPoints,
       maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 1,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     }
 
     // Create a test mission with weak enemies
@@ -105,7 +105,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10), // Low hit points
       maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 0,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     }
 
     const testMission: Mission = {
@@ -178,7 +178,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     }
 
     const agent2: Agent = {
@@ -192,7 +192,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     }
 
     const testMission: Mission = {

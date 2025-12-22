@@ -13,7 +13,9 @@ export type Actor = {
   id: string
   skill: Fixed6
   hitPoints: Fixed6
+  // KJA3 maxHitPoints should be Fixed6
   maxHitPoints: number
+  // KJA3 exhaustionPct should be Fixed6
   exhaustionPct: number
   weapon: Weapon
 }

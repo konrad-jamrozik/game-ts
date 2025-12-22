@@ -12,7 +12,7 @@ export const hireAgent = asPlayerAction((state: GameState) => {
   const newAgent = bldAgent({
     agentCount: state.agents.length,
     turnHired: state.turn,
-    weapon: bldWeapon(state.weaponDamage),
+    weapon: bldWeapon({ damage: state.weaponDamage }),
     state: 'InTransit',
     assignment: 'Standby',
   })

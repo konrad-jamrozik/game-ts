@@ -18,7 +18,7 @@ function spawn10Agents(state: GameState): void {
     const newAgent = bldAgent({
       agentCount: state.agents.length,
       turnHired: state.turn,
-      weapon: bldWeapon(state.weaponDamage),
+      weapon: bldWeapon({ damage: state.weaponDamage }),
       state: 'Available',
       assignment: 'Standby',
       skill,

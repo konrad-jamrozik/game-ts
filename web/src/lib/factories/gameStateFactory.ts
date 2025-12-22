@@ -78,7 +78,7 @@ function bldInitialAgents(): GameState['agents'] {
       bldAgent({
         agentCount: agents.length,
         id: agentId,
-        weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+        weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
         state: 'Available',
         assignment: 'Standby',
       }),
@@ -107,7 +107,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(60),
@@ -118,7 +118,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(140),
@@ -130,7 +130,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
       skill: toF6(100),
@@ -140,7 +140,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(80),
@@ -153,7 +153,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Contracting',
       skill: toF6(90),
@@ -164,7 +164,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: 'Contracting',
       skill: toF6(110),
@@ -176,7 +176,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
@@ -189,7 +189,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Recovering',
       assignment: 'Recovery',
       skill: toF6(100),
@@ -201,7 +201,7 @@ function bldDebugAgents(
   const agent9 = bldAgent({
     agentCount: agents.length,
     id: `agent-${nextId()}`,
-    weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     state: 'OnMission',
     assignment: missionId,
     skill: toF6(95),
@@ -214,7 +214,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Sacked',
       assignment: 'Sacked',
       skill: toF6(70),
@@ -225,7 +225,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Recovery',
       skill: toF6(30),
@@ -236,7 +236,7 @@ function bldDebugAgents(
   const agent12 = bldAgent({
     agentCount: agents.length,
     id: `agent-${nextId()}`,
-    weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+    weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     state: 'OnMission',
     assignment: missionId,
     skill: toF6(85),
@@ -250,7 +250,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTraining',
       assignment: 'Training',
       skill: toF6(75),
@@ -260,7 +260,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTraining',
       assignment: 'Training',
       skill: toF6(90),
@@ -273,7 +273,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(105),
@@ -285,7 +285,7 @@ function bldDebugAgents(
     bldAgent({
       agentCount: agents.length,
       id: `agent-${nextId()}`,
-      weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
       skill: toF6(115),

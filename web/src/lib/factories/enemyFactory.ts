@@ -33,18 +33,18 @@ export function bldEnemies(enemyCounts: Partial<EnemyCounts>): Enemy[] {
  * Creates an enemy of the specified type
  */
 export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
-  const stats = getEnemyByType(type)
+  const enemyData = getEnemyByType(type)
 
   const id = `enemy-${type}-${currentIdCounter}`
 
   return {
     id,
     type,
-    skill: stats.skill,
+    skill: enemyData.skill,
     exhaustionPct: 0, // Enemies start with 0 exhaustion
-    hitPoints: toF6(stats.hp),
-    maxHitPoints: stats.hp,
-    weapon: bldWeapon(stats.damage),
-    isOfficer: stats.isOfficer,
+    hitPoints: toF6(enemyData.hp),
+    maxHitPoints: enemyData.hp,
+    weapon: bldWeapon({ damage: enemyData.damage }),
+    isOfficer: enemyData.isOfficer,
   }
 }

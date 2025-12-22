@@ -1,9 +1,12 @@
 /* eslint-disable unicorn/prefer-switch */
 import type { Agent, AgentId } from '../model/agentModel'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../data_tables/constants'
 import { toF6 } from '../primitives/fixed6'
-import { bldWeapon } from './weaponFactory'
+import { initialWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
+
+type CreateAgentParams = {
+  agentCount: number
+} & Partial<Agent>
 
 /**
  * Creates a new agent object.
@@ -53,11 +56,5 @@ export const initialAgent: Agent = {
   maxHitPoints: 30,
   missionsTotal: 0,
   skillFromTraining: toF6(0),
-  weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+  weapon: initialWeapon,
 }
-
-type CreateAgentParams = {
-  agentCount: number
-} & Partial<Omit<Agent, 'id'>> & {
-    id?: AgentId // Optional: if not provided, will be auto-generated
-  }

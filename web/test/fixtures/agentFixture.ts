@@ -18,7 +18,7 @@ export const agFix = (() => {
       return bldAgent({
         agentCount: agentIdCounter - 1,
         id: `agent-${agentIdCounter}` as AgentId,
-        weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+        weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
         state: 'InTransit',
         assignment: 'Standby',
       })
