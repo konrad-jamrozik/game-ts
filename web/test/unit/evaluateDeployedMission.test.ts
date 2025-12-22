@@ -1,6 +1,5 @@
 import { describe, expect, test } from 'vitest'
 import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
-import type { Agent } from '../../src/lib/model/agentModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { Mission, MissionDataId } from '../../src/lib/model/missionModel'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
@@ -12,29 +11,25 @@ import {
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/data_tables/constants'
-import { initialAgent } from '../../src/lib/factories/agentFactory'
+import { bldAgent } from '../../src/lib/factories/agentFactory'
 import { bldEnemies } from '../../src/lib/factories/enemyFactory'
 import { initialWeapon } from '../../src/lib/factories/weaponFactory'
 
 describe(evaluateDeployedMission, () => {
   test('evaluateDeployedMission succeeds', () => {
     // Create a test agent with high skill
-    // KJA1 call bldAgent here and in all other functions that create agents.
-    const testAgent: Agent = {
+    const testAgent = bldAgent({
       id: 'agent-001',
-      turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(200), // High skill to ensure success
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
-      hitPoints: initialAgent.hitPoints,
-      maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 1,
-      weapon: initialAgent.weapon,
-    }
+    })
 
     // Create a test mission with weak enemies
+    // KJA1 call bldMission here and in all other functions that create missions.
     const testMission: Mission = {
       id: 'mission-001',
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
@@ -95,19 +90,16 @@ describe(evaluateDeployedMission, () => {
 
   test('agent KIA', () => {
     // Create a test agent with low skill and hit points
-    const testAgent: Agent = {
+    const testAgent = bldAgent({
       id: 'agent-001',
-      turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(50), // Low skill
       skillFromTraining: toF6(0),
       exhaustionPct: 0,
       hitPoints: toF6(10), // Low hit points
-      maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 0,
-      weapon: initialAgent.weapon,
-    }
+    })
 
     const testMission: Mission = {
       id: 'mission-001',
@@ -168,9 +160,8 @@ describe(evaluateDeployedMission, () => {
 
   test('failure: all agents terminated', () => {
     // Create agents with low skill and HP to ensure they get terminated
-    const agent1: Agent = {
+    const agent1 = bldAgent({
       id: 'agent-001',
-      turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(60),
@@ -179,12 +170,10 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: initialAgent.weapon,
-    }
+    })
 
-    const agent2: Agent = {
+    const agent2 = bldAgent({
       id: 'agent-002',
-      turnHired: 1,
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(50),
@@ -193,8 +182,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: initialAgent.weapon,
-    }
+    })
 
     const testMission: Mission = {
       id: 'mission-001',
