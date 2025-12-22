@@ -21,10 +21,7 @@ export type SituationReportRow = {
   reverseColor?: boolean
 }
 
-function isFactionDiscovered(
-  faction: Faction,
-  leadInvestigationCounts: Record<string, number>,
-): boolean {
+function isFactionDiscovered(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
   const discoveryPrerequisite = getFactionDiscoveryPrerequisite(faction)
   return discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
 }
