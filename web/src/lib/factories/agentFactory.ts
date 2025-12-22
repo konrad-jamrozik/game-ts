@@ -4,6 +4,7 @@ import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
 import { formatAgentId } from '../model_utils/formatModelUtils'
 import { assertEqual, assertDefined } from '../primitives/assertPrimitives'
+import { validateAgentLocalInvariants } from '../model_utils/validateAgentInvariants'
 
 /**
  * Prototype agent with all default values.
@@ -71,7 +72,6 @@ export function bldAgent(params: CreateAgentParams): Agent {
     }
   }
 
-  // KJA1 try
-  // validateAgentLocalInvariants(agent)
+  validateAgentLocalInvariants(agent)
   return agent
 }
