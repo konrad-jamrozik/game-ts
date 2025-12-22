@@ -13,7 +13,7 @@ export type GameState = {
   panic: Fixed6
   factions: Faction[]
   // Assets
-  // KJA1 introduce assetFactory.ts
+  // KJA2 introduce assetFactory.ts
   money: number
   funding: number
   agents: Agent[]

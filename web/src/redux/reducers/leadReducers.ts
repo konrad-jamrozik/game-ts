@@ -26,7 +26,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
     const investigationCount = Object.keys(state.leadInvestigations).length
     const newInvestigation = bldLeadInvestigation({
       investigationCount,
-      turn: state.turn,
+      startTurn: state.turn,
       leadId,
       agentIds,
     })

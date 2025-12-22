@@ -14,18 +14,16 @@ export const initialLeadInvestigation: LeadInvestigation = {
   state: 'Active',
 }
 
-// KJA1 why omit these? Do not omit. Fix naming.
 type CreateLeadInvestigationParams = {
   investigationCount: number
-  turn: number
-} & Partial<Omit<LeadInvestigation, 'id' | 'startTurn'>>
+} & Partial<LeadInvestigation>
 
 /**
  * Creates a new lead investigation object.
  * Returns the created lead investigation. The caller is responsible for adding it to state.
  */
 export function bldLeadInvestigation(params: CreateLeadInvestigationParams): LeadInvestigation {
-  const { investigationCount, turn, ...investigationOverrides } = params
+  const { investigationCount, ...investigationOverrides } = params
 
   // Start with initialLeadInvestigation and override with provided values
   const investigation: LeadInvestigation = {
@@ -36,11 +34,6 @@ export function bldLeadInvestigation(params: CreateLeadInvestigationParams): Lea
   // Generate ID if not provided
   if (investigation.id === initialLeadInvestigation.id) {
     investigation.id = formatLeadInvestigationId(investigationCount)
-  }
-
-  // Set startTurn to turn parameter if not explicitly provided
-  if (!('startTurn' in investigationOverrides)) {
-    investigation.startTurn = turn
   }
 
   return investigation
