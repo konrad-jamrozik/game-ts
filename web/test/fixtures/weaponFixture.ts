@@ -1,12 +1,12 @@
 import type { Weapon } from '../../src/lib/model/actorModel'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/data_tables/constants'
+import { initialWeapon } from '../../src/lib/factories/weaponFactory'
 
 export const wpnFix = {
   default(): Weapon {
     return {
-      damage: AGENT_INITIAL_WEAPON_DAMAGE,
+      damage: initialWeapon.damage,
       minDamage: 1,
-      maxDamage: AGENT_INITIAL_WEAPON_DAMAGE * 2,
+      maxDamage: initialWeapon.damage * 2,
     }
   },
 

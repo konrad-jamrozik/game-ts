@@ -2,8 +2,6 @@ import type { Agent, AgentId } from '../../src/lib/model/agentModel'
 import { bldAgent } from '../../src/lib/factories/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
-import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/data_tables/constants'
-import { bldWeapon } from '../../src/lib/factories/weaponFactory'
 
 export const agFix = (() => {
   let agentIdCounter = 0
@@ -17,7 +15,6 @@ export const agFix = (() => {
       agentIdCounter += 1
       return bldAgent({
         id: `agent-${agentIdCounter}` as AgentId,
-        weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
         state: 'InTransit',
         assignment: 'Standby',
       })

@@ -7,19 +7,19 @@ import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advanceme
 import {
   AGENT_CAP,
   AGENT_EXHAUSTION_RECOVERY_PER_TURN,
-  AGENT_INITIAL_WEAPON_DAMAGE,
   AGENT_HIT_POINTS_RECOVERY_PCT,
   TRAINING_CAP,
   TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../src/lib/data_tables/constants'
 import { initialAgent } from '../../src/lib/factories/agentFactory'
-import { bldWeapon } from '../../src/lib/factories/weaponFactory'
 import { bldEnemies } from '../../src/lib/factories/enemyFactory'
+import { initialWeapon } from '../../src/lib/factories/weaponFactory'
 
 describe(evaluateDeployedMission, () => {
   test('evaluateDeployedMission succeeds', () => {
     // Create a test agent with high skill
+    // KJA1 call bldAgent here and in all other functions that create agents.
     const testAgent: Agent = {
       id: 'agent-001',
       turnHired: 1,
@@ -31,7 +31,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: initialAgent.hitPoints,
       maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 1,
-      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
+      weapon: initialAgent.weapon,
     }
 
     // Create a test mission with weak enemies
@@ -45,6 +45,7 @@ describe(evaluateDeployedMission, () => {
     }
 
     // Create a minimal game state
+    // KJA1 call bldGameState here and in all other functions that create gameState.
     const gameState: GameState = {
       actionsCount: 0,
       turn: 1,
@@ -57,7 +58,7 @@ describe(evaluateDeployedMission, () => {
       trainingSkillGain: TRAINING_SKILL_GAIN,
       exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
       hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
-      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      weaponDamage: initialWeapon.damage,
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missions: [testMission],
@@ -105,7 +106,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10), // Low hit points
       maxHitPoints: initialAgent.maxHitPoints,
       missionsTotal: 0,
-      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
+      weapon: initialAgent.weapon,
     }
 
     const testMission: Mission = {
@@ -129,7 +130,7 @@ describe(evaluateDeployedMission, () => {
       trainingSkillGain: TRAINING_SKILL_GAIN,
       exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
       hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
-      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      weaponDamage: initialWeapon.damage,
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missions: [testMission],
@@ -178,7 +179,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
+      weapon: initialAgent.weapon,
     }
 
     const agent2: Agent = {
@@ -192,7 +193,7 @@ describe(evaluateDeployedMission, () => {
       hitPoints: toF6(10),
       maxHitPoints: 10,
       missionsTotal: 0,
-      weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
+      weapon: initialAgent.weapon,
     }
 
     const testMission: Mission = {
@@ -216,7 +217,7 @@ describe(evaluateDeployedMission, () => {
       trainingSkillGain: TRAINING_SKILL_GAIN,
       exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
       hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
-      weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
+      weaponDamage: initialWeapon.damage,
       leadInvestigationCounts: {},
       leadInvestigations: {},
       missions: [testMission],

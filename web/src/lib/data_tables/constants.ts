@@ -40,10 +40,6 @@ export const BASE_SUPPRESSION_TURNS = 5
 // See also `Weapon damage roll` in docs.
 export const WEAPON_DAMAGE_RANGE_FACTOR = 0.5
 
-// KJA1 AGENT_INITIAL_WEAPON_DAMAGE should not be needed; use the prototype from agentFactory.ts instead.
-// Agent weapon stats
-export const AGENT_INITIAL_WEAPON_DAMAGE = 10
-
 // When agents' total effective skill is less than this threshold, they will retreat.
 export const AGENTS_SKILL_RETREAT_THRESHOLD = 0.5
 // Retreat also occurs when enemy effective skill is at least this percentage of agents' current effective skill.
