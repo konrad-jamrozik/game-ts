@@ -41,7 +41,7 @@ type BaseCreateMissionParams = {
  * unless explicitly provided (primarily for debug or testing purposes).
  */
 export function bldMission(params: CreateMissionParams): Mission {
-  const { missionCount, enemyCounts, expiresIn, ...missionOverrides } = params
+  const { missionCount, enemyCounts, ...missionOverrides } = params
 
   // Look up mission data early to get default values
   const missionData = getMissionDataById(params.missionDataId)
@@ -50,8 +50,11 @@ export function bldMission(params: CreateMissionParams): Mission {
   const mission: Mission = {
     ...initialMission,
     ...missionOverrides,
-    // Use provided expiresIn if available (for tests), otherwise use from mission data
-    expiresIn: expiresIn ?? missionData.expiresIn,
+  }
+
+  // If expiresIn wasn't provided in missionOverrides, use mission data
+  if (!('expiresIn' in params)) {
+    mission.expiresIn = missionData.expiresIn
   }
 
   // Generate ID if not provided
