@@ -31,7 +31,6 @@ type BaseCreateMissionParams = {
   enemyCounts: Partial<EnemyCounts>
 } & Partial<Omit<Mission, 'enemies' | 'id'>>
 
-// KJA1 need to verify that either ID or count is passed, but not both. In all bld functions.
 /**
  * Creates a new mission object.
  * Returns the created mission. The caller is responsible for adding it to state.

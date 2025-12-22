@@ -76,7 +76,6 @@ function bldInitialAgents(): GameState['agents'] {
     const agentId: AgentId = `agent-${index.toString().padStart(3, '0')}`
     agents.push(
       bldAgent({
-        agentCount: agents.length,
         id: agentId,
         weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
         state: 'Available',
@@ -92,13 +91,6 @@ function bldDebugAgents(
   missionId: MissionId,
   deepStateInvestigationId: LeadInvestigationId,
 ): { agents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
-  let agentCounter = 0
-  function nextId(): string {
-    const id = agentCounter.toString().padStart(3, '0')
-    agentCounter += 1
-    return id
-  }
-
   const onMissionAgentIds: AgentId[] = []
   const agents: Agent[] = []
 
@@ -106,7 +98,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
@@ -117,7 +108,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
@@ -129,7 +119,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Available',
       assignment: 'Standby',
@@ -139,7 +128,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Recovery',
@@ -152,7 +140,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Contracting',
@@ -163,7 +150,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: 'Contracting',
@@ -175,7 +161,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Recovering',
       assignment: 'Recovery',
@@ -188,7 +173,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Recovering',
       assignment: 'Recovery',
@@ -200,7 +184,6 @@ function bldDebugAgents(
   )
   const agent9 = bldAgent({
     agentCount: agents.length,
-    id: `agent-${nextId()}`,
     weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     state: 'OnMission',
     assignment: missionId,
@@ -213,7 +196,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'Sacked',
       assignment: 'Sacked',
@@ -224,7 +206,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTransit',
       assignment: 'Recovery',
@@ -235,7 +216,6 @@ function bldDebugAgents(
   )
   const agent12 = bldAgent({
     agentCount: agents.length,
-    id: `agent-${nextId()}`,
     weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
     state: 'OnMission',
     assignment: missionId,
@@ -249,7 +229,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTraining',
       assignment: 'Training',
@@ -259,7 +238,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'InTraining',
       assignment: 'Training',
@@ -272,7 +250,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,
@@ -284,7 +261,6 @@ function bldDebugAgents(
   agents.push(
     bldAgent({
       agentCount: agents.length,
-      id: `agent-${nextId()}`,
       weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
       state: 'OnAssignment',
       assignment: deepStateInvestigationId,

@@ -16,7 +16,6 @@ export const agFix = (() => {
     default(): Agent {
       agentIdCounter += 1
       return bldAgent({
-        agentCount: agentIdCounter - 1,
         id: `agent-${agentIdCounter}` as AgentId,
         weapon: bldWeapon({ damage: AGENT_INITIAL_WEAPON_DAMAGE }),
         state: 'InTransit',

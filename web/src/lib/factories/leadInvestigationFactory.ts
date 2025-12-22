@@ -1,5 +1,6 @@
 import type { LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
 import { formatLeadInvestigationId } from '../model_utils/formatModelUtils'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 /**
  * Prototype lead investigation with all default values.
@@ -14,9 +15,11 @@ export const initialLeadInvestigation: LeadInvestigation = {
   state: 'Active',
 }
 
-type CreateLeadInvestigationParams = {
-  investigationCount: number
-} & Partial<LeadInvestigation>
+type CreateLeadInvestigationParams =
+  | (BaseCreateLeadInvestigationParams & { investigationCount: number; id?: never })
+  | (BaseCreateLeadInvestigationParams & { id: LeadInvestigation['id']; investigationCount?: never })
+
+type BaseCreateLeadInvestigationParams = Partial<Omit<LeadInvestigation, 'id'>>
 
 /**
  * Creates a new lead investigation object.
@@ -33,6 +36,7 @@ export function bldLeadInvestigation(params: CreateLeadInvestigationParams): Lea
 
   // Generate ID if not provided
   if (investigation.id === initialLeadInvestigation.id) {
+    assertDefined(investigationCount, 'Investigation count must be provided if ID is not provided')
     investigation.id = formatLeadInvestigationId(investigationCount)
   }
 

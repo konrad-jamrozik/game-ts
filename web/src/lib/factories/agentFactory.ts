@@ -3,7 +3,7 @@ import type { Agent, AgentId } from '../model/agentModel'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
 import { formatAgentId } from '../model_utils/formatModelUtils'
-import { assertEqual } from '../primitives/assertPrimitives'
+import { assertEqual, assertDefined } from '../primitives/assertPrimitives'
 
 /**
  * Prototype agent with all default values.
@@ -23,9 +23,11 @@ export const initialAgent: Agent = {
   weapon: initialWeapon,
 }
 
-type CreateAgentParams = {
-  agentCount: number
-} & Partial<Agent>
+type CreateAgentParams =
+  | (BaseCreateAgentParams & { agentCount: number; id?: never })
+  | (BaseCreateAgentParams & { id: Agent['id']; agentCount?: never })
+
+type BaseCreateAgentParams = Partial<Omit<Agent, 'id'>>
 
 /**
  * Creates a new agent object.
@@ -42,6 +44,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
 
   // Generate ID if not provided
   if (agent.id === initialAgent.id) {
+    assertDefined(agentCount, 'Agent count must be provided if ID is not provided')
     agent.id = formatAgentId(agentCount)
   }
 
