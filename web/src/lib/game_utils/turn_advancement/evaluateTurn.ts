@@ -2,7 +2,8 @@ import {
   getMissionDataById,
   dataTables,
   getActivityLevelByOrd,
-  getFactionDataByDataId,
+  getFactionName,
+  getFactionDiscoveryPrerequisite,
 } from '../../data_tables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
@@ -182,7 +183,8 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           // Get faction info for the report
           const { factionId } = missionData
           const faction = state.factions.find((f) => f.id === factionId)
-          const factionName = faction ? getFactionDataByDataId(faction.factionDataId).name : 'Unknown'
+          // KJA2 Unknown here should fail assertion
+          const factionName = faction ? getFactionName(faction) : 'Unknown'
 
           // Calculate penalties based on operation level
           const panicPenalty = getPanicIncreaseForOperation(operationLevel)
@@ -257,8 +259,7 @@ function evaluateDeployedMissions(state: GameState): {
       const { factionId } = missionData
       const faction = state.factions.find((factionItem) => factionItem.id === factionId)
       if (faction !== undefined) {
-        const factionData = getFactionDataByDataId(faction.factionDataId)
-        factionName = factionData.name
+        factionName = getFactionName(faction)
       }
 
       // Calculate battle stats
@@ -669,15 +670,13 @@ function updateFactions(
     }
 
     // Check if faction is discovered by verifying all discovery prerequisites are met
-    const factionData = getFactionDataByDataId(faction.factionDataId)
-    const isDiscovered = factionData.discoveryPrerequisite.every(
-      (leadId) => (state.leadInvestigationCounts[leadId] ?? 0) > 0,
-    )
+    const discoveryPrerequisite = getFactionDiscoveryPrerequisite(faction)
+    const isDiscovered = discoveryPrerequisite.every((leadId) => (state.leadInvestigationCounts[leadId] ?? 0) > 0)
 
     // Create faction report
     factionReports.push({
       factionId: faction.id,
-      factionName: factionData.name,
+      factionName: getFactionName(faction),
       isDiscovered,
       activityLevel: bldValueChange(previousActivityLevel, faction.activityLevel),
       turnsAtCurrentLevel: bldValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),

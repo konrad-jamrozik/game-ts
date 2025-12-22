@@ -40,6 +40,7 @@ export const BASE_SUPPRESSION_TURNS = 5
 // See also `Weapon damage roll` in docs.
 export const WEAPON_DAMAGE_RANGE_FACTOR = 0.5
 
+// KJA1 AGENT_INITIAL_WEAPON_DAMAGE should not be needed; use the prototype from agentFactory.ts instead.
 // Agent weapon stats
 export const AGENT_INITIAL_WEAPON_DAMAGE = 10
 
