@@ -2,6 +2,7 @@ import type { Mission, MissionDataId, MissionId } from '../model/missionModel'
 import type { EnemyCounts } from '../data_tables/enemiesDataTable'
 import { bldEnemies } from './enemyFactory'
 import { formatMissionId } from '../model_utils/formatModelUtils'
+import { assertDefined } from '../primitives/assertPrimitives'
 
 /**
  * Prototype mission with all default values.
@@ -22,10 +23,13 @@ export const initialMission: Mission = {
  * is not responsible for creating the Enemy objects.
  * Instead, the bldMission function will invoke bldEnemies(enemyCounts).
  */
-type CreateMissionParams = {
-  missionCount: number
+type CreateMissionParams =
+  | (BaseCreateMissionParams & { missionCount: number; id?: never })
+  | (BaseCreateMissionParams & { id: Mission['id']; missionCount?: never })
+
+type BaseCreateMissionParams = {
   enemyCounts: Partial<EnemyCounts>
-} & Partial<Omit<Mission, 'enemies'>>
+} & Partial<Omit<Mission, 'enemies' | 'id'>>
 
 // KJA1 need to verify that either ID or count is passed, but not both. In all bld functions.
 /**
@@ -43,6 +47,7 @@ export function bldMission(params: CreateMissionParams): Mission {
 
   // Generate ID if not provided
   if (mission.id === initialMission.id) {
+    assertDefined(missionCount, 'Mission count must be provided if ID is not provided')
     mission.id = formatMissionId(missionCount)
   }
 
