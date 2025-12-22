@@ -10,57 +10,32 @@ import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
  * Returns the created agent. The caller is responsible for adding it to state.
  */
 export function bldAgent(params: CreateAgentParams): Agent {
-  const {
-    agentCount,
-    turnHired,
-    weaponDamage,
-    id,
-    agentState,
-    assignment = initialAgent.assignment,
-    skill = initialAgent.skill,
-    exhaustionPct = initialAgent.exhaustionPct,
-    hitPoints = initialAgent.hitPoints,
-    maxHitPoints = initialAgent.maxHitPoints,
-    missionsTotal = initialAgent.missionsTotal,
-    skillFromTraining = initialAgent.skillFromTraining,
-    turnTerminated,
-    terminatedOnMissionId,
-    terminatedBy,
-  } = params
+  const { agentCount, ...agentOverrides } = params
+
+  // Start with initialAgent and override with provided values
+  const agent: Agent = {
+    ...initialAgent,
+    ...agentOverrides,
+  }
 
   // Generate ID if not provided
-  const agentId: AgentId = id ?? formatAgentId(agentCount)
-
-  // Determine agent state if not provided
-  let finalAgentState: Agent['state'] = 'Available'
-  if (agentState !== undefined) {
-    finalAgentState = agentState
-  } else if (assignment === 'Training') {
-    finalAgentState = 'InTraining'
-  } else if (assignment === 'Contracting') {
-    finalAgentState = 'InTransit'
-  } else if (assignment === 'Standby') {
-    finalAgentState = 'Available'
+  if (agent.id === initialAgent.id) {
+    agent.id = formatAgentId(agentCount)
   }
 
-  const newAgent: Agent = {
-    id: agentId,
-    turnHired,
-    state: finalAgentState,
-    assignment,
-    skill,
-    exhaustionPct,
-    hitPoints,
-    maxHitPoints,
-    missionsTotal,
-    skillFromTraining,
-    weapon: bldWeapon(weaponDamage),
-    ...(turnTerminated !== undefined && { turnTerminated }),
-    ...(terminatedOnMissionId !== undefined && { terminatedOnMissionId }),
-    ...(terminatedBy !== undefined && { terminatedBy }),
+  // Determine agent state if not explicitly provided
+  if (!('state' in agentOverrides)) {
+    if (agent.assignment === 'Training') {
+      agent.state = 'InTraining'
+    } else if (agent.assignment === 'Contracting') {
+      agent.state = 'InTransit'
+    } else if (agent.assignment === 'Standby') {
+      agent.state = 'Available'
+    }
+    // Otherwise keep initialAgent.state ('Available')
   }
 
-  return newAgent
+  return agent
 }
 
 /**
@@ -83,18 +58,6 @@ export const initialAgent: Agent = {
 
 type CreateAgentParams = {
   agentCount: number
-  turnHired: number
-  weaponDamage: number
-  id?: AgentId // Optional: if not provided, will be auto-generated
-  agentState?: Agent['state'] // Optional: defaults based on assignment
-  assignment?: Agent['assignment'] // Optional: defaults to initialAgent.assignment
-  skill?: Agent['skill'] // Optional: defaults to initialAgent.skill
-  exhaustionPct?: number // Optional: defaults to initialAgent.exhaustionPct
-  hitPoints?: Agent['hitPoints'] // Optional: defaults to initialAgent.hitPoints
-  maxHitPoints?: number // Optional: defaults to initialAgent.maxHitPoints
-  missionsTotal?: number // Optional: defaults to initialAgent.missionsTotal
-  skillFromTraining?: Agent['skillFromTraining'] // Optional: defaults to initialAgent.skillFromTraining
-  turnTerminated?: number // Optional
-  terminatedOnMissionId?: Agent['terminatedOnMissionId'] // Optional
-  terminatedBy?: string // Optional
-}
+} & Partial<Omit<Agent, 'id'>> & {
+    id?: AgentId // Optional: if not provided, will be auto-generated
+  }

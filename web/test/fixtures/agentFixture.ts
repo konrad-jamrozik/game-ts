@@ -3,6 +3,7 @@ import { bldAgent } from '../../src/lib/factories/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'
 import { AGENT_INITIAL_WEAPON_DAMAGE } from '../../src/lib/data_tables/constants'
+import { bldWeapon } from '../../src/lib/factories/weaponFactory'
 
 export const agFix = (() => {
   let agentIdCounter = 0
@@ -17,9 +18,8 @@ export const agFix = (() => {
       return bldAgent({
         agentCount: agentIdCounter - 1,
         id: `agent-${agentIdCounter}` as AgentId,
-        turnHired: 1,
-        weaponDamage: AGENT_INITIAL_WEAPON_DAMAGE,
-        agentState: 'InTransit',
+        weapon: bldWeapon(AGENT_INITIAL_WEAPON_DAMAGE),
+        state: 'InTransit',
         assignment: 'Standby',
       })
     },

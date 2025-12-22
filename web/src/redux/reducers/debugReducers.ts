@@ -4,6 +4,7 @@ import { dataTables } from '../../lib/data_tables/dataTables'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldMission } from '../../lib/factories/missionFactory'
 import { bldAgent } from '../../lib/factories/agentFactory'
+import { bldWeapon } from '../../lib/factories/weaponFactory'
 
 function addMoney(state: GameState): void {
   state.money += 10_000
@@ -17,8 +18,8 @@ function spawn10Agents(state: GameState): void {
     const newAgent = bldAgent({
       agentCount: state.agents.length,
       turnHired: state.turn,
-      weaponDamage: state.weaponDamage,
-      agentState: 'Available',
+      weapon: bldWeapon(state.weaponDamage),
+      state: 'Available',
       assignment: 'Standby',
       skill,
     })

@@ -6,13 +6,14 @@ import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
 import { bldAgent } from '../../lib/factories/agentFactory'
+import { bldWeapon } from '../../lib/factories/weaponFactory'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const newAgent = bldAgent({
     agentCount: state.agents.length,
     turnHired: state.turn,
-    weaponDamage: state.weaponDamage,
-    agentState: 'InTransit',
+    weapon: bldWeapon(state.weaponDamage),
+    state: 'InTransit',
     assignment: 'Standby',
   })
   state.agents.push(newAgent)
