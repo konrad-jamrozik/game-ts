@@ -26,19 +26,25 @@ dataTables.factions
 
 | Collection(s)         | Location                                  | Data tables referenced by `bld<entity>` functions from `<entity>factory.ts` |
 | --------------------- | ----------------------------------------- | --------------------------------------------------------------------------- |
-| `factions`            | `gameState.factions`                      | `dataTables.factions`                                   |
+| `factions`            | `gameState.factions`                      | `dataTables.factions`                                                       |
 | `agents`              | `gameState.agents`                        | None                                                                        |
 | `missions`            | `gameState.missions`                      | `dataTables.offensiveMissions`, `dataTables.defensiveMissions`              |
-| `lead investigations` | `gameState.leadInvestigations`            | `dataTables.leads`                                      |
-| `enemies`             | `gameState.missions[x].enemies`           | `dataTables.enemies` (only `EnemyCounts` referenced)                        |
+| `lead investigations` | `gameState.leadInvestigations`            | `dataTables.leads`                                                          |
+| `enemies`             | `gameState.missions[x].enemies`           | None                                                                        |
 | `weapons`             | `gameState.agents[x].weapon`,             |                                                                             |
 |                       | `gameState.missions[x].enemies[y].weapon` | None                                                                        |
 
-`[1]`: Each type `Actor` has a `Weapon`. `Actor`s are present in following locations in a `gameState`:
-- `gameState.agents[x]` - each agent is an actor, and hence has a weapon.
-- `gameState.missions[x].enemies[y]` - each enemy is an actor, and hence has a weapon.
-
 // KJA2 document in detail when/how each collection items are instantiated during game session.
+// For example:
+// - During game initialization, as part of initial game state:
+//   - factions are constructed
+//   - agents are constructed
+//   - ...
+// - During game session:
+// - agent is constructed when when "hire agent" player action is invoked.
+// - lead investigation is constructed when "investigate lead" player action is invoked.
+// - mission is constructed when ...
+//
 // Clarify that factions are special case as the collection doesn't mutate during game session.
 
 // KJA2 also need to talk about `bldWeapon` and sort out the constants for it - for agents (part of the agent data structure, see the other todo), and enemies (part of data table)
