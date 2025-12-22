@@ -42,6 +42,16 @@ export function bldAgent(params: CreateAgentParams): Agent {
     ...agentOverrides,
   }
 
+  // If maxHitPoints was overridden and is different from initial, and hitPoints was not overridden,
+  // set hitPoints to maxHitPoints
+  if (
+    'maxHitPoints' in agentOverrides &&
+    agentOverrides.maxHitPoints !== initialAgent.maxHitPoints &&
+    !('hitPoints' in agentOverrides)
+  ) {
+    agent.hitPoints = toF6(agent.maxHitPoints)
+  }
+
   // Generate ID if not provided
   if (agent.id === initialAgent.id) {
     assertDefined(agentCount, 'Agent count must be provided if ID is not provided')
@@ -61,5 +71,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
     }
   }
 
+  // KJA1 try
+  // validateAgentLocalInvariants(agent)
   return agent
 }

@@ -14,9 +14,6 @@ import { bldAgent, initialAgent } from './agentFactory'
 import { initialWeapon } from './weaponFactory'
 import { bldDebugGameStateOverrides } from './debugGameStateFactory'
 
-// KJA1 review / dedup gameStateFactory logic
-// Notably, do not pass default values overriding init prototypes.
-
 /**
  * Prototype game state with all default values.
  * Used as a reference for initial game state properties.
