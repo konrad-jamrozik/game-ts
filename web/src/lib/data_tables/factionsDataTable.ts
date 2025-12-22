@@ -5,7 +5,7 @@
  *
  */
 
-import type { FactionActivityLevelOrd, FactionId } from '../model/factionModel'
+import type { FactionActivityLevelOrd, FactionId, FactionDataId } from '../model/factionModel'
 
 /**
  * Faction definitions.
@@ -27,16 +27,27 @@ export function bldFactionsTable(): readonly FactionData[] {
 
 export type FactionData = {
   id: FactionId
+  factionDataId: FactionDataId
   name: string
   initialActivityLevel: FactionActivityLevelOrd
+  discoveryPrerequisite: string[]
 }
 
 type FactionDataRow = [id: FactionId, name: string, initialActivityLevel: FactionActivityLevelOrd]
 
 function toFactionsDataTable(rows: FactionDataRow[]): FactionData[] {
-  return rows.map((row) => ({
-    id: row[0],
-    name: row[1],
-    initialActivityLevel: row[2],
-  }))
+  return rows.map((row) => {
+    const id = row[0]
+    const name = row[1]
+    const initialActivityLevel = row[2]
+    const factionDataId: FactionDataId = `factiondata-${id.replace('faction-', '')}`
+    const discoveryPrerequisite = [`lead-${id.replace('faction-', '')}-profile`]
+    return {
+      id,
+      factionDataId,
+      name,
+      initialActivityLevel,
+      discoveryPrerequisite,
+    }
+  })
 }

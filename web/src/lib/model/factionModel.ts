@@ -1,5 +1,7 @@
 export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
 
+export type FactionDataId = `factiondata-${string}`
+
 /**
  * Activity level progression values.
  * 0 = Dormant, 1 = Faint, 2 = Emerging, 3 = Active, 4 = Expanding, 5 = Escalating, 6 = War, 7 = Total War
@@ -32,7 +34,7 @@ export type FactionActivityLevelName = (typeof ACTIVITY_LEVEL_NAMES)[number]
 
 export type Faction = {
   id: FactionId
-  name: string
+  factionDataId: FactionDataId
   /**
    * Current activity level (0-7).
    * Determines faction operation frequency and strength.
@@ -58,7 +60,6 @@ export type Faction = {
    * Used to prevent repeating the same operation type twice in a row.
    */
   lastOperationTypeName?: string | undefined
-  discoveryPrerequisite: string[]
 }
 
 export function asActivityLevelOrd(value: number): FactionActivityLevelOrd {

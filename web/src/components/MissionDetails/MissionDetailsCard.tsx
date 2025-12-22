@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionDataById } from '../../lib/data_tables/dataTables'
+import { getMissionDataById, getFactionDataByDataId } from '../../lib/data_tables/dataTables'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
@@ -100,7 +100,8 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
 
   const { factionId } = missionData
   const { factions } = gameState
-  const enemyFaction = factions.find((f) => f.id === factionId)?.name ?? 'Unknown'
+  const faction = factions.find((f) => f.id === factionId)
+  const enemyFaction = faction ? getFactionDataByDataId(faction.factionDataId).name : 'Unknown'
   const enemyCount = enemies.length
 
   const enemyAverageSkill =

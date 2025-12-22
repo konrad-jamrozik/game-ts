@@ -1,4 +1,9 @@
-import { getMissionDataById, dataTables, getActivityLevelByOrd } from '../../data_tables/dataTables'
+import {
+  getMissionDataById,
+  dataTables,
+  getActivityLevelByOrd,
+  getFactionDataByDataId,
+} from '../../data_tables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
@@ -177,7 +182,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           // Get faction info for the report
           const { factionId } = missionData
           const faction = state.factions.find((f) => f.id === factionId)
-          const factionName = faction?.name ?? 'Unknown'
+          const factionName = faction ? getFactionDataByDataId(faction.factionDataId).name : 'Unknown'
 
           // Calculate penalties based on operation level
           const panicPenalty = getPanicIncreaseForOperation(operationLevel)
@@ -252,7 +257,8 @@ function evaluateDeployedMissions(state: GameState): {
       const { factionId } = missionData
       const faction = state.factions.find((factionItem) => factionItem.id === factionId)
       if (faction !== undefined) {
-        factionName = faction.name
+        const factionData = getFactionDataByDataId(faction.factionDataId)
+        factionName = factionData.name
       }
 
       // Calculate battle stats
@@ -663,14 +669,15 @@ function updateFactions(
     }
 
     // Check if faction is discovered by verifying all discovery prerequisites are met
-    const isDiscovered = faction.discoveryPrerequisite.every(
+    const factionData = getFactionDataByDataId(faction.factionDataId)
+    const isDiscovered = factionData.discoveryPrerequisite.every(
       (leadId) => (state.leadInvestigationCounts[leadId] ?? 0) > 0,
     )
 
     // Create faction report
     factionReports.push({
       factionId: faction.id,
-      factionName: faction.name,
+      factionName: factionData.name,
       isDiscovered,
       activityLevel: bldValueChange(previousActivityLevel, faction.activityLevel),
       turnsAtCurrentLevel: bldValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),

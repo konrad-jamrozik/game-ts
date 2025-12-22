@@ -9,7 +9,7 @@
 
 import { assertDefined } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
-import type { FactionId, FactionActivityLevelOrd } from '../model/factionModel'
+import type { FactionId, FactionActivityLevelOrd, FactionDataId } from '../model/factionModel'
 import type { MissionDataId, EnemyType } from '../model/missionModel'
 import type { Lead, LeadId } from '../model/leadModel'
 import { bldFactionsTable, type FactionData } from './factionsDataTable'
@@ -96,6 +96,14 @@ export function getLeadById(id: LeadId): Lead {
 export function getFactionDataById(id: FactionId): FactionData {
   const found = dataTables.factions.find((faction) => faction.id === id)
   assertDefined(found, `Faction data with id ${id} not found`)
+  return found
+}
+
+// KJA1 replace all invocations of form getFactionDataByDataId(faction.factionDataId).name with getFactionName(faction)
+// KJA1 similarly, also getFactionDiscoveryPrerequisite(faction)
+export function getFactionDataByDataId(id: FactionDataId): FactionData {
+  const found = dataTables.factions.find((faction) => faction.factionDataId === id)
+  assertDefined(found, `Faction data with data id ${id} not found`)
   return found
 }
 

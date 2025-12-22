@@ -4,9 +4,9 @@ import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2 } from '../lib/primitives/fixed6'
-import { getActivityLevelByOrd } from '../lib/data_tables/dataTables'
+import { getActivityLevelByOrd, getFactionDataByDataId } from '../lib/data_tables/dataTables'
 import { getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
-import { assertIsActivityLevelOrd } from '../lib/model/factionModel'
+import { assertIsActivityLevelOrd, type FactionDataId } from '../lib/model/factionModel'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
@@ -22,10 +22,11 @@ export type SituationReportRow = {
 }
 
 function isFactionDiscovered(
-  faction: { discoveryPrerequisite: string[] },
+  faction: { factionDataId: FactionDataId },
   leadInvestigationCounts: Record<string, number>,
 ): boolean {
-  return faction.discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
+  const factionData = getFactionDataByDataId(faction.factionDataId)
+  return factionData.discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
 }
 
 function getFactionRows(faction: {
@@ -103,16 +104,19 @@ export function SituationReportCard(): React.JSX.Element {
     >
       <Stack spacing={2}>
         <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
-        {discoveredFactions.map((faction) => (
-          <Fragment key={faction.id}>
-            <Typography variant="h6">{faction.name} faction</Typography>
-            <StyledDataGrid
-              rows={getFactionRows(faction)}
-              columns={columns}
-              aria-label={`${faction.name} Report data`}
-            />
-          </Fragment>
-        ))}
+        {discoveredFactions.map((faction) => {
+          const factionData = getFactionDataByDataId(faction.factionDataId)
+          return (
+            <Fragment key={faction.id}>
+              <Typography variant="h6">{factionData.name} faction</Typography>
+              <StyledDataGrid
+                rows={getFactionRows(faction)}
+                columns={columns}
+                aria-label={`${factionData.name} Report data`}
+              />
+            </Fragment>
+          )
+        })}
       </Stack>
     </ExpandableCard>
   )
