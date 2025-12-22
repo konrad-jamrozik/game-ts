@@ -13,13 +13,15 @@ export const initialWeapon: Weapon = {
   maxDamage: 15,
 }
 
+export type CreateWeaponParams = Partial<Weapon>
+
 /**
  * Creates a weapon object.
  * Returns the created weapon. If only damage is provided, minDamage and maxDamage
  * are calculated as +/- 50% of base damage.
  * See also `Weapon damage roll` in docs.
  */
-export function bldWeapon(params: Partial<Weapon> = {}): Weapon {
+export function bldWeapon(params: CreateWeaponParams): Weapon {
   // Start with initialWeapon and override with provided values
   const weapon: Weapon = {
     ...initialWeapon,

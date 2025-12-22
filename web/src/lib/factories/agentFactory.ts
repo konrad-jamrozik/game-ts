@@ -3,6 +3,25 @@ import type { Agent, AgentId } from '../model/agentModel'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
 import { formatAgentId } from '../../redux/reducer_utils/agentIdUtils'
+import { assertEqual } from '../primitives/assertPrimitives'
+
+/**
+ * Prototype agent with all default values.
+ * Used as a reference for initial agent properties.
+ */
+export const initialAgent: Agent = {
+  id: 'agent-ini' as AgentId,
+  turnHired: 1,
+  state: 'Available',
+  assignment: 'Standby',
+  skill: toF6(100),
+  exhaustionPct: 0,
+  hitPoints: toF6(30),
+  maxHitPoints: 30,
+  missionsTotal: 0,
+  skillFromTraining: toF6(0),
+  weapon: initialWeapon,
+}
 
 type CreateAgentParams = {
   agentCount: number
@@ -34,27 +53,10 @@ export function bldAgent(params: CreateAgentParams): Agent {
       agent.state = 'InTransit'
     } else if (agent.assignment === 'Standby') {
       agent.state = 'Available'
+    } else {
+      assertEqual(agent.state, initialAgent.state, `Agent state must be ${initialAgent.state} (got ${agent.state})`)
     }
-    // Otherwise keep initialAgent.state ('Available')
   }
 
   return agent
-}
-
-/**
- * Prototype agent with all default values.
- * Used as a reference for initial agent properties.
- */
-export const initialAgent: Agent = {
-  id: 'agent-proto' as AgentId,
-  turnHired: 1,
-  state: 'Available',
-  assignment: 'Standby',
-  skill: toF6(100),
-  exhaustionPct: 0,
-  hitPoints: toF6(30),
-  maxHitPoints: 30,
-  missionsTotal: 0,
-  skillFromTraining: toF6(0),
-  weapon: initialWeapon,
 }
