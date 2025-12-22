@@ -65,7 +65,7 @@ Collection items are instantiated in response to player actions or game events:
 | Collection              | When instantiated                                                                                                   |
 | ----------------------- | ------------------------------------------------------------------------------------------------------------------- |
 | **Lead investigations** | When the "investigate lead" player action is invoked                                                                |
-| **Missions**            | 1. When a lead investigation completes successfully<br>2. When a faction's operation counter reaches 0              |
+| **Missions**            | 1. When a lead investigation completes successfully<br>2. When a faction's `turnsUntilNextOperation` reaches 0              |
 | **Agents**              | When the "hire agent" player action is invoked                                                                      |
 | **Enemies**             | When a mission is constructed (as part of mission creation)                                                         |
 | **Weapons**             | 1. For agents: When an agent is hired<br>2. For enemies: When an enemy is constructed (as part of mission creation) |
