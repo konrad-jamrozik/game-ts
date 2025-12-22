@@ -16,7 +16,6 @@ import type { Agent, AgentId } from '../model/agentModel'
 import type { MissionId, MissionDataId } from '../model/missionModel'
 import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import { bldMission } from './missionFactory'
-import { assertDefined } from '../primitives/assertPrimitives'
 import { initialWeapon } from './weaponFactory'
 
 // KJA1 review / dedup gameStateFactory logic
@@ -77,16 +76,21 @@ export function bldGameState(gameStateOverrides: CreateGameStateParams = {}): Ga
 export function bldInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
 
-  let gameState: GameState = bldGameState()
   if (useDebug) {
     const debugOverrides = bldDebugInitialOverrides()
-    gameState = { ...gameState, ...debugOverrides }
-    gameState = overwriteWithDebugOverrides(gameState)
+    // Apply faction mutation: modify Red Dawn faction so next operation happens in 3 turns
+    const factions = [...initialGameState.factions]
+    const redDawnFaction = factions.find((faction) => faction.id === 'faction-red-dawn')
+    if (redDawnFaction) {
+      redDawnFaction.turnsUntilNextOperation = 3
+    }
+    return bldGameState({
+      ...debugOverrides,
+      factions,
+    })
   }
 
-  gameState.agents.forEach((agent) => validateAgentInvariants(agent, gameState))
-
-  return gameState
+  return bldGameState()
 }
 
 function bldInitialAgents(): GameState['agents'] {
@@ -336,14 +340,4 @@ function bldDebugInitialOverrides(): Partial<GameState> {
   }
 
   return stateBase
-}
-
-function overwriteWithDebugOverrides(gameState: GameState): GameState {
-  // Modify Red Dawn faction so next operation happens in 3 turns
-  assertDefined(gameState.factions)
-  const redDawnFaction = gameState.factions.find((faction) => faction.id === 'faction-red-dawn')
-  if (redDawnFaction) {
-    redDawnFaction.turnsUntilNextOperation = 3
-  }
-  return gameState
 }
