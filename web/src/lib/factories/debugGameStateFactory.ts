@@ -7,6 +7,7 @@ import type { LeadId, LeadInvestigationId } from '../model/leadModel'
 import { bldMission } from './missionFactory'
 import { getFactionById } from '../model_utils/factionUtils'
 import { initialGameState } from './gameStateFactory'
+import { bldLeadInvestigation } from './leadInvestigationFactory'
 
 /**
  * Return only the overrides that should replace values in the normal initial state
@@ -51,16 +52,13 @@ export function bldDebugGameStateOverrides(): Partial<GameState> {
     }),
   ]
 
-  // Create lead investigation for deep state lead
+  // Create lead investigation for the deep state lead
   gameStateOverrides.leadInvestigations = {
-    [deepStateInvestigationId]: {
+    [deepStateInvestigationId]: bldLeadInvestigation({
       id: deepStateInvestigationId,
       leadId: 'lead-deep-state' as LeadId,
-      accumulatedIntel: 0,
       agentIds: deepStateInvestigationAgentIds,
-      startTurn: 1,
-      state: 'Active',
-    },
+    }),
   }
 
   return gameStateOverrides
