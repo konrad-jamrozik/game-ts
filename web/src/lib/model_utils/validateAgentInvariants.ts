@@ -1,6 +1,6 @@
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
-import { toF6, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub, f6ge } from '../primitives/fixed6'
+import { toF6, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {

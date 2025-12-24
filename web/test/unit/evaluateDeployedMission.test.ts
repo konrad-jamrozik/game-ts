@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { toF6, f6gt } from '../../src/lib/primitives/fixed6'
+import { toF6, f6gt, toF } from '../../src/lib/primitives/fixed6'
 import type { MissionDataId, Mission } from '../../src/lib/model/missionModel'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
 import { bldAgent } from '../../src/lib/factories/agentFactory'
@@ -49,7 +49,7 @@ describe(evaluateDeployedMission, () => {
     expect(f6gt(agent1.skill, 200)).toBe(true)
 
     // Verify agent gained exhaustion from combat
-    expect(agent1.exhaustionPct).toBeGreaterThan(0)
+    expect(toF(agent1.exhaustionPct)).toBeGreaterThan(0)
 
     // Verify agent survived
     expect(agent1.state).toBe('InTransit')

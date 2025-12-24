@@ -38,7 +38,7 @@ describe(getRecoveryTurns, () => {
     '%s: maxHitPoints=%s, damage=%s, hitPointsRecoveryPct=%s -> %s',
     (_testName, maxHitPoints, damage, hitPointsRecoveryPct, expected) => {
       const damageF6 = toF6(damage)
-      const result = getRecoveryTurns(maxHitPoints, damageF6, toF6(hitPointsRecoveryPct))
+      const result = getRecoveryTurns(toF6(maxHitPoints), damageF6, toF6(hitPointsRecoveryPct))
       expect(result).toBe(expected)
     }
   )

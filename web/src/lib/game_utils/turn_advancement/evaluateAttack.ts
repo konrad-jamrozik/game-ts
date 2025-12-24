@@ -226,7 +226,7 @@ export function evaluateAttack(
       damageMin: attacker.weapon.minDamage,
       damageMax: attacker.weapon.maxDamage,
       defenderHpAfterDamage: toF(defender.hitPoints),
-      defenderHpMax: defender.maxHitPoints,
+      defenderHpMax: toF(defender.maxHitPoints),
     }
   }
 
