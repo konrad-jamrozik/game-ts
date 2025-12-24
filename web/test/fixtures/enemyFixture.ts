@@ -2,6 +2,7 @@ import type { Enemy } from '../../src/lib/model/enemyModel'
 import { bldEnemy } from '../../src/lib/factories/enemyFactory'
 import { wpnFix } from './weaponFixture'
 import { initialAgent } from '../../src/lib/factories/agentFactory'
+import { toF } from '../../src/lib/primitives/fixed6'
 
 export const enFix = (() => {
   let enemyIdCounter = 0
@@ -17,7 +18,8 @@ export const enFix = (() => {
     },
 
     withWeakWeapon(): Enemy {
-      const weakDamage = Math.floor(initialAgent.maxHitPoints / 4) // 30 / 4 = 7.5, floor to 7
+      // KJA1 use my floor
+      const weakDamage = Math.floor(toF(initialAgent.maxHitPoints) / 4) // 30 / 4 = 7.5, floor to 7
       return this.bld({
         weapon: wpnFix.bld({ constDamage: weakDamage }),
       })

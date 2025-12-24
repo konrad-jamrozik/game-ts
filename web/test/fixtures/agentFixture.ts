@@ -35,14 +35,14 @@ export const agFix = (() => {
 
     exhausted(exhaustion = 50): Agent {
       return this.bld({
-        exhaustionPct: exhaustion,
+        exhaustionPct: toF6(exhaustion),
       })
     },
 
     wounded(hitPointsLost = 10): Agent {
-      const maxHitPoints = 30
+      const maxHitPoints = toF6(30)
       return this.bld({
-        hitPoints: toF6(Math.max(0, maxHitPoints - hitPointsLost)),
+        hitPoints: toF6(Math.max(0, 30 - hitPointsLost)),
         maxHitPoints,
       })
     },

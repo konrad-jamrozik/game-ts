@@ -16,9 +16,9 @@ export const initialAgent: Agent = {
   state: 'Available',
   assignment: 'Standby',
   skill: toF6(100),
-  exhaustionPct: 0,
+  exhaustionPct: toF6(0),
   hitPoints: toF6(30),
-  maxHitPoints: 30,
+  maxHitPoints: toF6(30),
   missionsTotal: 0,
   skillFromTraining: toF6(0),
   weapon: initialWeapon,
@@ -50,7 +50,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
     agentOverrides.maxHitPoints !== initialAgent.maxHitPoints &&
     !('hitPoints' in agentOverrides)
   ) {
-    agent.hitPoints = toF6(agent.maxHitPoints)
+    agent.hitPoints = agent.maxHitPoints
   }
 
   // Generate ID if not provided

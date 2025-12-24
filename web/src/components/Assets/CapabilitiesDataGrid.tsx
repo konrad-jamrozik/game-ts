@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/data_tables/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
+import { isF6, type Fixed6, f6fmtDec2, toF } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getCapabilitiesColumns } from './getCapabilitiesColumns'
@@ -75,7 +75,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
     {
       name: 'Exhaustion recovery',
       id: 8,
-      value: gameState.exhaustionRecovery,
+      value: toF(gameState.exhaustionRecovery),
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery']),
       displayedName: 'Exhaustion recov.',
       price: UPGRADE_PRICES['Exhaustion recovery'],

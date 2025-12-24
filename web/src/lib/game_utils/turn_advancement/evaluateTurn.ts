@@ -6,7 +6,7 @@ import {
   isFactionDiscovered,
 } from '../../data_tables/dataTables'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
-import { toF6, f6add, f6max, f6sub, f6sum, f6gt } from '../../primitives/fixed6'
+import { toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
 import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
@@ -243,14 +243,16 @@ function evaluateDeployedMissions(state: GameState): {
         agentExhaustionAfterBattle,
         initialAgentEffectiveSkill,
         initialEnemySkill,
-        initialAgentHitPoints,
-        initialEnemyHitPoints,
+        initialAgentHitPoints: initialAgentHitPointsF6,
+        initialEnemyHitPoints: initialEnemyHitPointsF6,
         totalDamageInflicted,
         totalDamageTaken,
         rounds,
         roundLogs,
         attackLogs,
       } = battleReport
+      const initialAgentHitPoints = toF(initialAgentHitPointsF6)
+      const initialEnemyHitPoints = toF(initialEnemyHitPointsF6)
 
       // Determine mission outcome
       const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'

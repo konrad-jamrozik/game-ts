@@ -46,9 +46,7 @@ Replace `tsc --build` with `tsgo --build` (or `tsgo -b`):
 - **Current `build` script**: `"build": "tsc --build && vite build"` (calls `tsc` directly)
 - **New `build` script**: `"build": "npm run tsc && vite build"` (uses the updated `tsc` script)
 
-The `qcheck` script already uses `npm run tsc`, so it will automatically use the updated script.
-
-**Note**: According to the [December 2025 blog post](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/), `tsgo` now fully supports `--build` mode, project references, and `--incremental`, so this is a direct replacement with no workarounds needed.
+The `qcheck` script already uses `npm run tsc`, so it will automatically use the updated script.**Note**: According to the [December 2025 blog post](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/), `tsgo` now fully supports `--build` mode, project references, and `--incremental`, so this is a direct replacement with no workarounds needed.
 
 ### 3. Update CI/CD workflow (if needed)
 
@@ -56,19 +54,20 @@ The [.github/workflows/web_gh_pages_CICD.yml](.github/workflows/web_gh_pages_CIC
 
 ## Limitations and Considerations
 
-According to the [December 2025 blog post](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/):
+According to the [December 2025 blog post](https://devblogs.microsoft.com/typescript/progress-on-typescript-7-december-2025/):**Now Supported:**
 
-**Now Supported:**
 - `--build` mode is fully supported
 - Project references are fully supported
 - `--incremental` is fully supported
 - Type-checking is very nearly complete (only 74 known incomplete cases out of ~6,000 error-producing test cases)
 
 **Still Missing (but not relevant for this project):**
+
 - Declaration emit (`--declaration`) is not supported (not used in this project since `noEmit: true`)
 - Some downlevel emit targets are limited (not relevant since `noEmit: true`)
 
 **Performance Benefits:**
+
 - Up to 10x faster than TypeScript 5.9/6.0
 - Parallel builds for multiple projects
 - Faster incremental builds
@@ -80,5 +79,3 @@ After implementation:
 1. Run `npm run tsc` to verify type-checking works
 2. Run `npm run build` to ensure the full build process works
 3. Run `npm run qcheck` to verify the complete check suite works
-
-## Notes

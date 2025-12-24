@@ -64,7 +64,7 @@ describe(evaluateDeployedMission, () => {
       assignment: 'mission-001',
       skill: toF6(50), // Low skill
       skillFromTraining: toF6(0),
-      maxHitPoints: 8, // Low hit points, so that max damage from 1 initiate kills the agent outright.
+      maxHitPoints: toF6(8), // Low hit points, so that max damage from 1 initiate kills the agent outright.
     })
 
     const mission1 = bldMission({
@@ -102,7 +102,7 @@ describe(evaluateDeployedMission, () => {
       skill: toF6(60),
       skillFromTraining: toF6(0),
       hitPoints: toF6(10),
-      maxHitPoints: 10,
+      maxHitPoints: toF6(10),
     })
 
     const agent2 = bldAgent({
@@ -112,7 +112,7 @@ describe(evaluateDeployedMission, () => {
       skill: toF6(50),
       skillFromTraining: toF6(0),
       hitPoints: toF6(10),
-      maxHitPoints: 10,
+      maxHitPoints: toF6(10),
     })
 
     const mission1 = bldMission({

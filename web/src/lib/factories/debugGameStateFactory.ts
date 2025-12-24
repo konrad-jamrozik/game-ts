@@ -106,7 +106,7 @@ function bldDebugAgents(
     }
 
     if (exhaustionPct !== '') {
-      agentParams.exhaustionPct = exhaustionPct
+      agentParams.exhaustionPct = toF6(exhaustionPct)
     }
     if (hitPoints !== '') {
       agentParams.hitPoints = toF6(hitPoints)

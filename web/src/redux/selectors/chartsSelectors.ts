@@ -192,9 +192,9 @@ function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
 function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
   const agents = notTerminated(gameState.agents)
 
-  const maxHitPoints = agents.map((agent) => agent.maxHitPoints)
+  const maxHitPoints = agents.map((agent) => toF(agent.maxHitPoints))
   const hitPoints = agents.map((agent) => toF(agent.hitPoints))
-  const exhaustion = agents.map((agent) => agent.exhaustionPct)
+  const exhaustion = agents.map((agent) => toF(agent.exhaustionPct))
   const recoveryTurns = agents.map((agent) => getRemainingRecoveryTurns(agent, gameState.hitPointsRecoveryPct))
 
   return {
@@ -306,8 +306,8 @@ function applyBattleOutcomeToSets(
 }
 
 function getMaxEffectiveSkill(agent: Agent): number {
-  const maxHp = toF6(agent.maxHitPoints)
-  return toF(effectiveSkill({ ...agent, hitPoints: maxHp, exhaustionPct: 0 }))
+  const zeroF6 = toF6(0)
+  return toF(effectiveSkill({ ...agent, hitPoints: agent.maxHitPoints, exhaustionPct: zeroF6 }))
 }
 
 function getSummaryStats(values: readonly number[]): {

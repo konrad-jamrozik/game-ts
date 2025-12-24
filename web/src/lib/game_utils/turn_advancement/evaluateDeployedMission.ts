@@ -1,11 +1,10 @@
-import { sum } from 'radash'
 import { getMissionDataById } from '../../data_tables/dataTables'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../data_tables/constants'
 import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
 import type { OffensiveMissionData } from '../../data_tables/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { f6add, f6fmtInt, toF6, f6lt, f6le, type Fixed6 } from '../../primitives/fixed6'
+import { f6add, f6fmtInt, toF6, f6lt, f6le, f6sum, f6sub, f6mult, toF, type Fixed6 } from '../../primitives/fixed6'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
@@ -119,18 +118,23 @@ export function evaluateDeployedMission(
 
 function getAgentExhaustionAfterBattle(
   deployedAgents: Agent[],
-  initialAgentExhaustionByAgentId: Record<string, number>,
+  initialAgentExhaustionByAgentId: Record<string, Fixed6>,
 ): number {
   // Calculate final exhaustion gain AFTER updateAgentsAfterBattle (which includes casualty penalty)
   // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
   const survivingAgents = notTerminated(deployedAgents)
-  const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustionPct)
+  // KJA1 previously it was
+  // const finalAgentExhaustion = sum(survivingAgents, (agent) => agent.exhaustionPct)
+  // Notice the lack of ... and map. Can I simplify it?
+  // The .sum was from Radash.
+  // Same below for sum.
+  const finalAgentExhaustion = f6sum(...survivingAgents.map((agent) => agent.exhaustionPct))
   // Calculate initial exhaustion for only the surviving agents
-  const initialSurvivingAgentExhaustion = sum(
-    survivingAgents,
-    (agent) => initialAgentExhaustionByAgentId[agent.id] ?? 0,
+  const zeroF6 = toF6(0)
+  const initialSurvivingAgentExhaustion = f6sum(
+    ...survivingAgents.map((agent) => initialAgentExhaustionByAgentId[agent.id] ?? zeroF6),
   )
-  return finalAgentExhaustion - initialSurvivingAgentExhaustion
+  return toF(f6sub(finalAgentExhaustion, initialSurvivingAgentExhaustion))
 }
 
 function updateAgentsAfterBattle(
@@ -181,7 +185,7 @@ function updateSurvivingAgent(
   // ----------------------------------------
 
   // Apply mission conclusion exhaustion
-  agent.exhaustionPct += EXHAUSTION_PENALTY
+  agent.exhaustionPct = f6add(agent.exhaustionPct, EXHAUSTION_PENALTY)
 
   // Additional exhaustion based on percentage of agents lost
   // Calculate percentage lost, round up to nearest 5%, then apply EXHAUSTION_PENALTY per 5% increment
@@ -191,8 +195,10 @@ function updateSurvivingAgent(
     const roundedPercentage = Math.ceil(percentageLost * 20) / 20
     // Divide by 0.05 to get number of 5% increments
     const increments = roundedPercentage / 0.05
-    // Multiply by EXHAUSTION_PENALTY
-    agent.exhaustionPct += Math.round(increments) * EXHAUSTION_PENALTY
+    // Multiply by EXHAUSTION_PENALTY (convert increments count to Fixed6, then multiply)
+    const incrementsCount = Math.round(increments)
+    const additionalExhaustion = f6mult(EXHAUSTION_PENALTY, incrementsCount)
+    agent.exhaustionPct = f6add(agent.exhaustionPct, toF6(additionalExhaustion))
   }
 
   // ----------------------------------------
@@ -223,8 +229,7 @@ function updateSurvivingAgent(
   agent.state = 'InTransit'
 
   // If agent took damage they need to recover
-  const maxHitPointsF6 = toF6(agent.maxHitPoints)
-  const tookDamage = f6lt(agent.hitPoints, maxHitPointsF6)
+  const tookDamage = f6lt(agent.hitPoints, agent.maxHitPoints)
   if (tookDamage) {
     agent.assignment = 'Recovery'
     return true // Agent was wounded

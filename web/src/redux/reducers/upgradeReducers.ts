@@ -35,7 +35,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       break
     }
     case 'Exhaustion recovery': {
-      state.exhaustionRecovery += getUpgradeIncrement(upgradeName)
+      state.exhaustionRecovery = f6add(state.exhaustionRecovery, getUpgradeIncrementFixed6(upgradeName))
       break
     }
     case 'Hit points recovery %': {

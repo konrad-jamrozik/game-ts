@@ -164,6 +164,7 @@ export type AttackLog = {
   defenderHpMax: number
 }
 
+// KJA1 the hit points in battle stats should be Fixed6. Hit points everywhere should be Fixed6.
 export type BattleStats = {
   agentsDeployed: number
   agentsUnscathed: number

@@ -47,9 +47,9 @@ export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     id,
     type,
     skill: enemyData.skill,
-    exhaustionPct: 0,
+    exhaustionPct: toF6(0),
     hitPoints: toF6(enemyData.hp),
-    maxHitPoints: enemyData.hp,
+    maxHitPoints: toF6(enemyData.hp),
     weapon: bldWeapon({ damage: enemyData.damage }),
     isOfficer: enemyData.isOfficer,
   }

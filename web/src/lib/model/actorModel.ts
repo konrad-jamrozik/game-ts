@@ -13,9 +13,7 @@ export type Actor = {
   id: EnemyId | AgentId
   skill: Fixed6
   hitPoints: Fixed6
-  // KJA3 maxHitPoints should be Fixed6
-  maxHitPoints: number
-  // KJA3 exhaustionPct should be Fixed6
-  exhaustionPct: number
+  maxHitPoints: Fixed6
+  exhaustionPct: Fixed6
   weapon: Weapon
 }

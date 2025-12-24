@@ -20,7 +20,7 @@ export type GameState = {
   transportCap: number
   trainingCap: number
   trainingSkillGain: Fixed6
-  exhaustionRecovery: number
+  exhaustionRecovery: Fixed6
   hitPointsRecoveryPct: Fixed6
   weaponDamage: number
   // Archive

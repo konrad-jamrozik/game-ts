@@ -56,9 +56,9 @@ describe(getAgentSkillBasedValue, () => {
     // so that effectiveSkill(agent) = skill
     const agent = agFix.bld({
       skill: toF6(effectiveSkill),
-      exhaustionPct: 0,
+      exhaustionPct: toF6(0),
       hitPoints: toF6(30),
-      maxHitPoints: 30,
+      maxHitPoints: toF6(30),
     })
     const multiplier = 5 // Using a realistic multiplier value
     const result = getAgentSkillBasedValue(agent, multiplier)

@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { toF6, f6fmtInt, f6fmtPctDec0, type Fixed6 } from '../../lib/primitives/fixed6'
+import { toF6, f6fmtInt, f6fmtPctDec0, toF, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -126,7 +126,7 @@ export function getAgentsColumns(
           >
             <span style={{ textAlign: 'right' }}>{f6fmtInt(params.value)}</span>
             <span style={{ textAlign: 'center' }}>/</span>
-            <span style={{ textAlign: 'right' }}>{params.row.maxHitPoints}</span>
+            <span style={{ textAlign: 'right' }}>{f6fmtInt(params.row.maxHitPoints)}</span>
           </div>
         )
       },
@@ -149,8 +149,9 @@ export function getAgentsColumns(
       headerName: 'Exh.',
       width: columnWidths['agents.exhaustionPct'],
       cellClassName: 'agents-color-bar-cell',
-      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => {
-        const exhaustionPct = params.value ?? 0
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
+        const exhaustionPctF6 = params.value ?? toF6(0)
+        const exhaustionPct = toF(exhaustionPctF6)
         const { fillPct, colorPct } = getExhaustionBarPcts(exhaustionPct)
         return (
           <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
@@ -172,8 +173,8 @@ export function getAgentsColumns(
       field: 'hitPointsMax',
       headerName: 'HP',
       width: columnWidths['agents.hit_points_max'],
-      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
-        <span aria-label={`agents-row-hp-${params.id}`}>{params.row.maxHitPoints}</span>
+      renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => (
+        <span aria-label={`agents-row-hp-${params.id}`}>{f6fmtInt(params.row.maxHitPoints)}</span>
       ),
     },
     {

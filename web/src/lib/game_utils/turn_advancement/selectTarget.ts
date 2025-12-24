@@ -145,13 +145,12 @@ function isInValidSkillRange(
 function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T[]): T[] {
   // Filter out targets that randomly remove themselves based on HP lost percentage
   let availableTargets = potentialTargets.filter((target) => {
-    const maxHitPointsF6 = toF6r(target.maxHitPoints)
-    const hitPointsLost = f6sub(maxHitPointsF6, target.hitPoints)
+    const hitPointsLost = f6sub(target.maxHitPoints, target.hitPoints)
     const zeroF6 = toF6r(0)
     if (f6le(hitPointsLost, zeroF6)) {
       return true // No HP lost, target stays available
     }
-    const hpLostPercentage = f6div(hitPointsLost, maxHitPointsF6)
+    const hpLostPercentage = f6div(hitPointsLost, target.maxHitPoints)
     const roll = rand.get()
 
     // If roll is less than HP lost percentage, target removes itself
