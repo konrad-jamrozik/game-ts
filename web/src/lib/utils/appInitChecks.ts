@@ -1,6 +1,7 @@
 import { showErrorToast } from './errorToast'
 import { assertExhaustiveMissionStatePriorityMap } from '../model_utils/missionStatePriority'
 
+// KJA1 utils dir is not on dependency diagram even.
 /**
  * Runs all app initialization checks. Call this once after React mounts
  * so that errors are caught and displayed via the error toast snackbar.
