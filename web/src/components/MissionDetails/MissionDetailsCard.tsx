@@ -101,7 +101,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const { factionId } = missionData
   const { factions } = gameState
   const faction = factions.find((f) => f.id === factionId)
-  // KJA2 Unknown here should fail assertion
+  // KJA2 FAIL FAST Unknown here should fail assertion
   const enemyFaction = faction ? getFactionName(faction) : 'Unknown'
   const enemyCount = enemies.length
 

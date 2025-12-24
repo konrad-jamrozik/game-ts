@@ -21,7 +21,7 @@
  */
 
 import type { FactionData } from './factionsDataTable'
-import { bldMissionDataId, expandTemplateString, type BaseMissionData } from './dataTablesUtils'
+import { bldMissionDataId, expandTemplateString, type BaseMissionData } from './dataTablesPrivateUtils'
 
 // prettier-ignore
 export function bldOffensiveMissionsTable(factions: readonly FactionData[]): readonly OffensiveMissionData[] {

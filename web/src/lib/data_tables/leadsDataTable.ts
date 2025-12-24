@@ -16,7 +16,7 @@
 
 import { type Lead, asLeadId } from '../model/leadModel'
 import type { FactionData } from './factionsDataTable'
-import { expandTemplateString } from './dataTablesUtils'
+import { expandTemplateString } from './dataTablesPrivateUtils'
 
 // prettier-ignore
 export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[] {
