@@ -21,18 +21,18 @@ import {
   rollOperationLevel,
 } from '../../ruleset/factionOperationLevelRuleset'
 import { bldMission } from '../../factories/missionFactory'
-import {
-  bldValueChange,
-  type AgentsReport,
-  type AssetsReport,
-  type BattleStats,
-  type ExpiredMissionReport,
-  type FactionReport,
-  type MissionReport,
-  type MoneyBreakdown,
-  type PanicReport,
-  type TurnReport,
+import type {
+  AgentsReport,
+  AssetsReport,
+  BattleStats,
+  ExpiredMissionReport,
+  FactionReport,
+  MissionReport,
+  MoneyBreakdown,
+  PanicReport,
+  TurnReport,
 } from '../../model/turnReportModel'
+import { bldValueChange } from '../../model_utils/turnReportUtils'
 import type { BattleOutcome } from '../../model/outcomeTypes'
 import { validateGameStateInvariants } from '../../model_utils/validateGameStateInvariants'
 import { evaluateDeployedMission } from './evaluateDeployedMission'
@@ -45,6 +45,7 @@ import {
 } from './updateAgents'
 import { updateLeadInvestigations } from './updateLeadInvestigations'
 import { getAgentUpkeep } from '../../ruleset/moneyRuleset'
+import { assertDefined, assertNotEmpty } from '../../primitives/assertPrimitives'
 
 /**
  * This function is documented by the about_turn_advancement.md document.
@@ -183,8 +184,8 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           // Get faction info for the report
           const { factionId } = missionData
           const faction = state.factions.find((f) => f.id === factionId)
-          // KJA2 FAIL FAST Unknown here should fail assertion
-          const factionName = faction ? getFactionName(faction) : 'Unknown'
+          assertDefined(faction, `Faction with id ${factionId} not found for expired mission ${missionId}`)
+          const factionName = getFactionName(faction)
 
           // Calculate penalties based on operation level
           const panicPenalty = getPanicIncreaseForOperation(operationLevel)
@@ -548,11 +549,10 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
     (data) => data.level === operationLevel && data.factionId === faction.id,
   )
 
-  if (availableMissionData.length === 0) {
-    // KJA2 FAIL FAST - should assert failure instead
-    // No mission data available for this operation level - should not happen, but handle gracefully
-    return
-  }
+  assertNotEmpty(
+    availableMissionData,
+    `No defensive mission data available for faction ${faction.id} at operation level ${operationLevel}`,
+  )
 
   // Filter out the last operation type if there are multiple options
   let candidateMissionData = availableMissionData

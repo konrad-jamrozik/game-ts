@@ -101,8 +101,8 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const { factionId } = missionData
   const { factions } = gameState
   const faction = factions.find((f) => f.id === factionId)
-  // KJA2 FAIL FAST Unknown here should fail assertion
-  const enemyFaction = faction ? getFactionName(faction) : 'Unknown'
+  assertDefined(faction, `Faction with id ${factionId} not found for mission ${missionId}`)
+  const enemyFaction = getFactionName(faction)
   const enemyCount = enemies.length
 
   const enemyAverageSkill =
