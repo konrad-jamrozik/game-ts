@@ -53,8 +53,3 @@ export function assertIsMissionDataId(id: string): asserts id is MissionDataId {
     throw new Error(`Invalid mission data ID: ${id}`)
   }
 }
-
-// Legacy function for backward compatibility during migration // KJA2 remove this
-export function assertIsMissionDefId(id: string): asserts id is MissionDataId {
-  assertIsMissionDataId(id)
-}

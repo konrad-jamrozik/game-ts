@@ -183,7 +183,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           // Get faction info for the report
           const { factionId } = missionData
           const faction = state.factions.find((f) => f.id === factionId)
-          // KJA2 Unknown here should fail assertion
+          // KJA2 FAIL FAST Unknown here should fail assertion
           const factionName = faction ? getFactionName(faction) : 'Unknown'
 
           // Calculate penalties based on operation level
@@ -549,7 +549,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   )
 
   if (availableMissionData.length === 0) {
-    // KJA2, no - should assert failure instead
+    // KJA2 FAIL FAST - should assert failure instead
     // No mission data available for this operation level - should not happen, but handle gracefully
     return
   }

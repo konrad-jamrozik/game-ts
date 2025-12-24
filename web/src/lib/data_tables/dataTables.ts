@@ -58,8 +58,6 @@ export function bldDataTables(): DataTables {
 }
 
 // KJA2 move the many lookup functions to appropriate model_utils, e.g. for factions. Same as agentUtils
-// Data table lookup utilities
-// These functions look up entities in the immutable dataTables constant.
 
 export function getFactionShortId(factionId: FactionId): string {
   return fmtNoPrefix(factionId, 'faction-')
