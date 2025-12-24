@@ -78,4 +78,3 @@ After implementation:
 
 1. Run `npm run tsc` to verify type-checking works
 2. Run `npm run build` to ensure the full build process works
-3. Run `npm run qcheck` to verify the complete check suite works

@@ -81,5 +81,3 @@ Note: `assertDefined` is already imported in this file.
 ## Rationale
 
 These are all internal consistency checks where missing data indicates a bug:
-
-- If we're logging a deploy action, the mission should exist
