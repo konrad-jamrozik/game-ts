@@ -1,12 +1,7 @@
 import { expect } from 'vitest'
 import { store } from '../../src/redux/store'
-import {
-  isActivityAssignment,
-  type Agent,
-  type AgentAssignment,
-  type AgentId,
-  type AgentState,
-} from '../../src/lib/model/agentModel'
+import type { Agent, AgentAssignment, AgentId, AgentState } from '../../src/lib/model/agentModel'
+import { isActivityAssignment } from '../../src/lib/model_utils/agentModelUtils'
 import type { LeadId } from '../../src/lib/model/leadModel'
 import type { Enemy } from '../../src/lib/model/enemyModel'
 import type { Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'

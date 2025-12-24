@@ -69,8 +69,9 @@ graph TD
         LibGam[lib/game_utils]
         LibFac[lib/factories]
         LibRul[lib/ruleset]
-        LibMUt[lib/model_utils]
+        LibDataTUtils[lib/data_table_utils]
         LibDataT[lib/data_tables]
+        LibMUt[lib/model_utils]
         LibMod[lib/model]
         LibPri[lib/primitives]
     end
@@ -95,9 +96,10 @@ graph TD
     RdxSel --> RdxStore
     LibGam --> LibFac
     LibFac --> LibRul
-    LibRul --> LibMUt
-    LibMUt --> LibDataT
-    LibDataT --> LibMod
+    LibRul --> LibDataTUtils
+    LibDataTUtils --> LibDataT
+    LibDataT --> LibMUt
+    LibMUt --> LibMod
     LibMod --> LibPri
 ```
 
@@ -182,3 +184,5 @@ graph LR
 
 - [About top-level app initialization](about_top_level_app_init.md)
 - [About game state initialization](about_game_state_init.md)
+
+// KJA1 question: do data_tables need to depend on model? Why?

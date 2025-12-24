@@ -14,7 +14,8 @@
  * - EnemyEstimate: Optional enemy estimate text (may contain {facName} template)
  */
 
-import { type Lead, asLeadId } from '../model/leadModel'
+import type { Lead } from '../model/leadModel'
+import { asLeadId } from '../model_utils/leadModelUtils'
 import type { FactionData } from './factionsDataTable'
 import { expandTemplateString } from './dataTablesPrivateUtils'
 

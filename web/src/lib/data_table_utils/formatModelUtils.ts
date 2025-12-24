@@ -1,12 +1,15 @@
 import pluralize from 'pluralize'
 import { getLeadById, getMissionDataById, getFactionDataById } from '../data_tables/dataTables'
-import { getMissionById } from './missionUtils'
-import { getLeadInvestigationById } from './leadInvestigationUtils'
-import { type LeadId, type LeadInvestigationId, asLeadId, assertIsLeadInvestigationId } from '../model/leadModel'
+import { getMissionById } from '../model_utils/missionUtils'
+import { getLeadInvestigationById } from '../model_utils/leadInvestigationUtils'
+import type { LeadId, LeadInvestigationId } from '../model/leadModel'
+import { asLeadId, assertIsLeadInvestigationId } from '../model_utils/leadModelUtils'
 import type { EnemyId } from '../model/actorModel'
 import type { EnemyType } from '../model/enemyModel'
-import { type MissionDataId, type MissionId, assertIsMissionId } from '../model/missionModel'
-import { type FactionId, assertIsFactionId } from '../model/factionModel'
+import type { MissionDataId, MissionId } from '../model/missionModel'
+import { assertIsMissionId } from '../model_utils/missionModelUtils'
+import type { FactionId } from '../model/factionModel'
+import { assertIsFactionId } from '../model_utils/factionModelUtils'
 import type { AgentId } from '../model/agentModel'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
@@ -15,6 +18,7 @@ import { isF6, type Fixed6, f6fmtPctDec2 } from '../primitives/fixed6'
 import type { ValueChange } from '../model/turnReportModel'
 import type { GameState } from '../model/gameStateModel'
 
+// KJA1 rename format to fmt
 /**
  * Formats a numeric agent ID into the standard agent ID format.
  * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)

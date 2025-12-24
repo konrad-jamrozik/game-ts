@@ -1,4 +1,4 @@
-import { isF6, type Fixed6, f6sub } from '../primitives/fixed6'
+import type { Fixed6 } from '../primitives/fixed6'
 import type { FactionId } from './factionModel'
 import type { LeadId } from './leadModel'
 import type { MissionRewards } from './missionModel'
@@ -28,32 +28,6 @@ export type ValueChange<TNumber extends number | Fixed6 = number> = {
   previous: TNumber
   current: TNumber
   readonly delta: TNumber
-}
-
-// --- Overloads ---
-export function bldValueChange(previous: Fixed6, current: Fixed6): ValueChange<Fixed6>
-export function bldValueChange(previous: number, current: number): ValueChange
-
-// --- Implementation ---
-export function bldValueChange(previous: Fixed6 | number, current: Fixed6 | number): ValueChange<Fixed6> | ValueChange {
-  if (isF6(previous) && isF6(current)) {
-    return {
-      previous,
-      current,
-      delta: f6sub(current, previous),
-    }
-  }
-
-  if (typeof previous === 'number' && typeof current === 'number') {
-    return {
-      previous,
-      current,
-      delta: current - previous,
-    }
-  }
-
-  // Exhaustive guard: disallow mixing number with Fixed6
-  throw new TypeError('bldValueChange: mixed types (number vs Fixed6) are not allowed.')
 }
 
 export type MoneyBreakdown = {

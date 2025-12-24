@@ -2,7 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import type { LeadRow } from './LeadsDataGrid'
-import { fmtForDisplay } from '../../lib/model_utils/formatModelUtils'
+import { fmtForDisplay } from '../../lib/data_table_utils/formatModelUtils'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [

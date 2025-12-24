@@ -19,7 +19,8 @@
  * - When a faction operation succeeds (defensive mission expires or fails), rewards and penalties
  *   are applied based on the operation level.
  */
-import { asOperationLevelOrd, type FactionOperationLevelOrd } from '../model/factionModel'
+import type { FactionOperationLevelOrd } from '../model/factionModel'
+import { asOperationLevelOrd } from '../model_utils/factionModelUtils'
 
 // prettier-ignore
 export function bldFactionOperationLevelsTable(): readonly FactionOperationLevelData[] {

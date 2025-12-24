@@ -1,5 +1,5 @@
 import type { LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
-import { formatLeadInvestigationId } from '../model_utils/formatModelUtils'
+import { formatLeadInvestigationId } from '../data_table_utils/formatModelUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 
 /**

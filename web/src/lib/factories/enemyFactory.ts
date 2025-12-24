@@ -3,7 +3,7 @@ import { getEnemyByType } from '../data_tables/dataTables'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { assertAboveZero, assertNonNeg, assertTrue } from '../primitives/assertPrimitives'
-import { formatEnemyId } from '../model_utils/formatModelUtils'
+import { formatEnemyId } from '../data_table_utils/formatModelUtils'
 
 let idCounter = 0
 
