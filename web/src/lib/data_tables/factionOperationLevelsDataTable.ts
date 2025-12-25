@@ -20,7 +20,7 @@
  *   are applied based on the operation level.
  */
 import type { FactionOperationLevelOrd } from '../model/factionModel'
-import { asOperationLevelOrd } from '../model_utils/factionUtils'
+import { asOperationLevelOrd } from '../model/modelOrdUtils'
 
 // prettier-ignore
 export function bldFactionOperationLevelsTable(): readonly FactionOperationLevelData[] {
