@@ -4,7 +4,8 @@ KJA backlog:
 
 # Current milestone
 
-- Use https://github.com/sverweij/dependency-cruiser
+- Undoing/redoing turn and clicking next seems to change by when exactly activity level of faction goes up.
+  This is unexpected, this should have been pre-rolled at game start.
 
 ## Current Game mechanics
 
@@ -28,9 +29,6 @@ KJA backlog:
   - Get rid of "projected" column
 - Turn report:
   - "Turns at level: should not be displayed
-
-- Undoing/redoing turn and clicking next seems to change by when exactly activity level of faction goes up.
-  This is unexpected, this should have been pre-rolled at game start.
 
 # Next milestone
 

@@ -35,6 +35,10 @@ function tsc {
     npmr tsc
 }
 
+function depcruise {
+    npmr depcruise
+}
+
 function dev {
     npmr dev
 }

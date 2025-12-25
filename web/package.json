@@ -29,8 +29,8 @@
     "test:ui": "vitest --ui --api.port=6174 --no-open",
     "test:cov": "vitest --coverage",
     "test:uicov": "vitest --ui --coverage.enabled=true",
-    "qcheck": "npm run oxlint && npm run tsc && npm run test",
     "depcruise": "depcruise src test --config .dependency-cruiser.js",
+    "qcheck": "npm run oxlint && && npm run depcruise && npm run tsc && npm run test",
     "check": "npm run format && npm run oxlint && npm run eslint:cached && npm run depcruise && npm run build && npm run test:all"
   },
   "dependencies": {
