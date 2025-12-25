@@ -1,4 +1,4 @@
-import { getActivityLevelByOrd, getFactionDataByDataId } from '../model_utils/getterUtils'
+import { getActivityLevelByOrd, getFactionDataByDataId } from '../data_tables/dataTableUtils'
 import type { Faction } from '../model/factionModel'
 
 /**
