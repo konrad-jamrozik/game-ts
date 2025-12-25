@@ -1,6 +1,6 @@
 import { ENEMY_TYPES, type Enemy, type EnemyCounts, type EnemyType } from '../model/enemyModel'
 import { getEnemyByType } from '../model_utils/enemyUtils'
-import { F6Val0, toF6 } from '../primitives/fixed6'
+import { f6c0, toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { assertAboveZero, assertNonNeg, assertTrue } from '../primitives/assertPrimitives'
 import { fmtEnemyId } from '../model_utils/formatUtils'
@@ -47,7 +47,7 @@ export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
     id,
     type,
     skill: enemyData.skill,
-    exhaustionPct: F6Val0,
+    exhaustionPct: f6c0,
     hitPoints: toF6(enemyData.hp),
     maxHitPoints: toF6(enemyData.hp),
     weapon: bldWeapon({ damage: enemyData.damage }),

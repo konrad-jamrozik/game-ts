@@ -3,7 +3,7 @@ import type { Agent } from '../model/agentModel'
 import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from '../data_tables/constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { nonNeg } from '../primitives/mathPrimitives'
-import { f6mult, f6sumBy, toF, toF6r, f6sub, f6div, f6min, F6Val100, type Fixed6 } from '../primitives/fixed6'
+import { f6mult, f6sumBy, toF, toF6r, f6sub, f6div, f6min, f6c100, type Fixed6 } from '../primitives/fixed6'
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
@@ -12,7 +12,7 @@ export function effectiveSkill(actor: Actor): Fixed6 {
   const hitPointsMalus = f6div(hitPointsLost, actor.maxHitPoints)
   const hitPointsMult = assertNonNeg(1 - hitPointsMalus)
 
-  const cappedExhaustionF6 = f6min(F6Val100, actor.exhaustionPct)
+  const cappedExhaustionF6 = f6min(f6c100, actor.exhaustionPct)
   const effectiveExhaustionF6 = f6sub(cappedExhaustionF6, NO_IMPACT_EXHAUSTION)
   const effectiveExhaustion = nonNeg(toF(effectiveExhaustionF6))
   const exhaustionMalus = effectiveExhaustion / 100

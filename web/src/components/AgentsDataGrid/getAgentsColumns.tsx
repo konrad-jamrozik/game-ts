@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { F6Val0, f6fmtInt, f6fmtPctDec0, toF, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6c0, f6fmtInt, f6fmtPctDec0, toF, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { Agent, AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -82,7 +82,7 @@ export function getAgentsColumns(
       ),
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         const effectiveSkillVal = effectiveSkill(params.row)
-        const baselineSkill = params.value ?? F6Val0
+        const baselineSkill = params.value ?? f6c0
         const percentage = f6fmtPctDec0(effectiveSkillVal, baselineSkill)
         const { fillPct, colorPct, backgroundOverride } = getSkillBarDisplay(
           effectiveSkillVal,
@@ -155,7 +155,7 @@ export function getAgentsColumns(
       width: columnWidths['agents.exhaustionPct'],
       cellClassName: 'agents-color-bar-cell',
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
-        const exhaustionPctF6 = params.value ?? F6Val0
+        const exhaustionPctF6 = params.value ?? f6c0
         const exhaustionPct = toF(exhaustionPctF6)
         const { fillPct, colorPct } = getExhaustionBarPcts(exhaustionPct)
         return (

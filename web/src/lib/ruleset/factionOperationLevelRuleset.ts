@@ -1,7 +1,7 @@
 import { getFactionOperationByLevel } from '../model_utils/factionOperationLevelUtils'
 import { getActivityLevelByOrd } from '../model_utils/factionActivityLevelUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
-import { F6Val0, toF6, type Fixed6 } from '../primitives/fixed6'
+import { f6c0, toF6, type Fixed6 } from '../primitives/fixed6'
 
 /**
  * Calculate the turns until next faction operation.
@@ -52,7 +52,7 @@ export function rollOperationLevel(activityLevel: FactionActivityLevelOrd): numb
  */
 export function getPanicIncreaseForOperation(operationLevel: number): Fixed6 {
   if (operationLevel === 0) {
-    return F6Val0
+    return f6c0
   }
   const stats = getFactionOperationByLevel(operationLevel)
   return toF6(stats.panicIncreasePct / 100)

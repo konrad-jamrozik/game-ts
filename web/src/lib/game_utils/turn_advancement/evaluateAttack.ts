@@ -8,7 +8,7 @@ import {
   AGENT_FAILED_ATTACK_SKILL_REWARD,
   AGENT_SUCCESSFUL_DEFENSE_SKILL_REWARD,
 } from '../../data_tables/constants'
-import { F6Val0, f6add, toF, toF6, f6sub, f6max, type Fixed6 } from '../../primitives/fixed6'
+import { f6c0, f6add, toF, toF6, f6sub, f6max, type Fixed6 } from '../../primitives/fixed6'
 import { isAgent } from '../../model_utils/agentUtils'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollWeaponDamage } from '../../ruleset/weaponRuleset'
@@ -75,7 +75,7 @@ export function evaluateAttack(
 
     const damageF6 = toF6(damage)
     const hpRemaining = f6sub(defender.hitPoints, damageF6)
-    defender.hitPoints = f6max(hpRemaining, F6Val0)
+    defender.hitPoints = f6max(hpRemaining, f6c0)
 
     // Update skill gains from battle combat
     if (attackerStats) {

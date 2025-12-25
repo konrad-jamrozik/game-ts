@@ -2,7 +2,7 @@ import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel }
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
-import { F6Val0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
 import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
@@ -163,5 +163,5 @@ export function AgentsDataGrid(): React.JSX.Element {
 
 function getMaxSkillNonTerminated(rows: AgentRow[]): Fixed6 {
   const activeRows = notTerminated(rows)
-  return activeRows.reduce((max, row) => f6max(max, row.skill), F6Val0)
+  return activeRows.reduce((max, row) => f6max(max, row.skill), f6c0)
 }

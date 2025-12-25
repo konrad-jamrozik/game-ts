@@ -5,7 +5,7 @@ import { BATTLE_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionId } from '../../lib/model/modelIds'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
-import { F6Val0, f6max, f6div } from '../../lib/primitives/fixed6'
+import { f6c0, f6max, f6div } from '../../lib/primitives/fixed6'
 import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
@@ -31,7 +31,7 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
   const maxInitialSkill = rows.reduce((max, row) => {
     const maxAgentEnemy = f6max(row.agentSkillTotal, row.enemySkillTotal)
     return f6max(max, maxAgentEnemy)
-  }, F6Val0)
+  }, f6c0)
 
   // Compute battle-wide max HP from all rows
   const maxHp = rows.reduce((max, row) => Math.max(max, Math.max(row.agentHpTotal, row.enemyHpTotal)), 0)
@@ -40,7 +40,7 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
   const maxCount = rows.reduce((max, row) => Math.max(max, Math.max(row.agentCountTotal, row.enemyCountTotal)), 0)
 
   // Compute battle-wide max ratio from all rows (ratio can go up and down, so we need the max across all rounds)
-  const maxRatio = rows.reduce((max, row) => f6max(max, row.skillRatio), F6Val0)
+  const maxRatio = rows.reduce((max, row) => f6max(max, row.skillRatio), f6c0)
 
   const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount, maxRatio })
 

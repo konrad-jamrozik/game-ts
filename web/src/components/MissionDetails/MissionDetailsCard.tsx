@@ -4,7 +4,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { getMissionDataById } from '../../lib/model_utils/missionUtils'
 import { getFactionName } from '../../lib/model_utils/factionUtils'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
-import { F6Val0, f6sumBy, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
+import { f6c0, f6sumBy, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
 import type { OffensiveMissionData } from '../../lib/data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../../lib/data_tables/defensiveMissionsDataTable'
@@ -34,7 +34,7 @@ function bldRewardsFromMissionData(
     return {
       money: getMoneyRewardForOperation(operationLevel),
       funding: getFundingRewardForOperation(operationLevel),
-      panicReduction: F6Val0,
+      panicReduction: f6c0,
       factionRewards: [],
     }
   }

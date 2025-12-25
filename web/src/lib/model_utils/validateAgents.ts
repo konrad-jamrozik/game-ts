@@ -1,6 +1,6 @@
 import type { Agent } from '../model/agentModel'
 import { withIds, notAvailable, notOnAssignment } from './agentUtils'
-import { F6Val100, f6ge } from '../primitives/fixed6'
+import { f6c100, f6ge } from '../primitives/fixed6'
 
 export type ValidateAgentsResult = Readonly<{
   isValid: boolean
@@ -54,7 +54,7 @@ export function validateOnAssignmentAgents(agents: Agent[], selectedAgentIds: st
 }
 
 export function exhaustedAgents(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => f6ge(agent.exhaustionPct, F6Val100))
+  return agents.filter((agent) => f6ge(agent.exhaustionPct, f6c100))
 }
 
 export function validateNotExhaustedAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {

@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { F6Val0, toF6, f6gt, toF } from '../../src/lib/primitives/fixed6'
+import { f6c0, toF6, f6gt, toF } from '../../src/lib/primitives/fixed6'
 import type { Mission } from '../../src/lib/model/missionModel'
 import type { MissionDataId } from '../../src/lib/model/modelIds'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
@@ -18,7 +18,7 @@ describe(evaluateDeployedMission, () => {
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(200), // High skill to ensure success
-      skillFromTraining: F6Val0,
+      skillFromTraining: f6c0,
       missionsTotal: 1,
     })
 
@@ -64,7 +64,7 @@ describe(evaluateDeployedMission, () => {
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(50), // Low skill
-      skillFromTraining: F6Val0,
+      skillFromTraining: f6c0,
       maxHitPoints: toF6(8), // Low hit points, so that max damage from 1 initiate kills the agent outright.
     })
 
@@ -101,7 +101,7 @@ describe(evaluateDeployedMission, () => {
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(60),
-      skillFromTraining: F6Val0,
+      skillFromTraining: f6c0,
       hitPoints: toF6(10),
       maxHitPoints: toF6(10),
     })
@@ -111,7 +111,7 @@ describe(evaluateDeployedMission, () => {
       state: 'OnMission',
       assignment: 'mission-001',
       skill: toF6(50),
-      skillFromTraining: F6Val0,
+      skillFromTraining: f6c0,
       hitPoints: toF6(10),
       maxHitPoints: toF6(10),
     })

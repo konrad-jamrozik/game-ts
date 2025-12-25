@@ -63,8 +63,8 @@ export function toF6(value: number): Fixed6 {
   return roundToF6(value)
 }
 
-export const F6Val0 = toF6(0)
-export const F6Val100 = toF6(100)
+export const f6c0 = toF6(0)
+export const f6c100 = toF6(100)
 
 /**
  * Converts a decimal value to Fixed6 format by rounding to 6 decimal places.

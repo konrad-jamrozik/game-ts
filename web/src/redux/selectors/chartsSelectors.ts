@@ -5,7 +5,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
-import { F6Val0, toF } from '../../lib/primitives/fixed6'
+import { f6c0, toF } from '../../lib/primitives/fixed6'
 
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
@@ -306,7 +306,7 @@ function applyBattleOutcomeToSets(
 }
 
 function getMaxEffectiveSkill(agent: Agent): number {
-  return toF(effectiveSkill({ ...agent, hitPoints: agent.maxHitPoints, exhaustionPct: F6Val0 }))
+  return toF(effectiveSkill({ ...agent, hitPoints: agent.maxHitPoints, exhaustionPct: f6c0 }))
 }
 
 function getSummaryStats(values: readonly number[]): {

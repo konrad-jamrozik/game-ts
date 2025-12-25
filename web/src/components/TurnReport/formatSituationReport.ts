@@ -1,6 +1,6 @@
 import { sum } from 'radash'
 import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
-import { F6Val0, toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
+import { f6c0, toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatUtils'
 import { getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
 import { asActivityLevelOrd } from '../../lib/model/modelOrdUtils'
@@ -70,7 +70,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
   const rows: TurnReportTreeViewModelProps[] = [
     // Faction operation penalties (from expired missions)
     ...breakdown.factionOperationPenalties
-      .filter((penalty) => f6gt(penalty.panicIncrease, F6Val0))
+      .filter((penalty) => f6gt(penalty.panicIncrease, f6c0))
       .map((penalty) => ({
         id: `panic-faction-op-${penalty.factionId}`,
         label: `${penalty.factionName} operation (lvl ${penalty.operationLevel})`,
@@ -171,7 +171,7 @@ function formatExpiredMissions(
     const displayId = fmtNoPrefix(expired.missionId, 'mission-')
     const children: TurnReportTreeViewModelProps[] = []
 
-    if (expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, F6Val0)) {
+    if (expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, f6c0)) {
       children.push({
         id: `expired-mission-${expired.missionId}-panic`,
         label: 'Panic penalty',

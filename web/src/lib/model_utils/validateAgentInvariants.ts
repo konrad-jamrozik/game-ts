@@ -1,6 +1,6 @@
 import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
-import { F6Val0, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub } from '../primitives/fixed6'
+import { f6c0, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
@@ -23,18 +23,18 @@ export function validateAgentLocalInvariants(agent: Agent, state?: GameState): v
  * Throws an Error if an invariant is violated.
  */
 function validateBasicStatRanges(agent: Agent): void {
-  if (f6lt(agent.hitPoints, F6Val0) || f6gt(agent.hitPoints, agent.maxHitPoints)) {
+  if (f6lt(agent.hitPoints, f6c0) || f6gt(agent.hitPoints, agent.maxHitPoints)) {
     throw new Error(
       `Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${f6fmtInt(agent.maxHitPoints)}`,
     )
   }
-  if (f6lt(agent.exhaustionPct, F6Val0)) {
+  if (f6lt(agent.exhaustionPct, f6c0)) {
     throw new Error(`Agent ${agent.id} has negative exhaustionPct: ${f6fmtInt(agent.exhaustionPct)}`)
   }
-  if (f6lt(agent.skill, F6Val0)) {
+  if (f6lt(agent.skill, f6c0)) {
     throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
   }
-  if (f6le(agent.maxHitPoints, F6Val0)) {
+  if (f6le(agent.maxHitPoints, f6c0)) {
     throw new Error(`Agent ${agent.id} has non-positive maxHitPoints: ${f6fmtInt(agent.maxHitPoints)}`)
   }
 }
@@ -42,7 +42,7 @@ function validateBasicStatRanges(agent: Agent): void {
 function validateTermination(agent: Agent): void {
   if (agent.state === 'KIA') {
     assertEqual(agent.assignment, 'KIA', `KIA agent ${agent.id} must have assignment of KIA (got ${agent.assignment})`)
-    assertEqual(agent.hitPoints.value, F6Val0.value, `KIA agent ${agent.id} must have 0 hit points`)
+    assertEqual(agent.hitPoints.value, f6c0.value, `KIA agent ${agent.id} must have 0 hit points`)
   }
   if (agent.state === 'Sacked') {
     assertEqual(
@@ -56,13 +56,13 @@ function validateTermination(agent: Agent): void {
       `Sacked agent ${agent.id} must have full hit points (${f6fmtInt(agent.maxHitPoints)})`,
     )
   }
-  if (f6eq(agent.hitPoints, F6Val0)) {
+  if (f6eq(agent.hitPoints, f6c0)) {
     assertEqual(agent.state, 'KIA', `Agent ${agent.id} with 0 hit points must be KIA`)
   }
 }
 
 function validateInjuryAndAssignment(agent: Agent): void {
-  if (f6lt(agent.hitPoints, agent.maxHitPoints) && f6gt(agent.hitPoints, F6Val0)) {
+  if (f6lt(agent.hitPoints, agent.maxHitPoints) && f6gt(agent.hitPoints, f6c0)) {
     assertEqual(
       agent.assignment,
       'Recovery',
@@ -86,7 +86,7 @@ function validateRecoveryMath(agent: Agent): void {
   if (!(agent.assignment === 'Recovery' || agent.state === 'Recovering')) {
     return
   }
-  if (f6le(lostHitPoints, F6Val0)) {
+  if (f6le(lostHitPoints, f6c0)) {
     return
   }
 
