@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
-import { getMissionDataById, getFactionName } from '../../lib/data_tables/dataTables'
+import { getMissionDataById, getFactionName } from '../../lib/data_table_utils/getterUtils'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'

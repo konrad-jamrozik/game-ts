@@ -1,4 +1,4 @@
-import { getMissionDataById } from '../../data_tables/dataTables'
+import { getMissionDataById } from '../../data_table_utils/getterUtils'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../data_tables/constants'
 import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
 import type { OffensiveMissionData } from '../../data_tables/offensiveMissionsDataTable'

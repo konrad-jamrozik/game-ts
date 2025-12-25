@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { getLeadById } from '../../lib/data_tables/dataTables'
+import { getLeadById } from '../../lib/data_table_utils/getterUtils'
 import {
   assignAgentsToContracting,
   assignAgentsToTraining,
