@@ -1,4 +1,4 @@
-import { getActivityLevelByOrd } from '../data_tables/dataTables'
+import { getActivityLevelByOrd, getFactionDataByDataId } from '../data_tables/dataTables'
 import type { Faction } from '../model/factionModel'
 
 /**
@@ -32,4 +32,13 @@ export function shouldPerformOperation(faction: Faction): boolean {
  */
 export function applySuppression(faction: Faction, turns: number): void {
   faction.suppressionTurns += turns
+}
+
+/**
+ * Checks if a faction is discovered by verifying all discovery prerequisites are met.
+ */
+export function isFactionDiscovered(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
+  const factionData = getFactionDataByDataId(faction.factionDataId)
+  const discoveryPrerequisite = factionData.discoveryPrerequisite
+  return discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
 }

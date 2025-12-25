@@ -106,16 +106,7 @@ export function getFactionName(faction: Faction): string {
   return factionData.name
 }
 
-/**
- * Checks if a faction is discovered by verifying all discovery prerequisites are met.
- */
-export function isFactionDiscovered(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
-  const factionData = getFactionDataByDataId(faction.factionDataId)
-  const discoveryPrerequisite = factionData.discoveryPrerequisite
-  return discoveryPrerequisite.every((leadId) => (leadInvestigationCounts[leadId] ?? 0) > 0)
-}
-
-function getFactionDataByDataId(id: FactionDataId): FactionData {
+export function getFactionDataByDataId(id: FactionDataId): FactionData {
   const found = dataTables.factions.find((faction) => faction.factionDataId === id)
   assertDefined(found, `Faction data with data id ${id} not found`)
   return found
