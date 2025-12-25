@@ -7,7 +7,7 @@ export function getRecoveryTurns(maxHitPoints: Fixed6, damage: Fixed6, hitPoints
   const damageNum = toF(damage)
   assertAboveZero(damageNum, `damage must be above 0, got: ${damageNum}`)
   const maxHitPointsNum = toF(maxHitPoints)
-  // KJA1 use Fixed6-native assert instead of these converstions
+  // KJA1 use Fixed6-native assert instead of these conversions
   assertLessThan(
     damageNum,
     maxHitPointsNum,
