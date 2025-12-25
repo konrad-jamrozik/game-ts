@@ -1,7 +1,7 @@
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { AgentId, LeadId, LeadInvestigationId } from '../../lib/model/modelIds'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
-import { getLeadById } from '../../lib/data_tables/dataTableUtils'
+import { getLeadById } from '../../lib/model_utils/getterUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 

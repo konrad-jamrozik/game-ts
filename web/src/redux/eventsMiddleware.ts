@@ -1,6 +1,6 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
-import { getMissionDataById } from '../lib/data_tables/dataTableUtils'
+import { getMissionDataById } from '../lib/model_utils/getterUtils'
 import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
 import {
   advanceTurn,

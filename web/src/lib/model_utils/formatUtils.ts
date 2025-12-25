@@ -1,5 +1,5 @@
 import pluralize from 'pluralize'
-import { getFactionDataById, getLeadById, getMissionDataById } from '../data_tables/dataTableUtils'
+import { getFactionDataById, getLeadById, getMissionDataById } from './getterUtils'
 import type { EnemyType } from '../model/enemyModel'
 import type { GameState } from '../model/gameStateModel'
 import {

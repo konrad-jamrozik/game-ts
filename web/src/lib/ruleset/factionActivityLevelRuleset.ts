@@ -1,4 +1,4 @@
-import { getActivityLevelByOrd } from '../data_tables/dataTableUtils'
+import { getActivityLevelByOrd } from '../model_utils/getterUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { asActivityLevelOrd } from '../model/modelOrdUtils'
 import { assertInRange } from '../primitives/assertPrimitives'
