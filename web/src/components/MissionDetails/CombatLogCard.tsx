@@ -7,7 +7,7 @@ import type { MissionId } from '../../lib/model/modelIds'
 import { useMissionReport } from './useMissionReport'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
-import { f6max, toF6 } from '../../lib/primitives/fixed6'
+import { F6Val0, f6max } from '../../lib/primitives/fixed6'
 
 type CombatLogCardProps = {
   missionId: MissionId
@@ -30,7 +30,7 @@ export function CombatLogCard({ missionId }: CombatLogCardProps): React.JSX.Elem
   const combatMaxSkill = allRows.reduce((max, row) => {
     const maxAttackerDefender = f6max(row.attackerSkill, row.defenderSkill)
     return f6max(max, maxAttackerDefender)
-  }, toF6(0))
+  }, F6Val0)
 
   // Filter rows based on checkbox states
   const rows: CombatLogRow[] = allRows.filter((row) =>

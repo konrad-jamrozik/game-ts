@@ -1,5 +1,5 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import { toF6 } from '../../lib/primitives/fixed6'
+import { F6Val0, toF6 } from '../../lib/primitives/fixed6'
 import { dataTables } from '../../lib/data_tables/dataTables'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldMission } from '../../lib/factories/missionFactory'
@@ -50,7 +50,7 @@ export function spawnMissions(state: GameState): void {
 }
 
 export const debugSetPanicToZero = asPlayerAction((state: GameState) => {
-  state.panic = toF6(0)
+  state.panic = F6Val0
 })
 
 export const debugSetAllFactionsSuppression = asPlayerAction((state: GameState) => {

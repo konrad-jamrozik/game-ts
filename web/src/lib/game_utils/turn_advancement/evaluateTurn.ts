@@ -4,7 +4,7 @@ import { getActivityLevelByOrd } from '../../model_utils/factionActivityLevelUti
 import { getFactionName } from '../../model_utils/factionUtils'
 import { isFactionDiscovered } from '../../ruleset/factionRuleset'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
-import { toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
+import { F6Val0, toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
 import type { Faction } from '../../model/factionModel'
 import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
@@ -479,12 +479,12 @@ function updatePanic(
 
   // Track faction operation penalties (from expired missions)
   const factionOperationPenalties = expiredMissions
-    .filter((expired) => expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, toF6(0)))
+    .filter((expired) => expired.panicPenalty !== undefined && f6gt(expired.panicPenalty, F6Val0))
     .map((expired) => ({
       factionId: expired.factionId,
       factionName: expired.factionName,
       operationLevel: expired.operationLevel ?? 1,
-      panicIncrease: expired.panicPenalty ?? toF6(0),
+      panicIncrease: expired.panicPenalty ?? F6Val0,
     }))
 
   // Apply panic increases from expired missions
@@ -501,7 +501,7 @@ function updatePanic(
         missionName,
         reduction: rewards.panicReduction,
       })
-      state.panic = f6max(toF6(0), f6sub(state.panic, rewards.panicReduction))
+      state.panic = f6max(F6Val0, f6sub(state.panic, rewards.panicReduction))
     }
   }
 

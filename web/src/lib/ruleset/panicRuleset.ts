@@ -1,4 +1,4 @@
-import { toF6, f6add, f6max, f6sub, type Fixed6 } from '../primitives/fixed6'
+import { F6Val0, f6add, f6max, f6sub, type Fixed6 } from '../primitives/fixed6'
 import type { GameState } from '../model/gameStateModel'
 
 /**
@@ -15,7 +15,7 @@ import type { GameState } from '../model/gameStateModel'
  * Panic cannot go below 0.
  */
 export function applyPanicReduction(state: GameState, reduction: Fixed6): Fixed6 {
-  const newPanic = f6max(toF6(0), f6sub(state.panic, reduction))
+  const newPanic = f6max(F6Val0, f6sub(state.panic, reduction))
   const actualReduction = f6sub(state.panic, newPanic)
   state.panic = newPanic
   return actualReduction

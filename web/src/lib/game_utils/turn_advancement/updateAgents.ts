@@ -1,5 +1,5 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../data_tables/constants'
-import { toF6, floorToF6, f6add, f6min, f6lt, f6eq, f6max, f6sub, f6mult, toF } from '../../primitives/fixed6'
+import { F6Val0, floorToF6, f6add, f6min, f6lt, f6eq, f6max, f6sub, f6mult, toF } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
@@ -20,9 +20,8 @@ export function updateAvailableAgents(state: GameState): void {
   // KJA1 previously this was
   // applyExhaustion(availableAgents, -state.exhaustionRecovery)
   // Still should call it?
-  const zeroF6 = toF6(0)
   for (const agent of availableAgents) {
-    agent.exhaustionPct = f6max(zeroF6, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
+    agent.exhaustionPct = f6max(F6Val0, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
   }
 }
 
@@ -33,8 +32,7 @@ export function updateRecoveringAgents(state: GameState): void {
   for (const agent of state.agents) {
     if (agent.state === 'Recovering') {
       // Apply exhaustion recovery
-      const zeroF6 = toF6(0)
-      agent.exhaustionPct = f6max(zeroF6, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
+      agent.exhaustionPct = f6max(F6Val0, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
 
       const isRecovering = f6lt(agent.hitPoints, agent.maxHitPoints)
 

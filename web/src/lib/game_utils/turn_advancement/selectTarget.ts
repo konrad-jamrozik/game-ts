@@ -1,4 +1,4 @@
-import { f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, f6sub, f6div, f6le, type Fixed6 } from '../../primitives/fixed6'
+import { F6Val0, f6cmp, f6dist, f6eq, f6inRange, f6mult, toF6r, f6sub, f6div, f6le, type Fixed6 } from '../../primitives/fixed6'
 import type { Enemy } from '../../model/enemyModel'
 import type { Agent } from '../../model/agentModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
@@ -146,8 +146,7 @@ function filterTargetsBySelfRemoval<T extends Agent | Enemy>(potentialTargets: T
   // Filter out targets that randomly remove themselves based on HP lost percentage
   let availableTargets = potentialTargets.filter((target) => {
     const hitPointsLost = f6sub(target.maxHitPoints, target.hitPoints)
-    const zeroF6 = toF6r(0)
-    if (f6le(hitPointsLost, zeroF6)) {
+    if (f6le(hitPointsLost, F6Val0)) {
       return true // No HP lost, target stays available
     }
     const hpLostPercentage = f6div(hitPointsLost, target.maxHitPoints)

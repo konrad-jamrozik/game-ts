@@ -1,6 +1,6 @@
 import { describe, expect, test } from 'vitest'
 import { getAgentSkillBasedValue } from '../../src/lib/ruleset/skillRuleset'
-import { toF6 } from '../../src/lib/primitives/fixed6'
+import { F6Val0, toF6 } from '../../src/lib/primitives/fixed6'
 import { agFix } from '../fixtures/agentFixture'
 
 describe(getAgentSkillBasedValue, () => {
@@ -56,7 +56,7 @@ describe(getAgentSkillBasedValue, () => {
     // so that effectiveSkill(agent) = skill
     const agent = agFix.bld({
       skill: toF6(effectiveSkill),
-      exhaustionPct: toF6(0),
+      exhaustionPct: F6Val0,
       hitPoints: toF6(30),
       maxHitPoints: toF6(30),
     })

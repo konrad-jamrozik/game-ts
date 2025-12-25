@@ -2,7 +2,7 @@ import type { Actor } from '../model/actorModel'
 import type { LeadInvestigation } from '../model/leadModel'
 import type { Agent, AgentAssignment, ActivityId, AgentAssignmentState } from '../model/agentModel'
 import type { LeadInvestigationId, MissionId } from '../model/modelIds'
-import { f6add, f6max, toF6, type Fixed6 } from '../primitives/fixed6'
+import { F6Val0, f6add, f6max, type Fixed6 } from '../primitives/fixed6'
 
 // Type guard function to determine if an Actor is an Agent
 export function isAgent(actor: Actor): actor is Agent {
@@ -79,9 +79,8 @@ export function notOnAssignment(agents: Agent[]): Agent[] {
 }
 
 export function applyExhaustion(agents: Agent[], exhaustion: Fixed6): void {
-  const zeroF6 = toF6(0) // KJA1 need global constant for 0 Fixed6.
   for (const agent of agents) {
-    agent.exhaustionPct = f6max(zeroF6, f6add(agent.exhaustionPct, exhaustion))
+    agent.exhaustionPct = f6max(F6Val0, f6add(agent.exhaustionPct, exhaustion))
   }
 }
 

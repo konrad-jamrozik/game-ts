@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/prefer-switch */
 import type { Agent } from '../model/agentModel'
 import type { AgentId } from '../model/modelIds'
-import { toF6 } from '../primitives/fixed6'
+import { F6Val0, F6Val100, toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
 import { fmtAgentId } from '../model_utils/formatUtils'
 import { assertEqual, assertDefined } from '../primitives/assertPrimitives'
@@ -16,12 +16,12 @@ export const initialAgent: Agent = {
   turnHired: 1,
   state: 'Available',
   assignment: 'Standby',
-  skill: toF6(100),
-  exhaustionPct: toF6(0),
+  skill: F6Val100,
+  exhaustionPct: F6Val0,
   hitPoints: toF6(30),
   maxHitPoints: toF6(30),
   missionsTotal: 0,
-  skillFromTraining: toF6(0),
+  skillFromTraining: F6Val0,
   weapon: initialWeapon,
 }
 

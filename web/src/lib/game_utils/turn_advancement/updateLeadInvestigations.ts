@@ -6,7 +6,7 @@ import type { Mission } from '../../model/missionModel'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../data_tables/constants'
-import { toF6, f6ge } from '../../primitives/fixed6'
+import { F6Val100, f6ge } from '../../primitives/fixed6'
 import { getLeadIntelFromAgents, getLeadSuccessChance } from '../../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
@@ -77,8 +77,7 @@ function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigat
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
 
   // Find exhausted agents (exhaustionPct >= 100)
-  const exhaustion100 = toF6(100) // KJA1 need global constant for 100 Fixed6.
-  const exhaustedAgents = agentsInvestigating.filter((agent) => f6ge(agent.exhaustionPct, exhaustion100))
+  const exhaustedAgents = agentsInvestigating.filter((agent) => f6ge(agent.exhaustionPct, F6Val100))
 
   if (exhaustedAgents.length === 0) {
     return

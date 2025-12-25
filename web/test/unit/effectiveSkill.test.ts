@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import type { Agent } from '../../src/lib/model/agentModel'
 import { agFix } from '../fixtures/agentFixture'
 import { effectiveSkill } from '../../src/lib/ruleset/skillRuleset'
-import { toF6 } from '../../src/lib/primitives/fixed6'
+import { F6Val0, toF6 } from '../../src/lib/primitives/fixed6'
 
 describe(effectiveSkill, () => {
   // prettier-ignore
@@ -32,7 +32,7 @@ describe(effectiveSkill, () => {
     ['exhaustion above 100 capped at 100', agFix.exhausted(150), 5],  // exhaustion capped at 100, subtract 5 = 95 effective; effective_skill = 100 * (1 - 0/30) * (1 - 95/100) = 100 * 1 * 0.05 = 5
 
     ['zero hit points', agFix.bld({
-      hitPoints: toF6(0),
+      hitPoints: F6Val0,
       maxHitPoints: toF6(30),
     }), 0],  // hit points lost = 30 - 0 = 30; effective_skill = 100 * (1 - 30/30) * (1 - 0/100) = 100 * 0 * 1 = 0
   ])('%s', (_testName, agent, expected) => {

@@ -1,4 +1,4 @@
-import { toF6 } from '../primitives/fixed6'
+import { F6Val0 } from '../primitives/fixed6'
 import { bldFactions } from './factionFactory'
 import type { GameState } from '../model/gameStateModel'
 import { validateAgentInvariants } from '../model_utils/validateAgentInvariants'
@@ -23,7 +23,7 @@ export const initialGameState: GameState = {
   turn: 1,
   actionsCount: 0,
   // Situation
-  panic: toF6(0),
+  panic: F6Val0,
   factions: bldFactions(),
   // Assets
   money: 500,

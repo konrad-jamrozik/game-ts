@@ -5,7 +5,19 @@ import type { MissionId } from '../../model/modelIds'
 import type { OffensiveMissionData } from '../../data_tables/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
-import { f6add, f6fmtInt, toF6, f6lt, f6le, f6sumBy, f6sub, f6mult, toF, type Fixed6 } from '../../primitives/fixed6'
+import {
+  f6add,
+  f6fmtInt,
+  F6Val0,
+  toF6,
+  f6lt,
+  f6le,
+  f6sumBy,
+  f6sub,
+  f6mult,
+  toF,
+  type Fixed6,
+} from '../../primitives/fixed6'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
@@ -48,7 +60,7 @@ export function evaluateDeployedMission(
   // Determine mission outcome
   // Enemies are neutralized if they are either terminated (HP <= 0) or incapacitated (effective skill <= 10% base)
   const allEnemiesNeutralized = mission.enemies.every(
-    (enemy) => f6le(enemy.hitPoints, toF6(0)) || !canParticipateInBattle(enemy),
+    (enemy) => f6le(enemy.hitPoints, F6Val0) || !canParticipateInBattle(enemy),
   )
   assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
   if (allEnemiesNeutralized) {
@@ -76,10 +88,9 @@ function getAgentExhaustionAfterBattle(
   const survivingAgents = notTerminated(deployedAgents)
   const finalAgentExhaustion = f6sumBy(survivingAgents, (agent) => agent.exhaustionPct)
   // Calculate initial exhaustion for only the surviving agents
-  const zeroF6 = toF6(0)
   const initialSurvivingAgentExhaustion = f6sumBy(
     survivingAgents,
-    (agent) => initialAgentExhaustionByAgentId[agent.id] ?? zeroF6,
+    (agent) => initialAgentExhaustionByAgentId[agent.id] ?? F6Val0,
   )
   return toF(f6sub(finalAgentExhaustion, initialSurvivingAgentExhaustion))
 }
@@ -101,7 +112,7 @@ function updateAgentsAfterBattle(
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
 
-    const isTerminated = f6le(agent.hitPoints, toF6(0))
+    const isTerminated = f6le(agent.hitPoints, F6Val0)
 
     if (isTerminated) {
       agent.state = 'KIA'
@@ -206,7 +217,7 @@ function bldRewardsFromMissionData(
     return {
       money: getMoneyRewardForOperation(operationLevel),
       funding: getFundingRewardForOperation(operationLevel),
-      panicReduction: toF6(0),
+      panicReduction: F6Val0,
       factionRewards: [],
     }
   }
