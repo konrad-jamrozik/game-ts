@@ -258,12 +258,10 @@ function evaluateDeployedMissions(state: GameState): {
       const outcome: BattleOutcome = retreated ? 'Retreated' : agentsTerminated === agentsDeployed ? 'Wiped' : 'Won'
 
       // Get faction name from mission data
-      let factionName = 'Unknown'
       const { factionId } = missionData
       const faction = state.factions.find((factionItem) => factionItem.id === factionId)
-      if (faction !== undefined) {
-        factionName = getFactionName(faction)
-      }
+      assertDefined(faction, `Faction with id ${factionId} not found for deployed mission ${missionId}`)
+      const factionName = getFactionName(faction)
 
       // Calculate battle stats
 
@@ -569,11 +567,10 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   // Pick a random mission data from candidates
   // KJA3 put this random into an until function
   const selectedMissionData = candidateMissionData[Math.floor(Math.random() * candidateMissionData.length)]
-  if (selectedMissionData === undefined) {
-    // KJA3 should assert fail. Also search for other palaces like that and update Agents.md
-    // Should not happen, but handle gracefully
-    return
-  }
+  assertDefined(
+    selectedMissionData,
+    `Failed to select mission data: candidateMissionData.length=${candidateMissionData.length}, faction ${faction.id}, operation level ${operationLevel}`,
+  )
 
   const newMission = bldMission({
     missionCount: state.missions.length,

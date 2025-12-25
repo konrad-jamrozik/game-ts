@@ -95,7 +95,8 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
 
       // Find the mission to get the mission info for logging
       const mission = gameState.missions.find((m) => m.id === missionId)
-      const missionName = mission ? getMissionDataById(mission.missionDataId).name : 'Unknown Mission'
+      assertDefined(mission, `Mission with id ${missionId} not found when logging deploy action`)
+      const missionName = getMissionDataById(mission.missionDataId).name
 
       postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
     } else if (buyUpgrade.match(action)) {
