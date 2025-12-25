@@ -359,7 +359,7 @@ export default {
       severity: 'error',
       comment: 'lib/model can directly import from lib/model (same directory), lib/primitives',
       from: {
-        path: '^src/lib/model',
+        path: '^src/lib/model/',
       },
       to: {
         pathNot: '^src/lib/(model|primitives)',
