@@ -1,13 +1,9 @@
 import type { Fixed6 } from '../primitives/fixed6'
 import type { MissionState } from './outcomeTypes'
-import type { AgentId } from './agentModel'
 import type { Enemy } from './enemyModel'
-import type { FactionId } from './factionModel'
-import type { MissionDataId, MissionId } from './modelIds'
+import type { AgentId, FactionId, MissionDataId, MissionId } from './modelIds'
 
 export type { MissionState } from './outcomeTypes'
-
-export type { MissionId, MissionDataId } from './modelIds'
 
 export type FactionRewards = {
   factionId: FactionId

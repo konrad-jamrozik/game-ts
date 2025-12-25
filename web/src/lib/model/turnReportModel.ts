@@ -1,6 +1,5 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { FactionId } from './factionModel'
-import type { LeadId } from './leadModel'
+import type { FactionId, LeadId } from './modelIds'
 import type { MissionRewards } from './missionModel'
 import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
 

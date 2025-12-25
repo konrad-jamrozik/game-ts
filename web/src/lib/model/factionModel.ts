@@ -1,7 +1,5 @@
 import type { FactionId, FactionDataId } from './modelIds'
 
-export type { FactionId, FactionDataId } from './modelIds'
-
 /**
  * Activity level progression values.
  * 0 = Dormant, 1 = Faint, 2 = Emerging, 3 = Active, 4 = Expanding, 5 = Escalating, 6 = War, 7 = Total War

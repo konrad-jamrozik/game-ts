@@ -1,4 +1,5 @@
-import type { Agent, AgentId } from '../../src/lib/model/agentModel'
+import type { Agent } from '../../src/lib/model/agentModel'
+import type { AgentId } from '../../src/lib/model/modelIds'
 import { bldAgent } from '../../src/lib/factories/agentFactory'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { wpnFix } from './weaponFixture'

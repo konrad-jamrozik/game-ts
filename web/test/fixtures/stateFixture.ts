@@ -1,12 +1,11 @@
 import { expect } from 'vitest'
 import { bldEnemies } from '../../src/lib/factories/enemyFactory'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
-import type { Agent, AgentAssignment, AgentId, AgentState } from '../../src/lib/model/agentModel'
+import type { Agent, AgentAssignment, AgentState } from '../../src/lib/model/agentModel'
 import type { Enemy } from '../../src/lib/model/enemyModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
-import type { LeadId } from '../../src/lib/model/leadModel'
 import type { Mission } from '../../src/lib/model/missionModel'
-import type { MissionDataId, MissionId } from '../../src/lib/model/modelIds'
+import type { AgentId, LeadId, MissionDataId, MissionId } from '../../src/lib/model/modelIds'
 import {
   available,
   isActivityAssignment,

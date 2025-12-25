@@ -5,7 +5,8 @@
  *
  */
 
-import type { FactionActivityLevelOrd, FactionId, FactionDataId } from '../model/factionModel'
+import type { FactionActivityLevelOrd } from '../model/factionModel'
+import type { FactionDataId, FactionId } from '../model/modelIds'
 
 /**
  * Faction definitions.

@@ -11,7 +11,8 @@ import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_
 import { fmtForDisplay } from '../../lib/data_table_utils/formatUtils'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../../lib/model/leadModel'
+import type { LeadInvestigation } from '../../lib/model/leadModel'
+import type { LeadInvestigationId } from '../../lib/model/modelIds'
 import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { getLeadIntelFromAgents, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {

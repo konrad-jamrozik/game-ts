@@ -1,14 +1,11 @@
 import type { Fixed6 } from '../primitives/fixed6'
-import type { AgentId } from './agentModel'
-import type { EnemyId } from './modelIds'
+import type { AgentId, EnemyId } from './modelIds'
 
 export type Weapon = {
   damage: number
   minDamage: number
   maxDamage: number
 }
-
-export type { EnemyId } from './modelIds'
 
 export type Actor = {
   id: EnemyId | AgentId

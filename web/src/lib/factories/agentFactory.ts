@@ -1,5 +1,6 @@
 /* eslint-disable unicorn/prefer-switch */
-import type { Agent, AgentId } from '../model/agentModel'
+import type { Agent } from '../model/agentModel'
+import type { AgentId } from '../model/modelIds'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
 import { fmtAgentId } from '../data_table_utils/formatUtils'

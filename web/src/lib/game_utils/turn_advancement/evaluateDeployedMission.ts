@@ -1,6 +1,7 @@
 import { getMissionDataById } from '../../data_table_utils/getterUtils'
 import { MISSION_SURVIVAL_SKILL_GAIN, EXHAUSTION_PENALTY } from '../../data_tables/constants'
-import type { MissionRewards, Mission, MissionId } from '../../model/missionModel'
+import type { Mission, MissionRewards } from '../../model/missionModel'
+import type { MissionId } from '../../model/modelIds'
 import type { OffensiveMissionData } from '../../data_tables/offensiveMissionsDataTable'
 import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'

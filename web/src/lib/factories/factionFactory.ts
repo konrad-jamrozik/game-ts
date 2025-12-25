@@ -1,5 +1,6 @@
 import { dataTables } from '../data_tables/dataTables'
-import type { Faction, FactionId, FactionDataId } from '../model/factionModel'
+import type { Faction } from '../model/factionModel'
+import type { FactionDataId, FactionId } from '../model/modelIds'
 import type { FactionData } from '../data_tables/factionsDataTable'
 import { calculateOperationTurns } from '../ruleset/factionOperationLevelRuleset'
 

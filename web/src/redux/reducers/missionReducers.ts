@@ -1,6 +1,5 @@
 import type { GameState } from '../../lib/model/gameStateModel'
-import type { AgentId } from '../../lib/model/agentModel'
-import type { MissionId } from '../../lib/model/missionModel'
+import type { AgentId, MissionId } from '../../lib/model/modelIds'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const deployAgentsToMission = asPlayerAction<{ missionId: MissionId; agentIds: AgentId[] }>(

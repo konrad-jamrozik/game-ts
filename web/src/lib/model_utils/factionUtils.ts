@@ -1,4 +1,5 @@
-import type { Faction, FactionId, FactionActivityLevelOrd, FactionOperationLevelOrd } from '../model/factionModel'
+import type { Faction, FactionActivityLevelOrd, FactionOperationLevelOrd } from '../model/factionModel'
+import type { FactionId } from '../model/modelIds'
 import { assertDefined } from '../primitives/assertPrimitives'
 
 export function getFactionById(gameState: { factions: Faction[] }, factionId: FactionId): Faction {

@@ -1,14 +1,21 @@
 import pluralize from 'pluralize'
 import { getFactionDataById, getLeadById, getMissionDataById } from './getterUtils'
-import type { EnemyId } from '../model/actorModel'
-import type { AgentId } from '../model/agentModel'
 import type { EnemyType } from '../model/enemyModel'
-import type { FactionId } from '../model/factionModel'
 import type { GameState } from '../model/gameStateModel'
-import type { LeadId, LeadInvestigationId } from '../model/leadModel'
-import type { MissionDataId, MissionId } from '../model/missionModel'
+import {
+  assertIsFactionId,
+  asLeadId,
+  assertIsLeadInvestigationId,
+  assertIsMissionId,
+  type AgentId,
+  type EnemyId,
+  type FactionId,
+  type LeadId,
+  type LeadInvestigationId,
+  type MissionDataId,
+  type MissionId,
+} from '../model/modelIds'
 import type { ValueChange } from '../model/turnReportModel'
-import { assertIsFactionId, asLeadId, assertIsLeadInvestigationId, assertIsMissionId } from '../model/modelIds'
 import { getLeadInvestigationById } from '../model_utils/leadInvestigationUtils'
 import { getMissionById } from '../model_utils/missionUtils'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'

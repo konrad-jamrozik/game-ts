@@ -1,4 +1,5 @@
-import type { Mission, MissionDataId, MissionId } from '../model/missionModel'
+import type { Mission } from '../model/missionModel'
+import type { MissionDataId, MissionId } from '../model/modelIds'
 import type { EnemyCounts } from '../model/enemyModel'
 import { bldEnemies } from './enemyFactory'
 import { fmtMissionId } from '../data_table_utils/formatUtils'

@@ -5,7 +5,7 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import * as React from 'react'
-import type { LeadId } from '../../lib/model/leadModel'
+import type { LeadId } from '../../lib/model/modelIds'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { dataTables } from '../../lib/data_tables/dataTables'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'

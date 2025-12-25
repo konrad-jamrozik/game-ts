@@ -1,4 +1,5 @@
-import type { LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
+import type { LeadInvestigation } from '../model/leadModel'
+import type { LeadInvestigationId } from '../model/modelIds'
 import type { GameState } from '../model/gameStateModel'
 import { assertDefined } from '../primitives/assertPrimitives'
 

@@ -1,4 +1,5 @@
-import type { Mission, MissionId } from '../model/missionModel'
+import type { Mission } from '../model/missionModel'
+import type { MissionId } from '../model/modelIds'
 import type { MissionState } from '../model/outcomeTypes'
 import type { GameState } from '../model/gameStateModel'
 import { assertDefined } from '../primitives/assertPrimitives'

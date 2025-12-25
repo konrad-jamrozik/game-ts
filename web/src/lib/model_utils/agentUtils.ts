@@ -1,7 +1,7 @@
 import type { Actor } from '../model/actorModel'
-import type { MissionId } from '../model/missionModel'
-import type { LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
+import type { LeadInvestigation } from '../model/leadModel'
 import type { Agent, AgentAssignment, ActivityId, AgentAssignmentState } from '../model/agentModel'
+import type { LeadInvestigationId, MissionId } from '../model/modelIds'
 import { f6add, f6max, toF6, type Fixed6 } from '../primitives/fixed6'
 
 // Type guard function to determine if an Actor is an Agent

@@ -1,7 +1,6 @@
 import { assertTrue } from '../primitives/assertPrimitives'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
-import type { MissionDataId } from '../model/missionModel'
-import type { FactionId } from '../model/factionModel'
+import type { FactionId, MissionDataId } from '../model/modelIds'
 import type { EnemyCounts } from '../model/enemyModel'
 import type { FactionData } from './factionsDataTable'
 
