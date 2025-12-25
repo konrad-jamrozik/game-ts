@@ -8,7 +8,7 @@ import { ExpandableCard } from './Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
-import { f6str } from '../lib/data_table_utils/formatUtils'
+import { f6str } from '../lib/model_utils/formatUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event

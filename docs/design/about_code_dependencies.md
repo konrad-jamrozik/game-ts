@@ -69,7 +69,6 @@ graph TD
         LibGam[lib/game_utils]
         LibFac[lib/factories]
         LibRul[lib/ruleset]
-        LibDataTUtils[lib/data_table_utils]
         LibDataT[lib/data_tables]
         LibMUt[lib/model_utils]
         LibMod[lib/model]
@@ -96,8 +95,7 @@ graph TD
     RdxSel --> RdxStore
     LibGam --> LibFac
     LibFac --> LibRul
-    LibRul --> LibDataTUtils
-    LibDataTUtils --> LibDataT
+    LibRul --> LibDataT
     LibDataT --> LibMUt
     LibMUt --> LibMod
     LibMod --> LibPri

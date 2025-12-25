@@ -1,6 +1,6 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
-import { getMissionDataById } from '../lib/data_table_utils/getterUtils'
+import { getMissionDataById } from '../lib/model_utils/getterUtils'
 import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
 import {
   advanceTurn,
@@ -16,7 +16,7 @@ import {
 } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import type { RootState } from './rootReducer'
-import { fmtAgentCount } from '../lib/data_table_utils/formatUtils'
+import { fmtAgentCount } from '../lib/model_utils/formatUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].

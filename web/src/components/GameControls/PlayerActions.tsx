@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { getLeadById } from '../../lib/data_table_utils/getterUtils'
+import { getLeadById } from '../../lib/model_utils/getterUtils'
 import {
   assignAgentsToContracting,
   assignAgentsToTraining,
@@ -24,7 +24,7 @@ import {
   clearInvestigationSelection,
   clearMissionSelection,
 } from '../../redux/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../../lib/data_table_utils/formatUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
 import { getRemainingTransportCap, validateMissionDeployment } from '../../lib/model_utils/missionUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'

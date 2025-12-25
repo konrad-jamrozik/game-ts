@@ -3,7 +3,7 @@ import type { Agent } from '../model/agentModel'
 import type { AgentId } from '../model/modelIds'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
-import { fmtAgentId } from '../data_table_utils/formatUtils'
+import { fmtAgentId } from '../model_utils/formatUtils'
 import { assertEqual, assertDefined } from '../primitives/assertPrimitives'
 import { validateAgentLocalInvariants } from '../model_utils/validateAgentInvariants'
 

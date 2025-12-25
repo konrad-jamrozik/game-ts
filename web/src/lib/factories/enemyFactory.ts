@@ -1,9 +1,9 @@
 import { ENEMY_TYPES, type Enemy, type EnemyCounts, type EnemyType } from '../model/enemyModel'
-import { getEnemyByType } from '../data_table_utils/getterUtils'
+import { getEnemyByType } from '../model_utils/getterUtils'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { assertAboveZero, assertNonNeg, assertTrue } from '../primitives/assertPrimitives'
-import { fmtEnemyId } from '../data_table_utils/formatUtils'
+import { fmtEnemyId } from '../model_utils/formatUtils'
 
 let idCounter = 0
 
