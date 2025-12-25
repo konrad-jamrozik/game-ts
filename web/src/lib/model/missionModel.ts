@@ -3,12 +3,11 @@ import type { MissionState } from './outcomeTypes'
 import type { AgentId } from './agentModel'
 import type { Enemy } from './enemyModel'
 import type { FactionId } from './factionModel'
+import type { MissionDataId, MissionId } from './modelIds'
 
 export type { MissionState } from './outcomeTypes'
 
-export type MissionId = `mission-${string}`
-
-export type MissionDataId = `missiondata-${string}`
+export type { MissionId, MissionDataId } from './modelIds'
 
 export type FactionRewards = {
   factionId: FactionId

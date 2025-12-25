@@ -28,9 +28,3 @@ export function assertIsOperationLevelOrd(value: number): asserts value is Facti
     throw new Error(`Invalid operation level: ${value}. Must be an integer 1-6.`)
   }
 }
-
-export function assertIsFactionId(id: string): asserts id is FactionId {
-  if (!id.startsWith('faction-')) {
-    throw new Error(`Invalid faction ID: ${id}`)
-  }
-}

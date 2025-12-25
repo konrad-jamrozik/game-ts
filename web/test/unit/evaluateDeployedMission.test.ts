@@ -1,6 +1,7 @@
 import { describe, expect, test } from 'vitest'
 import { toF6, f6gt, toF } from '../../src/lib/primitives/fixed6'
-import type { MissionDataId, Mission } from '../../src/lib/model/missionModel'
+import type { Mission } from '../../src/lib/model/missionModel'
+import type { MissionDataId } from '../../src/lib/model/modelIds'
 import { evaluateDeployedMission } from '../../src/lib/game_utils/turn_advancement/evaluateDeployedMission'
 import { bldAgent } from '../../src/lib/factories/agentFactory'
 import { bldMission } from '../../src/lib/factories/missionFactory'

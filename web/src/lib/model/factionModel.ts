@@ -1,6 +1,6 @@
-export type FactionId = 'faction-red-dawn' | 'faction-black-lotus' | 'faction-exalt' | 'faction-followers-of-dagon'
+import type { FactionId, FactionDataId } from './modelIds'
 
-export type FactionDataId = `factiondata-${string}`
+export type { FactionId, FactionDataId } from './modelIds'
 
 /**
  * Activity level progression values.

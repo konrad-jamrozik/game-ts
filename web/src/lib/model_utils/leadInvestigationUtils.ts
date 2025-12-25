@@ -13,9 +13,3 @@ export function getLeadInvestigationById(
   assertDefined(investigation, `Lead investigation with id ${investigationId} not found`)
   return investigation
 }
-
-export function assertIsLeadInvestigationId(id: string): asserts id is LeadInvestigationId {
-  if (!id.startsWith('investigation-')) {
-    throw new Error(`Invalid lead investigation ID: ${id}`)
-  }
-}

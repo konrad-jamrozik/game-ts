@@ -17,7 +17,7 @@ import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
 import { useAppSelector } from '../redux/hooks'
-import type { MissionId } from '../lib/model/missionModel'
+import type { MissionId } from '../lib/model/modelIds'
 
 function App(): React.JSX.Element {
   const viewMissionDetailsId: MissionId | undefined = useAppSelector((state) => state.selection.viewMissionDetailsId)

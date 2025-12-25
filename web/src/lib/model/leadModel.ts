@@ -1,11 +1,10 @@
 import type { LeadInvestigationState } from './outcomeTypes'
 import type { AgentId } from './agentModel'
+import type { LeadId, LeadInvestigationId } from './modelIds'
 
 export type { LeadInvestigationState } from './outcomeTypes'
 
-export type LeadId = `lead-${string}`
-
-export type LeadInvestigationId = `investigation-${string}`
+export type { LeadId, LeadInvestigationId } from './modelIds'
 
 export type Lead = {
   id: LeadId

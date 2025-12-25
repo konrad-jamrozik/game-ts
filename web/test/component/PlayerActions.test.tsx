@@ -4,8 +4,7 @@ import { st } from '../fixtures/stateFixture'
 import { ui } from '../fixtures/uiFixture'
 import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 import { agFix } from '../fixtures/agentFixture'
-
-import type { AgentId } from '../../src/lib/model/agentModel'
+import type { AgentId } from '../../src/lib/model/modelIds'
 
 describe(PlayerActions, () => {
   const agentId = 'agent-1' as AgentId

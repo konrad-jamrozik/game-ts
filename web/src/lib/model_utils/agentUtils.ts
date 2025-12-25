@@ -1,7 +1,7 @@
 import type { Actor } from '../model/actorModel'
 import type { MissionId } from '../model/missionModel'
 import type { LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
-import type { Agent, AgentAssignment, ActivityId, AgentAssignmentState, AgentId } from '../model/agentModel'
+import type { Agent, AgentAssignment, ActivityId, AgentAssignmentState } from '../model/agentModel'
 import { f6add, f6max, toF6, type Fixed6 } from '../primitives/fixed6'
 
 // Type guard function to determine if an Actor is an Agent
@@ -125,10 +125,4 @@ export function isLeadInvestigationAssignment(assignment: AgentAssignment): assi
 
 export function isAssignmentState(assignment: AgentAssignment): assignment is AgentAssignmentState {
   return assignment === 'Standby' || assignment === 'Recovery' || assignment === 'Sacked' || assignment === 'KIA'
-}
-
-export function assertIsAgentId(id: string): asserts id is AgentId {
-  if (!id.startsWith('agent-')) {
-    throw new Error(`Invalid agent ID: ${id}`)
-  }
 }

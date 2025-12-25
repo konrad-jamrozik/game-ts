@@ -17,11 +17,6 @@ KJA backlog:
 
 ## Current UI refinement
 
-- In UI, don't display the IDs, like "Mission site ID" or "Lead ID"; instead, just say "Mission site" or "Lead"
-  and display a simplified `<Idx> <abbreviated_name>`
-- Remove `-cult-` to shorten e.g. from `apprehend-cult-member-red-dawn`
-- looks like "Investigation ID" actually shows Name, not ID. E.g. "000 Deep state" instead of "000 deep-state".
-
 - Add color bars to assets and capab
 
 - display in capab Exhaustion recov. with %

@@ -1,4 +1,4 @@
-import type { Mission, MissionId, MissionDataId } from '../model/missionModel'
+import type { Mission, MissionId } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { GameState } from '../model/gameStateModel'
 import { assertDefined } from '../primitives/assertPrimitives'
@@ -115,16 +115,4 @@ export function getMissionById(missionId: MissionId, gameState: GameState): Miss
   const foundMission = gameState.missions.find((mission) => mission.id === missionId)
   assertDefined(foundMission, `Mission with id ${missionId} not found`)
   return foundMission
-}
-
-export function assertIsMissionId(id: string): asserts id is MissionId {
-  if (!id.startsWith('mission-')) {
-    throw new Error(`Invalid mission ID: ${id}`)
-  }
-}
-
-export function assertIsMissionDataId(id: string): asserts id is MissionDataId {
-  if (!id.startsWith('missiondata-')) {
-    throw new Error(`Invalid mission data ID: ${id}`)
-  }
 }
