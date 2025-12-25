@@ -5,10 +5,10 @@ import { getMissionById, getMissionDataById } from './missionUtils'
 import type { EnemyType } from '../model/enemyModel'
 import type { GameState } from '../model/gameStateModel'
 import {
-  assertIsFactionId,
+  asFactionId,
   asLeadId,
-  assertIsLeadInvestigationId,
-  assertIsMissionId,
+  asLeadInvestigationId,
+  asMissionId,
   type AgentId,
   type EnemyId,
   type FactionId,
@@ -108,8 +108,8 @@ export function fmtIdForDisplay(
   gameState?: GameState,
 ): string {
   if (id.startsWith('faction-')) {
-    assertIsFactionId(id)
-    const factionData = getFactionDataById(id)
+    const factionId = asFactionId(id)
+    const factionData = getFactionDataById(factionId)
     return factionData.name
   }
 
@@ -119,21 +119,21 @@ export function fmtIdForDisplay(
   }
 
   if (id.startsWith('investigation-')) {
-    assertIsLeadInvestigationId(id)
+    const investigationId = asLeadInvestigationId(id)
     assertDefined(gameState, 'gameState is required')
-    const investigation = gameState.leadInvestigations[id]
-    assertDefined(investigation, `Lead investigation with id ${id} not found`)
+    const investigation = gameState.leadInvestigations[investigationId]
+    assertDefined(investigation, `Lead investigation with id ${investigationId} not found`)
     const lead = getLeadById(investigation.leadId)
-    const numericPart = fmtNoPrefix(id, 'investigation-')
+    const numericPart = fmtNoPrefix(investigationId, 'investigation-')
     return `${numericPart} ${lead.name}`
   }
 
   if (id.startsWith('mission-')) {
-    assertIsMissionId(id)
+    const missionId = asMissionId(id)
     assertDefined(gameState, 'gameState is required')
-    const mission = getMissionById(id, gameState)
+    const mission = getMissionById(missionId, gameState)
     const missionData = getMissionDataById(mission.missionDataId)
-    const numericPart = fmtNoPrefix(id, 'mission-')
+    const numericPart = fmtNoPrefix(missionId, 'mission-')
     return `${numericPart} ${missionData.name}`
   }
 

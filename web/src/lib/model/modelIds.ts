@@ -14,6 +14,31 @@ export function asLeadId(id: string): LeadId {
   return id
 }
 
+export function asFactionId(id: string): FactionId {
+  assertIsFactionId(id)
+  return id
+}
+
+export function asLeadInvestigationId(id: string): LeadInvestigationId {
+  assertIsLeadInvestigationId(id)
+  return id
+}
+
+export function asMissionId(id: string): MissionId {
+  assertIsMissionId(id)
+  return id
+}
+
+export function asAgentId(id: string): AgentId {
+  assertIsAgentId(id)
+  return id
+}
+
+export function asMissionDataId(id: string): MissionDataId {
+  assertIsMissionDataId(id)
+  return id
+}
+
 export function assertIsLeadId(id: string): asserts id is LeadId {
   if (!id.startsWith('lead-')) {
     throw new Error(`Invalid lead ID: ${id}`)
