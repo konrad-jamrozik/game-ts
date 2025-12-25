@@ -38,6 +38,8 @@ The diagram below defines the directory import rules for the codebase.
 An entry `Foo --> Bar` means that directory or file `Foo` can depend on directory or file `Bar`
 and on all directories or files on which `Bar` can depend, recursively.
 
+Specifically, it means that `Foo` can also **directly depend on** anything that `Bar` can depend on, recursively.
+
 As such:
 - The first listed directory can depend on all other listed directories.
 - The last listed directory can not depend on any other listed directories.
