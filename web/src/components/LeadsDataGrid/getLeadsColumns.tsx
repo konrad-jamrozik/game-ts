@@ -2,7 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import type { LeadRow } from './LeadsDataGrid'
-import { fmtForDisplay } from '../../lib/model_utils/formatUtils'
+import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [
@@ -11,7 +11,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
       headerName: 'Lead',
       width: columnWidths['leads.id'],
       renderCell: (params: GridRenderCellParams<LeadRow, string>): React.JSX.Element => {
-        const displayValue = fmtForDisplay(params.row.id)
+        const displayValue = fmtIdForDisplay(params.row.id)
         return <span aria-label={`leads-row-id-${params.id}`}>{displayValue}</span>
       },
     },

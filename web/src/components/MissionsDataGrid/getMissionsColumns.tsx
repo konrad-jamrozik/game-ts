@@ -3,7 +3,7 @@ import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
-import { fmtForDisplay } from '../../lib/model_utils/formatUtils'
+import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
@@ -19,7 +19,7 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       headerName: 'Mission ID',
       width: columnWidths['missions.id'],
       renderCell: (params: GridRenderCellParams<MissionRow, string>): React.JSX.Element => {
-        const displayValue = fmtForDisplay(params.row.id, gameState)
+        const displayValue = fmtIdForDisplay(params.row.id, gameState)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },
     },

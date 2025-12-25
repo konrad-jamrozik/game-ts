@@ -95,9 +95,9 @@ graph TD
     RdxSel --> RdxStore
     LibGam --> LibFac
     LibFac --> LibRul
-    LibRul --> LibDataT
-    LibDataT --> LibMUt
-    LibMUt --> LibMod
+    LibRul --> LibMUt
+    LibMUt --> LibDataT
+    LibDataT --> LibMod
     LibMod --> LibPri
 ```
 

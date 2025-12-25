@@ -103,7 +103,7 @@ export function f6fmtValueChange<TNumber extends number | Fixed6 = number>(chang
  * - AgentId: "agent-007" (full agent ID as-is)
  * - MissionId: "007 Raid cult logistics hub" (numeric value + mission name)
  */
-export function fmtForDisplay(
+export function fmtIdForDisplay(
   id: FactionId | LeadId | LeadInvestigationId | MissionId | MissionDataId | AgentId,
   gameState?: GameState,
 ): string {

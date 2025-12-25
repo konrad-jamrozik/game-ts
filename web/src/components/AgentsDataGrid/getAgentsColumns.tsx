@@ -5,7 +5,7 @@ import type { AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
-import { fmtForDisplay } from '../../lib/model_utils/formatUtils'
+import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import { columnWidths } from '../Common/columnWidths'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
@@ -30,7 +30,7 @@ export function getAgentsColumns(
       headerName: 'ID',
       width: columnWidths['agents.id'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
-        const displayValue = fmtForDisplay(params.row.id)
+        const displayValue = fmtIdForDisplay(params.row.id)
         return <span aria-label={`agents-row-agent-id-${params.id}`}>{displayValue}</span>
       },
     },

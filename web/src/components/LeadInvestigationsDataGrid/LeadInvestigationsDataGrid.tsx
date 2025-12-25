@@ -8,7 +8,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getLeadById } from '../../lib/model_utils/getterUtils'
 import { investigatingAgents, inTransitWithAssignmentId } from '../../lib/model_utils/agentUtils'
-import { fmtForDisplay } from '../../lib/model_utils/formatUtils'
+import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
@@ -177,7 +177,7 @@ function bldAllInvestigationRows(
     return {
       id: investigation.id,
       rowId: index,
-      name: fmtForDisplay(investigation.id, gameState),
+      name: fmtIdForDisplay(investigation.id, gameState),
       intel: investigation.accumulatedIntel,
       successChance,
       agents: activeAgents,
