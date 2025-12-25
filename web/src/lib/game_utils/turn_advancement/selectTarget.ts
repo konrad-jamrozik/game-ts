@@ -16,7 +16,7 @@ import type { Agent } from '../../model/agentModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rand } from '../../primitives/rand'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
-import { rollRange } from '../../primitives/rolls'
+import { rollIncToInc } from '../../primitives/rolls'
 
 /**
  * Selects a target from potential targets using a fair distribution algorithm with skill-based preference.
@@ -86,7 +86,7 @@ export function selectTarget<T extends Agent | Enemy>(
   const targetsWithMinAttacks = availableTargets.filter(
     (target) => (attackCounts.get(target.id) ?? 0) === minAttackCount,
   )
-  const randomIndex = rollRange(0, targetsWithMinAttacks.length - 1).roll
+  const randomIndex = rollIncToInc(0, targetsWithMinAttacks.length - 1).roll
   return targetsWithMinAttacks[randomIndex]
 }
 

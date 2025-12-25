@@ -133,26 +133,40 @@ export function rollFixed4(label?: string): Fixed6 {
  * @returns A random integer from 1 to precision (inclusive)
  */
 export function roll1to(precision: number, label?: string): number {
-  return rollRange(1, precision, label).roll
+  return rollIncToInc(1, precision, label).roll
 }
 
 export function roll0IncTo1Exc(label?: string): RangeRoll {
-  return rollInFloatRange(0, 1, label)
+  return rollIncToExc(0, 1, label)
 }
 
-function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
+/**
+ * Performs a range roll, uniformly selecting a random value from the given [min, max) range, (min is inclusive, max is exclusive).
+ *
+ * @example
+ * rollInFloatRange(1, 100) -> returns a value in [1, 100)
+ * - range = 100 - 1 = 99
+ * - randResult * 99 = [0, 99.(9))
+ * - roll = [0, 99.(9))) + 1 = [1, 100.(9))
+ *
+ * @param min - Minimum value (inclusive)
+ * @param max - Maximum value (exclusive)
+ * @param label - Optional label for controllable random in tests
+ * @returns A random value from the given [min, max) range
+ */
+function rollIncToExc(min: number, max: number, label?: string): RangeRoll {
   const range = max - min
   const randResult = rand.get(label)
   const roll = randResult * range + min
   return {
     min,
     max,
-    roll,
+    roll, // KJA1 should return roll as [0,1) and final result
   }
 }
 
 /**
- * Performs a range roll, uniformly selecting a random value from the given (min, max) range, both inclusive.
+ * Performs a range roll, uniformly selecting a random value from the given [min, max] range (both inclusive).
  *
  * @example
  * rollRange(1, 100) -> returns a value in [1, 100] (inclusive)
@@ -166,7 +180,8 @@ function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
  * @param label - Optional label for controllable random in tests
  * @returns The range roll result
  */
-export function rollRange(min: number, max: number, label?: string): RangeRoll {
+// KJA1 this is not possible on floats, see https://chatgpt.com/c/694dbd81-03d4-832d-905e-57035c6e40bb
+export function rollIncToInc(min: number, max: number, label?: string): RangeRoll {
   const range = max - min + 1
   const randResult = rand.get(label)
   const roll = Math.floor(randResult * range) + min
