@@ -4,28 +4,28 @@ overview: Review and update all dependency-cruiser rules to allow direct imports
 todos:
   - id: analyze-transitive-deps
     content: Build complete transitive dependency sets for each file/directory from the mermaid diagrams
-    status: pending
+    status: completed
   - id: update-main-tsx-rule
     content: Update main.tsx rule to allow all transitive dependencies
-    status: pending
+    status: completed
   - id: update-store-ts-rule
     content: Update store.ts rule to allow all transitive dependencies (slices, reducers, reducer_utils, lib/game_utils, lib/model)
-    status: pending
+    status: completed
   - id: update-components-rules
     content: Update all components/* rules to allow transitive dependencies
-    status: pending
+    status: completed
   - id: update-redux-rules
     content: Update all redux/* rules to allow transitive dependencies
-    status: pending
+    status: completed
   - id: update-lib-rules
     content: Update all lib/* rules to allow transitive dependencies
-    status: pending
+    status: completed
   - id: update-primitives-rules
     content: Update primitives rules to allow transitive dependencies
-    status: pending
+    status: completed
   - id: verify-rules
     content: Verify all rules are correct and don't conflict
-    status: pending
+    status: completed
 ---
 
 # Update dependency-cruiser rules for transitive direct imports
