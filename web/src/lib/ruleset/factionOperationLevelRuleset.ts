@@ -13,6 +13,7 @@ export function calculateOperationTurns(level: FactionActivityLevelOrd): number 
     return Infinity
   }
   return (
+    // KJA1 use random util here. Basically all cases where we randomize from [0, 1)
     Math.floor(Math.random() * (config.operationFrequencyMax - config.operationFrequencyMin + 1)) +
     config.operationFrequencyMin
   )
