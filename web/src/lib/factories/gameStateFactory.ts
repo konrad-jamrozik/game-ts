@@ -68,7 +68,7 @@ export function bldGameState(gameStateOverrides: CreateGameStateParams = {}): Ga
  */
 export function bldInitialState(options?: { debug?: boolean }): GameState {
   const useDebug = options?.debug === true
-  const debugOverrides = useDebug ? bldDebugGameStateOverrides() : {}
+  const debugOverrides = useDebug ? bldDebugGameStateOverrides(initialGameState) : {}
   return bldGameState(debugOverrides)
 }
 

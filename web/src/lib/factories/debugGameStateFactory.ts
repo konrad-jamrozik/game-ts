@@ -5,13 +5,12 @@ import type { Agent } from '../model/agentModel'
 import type { AgentId, LeadId, LeadInvestigationId, MissionDataId, MissionId } from '../model/modelIds'
 import { bldMission } from './missionFactory'
 import { getFactionById } from '../model_utils/factionUtils'
-import { initialGameState } from './gameStateFactory'
 import { bldLeadInvestigation } from './leadInvestigationFactory'
 
 /**
  * Return only the overrides that should replace values in the normal initial state
  */
-export function bldDebugGameStateOverrides(): Partial<GameState> {
+export function bldDebugGameStateOverrides(initialGameState: GameState): Partial<GameState> {
   const gameStateOverrides: Partial<GameState> & { factions: GameState['factions'] } = {
     money: 1000,
     trainingCap: 4,
