@@ -1,5 +1,5 @@
 import { showErrorToast } from './errorToast'
-import { assertExhaustiveMissionStatePriorityMap } from '../model_utils/missionStatePriority'
+import { assertExhaustiveMissionStatePriorityMap } from '../../lib/model_utils/missionStatePriority'
 
 // KJA1 utils dir is not on dependency diagram even.
 /**

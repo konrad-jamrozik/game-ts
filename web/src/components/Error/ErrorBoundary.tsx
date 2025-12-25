@@ -1,6 +1,6 @@
 import { Component, type ReactNode, type ErrorInfo } from 'react'
 import { wipeStorage } from '../../redux/persist'
-import { showErrorToast } from '../../lib/utils/errorToast'
+import { showErrorToast } from '../utils/errorToast'
 
 type ErrorBoundaryState = {
   hasError: boolean

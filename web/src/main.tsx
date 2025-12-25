@@ -5,7 +5,7 @@ import { Provider } from 'react-redux'
 import App from './components/App'
 import { store } from './redux/store'
 import { ErrorBoundary } from './components/Error/ErrorBoundary'
-import { showErrorToast } from './lib/utils/errorToast'
+import { showErrorToast } from './components/utils/errorToast'
 import theme from './components/styling/theme'
 
 // Global error handler for unhandled promise rejections
