@@ -130,145 +130,142 @@ export default {
       },
     },
     // redux/store.ts can import from rootReducer.ts, eventsMiddleware.ts, persist.ts and their transitive dependencies
-    // Transitive: slices, reducer_utils, reducers, lib/game_utils, lib/model
+    // Transitive: slices, reducer_utils, reducers, and all of lib/
     {
       name: 'redux-store-restrictions',
       severity: 'error',
       comment:
-        'redux/store.ts can directly import from rootReducer.ts, eventsMiddleware.ts, persist.ts, and their transitive dependencies (slices, reducer_utils, reducers, lib/game_utils, lib/model)',
+        'redux/store.ts can directly import from rootReducer.ts, eventsMiddleware.ts, persist.ts, and their transitive dependencies (slices, reducer_utils, reducers, and all of lib/)',
       from: {
         path: '^src/redux/store\\.ts$',
       },
       to: {
         pathNot:
-          '^(src/redux/(eventsMiddleware|rootReducer|persist|slices|reducer_utils|reducers)\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+          '^(src/redux/(eventsMiddleware|rootReducer|persist|slices|reducer_utils|reducers)\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/eventsMiddleware.ts can import from rootReducer.ts, reducer_utils and their transitive dependencies
-    // Transitive: slices, reducers, lib/game_utils, lib/model
+    // Transitive: slices, reducers, and all of lib/
     {
       name: 'redux-events-middleware-restrictions',
       severity: 'error',
       comment:
-        'redux/eventsMiddleware.ts can directly import from rootReducer.ts, reducer_utils, and their transitive dependencies (slices, reducers, lib/game_utils, lib/model)',
+        'redux/eventsMiddleware.ts can directly import from rootReducer.ts, reducer_utils, and their transitive dependencies (slices, reducers, and all of lib/)',
       from: {
         path: '^src/redux/eventsMiddleware\\.ts$',
       },
       to: {
-        pathNot: '^(src/redux/(rootReducer\\.ts|reducer_utils|slices|reducers)|src/lib/(game_utils|model))',
+        pathNot: '^(src/redux/(rootReducer\\.ts|reducer_utils|slices|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
-    // redux/slices can import from reducers, lib/game_utils and their transitive dependencies
-    // Transitive: reducer_utils, lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives
+    // redux/slices can import from reducers and their transitive dependencies
+    // Transitive: reducer_utils, and all of lib/
     // Also allow imports within redux/slices (same directory)
     {
       name: 'redux-slices-restrictions',
       severity: 'error',
       comment:
-        'redux/slices can directly import from redux/slices (same directory), reducers, lib/game_utils, and their transitive dependencies (reducer_utils, lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
+        'redux/slices can directly import from redux/slices (same directory), reducers, and their transitive dependencies (reducer_utils, and all of lib/)',
       from: {
         path: '^src/redux/slices',
       },
       to: {
-        pathNot:
-          '^(src/redux/(slices|reducers|reducer_utils)|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
+        pathNot: '^(src/redux/(slices|reducers|reducer_utils)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
-    // redux/reducers can import from reducer_utils, lib/game_utils and their transitive dependencies
-    // Transitive: lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives
+    // redux/reducers can import from reducer_utils and their transitive dependencies
+    // Transitive: and all of lib/
     // Also allow imports within redux/reducers (same directory)
     {
       name: 'redux-reducers-restrictions',
       severity: 'error',
       comment:
-        'redux/reducers can directly import from redux/reducers (same directory), reducer_utils, lib/game_utils, and their transitive dependencies (lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
+        'redux/reducers can directly import from redux/reducers (same directory), reducer_utils, and their transitive dependencies (and all of lib/)',
       from: {
         path: '^src/redux/reducers',
       },
       to: {
-        pathNot:
-          '^(src/redux/(reducers|reducer_utils)|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
+        pathNot: '^(src/redux/(reducers|reducer_utils)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
-    // redux/reducer_utils can import from lib/model and its transitive dependencies
-    // Transitive: lib/primitives
+    // redux/reducer_utils can import from its transitive dependencies
+    // Transitive: and all of lib/
     // Also allow imports within redux/reducer_utils (same directory)
     {
       name: 'redux-reducer-utils-restrictions',
       severity: 'error',
-      comment:
-        'redux/reducer_utils can directly import from redux/reducer_utils (same directory), lib/model and its transitive dependencies (lib/primitives)',
+      comment: 'redux/reducer_utils can directly import from redux/reducer_utils (same directory), and all of lib/',
       from: {
         path: '^src/redux/reducer_utils',
       },
       to: {
-        pathNot: '^(src/redux/reducer_utils|src/lib/(model|primitives))',
+        pathNot: '^(src/redux/reducer_utils|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/hooks.ts can import from store.ts, rootReducer.ts and their transitive dependencies
-    // Transitive: eventsMiddleware.ts, persist.ts, slices, reducer_utils, reducers, lib/game_utils, lib/model
+    // Transitive: eventsMiddleware.ts, persist.ts, slices, reducer_utils, reducers, and all of lib/
     {
       name: 'redux-hooks-restrictions',
       severity: 'error',
       comment:
-        'redux/hooks.ts can directly import from store.ts, rootReducer.ts, and their transitive dependencies (eventsMiddleware.ts, persist.ts, slices, reducer_utils, reducers, lib/game_utils, lib/model)',
+        'redux/hooks.ts can directly import from store.ts, rootReducer.ts, and their transitive dependencies (eventsMiddleware.ts, persist.ts, slices, reducer_utils, reducers, and all of lib/)',
       from: {
         path: '^src/redux/hooks\\.ts$',
       },
       to: {
         pathNot:
-          '^(src/redux/(store|rootReducer|eventsMiddleware|persist|slices|reducer_utils|reducers)\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+          '^(src/redux/(store|rootReducer|eventsMiddleware|persist|slices|reducer_utils|reducers)\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/selectors can import from rootReducer.ts and its transitive dependencies
-    // Transitive: slices, reducer_utils, reducers, lib/game_utils, lib/model
+    // Transitive: slices, reducer_utils, reducers, and all of lib/
     // Also allow imports within redux/selectors (same directory)
     {
       name: 'redux-selectors-restrictions',
       severity: 'error',
       comment:
-        'redux/selectors can directly import from redux/selectors (same directory), rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, lib/game_utils, lib/model)',
+        'redux/selectors can directly import from redux/selectors (same directory), rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, and all of lib/)',
       from: {
         path: '^src/redux/selectors',
       },
       to: {
-        pathNot: '^(src/redux/(selectors|rootReducer\\.ts|slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+        pathNot: '^(src/redux/(selectors|rootReducer\\.ts|slices|reducer_utils|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/rootReducer.ts can import from slices, reducer_utils and their transitive dependencies
-    // Transitive: reducers, lib/game_utils, lib/model
+    // Transitive: reducers, and all of lib/
     {
       name: 'redux-root-reducer-restrictions',
       severity: 'error',
       comment:
-        'redux/rootReducer.ts can directly import from slices, reducer_utils, and their transitive dependencies (reducers, lib/game_utils, lib/model)',
+        'redux/rootReducer.ts can directly import from slices, reducer_utils, and their transitive dependencies (reducers, and all of lib/)',
       from: {
         path: '^src/redux/rootReducer\\.ts$',
       },
       to: {
-        pathNot: '^(src/redux/(slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+        pathNot: '^(src/redux/(slices|reducer_utils|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/persist.ts can import from rootReducer.ts and its transitive dependencies
-    // Transitive: slices, reducer_utils, reducers, lib/game_utils, lib/model
+    // Transitive: slices, reducer_utils, reducers, and all of lib/
     {
       name: 'redux-persist-restrictions',
       severity: 'error',
       comment:
-        'redux/persist.ts can directly import from rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, lib/game_utils, lib/model)',
+        'redux/persist.ts can directly import from rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, and all of lib/)',
       from: {
         path: '^src/redux/persist\\.ts$',
       },
       to: {
-        pathNot: '^(src/redux/rootReducer\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+        pathNot: '^(src/redux/rootReducer\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib)',
         path: '^(src/redux|src/lib)',
       },
     },

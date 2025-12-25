@@ -47,6 +47,10 @@ jobs:
         run: |
           npm run oxlint
 
+      - name: Run dependency-cruiser
+        run: |
+          npm run depcruise
+
       - name: Run ESLint
         run: |
           npm run eslint:ci
