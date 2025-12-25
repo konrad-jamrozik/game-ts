@@ -1,7 +1,7 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { toF6, f6fmtInt, f6fmtPctDec0, toF, type Fixed6 } from '../../lib/primitives/fixed6'
-import type { AgentState } from '../../lib/model/agentModel'
+import type { Agent, AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
@@ -9,12 +9,17 @@ import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import { columnWidths } from '../Common/columnWidths'
 import { getModelPalette } from '../styling/modelPaletteUtils'
 import { MyChip } from '../Common/MyChip'
-import type { AgentRow } from './AgentsDataGrid'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { bldFixed6SortComparator } from '../Common/dataGridSortUtils'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { AGENTS_SKILL_BAR_GREY, getColorBarFillColor } from '../ColorBar/colorBarUtils'
+
+export type AgentRow = Agent & {
+  // row id for DataGrid (required by MUI DataGrid)
+  // https://mui.com/x/react-data-grid/row-definition/
+  rowId: number
+}
 
 export function getAgentsColumns(
   rows: AgentRow[],

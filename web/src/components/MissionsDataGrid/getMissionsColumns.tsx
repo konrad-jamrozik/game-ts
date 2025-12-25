@@ -5,12 +5,18 @@ import * as React from 'react'
 import type { AppDispatch } from '../../redux/store'
 import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { GameState } from '../../lib/model/gameStateModel'
+import type { Mission } from '../../lib/model/missionModel'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
-import type { MissionRow } from './MissionsDataGrid'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
+
+export type MissionRow = Mission & {
+  rowId: number
+  name: string
+  displayId: string
+}
 
 export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [

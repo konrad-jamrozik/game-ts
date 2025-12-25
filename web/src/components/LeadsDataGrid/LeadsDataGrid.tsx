@@ -5,27 +5,13 @@ import {
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
 import * as React from 'react'
-import type { LeadId } from '../../lib/model/modelIds'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { dataTables } from '../../lib/data_tables/dataTables'
 import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
-import { getLeadsColumns } from './getLeadsColumns'
+import { getLeadsColumns, type LeadRow } from './getLeadsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-
-export type LeadRow = {
-  rowId: number
-  id: LeadId
-  name: string
-  difficulty: number
-  repeatable: boolean
-  hasActiveInvestigation: boolean
-  hasDoneInvestigation: boolean
-  isArchived: boolean
-  activeInvestigationCount: number
-  doneInvestigationCount: number
-}
 
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()

@@ -7,23 +7,7 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2, toF } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
-import { getCapabilitiesColumns } from './getCapabilitiesColumns'
-
-export type UpgradeRow = {
-  id: number
-  name:
-    | 'Agent cap'
-    | 'Transport cap'
-    | 'Training cap'
-    | 'Training skill gain'
-    | 'Exhaustion recovery'
-    | 'Hit points recovery %'
-    | 'Weapon damage'
-  displayedName?: string
-  value: number | string
-  upgrade: number | string
-  price: number
-}
+import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 
 export function CapabilitiesDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()

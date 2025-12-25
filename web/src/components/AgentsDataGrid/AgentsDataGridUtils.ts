@@ -1,5 +1,5 @@
 import type { GridColDef } from '@mui/x-data-grid'
-import type { AgentRow } from './AgentsDataGrid'
+import type { AgentRow } from './getAgentsColumns'
 
 export function filterAgentRows(
   allRows: AgentRow[],

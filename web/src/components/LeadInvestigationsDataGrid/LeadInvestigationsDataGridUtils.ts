@@ -1,4 +1,4 @@
-import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
+import type { LeadInvestigationRow } from './getLeadInvestigationsColumns'
 
 export function filterLeadInvestigationRows(
   allInvestigationRows: LeadInvestigationRow[],

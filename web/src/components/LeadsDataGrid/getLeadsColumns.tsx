@@ -1,8 +1,21 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
-import type { LeadRow } from './LeadsDataGrid'
 import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
+import type { LeadId } from '../../lib/model/modelIds'
+
+export type LeadRow = {
+  rowId: number
+  id: LeadId
+  name: string
+  difficulty: number
+  repeatable: boolean
+  hasActiveInvestigation: boolean
+  hasDoneInvestigation: boolean
+  isArchived: boolean
+  activeInvestigationCount: number
+  doneInvestigationCount: number
+}
 
 export function getLeadsColumns(): GridColDef<LeadRow>[] {
   const columns: GridColDef<LeadRow>[] = [

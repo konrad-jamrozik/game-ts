@@ -2,7 +2,15 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
-import type { SituationReportRow } from '../SituationReportCard'
+
+export type SituationReportRow = {
+  id: number
+  metric: string
+  value: string
+  projected?: string
+  diff?: string
+  reverseColor?: boolean
+}
 
 export function getSituationReportColumns(): GridColDef<SituationReportRow>[] {
   const columns: GridColDef<SituationReportRow>[] = [

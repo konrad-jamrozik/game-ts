@@ -6,7 +6,6 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import type { Mission } from '../../lib/model/missionModel'
 import { clearMissionSelection, setMissionSelection } from '../../redux/slices/selectionSlice'
 import {
   getActiveOrDeployedMissions,
@@ -19,14 +18,8 @@ import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedMissionIds } from '../../lib/model_utils/turnReportUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
-import { getMissionsColumns } from './getMissionsColumns'
+import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-
-export type MissionRow = Mission & {
-  rowId: number
-  name: string
-  displayId: string
-}
 
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()

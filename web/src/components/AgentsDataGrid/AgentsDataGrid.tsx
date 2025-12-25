@@ -1,7 +1,6 @@
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import type { Agent } from '../../lib/model/agentModel'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6max, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
@@ -9,14 +8,8 @@ import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
-import { getAgentsColumns } from './getAgentsColumns'
+import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-
-export type AgentRow = Agent & {
-  // row id for DataGrid (required by MUI DataGrid)
-  // https://mui.com/x/react-data-grid/row-definition/
-  rowId: number
-}
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()

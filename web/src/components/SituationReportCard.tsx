@@ -11,16 +11,7 @@ import { assertIsActivityLevelOrd } from '../lib/model/modelOrdUtils'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
-import { getSituationReportColumns } from './SituationReport/getSituationReportColumns'
-
-export type SituationReportRow = {
-  id: number
-  metric: string
-  value: string
-  projected?: string
-  diff?: string
-  reverseColor?: boolean
-}
+import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 
 function getFactionRows(faction: {
   activityLevel: number

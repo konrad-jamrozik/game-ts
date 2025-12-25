@@ -3,9 +3,26 @@ import * as React from 'react'
 import { fmtDec1, fmtDec1Diff, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
 import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { GameState } from '../../lib/model/gameStateModel'
+import type { LeadInvestigationId } from '../../lib/model/modelIds'
+import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
-import type { LeadInvestigationRow } from './LeadInvestigationsDataGrid'
+
+export type LeadInvestigationRow = {
+  id: LeadInvestigationId
+  rowId: number
+  name: string
+  intel: number
+  successChance: number
+  agents: number
+  agentsInTransit: number
+  startTurn: number
+  resistance: number
+  projectedIntel: number
+  intelDiff: number
+  state: LeadInvestigationState
+  completedThisTurn: boolean
+}
 
 export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<LeadInvestigationRow>[] {
   const columns: GridColDef<LeadInvestigationRow>[] = [

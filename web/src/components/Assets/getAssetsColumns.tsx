@@ -2,7 +2,15 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
-import type { AssetRow } from './AssetsDataGrid'
+
+export type AssetRow = {
+  id: number
+  name: 'Money' | 'Agents' | 'Funding'
+  displayedName?: string
+  value: number
+  projected?: number
+  diff?: number
+}
 
 export function getAssetsColumns(): GridColDef<AssetRow>[] {
   const columns: GridColDef<AssetRow>[] = [

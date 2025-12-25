@@ -12,8 +12,6 @@ import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
-import type { LeadInvestigationId } from '../../lib/model/modelIds'
-import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { getLeadIntelFromAgents, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
@@ -26,23 +24,7 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { getLeadInvestigationsColumns } from './getLeadInvestigationsColumns'
-
-export type LeadInvestigationRow = {
-  id: LeadInvestigationId
-  rowId: number
-  name: string
-  intel: number
-  successChance: number
-  agents: number
-  agentsInTransit: number
-  startTurn: number
-  resistance: number
-  projectedIntel: number
-  intelDiff: number
-  state: LeadInvestigationState
-  completedThisTurn: boolean
-}
+import { getLeadInvestigationsColumns, type LeadInvestigationRow } from './getLeadInvestigationsColumns'
 
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -170,8 +152,7 @@ function bldAllInvestigationRows(
       intelDiff = projectedIntel - investigation.accumulatedIntel
     }
 
-    const rowState: LeadInvestigationState =
-      investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
+    const rowState = investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
     const completedThisTurn = completedThisTurnIds.has(investigation.id)
 
     return {

@@ -3,16 +3,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { getAssetsColumns } from './getAssetsColumns'
-
-export type AssetRow = {
-  id: number
-  name: 'Money' | 'Agents' | 'Funding'
-  displayedName?: string
-  value: number
-  projected?: number
-  diff?: number
-}
+import { getAssetsColumns, type AssetRow } from './getAssetsColumns'
 
 export function AssetsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
