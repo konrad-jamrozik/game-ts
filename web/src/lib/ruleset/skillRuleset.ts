@@ -3,7 +3,7 @@ import type { Agent } from '../model/agentModel'
 import { NO_IMPACT_EXHAUSTION, AGENT_SKILL_VALUE_DIVISOR } from '../data_tables/constants'
 import { assertNonNeg } from '../primitives/assertPrimitives'
 import { nonNeg } from '../primitives/mathPrimitives'
-import { f6mult, f6sum, toF, toF6r, toF6, f6sub, f6div, f6min, type Fixed6 } from '../primitives/fixed6'
+import { f6mult, f6sumBy, toF, toF6r, toF6, f6sub, f6div, f6min, type Fixed6 } from '../primitives/fixed6'
 
 // Calculates the effective skill of an actor based on hit points lost and exhaustion
 // Refer to about_agents.md for details
@@ -56,7 +56,5 @@ export function getAgentSkillBasedValue(agent: Agent, value: number): Fixed6 {
  * @returns The total sum as a number
  */
 export function sumAgentSkillBasedValues(agents: readonly Agent[], value: number): Fixed6 {
-  const values = agents.map((agent) => getAgentSkillBasedValue(agent, value))
-  const sum = f6sum(...values)
-  return sum
+  return f6sumBy(agents, (agent) => getAgentSkillBasedValue(agent, value))
 }

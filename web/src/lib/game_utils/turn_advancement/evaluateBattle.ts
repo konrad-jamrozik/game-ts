@@ -8,7 +8,7 @@ import {
   f6cmp,
   f6div,
   f6eq,
-  f6sum,
+  f6sumBy,
   f6gt,
   f6lt,
   f6le,
@@ -60,13 +60,13 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const agentSkillUpdates: Record<string, Fixed6> = {}
 
   // Calculate initial totals for percentage tracking
-  const initialAgentEffectiveSkill = f6sum(...agentStats.map((stats) => stats.initialEffectiveSkill))
-  const initialAgentHitPoints = f6sum(...agents.map((agent) => agent.maxHitPoints))
-  const initialEnemySkill = f6sum(...enemies.map((enemy) => effectiveSkill(enemy)))
-  const initialEnemyHitPoints = f6sum(...enemies.map((enemy) => enemy.maxHitPoints))
+  const initialAgentEffectiveSkill = f6sumBy(agentStats, (stats) => stats.initialEffectiveSkill)
+  const initialAgentHitPoints = f6sumBy(agents, (agent) => agent.maxHitPoints)
+  const initialEnemySkill = f6sumBy(enemies, (enemy) => effectiveSkill(enemy))
+  const initialEnemyHitPoints = f6sumBy(enemies, (enemy) => enemy.maxHitPoints)
 
   // Track initial agent exhaustion for calculating total exhaustion gain
-  const initialAgentExhaustion = f6sum(...agents.map((agent) => agent.exhaustionPct))
+  const initialAgentExhaustion = f6sumBy(agents, (agent) => agent.exhaustionPct)
   const initialAgentExhaustionByAgentId: Record<string, Fixed6> = {}
   for (const agent of agents) {
     initialAgentExhaustionByAgentId[agent.id] = agent.exhaustionPct
@@ -100,9 +100,9 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     const activeEnemiesAtRoundStart = enemies.filter(
       (enemy) => f6gt(enemy.hitPoints, toF6(0)) && canParticipateInBattle(enemy),
     )
-    const agentSkillAtRoundStart = f6sum(...activeAgentsAtRoundStart.map((agent) => effectiveSkill(agent)))
+    const agentSkillAtRoundStart = f6sumBy(activeAgentsAtRoundStart, (agent) => effectiveSkill(agent))
     const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
-    const enemySkillAtRoundStart = f6sum(...activeEnemiesAtRoundStart.map((enemy) => effectiveSkill(enemy)))
+    const enemySkillAtRoundStart = f6sumBy(activeEnemiesAtRoundStart, (enemy) => effectiveSkill(enemy))
     const enemyHpAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => toF(enemy.hitPoints))
     const skillRatioAtRoundStart = toF6r(f6div(enemySkillAtRoundStart, agentSkillAtRoundStart))
 
@@ -166,9 +166,9 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const activeEnemiesAtBattleEnd = enemies.filter(
     (enemy) => f6gt(enemy.hitPoints, zeroF6) && canParticipateInBattle(enemy),
   )
-  const agentSkillAtBattleEnd = f6sum(...activeAgentsAtBattleEnd.map((agent) => effectiveSkill(agent)))
+  const agentSkillAtBattleEnd = f6sumBy(activeAgentsAtBattleEnd, (agent) => effectiveSkill(agent))
   const agentHpAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => toF(agent.hitPoints))
-  const enemySkillAtBattleEnd = f6sum(...activeEnemiesAtBattleEnd.map((enemy) => effectiveSkill(enemy)))
+  const enemySkillAtBattleEnd = f6sumBy(activeEnemiesAtBattleEnd, (enemy) => effectiveSkill(enemy))
   const enemyHpAtBattleEnd = sum(activeEnemiesAtBattleEnd, (enemy) => toF(enemy.hitPoints))
   // When all agents are terminated, skill ratio is undefined (division by zero).
   // Use 0 as a placeholder - the 'Wiped' status already conveys the battle outcome.
@@ -430,14 +430,14 @@ function showRoundStatus(
 
   // Current agent statistics
   const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, toF6(0)) && canParticipateInBattle(agent))
-  const currentAgentEffectiveSkill = f6sum(...activeAgents.map((agent) => effectiveSkill(agent)))
+  const currentAgentEffectiveSkill = f6sumBy(activeAgents, (agent) => effectiveSkill(agent))
   const currentAgentHitPoints = sum(activeAgents, (agent) => toF(agent.hitPoints))
   const agentSkillPct = f6fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, toF(initialAgentHitPoints))
 
   // Current enemy statistics
   const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, toF6(0)) && canParticipateInBattle(enemy))
-  const currentEnemyEffectiveSkill = f6sum(...activeEnemies.map((enemy) => effectiveSkill(enemy)))
+  const currentEnemyEffectiveSkill = f6sumBy(activeEnemies, (enemy) => effectiveSkill(enemy))
   const currentEnemyHitPoints = sum(activeEnemies, (enemy) => toF(enemy.hitPoints))
   const enemySkillPct = f6fmtPctDec0(currentEnemyEffectiveSkill, initialEnemySkill)
   const enemyHpPct = fmtPctDec0(currentEnemyHitPoints, toF(initialEnemyHitPoints))

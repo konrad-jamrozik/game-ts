@@ -142,6 +142,18 @@ export function f6sum(...values: Fixed6[]): Fixed6 {
 }
 
 /**
+ * Sums Fixed6 values from an array using a mapper function.
+ * Similar to Radash's sum, but returns a Fixed6.
+ * For example:
+ * f6sumBy(agents, (agent) => agent.exhaustionPct) = sum of all agent exhaustion values
+ * f6sumBy(enemies, (enemy) => enemy.skill) = sum of all enemy skill values
+ */
+export function f6sumBy<T extends object>(array: readonly T[], mapper: (item: T) => Fixed6): Fixed6 {
+  const sumRes = sum(array, (item) => mapper(item).value)
+  return fixed6(sumRes)
+}
+
+/**
  * Checks if two Fixed6 values are equal.
  * For example:
  * f6eq(fixed6(7_000_000), fixed6(7_000_000)) = true

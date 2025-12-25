@@ -4,7 +4,7 @@ import { useAppSelector } from '../../redux/hooks'
 import { getMissionDataById } from '../../lib/model_utils/missionUtils'
 import { getFactionName } from '../../lib/model_utils/factionUtils'
 import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
-import { f6sum, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
+import { f6sumBy, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import { div } from '../../lib/primitives/mathPrimitives'
 import type { OffensiveMissionData } from '../../lib/data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../../lib/data_tables/defensiveMissionsDataTable'
@@ -110,7 +110,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const enemyAverageSkill =
     enemies.length > 0
       ? (() => {
-          const totalSkill = toF(f6sum(...enemies.map((enemy) => enemy.skill)))
+          const totalSkill = toF(f6sumBy(enemies, (enemy) => enemy.skill))
           return fmtDec1(div(totalSkill, enemies.length))
         })()
       : '-'
