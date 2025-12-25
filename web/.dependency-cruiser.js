@@ -162,49 +162,52 @@ export default {
     },
     // redux/slices can import from reducers, lib/game_utils and their transitive dependencies
     // Transitive: reducer_utils, lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives
+    // Also allow imports within redux/slices (same directory)
     {
       name: 'redux-slices-restrictions',
       severity: 'error',
       comment:
-        'redux/slices can directly import from reducers, lib/game_utils, and their transitive dependencies (reducer_utils, lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
+        'redux/slices can directly import from redux/slices (same directory), reducers, lib/game_utils, and their transitive dependencies (reducer_utils, lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
       from: {
         path: '^src/redux/slices',
       },
       to: {
         pathNot:
-          '^(src/redux/reducers|src/redux/reducer_utils|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
+          '^(src/redux/(slices|reducers|reducer_utils)|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/reducers can import from reducer_utils, lib/game_utils and their transitive dependencies
     // Transitive: lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives
+    // Also allow imports within redux/reducers (same directory)
     {
       name: 'redux-reducers-restrictions',
       severity: 'error',
       comment:
-        'redux/reducers can directly import from reducer_utils, lib/game_utils, and their transitive dependencies (lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
+        'redux/reducers can directly import from redux/reducers (same directory), reducer_utils, lib/game_utils, and their transitive dependencies (lib/model, lib/factories, lib/ruleset, lib/model_utils, lib/data_tables, lib/primitives)',
       from: {
         path: '^src/redux/reducers',
       },
       to: {
         pathNot:
-          '^(src/redux/reducer_utils|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
+          '^(src/redux/(reducers|reducer_utils)|src/lib/(game_utils|model|factories|ruleset|model_utils|data_tables|primitives))',
         path: '^(src/redux|src/lib)',
       },
     },
     // redux/reducer_utils can import from lib/model and its transitive dependencies
     // Transitive: lib/primitives
+    // Also allow imports within redux/reducer_utils (same directory)
     {
       name: 'redux-reducer-utils-restrictions',
       severity: 'error',
       comment:
-        'redux/reducer_utils can directly import from lib/model and its transitive dependencies (lib/primitives)',
+        'redux/reducer_utils can directly import from redux/reducer_utils (same directory), lib/model and its transitive dependencies (lib/primitives)',
       from: {
         path: '^src/redux/reducer_utils',
       },
       to: {
-        pathNot: '^src/lib/(model|primitives)',
-        path: '^src/lib',
+        pathNot: '^(src/redux/reducer_utils|src/lib/(model|primitives))',
+        path: '^(src/redux|src/lib)',
       },
     },
     // redux/hooks.ts can import from store.ts, rootReducer.ts and their transitive dependencies
@@ -225,16 +228,17 @@ export default {
     },
     // redux/selectors can import from rootReducer.ts and its transitive dependencies
     // Transitive: slices, reducer_utils, reducers, lib/game_utils, lib/model
+    // Also allow imports within redux/selectors (same directory)
     {
       name: 'redux-selectors-restrictions',
       severity: 'error',
       comment:
-        'redux/selectors can directly import from rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, lib/game_utils, lib/model)',
+        'redux/selectors can directly import from redux/selectors (same directory), rootReducer.ts and its transitive dependencies (slices, reducer_utils, reducers, lib/game_utils, lib/model)',
       from: {
         path: '^src/redux/selectors',
       },
       to: {
-        pathNot: '^(src/redux/rootReducer\\.ts|src/redux/(slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
+        pathNot: '^(src/redux/(selectors|rootReducer\\.ts|slices|reducer_utils|reducers)|src/lib/(game_utils|model))',
         path: '^(src/redux|src/lib)',
       },
     },
@@ -270,88 +274,95 @@ export default {
     },
     // lib/game_utils can import from lib/factories and its transitive dependencies
     // Transitive: lib/ruleset, lib/model_utils, lib/data_tables, lib/model, lib/primitives
+    // Also allow imports within lib/game_utils (same directory)
     {
       name: 'lib-game-utils-restrictions',
       severity: 'error',
       comment:
-        'lib/game_utils can directly import from lib/factories and its transitive dependencies (lib/ruleset, lib/model_utils, lib/data_tables, lib/model, lib/primitives)',
+        'lib/game_utils can directly import from lib/game_utils (same directory), lib/factories and its transitive dependencies (lib/ruleset, lib/model_utils, lib/data_tables, lib/model, lib/primitives)',
       from: {
         path: '^src/lib/game_utils',
+      },
+      to: {
+        pathNot: '^src/lib/(game_utils|factories|ruleset|model_utils|data_tables|model|primitives)',
+        path: '^src/lib',
+      },
+    },
+    // lib/factories can import from lib/ruleset and its transitive dependencies
+    // Transitive: lib/model_utils, lib/data_tables, lib/model, lib/primitives
+    // Also allow imports within lib/factories (same directory)
+    {
+      name: 'lib-factories-restrictions',
+      severity: 'error',
+      comment:
+        'lib/factories can directly import from lib/factories (same directory), lib/ruleset and its transitive dependencies (lib/model_utils, lib/data_tables, lib/model, lib/primitives)',
+      from: {
+        path: '^src/lib/factories',
       },
       to: {
         pathNot: '^src/lib/(factories|ruleset|model_utils|data_tables|model|primitives)',
         path: '^src/lib',
       },
     },
-    // lib/factories can import from lib/ruleset and its transitive dependencies
-    // Transitive: lib/model_utils, lib/data_tables, lib/model, lib/primitives
+    // lib/ruleset can import from lib/model_utils and its transitive dependencies
+    // Transitive: lib/data_tables, lib/model, lib/primitives
+    // Also allow imports within lib/ruleset (same directory)
     {
-      name: 'lib-factories-restrictions',
+      name: 'lib-ruleset-restrictions',
       severity: 'error',
       comment:
-        'lib/factories can directly import from lib/ruleset and its transitive dependencies (lib/model_utils, lib/data_tables, lib/model, lib/primitives)',
+        'lib/ruleset can directly import from lib/ruleset (same directory), lib/model_utils and its transitive dependencies (lib/data_tables, lib/model, lib/primitives)',
       from: {
-        path: '^src/lib/factories',
+        path: '^src/lib/ruleset',
       },
       to: {
         pathNot: '^src/lib/(ruleset|model_utils|data_tables|model|primitives)',
         path: '^src/lib',
       },
     },
-    // lib/ruleset can import from lib/model_utils and its transitive dependencies
-    // Transitive: lib/data_tables, lib/model, lib/primitives
+    // lib/model_utils can import from lib/data_tables and its transitive dependencies
+    // Transitive: lib/model, lib/primitives
+    // Also allow imports within lib/model_utils (same directory)
     {
-      name: 'lib-ruleset-restrictions',
+      name: 'lib-model-utils-restrictions',
       severity: 'error',
       comment:
-        'lib/ruleset can directly import from lib/model_utils and its transitive dependencies (lib/data_tables, lib/model, lib/primitives)',
+        'lib/model_utils can directly import from lib/model_utils (same directory), lib/data_tables and its transitive dependencies (lib/model, lib/primitives)',
       from: {
-        path: '^src/lib/ruleset',
+        path: '^src/lib/model_utils',
       },
       to: {
         pathNot: '^src/lib/(model_utils|data_tables|model|primitives)',
         path: '^src/lib',
       },
     },
-    // lib/model_utils can import from lib/data_tables and its transitive dependencies
-    // Transitive: lib/model, lib/primitives
+    // lib/data_tables can import from lib/model and its transitive dependencies
+    // Transitive: lib/primitives
+    // Also allow imports within lib/data_tables (same directory)
     {
-      name: 'lib-model-utils-restrictions',
+      name: 'lib-data-tables-restrictions',
       severity: 'error',
       comment:
-        'lib/model_utils can directly import from lib/data_tables and its transitive dependencies (lib/model, lib/primitives)',
+        'lib/data_tables can directly import from lib/data_tables (same directory), lib/model and its transitive dependencies (lib/primitives)',
       from: {
-        path: '^src/lib/model_utils',
+        path: '^src/lib/data_tables',
       },
       to: {
         pathNot: '^src/lib/(data_tables|model|primitives)',
         path: '^src/lib',
       },
     },
-    // lib/data_tables can import from lib/model and its transitive dependencies
-    // Transitive: lib/primitives
-    {
-      name: 'lib-data-tables-restrictions',
-      severity: 'error',
-      comment: 'lib/data_tables can directly import from lib/model and its transitive dependencies (lib/primitives)',
-      from: {
-        path: '^src/lib/data_tables',
-      },
-      to: {
-        pathNot: '^src/lib/(model|primitives)',
-        path: '^src/lib',
-      },
-    },
     // lib/model can import from lib/primitives (no transitive dependencies beyond primitives)
+    // Also allow imports within lib/model (same directory)
     {
       name: 'lib-model-restrictions',
       severity: 'error',
-      comment: 'lib/model can directly import from lib/primitives',
+      comment: 'lib/model can directly import from lib/model (same directory), lib/primitives',
       from: {
         path: '^src/lib/model',
       },
       to: {
-        pathNot: '^src/lib/primitives',
+        pathNot: '^src/lib/(model|primitives)',
         path: '^src/lib',
       },
     },
