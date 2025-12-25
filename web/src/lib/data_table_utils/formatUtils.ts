@@ -17,13 +17,12 @@ import { f6fmtPctDec2, isF6, type Fixed6 } from '../primitives/fixed6'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
 import { floorToDec2 } from '../primitives/mathPrimitives'
 
-// KJA1 rename format to fmt
 /**
  * Formats a numeric agent ID into the standard agent ID format.
  * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)
  * @returns The formatted agent ID (e.g., "agent-000", "agent-001", "agent-002")
  */
-export function formatAgentId(numericId: number): AgentId {
+export function fmtAgentId(numericId: number): AgentId {
   return `agent-${numericId.toString().padStart(3, '0')}`
 }
 
@@ -32,7 +31,7 @@ export function formatAgentId(numericId: number): AgentId {
  * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)
  * @returns The formatted mission ID (e.g., "mission-000", "mission-001", "mission-002")
  */
-export function formatMissionId(numericId: number): MissionId {
+export function fmtMissionId(numericId: number): MissionId {
   return `mission-${numericId.toString().padStart(3, '0')}`
 }
 
@@ -41,11 +40,11 @@ export function formatMissionId(numericId: number): MissionId {
  * @param numericId - The numeric ID (e.g., 0, 1, 2, ...)
  * @returns The formatted investigation ID (e.g., "investigation-000", "investigation-001", "investigation-002")
  */
-export function formatLeadInvestigationId(numericId: number): LeadInvestigationId {
+export function fmtLeadInvestigationId(numericId: number): LeadInvestigationId {
   return `investigation-${numericId.toString().padStart(3, '0')}`
 }
 
-export function formatEnemyId(type: EnemyType, numericId: number): EnemyId {
+export function fmtEnemyId(type: EnemyType, numericId: number): EnemyId {
   return `enemy-${type}-${numericId.toString().padStart(3, '0')}`
 }
 

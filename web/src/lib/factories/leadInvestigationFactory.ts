@@ -1,5 +1,5 @@
 import type { LeadId, LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
-import { formatLeadInvestigationId } from '../data_table_utils/formatModelUtils'
+import { fmtLeadInvestigationId } from '../data_table_utils/formatUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 
 /**
@@ -39,7 +39,7 @@ export function bldLeadInvestigation(params: CreateLeadInvestigationParams): Lea
   // Generate ID if not provided
   if (investigation.id === initialLeadInvestigation.id) {
     assertDefined(investigationCount, 'Investigation count must be provided if ID is not provided')
-    investigation.id = formatLeadInvestigationId(investigationCount)
+    investigation.id = fmtLeadInvestigationId(investigationCount)
   }
 
   return investigation

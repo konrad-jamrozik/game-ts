@@ -2,7 +2,7 @@
 import type { Agent, AgentId } from '../model/agentModel'
 import { toF6 } from '../primitives/fixed6'
 import { initialWeapon } from './weaponFactory'
-import { formatAgentId } from '../data_table_utils/formatModelUtils'
+import { fmtAgentId } from '../data_table_utils/formatUtils'
 import { assertEqual, assertDefined } from '../primitives/assertPrimitives'
 import { validateAgentLocalInvariants } from '../model_utils/validateAgentInvariants'
 
@@ -56,7 +56,7 @@ export function bldAgent(params: CreateAgentParams): Agent {
   // Generate ID if not provided
   if (agent.id === initialAgent.id) {
     assertDefined(agentCount, 'Agent count must be provided if ID is not provided')
-    agent.id = formatAgentId(agentCount)
+    agent.id = fmtAgentId(agentCount)
   }
 
   // Determine agent state if not explicitly provided

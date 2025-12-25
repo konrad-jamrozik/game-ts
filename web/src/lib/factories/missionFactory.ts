@@ -1,7 +1,7 @@
 import type { Mission, MissionDataId, MissionId } from '../model/missionModel'
 import type { EnemyCounts } from '../model/enemyModel'
 import { bldEnemies } from './enemyFactory'
-import { formatMissionId } from '../data_table_utils/formatModelUtils'
+import { fmtMissionId } from '../data_table_utils/formatUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { getMissionDataById } from '../data_table_utils/getterUtils'
 
@@ -60,7 +60,7 @@ export function bldMission(params: CreateMissionParams): Mission {
   // Generate ID if not provided
   if (mission.id === initialMission.id) {
     assertDefined(missionCount, 'Mission count must be provided if ID is not provided')
-    mission.id = formatMissionId(missionCount)
+    mission.id = fmtMissionId(missionCount)
   }
 
   // Use provided enemyCounts if available (for tests), otherwise use from mission data

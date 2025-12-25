@@ -3,7 +3,7 @@ import { getEnemyByType } from '../data_table_utils/getterUtils'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { assertAboveZero, assertNonNeg, assertTrue } from '../primitives/assertPrimitives'
-import { formatEnemyId } from '../data_table_utils/formatModelUtils'
+import { fmtEnemyId } from '../data_table_utils/formatUtils'
 
 let idCounter = 0
 
@@ -41,7 +41,7 @@ export function bldEnemies(enemyCounts: Partial<EnemyCounts>): Enemy[] {
 export function bldEnemy(type: EnemyType, currentIdCounter: number): Enemy {
   const enemyData = getEnemyByType(type)
 
-  const id = formatEnemyId(type, currentIdCounter)
+  const id = fmtEnemyId(type, currentIdCounter)
 
   return {
     id,

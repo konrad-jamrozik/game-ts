@@ -24,7 +24,7 @@ import {
   clearInvestigationSelection,
   clearMissionSelection,
 } from '../../redux/slices/selectionSlice'
-import { fmtAgentCount, fmtMissionTarget } from '../../lib/data_table_utils/formatModelUtils'
+import { fmtAgentCount, fmtMissionTarget } from '../../lib/data_table_utils/formatUtils'
 import { getRemainingTransportCap, validateMissionDeployment } from '../../lib/model_utils/missionUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
