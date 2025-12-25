@@ -75,9 +75,3 @@ Change to:
 
 - Use `assertDefined(selectedMissionData, ...)` with an error message mentioning the operation level, faction ID, and candidate mission data length
 - Remove the if/return block
-
-Note: `assertDefined` is already imported in this file.
-
-## Rationale
-
-These are all internal consistency checks where missing data indicates a bug:
