@@ -1,19 +1,23 @@
 import { expect } from 'vitest'
-import { store } from '../../src/redux/store'
-import type { Agent, AgentAssignment, AgentId, AgentState } from '../../src/lib/model/agentModel'
-import { isActivityAssignment } from '../../src/lib/model_utils/agentModelUtils'
-import type { LeadId } from '../../src/lib/model/leadModel'
-import type { Enemy } from '../../src/lib/model/enemyModel'
-import type { Mission, MissionId, MissionDataId } from '../../src/lib/model/missionModel'
-import type { GameState } from '../../src/lib/model/gameStateModel'
+import { bldEnemies } from '../../src/lib/factories/enemyFactory'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
+import type { Agent, AgentAssignment, AgentId, AgentState } from '../../src/lib/model/agentModel'
+import type { Enemy } from '../../src/lib/model/enemyModel'
+import type { GameState } from '../../src/lib/model/gameStateModel'
+import type { LeadId } from '../../src/lib/model/leadModel'
+import type { Mission, MissionDataId, MissionId } from '../../src/lib/model/missionModel'
+import {
+  available,
+  isActivityAssignment,
+  onContractingAssignment,
+  terminated,
+} from '../../src/lib/model_utils/agentUtils'
+import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
+import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
-import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
-import { bldEnemies } from '../../src/lib/factories/enemyFactory'
+import { store } from '../../src/redux/store'
 import { agFix } from './agentFixture'
-import { toF6 } from '../../src/lib/primitives/fixed6'
-import { terminated, onContractingAssignment, available } from '../../src/lib/model_utils/agentUtils'
 
 export const st = {
   get gameState(): GameState {
