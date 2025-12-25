@@ -13,56 +13,6 @@ import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 import type { DefensiveMissionData } from '../../data_tables/defensiveMissionsDataTable'
 import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/factionOperationLevelRuleset'
 
-function parseSuppression(suppression: string): number {
-  if (suppression === 'N/A') {
-    return 0
-  }
-  const match = /^(?<value>\d+)/u.exec(suppression)
-  const value = match?.groups?.['value']
-  if (value !== undefined && value !== '') {
-    return Number.parseInt(value, 10)
-  }
-  return 0
-}
-
-function bldRewardsFromMissionData(
-  missionData: OffensiveMissionData | DefensiveMissionData,
-  operationLevel?: number,
-): MissionRewards {
-  // Defensive missions: rewards calculated from operation level
-  if (operationLevel !== undefined) {
-    return {
-      money: getMoneyRewardForOperation(operationLevel),
-      funding: getFundingRewardForOperation(operationLevel),
-      panicReduction: toF6(0),
-      factionRewards: [],
-    }
-  }
-
-  // Offensive missions: rewards from mission data
-  // Type guard: defensive missions don't have these fields
-  if (!('moneyReward' in missionData)) {
-    throw new Error('Expected offensive mission data but got defensive mission data')
-  }
-  const offensiveData = missionData
-  const suppressionValue = parseSuppression(offensiveData.suppression)
-
-  return {
-    money: offensiveData.moneyReward,
-    funding: offensiveData.fundingReward,
-    panicReduction: toF6(offensiveData.panicReductionPct / 100),
-    factionRewards:
-      suppressionValue > 0
-        ? [
-            {
-              factionId: offensiveData.factionId,
-              suppression: suppressionValue,
-            },
-          ]
-        : [],
-  }
-}
-
 /**
  * Evaluates a deployed mission according to about_deployed_mission.md.
  * This includes the mission battle, agent updates, and rewards.
@@ -233,4 +183,54 @@ function updateSurvivingAgent(
   }
   agent.assignment = 'Standby'
   return false // Agent was not wounded
+}
+
+function parseSuppression(suppression: string): number {
+  if (suppression === 'N/A') {
+    return 0
+  }
+  const match = /^(?<value>\d+)/u.exec(suppression)
+  const value = match?.groups?.['value']
+  if (value !== undefined && value !== '') {
+    return Number.parseInt(value, 10)
+  }
+  return 0
+}
+
+function bldRewardsFromMissionData(
+  missionData: OffensiveMissionData | DefensiveMissionData,
+  operationLevel?: number,
+): MissionRewards {
+  // Defensive missions: rewards calculated from operation level
+  if (operationLevel !== undefined) {
+    return {
+      money: getMoneyRewardForOperation(operationLevel),
+      funding: getFundingRewardForOperation(operationLevel),
+      panicReduction: toF6(0),
+      factionRewards: [],
+    }
+  }
+
+  // Offensive missions: rewards from mission data
+  // Type guard: defensive missions don't have these fields
+  if (!('moneyReward' in missionData)) {
+    throw new Error('Expected offensive mission data but got defensive mission data')
+  }
+  const offensiveData = missionData
+  const suppressionValue = parseSuppression(offensiveData.suppression)
+
+  return {
+    money: offensiveData.moneyReward,
+    funding: offensiveData.fundingReward,
+    panicReduction: toF6(offensiveData.panicReductionPct / 100),
+    factionRewards:
+      suppressionValue > 0
+        ? [
+            {
+              factionId: offensiveData.factionId,
+              suppression: suppressionValue,
+            },
+          ]
+        : [],
+  }
 }
