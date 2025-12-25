@@ -1,5 +1,7 @@
 import { dataTables } from '../../data_tables/dataTables'
-import { getMissionDataById, getActivityLevelByOrd, getFactionName } from '../../model_utils/getterUtils'
+import { getMissionDataById } from '../../model_utils/missionUtils'
+import { getActivityLevelByOrd } from '../../model_utils/factionActivityLevelUtils'
+import { getFactionName } from '../../model_utils/factionUtils'
 import { isFactionDiscovered } from '../../ruleset/factionRuleset'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'

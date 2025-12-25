@@ -1,4 +1,5 @@
-import { getFactionOperationByLevel, getActivityLevelByOrd } from '../model_utils/getterUtils'
+import { getFactionOperationByLevel } from '../model_utils/factionOperationLevelUtils'
+import { getActivityLevelByOrd } from '../model_utils/factionActivityLevelUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { toF6, type Fixed6 } from '../primitives/fixed6'
 

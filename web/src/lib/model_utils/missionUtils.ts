@@ -1,9 +1,36 @@
+import { assertDefined } from '../primitives/assertPrimitives'
+import { dataTables } from '../data_tables/dataTables'
 import type { Mission } from '../model/missionModel'
-import type { MissionId } from '../model/modelIds'
+import type { MissionDataId, MissionId } from '../model/modelIds'
 import type { MissionState } from '../model/outcomeTypes'
 import type { GameState } from '../model/gameStateModel'
-import { assertDefined } from '../primitives/assertPrimitives'
+import type { OffensiveMissionData } from '../data_tables/offensiveMissionsDataTable'
+import type { DefensiveMissionData } from '../data_tables/defensiveMissionsDataTable'
 import { getStatePriority } from './missionStatePriority'
+
+export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
+  const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
+  assertDefined(found, `Offensive mission data with id ${id} not found`)
+  return found
+}
+
+export function getDefensiveMissionDataById(id: MissionDataId): DefensiveMissionData {
+  const found = dataTables.defensiveMissions.find((mission) => mission.id === id)
+  assertDefined(found, `Defensive mission data with id ${id} not found`)
+  return found
+}
+
+export function getMissionDataById(id: MissionDataId): OffensiveMissionData | DefensiveMissionData {
+  const offensive = dataTables.offensiveMissions.find((mission) => mission.id === id)
+  if (offensive) {
+    return offensive
+  }
+  const defensive = dataTables.defensiveMissions.find((mission) => mission.id === id)
+  if (defensive) {
+    return defensive
+  }
+  throw new Error(`Mission data with id ${id} not found`)
+}
 
 /**
  * Filters missions by their state

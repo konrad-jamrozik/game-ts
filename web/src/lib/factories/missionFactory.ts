@@ -4,7 +4,7 @@ import type { EnemyCounts } from '../model/enemyModel'
 import { bldEnemies } from './enemyFactory'
 import { fmtMissionId } from '../model_utils/formatUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
-import { getMissionDataById } from '../model_utils/getterUtils'
+import { getMissionDataById } from '../model_utils/missionUtils'
 
 /**
  * Prototype mission with all default values.

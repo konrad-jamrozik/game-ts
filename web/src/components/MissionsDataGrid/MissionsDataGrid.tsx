@@ -6,12 +6,12 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getMissionDataById } from '../../lib/model_utils/getterUtils'
 import type { Mission } from '../../lib/model/missionModel'
 import { clearMissionSelection, setMissionSelection } from '../../redux/slices/selectionSlice'
 import {
   getActiveOrDeployedMissions,
   getArchivedMissions,
+  getMissionDataById,
   sortActiveOrDeployedMissions,
   sortMissionsByIdDesc,
 } from '../../lib/model_utils/missionUtils'

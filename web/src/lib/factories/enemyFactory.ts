@@ -1,5 +1,5 @@
 import { ENEMY_TYPES, type Enemy, type EnemyCounts, type EnemyType } from '../model/enemyModel'
-import { getEnemyByType } from '../model_utils/getterUtils'
+import { getEnemyByType } from '../model_utils/enemyUtils'
 import { toF6 } from '../primitives/fixed6'
 import { bldWeapon } from './weaponFactory'
 import { assertAboveZero, assertNonNeg, assertTrue } from '../primitives/assertPrimitives'

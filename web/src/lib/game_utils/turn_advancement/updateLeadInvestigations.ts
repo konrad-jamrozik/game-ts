@@ -1,5 +1,5 @@
 import { dataTables } from '../../data_tables/dataTables'
-import { getLeadById } from '../../model_utils/getterUtils'
+import { getLeadById } from '../../model_utils/leadUtils'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
 import type { Mission } from '../../model/missionModel'

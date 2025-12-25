@@ -1,5 +1,7 @@
 import pluralize from 'pluralize'
-import { getFactionDataById, getLeadById, getMissionDataById } from './getterUtils'
+import { getFactionDataById } from './factionUtils'
+import { getLeadById } from './leadUtils'
+import { getMissionById, getMissionDataById } from './missionUtils'
 import type { EnemyType } from '../model/enemyModel'
 import type { GameState } from '../model/gameStateModel'
 import {
@@ -16,8 +18,6 @@ import {
   type MissionId,
 } from '../model/modelIds'
 import type { ValueChange } from '../model/turnReportModel'
-import { getLeadInvestigationById } from '../model_utils/leadInvestigationUtils'
-import { getMissionById } from '../model_utils/missionUtils'
 import { assertDefined, assertUnreachable } from '../primitives/assertPrimitives'
 import { f6fmtPctDec2, isF6, type Fixed6 } from '../primitives/fixed6'
 import { fmtNoPrefix } from '../primitives/formatPrimitives'
@@ -121,7 +121,8 @@ export function fmtIdForDisplay(
   if (id.startsWith('investigation-')) {
     assertIsLeadInvestigationId(id)
     assertDefined(gameState, 'gameState is required')
-    const investigation = getLeadInvestigationById(id, gameState)
+    const investigation = gameState.leadInvestigations[id]
+    assertDefined(investigation, `Lead investigation with id ${id} not found`)
     const lead = getLeadById(investigation.leadId)
     const numericPart = fmtNoPrefix(id, 'investigation-')
     return `${numericPart} ${lead.name}`
