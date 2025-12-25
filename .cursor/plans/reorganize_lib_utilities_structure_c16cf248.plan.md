@@ -28,8 +28,6 @@ todos:
 
 # Reorganize lib utilities structure
 
-
-
 ## Current State Analysis
 
 ### Current Directory Structure:
@@ -223,6 +221,10 @@ ruleset → data_table_utils → (data_tables, model_utils) → model → primit
 factories → (data_table_utils, model_utils, data_tables, model, primitives)
 game_utils → (ruleset, factories, model_utils, data_tables, model, primitives)
 utils → (model_utils, primitives)
+
+
+
+
 
 
 

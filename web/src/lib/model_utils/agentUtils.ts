@@ -1,7 +1,7 @@
 import type { Actor } from '../model/actorModel'
 import type { MissionId } from '../model/missionModel'
-import type { LeadInvestigation } from '../model/leadModel'
-import type { Agent } from '../model/agentModel'
+import type { LeadInvestigation, LeadInvestigationId } from '../model/leadModel'
+import type { Agent, AgentAssignment, ActivityId, AgentAssignmentState, AgentId } from '../model/agentModel'
 import { f6add, f6max, toF6, type Fixed6 } from '../primitives/fixed6'
 
 // Type guard function to determine if an Actor is an Agent
@@ -108,4 +108,27 @@ export function onRecoveryAssignment(agents: Agent[]): Agent[] {
 export function investigatingAgents(agents: Agent[], investigation: LeadInvestigation): Agent[] {
   const filteredAgents = withIds(agents, investigation.agentIds)
   return onAssignmentWithAssignmentId(filteredAgents, investigation.id)
+}
+
+// Type guard functions for agent assignments
+export function isActivityAssignment(assignment: AgentAssignment): assignment is ActivityId {
+  return assignment === 'Contracting' || assignment === 'Training'
+}
+
+export function isMissionAssignment(assignment: AgentAssignment): assignment is MissionId {
+  return typeof assignment === 'string' && assignment.startsWith('mission-')
+}
+
+export function isLeadInvestigationAssignment(assignment: AgentAssignment): assignment is LeadInvestigationId {
+  return typeof assignment === 'string' && assignment.startsWith('investigation-')
+}
+
+export function isAssignmentState(assignment: AgentAssignment): assignment is AgentAssignmentState {
+  return assignment === 'Standby' || assignment === 'Recovery' || assignment === 'Sacked' || assignment === 'KIA'
+}
+
+export function assertIsAgentId(id: string): asserts id is AgentId {
+  if (!id.startsWith('agent-')) {
+    throw new Error(`Invalid agent ID: ${id}`)
+  }
 }

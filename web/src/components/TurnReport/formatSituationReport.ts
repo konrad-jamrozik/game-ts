@@ -3,7 +3,7 @@ import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/data_table_utils/formatModelUtils'
 import { getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
-import { asActivityLevelOrd } from '../../lib/model_utils/factionModelUtils'
+import { asActivityLevelOrd } from '../../lib/model_utils/factionUtils'
 import type {
   ExpiredMissionReport,
   FactionReport,

@@ -15,7 +15,7 @@
  */
 
 import type { Lead } from '../model/leadModel'
-import { asLeadId } from '../model_utils/leadModelUtils'
+import { asLeadId } from '../model_utils/leadUtils'
 import type { FactionData } from './factionsDataTable'
 import { expandTemplateString } from './dataTablesPrivateUtils'
 
