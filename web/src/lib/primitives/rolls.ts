@@ -141,18 +141,6 @@ export function roll0IncTo1Exc(label?: string): RangeRoll {
   return rollInFloatRange(0, 1, label)
 }
 
-function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
-  const range = max - min
-  const pct = rand.get(label)
-  const roll = pct * range + min
-  return {
-    min,
-    max,
-    pct,
-    roll,
-  }
-}
-
 /**
  * Performs a range roll, uniformly selecting a random value from the given [min, max] range (both inclusive).
  *
@@ -177,12 +165,12 @@ export function rollIntIncToInc(min: number, max: number, label?: string): Range
   // scaledPct is a float in [0, rangeSize)
   const scaledPct = pct * rangeSize
 
-  // scaledInt is an integer in [0, rangeSize - 1]
-  const scaledInt = Math.floor(scaledPct)
+  // shiftedScaledPct is a float in [min, rangeSize + min)
+  // which is in [min, max + 1)
+  const shiftedScaledPct = scaledPct + min
 
-  // roll is an integer in [min, rangeSize + min - 1]
-  // which is [min, max]
-  const roll = scaledInt + min
+  // roll is an integer in [min, max]
+  const roll = Math.floor(shiftedScaledPct)
 
   return {
     min,
@@ -217,13 +205,25 @@ export function rollIntIncToExc(min: number, max: number, label?: string): Range
   // scaledPct is a float in [0, rangeSize)
   const scaledPct = pct * rangeSize
 
-  // scaledInt is an integer in [0, rangeSize - 1]
-  const scaledInt = Math.floor(scaledPct)
+  // shiftedScaledPct is a float in [min, rangeSize + min)
+  // which is in [min, max)
+  const shiftedScaledPct = scaledPct + min
 
-  // roll is an integer in [min, rangeSize + min - 1]
-  // which is [min, max - 1]
-  const roll = scaledInt + min
+  // roll is an integer in [min, max - 1]
+  const roll = Math.floor(shiftedScaledPct)
 
+  return {
+    min,
+    max,
+    pct,
+    roll,
+  }
+}
+
+function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
+  const range = max - min
+  const pct = rand.get(label)
+  const roll = pct * range + min
   return {
     min,
     max,
