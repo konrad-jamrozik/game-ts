@@ -55,7 +55,6 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // The step and their numbers are taken from the documented describing this function.
 
   // 1. Update turn and actions counter
-
   const timestamp = Date.now()
   const turn = state.turn + 1
   state.turn = turn
@@ -77,7 +76,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   // 5. Update all agents on Contracting assignment
   const contractingResults = updateContractingAgents(state)
 
-  // 6.5. Update all agents in Training
+  // 6. Update all agents in Training
   updateTrainingAgents(state)
 
   // 7. Update lead investigations (agents completing investigations go to InTransit)
@@ -678,5 +677,3 @@ function updateFactions(
 
   return factionReports
 }
-
-// KJA3 review which functions should be moved out from evaluateTurn.s
