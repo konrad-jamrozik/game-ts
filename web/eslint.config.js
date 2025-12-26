@@ -175,10 +175,10 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/max-statements
       'max-statements': 'off',
       // https://eslint.org/docs/latest/rules/func-style
-      'func-style': [
-        'error',
-        'declaration', // I like declaration more than the default 'expression'
-      ],
+      // Turned off, as I like both functions and expressions,
+      // depending on context. Functions for file top-level declarations and
+      // nontrivial nested declarations. Expressions for nested one-liners.
+      'func-style': 'off',
       // See @typescript-eslint/no-magic-numbers
       'no-magic-numbers': 'off',
       // I don't care about comment capitalization
@@ -392,7 +392,7 @@ export default plugTypescriptEslint.config([
             camelCase: true, // for files primarily exporting a function
             pascalCase: true, // allow PascalCase for React components, as they require it
           },
-          ignore: ['vite-env.d.ts', '^AI.*'], // vite-env.d.ts is a file name provided by Vite by default
+          ignore: ['vite-env.d.ts', '^.*AI.*'], // vite-env.d.ts is a file name provided by Vite by default
         },
       ],
       // Sometimes I need empty files while figuring out how to make things work

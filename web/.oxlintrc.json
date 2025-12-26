@@ -23,7 +23,7 @@
         "eqeqeq": "error",
         "for-direction": "error",
         "func-names": "error",
-        "func-style": "error",
+        "func-style": "off",
         "grouped-accessor-pairs": "error",
         "guard-for-in": "error",
         "id-length": "off",
@@ -433,7 +433,7 @@
       "rules": {
         "sort-imports": "off",
         "no-console": "off",
-        "func-style": ["error", "declaration"],
+        "func-style": "off",
         "no-magic-numbers": "off",
         "max-lines-per-function": "off",
         "no-undefined": "off",
