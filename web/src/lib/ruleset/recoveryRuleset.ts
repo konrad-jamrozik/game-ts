@@ -1,5 +1,5 @@
 import { ceil, div } from '../primitives/mathPrimitives'
-import { f6assertAboveZero, f6assertLessThan } from '../primitives/assertPrimitives'
+import { f6assertAboveZero, f6assertLessThan } from '../primitives/fixed6assertPrimitives'
 import { toF, f6div, f6sub, f6lt, type Fixed6 } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
 
