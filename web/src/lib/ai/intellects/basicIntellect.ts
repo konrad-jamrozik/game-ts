@@ -1,22 +1,19 @@
 import {
   hireAgent,
   assignAgentsToContracting,
-  assignAgentsToTraining,
   deployAgentsToMission,
   startLeadInvestigation,
   buyUpgrade,
-} from '../../redux/slices/gameStateSlice'
+} from '../../../redux/slices/gameStateSlice'
 import { AGENT_HIRE_COST } from '../../data_tables/constants'
-import { available, notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
+import { available, notTerminated } from '../../model_utils/agentUtils'
 import {
   filterMissionsByState,
   getRemainingTransportCap,
   validateMissionDeployment,
-} from '../../lib/model_utils/missionUtils'
+} from '../../model_utils/missionUtils'
 import { dataTables } from '../../data_tables/dataTables'
-import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { UPGRADE_PRICES } from '../../data_tables/upgrades'
-import { f6ge, toF6 } from '../../primitives/fixed6'
 import type { AIPlayerIntellect } from '../types'
 
 export const basicIntellect: AIPlayerIntellect = {
