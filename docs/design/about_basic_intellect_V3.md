@@ -1,6 +1,8 @@
 
 # Basic AI player intellect V3
 
+# Key decisions
+
 On a high level, the basic AI player intellect V3 strives to answer following questions,
 and decide based on the answers:
 
@@ -17,10 +19,11 @@ and decide based on the answers:
   - How many and which agents to deploy on a mission?
     - Which missions?
 
-## Overall goals
+# Goals
 
-The player strives to maintain the goal listed below. Not all of them can be always
-achieved at the same time, and as such the player must prioritize.
+The player strives to maintain the goals listed below. Not all of them can be always
+achieved at the same time, and as such the player must prioritize, which is elaborated in
+further sections.
 
 - Ensure that income from agent contracting covers between 100% and 120% per-turn costs.
   - Notably, this doesn't take into account any money coming from funding, nor it takes
@@ -35,4 +38,16 @@ achieved at the same time, and as such the player must prioritize.
   within next 3 turns.
 - Ensure any remaining agents are not idling; all ready agents should be in training.
   - As such, ensure there is enough training capacity available.
--
+- Ensure there is enough agents available in total to face the ever increasing threat
+  level of missions.
+  - As such, ensure there is enough agent capacity available.
+
+# Future work
+
+- Smarter selection of which capabilities to upgrade.
+- Smarter selection of which agents to assign to what, based on their skill level
+  (higher skill means better threat level for mission deployment but also better efficiency
+  in assignments)
+- Smarter selection of which leads to investigate and how many
+  - Specifically, decision on if to investigate leads that spawn offensive missions
+- Smarter assignment of agents to lead investigations, to make good forward progress
