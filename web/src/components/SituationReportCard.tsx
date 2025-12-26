@@ -26,6 +26,8 @@ function getFactionRows(faction: {
 
   // Format progression display as "current/min" (see about_faction_activity_level.md)
   const progressionDisplay = config.turnsMin === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.turnsMin}`
+  const levelProgressPct =
+    config.turnsMin === Infinity ? undefined : (faction.turnsAtCurrentLevel / config.turnsMin) * 100
 
   // Format next operation display
   const nextOpDisplay =
@@ -46,6 +48,7 @@ function getFactionRows(faction: {
       metric: 'Level progress',
       value: progressionDisplay,
       reverseColor: true, // Progress towards higher activity is bad
+      ...(levelProgressPct !== undefined ? { levelProgressPct } : {}),
     },
     {
       id: 3,
@@ -107,6 +110,11 @@ export function SituationReportCard(): React.JSX.Element {
               rows={getFactionRows(faction)}
               columns={columns}
               aria-label={`${getFactionName(faction)} Report data`}
+              sx={{
+                '& .situation-report-color-bar-cell': {
+                  padding: '4px',
+                },
+              }}
             />
           </Fragment>
         ))}
