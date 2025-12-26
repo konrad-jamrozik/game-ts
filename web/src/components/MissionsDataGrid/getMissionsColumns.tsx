@@ -11,7 +11,7 @@ import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionConcluded, calculateMissionThreatAssessment } from '../../lib/ruleset/missionRuleset'
-import { fmtDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 
 export type MissionRow = Mission & {
   rowId: number
@@ -34,10 +34,12 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       field: 'threat',
       headerName: 'Threat',
       width: columnWidths['missions.threat'],
+      align: 'right',
+      headerAlign: 'right',
       valueGetter: (_value, row: MissionRow) => calculateMissionThreatAssessment(row),
       renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
         <span aria-label={`missions-row-threat-${params.id}`}>
-          {params.value !== undefined ? fmtDec2(params.value) : '-'}
+          {params.value !== undefined ? fmtDec1(params.value) : '-'}
         </span>
       ),
     },
