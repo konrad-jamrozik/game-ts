@@ -16,6 +16,7 @@ import { getSituationReportColumns, type SituationReportRow } from './SituationR
 function getFactionRows(faction: {
   activityLevel: number
   turnsAtCurrentLevel: number
+  targetTurnsForProgression: number
   turnsUntilNextOperation: number
   suppressionTurns: number
 }): SituationReportRow[] {

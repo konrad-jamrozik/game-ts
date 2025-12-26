@@ -3,6 +3,7 @@ import type { Faction } from '../model/factionModel'
 import type { FactionDataId, FactionId } from '../model/modelIds'
 import type { FactionData } from '../data_tables/factionsDataTable'
 import { calculateOperationTurns } from '../ruleset/factionOperationLevelRuleset'
+import { calculateProgressionTurns } from '../ruleset/factionActivityLevelRuleset'
 
 /**
  * Prototype faction with all default values.
@@ -13,6 +14,7 @@ export const initialFaction: Faction = {
   factionDataId: 'factiondata-ini' as FactionDataId,
   activityLevel: 0,
   turnsAtCurrentLevel: 0,
+  targetTurnsForProgression: Infinity,
   turnsUntilNextOperation: 0,
   suppressionTurns: 0,
   lastOperationTypeName: undefined,
@@ -38,6 +40,7 @@ export function bldFaction(datum: FactionData): Faction {
     id: datum.id,
     factionDataId: datum.factionDataId,
     activityLevel: datum.initialActivityLevel,
+    targetTurnsForProgression: calculateProgressionTurns(datum.initialActivityLevel),
     turnsUntilNextOperation: calculateOperationTurns(datum.initialActivityLevel),
   }
 

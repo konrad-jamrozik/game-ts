@@ -630,15 +630,18 @@ function updateFactions(
 
       // Check if faction should advance to next activity level
       const config = getActivityLevelByOrd(faction.activityLevel)
-      if (faction.activityLevel < 7 && config.turnsMin !== Infinity) {
-        // Calculate the target turns for this faction if not already calculated
-        const targetTurns = calculateProgressionTurns(faction.activityLevel)
-        if (faction.turnsAtCurrentLevel >= targetTurns) {
-          faction.activityLevel = nextActivityLevelOrd(faction.activityLevel)
-          faction.turnsAtCurrentLevel = 0
-          faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
-          activityLevelIncreased = true
-        }
+      if (
+        faction.activityLevel < 7 &&
+        config.turnsMin !== Infinity &&
+        faction.turnsAtCurrentLevel >= faction.targetTurnsForProgression
+      ) {
+        // Use the pre-rolled target turns instead of recalculating
+        faction.activityLevel = nextActivityLevelOrd(faction.activityLevel)
+        faction.turnsAtCurrentLevel = 0
+        // Pre-roll the target turns for the new level
+        faction.targetTurnsForProgression = calculateProgressionTurns(faction.activityLevel)
+        faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
+        activityLevelIncreased = true
       }
     }
 

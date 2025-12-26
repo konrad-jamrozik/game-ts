@@ -44,6 +44,11 @@ export type Faction = {
    */
   turnsAtCurrentLevel: number
   /**
+   * Pre-rolled target number of turns needed to progress from current activity level.
+   * This value is determined at game start or when advancing to a new level.
+   */
+  targetTurnsForProgression: number
+  /**
    * Number of turns until next faction operation roll.
    * When this reaches 0, a faction operation occurs.
    */
