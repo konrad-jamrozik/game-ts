@@ -49,7 +49,6 @@ export function bldActivityLevelsTable(): readonly FactionActivityLevelData[] {
   ])
 }
 
-// KJA3  numbers here should probably be Fixed6
 export type FactionActivityLevelData = {
   ord: FactionActivityLevelOrd
   name: FactionActivityLevelName

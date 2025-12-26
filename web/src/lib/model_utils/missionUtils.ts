@@ -6,7 +6,7 @@ import type { MissionState } from '../model/outcomeTypes'
 import type { GameState } from '../model/gameStateModel'
 import type { OffensiveMissionData } from '../data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../data_tables/defensiveMissionsDataTable'
-import { getStatePriority } from './missionStatePriority'
+import { getMissionStateDisplayOrd } from './missionStateDisplayOrd'
 
 export function getOffensiveMissionDataById(id: MissionDataId): OffensiveMissionData {
   const found = dataTables.offensiveMissions.find((mission) => mission.id === id)
@@ -78,18 +78,18 @@ export function sortMissionsByIdDesc(missions: Mission[]): Mission[] {
 }
 
 /**
- * Sorts missions by state priority, then by secondary criteria:
+ * Sorts missions by state display order, then by secondary criteria:
  * - Active missions: by expiresIn ascending (expiring soonest first, 'never' last)
  * - Other states: by ID descending (newest first)
  */
 export function sortActiveOrDeployedMissions(missions: Mission[]): Mission[] {
   return missions.toSorted((missionA, missionB) => {
-    const priorityA = getStatePriority(missionA.state)
-    const priorityB = getStatePriority(missionB.state)
+    const displayOrdA = getMissionStateDisplayOrd(missionA.state)
+    const displayOrdB = getMissionStateDisplayOrd(missionB.state)
 
-    // First sort by state priority
-    if (priorityA !== priorityB) {
-      return priorityA - priorityB
+    // First sort by state display order
+    if (displayOrdA !== displayOrdB) {
+      return displayOrdA - displayOrdB
     }
 
     // Within Active state, sort by expiresIn ascending
