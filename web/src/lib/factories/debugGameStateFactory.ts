@@ -25,6 +25,7 @@ export function bldDebugGameStateOverrides(initialGameState: GameState): Partial
   // Speed up when next Red Dawn operation happens
   const redDawnFaction = getFactionById(gameStateOverrides, 'faction-red-dawn')
   redDawnFaction.turnsUntilNextOperation = 3
+  redDawnFaction.turnsAtCurrentLevel = 40
 
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
   const missionId: MissionId = 'mission-000'

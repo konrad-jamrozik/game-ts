@@ -4,7 +4,7 @@ KJA backlog:
 
 # Current milestone
 
-- Undoing/redoing turn and clicking next seems to change by when exactly activity level of faction goes up.
+- KJA1 Undoing/redoing turn and clicking next seems to change by when exactly activity level of faction goes up.
   This is unexpected, this should have been pre-rolled at game start.
 
 ## Current Game mechanics
