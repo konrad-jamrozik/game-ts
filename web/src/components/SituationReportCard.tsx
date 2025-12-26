@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
-import { f6fmtPctDec2 } from '../lib/primitives/fixed6'
+import { f6fmtPctDec2, toF } from '../lib/primitives/fixed6'
 import { getActivityLevelByOrd, getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
 import { getFactionName } from '../lib/model_utils/factionUtils'
 import { isFactionDiscovered } from '../lib/ruleset/factionRuleset'
@@ -66,6 +66,7 @@ export function SituationReportCard(): React.JSX.Element {
   const { panic, factions, leadInvestigationCounts } = gameState
 
   const panicPctStr = f6fmtPctDec2(panic)
+  const panicPct = toF(panic) * 100
 
   const columns = getSituationReportColumns()
 
@@ -75,6 +76,7 @@ export function SituationReportCard(): React.JSX.Element {
       metric: 'Panic',
       value: panicPctStr,
       reverseColor: true,
+      panicPct,
     },
   ]
 
@@ -88,7 +90,16 @@ export function SituationReportCard(): React.JSX.Element {
       sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}
     >
       <Stack spacing={2}>
-        <StyledDataGrid rows={panicRows} columns={columns} aria-label="Panic data" />
+        <StyledDataGrid
+          rows={panicRows}
+          columns={columns}
+          aria-label="Panic data"
+          sx={{
+            '& .situation-report-color-bar-cell': {
+              padding: '4px',
+            },
+          }}
+        />
         {discoveredFactions.map((faction) => (
           <Fragment key={faction.id}>
             <Typography variant="h6">{getFactionName(faction)} faction</Typography>
