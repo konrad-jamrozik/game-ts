@@ -2,6 +2,13 @@ import type { Agent } from '../model/agentModel'
 import type { GameState } from '../model/gameStateModel'
 import { f6c0, f6fmtInt, f6lt, f6gt, f6le, f6eq, f6sub } from '../primitives/fixed6'
 import { assertDefined, assertEqual, assertOneOf } from '../primitives/assertPrimitives'
+import {
+  f6assertAboveZero,
+  f6assertEqual,
+  f6assertLessThanOrEqual,
+  f6assertNonNeg,
+  f6assertGreaterThanOrEqual,
+} from '../primitives/fixed6assertPrimitives'
 
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)
@@ -23,26 +30,28 @@ export function validateAgentLocalInvariants(agent: Agent, state?: GameState): v
  * Throws an Error if an invariant is violated.
  */
 function validateBasicStatRanges(agent: Agent): void {
-  if (f6lt(agent.hitPoints, f6c0) || f6gt(agent.hitPoints, agent.maxHitPoints)) {
-    throw new Error(
-      `Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${f6fmtInt(agent.maxHitPoints)}`,
-    )
-  }
-  if (f6lt(agent.exhaustionPct, f6c0)) {
-    throw new Error(`Agent ${agent.id} has negative exhaustionPct: ${f6fmtInt(agent.exhaustionPct)}`)
-  }
-  if (f6lt(agent.skill, f6c0)) {
-    throw new Error(`Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
-  }
-  if (f6le(agent.maxHitPoints, f6c0)) {
-    throw new Error(`Agent ${agent.id} has non-positive maxHitPoints: ${f6fmtInt(agent.maxHitPoints)}`)
-  }
+  f6assertGreaterThanOrEqual(
+    agent.hitPoints,
+    f6c0,
+    `Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${f6fmtInt(agent.maxHitPoints)}`,
+  )
+  f6assertLessThanOrEqual(
+    agent.hitPoints,
+    agent.maxHitPoints,
+    `Agent ${agent.id} has invalid hit points: ${f6fmtInt(agent.hitPoints)}/${f6fmtInt(agent.maxHitPoints)}`,
+  )
+  f6assertNonNeg(agent.exhaustionPct, `Agent ${agent.id} has negative exhaustionPct: ${f6fmtInt(agent.exhaustionPct)}`)
+  f6assertNonNeg(agent.skill, `Agent ${agent.id} has negative skill: ${f6fmtInt(agent.skill)}`)
+  f6assertAboveZero(
+    agent.maxHitPoints,
+    `Agent ${agent.id} has non-positive maxHitPoints: ${f6fmtInt(agent.maxHitPoints)}`,
+  )
 }
 
 function validateTermination(agent: Agent): void {
   if (agent.state === 'KIA') {
     assertEqual(agent.assignment, 'KIA', `KIA agent ${agent.id} must have assignment of KIA (got ${agent.assignment})`)
-    assertEqual(agent.hitPoints.value, f6c0.value, `KIA agent ${agent.id} must have 0 hit points`)
+    f6assertEqual(agent.hitPoints, f6c0, `KIA agent ${agent.id} must have 0 hit points`)
   }
   if (agent.state === 'Sacked') {
     assertEqual(
@@ -50,9 +59,9 @@ function validateTermination(agent: Agent): void {
       'Sacked',
       `Sacked agent ${agent.id} must have assignment of Sacked (got ${agent.assignment})`,
     )
-    assertEqual(
-      agent.hitPoints.value,
-      agent.maxHitPoints.value,
+    f6assertEqual(
+      agent.hitPoints,
+      agent.maxHitPoints,
       `Sacked agent ${agent.id} must have full hit points (${f6fmtInt(agent.maxHitPoints)})`,
     )
   }
@@ -97,8 +106,10 @@ function validateRecoveryMath(agent: Agent): void {
 
   // We just check that hitPoints <= maxHitPoints
   // The exact recovery per turn is calculated dynamically based on current recoveryPct
-  if (agent.state === 'Recovering' && f6gt(agent.hitPoints, agent.maxHitPoints)) {
-    throw new Error(
+  if (agent.state === 'Recovering') {
+    f6assertLessThanOrEqual(
+      agent.hitPoints,
+      agent.maxHitPoints,
       `Agent ${agent.id} recovering HP exceeds max: ${f6fmtInt(agent.hitPoints)} > ${f6fmtInt(agent.maxHitPoints)}`,
     )
   }
