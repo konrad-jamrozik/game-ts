@@ -36,7 +36,6 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       headerName: 'Threat',
       width: columnWidths['missions.threat'],
       align: 'right',
-      headerAlign: 'right',
       valueGetter: (_value, row: MissionRow) => calculateMissionThreatAssessment(row),
       renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
         <span aria-label={`missions-row-threat-${params.id}`}>
