@@ -142,12 +142,12 @@ export function roll0IncTo1Exc(label?: string): RangeRoll {
 }
 
 /**
- * Performs a range roll, uniformly selecting a random value from the given [min, max] range (both inclusive).
+ * Performs a range roll, uniformly selecting a random integer value from the given [min, max] range (both inclusive).
  *
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)
  * @param label - Optional label for controllable random in tests
- * @returns The range roll result
+ * @returns The integer range roll result
  */
 export function rollIntIncToInc(min: number, max: number, label?: string): RangeRoll {
   assertInteger(min)
@@ -181,13 +181,13 @@ export function rollIntIncToInc(min: number, max: number, label?: string): Range
 }
 
 /**
- * Performs a range roll, uniformly selecting a random value from the given [min, max) range
+ * Performs a range roll, uniformly selecting a random integer value from the given [min, max) range
  * (min is inclusive, max is exclusive).
  *
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (exclusive)
  * @param label - Optional label for controllable random in tests
- * @returns The range roll result
+ * @returns The integer range roll result
  */
 export function rollIntIncToExc(min: number, max: number, label?: string): RangeRoll {
   assertInteger(min)
@@ -220,10 +220,31 @@ export function rollIntIncToExc(min: number, max: number, label?: string): Range
   }
 }
 
+/**
+ * Performs a range roll, uniformly selecting a random value from the given [min, max) range
+ * (min is inclusive, max is exclusive).
+ *
+ * @param min - Minimum value (inclusive)
+ * @param max - Maximum value (exclusive)
+ * @param label - Optional label for controllable random in tests
+ * @returns The range roll result
+ */
 function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
-  const range = max - min
+  // We roll in [min, max) range, which contains (max - min) floats
+  // So rangeSize = max - min
+  // and max = rangeSize + min
+  // For example: [3, 7) = floats of {3.X, 4.X, 5.X, 6.X} = 4 = max - min
+  const rangeSize = max - min
+
+  // pct is a float in [0, 1)
   const pct = rand.get(label)
-  const roll = pct * range + min
+
+  // scaledPct is a float in [0, rangeSize)
+  const scaledPct = pct * rangeSize
+
+  // roll is a float in [min, rangeSize + min)
+  // which is in [min, max)
+  const roll = scaledPct + min
   return {
     min,
     max,
