@@ -1,5 +1,5 @@
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../data_tables/constants'
-import { f6c0, floorToF6, f6add, f6min, f6lt, f6eq, f6max, f6sub, f6mult, toF } from '../../primitives/fixed6'
+import { floorToF6, f6add, f6min, f6lt, f6eq, f6neg, f6mult, toF } from '../../primitives/fixed6'
 import type { GameState } from '../../model/gameStateModel'
 import {
   addSkill,
@@ -8,6 +8,7 @@ import {
   onContractingAssignment,
   onTrainingAssignment,
   applyExhaustion,
+  recovering,
 } from '../../model_utils/agentUtils'
 import { getContractingIncome } from '../../ruleset/moneyRuleset'
 
@@ -16,44 +17,40 @@ import { getContractingIncome } from '../../ruleset/moneyRuleset'
  */
 export function updateAvailableAgents(state: GameState): void {
   const availableAgents = available(state.agents)
-  // Apply negative exhaustion (recovery) by subtracting
-  // KJA1 previously this was
-  // applyExhaustion(availableAgents, -state.exhaustionRecovery)
-  // Still should call it?
-  for (const agent of availableAgents) {
-    agent.exhaustionPct = f6max(f6c0, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
-  }
+  // Apply exhaustion recovery to all available agents
+  const recoveryAmount = f6neg(state.exhaustionRecovery)
+  applyExhaustion(availableAgents, recoveryAmount)
 }
 
 /**
  * Updates agents in Recovering state - apply hit point restoration and exhaustion recovery
  */
 export function updateRecoveringAgents(state: GameState): void {
-  for (const agent of state.agents) {
-    if (agent.state === 'Recovering') {
-      // Apply exhaustion recovery
-      agent.exhaustionPct = f6max(f6c0, f6sub(agent.exhaustionPct, state.exhaustionRecovery))
+  const recoveringAgents = recovering(state.agents)
+  // Apply exhaustion recovery to all recovering agents
+  const recoveryAmount = f6neg(state.exhaustionRecovery)
+  applyExhaustion(recoveringAgents, recoveryAmount)
 
-      const isRecovering = f6lt(agent.hitPoints, agent.maxHitPoints)
+  for (const agent of recoveringAgents) {
+    const isRecovering = f6lt(agent.hitPoints, agent.maxHitPoints)
 
-      if (isRecovering) {
-        // Calculate recovery per turn: maxHitPoints * recoveryPct / 100, rounded down to 6 decimal places
-        const recoveryPctDecimal = toF(state.hitPointsRecoveryPct) / 100
-        const recoveryPerTurn = floorToF6(f6mult(agent.maxHitPoints, recoveryPctDecimal))
+    if (isRecovering) {
+      // Calculate recovery per turn: maxHitPoints * recoveryPct / 100, rounded down to 6 decimal places
+      const recoveryPctDecimal = toF(state.hitPointsRecoveryPct) / 100
+      const recoveryPerTurn = floorToF6(f6mult(agent.maxHitPoints, recoveryPctDecimal))
 
-        // Add recovered hit points
-        agent.hitPoints = f6add(agent.hitPoints, recoveryPerTurn)
+      // Add recovered hit points
+      agent.hitPoints = f6add(agent.hitPoints, recoveryPerTurn)
 
-        // Cap hit points at maxHitPoints
-        agent.hitPoints = f6min(agent.hitPoints, agent.maxHitPoints)
-      }
+      // Cap hit points at maxHitPoints
+      agent.hitPoints = f6min(agent.hitPoints, agent.maxHitPoints)
+    }
 
-      // Check if recovery is complete
-      if (f6eq(agent.hitPoints, agent.maxHitPoints)) {
-        // Reset recovery state
-        agent.state = 'Available'
-        agent.assignment = 'Standby'
-      }
+    // Check if recovery is complete
+    if (f6eq(agent.hitPoints, agent.maxHitPoints)) {
+      // Reset recovery state
+      agent.state = 'Available'
+      agent.assignment = 'Standby'
     }
   }
 }

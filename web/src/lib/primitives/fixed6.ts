@@ -90,6 +90,16 @@ export function f6sub(first: Fixed6, second: Fixed6): Fixed6 {
 }
 
 /**
+ * Negates a Fixed6 value.
+ * For example:
+ * f6neg(fixed6(7_000_000)) = fixed6(-7_000_000) (representing -7.00)
+ * f6neg(fixed6(-3_000_000)) = fixed6(3_000_000) (representing 3.00)
+ */
+export function f6neg(value: Fixed6): Fixed6 {
+  return fixed6(-value.value)
+}
+
+/**
  * Adds two Fixed6 values together.
  * For example:
  * f6add(fixed6(7_000_000), fixed6(3_000_000)) = fixed6(10_000_000) (representing 7.00 + 3.00 = 10.00)
