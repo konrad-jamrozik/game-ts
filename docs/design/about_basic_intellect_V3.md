@@ -52,27 +52,189 @@ which is elaborated in further sections.
 The player follows the following algorithm when deciding what to do in given turn.
 It effectively codifies how the player prioritizes the goals described above:
 
-TODO
+``` typescript
+playTurn():
+  // Phase 1: Unassign agents that need recovery
+  unassignExhaustedAgents()          // See "Unassignment"
+
+  // Phase 2: Handle critical mission deployment (highest priority - losing missions = game over)
+  deployToMissions()                 // See "Mission deployment"
+
+  // Phase 3: Ensure income covers per-turn costs (100-120% target)
+  assignToContracting()              // See "Assignment to contracting"
+
+  // Phase 4: Ensure at least one lead is being investigated
+  assignToLeadInvestigation()        // See "Lead investigation"
+
+  // Phase 5: Assign remaining idle agents to training
+  assignToTraining()                 // See "Assignment to training"
+
+  // Phase 6: Make purchases if financially viable (3-turn runway check)
+  if hasSufficientMoneyRunway():
+    // Priority order for spending:
+    upgradeCapacities()              // See "Capacity upgrade"
+    upgradeAgentEffectiveness()      // See "Agent effectiveness capability upgrade"
+    hireAgents()                     // See "Hiring"
+```
+
+The phases are ordered by priority:
+1. **Unassignment** - Agents with exhaustion must recover before being useful.
+2. **Mission deployment** - Defensive missions are existential; failing them loses the game.
+3. **Contracting** - Income must cover costs to ensure long-term survival.
+4. **Lead investigation** - Needed to discover new missions and progress the game.
+5. **Training** - Idle agents should always be improving.
+6. **Purchases** - Only if money runway is safe (3+ turns).
 
 ## Money
 
 ### Hiring
 
+``` typescript
+hireAgents():
+  targetAgentCount = calculateTargetAgentCount()
+  currentAgentCount = countAgents()
+  agentsToHire = max(0, targetAgentCount - currentAgentCount)
+
+  for i in 1..agentsToHire:
+    if canAffordHire():
+      hireAgent()
+```
+
+The target agent count is determined by the need to:
+- Have enough agents to deploy on expected defensive missions.
+- Have enough agents to cover contracting needs.
+- Have spare agents for training and lead investigation.
+
 ### Capacity upgrade
 
+``` typescript
+upgradeCapacities():
+  // Priority: transport > training
+  if transportCapacity < minTransportCapacity():
+    upgradeTransportCapacity()
+  if trainingCapacity < countAgents() - expectedContractingAgents():
+    upgradeTrainingCapacity()
+```
+
+Transport capacity is prioritized because without it, agents cannot be deployed to missions.
+Training capacity is secondary but important to ensure idle agents are always improving.
+
 ### Agent effectiveness capability upgrade
+
+``` typescript
+upgradeAgentEffectiveness():
+  // Upgrade capabilities in priority order
+  capabilities = [
+    weaponBaseDamage,      // Direct combat improvement
+    exhaustionRecovery,    // Faster agent turnaround
+    hitPointsRecovery,     // Faster post-mission recovery
+    trainingSkillGain      // Faster skill improvement
+  ]
+  for capability in capabilities:
+    if shouldUpgrade(capability) and canAfford(capability):
+      upgrade(capability)
+```
+
+The priority order reflects combat effectiveness first (to win missions),
+then recovery rates (to maximize agent availability).
 
 ## Agent management
 
 ### Assignment to contracting
 
+``` typescript
+assignToContracting():
+  perTurnCosts = calculatePerTurnCosts()
+  targetIncome = perTurnCosts * 1.1  // Target 110% of costs (middle of 100-120% range)
+  currentIncome = calculateContractingIncome()
+
+  while currentIncome < targetIncome:
+    agent = selectBestAgentForContracting()
+    if agent is null:
+      break
+    assignAgentToContracting(agent)
+    currentIncome = calculateContractingIncome()
+```
+
+Agents are selected for contracting based on:
+- Being ready (not exhausted, not deployed, not recovering).
+- Not being needed for imminent mission deployment.
+
 ### Assignment to training
+
+``` typescript
+assignToTraining():
+  idleAgents = getIdleReadyAgents()
+  availableTrainingSlots = trainingCapacity - countAgentsInTraining()
+
+  for agent in idleAgents:
+    if availableTrainingSlots <= 0:
+      break
+    assignAgentToTraining(agent)
+    availableTrainingSlots -= 1
+```
+
+All idle agents should be training. This ensures continuous skill improvement
+and that no agents are wasted sitting idle.
 
 ### Lead investigation
 
+``` typescript
+assignToLeadInvestigation():
+  if countAgentsInvestigatingLeads() >= 1:
+    return  // Goal: at least 1 agent investigating
+
+  availableLeads = getAvailableLeads()
+  if availableLeads is empty:
+    return
+
+  lead = selectLeadToInvestigate(availableLeads)
+  agent = selectBestAgentForInvestigation()
+  if agent is not null:
+    assignAgentToLead(agent, lead)
+```
+
+Lead selection prioritizes leads that spawn defensive missions,
+as these are mandatory to handle.
+
 ### Mission deployment
 
+``` typescript
+deployToMissions():
+  // Handle defensive missions first (mandatory)
+  defensiveMissions = getDefensiveMissionsNearExpiry()
+  for mission in defensiveMissions:
+    deployToMission(mission)
+
+  // Then offensive missions if resources allow
+  offensiveMissions = getOffensiveMissions()
+  for mission in offensiveMissions:
+    if hasSpareAgentsForOffensive():
+      deployToMission(mission)
+
+deployToMission(mission):
+  requiredThreat = mission.enemyThreatAssessment
+  agents = selectAgentsForMission(requiredThreat)
+  if sumThreat(agents) >= requiredThreat and hasTransportCapacity(agents):
+    deployAgents(agents, mission)
+```
+
+Agent selection for missions ensures:
+- Total agent threat meets or exceeds enemy threat.
+- Agents are not exhausted.
+- Transport capacity is available.
+
 ### Unassignment
+
+``` typescript
+unassignExhaustedAgents():
+  for agent in getAllAssignedAgents():
+    if agent.exhaustion > exhaustionThreshold:
+      unassignAgent(agent)  // Agent will recover while idle
+```
+
+Exhausted agents perform poorly and should recover before being reassigned.
+The threshold determines when an agent is too exhausted to be effective.
 
 # Future work
 
