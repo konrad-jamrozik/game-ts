@@ -57,7 +57,7 @@ playTurn():
   // Phase 1: Unassign agents that need recovery
   unassignExhaustedAgents()          // See "Unassignment"
 
-  // Phase 2: Handle critical mission deployment (highest priority - losing missions = game over)
+  // Phase 2: Deploy to missions according to priority and feasibility
   deployToMissions()                 // See "Mission deployment"
 
   // Phase 3: Ensure income covers per-turn costs (100-120% target)
