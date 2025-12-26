@@ -28,7 +28,7 @@ The player aims to make the key decision described above by following a set of g
 Not all of the goals can be always achieved at the same time, and as such the player must prioritize,
 which is elaborated in further sections.
 
-- Ensure that income from agent contracting covers between 100% and 120% per-turn costs.
+- Ensure that income from agent contracting covers between 100% and 120% upkeep costs.
   - Notably, this doesn't take into account any money coming from funding, nor it takes
     into account discrete expenses like hiring agents or buying capability upgrade.
 - Ensure that agents have no exhaustion, or as little exhaustion as possible, when being
@@ -38,7 +38,7 @@ which is elaborated in further sections.
   - Ensure there is enough transport capacity to deploy at least one such mission per turn
 - Ensure there is at least one lead always being investigated, by 1 agent.
 - Ensure there is at least enough money available so that the player won't run out of money
-  within next 3 turns.
+  within next 3 turns, assuming that the contracting income would cover only 50% of upkeep costs.
 - Ensure any remaining agents are not idling; all ready agents should be in training.
   - As such, ensure there is enough training capacity available.
 - Ensure the player can face the ever-increasing frequency and threat level of defensive missions,
@@ -65,7 +65,7 @@ function manageAgents() {
   // Deploy to missions according to priority and feasibility
   deployToMissions()                 // See "Mission deployment"
 
-  // Ensure income covers per-turn costs (100-120% target)
+  // Ensure income covers upkeep costs (100-120% target)
   assignToContracting()              // See "Assignment to contracting"
 
   // Ensure at least one lead is being investigated
@@ -73,14 +73,14 @@ function manageAgents() {
 
   // Assign remaining idle agents to training
   assignToTraining()                 // See "Assignment to training"
+
+  // Assign remaining idle agents to contracting
+  assignLeftoverToContracting()      // See "Assignment to contracting"
 }
 
 function spendMoney() {
-  if (hasSufficientMoneyRunway()):
-    // Priority order for spending:
-    upgradeCapacities()              // See "Capacity upgrade"
-    upgradeAgentEffectiveness()      // See "Agent effectiveness capability upgrade"
-    hireAgents()                     // See "Hiring"
+  while (hasSufficientMoney()):      // See "Money savings"
+    buy(computeBuyPriorities().top)  // See "Buy priorities"
 }
 ```
 
@@ -185,6 +185,22 @@ function assignToTraining() {
 
 All idle agents should be training. This ensures continuous skill improvement
 and that no agents are wasted sitting idle.
+
+## Money savings
+
+The player is allowed to spend money only if they had enough money saved up to not run out of money
+within next 5 turns, assuming that only 50% of upkeep costs are covered by contracting income.
+
+E.g. if upkeep costs are 300, and 50% of them are covered by contracting income,
+then the player is allowed to spend money only if they had saved up at least 150 * 5 = 750 money.
+
+If they make a purchase which will result money going below 750, they are not allowed to spend
+any more money given turn unless they increase the amount of money in given turn above 750.
+
+If that purchase increased the upkeep costs, then the requirement is immediately recomputed based
+on the new upkeep costs.
+
+## Buy priorities
 
 ## Capacity upgrade
 
