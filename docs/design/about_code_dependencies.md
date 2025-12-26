@@ -160,6 +160,7 @@ graph LR
         MathPrim[prim/mathPrimitives.ts]
         AssertPrim[prim/assertPrimitives.ts]
         Fixed6Prim[prim/fixed6.ts]
+        Fixed6AssertPrim[prim/fixed6assertPrimitives.ts]
         FormatPrim[prim/formatPrimitives.ts]
         RandPrim[prim/rand.ts]
         StringPrim[prim/stringPrimitives.ts]
@@ -170,6 +171,7 @@ graph LR
     Fixed6Prim --> AssertPrim
     Fixed6Prim --> MathPrim
     Fixed6Prim --> FormatPrim
+    Fixed6AssertPrim --> Fixed6Prim
     FormatPrim --> MathPrim
     RandPrim --> AssertPrim
     StringPrim --> AssertPrim
