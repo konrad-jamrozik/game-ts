@@ -7,9 +7,12 @@ KJA backlog:
 ## Current Game mechanics
 
 AI player:
-- Improve the playTurn interface so it is just one param like gameApi that has both
+
+Introduce a playTurnV2 interface so it is like playTurn but it takes just one param like gameApi that has both
   the game state and a set of well defined actions that all update the game state when invoked.
   So there is no need to obtain new game state references.
+
+- The playTurnV2 type should be defined as a standalone type, and the
 - AI player can reuse functions from lib, but if it wants a convenience function for itself,
   they must be implemented in ai/
 

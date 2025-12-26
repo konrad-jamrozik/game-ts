@@ -5,3 +5,13 @@ export type AIPlayerIntellect = {
   name: string
   playTurn: (getState: () => GameState, dispatch: AppDispatch) => void
 }
+
+export type AIPlayerIntellectV2 = {
+  name: string
+  playTurn(api: PlayTurnAPI): void
+}
+
+export type PlayTurnAPI = {
+  getState: () => GameState
+  dispatch: AppDispatch
+}
