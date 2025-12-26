@@ -2,7 +2,7 @@
  * A random number generator that can return fixed values for labeled random calls.
  */
 
-import { assertDefined, assertInRange } from './assertPrimitives'
+import { assertDefined, assertGreaterThanOrEqual, assertInRange, assertLessThan } from './assertPrimitives'
 
 function newRand(): {
   readonly get: (label?: string) => number
@@ -13,12 +13,17 @@ function newRand(): {
 
   return {
     get(label?: string): number {
+      let randResult
       if (label !== undefined && overrides.has(label)) {
         const value = overrides.get(label)
         assertDefined(value)
-        return value
+        randResult = value
+      } else {
+        randResult = Math.random()
       }
-      return Math.random()
+      assertGreaterThanOrEqual(randResult, 0)
+      assertLessThan(randResult, 1)
+      return randResult
     },
 
     set(label: string, value: number): void {

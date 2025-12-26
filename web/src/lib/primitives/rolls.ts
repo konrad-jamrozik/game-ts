@@ -1,4 +1,4 @@
-import { assertInRange } from './assertPrimitives'
+import { assertInRange, assertInteger, assertLessThan, assertLessThanOrEqual } from './assertPrimitives'
 import { FIXED4_PRECISION, f6fmtPctDec2, f6fromF4, f6gt, f6sub, roundToF4, toF6, type Fixed6 } from './fixed6'
 import { fmtPctDec2 } from './formatPrimitives'
 import { div } from './mathPrimitives'
@@ -25,6 +25,7 @@ export type RollResultFloat = {
 export type RangeRoll = {
   min: number
   max: number
+  pct: number
   roll: number
 }
 
@@ -133,62 +134,88 @@ export function rollFixed4(label?: string): Fixed6 {
  * @returns A random integer from 1 to precision (inclusive)
  */
 export function roll1to(precision: number, label?: string): number {
-  return rollIncToInc(1, precision, label).roll
+  return rollIntIncToInc(1, precision, label).roll
 }
 
 export function roll0IncTo1Exc(label?: string): RangeRoll {
-  return rollIncToExc(0, 1, label)
-}
-
-/**
- * Performs a range roll, uniformly selecting a random value from the given [min, max) range, (min is inclusive, max is exclusive).
- *
- * @example
- * rollInFloatRange(1, 100) -> returns a value in [1, 100)
- * - range = 100 - 1 = 99
- * - randResult * 99 = [0, 99.(9))
- * - roll = [0, 99.(9))) + 1 = [1, 100.(9))
- *
- * @param min - Minimum value (inclusive)
- * @param max - Maximum value (exclusive)
- * @param label - Optional label for controllable random in tests
- * @returns A random value from the given [min, max) range
- */
-function rollIncToExc(min: number, max: number, label?: string): RangeRoll {
-  const range = max - min
-  const randResult = rand.get(label)
-  const roll = randResult * range + min
-  return {
-    min,
-    max,
-    roll, // KJA1 should return roll as [0,1) and final result
-  }
+  return rollIntIncToExc(0, 1, label)
 }
 
 /**
  * Performs a range roll, uniformly selecting a random value from the given [min, max] range (both inclusive).
- *
- * @example
- * rollRange(1, 100) -> returns a value in [1, 100] (inclusive)
- * - range = 100 - 1 + 1 = 100
- * - randResult * 100 gives [0, 100)
- * - Math.floor(randResult * 100) gives [0, 99] (integers)
- * - Math.floor(randResult * 100) + 1 gives [1, 100] (inclusive)
  *
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)
  * @param label - Optional label for controllable random in tests
  * @returns The range roll result
  */
-// KJA1 this is not possible on floats, see https://chatgpt.com/c/694dbd81-03d4-832d-905e-57035c6e40bb
-export function rollIncToInc(min: number, max: number, label?: string): RangeRoll {
-  const range = max - min + 1
-  const randResult = rand.get(label)
-  const roll = Math.floor(randResult * range) + min
+export function rollIntIncToInc(min: number, max: number, label?: string): RangeRoll {
+  assertInteger(min)
+  assertInteger(max)
+  assertLessThanOrEqual(min, max)
+  // We roll [min, max), which contains (max - (min - 1)) integers
+  // So rangeSize = max - min + 1
+  // And max = rangeSize + min - 1
+  // For example: [3, 7] = {3, 4, 5, 6, 7} = 5
+  const rangeSize = max - min + 1
+
+  // pct is a float in [0, 1)
+  const pct = rand.get(label)
+
+  // scaledPct is a float in [0, rangeSize)
+  const scaledPct = pct * rangeSize
+
+  // scaledInt is an integer in [0, rangeSize - 1]
+  const scaledInt = Math.floor(scaledPct)
+
+  // roll is an integer in [min, rangeSize + min - 1]
+  // which is [min, max]
+  const roll = scaledInt + min
 
   return {
     min,
     max,
+    pct,
+    roll,
+  }
+}
+
+/**
+ * Performs a range roll, uniformly selecting a random value from the given [min, max) range
+ * (min is inclusive, max is exclusive).
+ *
+ * @param min - Minimum value (inclusive)
+ * @param max - Maximum value (exclusive)
+ * @param label - Optional label for controllable random in tests
+ * @returns The range roll result
+ */
+export function rollIntIncToExc(min: number, max: number, label?: string): RangeRoll {
+  assertInteger(min)
+  assertInteger(max)
+  assertLessThan(min, max)
+  // We roll [min, max), which contains (max - min) integers
+  // So rangeSize = max - min
+  // And max = rangeSize + min
+  // For example: [3, 7) = {3, 4, 5, 6} = 4
+  const rangeSize = max - min
+
+  // pct is a float in [0, 1)
+  const pct = rand.get(label)
+
+  // scaledPct is a float in [0, rangeSize)
+  const scaledPct = pct * rangeSize
+
+  // scaledInt is an integer in [0, rangeSize - 1]
+  const scaledInt = Math.floor(scaledPct)
+
+  // roll is an integer in [min, rangeSize + min - 1]
+  // which is [min, max - 1]
+  const roll = scaledInt + min
+
+  return {
+    min,
+    max,
+    pct,
     roll,
   }
 }

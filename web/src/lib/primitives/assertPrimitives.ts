@@ -97,6 +97,35 @@ export function assertLessThan(
   }
 }
 
+export function assertLessThanOrEqual(
+  left: number,
+  right: number,
+  errMsg = 'Left value must be less than or equal to right value',
+): asserts left is number {
+  if (left > right) {
+    throw new Error(errMsg)
+  }
+}
+
+export function assertGreaterThan(
+  left: number,
+  right: number,
+  errMsg = 'Left value must be greater than right value',
+): asserts left is number {
+  if (left <= right) {
+    throw new Error(errMsg)
+  }
+}
+
+export function assertGreaterThanOrEqual(
+  left: number,
+  right: number,
+  errMsg = 'Left value must be greater than or equal to right value',
+): asserts left is number {
+  if (left < right) {
+    throw new Error(errMsg)
+  }
+}
 export function assertInteger(
   value: number,
   errMsg = `Value must be an integer, got: ${value}`,
