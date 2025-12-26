@@ -1,13 +1,19 @@
 import type { Agent } from '../model/agentModel'
 import { withIds, notAvailable, notOnAssignment } from './agentUtils'
 import { f6c100, f6ge } from '../primitives/fixed6'
+import { assertDefined } from '../primitives/assertPrimitives'
 
-// KJA1 error message can never be undefined
-export type ValidateAgentsResult = Readonly<{
-  isValid: boolean
-  errorMessage?: string
-  invalidAgents: readonly Agent[]
-}>
+export type ValidateAgentsResult =
+  | Readonly<{
+      isValid: true
+      invalidAgents: readonly Agent[]
+      errorMessage?: never
+    }>
+  | Readonly<{
+      isValid: false
+      invalidAgents: readonly Agent[]
+      errorMessage: string
+    }>
 
 export function validateAgents(
   agents: Agent[],
@@ -33,7 +39,11 @@ export function validateAgents(
     }
   }
 
-  return { isValid, ...(errorMessage !== undefined ? { errorMessage } : {}), invalidAgents }
+  if (isValid) {
+    return { isValid, invalidAgents }
+  }
+  assertDefined(errorMessage, 'Error message must be defined')
+  return { isValid, errorMessage, invalidAgents }
 }
 
 export function validateAvailableAgents(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
