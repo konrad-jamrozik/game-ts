@@ -87,7 +87,6 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   let roundIdx = 0
   let combatRounds = 0
   let retreated = false
-  // eslint-disable-next-line @typescript-eslint/init-declarations
   let battleEnded: boolean
   do {
     roundIdx += 1

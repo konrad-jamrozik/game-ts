@@ -62,7 +62,6 @@ function determineChipColor(
   useWarningColor: boolean,
   paletteColorName?: ChipColor,
 ): ChipColor {
-  // eslint-disable-next-line @typescript-eslint/init-declarations
   let returnedColor: ChipColor
 
   if (paletteColorName !== undefined) {

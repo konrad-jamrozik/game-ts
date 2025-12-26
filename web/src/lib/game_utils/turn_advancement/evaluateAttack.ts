@@ -61,8 +61,6 @@ export function evaluateAttack(
   const rollPct = toF(rollResult.rollF4) * 100
   const thresholdPct = toF(rollResult.failureProbF4) * 100
 
-  // oxlint-disable-next-line init-declarations
-  // eslint-disable-next-line @typescript-eslint/init-declarations
   let attackLog: AttackLog
 
   if (rollResult.success) {
