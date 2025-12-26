@@ -59,7 +59,7 @@ export function fmtDec1Diff(prev: number, succ: number): string | undefined {
     return undefined
   }
 
-  const sign = displayedDiff < 0 ? '-' : ''
+  const sign = displayedDiff < 0 ? '-' : '+'
   const value = Math.abs(displayedDiff) / displayUnit
   return `${sign}${value.toFixed(1)}`
 }
