@@ -73,7 +73,7 @@ export function PlayerActions(): React.JSX.Element {
     const validationResult = validateAvailableAgents(gameState.agents, selectedAgentIds)
 
     if (!validationResult.isValid) {
-      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
+      setAlertMessage(validationResult.errorMessage)
       setShowAlert(true)
       return
     }
@@ -88,7 +88,7 @@ export function PlayerActions(): React.JSX.Element {
     const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
 
     if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(availabilityValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -97,7 +97,7 @@ export function PlayerActions(): React.JSX.Element {
     const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
 
     if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(exhaustionValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -112,7 +112,7 @@ export function PlayerActions(): React.JSX.Element {
     const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
 
     if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(availabilityValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -121,7 +121,7 @@ export function PlayerActions(): React.JSX.Element {
     const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
 
     if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(exhaustionValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -147,7 +147,7 @@ export function PlayerActions(): React.JSX.Element {
     // Check if all selected agents are in "OnAssignment" state
     const validationResult = validateOnAssignmentAgents(gameState.agents, selectedAgentIds)
     if (!validationResult.isValid) {
-      setAlertMessage(validationResult.errorMessage ?? 'Unknown error')
+      setAlertMessage(validationResult.errorMessage)
       setShowAlert(true)
       return
     }
@@ -157,7 +157,7 @@ export function PlayerActions(): React.JSX.Element {
     dispatch(clearAgentSelection())
   }
 
-  /**
+  /** // KJA1 fix impl.
    * This function handles what happens when the "investigate lead" button is clicked by the player.
    * There are following happy paths:
    * - 1. When a lead is selected, then a new investigation is created with the selected agents.
@@ -196,7 +196,7 @@ export function PlayerActions(): React.JSX.Element {
       const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
 
       if (!availabilityValidation.isValid) {
-        setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
+        setAlertMessage(availabilityValidation.errorMessage)
         setShowAlert(true)
         return
       }
@@ -205,7 +205,7 @@ export function PlayerActions(): React.JSX.Element {
       const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
 
       if (!exhaustionValidation.isValid) {
-        setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
+        setAlertMessage(exhaustionValidation.errorMessage)
         setShowAlert(true)
         return
       }
@@ -234,7 +234,7 @@ export function PlayerActions(): React.JSX.Element {
     const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
 
     if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(availabilityValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -243,7 +243,7 @@ export function PlayerActions(): React.JSX.Element {
     const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
 
     if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(exhaustionValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -285,7 +285,7 @@ export function PlayerActions(): React.JSX.Element {
     // Validate agents are available
     const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
     if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(availabilityValidation.errorMessage)
       setShowAlert(true)
       return
     }
@@ -294,7 +294,7 @@ export function PlayerActions(): React.JSX.Element {
     const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
 
     if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(exhaustionValidation.errorMessage)
       setShowAlert(true)
       return
     }

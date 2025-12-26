@@ -112,6 +112,7 @@ function compareExpiresIn(a: number | 'never', b: number | 'never'): number {
   return a - b
 }
 
+// KJA1 apply same pattern as for validateAgents and fix caller
 /**
  * Validates mission for agent deployment
  */
