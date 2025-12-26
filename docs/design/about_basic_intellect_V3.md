@@ -54,19 +54,25 @@ It effectively codifies how the player prioritizes the goals described above:
 
 TODO
 
-## Hiring
+## Money
 
-## Assignment to contracting
+### Hiring
 
-## Assignment to training
+### Capacity upgrade
 
-## Lead investigation
+### Agent effectiveness capability upgrade
 
-## Mission deployment
+## Agent management
 
-## Capacity upgrade
+### Assignment to contracting
 
-## Agent effectiveness capability upgrade
+### Assignment to training
+
+### Lead investigation
+
+### Mission deployment
+
+### Unassignment
 
 # Future work
 
