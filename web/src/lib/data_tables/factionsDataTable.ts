@@ -41,6 +41,7 @@ function toFactionsDataTable(rows: FactionDataRow[]): FactionData[] {
     const id = row[0]
     const name = row[1]
     const initialActivityLevel = row[2]
+    // KJA1 should this one of the ID fmt functions?
     const factionDataId: FactionDataId = `factiondata-${id.replace('faction-', '')}`
     const discoveryPrerequisite = [`lead-${id.replace('faction-', '')}-profile`]
     return {
