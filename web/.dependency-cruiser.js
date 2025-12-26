@@ -462,6 +462,19 @@ export default {
         pathNot: '^src/lib/primitives/mathPrimitives\\.ts$',
       },
     },
+    // Primitives: nothing in primitives can depend on fixed6assertPrimitives.ts
+    {
+      name: 'primitives-no-fixed6assert-deps',
+      severity: 'error',
+      comment: 'Nothing in lib/primitives can depend on fixed6assertPrimitives.ts',
+      from: {
+        path: '^src/lib/primitives',
+        pathNot: '^src/lib/primitives/fixed6assertPrimitives\\.ts$',
+      },
+      to: {
+        path: '^src/lib/primitives/fixed6assertPrimitives\\.ts$',
+      },
+    },
     // Test directory can import from src/ following the same rules as src/
     // This is handled implicitly - test files can import from src/ and the rules above will apply
     // No additional rules needed as test/ imports are validated against src/ rules
