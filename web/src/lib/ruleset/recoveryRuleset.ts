@@ -1,18 +1,11 @@
 import { ceil, div } from '../primitives/mathPrimitives'
-import { assertAboveZero, assertLessThan } from '../primitives/assertPrimitives'
+import { f6assertAboveZero, f6assertLessThan } from '../primitives/assertPrimitives'
 import { toF, f6div, f6sub, f6lt, type Fixed6 } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
 
 export function getRecoveryTurns(maxHitPoints: Fixed6, damage: Fixed6, hitPointsRecoveryPct: Fixed6): number {
-  const damageNum = toF(damage)
-  assertAboveZero(damageNum, `damage must be above 0, got: ${damageNum}`)
-  const maxHitPointsNum = toF(maxHitPoints)
-  // KJA1 use Fixed6-native assert instead of these conversions
-  assertLessThan(
-    damageNum,
-    maxHitPointsNum,
-    `damage must be less than maxHitPoints, got: ${damageNum} < ${maxHitPointsNum}`,
-  )
+  f6assertAboveZero(damage)
+  f6assertLessThan(damage, maxHitPoints)
 
   const hitPointsRecoveryPctNum = toF(hitPointsRecoveryPct)
   const hitPointsLostPct = Math.min(f6div(damage, maxHitPoints) * 100, 100)
