@@ -53,11 +53,12 @@ The player follows the following algorithm when deciding what to do in given tur
 It effectively codifies how the player prioritizes the goals described above:
 
 ``` typescript
-playTurn():
+function playTurn() {
   manageAgents()                     // See "Agent management"
   spendMoney()                       // See "Money spending"
+}
 
-manageAgents():
+function manageAgents() {
   // Unassign agents that need recovery
   unassignExhaustedAgents()          // See "Unassignment"
 
@@ -72,22 +73,25 @@ manageAgents():
 
   // Assign remaining idle agents to training
   assignToTraining()                 // See "Assignment to training"
+}
 
-spendMoney():
-  if hasSufficientMoneyRunway():
+function spendMoney() {
+  if (hasSufficientMoneyRunway()):
     // Priority order for spending:
     upgradeCapacities()              // See "Capacity upgrade"
     upgradeAgentEffectiveness()      // See "Agent effectiveness capability upgrade"
     hireAgents()                     // See "Hiring"
+}
 ```
 
 ## Unassignment
 
 ``` typescript
-unassignExhaustedAgents():
-  for agent in getAllAssignedAgents():
-    if agent.exhaustion > exhaustionThreshold:
+function unassignExhaustedAgents() {
+  for (agent in getAllAssignedAgents()):
+    if (agent.exhaustion > exhaustionThreshold):
       unassignAgent(agent)  // Agent will recover while idle
+}
 ```
 
 Exhausted agents perform poorly and should recover before being reassigned.
@@ -96,23 +100,25 @@ The threshold determines when an agent is too exhausted to be effective.
 ## Mission deployment
 
 ``` typescript
-deployToMissions():
+function deployToMissions() {
   // Handle defensive missions first (mandatory)
-  defensiveMissions = getDefensiveMissionsNearExpiry()
-  for mission in defensiveMissions:
+  let defensiveMissions = getDefensiveMissionsNearExpiry()
+  for (mission in defensiveMissions):
     deployToMission(mission)
 
   // Then offensive missions if resources allow
-  offensiveMissions = getOffensiveMissions()
-  for mission in offensiveMissions:
-    if hasSpareAgentsForOffensive():
+  let offensiveMissions = getOffensiveMissions()
+  for (mission in offensiveMissions):
+    if (hasSpareAgentsForOffensive()):
       deployToMission(mission)
+}
 
-deployToMission(mission):
-  requiredThreat = mission.enemyThreatAssessment
-  agents = selectAgentsForMission(requiredThreat)
-  if sumThreat(agents) >= requiredThreat and hasTransportCapacity(agents):
+function deployToMission(mission) {
+  let requiredThreat = mission.enemyThreatAssessment
+  let agents = selectAgentsForMission(requiredThreat)
+  if (sumThreat(agents) >= requiredThreat) and (hasTransportCapacity(agents)):
     deployAgents(agents, mission)
+}
 ```
 
 Agent selection for missions ensures:
@@ -123,17 +129,18 @@ Agent selection for missions ensures:
 ## Assignment to contracting
 
 ``` typescript
-assignToContracting():
-  perTurnCosts = calculatePerTurnCosts()
-  targetIncome = perTurnCosts * 1.1  // Target 110% of costs (middle of 100-120% range)
-  currentIncome = calculateContractingIncome()
+function assignToContracting() {
+  let perTurnCosts = calculatePerTurnCosts()
+  let targetIncome = perTurnCosts * 1.1  // Target 110% of costs (middle of 100-120% range)
+  let currentIncome = calculateContractingIncome()
 
-  while currentIncome < targetIncome:
-    agent = selectBestAgentForContracting()
-    if agent is null:
+  while (currentIncome < targetIncome):
+    let agent = selectBestAgentForContracting()
+    if (agent is null):
       break
     assignAgentToContracting(agent)
     currentIncome = calculateContractingIncome()
+}
 ```
 
 Agents are selected for contracting based on:
@@ -143,18 +150,19 @@ Agents are selected for contracting based on:
 ## Lead investigation
 
 ``` typescript
-assignToLeadInvestigation():
-  if countAgentsInvestigatingLeads() >= 1:
+function assignToLeadInvestigation() {
+  if (countAgentsInvestigatingLeads() >= 1):
     return  // Goal: at least 1 agent investigating
 
-  availableLeads = getAvailableLeads()
-  if availableLeads is empty:
+  let availableLeads = getAvailableLeads()
+  if (availableLeads is empty):
     return
 
-  lead = selectLeadToInvestigate(availableLeads)
-  agent = selectBestAgentForInvestigation()
-  if agent is not null:
+  let lead = selectLeadToInvestigate(availableLeads)
+  let agent = selectBestAgentForInvestigation()
+  if (agent is not null):
     assignAgentToLead(agent, lead)
+}
 ```
 
 Lead selection prioritizes leads that spawn defensive missions,
@@ -163,15 +171,16 @@ as these are mandatory to handle.
 ## Assignment to training
 
 ``` typescript
-assignToTraining():
-  idleAgents = getIdleReadyAgents()
-  availableTrainingSlots = trainingCapacity - countAgentsInTraining()
+function assignToTraining() {
+  let idleAgents = getIdleReadyAgents()
+  let availableTrainingSlots = trainingCapacity - countAgentsInTraining()
 
-  for agent in idleAgents:
-    if availableTrainingSlots <= 0:
+  for (agent in idleAgents):
+    if (availableTrainingSlots <= 0):
       break
     assignAgentToTraining(agent)
     availableTrainingSlots -= 1
+}
 ```
 
 All idle agents should be training. This ensures continuous skill improvement
@@ -180,12 +189,13 @@ and that no agents are wasted sitting idle.
 ## Capacity upgrade
 
 ``` typescript
-upgradeCapacities():
+function upgradeCapacities() {
   // Priority: transport > training
-  if transportCapacity < minTransportCapacity():
+  if (transportCapacity < minTransportCapacity()):
     upgradeTransportCapacity()
-  if trainingCapacity < countAgents() - expectedContractingAgents():
+  if (trainingCapacity < countAgents() - expectedContractingAgents()):
     upgradeTrainingCapacity()
+}
 ```
 
 Transport capacity is prioritized because without it, agents cannot be deployed to missions.
@@ -194,17 +204,18 @@ Training capacity is secondary but important to ensure idle agents are always im
 ## Agent effectiveness capability upgrade
 
 ``` typescript
-upgradeAgentEffectiveness():
+function upgradeAgentEffectiveness() {
   // Upgrade capabilities in priority order
-  capabilities = [
+  let capabilities = [
     weaponBaseDamage,      // Direct combat improvement
     exhaustionRecovery,    // Faster agent turnaround
     hitPointsRecovery,     // Faster post-mission recovery
     trainingSkillGain      // Faster skill improvement
   ]
-  for capability in capabilities:
-    if shouldUpgrade(capability) and canAfford(capability):
+  for (capability in capabilities):
+    if (shouldUpgrade(capability) and canAfford(capability)):
       upgrade(capability)
+}
 ```
 
 The priority order reflects combat effectiveness first (to win missions),
@@ -213,14 +224,15 @@ then recovery rates (to maximize agent availability).
 ## Hiring
 
 ``` typescript
-hireAgents():
-  targetAgentCount = calculateTargetAgentCount()
-  currentAgentCount = countAgents()
-  agentsToHire = max(0, targetAgentCount - currentAgentCount)
+function hireAgents() {
+  let targetAgentCount = calculateTargetAgentCount()
+  let currentAgentCount = countAgents()
+  let agentsToHire = max(0, targetAgentCount - currentAgentCount)
 
-  for i in 1..agentsToHire:
-    if canAffordHire():
+  for (i in 1..agentsToHire):
+    if (canAffordHire()):
       hireAgent()
+}
 ```
 
 The target agent count is determined by the need to:
