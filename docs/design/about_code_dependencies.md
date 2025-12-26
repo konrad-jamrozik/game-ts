@@ -67,6 +67,10 @@ graph TD
         RdxRed[rdx/reducers]
     end
 
+    subgraph "web/src/ai"
+        Ai[ai]
+    end
+
     subgraph "web/src/lib"
         LibGam[lib/game_utils]
         LibFac[lib/factories]
@@ -88,6 +92,8 @@ graph TD
     Comp__ --> RdxSel
     Comp__ --> CompTheme
     Comp__ --> LibGam
+    Comp__ --> Ai
+    Ai --> LibGam
     CompSt --> LibMod
     RdxStore --> RdxMid
     RdxMid --> RdxSli

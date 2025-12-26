@@ -97,19 +97,19 @@ export default {
         path: '^src',
       },
     },
-    // components/* (other than App.tsx, Error, styling/theme.tsx) can import from hooks.ts, selectors, theme.tsx, lib/game_utils and their transitive dependencies
+    // components/* (other than App.tsx, Error, styling/theme.tsx) can import from hooks.ts, selectors, theme.tsx, lib/game_utils, ai/ and their transitive dependencies
     // Transitive: store.ts, rootReducer.ts, slices, reducer_utils, reducers, lib/model, lib/primitives
     {
       name: 'components-general-restrictions',
       severity: 'error',
       comment:
-        'components/* can directly import from hooks.ts, selectors, theme.tsx, lib/game_utils, components/*, and their transitive dependencies (store.ts, rootReducer.ts, slices, reducer_utils, reducers, lib/model, lib/primitives)',
+        'components/* can directly import from hooks.ts, selectors, theme.tsx, lib/game_utils, components/*, ai/, and their transitive dependencies (store.ts, rootReducer.ts, slices, reducer_utils, reducers, lib/model, lib/primitives)',
       from: {
         path: '^src/components',
         pathNot: '^src/components/(App\\.tsx|Error|styling/theme\\.tsx)$',
       },
       to: {
-        pathNot: '^(src/components|src/redux|src/lib)',
+        pathNot: '^(src/components|src/redux|src/lib|src/ai)',
         path: '^src',
       },
     },
