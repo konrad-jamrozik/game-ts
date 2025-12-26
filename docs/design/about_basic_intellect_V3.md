@@ -8,16 +8,19 @@ and decide based on the answers:
 
 - What to spend money on, if at all?
   - How many agents to hire?
-  - Which capabilities to upgrade?
+  - Which capacities to upgrade?
+  - Which agent capabilities to upgrade?
 
 - What to do with agents?
   - How many and which agents to assign to:
     - Contracting?
     - Training?
     - Lead investigations?
-      - Which leads?
+      - Which leads to investigate?
   - How many and which agents to deploy on a mission?
-    - Which missions?
+    - Which missions to deploy to?
+    - When to deploy? (missions expire)
+    - Which agents and how many to deploy?
 
 # Goals
 
@@ -50,6 +53,20 @@ The player follows the following algorithm when deciding what to do in given tur
 It effectively codifies how the player prioritizes the goals described above:
 
 TODO
+
+## Hiring
+
+## Assignment to contracting
+
+## Assignment to training
+
+## Lead investigation
+
+## Mission deployment
+
+## Capacity upgrade
+
+## Agent effectiveness capability upgrade
 
 # Future work
 
