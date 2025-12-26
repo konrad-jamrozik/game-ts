@@ -1,4 +1,30 @@
-<!-- 9366c483-9c3d-4bf0-826b-8098195c8c39 d1d52ebe-93f0-4bf1-aaff-b3ca7daf11d9 -->
+---
+name: AI Player Feature Implementation Plan
+overview: ""
+todos:
+  - id: 2aa5446c-eee8-41db-aa1c-20494538627c
+    content: "Create AI player core infrastructure: interfaces, action types, executor, and registry"
+    status: pending
+  - id: e45a6254-65c4-457e-b87c-8747d7b2db38
+    content: Create aiPlayerSlice Redux slice and integrate into store
+    status: pending
+  - id: 6938ba38-129b-4daa-acca-763e8499e4ca
+    content: Create AiPlayerControls component with dropdown and delegate button
+    status: pending
+  - id: 0386e195-3671-4924-a5cb-d26606ec8629
+    content: Create helper utilities for AI decision-making (agents, missions, leads, factions, resources)
+    status: pending
+  - id: 015cc51d-e09f-4eee-91d8-e5a727d3771f
+    content: Implement basicAiIntellect with core decision logic for all player actions
+    status: pending
+  - id: 3f6f40eb-751d-49c7-8b5c-181201f8d749
+    content: Add AiPlayerControls to GameControls component
+    status: pending
+  - id: 0792ecb1-c25e-4391-bd42-e9168ecb9458
+    content: Test AI intellect through multiple turns and verify reasonable decisions
+    status: pending
+---
+
 # AI Player Feature Implementation Plan
 
 ## Overview
@@ -9,76 +35,83 @@ Add an AI Player system that allows users to delegate control to AI intellects. 
 
 ### 1. AI Player Core Infrastructure
 
-**Location**: `web/src/lib/ai/`
-
-Create the core AI player scaffolding:
+**Location**: `web/src/lib/ai/`Create the core AI player scaffolding:
 
 - **`aiPlayerInterface.ts`**: Define the `AiPlayerIntellect` interface that all AI implementations must follow:
   ```typescript
-  type AiPlayerIntellect = {
-    id: string
-    name: string
-    description: string
-    executeTurn: (gameState: GameState) => AiPlayerAction[]
-  }
+              type AiPlayerIntellect = {
+                id: string
+                name: string
+                description: string
+                executeTurn: (gameState: GameState) => AiPlayerAction[]
+              }
   ```
+
+
+
 
 - **`aiPlayerActions.ts`**: Define types for AI player actions (wrappers around Redux actions):
   ```typescript
-  type AiPlayerAction = 
-    | { type: 'hireAgent' }
-    | { type: 'sackAgents', agentIds: string[] }
-    | { type: 'assignAgentsToContracting', agentIds: string[] }
-    | { type: 'assignAgentsToEspionage', agentIds: string[] }
-    | { type: 'assignAgentsToTraining', agentIds: string[] }
-    | { type: 'recallAgents', agentIds: string[] }
-    | { type: 'createLeadInvestigation', leadId: string, agentIds: string[] }
-    | { type: 'addAgentsToInvestigation', investigationId: string, agentIds: string[] }
-    | { type: 'deployAgentsToMission', missionSiteId: string, agentIds: string[] }
-    | { type: 'buyUpgrade', upgradeName: UpgradeName }
-    | { type: 'advanceTurn' }
+              type AiPlayerAction = 
+                | { type: 'hireAgent' }
+                | { type: 'sackAgents', agentIds: string[] }
+                | { type: 'assignAgentsToContracting', agentIds: string[] }
+                | { type: 'assignAgentsToEspionage', agentIds: string[] }
+                | { type: 'assignAgentsToTraining', agentIds: string[] }
+                | { type: 'recallAgents', agentIds: string[] }
+                | { type: 'createLeadInvestigation', leadId: string, agentIds: string[] }
+                | { type: 'addAgentsToInvestigation', investigationId: string, agentIds: string[] }
+                | { type: 'deployAgentsToMission', missionSiteId: string, agentIds: string[] }
+                | { type: 'buyUpgrade', upgradeName: UpgradeName }
+                | { type: 'advanceTurn' }
   ```
+
+
+
 
 - **`aiPlayerExecutor.ts`**: Executor that takes an AI intellect, reads game state, executes actions, and dispatches Redux actions:
   ```typescript
-  function executeAiTurn(
-    intellect: AiPlayerIntellect,
-    gameState: GameState,
-    dispatch: AppDispatch
-  ): void
+              function executeAiTurn(
+                intellect: AiPlayerIntellect,
+                gameState: GameState,
+                dispatch: AppDispatch
+              ): void
   ```
+
+
+
 
 - **`aiPlayerRegistry.ts`**: Registry for available AI intellects:
   ```typescript
-  const aiIntellects: AiPlayerIntellect[] = [...]
-  export function getAiIntellectById(id: string): AiPlayerIntellect | undefined
-  export function getAllAiIntellects(): AiPlayerIntellect[]
+              const aiIntellects: AiPlayerIntellect[] = [...]
+              export function getAiIntellectById(id: string): AiPlayerIntellect | undefined
+              export function getAllAiIntellects(): AiPlayerIntellect[]
   ```
+
+
 
 
 ### 2. AI Intellect Implementation
 
-**Location**: `web/src/lib/ai/intellects/`
-
-Create at least one functional AI intellect:
+**Location**: `web/src/lib/ai/intellects/`Create at least one functional AI intellect:
 
 - **`basicAiIntellect.ts`**: A basic AI that can successfully play the game:
-  - **Agent Management**:
+- **Agent Management**:
     - Hire agents when money is available and agent cap allows
     - Fire low-skill agents if agent cap is reached and better agents are available
     - Assign agents to contracting/espionage based on resource needs
     - Assign agents to training when training slots are available
-  - **Lead Investigation**:
+- **Lead Investigation**:
     - Prioritize leads based on dependencies and difficulty
     - Assign available agents to lead investigations
     - Add more agents to existing investigations if needed
-  - **Mission Deployment**:
+- **Mission Deployment**:
     - Evaluate mission sites for deployment priority (based on rewards, expiration, enemy strength)
     - Deploy appropriate number of agents to missions (considering transport cap)
     - Prioritize missions that reduce panic or suppress high-threat factions
-  - **Upgrades**:
+- **Upgrades**:
     - Purchase upgrades based on current needs (e.g., agent cap when at limit, transport cap when deploying missions)
-  - **Panic Management**:
+- **Panic Management**:
     - Focus on factions with highest threat levels relative to suppression
     - Prioritize missions that suppress high-threat factions
 
@@ -95,17 +128,17 @@ The AI should:
 
 - **`aiPlayerSlice.ts`**: Redux slice for AI player state:
   ```typescript
-  type AiPlayerState = {
-    selectedIntellectId: string | undefined
-    isExecuting: boolean
-  }
+              type AiPlayerState = {
+                selectedIntellectId: string | undefined
+                isExecuting: boolean
+              }
   ```
 
 
 Actions:
 
-  - `setSelectedIntellect(intellectId: string | undefined)`
-  - `setIsExecuting(isExecuting: boolean)`
+- `setSelectedIntellect(intellectId: string | undefined)`
+- `setIsExecuting(isExecuting: boolean)`
 
 Add to `web/src/app/store.ts` root reducer.
 
@@ -114,8 +147,8 @@ Add to `web/src/app/store.ts` root reducer.
 **Location**: `web/src/components/GameControls/`
 
 - **`AiPlayerControls.tsx`**: New component with:
-  - Dropdown (MUI Select) to choose AI intellect from registry
-  - "Delegate to AI" button that:
+- Dropdown (MUI Select) to choose AI intellect from registry
+- "Delegate to AI" button that:
     - Gets current game state from Redux
     - Executes selected AI intellect for one turn
     - Dispatches all actions generated by AI
@@ -133,18 +166,16 @@ The executor (`aiPlayerExecutor.ts`) should:
 2. Call `intellect.executeTurn(gameState)` to get array of actions
 3. For each action in sequence:
 
-   - Map AI action to Redux action creator
-   - Dispatch Redux action
-   - Wait for state update (if needed)
+- Map AI action to Redux action creator
+- Dispatch Redux action
+- Wait for state update (if needed)
 
 4. After all actions, dispatch `advanceTurn()` if not already included
 5. Handle errors gracefully (log and stop execution)
 
 ### 6. Helper Utilities
 
-**Location**: `web/src/lib/ai/utils/`
-
-Create utilities for AI decision-making:
+**Location**: `web/src/lib/ai/utils/`Create utilities for AI decision-making:
 
 - **`agentUtils.ts`**: Helper functions for evaluating agents (skill, exhaustion, availability)
 - **`missionUtils.ts`**: Helper functions for evaluating missions (priority, required agents, rewards)
@@ -191,21 +222,3 @@ Create utilities for AI decision-making:
 - Test edge cases (no money, caps reached, no available agents, etc.)
 - Verify turn advancement works correctly after AI actions
 - Test with different AI intellects (when multiple are implemented)
-
-## Future Enhancements
-
-- Add more AI intellects with different strategies
-- Add AI execution speed controls (fast/slow animation)
-- Add AI decision explanation/logging
-- Add ability to pause/resume AI execution
-- Add AI performance metrics (turns survived, panic management, etc.)
-
-### To-dos
-
-- [ ] Create AI player core infrastructure: interfaces, action types, executor, and registry
-- [ ] Create aiPlayerSlice Redux slice and integrate into store
-- [ ] Create AiPlayerControls component with dropdown and delegate button
-- [ ] Create helper utilities for AI decision-making (agents, missions, leads, factions, resources)
-- [ ] Implement basicAiIntellect with core decision logic for all player actions
-- [ ] Add AiPlayerControls to GameControls component
-- [ ] Test AI intellect through multiple turns and verify reasonable decisions

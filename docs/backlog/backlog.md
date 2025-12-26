@@ -153,7 +153,7 @@ KJA backlog:
     },  
   ```
 
-# DONE in MLS-5
+# DONE in MLS-6
 
 - Delete the intel espionage gathering. I.e. ensure that agents can no longer be assigned to espionage / intel gathering missions.
   Delete all related code symbols: reducer, model, all of that.

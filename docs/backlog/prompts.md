@@ -61,20 +61,45 @@ There should be following tabs:
 Write a plan how to add "AI Player" feature to the game.
 
 Key components of it:
+- The UI allowing the human player to invoke the API player
+- The implementation of the AI player interface to the rest of the app
+- The implementation of the AI player intellects
 
-- A user can choose an "AI player intellect" from a dropdown, and click "Delegate to AI" button,
-  that makes the AI player execute player actions on player's behalf, and advance turn on player's behalf.
-- A scaffolding & interface for an "AI player", that can:
-  - read game state to get the same information as human player would,
-  - execute player actions and other reducers, like a human player could.
-  - load an "AI player intellect" that reads the game state and executes the player actions and advances turn
-    based on its implementation.
-- The implementation of at least one "AI player intellect", that can successfully play and win the game.
-  - Such AI player intellect should be able to:
-    - Have the basic capability to read game state and act on it, as described above.
-    - Make good decision about:
-      - agents: when to fire, hire, what to assign them to, including
-        lead investigations and mission deployments.
-      - Which lead to investigate, which mission to deploy agents to, how much, and so on.
-      - Which capabilities to upgrade and when.
-      - Which factions to focus on, to suppress them enough so panic doesn't reach 100% and thus game ends.
+## The UI for AI player
+
+In "Game controls" component, add another section at the bottom, "AI player", with following elements:
+
+- A dropdown to choose "AI player intellect"
+- A button "Delegate to AI" that makes the AI player execute all the actions it wants to execute
+  in the given turn according to the chosen intellect, and then advances the turn,
+  if possible (it won't be possible is game is over).
+
+## The AI player API
+
+The AI player API is as follows:
+- It is implemented in web/src/lib/ai/
+- When a player clicks "Delegate to AI" it is routed to function that obtains appropriate `AIPlayerIntellect` from the `intellectRegistry`
+  and launches `playTurn` function. That function can be called `delegateTurnToAIPlayer`.
+- The `playTurn` function is implemented within the intellect itself, according to the `AIPlayerIntellect` type.
+- The `playTurn` functions allows the intellect implementing it to repeatedly inspect current turn `gameState`, and invoke all the same
+  actions a human player could invoke, read the updated `gameState`, and repeat until the intellect decides it doesn't want to do anything else
+  in the turn and returns.
+- Then the control comes back to `delegateTurnToAIPlayer` function which advances the game turn, if possible (i.e. it is not game over).
+
+## The AI player intellects
+
+Two intellects at first:
+
+- "Do nothing" intellect, that always just advances the turn, that's it.
+- "Basic" intellect, as described below.
+
+### Basic intellect
+
+The "basic" AI player intellect should be able to:
+- Have the basic capability to read game state and act on it, as described above.
+- Make good decision about:
+  - agents: when to fire, hire, what to assign them to, including
+    lead investigations, training, and mission deployments.
+  - Which lead to investigate, which mission to deploy agents to, how much, and so on.
+  - Which capabilities to upgrade and when.
+  - Which factions to focus on, to suppress them enough so panic doesn't reach 100% and thus game ends.
