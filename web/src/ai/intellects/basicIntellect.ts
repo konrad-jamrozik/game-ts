@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-loop-func */
+/* eslint-disable no-continue */
 import {
   hireAgent,
   assignAgentsToContracting,
