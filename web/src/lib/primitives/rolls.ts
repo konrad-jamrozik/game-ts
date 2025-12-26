@@ -138,7 +138,19 @@ export function roll1to(precision: number, label?: string): number {
 }
 
 export function roll0IncTo1Exc(label?: string): RangeRoll {
-  return rollIntIncToExc(0, 1, label)
+  return rollInFloatRange(0, 1, label)
+}
+
+function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
+  const range = max - min
+  const pct = rand.get(label)
+  const roll = pct * range + min
+  return {
+    min,
+    max,
+    pct,
+    roll,
+  }
 }
 
 /**

@@ -48,7 +48,7 @@ describe('fmtRollResult - aligned display', () => {
       // - threshold     = 0.555_55  -> displays as 55.55%
       // - Result: displayed roll (55.56%) > threshold (55.55%)
       [0.444_45, 0.555_551, true, '✅ roll  55.56% is >   55.55% threshold'],
-  ])('successProb: %f, roll: %f, success: %s -> expected format', (successProb, roll, success, expectedFormat) => {
+  ])('successProb: %f, roll: %f, success: %s -> %s', (successProb, roll, success, expectedFormat) => {
     rand.set('injected_roll_result', roll)
     const rollResultFloat = rollAgainstProbabilityFloat(successProb, 'injected_roll_result')
     expect(rollResultFloat.success).toBe(success)
