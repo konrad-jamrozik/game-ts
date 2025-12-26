@@ -153,29 +153,16 @@ export function rollIntIncToInc(min: number, max: number, label?: string): Range
   assertInteger(min)
   assertInteger(max)
   assertLessThanOrEqual(min, max)
-  // We roll [min, max), which contains (max - (min - 1)) integers
-  // So rangeSize = max - min + 1
-  // And max = rangeSize + min - 1
-  // For example: [3, 7] = {3, 4, 5, 6, 7} = 5
-  const rangeSize = max - min + 1
 
-  // pct is a float in [0, 1)
-  const pct = rand.get(label)
+  const floatRoll = rollInFloatRange(min, max + 1, label)
 
-  // scaledPct is a float in [0, rangeSize)
-  const scaledPct = pct * rangeSize
-
-  // shiftedScaledPct is a float in [min, rangeSize + min)
-  // which is in [min, max + 1)
-  const shiftedScaledPct = scaledPct + min
-
-  // roll is an integer in [min, max]
-  const roll = Math.floor(shiftedScaledPct)
+  // roll is an integer in [min, max], floored from float roll in [min, max + 1)
+  const roll = Math.floor(floatRoll.roll)
 
   return {
     min,
     max,
-    pct,
+    pct: floatRoll.pct,
     roll,
   }
 }
@@ -193,29 +180,15 @@ export function rollIntIncToExc(min: number, max: number, label?: string): Range
   assertInteger(min)
   assertInteger(max)
   assertLessThan(min, max)
-  // We roll [min, max), which contains (max - min) integers
-  // So rangeSize = max - min
-  // And max = rangeSize + min
-  // For example: [3, 7) = {3, 4, 5, 6} = 4
-  const rangeSize = max - min
+  const floatRoll = rollInFloatRange(min, max, label)
 
-  // pct is a float in [0, 1)
-  const pct = rand.get(label)
-
-  // scaledPct is a float in [0, rangeSize)
-  const scaledPct = pct * rangeSize
-
-  // shiftedScaledPct is a float in [min, rangeSize + min)
-  // which is in [min, max)
-  const shiftedScaledPct = scaledPct + min
-
-  // roll is an integer in [min, max - 1]
-  const roll = Math.floor(shiftedScaledPct)
+  // roll is an integer in [min, max - 1], floored from float roll in [min, max)
+  const roll = Math.floor(floatRoll.roll)
 
   return {
     min,
     max,
-    pct,
+    pct: floatRoll.pct,
     roll,
   }
 }
@@ -230,6 +203,8 @@ export function rollIntIncToExc(min: number, max: number, label?: string): Range
  * @returns The range roll result
  */
 function rollInFloatRange(min: number, max: number, label?: string): RangeRoll {
+  assertLessThan(min, max)
+
   // We roll in [min, max) range, which contains (max - min) floats
   // So rangeSize = max - min
   // and max = rangeSize + min
