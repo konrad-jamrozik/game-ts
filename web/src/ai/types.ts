@@ -1,5 +1,5 @@
-import type { GameState } from '../model/gameStateModel'
-import type { AppDispatch } from '../../redux/store'
+import type { GameState } from '../lib/model/gameStateModel'
+import type { AppDispatch } from '../redux/store'
 
 export type AIPlayerIntellect = {
   name: string

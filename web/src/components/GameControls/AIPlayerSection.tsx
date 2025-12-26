@@ -9,8 +9,8 @@ import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
-import { delegateTurnToAIPlayer } from '../../lib/ai/delegateTurnToAIPlayer'
-import { getAllIntellectNames, getIntellect } from '../../lib/ai/intellectRegistry'
+import { delegateTurnToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
+import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 
 export function AIPlayerSection(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)

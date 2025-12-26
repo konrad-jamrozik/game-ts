@@ -4,19 +4,19 @@ import {
   deployAgentsToMission,
   startLeadInvestigation,
   buyUpgrade,
-} from '../../../redux/slices/gameStateSlice'
-import { AGENT_HIRE_COST } from '../../data_tables/constants'
-import { available, notTerminated } from '../../model_utils/agentUtils'
+} from '../../redux/slices/gameStateSlice'
+import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
+import { available, notTerminated } from '../../lib/model_utils/agentUtils'
 import {
   filterMissionsByState,
   getRemainingTransportCap,
   validateMissionDeployment,
-} from '../../model_utils/missionUtils'
-import { dataTables } from '../../data_tables/dataTables'
-import { UPGRADE_PRICES } from '../../data_tables/upgrades'
+} from '../../lib/model_utils/missionUtils'
+import { dataTables } from '../../lib/data_tables/dataTables'
+import { UPGRADE_PRICES } from '../../lib/data_tables/upgrades'
 import type { AIPlayerIntellect } from '../types'
-import type { GameState } from '../../model/gameStateModel'
-import type { AppDispatch } from '../../../redux/store'
+import type { GameState } from '../../lib/model/gameStateModel'
+import type { AppDispatch } from '../../redux/store'
 
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
