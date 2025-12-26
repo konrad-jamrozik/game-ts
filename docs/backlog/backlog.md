@@ -8,15 +8,7 @@ KJA backlog:
 
 ## Current UI refinement
 
-- Add color bars to assets and capab
-
-- display in capab Exhaustion recov. with %
-
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
-
-- Test and refine the new activity level
-  - Stylize with color bars
-  - Get rid of "projected" column
 - Turn report:
   - "Turns at level: should not be displayed
 

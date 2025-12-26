@@ -2,14 +2,14 @@
 
 # P0: Next important stuff for a complete game
 
-More robust debug
-Training assignment
-Win criteria
-Funding increase
-Weapon damage display
-Detailed battle report
-Factions offensive missions
-3 more factions, to 4 in total
+✅ More robust debug
+✅ Training assignment
+✅ Win criteria
+✅ Funding increase
+✅ Weapon damage display
+✅ Detailed battle report
+✅ Defensive missions against factions
+✅ 2 more factions, to 3 in total
 Do something with intel, see 2025-11-19 Intel ideas
 AI player for balance testing
 Balance pass, especially applying agent effective skill to contracting etc.
