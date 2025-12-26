@@ -458,7 +458,7 @@
               "camelCase": true,
               "pascalCase": true
             },
-            "ignore": "vite-env.d.ts"
+            "ignore": "(vite-env\\.d\\.ts|.*AI.*)"
           }
         ],
         "unicorn/no-empty-file": "off",

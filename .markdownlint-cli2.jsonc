@@ -18,7 +18,7 @@
     // If you are curious how markdownlint-cli2 relates to markdownlint-cli, see:
     // https://dlaa.me/blog/post/markdownlintcli2
     // which is linked from https://github.com/DavidAnson/markdownlint-cli2#overview
-    // "ignores": [
-    //     ".cursor/plans"
-    // ]
+    "ignores": [
+        ".cursor/plans"
+    ]
 }
