@@ -564,7 +564,6 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
   }
 
   // Pick a random mission data from candidates
-  // KJA3 put this random into an until function
   const selectedMissionData = candidateMissionData[rollIntIncToExc(0, candidateMissionData.length).roll]
   assertDefined(
     selectedMissionData,
