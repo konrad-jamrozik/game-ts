@@ -6,7 +6,12 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Add AI player that can play the game for me
+AI player:
+- Improve the playTurn interface so it is just one param like gameApi that has both
+  the game state and a set of well defined actions that all update the game state when invoked.
+  So there is no need to obtain new game state references.
+- AI player can reuse functions from lib, but if it wants a convenience function for itself,
+  they must be implemented in ai/
 
 ## Current UI refinement
 

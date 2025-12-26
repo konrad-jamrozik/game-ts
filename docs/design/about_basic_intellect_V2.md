@@ -1,7 +1,7 @@
 
-# Basic AI player intellect
+# Basic AI player intellect V2
 
-The basic AI player intellect follows following rules for itself:
+The basic AI player intellect V2 follows following rules for itself:
 
 # Money management
 
