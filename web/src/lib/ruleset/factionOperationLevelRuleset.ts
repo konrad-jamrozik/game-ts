@@ -2,6 +2,7 @@ import { getFactionOperationByLevel } from '../model_utils/factionOperationLevel
 import { getActivityLevelByOrd } from '../model_utils/factionActivityLevelUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { f6c0, toF6, type Fixed6 } from '../primitives/fixed6'
+import { rollIntIncToInc } from '../primitives/rolls'
 
 /**
  * Calculate the turns until next faction operation.
@@ -12,11 +13,7 @@ export function calculateOperationTurns(level: FactionActivityLevelOrd): number 
   if (config.operationFrequencyMin === Infinity) {
     return Infinity
   }
-  return (
-    // KJA1 use random util here. Basically all cases where we randomize from [0, 1)
-    Math.floor(Math.random() * (config.operationFrequencyMax - config.operationFrequencyMin + 1)) +
-    config.operationFrequencyMin
-  )
+  return rollIntIncToInc(config.operationFrequencyMin, config.operationFrequencyMax).roll
 }
 
 /**

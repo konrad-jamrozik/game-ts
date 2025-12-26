@@ -5,6 +5,7 @@ import { getFactionName } from '../../model_utils/factionUtils'
 import { isFactionDiscovered } from '../../ruleset/factionRuleset'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { f6c0, toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
+import { rollIntIncToExc } from '../../primitives/rolls'
 import type { Faction } from '../../model/factionModel'
 import type { FactionRewards, MissionRewards } from '../../model/missionModel'
 import type { AgentState } from '../../model/agentModel'
@@ -564,7 +565,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
 
   // Pick a random mission data from candidates
   // KJA3 put this random into an until function
-  const selectedMissionData = candidateMissionData[Math.floor(Math.random() * candidateMissionData.length)]
+  const selectedMissionData = candidateMissionData[rollIntIncToExc(0, candidateMissionData.length).roll]
   assertDefined(
     selectedMissionData,
     `Failed to select mission data: candidateMissionData.length=${candidateMissionData.length}, faction ${faction.id}, operation level ${operationLevel}`,

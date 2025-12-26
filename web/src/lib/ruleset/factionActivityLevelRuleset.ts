@@ -2,6 +2,7 @@ import { getActivityLevelByOrd } from '../model_utils/factionActivityLevelUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { asActivityLevelOrd } from '../model/modelOrdUtils'
 import { assertInRange } from '../primitives/assertPrimitives'
+import { rollIntIncToInc } from '../primitives/rolls'
 
 /**
  * Get the next activity level, clamped at 7 (Total War).
@@ -21,5 +22,5 @@ export function calculateProgressionTurns(level: FactionActivityLevelOrd): numbe
   if (config.turnsMin === Infinity) {
     return Infinity
   }
-  return Math.floor(Math.random() * (config.turnsMax - config.turnsMin + 1)) + config.turnsMin
+  return rollIntIncToInc(config.turnsMin, config.turnsMax).roll
 }
