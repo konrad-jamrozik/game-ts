@@ -174,6 +174,14 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
         const { factionId } = missionData
         const factionName = getFactionNameById(state, factionId)
 
+        // Build base report for all expired missions
+        const report: ExpiredMissionReport = {
+          missionId,
+          missionName: missionData.name,
+          factionId,
+          factionName,
+        }
+
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
         if (typeof operationLevel === 'number') {
@@ -184,27 +192,12 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
           }
 
           // Calculate penalties based on operation level
-          const panicPenalty = getPanicIncreaseForOperation(operationLevel)
-          const fundingPenalty = getFundingDecreaseForOperation(operationLevel)
-
-          expiredReports.push({
-            missionId,
-            missionName: missionData.name,
-            factionId,
-            factionName,
-            operationLevel,
-            panicPenalty,
-            fundingPenalty,
-          })
-        } else {
-          // Offensive mission expired - report it but without penalties
-          expiredReports.push({
-            missionId,
-            missionName: missionData.name,
-            factionId,
-            factionName,
-          })
+          report.operationLevel = operationLevel
+          report.panicPenalty = getPanicIncreaseForOperation(operationLevel)
+          report.fundingPenalty = getFundingDecreaseForOperation(operationLevel)
         }
+
+        expiredReports.push(report)
       }
     }
   }
