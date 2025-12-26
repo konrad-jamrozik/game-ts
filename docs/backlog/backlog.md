@@ -6,11 +6,9 @@ KJA backlog:
 
 ## Current Game mechanics
 
-## Current UI refinement
+- Add AI player that can play the game for me
 
-- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
-- Turn report:
-  - "Turns at level: should not be displayed
+## Current UI refinement
 
 # Next milestone
 
@@ -20,9 +18,16 @@ KJA backlog:
 
 # P0 Game mechanics
 
-# P1 Game mechanics
+- At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
+  how quickly they go through activity levels.
+  So e.g. when faction rolls the growth between range 60-90, and it rolls 70, then:
+  - if growth factor is 60%, then (70-60) * 0.6 = 6, so it actually rolled 70-6 = 64.
+  - if growth factor is 140%, then (90-70) *0.4 = 20*0.4 = 8, so it actually rolled 70+8 = 78.
+  - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
+       growth factor of 150% narrows effective roll from 60-90 to 75-90.
+// KJA this should be opposite: growth factor of 50% should slow-down, not speed up
 
-- Add AI player that can play the game for me
+# P1 Game mechanics
 
 # P0 UI refinement
 
@@ -36,6 +41,8 @@ KJA backlog:
 
 # P2 UI refinement
 
+- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
+
 - Charts for stats over time, at the bottom of the screen.
   - Panic
   - Each faction threat level, suppression, panic increase
@@ -48,9 +55,6 @@ KJA backlog:
 # P0 Game content
 
 # Ideas
-
-- At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
-  how quickly they go through activity levels.
 
 - Add some mechanism that influences how long missions sites will last until expiration.
   Conceptually it denotes how early player learned about them. Maybe:
