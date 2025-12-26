@@ -313,7 +313,7 @@ export function PlayerActions(): React.JSX.Element {
     const selectedMission = gameState.missions.find((m) => m.id === selectedMissionId)
     const missionValidation = validateMissionDeployment(selectedMission)
     if (!missionValidation.isValid) {
-      setAlertMessage(missionValidation.errorMessage ?? 'Unknown error')
+      setAlertMessage(missionValidation.errorMessage)
       setShowAlert(true)
       return
     }

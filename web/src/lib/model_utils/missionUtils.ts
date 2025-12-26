@@ -112,29 +112,36 @@ function compareExpiresIn(a: number | 'never', b: number | 'never'): number {
   return a - b
 }
 
-// KJA1 apply same pattern as for validateAgents and fix caller
+export type ValidateMissionDeploymentResult =
+  | Readonly<{
+      isValid: true
+      errorMessage?: never
+    }>
+  | Readonly<{
+      isValid: false
+      errorMessage: string
+    }>
+
 /**
  * Validates mission for agent deployment
  */
-export function validateMissionDeployment(mission: Mission | undefined): {
-  isValid: boolean
-  errorMessage?: string
-} {
+export function validateMissionDeployment(mission: Mission | undefined): ValidateMissionDeploymentResult {
+  let isValid = true
+  let errorMessage: string | undefined = undefined
+
   if (!mission) {
-    return {
-      isValid: false,
-      errorMessage: 'Mission not found!',
-    }
+    isValid = false
+    errorMessage = 'Mission not found!'
+  } else if (mission.state !== 'Active') {
+    isValid = false
+    errorMessage = 'This mission is not available for deployment!'
   }
 
-  if (mission.state !== 'Active') {
-    return {
-      isValid: false,
-      errorMessage: 'This mission is not available for deployment!',
-    }
+  if (isValid) {
+    return { isValid }
   }
-
-  return { isValid: true }
+  assertDefined(errorMessage, 'Error message must be defined')
+  return { isValid, errorMessage }
 }
 
 /**
