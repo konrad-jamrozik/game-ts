@@ -34,3 +34,8 @@ export function getFactionById(gameState: { factions: Faction[] }, factionId: Fa
   assertDefined(faction, `Faction with id ${factionId} not found`)
   return faction
 }
+
+export function getFactionNameById(gameState: { factions: Faction[] }, factionId: FactionId): string {
+  const faction = getFactionById(gameState, factionId)
+  return getFactionName(faction)
+}

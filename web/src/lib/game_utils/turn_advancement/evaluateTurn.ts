@@ -1,7 +1,7 @@
 import { dataTables } from '../../data_tables/dataTables'
 import { getMissionDataById } from '../../model_utils/missionUtils'
 import { getActivityLevelByOrd } from '../../model_utils/factionActivityLevelUtils'
-import { getFactionName } from '../../model_utils/factionUtils'
+import { getFactionName, getFactionNameById } from '../../model_utils/factionUtils'
 import { isFactionDiscovered } from '../../ruleset/factionRuleset'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { f6c0, toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
@@ -168,22 +168,20 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
       if (mission.expiresIn <= 0) {
         mission.state = 'Expired'
         const missionData = getMissionDataById(mission.missionDataId)
+        const { operationLevel, id: missionId } = mission
+
+        // Get faction info for the report (needed for all expired missions)
+        const { factionId } = missionData
+        const factionName = getFactionNameById(state, factionId)
 
         // Only defensive missions (faction operations) have operationLevel and apply penalties
         // Offensive missions (apprehend/raid) have undefined operationLevel and no penalties
-        const { operationLevel, id: missionId } = mission
         if (typeof operationLevel === 'number') {
           // Level 6 existential mission expired - game over
           if (operationLevel === 6) {
             // Set panic to 1.0 (100%) to trigger game over condition
             state.panic = toF6(1)
           }
-
-          // Get faction info for the report
-          const { factionId } = missionData
-          const faction = state.factions.find((f) => f.id === factionId)
-          assertDefined(faction, `Faction with id ${factionId} not found for expired mission ${missionId}`)
-          const factionName = getFactionName(faction)
 
           // Calculate penalties based on operation level
           const panicPenalty = getPanicIncreaseForOperation(operationLevel)
@@ -197,6 +195,14 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
             operationLevel,
             panicPenalty,
             fundingPenalty,
+          })
+        } else {
+          // Offensive mission expired - report it but without penalties
+          expiredReports.push({
+            missionId,
+            missionName: missionData.name,
+            factionId,
+            factionName,
           })
         }
       }
