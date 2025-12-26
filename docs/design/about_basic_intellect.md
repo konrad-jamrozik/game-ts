@@ -1,9 +1,9 @@
 
-# Basic AI player intellect V3
+# Basic AI player intellect
 
 # Key decisions
 
-On a high level, the basic AI player intellect V3 strives to answer following questions,
+On a high level, the basic AI player intellect strives to answer following questions,
 and decide based on the answers:
 
 - What to spend money on, if at all?
