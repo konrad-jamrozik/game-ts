@@ -4,7 +4,7 @@ import type { Mission } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
-import { f6c0, toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sumBy, type Fixed6, toF6r } from '../primitives/fixed6'
+import { f6c0, toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sumBy, type Fixed6, toF6r, toF } from '../primitives/fixed6'
 import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
   COMBAT_INCAPACITATION_THRESHOLD,
@@ -46,6 +46,27 @@ export function isConcludedMissionState(state: MissionState): boolean {
 
 export function isMissionConcluded(mission: Mission): boolean {
   return isConcludedMissionState(mission.state)
+}
+
+/**
+ * Calculates the threat assessment for a mission.
+ * Threat assessment is the sum of all enemy threat assessments, rounded to the nearest integer.
+ *
+ * Enemy threat assessment formula:
+ * enemy skill * (1 + (enemy hit points / 100) + (enemy weapon base damage * 2 / 100))
+ *
+ * @param mission - The mission to calculate threat assessment for
+ * @returns The total threat assessment as an integer
+ */
+export function calculateMissionThreatAssessment(mission: Mission): number {
+  const totalThreat = mission.enemies.reduce((sum, enemy) => {
+    const hpMultiplier = toF(enemy.hitPoints) / 100
+    const damageMultiplier = (enemy.weapon.damage * 2) / 100
+    const multiplier = 1 + hpMultiplier + damageMultiplier
+    const enemyThreat = f6mult(enemy.skill, multiplier)
+    return sum + enemyThreat
+  }, 0)
+  return Math.round(totalThreat)
 }
 
 /**

@@ -3,9 +3,8 @@ import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { getMissionDataById } from '../../lib/model_utils/missionUtils'
 import { getFactionName } from '../../lib/model_utils/factionUtils'
-import { fmtNoPrefix, fmtDec1 } from '../../lib/primitives/formatPrimitives'
-import { f6c0, f6sumBy, toF, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
-import { div } from '../../lib/primitives/mathPrimitives'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
+import { f6c0, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import type { OffensiveMissionData } from '../../lib/data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../../lib/data_tables/defensiveMissionsDataTable'
 import {
@@ -72,7 +71,7 @@ import type { MissionId } from '../../lib/model/modelIds'
 import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
-import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
+import { isConcludedMissionState, calculateMissionThreatAssessment } from '../../lib/ruleset/missionRuleset'
 
 type MissionDetailsRow = {
   id: number
@@ -107,13 +106,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const enemyFaction = getFactionName(faction)
   const enemyCount = enemies.length
 
-  const enemyAverageSkill =
-    enemies.length > 0
-      ? (() => {
-          const totalSkill = toF(f6sumBy(enemies, (enemy) => enemy.skill))
-          return fmtDec1(div(totalSkill, enemies.length))
-        })()
-      : '-'
+  const missionThreatAssessment = calculateMissionThreatAssessment(mission)
 
   const { operationLevel } = mission
   const rewards = bldRewardsFromMissionData(missionData, operationLevel)
@@ -134,7 +127,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
     { id: 5, key: 'Expires in', value: expiresIn },
     { id: 6, key: 'Agents deployed', value: agentsDeployedStr },
     { id: 7, key: 'Enemy count', value: String(enemyCount) },
-    { id: 8, key: 'Enemy avg. skill', value: enemyAverageSkill },
+    { id: 8, key: 'Threat', value: String(missionThreatAssessment) },
   ]
 
   const rewardRows: MissionDetailsRow[] = [
