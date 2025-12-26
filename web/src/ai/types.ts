@@ -1,5 +1,6 @@
 import type { GameState } from '../lib/model/gameStateModel'
 import type { AppDispatch } from '../redux/store'
+import type { UpgradeName } from '../lib/data_tables/upgrades'
 
 export type AIPlayerIntellect = {
   name: string
@@ -12,6 +13,14 @@ export type AIPlayerIntellectV2 = {
 }
 
 export type PlayTurnAPI = {
-  getState: () => GameState
-  dispatch: AppDispatch
+  gameState: GameState
+  hireAgent(): void
+  sackAgents(agentIds: string[]): void
+  assignAgentsToContracting(agentIds: string[]): void
+  assignAgentsToTraining(agentIds: string[]): void
+  recallAgents(agentIds: string[]): void
+  startLeadInvestigation(params: { leadId: string; agentIds: string[] }): void
+  addAgentsToInvestigation(params: { investigationId: string; agentIds: string[] }): void
+  deployAgentsToMission(params: { missionId: string; agentIds: string[] }): void
+  buyUpgrade(upgradeName: UpgradeName): void
 }
