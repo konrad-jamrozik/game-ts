@@ -65,10 +65,7 @@ export const CAPABILITIES_DATA_GRID_WIDTH =
   CHECKMARK_COLUMN_WIDTH
 
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH +
-  columnWidths['situation_report.metric'] +
-  columnWidths['situation_report.value'] +
-  columnWidths['situation_report.projected']
+  DATA_GRID_BASE_WIDTH + columnWidths['situation_report.metric'] + columnWidths['situation_report.value']
 
 export const SITUATION_REPORT_FACTION_DATA_GRID_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
 

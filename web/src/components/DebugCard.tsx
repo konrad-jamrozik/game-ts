@@ -55,7 +55,7 @@ export function DebugCard(): React.JSX.Element {
           Set panic to zero
         </Button>
         <Button variant="contained" onClick={handleSetAllFactionsSuppression}>
-          Set all factions suppression to 1000%
+          Set all factions suppression to 100
         </Button>
         <Button variant="contained" onClick={handleAddMoney}>
           Add 10000 money
