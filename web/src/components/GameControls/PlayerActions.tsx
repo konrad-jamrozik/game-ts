@@ -157,6 +157,25 @@ export function PlayerActions(): React.JSX.Element {
     dispatch(clearAgentSelection())
   }
 
+  /**
+   * This function handles what happens when the "investigate lead" button is clicked by the player.
+   * There are following happy paths:
+   * - 1. When a lead is selected, then a new investigation is created with the selected agents.
+   * - 2. When a lead investigation is selected, then the selected agents are added to the investigation.
+   *
+   * In both cases, all of the selected agents must be available and not exhausted.
+   * If either of these conditions is not met, an alert is shown to the player and the function returns early.
+   *
+   * All other cases should result in assertion failure, because it should not be possible for the
+   * player to end up in such a state - UI should have prevented this.
+   * This includes cases like:
+   * - Both lead and investigation are selected.
+   * - No agents are selected.
+   * - Any objects cannot be found based on their selected IDs: lead, investigation, agents.
+   * - The selected lead already has an active investigation.
+   * - The selected lead was already successfully investigated and is not repeatable.
+   * @returns
+   */
   function handleInvestigateLead(): void {
     // Check if both lead and investigation are selected
     if (selectedLeadId !== undefined && selectedInvestigationId !== undefined) {

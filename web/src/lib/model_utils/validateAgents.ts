@@ -2,6 +2,7 @@ import type { Agent } from '../model/agentModel'
 import { withIds, notAvailable, notOnAssignment } from './agentUtils'
 import { f6c100, f6ge } from '../primitives/fixed6'
 
+// KJA1 error message can never be undefined
 export type ValidateAgentsResult = Readonly<{
   isValid: boolean
   errorMessage?: string

@@ -83,6 +83,7 @@ function bldDebugAgents(
       ['OnAssignment',     'DEEP_STATE',    105,   5,      '',     2,        ''],
       ['KIA',              'KIA',           300,   '',      0,     '',       ''],
       ['OnAssignment',     'DEEP_STATE',    115,   8,      '',     3,        ''],
+      ['OnMission',        'MISSION',       200,   0,      '',     5,        ''],
       
     ]
 
