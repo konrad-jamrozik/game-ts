@@ -14,20 +14,24 @@ import { getAllIntellectNames, getIntellect } from '../../lib/ai/intellectRegist
 
 export function AIPlayerSection(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const [selectedIntellect, setSelectedIntellect] = React.useState<string>('basic')
+  const intellectNames = getAllIntellectNames()
+  const initialIntellect = intellectNames[0] ?? ''
+  const [selectedIntellect, setSelectedIntellect] = React.useState<string>(initialIntellect)
 
   const gameOver = isGameOver(gameState)
   const gameWon = isGameWon(gameState)
   const isGameEnded = gameOver || gameWon
+  const hasValidIntellect = selectedIntellect !== '' && intellectNames.includes(selectedIntellect)
+  const isButtonDisabled = isGameEnded || !hasValidIntellect
 
-  const intellectNames = getAllIntellectNames()
-  const intellects = intellectNames.map((name) => getIntellect(name))
-
-  function handleIntellectChange(event: SelectChangeEvent<string>): void {
+  function handleIntellectChange(event: SelectChangeEvent): void {
     setSelectedIntellect(event.target.value)
   }
 
   function handleDelegateToAI(): void {
+    if (!hasValidIntellect) {
+      return
+    }
     delegateTurnToAIPlayer(selectedIntellect)
   }
 
@@ -48,14 +52,17 @@ export function AIPlayerSection(): React.JSX.Element {
             label="AI Player Intellect"
             onChange={handleIntellectChange}
           >
-            {intellects.map((intellect) => (
-              <MenuItem key={intellect.name} value={intellect.name}>
-                {intellect.name}
-              </MenuItem>
-            ))}
+            {intellectNames.map((name) => {
+              const intellect = getIntellect(name)
+              return (
+                <MenuItem key={name} value={name}>
+                  {intellect.name}
+                </MenuItem>
+              )
+            })}
           </Select>
         </FormControl>
-        <Button variant="contained" onClick={handleDelegateToAI} disabled={isGameEnded} fullWidth>
+        <Button variant="contained" onClick={handleDelegateToAI} disabled={isButtonDisabled} fullWidth>
           Delegate to AI
         </Button>
       </Stack>

@@ -76,7 +76,7 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
     const price = UPGRADE_PRICES[upgradeName]
     if (state.money >= price) {
       dispatch(buyUpgrade(upgradeName))
-      state = getState()
+      // state = getState()
       // Only buy one upgrade per turn to be conservative
       break
     }

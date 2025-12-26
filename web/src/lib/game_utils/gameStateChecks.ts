@@ -1,6 +1,7 @@
 import { f6ge, toF6 } from '../primitives/fixed6'
 import type { GameState } from '../model/gameStateModel'
 
+// KJA1 this should be isGameLost and isGameOver should e both
 export function isGameOver(gameState: GameState): boolean {
   return f6ge(gameState.panic, toF6(1)) || gameState.money < 0
 }
