@@ -650,12 +650,10 @@ function updateFactions(
 
     // Update turns until next operation (only if not suppressed and not dormant)
     if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
-      // KJA3 Why I need turnsUntilNextOperationBeforeDecrement?
-      const turnsUntilNextOperationBeforeDecrement = faction.turnsUntilNextOperation
       faction.turnsUntilNextOperation -= 1
 
-      // Check if it's time to perform an operation (when counter goes from 1 to 0)
-      if (turnsUntilNextOperationBeforeDecrement === 1 && faction.turnsUntilNextOperation === 0) {
+      // Check if it's time to perform an operation (when counter reaches 0)
+      if (faction.turnsUntilNextOperation === 0) {
         spawnDefensiveMission(state, faction)
         faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
       }

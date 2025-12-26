@@ -3,6 +3,7 @@ import { getActivityLevelByOrd } from '../model_utils/factionActivityLevelUtils'
 import type { FactionActivityLevelOrd } from '../model/factionModel'
 import { f6c0, toF6, type Fixed6 } from '../primitives/fixed6'
 import { rollIntIncToInc } from '../primitives/rolls'
+import { assertAboveZero } from '../primitives/assertPrimitives'
 
 /**
  * Calculate the turns until next faction operation.
@@ -13,7 +14,9 @@ export function calculateOperationTurns(level: FactionActivityLevelOrd): number 
   if (config.operationFrequencyMin === Infinity) {
     return Infinity
   }
-  return rollIntIncToInc(config.operationFrequencyMin, config.operationFrequencyMax).roll
+  const roll = rollIntIncToInc(config.operationFrequencyMin, config.operationFrequencyMax).roll
+  assertAboveZero(roll, 'Operation turns must be positive')
+  return roll
 }
 
 /**
