@@ -34,6 +34,8 @@ import {
   validateNotExhaustedAgents,
 } from '../../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
+import { assertDefined, assertNotBothTrue, assertNotEmpty, assertTrue } from '../../lib/primitives/assertPrimitives'
+import { getLeadInvestigationById } from '../../lib/model_utils/leadInvestigationUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -157,7 +159,7 @@ export function PlayerActions(): React.JSX.Element {
     dispatch(clearAgentSelection())
   }
 
-  /** // KJA1 fix impl.
+  /**
    * This function handles what happens when the "investigate lead" button is clicked by the player.
    * There are following happy paths:
    * - 1. When a lead is selected, then a new investigation is created with the selected agents.
@@ -174,102 +176,69 @@ export function PlayerActions(): React.JSX.Element {
    * - Any objects cannot be found based on their selected IDs: lead, investigation, agents.
    * - The selected lead already has an active investigation.
    * - The selected lead was already successfully investigated and is not repeatable.
-   * @returns
    */
   function handleInvestigateLead(): void {
-    // Check if both lead and investigation are selected
-    if (selectedLeadId !== undefined && selectedInvestigationId !== undefined) {
-      setAlertMessage('Select a lead or investigation, but not both')
-      setShowAlert(true)
-      return
-    }
+    // Assertions for cases that should never happen (UI should prevent these)
+    assertNotBothTrue(
+      selectedLeadId !== undefined,
+      selectedInvestigationId !== undefined,
+      'Both lead and investigation cannot be selected at the same time',
+    )
+    assertNotEmpty(selectedAgentIds, 'At least one agent must be selected')
 
-    // Handle investigation selection (add agents to existing investigation)
-    if (selectedInvestigationId !== undefined) {
-      if (selectedAgentIds.length === 0) {
-        setAlertMessage('No agents selected!')
-        setShowAlert(true)
-        return
-      }
-
-      // Validate that all selected agents are available
-      const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
-      if (!availabilityValidation.isValid) {
-        setAlertMessage(availabilityValidation.errorMessage)
-        setShowAlert(true)
-        return
-      }
-
-      // Validate that agents are not exhausted
-      const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
-      if (!exhaustionValidation.isValid) {
-        setAlertMessage(exhaustionValidation.errorMessage)
-        setShowAlert(true)
-        return
-      }
-
-      setShowAlert(false) // Hide alert on successful action
-      dispatch(addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds }))
-      dispatch(clearInvestigationSelection())
-      dispatch(clearAgentSelection())
-      return
-    }
-
-    // Handle lead selection (create new investigation)
-    if (selectedLeadId === undefined) {
-      setAlertMessage('No lead selected!')
-      setShowAlert(true)
-      return
-    }
-
-    if (selectedAgentIds.length === 0) {
-      setAlertMessage('No agents selected!')
-      setShowAlert(true)
-      return
-    }
-
-    // Validate that all selected agents are available
+    // Common validation: check if agents are available and not exhausted
+    // These are user-facing errors, so show alert instead of asserting
     const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
     if (!availabilityValidation.isValid) {
       setAlertMessage(availabilityValidation.errorMessage)
       setShowAlert(true)
       return
     }
 
-    // Validate that agents are not exhausted
     const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
     if (!exhaustionValidation.isValid) {
       setAlertMessage(exhaustionValidation.errorMessage)
       setShowAlert(true)
       return
     }
 
-    // Find the selected lead to get its properties
+    // Route to appropriate happy path
+    if (selectedInvestigationId !== undefined) {
+      handleAddAgentsToInvestigation()
+    } else {
+      handleStartNewInvestigation()
+    }
+  }
+
+  function handleAddAgentsToInvestigation(): void {
+    assertDefined(selectedInvestigationId, 'Investigation ID must be defined')
+    // Assert that investigation exists (will throw if not found)
+    getLeadInvestigationById(selectedInvestigationId, gameState)
+
+    setShowAlert(false)
+    dispatch(addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds }))
+    dispatch(clearInvestigationSelection())
+    dispatch(clearAgentSelection())
+  }
+
+  function handleStartNewInvestigation(): void {
+    assertDefined(selectedLeadId, 'Lead ID must be defined')
     const lead = getLeadById(selectedLeadId)
 
-    // KJA3 this is weird - above we add agents to investigation ("addAgentsToInvestigation"), but we check later if it exists.
-    // But we need to check BEFORE adding any agents.
+    // Assert that lead doesn't already have an active investigation
     const hasActiveInvestigationForLead = Object.values(gameState.leadInvestigations).some(
       (investigation) => investigation.leadId === selectedLeadId && investigation.state === 'Active',
     )
-    if (hasActiveInvestigationForLead) {
-      setAlertMessage('This lead already has an active investigation!')
-      setShowAlert(true)
-      return
-    }
+    assertTrue(!hasActiveInvestigationForLead, `Lead ${selectedLeadId} already has an active investigation`)
 
-    // Check if the lead is already investigated and is not repeatable
-    if (!lead.repeatable && (gameState.leadInvestigationCounts[selectedLeadId] ?? 0) > 0) {
-      setAlertMessage('This lead has already been investigated!')
-      setShowAlert(true)
-      return
-    }
+    // Assert that lead is repeatable or hasn't been investigated yet
+    const investigationCount = gameState.leadInvestigationCounts[selectedLeadId] ?? 0
+    assertTrue(
+      lead.repeatable || investigationCount === 0,
+      `Lead ${selectedLeadId} has already been investigated and is not repeatable`,
+    )
 
-    setShowAlert(false) // Hide alert on successful action
+    setShowAlert(false)
     dispatch(startLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
     dispatch(clearLeadSelection())
     dispatch(clearAgentSelection())
