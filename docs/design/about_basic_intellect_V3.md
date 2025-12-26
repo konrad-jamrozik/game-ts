@@ -71,9 +71,9 @@ TODO
 # Future work
 
 - Smarter selection of which capabilities to upgrade.
-- Smarter selection of which agents to assign to what, based on their skill level
+- Smarter selection of which agents to assign to what, based on their skill level.
   (higher skill means better threat level for mission deployment but also better efficiency
-  in assignments)
-- Smarter selection of which leads to investigate and how many
-  - Specifically, decision on if to investigate leads that spawn offensive missions
-- Smarter assignment of agents to lead investigations, to make good forward progress
+  in assignments).
+- Smarter selection of which leads to investigate and how many.
+  - Specifically, decision on if to investigate leads that spawn offensive missions.
+- Smarter assignment of agents to lead investigations, to make good forward progress.
