@@ -71,7 +71,8 @@ import type { MissionId } from '../../lib/model/modelIds'
 import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
-import { isConcludedMissionState, calculateMissionThreatAssessment } from '../../lib/ruleset/missionRuleset'
+import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
+import { calculateMissionThreatAssessment } from '../../lib/game_utils/missionThreatAssessment'
 
 type MissionDetailsRow = {
   id: number

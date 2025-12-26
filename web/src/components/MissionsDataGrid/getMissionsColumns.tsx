@@ -10,7 +10,8 @@ import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
-import { isMissionConcluded, calculateMissionThreatAssessment } from '../../lib/ruleset/missionRuleset'
+import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
+import { calculateMissionThreatAssessment } from '../../lib/game_utils/missionThreatAssessment'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 
 export type MissionRow = Mission & {
