@@ -4,12 +4,26 @@ import type { Mission } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
-import { f6c0, toF6, f6div, f6ge, f6gt, f6le, f6lt, f6mult, f6sumBy, type Fixed6, toF6r, toF } from '../primitives/fixed6'
+import {
+  f6c0,
+  toF6,
+  f6div,
+  f6ge,
+  f6gt,
+  f6le,
+  f6lt,
+  f6mult,
+  f6sumBy,
+  type Fixed6,
+  toF6r,
+  toF,
+} from '../primitives/fixed6'
 import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
   COMBAT_INCAPACITATION_THRESHOLD,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
 } from '../data_tables/constants'
+import { initialAgent } from '../factories/agentFactory'
 
 /**
  * Determines if an actor can participate in battle.
@@ -49,24 +63,36 @@ export function isMissionConcluded(mission: Mission): boolean {
 }
 
 /**
- * Calculates the threat assessment for a mission.
- * Threat assessment is the sum of all enemy threat assessments, rounded to the nearest integer.
+ * Calculates the threat assessment for an actor (agent or enemy).
+ * Threat assessment formula:
+ * actor skill * (1 + (actor hit points / 100) + (actor weapon base damage * 2 / 100))
  *
- * Enemy threat assessment formula:
- * enemy skill * (1 + (enemy hit points / 100) + (enemy weapon base damage * 2 / 100))
+ * @param actor - The actor to calculate threat assessment for
+ * @returns The threat assessment as a number
+ */
+export function calculateActorThreatAssessment(actor: Actor): number {
+  const hpMultiplier = toF(actor.hitPoints) / 100
+  const damageMultiplier = (actor.weapon.damage * 2) / 100
+  const multiplier = 1 + hpMultiplier + damageMultiplier
+  return f6mult(actor.skill, multiplier)
+}
+
+/**
+ * Calculates the threat assessment for a mission.
+ * Threat assessment is the sum of all enemy threat assessments, normalized by dividing
+ * by the initial hired agent threat assessment.
  *
  * @param mission - The mission to calculate threat assessment for
- * @returns The total threat assessment as an integer
+ * @returns The normalized threat assessment as a number (to be formatted with 2 decimals in UI)
  */
 export function calculateMissionThreatAssessment(mission: Mission): number {
-  const totalThreat = mission.enemies.reduce((sum, enemy) => {
-    const hpMultiplier = toF(enemy.hitPoints) / 100
-    const damageMultiplier = (enemy.weapon.damage * 2) / 100
-    const multiplier = 1 + hpMultiplier + damageMultiplier
-    const enemyThreat = f6mult(enemy.skill, multiplier)
-    return sum + enemyThreat
-  }, 0)
-  return Math.round(totalThreat)
+  const totalThreat = mission.enemies.reduce((sum, enemy) => sum + calculateActorThreatAssessment(enemy), 0)
+
+  // Calculate initial agent threat assessment
+  const initialAgentThreat = calculateActorThreatAssessment(initialAgent)
+
+  // Normalize by dividing by initial agent threat assessment
+  return totalThreat / initialAgentThreat
 }
 
 /**

@@ -9,6 +9,8 @@ The formula for the threat assessment is:
 for each enemy unit in the mission:
   add the enemy threat assessment to the final mission threat assessment
 
+then normalize by dividing by initial hired agent threat assessment
+
 enemy threat assessment is calculated as:
   enemy skill * (1 + (enemy hit points / 100) + (enemy weapon base damage * 2 / 100))
   rounded to the nearest integer

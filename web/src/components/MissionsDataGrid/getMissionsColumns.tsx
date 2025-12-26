@@ -11,6 +11,7 @@ import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionConcluded, calculateMissionThreatAssessment } from '../../lib/ruleset/missionRuleset'
+import { fmtDec2 } from '../../lib/primitives/formatPrimitives'
 
 export type MissionRow = Mission & {
   rowId: number
@@ -21,15 +22,6 @@ export type MissionRow = Mission & {
 export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
-      field: 'threat',
-      headerName: 'Threat',
-      width: columnWidths['missions.threat'],
-      valueGetter: (_value, row: MissionRow) => calculateMissionThreatAssessment(row),
-      renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
-        <span aria-label={`missions-row-threat-${params.id}`}>{params.value}</span>
-      ),
-    },
-    {
       field: 'id',
       headerName: 'Mission ID',
       width: columnWidths['missions.id'],
@@ -37,6 +29,17 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
         const displayValue = fmtIdForDisplay(params.row.id, gameState)
         return <span aria-label={`missions-row-id-${params.id}`}>{displayValue}</span>
       },
+    },
+    {
+      field: 'threat',
+      headerName: 'Threat',
+      width: columnWidths['missions.threat'],
+      valueGetter: (_value, row: MissionRow) => calculateMissionThreatAssessment(row),
+      renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
+        <span aria-label={`missions-row-threat-${params.id}`}>
+          {params.value !== undefined ? fmtDec2(params.value) : '-'}
+        </span>
+      ),
     },
     {
       field: 'state',

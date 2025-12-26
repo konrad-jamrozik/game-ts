@@ -3,7 +3,7 @@ import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { getMissionDataById } from '../../lib/model_utils/missionUtils'
 import { getFactionName } from '../../lib/model_utils/factionUtils'
-import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
+import { fmtNoPrefix, fmtDec2 } from '../../lib/primitives/formatPrimitives'
 import { f6c0, f6fmtPctDec2, toF6 } from '../../lib/primitives/fixed6'
 import type { OffensiveMissionData } from '../../lib/data_tables/offensiveMissionsDataTable'
 import type { DefensiveMissionData } from '../../lib/data_tables/defensiveMissionsDataTable'
@@ -127,7 +127,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
     { id: 5, key: 'Expires in', value: expiresIn },
     { id: 6, key: 'Agents deployed', value: agentsDeployedStr },
     { id: 7, key: 'Enemy count', value: String(enemyCount) },
-    { id: 8, key: 'Threat', value: String(missionThreatAssessment) },
+    { id: 8, key: 'Threat', value: fmtDec2(missionThreatAssessment) },
   ]
 
   const rewardRows: MissionDetailsRow[] = [

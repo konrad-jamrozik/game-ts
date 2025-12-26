@@ -9,6 +9,7 @@ const DATA_GRID_BASE_WIDTH = 2 * BORDER_WIDTH + 2 * PADDING_WIDTH + MUI_DATA_GRI
 export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
   columnWidths['missions.id'] +
+  columnWidths['missions.threat'] +
   columnWidths['missions.state'] +
   columnWidths['missions.expires_in'] +
   // columnWidths['missions.enemies'] +
