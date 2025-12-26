@@ -12,6 +12,7 @@ import {
 } from '../redux/slices/gameStateSlice'
 import type { UpgradeName } from '../lib/data_tables/upgrades'
 import type { PlayTurnAPI } from './types'
+import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 
 export function getPlayTurnApi(): PlayTurnAPI {
   const api: PlayTurnAPI = {
@@ -19,48 +20,52 @@ export function getPlayTurnApi(): PlayTurnAPI {
 
     hireAgent(): void {
       store.dispatch(hireAgent())
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
     sackAgents(agentIds: string[]): void {
       store.dispatch(sackAgents(agentIds))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
     assignAgentsToContracting(agentIds: string[]): void {
       store.dispatch(assignAgentsToContracting(agentIds))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
     assignAgentsToTraining(agentIds: string[]): void {
       store.dispatch(assignAgentsToTraining(agentIds))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
     recallAgents(agentIds: string[]): void {
       store.dispatch(recallAgents(agentIds))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
-    startLeadInvestigation(params: { leadId: string; agentIds: string[] }): void {
+    startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): void {
       store.dispatch(startLeadInvestigation(params))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
-    addAgentsToInvestigation(params: { investigationId: string; agentIds: string[] }): void {
+    addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): void {
       store.dispatch(addAgentsToInvestigation(params))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
-    deployAgentsToMission(params: { missionId: string; agentIds: string[] }): void {
+    deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): void {
       store.dispatch(deployAgentsToMission(params))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
 
     buyUpgrade(upgradeName: UpgradeName): void {
       store.dispatch(buyUpgrade(upgradeName))
-      api.gameState = store.getState().undoable.present.gameState
+      updateGameState()
     },
+  }
+
+  function updateGameState(): void {
+    api.gameState = store.getState().undoable.present.gameState
   }
 
   return api
