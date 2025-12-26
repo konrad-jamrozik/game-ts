@@ -6,24 +6,16 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { getLeadById } from '../../lib/model_utils/leadUtils'
 import {
   assignAgentsToContracting,
   assignAgentsToTraining,
   buyUpgrade,
   deployAgentsToMission,
   hireAgent,
-  startLeadInvestigation,
-  addAgentsToInvestigation,
   recallAgents,
   sackAgents,
 } from '../../redux/slices/gameStateSlice'
-import {
-  clearAgentSelection,
-  clearLeadSelection,
-  clearInvestigationSelection,
-  clearMissionSelection,
-} from '../../redux/slices/selectionSlice'
+import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
 import { getRemainingTransportCap, validateMissionDeployment } from '../../lib/model_utils/missionUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
@@ -34,8 +26,7 @@ import {
   validateNotExhaustedAgents,
 } from '../../lib/model_utils/validateAgents'
 import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
-import { assertDefined, assertNotBothTrue, assertNotEmpty, assertTrue } from '../../lib/primitives/assertPrimitives'
-import { getLeadInvestigationById } from '../../lib/model_utils/leadInvestigationUtils'
+import { handleInvestigateLead } from './handleInvestigateLead'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -159,89 +150,16 @@ export function PlayerActions(): React.JSX.Element {
     dispatch(clearAgentSelection())
   }
 
-  /**
-   * This function handles what happens when the "investigate lead" button is clicked by the player.
-   * There are following happy paths:
-   * - 1. When a lead is selected, then a new investigation is created with the selected agents.
-   * - 2. When a lead investigation is selected, then the selected agents are added to the investigation.
-   *
-   * In both cases, all of the selected agents must be available and not exhausted.
-   * If either of these conditions is not met, an alert is shown to the player and the function returns early.
-   *
-   * All other cases should result in assertion failure, because it should not be possible for the
-   * player to end up in such a state - UI should have prevented this.
-   * This includes cases like:
-   * - Both lead and investigation are selected.
-   * - No agents are selected.
-   * - Any objects cannot be found based on their selected IDs: lead, investigation, agents.
-   * - The selected lead already has an active investigation.
-   * - The selected lead was already successfully investigated and is not repeatable.
-   */
-  function handleInvestigateLead(): void {
-    // Assertions for cases that should never happen (UI should prevent these)
-    assertNotBothTrue(
-      selectedLeadId !== undefined,
-      selectedInvestigationId !== undefined,
-      'Both lead and investigation cannot be selected at the same time',
-    )
-    assertNotEmpty(selectedAgentIds, 'At least one agent must be selected')
-
-    // Common validation: check if agents are available and not exhausted
-    // These are user-facing errors, so show alert instead of asserting
-    const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-    if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-    if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    // Route to appropriate happy path
-    if (selectedInvestigationId !== undefined) {
-      handleAddAgentsToInvestigation()
-    } else {
-      handleStartNewInvestigation()
-    }
-  }
-
-  function handleAddAgentsToInvestigation(): void {
-    assertDefined(selectedInvestigationId, 'Investigation ID must be defined')
-    // Assert that investigation exists (will throw if not found)
-    getLeadInvestigationById(selectedInvestigationId, gameState)
-
-    setShowAlert(false)
-    dispatch(addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds }))
-    dispatch(clearInvestigationSelection())
-    dispatch(clearAgentSelection())
-  }
-
-  function handleStartNewInvestigation(): void {
-    assertDefined(selectedLeadId, 'Lead ID must be defined')
-    const lead = getLeadById(selectedLeadId)
-
-    // Assert that lead doesn't already have an active investigation
-    const hasActiveInvestigationForLead = Object.values(gameState.leadInvestigations).some(
-      (investigation) => investigation.leadId === selectedLeadId && investigation.state === 'Active',
-    )
-    assertTrue(!hasActiveInvestigationForLead, `Lead ${selectedLeadId} already has an active investigation`)
-
-    // Assert that lead is repeatable or hasn't been investigated yet
-    const investigationCount = gameState.leadInvestigationCounts[selectedLeadId] ?? 0
-    assertTrue(
-      lead.repeatable || investigationCount === 0,
-      `Lead ${selectedLeadId} has already been investigated and is not repeatable`,
-    )
-
-    setShowAlert(false)
-    dispatch(startLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
-    dispatch(clearLeadSelection())
-    dispatch(clearAgentSelection())
+  function handleInvestigateLeadClick(): void {
+    handleInvestigateLead({
+      dispatch,
+      gameState,
+      selectedLeadId,
+      selectedInvestigationId,
+      selectedAgentIds,
+      setAlertMessage,
+      setShowAlert,
+    })
   }
 
   function handleDeployAgents(): void {
@@ -353,7 +271,7 @@ export function PlayerActions(): React.JSX.Element {
         </Button>
         <Button
           variant="contained"
-          onClick={handleInvestigateLead}
+          onClick={handleInvestigateLeadClick}
           disabled={
             (selectedLeadId === undefined && selectedInvestigationId === undefined) || selectedAgentIds.length === 0
           }
