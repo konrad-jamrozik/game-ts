@@ -346,6 +346,13 @@ export default plugTypescriptEslint.config([
       // Turned off as it just confuses AI agents
       // https://typescript-eslint.io/rules/prefer-destructuring/
       '@typescript-eslint/prefer-destructuring': 'off',
+      // Turned off as it just confuses AI agents
+      // Specifically, they get stuck in a loop of:
+      // "You assigned let foo = undefined, but that undefined value is never read"
+      // and when they remove undefined they get:
+      // "you defined 'let foo' but didn't initialize it with a value"
+      // https://typescript-eslint.io/rules/init-declarations/
+      '@typescript-eslint/init-declarations': 'off',
 
       // Note: per the performance note of typescript-eslint:
       // https://typescript-eslint.io/troubleshooting/typed-linting/performance/#eslint-plugin-import
