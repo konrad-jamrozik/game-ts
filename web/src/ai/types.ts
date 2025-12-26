@@ -1,13 +1,7 @@
 import type { GameState } from '../lib/model/gameStateModel'
-import type { AppDispatch } from '../redux/store'
 import type { UpgradeName } from '../lib/data_tables/upgrades'
 
 export type AIPlayerIntellect = {
-  name: string
-  playTurn: (getState: () => GameState, dispatch: AppDispatch) => void
-}
-
-export type AIPlayerIntellectV2 = {
   name: string
   playTurn(api: PlayTurnAPI): void
 }
