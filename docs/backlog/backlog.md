@@ -6,13 +6,6 @@ KJA backlog:
 
 ## Current Game mechanics
 
-- Implement defensive missions
-  - First, update the reference spec table: review all aspects of the defensive missions
-  - Then, implement in model
-  - Then, spawn when counter of next operation goes down
-
-- Implement the enemy unit scoring formula from the spreadsheet, and display it in the mission site UI as "threat assessment".
-
 ## Current UI refinement
 
 - Add color bars to assets and capab

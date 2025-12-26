@@ -32,6 +32,8 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       name: 'Agent cap',
       id: 4,
       value: `${remainingAgentCap} / ${gameState.agentCap}`,
+      remaining: remainingAgentCap,
+      total: gameState.agentCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Agent cap']),
       price: UPGRADE_PRICES['Agent cap'],
     },
@@ -39,6 +41,8 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       name: 'Transport cap',
       id: 5,
       value: `${remainingTransportCap} / ${gameState.transportCap}`,
+      remaining: remainingTransportCap,
+      total: gameState.transportCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Transport cap']),
       price: UPGRADE_PRICES['Transport cap'],
     },
@@ -46,6 +50,8 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       name: 'Training cap',
       id: 6,
       value: `${remainingTrainingCap} / ${gameState.trainingCap}`,
+      remaining: remainingTrainingCap,
+      total: gameState.trainingCap,
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Training cap']),
       price: UPGRADE_PRICES['Training cap'],
     },
@@ -61,7 +67,7 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       id: 8,
       value: toF(gameState.exhaustionRecovery),
       upgrade: formatUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery']),
-      displayedName: 'Exhaustion recov.',
+      displayedName: 'Exhaustion recov. %',
       price: UPGRADE_PRICES['Exhaustion recovery'],
     },
     {
@@ -115,6 +121,11 @@ export function CapabilitiesDataGrid(): React.JSX.Element {
       onRowSelectionModelChange={handleUpgradeSelectionChange}
       disableRowSelectionOnClick={false}
       disableMultipleRowSelection
+      sx={{
+        '& .capabilities-color-bar-cell': {
+          padding: '4px',
+        },
+      }}
     />
   )
 }
