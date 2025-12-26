@@ -282,5 +282,3 @@ Convert the React-based web game to Unity desktop application (Windows/Mac/Linux
 - Consider using Unity's UI Toolkit (newer) instead of uGUI if needed
 
 4. **Testing**: Maintain test coverage parity with current codebase
-
-5. **Code Organization**: Keep similar folder structure to aid in porting and maintenance

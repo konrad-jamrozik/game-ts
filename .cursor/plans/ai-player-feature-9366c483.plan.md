@@ -39,12 +39,12 @@ Add an AI Player system that allows users to delegate control to AI intellects. 
 
 - **`aiPlayerInterface.ts`**: Define the `AiPlayerIntellect` interface that all AI implementations must follow:
   ```typescript
-              type AiPlayerIntellect = {
-                id: string
-                name: string
-                description: string
-                executeTurn: (gameState: GameState) => AiPlayerAction[]
-              }
+                  type AiPlayerIntellect = {
+                    id: string
+                    name: string
+                    description: string
+                    executeTurn: (gameState: GameState) => AiPlayerAction[]
+                  }
   ```
 
 
@@ -52,18 +52,18 @@ Add an AI Player system that allows users to delegate control to AI intellects. 
 
 - **`aiPlayerActions.ts`**: Define types for AI player actions (wrappers around Redux actions):
   ```typescript
-              type AiPlayerAction = 
-                | { type: 'hireAgent' }
-                | { type: 'sackAgents', agentIds: string[] }
-                | { type: 'assignAgentsToContracting', agentIds: string[] }
-                | { type: 'assignAgentsToEspionage', agentIds: string[] }
-                | { type: 'assignAgentsToTraining', agentIds: string[] }
-                | { type: 'recallAgents', agentIds: string[] }
-                | { type: 'createLeadInvestigation', leadId: string, agentIds: string[] }
-                | { type: 'addAgentsToInvestigation', investigationId: string, agentIds: string[] }
-                | { type: 'deployAgentsToMission', missionSiteId: string, agentIds: string[] }
-                | { type: 'buyUpgrade', upgradeName: UpgradeName }
-                | { type: 'advanceTurn' }
+                  type AiPlayerAction = 
+                    | { type: 'hireAgent' }
+                    | { type: 'sackAgents', agentIds: string[] }
+                    | { type: 'assignAgentsToContracting', agentIds: string[] }
+                    | { type: 'assignAgentsToEspionage', agentIds: string[] }
+                    | { type: 'assignAgentsToTraining', agentIds: string[] }
+                    | { type: 'recallAgents', agentIds: string[] }
+                    | { type: 'createLeadInvestigation', leadId: string, agentIds: string[] }
+                    | { type: 'addAgentsToInvestigation', investigationId: string, agentIds: string[] }
+                    | { type: 'deployAgentsToMission', missionSiteId: string, agentIds: string[] }
+                    | { type: 'buyUpgrade', upgradeName: UpgradeName }
+                    | { type: 'advanceTurn' }
   ```
 
 
@@ -71,11 +71,11 @@ Add an AI Player system that allows users to delegate control to AI intellects. 
 
 - **`aiPlayerExecutor.ts`**: Executor that takes an AI intellect, reads game state, executes actions, and dispatches Redux actions:
   ```typescript
-              function executeAiTurn(
-                intellect: AiPlayerIntellect,
-                gameState: GameState,
-                dispatch: AppDispatch
-              ): void
+                  function executeAiTurn(
+                    intellect: AiPlayerIntellect,
+                    gameState: GameState,
+                    dispatch: AppDispatch
+                  ): void
   ```
 
 
@@ -83,9 +83,9 @@ Add an AI Player system that allows users to delegate control to AI intellects. 
 
 - **`aiPlayerRegistry.ts`**: Registry for available AI intellects:
   ```typescript
-              const aiIntellects: AiPlayerIntellect[] = [...]
-              export function getAiIntellectById(id: string): AiPlayerIntellect | undefined
-              export function getAllAiIntellects(): AiPlayerIntellect[]
+                  const aiIntellects: AiPlayerIntellect[] = [...]
+                  export function getAiIntellectById(id: string): AiPlayerIntellect | undefined
+                  export function getAllAiIntellects(): AiPlayerIntellect[]
   ```
 
 
@@ -128,10 +128,10 @@ The AI should:
 
 - **`aiPlayerSlice.ts`**: Redux slice for AI player state:
   ```typescript
-              type AiPlayerState = {
-                selectedIntellectId: string | undefined
-                isExecuting: boolean
-              }
+                  type AiPlayerState = {
+                    selectedIntellectId: string | undefined
+                    isExecuting: boolean
+                  }
   ```
 
 
@@ -220,5 +220,3 @@ The executor (`aiPlayerExecutor.ts`) should:
 - Test AI intellect with various game states (early game, mid game, late game)
 - Verify AI actions are properly dispatched and appear in event log
 - Test edge cases (no money, caps reached, no available agents, etc.)
-- Verify turn advancement works correctly after AI actions
-- Test with different AI intellects (when multiple are implemented)
