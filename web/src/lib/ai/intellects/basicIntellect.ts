@@ -45,6 +45,53 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
 
   // 2. Prioritize defensive missions (faction operations) - especially high operation levels
   const activeMissions = filterMissionsByState(state.missions, ['Active'])
+  availableAgents = deployToDefensiveMissions(getState, dispatch, availableAgents, activeMissions)
+
+  // 3. Deploy to offensive missions (apprehend/raid) if we have transport capacity
+  availableAgents = deployToOffensiveMissions(getState, dispatch, availableAgents, activeMissions)
+
+  // 4. Start investigating leads if we have available agents and no active investigations for that lead
+  availableAgents = startLeadInvestigations(getState, dispatch, availableAgents)
+
+  // 5. Assign remaining available agents to contracting for income
+  if (availableAgents.length > 0) {
+    const agentIds = availableAgents.map((a) => a.id)
+    dispatch(assignAgentsToContracting(agentIds))
+    state = getState()
+  }
+
+  // 6. Consider buying upgrades if we have excess money
+  // Prioritize agent cap and transport cap upgrades
+  const upgradePriority: (keyof typeof UPGRADE_PRICES)[] = [
+    'Agent cap',
+    'Transport cap',
+    'Training cap',
+    'Weapon damage',
+    'Exhaustion recovery',
+    'Training skill gain',
+    'Hit points recovery %',
+  ]
+
+  for (const upgradeName of upgradePriority) {
+    const price = UPGRADE_PRICES[upgradeName]
+    if (state.money >= price) {
+      dispatch(buyUpgrade(upgradeName))
+      state = getState()
+      // Only buy one upgrade per turn to be conservative
+      break
+    }
+  }
+}
+
+function deployToDefensiveMissions(
+  getState: () => GameState,
+  dispatch: AppDispatch,
+  availableAgents: ReturnType<typeof available>,
+  activeMissions: ReturnType<typeof filterMissionsByState>,
+): ReturnType<typeof available> {
+  let state = getState()
+  let currentAvailableAgents = availableAgents
+
   const defensiveMissions = activeMissions.filter((m) => typeof m.operationLevel === 'number')
 
   // Sort defensive missions by priority: higher operation level first, then by expiry (sooner first)
@@ -62,7 +109,7 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
 
   // Deploy agents to high-priority defensive missions
   for (const mission of prioritizedDefensiveMissions) {
-    if (availableAgents.length === 0) break
+    if (currentAvailableAgents.length === 0) break
 
     const validation = validateMissionDeployment(mission)
     if (!validation.isValid) continue
@@ -71,18 +118,29 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
     if (remainingTransportCap === 0) break
 
     // Deploy up to remaining transport cap, but prioritize having some agents available for other tasks
-    const agentsToDeploy = Math.min(remainingTransportCap, availableAgents.length, 3)
-    const agentIds = availableAgents.slice(0, agentsToDeploy).map((a) => a.id)
+    const agentsToDeploy = Math.min(remainingTransportCap, currentAvailableAgents.length, 3)
+    const agentIds = currentAvailableAgents.slice(0, agentsToDeploy).map((a) => a.id)
 
     dispatch(deployAgentsToMission({ missionId: mission.id, agentIds }))
     state = getState()
-    availableAgents = available(state.agents)
+    currentAvailableAgents = available(state.agents)
   }
 
-  // 3. Deploy to offensive missions (apprehend/raid) if we have transport capacity
+  return currentAvailableAgents
+}
+
+function deployToOffensiveMissions(
+  getState: () => GameState,
+  dispatch: AppDispatch,
+  availableAgents: ReturnType<typeof available>,
+  activeMissions: ReturnType<typeof filterMissionsByState>,
+): ReturnType<typeof available> {
+  let state = getState()
+  let currentAvailableAgents = availableAgents
+
   const offensiveMissions = activeMissions.filter((m) => m.operationLevel === undefined)
   for (const mission of offensiveMissions) {
-    if (availableAgents.length === 0) break
+    if (currentAvailableAgents.length === 0) break
 
     const validation = validateMissionDeployment(mission)
     if (!validation.isValid) continue
@@ -90,18 +148,28 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
     const remainingTransportCap = getRemainingTransportCap(state.missions, state.transportCap)
     if (remainingTransportCap === 0) break
 
-    const agentsToDeploy = Math.min(remainingTransportCap, availableAgents.length, 2)
-    const agentIds = availableAgents.slice(0, agentsToDeploy).map((a) => a.id)
+    const agentsToDeploy = Math.min(remainingTransportCap, currentAvailableAgents.length, 2)
+    const agentIds = currentAvailableAgents.slice(0, agentsToDeploy).map((a) => a.id)
 
     dispatch(deployAgentsToMission({ missionId: mission.id, agentIds }))
     state = getState()
-    availableAgents = available(state.agents)
+    currentAvailableAgents = available(state.agents)
   }
 
-  // 4. Start investigating leads if we have available agents and no active investigations for that lead
+  return currentAvailableAgents
+}
+
+function startLeadInvestigations(
+  getState: () => GameState,
+  dispatch: AppDispatch,
+  availableAgents: ReturnType<typeof available>,
+): ReturnType<typeof available> {
+  let state = getState()
+  let currentAvailableAgents = availableAgents
+
   const allLeads = dataTables.leads
   for (const lead of allLeads) {
-    if (availableAgents.length === 0) break
+    if (currentAvailableAgents.length === 0) break
 
     // Check if lead can be investigated
     const hasActiveInvestigation = Object.values(state.leadInvestigations).some(
@@ -127,40 +195,13 @@ function basicIntellectPlayTurn(getState: () => GameState, dispatch: AppDispatch
     if (!dependenciesMet) continue
 
     // Start investigation with 1-2 agents
-    const agentsToInvestigate = Math.min(availableAgents.length, 2)
-    const agentIds = availableAgents.slice(0, agentsToInvestigate).map((a) => a.id)
+    const agentsToInvestigate = Math.min(currentAvailableAgents.length, 2)
+    const agentIds = currentAvailableAgents.slice(0, agentsToInvestigate).map((a) => a.id)
 
     dispatch(startLeadInvestigation({ leadId: lead.id, agentIds }))
     state = getState()
-    availableAgents = available(state.agents)
+    currentAvailableAgents = available(state.agents)
   }
 
-  // 5. Assign remaining available agents to contracting for income
-  if (availableAgents.length > 0) {
-    const agentIds = availableAgents.map((a) => a.id)
-    dispatch(assignAgentsToContracting(agentIds))
-    state = getState()
-  }
-
-  // 6. Consider buying upgrades if we have excess money
-  // Prioritize agent cap and transport cap upgrades
-  const upgradePriority: Array<keyof typeof UPGRADE_PRICES> = [
-    'Agent cap',
-    'Transport cap',
-    'Training cap',
-    'Weapon damage',
-    'Exhaustion recovery',
-    'Training skill gain',
-    'Hit points recovery %',
-  ]
-
-  for (const upgradeName of upgradePriority) {
-    const price = UPGRADE_PRICES[upgradeName]
-    if (state.money >= price) {
-      dispatch(buyUpgrade(upgradeName))
-      state = getState()
-      // Only buy one upgrade per turn to be conservative
-      break
-    }
-  }
+  return currentAvailableAgents
 }
