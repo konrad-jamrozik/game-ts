@@ -39,7 +39,7 @@ which is elaborated in further sections.
 - Ensure there is at least one lead always being investigated, by 1 agent.
 - Ensure there is at least enough money available so that the player won't run out of money
   within next 3 turns, assuming that the contracting income would cover only 50% of upkeep costs.
-- Ensure any remaining agents are not idling; all ready agents should be in training.
+- Ensure all ready agents are in training.
   - As such, ensure there is enough training capacity available.
 - Ensure the player can face the ever-increasing frequency and threat level of defensive missions,
   plus that it can make progress and win offensive missions:
@@ -71,10 +71,10 @@ function manageAgents() {
   // Ensure at least one lead is being investigated
   assignToLeadInvestigation()        // See "Lead investigation"
 
-  // Assign remaining idle agents to training
+  // Assign remaining ready agents to training
   assignToTraining()                 // See "Assignment to training"
 
-  // Assign remaining idle agents to contracting
+  // Assign remaining ready agents to contracting
   assignLeftoverToContracting()      // See "Assignment of leftover agents to contracting"
 }
 
@@ -95,7 +95,7 @@ function spendMoney() {
 function unassignExhaustedAgents() {
   for (agent in getAllAssignedAgents()):
     if (agent.exhaustion > exhaustionThreshold):
-      unassignAgent(agent)  // Agent will recover while idle
+      unassignAgent(agent)  // Agent will recover while ready
 }
 ```
 
@@ -246,19 +246,19 @@ function selectBestAgentForInvestigation() {
 
 ## Assignment to training
 
-The player assigns idle agents to training to ensure continuous skill improvement and that no agents are wasted sitting idle.
+The player assigns ready agents to training to ensure continuous skill improvement and that no agents are wasted sitting ready.
 
 Algorithm:
-- Get all idle ready agents
+- Get all ready agents
 - Filter out agents with exhaustion of 5% or above
 - Assign eligible agents to training up to available training capacity
 - Stop when capacity is reached or no more eligible agents are available
 
 ``` typescript
 function assignToTraining() {
-  let idleAgents = getIdleReadyAgents()
+  let readyAgents = getReadyAgents()
   // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = idleAgents.filter(agent => agent.exhaustion < 0.05)
+  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
   let availableTrainingSlots = trainingCapacity - countAgentsInTraining()
 
   for (agent in eligibleAgents):
@@ -273,14 +273,14 @@ function assignToTraining() {
 
 ``` typescript
 function assignLeftoverToContracting() {
-  let leftoverAgents = getLeftoverIdleAgents()
+  let leftoverAgents = getLeftoverReadyAgents()
   for (agent in leftoverAgents):
     assignAgentToContracting(agent)
 }
 ```
 
 All leftover agents should be assigned to contracting. This ensures that no agents are wasted
-sitting idle.
+sitting ready.
 
 ## Money savings
 
