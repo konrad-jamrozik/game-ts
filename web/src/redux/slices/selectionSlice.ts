@@ -8,6 +8,7 @@ export type SelectionState = {
   selectedInvestigationId?: LeadInvestigationId
   selectedMissionId?: MissionId
   selectedUpgradeName?: UpgradeName
+  selectedAIIntellect?: string
   viewMissionDetailsId?: MissionId
   viewCharts?: true
 }
@@ -50,12 +51,19 @@ const selectionSlice = createSlice({
     clearUpgradeSelection(state) {
       delete state.selectedUpgradeName
     },
+    setAIIntellectSelection(state, action: PayloadAction<string>) {
+      state.selectedAIIntellect = action.payload
+    },
+    clearAIIntellectSelection(state) {
+      delete state.selectedAIIntellect
+    },
     clearAllSelection(state) {
       state.agents = []
       delete state.selectedLeadId
       delete state.selectedInvestigationId
       delete state.selectedMissionId
       delete state.selectedUpgradeName
+      delete state.selectedAIIntellect
       delete state.viewMissionDetailsId
       delete state.viewCharts
     },
@@ -85,6 +93,8 @@ export const {
   clearMissionSelection,
   setUpgradeSelection,
   clearUpgradeSelection,
+  setAIIntellectSelection,
+  clearAIIntellectSelection,
   clearAllSelection,
   setViewMissionDetails,
   clearViewMissionDetails,

@@ -5,18 +5,21 @@ import MenuItem from '@mui/material/MenuItem'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppSelector } from '../../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
+import { setAIIntellectSelection } from '../../redux/slices/selectionSlice'
 
 export function AIPlayerSection(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
   const intellectNames = getAllIntellectNames()
   const initialIntellect = intellectNames[0] ?? ''
-  const [selectedIntellect, setSelectedIntellect] = React.useState<string>(initialIntellect)
+  const selectedIntellect = selectedAIIntellect ?? initialIntellect
 
   const gameOver = isGameOver(gameState)
   const gameWon = isGameWon(gameState)
@@ -25,7 +28,7 @@ export function AIPlayerSection(): React.JSX.Element {
   const isButtonDisabled = isGameEnded || !hasValidIntellect
 
   function handleIntellectChange(event: SelectChangeEvent): void {
-    setSelectedIntellect(event.target.value)
+    dispatch(setAIIntellectSelection(event.target.value))
   }
 
   function handleDelegateToAI(): void {

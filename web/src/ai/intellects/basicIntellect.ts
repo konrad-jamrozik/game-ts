@@ -13,7 +13,6 @@ import { f6mult, toF } from '../../lib/primitives/fixed6'
 import { initialAgent } from '../../lib/factories/agentFactory'
 
 // KJA got error: Error: Lead lead-black-lotus-member already has an active investigation
-// KJA cannot find profile lead?
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
   playTurn(api: PlayTurnAPI): void {
