@@ -28,21 +28,23 @@ The player aims to make the key decision described above by following a set of g
 Not all of the goals can be always achieved at the same time, and as such the player must prioritize,
 which is elaborated in further sections.
 
-- Ensure that income from agent contracting covers between 100% and 120% upkeep costs.
+- Ensure that income from agent contracting covers 120% of upkeep costs.
   - Notably, this doesn't take into account any money coming from funding, nor it takes
     into account discrete expenses like hiring agents or buying capability upgrade.
-- Ensure that agents have no exhaustion, or as little exhaustion as possible, when being
-  assigned or deployed.
+- Ensure that agents assigned or deployed have exhaustion below 5%.
+  - If less than 20% of all agents are ready, do not assign or deploy agents.
 - Ensure that when deploying agents on a mission, the sum total of agent threat assessment
-  is at least as high as the enemy threat assessment.
-  - Ensure there is enough transport capacity to deploy at least one such mission per turn
-- Ensure there is at least one lead always being investigated, by 1 agent.
+  is at least 120% of the enemy threat assessment.
+  - Prioritize missions by expiry time (earliest first), with HQ raids always chosen first.
+  - Ensure there is enough transport capacity to deploy missions.
+- Ensure leads are being investigated by a target number of agents: 1 + floor(total agents / 10).
+  - Prioritize non-repeatable leads over repeatable leads.
 - Ensure there is at least enough money available so that the player won't run out of money
-  within next 3 turns, assuming that the contracting income would cover only 50% of upkeep costs.
-- Ensure all ready agents are in training.
+  within next 5 turns, assuming that the contracting income would cover only 50% of upkeep costs.
+- Ensure ready agents (with exhaustion < 5%) are assigned to training when capacity allows.
   - As such, ensure there is enough training capacity available.
-- Ensure the player can face the ever-increasing frequency and threat level of defensive missions,
-  plus that it can make progress and win offensive missions:
+- Ensure leftover ready agents are assigned to contracting to maximize income.
+- Ensure the player can face the ever-increasing frequency and threat level of missions:
   - Ensure there is enough agents available in total.
   - Ensure the capabilities improving agent effectiveness are adequately upgraded.
     - This includes: training skill gain, exhaustion recovery %, hit points recovery %, weapon base damage.
@@ -502,13 +504,3 @@ function computeDesiredHitPointsRecoveryLevel() {
   return Math.floor(turnNumber / 10)
 }
 ```
-
-# Future work
-
-- Smarter selection of which capabilities to upgrade.
-- Smarter selection of which agents to assign to what, based on their skill level.
-  (higher skill means better threat level for mission deployment but also better efficiency
-  in assignments).
-- Smarter selection of which leads to investigate and how many.
-  - Specifically, decision on if to investigate leads that spawn offensive missions.
-- Smarter assignment of agents to lead investigations, to make good forward progress.
