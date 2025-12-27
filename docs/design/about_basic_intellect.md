@@ -271,16 +271,24 @@ function assignToTraining() {
 
 ## Assignment of leftover agents to contracting
 
+The player assigns leftover ready agents to contracting to ensure that no agents are wasted and to maximize income.
+
+Algorithm:
+- Get all leftover ready agents (agents not assigned to missions, contracting, training, or lead investigation)
+- Filter out agents with exhaustion of 5% or above
+- Assign all eligible agents to contracting
+
+Agent selection excludes agents with exhaustion of 5% or above, ensuring only agents in good condition are assigned to contracting.
+
 ``` typescript
 function assignLeftoverToContracting() {
   let leftoverAgents = getLeftoverReadyAgents()
-  for (agent in leftoverAgents):
+  // Filter out agents with exhaustion >= 5%
+  let eligibleAgents = leftoverAgents.filter(agent => agent.exhaustion < 0.05)
+  for (agent in eligibleAgents):
     assignAgentToContracting(agent)
 }
 ```
-
-All leftover agents should be assigned to contracting. This ensures that no agents are wasted
-sitting ready.
 
 ## Money savings
 
