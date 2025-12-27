@@ -4,50 +4,50 @@ overview: Implement the basic AI player intellect as specified in `about_basic_i
 todos:
   - id: create-basic-intellect-file
     content: Create basicIntellect.ts with playTurn entry point and agent management functions
-    status: pending
+    status: completed
   - id: implement-agent-selection
     content: Implement selectNextBestReadyAgent helper with exhaustion filtering and 20% threshold
-    status: pending
+    status: completed
     dependencies:
       - create-basic-intellect-file
   - id: implement-unassign
     content: Implement unassignExhaustedAgents - recall agents with exhaustion >= 5%
-    status: pending
+    status: completed
     dependencies:
       - create-basic-intellect-file
   - id: implement-mission-deploy
     content: Implement deployToMissions - HQ raid priority, expiry sorting, threat calculation
-    status: pending
+    status: completed
     dependencies:
       - implement-agent-selection
   - id: implement-contracting
     content: Implement assignToContracting - target 120% of upkeep costs
-    status: pending
+    status: completed
     dependencies:
       - implement-agent-selection
   - id: implement-leads
     content: Implement assignToLeadInvestigation - 1 + floor(agents/10) target, non-repeatable priority
-    status: pending
+    status: completed
     dependencies:
       - implement-agent-selection
   - id: implement-training
     content: Implement assignToTraining - fill available training capacity
-    status: pending
+    status: completed
     dependencies:
       - implement-agent-selection
   - id: implement-leftover-contracting
     content: Implement assignLeftoverToContracting - assign remaining ready agents
-    status: pending
+    status: completed
     dependencies:
       - implement-agent-selection
   - id: implement-money-spending
     content: Implement spendMoney with hasSufficientMoney and computeNextBuyPriority
-    status: pending
+    status: completed
     dependencies:
       - create-basic-intellect-file
   - id: register-intellect
     content: Register basicIntellect in intellectRegistry.ts
-    status: pending
+    status: completed
     dependencies:
       - implement-money-spending
       - implement-leftover-contracting
