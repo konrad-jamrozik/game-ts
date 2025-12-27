@@ -264,8 +264,6 @@ function assignToTraining() {
 
 ## Assignment of leftover agents to contracting
 
-KJA1 TODO: do not assign leftover agents to contracting if this would mean than less than 20% of all agents are ready.
-
 The player assigns leftover ready agents to contracting to ensure that no agents are wasted and to maximize income.
 
 Algorithm:
@@ -293,6 +291,7 @@ This ensures consistent agent selection criteria across all assignment types.
 
 Algorithm:
 - Get all ready agents (available or in training)
+- If less than 20% of all agents are ready, return no agent (undefined)
 - Filter out agents with exhaustion of 5% or above
 - Select the agent with the lowest exhaustion level
 - If multiple agents have the same exhaustion, pick one at random
@@ -301,6 +300,11 @@ Algorithm:
 function selectNextBestReadyAgent() {
   // In base agents are Available or in training
   let inBaseAgents = getAvailableOrInTrainingAgents()
+  let totalAgentCount = countAgents()
+  // Return no agent (undefined) if less than 20% of all agents are ready
+  if (inBaseAgents.length < totalAgentCount * 0.2):
+    return undefined
+  
   // Filter out agents with exhaustion >= 5%
   let readyAgents = inBaseAgents.filter(agent => agent.exhaustion < 0.05)
   // Pick agent with lowest exhaustion, randomly if tied
