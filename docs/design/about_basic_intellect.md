@@ -65,7 +65,7 @@ function manageAgents() {
   // Deploy to missions according to priority and feasibility
   deployToMissions()                 // See "Mission deployment"
 
-  // Ensure income covers upkeep costs (100-120% target)
+  // Ensure income covers 120% of upkeep costs
   assignToContracting()              // See "Assignment to contracting"
 
   // Ensure at least one lead is being investigated
@@ -75,7 +75,7 @@ function manageAgents() {
   assignToTraining()                 // See "Assignment to training"
 
   // Assign remaining idle agents to contracting
-  assignLeftoverToContracting()      // See "Assignment to contracting"
+  assignLeftoverToContracting()      // See "Assignment of leftover agents to contracting"
 }
 
 function spendMoney() {
@@ -102,7 +102,7 @@ function unassignExhaustedAgents() {
 Exhausted agents perform poorly and should recover before being reassigned.
 The threshold determines when an agent is too exhausted to be effective.
 
-## Mission deployment
+## Mission deployment (TODO UPDATE)
 
 ``` typescript
 function deployToMissions() {
@@ -133,26 +133,44 @@ Agent selection for missions ensures:
 
 ## Assignment to contracting
 
+The player assigns agents to contracting to ensure that contracting income covers 120% of upkeep costs.
+This provides a buffer above the minimum required coverage.
+
+Algorithm:
+- Calculate target income: `upkeep costs * 1.2`
+- While current contracting income is below target:
+  - Select the best available agent (ready agents with lowest exhaustion, picked randomly if tied)
+  - Assign agent to contracting
+  - Recalculate current income
+- Stop when target is reached or no more ready agents are available
+
+Agent selection prioritizes ready agents (available or in training) with the lowest exhaustion level.
+If multiple agents have the same exhaustion, one is picked at random.
+
 ``` typescript
 function assignToContracting() {
-  let perTurnCosts = calculatePerTurnCosts()
-  let targetIncome = perTurnCosts * 1.1  // Target 110% of costs (middle of 100-120% range)
+  let upkeepCosts = calculateUpkeepCosts()
+  let targetIncome = upkeepCosts * 1.2 // Target 120% of costs
   let currentIncome = calculateContractingIncome()
 
   while (currentIncome < targetIncome):
     let agent = selectBestAgentForContracting()
-    if (agent is null):
+    if (agent is undefined):
       break
     assignAgentToContracting(agent)
     currentIncome = calculateContractingIncome()
 }
+
+function selectBestAgentForContracting() {
+  // Ready agents are Available or in training
+  let readyAgents = getReadyAgents()
+  let selectedAgent = pickAtRandomFromLowestExhaustion(readyAgents)
+  return selectedAgent
+}
+
 ```
 
-Agents are selected for contracting based on:
-- Being ready (not exhausted, not deployed, not recovering).
-- Not being needed for imminent mission deployment.
-
-## Lead investigation
+## Lead investigation (TODO REVIEW)
 
 ``` typescript
 function assignToLeadInvestigation() {
@@ -173,7 +191,7 @@ function assignToLeadInvestigation() {
 Lead selection prioritizes leads that spawn defensive missions,
 as these are mandatory to handle.
 
-## Assignment to training
+## Assignment to training (TODO REVIEW)
 
 ``` typescript
 function assignToTraining() {
@@ -190,6 +208,19 @@ function assignToTraining() {
 
 All idle agents should be training. This ensures continuous skill improvement
 and that no agents are wasted sitting idle.
+
+## Assignment of leftover agents to contracting (TODO REVIEW)
+
+``` typescript
+function assignLeftoverToContracting() {
+  let leftoverAgents = getLeftoverAgents()
+  for (agent in leftoverAgents):
+    assignAgentToContracting(agent)
+}
+```
+
+All leftover agents should be assigned to contracting. This ensures that no agents are wasted
+sitting idle.
 
 ## Money savings
 
