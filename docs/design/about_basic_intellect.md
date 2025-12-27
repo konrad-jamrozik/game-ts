@@ -102,47 +102,79 @@ function unassignExhaustedAgents() {
 Exhausted agents perform poorly and should recover before being reassigned.
 The threshold determines when an agent is too exhausted to be effective.
 
-## Mission deployment (TODO UPDATE)
+## Mission deployment
 
-// KJA1 todo
-The player should look at available missions and deploy agents to them by selecting next best ready
-agents until the sum of agents selected for deployment threat level is at least 120% of assessed enemy threat level.
+The player deploys agents to missions by selecting the next best ready agents until the sum of agent threat levels
+is at least 120% of the assessed enemy threat level.
 
-Missions that expire first should be prioritized to be deployed in given turn. If there are multiple ones
-with the same expiry, pick one at random.
+Algorithm:
+- If there is a mission where the enemy is raiding player HQ, deploy to that mission first
+- Otherwise, prioritize missions by expiry time (earliest first)
+- If multiple missions have the same expiry, pick one at random
+- For each selected mission:
+  - Select next best ready agents (see "Selecting next best ready agent") until agent threat sum >= 120% of enemy threat
+  - Check that transport capacity is sufficient
+  - Deploy agents to the mission
+- Repeat until no more missions can be deployed (no more missions, insufficient transport capacity, or insufficient ready agents)
 
-Repeat the mission selection for deployment process in given turn until it is no longer possible to deploy
-more missions. This may happen because:
-- there are no more missions
-- there is not enough transport capacity left to reach he desired agent threat level
-- there is not enough ready agents left to reach the desired agent threat level
+Note: There is no distinction in the selection process between offensive and defensive missions, except that HQ raids are always chosen first.
 
 ``` typescript
 function deployToMissions() {
-  // Handle defensive missions first (mandatory)
-  let defensiveMissions = getDefensiveMissionsNearExpiry()
-  for (mission in defensiveMissions):
-    deployToMission(mission)
+  while (true):
+    let mission = selectNextMissionToDeploy()
+    if (mission is undefined):
+      break  // No more missions to deploy
+    
+    let deployed = deployToMission(mission)
+    if (!deployed):
+      break  // Cannot deploy more missions (insufficient resources)
+}
 
-  // Then offensive missions if resources allow
-  let offensiveMissions = getOffensiveMissions()
-  for (mission in offensiveMissions):
-    if (hasSpareAgentsForOffensive()):
-      deployToMission(mission)
+function selectNextMissionToDeploy() {
+  let availableMissions = getAvailableMissions()
+  if (availableMissions is empty):
+    return undefined
+  
+  // Special case: HQ raids are chosen first
+  let hqRaidMissions = availableMissions.filter(mission => mission.isHQRaid)
+  if (hqRaidMissions.length > 0):
+    return pickAtRandom(hqRaidMissions)
+  
+  // Otherwise, prioritize by expiry time (earliest first)
+  let sortedMissions = availableMissions.sort((a, b) => a.expiryTurn - b.expiryTurn)
+  let earliestExpiry = sortedMissions[0].expiryTurn
+  let missionsWithEarliestExpiry = sortedMissions.filter(mission => mission.expiryTurn === earliestExpiry)
+  return pickAtRandom(missionsWithEarliestExpiry)
 }
 
 function deployToMission(mission) {
-  let requiredThreat = mission.enemyThreatAssessment
-  let agents = selectAgentsForMission(requiredThreat)
-  if (sumThreat(agents) >= requiredThreat) and (hasTransportCapacity(agents)):
-    deployAgents(agents, mission)
+  let enemyThreat = mission.enemyThreatAssessment
+  let targetThreat = enemyThreat * 1.2  // 120% of enemy threat
+  let selectedAgents = []
+  let currentThreat = 0
+  
+  // Select agents until we reach target threat
+  while (currentThreat < targetThreat):
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best ready agent"
+    if (agent is undefined):
+      break  // No more agents available
+    
+    selectedAgents.push(agent)
+    currentThreat += agent.threatAssessment
+  
+  // Check if we have enough threat and transport capacity
+  if (currentThreat < targetThreat):
+    return false  // Insufficient threat level
+  
+  if (!hasTransportCapacity(selectedAgents)):
+    return false  // Insufficient transport capacity
+  
+  // Deploy agents
+  deployAgents(selectedAgents, mission)
+  return true
 }
 ```
-
-Agent selection for missions ensures:
-- Total agent threat meets or exceeds enemy threat.
-- Agents are not exhausted.
-- Transport capacity is available.
 
 ## Assignment to contracting
 
