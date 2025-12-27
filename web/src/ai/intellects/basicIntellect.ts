@@ -288,6 +288,12 @@ function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const selectedAgentIds: string[] = []
 
+  // KJA1 the AI appears to first assign two agents to training, and then immediately reassign them to contracting
+  // Two problems here:
+  // 1. it should not be possible to forcefully assign agents to contracting once they are assigned to training.
+  // Basically the validation from the UI PlayerActions.tsx is missing. Consider pushing the validation down
+  // from the UI to the reducer assignAgentsToContracting in agentReducers.ts
+  // 2. Why the AI thinks these agents are ready? It should see they are assigned to training.
   let agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
