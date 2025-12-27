@@ -76,11 +76,11 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to contracting`)
+      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to contracting`)
     } else if (assignAgentsToTraining.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Assigned ${fmtAgentCount(agentCount)} to training`)
+      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to training`)
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
@@ -88,7 +88,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
     } else if (startLeadInvestigation.match(action)) {
       const { leadId, agentIds } = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Started investigating lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
+      postTextEvent(`Invst. lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
     } else if (deployAgentsToMission.match(action)) {
       const { missionId, agentIds } = action.payload
       const agentCount = agentIds.length
@@ -101,7 +101,7 @@ export function eventsMiddleware(): Middleware<{}, RootState> {
       postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
     } else if (buyUpgrade.match(action)) {
       const upgradeName = action.payload
-      postTextEvent(`Bought upgrade: ${upgradeName}`)
+      postTextEvent(`Bought upg.: ${upgradeName}`)
     } else if (reset.match(action)) {
       // Clear all events on full game reset
       store.dispatch(clearEvents())

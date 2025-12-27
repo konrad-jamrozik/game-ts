@@ -26,7 +26,7 @@ function renderPrimaryListItemText(event: GameEvent): string {
     return event.message
   }
   if (event.type === 'TurnAdvancement') {
-    return `Turn ${event.turn} Report Available`
+    return `Advanced to turn ${event.turn}`
   }
   assertEqual(event.type, 'MissionCompleted')
   const won = event.finalState === 'Won'
@@ -61,7 +61,7 @@ export function EventLog(): React.JSX.Element {
             <ListItem key={event.id} disablePadding>
               <ListItemText
                 primary={renderPrimaryListItemText(event)}
-                secondary={`T ${event.turn} / A ${event.actionsCount}`}
+                secondary={`T${event.turn}/A${event.actionsCount}`}
                 sx={{
                   display: 'flex',
                   justifyContent: 'space-between',
