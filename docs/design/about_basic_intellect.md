@@ -96,13 +96,13 @@ function spendMoney() {
 ``` typescript
 function unassignExhaustedAgents() {
   for (agent in getAllAssignedAgents()):
-    if (agent.exhaustion > exhaustionThreshold):
+    if (agent.exhaustion >= 30%):
       unassignAgent(agent)  // Agent will recover while ready
 }
 ```
 
 Exhausted agents perform poorly and should recover before being reassigned.
-The threshold determines when an agent is too exhausted to be effective.
+Agents with exhaustion of 30% or above are unassigned to allow them to recover.
 
 ## Mission deployment
 

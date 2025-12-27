@@ -12,6 +12,8 @@ import { dataTables } from '../../lib/data_tables/dataTables'
 import { f6mult, toF } from '../../lib/primitives/fixed6'
 import { initialAgent } from '../../lib/factories/agentFactory'
 
+// KJA got error: Error: Lead lead-black-lotus-member already has an active investigation
+// KJA cannot find profile lead?
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
   playTurn(api: PlayTurnAPI): void {
@@ -37,7 +39,7 @@ function unassignExhaustedAgents(api: PlayTurnAPI): void {
 
   const exhaustedAgents = assignedAgents.filter((agent) => {
     const exhaustionPct = toF(agent.exhaustionPct)
-    return exhaustionPct >= 5
+    return exhaustionPct >= 30
   })
 
   if (exhaustedAgents.length > 0) {
