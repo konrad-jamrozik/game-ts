@@ -156,20 +156,11 @@ function assignToContracting() {
   let currentIncome = calculateContractingIncome()
 
   while (currentIncome < targetIncome):
-    let agent = selectBestAgentForContracting()
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
     if (agent is undefined):
       break
     assignAgentToContracting(agent)
     currentIncome = calculateContractingIncome()
-}
-
-function selectBestAgentForContracting() {
-  // Ready agents are Available or in training
-  let readyAgents = getReadyAgents()
-  // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
-  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
-  return selectedAgent
 }
 
 ```
@@ -210,7 +201,7 @@ function assignToLeadInvestigation() {
     if (lead is undefined):
       break  // No more leads to investigate
     
-    let agent = selectBestAgentForInvestigation()
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
     if (agent is undefined):
       break  // No more agents available
     
@@ -232,16 +223,6 @@ function selectLeadToInvestigate(availableLeads) {
   // If no non-repeatable leads, pick from repeatable leads
   return pickAtRandom(availableLeads)
 }
-
-function selectBestAgentForInvestigation() {
-  // Ready agents are Available or in training
-  let readyAgents = getReadyAgents()
-  // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
-  // Pick agent with lowest exhaustion, randomly if tied
-  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
-  return selectedAgent
-}
 ```
 
 ## Assignment to training
@@ -249,20 +230,19 @@ function selectBestAgentForInvestigation() {
 The player assigns ready agents to training to ensure continuous skill improvement and that no agents are wasted sitting ready.
 
 Algorithm:
-- Get all ready agents
-- Filter out agents with exhaustion of 5% or above
-- Assign eligible agents to training up to available training capacity
-- Stop when capacity is reached or no more eligible agents are available
+- While training capacity is available:
+  - Select the next best ready agent (see "Selecting next best agent")
+  - If no agent is available, stop
+  - Assign agent to training
+  - Decrease available capacity
 
 ``` typescript
 function assignToTraining() {
-  let readyAgents = getReadyAgents()
-  // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
   let availableTrainingSlots = trainingCapacity - countAgentsInTraining()
 
-  for (agent in eligibleAgents):
-    if (availableTrainingSlots <= 0):
+  while (availableTrainingSlots > 0):
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    if (agent is undefined):
       break
     assignAgentToTraining(agent)
     availableTrainingSlots -= 1
@@ -274,19 +254,43 @@ function assignToTraining() {
 The player assigns leftover ready agents to contracting to ensure that no agents are wasted and to maximize income.
 
 Algorithm:
-- Get all leftover ready agents (agents not assigned to missions, contracting, training, or lead investigation)
-- Filter out agents with exhaustion of 5% or above
-- Assign all eligible agents to contracting
+- While there are leftover ready agents available:
+  - Select the next best ready agent (see "Selecting next best agent")
+  - If no agent is available, stop
+  - Assign agent to contracting
 
-Agent selection excludes agents with exhaustion of 5% or above, ensuring only agents in good condition are assigned to contracting.
+Agent selection uses the unified selection function, which excludes agents with exhaustion of 5% or above, ensuring only agents in good condition are assigned to contracting.
 
 ``` typescript
 function assignLeftoverToContracting() {
-  let leftoverAgents = getLeftoverReadyAgents()
-  // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = leftoverAgents.filter(agent => agent.exhaustion < 0.05)
-  for (agent in eligibleAgents):
+  while (true):
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    if (agent is undefined):
+      break
     assignAgentToContracting(agent)
+}
+```
+
+## Selecting next best agent
+
+The player uses a unified function to select the next best ready agent for any assignment.
+This ensures consistent agent selection criteria across all assignment types.
+
+Algorithm:
+- Get all ready agents (available or in training)
+- Filter out agents with exhaustion of 5% or above
+- Select the agent with the lowest exhaustion level
+- If multiple agents have the same exhaustion, pick one at random
+
+``` typescript
+function selectNextBestReadyAgent() {
+  // Ready agents are Available or in training
+  let readyAgents = getReadyAgents()
+  // Filter out agents with exhaustion >= 5%
+  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
+  // Pick agent with lowest exhaustion, randomly if tied
+  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
+  return selectedAgent
 }
 ```
 
