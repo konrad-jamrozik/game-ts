@@ -140,11 +140,13 @@ Algorithm:
 - Calculate target income: `upkeep costs * 1.2`
 - While current contracting income is below target:
   - Select the best available agent (ready agents with lowest exhaustion, picked randomly if tied)
+    - Do not assign agents that have exhaustion of 5% or above.
   - Assign agent to contracting
   - Recalculate current income
 - Stop when target is reached or no more ready agents are available
 
 Agent selection prioritizes ready agents (available or in training) with the lowest exhaustion level.
+Agents with exhaustion of 5% or above are excluded from consideration.
 If multiple agents have the same exhaustion, one is picked at random.
 
 ``` typescript
@@ -164,13 +166,34 @@ function assignToContracting() {
 function selectBestAgentForContracting() {
   // Ready agents are Available or in training
   let readyAgents = getReadyAgents()
-  let selectedAgent = pickAtRandomFromLowestExhaustion(readyAgents)
+  // Filter out agents with exhaustion >= 5%
+  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
+  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
   return selectedAgent
 }
 
 ```
 
-## Lead investigation (TODO REVIEW)
+## Lead investigation
+
+The player assigns agents to lead investigations as follows:
+
+- If there are no agents that can investigate leads, or no leads that can be investigated, do nothing.
+- Decide how many and which agents to assign to investigate leads
+- Assign these agents to investigate the leads.
+
+How to decide which leads to investigate:
+- Prioritize non-repeatable leads over repeatable leads.
+- If there are multiple non-repeatable leads, pick at random.
+- If there are multiple repeatable leads, pick at random.
+
+How to decide how many agents to assign to investigate leads:
+- At least one agent, and one extra for each 10 agents player has in total.
+
+How to pick the next best agent to investigate leads:
+- Prioritize ready agents (available or in training) with the lowest exhaustion level.
+- Do not assign agents that have exhaustion of 5% or above.
+- If multiple agents have the same exhaustion, one is picked at random.
 
 ``` typescript
 function assignToLeadInvestigation() {
@@ -187,9 +210,6 @@ function assignToLeadInvestigation() {
     assignAgentToLead(agent, lead)
 }
 ```
-
-Lead selection prioritizes leads that spawn defensive missions,
-as these are mandatory to handle.
 
 ## Assignment to training (TODO REVIEW)
 
@@ -209,11 +229,11 @@ function assignToTraining() {
 All idle agents should be training. This ensures continuous skill improvement
 and that no agents are wasted sitting idle.
 
-## Assignment of leftover agents to contracting (TODO REVIEW)
+## Assignment of leftover agents to contracting
 
 ``` typescript
 function assignLeftoverToContracting() {
-  let leftoverAgents = getLeftoverAgents()
+  let leftoverAgents = getLeftoverIdleAgents()
   for (agent in leftoverAgents):
     assignAgentToContracting(agent)
 }
