@@ -74,7 +74,11 @@ function deployToMissions(api: PlayTurnAPI): void {
 
   let deploymentsAttempted = 0
   let deploymentsSuccessful = 0
-  const cancelledDeployments: { missionId: string; reason: 'insufficientThreat' | 'insufficientTransport' }[] = []
+  const cancelledDeployments: {
+    missionId: string
+    reason: 'insufficientThreat' | 'insufficientTransport'
+    details?: string
+  }[] = []
 
   let mission = selectNextMissionToDeploy(activeMissions)
   while (mission !== undefined) {
@@ -94,13 +98,32 @@ function deployToMissions(api: PlayTurnAPI): void {
 function logDeploymentStatistics(
   deploymentsAttempted: number,
   deploymentsSuccessful: number,
-  cancelledDeployments: { missionId: string; reason: 'insufficientThreat' | 'insufficientTransport' }[],
+  cancelledDeployments: {
+    missionId: string
+    reason: 'insufficientThreat' | 'insufficientTransport'
+    details?: string
+  }[],
 ): void {
-  const cancelledByThreat = cancelledDeployments.filter((f) => f.reason === 'insufficientThreat').length
-  const cancelledByTransportCap = cancelledDeployments.filter((f) => f.reason === 'insufficientTransport').length
-  console.log(
-    `deployToMissions: attempted ${deploymentsAttempted} missions, deployed ${deploymentsSuccessful}. Cancelled: ${cancelledByThreat} insufficient threat, ${cancelledByTransportCap} insufficient transport cap`,
-  )
+  const cancelledByThreat = cancelledDeployments.filter((f) => f.reason === 'insufficientThreat')
+  const cancelledByTransportCap = cancelledDeployments.filter((f) => f.reason === 'insufficientTransport')
+
+  let logMessage = `deployToMissions: attempted ${deploymentsAttempted} missions, deployed ${deploymentsSuccessful}. Cancelled: ${cancelledByThreat.length} insufficient threat, ${cancelledByTransportCap.length} insufficient transport cap`
+
+  // Add details for insufficient threat cancellations
+  for (const cancelled of cancelledByThreat) {
+    if (cancelled.details !== undefined) {
+      logMessage += `\n  - ${cancelled.details}`
+    }
+  }
+
+  // Add details for insufficient transport cancellations
+  for (const cancelled of cancelledByTransportCap) {
+    if (cancelled.details !== undefined) {
+      logMessage += `\n  - ${cancelled.details}`
+    }
+  }
+
+  console.log(logMessage)
 }
 
 function selectNextMissionToDeploy(availableMissions: Mission[]): Mission | undefined {
@@ -139,7 +162,11 @@ function selectNextMissionToDeploy(availableMissions: Mission[]): Mission | unde
 function deployToMission(
   api: PlayTurnAPI,
   mission: Mission,
-  cancelledDeployments: { missionId: string; reason: 'insufficientThreat' | 'insufficientTransport' }[],
+  cancelledDeployments: {
+    missionId: string
+    reason: 'insufficientThreat' | 'insufficientTransport'
+    details?: string
+  }[],
 ): boolean {
   const { gameState } = api
   const enemyThreat = calculateMissionThreatAssessment(mission)
@@ -153,6 +180,8 @@ function deployToMission(
     const agent = selectNextBestReadyAgent(
       gameState,
       selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      true,
     )
     if (agent === undefined) {
       break
@@ -164,14 +193,16 @@ function deployToMission(
 
   // Check if we have enough threat
   if (currentThreat < targetThreat) {
-    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientThreat' })
+    const details = `Gathered ${selectedAgents.length} agents with total threat of ${currentThreat.toFixed(2)} against required ${targetThreat.toFixed(2)}`
+    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientThreat', details })
     return false
   }
 
   // Check transport capacity
   const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
   if (selectedAgents.length > remainingTransportCap) {
-    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport' })
+    const details = `Needed ${selectedAgents.length} transport capacity, had ${remainingTransportCap} available out of ${gameState.transportCap} total capacity`
+    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport', details })
     return false
   }
 
@@ -215,7 +246,7 @@ function assignToContracting(api: PlayTurnAPI): void {
 
   while (currentIncome < targetIncome) {
     const doNotIncludeInTraining = false
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
     if (agent === undefined) {
       break
     }
@@ -252,7 +283,7 @@ function assignToLeadInvestigation(api: PlayTurnAPI): void {
       break
     }
 
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length)
     if (agent === undefined) {
       break
     }
@@ -288,7 +319,7 @@ function assignToTraining(api: PlayTurnAPI): void {
   const selectedAgentIds: string[] = []
 
   for (let i = 0; i < availableTrainingSlots; i += 1) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length)
     if (agent === undefined) {
       break
     }
@@ -308,10 +339,10 @@ function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const selectedAgentIds: string[] = []
 
   const doNotIncludeInTraining = false
-  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
+  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
-    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
+    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
   }
 
   if (selectedAgentIds.length > 0) {
@@ -334,6 +365,7 @@ function logLeftoverContractingStatistics(gameState: GameState, assignedCount: n
 function selectNextBestReadyAgent(
   gameState: GameState,
   excludeAgentIds: string[],
+  alreadySelectedCount: number,
   includeInTraining = true,
 ): Agent | undefined {
   // Get agents in base (Available or in Training)
@@ -351,18 +383,14 @@ function selectNextBestReadyAgent(
 
   const totalAgentCount = notTerminated(gameState.agents).length
 
-  // Return no agent if less than 20% of all agents are ready
-  if (inBaseAgents.length < totalAgentCount * 0.2) {
-    return undefined
-  }
-
   // Filter out agents with exhaustion >= 5% and excluded agents
   const readyAgents = inBaseAgents.filter((agent: Agent) => {
     const exhaustionPct = toF(agent.exhaustionPct)
     return exhaustionPct < 5 && !excludeAgentIds.includes(agent.id)
   })
 
-  if (readyAgents.length === 0) {
+  // Return no agent if none available or if less than 20% of all agents will be ready after selecting alreadySelectedCount agents
+  if (readyAgents.length === 0 || readyAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
     return undefined
   }
 
