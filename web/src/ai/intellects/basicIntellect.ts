@@ -19,7 +19,7 @@ export const basicIntellect: AIPlayerIntellect = {
   playTurn(api: PlayTurnAPI): void {
     manageAgents(api)
     spendMoney(api)
-    console.log(`basicIntellect: finished playing turn ${api.gameState.turn}`)
+    console.log(`⌛ ===== basicIntellect: finished playing turn ${api.gameState.turn}`)
   },
 }
 
@@ -175,6 +175,24 @@ function deployToMission(
     return false
   }
 
+  // KJA1 problem here and with all actions
+  // it should not be possible to forcefully do things with agents bypassing checks. E.g. recovering agents
+  // cannot be deployed to missions, but api.deployAgentsToMission would ignore it.
+  // Basically the validation from the UI PlayerActions.tsx is missing. Consider pushing the validation down
+  // from PlayerActions.tsx handle* functions to the reducers, e.g. agentReducers.ts and missionReducers.ts
+  //
+  // But note this  is nontrivial, e.g. when assigning agents to contracting, PlayerActions.tsx
+  // checks validateAvailableAgents and validateNotExhaustedAgents; but these checks must be made
+  // BEFORE dispatching the action to the reducer. So these validate* functions should be invoked
+  // inside the reducer itself and also be separately exposed so the PlayerActions and AI player
+  // can use them before invoking the reducer.
+  //
+  // Perhaps the solution here is to have all the Validate* patterns currently in PlayerActions.tsx
+  // to be captured withing PlayTurnAPI, and then make PlayerActions.tsx reuse them.
+  // So e.g. api.deployAgentsToMission first runs the validate
+  // functions and dispatches the action to the reducer if valid, otherwise returns information about the error
+  // for the UI to display.
+
   // Deploy agents
   api.deployAgentsToMission({
     missionId: mission.id,
@@ -196,7 +214,8 @@ function assignToContracting(api: PlayTurnAPI): void {
   const desiredAgentCount = incomeGap > 0 ? Math.ceil(incomeGap / baseAgentIncome) : 0
 
   while (currentIncome < targetIncome) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
+    const doNotIncludeInTraining = false
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
     if (agent === undefined) {
       break
     }
@@ -288,16 +307,11 @@ function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const selectedAgentIds: string[] = []
 
-  // KJA1 the AI appears to first assign two agents to training, and then immediately reassign them to contracting
-  // Two problems here:
-  // 1. it should not be possible to forcefully assign agents to contracting once they are assigned to training.
-  // Basically the validation from the UI PlayerActions.tsx is missing. Consider pushing the validation down
-  // from the UI to the reducer assignAgentsToContracting in agentReducers.ts
-  // 2. Why the AI thinks these agents are ready? It should see they are assigned to training.
-  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
+  const doNotIncludeInTraining = false
+  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
-    agent = selectNextBestReadyAgent(gameState, selectedAgentIds)
+    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, doNotIncludeInTraining)
   }
 
   if (selectedAgentIds.length > 0) {
@@ -317,11 +331,23 @@ function logLeftoverContractingStatistics(gameState: GameState, assignedCount: n
   )
 }
 
-function selectNextBestReadyAgent(gameState: GameState, excludeAgentIds: string[]): Agent | undefined {
+function selectNextBestReadyAgent(
+  gameState: GameState,
+  excludeAgentIds: string[],
+  includeInTraining = true,
+): Agent | undefined {
   // Get agents in base (Available or in Training)
-  const inBaseAgents = gameState.agents.filter(
-    (agent: Agent) => agent.assignment === 'Standby' || agent.assignment === 'Training',
-  )
+  // KJA1 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
+  // these utils in many places.
+  const inBaseAgents = gameState.agents.filter((agent: Agent) => {
+    if (agent.assignment === 'Standby') {
+      return true
+    }
+    if (agent.assignment === 'Training') {
+      return includeInTraining
+    }
+    return false
+  })
 
   const totalAgentCount = notTerminated(gameState.agents).length
 

@@ -122,6 +122,7 @@ export type ValidateMissionDeploymentResult =
       errorMessage: string
     }>
 
+// KJA1 why mission can be undefined? Shouldn't be.
 /**
  * Validates mission for agent deployment
  */
