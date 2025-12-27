@@ -175,13 +175,18 @@ function deployToMission(
   const selectedAgents: Agent[] = []
   let currentThreat = 0
 
+  const includeInTraining = true
+  // KJA1 this "doNot" patterns is confusing, as someone will think doNot == false, so "do".
+  // Fix everywhere. Also doNotIncludeInTraining.
+  const doNotKeepReserve = false
   // Select agents until we reach target threat
   while (currentThreat < targetThreat) {
     const agent = selectNextBestReadyAgent(
       gameState,
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
-      true,
+      includeInTraining,
+      doNotKeepReserve,
     )
     if (agent === undefined) {
       break
@@ -367,6 +372,7 @@ function selectNextBestReadyAgent(
   excludeAgentIds: string[],
   alreadySelectedCount: number,
   includeInTraining = true,
+  keepReserve = true,
 ): Agent | undefined {
   // Get agents in base (Available or in Training)
   // KJA1 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
@@ -389,8 +395,13 @@ function selectNextBestReadyAgent(
     return exhaustionPct < 5 && !excludeAgentIds.includes(agent.id)
   })
 
-  // Return no agent if none available or if less than 20% of all agents will be ready after selecting alreadySelectedCount agents
-  if (readyAgents.length === 0 || readyAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
+  // Return no agent if none available
+  if (readyAgents.length === 0) {
+    return undefined
+  }
+
+  // Return no agent if less than 20% of all agents will be ready after selecting alreadySelectedCount agents (only if keepReserve is true)
+  if (keepReserve && readyAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
     return undefined
   }
 
