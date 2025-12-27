@@ -103,7 +103,14 @@ Create a new file [`web/src/ai/intellects/basicIntellect.ts`](web/src/ai/intelle
 
 ## Key Constants (from spec)
 
-| Constant | Value | Purpose ||----------|-------|---------|| Exhaustion threshold | 5% | Agents above this are considered exhausted || Ready agents minimum | 20% | If below, don't assign/deploy agents || Income target multiplier | 1.2 | Contracting income should cover 120% of upkeep || Threat target multiplier | 1.2 | Deploy agents with 120% of enemy threat || Savings turns | 5 | Keep enough money for 5 turns || Uncovered upkeep ratio | 0.5 | Assume only 50% upkeep covered when calculating savings |
+| Constant | Value | Purpose |
+|----------|-------|---------|
+| Exhaustion threshold | 5% | Agents above this are considered exhausted |
+| Ready agents minimum | 20% | If below, don't assign/deploy agents |
+| Income target multiplier | 1.2 | Contracting income should cover 120% of upkeep |
+| Threat target multiplier | 1.2 | Deploy agents with 120% of enemy threat |
+| Savings turns | 5 | Keep enough money for 5 turns |
+| Uncovered upkeep ratio | 0.5 | Assume only 50% upkeep covered when calculating savings |
 
 ## Implementation Details
 
@@ -133,7 +140,14 @@ The `selectNextBestReadyAgent()` function is core to the algorithm - it selects 
 
 ### 3. Existing Utilities to Leverage
 
-| Function | File | Purpose ||----------|------|---------|| `getAgentUpkeep()` | [`web/src/lib/ruleset/moneyRuleset.ts`](web/src/lib/ruleset/moneyRuleset.ts) | Calculate upkeep costs || `getContractingIncome()` | [`web/src/lib/ruleset/moneyRuleset.ts`](web/src/lib/ruleset/moneyRuleset.ts) | Calculate contracting income || `calculateMissionThreatAssessment()` | [`web/src/lib/game_utils/missionThreatAssessment.ts`](web/src/lib/game_utils/missionThreatAssessment.ts) | Mission threat calculation || `notTerminated()`, `available()`, `onTrainingAssignment()` | [`web/src/lib/model_utils/agentUtils.ts`](web/src/lib/model_utils/agentUtils.ts) | Agent filtering || `filterMissionsByState()` | [`web/src/lib/model_utils/missionUtils.ts`](web/src/lib/model_utils/missionUtils.ts) | Mission filtering || `getUpgradePrice()` | [`web/src/lib/data_tables/upgrades.ts`](web/src/lib/data_tables/upgrades.ts) | Upgrade costs |
+| Function | File | Purpose |
+|----------|------|---------|
+| `getAgentUpkeep()` | [`web/src/lib/ruleset/moneyRuleset.ts`](web/src/lib/ruleset/moneyRuleset.ts) | Calculate upkeep costs |
+| `getContractingIncome()` | [`web/src/lib/ruleset/moneyRuleset.ts`](web/src/lib/ruleset/moneyRuleset.ts) | Calculate contracting income |
+| `calculateMissionThreatAssessment()` | [`web/src/lib/game_utils/missionThreatAssessment.ts`](web/src/lib/game_utils/missionThreatAssessment.ts) | Mission threat calculation |
+| `notTerminated()`, `available()`, `onTrainingAssignment()` | [`web/src/lib/model_utils/agentUtils.ts`](web/src/lib/model_utils/agentUtils.ts) | Agent filtering |
+| `filterMissionsByState()` | [`web/src/lib/model_utils/missionUtils.ts`](web/src/lib/model_utils/missionUtils.ts) | Mission filtering |
+| `getUpgradePrice()` | [`web/src/lib/data_tables/upgrades.ts`](web/src/lib/data_tables/upgrades.ts) | Upgrade costs |
 
 ### 4. HQ Raid Detection
 
@@ -152,4 +166,5 @@ const intellects: Record<string, AIPlayerIntellect> = {
   'do-nothing': doNothingIntellect,
   'basic': basicIntellect,
 }
+
 ```
