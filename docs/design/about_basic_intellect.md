@@ -193,19 +193,33 @@ and that no agents are wasted sitting idle.
 
 ## Money savings
 
-The player is allowed to spend money only if they had enough money saved up to not run out of money
-within next 5 turns, assuming that only 50% of upkeep costs are covered by contracting income.
+The player is allowed to spend money only if they have enough money saved up to not run out of money
+within the next 5 turns, assuming that only 50% of upkeep costs are covered by contracting income.
 
-E.g. if upkeep costs are 300, and 50% of them are covered by contracting income,
-then the player is allowed to spend money only if they had saved up at least 150 * 5 = 750 money.
+Algorithm:
+- Calculate minimum required savings: `(upkeep costs * 0.5) * 5`
+- Allow spending only if current money >= minimum required savings
+- After each purchase, recalculate minimum required savings based on new upkeep costs
+- If a purchase would bring money below the minimum, stop spending for the turn
 
-If they make a purchase which will result money going below 750, they are not allowed to spend
-any more money given turn unless they increase the amount of money in given turn above 750.
+Example: if upkeep costs are 300, then 50% is 150, and minimum savings is 150 * 5 = 750.
+The player can spend only if they have at least 750 money. After spending, if upkeep costs increase
+(e.g., from hiring agents), the minimum is recalculated immediately.
 
-If that purchase increased the upkeep costs, then the requirement is immediately recomputed based
-on the new upkeep costs.
+``` typescript
+function hasSufficientMoney() {
+  let minimumRequiredSavings = computeMinimumRequiredSavings()
+  let currentMoney = getCurrentMoney()
+  return currentMoney >= minimumRequiredSavings
+}
 
-Similarly, a player could lower the upkeep costs e.g. by sacking agents.
+function computeMinimumRequiredSavings() {
+  let upkeepCosts = calculateUpkeepCosts()
+  let uncoveredUpkeepCosts = upkeepCosts * 0.5  // Only 50% covered by contracting income
+  let turnsToCover = 5
+  return uncoveredUpkeepCosts * turnsToCover
+}
+```
 
 ## Next buy priority
 
