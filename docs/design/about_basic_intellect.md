@@ -104,6 +104,19 @@ The threshold determines when an agent is too exhausted to be effective.
 
 ## Mission deployment (TODO UPDATE)
 
+// KJA1 todo
+The player should look at available missions and deploy agents to them by selecting next best ready
+agents until the sum of agents selected for deployment threat level is at least 120% of assessed enemy threat level.
+
+Missions that expire first should be prioritized to be deployed in given turn. If there are multiple ones
+with the same expiry, pick one at random.
+
+Repeat the mission selection for deployment process in given turn until it is no longer possible to deploy
+more missions. This may happen because:
+- there are no more missions
+- there is not enough transport capacity left to reach he desired agent threat level
+- there is not enough ready agents left to reach the desired agent threat level
+
 ``` typescript
 function deployToMissions() {
   // Handle defensive missions first (mandatory)
@@ -156,7 +169,7 @@ function assignToContracting() {
   let currentIncome = calculateContractingIncome()
 
   while (currentIncome < targetIncome):
-    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best ready agent"
     if (agent is undefined):
       break
     assignAgentToContracting(agent)
@@ -201,7 +214,7 @@ function assignToLeadInvestigation() {
     if (lead is undefined):
       break  // No more leads to investigate
     
-    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best ready agent"
     if (agent is undefined):
       break  // No more agents available
     
@@ -231,7 +244,7 @@ The player assigns ready agents to training to ensure continuous skill improveme
 
 Algorithm:
 - While training capacity is available:
-  - Select the next best ready agent (see "Selecting next best agent")
+  - Select the next best ready agent (see "Selecting next best ready agent")
   - If no agent is available, stop
   - Assign agent to training
   - Decrease available capacity
@@ -241,7 +254,7 @@ function assignToTraining() {
   let availableTrainingSlots = trainingCapacity - countAgentsInTraining()
 
   while (availableTrainingSlots > 0):
-    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best ready agent"
     if (agent is undefined):
       break
     assignAgentToTraining(agent)
@@ -251,11 +264,13 @@ function assignToTraining() {
 
 ## Assignment of leftover agents to contracting
 
+KJA1 TODO: do not assign leftover agents to contracting if this would mean than less than 20% of all agents are ready.
+
 The player assigns leftover ready agents to contracting to ensure that no agents are wasted and to maximize income.
 
 Algorithm:
 - While there are leftover ready agents available:
-  - Select the next best ready agent (see "Selecting next best agent")
+  - Select the next best ready agent (see "Selecting next best ready agent")
   - If no agent is available, stop
   - Assign agent to contracting
 
@@ -264,14 +279,14 @@ Agent selection uses the unified selection function, which excludes agents with 
 ``` typescript
 function assignLeftoverToContracting() {
   while (true):
-    let agent = selectNextBestReadyAgent()  // See "Selecting next best agent"
+    let agent = selectNextBestReadyAgent()  // See "Selecting next best ready agent"
     if (agent is undefined):
       break
     assignAgentToContracting(agent)
 }
 ```
 
-## Selecting next best agent
+## Selecting next best ready agent
 
 The player uses a unified function to select the next best ready agent for any assignment.
 This ensures consistent agent selection criteria across all assignment types.
@@ -284,12 +299,12 @@ Algorithm:
 
 ``` typescript
 function selectNextBestReadyAgent() {
-  // Ready agents are Available or in training
-  let readyAgents = getReadyAgents()
+  // In base agents are Available or in training
+  let inBaseAgents = getAvailableOrInTrainingAgents()
   // Filter out agents with exhaustion >= 5%
-  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
+  let readyAgents = inBaseAgents.filter(agent => agent.exhaustion < 0.05)
   // Pick agent with lowest exhaustion, randomly if tied
-  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
+  let selectedAgent = pickAtRandomFromLowestExhaustion(readyAgents)
   return selectedAgent
 }
 ```
