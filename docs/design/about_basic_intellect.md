@@ -81,7 +81,7 @@ function manageAgents() {
 function spendMoney() {
   while (hasSufficientMoney()):             // See "Money savings"
     let priority = computeNextBuyPriority() // See "Next buy priority"
-    if (hasSufficientMoneyToBuy(priority)):
+    if (priority is not undefined and hasSufficientMoneyToBuy(priority)):
       buy(priority)
     else {
       break
@@ -216,95 +216,124 @@ If the same priority still remain top, then either player buys it or the process
 
 The `next buy priority` is computed as follows:
 
-``` text
-buy agents until desired agent count is reached
-next, buy transport capacity until desired transport capacity is reached
-next, buy training capacity until desired training capacity is reached
-next, buy agent effectiveness capabilities until desired agent effectiveness is reached
-```
+Priority order (first matching condition determines what to buy):
+1. If agent count is below desired count: hire an agent (or upgrade agent cap if at capacity)
+2. If transport capacity is below 50% of desired agent count: upgrade transport capacity
+3. If training capacity is below 60% of desired agent count: upgrade training capacity
+4. If any agent effectiveness capability is below desired level: upgrade the first one that's below
+   (weapon damage, then training skill gain, then exhaustion recovery, then hit points recovery)
 
-where:
-
-``` text
-buy agents until desired agent count is reached:
-  desiredAgentCount = Compute desired agent count
-  Is actualAgentCount >= desiredAgentCount?
-    Yes: do not hire agent
-    No: hire agent
-  If cannot hire agent because not enough agent cap:
-    Buy agent cap upgrade
-
-desired agent count = 4 + floor((turnNumber - 1) / 4)
-
-desiredTransportCapacity = 50% of desired agent count
-
-desiredTrainingCapacity = 60% of desired desired agent count
-
-buy agent effectiveness capabilities until desired agent effectiveness is reached:
-  buy desired weapon damage upgrade if below
-  else buy desired training skill gain upgrade if below
-  else buy desired exhaustion recovery upgrade if below
-  else buy desired hit points recovery upgrade if below
-
-desiredWeaponDamage = buy 1 upgrade for each 10 turn
-desiredTrainingSkillGain = buy 1 upgrade for each 10 turn
-desiredExhaustionRecovery = buy 1 upgrade for each 10 turn
-desiredHitPointsRecovery = buy 1 upgrade for each 10 turn
-```
-
-## Capacity upgrade
+Desired values:
+- Desired agent count: 4 + floor((turn number - 1) / 4)
+- Desired transport capacity: 50% of desired agent count
+- Desired training capacity: 60% of desired agent count
+- Desired capability levels: 1 upgrade per 10 turns (each capability independently)
 
 ``` typescript
-function upgradeCapacities() {
-  // Priority: transport > training
-  if (transportCapacity < minTransportCapacity()):
-    upgradeTransportCapacity()
-  if (trainingCapacity < countAgents() - expectedContractingAgents()):
-    upgradeTrainingCapacity()
+function computeNextBuyPriority() {
+  // Priority 1: Buy agents until desired agent count is reached
+  if (shouldBuyAgent()):
+    if (canHireAgent()):
+      return { type: "hireAgent" }
+    else:
+      return { type: "upgradeAgentCap" }
+  
+  // Priority 2: Buy transport capacity until desired transport capacity is reached
+  if (shouldBuyTransportCapacity()):
+    return { type: "upgradeTransportCapacity" }
+  
+  // Priority 3: Buy training capacity until desired training capacity is reached
+  if (shouldBuyTrainingCapacity()):
+    return { type: "upgradeTrainingCapacity" }
+  
+  // Priority 4: Buy agent effectiveness capabilities until desired agent effectiveness is reached
+  if (shouldBuyWeaponDamage()):
+    return { type: "upgradeWeaponDamage" }
+  if (shouldBuyTrainingSkillGain()):
+    return { type: "upgradeTrainingSkillGain" }
+  if (shouldBuyExhaustionRecovery()):
+    return { type: "upgradeExhaustionRecovery" }
+  if (shouldBuyHitPointsRecovery()):
+    return { type: "upgradeHitPointsRecovery" }
+  
+  return undefined  // Nothing to buy
 }
-```
 
-Transport capacity is prioritized because without it, agents cannot be deployed to missions.
-Training capacity is secondary but important to ensure idle agents are always improving.
-
-## Agent effectiveness capability upgrade
-
-``` typescript
-function upgradeAgentEffectiveness() {
-  // Upgrade capabilities in priority order
-  let capabilities = [
-    weaponBaseDamage,      // Direct combat improvement
-    exhaustionRecovery,    // Faster agent turnaround
-    hitPointsRecovery,     // Faster post-mission recovery
-    trainingSkillGain      // Faster skill improvement
-  ]
-  for (capability in capabilities):
-    if (shouldUpgrade(capability) and canAfford(capability)):
-      upgrade(capability)
+function shouldBuyAgent() {
+  let desiredAgentCount = computeDesiredAgentCount()
+  let actualAgentCount = countAgents()
+  return actualAgentCount < desiredAgentCount
 }
-```
 
-The priority order reflects combat effectiveness first (to win missions),
-then recovery rates (to maximize agent availability).
-
-## Hiring
-
-``` typescript
-function hireAgents() {
-  let targetAgentCount = calculateTargetAgentCount()
+function canHireAgent() {
   let currentAgentCount = countAgents()
-  let agentsToHire = max(0, targetAgentCount - currentAgentCount)
+  let agentCap = getAgentCap()
+  return currentAgentCount < agentCap
+}
 
-  for (i in 1..agentsToHire):
-    if (canAffordHire()):
-      hireAgent()
+function computeDesiredAgentCount() {
+  let turnNumber = getCurrentTurnNumber()
+  return 4 + Math.floor((turnNumber - 1) / 4)
+}
+
+function shouldBuyTransportCapacity() {
+  let desiredAgentCount = computeDesiredAgentCount()
+  let desiredTransportCapacity = Math.floor(desiredAgentCount * 0.5)
+  let actualTransportCapacity = getTransportCapacity()
+  return actualTransportCapacity < desiredTransportCapacity
+}
+
+function shouldBuyTrainingCapacity() {
+  let desiredAgentCount = computeDesiredAgentCount()
+  let desiredTrainingCapacity = Math.floor(desiredAgentCount * 0.6)
+  let actualTrainingCapacity = getTrainingCapacity()
+  return actualTrainingCapacity < desiredTrainingCapacity
+}
+
+function shouldBuyWeaponDamage() {
+  let desiredLevel = computeDesiredWeaponDamageLevel()
+  let actualLevel = getWeaponDamageLevel()
+  return actualLevel < desiredLevel
+}
+
+function shouldBuyTrainingSkillGain() {
+  let desiredLevel = computeDesiredTrainingSkillGainLevel()
+  let actualLevel = getTrainingSkillGainLevel()
+  return actualLevel < desiredLevel
+}
+
+function shouldBuyExhaustionRecovery() {
+  let desiredLevel = computeDesiredExhaustionRecoveryLevel()
+  let actualLevel = getExhaustionRecoveryLevel()
+  return actualLevel < desiredLevel
+}
+
+function shouldBuyHitPointsRecovery() {
+  let desiredLevel = computeDesiredHitPointsRecoveryLevel()
+  let actualLevel = getHitPointsRecoveryLevel()
+  return actualLevel < desiredLevel
+}
+
+function computeDesiredWeaponDamageLevel() {
+  let turnNumber = getCurrentTurnNumber()
+  return Math.floor(turnNumber / 10)
+}
+
+function computeDesiredTrainingSkillGainLevel() {
+  let turnNumber = getCurrentTurnNumber()
+  return Math.floor(turnNumber / 10)
+}
+
+function computeDesiredExhaustionRecoveryLevel() {
+  let turnNumber = getCurrentTurnNumber()
+  return Math.floor(turnNumber / 10)
+}
+
+function computeDesiredHitPointsRecoveryLevel() {
+  let turnNumber = getCurrentTurnNumber()
+  return Math.floor(turnNumber / 10)
 }
 ```
-
-The target agent count is determined by the need to:
-- Have enough agents to deploy on expected defensive missions.
-- Have enough agents to cover contracting needs.
-- Have spare agents for training and lead investigation.
 
 # Future work
 
