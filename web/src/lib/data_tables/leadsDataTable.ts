@@ -31,7 +31,7 @@ export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[]
   // Faction-specific lead templates
   // Id, Name, Description, Difficulty, DependsOn, Repeatable, EnemyEstimate
   ['lead-{facId}-member', 'Locate {facName} member', 'Track down a {facName} member for apprehension.', 2, ['lead-criminal-orgs'], true, 'Expect 2 initiates and 1 operative.'],
-  ['lead-{facId}-interrogate-member', 'Interrogate member', 'Extract information from the captured member.', 2, ['missiondata-apprehend-cult-member-{facId}'], false],
+  ['lead-{facId}-interrogate-member', 'Interrogate member', 'Extract information from the captured member.', 2, ['missiondata-apprehend-{facId}-member'], false],
   ['lead-{facId}-safehouse', 'Locate safehouse', 'Location of a {facName} safehouse has been revealed.', 10, ['lead-{facId}-interrogate-member'], true, 'Expect 4 initiates, 4 operatives, and 1 handler.'],
   ['lead-{facId}-interrogate-handler', 'Interrogate handler', 'Extract information from the captured handler.', 2, ['missiondata-raid-{facId}-safehouse'], false],
   ['lead-{facId}-outpost', 'Locate outpost', 'Location of a {facName} outpost has been revealed.', 20, ['lead-{facId}-interrogate-handler'], true, 'Expect 8 initiates, 8 operatives, 2 soldiers, and 3 handlers.'],
