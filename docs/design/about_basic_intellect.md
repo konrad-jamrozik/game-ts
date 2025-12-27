@@ -79,8 +79,13 @@ function manageAgents() {
 }
 
 function spendMoney() {
-  while (hasSufficientMoney()):      // See "Money savings"
-    buy(computeBuyPriorities().top)  // See "Buy priorities"
+  while (hasSufficientMoney()):             // See "Money savings"
+    let priority = computeNextBuyPriority() // See "Next buy priority"
+    if (hasSufficientMoneyToBuy(priority)):
+      buy(priority)
+    else {
+      break
+    }
 }
 ```
 
@@ -200,7 +205,52 @@ any more money given turn unless they increase the amount of money in given turn
 If that purchase increased the upkeep costs, then the requirement is immediately recomputed based
 on the new upkeep costs.
 
-## Buy priorities
+Similarly, a player could lower the upkeep costs e.g. by sacking agents.
+
+## Next buy priority
+
+When deciding what to buy, the player first computes the `next buy priority` item to buy,
+and buys it if they can afford it. If they cannot, they stop buying anything
+else in given turn. Instead, they will re-evaluate the next buy priority in the next turn.
+If the same priority still remain top, then either player buys it or the process repeats.
+
+The `next buy priority` is computed as follows:
+
+``` text
+buy agents until desired agent count is reached
+next, buy transport capacity until desired transport capacity is reached
+next, buy training capacity until desired training capacity is reached
+next, buy agent effectiveness capabilities until desired agent effectiveness is reached
+```
+
+where:
+
+``` text
+buy agents until desired agent count is reached:
+  desiredAgentCount = Compute desired agent count
+  Is actualAgentCount >= desiredAgentCount?
+    Yes: do not hire agent
+    No: hire agent
+  If cannot hire agent because not enough agent cap:
+    Buy agent cap upgrade
+
+desired agent count = 4 + floor((turnNumber - 1) / 4)
+
+desiredTransportCapacity = 50% of desired agent count
+
+desiredTrainingCapacity = 60% of desired desired agent count
+
+buy agent effectiveness capabilities until desired agent effectiveness is reached:
+  buy desired weapon damage upgrade if below
+  else buy desired training skill gain upgrade if below
+  else buy desired exhaustion recovery upgrade if below
+  else buy desired hit points recovery upgrade if below
+
+desiredWeaponDamage = buy 1 upgrade for each 10 turn
+desiredTrainingSkillGain = buy 1 upgrade for each 10 turn
+desiredExhaustionRecovery = buy 1 upgrade for each 10 turn
+desiredHitPointsRecovery = buy 1 upgrade for each 10 turn
+```
 
 ## Capacity upgrade
 
