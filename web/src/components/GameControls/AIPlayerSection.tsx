@@ -12,6 +12,7 @@ import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 import { setAIIntellectSelection } from '../../redux/slices/selectionSlice'
+import { advanceTurn } from '../../redux/slices/gameStateSlice'
 
 export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -36,6 +37,10 @@ export function AIPlayerSection(): React.JSX.Element {
       return
     }
     delegateTurnToAIPlayer(selectedIntellect)
+  }
+
+  function handleNextTurn(): void {
+    dispatch(advanceTurn())
   }
 
   return (
@@ -67,6 +72,9 @@ export function AIPlayerSection(): React.JSX.Element {
         </FormControl>
         <Button variant="contained" onClick={handleDelegateToAI} disabled={isButtonDisabled} fullWidth>
           Delegate to AI
+        </Button>
+        <Button variant="contained" onClick={handleNextTurn} disabled={isGameEnded} fullWidth>
+          Next turn
         </Button>
       </Stack>
     </ExpandableCard>

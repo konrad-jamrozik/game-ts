@@ -416,6 +416,8 @@ function spendMoney(api: PlayTurnAPI): void {
       break
     }
 
+    // KJA1 the "hasSufficientMoneyToBuy" check should check if there will be enough money left
+    // after the purchase, to not bankrupt the player. See OneNote "Basic inellect issues"
     if (hasSufficientMoneyToBuy(api, priority)) {
       buy(api, priority)
     } else {
