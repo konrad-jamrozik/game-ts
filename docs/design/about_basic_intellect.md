@@ -174,7 +174,7 @@ function selectBestAgentForContracting() {
 
 ```
 
-## Lead investigation (TODO REVIEW)
+## Lead investigation
 
 The player assigns agents to lead investigations as follows:
 
@@ -244,23 +244,30 @@ function selectBestAgentForInvestigation() {
 }
 ```
 
-## Assignment to training (TODO REVIEW)
+## Assignment to training
+
+The player assigns idle agents to training to ensure continuous skill improvement and that no agents are wasted sitting idle.
+
+Algorithm:
+- Get all idle ready agents
+- Filter out agents with exhaustion of 5% or above
+- Assign eligible agents to training up to available training capacity
+- Stop when capacity is reached or no more eligible agents are available
 
 ``` typescript
 function assignToTraining() {
   let idleAgents = getIdleReadyAgents()
+  // Filter out agents with exhaustion >= 5%
+  let eligibleAgents = idleAgents.filter(agent => agent.exhaustion < 0.05)
   let availableTrainingSlots = trainingCapacity - countAgentsInTraining()
 
-  for (agent in idleAgents):
+  for (agent in eligibleAgents):
     if (availableTrainingSlots <= 0):
       break
     assignAgentToTraining(agent)
     availableTrainingSlots -= 1
 }
 ```
-
-All idle agents should be training. This ensures continuous skill improvement
-and that no agents are wasted sitting idle.
 
 ## Assignment of leftover agents to contracting
 
