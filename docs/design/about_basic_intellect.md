@@ -174,7 +174,7 @@ function selectBestAgentForContracting() {
 
 ```
 
-## Lead investigation
+## Lead investigation (TODO REVIEW)
 
 The player assigns agents to lead investigations as follows:
 
@@ -197,17 +197,50 @@ How to pick the next best agent to investigate leads:
 
 ``` typescript
 function assignToLeadInvestigation() {
-  if (countAgentsInvestigatingLeads() >= 1):
-    return  // Goal: at least 1 agent investigating
-
   let availableLeads = getAvailableLeads()
   if (availableLeads is empty):
     return
 
-  let lead = selectLeadToInvestigate(availableLeads)
-  let agent = selectBestAgentForInvestigation()
-  if (agent is not null):
+  let targetAgentCount = computeTargetAgentCountForInvestigation()
+  let currentAgentCount = countAgentsInvestigatingLeads()
+  let agentsToAssign = targetAgentCount - currentAgentCount
+
+  for (i in 1..agentsToAssign):
+    let lead = selectLeadToInvestigate(availableLeads)
+    if (lead is undefined):
+      break  // No more leads to investigate
+    
+    let agent = selectBestAgentForInvestigation()
+    if (agent is undefined):
+      break  // No more agents available
+    
     assignAgentToLead(agent, lead)
+}
+
+function computeTargetAgentCountForInvestigation() {
+  let totalAgentCount = countAgents()
+  // At least 1 agent, plus 1 extra for each 10 agents
+  return 1 + Math.floor(totalAgentCount / 10)
+}
+
+function selectLeadToInvestigate(availableLeads) {
+  // Prioritize non-repeatable leads over repeatable leads
+  let nonRepeatableLeads = availableLeads.filter(lead => !lead.isRepeatable)
+  if (nonRepeatableLeads.length > 0):
+    return pickAtRandom(nonRepeatableLeads)
+  
+  // If no non-repeatable leads, pick from repeatable leads
+  return pickAtRandom(availableLeads)
+}
+
+function selectBestAgentForInvestigation() {
+  // Ready agents are Available or in training
+  let readyAgents = getReadyAgents()
+  // Filter out agents with exhaustion >= 5%
+  let eligibleAgents = readyAgents.filter(agent => agent.exhaustion < 0.05)
+  // Pick agent with lowest exhaustion, randomly if tied
+  let selectedAgent = pickAtRandomFromLowestExhaustion(eligibleAgents)
+  return selectedAgent
 }
 ```
 
