@@ -202,6 +202,9 @@ export default plugTypescriptEslint.config([
       // I like ternaries
       // https://eslint.org/docs/latest/rules/no-ternary
       'no-ternary': 'off',
+      // Turned off to not interfere with AI agent.
+      // https://eslint.org/docs/latest/rules/no-continue
+      'no-continue': 'off',
       // Omitting curly braces is sometimes more readable.
       // https://eslint.org/docs/latest/rules/curly
       curly: 'off',

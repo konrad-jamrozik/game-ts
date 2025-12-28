@@ -50,7 +50,7 @@
         "no-constant-binary-expression": "error",
         "no-constant-condition": "error",
         "no-constructor-return": "error",
-        "no-continue": "error",
+        "no-continue": "off",
         "no-control-regex": "error",
         "no-debugger": "error",
         "no-delete-var": "error",
