@@ -109,7 +109,7 @@ In [`web/src/components/GameControls/PlayerActions.tsx`](web/src/components/Game
 
 In [`web/src/ai/intellects/basicIntellect.ts`](web/src/ai/intellects/basicIntellect.ts):
 
-- Remove `import { store }` 
+- Remove `import { store }`
 - Remove `getAiState()` function - use `api.aiState` instead
 - Replace `store.dispatch(incrementActual...)` with `api.incrementActual...()`
 - Replace `store.dispatch(increaseDesiredCounts())` with `api.increaseDesiredCounts()`
@@ -117,7 +117,3 @@ In [`web/src/ai/intellects/basicIntellect.ts`](web/src/ai/intellects/basicIntell
 ### 6. Update handleInvestigateLead.ts
 
 In [`web/src/components/GameControls/handleInvestigateLead.ts`](web/src/components/GameControls/handleInvestigateLead.ts):
-
-- Update type annotation from `PlayTurnAPI` to `PlayerActionsAPI`
-
-## Result
