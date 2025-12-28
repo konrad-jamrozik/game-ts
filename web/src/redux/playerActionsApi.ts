@@ -1,4 +1,3 @@
-import { store } from './store'
 import {
   hireAgent,
   sackAgents,
@@ -28,8 +27,9 @@ import {
 } from '../lib/model_utils/validatePlayerActions'
 import { assertTrue } from '../lib/primitives/assertPrimitives'
 import type { GameState } from '../lib/model/gameStateModel'
+import type { AppDispatch } from './store'
 
-export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActionsAPI {
+export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: boolean }): PlayerActionsAPI {
   const strict = options?.strict ?? false
 
   const api: PlayerActionsAPI = {
@@ -38,7 +38,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateHireAgent(gameState)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(hireAgent())
+      dispatch(hireAgent())
       return { success: true }
     },
 
@@ -47,7 +47,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateSackAgents(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(sackAgents(agentIds))
+      dispatch(sackAgents(agentIds))
       return { success: true }
     },
 
@@ -56,7 +56,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateAssignToContracting(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(assignAgentsToContracting(agentIds))
+      dispatch(assignAgentsToContracting(agentIds))
       return { success: true }
     },
 
@@ -65,7 +65,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateAssignToTraining(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(assignAgentsToTraining(agentIds))
+      dispatch(assignAgentsToTraining(agentIds))
       return { success: true }
     },
 
@@ -74,7 +74,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateRecallAgents(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(recallAgents(agentIds))
+      dispatch(recallAgents(agentIds))
       return { success: true }
     },
 
@@ -83,7 +83,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateStartLeadInvestigation(gameState, params.agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(startLeadInvestigation(params))
+      dispatch(startLeadInvestigation(params))
       return { success: true }
     },
 
@@ -100,7 +100,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateAddAgentsToInvestigation(gameState, params.agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(addAgentsToInvestigation(params))
+      dispatch(addAgentsToInvestigation(params))
       return { success: true }
     },
 
@@ -114,7 +114,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateDeployAgents(gameState, params.missionId, params.agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(deployAgentsToMission(params))
+      dispatch(deployAgentsToMission(params))
       return { success: true }
     },
 
@@ -123,7 +123,7 @@ export function getPlayerActionsApi(options?: { strict?: boolean }): PlayerActio
       const validation = validateBuyUpgrade(gameState, upgradeName)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
-      store.dispatch(buyUpgrade(upgradeName))
+      dispatch(buyUpgrade(upgradeName))
       return { success: true }
     },
   }

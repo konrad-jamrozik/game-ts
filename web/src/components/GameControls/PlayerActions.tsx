@@ -25,7 +25,7 @@ export function PlayerActions(): React.JSX.Element {
   const [alertMessage, setAlertMessage] = React.useState('')
 
   const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
-  const api = getPlayerActionsApi()
+  const api = getPlayerActionsApi(dispatch)
 
   function handleHireAgent(): void {
     const result = api.hireAgent(gameState)

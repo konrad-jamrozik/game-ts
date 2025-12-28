@@ -1,4 +1,4 @@
-import { store } from './store'
+import type { Store } from '@reduxjs/toolkit'
 import {
   incrementActualWeaponDamageUpgrades,
   incrementActualTrainingSkillGainUpgrades,
@@ -12,16 +12,17 @@ import type { UpgradeName } from '../lib/data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 import type { GameState } from '../lib/model/gameStateModel'
 import { getPlayerActionsApi } from './playerActionsApi'
+import type { RootState } from './rootReducer'
 
-export function getPlayTurnApi(options?: { strict?: boolean }): PlayTurnAPI {
+export function getPlayTurnApi(store: Store<RootState>, options?: { strict?: boolean }): PlayTurnAPI {
   const strict = options?.strict ?? false
 
-  const initialGameState = getCurrentGameState()
-  const baseApi = getPlayerActionsApi({ strict })
+  const initialGameState = getCurrentGameState(store)
+  const baseApi = getPlayerActionsApi(store.dispatch, { strict })
 
   const api: PlayTurnAPI = {
     gameState: initialGameState,
-    aiState: getCurrentAiState(),
+    aiState: getCurrentAiState(store),
 
     hireAgent(): ActionResult {
       const result = baseApi.hireAgent(api.gameState)
@@ -122,17 +123,17 @@ export function getPlayTurnApi(options?: { strict?: boolean }): PlayTurnAPI {
   }
 
   function updateGameState(): void {
-    api.gameState = getCurrentGameState()
+    api.gameState = getCurrentGameState(store)
   }
 
   function updateAiState(): void {
-    api.aiState = getCurrentAiState()
+    api.aiState = getCurrentAiState(store)
   }
 
   return api
 }
 
-function getCurrentAiState(): BasicIntellectState {
+function getCurrentAiState(store: Store<RootState>): BasicIntellectState {
   const rootState = store.getState()
   const present = rootState.undoable.present
   if (!('aiState' in present)) {
@@ -141,6 +142,6 @@ function getCurrentAiState(): BasicIntellectState {
   return present.aiState
 }
 
-function getCurrentGameState(): GameState {
+function getCurrentGameState(store: Store<RootState>): GameState {
   return store.getState().undoable.present.gameState
 }
