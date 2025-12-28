@@ -4,13 +4,13 @@ overview: Implement a `delegateTurnsToAIPlayer` function that executes multiple 
 todos:
   - id: delegate-turns-fn
     content: Implement delegateTurnsToAIPlayer function with loop and stop conditions
-    status: pending
+    status: completed
   - id: number-field-ui
     content: Add Base UI Number Field and Delegate N turns button to AIPlayerSection
-    status: pending
+    status: completed
   - id: verify
     content: Run qcheck to verify changes
-    status: pending
+    status: completed
     dependencies:
       - delegate-turns-fn
       - number-field-ui
@@ -77,5 +77,3 @@ Component anatomy from Base UI docs:
 ```
 
 Key props to use:
-
-- `defaultValue={1}` - Start with 1 turn

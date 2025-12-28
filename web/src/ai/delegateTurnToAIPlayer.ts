@@ -18,3 +18,17 @@ export function delegateTurnToAIPlayer(intellectName: string): void {
     }
   }
 }
+
+export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
+  for (let i = 0; i < turnCount; i += 1) {
+    const currentState = store.getState().undoable.present.gameState
+    if (isGameOver(currentState) || isGameWon(currentState)) {
+      break
+    }
+    delegateTurnToAIPlayer(intellectName)
+    const afterState = store.getState().undoable.present.gameState
+    if (!isGameOver(afterState) && !isGameWon(afterState)) {
+      store.dispatch(advanceTurn())
+    }
+  }
+}
