@@ -1,4 +1,5 @@
-import type { AIPlayerIntellect, PlayTurnAPI } from '../types'
+import type { AIPlayerIntellect } from '../types'
+import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
 
 export const doNothingIntellect: AIPlayerIntellect = {
   name: 'Do Nothing',

@@ -1,8 +1,8 @@
 import { store } from '../redux/store'
 import { advanceTurn } from '../redux/slices/gameStateSlice'
+import { getPlayTurnApi } from '../redux/playTurnApi'
 import { isGameOver, isGameWon } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
-import { getPlayTurnApi } from './playTurnApi'
 
 export function delegateTurnToAIPlayer(intellectName: string): void {
   const intellect = getIntellect(intellectName)

@@ -71,5 +71,3 @@ Split the current "Assets" card (which contains both AssetsDataGrid and Capabili
 
 - Delete `web/src/components/Assets/AssetsAndCapabCard.tsx` (no longer used)
 - Delete `web/src/components/Assets/CapabilitiesDataGrid.tsx` (replaced by CapacitiesDataGrid and UpgradesDataGrid)
-
-## Implementation Details

@@ -1,4 +1,5 @@
-import type { AIPlayerIntellect, PlayTurnAPI } from '../types'
+import type { AIPlayerIntellect } from '../types'
+import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
 import type { Agent } from '../../lib/model/agentModel'
 import type { Mission } from '../../lib/model/missionModel'
 import type { Lead } from '../../lib/model/leadModel'

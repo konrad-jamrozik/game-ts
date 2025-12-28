@@ -65,6 +65,7 @@ graph TD
         RdxMid[rdx/eventsMiddleware.ts]
         RdxSli[rdx/slices]
         RdxRed[rdx/reducers]
+        RdxPlayTurnApi[rdx/playTurnApi.ts]
     end
 
     subgraph "web/src/ai"
@@ -90,10 +91,14 @@ graph TD
     CompErr --> Comp__
     Comp__ --> RdxHook
     Comp__ --> RdxSel
+    Comp__ --> RdxPlayTurnApi
     Comp__ --> CompTheme
     Comp__ --> LibGam
     Comp__ --> Ai
+    Ai --> RdxPlayTurnApi
     Ai --> LibGam
+    RdxPlayTurnApi --> RdxStore
+    RdxPlayTurnApi --> RdxSli
     CompSt --> LibMod
     RdxStore --> RdxMid
     RdxMid --> RdxSli
@@ -129,6 +134,11 @@ graph TD
         RdxSli[rdx/slices]
         RdxHook[rdx/hooks.ts]
         RdxSel[rdx/selectors]
+        RdxPlayTurnApi[rdx/playTurnApi.ts]
+    end
+
+    subgraph "web/src/ai"
+        Ai[ai]
     end
 
     subgraph "web/src/lib"
@@ -138,6 +148,10 @@ graph TD
 
     Comp --> RdxHook
     Comp --> RdxSel
+    Comp --> RdxPlayTurnApi
+    Ai --> RdxPlayTurnApi
+    RdxPlayTurnApi --> RdxStore
+    RdxPlayTurnApi --> RdxSli
     RdxStore --> RdxRedu
     RdxStore --> RdxEvt
     RdxStore --> RdxPers

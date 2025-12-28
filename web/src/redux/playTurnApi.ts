@@ -1,4 +1,4 @@
-import { store } from '../redux/store'
+import { store } from './store'
 import {
   hireAgent,
   sackAgents,
@@ -9,9 +9,9 @@ import {
   addAgentsToInvestigation,
   deployAgentsToMission,
   buyUpgrade,
-} from '../redux/slices/gameStateSlice'
+} from './slices/gameStateSlice'
 import type { UpgradeName } from '../lib/data_tables/upgrades'
-import type { PlayTurnAPI } from './types'
+import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 
 export function getPlayTurnApi(): PlayTurnAPI {

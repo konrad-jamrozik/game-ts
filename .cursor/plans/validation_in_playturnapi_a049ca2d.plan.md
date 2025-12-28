@@ -3,7 +3,7 @@ name: Validation in PlayTurnAPI
 overview: Move validation logic from PlayerActions.tsx into PlayTurnAPI, making it the canonical validation layer for all player actions (both UI and AI). API methods will validate before dispatching and return success/error results.
 todos:
   - id: types
-    content: Update PlayTurnAPI type in types.ts with ActionResult return type
+    content: Update PlayTurnAPI type in playTurnApiTypes.ts with ActionResult return type
     status: pending
   - id: validate-funcs
     content: Create validatePlayerActions.ts with consolidated validation functions
@@ -74,7 +74,7 @@ flowchart LR
 
 ## Files to Modify
 
-### 1. [web/src/ai/types.ts](web/src/ai/types.ts)
+### 1. [web/src/lib/model_utils/playTurnApiTypes.ts](web/src/lib/model_utils/playTurnApiTypes.ts)
 
 Update `PlayTurnAPI` type to return validation results:
 
@@ -104,7 +104,7 @@ Consolidate all validation logic into pure functions. Move/extract from `PlayerA
 - `validateBuyUpgrade(gameState, upgradeName)` - checks money
 - etc.
 
-### 3. [web/src/ai/playTurnApi.ts](web/src/ai/playTurnApi.ts)
+### 3. [web/src/redux/playTurnApi.ts](web/src/redux/playTurnApi.ts)
 
 Add validation before each dispatch:
 
@@ -141,3 +141,14 @@ function handleHireAgent(): void {
 
 
 ### 5. [web/src/components/GameControls/handleInvestigateLead.ts](web/src/components/GameControls/handleInvestigateLead.ts)
+
+Refactor to use `PlayTurnAPI` for lead investigation actions.
+
+## Dependency Compliance
+
+Per [about_code_dependencies.md](docs/design/about_code_dependencies.md):
+
+- `playTurnApi.ts` is now in `redux/` directory (can depend on redux store and slices)
+- `PlayTurnAPI` type is in `lib/model_utils/playTurnApiTypes.ts` (can import from `lib/data_tables/` and `lib/model/`)
+- `Comp__ --> RdxPlayTurnApi` allows `PlayerActions.tsx` to import from `redux/playTurnApi.ts`
+- `Ai --> RdxPlayTurnApi` allows AI code to import from `redux/playTurnApi.ts`
