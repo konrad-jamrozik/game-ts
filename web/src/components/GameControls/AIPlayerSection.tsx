@@ -7,7 +7,6 @@ import MenuItem from '@mui/material/MenuItem'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { NumberField } from '@base-ui/react/number-field'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
@@ -17,6 +16,7 @@ import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../../redux/slices/selectionSlice'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
+import { NumberField } from './NumberField'
 
 export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -97,7 +97,7 @@ export function AIPlayerSection(): React.JSX.Element {
         <Button variant="contained" onClick={handleDelegateToAI} disabled={isButtonDisabled} fullWidth>
           Delegate to AI
         </Button>
-        <NumberField.Root
+        <NumberField
           value={aiTurnCount}
           onValueChange={handleTurnCountChange}
           min={1}
@@ -105,61 +105,7 @@ export function AIPlayerSection(): React.JSX.Element {
           style={{
             width: '100%',
           }}
-        >
-          <NumberField.Group
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              border: '1px solid rgba(0, 0, 0, 0.23)',
-              borderRadius: '4px',
-              overflow: 'hidden',
-            }}
-          >
-            <NumberField.Decrement
-              style={{
-                border: 'none',
-                background: 'transparent',
-                padding: '8px 12px',
-                cursor: 'pointer',
-                fontSize: '1.25rem',
-                lineHeight: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: '40px',
-              }}
-            >
-              −
-            </NumberField.Decrement>
-            <NumberField.Input
-              style={{
-                flex: 1,
-                border: 'none',
-                outline: 'none',
-                padding: '12px 8px',
-                fontSize: '1rem',
-                textAlign: 'center',
-                minWidth: 0,
-              }}
-            />
-            <NumberField.Increment
-              style={{
-                border: 'none',
-                background: 'transparent',
-                padding: '8px 12px',
-                cursor: 'pointer',
-                fontSize: '1.25rem',
-                lineHeight: 1,
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                minWidth: '40px',
-              }}
-            >
-              +
-            </NumberField.Increment>
-          </NumberField.Group>
-        </NumberField.Root>
+        />
         <Button variant="contained" onClick={handleDelegateTurnsToAI} disabled={isButtonDisabled} fullWidth>
           Delegate {aiTurnCount} turn{aiTurnCount !== 1 ? 's' : ''} to AI
         </Button>
