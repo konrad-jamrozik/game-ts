@@ -580,92 +580,101 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hire
 }
 
 function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
-  // Execute the purchase
-  if (priority === 'hireAgent') {
-    api.hireAgent()
-  } else {
-    api.buyUpgrade(priority)
-    // Track actual upgrade counts (caps are tracked via game state, not here)
-    switch (priority) {
-      case 'Weapon damage':
-        basicIntellectState.actualWeaponDamageUpgrades += 1
-        break
-      case 'Training skill gain':
-        basicIntellectState.actualTrainingSkillGainUpgrades += 1
-        break
-      case 'Exhaustion recovery':
-        basicIntellectState.actualExhaustionRecoveryUpgrades += 1
-        break
-      case 'Hit points recovery %':
-        basicIntellectState.actualHitPointsRecoveryUpgrades += 1
-        break
-      case 'Agent cap':
-      case 'Transport cap':
-      case 'Training cap':
-        // Cap upgrades are tracked via game state, not in basicIntellectState
-        break
-    }
-  }
+  executePurchase(api, priority)
 
   const { gameState: gameStateAfter } = api
 
-  // KJA1 move it into its own function
-  // Check if all desired counts are met
-  const actualAgentCount = notTerminated(gameStateAfter.agents).length
-  const allDesiredCountsMet =
+  if (areAllDesiredCountsMet(gameStateAfter)) {
+    const stateBeforeIncrease = { ...basicIntellectState }
+    increaseSomeDesiredCount()
+    logBuyResult(priority, stateBeforeIncrease)
+  } else {
+    logBuyResult(priority)
+  }
+}
+
+function executePurchase(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
+  if (priority === 'hireAgent') {
+    api.hireAgent()
+    return
+  }
+
+  api.buyUpgrade(priority)
+  // Track actual upgrade counts (caps are tracked via game state, not here)
+  switch (priority) {
+    case 'Weapon damage':
+      basicIntellectState.actualWeaponDamageUpgrades += 1
+      break
+    case 'Training skill gain':
+      basicIntellectState.actualTrainingSkillGainUpgrades += 1
+      break
+    case 'Exhaustion recovery':
+      basicIntellectState.actualExhaustionRecoveryUpgrades += 1
+      break
+    case 'Hit points recovery %':
+      basicIntellectState.actualHitPointsRecoveryUpgrades += 1
+      break
+    case 'Agent cap':
+    case 'Transport cap':
+    case 'Training cap':
+      // Cap upgrades are tracked via game state, not in basicIntellectState
+      break
+  }
+}
+
+function areAllDesiredCountsMet(gameState: GameState): boolean {
+  const actualAgentCount = notTerminated(gameState.agents).length
+  return (
     actualAgentCount >= basicIntellectState.desiredAgentCount &&
-    gameStateAfter.agentCap >= basicIntellectState.desiredAgentCap &&
-    gameStateAfter.transportCap >= basicIntellectState.desiredTransportCap &&
-    gameStateAfter.trainingCap >= basicIntellectState.desiredTrainingCap &&
+    gameState.agentCap >= basicIntellectState.desiredAgentCap &&
+    gameState.transportCap >= basicIntellectState.desiredTransportCap &&
+    gameState.trainingCap >= basicIntellectState.desiredTrainingCap &&
     basicIntellectState.actualWeaponDamageUpgrades >= basicIntellectState.desiredWeaponDamageUpgrades &&
     basicIntellectState.actualTrainingSkillGainUpgrades >= basicIntellectState.desiredTrainingSkillGainUpgrades &&
     basicIntellectState.actualExhaustionRecoveryUpgrades >= basicIntellectState.desiredExhaustionRecoveryUpgrades &&
     basicIntellectState.actualHitPointsRecoveryUpgrades >= basicIntellectState.desiredHitPointsRecoveryUpgrades
+  )
+}
 
-  let increaseMessage: string
-
-  if (allDesiredCountsMet) {
-    // Store state before increase for logging
-    const stateBeforeIncrease = { ...basicIntellectState }
-    increaseSomeDesiredCount()
-
-    // KJA1 move the message construction and logging into appropriate log function
-    // Determine what was increased
-    if (basicIntellectState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
-      increaseMessage = `Increased desired agents to ${basicIntellectState.desiredAgentCount}`
-    } else if (basicIntellectState.desiredAgentCap > stateBeforeIncrease.desiredAgentCap) {
-      increaseMessage = `Increased desired agentCap to ${basicIntellectState.desiredAgentCap}`
-    } else if (basicIntellectState.desiredTransportCap > stateBeforeIncrease.desiredTransportCap) {
-      increaseMessage = `Increased desired transportCap to ${basicIntellectState.desiredTransportCap}`
-    } else if (basicIntellectState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
-      increaseMessage = `Increased desired trainingCap to ${basicIntellectState.desiredTrainingCap}`
-    } else if (basicIntellectState.desiredWeaponDamageUpgrades > stateBeforeIncrease.desiredWeaponDamageUpgrades) {
-      increaseMessage = `Increased desired weaponDamageUpgrades to ${basicIntellectState.desiredWeaponDamageUpgrades}`
-    } else if (
-      basicIntellectState.desiredTrainingSkillGainUpgrades > stateBeforeIncrease.desiredTrainingSkillGainUpgrades
-    ) {
-      increaseMessage = `Increased desired trainingSkillGainUpgrades to ${basicIntellectState.desiredTrainingSkillGainUpgrades}`
-    } else if (
-      basicIntellectState.desiredExhaustionRecoveryUpgrades > stateBeforeIncrease.desiredExhaustionRecoveryUpgrades
-    ) {
-      increaseMessage = `Increased desired exhaustionRecoveryUpgrades to ${basicIntellectState.desiredExhaustionRecoveryUpgrades}`
-    } else if (
-      basicIntellectState.desiredHitPointsRecoveryUpgrades > stateBeforeIncrease.desiredHitPointsRecoveryUpgrades
-    ) {
-      increaseMessage = `Increased desired hitPointsRecoveryUpgrades to ${basicIntellectState.desiredHitPointsRecoveryUpgrades}`
-    } else {
-      increaseMessage = 'No increase (goals not yet met)'
-    }
-  } else {
-    increaseMessage = 'No increase (goals not yet met)'
-  }
-
-  // Log purchase and state
+function logBuyResult(priority: UpgradeName | 'hireAgent', stateBeforeIncrease?: BasicIntellectState): void {
   const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
+  const increaseMessage = getIncreaseMessage(stateBeforeIncrease)
 
   console.log(
     `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${basicIntellectState.desiredAgentCount}, agentCap=${basicIntellectState.desiredAgentCap}, transportCap=${basicIntellectState.desiredTransportCap}, trainingCap=${basicIntellectState.desiredTrainingCap}, weaponDamageUpgrades=${basicIntellectState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${basicIntellectState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${basicIntellectState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${basicIntellectState.desiredHitPointsRecoveryUpgrades}`,
   )
+}
+
+function getIncreaseMessage(stateBeforeIncrease?: BasicIntellectState): string {
+  if (stateBeforeIncrease === undefined) {
+    return 'No increase (goals not yet met)'
+  }
+
+  if (basicIntellectState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
+    return `Increased desired agents to ${basicIntellectState.desiredAgentCount}`
+  }
+  if (basicIntellectState.desiredAgentCap > stateBeforeIncrease.desiredAgentCap) {
+    return `Increased desired agentCap to ${basicIntellectState.desiredAgentCap}`
+  }
+  if (basicIntellectState.desiredTransportCap > stateBeforeIncrease.desiredTransportCap) {
+    return `Increased desired transportCap to ${basicIntellectState.desiredTransportCap}`
+  }
+  if (basicIntellectState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
+    return `Increased desired trainingCap to ${basicIntellectState.desiredTrainingCap}`
+  }
+  if (basicIntellectState.desiredWeaponDamageUpgrades > stateBeforeIncrease.desiredWeaponDamageUpgrades) {
+    return `Increased desired weaponDamageUpgrades to ${basicIntellectState.desiredWeaponDamageUpgrades}`
+  }
+  if (basicIntellectState.desiredTrainingSkillGainUpgrades > stateBeforeIncrease.desiredTrainingSkillGainUpgrades) {
+    return `Increased desired trainingSkillGainUpgrades to ${basicIntellectState.desiredTrainingSkillGainUpgrades}`
+  }
+  if (basicIntellectState.desiredExhaustionRecoveryUpgrades > stateBeforeIncrease.desiredExhaustionRecoveryUpgrades) {
+    return `Increased desired exhaustionRecoveryUpgrades to ${basicIntellectState.desiredExhaustionRecoveryUpgrades}`
+  }
+  if (basicIntellectState.desiredHitPointsRecoveryUpgrades > stateBeforeIncrease.desiredHitPointsRecoveryUpgrades) {
+    return `Increased desired hitPointsRecoveryUpgrades to ${basicIntellectState.desiredHitPointsRecoveryUpgrades}`
+  }
+  return 'No change detected'
 }
 
 // Helper functions

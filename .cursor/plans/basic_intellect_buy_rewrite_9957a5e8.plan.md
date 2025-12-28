@@ -4,22 +4,22 @@ overview: Rewrite the basic intellect's purchasing logic to track desired counts
 todos:
   - id: state-model
     content: Add BasicIntellectState type and module-level state variable with initialization
-    status: pending
+    status: completed
   - id: reset-function
     content: Create resetBasicIntellectState() (runs weighted random to set first goal) and getBasicIntellectState()
-    status: pending
+    status: completed
   - id: compute-priority
     content: Rewrite computeNextBuyPriority() to use state.desiredX counts
-    status: pending
+    status: completed
   - id: buy-function
     content: Rewrite buy() with weighted randomization and logging
-    status: pending
+    status: completed
   - id: cleanup
     content: Remove old computeDesiredXCount() and shouldBuyX() functions
-    status: pending
+    status: completed
   - id: reset-hook
     content: Call resetBasicIntellectState() from ResetControls.tsx
-    status: pending
+    status: completed
 ---
 
 # Rewrite Basic Intellect Buy Priority System
