@@ -87,37 +87,54 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
     return
   }
 
-  // Weighted random (if no priority pick)
+  // Calculate sum of all purchased upgrades (excluding caps)
+  const sumTotalAllAlreadyPurchasedUpgraded =
+    state.actualWeaponDamageUpgrades +
+    state.actualTrainingSkillGainUpgrades +
+    state.actualExhaustionRecoveryUpgrades +
+    state.actualHitPointsRecoveryUpgrades
+
+  // Always roll for desiredAgentCount if condition is met
+  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 2) {
+    increaseDesiredAgentCount(state)
+    return
+  }
+
+  // Weighted random (if no priority pick and condition not met)
   // Agents: 50%, Weapon damage: 12.5%, Training skill gain: 12.5%,
   // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
   const random = Math.random()
 
-  if (random < 0.8) {
-    // Special case: if picked agents but at cap, increase agent cap instead
-    if (state.desiredAgentCount === state.desiredAgentCap) {
-      state.desiredAgentCap += 1
-      return
-    }
-    state.desiredAgentCount += 1
+  if (random < 0.5) {
+    increaseDesiredAgentCount(state)
     return
   }
 
-  if (random < 0.85) {
+  if (random < 0.625) {
     state.desiredWeaponDamageUpgrades += 1
     return
   }
 
-  if (random < 0.9) {
+  if (random < 0.75) {
     state.desiredTrainingSkillGainUpgrades += 1
     return
   }
 
-  if (random < 0.95) {
+  if (random < 0.875) {
     state.desiredExhaustionRecoveryUpgrades += 1
     return
   }
 
   state.desiredHitPointsRecoveryUpgrades += 1
+}
+
+function increaseDesiredAgentCount(state: BasicIntellectState): void {
+  // Special case: if at cap, increase agent cap instead
+  if (state.desiredAgentCount === state.desiredAgentCap) {
+    state.desiredAgentCap += 1
+    return
+  }
+  state.desiredAgentCount += 1
 }
 
 export const {
