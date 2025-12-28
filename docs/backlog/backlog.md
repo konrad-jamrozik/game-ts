@@ -4,6 +4,14 @@ KJA backlog:
 
 # Current milestone
 
+- Fix all the remaining inline todos
+- Fix the charts display
+- Fix column spacing for agents stats etc.
+- Problem: battle ratio is computed based on skill and hp, instead of threat
+  - AI player constantly loses harder offensive missions because of it
+  - Also add constraint to have at least 1 agent for 5 enemies or so
+- Agents stats view sorting by skill is busted. Shows as max 966 skill instead of 1958
+
 # P0 Game mechanics
 
 - At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
