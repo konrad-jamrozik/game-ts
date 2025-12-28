@@ -30,7 +30,7 @@
     "test:cov": "vitest --coverage",
     "test:uicov": "vitest --ui --coverage.enabled=true",
     "depcruise": "depcruise src test --config .dependency-cruiser.js",
-    "qcheck": "npm run oxlint && npm run depcruise && npm run tsc && npm run test",
+    "qcheck": "npm run oxlint && npm run depcruise && npm run tsc",
     "check": "npm run format && npm run oxlint && npm run eslint:cached && npm run depcruise && npm run build && npm run test:all"
   },
   "dependencies": {
