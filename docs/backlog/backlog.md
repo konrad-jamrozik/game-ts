@@ -4,37 +4,6 @@ KJA backlog:
 
 # Current milestone
 
-So the situation with state management for basicIntellect is funny. First off, it uses store directly instead of through hook, e.g.:
-
-  // KJA1 can I just useAppSelector() hook? But the point is that basic intellect is not a react component
-  const rootState = store.getState()
-  // aiState is guaranteed to exist because it's part of the combinedReducer in rootReducer.ts
-  const present = rootState.undoable.present
-
-It also obtains updated game state in funny way:
-
-    // Check if there's an existing investigation for this lead
-    // Re-read gameState to get the latest state after previous API calls
-    const { gameState: currentGameState } = api
-    const { leadInvestigations: currentLeadInvestigations } = currentGameState
-
-And there is also this sus usage:
-
-  // KJA1 is this useMemo needed? Probably not
-  const api = React.useMemo(() => getPlayTurnApi(), [])
-
-And overall the usage of "api" is weird, as it uses store directly instead of through hook.
-
-Can I simply make the intellect use standard hooks and patterns for state?
-
-I am not sure about it because:
-
-- the intellect is not a react component
-
-- the intellect should be able to invoke multiple actions without any need to rerender anything.
-Basically as long as the intellect.playTurn function executes and dispatched player actions and gets updated
-game state, react should not rerender anything.
-
 # P0 Game mechanics
 
 - At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
