@@ -14,9 +14,40 @@ import { filterMissionsByState, getRemainingTransportCap } from '../../lib/model
 import { dataTables } from '../../lib/data_tables/dataTables'
 import { f6mult, toF } from '../../lib/primitives/fixed6'
 import { initialAgent } from '../../lib/factories/agentFactory'
-import { AGENT_CONTRACTING_INCOME, AGENT_HIRE_COST } from '../../lib/data_tables/constants'
+import {
+  AGENT_CAP,
+  AGENT_CONTRACTING_INCOME,
+  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
+  AGENT_HIRE_COST,
+  AGENT_HIT_POINTS_RECOVERY_PCT,
+  TRAINING_CAP,
+  TRAINING_SKILL_GAIN,
+  TRANSPORT_CAP,
+} from '../../lib/data_tables/constants'
+import { initialWeapon } from '../../lib/factories/weaponFactory'
+import { initialGameState } from '../../lib/factories/gameStateFactory'
 
 const REQUIRED_TURNS_OF_SAVINGS = 5
+
+type BasicIntellectState = {
+  desiredAgentCount: number
+  desiredAgentCap: number
+  desiredTransportCap: number
+  desiredTrainingCap: number
+  desiredWeaponDamage: number
+  desiredTrainingSkillGain: number
+  desiredExhaustionRecovery: number
+  desiredHitPointsRecoveryPct: number
+}
+
+// KJA1 this won't be persisted to indexedDB.
+// But should this be part of the redux store? Or separate key in indexedDB?
+let basicIntellectState: BasicIntellectState
+
+export function resetBasicIntellectState(): void {
+  basicIntellectState = createInitialState()
+  increaseSomeDesiredCount()
+}
 
 // KJA got error: Error: Lead lead-black-lotus-member already has an active investigation
 export const basicIntellect: AIPlayerIntellect = {
@@ -474,7 +505,7 @@ function selectNextBestReadyAgent(
 
 function spendMoney(api: PlayTurnAPI): void {
   let priority = computeNextBuyPriority(api)
-  while (priority !== undefined && hasSufficientMoneyToBuy(api, priority)) {
+  while (hasSufficientMoneyToBuy(api, priority)) {
     buy(api, priority)
     priority = computeNextBuyPriority(api)
   }
@@ -488,134 +519,46 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return requiredSavings
 }
 
-// KJA2 rewrite "computeNextBuyPriority" and "buy" so it works like that:
-// Keeps track of total number of "desired agents count", "desired transport cap upgrade count" etc.
-// Notably the "desired agents count" starts with being set to the initial agent count.
-// Then each time a purchase is made, and not all desired counts are met,
-// the AI randomizes with some weights increase of one of the desired counts by one.
-// Then AI looks how much below it is compared with current count vs desired.
-// For upgrades it will be always 1 less than desired for exactly one upgrade, but with agents
-// it may be more, if agents were KIA.
-// It always prioritizes bringing agents to desired count, before bringing any other counts to desired.
-// Furthermore, if it randomizes "hire agent" but at already at the agent cap, then instead it
-// increases the desired agent cap by 1.
-//
-// Note this means that the basic intellect will need to keep track of the desired counts
-// across invocations to playNextTurn. Initialize the basic intellect state upon app initialization;
-// it should be reset when the "Reset game" button is clicked.
-//
-// Log at the end of "buy" what was bought if any, and if something was bought, what desired count increased.
-// Also always log all the current desired counts.
-function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' | undefined {
+function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
   const { gameState } = api
+  const actualAgentCount = notTerminated(gameState.agents).length
 
   // Priority 1: Buy agents until desired agent count is reached
-  if (shouldBuyAgent(gameState)) {
-    if (canHireAgent(gameState)) {
-      return 'hireAgent'
-    }
+  if (actualAgentCount < basicIntellectState.desiredAgentCount) {
+    // KJA1 assert here that desiredAgentCount <= agentCap
+    return 'hireAgent'
+  }
+
+  // Priority 2: Buy agent cap if below desired
+  if (gameState.agentCap < basicIntellectState.desiredAgentCap) {
     return 'Agent cap'
   }
 
-  // Priority 2: Buy transport capacity until desired transport capacity is reached
-  if (shouldBuyTransportCapacity(gameState)) {
+  // Find the one cap/upgrade where actual < desired
+  // KJA1 assert here that exactly one desired cap is exactly 1 above actual
+  if (gameState.transportCap < basicIntellectState.desiredTransportCap) {
     return 'Transport cap'
   }
-
-  // Priority 3: Buy training capacity until desired training capacity is reached
-  if (shouldBuyTrainingCapacity(gameState)) {
+  if (gameState.trainingCap < basicIntellectState.desiredTrainingCap) {
     return 'Training cap'
   }
-
-  // Priority 4: Buy agent effectiveness capabilities until desired agent effectiveness is reached
-  if (shouldBuyWeaponDamage(gameState)) {
+  if (gameState.weaponDamage < basicIntellectState.desiredWeaponDamage) {
     return 'Weapon damage'
   }
-  if (shouldBuyTrainingSkillGain(gameState)) {
+  // KJA1 BUG these are wrong. What is actually desired is "the count of upgrades bought" not the actual value. So no Fixed6.
+  if (toF(gameState.trainingSkillGain) < basicIntellectState.desiredTrainingSkillGain) {
     return 'Training skill gain'
   }
-  if (shouldBuyExhaustionRecovery(gameState)) {
+  if (toF(gameState.exhaustionRecovery) < basicIntellectState.desiredExhaustionRecovery) {
     return 'Exhaustion recovery'
   }
-  if (shouldBuyHitPointsRecovery(gameState)) {
+  if (toF(gameState.hitPointsRecoveryPct) < basicIntellectState.desiredHitPointsRecoveryPct) {
     return 'Hit points recovery %'
   }
 
-  return undefined
-}
-
-function shouldBuyAgent(gameState: GameState): boolean {
-  const desiredAgentCount = computeDesiredAgentCount(gameState)
-  const actualAgentCount = notTerminated(gameState.agents).length
-  return actualAgentCount < desiredAgentCount
-}
-
-function canHireAgent(gameState: GameState): boolean {
-  const currentAgentCount = notTerminated(gameState.agents).length
-  return currentAgentCount < gameState.agentCap
-}
-
-function computeDesiredAgentCount(gameState: GameState): number {
-  const turnNumber = gameState.turn
-  return 4 + Math.floor((turnNumber - 1) / 4)
-}
-
-function shouldBuyTransportCapacity(gameState: GameState): boolean {
-  const desiredAgentCount = computeDesiredAgentCount(gameState)
-  const desiredTransportCapacity = Math.floor(desiredAgentCount * 0.5)
-  const actualTransportCapacity = gameState.transportCap
-  return actualTransportCapacity < desiredTransportCapacity
-}
-
-function shouldBuyTrainingCapacity(gameState: GameState): boolean {
-  const desiredAgentCount = computeDesiredAgentCount(gameState)
-  const desiredTrainingCapacity = Math.floor(desiredAgentCount * 0.6)
-  const actualTrainingCapacity = gameState.trainingCap
-  return actualTrainingCapacity < desiredTrainingCapacity
-}
-
-function shouldBuyWeaponDamage(gameState: GameState): boolean {
-  const desiredLevel = computeDesiredWeaponDamageLevel(gameState)
-  const actualLevel = gameState.weaponDamage
-  return actualLevel < desiredLevel
-}
-
-function shouldBuyTrainingSkillGain(gameState: GameState): boolean {
-  const desiredLevel = computeDesiredTrainingSkillGainLevel(gameState)
-  const actualLevel = toF(gameState.trainingSkillGain)
-  return actualLevel < desiredLevel
-}
-
-function shouldBuyExhaustionRecovery(gameState: GameState): boolean {
-  const desiredLevel = computeDesiredExhaustionRecoveryLevel(gameState)
-  const actualLevel = toF(gameState.exhaustionRecovery)
-  return actualLevel < desiredLevel
-}
-
-function shouldBuyHitPointsRecovery(gameState: GameState): boolean {
-  const desiredLevel = computeDesiredHitPointsRecoveryLevel(gameState)
-  const actualLevel = toF(gameState.hitPointsRecoveryPct)
-  return actualLevel < desiredLevel
-}
-
-function computeDesiredWeaponDamageLevel(gameState: GameState): number {
-  const turnNumber = gameState.turn
-  return Math.floor(turnNumber / 10)
-}
-
-function computeDesiredTrainingSkillGainLevel(gameState: GameState): number {
-  const turnNumber = gameState.turn
-  return Math.floor(turnNumber / 10)
-}
-
-function computeDesiredExhaustionRecoveryLevel(gameState: GameState): number {
-  const turnNumber = gameState.turn
-  return Math.floor(turnNumber / 10)
-}
-
-function computeDesiredHitPointsRecoveryLevel(gameState: GameState): number {
-  const turnNumber = gameState.turn
-  return Math.floor(turnNumber / 10)
+  // This should never happen due to invariants - there's always exactly one goal to pursue
+  // TypeScript requires a return, so we assert this case is unreachable
+  return 'hireAgent' as UpgradeName | 'hireAgent'
 }
 
 function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): boolean {
@@ -635,11 +578,66 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hire
 }
 
 function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
+  // Execute the purchase
   if (priority === 'hireAgent') {
     api.hireAgent()
   } else {
     api.buyUpgrade(priority)
   }
+
+  const { gameState: gameStateAfter } = api
+
+  // KJA1 move it into its own function
+  // Check if all desired counts are met
+  const actualAgentCount = notTerminated(gameStateAfter.agents).length
+  const allDesiredCountsMet =
+    actualAgentCount >= basicIntellectState.desiredAgentCount &&
+    gameStateAfter.agentCap >= basicIntellectState.desiredAgentCap &&
+    gameStateAfter.transportCap >= basicIntellectState.desiredTransportCap &&
+    gameStateAfter.trainingCap >= basicIntellectState.desiredTrainingCap &&
+    gameStateAfter.weaponDamage >= basicIntellectState.desiredWeaponDamage &&
+    toF(gameStateAfter.trainingSkillGain) >= basicIntellectState.desiredTrainingSkillGain &&
+    toF(gameStateAfter.exhaustionRecovery) >= basicIntellectState.desiredExhaustionRecovery &&
+    toF(gameStateAfter.hitPointsRecoveryPct) >= basicIntellectState.desiredHitPointsRecoveryPct
+
+  let increaseMessage: string
+
+  if (allDesiredCountsMet) {
+    // Store state before increase for logging
+    const stateBeforeIncrease = { ...basicIntellectState }
+    increaseSomeDesiredCount()
+
+    // KJA1 move the message construction and logging into appropriate log function
+    // Determine what was increased
+    if (basicIntellectState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
+      increaseMessage = `Increased desired agents to ${basicIntellectState.desiredAgentCount}`
+    } else if (basicIntellectState.desiredAgentCap > stateBeforeIncrease.desiredAgentCap) {
+      increaseMessage = `Increased desired agentCap to ${basicIntellectState.desiredAgentCap}`
+    } else if (basicIntellectState.desiredTransportCap > stateBeforeIncrease.desiredTransportCap) {
+      increaseMessage = `Increased desired transportCap to ${basicIntellectState.desiredTransportCap}`
+    } else if (basicIntellectState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
+      increaseMessage = `Increased desired trainingCap to ${basicIntellectState.desiredTrainingCap}`
+    } else if (basicIntellectState.desiredWeaponDamage > stateBeforeIncrease.desiredWeaponDamage) {
+      increaseMessage = `Increased desired weaponDamage to ${basicIntellectState.desiredWeaponDamage}`
+    } else if (basicIntellectState.desiredTrainingSkillGain > stateBeforeIncrease.desiredTrainingSkillGain) {
+      increaseMessage = `Increased desired trainingSkillGain to ${basicIntellectState.desiredTrainingSkillGain.toFixed(1)}`
+    } else if (basicIntellectState.desiredExhaustionRecovery > stateBeforeIncrease.desiredExhaustionRecovery) {
+      increaseMessage = `Increased desired exhaustionRecovery to ${basicIntellectState.desiredExhaustionRecovery.toFixed(1)}`
+    } else if (basicIntellectState.desiredHitPointsRecoveryPct > stateBeforeIncrease.desiredHitPointsRecoveryPct) {
+      increaseMessage = `Increased desired hitPointsRecoveryPct to ${basicIntellectState.desiredHitPointsRecoveryPct.toFixed(1)}`
+    } else {
+      increaseMessage = 'No increase (goals not yet met)'
+    }
+  } else {
+    increaseMessage = 'No increase (goals not yet met)'
+  }
+
+  // Log purchase and state
+  const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
+
+  console.log(
+    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${basicIntellectState.desiredAgentCount}, agentCap=${basicIntellectState.desiredAgentCap}, transportCap=${basicIntellectState.desiredTransportCap}, trainingCap=${basicIntellectState.desiredTrainingCap}, weaponDamage=${basicIntellectState.desiredWeaponDamage}, trainingSkillGain=${basicIntellectState.desiredTrainingSkillGain.toFixed(1)}, exhaustionRecovery=${basicIntellectState.desiredExhaustionRecovery.toFixed(1)}, hitPointsRecoveryPct=${basicIntellectState.desiredHitPointsRecoveryPct.toFixed(1)}`,
+  )
 }
 
 // Helper functions
@@ -777,4 +775,64 @@ function pickAtRandomFromLowestExhaustion(agents: Agent[]): Agent {
   })
 
   return pickAtRandom(agentsWithMinExhaustion)
+}
+
+function createInitialState(): BasicIntellectState {
+  return {
+    desiredAgentCount: initialGameState.agents.length,
+    desiredAgentCap: AGENT_CAP,
+    desiredTransportCap: TRANSPORT_CAP,
+    desiredTrainingCap: TRAINING_CAP,
+    desiredWeaponDamage: initialWeapon.damage,
+    desiredTrainingSkillGain: toF(TRAINING_SKILL_GAIN),
+    desiredExhaustionRecovery: toF(AGENT_EXHAUSTION_RECOVERY_PER_TURN),
+    desiredHitPointsRecoveryPct: toF(AGENT_HIT_POINTS_RECOVERY_PCT),
+  }
+}
+
+function increaseSomeDesiredCount(): void {
+  // Priority picks (deterministic, checked first)
+  const targetTransportCap = Math.ceil(basicIntellectState.desiredAgentCount * 0.5)
+  if (basicIntellectState.desiredTransportCap < targetTransportCap) {
+    basicIntellectState.desiredTransportCap += 1
+    return
+  }
+
+  const targetTrainingCap = Math.ceil(basicIntellectState.desiredAgentCount * 0.5)
+  if (basicIntellectState.desiredTrainingCap < targetTrainingCap) {
+    basicIntellectState.desiredTrainingCap += 1
+    return
+  }
+
+  // Weighted random (if no priority pick)
+  // Agents: 50%, Weapon damage: 12.5%, Training skill gain: 12.5%,
+  // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
+  const random = Math.random()
+
+  // Special case: if picked agents but at cap, increase agent cap instead
+  if (random < 0.5) {
+    if (basicIntellectState.desiredAgentCount === basicIntellectState.desiredAgentCap) {
+      basicIntellectState.desiredAgentCap += 1
+      return
+    }
+    basicIntellectState.desiredAgentCount += 1
+    return
+  }
+
+  if (random < 0.625) {
+    basicIntellectState.desiredWeaponDamage += 1
+    return
+  }
+
+  if (random < 0.75) {
+    basicIntellectState.desiredTrainingSkillGain += 0.1
+    return
+  }
+
+  if (random < 0.875) {
+    basicIntellectState.desiredExhaustionRecovery += 1
+    return
+  }
+
+  basicIntellectState.desiredHitPointsRecoveryPct += 0.2
 }

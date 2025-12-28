@@ -17,6 +17,7 @@ import { setResetControlsExpanded } from '../../redux/slices/settingsSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { useTheme, type SxProps } from '@mui/material/styles'
+import { resetBasicIntellectState } from '../../ai/intellects/basicIntellect'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -49,6 +50,7 @@ export function ResetControls(): React.JSX.Element {
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
+    resetBasicIntellectState()
     dispatch(clearAllSelection())
     dispatch(ActionCreators.clearHistory())
   }
