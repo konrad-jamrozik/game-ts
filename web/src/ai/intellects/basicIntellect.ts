@@ -1,3 +1,4 @@
+// KJA1 got assert failure Error: Lead lead-black-lotus-interrogate-member already has an active investigation
 import type { AIPlayerIntellect } from '../types'
 import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
 import type { Agent } from '../../lib/model/agentModel'
@@ -355,7 +356,10 @@ function assignToLeadInvestigation(api: PlayTurnAPI): void {
     selectedAgentIds.push(agent.id)
 
     // Check if there's an existing investigation for this lead
-    const existingInvestigation = Object.values(gameState.leadInvestigations).find(
+    // Re-read gameState to get the latest state after previous API calls
+    const { gameState: currentGameState } = api
+    const { leadInvestigations: currentLeadInvestigations } = currentGameState
+    const existingInvestigation = Object.values(currentLeadInvestigations).find(
       (inv) => inv.leadId === lead.id && inv.state === 'Active',
     )
 
@@ -369,6 +373,11 @@ function assignToLeadInvestigation(api: PlayTurnAPI): void {
         leadId: lead.id,
         agentIds: [agent.id],
       })
+      // Remove the lead from availableLeads since it now has an active investigation
+      const leadIndex = availableLeads.findIndex((l) => l.id === lead.id)
+      if (leadIndex !== -1) {
+        availableLeads.splice(leadIndex, 1)
+      }
     }
   }
 
