@@ -410,26 +410,11 @@ function selectNextBestReadyAgent(
 }
 
 function spendMoney(api: PlayTurnAPI): void {
-  while (hasSufficientMoney(api)) {
-    const priority = computeNextBuyPriority(api)
-    if (priority === undefined) {
-      break
-    }
-
-    // KJA1 the "hasSufficientMoneyToBuy" check should check if there will be enough money left
-    // after the purchase, to not bankrupt the player. See OneNote "Basic inellect issues"
-    if (hasSufficientMoneyToBuy(api, priority)) {
-      buy(api, priority)
-    } else {
-      break
-    }
+  let priority = computeNextBuyPriority(api)
+  while (priority !== undefined && hasSufficientMoneyToBuy(api, priority)) {
+    buy(api, priority)
+    priority = computeNextBuyPriority(api)
   }
-}
-
-function hasSufficientMoney(api: PlayTurnAPI): boolean {
-  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
-  const currentMoney = api.gameState.money
-  return currentMoney >= minimumRequiredSavings
 }
 
 function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
@@ -440,6 +425,15 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return uncoveredUpkeepCosts * turnsToCover
 }
 
+// KJA2 rewrite it so it works like that:
+// Keeps track of total number of "desired agents count", "desired transport cap upgrade count" etc.
+// Notably the "desired agents count" starts with being set to the initial agent count.
+// Then each time a purchase is made, and not all desired counts are met,
+// the AI randomizes with some weights increase of one of the desired counts by one.
+// Then AI looks how much below it is compared with current count vs desired.
+// For upgrades it will be always 1 less than desired for exactly one upgrade, but with agents
+// it may be more, if agents were KIA.
+// It always prioritizes bringing agents to desired count, before bringing any other counts to desired.
 function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' | undefined {
   const { gameState } = api
 
@@ -564,7 +558,9 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hire
   }
 
   const currentMoney = gameState.money
-  return currentMoney >= cost
+  const moneyAfterPurchase = currentMoney - cost
+  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
+  return moneyAfterPurchase >= minimumRequiredSavings
 }
 
 function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
