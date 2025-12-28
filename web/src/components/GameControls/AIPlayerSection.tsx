@@ -102,6 +102,7 @@ export function AIPlayerSection(): React.JSX.Element {
           onValueChange={handleTurnCountChange}
           min={1}
           disabled={isButtonDisabled}
+          label="Turns to delegate"
           style={{
             width: '100%',
           }}

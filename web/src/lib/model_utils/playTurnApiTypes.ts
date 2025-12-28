@@ -4,6 +4,7 @@ import type { UpgradeName } from '../data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../model/modelIds'
 import type { ActionResult } from './playerActionsApiTypes'
 
+// KJA1 do not re export
 export type { ActionResult }
 
 export type PlayTurnAPI = {
