@@ -639,7 +639,7 @@ function updateFactions(
         faction.turnsAtCurrentLevel = 0
         // Pre-roll the target turns for the new level
         faction.targetTurnsForProgression = calculateProgressionTurns(faction.activityLevel)
-        faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
+        // Note: turnsUntilNextOperation is NOT reset when activity level increases - it continues unchanged
         activityLevelIncreased = true
       }
     }
