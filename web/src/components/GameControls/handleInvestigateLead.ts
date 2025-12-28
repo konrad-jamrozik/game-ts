@@ -1,16 +1,14 @@
 import type { AppDispatch } from '../../redux/store'
-import type { GameState } from '../../lib/model/gameStateModel'
+import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
 import type { AgentId, LeadId, LeadInvestigationId } from '../../lib/model/modelIds'
 import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { getLeadInvestigationById } from '../../lib/model_utils/leadInvestigationUtils'
-import { startLeadInvestigation, addAgentsToInvestigation } from '../../redux/slices/gameStateSlice'
 import { clearLeadSelection, clearInvestigationSelection, clearAgentSelection } from '../../redux/slices/selectionSlice'
-import { validateAvailableAgents, validateNotExhaustedAgents } from '../../lib/model_utils/validateAgents'
 import { assertDefined, assertNotBothTrue, assertNotEmpty, assertTrue } from '../../lib/primitives/assertPrimitives'
 
 export type HandleInvestigateLeadDependencies = {
+  api: PlayTurnAPI
   dispatch: AppDispatch
-  gameState: GameState
   selectedLeadId: LeadId | undefined
   selectedInvestigationId: LeadInvestigationId | undefined
   selectedAgentIds: AgentId[]
@@ -37,7 +35,7 @@ export type HandleInvestigateLeadDependencies = {
  * - The selected lead was already successfully investigated and is not repeatable.
  */
 export function handleInvestigateLead(deps: HandleInvestigateLeadDependencies): void {
-  const { gameState, selectedLeadId, selectedInvestigationId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
+  const { selectedLeadId, selectedInvestigationId, selectedAgentIds } = deps
 
   // Assertions for cases that should never happen (UI should prevent these)
   assertNotBothTrue(
@@ -46,22 +44,6 @@ export function handleInvestigateLead(deps: HandleInvestigateLeadDependencies): 
     'Both lead and investigation cannot be selected at the same time',
   )
   assertNotEmpty(selectedAgentIds, 'At least one agent must be selected')
-
-  // Common validation: check if agents are available and not exhausted
-  // These are user-facing errors, so show alert instead of asserting
-  const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-  if (!availabilityValidation.isValid) {
-    setAlertMessage(availabilityValidation.errorMessage)
-    setShowAlert(true)
-    return
-  }
-
-  const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-  if (!exhaustionValidation.isValid) {
-    setAlertMessage(exhaustionValidation.errorMessage)
-    setShowAlert(true)
-    return
-  }
 
   // Route to appropriate happy path
   if (selectedInvestigationId !== undefined) {
@@ -72,39 +54,51 @@ export function handleInvestigateLead(deps: HandleInvestigateLeadDependencies): 
 }
 
 function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { dispatch, gameState, selectedInvestigationId, selectedAgentIds, setShowAlert } = deps
+  const { api, dispatch, selectedInvestigationId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
 
   assertDefined(selectedInvestigationId, 'Investigation ID must be defined')
   // Assert that investigation exists (will throw if not found)
-  getLeadInvestigationById(selectedInvestigationId, gameState)
+  getLeadInvestigationById(selectedInvestigationId, api.gameState)
+
+  const result = api.addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds })
+  if (!result.success) {
+    setAlertMessage(result.errorMessage)
+    setShowAlert(true)
+    return
+  }
 
   setShowAlert(false)
-  dispatch(addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds }))
   dispatch(clearInvestigationSelection())
   dispatch(clearAgentSelection())
 }
 
 function handleStartNewInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { dispatch, gameState, selectedLeadId, selectedAgentIds, setShowAlert } = deps
+  const { api, dispatch, selectedLeadId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
 
   assertDefined(selectedLeadId, 'Lead ID must be defined')
   const lead = getLeadById(selectedLeadId)
 
   // Assert that lead doesn't already have an active investigation
-  const hasActiveInvestigationForLead = Object.values(gameState.leadInvestigations).some(
+  const hasActiveInvestigationForLead = Object.values(api.gameState.leadInvestigations).some(
     (investigation) => investigation.leadId === selectedLeadId && investigation.state === 'Active',
   )
   assertTrue(!hasActiveInvestigationForLead, `Lead ${selectedLeadId} already has an active investigation`)
 
   // Assert that lead is repeatable or hasn't been investigated yet
-  const investigationCount = gameState.leadInvestigationCounts[selectedLeadId] ?? 0
+  const investigationCount = api.gameState.leadInvestigationCounts[selectedLeadId] ?? 0
   assertTrue(
     lead.repeatable || investigationCount === 0,
     `Lead ${selectedLeadId} has already been investigated and is not repeatable`,
   )
 
+  const result = api.startLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds })
+  if (!result.success) {
+    setAlertMessage(result.errorMessage)
+    setShowAlert(true)
+    return
+  }
+
   setShowAlert(false)
-  dispatch(startLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds }))
   dispatch(clearLeadSelection())
   dispatch(clearAgentSelection())
 }

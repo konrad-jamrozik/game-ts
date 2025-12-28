@@ -4,28 +4,12 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { getPlayTurnApi } from '../../redux/playTurnApi'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import {
-  assignAgentsToContracting,
-  assignAgentsToTraining,
-  buyUpgrade,
-  deployAgentsToMission,
-  hireAgent,
-  recallAgents,
-  sackAgents,
-} from '../../redux/slices/gameStateSlice'
 import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
-import { getRemainingTransportCap, validateMissionDeployment } from '../../lib/model_utils/missionUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
-import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
-import {
-  validateAvailableAgents,
-  validateOnAssignmentAgents,
-  validateNotExhaustedAgents,
-} from '../../lib/model_utils/validateAgents'
-import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
 import { handleInvestigateLead } from './handleInvestigateLead'
 
 export function PlayerActions(): React.JSX.Element {
@@ -41,119 +25,67 @@ export function PlayerActions(): React.JSX.Element {
   const [alertMessage, setAlertMessage] = React.useState('')
 
   const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
+  // KJA1 is this useMemo needed? Probably not
+  const api = React.useMemo(() => getPlayTurnApi(), [])
 
   function handleHireAgent(): void {
-    // Check if player has enough money to hire an agent
-    if (gameState.money < AGENT_HIRE_COST) {
-      setAlertMessage('Insufficient funds')
+    const result = api.hireAgent()
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    // Validate agent cap (only count non-terminated agents)
-    if (notTerminated(gameState.agents).length >= gameState.agentCap) {
-      setAlertMessage(`Cannot hire more than ${gameState.agentCap} agents (agent cap reached)`)
-      setShowAlert(true)
-      return
-    }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(hireAgent())
+    setShowAlert(false)
   }
 
   function handleSackAgents(): void {
-    // Validate that all selected agents are available
-    const validationResult = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
-    if (!validationResult.isValid) {
-      setAlertMessage(validationResult.errorMessage)
+    const result = api.sackAgents(selectedAgentIds)
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(sackAgents(selectedAgentIds))
+    setShowAlert(false)
     dispatch(clearAgentSelection())
   }
 
   function handleAssignToContracting(): void {
-    // Validate that all selected agents are available
-    const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
-    if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage)
+    const result = api.assignAgentsToContracting(selectedAgentIds)
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    // Validate that agents are not exhausted
-    const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
-    if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(assignAgentsToContracting(selectedAgentIds))
+    setShowAlert(false)
     dispatch(clearAgentSelection())
   }
 
   function handleAssignToTraining(): void {
-    // Validate that all selected agents are available
-    const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-
-    if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage)
+    const result = api.assignAgentsToTraining(selectedAgentIds)
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    // Validate that agents are not exhausted
-    const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
-    if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    // Count how many agents are already in training
-    const agentsInTraining = onTrainingAssignment(gameState.agents).length
-    const availableTrainingCap = gameState.trainingCap - agentsInTraining
-
-    if (selectedAgentIds.length > availableTrainingCap) {
-      setAlertMessage(
-        `Cannot assign ${selectedAgentIds.length} agents to training. Only ${availableTrainingCap} training slots available.`,
-      )
-      setShowAlert(true)
-      return
-    }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(assignAgentsToTraining(selectedAgentIds))
+    setShowAlert(false)
     dispatch(clearAgentSelection())
   }
 
   function handleRecallAgents(): void {
-    // Check if all selected agents are in "OnAssignment" state
-    const validationResult = validateOnAssignmentAgents(gameState.agents, selectedAgentIds)
-    if (!validationResult.isValid) {
-      setAlertMessage(validationResult.errorMessage)
+    const result = api.recallAgents(selectedAgentIds)
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(recallAgents(selectedAgentIds))
+    setShowAlert(false)
     dispatch(clearAgentSelection())
   }
 
   function handleInvestigateLeadClick(): void {
     handleInvestigateLead({
+      api,
       dispatch,
-      gameState,
       selectedLeadId,
       selectedInvestigationId,
       selectedAgentIds,
@@ -169,44 +101,13 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    // Validate agents are available
-    const availabilityValidation = validateAvailableAgents(gameState.agents, selectedAgentIds)
-    if (!availabilityValidation.isValid) {
-      setAlertMessage(availabilityValidation.errorMessage)
+    const result = api.deployAgentsToMission({ missionId: selectedMissionId, agentIds: selectedAgentIds })
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    // Validate that agents are not exhausted
-    const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, selectedAgentIds)
-
-    if (!exhaustionValidation.isValid) {
-      setAlertMessage(exhaustionValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    // Validate transport cap
-    const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
-    if (selectedAgentIds.length > remainingTransportCap) {
-      setAlertMessage(
-        `Cannot deploy ${selectedAgentIds.length} agents. Only ${remainingTransportCap} transport slots available.`,
-      )
-      setShowAlert(true)
-      return
-    }
-
-    // Validate mission is available for deployment
-    const selectedMission = gameState.missions.find((m) => m.id === selectedMissionId)
-    const missionValidation = validateMissionDeployment(selectedMission)
-    if (!missionValidation.isValid) {
-      setAlertMessage(missionValidation.errorMessage)
-      setShowAlert(true)
-      return
-    }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(deployAgentsToMission({ missionId: selectedMissionId, agentIds: selectedAgentIds }))
+    setShowAlert(false)
     dispatch(clearAgentSelection())
     dispatch(clearMissionSelection())
   }
@@ -218,15 +119,13 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    const UPGRADE_PRICE = 100
-    if (gameState.money < UPGRADE_PRICE) {
-      setAlertMessage('Insufficient funds')
+    const result = api.buyUpgrade(selectedUpgradeName)
+    if (!result.success) {
+      setAlertMessage(result.errorMessage)
       setShowAlert(true)
       return
     }
-
-    setShowAlert(false) // Hide alert on successful action
-    dispatch(buyUpgrade(selectedUpgradeName))
+    setShowAlert(false)
   }
 
   return (

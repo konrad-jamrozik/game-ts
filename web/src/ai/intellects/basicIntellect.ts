@@ -4,6 +4,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import type { Mission } from '../../lib/model/missionModel'
 import type { Lead } from '../../lib/model/leadModel'
 import type { GameState } from '../../lib/model/gameStateModel'
+import type { AgentId } from '../../lib/model/modelIds'
 import { getUpgradePrice, type UpgradeName } from '../../lib/data_tables/upgrades'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../lib/ruleset/moneyRuleset'
 import { getAgentSkillBasedValue } from '../../lib/ruleset/skillRuleset'
@@ -85,7 +86,7 @@ function assignToContractingWithPriority(api: PlayTurnAPI): void {
     return
   }
 
-  const selectedAgentIds: string[] = []
+  const selectedAgentIds: AgentId[] = []
   const includeInTraining = true
 
   // Assign agents until projected income becomes non-negative
@@ -263,25 +264,6 @@ function deployToMission(
     cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport', details })
     return false
   }
-
-  // KJA1 problem here and with all actions
-  // it should not be possible to forcefully do things with agents bypassing checks. E.g. recovering agents
-  // cannot be deployed to missions, but api.deployAgentsToMission would ignore it.
-  // Basically the validation from the UI PlayerActions.tsx is missing. Consider pushing the validation down
-  // from PlayerActions.tsx handle* functions to the reducers, e.g. agentReducers.ts and missionReducers.ts
-  //
-  // But note this  is nontrivial, e.g. when assigning agents to contracting, PlayerActions.tsx
-  // checks validateAvailableAgents and validateNotExhaustedAgents; but these checks must be made
-  // BEFORE dispatching the action to the reducer. So these validate* functions should be invoked
-  // inside the reducer itself and also be separately exposed so the PlayerActions and AI player
-  // can use them before invoking the reducer.
-  //
-  // Perhaps the solution here is to have all the Validate* patterns currently in PlayerActions.tsx
-  // to be captured withing PlayTurnAPI, and then make PlayerActions.tsx reuse them.
-  // So e.g. api.deployAgentsToMission first runs the validate
-  // functions and dispatches the action to the reducer if valid, otherwise returns information about the error
-  // for the UI to display.
-
   // Deploy agents
   api.deployAgentsToMission({
     missionId: mission.id,
@@ -297,7 +279,7 @@ function assignToContracting(api: PlayTurnAPI): void {
   let currentIncome = getContractingIncome(gameState)
   const incomeGap = targetIncome - currentIncome
 
-  const selectedAgentIds: string[] = []
+  const selectedAgentIds: AgentId[] = []
   // Estimate desired agent count based on average agent income (using base income as approximation)
   const baseAgentIncome = AGENT_CONTRACTING_INCOME
   const desiredAgentCount = incomeGap > 0 ? Math.ceil(incomeGap / baseAgentIncome) : 0
@@ -333,7 +315,7 @@ function assignToLeadInvestigation(api: PlayTurnAPI): void {
   const currentAgentCount = countAgentsInvestigatingLeads(gameState)
   const agentsToAssign = targetAgentCount - currentAgentCount
 
-  const selectedAgentIds: string[] = []
+  const selectedAgentIds: AgentId[] = []
 
   for (let i = 0; i < agentsToAssign; i += 1) {
     const lead = selectLeadToInvestigate(availableLeads)
@@ -374,7 +356,7 @@ function assignToTraining(api: PlayTurnAPI): void {
   const agentsInTraining = onTrainingAssignment(gameState.agents)
   const availableTrainingSlots = gameState.trainingCap - agentsInTraining.length
 
-  const selectedAgentIds: string[] = []
+  const selectedAgentIds: AgentId[] = []
 
   for (let i = 0; i < availableTrainingSlots; i += 1) {
     const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length)
@@ -394,7 +376,7 @@ function assignToTraining(api: PlayTurnAPI): void {
 
 function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
-  const selectedAgentIds: string[] = []
+  const selectedAgentIds: AgentId[] = []
 
   const doNotIncludeInTraining = false
   let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
