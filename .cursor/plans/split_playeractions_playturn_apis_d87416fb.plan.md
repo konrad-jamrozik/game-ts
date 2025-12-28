@@ -113,7 +113,3 @@ In [`web/src/ai/intellects/basicIntellect.ts`](web/src/ai/intellects/basicIntell
 - Remove `getAiState()` function - use `api.aiState` instead
 - Replace `store.dispatch(incrementActual...)` with `api.incrementActual...()`
 - Replace `store.dispatch(increaseDesiredCounts())` with `api.increaseDesiredCounts()`
-
-### 6. Update handleInvestigateLead.ts
-
-In [`web/src/components/GameControls/handleInvestigateLead.ts`](web/src/components/GameControls/handleInvestigateLead.ts):

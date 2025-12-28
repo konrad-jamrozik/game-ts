@@ -1,0 +1,16 @@
+import type { UpgradeName } from '../data_tables/upgrades'
+import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../model/modelIds'
+
+export type ActionResult = Readonly<{ success: true }> | Readonly<{ success: false; errorMessage: string }>
+
+export type PlayerActionsAPI = {
+  hireAgent(): ActionResult
+  sackAgents(agentIds: AgentId[]): ActionResult
+  assignAgentsToContracting(agentIds: AgentId[]): ActionResult
+  assignAgentsToTraining(agentIds: AgentId[]): ActionResult
+  recallAgents(agentIds: AgentId[]): ActionResult
+  startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult
+  addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult
+  deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult
+  buyUpgrade(upgradeName: UpgradeName): ActionResult
+}

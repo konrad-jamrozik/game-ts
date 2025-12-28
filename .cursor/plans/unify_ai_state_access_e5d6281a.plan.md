@@ -28,7 +28,7 @@ Extend `PlayTurnAPI` to include AI state access and actions, removing direct sto
 
 ## Current Problem
 
-```mermaid
+````mermaid
 flowchart LR
     subgraph inconsistent [Current Inconsistent Pattern]
         BI[basicIntellect]
@@ -92,4 +92,5 @@ In [`web/src/components/GameControls/PlayerActions.tsx`](web/src/components/Game
 ## Result
 
 - All state access unified through the API
-- `basicIntellect.ts` has no direct Redux store dependency
+
+````

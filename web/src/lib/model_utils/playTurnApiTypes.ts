@@ -1,18 +1,15 @@
 import type { GameState } from '../model/gameStateModel'
-import type { UpgradeName } from '../data_tables/upgrades'
-import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../model/modelIds'
+import type { BasicIntellectState } from '../../redux/slices/aiStateSlice'
+import type { PlayerActionsAPI } from './playerActionsApiTypes'
 
-export type ActionResult = Readonly<{ success: true }> | Readonly<{ success: false; errorMessage: string }>
+export type { ActionResult } from './playerActionsApiTypes'
 
-export type PlayTurnAPI = {
+export type PlayTurnAPI = PlayerActionsAPI & {
   gameState: GameState
-  hireAgent(): ActionResult
-  sackAgents(agentIds: AgentId[]): ActionResult
-  assignAgentsToContracting(agentIds: AgentId[]): ActionResult
-  assignAgentsToTraining(agentIds: AgentId[]): ActionResult
-  recallAgents(agentIds: AgentId[]): ActionResult
-  startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult
-  addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult
-  deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult
-  buyUpgrade(upgradeName: UpgradeName): ActionResult
+  aiState: BasicIntellectState
+  incrementActualWeaponDamageUpgrades(): void
+  incrementActualTrainingSkillGainUpgrades(): void
+  incrementActualExhaustionRecoveryUpgrades(): void
+  incrementActualHitPointsRecoveryUpgrades(): void
+  increaseDesiredCounts(): void
 }

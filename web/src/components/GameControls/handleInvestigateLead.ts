@@ -1,5 +1,6 @@
 import type { AppDispatch } from '../../redux/store'
-import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
+import type { PlayerActionsAPI } from '../../lib/model_utils/playerActionsApiTypes'
+import type { GameState } from '../../lib/model/gameStateModel'
 import type { AgentId, LeadId, LeadInvestigationId } from '../../lib/model/modelIds'
 import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { getLeadInvestigationById } from '../../lib/model_utils/leadInvestigationUtils'
@@ -7,7 +8,8 @@ import { clearLeadSelection, clearInvestigationSelection, clearAgentSelection } 
 import { assertDefined, assertNotBothTrue, assertNotEmpty, assertTrue } from '../../lib/primitives/assertPrimitives'
 
 export type HandleInvestigateLeadDependencies = {
-  api: PlayTurnAPI
+  api: PlayerActionsAPI
+  gameState: GameState
   dispatch: AppDispatch
   selectedLeadId: LeadId | undefined
   selectedInvestigationId: LeadInvestigationId | undefined
@@ -54,11 +56,11 @@ export function handleInvestigateLead(deps: HandleInvestigateLeadDependencies): 
 }
 
 function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { api, dispatch, selectedInvestigationId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
+  const { api, gameState, dispatch, selectedInvestigationId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
 
   assertDefined(selectedInvestigationId, 'Investigation ID must be defined')
   // Assert that investigation exists (will throw if not found)
-  getLeadInvestigationById(selectedInvestigationId, api.gameState)
+  getLeadInvestigationById(selectedInvestigationId, gameState)
 
   const result = api.addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds })
   if (!result.success) {
@@ -73,19 +75,19 @@ function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies)
 }
 
 function handleStartNewInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { api, dispatch, selectedLeadId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
+  const { api, gameState, dispatch, selectedLeadId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
 
   assertDefined(selectedLeadId, 'Lead ID must be defined')
   const lead = getLeadById(selectedLeadId)
 
   // Assert that lead doesn't already have an active investigation
-  const hasActiveInvestigationForLead = Object.values(api.gameState.leadInvestigations).some(
+  const hasActiveInvestigationForLead = Object.values(gameState.leadInvestigations).some(
     (investigation) => investigation.leadId === selectedLeadId && investigation.state === 'Active',
   )
   assertTrue(!hasActiveInvestigationForLead, `Lead ${selectedLeadId} already has an active investigation`)
 
   // Assert that lead is repeatable or hasn't been investigated yet
-  const investigationCount = api.gameState.leadInvestigationCounts[selectedLeadId] ?? 0
+  const investigationCount = gameState.leadInvestigationCounts[selectedLeadId] ?? 0
   assertTrue(
     lead.repeatable || investigationCount === 0,
     `Lead ${selectedLeadId} has already been investigated and is not repeatable`,

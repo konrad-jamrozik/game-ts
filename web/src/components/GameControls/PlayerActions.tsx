@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getPlayTurnApi } from '../../redux/playTurnApi'
+import { getPlayerActionsApi } from '../../redux/playTurnApi'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
@@ -25,8 +25,7 @@ export function PlayerActions(): React.JSX.Element {
   const [alertMessage, setAlertMessage] = React.useState('')
 
   const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
-  // KJA1 is this useMemo needed? Probably not
-  const api = React.useMemo(() => getPlayTurnApi(), [])
+  const api = getPlayerActionsApi()
 
   function handleHireAgent(): void {
     const result = api.hireAgent()
@@ -85,6 +84,7 @@ export function PlayerActions(): React.JSX.Element {
   function handleInvestigateLeadClick(): void {
     handleInvestigateLead({
       api,
+      gameState,
       dispatch,
       selectedLeadId,
       selectedInvestigationId,

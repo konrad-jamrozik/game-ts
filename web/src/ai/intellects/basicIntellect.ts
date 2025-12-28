@@ -5,6 +5,7 @@ import type { Mission } from '../../lib/model/missionModel'
 import type { Lead } from '../../lib/model/leadModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { AgentId } from '../../lib/model/modelIds'
+import type { BasicIntellectState } from '../../redux/slices/aiStateSlice'
 import { getUpgradePrice, type UpgradeName } from '../../lib/data_tables/upgrades'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../lib/ruleset/moneyRuleset'
 import { getAgentSkillBasedValue } from '../../lib/ruleset/skillRuleset'
@@ -15,32 +16,11 @@ import { dataTables } from '../../lib/data_tables/dataTables'
 import { f6mult, toF } from '../../lib/primitives/fixed6'
 import { initialAgent } from '../../lib/factories/agentFactory'
 import { AGENT_CONTRACTING_INCOME, AGENT_HIRE_COST } from '../../lib/data_tables/constants'
-import { store } from '../../redux/store'
-import {
-  type BasicIntellectState,
-  incrementActualWeaponDamageUpgrades,
-  incrementActualTrainingSkillGainUpgrades,
-  incrementActualExhaustionRecoveryUpgrades,
-  incrementActualHitPointsRecoveryUpgrades,
-  increaseDesiredCounts,
-} from '../../redux/slices/aiStateSlice'
 import { assertUnreachable, assertLessThan } from '../../lib/primitives/assertPrimitives'
 
 type UpgradeNameOrNewAgent = UpgradeName | 'newAgent'
 
 const REQUIRED_TURNS_OF_SAVINGS = 5
-
-function getAiState(): BasicIntellectState {
-  // KJA1 can I just useAppSelector() hook? But the point is that basic intellect is not a react component
-  const rootState = store.getState()
-  // aiState is guaranteed to exist because it's part of the combinedReducer in rootReducer.ts
-  const present = rootState.undoable.present
-  if (!('aiState' in present)) {
-    // KJA3 use assert primitive
-    throw new Error('aiState not found in undoable.present - this should never happen')
-  }
-  return present.aiState
-}
 
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
@@ -554,8 +534,7 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
 }
 
 function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
-  const { gameState } = api
-  const aiState = getAiState()
+  const { gameState, aiState } = api
   const actualAgentCount = notTerminated(gameState.agents).length
 
   // Priority 1: Buy agents until desired agent count is reached
@@ -617,14 +596,14 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAge
 function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   executePurchase(api, priority)
 
-  const { gameState: gameStateAfter } = api
+  const { gameState: gameStateAfter, aiState: aiStateAfter } = api
 
-  if (areAllDesiredCountsMet(gameStateAfter)) {
-    const stateBeforeIncrease = { ...getAiState() }
-    store.dispatch(increaseDesiredCounts())
-    logBuyResult(priority, stateBeforeIncrease)
+  if (areAllDesiredCountsMet(gameStateAfter, aiStateAfter)) {
+    const stateBeforeIncrease = { ...aiStateAfter }
+    api.increaseDesiredCounts()
+    logBuyResult(api, priority, stateBeforeIncrease)
   } else {
-    logBuyResult(priority)
+    logBuyResult(api, priority)
   }
 }
 
@@ -638,16 +617,16 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   // Track actual upgrade counts (caps are tracked via game state, not here)
   switch (priority) {
     case 'Weapon damage':
-      store.dispatch(incrementActualWeaponDamageUpgrades())
+      api.incrementActualWeaponDamageUpgrades()
       break
     case 'Training skill gain':
-      store.dispatch(incrementActualTrainingSkillGainUpgrades())
+      api.incrementActualTrainingSkillGainUpgrades()
       break
     case 'Exhaustion recovery':
-      store.dispatch(incrementActualExhaustionRecoveryUpgrades())
+      api.incrementActualExhaustionRecoveryUpgrades()
       break
     case 'Hit points recovery %':
-      store.dispatch(incrementActualHitPointsRecoveryUpgrades())
+      api.incrementActualHitPointsRecoveryUpgrades()
       break
     case 'Agent cap':
     case 'Transport cap':
@@ -657,8 +636,7 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 }
 
-function areAllDesiredCountsMet(gameState: GameState): boolean {
-  const aiState = getAiState()
+function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
   const actualAgentCount = notTerminated(gameState.agents).length
   return (
     actualAgentCount >= aiState.desiredAgentCount &&
@@ -672,22 +650,26 @@ function areAllDesiredCountsMet(gameState: GameState): boolean {
   )
 }
 
-function logBuyResult(priority: UpgradeNameOrNewAgent, stateBeforeIncrease?: BasicIntellectState): void {
-  const aiState = getAiState()
+function logBuyResult(
+  api: PlayTurnAPI,
+  priority: UpgradeNameOrNewAgent,
+  stateBeforeIncrease?: BasicIntellectState,
+): void {
+  const { aiState } = api
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
-  const increaseMessage = getIncreaseMessage(stateBeforeIncrease)
+  const increaseMessage = getIncreaseMessage(api, stateBeforeIncrease)
 
   console.log(
     `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCap=${aiState.desiredAgentCap}, transportCap=${aiState.desiredTransportCap}, trainingCap=${aiState.desiredTrainingCap}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
   )
 }
 
-function getIncreaseMessage(stateBeforeIncrease?: BasicIntellectState): string {
+function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntellectState): string {
   if (stateBeforeIncrease === undefined) {
     return 'No increase (goals not yet met)'
   }
 
-  const aiState = getAiState()
+  const { aiState } = api
   if (aiState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
     return `Increased desired agents to ${aiState.desiredAgentCount}`
   }
