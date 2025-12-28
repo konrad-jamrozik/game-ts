@@ -73,6 +73,3 @@ Split the current "Assets" card (which contains both AssetsDataGrid and Capabili
 - Delete `web/src/components/Assets/CapabilitiesDataGrid.tsx` (replaced by CapacitiesDataGrid and UpgradesDataGrid)
 
 ## Implementation Details
-
-- CapacitiesDataGrid will contain rows with ids 4, 5, 6 (Agent cap, Transport cap, Training cap)
-- UpgradesDataGrid will contain rows with ids 7, 8, 9, 10 (Training skill gain, Exhaustion recovery, Hit points recovery %, Weapon damage)

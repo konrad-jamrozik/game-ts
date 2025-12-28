@@ -4,10 +4,10 @@ overview: Add `assignToContractingWithPriority` function to `basicIntellect.ts` 
 todos:
   - id: add-priority-contracting
     content: Add assignToContractingWithPriority function and helper to basicIntellect.ts
-    status: pending
+    status: completed
   - id: update-manage-agents
     content: Update manageAgents to call new function before deployToMissions
-    status: pending
+    status: completed
 ---
 
 # Add Priority Contracting Assignment
@@ -70,5 +70,7 @@ From [`web/src/lib/ruleset/moneyRuleset.ts`](web/src/lib/ruleset/moneyRuleset.ts
 ```typescript
 // Projected income per turn
 projectedIncome = funding + contractingIncome - agentUpkeep
+
+
 
 ```

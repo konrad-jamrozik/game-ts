@@ -141,9 +141,3 @@ function handleHireAgent(): void {
 
 
 ### 5. [web/src/components/GameControls/handleInvestigateLead.ts](web/src/components/GameControls/handleInvestigateLead.ts)
-
-Refactor to use `PlayTurnAPI` for lead investigation actions.
-
-## Dependency Compliance
-
-Per [about_code_dependencies.md](docs/design/about_code_dependencies.md):

@@ -4,7 +4,8 @@ import type { Mission } from '../../lib/model/missionModel'
 import type { Lead } from '../../lib/model/leadModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { getUpgradePrice, type UpgradeName } from '../../lib/data_tables/upgrades'
-import { getAgentUpkeep, getContractingIncome } from '../../lib/ruleset/moneyRuleset'
+import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../lib/ruleset/moneyRuleset'
+import { getAgentSkillBasedValue } from '../../lib/ruleset/skillRuleset'
 import { calculateMissionThreatAssessment } from '../../lib/game_utils/missionThreatAssessment'
 import { onTrainingAssignment, notTerminated } from '../../lib/model_utils/agentUtils'
 import { filterMissionsByState, getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
@@ -25,13 +26,9 @@ export const basicIntellect: AIPlayerIntellect = {
   },
 }
 
-/*
- * KJA1 The manageAgents should have assignToContractingWithPriority function invoked before deployToMissions.
- * This function should assign enough agents to contracting so that the projected income is not negative.
- * This may mean assigning agents that are not ready (having exhaustion >= 5%)
- */
 function manageAgents(api: PlayTurnAPI): void {
   unassignExhaustedAgents(api)
+  assignToContractingWithPriority(api)
   deployToMissions(api)
   assignToContracting(api)
   assignToLeadInvestigation(api)
@@ -73,6 +70,48 @@ function logAgentStatistics(gameState: GameState): void {
   console.log(
     `unassignExhaustedAgents: ${standbyAgents.length} standby, ${inTrainingAgents.length} in training, ${readyAgents.length} ready (${readyAgentsPct}% of ${totalAgents} total agents)`,
   )
+}
+
+function assignToContractingWithPriority(api: PlayTurnAPI): void {
+  const { gameState } = api
+  let projectedIncome = getMoneyTurnDiff(gameState)
+
+  // If projected income is already non-negative, no need to assign agents
+  if (projectedIncome >= 0) {
+    console.log(
+      `assignToContractingWithPriority: projected income ${projectedIncome.toFixed(2)} is non-negative, no assignment needed`,
+    )
+    return
+  }
+
+  const selectedAgentIds: string[] = []
+  const includeInTraining = true
+
+  // Assign agents until projected income becomes non-negative
+  while (projectedIncome < 0) {
+    const agent = selectNextAgentForPriorityContracting(gameState, selectedAgentIds, includeInTraining)
+    if (agent === undefined) {
+      // No more agents available to assign
+      break
+    }
+
+    selectedAgentIds.push(agent.id)
+    // Estimate income increase from this agent
+    const agentIncome = estimateAgentContractingIncome(agent)
+    projectedIncome += agentIncome
+  }
+
+  if (selectedAgentIds.length > 0) {
+    api.assignAgentsToContracting(selectedAgentIds)
+    const finalProjectedIncome = getMoneyTurnDiff(gameState)
+    console.log(
+      `assignToContractingWithPriority: assigned ${selectedAgentIds.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
+    )
+  } else {
+    console.log(
+      `assignToContractingWithPriority: projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`,
+    )
+  }
 }
 
 function deployToMissions(api: PlayTurnAPI): void {
@@ -380,6 +419,34 @@ function logLeftoverContractingStatistics(gameState: GameState, assignedCount: n
   )
 }
 
+function selectNextAgentForPriorityContracting(
+  gameState: GameState,
+  excludeAgentIds: string[],
+  includeInTraining = true,
+): Agent | undefined {
+  // Get agents in base (Standby or in Training)
+  const inBaseAgents = gameState.agents.filter((agent: Agent) => {
+    if (agent.assignment === 'Standby') {
+      return true
+    }
+    if (agent.assignment === 'Training') {
+      return includeInTraining
+    }
+    return false
+  })
+
+  // Filter out excluded agents only (no exhaustion filter)
+  const availableAgents = inBaseAgents.filter((agent: Agent) => !excludeAgentIds.includes(agent.id))
+
+  // Return no agent if none available
+  if (availableAgents.length === 0) {
+    return undefined
+  }
+
+  // Pick agent with lowest exhaustion, randomly if tied
+  return pickAtRandomFromLowestExhaustion(availableAgents)
+}
+
 function selectNextBestReadyAgent(
   gameState: GameState,
   excludeAgentIds: string[],
@@ -613,12 +680,7 @@ function calculateInitialAgentThreatAssessment(): number {
 }
 
 function estimateAgentContractingIncome(agent: Agent): number {
-  // Rough estimate: use agent skill relative to initial agent
-  const initialAgentSkill = toF(initialAgent.skill)
-  const agentSkill = toF(agent.skill)
-  const skillMultiplier = agentSkill / initialAgentSkill
-  // Base income per agent is AGENT_CONTRACTING_INCOME (30)
-  return 30 * skillMultiplier
+  return toF(getAgentSkillBasedValue(agent, AGENT_CONTRACTING_INCOME))
 }
 
 function getAvailableLeads(gameState: GameState): Lead[] {
