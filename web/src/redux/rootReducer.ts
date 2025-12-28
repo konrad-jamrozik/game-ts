@@ -1,17 +1,19 @@
 import { combineReducers } from 'redux'
 import undoable from 'redux-undo'
 import eventsReducer from './slices/eventsSlice'
-import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
+import gameStateReducer, { advanceTurn, reset } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import selectionReducer from './slices/selectionSlice'
 import settingsReducer from './slices/settingsSlice'
 import expansionReducer from './slices/expansionSlice'
+import aiStateReducer from './slices/aiStateSlice'
 
 export const UNDO_LIMIT = 100
 
 // 1. Start by creating a combined reducer having only one `gameState` reducer.
 const combinedReducer = combineReducers({
   gameState: gameStateReducer,
+  aiState: aiStateReducer,
 })
 
 // 2. Now make the `gameState` undoable.

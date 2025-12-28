@@ -3,7 +3,7 @@ import type { RootState } from './rootReducer'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'
-const STATE_VERSION = 1
+const STATE_VERSION = 2
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface PersistedState {
