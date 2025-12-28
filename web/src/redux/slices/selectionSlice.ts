@@ -9,6 +9,7 @@ export type SelectionState = {
   selectedMissionId?: MissionId
   selectedUpgradeName?: UpgradeName
   selectedAIIntellect?: string
+  autoAdvanceTurn?: boolean
   viewMissionDetailsId?: MissionId
   viewCharts?: true
 }
@@ -57,6 +58,12 @@ const selectionSlice = createSlice({
     clearAIIntellectSelection(state) {
       delete state.selectedAIIntellect
     },
+    setAutoAdvanceTurn(state, action: PayloadAction<boolean>) {
+      state.autoAdvanceTurn = action.payload
+    },
+    clearAutoAdvanceTurn(state) {
+      delete state.autoAdvanceTurn
+    },
     clearAllSelection(state) {
       state.agents = []
       delete state.selectedLeadId
@@ -64,6 +71,7 @@ const selectionSlice = createSlice({
       delete state.selectedMissionId
       delete state.selectedUpgradeName
       delete state.selectedAIIntellect
+      delete state.autoAdvanceTurn
       delete state.viewMissionDetailsId
       delete state.viewCharts
     },
@@ -95,6 +103,8 @@ export const {
   clearUpgradeSelection,
   setAIIntellectSelection,
   clearAIIntellectSelection,
+  setAutoAdvanceTurn,
+  clearAutoAdvanceTurn,
   clearAllSelection,
   setViewMissionDetails,
   clearViewMissionDetails,

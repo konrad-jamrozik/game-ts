@@ -11,7 +11,9 @@ import { filterMissionsByState, getRemainingTransportCap } from '../../lib/model
 import { dataTables } from '../../lib/data_tables/dataTables'
 import { f6mult, toF } from '../../lib/primitives/fixed6'
 import { initialAgent } from '../../lib/factories/agentFactory'
-import { AGENT_CONTRACTING_INCOME } from '../../lib/data_tables/constants'
+import { AGENT_CONTRACTING_INCOME, AGENT_HIRE_COST } from '../../lib/data_tables/constants'
+
+const REQUIRED_TURNS_OF_SAVINGS = 5
 
 // KJA got error: Error: Lead lead-black-lotus-member already has an active investigation
 export const basicIntellect: AIPlayerIntellect = {
@@ -420,9 +422,9 @@ function spendMoney(api: PlayTurnAPI): void {
 function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   const { gameState } = api
   const upkeepCosts = getAgentUpkeep(gameState)
-  const uncoveredUpkeepCosts = upkeepCosts * 0.5 // Only 50% covered by contracting income
-  const turnsToCover = 5
-  return uncoveredUpkeepCosts * turnsToCover
+  const turnsToCover = REQUIRED_TURNS_OF_SAVINGS
+  const requiredSavings = upkeepCosts * turnsToCover
+  return requiredSavings
 }
 
 // KJA2 rewrite it so it works like that:
@@ -551,8 +553,7 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hire
   let cost: number
 
   if (priority === 'hireAgent') {
-    // AGENT_HIRE_COST from constants
-    cost = 50
+    cost = AGENT_HIRE_COST
   } else {
     cost = getUpgradePrice(priority)
   }

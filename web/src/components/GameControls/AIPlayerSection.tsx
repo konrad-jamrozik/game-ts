@@ -1,5 +1,7 @@
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
 import FormControl from '@mui/material/FormControl'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select, { type SelectChangeEvent } from '@mui/material/Select'
@@ -11,15 +13,16 @@ import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
-import { setAIIntellectSelection } from '../../redux/slices/selectionSlice'
+import { setAIIntellectSelection, setAutoAdvanceTurn } from '../../redux/slices/selectionSlice'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 
 export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
+  const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? false)
   const intellectNames = getAllIntellectNames()
-  const initialIntellect = intellectNames[0] ?? ''
+  const initialIntellect = intellectNames.includes('basic') ? 'basic' : (intellectNames[0] ?? '')
   const selectedIntellect = selectedAIIntellect ?? initialIntellect
 
   const gameOver = isGameOver(gameState)
@@ -30,6 +33,10 @@ export function AIPlayerSection(): React.JSX.Element {
 
   function handleIntellectChange(event: SelectChangeEvent): void {
     dispatch(setAIIntellectSelection(event.target.value))
+  }
+
+  function handleAutoAdvanceTurnChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setAutoAdvanceTurn(event.target.checked))
   }
 
   function handleDelegateToAI(): void {
@@ -73,6 +80,10 @@ export function AIPlayerSection(): React.JSX.Element {
         <Button variant="contained" onClick={handleDelegateToAI} disabled={isButtonDisabled} fullWidth>
           Delegate to AI
         </Button>
+        <FormControlLabel
+          control={<Checkbox checked={autoAdvanceTurn} onChange={handleAutoAdvanceTurnChange} />}
+          label="Auto-advance turn"
+        />
         <Button variant="contained" onClick={handleNextTurn} disabled={isGameEnded} fullWidth>
           Next turn
         </Button>
