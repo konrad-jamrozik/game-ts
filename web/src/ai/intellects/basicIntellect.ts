@@ -1,4 +1,3 @@
-// KJA1 got assert failure Error: Lead lead-black-lotus-interrogate-member already has an active investigation
 import type { AIPlayerIntellect } from '../types'
 import type { PlayTurnAPI } from '../../lib/model_utils/playTurnApiTypes'
 import type { Agent } from '../../lib/model/agentModel'
@@ -43,7 +42,6 @@ function getAiState(): BasicIntellectState {
   return present.aiState
 }
 
-// KJA3 got error: Error: Lead lead-black-lotus-member already has an active investigation
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
   playTurn(api: PlayTurnAPI): void {
