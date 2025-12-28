@@ -1,7 +1,7 @@
 import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { Fragment, useEffect } from 'react'
-import { runAppInit } from './utils/appInitChecks'
+import { runAppInit } from './utils/runAppInit'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
 import { DebugCard } from './DebugCard'
 import { ErrorToast } from './Error/ErrorToast'
