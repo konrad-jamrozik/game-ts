@@ -25,7 +25,7 @@ export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[]
   // Static (faction-agnostic) leads
   // Id, Name, Description, Difficulty, DependsOn, Repeatable, EnemyEstimate
   ['lead-criminal-orgs', 'Criminal organizations', 'Investigate local criminal organizations to find cult connections.', 1, [], false],
-  //['lead-deep-state', 'Deep state', 'Investigate the deep state', 10, [], false],
+  ['lead-deep-state', 'Deep state', 'Investigate the deep state', 10, [], false],
   ['lead-peace-on-earth', 'Peace on Earth', 'With all enemy factions defeated, coordinate the final operation to ensure lasting peace.', 200, ['lead-red-dawn-terminate-cult', 'lead-exalt-terminate-cult', 'lead-black-lotus-terminate-cult'], false],
 
   // Faction-specific lead templates

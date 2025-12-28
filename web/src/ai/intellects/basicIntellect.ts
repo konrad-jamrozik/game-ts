@@ -626,6 +626,12 @@ function getAvailableLeads(gameState: GameState): Lead[] {
   const availableLeads: Lead[] = []
 
   for (const lead of allLeads) {
+    // Never investigate the deep state lead
+    // It exists primarily for debugging purposes. Scheduled to be removed later.
+    if (lead.id === 'lead-deep-state') {
+      continue
+    }
+
     // Check if lead dependencies are met
     const dependenciesMet = lead.dependsOn.every((depId) => {
       // Check if it's a mission dependency (completed missions)

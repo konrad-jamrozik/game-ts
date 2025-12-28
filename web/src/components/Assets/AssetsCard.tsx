@@ -5,12 +5,7 @@ import { AssetsDataGrid } from './AssetsDataGrid'
 
 export function AssetsCard(): React.JSX.Element {
   return (
-    <ExpandableCard
-      id="assets"
-      title="Assets"
-      defaultExpanded={true}
-      sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}
-    >
+    <ExpandableCard id="assets" title="Assets" defaultExpanded={true} sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}>
       <AssetsDataGrid />
     </ExpandableCard>
   )
