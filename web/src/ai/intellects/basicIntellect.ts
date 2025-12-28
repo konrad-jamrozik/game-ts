@@ -26,6 +26,8 @@ import {
 } from '../../redux/slices/aiStateSlice'
 import { assertUnreachable } from '../../lib/primitives/assertPrimitives'
 
+type UpgradeNameOrNewAgent = UpgradeName | 'newAgent'
+
 const REQUIRED_TURNS_OF_SAVINGS = 5
 
 function getAiState(): BasicIntellectState {
@@ -505,11 +507,11 @@ function spendMoney(api: PlayTurnAPI): void {
   logFailedPurchase(api, priority)
 }
 
-function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
+function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   const { gameState } = api
   let cost: number
 
-  if (priority === 'hireAgent') {
+  if (priority === 'newAgent') {
     cost = AGENT_HIRE_COST
   } else {
     cost = getUpgradePrice(priority)
@@ -519,7 +521,7 @@ function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'
   const moneyAfterPurchase = currentMoney - cost
   const minimumRequiredSavings = computeMinimumRequiredSavings(api)
 
-  const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
+  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   console.log(
     `spendMoney: cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
   )
@@ -533,7 +535,7 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return requiredSavings
 }
 
-function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
+function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   const { gameState } = api
   const aiState = getAiState()
   const actualAgentCount = notTerminated(gameState.agents).length
@@ -541,7 +543,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
   // Priority 1: Buy agents until desired agent count is reached
   if (actualAgentCount < aiState.desiredAgentCount) {
     // KJA3 assert here that desiredAgentCount <= agentCap
-    return 'hireAgent'
+    return 'newAgent'
   }
 
   // Priority 2: Buy agent cap if below desired
@@ -573,11 +575,11 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
   assertUnreachable('computeNextBuyPriority: no priority found')
 }
 
-function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): boolean {
+function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): boolean {
   const { gameState } = api
   let cost: number
 
-  if (priority === 'hireAgent') {
+  if (priority === 'newAgent') {
     cost = AGENT_HIRE_COST
   } else {
     cost = getUpgradePrice(priority)
@@ -589,7 +591,7 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hire
   return moneyAfterPurchase >= minimumRequiredSavings
 }
 
-function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
+function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   executePurchase(api, priority)
 
   const { gameState: gameStateAfter } = api
@@ -603,8 +605,8 @@ function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
   }
 }
 
-function executePurchase(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
-  if (priority === 'hireAgent') {
+function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+  if (priority === 'newAgent') {
     api.hireAgent()
     return
   }
@@ -647,9 +649,9 @@ function areAllDesiredCountsMet(gameState: GameState): boolean {
   )
 }
 
-function logBuyResult(priority: UpgradeName | 'hireAgent', stateBeforeIncrease?: BasicIntellectState): void {
+function logBuyResult(priority: UpgradeNameOrNewAgent, stateBeforeIncrease?: BasicIntellectState): void {
   const aiState = getAiState()
-  const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
+  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   const increaseMessage = getIncreaseMessage(stateBeforeIncrease)
 
   console.log(
