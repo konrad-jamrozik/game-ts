@@ -17,6 +17,7 @@ import {
   f6mult,
   toF,
   type Fixed6,
+  toF6r,
 } from '../../primitives/fixed6'
 import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
@@ -156,7 +157,7 @@ function updateSurvivingAgent(
     // Multiply by EXHAUSTION_PENALTY (convert increments count to Fixed6, then multiply)
     const incrementsCount = Math.round(increments)
     const additionalExhaustion = f6mult(EXHAUSTION_PENALTY, incrementsCount)
-    agent.exhaustionPct = f6add(agent.exhaustionPct, toF6(additionalExhaustion))
+    agent.exhaustionPct = f6add(agent.exhaustionPct, toF6r(additionalExhaustion))
   }
 
   // ----------------------------------------
