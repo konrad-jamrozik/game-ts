@@ -235,6 +235,7 @@ function deployToMission(
   const includeInTraining = true
   // KJA2 this "doNot" patterns is confusing, as someone will think doNot == false, so "do".
   // Fix everywhere. Also doNotIncludeInTraining.
+  // Ideally some kind of key-value syntax would be used instead of boolean flags.
   const doNotKeepReserve = false
   // Select agents until we reach target threat
   while (currentThreat < targetThreat) {

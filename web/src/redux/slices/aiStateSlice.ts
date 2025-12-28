@@ -21,7 +21,7 @@ export type BasicIntellectState = {
 }
 
 function createInitialState(): BasicIntellectState {
-  return {
+  const state: BasicIntellectState = {
     desiredAgentCount: initialGameState.agents.length,
     desiredAgentCap: AGENT_CAP,
     desiredTransportCap: TRANSPORT_CAP,
@@ -35,6 +35,9 @@ function createInitialState(): BasicIntellectState {
     actualExhaustionRecoveryUpgrades: 0,
     actualHitPointsRecoveryUpgrades: 0,
   }
+  // Increase desired counts once to match reset behavior
+  increaseSomeDesiredCount(state)
+  return state
 }
 
 const aiStateSlice = createSlice({
