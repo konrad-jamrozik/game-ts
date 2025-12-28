@@ -13,7 +13,9 @@ import { LeadsDataGrid } from './LeadsDataGrid/LeadsDataGrid'
 import { MissionsDataGrid } from './MissionsDataGrid/MissionsDataGrid'
 import { PlayerActions } from './GameControls/PlayerActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
-import { AssetsAndCapabCard } from './Assets/AssetsAndCapabCard'
+import { AssetsCard } from './Assets/AssetsCard'
+import { CapacitiesCard } from './Assets/CapacitiesCard'
+import { UpgradesCard } from './Assets/UpgradesCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
@@ -77,7 +79,9 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <AssetsAndCapabCard />
+          <AssetsCard />
+          <CapacitiesCard />
+          <UpgradesCard />
           <SituationReportCard />
           <TurnReportCard />
         </Stack>
