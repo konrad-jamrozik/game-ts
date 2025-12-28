@@ -5,7 +5,7 @@ import { BATTLE_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionId } from '../../lib/model/modelIds'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
-import { f6c0, f6max, f6div } from '../../lib/primitives/fixed6'
+import { f6c0, f6max, f6div, f6fmtPctDec0 } from '../../lib/primitives/fixed6'
 import {
   AGENTS_SKILL_RETREAT_THRESHOLD,
   RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
@@ -50,16 +50,16 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
   if (lastRoundLog?.status === 'Retreated') {
     const agentSkillCurrent = lastRoundLog.agentSkill
     const agentSkillOriginal = lastRoundLog.agentSkillTotal
-    const enemySkillCurrent = lastRoundLog.enemySkill
 
     // Calculate agent skill percentage (current vs original)
     const agentSkillPct = f6div(agentSkillCurrent, agentSkillOriginal)
     const agentSkillPctFmt = fmtPctDec0(agentSkillPct)
     const agentSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
 
-    // Calculate enemy to agent skill ratio
-    const enemyToAgentRatio = f6div(enemySkillCurrent, agentSkillCurrent)
-    const enemyToAgentRatioFmt = fmtPctDec0(enemyToAgentRatio)
+    // Use the skillRatio from the round log instead of recalculating
+    // This ensures consistency with the retreat decision calculation
+    const enemyToAgentRatio = lastRoundLog.skillRatio
+    const enemyToAgentRatioFmt = f6fmtPctDec0(enemyToAgentRatio)
     const enemyToAgentThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
 
     retreatExplanation = `The mission commander ordered a retreat because the agents' combat effectiveness had dropped to ${agentSkillPctFmt} of their original strength (below the ${agentSkillThresholdFmt} threshold), while the enemy force remained at ${enemyToAgentRatioFmt} of the agents' current strength (at or above the ${enemyToAgentThresholdFmt} threshold).`

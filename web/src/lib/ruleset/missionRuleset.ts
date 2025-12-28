@@ -75,9 +75,9 @@ export type RetreatResult = {
  * @returns RetreatResult containing the retreat decision and calculated values for logging
  */
 export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], enemies: Enemy[]): RetreatResult {
-  const aliveAgents = agents.filter((agent) => f6gt(agent.hitPoints, f6c0))
+  const participatingAgents = agents.filter((agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent))
   const agentsTotalOriginalEffectiveSkill = f6sumBy(agentStats, (stats) => stats.initialEffectiveSkill)
-  const agentsTotalCurrentEffectiveSkill = f6sumBy(aliveAgents, (agent) => effectiveSkill(agent))
+  const agentsTotalCurrentEffectiveSkill = f6sumBy(participatingAgents, (agent) => effectiveSkill(agent))
 
   const agentsEffectiveSkillThreshold = toF6r(f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD))
 
@@ -85,8 +85,8 @@ export function shouldRetreat(agents: Agent[], agentStats: AgentCombatStats[], e
   const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
 
   // Check if enemy effective skill is at least 80% of agents' current effective skill
-  const aliveEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, f6c0))
-  const enemyTotalCurrentEffectiveSkill = f6sumBy(aliveEnemies, (enemy) => effectiveSkill(enemy))
+  const participatingEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy))
+  const enemyTotalCurrentEffectiveSkill = f6sumBy(participatingEnemies, (enemy) => effectiveSkill(enemy))
   const enemyToAgentsSkillRatio = toF6r(f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill))
   const enemyToAgentsSkillThreshold = toF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
   const enemyAboveThreshold = f6ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
