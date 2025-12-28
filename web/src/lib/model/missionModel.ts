@@ -3,9 +3,6 @@ import type { MissionState } from './outcomeTypes'
 import type { Enemy } from './enemyModel'
 import type { AgentId, FactionId, MissionDataId, MissionId } from './modelIds'
 
-// KJA1 do not re export
-export type { MissionState } from './outcomeTypes'
-
 export type FactionRewards = {
   factionId: FactionId
   /**

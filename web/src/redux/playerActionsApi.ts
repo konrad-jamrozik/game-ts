@@ -10,8 +10,7 @@ import {
   buyUpgrade,
 } from './slices/gameStateSlice'
 import type { UpgradeName } from '../lib/data_tables/upgrades'
-import type { PlayerActionsAPI } from '../lib/model_utils/playerActionsApiTypes'
-import type { ActionResult } from '../lib/model_utils/playTurnApiTypes'
+import type { ActionResult, PlayerActionsAPI } from '../lib/model_utils/playerActionsApiTypes'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 import {
   validateHireAgent,

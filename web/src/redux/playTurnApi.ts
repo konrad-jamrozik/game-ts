@@ -7,7 +7,8 @@ import {
   increaseDesiredCounts,
   type BasicIntellectState,
 } from './slices/aiStateSlice'
-import type { PlayTurnAPI, ActionResult } from '../lib/model_utils/playTurnApiTypes'
+import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
+import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
 import type { UpgradeName } from '../lib/data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 import type { GameState } from '../lib/model/gameStateModel'

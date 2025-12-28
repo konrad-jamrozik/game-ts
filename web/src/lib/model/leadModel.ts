@@ -1,9 +1,6 @@
 import type { LeadInvestigationState } from './outcomeTypes'
 import type { AgentId, LeadId, LeadInvestigationId } from './modelIds'
 
-// KJA1 do not re export
-export type { LeadInvestigationState } from './outcomeTypes'
-
 export type Lead = {
   id: LeadId
   name: string
