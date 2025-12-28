@@ -6,7 +6,7 @@ todos:
     content: Add BasicIntellectState type and module-level state variable with initialization
     status: pending
   - id: reset-function
-    content: Create resetBasicIntellectState() and getBasicIntellectState() exports
+    content: Create resetBasicIntellectState() (runs weighted random to set first goal) and getBasicIntellectState()
     status: pending
   - id: compute-priority
     content: Rewrite computeNextBuyPriority() to use state.desiredX counts
@@ -26,7 +26,7 @@ todos:
 
 ## Overview
 
-Replace the current turn-based `computeDesiredXCount` logic with a persistent state that tracks desired counts, initialized at game start and reset when the game is reset. After each purchase, the AI will randomly (with weighted probabilities) increase one of the desired counts.
+Replace the current turn-based `computeDesiredXCount` logic with a persistent state that tracks desired counts, initialized at game start and reset when the game is reset. After each purchase, **only if all desired counts are currently met**, the AI will randomly (with weighted probabilities) increase one of the desired counts by 1. This represents the AI "raising its ambitions" after achieving its current goals.
 
 ## Key Design Decisions
 
@@ -51,33 +51,35 @@ type BasicIntellectState = {
 }
 ```
 
+## Key Invariants
 
+1. **`desiredAgentCount <= agentCap` always holds.** When the weighted randomization picks "agents" but `desiredAgentCount` would exceed `agentCap`, we increase `desiredAgentCap` instead.
+
+2. **At most ONE cap/upgrade can be above actual, and exactly by 1.** This is because desired counts only increase by 1 after a successful purchase, and the AI buys that item before any other desired count can increase.
+
+3. **When `agents < desiredAgentCount`, all caps/upgrades equal their actual values.** The only way for a cap/upgrade to be above actual is if the AI just increased it (after buying the previous goal). But that can only happen when all agent goals were already met.
 
 ## Algorithm
 
 ```mermaid
 flowchart TD
     A[computeNextBuyPriority] --> B{agents < desiredAgentCount?}
-    B -->|Yes| C{at agent cap?}
-    C -->|Yes| D[return Agent cap]
-    C -->|No| E[return hireAgent]
-    B -->|No| F{any upgrade below desired?}
-    F -->|Yes| G[return first needed upgrade]
-    F -->|No| H[return undefined]
+    B -->|Yes| E[return hireAgent]
+    B -->|No| F[return the one cap/upgrade where actual < desired]
     
     I[buy] --> J[execute purchase]
-    J --> K{any desired not met?}
+    J --> K{all desired counts met?}
+    K -->|No| P[skip increase]
     K -->|Yes| L[weighted random: pick which desired to increase]
-    L --> M{picked agents AND at cap?}
+    L --> M{picked agents AND desiredAgentCount == agentCap?}
     M -->|Yes| N[increase desiredAgentCap instead]
     M -->|No| O[increase picked desired by 1]
-    K -->|No| P[skip increase]
-    O --> Q[log purchase and state]
+    P --> Q[log purchase and state]
+    O --> Q
     N --> Q
-    P --> Q
 ```
 
-
+**Note**: `computeNextBuyPriority` always returns a value. The initialization logic must run "pick which desired to increase" to ensure there's always exactly one goal to pursue.
 
 ## Files to Modify
 
@@ -85,12 +87,12 @@ flowchart TD
 
 - Add `BasicIntellectState` type
 - Add module-level `state` variable with initial values
-- Export `resetBasicIntellectState()` function and `getBasicIntellectState()` for debugging
+- Export `resetBasicIntellectState()` function (must run weighted random to set first goal) and `getBasicIntellectState()` for debugging
 - Rewrite `computeNextBuyPriority()` to use desired counts from state
 - Rewrite `buy()` to:
-- Execute the purchase
-- Call `maybeIncreaseDesiredCount()` to randomly increase a desired count
-- Log results
+  - Execute the purchase
+  - Check if all desired counts are met; if so, call `increaseRandomDesiredCount()` to raise ambitions
+  - Log what was bought, what desired count increased (if any), and all current desired counts
 - Remove old `computeDesiredXCount()` and `shouldBuyX()` functions
 
 ### 2. [`web/src/components/GameControls/ResetControls.tsx`](web/src/components/GameControls/ResetControls.tsx)
@@ -119,9 +121,12 @@ For weighted randomization after each purchase:
 
 At end of `buy()`:
 
-```javascript
-buy: Purchased [item]. Increased desired [category] to [value]. 
+```
+buy: Purchased [item]. [Increased desired [category] to [value] | No increase (goals not yet met)].
   Desired counts: agents=5, agentCap=20, transportCap=7, trainingCap=1, ...
+
+
+
 
 
 
