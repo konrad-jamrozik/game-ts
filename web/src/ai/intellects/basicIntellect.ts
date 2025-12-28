@@ -442,9 +442,16 @@ function selectNextAgentForPriorityContracting(
 ): Agent | undefined {
   // Get agents in base (Standby or in Training)
   const inBaseAgents = gameState.agents.filter((agent: Agent) => {
+    // Only select agents that are Available (required for validation)
+    if (agent.state !== 'Available') {
+      return false
+    }
     if (agent.assignment === 'Standby') {
       return true
     }
+    // KJA3 this is currently effectively no-op, because agent must
+    // become smarter, and first unassign training agents.
+    // OR change game logic to allow directly assigning agents in training.
     if (agent.assignment === 'Training') {
       return includeInTraining
     }
@@ -474,6 +481,10 @@ function selectNextBestReadyAgent(
   // KJA3 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
   // these utils in many places.
   const inBaseAgents = gameState.agents.filter((agent: Agent) => {
+    // Only select agents that are Available (required for validation)
+    if (agent.state !== 'Available') {
+      return false
+    }
     if (agent.assignment === 'Standby') {
       return true
     }

@@ -13,7 +13,7 @@ import type { RootState } from '../../redux/rootReducer'
 import { truncateEventsTo } from '../../redux/slices/eventsSlice'
 import { reset } from '../../redux/slices/gameStateSlice'
 import { clearAllSelection } from '../../redux/slices/selectionSlice'
-import { setResetControlsExpanded, setRevealAllFactionProfiles } from '../../redux/slices/settingsSlice'
+import { setResetControlsExpanded } from '../../redux/slices/settingsSlice'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { useTheme, type SxProps } from '@mui/material/styles'
@@ -50,8 +50,6 @@ export function ResetControls(): React.JSX.Element {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
     dispatch(clearAllSelection())
-    dispatch(setRevealAllFactionProfiles(false))
-    // Reset undo history
     dispatch(ActionCreators.clearHistory())
   }
 
