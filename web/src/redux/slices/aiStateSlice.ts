@@ -75,7 +75,7 @@ const aiStateSlice = createSlice({
 
 function increaseSomeDesiredCount(state: BasicIntellectState): void {
   // Priority picks (deterministic, checked first)
-  const targetTransportCap = Math.ceil(state.desiredAgentCount * 0.5)
+  const targetTransportCap = Math.ceil(state.desiredAgentCount * 0.25)
   if (state.desiredTransportCap < targetTransportCap) {
     state.desiredTransportCap += 1
     return
