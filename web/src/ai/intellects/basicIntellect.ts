@@ -17,14 +17,10 @@ import { initialAgent } from '../../lib/factories/agentFactory'
 import {
   AGENT_CAP,
   AGENT_CONTRACTING_INCOME,
-  AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   AGENT_HIRE_COST,
-  AGENT_HIT_POINTS_RECOVERY_PCT,
   TRAINING_CAP,
-  TRAINING_SKILL_GAIN,
   TRANSPORT_CAP,
 } from '../../lib/data_tables/constants'
-import { initialWeapon } from '../../lib/factories/weaponFactory'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
 
 const REQUIRED_TURNS_OF_SAVINGS = 5
@@ -34,10 +30,16 @@ type BasicIntellectState = {
   desiredAgentCap: number
   desiredTransportCap: number
   desiredTrainingCap: number
-  desiredWeaponDamage: number
-  desiredTrainingSkillGain: number
-  desiredExhaustionRecovery: number
-  desiredHitPointsRecoveryPct: number
+  // Upgrade counts (number of upgrades bought/to buy)
+  desiredWeaponDamageUpgrades: number
+  desiredTrainingSkillGainUpgrades: number
+  desiredExhaustionRecoveryUpgrades: number
+  desiredHitPointsRecoveryUpgrades: number
+  // Actual upgrade counts (number of upgrades bought so far)
+  actualWeaponDamageUpgrades: number
+  actualTrainingSkillGainUpgrades: number
+  actualExhaustionRecoveryUpgrades: number
+  actualHitPointsRecoveryUpgrades: number
 }
 
 // KJA2 this won't be persisted to indexedDB.
@@ -542,22 +544,22 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
   if (gameState.trainingCap < basicIntellectState.desiredTrainingCap) {
     return 'Training cap'
   }
-  if (gameState.weaponDamage < basicIntellectState.desiredWeaponDamage) {
+  if (basicIntellectState.actualWeaponDamageUpgrades < basicIntellectState.desiredWeaponDamageUpgrades) {
     return 'Weapon damage'
   }
-  // KJA1 BUG these are wrong. What is actually desired is "the count of upgrades bought" not the actual value. So no Fixed6.
-  if (toF(gameState.trainingSkillGain) < basicIntellectState.desiredTrainingSkillGain) {
+  if (basicIntellectState.actualTrainingSkillGainUpgrades < basicIntellectState.desiredTrainingSkillGainUpgrades) {
     return 'Training skill gain'
   }
-  if (toF(gameState.exhaustionRecovery) < basicIntellectState.desiredExhaustionRecovery) {
+  if (basicIntellectState.actualExhaustionRecoveryUpgrades < basicIntellectState.desiredExhaustionRecoveryUpgrades) {
     return 'Exhaustion recovery'
   }
-  if (toF(gameState.hitPointsRecoveryPct) < basicIntellectState.desiredHitPointsRecoveryPct) {
+  if (basicIntellectState.actualHitPointsRecoveryUpgrades < basicIntellectState.desiredHitPointsRecoveryUpgrades) {
     return 'Hit points recovery %'
   }
 
   // This should never happen due to invariants - there's always exactly one goal to pursue
   // TypeScript requires a return, so we assert this case is unreachable
+  // KJA2 assert that not possible
   return 'hireAgent' as UpgradeName | 'hireAgent'
 }
 
@@ -583,6 +585,26 @@ function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
     api.hireAgent()
   } else {
     api.buyUpgrade(priority)
+    // Track actual upgrade counts (caps are tracked via game state, not here)
+    switch (priority) {
+      case 'Weapon damage':
+        basicIntellectState.actualWeaponDamageUpgrades += 1
+        break
+      case 'Training skill gain':
+        basicIntellectState.actualTrainingSkillGainUpgrades += 1
+        break
+      case 'Exhaustion recovery':
+        basicIntellectState.actualExhaustionRecoveryUpgrades += 1
+        break
+      case 'Hit points recovery %':
+        basicIntellectState.actualHitPointsRecoveryUpgrades += 1
+        break
+      case 'Agent cap':
+      case 'Transport cap':
+      case 'Training cap':
+        // Cap upgrades are tracked via game state, not in basicIntellectState
+        break
+    }
   }
 
   const { gameState: gameStateAfter } = api
@@ -595,10 +617,10 @@ function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
     gameStateAfter.agentCap >= basicIntellectState.desiredAgentCap &&
     gameStateAfter.transportCap >= basicIntellectState.desiredTransportCap &&
     gameStateAfter.trainingCap >= basicIntellectState.desiredTrainingCap &&
-    gameStateAfter.weaponDamage >= basicIntellectState.desiredWeaponDamage &&
-    toF(gameStateAfter.trainingSkillGain) >= basicIntellectState.desiredTrainingSkillGain &&
-    toF(gameStateAfter.exhaustionRecovery) >= basicIntellectState.desiredExhaustionRecovery &&
-    toF(gameStateAfter.hitPointsRecoveryPct) >= basicIntellectState.desiredHitPointsRecoveryPct
+    basicIntellectState.actualWeaponDamageUpgrades >= basicIntellectState.desiredWeaponDamageUpgrades &&
+    basicIntellectState.actualTrainingSkillGainUpgrades >= basicIntellectState.desiredTrainingSkillGainUpgrades &&
+    basicIntellectState.actualExhaustionRecoveryUpgrades >= basicIntellectState.desiredExhaustionRecoveryUpgrades &&
+    basicIntellectState.actualHitPointsRecoveryUpgrades >= basicIntellectState.desiredHitPointsRecoveryUpgrades
 
   let increaseMessage: string
 
@@ -617,14 +639,20 @@ function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
       increaseMessage = `Increased desired transportCap to ${basicIntellectState.desiredTransportCap}`
     } else if (basicIntellectState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
       increaseMessage = `Increased desired trainingCap to ${basicIntellectState.desiredTrainingCap}`
-    } else if (basicIntellectState.desiredWeaponDamage > stateBeforeIncrease.desiredWeaponDamage) {
-      increaseMessage = `Increased desired weaponDamage to ${basicIntellectState.desiredWeaponDamage}`
-    } else if (basicIntellectState.desiredTrainingSkillGain > stateBeforeIncrease.desiredTrainingSkillGain) {
-      increaseMessage = `Increased desired trainingSkillGain to ${basicIntellectState.desiredTrainingSkillGain.toFixed(1)}`
-    } else if (basicIntellectState.desiredExhaustionRecovery > stateBeforeIncrease.desiredExhaustionRecovery) {
-      increaseMessage = `Increased desired exhaustionRecovery to ${basicIntellectState.desiredExhaustionRecovery.toFixed(1)}`
-    } else if (basicIntellectState.desiredHitPointsRecoveryPct > stateBeforeIncrease.desiredHitPointsRecoveryPct) {
-      increaseMessage = `Increased desired hitPointsRecoveryPct to ${basicIntellectState.desiredHitPointsRecoveryPct.toFixed(1)}`
+    } else if (basicIntellectState.desiredWeaponDamageUpgrades > stateBeforeIncrease.desiredWeaponDamageUpgrades) {
+      increaseMessage = `Increased desired weaponDamageUpgrades to ${basicIntellectState.desiredWeaponDamageUpgrades}`
+    } else if (
+      basicIntellectState.desiredTrainingSkillGainUpgrades > stateBeforeIncrease.desiredTrainingSkillGainUpgrades
+    ) {
+      increaseMessage = `Increased desired trainingSkillGainUpgrades to ${basicIntellectState.desiredTrainingSkillGainUpgrades}`
+    } else if (
+      basicIntellectState.desiredExhaustionRecoveryUpgrades > stateBeforeIncrease.desiredExhaustionRecoveryUpgrades
+    ) {
+      increaseMessage = `Increased desired exhaustionRecoveryUpgrades to ${basicIntellectState.desiredExhaustionRecoveryUpgrades}`
+    } else if (
+      basicIntellectState.desiredHitPointsRecoveryUpgrades > stateBeforeIncrease.desiredHitPointsRecoveryUpgrades
+    ) {
+      increaseMessage = `Increased desired hitPointsRecoveryUpgrades to ${basicIntellectState.desiredHitPointsRecoveryUpgrades}`
     } else {
       increaseMessage = 'No increase (goals not yet met)'
     }
@@ -636,7 +664,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
   const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
 
   console.log(
-    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${basicIntellectState.desiredAgentCount}, agentCap=${basicIntellectState.desiredAgentCap}, transportCap=${basicIntellectState.desiredTransportCap}, trainingCap=${basicIntellectState.desiredTrainingCap}, weaponDamage=${basicIntellectState.desiredWeaponDamage}, trainingSkillGain=${basicIntellectState.desiredTrainingSkillGain.toFixed(1)}, exhaustionRecovery=${basicIntellectState.desiredExhaustionRecovery.toFixed(1)}, hitPointsRecoveryPct=${basicIntellectState.desiredHitPointsRecoveryPct.toFixed(1)}`,
+    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${basicIntellectState.desiredAgentCount}, agentCap=${basicIntellectState.desiredAgentCap}, transportCap=${basicIntellectState.desiredTransportCap}, trainingCap=${basicIntellectState.desiredTrainingCap}, weaponDamageUpgrades=${basicIntellectState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${basicIntellectState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${basicIntellectState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${basicIntellectState.desiredHitPointsRecoveryUpgrades}`,
   )
 }
 
@@ -783,10 +811,14 @@ function createInitialState(): BasicIntellectState {
     desiredAgentCap: AGENT_CAP,
     desiredTransportCap: TRANSPORT_CAP,
     desiredTrainingCap: TRAINING_CAP,
-    desiredWeaponDamage: initialWeapon.damage,
-    desiredTrainingSkillGain: toF(TRAINING_SKILL_GAIN),
-    desiredExhaustionRecovery: toF(AGENT_EXHAUSTION_RECOVERY_PER_TURN),
-    desiredHitPointsRecoveryPct: toF(AGENT_HIT_POINTS_RECOVERY_PCT),
+    desiredWeaponDamageUpgrades: 0,
+    desiredTrainingSkillGainUpgrades: 0,
+    desiredExhaustionRecoveryUpgrades: 0,
+    desiredHitPointsRecoveryUpgrades: 0,
+    actualWeaponDamageUpgrades: 0,
+    actualTrainingSkillGainUpgrades: 0,
+    actualExhaustionRecoveryUpgrades: 0,
+    actualHitPointsRecoveryUpgrades: 0,
   }
 }
 
@@ -820,19 +852,19 @@ function increaseSomeDesiredCount(): void {
   }
 
   if (random < 0.625) {
-    basicIntellectState.desiredWeaponDamage += 1
+    basicIntellectState.desiredWeaponDamageUpgrades += 1
     return
   }
 
   if (random < 0.75) {
-    basicIntellectState.desiredTrainingSkillGain += 0.1
+    basicIntellectState.desiredTrainingSkillGainUpgrades += 1
     return
   }
 
   if (random < 0.875) {
-    basicIntellectState.desiredExhaustionRecovery += 1
+    basicIntellectState.desiredExhaustionRecoveryUpgrades += 1
     return
   }
 
-  basicIntellectState.desiredHitPointsRecoveryPct += 0.2
+  basicIntellectState.desiredHitPointsRecoveryUpgrades += 1
 }
