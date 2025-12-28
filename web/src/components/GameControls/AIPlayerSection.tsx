@@ -14,7 +14,7 @@ import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer, delegateTurnsToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
-import { setAIIntellectSelection, setAutoAdvanceTurn } from '../../redux/slices/selectionSlice'
+import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../../redux/slices/selectionSlice'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
@@ -23,12 +23,11 @@ export function AIPlayerSection(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
   const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? false)
+  const aiTurnCount = useAppSelector((state) => state.selection.aiTurnCount ?? 1)
   const intellectNames = getAllIntellectNames()
   assertDefined(intellectNames[0], 'No intellect names found')
   const initialIntellect = intellectNames[0]
   const selectedIntellect = selectedAIIntellect ?? initialIntellect
-
-  const [turnCount, setTurnCount] = React.useState<number>(1)
 
   const gameOver = isGameOver(gameState)
   const gameWon = isGameWon(gameState)
@@ -55,7 +54,13 @@ export function AIPlayerSection(): React.JSX.Element {
     if (!hasValidIntellect) {
       return
     }
-    delegateTurnsToAIPlayer(selectedIntellect, turnCount)
+    delegateTurnsToAIPlayer(selectedIntellect, aiTurnCount)
+  }
+
+  function handleTurnCountChange(value: number | null): void {
+    if (typeof value === 'number' && value >= 1) {
+      dispatch(setAITurnCount(value))
+    }
   }
 
   function handleNextTurn(): void {
@@ -93,12 +98,8 @@ export function AIPlayerSection(): React.JSX.Element {
           Delegate to AI
         </Button>
         <NumberField.Root
-          value={turnCount}
-          onValueChange={(value) => {
-            if (typeof value === 'number' && value >= 1) {
-              setTurnCount(value)
-            }
-          }}
+          value={aiTurnCount}
+          onValueChange={handleTurnCountChange}
           min={1}
           disabled={isButtonDisabled}
           style={{
@@ -160,7 +161,7 @@ export function AIPlayerSection(): React.JSX.Element {
           </NumberField.Group>
         </NumberField.Root>
         <Button variant="contained" onClick={handleDelegateTurnsToAI} disabled={isButtonDisabled} fullWidth>
-          Delegate {turnCount} turn{turnCount !== 1 ? 's' : ''} to AI
+          Delegate {aiTurnCount} turn{aiTurnCount !== 1 ? 's' : ''} to AI
         </Button>
         <FormControlLabel
           control={<Checkbox checked={autoAdvanceTurn} onChange={handleAutoAdvanceTurnChange} />}
