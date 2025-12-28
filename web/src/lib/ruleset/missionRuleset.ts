@@ -32,7 +32,7 @@ export function canParticipateInBattle(actor: Actor): boolean {
  * @returns true if the actor is incapacitated, false otherwise
  */
 export function isIncapacitated(actor: Actor): boolean {
-  const threshold = toF6(f6mult(actor.skill, COMBAT_INCAPACITATION_THRESHOLD))
+  const threshold = toF6r(f6mult(actor.skill, COMBAT_INCAPACITATION_THRESHOLD))
   return f6le(effectiveSkill(actor), threshold)
 }
 
