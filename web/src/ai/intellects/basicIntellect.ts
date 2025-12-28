@@ -24,6 +24,7 @@ import {
   incrementActualHitPointsRecoveryUpgrades,
   increaseDesiredCounts,
 } from '../../redux/slices/aiStateSlice'
+import { assertUnreachable } from '../../lib/primitives/assertPrimitives'
 
 const REQUIRED_TURNS_OF_SAVINGS = 5
 
@@ -499,6 +500,29 @@ function spendMoney(api: PlayTurnAPI): void {
     buy(api, priority)
     priority = computeNextBuyPriority(api)
   }
+
+  // Log why we didn't buy anything
+  logFailedPurchase(api, priority)
+}
+
+function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): void {
+  const { gameState } = api
+  let cost: number
+
+  if (priority === 'hireAgent') {
+    cost = AGENT_HIRE_COST
+  } else {
+    cost = getUpgradePrice(priority)
+  }
+
+  const currentMoney = gameState.money
+  const moneyAfterPurchase = currentMoney - cost
+  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
+
+  const purchaseItem = priority === 'hireAgent' ? 'hireAgent' : priority
+  console.log(
+    `spendMoney: cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
+  )
 }
 
 function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
@@ -546,10 +570,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
     return 'Hit points recovery %'
   }
 
-  // This should never happen due to invariants - there's always exactly one goal to pursue
-  // TypeScript requires a return, so we assert this case is unreachable
-  // KJA2 assert that not possible
-  return 'hireAgent' as UpgradeName | 'hireAgent'
+  assertUnreachable('computeNextBuyPriority: no priority found')
 }
 
 function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeName | 'hireAgent'): boolean {

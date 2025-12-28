@@ -71,7 +71,8 @@ export function assertNotNaN(value: number, errMsg = 'Value must not be NaN'): a
 }
 
 export function assertUnreachable(value?: unknown): never {
-  throw new Error(`Unreachable code reached. Received: ${JSON.stringify(value)}`)
+  const message = typeof value === 'string' ? value : JSON.stringify(value)
+  throw new Error(`Unreachable code reached. Received: ${message}`)
 }
 
 export function assertNonNeg(value: number, errMsg = 'Value must be non-negative'): number {

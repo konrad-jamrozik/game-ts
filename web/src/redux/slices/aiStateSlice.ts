@@ -92,8 +92,8 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
   // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
   const random = Math.random()
 
-  // Special case: if picked agents but at cap, increase agent cap instead
-  if (random < 0.5) {
+  if (random < 0.8) {
+    // Special case: if picked agents but at cap, increase agent cap instead
     if (state.desiredAgentCount === state.desiredAgentCap) {
       state.desiredAgentCap += 1
       return
@@ -102,17 +102,17 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
     return
   }
 
-  if (random < 0.625) {
+  if (random < 0.85) {
     state.desiredWeaponDamageUpgrades += 1
     return
   }
 
-  if (random < 0.75) {
+  if (random < 0.9) {
     state.desiredTrainingSkillGainUpgrades += 1
     return
   }
 
-  if (random < 0.875) {
+  if (random < 0.95) {
     state.desiredExhaustionRecoveryUpgrades += 1
     return
   }
