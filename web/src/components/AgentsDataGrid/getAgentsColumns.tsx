@@ -154,6 +154,12 @@ export function getAgentsColumns(
       headerName: 'Exh.',
       width: columnWidths['agents.exhaustionPct'],
       cellClassName: 'agents-color-bar-cell',
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => row.exhaustionPct,
+        undefined,
+        (row) => row.rowId,
+      ),
       renderCell: (params: GridRenderCellParams<AgentRow, Fixed6>): React.JSX.Element => {
         const exhaustionPctF6 = params.value ?? f6c0
         const exhaustionPct = toF(exhaustionPctF6)

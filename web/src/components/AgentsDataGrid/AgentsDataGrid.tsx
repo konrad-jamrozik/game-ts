@@ -1,4 +1,3 @@
-// KJA1 sorting by exhaustion doesn't work
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
