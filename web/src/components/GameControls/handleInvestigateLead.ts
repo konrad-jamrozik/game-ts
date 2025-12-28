@@ -62,7 +62,10 @@ function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies)
   // Assert that investigation exists (will throw if not found)
   getLeadInvestigationById(selectedInvestigationId, gameState)
 
-  const result = api.addAgentsToInvestigation({ investigationId: selectedInvestigationId, agentIds: selectedAgentIds })
+  const result = api.addAgentsToInvestigation(gameState, {
+    investigationId: selectedInvestigationId,
+    agentIds: selectedAgentIds,
+  })
   if (!result.success) {
     setAlertMessage(result.errorMessage)
     setShowAlert(true)
@@ -93,7 +96,7 @@ function handleStartNewInvestigation(deps: HandleInvestigateLeadDependencies): v
     `Lead ${selectedLeadId} has already been investigated and is not repeatable`,
   )
 
-  const result = api.startLeadInvestigation({ leadId: selectedLeadId, agentIds: selectedAgentIds })
+  const result = api.startLeadInvestigation(gameState, { leadId: selectedLeadId, agentIds: selectedAgentIds })
   if (!result.success) {
     setAlertMessage(result.errorMessage)
     setShowAlert(true)

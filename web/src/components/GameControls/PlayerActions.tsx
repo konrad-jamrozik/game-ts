@@ -4,7 +4,7 @@ import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getPlayerActionsApi } from '../../redux/playTurnApi'
+import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
@@ -28,7 +28,7 @@ export function PlayerActions(): React.JSX.Element {
   const api = getPlayerActionsApi()
 
   function handleHireAgent(): void {
-    const result = api.hireAgent()
+    const result = api.hireAgent(gameState)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -38,7 +38,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleSackAgents(): void {
-    const result = api.sackAgents(selectedAgentIds)
+    const result = api.sackAgents(gameState, selectedAgentIds)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -49,7 +49,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleAssignToContracting(): void {
-    const result = api.assignAgentsToContracting(selectedAgentIds)
+    const result = api.assignAgentsToContracting(gameState, selectedAgentIds)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -60,7 +60,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleAssignToTraining(): void {
-    const result = api.assignAgentsToTraining(selectedAgentIds)
+    const result = api.assignAgentsToTraining(gameState, selectedAgentIds)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -71,7 +71,7 @@ export function PlayerActions(): React.JSX.Element {
   }
 
   function handleRecallAgents(): void {
-    const result = api.recallAgents(selectedAgentIds)
+    const result = api.recallAgents(gameState, selectedAgentIds)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -101,7 +101,7 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    const result = api.deployAgentsToMission({ missionId: selectedMissionId, agentIds: selectedAgentIds })
+    const result = api.deployAgentsToMission(gameState, { missionId: selectedMissionId, agentIds: selectedAgentIds })
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
@@ -119,7 +119,7 @@ export function PlayerActions(): React.JSX.Element {
       return
     }
 
-    const result = api.buyUpgrade(selectedUpgradeName)
+    const result = api.buyUpgrade(gameState, selectedUpgradeName)
     if (!result.success) {
       setAlertMessage(result.errorMessage)
       setShowAlert(true)
