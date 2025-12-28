@@ -23,18 +23,21 @@ import {
   validateStartLeadInvestigation,
   validateAddAgentsToInvestigation,
   validateBuyUpgrade,
+  type ValidationResult,
 } from '../lib/model_utils/validatePlayerActions'
+import { assertTrue } from '../lib/primitives/assertPrimitives'
 
-export function getPlayTurnApi(): PlayTurnAPI {
+export function getPlayTurnApi(options?: { strict?: boolean }): PlayTurnAPI {
+  const strict = options?.strict ?? false
+
   const api: PlayTurnAPI = {
     gameState: store.getState().undoable.present.gameState,
 
     hireAgent(): ActionResult {
       console.log('⚡ Player action: hire agent')
       const validation = validateHireAgent(api.gameState)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(hireAgent())
       updateGameState()
       return { success: true }
@@ -43,9 +46,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     sackAgents(agentIds: AgentId[]): ActionResult {
       console.log('⚡ Player action: sack agents. Agent IDs:', agentIds)
       const validation = validateSackAgents(api.gameState, agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(sackAgents(agentIds))
       updateGameState()
       return { success: true }
@@ -54,9 +56,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     assignAgentsToContracting(agentIds: AgentId[]): ActionResult {
       console.log('⚡ Player action: assign agents to contracting. Agent IDs:', agentIds)
       const validation = validateAssignToContracting(api.gameState, agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(assignAgentsToContracting(agentIds))
       updateGameState()
       return { success: true }
@@ -65,9 +66,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     assignAgentsToTraining(agentIds: AgentId[]): ActionResult {
       console.log('⚡ Player action: assign agents to training. Agent IDs:', agentIds)
       const validation = validateAssignToTraining(api.gameState, agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(assignAgentsToTraining(agentIds))
       updateGameState()
       return { success: true }
@@ -76,9 +76,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     recallAgents(agentIds: AgentId[]): ActionResult {
       console.log('⚡ Player action: recall agents. Agent IDs:', agentIds)
       const validation = validateRecallAgents(api.gameState, agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(recallAgents(agentIds))
       updateGameState()
       return { success: true }
@@ -87,9 +86,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult {
       console.log('⚡ Player action: start lead investigation. Lead ID:', params.leadId, 'Agent IDs:', params.agentIds)
       const validation = validateStartLeadInvestigation(api.gameState, params.agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(startLeadInvestigation(params))
       updateGameState()
       return { success: true }
@@ -103,9 +101,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
         params.agentIds,
       )
       const validation = validateAddAgentsToInvestigation(api.gameState, params.agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(addAgentsToInvestigation(params))
       updateGameState()
       return { success: true }
@@ -119,9 +116,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
         params.agentIds,
       )
       const validation = validateDeployAgents(api.gameState, params.missionId, params.agentIds)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(deployAgentsToMission(params))
       updateGameState()
       return { success: true }
@@ -130,9 +126,8 @@ export function getPlayTurnApi(): PlayTurnAPI {
     buyUpgrade(upgradeName: UpgradeName): ActionResult {
       console.log('⚡ Player action: buy upgrade. Upgrade:', upgradeName)
       const validation = validateBuyUpgrade(api.gameState, upgradeName)
-      if (!validation.isValid) {
-        return { success: false, errorMessage: validation.errorMessage }
-      }
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
       store.dispatch(buyUpgrade(upgradeName))
       updateGameState()
       return { success: true }
@@ -144,4 +139,14 @@ export function getPlayTurnApi(): PlayTurnAPI {
   }
 
   return api
+}
+
+function handleValidationError(strict: boolean, validation: ValidationResult): ActionResult | undefined {
+  if (!validation.isValid) {
+    if (strict) {
+      assertTrue(false, `AI player validation failed: ${validation.errorMessage}`)
+    }
+    return { success: false, errorMessage: validation.errorMessage }
+  }
+  return undefined
 }

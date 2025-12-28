@@ -7,7 +7,7 @@ import { getIntellect } from './intellectRegistry'
 export function delegateTurnToAIPlayer(intellectName: string): void {
   const intellect = getIntellect(intellectName)
 
-  const api = getPlayTurnApi()
+  const api = getPlayTurnApi({ strict: true })
   intellect.playTurn(api)
 
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
