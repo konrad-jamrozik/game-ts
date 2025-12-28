@@ -15,6 +15,7 @@ import { delegateTurnToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 import { setAIIntellectSelection, setAutoAdvanceTurn } from '../../redux/slices/selectionSlice'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
+import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
 export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -22,7 +23,8 @@ export function AIPlayerSection(): React.JSX.Element {
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
   const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? false)
   const intellectNames = getAllIntellectNames()
-  const initialIntellect = intellectNames.includes('basic') ? 'basic' : (intellectNames[0] ?? '')
+  assertDefined(intellectNames[0], 'No intellect names found')
+  const initialIntellect = intellectNames[0]
   const selectedIntellect = selectedAIIntellect ?? initialIntellect
 
   const gameOver = isGameOver(gameState)

@@ -70,10 +70,10 @@ const selectionSlice = createSlice({
       delete state.selectedInvestigationId
       delete state.selectedMissionId
       delete state.selectedUpgradeName
-      delete state.selectedAIIntellect
-      delete state.autoAdvanceTurn
       delete state.viewMissionDetailsId
       delete state.viewCharts
+      // Selections not deleted, i.e. preserved:
+      // AI section selections (selectedAIIntellect and autoAdvanceTurn)
     },
     setViewMissionDetails(state, action: PayloadAction<MissionId>) {
       state.viewMissionDetailsId = action.payload

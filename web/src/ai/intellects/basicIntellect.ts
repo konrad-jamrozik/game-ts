@@ -85,7 +85,13 @@ function deployToMissions(api: PlayTurnAPI): void {
   let mission = selectNextMissionToDeploy(activeMissions)
   while (mission !== undefined) {
     deploymentsAttempted += 1
+    const missionId = mission.id
     const deployed = deployToMission(api, mission, cancelledDeployments)
+    // Remove the evaluated mission from the list
+    const missionIndex = activeMissions.findIndex((m) => m.id === missionId)
+    if (missionIndex !== -1) {
+      activeMissions.splice(missionIndex, 1)
+    }
     if (deployed) {
       deploymentsSuccessful += 1
       mission = selectNextMissionToDeploy(activeMissions)
