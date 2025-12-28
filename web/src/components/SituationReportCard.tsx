@@ -67,6 +67,7 @@ function getFactionRows(faction: {
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { panic, factions, leadInvestigationCounts } = gameState
+  const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
 
   const panicPctStr = f6fmtPctDec2(panic)
   const panicPct = toF(panic) * 100
@@ -83,7 +84,9 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
-  const discoveredFactions = factions.filter((faction) => isFactionDiscovered(faction, leadInvestigationCounts))
+  const discoveredFactions = revealAllFactionProfiles
+    ? factions
+    : factions.filter((faction) => isFactionDiscovered(faction, leadInvestigationCounts))
 
   return (
     <ExpandableCard

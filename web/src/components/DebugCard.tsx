@@ -13,6 +13,7 @@ import {
   debugAddCapabilities,
   debugAddEverything,
 } from '../redux/slices/gameStateSlice'
+import { toggleRevealAllFactionProfiles } from '../redux/slices/settingsSlice'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -45,6 +46,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugAddEverything())
   }
 
+  function handleRevealAllFactionProfiles(): void {
+    dispatch(toggleRevealAllFactionProfiles())
+  }
+
   return (
     <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
@@ -68,6 +73,9 @@ export function DebugCard(): React.JSX.Element {
         </Button>
         <Button variant="contained" onClick={handleSpawnMissions}>
           Spawn missions
+        </Button>
+        <Button variant="contained" onClick={handleRevealAllFactionProfiles}>
+          Reveal all faction profiles
         </Button>
       </Stack>
     </ExpandableCard>
