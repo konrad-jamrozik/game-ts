@@ -25,6 +25,11 @@ export const basicIntellect: AIPlayerIntellect = {
   },
 }
 
+/*
+ * KJA1 The manageAgents should have assignToContractingWithPriority function invoked before deployToMissions.
+ * This function should assign enough agents to contracting so that the projected income is not negative.
+ * This may mean assigning agents that are not ready (having exhaustion >= 5%)
+ */
 function manageAgents(api: PlayTurnAPI): void {
   unassignExhaustedAgents(api)
   deployToMissions(api)
@@ -433,7 +438,7 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return requiredSavings
 }
 
-// KJA2 rewrite it so it works like that:
+// KJA2 rewrite "computeNextBuyPriority" and "buy" so it works like that:
 // Keeps track of total number of "desired agents count", "desired transport cap upgrade count" etc.
 // Notably the "desired agents count" starts with being set to the initial agent count.
 // Then each time a purchase is made, and not all desired counts are met,
@@ -442,6 +447,15 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
 // For upgrades it will be always 1 less than desired for exactly one upgrade, but with agents
 // it may be more, if agents were KIA.
 // It always prioritizes bringing agents to desired count, before bringing any other counts to desired.
+// Furthermore, if it randomizes "hire agent" but at already at the agent cap, then instead it
+// increases the desired agent cap by 1.
+//
+// Note this means that the basic intellect will need to keep track of the desired counts
+// across invocations to playNextTurn. Initialize the basic intellect state upon app initialization;
+// it should be reset when the "Reset game" button is clicked.
+//
+// Log at the end of "buy" what was bought if any, and if something was bought, what desired count increased.
+// Also always log all the current desired counts.
 function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' | undefined {
   const { gameState } = api
 
