@@ -651,12 +651,12 @@ function updateFactions(
 
     // Update turns until next operation (only if not suppressed and not dormant)
     if (faction.activityLevel > 0 && faction.suppressionTurns === 0) {
-      faction.turnsUntilNextOperation -= 1
-
-      // Check if it's time to perform an operation (when counter reaches 0)
-      if (faction.turnsUntilNextOperation === 0) {
+      // Check if it's time to perform an operation (when counter reaches 1, meaning next turn is the operation)
+      if (faction.turnsUntilNextOperation === 1) {
         spawnDefensiveMission(state, faction)
         faction.turnsUntilNextOperation = calculateOperationTurns(faction.activityLevel)
+      } else {
+        faction.turnsUntilNextOperation -= 1
       }
     }
 
