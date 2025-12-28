@@ -97,6 +97,13 @@ export function AIPlayerSection(): React.JSX.Element {
         <Button variant="contained" onClick={handleDelegateToAI} disabled={isButtonDisabled} fullWidth>
           Delegate to AI
         </Button>
+        <FormControlLabel
+          control={<Checkbox checked={autoAdvanceTurn} onChange={handleAutoAdvanceTurnChange} />}
+          label="Auto-advance turn"
+        />
+        <Button variant="contained" onClick={handleNextTurn} disabled={isGameEnded} fullWidth>
+          Next turn
+        </Button>
         <NumberField
           value={aiTurnCount}
           onValueChange={handleTurnCountChange}
@@ -109,13 +116,6 @@ export function AIPlayerSection(): React.JSX.Element {
         />
         <Button variant="contained" onClick={handleDelegateTurnsToAI} disabled={isButtonDisabled} fullWidth>
           Delegate {aiTurnCount} turn{aiTurnCount !== 1 ? 's' : ''} to AI
-        </Button>
-        <FormControlLabel
-          control={<Checkbox checked={autoAdvanceTurn} onChange={handleAutoAdvanceTurnChange} />}
-          label="Auto-advance turn"
-        />
-        <Button variant="contained" onClick={handleNextTurn} disabled={isGameEnded} fullWidth>
-          Next turn
         </Button>
       </Stack>
     </ExpandableCard>

@@ -1,4 +1,5 @@
 import { NumberField as BaseNumberField } from '@base-ui/react/number-field'
+import { useTheme } from '@mui/material/styles'
 import * as React from 'react'
 
 export type NumberFieldProps = {
@@ -18,6 +19,7 @@ export function NumberField({
   label,
   style,
 }: NumberFieldProps): React.JSX.Element {
+  const theme = useTheme()
   const [isFocused, setIsFocused] = React.useState(false)
   const fieldsetRef = React.useRef<HTMLFieldSetElement>(null)
 
@@ -48,7 +50,10 @@ export function NumberField({
           ref={fieldsetRef}
           style={{
             position: 'absolute',
-            inset: 0,
+            top: label !== undefined && label !== '' ? '-5px' : 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
             margin: 0,
             padding: '0 8px',
             border: `1px solid ${borderColor}`,
@@ -80,7 +85,7 @@ export function NumberField({
                   paddingRight: '5px',
                   display: 'inline-block',
                   opacity: disabled === true ? 0.5 : 1,
-                  color: 'rgba(255, 255, 255, 0.7)',
+                  color: theme.palette.text.secondary,
                 }}
               >
                 {label}
