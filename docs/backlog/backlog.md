@@ -13,7 +13,7 @@ KJA backlog:
   - if growth factor is 140%, then (90-70) *0.4 = 20*0.4 = 8, so it actually rolled 70+8 = 78.
   - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
-// KJA this should be opposite: growth factor of 50% should slow-down, not speed up
+// KJA3 this should be opposite: growth factor of 50% should slow-down, not speed up
 
 # P1 UI refinement
 

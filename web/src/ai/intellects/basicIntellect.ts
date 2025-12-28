@@ -40,7 +40,7 @@ type BasicIntellectState = {
   desiredHitPointsRecoveryPct: number
 }
 
-// KJA1 this won't be persisted to indexedDB.
+// KJA2 this won't be persisted to indexedDB.
 // But should this be part of the redux store? Or separate key in indexedDB?
 let basicIntellectState: BasicIntellectState
 
@@ -49,7 +49,7 @@ export function resetBasicIntellectState(): void {
   increaseSomeDesiredCount()
 }
 
-// KJA got error: Error: Lead lead-black-lotus-member already has an active investigation
+// KJA3 got error: Error: Lead lead-black-lotus-member already has an active investigation
 export const basicIntellect: AIPlayerIntellect = {
   name: 'Basic',
   playTurn(api: PlayTurnAPI): void {
@@ -261,7 +261,7 @@ function deployToMission(
   let currentThreat = 0
 
   const includeInTraining = true
-  // KJA1 this "doNot" patterns is confusing, as someone will think doNot == false, so "do".
+  // KJA2 this "doNot" patterns is confusing, as someone will think doNot == false, so "do".
   // Fix everywhere. Also doNotIncludeInTraining.
   const doNotKeepReserve = false
   // Select agents until we reach target threat
@@ -469,7 +469,7 @@ function selectNextBestReadyAgent(
   keepReserve = true,
 ): Agent | undefined {
   // Get agents in base (Available or in Training)
-  // KJA1 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
+  // KJA3 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
   // these utils in many places.
   const inBaseAgents = gameState.agents.filter((agent: Agent) => {
     if (agent.assignment === 'Standby') {
@@ -525,7 +525,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
 
   // Priority 1: Buy agents until desired agent count is reached
   if (actualAgentCount < basicIntellectState.desiredAgentCount) {
-    // KJA1 assert here that desiredAgentCount <= agentCap
+    // KJA3 assert here that desiredAgentCount <= agentCap
     return 'hireAgent'
   }
 
@@ -535,7 +535,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeName | 'hireAgent' {
   }
 
   // Find the one cap/upgrade where actual < desired
-  // KJA1 assert here that exactly one desired cap is exactly 1 above actual
+  // KJA3 assert here that exactly one desired cap is exactly 1 above actual
   if (gameState.transportCap < basicIntellectState.desiredTransportCap) {
     return 'Transport cap'
   }
