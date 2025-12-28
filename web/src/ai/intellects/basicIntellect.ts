@@ -25,7 +25,7 @@ import {
   incrementActualHitPointsRecoveryUpgrades,
   increaseDesiredCounts,
 } from '../../redux/slices/aiStateSlice'
-import { assertUnreachable } from '../../lib/primitives/assertPrimitives'
+import { assertUnreachable, assertLessThan } from '../../lib/primitives/assertPrimitives'
 
 type UpgradeNameOrNewAgent = UpgradeName | 'newAgent'
 
@@ -551,7 +551,12 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
 
   // Priority 1: Buy agents until desired agent count is reached
   if (actualAgentCount < aiState.desiredAgentCount) {
-    // KJA3 assert here that desiredAgentCount <= agentCap
+    // Assert we can actually hire (not at agent cap)
+    assertLessThan(
+      actualAgentCount,
+      gameState.agentCap,
+      `AI bug: Trying to hire agent but at cap. actualAgentCount=${actualAgentCount}, agentCap=${gameState.agentCap}, desiredAgentCount=${aiState.desiredAgentCount}`,
+    )
     return 'newAgent'
   }
 
