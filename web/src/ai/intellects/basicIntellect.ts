@@ -767,6 +767,10 @@ function getAvailableLeads(gameState: GameState): Lead[] {
 }
 
 function selectLeadToInvestigate(availableLeads: Lead[]): Lead | undefined {
+  if (availableLeads.length === 0) {
+    return undefined
+  }
+
   // Prioritize non-repeatable leads over repeatable leads
   const nonRepeatableLeads = availableLeads.filter((lead) => !lead.repeatable)
   if (nonRepeatableLeads.length > 0) {
