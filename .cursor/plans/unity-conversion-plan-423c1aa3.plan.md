@@ -175,13 +175,11 @@ Convert the React-based web game to Unity desktop application (Windows/Mac/Linux
 - `PlayerActions.tsx` → `PlayerActionsView.cs` + Unity UI prefab
 - `EventLog.tsx` → `EventLogView.cs` + Unity UI prefab (ScrollView)
 - `DebugCard.tsx` → `DebugCardView.cs` + Unity UI prefab
-
 - **Middle Column:**
 - `MissionsDataGrid.tsx` → `MissionsDataGridView.cs` + Unity UI (Table/ScrollView)
 - `LeadsDataGrid.tsx` → `LeadsDataGridView.cs` + Unity UI
 - `LeadInvestigationsDataGrid.tsx` → `LeadInvestigationsDataGridView.cs` + Unity UI
 - `AgentsDataGrid.tsx` → `AgentsDataGridView.cs` + Unity UI
-
 - **Right Column:**
 - `AssetsAndCapabCard.tsx` → `AssetsAndCapabCardView.cs` + Unity UI
 - `SituationReportCard.tsx` → `SituationReportCardView.cs` + Unity UI
@@ -280,5 +278,3 @@ Convert the React-based web game to Unity desktop application (Windows/Mac/Linux
 - Use object pooling for list items
 - Implement efficient update patterns (only update changed elements)
 - Consider using Unity's UI Toolkit (newer) instead of uGUI if needed
-
-4. **Testing**: Maintain test coverage parity with current codebase
