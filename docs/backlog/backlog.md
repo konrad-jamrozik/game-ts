@@ -11,6 +11,8 @@ KJA backlog:
   - AI player constantly loses harder offensive missions because of it
   - Also add constraint to have at least 1 agent for 5 enemies or so
 - Agents stats view sorting by skill is busted. Shows as max 966 skill instead of 1958
+- UI Bug: deployment button says "Deploy 26 agents on  on 139"
+- UI Bug: the turn report is wider than the right column
 
 # P0 Game mechanics
 
