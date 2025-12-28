@@ -4,26 +4,6 @@ KJA backlog:
 
 # Current milestone
 
-## Current Game mechanics
-
-AI player:
-
-Introduce a playTurnV2 interface so it is like playTurn but it takes just one param like gameApi that has both
-  the game state and a set of well defined actions that all update the game state when invoked.
-  So there is no need to obtain new game state references.
-
-- The playTurnV2 type should be defined as a standalone type, and the
-- AI player can reuse functions from lib, but if it wants a convenience function for itself,
-  they must be implemented in ai/
-
-## Current UI refinement
-
-# Next milestone
-
-## Next Game mechanics
-
-## Next UI refinement
-
 # P0 Game mechanics
 
 - At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
@@ -34,10 +14,6 @@ Introduce a playTurnV2 interface so it is like playTurn but it takes just one pa
   - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
 // KJA this should be opposite: growth factor of 50% should slow-down, not speed up
-
-# P1 Game mechanics
-
-# P0 UI refinement
 
 # P1 UI refinement
 
