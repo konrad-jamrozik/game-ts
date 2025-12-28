@@ -5,12 +5,7 @@ import { CapacitiesDataGrid } from './CapacitiesDataGrid'
 
 export function CapacitiesCard(): React.JSX.Element {
   return (
-    <ExpandableCard
-      id="capacities"
-      title="Capacities"
-      defaultExpanded={true}
-      sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}
-    >
+    <ExpandableCard id="capacities" title="Capacities" defaultExpanded={true} sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}>
       <CapacitiesDataGrid />
     </ExpandableCard>
   )

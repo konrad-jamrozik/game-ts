@@ -5,12 +5,7 @@ import { UpgradesDataGrid } from './UpgradesDataGrid'
 
 export function UpgradesCard(): React.JSX.Element {
   return (
-    <ExpandableCard
-      id="upgrades"
-      title="Upgrades"
-      defaultExpanded={true}
-      sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}
-    >
+    <ExpandableCard id="upgrades" title="Upgrades" defaultExpanded={true} sx={{ width: RIGHT_COLUMN_CARD_WIDTH }}>
       <UpgradesDataGrid />
     </ExpandableCard>
   )
