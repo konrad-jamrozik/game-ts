@@ -5,6 +5,7 @@ import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missio
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
+import { floor } from '../../../lib/primitives/mathPrimitives'
 
 export function deployToMissions(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -14,7 +15,7 @@ export function deployToMissions(api: PlayTurnAPI): void {
   let deploymentsSuccessful = 0
   const cancelledDeployments: {
     missionId: string
-    reason: 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
     details?: string
   }[] = []
 
@@ -44,16 +45,24 @@ function logDeploymentStatistics(
   deploymentsSuccessful: number,
   cancelledDeployments: {
     missionId: string
-    reason: 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
     details?: string
   }[],
 ): void {
+  const cancelledByAgentCount = cancelledDeployments.filter((f) => f.reason === 'insufficientAgentCount')
   const cancelledByThreat = cancelledDeployments.filter((f) => f.reason === 'insufficientThreat')
   const cancelledByTransportCap = cancelledDeployments.filter((f) => f.reason === 'insufficientTransport')
 
   let logMessage =
     `deployToMissions: attempted ${deploymentsAttempted} missions, deployed ${deploymentsSuccessful}. ` +
-    `Cancelled: ${cancelledByThreat.length} insufficient threat, ${cancelledByTransportCap.length} insufficient transport cap`
+    `Cancelled: ${cancelledByAgentCount.length} insufficient agent count, ${cancelledByThreat.length} insufficient threat, ${cancelledByTransportCap.length} insufficient transport cap`
+
+  // Add details for insufficient agent count cancellations
+  for (const cancelled of cancelledByAgentCount) {
+    if (cancelled.details !== undefined) {
+      logMessage += `\n  - ${cancelled.details}`
+    }
+  }
 
   // Add details for insufficient threat cancellations
   for (const cancelled of cancelledByThreat) {
@@ -110,18 +119,42 @@ function deployToMission(
   mission: Mission,
   cancelledDeployments: {
     missionId: string
-    reason: 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
     details?: string
   }[],
 ): boolean {
   const { gameState } = api
+  const minimumRequiredAgents = floor(mission.enemies.length / 5)
   const enemyThreat = calculateMissionThreatAssessment(mission)
   const targetThreat = enemyThreat * 1.2 // 120% of enemy threat
 
   const selectedAgents: Agent[] = []
   let currentThreat = 0
 
-  // Select agents until we reach target threat
+  // Phase 1: Select agents until meeting minimum count requirement
+  while (selectedAgents.length < minimumRequiredAgents) {
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      { includeInTraining: true, keepReserve: false },
+    )
+    if (agent === undefined) {
+      break // No more agents available
+    }
+
+    selectedAgents.push(agent)
+    currentThreat += calculateAgentThreatAssessment(agent)
+  }
+
+  // Check if we have enough agents
+  if (selectedAgents.length < minimumRequiredAgents) {
+    const details = `Mission has ${mission.enemies.length} enemies, requiring at least ${minimumRequiredAgents} agents. Only ${selectedAgents.length} agents available.`
+    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientAgentCount', details })
+    return false
+  }
+
+  // Phase 2: Continue selecting if threat requirement not yet met
   while (currentThreat < targetThreat) {
     const agent = selectNextBestReadyAgent(
       gameState,
@@ -130,7 +163,7 @@ function deployToMission(
       { includeInTraining: true, keepReserve: false },
     )
     if (agent === undefined) {
-      break
+      break // No more agents available
     }
 
     selectedAgents.push(agent)
@@ -151,6 +184,7 @@ function deployToMission(
     cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport', details })
     return false
   }
+
   // Unassign agents from training if needed
   unassignAgentsFromTraining(api, selectedAgents)
   // Deploy agents
