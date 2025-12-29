@@ -6,7 +6,7 @@
  */
 
 import type { FactionActivityLevelOrd } from '../model/factionModel'
-import type { FactionDataId, FactionId } from '../model/modelIds'
+import { fmtFactionDataId, fmtFactionProfileLeadId, type FactionDataId, type FactionId } from '../model/modelIds'
 
 /**
  * Faction definitions.
@@ -41,9 +41,8 @@ function toFactionsDataTable(rows: FactionDataRow[]): FactionData[] {
     const id = row[0]
     const name = row[1]
     const initialActivityLevel = row[2]
-    // KJA3 should this one of the ID fmt functions?
-    const factionDataId: FactionDataId = `factiondata-${id.replace('faction-', '')}`
-    const discoveryPrerequisite = [`lead-${id.replace('faction-', '')}-profile`]
+    const factionDataId = fmtFactionDataId(id)
+    const discoveryPrerequisite = [fmtFactionProfileLeadId(id)]
     return {
       id,
       factionDataId,

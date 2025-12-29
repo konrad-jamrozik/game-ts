@@ -39,6 +39,11 @@ export function asMissionDataId(id: string): MissionDataId {
   return id
 }
 
+export function asFactionDataId(id: string): FactionDataId {
+  assertIsFactionDataId(id)
+  return id
+}
+
 export function assertIsLeadId(id: string): asserts id is LeadId {
   if (!id.startsWith('lead-')) {
     throw new Error(`Invalid lead ID: ${id}`)
@@ -73,4 +78,28 @@ export function assertIsAgentId(id: string): asserts id is AgentId {
   if (!id.startsWith('agent-')) {
     throw new Error(`Invalid agent ID: ${id}`)
   }
+}
+
+export function assertIsFactionDataId(id: string): asserts id is FactionDataId {
+  if (!id.startsWith('factiondata-')) {
+    throw new Error(`Invalid faction data ID: ${id}`)
+  }
+}
+
+/**
+ * Converts a FactionId to a FactionDataId.
+ * @param factionId - The faction ID (e.g., 'faction-red-dawn')
+ * @returns The faction data ID (e.g., 'factiondata-red-dawn')
+ */
+export function fmtFactionDataId(factionId: FactionId): FactionDataId {
+  return `factiondata-${factionId.replace('faction-', '')}`
+}
+
+/**
+ * Converts a FactionId to the corresponding profile LeadId.
+ * @param factionId - The faction ID (e.g., 'faction-red-dawn')
+ * @returns The profile lead ID (e.g., 'lead-red-dawn-profile')
+ */
+export function fmtFactionProfileLeadId(factionId: FactionId): LeadId {
+  return `lead-${factionId.replace('faction-', '')}-profile`
 }
