@@ -1,6 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
-import { reset as resetGameState } from './gameStateSlice'
 
 export type DesiredCountName =
   | 'agentCount'
@@ -108,14 +107,6 @@ const aiStateSlice = createSlice({
       const initialState = createInitialState()
       Object.assign(state, initialState)
     },
-  },
-  extraReducers: (builder) => {
-    // Also reset AI state when game state is reset
-    // KJA3 should this be made in cleaner way like gameControlsReducers.ts / reset ?
-    builder.addCase(resetGameState, (state) => {
-      const initialState = createInitialState()
-      Object.assign(state, initialState)
-    })
   },
 })
 

@@ -10,6 +10,7 @@ import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { wipeStorage } from '../../redux/persist'
 import type { RootState } from '../../redux/rootReducer'
+import { resetAiState } from '../../redux/slices/aiStateSlice'
 import { truncateEventsTo } from '../../redux/slices/eventsSlice'
 import { reset } from '../../redux/slices/gameStateSlice'
 import { clearAllSelection } from '../../redux/slices/selectionSlice'
@@ -49,6 +50,7 @@ export function ResetControls(): React.JSX.Element {
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
+    dispatch(resetAiState())
     dispatch(clearAllSelection())
     dispatch(ActionCreators.clearHistory())
   }
