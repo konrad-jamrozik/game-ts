@@ -279,9 +279,6 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
 
   // Calculate sum of all purchased upgrades (including caps)
   const sumTotalAllAlreadyPurchasedUpgraded =
-    aiState.actualAgentCapUpgrades +
-    aiState.actualTransportCapUpgrades +
-    aiState.actualTrainingCapUpgrades +
     aiState.actualWeaponDamageUpgrades +
     aiState.actualTrainingSkillGainUpgrades +
     aiState.actualExhaustionRecoveryUpgrades +
