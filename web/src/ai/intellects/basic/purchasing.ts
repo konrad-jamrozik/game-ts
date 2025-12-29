@@ -19,12 +19,7 @@ import {
   TRANSPORT_CAP_RATIO,
   TRAINING_CAP_RATIO,
   AGENT_COUNT_BASE,
-  PURCHASED_UPGRADES_MULTIPLIER,
-  PROBABILITY_AGENTS,
-  PROBABILITY_WEAPON_DAMAGE,
-  PROBABILITY_TRAINING_SKILL_GAIN,
-  PROBABILITY_EXHAUSTION_RECOVERY,
-  PROBABILITY_HIT_POINTS_RECOVERY,
+  AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER,
 } from './constants'
 
 export function spendMoney(api: PlayTurnAPI): void {
@@ -297,42 +292,35 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
   // Always roll for desiredAgentCount if condition is met
   if (
     aiState.desiredAgentCount <=
-    AGENT_COUNT_BASE + sumTotalAllAlreadyPurchasedUpgraded * PURCHASED_UPGRADES_MULTIPLIER
+    AGENT_COUNT_BASE + sumTotalAllAlreadyPurchasedUpgraded * AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER
   ) {
     decideDesiredAgentCount(api)
     return
   }
 
-  // Weighted random (if no priority pick and condition not met)
-  // Agents: 50%, Weapon damage: 12.5%, Training skill gain: 12.5%,
-  // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
-  const random = Math.random()
+  // Deterministic round-robin for stat upgrades
+  const sumStatUpgrades =
+    aiState.actualWeaponDamageUpgrades +
+    aiState.actualTrainingSkillGainUpgrades +
+    aiState.actualExhaustionRecoveryUpgrades +
+    aiState.actualHitPointsRecoveryUpgrades
 
-  if (random < PROBABILITY_AGENTS) {
-    decideDesiredAgentCount(api)
-    return
+  const upgradeIndex = sumStatUpgrades % 4
+  switch (upgradeIndex) {
+    case 0:
+      api.increaseDesiredCount('weaponDamageUpgrades')
+      return
+    case 1:
+      api.increaseDesiredCount('trainingSkillGainUpgrades')
+      return
+    case 2:
+      api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+      return
+    case 3:
+      api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+      return
   }
-
-  if (random < PROBABILITY_WEAPON_DAMAGE) {
-    api.increaseDesiredCount('weaponDamageUpgrades')
-    return
-  }
-
-  if (random < PROBABILITY_TRAINING_SKILL_GAIN) {
-    api.increaseDesiredCount('trainingSkillGainUpgrades')
-    return
-  }
-
-  if (random < PROBABILITY_EXHAUSTION_RECOVERY) {
-    api.increaseDesiredCount('exhaustionRecoveryUpgrades')
-    return
-  }
-
-  if (random < PROBABILITY_HIT_POINTS_RECOVERY) {
-    api.increaseDesiredCount('hitPointsRecoveryUpgrades')
-    return
-  }
-  assertUnreachable('decideSomeDesiredCount: no priority pick met')
+  assertUnreachable('decideSomeDesiredCount: invalid upgrade index')
 }
 
 function decideDesiredAgentCount(api: PlayTurnAPI): void {
