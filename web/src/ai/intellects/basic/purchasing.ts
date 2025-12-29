@@ -111,7 +111,7 @@ function getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntell
   checkActualVsDesired(
     aiState.actualExhaustionRecoveryUpgrades,
     aiState.desiredExhaustionRecoveryUpgrades,
-    'Exhaustion recovery',
+    'Exhaustion recovery %',
   )
   checkActualVsDesired(
     aiState.actualHitPointsRecoveryUpgrades,
@@ -184,7 +184,7 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
     case 'Training skill gain':
       api.incrementActualTrainingSkillGainUpgrades()
       break
-    case 'Exhaustion recovery':
+    case 'Exhaustion recovery %':
       api.incrementActualExhaustionRecoveryUpgrades()
       break
     case 'Hit points recovery %':

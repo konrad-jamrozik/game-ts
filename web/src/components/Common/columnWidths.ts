@@ -19,7 +19,7 @@ export const columnWidths = {
 
   // Missions columns
   'missions.threat': 80,
-  'missions.id': 340,
+  'missions.id': 360,
   'missions.state': 120,
   'missions.expires_in': 70,
   'missions.enemies': 80,

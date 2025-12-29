@@ -16,7 +16,7 @@
     "eslint:ci": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "eslint:cached": "eslint . --ext ts,tsx --cache --report-unused-disable-directives --max-warnings 0",
     "eslint:fix": "eslint . --ext ts,tsx --fix",
-    "preview": "vite preview",
+    "preview": "npm run build && vite preview",
     "format": "prettier . --check --end-of-line auto",
     "format:debug": "prettier . --check --end-of-line auto --log-level debug",
     "format:fix": "prettier . --end-of-line auto --write",

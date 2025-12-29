@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/data_tables/upgrades'
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { isF6, type Fixed6, f6fmtDec2, toF } from '../../lib/primitives/fixed6'
+import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 
 export function UpgradesDataGrid(): React.JSX.Element {
@@ -21,12 +21,12 @@ export function UpgradesDataGrid(): React.JSX.Element {
       price: UPGRADE_PRICES['Training skill gain'],
     },
     {
-      name: 'Exhaustion recovery',
+      name: 'Exhaustion recovery %',
       id: 8,
-      value: toF(gameState.exhaustionRecovery),
-      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery']),
+      value: f6fmtDec2(gameState.exhaustionRecovery),
+      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Exhaustion recovery %']),
       displayedName: 'Exhaustion recov. %',
-      price: UPGRADE_PRICES['Exhaustion recovery'],
+      price: UPGRADE_PRICES['Exhaustion recovery %'],
     },
     {
       name: 'Hit points recovery %',

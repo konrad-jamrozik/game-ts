@@ -34,7 +34,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
       state.trainingSkillGain = f6add(state.trainingSkillGain, getUpgradeIncrementFixed6(upgradeName))
       break
     }
-    case 'Exhaustion recovery': {
+    case 'Exhaustion recovery %': {
       state.exhaustionRecovery = f6add(state.exhaustionRecovery, getUpgradeIncrementFixed6(upgradeName))
       break
     }

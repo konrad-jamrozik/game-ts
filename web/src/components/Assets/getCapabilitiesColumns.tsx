@@ -11,7 +11,7 @@ export type UpgradeRow = {
     | 'Transport cap'
     | 'Training cap'
     | 'Training skill gain'
-    | 'Exhaustion recovery'
+    | 'Exhaustion recovery %'
     | 'Hit points recovery %'
     | 'Weapon damage'
   displayedName?: string
@@ -22,6 +22,7 @@ export type UpgradeRow = {
   total?: number
 }
 
+// KJA3 split into two: getCapabilitiesColumns and getUpgradesColumns
 export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
   const columns: GridColDef<UpgradeRow>[] = [
     {

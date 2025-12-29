@@ -185,7 +185,7 @@ function formatExpiredMissions(
         id: `expired-mission-${expired.missionId}-funding`,
         label: 'Funding penalty',
         chipValue: `-${expired.fundingPenalty}`,
-        reverseColor: true, // Funding decrease is bad
+        reverseColor: false, // Funding decrease is bad, so negative should be red (error)
       })
     }
 
