@@ -1,5 +1,5 @@
 import { doNothingIntellect } from './intellects/doNothingIntellect'
-import { basicIntellect } from './intellects/basicIntellect'
+import { basicIntellect } from './intellects/basic/basicIntellect'
 import type { AIPlayerIntellect } from './types'
 
 const intellects: Record<string, AIPlayerIntellect> = {

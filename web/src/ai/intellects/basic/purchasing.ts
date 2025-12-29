@@ -1,0 +1,253 @@
+import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
+import type { GameState } from '../../../lib/model/gameStateModel'
+import type { BasicIntellectState } from '../../../redux/slices/aiStateSlice'
+import { getUpgradePrice } from '../../../lib/data_tables/upgrades'
+import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
+import { notTerminated } from '../../../lib/model_utils/agentUtils'
+import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
+import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
+import { REQUIRED_TURNS_OF_SAVINGS, type UpgradeNameOrNewAgent } from './types'
+
+export function spendMoney(api: PlayTurnAPI): void {
+  let priority = computeNextBuyPriority(api)
+  while (hasSufficientMoneyToBuy(api, priority)) {
+    buy(api, priority)
+    priority = computeNextBuyPriority(api)
+  }
+
+  // Log why we didn't buy anything
+  logFailedPurchase(api, priority)
+}
+
+function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+  const { gameState } = api
+  let cost: number
+
+  if (priority === 'newAgent') {
+    cost = AGENT_HIRE_COST
+  } else {
+    cost = getUpgradePrice(priority)
+  }
+
+  const currentMoney = gameState.money
+  const moneyAfterPurchase = currentMoney - cost
+  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
+
+  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
+  console.log(
+    `spendMoney: cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
+  )
+}
+
+function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
+  const { gameState } = api
+  const upkeepCosts = getAgentUpkeep(gameState)
+  const turnsToCover = REQUIRED_TURNS_OF_SAVINGS
+  const requiredSavings = upkeepCosts * turnsToCover
+  return requiredSavings
+}
+
+function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
+  const { gameState, aiState } = api
+  const actualAgentCount = notTerminated(gameState.agents).length
+
+  // Priority 1: Buy agents until desired agent count is reached
+  if (actualAgentCount < aiState.desiredAgentCount) {
+    // Assert we can actually hire (not at agent cap)
+    assertLessThan(
+      actualAgentCount,
+      gameState.agentCap,
+      `AI bug: Trying to hire agent but at cap. actualAgentCount=${actualAgentCount}, agentCap=${gameState.agentCap}, desiredAgentCount=${aiState.desiredAgentCount}`,
+    )
+    return 'newAgent'
+  }
+
+  // Priority 2: Buy agent cap if below desired
+  if (gameState.agentCap < aiState.desiredAgentCap) {
+    return 'Agent cap'
+  }
+
+  // Find the one cap/upgrade where actual < desired
+  assertExactlyOneDesiredStateIsOneAboveActual(gameState, aiState)
+  if (gameState.transportCap < aiState.desiredTransportCap) {
+    return 'Transport cap'
+  }
+  if (gameState.trainingCap < aiState.desiredTrainingCap) {
+    return 'Training cap'
+  }
+  if (aiState.actualWeaponDamageUpgrades < aiState.desiredWeaponDamageUpgrades) {
+    return 'Weapon damage'
+  }
+  if (aiState.actualTrainingSkillGainUpgrades < aiState.desiredTrainingSkillGainUpgrades) {
+    return 'Training skill gain'
+  }
+  if (aiState.actualExhaustionRecoveryUpgrades < aiState.desiredExhaustionRecoveryUpgrades) {
+    return 'Exhaustion recovery'
+  }
+  if (aiState.actualHitPointsRecoveryUpgrades < aiState.desiredHitPointsRecoveryUpgrades) {
+    return 'Hit points recovery %'
+  }
+
+  assertUnreachable('computeNextBuyPriority: no priority found')
+}
+
+function assertExactlyOneDesiredStateIsOneAboveActual(gameState: GameState, aiState: BasicIntellectState): void {
+  const mismatches: string[] = []
+  let exactlyOneAboveCount = 0
+
+  function checkActualVsDesired(actual: number, desired: number, name: string): void {
+    if (actual !== desired) {
+      if (desired === actual + 1) {
+        exactlyOneAboveCount += 1
+      } else {
+        mismatches.push(`${name}: actual=${actual}, desired=${desired}`)
+      }
+    }
+  }
+
+  checkActualVsDesired(gameState.transportCap, aiState.desiredTransportCap, 'transportCap')
+  checkActualVsDesired(gameState.trainingCap, aiState.desiredTrainingCap, 'trainingCap')
+  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'weaponDamageUpgrades')
+  checkActualVsDesired(
+    aiState.actualTrainingSkillGainUpgrades,
+    aiState.desiredTrainingSkillGainUpgrades,
+    'trainingSkillGainUpgrades',
+  )
+  checkActualVsDesired(
+    aiState.actualExhaustionRecoveryUpgrades,
+    aiState.desiredExhaustionRecoveryUpgrades,
+    'exhaustionRecoveryUpgrades',
+  )
+  checkActualVsDesired(
+    aiState.actualHitPointsRecoveryUpgrades,
+    aiState.desiredHitPointsRecoveryUpgrades,
+    'hitPointsRecoveryUpgrades',
+  )
+
+  if (exactlyOneAboveCount !== 1) {
+    const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
+    throw new Error(
+      `AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found ${exactlyOneAboveCount}.${mismatchDetails}`,
+    )
+  }
+}
+
+function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): boolean {
+  const { gameState } = api
+  let cost: number
+
+  if (priority === 'newAgent') {
+    cost = AGENT_HIRE_COST
+  } else {
+    cost = getUpgradePrice(priority)
+  }
+
+  const currentMoney = gameState.money
+  const moneyAfterPurchase = currentMoney - cost
+  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
+  return moneyAfterPurchase >= minimumRequiredSavings
+}
+
+function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+  executePurchase(api, priority)
+
+  const { gameState: gameStateAfter, aiState: aiStateAfter } = api
+
+  if (areAllDesiredCountsMet(gameStateAfter, aiStateAfter)) {
+    const stateBeforeIncrease = { ...aiStateAfter }
+    api.increaseDesiredCounts()
+    logBuyResult(api, priority, stateBeforeIncrease)
+  } else {
+    logBuyResult(api, priority)
+  }
+}
+
+function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+  if (priority === 'newAgent') {
+    api.hireAgent()
+    return
+  }
+
+  api.buyUpgrade(priority)
+  // Track actual upgrade counts (caps are tracked via game state, not here)
+  switch (priority) {
+    case 'Weapon damage':
+      api.incrementActualWeaponDamageUpgrades()
+      break
+    case 'Training skill gain':
+      api.incrementActualTrainingSkillGainUpgrades()
+      break
+    case 'Exhaustion recovery':
+      api.incrementActualExhaustionRecoveryUpgrades()
+      break
+    case 'Hit points recovery %':
+      api.incrementActualHitPointsRecoveryUpgrades()
+      break
+    case 'Agent cap':
+    case 'Transport cap':
+    case 'Training cap':
+      // Cap upgrades are tracked via game state, not in aiState
+      break
+  }
+}
+
+function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
+  const actualAgentCount = notTerminated(gameState.agents).length
+  return (
+    actualAgentCount >= aiState.desiredAgentCount &&
+    gameState.agentCap >= aiState.desiredAgentCap &&
+    gameState.transportCap >= aiState.desiredTransportCap &&
+    gameState.trainingCap >= aiState.desiredTrainingCap &&
+    aiState.actualWeaponDamageUpgrades >= aiState.desiredWeaponDamageUpgrades &&
+    aiState.actualTrainingSkillGainUpgrades >= aiState.desiredTrainingSkillGainUpgrades &&
+    aiState.actualExhaustionRecoveryUpgrades >= aiState.desiredExhaustionRecoveryUpgrades &&
+    aiState.actualHitPointsRecoveryUpgrades >= aiState.desiredHitPointsRecoveryUpgrades
+  )
+}
+
+function logBuyResult(
+  api: PlayTurnAPI,
+  priority: UpgradeNameOrNewAgent,
+  stateBeforeIncrease?: BasicIntellectState,
+): void {
+  const { aiState } = api
+  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
+  const increaseMessage = getIncreaseMessage(api, stateBeforeIncrease)
+
+  console.log(
+    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCap=${aiState.desiredAgentCap}, transportCap=${aiState.desiredTransportCap}, trainingCap=${aiState.desiredTrainingCap}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
+  )
+}
+
+function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntellectState): string {
+  if (stateBeforeIncrease === undefined) {
+    return 'No increase (goals not yet met)'
+  }
+
+  const { aiState } = api
+  if (aiState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
+    return `Increased desired agents to ${aiState.desiredAgentCount}`
+  }
+  if (aiState.desiredAgentCap > stateBeforeIncrease.desiredAgentCap) {
+    return `Increased desired agentCap to ${aiState.desiredAgentCap}`
+  }
+  if (aiState.desiredTransportCap > stateBeforeIncrease.desiredTransportCap) {
+    return `Increased desired transportCap to ${aiState.desiredTransportCap}`
+  }
+  if (aiState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
+    return `Increased desired trainingCap to ${aiState.desiredTrainingCap}`
+  }
+  if (aiState.desiredWeaponDamageUpgrades > stateBeforeIncrease.desiredWeaponDamageUpgrades) {
+    return `Increased desired weaponDamageUpgrades to ${aiState.desiredWeaponDamageUpgrades}`
+  }
+  if (aiState.desiredTrainingSkillGainUpgrades > stateBeforeIncrease.desiredTrainingSkillGainUpgrades) {
+    return `Increased desired trainingSkillGainUpgrades to ${aiState.desiredTrainingSkillGainUpgrades}`
+  }
+  if (aiState.desiredExhaustionRecoveryUpgrades > stateBeforeIncrease.desiredExhaustionRecoveryUpgrades) {
+    return `Increased desired exhaustionRecoveryUpgrades to ${aiState.desiredExhaustionRecoveryUpgrades}`
+  }
+  if (aiState.desiredHitPointsRecoveryUpgrades > stateBeforeIncrease.desiredHitPointsRecoveryUpgrades) {
+    return `Increased desired hitPointsRecoveryUpgrades to ${aiState.desiredHitPointsRecoveryUpgrades}`
+  }
+  return 'No change detected'
+}
