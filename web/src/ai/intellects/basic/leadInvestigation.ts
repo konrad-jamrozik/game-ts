@@ -2,12 +2,45 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead } from '../../../lib/model/leadModel'
 import type { Mission } from '../../../lib/model/missionModel'
-import type { AgentId } from '../../../lib/model/modelIds'
+import type { Agent } from '../../../lib/model/agentModel'
+import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { pickAtRandom, unassignAgentsFromTraining } from './utils'
+import { pickAtRandom, unassignAgentsFromTraining, calculateAgentThreatAssessment } from './utils'
+import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
+import { getRemainingTransportCap } from '../../../lib/model_utils/missionUtils'
+import { bldMission } from '../../../lib/factories/missionFactory'
+import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
+import { floor } from '../../../lib/primitives/mathPrimitives'
 
+/**
+ * Assigns agents to lead investigations using a smart selection algorithm.
+ *
+ * Algorithm:
+ * 1. Calculates target agent count based on total agent count (1 + floor(totalAgents / 10))
+ * 2. Determines how many additional agents need to be assigned
+ * 3. For each agent to assign:
+ *    a. If a repeatable lead was already selected in this turn:
+ *       - Pile all remaining agents onto that same investigation
+ *       - Stop if the investigation is completed or abandoned
+ *    b. Otherwise, select a new lead:
+ *       - Prioritize non-repeatable leads (pick randomly if multiple available)
+ *       - For repeatable leads only:
+ *         * Sort by mission threat level (descending - hardest missions first)
+ *         * For each lead, check if the resulting mission could be deployed successfully
+ *           with current resources (agents, threat, transport capacity)
+ *         * Select the first deployable lead found
+ *         * If no leads would result in deployable missions, skip investigation entirely
+ *    c. Assign the agent to the selected lead's investigation
+ *    d. If the lead is repeatable, mark it for agent piling in subsequent iterations
+ *
+ * This ensures that:
+ * - Non-repeatable leads are always prioritized
+ * - Repeatable leads are only investigated if they would produce deployable missions
+ * - All agents allocated to lead investigation are concentrated on a single repeatable lead
+ *   when one is selected, maximizing investigation efficiency
+ */
 export function assignToLeadInvestigation(api: PlayTurnAPI): void {
   const { gameState } = api
   const availableLeads = getAvailableLeads(gameState)
@@ -20,47 +53,83 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
   const agentsToAssign = targetAgentCount - currentAgentCount
 
   const selectedAgentIds: AgentId[] = []
+  let repeatableLeadSelected: Lead | undefined = undefined
 
   for (let i = 0; i < agentsToAssign; i += 1) {
-    const lead = selectLeadToInvestigate(availableLeads)
-    if (lead === undefined) {
-      break
-    }
+    // If we already selected a repeatable lead, pile agents on it
+    if (repeatableLeadSelected !== undefined) {
+      const { gameState: currentGameState } = api
+      const { leadInvestigations: currentLeadInvestigations } = currentGameState
+      const selectedLeadId = repeatableLeadSelected.id
+      const existingInvestigation = Object.values(currentLeadInvestigations).find(
+        (inv) => inv.leadId === selectedLeadId && inv.state === 'Active',
+      )
 
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
-      includeInTraining: true,
-    })
-    if (agent === undefined) {
-      break
-    }
+      if (existingInvestigation !== undefined) {
+        const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+          includeInTraining: true,
+        })
+        if (agent === undefined) {
+          break
+        }
 
-    selectedAgentIds.push(agent.id)
-
-    // Unassign agent from training if needed
-    unassignAgentsFromTraining(api, [agent])
-
-    // Check if there's an existing investigation for this lead
-    // Re-read gameState to get the latest state after previous API calls
-    const { gameState: currentGameState } = api
-    const { leadInvestigations: currentLeadInvestigations } = currentGameState
-    const existingInvestigation = Object.values(currentLeadInvestigations).find(
-      (inv) => inv.leadId === lead.id && inv.state === 'Active',
-    )
-
-    if (existingInvestigation) {
-      api.addAgentsToInvestigation({
-        investigationId: existingInvestigation.id,
-        agentIds: [agent.id],
-      })
+        selectedAgentIds.push(agent.id)
+        unassignAgentsFromTraining(api, [agent])
+        api.addAgentsToInvestigation({
+          investigationId: existingInvestigation.id,
+          agentIds: [agent.id],
+        })
+      } else {
+        // Investigation was completed or abandoned, break
+        break
+      }
     } else {
-      api.startLeadInvestigation({
-        leadId: lead.id,
-        agentIds: [agent.id],
+      // Select a new lead to investigate
+      const lead = selectLeadToInvestigate(availableLeads, gameState)
+      if (lead === undefined) {
+        break
+      }
+
+      // Track if we selected a repeatable lead
+      if (lead.repeatable) {
+        repeatableLeadSelected = lead
+      }
+
+      const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+        includeInTraining: true,
       })
-      // Remove the lead from availableLeads since it now has an active investigation
-      const leadIndex = availableLeads.findIndex((l) => l.id === lead.id)
-      if (leadIndex !== -1) {
-        availableLeads.splice(leadIndex, 1)
+      if (agent === undefined) {
+        break
+      }
+
+      selectedAgentIds.push(agent.id)
+
+      // Unassign agent from training if needed
+      unassignAgentsFromTraining(api, [agent])
+
+      // Check if there's an existing investigation for this lead
+      // Re-read gameState to get the latest state after previous API calls
+      const { gameState: currentGameState } = api
+      const { leadInvestigations: currentLeadInvestigations } = currentGameState
+      const existingInvestigation = Object.values(currentLeadInvestigations).find(
+        (inv) => inv.leadId === lead.id && inv.state === 'Active',
+      )
+
+      if (existingInvestigation) {
+        api.addAgentsToInvestigation({
+          investigationId: existingInvestigation.id,
+          agentIds: [agent.id],
+        })
+      } else {
+        api.startLeadInvestigation({
+          leadId: lead.id,
+          agentIds: [agent.id],
+        })
+        // Remove the lead from availableLeads since it now has an active investigation
+        const leadIndex = availableLeads.findIndex((l) => l.id === lead.id)
+        if (leadIndex !== -1) {
+          availableLeads.splice(leadIndex, 1)
+        }
       }
     }
   }
@@ -113,7 +182,7 @@ function getAvailableLeads(gameState: GameState): Lead[] {
   return availableLeads
 }
 
-function selectLeadToInvestigate(availableLeads: Lead[]): Lead | undefined {
+function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): Lead | undefined {
   if (availableLeads.length === 0) {
     return undefined
   }
@@ -124,8 +193,41 @@ function selectLeadToInvestigate(availableLeads: Lead[]): Lead | undefined {
     return pickAtRandom(nonRepeatableLeads)
   }
 
-  // If no non-repeatable leads, pick from repeatable leads
-  return pickAtRandom(availableLeads)
+  // If no non-repeatable leads, use smart selection for repeatable leads
+  const repeatableLeads = availableLeads.filter((lead) => lead.repeatable)
+
+  // Get leads with their mission threats and sort by threat descending
+  const leadsWithThreat = repeatableLeads.map((lead) => ({
+    lead,
+    threat: getMissionThreatForLead(lead.id),
+  }))
+
+  const sortedLeads = leadsWithThreat.toSorted((a, b) => b.threat - a.threat)
+
+  // Go through the list and check if each mission can be deployed
+  for (const { lead } of sortedLeads) {
+    // Get the mission data that depends on this lead
+    const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
+      missionData.dependsOn.includes(lead.id),
+    )
+
+    // Check each mission that would be created from this lead
+    for (const missionData of dependentMissionData) {
+      // Create a temporary mission to check deployability
+      const tempMission = bldMission({
+        id: 'mission-simulated-for-deployment-assessment',
+        missionDataId: missionData.id,
+      })
+
+      if (canDeployMissionWithCurrentResources(gameState, tempMission)) {
+        // This lead would result in a deployable mission - select it
+        return lead
+      }
+    }
+  }
+
+  // No leads would result in deployable missions
+  return undefined
 }
 
 function computeTargetAgentCountForInvestigation(gameState: GameState): number {
@@ -143,4 +245,97 @@ function countAgentsInvestigatingLeads(gameState: GameState): number {
     }
   }
   return agentIds.size
+}
+
+/**
+ * Gets the maximum threat level of missions that would be created from investigating a lead.
+ * Returns 0 if no missions depend on the lead.
+ */
+function getMissionThreatForLead(leadId: LeadId): number {
+  const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
+    missionData.dependsOn.includes(leadId),
+  )
+
+  if (dependentMissionData.length === 0) {
+    return 0
+  }
+
+  // Calculate threat for each mission and return the maximum
+  let maxThreat = 0
+  for (const missionData of dependentMissionData) {
+    // Create a temporary mission to calculate threat
+    const tempMission = bldMission({
+      id: 'mission-simulated-for-threat-assessment',
+      missionDataId: missionData.id,
+    })
+    const threat = calculateMissionThreatAssessment(tempMission)
+    if (threat > maxThreat) {
+      maxThreat = threat
+    }
+  }
+
+  return maxThreat
+}
+
+/**
+ * Checks if a mission can be deployed with current resources without actually deploying.
+ * Mirrors the checks in deployToMission but without side effects.
+ */
+function canDeployMissionWithCurrentResources(gameState: GameState, mission: Mission): boolean {
+  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
+  const enemyThreat = calculateMissionThreatAssessment(mission)
+  const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
+
+  const selectedAgents: Agent[] = []
+  let currentThreat = 0
+
+  // Phase 1: Select agents until meeting minimum count requirement
+  while (selectedAgents.length < minimumRequiredAgents) {
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      { includeInTraining: true, keepReserve: false },
+    )
+    if (agent === undefined) {
+      break // No more agents available
+    }
+
+    selectedAgents.push(agent)
+    currentThreat += calculateAgentThreatAssessment(agent)
+  }
+
+  // Check if we have enough agents
+  if (selectedAgents.length < minimumRequiredAgents) {
+    return false
+  }
+
+  // Phase 2: Continue selecting if threat requirement not yet met
+  while (currentThreat < targetThreat) {
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      { includeInTraining: true, keepReserve: false },
+    )
+    if (agent === undefined) {
+      break // No more agents available
+    }
+
+    selectedAgents.push(agent)
+    currentThreat += calculateAgentThreatAssessment(agent)
+  }
+
+  // Check if we have enough threat
+  if (currentThreat < targetThreat) {
+    return false
+  }
+
+  // Check transport capacity
+  const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
+  if (selectedAgents.length > remainingTransportCap) {
+    return false
+  }
+
+  return true
 }
