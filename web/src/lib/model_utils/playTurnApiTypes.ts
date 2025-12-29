@@ -1,5 +1,5 @@
 import type { GameState } from '../model/gameStateModel'
-import type { BasicIntellectState } from '../../redux/slices/aiStateSlice'
+import type { BasicIntellectState, DesiredCountName } from '../../redux/slices/aiStateSlice'
 import type { UpgradeName } from '../data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../model/modelIds'
 import type { ActionResult } from './playerActionsApiTypes'
@@ -23,5 +23,5 @@ export type PlayTurnAPI = {
   incrementActualAgentCapUpgrades(): void
   incrementActualTransportCapUpgrades(): void
   incrementActualTrainingCapUpgrades(): void
-  increaseDesiredCounts(): void
+  increaseDesiredCount(name: DesiredCountName): void
 }

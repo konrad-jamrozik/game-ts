@@ -6,6 +6,7 @@ import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { AGENT_CAP, AGENT_HIRE_COST, TRAINING_CAP, TRANSPORT_CAP } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
+import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { REQUIRED_TURNS_OF_SAVINGS, type UpgradeNameOrNewAgent } from './types'
 
 export function spendMoney(api: PlayTurnAPI): void {
@@ -160,7 +161,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
 
   if (areAllDesiredCountsMet(gameStateAfter, aiStateAfter)) {
     const stateBeforeIncrease = { ...aiStateAfter }
-    api.increaseDesiredCounts()
+    decideSomeDesiredCount(api)
     logBuyResult(api, priority, stateBeforeIncrease)
   } else {
     logBuyResult(api, priority)
@@ -281,4 +282,80 @@ function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntelle
     return `Increased desired hitPointsRecoveryUpgrades to ${aiState.desiredHitPointsRecoveryUpgrades}`
   }
   return 'No change detected'
+}
+
+function decideSomeDesiredCount(api: PlayTurnAPI): void {
+  const { aiState } = api
+  // Priority picks (deterministic, checked first)
+  const targetTransportCap = ceil(aiState.desiredAgentCount * 0.25)
+  // KJA2 these constants (for caps) should come from relevant upgrades data table
+  const currentTransportCap = TRANSPORT_CAP + aiState.desiredTransportCapUpgrades * 2
+  if (currentTransportCap < targetTransportCap) {
+    api.increaseDesiredCount('transportCapUpgrades')
+    return
+  }
+
+  const targetTrainingCap = ceil(aiState.desiredAgentCount * 0.3)
+  const currentTrainingCap = TRAINING_CAP + aiState.desiredTrainingCapUpgrades * 4
+  if (currentTrainingCap < targetTrainingCap) {
+    api.increaseDesiredCount('trainingCapUpgrades')
+    return
+  }
+
+  // Calculate sum of all purchased upgrades (including caps)
+  const sumTotalAllAlreadyPurchasedUpgraded =
+    aiState.actualAgentCapUpgrades +
+    aiState.actualTransportCapUpgrades +
+    aiState.actualTrainingCapUpgrades +
+    aiState.actualWeaponDamageUpgrades +
+    aiState.actualTrainingSkillGainUpgrades +
+    aiState.actualExhaustionRecoveryUpgrades +
+    aiState.actualHitPointsRecoveryUpgrades
+
+  // KJA2 make these 8 and 4 and ratios above and below into constants, once this is moved to AI
+  // Note: if the multiplier for sumTotalAllAlreadyPurchasedUpgraded is too large,
+  // then the AI player spends all money just buying agents and catching up with transport and training cap.
+  // Always roll for desiredAgentCount if condition is met
+  if (aiState.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 2) {
+    decideDesiredAgentCount(api)
+    return
+  }
+
+  // Weighted random (if no priority pick and condition not met)
+  // Agents: 50%, Weapon damage: 12.5%, Training skill gain: 12.5%,
+  // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
+  const random = Math.random()
+
+  if (random < 0.5) {
+    decideDesiredAgentCount(api)
+    return
+  }
+
+  if (random < 0.625) {
+    api.increaseDesiredCount('weaponDamageUpgrades')
+    return
+  }
+
+  if (random < 0.75) {
+    api.increaseDesiredCount('trainingSkillGainUpgrades')
+    return
+  }
+
+  if (random < 0.875) {
+    api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+    return
+  }
+
+  api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+}
+
+function decideDesiredAgentCount(api: PlayTurnAPI): void {
+  const { aiState } = api
+  // Special case: if at cap, increase agent cap instead
+  const currentAgentCap = AGENT_CAP + aiState.desiredAgentCapUpgrades * 4
+  if (aiState.desiredAgentCount === currentAgentCap) {
+    api.increaseDesiredCount('agentCapUpgrades')
+    return
+  }
+  api.increaseDesiredCount('agentCount')
 }

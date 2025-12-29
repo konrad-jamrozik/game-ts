@@ -1,8 +1,16 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { AGENT_CAP, TRAINING_CAP, TRANSPORT_CAP } from '../../lib/data_tables/constants'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
 import { reset as resetGameState } from './gameStateSlice'
-import { ceil } from '../../lib/primitives/mathPrimitives'
+
+export type DesiredCountName =
+  | 'agentCount'
+  | 'agentCapUpgrades'
+  | 'transportCapUpgrades'
+  | 'trainingCapUpgrades'
+  | 'weaponDamageUpgrades'
+  | 'trainingSkillGainUpgrades'
+  | 'exhaustionRecoveryUpgrades'
+  | 'hitPointsRecoveryUpgrades'
 
 export type BasicIntellectState = {
   desiredAgentCount: number
@@ -27,8 +35,9 @@ export type BasicIntellectState = {
 }
 
 function createInitialState(): BasicIntellectState {
-  const state: BasicIntellectState = {
-    desiredAgentCount: initialGameState.agents.length,
+  return {
+    // This is set to +1 to maintain the invariant that there is always at least one desired count above actual count.
+    desiredAgentCount: initialGameState.agents.length + 1,
     desiredAgentCapUpgrades: 0,
     desiredTransportCapUpgrades: 0,
     desiredTrainingCapUpgrades: 0,
@@ -44,9 +53,6 @@ function createInitialState(): BasicIntellectState {
     actualExhaustionRecoveryUpgrades: 0,
     actualHitPointsRecoveryUpgrades: 0,
   }
-  // Increase desired counts once to match reset behavior
-  increaseSomeDesiredCount(state)
-  return state
 }
 
 const aiStateSlice = createSlice({
@@ -74,8 +80,29 @@ const aiStateSlice = createSlice({
     incrementActualTrainingCapUpgrades(state) {
       state.actualTrainingCapUpgrades += 1
     },
-    increaseDesiredCounts(state) {
-      increaseSomeDesiredCount(state)
+    incrementDesiredAgentCount(state) {
+      state.desiredAgentCount += 1
+    },
+    incrementDesiredAgentCapUpgrades(state) {
+      state.desiredAgentCapUpgrades += 1
+    },
+    incrementDesiredTransportCapUpgrades(state) {
+      state.desiredTransportCapUpgrades += 1
+    },
+    incrementDesiredTrainingCapUpgrades(state) {
+      state.desiredTrainingCapUpgrades += 1
+    },
+    incrementDesiredWeaponDamageUpgrades(state) {
+      state.desiredWeaponDamageUpgrades += 1
+    },
+    incrementDesiredTrainingSkillGainUpgrades(state) {
+      state.desiredTrainingSkillGainUpgrades += 1
+    },
+    incrementDesiredExhaustionRecoveryUpgrades(state) {
+      state.desiredExhaustionRecoveryUpgrades += 1
+    },
+    incrementDesiredHitPointsRecoveryUpgrades(state) {
+      state.desiredHitPointsRecoveryUpgrades += 1
     },
     reset(state) {
       const initialState = createInitialState()
@@ -92,82 +119,6 @@ const aiStateSlice = createSlice({
   },
 })
 
-// KJA2 the logic for that should be in basic intellect; this should only mechanistically update
-// relevant field, with no validation logic
-function increaseSomeDesiredCount(state: BasicIntellectState): void {
-  // Priority picks (deterministic, checked first)
-  const targetTransportCap = ceil(state.desiredAgentCount * 0.25)
-  // KJA2 these constants (for caps) should come from relevant upgrades data table
-  const currentTransportCap = TRANSPORT_CAP + state.desiredTransportCapUpgrades * 2
-  if (currentTransportCap < targetTransportCap) {
-    state.desiredTransportCapUpgrades += 1
-    return
-  }
-
-  const targetTrainingCap = ceil(state.desiredAgentCount * 0.3)
-  const currentTrainingCap = TRAINING_CAP + state.desiredTrainingCapUpgrades * 4
-  if (currentTrainingCap < targetTrainingCap) {
-    state.desiredTrainingCapUpgrades += 1
-    return
-  }
-
-  // Calculate sum of all purchased upgrades (including caps)
-  const sumTotalAllAlreadyPurchasedUpgraded =
-    state.actualAgentCapUpgrades +
-    state.actualTransportCapUpgrades +
-    state.actualTrainingCapUpgrades +
-    state.actualWeaponDamageUpgrades +
-    state.actualTrainingSkillGainUpgrades +
-    state.actualExhaustionRecoveryUpgrades +
-    state.actualHitPointsRecoveryUpgrades
-
-  // KJA2 make these 8 and 4 and ratios above and below into constants, once this is moved to AI
-  // Note: if the multiplier for sumTotalAllAlreadyPurchasedUpgraded is too large,
-  // then the AI player spends all money just buying agents and catching up with transport and training cap.
-  // Always roll for desiredAgentCount if condition is met
-  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 2) {
-    increaseDesiredAgentCount(state)
-    return
-  }
-
-  // Weighted random (if no priority pick and condition not met)
-  // Agents: 50%, Weapon damage: 12.5%, Training skill gain: 12.5%,
-  // Exhaustion recovery: 12.5%, Hit points recovery: 12.5%
-  const random = Math.random()
-
-  if (random < 0.5) {
-    increaseDesiredAgentCount(state)
-    return
-  }
-
-  if (random < 0.625) {
-    state.desiredWeaponDamageUpgrades += 1
-    return
-  }
-
-  if (random < 0.75) {
-    state.desiredTrainingSkillGainUpgrades += 1
-    return
-  }
-
-  if (random < 0.875) {
-    state.desiredExhaustionRecoveryUpgrades += 1
-    return
-  }
-
-  state.desiredHitPointsRecoveryUpgrades += 1
-}
-
-function increaseDesiredAgentCount(state: BasicIntellectState): void {
-  // Special case: if at cap, increase agent cap instead
-  const currentAgentCap = AGENT_CAP + state.desiredAgentCapUpgrades * 4
-  if (state.desiredAgentCount === currentAgentCap) {
-    state.desiredAgentCapUpgrades += 1
-    return
-  }
-  state.desiredAgentCount += 1
-}
-
 export const {
   incrementActualWeaponDamageUpgrades,
   incrementActualTrainingSkillGainUpgrades,
@@ -176,7 +127,14 @@ export const {
   incrementActualAgentCapUpgrades,
   incrementActualTransportCapUpgrades,
   incrementActualTrainingCapUpgrades,
-  increaseDesiredCounts,
+  incrementDesiredAgentCount,
+  incrementDesiredAgentCapUpgrades,
+  incrementDesiredTransportCapUpgrades,
+  incrementDesiredTrainingCapUpgrades,
+  incrementDesiredWeaponDamageUpgrades,
+  incrementDesiredTrainingSkillGainUpgrades,
+  incrementDesiredExhaustionRecoveryUpgrades,
+  incrementDesiredHitPointsRecoveryUpgrades,
   reset: resetAiState,
 } = aiStateSlice.actions
 

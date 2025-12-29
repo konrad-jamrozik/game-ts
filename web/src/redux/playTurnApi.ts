@@ -7,8 +7,16 @@ import {
   incrementActualAgentCapUpgrades,
   incrementActualTransportCapUpgrades,
   incrementActualTrainingCapUpgrades,
-  increaseDesiredCounts,
+  incrementDesiredAgentCount,
+  incrementDesiredAgentCapUpgrades,
+  incrementDesiredTransportCapUpgrades,
+  incrementDesiredTrainingCapUpgrades,
+  incrementDesiredWeaponDamageUpgrades,
+  incrementDesiredTrainingSkillGainUpgrades,
+  incrementDesiredExhaustionRecoveryUpgrades,
+  incrementDesiredHitPointsRecoveryUpgrades,
   type BasicIntellectState,
+  type DesiredCountName,
 } from './slices/aiStateSlice'
 import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
 import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
@@ -135,8 +143,33 @@ export function getPlayTurnApi(store: Store<RootState>, options?: { strict?: boo
       updateAiState()
     },
 
-    increaseDesiredCounts(): void {
-      store.dispatch(increaseDesiredCounts())
+    increaseDesiredCount(name: DesiredCountName): void {
+      switch (name) {
+        case 'agentCount':
+          store.dispatch(incrementDesiredAgentCount())
+          break
+        case 'agentCapUpgrades':
+          store.dispatch(incrementDesiredAgentCapUpgrades())
+          break
+        case 'transportCapUpgrades':
+          store.dispatch(incrementDesiredTransportCapUpgrades())
+          break
+        case 'trainingCapUpgrades':
+          store.dispatch(incrementDesiredTrainingCapUpgrades())
+          break
+        case 'weaponDamageUpgrades':
+          store.dispatch(incrementDesiredWeaponDamageUpgrades())
+          break
+        case 'trainingSkillGainUpgrades':
+          store.dispatch(incrementDesiredTrainingSkillGainUpgrades())
+          break
+        case 'exhaustionRecoveryUpgrades':
+          store.dispatch(incrementDesiredExhaustionRecoveryUpgrades())
+          break
+        case 'hitPointsRecoveryUpgrades':
+          store.dispatch(incrementDesiredHitPointsRecoveryUpgrades())
+          break
+      }
       updateAiState()
     },
   }

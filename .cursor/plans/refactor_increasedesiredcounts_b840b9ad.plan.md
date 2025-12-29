@@ -4,24 +4,24 @@ overview: ""
 todos:
   - id: slice-reducers
     content: Add 8 simple incrementDesired* reducers and DesiredCountName type to aiStateSlice
-    status: pending
+    status: completed
   - id: slice-cleanup
     content: Remove increaseDesiredCounts reducer and helper functions from aiStateSlice
-    status: pending
+    status: completed
     dependencies:
       - slice-reducers
   - id: api-types
     content: "Update PlayTurnAPI type to use increaseDesiredCount(name: DesiredCountName)"
-    status: pending
+    status: completed
   - id: api-impl
     content: Implement routing logic in playTurnApi.ts
-    status: pending
+    status: completed
     dependencies:
       - slice-reducers
       - api-types
   - id: intellect
     content: Move decision logic to purchasing.ts decideSomeDesiredCount function
-    status: pending
+    status: completed
     dependencies:
       - api-impl
 ---
@@ -85,7 +85,3 @@ flowchart LR
 ### 3. [`web/src/redux/playTurnApi.ts`](web/src/redux/playTurnApi.ts)
 
 - **Replace** `increaseDesiredCounts()` method with `increaseDesiredCount(name: DesiredCountName)` that routes to the appropriate reducer via switch statement
-
-### 4. [`web/src/ai/intellects/basic/purchasing.ts`](web/src/ai/intellects/basic/purchasing.ts)
-
-- **Add** new function `decideSomeDesiredCount(api: PlayTurnAPI): void` containing all the decision logic currently in `increaseSomeDesiredCount`
