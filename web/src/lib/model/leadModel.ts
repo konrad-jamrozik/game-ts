@@ -8,7 +8,6 @@ export type Lead = {
   description: string
   dependsOn: string[]
   repeatable: boolean
-  enemyEstimate?: string // For observability, e.g., "Expect safehouse to have a dozen low-ranked cult members"
 }
 
 export type LeadInvestigation = {
