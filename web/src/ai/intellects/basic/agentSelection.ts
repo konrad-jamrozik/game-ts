@@ -1,6 +1,6 @@
 import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
-import { notTerminated } from '../../../lib/model_utils/agentUtils'
+import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
 import type { SelectNextAgentForPriorityContractingOptions, SelectNextBestReadyAgentOptions } from './types'
 import { pickAtRandomFromLowestExhaustion, getInBaseAgentsAdvanced } from './utils'
@@ -12,28 +12,38 @@ export function selectNextBestReadyAgent(
   options?: SelectNextBestReadyAgentOptions,
 ): Agent | undefined {
   const { includeInTraining = true, keepReserve = true } = options ?? {}
-  const inBaseAgents = getInBaseAgentsAdvanced(gameState, includeInTraining)
+  const availableAgents = available(gameState.agents)
+  const trainingAgents = onTrainingAssignment(gameState.agents)
 
   const totalAgentCount = notTerminated(gameState.agents).length
 
   // Filter out agents with exhaustion >= 5% and excluded agents
-  const readyAgents = inBaseAgents.filter((agent: Agent) => {
-    const exhaustionPct = toF(agent.exhaustionPct)
-    return exhaustionPct < 5 && !excludeAgentIds.includes(agent.id)
-  })
+  const filterReadyAgents = (agents: Agent[]): Agent[] =>
+    agents.filter((agent: Agent) => {
+      const exhaustionPct = toF(agent.exhaustionPct)
+      return exhaustionPct < 5 && !excludeAgentIds.includes(agent.id)
+    })
+
+  const readyAvailableAgents = filterReadyAgents(availableAgents)
+  const readyInTrainingAgents = filterReadyAgents(trainingAgents)
+
+  // Consider ready available agents first. If includeInTraining is true, also consider ready in training agents.
+  const consideredAgents: Agent[] =
+    includeInTraining && readyAvailableAgents.length === 0 ? readyInTrainingAgents : readyAvailableAgents
 
   // Return no agent if none available
-  if (readyAgents.length === 0) {
+  if (consideredAgents.length === 0) {
     return undefined
   }
 
   // Return no agent if less than 20% of all agents will be ready after selecting alreadySelectedCount agents (only if keepReserve is true)
-  if (keepReserve && readyAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
+  if (keepReserve && consideredAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
     return undefined
   }
 
+  // KJA1 if agent in training is picked, they first must be unassigned from training
   // Pick agent with lowest exhaustion, randomly if tied
-  return pickAtRandomFromLowestExhaustion(readyAgents)
+  return pickAtRandomFromLowestExhaustion(readyAvailableAgents)
 }
 
 export function selectNextAgentForPriorityContracting(

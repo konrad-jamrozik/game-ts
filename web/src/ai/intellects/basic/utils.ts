@@ -4,9 +4,10 @@ import { f6mult, toF } from '../../../lib/primitives/fixed6'
 import { initialAgent } from '../../../lib/factories/agentFactory'
 import { getAgentSkillBasedValue } from '../../../lib/ruleset/skillRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
+import { available } from '../../../lib/model_utils/agentUtils'
 
 export function getInBaseAgents(gameState: GameState): Agent[] {
-  return gameState.agents.filter((agent) => agent.assignment === 'Standby' || agent.assignment === 'Training')
+  return available(gameState.agents)
 }
 
 export function getInBaseAgentsAdvanced(gameState: GameState, includeInTraining: boolean): Agent[] {
