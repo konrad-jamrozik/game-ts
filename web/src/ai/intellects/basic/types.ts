@@ -10,7 +10,7 @@ export type SelectNextBestReadyAgentOptions = {
 
 export const REQUIRED_TURNS_OF_SAVINGS = 5
 
-export const REQUIRED_AGENTS_PER_ENEMY = 5
+export const MAX_ENEMIES_PER_AGENT = 3
 
 export const TARGET_AGENT_THREAT_MULTIPLIER = 1.2
 

@@ -4,7 +4,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { REQUIRED_AGENTS_PER_ENEMY, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
+import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { floor } from '../../../lib/primitives/mathPrimitives'
 
@@ -125,7 +125,7 @@ function deployToMission(
   }[],
 ): boolean {
   const { gameState } = api
-  const minimumRequiredAgents = floor(mission.enemies.length / REQUIRED_AGENTS_PER_ENEMY)
+  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
   const enemyThreat = calculateMissionThreatAssessment(mission)
   const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
 
