@@ -10,21 +10,21 @@ export type UpgradeName =
   | 'Weapon damage'
 
 export const UPGRADE_PRICES: Record<UpgradeName, number> = {
-  'Agent cap': 50,
-  'Transport cap': 500,
-  'Training cap': 50,
-  'Training skill gain': 400,
-  'Exhaustion recovery': 500,
+  'Agent cap': 200,
+  'Transport cap': 1000,
+  'Training cap': 200,
+  'Training skill gain': 1000,
+  'Exhaustion recovery': 1000,
   'Hit points recovery %': 1000,
-  'Weapon damage': 300,
+  'Weapon damage': 1000,
 }
 
 export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
-  'Agent cap': 1,
-  'Transport cap': 1,
-  'Training cap': 1,
-  'Training skill gain': toF6(0.1),
-  'Exhaustion recovery': toF6(1),
+  'Agent cap': 4,
+  'Transport cap': 2,
+  'Training cap': 4,
+  'Training skill gain': toF6(0.05),
+  'Exhaustion recovery': toF6(0.2),
   'Hit points recovery %': toF6(0.2),
   'Weapon damage': 1,
 }

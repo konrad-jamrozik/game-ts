@@ -2,6 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { AGENT_CAP, TRAINING_CAP, TRANSPORT_CAP } from '../../lib/data_tables/constants'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
 import { reset as resetGameState } from './gameStateSlice'
+import { ceil } from '../../lib/primitives/mathPrimitives'
 
 export type BasicIntellectState = {
   desiredAgentCount: number
@@ -74,15 +75,17 @@ const aiStateSlice = createSlice({
   },
 })
 
+// KJA2 the logic for that should be in basic intellect; this should only mechanistically update
+// relevant field, with no validation logic
 function increaseSomeDesiredCount(state: BasicIntellectState): void {
   // Priority picks (deterministic, checked first)
-  const targetTransportCap = Math.ceil(state.desiredAgentCount * 0.25)
+  const targetTransportCap = ceil(state.desiredAgentCount * 0.25)
   if (state.desiredTransportCap < targetTransportCap) {
     state.desiredTransportCap += 1
     return
   }
 
-  const targetTrainingCap = Math.ceil(state.desiredAgentCount * 0.5)
+  const targetTrainingCap = ceil(state.desiredAgentCount * 0.5)
   if (state.desiredTrainingCap < targetTrainingCap) {
     state.desiredTrainingCap += 1
     return
@@ -95,8 +98,9 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
     state.actualExhaustionRecoveryUpgrades +
     state.actualHitPointsRecoveryUpgrades
 
+  // KJA2 make these 8 and 4 and ratios above and below into constants, once this is moved to AI
   // Always roll for desiredAgentCount if condition is met
-  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 2) {
+  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 4) {
     increaseDesiredAgentCount(state)
     return
   }
