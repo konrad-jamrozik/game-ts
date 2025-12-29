@@ -2,8 +2,8 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
-import type { SelectNextAgentForPriorityContractingOptions, SelectNextBestReadyAgentOptions } from './types'
-import { pickAtRandomFromLowestExhaustion, getInBaseAgentsAdvanced } from './utils'
+import type { SelectNextBestReadyAgentOptions } from './types'
+import { pickAtRandomFromLowestExhaustion } from './utils'
 
 export function selectNextBestReadyAgent(
   gameState: GameState,
@@ -11,17 +11,17 @@ export function selectNextBestReadyAgent(
   alreadySelectedCount: number,
   options?: SelectNextBestReadyAgentOptions,
 ): Agent | undefined {
-  const { includeInTraining = true, keepReserve = true } = options ?? {}
+  const { includeInTraining = true, keepReserve = true, maxExhaustionPct = 5 } = options ?? {}
   const availableAgents = available(gameState.agents)
   const trainingAgents = onTrainingAssignment(gameState.agents)
 
   const totalAgentCount = notTerminated(gameState.agents).length
 
-  // Filter out agents with exhaustion >= 5% and excluded agents
+  // Filter out agents with exhaustion >= maxExhaustionPct and excluded agents
   const filterReadyAgents = (agents: Agent[]): Agent[] =>
     agents.filter((agent: Agent) => {
       const exhaustionPct = toF(agent.exhaustionPct)
-      return exhaustionPct < 5 && !excludeAgentIds.includes(agent.id)
+      return exhaustionPct <= maxExhaustionPct && !excludeAgentIds.includes(agent.id)
     })
 
   const readyAvailableAgents = filterReadyAgents(availableAgents)
@@ -44,24 +44,4 @@ export function selectNextBestReadyAgent(
   // KJA1 if agent in training is picked, they first must be unassigned from training
   // Pick agent with lowest exhaustion, randomly if tied
   return pickAtRandomFromLowestExhaustion(readyAvailableAgents)
-}
-
-export function selectNextAgentForPriorityContracting(
-  gameState: GameState,
-  excludeAgentIds: string[],
-  options?: SelectNextAgentForPriorityContractingOptions,
-): Agent | undefined {
-  const { includeInTraining = true } = options ?? {}
-  const inBaseAgents = getInBaseAgentsAdvanced(gameState, includeInTraining)
-
-  // Filter out excluded agents only (no exhaustion filter)
-  const availableAgents = inBaseAgents.filter((agent: Agent) => !excludeAgentIds.includes(agent.id))
-
-  // Return no agent if none available
-  if (availableAgents.length === 0) {
-    return undefined
-  }
-
-  // Pick agent with lowest exhaustion, randomly if tied
-  return pickAtRandomFromLowestExhaustion(availableAgents)
 }

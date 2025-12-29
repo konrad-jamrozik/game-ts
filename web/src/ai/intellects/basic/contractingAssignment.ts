@@ -3,7 +3,7 @@ import type { GameState } from '../../../lib/model/gameStateModel'
 import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
-import { selectNextBestReadyAgent, selectNextAgentForPriorityContracting } from './agentSelection'
+import { selectNextBestReadyAgent } from './agentSelection'
 import { estimateAgentContractingIncome } from './utils'
 
 export function assignToContractingWithPriority(api: PlayTurnAPI): void {
@@ -22,7 +22,10 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
 
   // Assign agents until projected income becomes non-negative
   while (projectedIncome < 0) {
-    const agent = selectNextAgentForPriorityContracting(gameState, selectedAgentIds, { includeInTraining: true })
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      includeInTraining: true,
+      maxExhaustionPct: 25,
+    })
     if (agent === undefined) {
       // No more agents available to assign
       break

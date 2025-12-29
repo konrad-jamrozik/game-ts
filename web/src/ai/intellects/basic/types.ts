@@ -5,10 +5,7 @@ export type UpgradeNameOrNewAgent = UpgradeName | 'newAgent'
 export type SelectNextBestReadyAgentOptions = {
   includeInTraining?: boolean
   keepReserve?: boolean
-}
-
-export type SelectNextAgentForPriorityContractingOptions = {
-  includeInTraining?: boolean
+  maxExhaustionPct?: number
 }
 
 export const REQUIRED_TURNS_OF_SAVINGS = 5
