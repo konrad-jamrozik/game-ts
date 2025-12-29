@@ -20,7 +20,7 @@ export type CreateWeaponParams = {
 /**
  * Creates a weapon object.
  * Returns the created weapon. If only damage is provided, minDamage and maxDamage
- * are calculated as +/- 50% of base damage.
+ * are calculated as +/- 50% of base damage, rounded outside - i.e. floor for min, ceil for max.
  * See also `Weapon damage roll` in docs.
  */
 export function bldWeapon(params: CreateWeaponParams): Weapon {

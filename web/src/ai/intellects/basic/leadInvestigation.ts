@@ -27,7 +27,10 @@ import { canDeployMissionWithCurrentResources } from './missionDeployment'
  *         * Sort by mission threat level (descending - hardest missions first)
  *         * For each lead, check if the resulting mission could be deployed successfully
  *           with current resources (agents, threat, transport capacity)
- *         * Select the first deployable lead found
+ *         * Collect all deployable leads
+ *         * Among deployable leads, select those with the maximum threat level
+ *         * Among those, select the lead(s) with the fewest successful investigations
+ *         * If multiple leads still tie, pick at random
  *         * If no leads would result in deployable missions, skip investigation entirely
  *    c. Assign the agent to the selected lead's investigation
  *    d. If the lead is repeatable, mark it for agent piling in subsequent iterations
@@ -201,8 +204,10 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
 
   const sortedLeads = leadsWithThreat.toSorted((a, b) => b.threat - a.threat)
 
-  // Go through the list and check if each mission can be deployed
-  for (const { lead } of sortedLeads) {
+  // Collect all deployable leads with their threat levels
+  const deployableLeads: { lead: Lead; threat: number }[] = []
+
+  for (const { lead, threat } of sortedLeads) {
     // Get the mission data that depends on this lead
     const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
       missionData.dependsOn.includes(lead.id),
@@ -218,14 +223,37 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
 
       const feasibility = canDeployMissionWithCurrentResources(gameState, tempMission)
       if (feasibility.canDeploy) {
-        // This lead would result in a deployable mission - select it
-        return lead
+        // This lead would result in a deployable mission - add it to the list
+        deployableLeads.push({ lead, threat })
+        // Only need to find one deployable mission per lead
+        break
       }
     }
   }
 
-  // No leads would result in deployable missions
-  return undefined
+  if (deployableLeads.length === 0) {
+    // No leads would result in deployable missions
+    return undefined
+  }
+
+  // Find max threat among deployable leads
+  const maxThreat = Math.max(...deployableLeads.map((d) => d.threat))
+  const topThreatLeads = deployableLeads.filter((d) => d.threat === maxThreat).map((d) => d.lead)
+
+  if (topThreatLeads.length === 1) {
+    return topThreatLeads[0]
+  }
+
+  // Multiple leads with same threat - pick one with least investigations
+  const leadsWithCounts = topThreatLeads.map((lead) => ({
+    lead,
+    investigationCount: gameState.leadInvestigationCounts[lead.id] ?? 0,
+  }))
+
+  const minCount = Math.min(...leadsWithCounts.map((l) => l.investigationCount))
+  const leastInvestigatedLeads = leadsWithCounts.filter((l) => l.investigationCount === minCount).map((l) => l.lead)
+
+  return pickAtRandom(leastInvestigatedLeads)
 }
 
 function computeTargetAgentCountForInvestigation(gameState: GameState): number {
