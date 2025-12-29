@@ -2,17 +2,14 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead } from '../../../lib/model/leadModel'
 import type { Mission } from '../../../lib/model/missionModel'
-import type { Agent } from '../../../lib/model/agentModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { pickAtRandom, unassignAgentsFromTraining, calculateAgentThreatAssessment } from './utils'
+import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
-import { getRemainingTransportCap } from '../../../lib/model_utils/missionUtils'
 import { bldMission } from '../../../lib/factories/missionFactory'
-import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
-import { floor } from '../../../lib/primitives/mathPrimitives'
+import { canDeployMissionWithCurrentResources } from './missionDeployment'
 
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
@@ -219,7 +216,8 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
         missionDataId: missionData.id,
       })
 
-      if (canDeployMissionWithCurrentResources(gameState, tempMission)) {
+      const feasibility = canDeployMissionWithCurrentResources(gameState, tempMission)
+      if (feasibility.canDeploy) {
         // This lead would result in a deployable mission - select it
         return lead
       }
@@ -275,67 +273,4 @@ function getMissionThreatForLead(leadId: LeadId): number {
   }
 
   return maxThreat
-}
-
-/**
- * Checks if a mission can be deployed with current resources without actually deploying.
- * Mirrors the checks in deployToMission but without side effects.
- */
-function canDeployMissionWithCurrentResources(gameState: GameState, mission: Mission): boolean {
-  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
-  const enemyThreat = calculateMissionThreatAssessment(mission)
-  const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
-
-  const selectedAgents: Agent[] = []
-  let currentThreat = 0
-
-  // Phase 1: Select agents until meeting minimum count requirement
-  while (selectedAgents.length < minimumRequiredAgents) {
-    const agent = selectNextBestReadyAgent(
-      gameState,
-      selectedAgents.map((a) => a.id),
-      selectedAgents.length,
-      { includeInTraining: true, keepReserve: false },
-    )
-    if (agent === undefined) {
-      break // No more agents available
-    }
-
-    selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
-  }
-
-  // Check if we have enough agents
-  if (selectedAgents.length < minimumRequiredAgents) {
-    return false
-  }
-
-  // Phase 2: Continue selecting if threat requirement not yet met
-  while (currentThreat < targetThreat) {
-    const agent = selectNextBestReadyAgent(
-      gameState,
-      selectedAgents.map((a) => a.id),
-      selectedAgents.length,
-      { includeInTraining: true, keepReserve: false },
-    )
-    if (agent === undefined) {
-      break // No more agents available
-    }
-
-    selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
-  }
-
-  // Check if we have enough threat
-  if (currentThreat < targetThreat) {
-    return false
-  }
-
-  // Check transport capacity
-  const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
-  if (selectedAgents.length > remainingTransportCap) {
-    return false
-  }
-
-  return true
 }

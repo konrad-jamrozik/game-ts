@@ -1,4 +1,5 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
+import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Mission } from '../../../lib/model/missionModel'
 import type { Agent } from '../../../lib/model/agentModel'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
@@ -7,6 +8,86 @@ import { selectNextBestReadyAgent } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { floor } from '../../../lib/primitives/mathPrimitives'
+
+export type DeploymentFeasibilityResult =
+  | {
+      canDeploy: true
+      selectedAgents: Agent[]
+    }
+  | {
+      canDeploy: false
+      reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
+      details: string
+    }
+
+/**
+ * Checks if a mission can be deployed with current resources without actually deploying.
+ * Returns detailed information including selected agents if deployable, or the reason and details if not.
+ */
+export function canDeployMissionWithCurrentResources(
+  gameState: GameState,
+  mission: Mission,
+): DeploymentFeasibilityResult {
+  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
+  const enemyThreat = calculateMissionThreatAssessment(mission)
+  const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
+
+  const selectedAgents: Agent[] = []
+  let currentThreat = 0
+
+  // Phase 1: Select agents until meeting minimum count requirement
+  while (selectedAgents.length < minimumRequiredAgents) {
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      { includeInTraining: true, keepReserve: false },
+    )
+    if (agent === undefined) {
+      break // No more agents available
+    }
+
+    selectedAgents.push(agent)
+    currentThreat += calculateAgentThreatAssessment(agent)
+  }
+
+  // Check if we have enough agents
+  if (selectedAgents.length < minimumRequiredAgents) {
+    const details = `Mission has ${mission.enemies.length} enemies, requiring at least ${minimumRequiredAgents} agents. Only ${selectedAgents.length} agents available.`
+    return { canDeploy: false, reason: 'insufficientAgentCount', details }
+  }
+
+  // Phase 2: Continue selecting if threat requirement not yet met
+  while (currentThreat < targetThreat) {
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      { includeInTraining: true, keepReserve: false },
+    )
+    if (agent === undefined) {
+      break // No more agents available
+    }
+
+    selectedAgents.push(agent)
+    currentThreat += calculateAgentThreatAssessment(agent)
+  }
+
+  // Check if we have enough threat
+  if (currentThreat < targetThreat) {
+    const details = `Gathered ${selectedAgents.length} agents with total threat of ${currentThreat.toFixed(2)} against required ${targetThreat.toFixed(2)}`
+    return { canDeploy: false, reason: 'insufficientThreat', details }
+  }
+
+  // Check transport capacity
+  const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
+  if (selectedAgents.length > remainingTransportCap) {
+    const details = `Needed ${selectedAgents.length} transport capacity, had ${remainingTransportCap} available out of ${gameState.transportCap} total capacity`
+    return { canDeploy: false, reason: 'insufficientTransport', details }
+  }
+
+  return { canDeploy: true, selectedAgents }
+}
 
 export function deployToMissions(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -125,73 +206,23 @@ function deployToMission(
   }[],
 ): boolean {
   const { gameState } = api
-  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
-  const enemyThreat = calculateMissionThreatAssessment(mission)
-  const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
+  const feasibility = canDeployMissionWithCurrentResources(gameState, mission)
 
-  const selectedAgents: Agent[] = []
-  let currentThreat = 0
-
-  // Phase 1: Select agents until meeting minimum count requirement
-  while (selectedAgents.length < minimumRequiredAgents) {
-    const agent = selectNextBestReadyAgent(
-      gameState,
-      selectedAgents.map((a) => a.id),
-      selectedAgents.length,
-      { includeInTraining: true, keepReserve: false },
-    )
-    if (agent === undefined) {
-      break // No more agents available
-    }
-
-    selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
-  }
-
-  // Check if we have enough agents
-  if (selectedAgents.length < minimumRequiredAgents) {
-    const details = `Mission has ${mission.enemies.length} enemies, requiring at least ${minimumRequiredAgents} agents. Only ${selectedAgents.length} agents available.`
-    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientAgentCount', details })
-    return false
-  }
-
-  // Phase 2: Continue selecting if threat requirement not yet met
-  while (currentThreat < targetThreat) {
-    const agent = selectNextBestReadyAgent(
-      gameState,
-      selectedAgents.map((a) => a.id),
-      selectedAgents.length,
-      { includeInTraining: true, keepReserve: false },
-    )
-    if (agent === undefined) {
-      break // No more agents available
-    }
-
-    selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
-  }
-
-  // Check if we have enough threat
-  if (currentThreat < targetThreat) {
-    const details = `Gathered ${selectedAgents.length} agents with total threat of ${currentThreat.toFixed(2)} against required ${targetThreat.toFixed(2)}`
-    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientThreat', details })
-    return false
-  }
-
-  // Check transport capacity
-  const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
-  if (selectedAgents.length > remainingTransportCap) {
-    const details = `Needed ${selectedAgents.length} transport capacity, had ${remainingTransportCap} available out of ${gameState.transportCap} total capacity`
-    cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport', details })
+  if (!feasibility.canDeploy) {
+    cancelledDeployments.push({
+      missionId: mission.id,
+      reason: feasibility.reason,
+      details: feasibility.details,
+    })
     return false
   }
 
   // Unassign agents from training if needed
-  unassignAgentsFromTraining(api, selectedAgents)
+  unassignAgentsFromTraining(api, feasibility.selectedAgents)
   // Deploy agents
   api.deployAgentsToMission({
     missionId: mission.id,
-    agentIds: selectedAgents.map((agent) => agent.id),
+    agentIds: feasibility.selectedAgents.map((agent) => agent.id),
   })
   return true
 }
