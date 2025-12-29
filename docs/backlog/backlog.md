@@ -4,17 +4,11 @@ KJA backlog:
 
 # Current milestone
 
-- In lead investigation data grid:
-  - the "Interrogate member" should show faction name
-  - Add ability to filter by investigation name; use MUI feature for column filter, same it works e.g. in combat log data grid and agent name
-
 - Fix all the remaining inline todos
 - Fix the charts display
-- Fix column spacing for agents stats etc.
 - Problem: battle ratio is computed based on skill and hp, instead of threat
   - AI player constantly loses harder offensive missions because of it
   - Also add constraint to have at least 1 agent for 5 enemies or so
-- Agents stats view sorting by skill is busted. Shows as max 966 skill instead of 1958
 - UI Bug: deployment button says "Deploy 26 agents on  on 139"
 - UI Bug: the turn report is wider than the right column
 
