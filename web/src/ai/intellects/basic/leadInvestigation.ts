@@ -18,7 +18,7 @@ import { canDeployMissionWithCurrentResources } from './missionDeployment'
  * 1. Calculates target agent count based on total agent count (1 + floor(totalAgents / 10))
  * 2. Determines how many additional agents need to be assigned
  * 3. For each agent to assign:
- *    a. If a repeatable lead was already selected in this turn:
+ *    a. If a repeatable lead was already selected (in this turn or from a previous turn):
  *       - Pile all remaining agents onto that same investigation
  *       - Stop if the investigation is completed or abandoned
  *    b. Otherwise, select a new lead:
@@ -56,6 +56,24 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
   let repeatableLeadSelected: Lead | undefined = undefined
 
   for (let i = 0; i < agentsToAssign; i += 1) {
+    // Check if there's an existing active investigation for a repeatable lead to pile onto
+    // This ensures we continue piling agents on existing repeatable investigations across turns
+    if (repeatableLeadSelected === undefined) {
+      const { gameState: currentGameState } = api
+      const existingRepeatableInvestigation = Object.values(currentGameState.leadInvestigations).find((inv) => {
+        if (inv.state !== 'Active') return false
+        const lead = dataTables.leads.find((l) => l.id === inv.leadId)
+        return lead?.repeatable === true
+      })
+
+      if (existingRepeatableInvestigation) {
+        const lead = dataTables.leads.find((l) => l.id === existingRepeatableInvestigation.leadId)
+        if (lead) {
+          repeatableLeadSelected = lead
+        }
+      }
+    }
+
     // If we already selected a repeatable lead, pile agents on it
     if (repeatableLeadSelected !== undefined) {
       const { gameState: currentGameState } = api
