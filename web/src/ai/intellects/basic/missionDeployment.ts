@@ -4,7 +4,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { calculateAgentThreatAssessment, pickAtRandom } from './utils'
+import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
 
 export function deployToMissions(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -151,10 +151,13 @@ function deployToMission(
     cancelledDeployments.push({ missionId: mission.id, reason: 'insufficientTransport', details })
     return false
   }
+  // Unassign agents from training if needed
+  const agentIds = selectedAgents.map((agent) => agent.id)
+  unassignAgentsFromTraining(api, agentIds)
   // Deploy agents
   api.deployAgentsToMission({
     missionId: mission.id,
-    agentIds: selectedAgents.map((agent) => agent.id),
+    agentIds,
   })
   return true
 }

@@ -6,7 +6,7 @@ import type { AgentId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { pickAtRandom } from './utils'
+import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 
 export function assignToLeadInvestigation(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -35,6 +35,9 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
     }
 
     selectedAgentIds.push(agent.id)
+
+    // Unassign agent from training if needed
+    unassignAgentsFromTraining(api, [agent.id])
 
     // Check if there's an existing investigation for this lead
     // Re-read gameState to get the latest state after previous API calls

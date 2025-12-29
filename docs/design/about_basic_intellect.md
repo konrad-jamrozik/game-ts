@@ -41,7 +41,7 @@ which is elaborated in further sections.
   - Prioritize non-repeatable leads over repeatable leads.
 - Ensure there is at least enough money available so that the player won't run out of money
   within next 5 turns, assuming that the contracting income would cover only 50% of upkeep costs.
-- Ensure ready agents (with exhaustion < 5%) are assigned to training when capacity allows.
+- Ensure ready agents (with exhaustion <= 5%) are assigned to training when capacity allows.
   - As such, ensure there is enough training capacity available.
 - Ensure leftover ready agents are assigned to contracting to maximize income.
 - Ensure the player can face the ever-increasing frequency and threat level of missions:

@@ -41,7 +41,6 @@ export function selectNextBestReadyAgent(
     return undefined
   }
 
-  // KJA1 if agent in training is picked, they first must be unassigned from training
   // Pick agent with lowest exhaustion, randomly if tied
   return pickAtRandomFromLowestExhaustion(readyAvailableAgents)
 }

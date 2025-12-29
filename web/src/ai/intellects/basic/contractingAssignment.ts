@@ -4,7 +4,7 @@ import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { estimateAgentContractingIncome } from './utils'
+import { estimateAgentContractingIncome, unassignAgentsFromTraining } from './utils'
 
 export function assignToContractingWithPriority(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -38,6 +38,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
   }
 
   if (selectedAgentIds.length > 0) {
+    unassignAgentsFromTraining(api, selectedAgentIds)
     api.assignAgentsToContracting(selectedAgentIds)
     const finalProjectedIncome = getMoneyTurnDiff(gameState)
     console.log(
