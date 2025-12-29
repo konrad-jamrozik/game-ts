@@ -20,6 +20,15 @@ import { assertUnreachable, assertLessThan } from '../../lib/primitives/assertPr
 
 type UpgradeNameOrNewAgent = UpgradeName | 'newAgent'
 
+type SelectNextBestReadyAgentOptions = {
+  includeInTraining?: boolean
+  keepReserve?: boolean
+}
+
+type SelectNextAgentForPriorityContractingOptions = {
+  includeInTraining?: boolean
+}
+
 const REQUIRED_TURNS_OF_SAVINGS = 5
 
 export const basicIntellect: AIPlayerIntellect = {
@@ -90,11 +99,10 @@ function assignToContractingWithPriority(api: PlayTurnAPI): void {
   }
 
   const selectedAgentIds: AgentId[] = []
-  const includeInTraining = true
 
   // Assign agents until projected income becomes non-negative
   while (projectedIncome < 0) {
-    const agent = selectNextAgentForPriorityContracting(gameState, selectedAgentIds, includeInTraining)
+    const agent = selectNextAgentForPriorityContracting(gameState, selectedAgentIds, { includeInTraining: true })
     if (agent === undefined) {
       // No more agents available to assign
       break
@@ -232,16 +240,13 @@ function deployToMission(
   const selectedAgents: Agent[] = []
   let currentThreat = 0
 
-  const includeInTraining = true
-  const keepReserve = false
   // Select agents until we reach target threat
   while (currentThreat < targetThreat) {
     const agent = selectNextBestReadyAgent(
       gameState,
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
-      includeInTraining,
-      keepReserve,
+      { includeInTraining: true, keepReserve: false },
     )
     if (agent === undefined) {
       break
@@ -286,8 +291,9 @@ function assignToContracting(api: PlayTurnAPI): void {
   const desiredAgentCount = incomeGap > 0 ? Math.ceil(incomeGap / baseAgentIncome) : 0
 
   while (currentIncome < targetIncome) {
-    const includeInTraining = false
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      includeInTraining: false,
+    })
     if (agent === undefined) {
       break
     }
@@ -387,11 +393,14 @@ function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const selectedAgentIds: AgentId[] = []
 
-  const includeInTraining = false
-  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
+  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+    includeInTraining: false,
+  })
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
-    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
+    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      includeInTraining: false,
+    })
   }
 
   if (selectedAgentIds.length > 0) {
@@ -414,8 +423,9 @@ function logLeftoverContractingStatistics(gameState: GameState, assignedCount: n
 function selectNextAgentForPriorityContracting(
   gameState: GameState,
   excludeAgentIds: string[],
-  includeInTraining = true,
+  options?: SelectNextAgentForPriorityContractingOptions,
 ): Agent | undefined {
+  const { includeInTraining = true } = options ?? {}
   // Get agents in base (Standby or in Training)
   const inBaseAgents = gameState.agents.filter((agent: Agent) => {
     // Only select agents that are Available (required for validation)
@@ -450,9 +460,9 @@ function selectNextBestReadyAgent(
   gameState: GameState,
   excludeAgentIds: string[],
   alreadySelectedCount: number,
-  includeInTraining = true,
-  keepReserve = true,
+  options?: SelectNextBestReadyAgentOptions,
 ): Agent | undefined {
+  const { includeInTraining = true, keepReserve = true } = options ?? {}
   // Get agents in base (Available or in Training)
   // KJA3 introduce inBaseAgents to agentUtils.ts and overall make the AI player reuse
   // these utils in many places.
