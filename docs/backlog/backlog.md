@@ -4,13 +4,8 @@ KJA backlog:
 
 # Current milestone
 
-- Fix all the remaining inline todos
 - Fix the charts display
 - Problem: battle ratio is computed based on skill and hp, instead of threat
-  - AI player constantly loses harder offensive missions because of it
-  - Also add constraint to have at least 1 agent for 5 enemies or so
-- UI Bug: deployment button says "Deploy 26 agents on  on 139"
-- UI Bug: the turn report is wider than the right column
 
 # P0 Game mechanics
 
@@ -21,7 +16,7 @@ KJA backlog:
   - if growth factor is 140%, then (90-70) *0.4 = 20*0.4 = 8, so it actually rolled 70+8 = 78.
   - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
-// KJA3 this should be opposite: growth factor of 50% should slow-down, not speed up
+// NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
 
 # P1 UI refinement
 
@@ -29,7 +24,7 @@ KJA backlog:
   - Combat stats (Killed / Damage Inflicted / Damage Taken)
     - Column names: "Kills", "Damage", "Wounds"
   - Skill: Total / from missions / from training
-    - Colum name: "Skill (Mis/Trn)"
+    - Column name: "Skill (Mis/Trn)"
 
 # P2 UI refinement
 

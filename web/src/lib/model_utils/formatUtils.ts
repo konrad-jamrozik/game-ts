@@ -62,7 +62,7 @@ export function fmtMissionTarget(missionId: MissionId | undefined): string {
     return 'mission ?'
   }
   const displayId = missionId.replaceAll('mission-', '')
-  return ` on ${displayId}`
+  return `mission ${displayId}`
 }
 
 export function fmtAgentCount(count: number): string {
