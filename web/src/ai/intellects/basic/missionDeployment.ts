@@ -5,7 +5,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './types'
+import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './constants'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { floor } from '../../../lib/primitives/mathPrimitives'
 

@@ -2,7 +2,8 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
-import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT, type SelectNextBestReadyAgentOptions } from './types'
+import type { SelectNextBestReadyAgentOptions } from './types'
+import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT } from './constants'
 import { pickAtRandomFromLowestExhaustion } from './utils'
 
 export function selectNextBestReadyAgent(

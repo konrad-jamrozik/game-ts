@@ -4,7 +4,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
-import { MAX_READY_URGENT_EXHAUSTION_PCT, TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER } from './types'
+import { MAX_READY_URGENT_EXHAUSTION_PCT, TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER } from './constants'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { estimateAgentContractingIncome, unassignAgentsFromTraining } from './utils'
 

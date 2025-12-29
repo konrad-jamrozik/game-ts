@@ -2,7 +2,7 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
-import { MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT, MAX_READY_EXHAUSTION_PCT } from './types'
+import { MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT, MAX_READY_EXHAUSTION_PCT } from './constants'
 import { deployToMissions } from './missionDeployment'
 import {
   assignToContractingWithPriority,
