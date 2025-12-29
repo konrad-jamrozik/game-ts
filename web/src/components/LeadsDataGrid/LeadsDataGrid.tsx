@@ -1,4 +1,3 @@
-// KJA3 displays "Cult profile" instead of "Red Dawn profile"
 import {
   createRowSelectionManager,
   type GridRowId,

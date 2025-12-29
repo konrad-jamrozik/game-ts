@@ -47,7 +47,7 @@ export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[]
   ['lead-{facId}-hq', 'Locate HQ', 'Location of the {facName} headquarters has been revealed.', 100, ['lead-{facId}-interrogate-high-commander'], false, 'Expect 60 soldiers, 20 elites, 12 lieutenants, 6 commanders, 2 high commanders, and 1 cult leader.'],
   ['lead-{facId}-interrogate-leader', 'Interrogate cult leader', 'Extract information from the captured cult leader.', 30, ['missiondata-raid-{facId}-hq'], false],
   ['lead-{facId}-terminate-cult', 'Terminate cult', 'Final operation to terminate the {facName} cult.', 150, ['lead-{facId}-interrogate-leader'], false],
-  ['lead-{facId}-profile', 'Cult profile', 'Compile detailed intelligence profile on {facName}.', 5, ['lead-{facId}-interrogate-member'], false],
+  ['lead-{facId}-profile', '{facName} profile', 'Compile detailed intelligence profile on {facName}.', 5, ['lead-{facId}-interrogate-member'], false],
   ], factions)
 }
 
