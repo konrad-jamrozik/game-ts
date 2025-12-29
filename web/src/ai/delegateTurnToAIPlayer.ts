@@ -1,7 +1,7 @@
 import { store } from '../redux/store'
 import { advanceTurn } from '../redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../redux/playTurnApi'
-import { isGameLost, isGameWon } from '../lib/game_utils/gameStateChecks'
+import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 
 export function delegateTurnToAIPlayer(intellectName: string): void {
@@ -13,7 +13,7 @@ export function delegateTurnToAIPlayer(intellectName: string): void {
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
   if (autoAdvanceTurn) {
     const finalState = api.gameState
-    if (!isGameLost(finalState) && !isGameWon(finalState)) {
+    if (!isGameEnded(finalState)) {
       store.dispatch(advanceTurn())
     }
   }
@@ -23,7 +23,7 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
   for (let i = 0; i < turnCount; i += 1) {
     const currentState = store.getState().undoable.present.gameState
-    if (isGameLost(currentState) || isGameWon(currentState)) {
+    if (isGameEnded(currentState)) {
       break
     }
     delegateTurnToAIPlayer(intellectName)
@@ -31,7 +31,7 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
     // already handles turn advancement when auto-advance is enabled
     if (!autoAdvanceTurn) {
       const afterState = store.getState().undoable.present.gameState
-      if (!isGameLost(afterState) && !isGameWon(afterState)) {
+      if (!isGameEnded(afterState)) {
         store.dispatch(advanceTurn())
       }
     }
