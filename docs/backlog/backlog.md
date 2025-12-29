@@ -4,6 +4,8 @@ KJA backlog:
 
 # Current milestone
 
+- Does the `<Strict> mode` continue double rendering even for vite preview>
+
 - The card headers should show more counts, like:
   - agents non-terminated / ready
   - missions: active / expired / successful / failed
