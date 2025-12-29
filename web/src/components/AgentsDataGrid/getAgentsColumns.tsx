@@ -176,6 +176,12 @@ export function getAgentsColumns(
       headerName: 'Skill',
       width: columnWidths['agents.skill_simple'],
       valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skill),
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => row.skill,
+        undefined,
+        (row) => row.rowId,
+      ),
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-skill-simple-${params.id}`}>{params.value ?? 0}</span>
       ),

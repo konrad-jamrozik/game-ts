@@ -30,7 +30,7 @@ export const columnWidths = {
   'leads.id': 300,
   'leads.difficulty': 120,
   'leads.repeatable': 60,
-  'leads.investigations': 140,
+  'leads.investigations': 180,
 
   // Lead Investigations columns
   'lead_investigations.name': 260,
@@ -50,7 +50,7 @@ export const columnWidths = {
   'agents.exhaustionPct': 70,
   'agents.skill_simple': 70,
   'agents.hit_points_max': 50,
-  'agents.service': 100,
+  'agents.service': 140,
   'agents.missions_total': 70,
   'agents.mission': 80,
   'agents.by': 170,
