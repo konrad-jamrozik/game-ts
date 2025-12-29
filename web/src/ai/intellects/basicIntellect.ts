@@ -233,10 +233,7 @@ function deployToMission(
   let currentThreat = 0
 
   const includeInTraining = true
-  // KJA2 this "doNot" patterns is confusing, as someone will think doNot == false, so "do".
-  // Fix everywhere. Also doNotIncludeInTraining.
-  // Ideally some kind of key-value syntax would be used instead of boolean flags.
-  const doNotKeepReserve = false
+  const keepReserve = false
   // Select agents until we reach target threat
   while (currentThreat < targetThreat) {
     const agent = selectNextBestReadyAgent(
@@ -244,7 +241,7 @@ function deployToMission(
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
       includeInTraining,
-      doNotKeepReserve,
+      keepReserve,
     )
     if (agent === undefined) {
       break
@@ -289,8 +286,8 @@ function assignToContracting(api: PlayTurnAPI): void {
   const desiredAgentCount = incomeGap > 0 ? Math.ceil(incomeGap / baseAgentIncome) : 0
 
   while (currentIncome < targetIncome) {
-    const doNotIncludeInTraining = false
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
+    const includeInTraining = false
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
     if (agent === undefined) {
       break
     }
@@ -390,11 +387,11 @@ function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const selectedAgentIds: AgentId[] = []
 
-  const doNotIncludeInTraining = false
-  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
+  const includeInTraining = false
+  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
-    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, doNotIncludeInTraining)
+    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, includeInTraining)
   }
 
   if (selectedAgentIds.length > 0) {
