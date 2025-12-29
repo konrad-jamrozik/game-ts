@@ -2,7 +2,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
-import type { SelectNextBestReadyAgentOptions } from './types'
+import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT, type SelectNextBestReadyAgentOptions } from './types'
 import { pickAtRandomFromLowestExhaustion } from './utils'
 
 export function selectNextBestReadyAgent(
@@ -11,7 +11,7 @@ export function selectNextBestReadyAgent(
   alreadySelectedCount: number,
   options?: SelectNextBestReadyAgentOptions,
 ): Agent | undefined {
-  const { includeInTraining = true, keepReserve = true, maxExhaustionPct = 5 } = options ?? {}
+  const { includeInTraining = true, keepReserve = true, maxExhaustionPct = MAX_READY_EXHAUSTION_PCT } = options ?? {}
   const availableAgents = available(gameState.agents)
   const trainingAgents = onTrainingAssignment(gameState.agents)
 
@@ -37,7 +37,7 @@ export function selectNextBestReadyAgent(
   }
 
   // Return no agent if less than 20% of all agents will be ready after selecting alreadySelectedCount agents (only if keepReserve is true)
-  if (keepReserve && consideredAgents.length - alreadySelectedCount < totalAgentCount * 0.2) {
+  if (keepReserve && consideredAgents.length - alreadySelectedCount < totalAgentCount * AGENT_RESERVE_PCT) {
     return undefined
   }
 

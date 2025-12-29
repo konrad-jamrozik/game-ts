@@ -4,6 +4,7 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
+import { MAX_READY_URGENT_EXHAUSTION_PCT, TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER } from './types'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { estimateAgentContractingIncome, unassignAgentsFromTraining } from './utils'
 
@@ -29,7 +30,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
       selectedAgents.length,
       {
         includeInTraining: true,
-        maxExhaustionPct: 25,
+        maxExhaustionPct: MAX_READY_URGENT_EXHAUSTION_PCT,
       },
     )
     if (agent === undefined) {
@@ -60,7 +61,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
 export function assignToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const upkeepCosts = getAgentUpkeep(gameState)
-  const targetIncome = upkeepCosts * 1.2 // Target 120% of costs
+  const targetIncome = upkeepCosts * TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER
   let currentIncome = getContractingIncome(gameState)
   const incomeGap = targetIncome - currentIncome
 

@@ -2,6 +2,7 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
+import { MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT, MAX_READY_EXHAUSTION_PCT } from './types'
 import { deployToMissions } from './missionDeployment'
 import {
   assignToContractingWithPriority,
@@ -29,7 +30,7 @@ function unassignExhaustedAgents(api: PlayTurnAPI): void {
 
   const exhaustedAgents = assignedAgents.filter((agent) => {
     const exhaustionPct = toF(agent.exhaustionPct)
-    return exhaustionPct >= 30
+    return exhaustionPct > MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT
   })
 
   if (exhaustedAgents.length > 0) {
@@ -45,7 +46,7 @@ function logAgentStatistics(gameState: GameState): void {
   const availableAgents = available(gameState.agents)
   const readyAgents = availableAgents.filter((agent) => {
     const exhaustionPct = toF(agent.exhaustionPct)
-    return exhaustionPct < 5
+    return exhaustionPct <= MAX_READY_EXHAUSTION_PCT
   })
   const totalAgents = notTerminated(gameState.agents).length
   const readyAgentsPct = totalAgents > 0 ? ((readyAgents.length / totalAgents) * 100).toFixed(1) : '0.0'
