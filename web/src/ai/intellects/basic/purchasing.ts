@@ -162,7 +162,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
 function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   if (priority === 'newAgent') {
     api.hireAgent()
-    console.log(`spendMoney: purchased newAgent`)
+    console.log(`spendMoney: purchased newAgent 🪖`)
     return
   }
 
@@ -193,9 +193,9 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 
   if (priority === 'Agent cap' || priority === 'Transport cap' || priority === 'Training cap') {
-    console.log(`spendMoney: purchased cap ${priority}`)
+    console.log(`spendMoney: purchased cap 🏦 ${priority}`)
   } else {
-    console.log(`spendMoney: purchased upgrade ${priority}`)
+    console.log(`spendMoney: purchased upgrade ⏫ ${priority}`)
   }
 }
 
