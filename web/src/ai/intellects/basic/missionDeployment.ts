@@ -7,7 +7,7 @@ import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/mo
 import { selectNextBestReadyAgent } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './constants'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
-import { floor } from '../../../lib/primitives/mathPrimitives'
+import { ceil } from '../../../lib/primitives/mathPrimitives'
 
 export type DeploymentFeasibilityResult =
   | {
@@ -28,7 +28,7 @@ export function canDeployMissionWithCurrentResources(
   gameState: GameState,
   mission: Mission,
 ): DeploymentFeasibilityResult {
-  const minimumRequiredAgents = floor(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
+  const minimumRequiredAgents = ceil(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
   const enemyThreat = calculateMissionThreatAssessment(mission)
   const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
 
