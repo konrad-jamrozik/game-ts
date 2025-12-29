@@ -97,13 +97,14 @@ const aiStateSlice = createSlice({
 function increaseSomeDesiredCount(state: BasicIntellectState): void {
   // Priority picks (deterministic, checked first)
   const targetTransportCap = ceil(state.desiredAgentCount * 0.25)
+  // KJA2 these constants (for caps) should come from relevant upgrades data table
   const currentTransportCap = TRANSPORT_CAP + state.desiredTransportCapUpgrades * 2
   if (currentTransportCap < targetTransportCap) {
     state.desiredTransportCapUpgrades += 1
     return
   }
 
-  const targetTrainingCap = ceil(state.desiredAgentCount * 0.5)
+  const targetTrainingCap = ceil(state.desiredAgentCount * 0.3)
   const currentTrainingCap = TRAINING_CAP + state.desiredTrainingCapUpgrades * 4
   if (currentTrainingCap < targetTrainingCap) {
     state.desiredTrainingCapUpgrades += 1
@@ -121,8 +122,10 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
     state.actualHitPointsRecoveryUpgrades
 
   // KJA2 make these 8 and 4 and ratios above and below into constants, once this is moved to AI
+  // Note: if the multiplier for sumTotalAllAlreadyPurchasedUpgraded is too large,
+  // then the AI player spends all money just buying agents and catching up with transport and training cap.
   // Always roll for desiredAgentCount if condition is met
-  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 4) {
+  if (state.desiredAgentCount <= 8 + sumTotalAllAlreadyPurchasedUpgraded * 2) {
     increaseDesiredAgentCount(state)
     return
   }
