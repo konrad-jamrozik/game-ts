@@ -152,12 +152,11 @@ function deployToMission(
     return false
   }
   // Unassign agents from training if needed
-  const agentIds = selectedAgents.map((agent) => agent.id)
-  unassignAgentsFromTraining(api, agentIds)
+  unassignAgentsFromTraining(api, selectedAgents)
   // Deploy agents
   api.deployAgentsToMission({
     missionId: mission.id,
-    agentIds,
+    agentIds: selectedAgents.map((agent) => agent.id),
   })
   return true
 }

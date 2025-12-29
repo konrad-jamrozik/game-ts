@@ -37,7 +37,7 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
     selectedAgentIds.push(agent.id)
 
     // Unassign agent from training if needed
-    unassignAgentsFromTraining(api, [agent.id])
+    unassignAgentsFromTraining(api, [agent])
 
     // Check if there's an existing investigation for this lead
     // Re-read gameState to get the latest state after previous API calls

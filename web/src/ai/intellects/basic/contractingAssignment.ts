@@ -1,5 +1,6 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
+import type { Agent } from '../../../lib/model/agentModel'
 import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
@@ -18,6 +19,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
     return
   }
 
+  const selectedAgents: Agent[] = []
   const selectedAgentIds: AgentId[] = []
 
   // Assign agents until projected income becomes non-negative
@@ -31,6 +33,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
       break
     }
 
+    selectedAgents.push(agent)
     selectedAgentIds.push(agent.id)
     // Estimate income increase from this agent
     const agentIncome = estimateAgentContractingIncome(agent)
@@ -38,7 +41,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
   }
 
   if (selectedAgentIds.length > 0) {
-    unassignAgentsFromTraining(api, selectedAgentIds)
+    unassignAgentsFromTraining(api, selectedAgents)
     api.assignAgentsToContracting(selectedAgentIds)
     const finalProjectedIncome = getMoneyTurnDiff(gameState)
     console.log(

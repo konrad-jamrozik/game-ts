@@ -1,21 +1,18 @@
 import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
-import type { AgentId } from '../../../lib/model/modelIds'
 import { f6mult, toF } from '../../../lib/primitives/fixed6'
 import { initialAgent } from '../../../lib/factories/agentFactory'
 import { getAgentSkillBasedValue } from '../../../lib/ruleset/skillRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
-import { available, withIds, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
+import { available, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 
 export function getInBaseAgents(gameState: GameState): Agent[] {
   return available(gameState.agents)
 }
 
-export function unassignAgentsFromTraining(api: PlayTurnAPI, agentIds: AgentId[]): void {
-  const { gameState } = api
-  const selectedAgents = withIds(gameState.agents, agentIds)
-  const trainingAgents = onTrainingAssignment(selectedAgents)
+export function unassignAgentsFromTraining(api: PlayTurnAPI, agents: Agent[]): void {
+  const trainingAgents = onTrainingAssignment(agents)
   if (trainingAgents.length > 0) {
     api.recallAgents(trainingAgents.map((a) => a.id))
   }
