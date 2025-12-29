@@ -8,7 +8,7 @@
  * - Id: Lead ID (may contain {facId} template for faction-specific leads)
  * - Name: Lead name/title (may contain {facName} template)
  * - Description: Lead description (may contain {facName} template)
- * - Difficulty: Intel difficulty level (higher = more intel needed)
+ * - Difficulty: Intel difficulty level (higher = more intel needed). Difficulty of X means the player must accumulate X * 100 intel to have a 100% chance of success.
  * - DependsOn: List of lead/mission IDs that must be completed first (may contain {facId} template)
  * - Repeatable: Whether this lead can be investigated multiple times
  */

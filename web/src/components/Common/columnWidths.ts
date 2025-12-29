@@ -19,7 +19,7 @@ export const columnWidths = {
 
   // Missions columns
   'missions.threat': 80,
-  'missions.id': 360,
+  'missions.id': 400,
   'missions.state': 120,
   'missions.expires_in': 70,
   'missions.enemies': 80,
@@ -27,13 +27,13 @@ export const columnWidths = {
   'missions.details': 100,
 
   // Leads columns
-  'leads.id': 300,
+  'leads.id': 340,
   'leads.difficulty': 120,
   'leads.repeatable': 60,
   'leads.investigations': 180,
 
   // Lead Investigations columns
-  'lead_investigations.name': 300,
+  'lead_investigations.name': 380,
   'lead_investigations.agents': 60,
   'lead_investigations.intel': 64,
   'lead_investigations.success_chance': 80,

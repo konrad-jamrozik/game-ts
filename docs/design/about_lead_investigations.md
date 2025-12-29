@@ -27,7 +27,7 @@ Input**, the **Efficiency Multiplier**, and the **Resistance**.
 | :--- | :--- | :--- |
 | **Intel per agent** | Base Intel gained per turn per normalized skill point | **10** |
 | **Difficulty multiplier** | Scales the stored lead difficulty into “Intel required for 100%” | **100** |
-| **Scaling exponent** | Controls diminishing returns from adding more agents \(used in \(\text{Count}^{0.8}\)\) | **0.8** |
+| **Scaling exponent** | Controls diminishing returns from adding more agents (used in $\text{Count}^{0.8}$) | **0.8** |
 | **Resistance exponent** | Controls how quickly resistance ramps up | **0.5** |
 
 ### A. Base Agent Input
