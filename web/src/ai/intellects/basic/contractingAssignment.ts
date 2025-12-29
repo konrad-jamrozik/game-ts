@@ -20,32 +20,35 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
   }
 
   const selectedAgents: Agent[] = []
-  const selectedAgentIds: AgentId[] = []
 
   // Assign agents until projected income becomes non-negative
   while (projectedIncome < 0) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
-      includeInTraining: true,
-      maxExhaustionPct: 25,
-    })
+    const agent = selectNextBestReadyAgent(
+      gameState,
+      selectedAgents.map((a) => a.id),
+      selectedAgents.length,
+      {
+        includeInTraining: true,
+        maxExhaustionPct: 25,
+      },
+    )
     if (agent === undefined) {
       // No more agents available to assign
       break
     }
 
     selectedAgents.push(agent)
-    selectedAgentIds.push(agent.id)
     // Estimate income increase from this agent
     const agentIncome = estimateAgentContractingIncome(agent)
     projectedIncome += agentIncome
   }
 
-  if (selectedAgentIds.length > 0) {
+  if (selectedAgents.length > 0) {
     unassignAgentsFromTraining(api, selectedAgents)
-    api.assignAgentsToContracting(selectedAgentIds)
+    api.assignAgentsToContracting(selectedAgents.map((a) => a.id))
     const finalProjectedIncome = getMoneyTurnDiff(gameState)
     console.log(
-      `assignToContractingWithPriority: assigned ${selectedAgentIds.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
+      `assignToContractingWithPriority: assigned ${selectedAgents.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
     )
   } else {
     console.log(
