@@ -4,7 +4,31 @@ KJA backlog:
 
 # Current milestone
 
-- Fix the charts display
+- The card headers should show more counts, like:
+  - agents non-terminated / ready
+  - missions: active / expired / successful / failed
+  - leads: active / investigated (at least once)
+  - lead investigations: active / completed
+
+- Selecting agents should show their total threat level
+  - and also there should be a column for their current threat level
+
+- Add stats to agents data grid
+  - Combat stats (Killed / Damage Inflicted / Damage Taken)
+    - Column names: "Kills", "Damage", "Wounds"
+  - Skill: Total / from missions / from training
+    - Column name: "Skill (Mis/Trn)"
+
+- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
+- Charts for stats over time, at the bottom of the screen.
+  - Panic
+  - Each faction threat level, suppression, panic increase
+  - Money
+  - Cumulative missions completed successfully, failed, expired
+  - Hardest mission completed by total enemy skill
+  - Agents, and what they do: contracting, investigating leads, on missions, etc.
+  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+
 - Problem: battle ratio is computed based on skill and hp, instead of threat
 
 # P0 Game mechanics
@@ -18,26 +42,7 @@ KJA backlog:
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
 // NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
 
-# P1 UI refinement
-
-- Add stats to agents data grid
-  - Combat stats (Killed / Damage Inflicted / Damage Taken)
-    - Column names: "Kills", "Damage", "Wounds"
-  - Skill: Total / from missions / from training
-    - Column name: "Skill (Mis/Trn)"
-
 # P2 UI refinement
-
-- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
-
-- Charts for stats over time, at the bottom of the screen.
-  - Panic
-  - Each faction threat level, suppression, panic increase
-  - Money
-  - Cumulative missions completed successfully, failed, expired
-  - Hardest mission completed by total enemy skill
-  - Agents, and what they do: contracting, investigating leads, on missions, etc.
-  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
 
 # P0 Game content
 
