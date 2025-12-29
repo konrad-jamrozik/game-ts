@@ -62,7 +62,6 @@ const aiStateSlice = createSlice({
     reset(state) {
       const initialState = createInitialState()
       Object.assign(state, initialState)
-      increaseSomeDesiredCount(state)
     },
   },
   extraReducers: (builder) => {
@@ -71,7 +70,6 @@ const aiStateSlice = createSlice({
     builder.addCase(resetGameState, (state) => {
       const initialState = createInitialState()
       Object.assign(state, initialState)
-      increaseSomeDesiredCount(state)
     })
   },
 })
