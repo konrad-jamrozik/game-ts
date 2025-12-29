@@ -562,7 +562,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   }
 
   // Find the one cap/upgrade where actual < desired
-  // KJA3 assert here that exactly one desired cap is exactly 1 above actual
+  assertExactlyOneDesiredStateIsOneAboveActual(gameState, aiState)
   if (gameState.transportCap < aiState.desiredTransportCap) {
     return 'Transport cap'
   }
@@ -583,6 +583,74 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   }
 
   assertUnreachable('computeNextBuyPriority: no priority found')
+}
+
+function assertExactlyOneDesiredStateIsOneAboveActual(gameState: GameState, aiState: BasicIntellectState): void {
+  const mismatches: string[] = []
+  let exactlyOneAboveCount = 0
+
+  if (gameState.transportCap !== aiState.desiredTransportCap) {
+    if (aiState.desiredTransportCap === gameState.transportCap + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(`transportCap: actual=${gameState.transportCap}, desired=${aiState.desiredTransportCap}`)
+    }
+  }
+
+  if (gameState.trainingCap !== aiState.desiredTrainingCap) {
+    if (aiState.desiredTrainingCap === gameState.trainingCap + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(`trainingCap: actual=${gameState.trainingCap}, desired=${aiState.desiredTrainingCap}`)
+    }
+  }
+
+  if (aiState.actualWeaponDamageUpgrades !== aiState.desiredWeaponDamageUpgrades) {
+    if (aiState.desiredWeaponDamageUpgrades === aiState.actualWeaponDamageUpgrades + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(
+        `weaponDamageUpgrades: actual=${aiState.actualWeaponDamageUpgrades}, desired=${aiState.desiredWeaponDamageUpgrades}`,
+      )
+    }
+  }
+
+  if (aiState.actualTrainingSkillGainUpgrades !== aiState.desiredTrainingSkillGainUpgrades) {
+    if (aiState.desiredTrainingSkillGainUpgrades === aiState.actualTrainingSkillGainUpgrades + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(
+        `trainingSkillGainUpgrades: actual=${aiState.actualTrainingSkillGainUpgrades}, desired=${aiState.desiredTrainingSkillGainUpgrades}`,
+      )
+    }
+  }
+
+  if (aiState.actualExhaustionRecoveryUpgrades !== aiState.desiredExhaustionRecoveryUpgrades) {
+    if (aiState.desiredExhaustionRecoveryUpgrades === aiState.actualExhaustionRecoveryUpgrades + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(
+        `exhaustionRecoveryUpgrades: actual=${aiState.actualExhaustionRecoveryUpgrades}, desired=${aiState.desiredExhaustionRecoveryUpgrades}`,
+      )
+    }
+  }
+
+  if (aiState.actualHitPointsRecoveryUpgrades !== aiState.desiredHitPointsRecoveryUpgrades) {
+    if (aiState.desiredHitPointsRecoveryUpgrades === aiState.actualHitPointsRecoveryUpgrades + 1) {
+      exactlyOneAboveCount += 1
+    } else {
+      mismatches.push(
+        `hitPointsRecoveryUpgrades: actual=${aiState.actualHitPointsRecoveryUpgrades}, desired=${aiState.desiredHitPointsRecoveryUpgrades}`,
+      )
+    }
+  }
+
+  if (exactlyOneAboveCount !== 1) {
+    const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
+    throw new Error(
+      `AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found ${exactlyOneAboveCount}.${mismatchDetails}`,
+    )
+  }
 }
 
 function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): boolean {
