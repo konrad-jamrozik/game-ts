@@ -27,7 +27,9 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       break
     }
 
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      includeInTraining: true,
+    })
     if (agent === undefined) {
       break
     }

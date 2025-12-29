@@ -11,7 +11,9 @@ export function assignToTraining(api: PlayTurnAPI): void {
   const selectedAgentIds: AgentId[] = []
 
   for (let i = 0; i < availableTrainingSlots; i += 1) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length)
+    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      includeInTraining: false,
+    })
     if (agent === undefined) {
       break
     }
