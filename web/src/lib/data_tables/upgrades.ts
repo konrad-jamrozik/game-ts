@@ -1,4 +1,5 @@
 import { toF6, type Fixed6, isF6 } from '../primitives/fixed6'
+import { AGENT_CAP, TRANSPORT_CAP, TRAINING_CAP } from './constants'
 
 export type UpgradeName =
   | 'Agent cap'
@@ -47,4 +48,16 @@ export function getUpgradeIncrementFixed6(upgradeName: UpgradeName): Fixed6 {
     return increment
   }
   return toF6(increment)
+}
+
+export function computeAgentCap(upgradeCount: number): number {
+  return AGENT_CAP + upgradeCount * getUpgradeIncrement('Agent cap')
+}
+
+export function computeTransportCap(upgradeCount: number): number {
+  return TRANSPORT_CAP + upgradeCount * getUpgradeIncrement('Transport cap')
+}
+
+export function computeTrainingCap(upgradeCount: number): number {
+  return TRAINING_CAP + upgradeCount * getUpgradeIncrement('Training cap')
 }
