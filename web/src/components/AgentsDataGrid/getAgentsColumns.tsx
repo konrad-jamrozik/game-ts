@@ -187,6 +187,21 @@ export function getAgentsColumns(
       ),
     },
     {
+      field: 'training',
+      headerName: 'Training',
+      width: columnWidths['agents.training'],
+      valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skillFromTraining),
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => row.skillFromTraining,
+        undefined,
+        (row) => row.rowId,
+      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-training-${params.id}`}>{params.value ?? 0}</span>
+      ),
+    },
+    {
       field: 'hitPointsMax',
       headerName: 'HP',
       width: columnWidths['agents.hit_points_max'],
