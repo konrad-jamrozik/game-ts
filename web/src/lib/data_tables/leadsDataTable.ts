@@ -22,31 +22,31 @@ import { expandTemplateString } from './dataTablesPrivateUtils'
 export function bldLeadsTable(factions: readonly FactionData[]): readonly Lead[] {
   return toLeadsDataTable([
   // Static (faction-agnostic) leads
-  // Id,                                      Name,                          Description,                                                                                 Difficulty, DependsOn,                                                                                        Repeatable
-  ['lead-criminal-orgs',                      'Criminal organizations',      'Investigate local criminal organizations to find cult connections.',                        1,          [],                                                                                               false],
-  ['lead-deep-state',                         'Deep state',                  'Investigate the deep state',                                                                10,         [],                                                                                               false],
-  ['lead-peace-on-earth',                     'Peace on Earth',              'With all enemy factions defeated, coordinate the final operation to ensure lasting peace.', 200,        ['lead-red-dawn-terminate-cult', 'lead-exalt-terminate-cult', 'lead-black-lotus-terminate-cult'], false],
+  // Id,                                      Name,                          Difficulty, Repeatable, Description,                                                                                  DependsOn,                                                                                        
+  ['lead-criminal-orgs',                      'Criminal organizations',      1,          false,      'Investigate local criminal organizations to find cult connections.',                         [],                                                                                             ],
+  ['lead-deep-state',                         'Deep state',                  10,         false,      'Investigate the deep state',                                                                 [],                                                                                             ],
+  ['lead-peace-on-earth',                     'Peace on Earth',              200,        false,      'With all enemy factions defeated, coordinate the final operation to ensure lasting peace.',  ['lead-red-dawn-terminate-cult', 'lead-exalt-terminate-cult', 'lead-black-lotus-terminate-cult']],
 
   // Faction-specific lead templates
-  // Id,                                      Name,                          Description,                                                                                  Difficulty, DependsOn,                                                                                       Repeatable
-  ['lead-{facId}-member',                     'Locate {facName} member',     'Track down a {facName} member for apprehension.',                                            2,          ['lead-criminal-orgs'],                                                                          true],
-  ['lead-{facId}-interrogate-member',         'Interrogate member',          'Extract information from the captured member.',                                              2,          ['missiondata-apprehend-{facId}-member'],                                                        false],
-  ['lead-{facId}-safehouse',                  'Locate safehouse',            'Location of a {facName} safehouse has been revealed.',                                       10,         ['lead-{facId}-interrogate-member'],                                                             true],
-  ['lead-{facId}-interrogate-handler',        'Interrogate handler',         'Extract information from the captured handler.',                                             2,          ['missiondata-raid-{facId}-safehouse'],                                                          false],
-  ['lead-{facId}-outpost',                    'Locate outpost',              'Location of a {facName} outpost has been revealed.',                                         20,         ['lead-{facId}-interrogate-handler'],                                                            true],
-  ['lead-{facId}-interrogate-soldier',        'Interrogate soldier',         'Extract information from the captured soldier.',                                             4,          ['missiondata-raid-{facId}-outpost'],                                                            false],
-  ['lead-{facId}-training-facility',          'Locate training facility',    'Location of a {facName} training facility has been revealed.',                               30,         ['lead-{facId}-interrogate-soldier'],                                                            true],
-  ['lead-{facId}-interrogate-lieutenant',     'Interrogate lieutenant',      'Extract information from the captured lieutenant.',                                          6,          ['missiondata-raid-{facId}-trainfac'],                                                           false],
-  ['lead-{facId}-logistics-hub',              'Locate logistics hub',        'Location of a {facName} logistics hub has been revealed.',                                   40,         ['lead-{facId}-interrogate-lieutenant'],                                                         true],
-  ['lead-{facId}-interrogate-commander',      'Interrogate commander',       'Extract information from the captured commander.',                                           10,         ['missiondata-raid-{facId}-logistics-hub'],                                                      false],
-  ['lead-{facId}-command-center',             'Locate command center',       'Location of a {facName} command center has been revealed.',                                  60,         ['lead-{facId}-interrogate-commander'],                                                          true],
-  ['lead-{facId}-analyze-command-structure',  'Analyze command structure',   'Analyze the {facName} command structure.',                                                   15,         ['missiondata-raid-{facId}-command-center'],                                                     false],
-  ['lead-{facId}-regional-stronghold',        'Locate regional stronghold',  'Location of a {facName} regional stronghold has been revealed.',                             80,         ['lead-{facId}-analyze-command-structure'],                                                      true],
-  ['lead-{facId}-interrogate-high-commander', 'Interrogate high commander',  'Extract information from the captured high commander.',                                      20,         ['missiondata-raid-{facId}-stronghold'],                                                         false],
-  ['lead-{facId}-hq',                         'Locate HQ',                   'Location of the {facName} headquarters has been revealed.',                                  100,        ['lead-{facId}-interrogate-high-commander'],                                                     false],
-  ['lead-{facId}-interrogate-leader',         'Interrogate cult leader',     'Extract information from the captured cult leader.',                                         30,         ['missiondata-raid-{facId}-hq'],                                                                 false],
-  ['lead-{facId}-terminate-cult',             'Terminate cult',              'Final operation to terminate the {facName} cult.',                                           150,        ['lead-{facId}-interrogate-leader'],                                                             false],
-  ['lead-{facId}-profile',                    '{facName} profile',           'Compile detailed intelligence profile on {facName}.',                                        5,          ['lead-{facId}-interrogate-member'],                                                             false],
+  // Id,                                      Name,                          Difficulty, Repeatable, Description,                                                                                   DependsOn,                                                                                     
+  ['lead-{facId}-member',                     'Locate {facName} member',     2,          true ,      'Track down a {facName} member for apprehension.',                                             ['lead-criminal-orgs'],                                                                        ],
+  ['lead-{facId}-interrogate-member',         'Interrogate member',          2,          false,      'Extract information from the captured member.',                                               ['missiondata-apprehend-{facId}-member'],                                                      ],
+  ['lead-{facId}-safehouse',                  'Locate safehouse',            10,         true ,      'Location of a {facName} safehouse has been revealed.',                                        ['lead-{facId}-interrogate-member'],                                                           ],
+  ['lead-{facId}-interrogate-handler',        'Interrogate handler',         2,          false,      'Extract information from the captured handler.',                                              ['missiondata-raid-{facId}-safehouse'],                                                        ],
+  ['lead-{facId}-outpost',                    'Locate outpost',              20,         true ,      'Location of a {facName} outpost has been revealed.',                                          ['lead-{facId}-interrogate-handler'],                                                          ],
+  ['lead-{facId}-interrogate-soldier',        'Interrogate soldier',         4,          false,      'Extract information from the captured soldier.',                                              ['missiondata-raid-{facId}-outpost'],                                                          ],
+  ['lead-{facId}-training-facility',          'Locate training facility',    30,         true ,      'Location of a {facName} training facility has been revealed.',                                ['lead-{facId}-interrogate-soldier'],                                                          ],
+  ['lead-{facId}-interrogate-lieutenant',     'Interrogate lieutenant',      6,          false,      'Extract information from the captured lieutenant.',                                           ['missiondata-raid-{facId}-trainfac'],                                                         ],
+  ['lead-{facId}-logistics-hub',              'Locate logistics hub',        40,         true ,      'Location of a {facName} logistics hub has been revealed.',                                    ['lead-{facId}-interrogate-lieutenant'],                                                       ],
+  ['lead-{facId}-interrogate-commander',      'Interrogate commander',       10,         false,      'Extract information from the captured commander.',                                            ['missiondata-raid-{facId}-logistics-hub'],                                                    ],
+  ['lead-{facId}-command-center',             'Locate command center',       60,         true ,      'Location of a {facName} command center has been revealed.',                                   ['lead-{facId}-interrogate-commander'],                                                        ],
+  ['lead-{facId}-analyze-command-structure',  'Analyze command structure',   15,         false,      'Analyze the {facName} command structure.',                                                    ['missiondata-raid-{facId}-command-center'],                                                   ],
+  ['lead-{facId}-regional-stronghold',        'Locate regional stronghold',  80,         true ,      'Location of a {facName} regional stronghold has been revealed.',                              ['lead-{facId}-analyze-command-structure'],                                                    ],
+  ['lead-{facId}-interrogate-high-commander', 'Interrogate high commander',  20,         false,      'Extract information from the captured high commander.',                                       ['missiondata-raid-{facId}-stronghold'],                                                       ],
+  ['lead-{facId}-hq',                         'Locate HQ',                   100,        false,      'Location of the {facName} headquarters has been revealed.',                                   ['lead-{facId}-interrogate-high-commander'],                                                   ],
+  ['lead-{facId}-interrogate-leader',         'Interrogate cult leader',     30,         false,      'Extract information from the captured cult leader.',                                          ['missiondata-raid-{facId}-hq'],                                                               ],
+  ['lead-{facId}-terminate-cult',             'Terminate cult',              150,        false,      'Final operation to terminate the {facName} cult.',                                            ['lead-{facId}-interrogate-leader'],                                                           ],
+  ['lead-{facId}-profile',                    '{facName} profile',           5,          false,      'Compile detailed intelligence profile on {facName}.',                                         ['lead-{facId}-interrogate-member'],                                                           ],
   ], factions)
 }
 
@@ -60,10 +60,10 @@ export type LeadData = Lead
 type LeadDataRow = [
   id: string,
   name: string,
-  description: string,
   difficulty: number,
-  dependsOn: string[],
   repeatable: boolean,
+  description: string,
+  dependsOn: string[],
 ]
 
 function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[]): Lead[] {
@@ -73,10 +73,10 @@ function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[])
     const rawLead = {
       id: row[0],
       name: row[1],
-      description: row[2],
-      difficulty: row[3],
-      dependsOn: row[4],
-      repeatable: row[5],
+      difficulty: row[2],
+      repeatable: row[3],
+      description: row[4],
+      dependsOn: row[5],
     }
 
     if (rawLead.id.includes('{facId}')) {
@@ -86,10 +86,10 @@ function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[])
         result.push({
           id: leadId,
           name: expandTemplateString(rawLead.name, faction),
-          description: expandTemplateString(rawLead.description, faction),
           difficulty: rawLead.difficulty,
-          dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep, faction)),
           repeatable: rawLead.repeatable,
+          description: expandTemplateString(rawLead.description, faction),
+          dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep, faction)),
         })
       }
     } else {
@@ -98,10 +98,10 @@ function toLeadsDataTable(rows: LeadDataRow[], factions: readonly FactionData[])
       result.push({
         id: leadId,
         name: expandTemplateString(rawLead.name),
-        description: expandTemplateString(rawLead.description),
         difficulty: rawLead.difficulty,
-        dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep)),
         repeatable: rawLead.repeatable,
+        description: expandTemplateString(rawLead.description),
+        dependsOn: rawLead.dependsOn.map((dep) => expandTemplateString(dep)),
       })
     }
   }
