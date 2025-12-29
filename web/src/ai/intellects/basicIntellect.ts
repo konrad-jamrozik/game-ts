@@ -589,61 +589,34 @@ function assertExactlyOneDesiredStateIsOneAboveActual(gameState: GameState, aiSt
   const mismatches: string[] = []
   let exactlyOneAboveCount = 0
 
-  if (gameState.transportCap !== aiState.desiredTransportCap) {
-    if (aiState.desiredTransportCap === gameState.transportCap + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(`transportCap: actual=${gameState.transportCap}, desired=${aiState.desiredTransportCap}`)
+  function checkActualVsDesired(actual: number, desired: number, name: string): void {
+    if (actual !== desired) {
+      if (desired === actual + 1) {
+        exactlyOneAboveCount += 1
+      } else {
+        mismatches.push(`${name}: actual=${actual}, desired=${desired}`)
+      }
     }
   }
 
-  if (gameState.trainingCap !== aiState.desiredTrainingCap) {
-    if (aiState.desiredTrainingCap === gameState.trainingCap + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(`trainingCap: actual=${gameState.trainingCap}, desired=${aiState.desiredTrainingCap}`)
-    }
-  }
-
-  if (aiState.actualWeaponDamageUpgrades !== aiState.desiredWeaponDamageUpgrades) {
-    if (aiState.desiredWeaponDamageUpgrades === aiState.actualWeaponDamageUpgrades + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(
-        `weaponDamageUpgrades: actual=${aiState.actualWeaponDamageUpgrades}, desired=${aiState.desiredWeaponDamageUpgrades}`,
-      )
-    }
-  }
-
-  if (aiState.actualTrainingSkillGainUpgrades !== aiState.desiredTrainingSkillGainUpgrades) {
-    if (aiState.desiredTrainingSkillGainUpgrades === aiState.actualTrainingSkillGainUpgrades + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(
-        `trainingSkillGainUpgrades: actual=${aiState.actualTrainingSkillGainUpgrades}, desired=${aiState.desiredTrainingSkillGainUpgrades}`,
-      )
-    }
-  }
-
-  if (aiState.actualExhaustionRecoveryUpgrades !== aiState.desiredExhaustionRecoveryUpgrades) {
-    if (aiState.desiredExhaustionRecoveryUpgrades === aiState.actualExhaustionRecoveryUpgrades + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(
-        `exhaustionRecoveryUpgrades: actual=${aiState.actualExhaustionRecoveryUpgrades}, desired=${aiState.desiredExhaustionRecoveryUpgrades}`,
-      )
-    }
-  }
-
-  if (aiState.actualHitPointsRecoveryUpgrades !== aiState.desiredHitPointsRecoveryUpgrades) {
-    if (aiState.desiredHitPointsRecoveryUpgrades === aiState.actualHitPointsRecoveryUpgrades + 1) {
-      exactlyOneAboveCount += 1
-    } else {
-      mismatches.push(
-        `hitPointsRecoveryUpgrades: actual=${aiState.actualHitPointsRecoveryUpgrades}, desired=${aiState.desiredHitPointsRecoveryUpgrades}`,
-      )
-    }
-  }
+  checkActualVsDesired(gameState.transportCap, aiState.desiredTransportCap, 'transportCap')
+  checkActualVsDesired(gameState.trainingCap, aiState.desiredTrainingCap, 'trainingCap')
+  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'weaponDamageUpgrades')
+  checkActualVsDesired(
+    aiState.actualTrainingSkillGainUpgrades,
+    aiState.desiredTrainingSkillGainUpgrades,
+    'trainingSkillGainUpgrades',
+  )
+  checkActualVsDesired(
+    aiState.actualExhaustionRecoveryUpgrades,
+    aiState.desiredExhaustionRecoveryUpgrades,
+    'exhaustionRecoveryUpgrades',
+  )
+  checkActualVsDesired(
+    aiState.actualHitPointsRecoveryUpgrades,
+    aiState.desiredHitPointsRecoveryUpgrades,
+    'hitPointsRecoveryUpgrades',
+  )
 
   if (exactlyOneAboveCount !== 1) {
     const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
