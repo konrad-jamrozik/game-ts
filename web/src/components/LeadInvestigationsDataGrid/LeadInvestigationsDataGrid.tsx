@@ -96,6 +96,7 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         rows={leadInvestigationRows}
         columns={leadInvestigationColumns}
         aria-label="Lead investigations data"
+        disableColumnMenu={false}
         checkboxSelection
         disableMultipleRowSelection
         onRowSelectionModelChange={handleRowSelectionChange}

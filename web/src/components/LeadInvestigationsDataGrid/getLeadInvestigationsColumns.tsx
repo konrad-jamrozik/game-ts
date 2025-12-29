@@ -30,6 +30,9 @@ export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<L
       field: 'name',
       headerName: 'Investigation',
       width: columnWidths['lead_investigations.name'],
+      valueGetter: (_value, row: LeadInvestigationRow): string =>
+        // Return the name field which already includes faction name for "Interrogate member" leads
+        row.name,
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow, string>): React.JSX.Element => {
         const displayValue = fmtIdForDisplay(params.row.id, gameState)
         return <span aria-label={`lead-investigations-row-name-${params.id}`}>{displayValue}</span>

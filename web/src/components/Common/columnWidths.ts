@@ -33,7 +33,7 @@ export const columnWidths = {
   'leads.investigations': 180,
 
   // Lead Investigations columns
-  'lead_investigations.name': 260,
+  'lead_investigations.name': 300,
   'lead_investigations.agents': 60,
   'lead_investigations.intel': 64,
   'lead_investigations.success_chance': 80,
