@@ -6,6 +6,7 @@ import {
   computeAgentCap,
   computeTransportCap,
   computeTrainingCap,
+  type UpgradeName,
 } from '../../../lib/data_tables/upgrades'
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
@@ -80,75 +81,57 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
     return 'newAgent'
   }
 
-  // Priority 2: Buy agent cap if below desired
-  if (aiState.actualAgentCapUpgrades < aiState.desiredAgentCapUpgrades) {
-    return 'Agent cap'
-  }
-
   // Find the one cap/upgrade where actual < desired
-  assertExactlyOneDesiredStateIsOneAboveActual(aiState)
-  if (aiState.actualTransportCapUpgrades < aiState.desiredTransportCapUpgrades) {
-    return 'Transport cap'
-  }
-  if (aiState.actualTrainingCapUpgrades < aiState.desiredTrainingCapUpgrades) {
-    return 'Training cap'
-  }
-  if (aiState.actualWeaponDamageUpgrades < aiState.desiredWeaponDamageUpgrades) {
-    return 'Weapon damage'
-  }
-  if (aiState.actualTrainingSkillGainUpgrades < aiState.desiredTrainingSkillGainUpgrades) {
-    return 'Training skill gain'
-  }
-  if (aiState.actualExhaustionRecoveryUpgrades < aiState.desiredExhaustionRecoveryUpgrades) {
-    return 'Exhaustion recovery'
-  }
-  if (aiState.actualHitPointsRecoveryUpgrades < aiState.desiredHitPointsRecoveryUpgrades) {
-    return 'Hit points recovery %'
-  }
-
-  assertUnreachable('computeNextBuyPriority: no priority found')
+  return getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState)
 }
 
-function assertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntellectState): void {
+function getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntellectState): UpgradeName {
   const mismatches: string[] = []
-  let exactlyOneAboveCount = 0
+  let foundUpgrade: UpgradeName | undefined
 
-  function checkActualVsDesired(actual: number, desired: number, name: string): void {
+  function checkActualVsDesired(actual: number, desired: number, upgradeName: UpgradeName): void {
     if (actual !== desired) {
       if (desired === actual + 1) {
-        exactlyOneAboveCount += 1
+        if (foundUpgrade !== undefined) {
+          throw new Error(
+            `AI bug: Found multiple upgrades with desired === actual + 1: ${foundUpgrade} and ${upgradeName}`,
+          )
+        }
+        foundUpgrade = upgradeName
       } else {
-        mismatches.push(`${name}: actual=${actual}, desired=${desired}`)
+        mismatches.push(`${upgradeName}: actual=${actual}, desired=${desired}`)
       }
     }
   }
 
-  checkActualVsDesired(aiState.actualAgentCapUpgrades, aiState.desiredAgentCapUpgrades, 'agentCapUpgrades')
-  checkActualVsDesired(aiState.actualTransportCapUpgrades, aiState.desiredTransportCapUpgrades, 'transportCapUpgrades')
-  checkActualVsDesired(aiState.actualTrainingCapUpgrades, aiState.desiredTrainingCapUpgrades, 'trainingCapUpgrades')
-  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'weaponDamageUpgrades')
+  checkActualVsDesired(aiState.actualAgentCapUpgrades, aiState.desiredAgentCapUpgrades, 'Agent cap')
+  checkActualVsDesired(aiState.actualTransportCapUpgrades, aiState.desiredTransportCapUpgrades, 'Transport cap')
+  checkActualVsDesired(aiState.actualTrainingCapUpgrades, aiState.desiredTrainingCapUpgrades, 'Training cap')
+  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'Weapon damage')
   checkActualVsDesired(
     aiState.actualTrainingSkillGainUpgrades,
     aiState.desiredTrainingSkillGainUpgrades,
-    'trainingSkillGainUpgrades',
+    'Training skill gain',
   )
   checkActualVsDesired(
     aiState.actualExhaustionRecoveryUpgrades,
     aiState.desiredExhaustionRecoveryUpgrades,
-    'exhaustionRecoveryUpgrades',
+    'Exhaustion recovery',
   )
   checkActualVsDesired(
     aiState.actualHitPointsRecoveryUpgrades,
     aiState.desiredHitPointsRecoveryUpgrades,
-    'hitPointsRecoveryUpgrades',
+    'Hit points recovery %',
   )
 
-  if (exactlyOneAboveCount !== 1) {
+  if (foundUpgrade === undefined) {
     const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
     throw new Error(
-      `AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found ${exactlyOneAboveCount}.${mismatchDetails}`,
+      `AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found none.${mismatchDetails}`,
     )
   }
+
+  return foundUpgrade
 }
 
 function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): boolean {
