@@ -6,6 +6,14 @@ KJA backlog:
 
 - Does the `<Strict> mode` continue double rendering even for vite preview>
 
+- When given faction is eliminated because the `terminate cult` lead investigation just got completed for it,
+  then:
+  - archive all leads for that faction (make them non-selectable and displayed only when "archived" is checked)
+  - set activity level to "terminated" (this is a new activity level, not yet implemented)
+  - set "next operation counter" to "-" and same for suppression.
+  - if there are any active defensive missions from that faction, let them expire naturally, with standard consequences/penalties and still allow player to deploy to them.
+  - similarly, if there are any active lead investigations against that faction, still allow player to complete them, and then the resulting mission.
+
 - The card headers should show more counts, like:
   - agents non-terminated / ready
   - missions: active / expired / successful / failed
