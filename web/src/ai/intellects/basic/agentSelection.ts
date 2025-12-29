@@ -42,5 +42,5 @@ export function selectNextBestReadyAgent(
   }
 
   // Pick agent with lowest exhaustion, randomly if tied
-  return pickAtRandomFromLowestExhaustion(readyAvailableAgents)
+  return pickAtRandomFromLowestExhaustion(consideredAgents)
 }
