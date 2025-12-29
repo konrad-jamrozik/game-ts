@@ -10,7 +10,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
+import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer, delegateTurnsToAIPlayer } from '../../ai/delegateTurnToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../../redux/slices/selectionSlice'
@@ -29,9 +29,9 @@ export function AIPlayerSection(): React.JSX.Element {
   const initialIntellect = intellectNames[0]
   const selectedIntellect = selectedAIIntellect ?? initialIntellect
 
-  const gameOver = isGameOver(gameState)
+  const gameLost = isGameLost(gameState)
   const gameWon = isGameWon(gameState)
-  const isGameEnded = gameOver || gameWon
+  const isGameEnded = gameLost || gameWon
   const hasValidIntellect = selectedIntellect !== '' && intellectNames.includes(selectedIntellect)
   const isButtonDisabled = isGameEnded || !hasValidIntellect
 

@@ -9,7 +9,7 @@ import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
-import { isGameOver, isGameWon } from '../../lib/game_utils/gameStateChecks'
+import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -31,9 +31,9 @@ export function GameControls(): React.JSX.Element {
     dispatch(setViewCharts())
   }
 
-  const gameOver = isGameOver(gameState)
+  const gameLost = isGameLost(gameState)
   const gameWon = isGameWon(gameState)
-  const isGameEnded = gameOver || gameWon
+  const gameEnded = gameLost || gameWon
 
   const labelWidthPx = 110
   return (
@@ -49,7 +49,7 @@ export function GameControls(): React.JSX.Element {
             variant="contained"
             onClick={handleAdvanceTurn}
             sx={(theme) => ({
-              ...(gameOver && {
+              ...(gameLost && {
                 '&.Mui-disabled': {
                   backgroundColor: theme.palette.error.dark,
                   color: theme.palette.error.contrastText,
@@ -62,9 +62,9 @@ export function GameControls(): React.JSX.Element {
                 },
               }),
             })}
-            disabled={isGameEnded}
+            disabled={gameEnded}
           >
-            {gameOver ? 'game over' : gameWon ? 'Game won' : 'next turn'}
+            {gameLost ? 'game over' : gameWon ? 'Game won' : 'next turn'}
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
         </Stack>
