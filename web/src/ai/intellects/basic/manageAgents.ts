@@ -10,6 +10,7 @@ import {
 } from './contractingAssignment'
 import { assignToLeadInvestigation } from './leadInvestigation'
 import { assignToTraining } from './trainingAssignment'
+import { getInBaseAgents } from './utils'
 
 export function manageAgents(api: PlayTurnAPI): void {
   unassignExhaustedAgents(api)
@@ -42,9 +43,7 @@ function unassignExhaustedAgents(api: PlayTurnAPI): void {
 function logAgentStatistics(gameState: GameState): void {
   const standbyAgents = gameState.agents.filter((agent) => agent.assignment === 'Standby')
   const inTrainingAgents = gameState.agents.filter((agent) => agent.assignment === 'Training')
-  const inBaseAgents = gameState.agents.filter(
-    (agent) => agent.assignment === 'Standby' || agent.assignment === 'Training',
-  )
+  const inBaseAgents = getInBaseAgents(gameState)
   const readyAgents = inBaseAgents.filter((agent) => {
     const exhaustionPct = toF(agent.exhaustionPct)
     return exhaustionPct < 5
