@@ -122,27 +122,18 @@ export type ValidateMissionDeploymentResult =
       errorMessage: string
     }>
 
-// KJA3 why mission can be undefined? Shouldn't be.
 /**
  * Validates mission for agent deployment
  */
-export function validateMissionDeployment(mission: Mission | undefined): ValidateMissionDeploymentResult {
-  let isValid = true
-  let errorMessage: string | undefined = undefined
-
-  if (!mission) {
-    isValid = false
-    errorMessage = 'Mission not found!'
-  } else if (mission.state !== 'Active') {
-    isValid = false
-    errorMessage = 'This mission is not available for deployment!'
+export function validateMissionDeployment(mission: Mission): ValidateMissionDeploymentResult {
+  if (mission.state !== 'Active') {
+    return {
+      isValid: false,
+      errorMessage: 'This mission is not available for deployment!',
+    }
   }
 
-  if (isValid) {
-    return { isValid }
-  }
-  assertDefined(errorMessage, 'Error message must be defined')
-  return { isValid, errorMessage }
+  return { isValid: true }
 }
 
 /**
