@@ -4,6 +4,10 @@ KJA backlog:
 
 # Current milestone
 
+- In lead investigation data grid:
+  - the "Interrogate member" should show faction name
+  - Add ability to filter by investigation name; use MUI feature for column filter, same it works e.g. in combat log data grid and agent name
+
 - Fix all the remaining inline todos
 - Fix the charts display
 - Fix column spacing for agents stats etc.
