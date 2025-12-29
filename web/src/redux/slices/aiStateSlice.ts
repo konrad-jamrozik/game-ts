@@ -6,14 +6,19 @@ import { ceil } from '../../lib/primitives/mathPrimitives'
 
 export type BasicIntellectState = {
   desiredAgentCount: number
-  desiredAgentCap: number
-  desiredTransportCap: number
-  desiredTrainingCap: number
+  // Cap upgrade counts (number of upgrades bought/to buy)
+  desiredAgentCapUpgrades: number
+  desiredTransportCapUpgrades: number
+  desiredTrainingCapUpgrades: number
   // Upgrade counts (number of upgrades bought/to buy)
   desiredWeaponDamageUpgrades: number
   desiredTrainingSkillGainUpgrades: number
   desiredExhaustionRecoveryUpgrades: number
   desiredHitPointsRecoveryUpgrades: number
+  // Actual cap upgrade counts (number of upgrades bought so far)
+  actualAgentCapUpgrades: number
+  actualTransportCapUpgrades: number
+  actualTrainingCapUpgrades: number
   // Actual upgrade counts (number of upgrades bought so far)
   actualWeaponDamageUpgrades: number
   actualTrainingSkillGainUpgrades: number
@@ -24,13 +29,16 @@ export type BasicIntellectState = {
 function createInitialState(): BasicIntellectState {
   const state: BasicIntellectState = {
     desiredAgentCount: initialGameState.agents.length,
-    desiredAgentCap: AGENT_CAP,
-    desiredTransportCap: TRANSPORT_CAP,
-    desiredTrainingCap: TRAINING_CAP,
+    desiredAgentCapUpgrades: 0,
+    desiredTransportCapUpgrades: 0,
+    desiredTrainingCapUpgrades: 0,
     desiredWeaponDamageUpgrades: 0,
     desiredTrainingSkillGainUpgrades: 0,
     desiredExhaustionRecoveryUpgrades: 0,
     desiredHitPointsRecoveryUpgrades: 0,
+    actualAgentCapUpgrades: 0,
+    actualTransportCapUpgrades: 0,
+    actualTrainingCapUpgrades: 0,
     actualWeaponDamageUpgrades: 0,
     actualTrainingSkillGainUpgrades: 0,
     actualExhaustionRecoveryUpgrades: 0,
@@ -57,6 +65,15 @@ const aiStateSlice = createSlice({
     incrementActualHitPointsRecoveryUpgrades(state) {
       state.actualHitPointsRecoveryUpgrades += 1
     },
+    incrementActualAgentCapUpgrades(state) {
+      state.actualAgentCapUpgrades += 1
+    },
+    incrementActualTransportCapUpgrades(state) {
+      state.actualTransportCapUpgrades += 1
+    },
+    incrementActualTrainingCapUpgrades(state) {
+      state.actualTrainingCapUpgrades += 1
+    },
     increaseDesiredCounts(state) {
       increaseSomeDesiredCount(state)
     },
@@ -80,19 +97,24 @@ const aiStateSlice = createSlice({
 function increaseSomeDesiredCount(state: BasicIntellectState): void {
   // Priority picks (deterministic, checked first)
   const targetTransportCap = ceil(state.desiredAgentCount * 0.25)
-  if (state.desiredTransportCap < targetTransportCap) {
-    state.desiredTransportCap += 1
+  const currentTransportCap = TRANSPORT_CAP + state.desiredTransportCapUpgrades * 2
+  if (currentTransportCap < targetTransportCap) {
+    state.desiredTransportCapUpgrades += 1
     return
   }
 
   const targetTrainingCap = ceil(state.desiredAgentCount * 0.5)
-  if (state.desiredTrainingCap < targetTrainingCap) {
-    state.desiredTrainingCap += 1
+  const currentTrainingCap = TRAINING_CAP + state.desiredTrainingCapUpgrades * 4
+  if (currentTrainingCap < targetTrainingCap) {
+    state.desiredTrainingCapUpgrades += 1
     return
   }
 
-  // Calculate sum of all purchased upgrades (excluding caps)
+  // Calculate sum of all purchased upgrades (including caps)
   const sumTotalAllAlreadyPurchasedUpgraded =
+    state.actualAgentCapUpgrades +
+    state.actualTransportCapUpgrades +
+    state.actualTrainingCapUpgrades +
     state.actualWeaponDamageUpgrades +
     state.actualTrainingSkillGainUpgrades +
     state.actualExhaustionRecoveryUpgrades +
@@ -135,8 +157,9 @@ function increaseSomeDesiredCount(state: BasicIntellectState): void {
 
 function increaseDesiredAgentCount(state: BasicIntellectState): void {
   // Special case: if at cap, increase agent cap instead
-  if (state.desiredAgentCount === state.desiredAgentCap) {
-    state.desiredAgentCap += 1
+  const currentAgentCap = AGENT_CAP + state.desiredAgentCapUpgrades * 4
+  if (state.desiredAgentCount === currentAgentCap) {
+    state.desiredAgentCapUpgrades += 1
     return
   }
   state.desiredAgentCount += 1
@@ -147,6 +170,9 @@ export const {
   incrementActualTrainingSkillGainUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
   incrementActualHitPointsRecoveryUpgrades,
+  incrementActualAgentCapUpgrades,
+  incrementActualTransportCapUpgrades,
+  incrementActualTrainingCapUpgrades,
   increaseDesiredCounts,
   reset: resetAiState,
 } = aiStateSlice.actions

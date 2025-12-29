@@ -20,5 +20,8 @@ export type PlayTurnAPI = {
   incrementActualTrainingSkillGainUpgrades(): void
   incrementActualExhaustionRecoveryUpgrades(): void
   incrementActualHitPointsRecoveryUpgrades(): void
+  incrementActualAgentCapUpgrades(): void
+  incrementActualTransportCapUpgrades(): void
+  incrementActualTrainingCapUpgrades(): void
   increaseDesiredCounts(): void
 }

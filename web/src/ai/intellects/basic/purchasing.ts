@@ -4,7 +4,7 @@ import type { BasicIntellectState } from '../../../redux/slices/aiStateSlice'
 import { getUpgradePrice } from '../../../lib/data_tables/upgrades'
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
-import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
+import { AGENT_CAP, AGENT_HIRE_COST, TRAINING_CAP, TRANSPORT_CAP } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
 import { REQUIRED_TURNS_OF_SAVINGS, type UpgradeNameOrNewAgent } from './types'
 
@@ -63,16 +63,20 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   }
 
   // Priority 2: Buy agent cap if below desired
-  if (gameState.agentCap < aiState.desiredAgentCap) {
+  // KJA2 these constants should come from relevant upgrades data table
+  const desiredAgentCap = AGENT_CAP + aiState.desiredAgentCapUpgrades * 4
+  if (gameState.agentCap < desiredAgentCap) {
     return 'Agent cap'
   }
 
   // Find the one cap/upgrade where actual < desired
-  assertExactlyOneDesiredStateIsOneAboveActual(gameState, aiState)
-  if (gameState.transportCap < aiState.desiredTransportCap) {
+  assertExactlyOneDesiredStateIsOneAboveActual(aiState)
+  const desiredTransportCap = TRANSPORT_CAP + aiState.desiredTransportCapUpgrades * 2
+  if (gameState.transportCap < desiredTransportCap) {
     return 'Transport cap'
   }
-  if (gameState.trainingCap < aiState.desiredTrainingCap) {
+  const desiredTrainingCap = TRAINING_CAP + aiState.desiredTrainingCapUpgrades * 4
+  if (gameState.trainingCap < desiredTrainingCap) {
     return 'Training cap'
   }
   if (aiState.actualWeaponDamageUpgrades < aiState.desiredWeaponDamageUpgrades) {
@@ -91,7 +95,7 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   assertUnreachable('computeNextBuyPriority: no priority found')
 }
 
-function assertExactlyOneDesiredStateIsOneAboveActual(gameState: GameState, aiState: BasicIntellectState): void {
+function assertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntellectState): void {
   const mismatches: string[] = []
   let exactlyOneAboveCount = 0
 
@@ -105,8 +109,9 @@ function assertExactlyOneDesiredStateIsOneAboveActual(gameState: GameState, aiSt
     }
   }
 
-  checkActualVsDesired(gameState.transportCap, aiState.desiredTransportCap, 'transportCap')
-  checkActualVsDesired(gameState.trainingCap, aiState.desiredTrainingCap, 'trainingCap')
+  checkActualVsDesired(aiState.actualAgentCapUpgrades, aiState.desiredAgentCapUpgrades, 'agentCapUpgrades')
+  checkActualVsDesired(aiState.actualTransportCapUpgrades, aiState.desiredTransportCapUpgrades, 'transportCapUpgrades')
+  checkActualVsDesired(aiState.actualTrainingCapUpgrades, aiState.desiredTrainingCapUpgrades, 'trainingCapUpgrades')
   checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'weaponDamageUpgrades')
   checkActualVsDesired(
     aiState.actualTrainingSkillGainUpgrades,
@@ -169,8 +174,17 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 
   api.buyUpgrade(priority)
-  // Track actual upgrade counts (caps are tracked via game state, not here)
+  // Track actual upgrade counts
   switch (priority) {
+    case 'Agent cap':
+      api.incrementActualAgentCapUpgrades()
+      break
+    case 'Transport cap':
+      api.incrementActualTransportCapUpgrades()
+      break
+    case 'Training cap':
+      api.incrementActualTrainingCapUpgrades()
+      break
     case 'Weapon damage':
       api.incrementActualWeaponDamageUpgrades()
       break
@@ -183,21 +197,23 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
     case 'Hit points recovery %':
       api.incrementActualHitPointsRecoveryUpgrades()
       break
-    case 'Agent cap':
-    case 'Transport cap':
-    case 'Training cap':
-      // Cap upgrades are tracked via game state, not in aiState
-      break
   }
 }
 
 function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
   const actualAgentCount = notTerminated(gameState.agents).length
+  // KJA2 these constants should come from relevant upgrades data table
+  const desiredAgentCap = AGENT_CAP + aiState.desiredAgentCapUpgrades * 4
+  const desiredTransportCap = TRANSPORT_CAP + aiState.desiredTransportCapUpgrades * 2
+  const desiredTrainingCap = TRAINING_CAP + aiState.desiredTrainingCapUpgrades * 4
   return (
     actualAgentCount >= aiState.desiredAgentCount &&
-    gameState.agentCap >= aiState.desiredAgentCap &&
-    gameState.transportCap >= aiState.desiredTransportCap &&
-    gameState.trainingCap >= aiState.desiredTrainingCap &&
+    gameState.agentCap >= desiredAgentCap &&
+    gameState.transportCap >= desiredTransportCap &&
+    gameState.trainingCap >= desiredTrainingCap &&
+    aiState.actualAgentCapUpgrades >= aiState.desiredAgentCapUpgrades &&
+    aiState.actualTransportCapUpgrades >= aiState.desiredTransportCapUpgrades &&
+    aiState.actualTrainingCapUpgrades >= aiState.desiredTrainingCapUpgrades &&
     aiState.actualWeaponDamageUpgrades >= aiState.desiredWeaponDamageUpgrades &&
     aiState.actualTrainingSkillGainUpgrades >= aiState.desiredTrainingSkillGainUpgrades &&
     aiState.actualExhaustionRecoveryUpgrades >= aiState.desiredExhaustionRecoveryUpgrades &&
@@ -214,8 +230,12 @@ function logBuyResult(
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   const increaseMessage = getIncreaseMessage(api, stateBeforeIncrease)
 
+  // KJA2 these constants should come from relevant upgrades data table
+  const desiredAgentCap = AGENT_CAP + aiState.desiredAgentCapUpgrades * 4
+  const desiredTransportCap = TRANSPORT_CAP + aiState.desiredTransportCapUpgrades * 2
+  const desiredTrainingCap = TRAINING_CAP + aiState.desiredTrainingCapUpgrades * 4
   console.log(
-    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCap=${aiState.desiredAgentCap}, transportCap=${aiState.desiredTransportCap}, trainingCap=${aiState.desiredTrainingCap}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
+    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCapUpgrades=${aiState.desiredAgentCapUpgrades} (cap=${desiredAgentCap}), transportCapUpgrades=${aiState.desiredTransportCapUpgrades} (cap=${desiredTransportCap}), trainingCapUpgrades=${aiState.desiredTrainingCapUpgrades} (cap=${desiredTrainingCap}), weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
   )
 }
 
@@ -228,14 +248,18 @@ function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntelle
   if (aiState.desiredAgentCount > stateBeforeIncrease.desiredAgentCount) {
     return `Increased desired agents to ${aiState.desiredAgentCount}`
   }
-  if (aiState.desiredAgentCap > stateBeforeIncrease.desiredAgentCap) {
-    return `Increased desired agentCap to ${aiState.desiredAgentCap}`
+  // KJA2 these constants should come from relevant upgrades data table
+  if (aiState.desiredAgentCapUpgrades > stateBeforeIncrease.desiredAgentCapUpgrades) {
+    const desiredCap = AGENT_CAP + aiState.desiredAgentCapUpgrades * 4
+    return `Increased desired agentCapUpgrades to ${aiState.desiredAgentCapUpgrades} (cap=${desiredCap})`
   }
-  if (aiState.desiredTransportCap > stateBeforeIncrease.desiredTransportCap) {
-    return `Increased desired transportCap to ${aiState.desiredTransportCap}`
+  if (aiState.desiredTransportCapUpgrades > stateBeforeIncrease.desiredTransportCapUpgrades) {
+    const desiredCap = TRANSPORT_CAP + aiState.desiredTransportCapUpgrades * 2
+    return `Increased desired transportCapUpgrades to ${aiState.desiredTransportCapUpgrades} (cap=${desiredCap})`
   }
-  if (aiState.desiredTrainingCap > stateBeforeIncrease.desiredTrainingCap) {
-    return `Increased desired trainingCap to ${aiState.desiredTrainingCap}`
+  if (aiState.desiredTrainingCapUpgrades > stateBeforeIncrease.desiredTrainingCapUpgrades) {
+    const desiredCap = TRAINING_CAP + aiState.desiredTrainingCapUpgrades * 4
+    return `Increased desired trainingCapUpgrades to ${aiState.desiredTrainingCapUpgrades} (cap=${desiredCap})`
   }
   if (aiState.desiredWeaponDamageUpgrades > stateBeforeIncrease.desiredWeaponDamageUpgrades) {
     return `Increased desired weaponDamageUpgrades to ${aiState.desiredWeaponDamageUpgrades}`

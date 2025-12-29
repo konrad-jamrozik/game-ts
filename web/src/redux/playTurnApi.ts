@@ -4,6 +4,9 @@ import {
   incrementActualTrainingSkillGainUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
   incrementActualHitPointsRecoveryUpgrades,
+  incrementActualAgentCapUpgrades,
+  incrementActualTransportCapUpgrades,
+  incrementActualTrainingCapUpgrades,
   increaseDesiredCounts,
   type BasicIntellectState,
 } from './slices/aiStateSlice'
@@ -114,6 +117,21 @@ export function getPlayTurnApi(store: Store<RootState>, options?: { strict?: boo
 
     incrementActualHitPointsRecoveryUpgrades(): void {
       store.dispatch(incrementActualHitPointsRecoveryUpgrades())
+      updateAiState()
+    },
+
+    incrementActualAgentCapUpgrades(): void {
+      store.dispatch(incrementActualAgentCapUpgrades())
+      updateAiState()
+    },
+
+    incrementActualTransportCapUpgrades(): void {
+      store.dispatch(incrementActualTransportCapUpgrades())
+      updateAiState()
+    },
+
+    incrementActualTrainingCapUpgrades(): void {
+      store.dispatch(incrementActualTrainingCapUpgrades())
       updateAiState()
     },
 
