@@ -4,40 +4,15 @@ KJA backlog:
 
 # Current milestone
 
-- When given faction is eliminated because the `terminate cult` lead investigation just got completed for it,
-  then:
-  - archive all leads for that faction (make them non-selectable and displayed only when "archived" is checked)
-  - set activity level to "terminated" (this is a new activity level, not yet implemented)
-  - set "next operation counter" to "-" and same for suppression.
-  - if there are any active defensive missions triggered by that faction, let them expire naturally, with standard consequences/penalties and still allow player to deploy to them.
-  - similarly, if there are any active lead investigations against that faction, still allow player to complete them, and then the resulting mission.
+Make the "Investigate lead" button label smarter - it should be "Investigate lead numeric_ID with X agents"
+and if lead is already investigated, it should say "Add X more agents to numeric_ID lead".
+Here numeric_ID are just those three digits like 000.
 
-- The expandable DataGridCard titles should show more counts, like:
-  - agents: A: non-terminated / R: ready / E: exhausted
-    - example display: "A: 20 / R: 5 / E: 7"
-    - ready are agents with exhaustion <= 5% and in available state or in training
-    - exhausted are agents that are like ready but have > 5% exhaustion
-    - and aligned to the right in the header: KIA: KIA / S: sacked
-    - example display, on header:
-      - left aligned: "A: 20 / R: 5 / E: 7"
-      - right aligned: "KIA: 7 / S: 3"
-  - missions: Act: active
-    - and aligned to the right in the header: Exp: expired / Scc: successful / Fld: failed
-      - left aligned: "Act: 10"
-      - right aligned: "Exp: 2 / Scc: 7 / Fld: 5"
-  - leads: Act: active (Rpt: repeatable)
-    - and aligned to the right in the header: Arch: total archived
-    - example display, on header:
-      - left aligned: "Act: 10 (Rpt: 5)"
-      - right aligned: "Arch: 20"
-  - lead investigations: Act: active
-    - and aligned to the right in the header: Done: total completed
-    - example display, on header:
-      - left aligned: "Act: 10 (Rpt: 5)"
-      - right aligned: "Done: 20"
-
-- Selecting agents should show their total threat level
-  - and also there should be a column for their current threat level
+Selecting agents in the agents data grid should show sum of their "Combat rating", abbreviated "CR"
+This should show in the top bar of the data grid, to the left of the checkboxes like "stats",
+Note that when CR is computed it should use the same formula as threat level for enemies in missions,
+but it should use agents effective skill instead of total skill (for enemies effective skill
+and total skill are the same).
 
 - Add stats to agents data grid
   - Combat stats (Killed / Damage Inflicted / Damage Taken)
