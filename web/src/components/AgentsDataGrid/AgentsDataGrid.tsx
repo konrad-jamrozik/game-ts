@@ -4,7 +4,7 @@ import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
-import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
+import { setAgentSelection } from '../../redux/slices/selectionSlice'
 import { notTerminated, withIds } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
@@ -41,7 +41,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       setShowOnlyAvailable(false)
       setShowRecovering(false)
       setShowStats(false)
-      dispatch(clearAgentSelection())
     }
   }
 
@@ -51,7 +50,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       setShowOnlyTerminated(false)
       setShowOnlyAvailable(false)
       setShowStats(false)
-      dispatch(clearAgentSelection())
     }
   }
 
@@ -61,7 +59,6 @@ export function AgentsDataGrid(): React.JSX.Element {
       setShowOnlyTerminated(false)
       setShowOnlyAvailable(false)
       setShowRecovering(false)
-      dispatch(clearAgentSelection())
     }
   }
 
@@ -129,9 +126,6 @@ export function AgentsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
-  // Disable row selection when recovering, stats, or terminated views are active
-  const isSelectionDisabled = showRecovering || showStats || showOnlyTerminated
-
   // Calculate total Combat Rating for selected agents (normalized)
   const selectedAgents = withIds(gameState.agents, agentSelection)
   const selectedAgentsCombatRating: number | undefined =
@@ -155,7 +149,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       rows={rows}
       columns={visibleColumns}
       getRowId={(row: AgentRow) => row.rowId}
-      checkboxSelection={!isSelectionDisabled}
+      checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       slots={{ toolbar: AgentsToolbar }}
