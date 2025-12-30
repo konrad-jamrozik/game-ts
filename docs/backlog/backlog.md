@@ -11,14 +11,33 @@ KJA backlog:
   - archive all leads for that faction (make them non-selectable and displayed only when "archived" is checked)
   - set activity level to "terminated" (this is a new activity level, not yet implemented)
   - set "next operation counter" to "-" and same for suppression.
-  - if there are any active defensive missions from that faction, let them expire naturally, with standard consequences/penalties and still allow player to deploy to them.
+  - if there are any active defensive missions triggered by that faction, let them expire naturally, with standard consequences/penalties and still allow player to deploy to them.
   - similarly, if there are any active lead investigations against that faction, still allow player to complete them, and then the resulting mission.
 
-- The card headers should show more counts, like:
-  - agents non-terminated / ready
-  - missions: active / expired / successful / failed
-  - leads: active / investigated (at least once)
-  - lead investigations: active / completed
+- The expandable DataGridCard titles should show more counts, like:
+  - agents: A: non-terminated / R: ready / E: exhausted
+    - example display: "A: 20 / R: 5 / E: 7"
+    - ready are agents with exhaustion <= 5% and in available state or in training
+    - exhausted are agents that are like ready but have > 5% exhaustion
+    - and aligned to the right in the header: KIA: KIA / S: sacked
+    - example display, on header:
+      - left aligned: "A: 20 / R: 5 / E: 7"
+      - right aligned: "KIA: 7 / S: 3"
+  - make sure all numbers are right aligned with 4 digit slots, so e.g. `A:   20 / R:    5` not `A: 20 / R: 5`
+  - missions: A: active
+    - and aligned to the right in the header: E: expired / S: successful / F: failed
+      - left aligned: "A: 10"
+      - right aligned: "E: 2 / S: 7 / F: 5"
+  - leads: A: active (Rpt: repeatable)
+    - and aligned to the right in the header: TDL: total distinct leads successfully investigated
+    - example display, on header:
+      - left aligned: "A: 10 (Rpt: 5)"
+      - right aligned: "TDL: 20"
+  - lead investigations: A: active
+    - and aligned to the right in the header: TI: total successfully investigated TA: total abandoned
+    - example display, on header:
+      - left aligned: "A: 10 (Rpt: 5)"
+      - right aligned: "TI: 20 / TA: 10"
 
 - Selecting agents should show their total threat level
   - and also there should be a column for their current threat level
