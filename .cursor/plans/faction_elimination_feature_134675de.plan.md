@@ -77,8 +77,8 @@ Implement the complete faction elimination feature as described in the backlog. 
 
 - In `LeadsDataGrid.tsx`, modify the `isArchived` computation to also check if the lead's faction is terminated:
   ```typescript
-      const isArchived = !lead.repeatable && hasDoneInvestigation || 
-                         isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
+        const isArchived = !lead.repeatable && hasDoneInvestigation || 
+                           isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
   ```
 
 
@@ -128,11 +128,11 @@ Implement the complete faction elimination feature as described in the backlog. 
 - In `updateFactions()` function, skip faction operation roll logic for terminated factions
 - In loop that processes factions for operations, add early continue:
   ```typescript
-      if (isFactionTerminated(faction, state.leadInvestigationCounts)) {
-        // Skip operation roll and activity progression for terminated factions
-        // Still include in faction reports but with no changes
-        continue
-      }
+        if (isFactionTerminated(faction, state.leadInvestigationCounts)) {
+          // Skip operation roll and activity progression for terminated factions
+          // Still include in faction reports but with no changes
+          continue
+        }
   ```
 
 
@@ -216,5 +216,3 @@ graph TD
 **Tests:**
 
 - [`web/src/ai/intellects/basic/leadInvestigation.ts`](web/src/ai/intellects/basic/leadInvestigation.ts) - Update AI to exclude archived leads
-
-**Tests:**

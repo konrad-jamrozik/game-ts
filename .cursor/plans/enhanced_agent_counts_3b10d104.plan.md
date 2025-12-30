@@ -72,5 +72,3 @@ Modify [`web/src/components/AgentsDataGrid/AgentsDataGrid.tsx`](web/src/componen
 - Pass the title component to `DataGridCard` instead of the string "Agents"
 
 ## Implementation Notes
-
-- The 5% exhaustion threshold should be created using `toF6(5)` for a Fixed6 value representing 5.0
