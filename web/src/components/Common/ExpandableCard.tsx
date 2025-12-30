@@ -12,7 +12,7 @@ import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
 
 type ExpandableCardProps = {
   id: string
-  title: string
+  title: React.ReactNode
   children: React.ReactNode
   nested?: boolean
   defaultExpanded?: boolean
@@ -52,7 +52,7 @@ export function ExpandableCard({
           </IconButton>
         }
         title={title}
-        slotProps={{ title: { variant: 'h6' } }}
+        slotProps={{ title: { variant: 'h6', component: 'div' } }}
         sx={{ paddingY: 0.75 }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
