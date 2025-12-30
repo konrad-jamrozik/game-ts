@@ -4,8 +4,12 @@ import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2, toF } from '../lib/primitives/fixed6'
-import { getActivityLevelByOrd, getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
-import { getFactionName } from '../lib/model_utils/factionUtils'
+import {
+  getActivityLevelByOrd,
+  getActivityLevelName,
+  getEffectiveActivityLevelName,
+} from '../lib/model_utils/factionActivityLevelUtils'
+import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionUtils'
 import { isFactionDiscovered } from '../lib/ruleset/factionRuleset'
 import { assertIsActivityLevelOrd } from '../lib/model/modelOrdUtils'
 import { ExpandableCard } from './Common/ExpandableCard'
@@ -13,25 +17,36 @@ import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 
-function getFactionRows(faction: {
-  activityLevel: number
-  turnsAtCurrentLevel: number
-  targetTurnsForProgression: number
-  turnsUntilNextOperation: number
-  suppressionTurns: number
-}): SituationReportRow[] {
+function getFactionRows(
+  faction: {
+    activityLevel: number
+    turnsAtCurrentLevel: number
+    targetTurnsForProgression: number
+    turnsUntilNextOperation: number
+    suppressionTurns: number
+  },
+  leadInvestigationCounts: Record<string, number>,
+  isTerminated: boolean,
+): SituationReportRow[] {
   assertIsActivityLevelOrd(faction.activityLevel)
   const config = getActivityLevelByOrd(faction.activityLevel)
-  const levelName = getActivityLevelName(faction.activityLevel)
+  const levelName = isTerminated ? 'Terminated' : getActivityLevelName(faction.activityLevel)
 
   // Format progression display as "current/min" (see about_faction_activity_level.md)
-  const progressionDisplay = config.turnsMin === Infinity ? '-' : `${faction.turnsAtCurrentLevel}/${config.turnsMin}`
+  // For terminated factions, show "-"
+  const progressionDisplay = isTerminated
+    ? '-'
+    : config.turnsMin === Infinity
+      ? '-'
+      : `${faction.turnsAtCurrentLevel}/${config.turnsMin}`
   const levelProgressPct =
-    config.turnsMin === Infinity ? undefined : (faction.turnsAtCurrentLevel / config.turnsMin) * 100
+    isTerminated || config.turnsMin === Infinity ? undefined : (faction.turnsAtCurrentLevel / config.turnsMin) * 100
 
   // Format next operation display
-  const nextOpDisplay =
-    faction.activityLevel === 0
+  // For terminated factions, show "-"
+  const nextOpDisplay = isTerminated
+    ? '-'
+    : faction.activityLevel === 0
       ? '-'
       : faction.suppressionTurns > 0
         ? `${faction.turnsUntilNextOperation} (supp: ${faction.suppressionTurns})`
@@ -41,7 +56,7 @@ function getFactionRows(faction: {
     {
       id: 1,
       metric: 'Activity level',
-      value: `${faction.activityLevel} - ${levelName}`,
+      value: isTerminated ? 'Terminated' : `${faction.activityLevel} - ${levelName}`,
     },
     {
       id: 2,
@@ -59,7 +74,7 @@ function getFactionRows(faction: {
     {
       id: 4,
       metric: 'Suppression',
-      value: faction.suppressionTurns > 0 ? `${faction.suppressionTurns} turns` : '-',
+      value: isTerminated ? '-' : faction.suppressionTurns > 0 ? `${faction.suppressionTurns} turns` : '-',
     },
   ]
 }
@@ -106,21 +121,24 @@ export function SituationReportCard(): React.JSX.Element {
             },
           }}
         />
-        {discoveredFactions.map((faction) => (
-          <Fragment key={faction.id}>
-            <Typography variant="h6">{getFactionName(faction)} faction</Typography>
-            <StyledDataGrid
-              rows={getFactionRows(faction)}
-              columns={columns}
-              aria-label={`${getFactionName(faction)} Report data`}
-              sx={{
-                '& .situation-report-color-bar-cell': {
-                  padding: '4px',
-                },
-              }}
-            />
-          </Fragment>
-        ))}
+        {discoveredFactions.map((faction) => {
+          const terminated = isFactionTerminated(faction, leadInvestigationCounts)
+          return (
+            <Fragment key={faction.id}>
+              <Typography variant="h6">{getFactionName(faction)} faction</Typography>
+              <StyledDataGrid
+                rows={getFactionRows(faction, leadInvestigationCounts, terminated)}
+                columns={columns}
+                aria-label={`${getFactionName(faction)} Report data`}
+                sx={{
+                  '& .situation-report-color-bar-cell': {
+                    padding: '4px',
+                  },
+                }}
+              />
+            </Fragment>
+          )
+        })}
       </Stack>
     </ExpandableCard>
   )

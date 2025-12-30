@@ -78,6 +78,10 @@ export type FactionReport = {
   factionName: string
   isDiscovered: boolean
   /**
+   * Whether this faction has been terminated
+   */
+  isTerminated: boolean
+  /**
    * Activity level change (0-7)
    */
   activityLevel: ValueChange

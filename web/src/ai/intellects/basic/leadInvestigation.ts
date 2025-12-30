@@ -10,6 +10,7 @@ import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
+import { isFactionForLeadTerminated } from '../../../lib/model_utils/leadUtils'
 
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
@@ -163,6 +164,11 @@ function getAvailableLeads(gameState: GameState): Lead[] {
     // Never investigate the deep state lead
     // It exists primarily for debugging purposes. Scheduled to be removed later.
     if (lead.id === 'lead-deep-state') {
+      continue
+    }
+
+    // Skip leads for terminated factions (archived leads)
+    if (isFactionForLeadTerminated(lead, gameState.factions, gameState.leadInvestigationCounts)) {
       continue
     }
 
