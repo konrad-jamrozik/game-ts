@@ -13,7 +13,7 @@ import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
-import { calculateCombatRating } from '../../lib/game_utils/missionCombatRating'
+import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
 import { initialAgent } from '../../lib/factories/agentFactory'
 
 export function AgentsDataGrid(): React.JSX.Element {
