@@ -5,6 +5,7 @@ import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { bldMission } from '../../lib/factories/missionFactory'
 import { bldAgent } from '../../lib/factories/agentFactory'
 import { bldWeapon } from '../../lib/factories/weaponFactory'
+import { maybeTerminateFactionFromLeadId } from '../../lib/game_utils/turn_advancement/updateLeadInvestigations'
 
 function addMoney(state: GameState): void {
   state.money += 10_000
@@ -93,3 +94,10 @@ function markLeadAsInvestigated(state: GameState, leadId: string): void {
   const currentCount = state.leadInvestigationCounts[leadId] ?? 0
   state.leadInvestigationCounts[leadId] = currentCount + 1
 }
+
+export const debugTerminateRedDawn = asPlayerAction((state: GameState) => {
+  const leadId = 'lead-red-dawn-terminate-cult'
+  markLeadAsInvestigated(state, leadId)
+  // Check if this is a terminate-cult lead completion and terminate the faction if so
+  maybeTerminateFactionFromLeadId(state, leadId)
+})

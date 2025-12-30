@@ -131,15 +131,7 @@ function completeInvestigation(
   }
 
   // Check if this is a terminate-cult lead completion and terminate the faction if so
-  const terminateCultMatch = investigation.leadId.match(/^lead-(.+)-terminate-cult$/)
-  if (terminateCultMatch !== null) {
-    const facId = terminateCultMatch[1]
-    // Find faction by matching factionDataId (e.g., 'factiondata-red-dawn' matches 'red-dawn')
-    const faction = state.factions.find((f) => f.factionDataId === `factiondata-${facId}`)
-    if (faction !== undefined) {
-      terminateFaction(state, faction.id)
-    }
-  }
+  maybeTerminateFactionFromLeadId(state, investigation.leadId)
 
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
@@ -159,10 +151,30 @@ function completeInvestigation(
  * The terminated state itself is derived from lead investigation counts, so no flag is set.
  * Existing missions and investigations continue naturally.
  */
-function terminateFaction(state: GameState, factionId: FactionId): void {
+export function terminateFaction(state: GameState, factionId: FactionId): void {
   const faction = getFactionById(state, factionId)
   faction.turnsUntilNextOperation = Infinity
   faction.suppressionTurns = 0
+}
+
+/**
+ * Checks if a lead ID is a terminate-cult lead and terminates the corresponding faction if so.
+ * @param state - The game state
+ * @param leadId - The lead ID to check
+ */
+export function maybeTerminateFactionFromLeadId(state: GameState, leadId: string): void {
+  const terminateCultRegex = /^lead-(?<facId>.+)-terminate-cult$/u
+  const terminateCultMatch = terminateCultRegex.exec(leadId)
+  if (terminateCultMatch !== null) {
+    const facId = terminateCultMatch.groups?.['facId']
+    if (facId !== undefined) {
+      // Find faction by matching factionDataId (e.g., 'factiondata-red-dawn' matches 'red-dawn')
+      const faction = state.factions.find((f) => f.factionDataId === `factiondata-${facId}`)
+      if (faction !== undefined) {
+        terminateFaction(state, faction.id)
+      }
+    }
+  }
 }
 
 /**

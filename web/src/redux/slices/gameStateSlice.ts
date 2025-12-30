@@ -22,6 +22,7 @@ import {
   debugAddCapabilities as debugAddCapabilitiesReducer,
   debugSpawnMissions as debugSpawnMissionsReducer,
   debugAddEverything as debugAddEverythingReducer,
+  debugTerminateRedDawn as debugTerminateRedDawnReducer,
 } from '../reducers/debugReducers'
 
 // Relevant docs on createSlice:
@@ -50,6 +51,7 @@ const gameStateSlice = createSlice({
     debugSpawn10Agents: debugSpawn10AgentsReducer,
     debugAddCapabilities: debugAddCapabilitiesReducer,
     debugAddEverything: debugAddEverythingReducer,
+    debugTerminateRedDawn: debugTerminateRedDawnReducer,
   },
 })
 
@@ -72,5 +74,6 @@ export const {
   debugSpawn10Agents,
   debugAddCapabilities,
   debugAddEverything,
+  debugTerminateRedDawn,
 } = gameStateSlice.actions
 export default gameStateSlice.reducer

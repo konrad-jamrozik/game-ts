@@ -12,6 +12,7 @@ import {
   debugSpawn10Agents,
   debugAddCapabilities,
   debugAddEverything,
+  debugTerminateRedDawn,
 } from '../redux/slices/gameStateSlice'
 import { toggleRevealAllFactionProfiles } from '../redux/slices/settingsSlice'
 
@@ -50,6 +51,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(toggleRevealAllFactionProfiles())
   }
 
+  function handleTerminateRedDawn(): void {
+    dispatch(debugTerminateRedDawn())
+  }
+
   return (
     <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
@@ -76,6 +81,9 @@ export function DebugCard(): React.JSX.Element {
         </Button>
         <Button variant="contained" onClick={handleRevealAllFactionProfiles}>
           Reveal all faction profiles
+        </Button>
+        <Button variant="contained" onClick={handleTerminateRedDawn}>
+          Terminate Red Dawn
         </Button>
       </Stack>
     </ExpandableCard>

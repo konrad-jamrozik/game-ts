@@ -9,7 +9,7 @@ export function filterAgentRows(
   agentsTerminatedThisTurnIds: Set<string>,
 ): AgentRow[] {
   if (showOnlyAvailable) {
-    return allRows.filter((agent) => agent.state === 'Available')
+    return allRows.filter((agent) => agent.state === 'Available' || agent.state === 'InTraining')
   }
   if (showOnlyTerminated) {
     return allRows.filter((agent) => agent.state === 'KIA' || agent.state === 'Sacked')
