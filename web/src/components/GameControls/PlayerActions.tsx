@@ -9,6 +9,7 @@ import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
+import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { handleInvestigateLead } from './handleInvestigateLead'
 
@@ -128,6 +129,15 @@ export function PlayerActions(): React.JSX.Element {
     setShowAlert(false)
   }
 
+  function getInvestigateLeadButtonLabel(): string {
+    const agentCount = fmtAgentCount(selectedAgentIds.length)
+    if (selectedInvestigationId !== undefined) {
+      const numericId = fmtNoPrefix(selectedInvestigationId, 'investigation-')
+      return `Add ${selectedAgentIds.length} more agents to ${numericId} lead`
+    }
+    return `Investigate lead with ${agentCount}`
+  }
+
   return (
     <ExpandableCard
       id="player-actions"
@@ -175,7 +185,7 @@ export function PlayerActions(): React.JSX.Element {
             (selectedLeadId === undefined && selectedInvestigationId === undefined) || selectedAgentIds.length === 0
           }
         >
-          Investigate lead
+          {getInvestigateLeadButtonLabel()}
         </Button>
         <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined}>
           Buy upgrade
