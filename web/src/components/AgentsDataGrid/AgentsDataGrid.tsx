@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
 import { clearAgentSelection, setAgentSelection } from '../../redux/slices/selectionSlice'
-import { notTerminated } from '../../lib/model_utils/agentUtils'
+import { notTerminated, withIds } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
@@ -12,6 +12,7 @@ import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
+import { calculateAgentCombatRating } from '../../lib/game_utils/missionThreatAssessment'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -129,6 +130,13 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Disable row selection when recovering, stats, or terminated views are active
   const isSelectionDisabled = showRecovering || showStats || showOnlyTerminated
 
+  // Calculate total Combat Rating for selected agents
+  const selectedAgents = withIds(gameState.agents, agentSelection)
+  const selectedAgentsCR: number | undefined =
+    selectedAgents.length > 0
+      ? selectedAgents.reduce((sum: number, agent) => sum + calculateAgentCombatRating(agent), 0)
+      : undefined
+
   const agentCounts = calculateAgentCounts(gameState.agents)
   const title = <AgentsDataGridTitle counts={agentCounts} />
 
@@ -155,6 +163,7 @@ export function AgentsDataGrid(): React.JSX.Element {
           onToggleRecovering: handleToggleRecovering,
           showStats,
           onToggleStats: handleToggleStats,
+          ...(selectedAgentsCR !== undefined && { selectedAgentsCR }),
         },
       }}
       showToolbar

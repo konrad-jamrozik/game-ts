@@ -1,7 +1,10 @@
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Typography from '@mui/material/Typography'
+import Box from '@mui/material/Box'
 import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
 import * as React from 'react'
+import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 
 // Allow passing custom props to the DataGrid toolbar slot for Agents grid
 declare module '@mui/x-data-grid' {
@@ -15,6 +18,7 @@ declare module '@mui/x-data-grid' {
     onToggleRecovering?: (checked: boolean) => void
     showStats: boolean
     onToggleStats?: (checked: boolean) => void
+    selectedAgentsCR?: number
   }
 }
 
@@ -28,9 +32,17 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
     onToggleRecovering,
     showStats,
     onToggleStats,
+    selectedAgentsCR,
   } = props
   return (
     <Toolbar>
+      {selectedAgentsCR !== undefined && selectedAgentsCR > 0 && (
+        <Box display="flex" alignItems="center" marginRight={2}>
+          <Typography variant="body2" component="span">
+            CR: {fmtDec1(selectedAgentsCR)}
+          </Typography>
+        </Box>
+      )}
       <FormControlLabel
         control={
           <Checkbox
