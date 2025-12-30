@@ -5,6 +5,7 @@ import { bldEnemies } from './enemyFactory'
 import { fmtMissionId } from '../model_utils/formatUtils'
 import { assertDefined } from '../primitives/assertPrimitives'
 import { getMissionDataById } from '../model_utils/missionUtils'
+import { calculateMissionCombatRating } from '../ruleset/combatRatingRuleset'
 
 /**
  * Prototype mission with all default values.
@@ -18,6 +19,7 @@ export const initialMission: Mission = {
   expiresIn: 'never',
   enemies: [],
   operationLevel: undefined,
+  combatRating: 0,
 }
 
 /**
@@ -67,6 +69,9 @@ export function bldMission(params: CreateMissionParams): Mission {
   // Use provided enemyCounts if available (for tests), otherwise use from mission data
   const finalEnemyCounts = enemyCounts ?? missionData.enemyCounts
   mission.enemies = bldEnemies(finalEnemyCounts)
+
+  // Calculate combat rating once when mission is constructed
+  mission.combatRating = calculateMissionCombatRating(mission)
 
   return mission
 }

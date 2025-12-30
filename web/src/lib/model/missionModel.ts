@@ -33,4 +33,11 @@ export type Mission = {
    * Used to calculate penalties when mission expires.
    */
   operationLevel?: number | undefined
+  /**
+   * Combat rating calculated when the mission is constructed.
+   * This is the sum of all enemy combat ratings, normalized by dividing
+   * by the initial hired agent combat rating.
+   * Stored as a field so it doesn't change as enemies are killed.
+   */
+  combatRating: number
 }

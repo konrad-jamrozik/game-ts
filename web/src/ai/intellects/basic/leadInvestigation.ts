@@ -7,7 +7,6 @@ import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining } from './utils'
-import { calculateMissionCombatRating } from '../../../lib/game_utils/missionCombatRating'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { isFactionForLeadTerminated } from '../../../lib/model_utils/leadUtils'
@@ -313,12 +312,12 @@ function getMissionCombatRatingForLead(leadId: LeadId): number {
   // Calculate combat rating for each mission and return the maximum
   let maxCombatRating = 0
   for (const missionData of dependentMissionData) {
-    // Create a temporary mission to calculate combat rating
+    // Create a temporary mission to get combat rating (calculated in bldMission)
     const tempMission = bldMission({
       id: 'mission-simulated-for-combat-rating-assessment',
       missionDataId: missionData.id,
     })
-    const combatRating = calculateMissionCombatRating(tempMission)
+    const combatRating = tempMission.combatRating
     if (combatRating > maxCombatRating) {
       maxCombatRating = combatRating
     }

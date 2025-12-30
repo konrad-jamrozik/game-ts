@@ -72,7 +72,6 @@ import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
 import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
-import { calculateMissionCombatRating } from '../../lib/game_utils/missionCombatRating'
 
 type MissionDetailsRow = {
   id: number
@@ -95,7 +94,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const missionData = getMissionDataById(mission.missionDataId)
 
   const displayId = fmtNoPrefix(mission.id, 'mission-')
-  const { state, expiresIn: expiresInValue, agentIds, enemies } = mission
+  const { state, expiresIn: expiresInValue, agentIds, enemies, combatRating: missionCombatRating } = mission
   const expiresIn = state === 'Active' ? (expiresInValue === 'never' ? 'Never' : String(expiresInValue)) : '-'
   const agentsDeployed = agentIds.length
   const agentsDeployedStr = agentsDeployed !== 0 ? String(agentsDeployed) : '-'
@@ -106,8 +105,6 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   assertDefined(faction, `Faction with id ${factionId} not found for mission ${missionId}`)
   const enemyFaction = getFactionName(faction)
   const enemyCount = enemies.length
-
-  const missionCombatRating = calculateMissionCombatRating(mission)
 
   const { operationLevel } = mission
   const rewards = bldRewardsFromMissionData(missionData, operationLevel)

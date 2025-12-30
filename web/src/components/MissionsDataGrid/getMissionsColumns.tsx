@@ -11,7 +11,6 @@ import { MyChip } from '../Common/MyChip'
 import { ColorBar } from '../ColorBar/ColorBar'
 import { setViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { isMissionConcluded } from '../../lib/ruleset/missionRuleset'
-import { calculateMissionCombatRating } from '../../lib/game_utils/missionCombatRating'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 
 export type MissionRow = Mission & {
@@ -36,7 +35,7 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       headerName: 'CR',
       width: columnWidths['missions.combat_rating'],
       align: 'right',
-      valueGetter: (_value, row: MissionRow) => calculateMissionCombatRating(row),
+      valueGetter: (_value, row: MissionRow) => row.combatRating,
       renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
         <span aria-label={`missions-row-combat-rating-${params.id}`}>
           {params.value !== undefined ? fmtDec1(params.value) : '-'}

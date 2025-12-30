@@ -2,7 +2,6 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Mission } from '../../../lib/model/missionModel'
 import type { Agent } from '../../../lib/model/agentModel'
-import { calculateMissionCombatRating } from '../../../lib/game_utils/missionCombatRating'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './constants'
@@ -29,7 +28,7 @@ export function canDeployMissionWithCurrentResources(
   mission: Mission,
 ): DeploymentFeasibilityResult {
   const minimumRequiredAgents = ceil(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
-  const enemyCombatRating = calculateMissionCombatRating(mission)
+  const enemyCombatRating = mission.combatRating
   const targetCombatRating = enemyCombatRating * TARGET_AGENT_THREAT_MULTIPLIER
 
   const selectedAgents: Agent[] = []
@@ -97,7 +96,7 @@ export function deployToMissions(api: PlayTurnAPI): void {
   let deploymentsSuccessful = 0
   const cancelledDeployments: {
     missionId: string
-    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientCombatRating' | 'insufficientTransport'
     details?: string
   }[] = []
 
@@ -127,7 +126,7 @@ function logDeploymentStatistics(
   deploymentsSuccessful: number,
   cancelledDeployments: {
     missionId: string
-    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientCombatRating' | 'insufficientTransport'
     details?: string
   }[],
 ): void {
@@ -201,7 +200,7 @@ function deployToMission(
   mission: Mission,
   cancelledDeployments: {
     missionId: string
-    reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
+    reason: 'insufficientAgentCount' | 'insufficientCombatRating' | 'insufficientTransport'
     details?: string
   }[],
 ): boolean {
