@@ -5,7 +5,8 @@ import { StyledDataGrid } from './StyledDataGrid'
 
 type DataGridCardProps = {
   id: string
-  title: string
+  title: React.ReactNode
+  ariaLabel?: string
   width: number
   rows: GridRowModel[]
   columns: GridColDef[]
@@ -14,6 +15,7 @@ type DataGridCardProps = {
 export function DataGridCard({
   id,
   title,
+  ariaLabel,
   rows,
   columns,
   width,
@@ -21,7 +23,7 @@ export function DataGridCard({
 }: DataGridCardProps): React.JSX.Element {
   return (
     <ExpandableCard id={id} title={title} defaultExpanded={true} sx={{ width }}>
-      <StyledDataGrid rows={rows} columns={columns} aria-label={title} {...dataGridProps} />
+      <StyledDataGrid rows={rows} columns={columns} aria-label={ariaLabel ?? 'Data grid'} {...dataGridProps} />
     </ExpandableCard>
   )
 }

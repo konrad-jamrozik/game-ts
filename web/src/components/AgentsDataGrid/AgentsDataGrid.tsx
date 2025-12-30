@@ -10,6 +10,8 @@ import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
 import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { calculateAgentCounts } from './agentCounts'
+import { AgentsDataGridTitle } from './AgentsDataGridTitle'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -127,10 +129,14 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Disable row selection when recovering, stats, or terminated views are active
   const isSelectionDisabled = showRecovering || showStats || showOnlyTerminated
 
+  const agentCounts = calculateAgentCounts(gameState.agents)
+  const title = <AgentsDataGridTitle counts={agentCounts} />
+
   return (
     <DataGridCard
       id="agents"
-      title="Agents"
+      title={title}
+      ariaLabel="Agents"
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={visibleColumns}
