@@ -28,6 +28,9 @@ export type Agent = Actor & {
   skillFromTraining: Fixed6
   state: AgentState
   assignment: AgentAssignment
+  kills: number
+  damageDealt: number
+  damageReceived: number
 }
 
 export type AgentCombatStats = {

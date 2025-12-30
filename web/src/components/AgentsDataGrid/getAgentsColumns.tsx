@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { f6c0, f6fmtInt, f6fmtPctDec0, f6sub, toF, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6c0, f6fmtInt, f6fmtPctDec0, f6sub, toF, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { Agent, AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -264,6 +264,48 @@ export function getAgentsColumns(
       width: columnWidths['agents.missions_total'],
       renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
         <span aria-label={`agents-row-missions-total-${params.id}`}>{params.row.missionsTotal}</span>
+      ),
+    },
+    {
+      field: 'kills',
+      headerName: 'KIA',
+      width: columnWidths['agents.kills'],
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => toF6(row.kills),
+        undefined,
+        (row) => row.rowId,
+      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-kills-${params.id}`}>{params.row.kills}</span>
+      ),
+    },
+    {
+      field: 'damageDealt',
+      headerName: 'DInfl',
+      width: columnWidths['agents.damage_dealt'],
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => toF6(row.damageDealt),
+        undefined,
+        (row) => row.rowId,
+      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-damage-dealt-${params.id}`}>{params.row.damageDealt}</span>
+      ),
+    },
+    {
+      field: 'damageReceived',
+      headerName: 'DRecv',
+      width: columnWidths['agents.damage_received'],
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => toF6(row.damageReceived),
+        undefined,
+        (row) => row.rowId,
+      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-damage-received-${params.id}`}>{params.row.damageReceived}</span>
       ),
     },
     {

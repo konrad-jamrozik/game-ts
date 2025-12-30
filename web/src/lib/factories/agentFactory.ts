@@ -23,6 +23,9 @@ export const initialAgent: Agent = {
   missionsTotal: 0,
   skillFromTraining: f6c0,
   weapon: initialWeapon,
+  kills: 0,
+  damageDealt: 0,
+  damageReceived: 0,
 }
 
 type CreateAgentParams =

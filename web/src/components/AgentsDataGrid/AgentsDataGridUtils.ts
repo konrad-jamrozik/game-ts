@@ -53,7 +53,7 @@ export function filterVisibleAgentColumns(
     )
   }
   if (showStats) {
-    // When "stats" is selected, show only: id, skillSimple, training, hitPointsMax, missionsTotal, service
+    // When "stats" is selected, show only: id, skillSimple, experience, training, hitPointsMax, service, kills, damageDealt, damageReceived, missionsTotal
     return columns.filter(
       (col) =>
         col.field === 'id' ||
@@ -62,7 +62,10 @@ export function filterVisibleAgentColumns(
         col.field === 'training' ||
         col.field === 'hitPointsMax' ||
         col.field === 'missionsTotal' ||
-        col.field === 'service',
+        col.field === 'service' ||
+        col.field === 'kills' ||
+        col.field === 'damageDealt' ||
+        col.field === 'damageReceived',
     )
   }
   return columns.filter(

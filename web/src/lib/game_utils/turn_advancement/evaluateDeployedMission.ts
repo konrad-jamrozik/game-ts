@@ -25,6 +25,7 @@ import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimiti
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 import type { DefensiveMissionData } from '../../data_tables/defensiveMissionsDataTable'
 import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/factionOperationLevelRuleset'
+import type { AttackLog } from '../../model/turnReportModel'
 
 /**
  * Evaluates a deployed mission according to about_deployed_mission.md.
@@ -109,9 +110,21 @@ function updateAgentsAfterBattle(
   let agentsWounded = 0
   let agentsUnscathed = 0
   const totalAgents = deployedAgents.length
+
+  // Calculate combat stats from attack logs
+  const combatStatsByAgentId = calculateCombatStats(deployedAgents, battleReport.attackLogs)
+
   deployedAgents.forEach((agent) => {
     const battleSkillGain = battleReport.agentSkillUpdates[agent.id]
     assertDefined(battleSkillGain)
+
+    // Update combat stats
+    const stats = combatStatsByAgentId.get(agent.id)
+    if (stats !== undefined) {
+      agent.kills += stats.kills
+      agent.damageDealt += stats.damageDealt
+      agent.damageReceived += stats.damageReceived
+    }
 
     const isTerminated = f6le(agent.hitPoints, f6c0)
 
@@ -131,6 +144,44 @@ function updateAgentsAfterBattle(
     }
   })
   return { agentsWounded, agentsUnscathed }
+}
+
+function calculateCombatStats(
+  deployedAgents: Agent[],
+  attackLogs: AttackLog[],
+): Map<string, { kills: number; damageDealt: number; damageReceived: number }> {
+  const statsByAgentId = new Map<string, { kills: number; damageDealt: number; damageReceived: number }>()
+
+  // Initialize stats for all deployed agents
+  for (const agent of deployedAgents) {
+    statsByAgentId.set(agent.id, { kills: 0, damageDealt: 0, damageReceived: 0 })
+  }
+
+  // Process attack logs
+  for (const log of attackLogs) {
+    if (log.attackerType === 'Agent') {
+      // Agent attacking enemy
+      const stats = statsByAgentId.get(log.agentId)
+      if (stats !== undefined) {
+        // Add damage dealt
+        if (log.damage !== undefined) {
+          stats.damageDealt += log.damage
+        }
+        // Check for kill (defender HP <= 0 after damage)
+        if (log.defenderHpAfterDamage <= 0) {
+          stats.kills += 1
+        }
+      }
+    } else {
+      // Enemy attacking agent
+      const stats = statsByAgentId.get(log.agentId)
+      if (stats !== undefined && log.damage !== undefined) {
+        stats.damageReceived += log.damage
+      }
+    }
+  }
+
+  return statsByAgentId
 }
 
 function updateSurvivingAgent(
