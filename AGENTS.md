@@ -35,6 +35,11 @@ It has project-specific documentation for setup, linting, formatting, testing, M
   assuming there is no bug, use the assert functions from `web/src/lib/primitives/assertPrimitives.ts`
   to fail immediately, or from other assert files, like `web/src/lib/primitives/assertMathPrimitives.ts`.
 - **Do not violate dependency rules**: Obey the code dependencies rules as laid out in `docs/design/about_code_dependencies.md`.
+- **Strive to reuse code, avoid duplication**: When implementing new functionality, first search for existing functions
+  that can be reused rather than duplicating code. However, when ensuring reuse, ensure that the reused code is in a location
+  that doesn't violate the code dependencies rules as expressed in `docs/design/about_code_dependencies.md` and `web/.dependency-cruiser.js`.
+  If existing code needs to be moved to enable reuse, ensure the new location respects the dependency hierarchy
+  (e.g., move shared logic to a lower-level directory that both consumers can depend on).
 
 ## Key aspects and conventions of the project
 
