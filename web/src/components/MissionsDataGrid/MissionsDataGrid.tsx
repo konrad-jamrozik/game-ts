@@ -20,6 +20,8 @@ import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { calculateMissionCounts } from './missionCounts'
+import { MissionsDataGridTitle } from './MissionsDataGridTitle'
 
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -108,10 +110,13 @@ export function MissionsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
+  const missionCounts = calculateMissionCounts(missions)
+  const title = <MissionsDataGridTitle counts={missionCounts} />
+
   return (
     <DataGridCard
       id="missions"
-      title={`Missions (${rows.length})`}
+      title={title}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}

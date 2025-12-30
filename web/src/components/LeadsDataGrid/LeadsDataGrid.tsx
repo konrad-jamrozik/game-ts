@@ -13,6 +13,8 @@ import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 import { getLeadsColumns, type LeadRow } from './getLeadsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isFactionForLeadTerminated } from '../../lib/model_utils/leadUtils'
+import { calculateLeadCounts } from './leadCounts'
+import { LeadsDataGridTitle } from './LeadsDataGridTitle'
 
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -106,10 +108,13 @@ export function LeadsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
+  const leadCounts = calculateLeadCounts(discoveredLeads, leadInvestigations, factions, leadInvestigationCounts)
+  const title = <LeadsDataGridTitle counts={leadCounts} />
+
   return (
     <DataGridCard
       id="leads"
-      title={`Leads (${rows.length})`}
+      title={title}
       width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}

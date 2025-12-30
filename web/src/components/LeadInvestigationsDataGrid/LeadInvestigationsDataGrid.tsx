@@ -25,6 +25,8 @@ import { ExpandableCard } from '../Common/ExpandableCard'
 import { LeadInvestigationsToolbar } from './LeadInvestigationsToolbar'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getLeadInvestigationsColumns, type LeadInvestigationRow } from './getLeadInvestigationsColumns'
+import { calculateLeadInvestigationCounts } from './leadInvestigationCounts'
+import { LeadInvestigationsDataGridTitle } from './LeadInvestigationsDataGridTitle'
 
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -85,10 +87,13 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
+  const leadInvestigationCounts = calculateLeadInvestigationCounts(leadInvestigations)
+  const title = <LeadInvestigationsDataGridTitle counts={leadInvestigationCounts} />
+
   return (
     <ExpandableCard
       id="lead-investigations"
-      title={`Lead Investigations (${leadInvestigationRows.length})`}
+      title={title}
       defaultExpanded={true}
       sx={{ width: MIDDLE_COLUMN_CARD_WIDTH }}
     >
