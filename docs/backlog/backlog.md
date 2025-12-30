@@ -23,7 +23,6 @@ KJA backlog:
     - example display, on header:
       - left aligned: "A: 20 / R: 5 / E: 7"
       - right aligned: "KIA: 7 / S: 3"
-  - make sure all numbers are right aligned with 4 digit slots, so e.g. `A:   20 / R:    5` not `A: 20 / R: 5`
   - missions: A: active
     - and aligned to the right in the header: E: expired / S: successful / F: failed
       - left aligned: "A: 10"
