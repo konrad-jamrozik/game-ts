@@ -10,10 +10,10 @@ export function LeadsDataGridTitle({ counts }: LeadsDataGridTitleProps): React.J
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
       <Typography variant="h6" component="span">
-        Act: {counts.active} {counts.repeatable > 0 && `(Rpt: ${counts.repeatable})`}
+        Leads: Active {counts.active} {counts.repeatable > 0 && `(Rpt: ${counts.repeatable})`}
       </Typography>
       <Typography variant="h6" component="span">
-        Arch: {counts.archived}
+        Arch {counts.archived}
       </Typography>
     </Box>
   )

@@ -10,10 +10,10 @@ export function MissionsDataGridTitle({ counts }: MissionsDataGridTitleProps): R
   return (
     <Box display="flex" justifyContent="space-between" width="100%">
       <Typography variant="h6" component="span">
-        Act: {counts.active}
+        Missions: Active {counts.active}
       </Typography>
       <Typography variant="h6" component="span">
-        Exp: {counts.expired} / Scc: {counts.successful} / Fld: {counts.failed}
+        Exp {counts.expired} | Succ {counts.successful} | Fail {counts.failed}
       </Typography>
     </Box>
   )
