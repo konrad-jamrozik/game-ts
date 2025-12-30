@@ -134,7 +134,7 @@ export function AgentsDataGrid(): React.JSX.Element {
 
   // Calculate total Combat Rating for selected agents (normalized)
   const selectedAgents = withIds(gameState.agents, agentSelection)
-  const selectedAgentsCR: number | undefined =
+  const selectedAgentsCombatRating: number | undefined =
     selectedAgents.length > 0
       ? (() => {
           const totalCR = sum(selectedAgents, (agent) => calculateCombatRating(agent))
@@ -169,7 +169,7 @@ export function AgentsDataGrid(): React.JSX.Element {
           onToggleRecovering: handleToggleRecovering,
           showStats,
           onToggleStats: handleToggleStats,
-          ...(selectedAgentsCR !== undefined && { selectedAgentsCR }),
+          ...(selectedAgentsCombatRating !== undefined && { selectedAgentsCombatRating }),
         },
       }}
       showToolbar
