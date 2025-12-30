@@ -4,11 +4,7 @@ import * as React from 'react'
 import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2, toF } from '../lib/primitives/fixed6'
-import {
-  getActivityLevelByOrd,
-  getActivityLevelName,
-  getEffectiveActivityLevelName,
-} from '../lib/model_utils/factionActivityLevelUtils'
+import { getActivityLevelByOrd, getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
 import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionUtils'
 import { isFactionDiscovered } from '../lib/ruleset/factionRuleset'
 import { assertIsActivityLevelOrd } from '../lib/model/modelOrdUtils'
@@ -25,7 +21,6 @@ function getFactionRows(
     turnsUntilNextOperation: number
     suppressionTurns: number
   },
-  leadInvestigationCounts: Record<string, number>,
   isTerminated: boolean,
 ): SituationReportRow[] {
   assertIsActivityLevelOrd(faction.activityLevel)
@@ -127,7 +122,7 @@ export function SituationReportCard(): React.JSX.Element {
             <Fragment key={faction.id}>
               <Typography variant="h6">{getFactionName(faction)} faction</Typography>
               <StyledDataGrid
-                rows={getFactionRows(faction, leadInvestigationCounts, terminated)}
+                rows={getFactionRows(faction, terminated)}
                 columns={columns}
                 aria-label={`${getFactionName(faction)} Report data`}
                 sx={{

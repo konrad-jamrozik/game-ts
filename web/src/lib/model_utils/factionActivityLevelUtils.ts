@@ -1,12 +1,12 @@
-import { assertDefined } from '../primitives/assertPrimitives'
 import { dataTables } from '../data_tables/dataTables'
+import type { FactionActivityLevelData } from '../data_tables/factionActivityLevelsDataTable'
 import {
   ACTIVITY_LEVEL_NAMES,
-  type FactionActivityLevelOrd,
+  type Faction,
   type FactionActivityLevelName,
+  type FactionActivityLevelOrd,
 } from '../model/factionModel'
-import type { FactionActivityLevelData } from '../data_tables/factionActivityLevelsDataTable'
-import type { Faction } from '../model/factionModel'
+import { assertDefined } from '../primitives/assertPrimitives'
 import { isFactionTerminated } from './factionUtils'
 
 export function getActivityLevelByOrd(ord: FactionActivityLevelOrd): FactionActivityLevelData {

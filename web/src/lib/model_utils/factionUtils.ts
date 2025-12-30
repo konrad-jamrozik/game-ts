@@ -47,10 +47,7 @@ export function getFactionNameById(gameState: { factions: Faction[] }, factionId
  * @param leadInvestigationCounts - Record of lead investigation counts
  * @returns true if the terminate-cult lead for this faction has been completed at least once
  */
-export function isFactionTerminated(
-  faction: Faction,
-  leadInvestigationCounts: Record<string, number>,
-): boolean {
+export function isFactionTerminated(faction: Faction, leadInvestigationCounts: Record<string, number>): boolean {
   // Extract the faction ID part from factionDataId (e.g., 'red-dawn' from 'factiondata-red-dawn')
   const facId = faction.factionDataId.replace('factiondata-', '')
   const terminateCultLeadId = `lead-${facId}-terminate-cult`

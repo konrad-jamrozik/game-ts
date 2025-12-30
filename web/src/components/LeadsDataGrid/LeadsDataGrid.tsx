@@ -46,8 +46,7 @@ export function LeadsDataGrid(): React.JSX.Element {
     // - Non-repeatable leads with done investigations are archived
     // - Leads for terminated factions are archived
     const isArchived =
-      (!lead.repeatable && hasDoneInvestigation) ||
-      isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
+      (!lead.repeatable && hasDoneInvestigation) || isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
 
     return {
       rowId: index,

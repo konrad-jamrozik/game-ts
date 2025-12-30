@@ -26,7 +26,7 @@ export function isFactionForLeadTerminated(
 ): boolean {
   // Extract faction ID from lead ID (pattern: lead-{facId}-...)
   // For example: 'lead-red-dawn-profile' -> 'red-dawn'
-  const leadIdMatch = lead.id.match(/^lead-(.+?)-/)
+  const leadIdMatch = /^lead-(?<facId>.+)-/u.exec(lead.id)
   if (leadIdMatch === null) {
     return false
   }

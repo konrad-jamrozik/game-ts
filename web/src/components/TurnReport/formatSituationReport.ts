@@ -95,7 +95,9 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const prevLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.previous))
-  const currLevelName = fct.isTerminated ? 'Terminated' : getActivityLevelName(asActivityLevelOrd(fct.activityLevel.current))
+  const currLevelName = fct.isTerminated
+    ? 'Terminated'
+    : getActivityLevelName(asActivityLevelOrd(fct.activityLevel.current))
   const levelChanged = prevLevelName !== currLevelName && !fct.isTerminated
 
   return {
@@ -130,7 +132,8 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
             : `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
         chipValue:
           fct.isTerminated ||
-          (!Number.isFinite(fct.turnsUntilNextOperation.delta) || fct.turnsUntilNextOperation.delta === 0)
+          !Number.isFinite(fct.turnsUntilNextOperation.delta) ||
+          fct.turnsUntilNextOperation.delta === 0
             ? undefined
             : fct.turnsUntilNextOperation.delta > 0
               ? `+${fct.turnsUntilNextOperation.delta}`
