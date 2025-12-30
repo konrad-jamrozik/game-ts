@@ -1,5 +1,6 @@
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
+import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
@@ -136,7 +137,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const selectedAgentsCR: number | undefined =
     selectedAgents.length > 0
       ? (() => {
-          const totalCR = selectedAgents.reduce((sum: number, agent) => sum + calculateCombatRating(agent), 0)
+          const totalCR = sum(selectedAgents, (agent) => calculateCombatRating(agent))
           const initialAgentCR = calculateCombatRating(initialAgent)
           return totalCR / initialAgentCR
         })()
