@@ -24,8 +24,8 @@ export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
   'Agent cap': 4,
   'Transport cap': 2,
   'Training cap': 4,
-  'Training skill gain': toF6(0.05),
-  'Exhaustion recovery %': toF6(0.2),
+  'Training skill gain': toF6(0.1),
+  'Exhaustion recovery %': toF6(0.5),
   'Hit points recovery %': toF6(0.2),
   'Weapon damage': 1,
 }
