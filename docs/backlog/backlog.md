@@ -4,8 +4,6 @@ KJA backlog:
 
 # Current milestone
 
-- Does the `<Strict> mode` continue double rendering even for vite preview>
-
 - When given faction is eliminated because the `terminate cult` lead investigation just got completed for it,
   then:
   - archive all leads for that faction (make them non-selectable and displayed only when "archived" is checked)
@@ -46,6 +44,15 @@ KJA backlog:
     - Column names: "Kills", "Damage", "Wounds"
   - Skill: Total / from missions / from training
     - Column name: "Skill (Mis/Trn)"
+
+- Does the `<Strict> mode` continue double rendering even for vite preview>
+
+- Add tests leveraging AI: e.g. "delegate 20 turns to do nothing intellect" that verifies
+  game is lost
+  - Or test that normal AI can go for 10 turn without causing assertion failure
+    (may want to keep random seed for repro)
+- Add tests leveraging debug actions and AI. E.g. AI that quickly wins the game by investigating relevant leads in order
+  and overwhelming the enemy with super-soldiers.
 
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
 - Charts for stats over time, at the bottom of the screen.
