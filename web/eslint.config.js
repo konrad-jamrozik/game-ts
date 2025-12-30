@@ -524,8 +524,9 @@ export default plugTypescriptEslint.config([
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/main/docs/rules/expect-expect.md
       'vitest/expect-expect': 'off',
 
+      // Sometimes I write slightly more elaborate tests with conditional logic.
       // https://github.com/vitest-dev/eslint-plugin-vitest/blob/HEAD/docs/rules/no-conditional-in-test.md
-      'vitest/no-conditional-in-test': 'error',
+      'vitest/no-conditional-in-test': 'off',
     },
   },
 ])
