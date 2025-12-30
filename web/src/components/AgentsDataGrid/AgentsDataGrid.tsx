@@ -12,7 +12,8 @@ import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
-import { calculateAgentCombatRating } from '../../lib/game_utils/missionThreatAssessment'
+import { calculateCombatRating } from '../../lib/game_utils/missionThreatAssessment'
+import { initialAgent } from '../../lib/factories/agentFactory'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -130,11 +131,15 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Disable row selection when recovering, stats, or terminated views are active
   const isSelectionDisabled = showRecovering || showStats || showOnlyTerminated
 
-  // Calculate total Combat Rating for selected agents
+  // Calculate total Combat Rating for selected agents (normalized)
   const selectedAgents = withIds(gameState.agents, agentSelection)
   const selectedAgentsCR: number | undefined =
     selectedAgents.length > 0
-      ? selectedAgents.reduce((sum: number, agent) => sum + calculateAgentCombatRating(agent), 0)
+      ? (() => {
+          const totalCR = selectedAgents.reduce((sum: number, agent) => sum + calculateCombatRating(agent), 0)
+          const initialAgentCR = calculateCombatRating(initialAgent)
+          return totalCR / initialAgentCR
+        })()
       : undefined
 
   const agentCounts = calculateAgentCounts(gameState.agents)
