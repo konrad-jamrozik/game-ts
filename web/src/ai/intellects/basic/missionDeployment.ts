@@ -2,7 +2,7 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Mission } from '../../../lib/model/missionModel'
 import type { Agent } from '../../../lib/model/agentModel'
-import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
+import { calculateMissionCombatRating } from '../../../lib/game_utils/missionCombatRating'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './constants'
@@ -16,7 +16,7 @@ export type DeploymentFeasibilityResult =
     }
   | {
       canDeploy: false
-      reason: 'insufficientAgentCount' | 'insufficientThreat' | 'insufficientTransport'
+      reason: 'insufficientAgentCount' | 'insufficientCombatRating' | 'insufficientTransport'
       details: string
     }
 
@@ -29,11 +29,11 @@ export function canDeployMissionWithCurrentResources(
   mission: Mission,
 ): DeploymentFeasibilityResult {
   const minimumRequiredAgents = ceil(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
-  const enemyThreat = calculateMissionThreatAssessment(mission)
-  const targetThreat = enemyThreat * TARGET_AGENT_THREAT_MULTIPLIER
+  const enemyCombatRating = calculateMissionCombatRating(mission)
+  const targetCombatRating = enemyCombatRating * TARGET_AGENT_THREAT_MULTIPLIER
 
   const selectedAgents: Agent[] = []
-  let currentThreat = 0
+  let currentCombatRating = 0
 
   // Phase 1: Select agents until meeting minimum count requirement
   while (selectedAgents.length < minimumRequiredAgents) {
@@ -48,7 +48,7 @@ export function canDeployMissionWithCurrentResources(
     }
 
     selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
+    currentCombatRating += calculateAgentThreatAssessment(agent)
   }
 
   // Check if we have enough agents
@@ -57,8 +57,8 @@ export function canDeployMissionWithCurrentResources(
     return { canDeploy: false, reason: 'insufficientAgentCount', details }
   }
 
-  // Phase 2: Continue selecting if threat requirement not yet met
-  while (currentThreat < targetThreat) {
+  // Phase 2: Continue selecting if combat rating requirement not yet met
+  while (currentCombatRating < targetCombatRating) {
     const agent = selectNextBestReadyAgent(
       gameState,
       selectedAgents.map((a) => a.id),
@@ -70,13 +70,13 @@ export function canDeployMissionWithCurrentResources(
     }
 
     selectedAgents.push(agent)
-    currentThreat += calculateAgentThreatAssessment(agent)
+    currentCombatRating += calculateAgentThreatAssessment(agent)
   }
 
-  // Check if we have enough threat
-  if (currentThreat < targetThreat) {
-    const details = `Gathered ${selectedAgents.length} agents with total threat of ${currentThreat.toFixed(2)} against required ${targetThreat.toFixed(2)}`
-    return { canDeploy: false, reason: 'insufficientThreat', details }
+  // Check if we have enough combat rating
+  if (currentCombatRating < targetCombatRating) {
+    const details = `Gathered ${selectedAgents.length} agents with total combat rating of ${currentCombatRating.toFixed(2)} against required ${targetCombatRating.toFixed(2)}`
+    return { canDeploy: false, reason: 'insufficientCombatRating', details }
   }
 
   // Check transport capacity
@@ -132,12 +132,12 @@ function logDeploymentStatistics(
   }[],
 ): void {
   const cancelledByAgentCount = cancelledDeployments.filter((f) => f.reason === 'insufficientAgentCount')
-  const cancelledByThreat = cancelledDeployments.filter((f) => f.reason === 'insufficientThreat')
+  const cancelledByCombatRating = cancelledDeployments.filter((f) => f.reason === 'insufficientCombatRating')
   const cancelledByTransportCap = cancelledDeployments.filter((f) => f.reason === 'insufficientTransport')
 
   let logMessage =
     `deployToMissions: attempted ${deploymentsAttempted} missions, deployed ${deploymentsSuccessful}. ` +
-    `Cancelled: ${cancelledByAgentCount.length} insufficient agent count, ${cancelledByThreat.length} insufficient threat, ${cancelledByTransportCap.length} insufficient transport cap`
+    `Cancelled: ${cancelledByAgentCount.length} insufficient agent count, ${cancelledByCombatRating.length} insufficient combat rating, ${cancelledByTransportCap.length} insufficient transport cap`
 
   // Add details for insufficient agent count cancellations
   for (const cancelled of cancelledByAgentCount) {
@@ -146,8 +146,8 @@ function logDeploymentStatistics(
     }
   }
 
-  // Add details for insufficient threat cancellations
-  for (const cancelled of cancelledByThreat) {
+  // Add details for insufficient combat rating cancellations
+  for (const cancelled of cancelledByCombatRating) {
     if (cancelled.details !== undefined) {
       logMessage += `\n  - ${cancelled.details}`
     }

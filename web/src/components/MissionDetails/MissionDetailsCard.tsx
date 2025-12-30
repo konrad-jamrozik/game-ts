@@ -72,7 +72,7 @@ import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
 import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
-import { calculateMissionThreatAssessment } from '../../lib/game_utils/missionThreatAssessment'
+import { calculateMissionCombatRating } from '../../lib/game_utils/missionCombatRating'
 
 type MissionDetailsRow = {
   id: number
@@ -107,7 +107,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   const enemyFaction = getFactionName(faction)
   const enemyCount = enemies.length
 
-  const missionThreatAssessment = calculateMissionThreatAssessment(mission)
+  const missionCombatRating = calculateMissionCombatRating(mission)
 
   const { operationLevel } = mission
   const rewards = bldRewardsFromMissionData(missionData, operationLevel)
@@ -128,7 +128,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
     { id: 5, key: 'Expires in', value: expiresIn },
     { id: 6, key: 'Agents deployed', value: agentsDeployedStr },
     { id: 7, key: 'Enemy count', value: String(enemyCount) },
-    { id: 8, key: 'Threat', value: fmtDec1(missionThreatAssessment) },
+    { id: 8, key: 'Combat rating', value: fmtDec1(missionCombatRating) },
   ]
 
   const rewardRows: MissionDetailsRow[] = [

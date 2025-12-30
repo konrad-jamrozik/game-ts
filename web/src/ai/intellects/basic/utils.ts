@@ -64,7 +64,7 @@ export function calculateAgentThreatAssessment(agent: Agent): number {
   const multiplier = 1 + hpMultiplier + damageMultiplier
   const agentThreat = f6mult(agent.skill, multiplier)
 
-  // Normalize by dividing by initial agent threat assessment (same as mission threat assessment)
+  // Normalize by dividing by initial agent combat rating (same as mission combat rating)
   const initialAgentThreat = calculateInitialAgentThreatAssessment()
   return agentThreat / initialAgentThreat
 }

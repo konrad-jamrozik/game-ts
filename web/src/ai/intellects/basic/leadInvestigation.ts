@@ -7,7 +7,7 @@ import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining } from './utils'
-import { calculateMissionThreatAssessment } from '../../../lib/game_utils/missionThreatAssessment'
+import { calculateMissionCombatRating } from '../../../lib/game_utils/missionCombatRating'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { isFactionForLeadTerminated } from '../../../lib/model_utils/leadUtils'
@@ -25,7 +25,7 @@ import { isFactionForLeadTerminated } from '../../../lib/model_utils/leadUtils'
  *    b. Otherwise, select a new lead:
  *       - Prioritize non-repeatable leads (pick randomly if multiple available)
  *       - For repeatable leads only:
- *         * Sort by mission threat level (descending - hardest missions first)
+ *         * Sort by mission combat rating (descending - hardest missions first)
  *         * For each lead, check if the resulting mission could be deployed successfully
  *           with current resources (agents, threat, transport capacity)
  *         * Collect all deployable leads
@@ -220,18 +220,18 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
   // If no non-repeatable leads, use smart selection for repeatable leads
   const repeatableLeads = availableLeads.filter((lead) => lead.repeatable)
 
-  // Get leads with their mission threats and sort by threat descending
-  const leadsWithThreat = repeatableLeads.map((lead) => ({
+  // Get leads with their mission combat ratings and sort by combat rating descending
+  const leadsWithCombatRating = repeatableLeads.map((lead) => ({
     lead,
-    threat: getMissionThreatForLead(lead.id),
+    combatRating: getMissionCombatRatingForLead(lead.id),
   }))
 
-  const sortedLeads = leadsWithThreat.toSorted((a, b) => b.threat - a.threat)
+  const sortedLeads = leadsWithCombatRating.toSorted((a, b) => b.combatRating - a.combatRating)
 
-  // Collect all deployable leads with their threat levels
-  const deployableLeads: { lead: Lead; threat: number }[] = []
+  // Collect all deployable leads with their combat ratings
+  const deployableLeads: { lead: Lead; combatRating: number }[] = []
 
-  for (const { lead, threat } of sortedLeads) {
+  for (const { lead, combatRating } of sortedLeads) {
     // Get the mission data that depends on this lead
     const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
       missionData.dependsOn.includes(lead.id),
@@ -248,7 +248,7 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
       const feasibility = canDeployMissionWithCurrentResources(gameState, tempMission)
       if (feasibility.canDeploy) {
         // This lead would result in a deployable mission - add it to the list
-        deployableLeads.push({ lead, threat })
+        deployableLeads.push({ lead, combatRating })
         // Only need to find one deployable mission per lead
         break
       }
@@ -260,16 +260,16 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
     return undefined
   }
 
-  // Find max threat among deployable leads
-  const maxThreat = Math.max(...deployableLeads.map((d) => d.threat))
-  const topThreatLeads = deployableLeads.filter((d) => d.threat === maxThreat).map((d) => d.lead)
+  // Find max combat rating among deployable leads
+  const maxCombatRating = Math.max(...deployableLeads.map((d) => d.combatRating))
+  const topCombatRatingLeads = deployableLeads.filter((d) => d.combatRating === maxCombatRating).map((d) => d.lead)
 
-  if (topThreatLeads.length === 1) {
-    return topThreatLeads[0]
+  if (topCombatRatingLeads.length === 1) {
+    return topCombatRatingLeads[0]
   }
 
-  // Multiple leads with same threat - pick one with least investigations
-  const leadsWithCounts = topThreatLeads.map((lead) => ({
+  // Multiple leads with same combat rating - pick one with least investigations
+  const leadsWithCounts = topCombatRatingLeads.map((lead) => ({
     lead,
     investigationCount: gameState.leadInvestigationCounts[lead.id] ?? 0,
   }))
@@ -298,10 +298,10 @@ function countAgentsInvestigatingLeads(gameState: GameState): number {
 }
 
 /**
- * Gets the maximum threat level of missions that would be created from investigating a lead.
+ * Gets the maximum combat rating of missions that would be created from investigating a lead.
  * Returns 0 if no missions depend on the lead.
  */
-function getMissionThreatForLead(leadId: LeadId): number {
+function getMissionCombatRatingForLead(leadId: LeadId): number {
   const dependentMissionData = dataTables.offensiveMissions.filter((missionData) =>
     missionData.dependsOn.includes(leadId),
   )
@@ -310,19 +310,19 @@ function getMissionThreatForLead(leadId: LeadId): number {
     return 0
   }
 
-  // Calculate threat for each mission and return the maximum
-  let maxThreat = 0
+  // Calculate combat rating for each mission and return the maximum
+  let maxCombatRating = 0
   for (const missionData of dependentMissionData) {
-    // Create a temporary mission to calculate threat
+    // Create a temporary mission to calculate combat rating
     const tempMission = bldMission({
-      id: 'mission-simulated-for-threat-assessment',
+      id: 'mission-simulated-for-combat-rating-assessment',
       missionDataId: missionData.id,
     })
-    const threat = calculateMissionThreatAssessment(tempMission)
-    if (threat > maxThreat) {
-      maxThreat = threat
+    const combatRating = calculateMissionCombatRating(tempMission)
+    if (combatRating > maxCombatRating) {
+      maxCombatRating = combatRating
     }
   }
 
-  return maxThreat
+  return maxCombatRating
 }

@@ -6,21 +6,21 @@ import { effectiveSkill } from '../ruleset/skillRuleset'
 import { isAgent } from '../model_utils/agentUtils'
 
 /**
- * Calculates the threat assessment for a mission.
- * Threat assessment is the sum of all enemy threat assessments, normalized by dividing
- * by the initial hired agent threat assessment.
+ * Calculates the combat rating for a mission.
+ * Combat rating is the sum of all enemy combat ratings, normalized by dividing
+ * by the initial hired agent combat rating.
  *
- * @param mission - The mission to calculate threat assessment for
- * @returns The normalized threat assessment as a number (to be formatted with 2 decimals in UI)
+ * @param mission - The mission to calculate combat rating for
+ * @returns The normalized combat rating as a number (to be formatted with 2 decimals in UI)
  */
-export function calculateMissionThreatAssessment(mission: Mission): number {
-  const totalThreat = mission.enemies.reduce((sum, enemy) => sum + calculateCombatRating(enemy), 0)
+export function calculateMissionCombatRating(mission: Mission): number {
+  const totalCombatRating = mission.enemies.reduce((sum, enemy) => sum + calculateCombatRating(enemy), 0)
 
-  // Calculate initial agent threat assessment
+  // Calculate initial agent combat rating
   const initialAgentCombatRating = calculateCombatRating(initialAgent)
 
-  // Normalize by dividing by initial agent threat assessment
-  return totalThreat / initialAgentCombatRating
+  // Normalize by dividing by initial agent combat rating
+  return totalCombatRating / initialAgentCombatRating
 }
 
 /**
