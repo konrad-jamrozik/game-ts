@@ -1,6 +1,6 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { f6c0, f6fmtInt, f6fmtPctDec0, toF, type Fixed6 } from '../../lib/primitives/fixed6'
+import { f6c0, f6fmtInt, f6fmtPctDec0, f6sub, toF, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { Agent, AgentState } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
@@ -187,8 +187,26 @@ export function getAgentsColumns(
       ),
     },
     {
+      field: 'experience',
+      headerName: 'Exp.',
+      width: columnWidths['agents.experience'],
+      valueGetter: (_value, row: AgentRow): string => {
+        const experience = f6sub(row.skill, row.skillFromTraining)
+        return f6fmtInt(experience)
+      },
+      sortComparator: bldFixed6SortComparator(
+        rows,
+        (row) => f6sub(row.skill, row.skillFromTraining),
+        undefined,
+        (row) => row.rowId,
+      ),
+      renderCell: (params: GridRenderCellParams<AgentRow, number>): React.JSX.Element => (
+        <span aria-label={`agents-row-experience-${params.id}`}>{params.value ?? 0}</span>
+      ),
+    },
+    {
       field: 'training',
-      headerName: 'Training',
+      headerName: 'Trn.',
       width: columnWidths['agents.training'],
       valueGetter: (_value, row: AgentRow) => f6fmtInt(row.skillFromTraining),
       sortComparator: bldFixed6SortComparator(

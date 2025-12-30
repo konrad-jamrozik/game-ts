@@ -58,6 +58,7 @@ export function filterVisibleAgentColumns(
       (col) =>
         col.field === 'id' ||
         col.field === 'skillSimple' ||
+        col.field === 'experience' ||
         col.field === 'training' ||
         col.field === 'hitPointsMax' ||
         col.field === 'missionsTotal' ||
