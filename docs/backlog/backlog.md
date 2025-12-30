@@ -5,7 +5,10 @@ KJA backlog:
 # Current milestone
 
 - BUG to fix: see fix_investigation_agent_assignment. First add assertion and see if it captures it.
--
+
+- See onenote for problem with ratio
+- also often 1 faction is ignore, as the mission is too easy and AI just goes for harder missions
+
 - Does the `<Strict> mode` continue double rendering even for vite preview>
 
 - Add tests leveraging AI: e.g. "delegate 20 turns to do nothing intellect" that verifies
