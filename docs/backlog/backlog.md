@@ -4,22 +4,8 @@ KJA backlog:
 
 # Current milestone
 
-Make the "Investigate lead" button label smarter - it should be "Investigate lead numeric_ID with X agents"
-and if lead is already investigated, it should say "Add X more agents to numeric_ID lead".
-Here numeric_ID are just those three digits like 000.
-
-Selecting agents in the agents data grid should show sum of their "Combat rating", abbreviated "CR"
-This should show in the top bar of the data grid, to the left of the checkboxes like "stats",
-Note that when CR is computed it should use the same formula as threat level for enemies in missions,
-but it should use agents effective skill instead of total skill (for enemies effective skill
-and total skill are the same).
-
-- Add stats to agents data grid
-  - Combat stats (Killed / Damage Inflicted / Damage Taken)
-    - Column names: "Kills", "Damage", "Wounds"
-  - Skill: Total / from missions / from training
-    - Column name: "Skill (Mis/Trn)"
-
+- BUG to fix: see fix_investigation_agent_assignment. First add assertion and see if it captures it.
+-
 - Does the `<Strict> mode` continue double rendering even for vite preview>
 
 - Add tests leveraging AI: e.g. "delegate 20 turns to do nothing intellect" that verifies
@@ -38,8 +24,6 @@ and total skill are the same).
   - Hardest mission completed by total enemy skill
   - Agents, and what they do: contracting, investigating leads, on missions, etc.
   - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
-
-- Problem: battle ratio is computed based on skill and hp, instead of threat
 
 # P0 Game mechanics
 
