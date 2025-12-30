@@ -1,7 +1,7 @@
 import { dataTables } from '../../data_tables/dataTables'
 import { getMissionDataById } from '../../model_utils/missionUtils'
 import { getActivityLevelByOrd } from '../../model_utils/factionActivityLevelUtils'
-import { getFactionName, getFactionNameById } from '../../model_utils/factionUtils'
+import { getFactionName, getFactionNameById, isFactionTerminated } from '../../model_utils/factionUtils'
 import { isFactionDiscovered } from '../../ruleset/factionRuleset'
 import { withIds, onStandbyAssignment, recovering } from '../../model_utils/agentUtils'
 import { f6c0, toF6, f6add, f6max, f6sub, f6sum, f6gt, toF } from '../../primitives/fixed6'
@@ -596,6 +596,26 @@ function updateFactions(
     const previousTurnsUntilNextOperation = faction.turnsUntilNextOperation
     const previousSuppressionTurns = faction.suppressionTurns
 
+    // Check if faction is terminated - skip operation roll and activity progression
+    const terminated = isFactionTerminated(faction, state.leadInvestigationCounts)
+    if (terminated) {
+      // Still include in faction reports but with no changes to counters
+      const isDiscovered = isFactionDiscovered(faction, state.leadInvestigationCounts)
+      factionReports.push({
+        factionId: faction.id,
+        factionName: getFactionName(faction),
+        isDiscovered,
+        isTerminated: true,
+        activityLevel: bldValueChange(previousActivityLevel, faction.activityLevel),
+        turnsAtCurrentLevel: bldValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),
+        turnsUntilNextOperation: bldValueChange(previousTurnsUntilNextOperation, faction.turnsUntilNextOperation),
+        suppressionTurns: bldValueChange(previousSuppressionTurns, faction.suppressionTurns),
+        missionImpacts: [],
+        activityLevelIncreased: false,
+      })
+      continue
+    }
+
     // Track mission impacts on this faction
     const missionImpacts = []
     for (const { rewards, missionId, missionName } of missionRewards) {
@@ -672,6 +692,7 @@ function updateFactions(
       factionId: faction.id,
       factionName: getFactionName(faction),
       isDiscovered,
+      isTerminated: false,
       activityLevel: bldValueChange(previousActivityLevel, faction.activityLevel),
       turnsAtCurrentLevel: bldValueChange(previousTurnsAtCurrentLevel, faction.turnsAtCurrentLevel),
       turnsUntilNextOperation: bldValueChange(previousTurnsUntilNextOperation, faction.turnsUntilNextOperation),

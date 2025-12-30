@@ -12,12 +12,13 @@ import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 import { getLeadsColumns, type LeadRow } from './getLeadsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { isFactionForLeadTerminated } from '../../lib/model_utils/leadUtils'
 
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
-  const { leadInvestigationCounts, leadInvestigations, missions } = gameState
+  const { leadInvestigationCounts, leadInvestigations, missions, factions } = gameState
   const [showArchived, setShowArchived] = React.useState(false)
 
   // Get mission data IDs that have won missions
@@ -42,8 +43,11 @@ export function LeadsDataGrid(): React.JSX.Element {
     const doneInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Done').length
 
     // Determine if lead is archived:
-    // - Only non-repeatable leads with done investigations are archived
-    const isArchived = !lead.repeatable && hasDoneInvestigation
+    // - Non-repeatable leads with done investigations are archived
+    // - Leads for terminated factions are archived
+    const isArchived =
+      (!lead.repeatable && hasDoneInvestigation) ||
+      isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
 
     return {
       rowId: index,

@@ -13,6 +13,8 @@ import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
 import { bldMission } from '../../factories/missionFactory'
+import { getFactionById } from '../../model_utils/factionUtils'
+import type { FactionId } from '../../model/modelIds'
 
 /**
  * Updates lead investigations: applies decay, accumulates intel, checks for completion
@@ -128,6 +130,17 @@ function completeInvestigation(
     state.missions.push(mission)
   }
 
+  // Check if this is a terminate-cult lead completion and terminate the faction if so
+  const terminateCultMatch = investigation.leadId.match(/^lead-(.+)-terminate-cult$/)
+  if (terminateCultMatch !== null) {
+    const facId = terminateCultMatch[1]
+    // Find faction by matching factionDataId (e.g., 'factiondata-red-dawn' matches 'red-dawn')
+    const faction = state.factions.find((f) => f.factionDataId === `factiondata-${facId}`)
+    if (faction !== undefined) {
+      terminateFaction(state, faction.id)
+    }
+  }
+
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
   investigation.agentIds = []
@@ -139,6 +152,17 @@ function completeInvestigation(
   }
 
   return createdMissionIds
+}
+
+/**
+ * Terminates a faction by setting its operation counter to Infinity and suppression to 0.
+ * The terminated state itself is derived from lead investigation counts, so no flag is set.
+ * Existing missions and investigations continue naturally.
+ */
+function terminateFaction(state: GameState, factionId: FactionId): void {
+  const faction = getFactionById(state, factionId)
+  faction.turnsUntilNextOperation = Infinity
+  faction.suppressionTurns = 0
 }
 
 /**

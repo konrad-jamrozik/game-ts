@@ -95,50 +95,57 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
 
 function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
   const prevLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.previous))
-  const currLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.current))
-  const levelChanged = prevLevelName !== currLevelName
+  const currLevelName = fct.isTerminated ? 'Terminated' : getActivityLevelName(asActivityLevelOrd(fct.activityLevel.current))
+  const levelChanged = prevLevelName !== currLevelName && !fct.isTerminated
 
   return {
     id: fct.factionId,
     label: `${fct.factionName}. Activity: ${currLevelName}${levelChanged ? ` (was ${prevLevelName})` : ''}`,
-    chipValue: levelChanged ? 'Level up!' : undefined,
+    chipValue: fct.isTerminated ? 'Terminated' : levelChanged ? 'Level up!' : undefined,
     reverseColor: true, // Activity increase is bad
     children: [
       {
         id: `faction-${fct.factionId}-activity-level`,
-        label: `Activity level: ${currLevelName} - ${currLevelName}`,
-        chipValue: fct.activityLevelIncreased === true ? '+1' : undefined,
+        label: `Activity level: ${currLevelName}`,
+        chipValue: fct.isTerminated ? undefined : fct.activityLevelIncreased === true ? '+1' : undefined,
         reverseColor: true, // Activity increase is bad
       },
       {
         id: `faction-${fct.factionId}-turns-at-level`,
-        label: `Turns at level: ${fct.turnsAtCurrentLevel.current}`,
-        chipValue: fct.turnsAtCurrentLevel.delta !== 0 ? (fct.turnsAtCurrentLevel.delta > 0 ? '+1' : '-1') : undefined,
+        label: `Turns at level: ${fct.isTerminated ? '-' : fct.turnsAtCurrentLevel.current}`,
+        chipValue:
+          fct.isTerminated || fct.turnsAtCurrentLevel.delta === 0
+            ? undefined
+            : fct.turnsAtCurrentLevel.delta > 0
+              ? '+1'
+              : '-1',
         noColor: true,
       },
       {
         id: `faction-${fct.factionId}-next-operation`,
-        label:
-          !Number.isFinite(fct.turnsUntilNextOperation.current) || currLevelName === 'Dormant'
+        label: fct.isTerminated
+          ? 'Next operation in: Never'
+          : !Number.isFinite(fct.turnsUntilNextOperation.current) || currLevelName === 'Dormant'
             ? 'Next operation in: Never'
             : `Next operation in: ${fct.turnsUntilNextOperation.current} turns`,
         chipValue:
-          Number.isFinite(fct.turnsUntilNextOperation.delta) && fct.turnsUntilNextOperation.delta !== 0
-            ? fct.turnsUntilNextOperation.delta > 0
+          fct.isTerminated ||
+          (!Number.isFinite(fct.turnsUntilNextOperation.delta) || fct.turnsUntilNextOperation.delta === 0)
+            ? undefined
+            : fct.turnsUntilNextOperation.delta > 0
               ? `+${fct.turnsUntilNextOperation.delta}`
-              : String(fct.turnsUntilNextOperation.delta)
-            : undefined,
+              : String(fct.turnsUntilNextOperation.delta),
         reverseColor: false, // Lower is worse, but showing the number is neutral
       },
       {
         id: `faction-${fct.factionId}-suppression`,
-        label: `Suppression: ${fct.suppressionTurns.current} turns`,
+        label: `Suppression: ${fct.isTerminated ? '-' : `${fct.suppressionTurns.current} turns`}`,
         chipValue:
-          fct.suppressionTurns.delta !== 0
-            ? fct.suppressionTurns.delta > 0
+          fct.isTerminated || fct.suppressionTurns.delta === 0
+            ? undefined
+            : fct.suppressionTurns.delta > 0
               ? `+${fct.suppressionTurns.delta}`
-              : String(fct.suppressionTurns.delta)
-            : undefined,
+              : String(fct.suppressionTurns.delta),
         reverseColor: false, // Suppression increase is good
         children: formatSuppressionChildren(fct.factionId, fct.missionImpacts),
       },
