@@ -108,7 +108,7 @@ const colorSystemOptions: ColorSystemOptions = {
 
     agentStateOnAssignment: defaultTheme.palette.augmentColor({
       color: {
-        main: cyan[800],
+        main: amber[700],
       },
       name: 'agentStateOnAssignment',
     }),
@@ -129,7 +129,7 @@ const colorSystemOptions: ColorSystemOptions = {
 
     agentStateInTraining: defaultTheme.palette.augmentColor({
       color: {
-        main: amber[700],
+        main: cyan[800],
       },
       name: 'agentStateInTraining',
     }),
