@@ -21,20 +21,20 @@ KJA backlog:
     - example display, on header:
       - left aligned: "A: 20 / R: 5 / E: 7"
       - right aligned: "KIA: 7 / S: 3"
-  - missions: A: active
-    - and aligned to the right in the header: E: expired / S: successful / F: failed
-      - left aligned: "A: 10"
-      - right aligned: "E: 2 / S: 7 / F: 5"
-  - leads: A: active (Rpt: repeatable)
-    - and aligned to the right in the header: TDL: total distinct leads successfully investigated
+  - missions: Act: active
+    - and aligned to the right in the header: Exp: expired / Scc: successful / Fld: failed
+      - left aligned: "Act: 10"
+      - right aligned: "Exp: 2 / Scc: 7 / Fld: 5"
+  - leads: Act: active (Rpt: repeatable)
+    - and aligned to the right in the header: Arch: total archived
     - example display, on header:
-      - left aligned: "A: 10 (Rpt: 5)"
-      - right aligned: "TDL: 20"
-  - lead investigations: A: active
-    - and aligned to the right in the header: TI: total successfully investigated TA: total abandoned
+      - left aligned: "Act: 10 (Rpt: 5)"
+      - right aligned: "Arch: 20"
+  - lead investigations: Act: active
+    - and aligned to the right in the header: Done: total completed
     - example display, on header:
-      - left aligned: "A: 10 (Rpt: 5)"
-      - right aligned: "TI: 20 / TA: 10"
+      - left aligned: "Act: 10 (Rpt: 5)"
+      - right aligned: "Done: 20"
 
 - Selecting agents should show their total threat level
   - and also there should be a column for their current threat level
