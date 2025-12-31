@@ -134,9 +134,9 @@ This is the most reliable way to profile JavaScript execution. It bypasses brows
 
 ### Option 2: Standalone Profiling Script
 
-For more control, create a script that runs the AI directly without Vitest overhead:
+For more control, use the script that runs the AI directly without Vitest overhead.
 
-1. **Create `web/scripts/profile-ai.ts`**:
+The script already exists at `web/scripts/profileAi.ts`. Here's how it works:
 
    ```typescript
    import { initStore, getStore } from '../src/redux/store'
@@ -169,14 +169,14 @@ For more control, create a script that runs the AI directly without Vitest overh
    main()
    ```
 
-2. **Run with CPU profiling**:
+**Run with CPU profiling**:
 
-   ```powershell
-   cd web
-   npx tsx --cpu-prof scripts/profile-ai.ts
-   ```
+```powershell
+cd web
+npx tsx --cpu-prof scripts/profileAi.ts
+```
 
-3. **Load the generated `.cpuprofile` file** in Chrome DevTools as described above.
+Load the generated `.cpuprofile` file in Chrome DevTools as described in Option 1.
 
 ### Option 3: Browser Profiling (Alternative Methods)
 

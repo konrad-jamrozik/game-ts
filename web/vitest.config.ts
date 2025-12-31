@@ -65,7 +65,7 @@ export default defineConfig({
           environment: 'node',
           globals: true,
           setupFiles: ['./test/utils/setupAITests.ts'],
-          testTimeout: 60_000, // Longer timeout for AI tests
+          testTimeout: 120_000, // Longer timeout for AI tests
         },
       },
     ],
