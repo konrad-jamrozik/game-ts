@@ -1,6 +1,6 @@
-import { describe, expect, test, beforeAll, beforeEach } from 'vitest'
+import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
-import { initStore, getStore } from '../../src/redux/store'
+import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
@@ -9,11 +9,7 @@ import { isGameWon } from '../../src/lib/game_utils/gameStateChecks'
 import { rand } from '../../src/lib/primitives/rand'
 
 describe('Basic Intellect AI Player', () => {
-  beforeAll(async () => {
-    // KJA1 won't this conflict with the setupAllTests.ts file?
-    // Initialize store with undo limit of 0 for this test
-    await initStore({ undoLimit: 0 })
-  })
+  // Store is initialized by setupAITests.ts with undoLimit: 0
 
   beforeEach(() => {
     const store = getStore()

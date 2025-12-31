@@ -1,5 +1,4 @@
-// Setup for all non-AI tests with default store initialization
-// Auto-reset all fixture counters before each test for consistent test isolation
+// Setup for AI tests with undoLimit: 0 to avoid undo history overhead during long AI simulations
 // Disable eslint warning as this is global setup test file that is expected
 // to have beforeEach outside of describe blocks.
 /* eslint-disable vitest/require-top-level-describe */
@@ -8,9 +7,12 @@ import { resetAllFixtures } from '../fixtures/resetAllFixtures'
 import { rand } from '../../src/lib/primitives/rand'
 import { initStore } from '../../src/redux/store'
 
-// Initialize store before all tests
+// Mock IndexedDB for tests
+import 'fake-indexeddb/auto'
+
+// Initialize store with undoLimit: 0 for AI tests (no undo history needed)
 beforeAll(async () => {
-  await initStore()
+  await initStore({ undoLimit: 0 })
 })
 
 beforeEach(() => {
