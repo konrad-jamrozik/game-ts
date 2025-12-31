@@ -4,9 +4,9 @@ import { getPlayTurnApi } from '../redux/playTurnApi'
 import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 
-export async function delegateTurnToAIPlayer(intellectName: string): Promise<void> {
+export function delegateTurnToAIPlayer(intellectName: string): void {
   const intellect = getIntellect(intellectName)
-  const store = await getStore()
+  const store = getStore()
 
   const api = getPlayTurnApi(store, { strict: true })
   intellect.playTurn(api)
@@ -20,15 +20,15 @@ export async function delegateTurnToAIPlayer(intellectName: string): Promise<voi
   }
 }
 
-export async function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): Promise<void> {
-  const store = await getStore()
+export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
+  const store = getStore()
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
   for (let i = 0; i < turnCount; i += 1) {
     const currentState = store.getState().undoable.present.gameState
     if (isGameEnded(currentState)) {
       break
     }
-    await delegateTurnToAIPlayer(intellectName)
+    delegateTurnToAIPlayer(intellectName)
     // Only advance turn if auto-advance is disabled, since delegateTurnToAIPlayer
     // already handles turn advancement when auto-advance is enabled
     if (!autoAdvanceTurn) {

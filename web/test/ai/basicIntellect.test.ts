@@ -10,12 +10,13 @@ import { rand } from '../../src/lib/primitives/rand'
 
 describe('Basic Intellect AI Player', () => {
   beforeAll(async () => {
+    // KJA1 won't this conflict with the setupAllTests.ts file?
     // Initialize store with undo limit of 0 for this test
     await initStore({ undoLimit: 0 })
   })
 
-  beforeEach(async () => {
-    const store = await getStore()
+  beforeEach(() => {
+    const store = getStore()
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
@@ -24,8 +25,8 @@ describe('Basic Intellect AI Player', () => {
     rand.reset()
   })
 
-  test('AI player wins game within 100 turns with favorable conditions', async () => {
-    const store = await getStore()
+  test('AI player wins game within 100 turns with favorable conditions', () => {
+    const store = getStore()
     // Arrange: Set up standard initial game state with 100,000 money
     const initialState = bldInitialState()
     const customState = { ...initialState, money: 100_000 }
@@ -40,7 +41,7 @@ describe('Basic Intellect AI Player', () => {
     rand.set('enemy_attack_roll', 0)
 
     // Act: Delegate up to 100 turns to basic intellect AI player
-    await delegateTurnsToAIPlayer('basic', 100)
+    delegateTurnsToAIPlayer('basic', 100)
 
     // Assert: Verify game ended in victory
     const finalState = store.getState().undoable.present.gameState

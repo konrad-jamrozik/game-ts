@@ -5,13 +5,11 @@
 import { beforeAll, beforeEach } from 'vitest'
 import { resetAllFixtures } from '../fixtures/resetAllFixtures'
 import { rand } from '../../src/lib/primitives/rand'
-import { getCachedStore } from '../fixtures/stateFixture'
+import { initStore } from '../../src/redux/store'
 
-// Initialize store before all tests (lazy init will happen on first getStore() call)
-// This ensures stateFixture can access the store synchronously
+// Initialize store before all tests
 beforeAll(async () => {
-  // Cache the store for stateFixture
-  await getCachedStore()
+  await initStore()
 })
 
 beforeEach(() => {

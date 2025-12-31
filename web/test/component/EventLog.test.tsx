@@ -6,8 +6,8 @@ import { EventLog } from '../../src/components/EventLog'
 import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 
-async function renderEventLog(): Promise<void> {
-  const store = await getStore()
+function renderEventLog(): void {
+  const store = getStore()
   render(
     <Provider store={store}>
       <EventLog />
@@ -16,17 +16,17 @@ async function renderEventLog(): Promise<void> {
 }
 
 describe(EventLog, () => {
-  beforeEach(async () => {
-    const store = await getStore()
+  beforeEach(() => {
+    const store = getStore()
     // Reset the store before each test
     store.dispatch(reset())
     store.dispatch(clearEvents())
   })
 
-  test('happy path: no events', async () => {
+  test('happy path: no events', () => {
     expect.hasAssertions()
 
-    await renderEventLog()
+    renderEventLog()
 
     expect(screen.getByText('Event Log')).toBeInTheDocument()
     expect(screen.getByText('No events yet')).toBeInTheDocument()
@@ -34,12 +34,12 @@ describe(EventLog, () => {
 
   test('happy path: events', async () => {
     expect.hasAssertions()
-    const store = await getStore()
+    const store = getStore()
 
     const { hireAgent } = await import('../../src/redux/slices/gameStateSlice')
     store.dispatch(hireAgent())
 
-    await renderEventLog()
+    renderEventLog()
 
     expect(screen.getAllByText('Agent hired')).toHaveLength(1)
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()
@@ -47,7 +47,7 @@ describe(EventLog, () => {
 
   test('happy path: new game started', async () => {
     expect.hasAssertions()
-    const store = await getStore()
+    const store = getStore()
 
     const { addTextEvent: addEvent } = await import('../../src/redux/slices/eventsSlice')
     const state = store.getState()
@@ -62,7 +62,7 @@ describe(EventLog, () => {
       }),
     )
 
-    await renderEventLog()
+    renderEventLog()
 
     expect(screen.getByText('New game started')).toBeInTheDocument()
     expect(screen.queryByText('No events yet')).not.toBeInTheDocument()

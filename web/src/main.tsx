@@ -3,7 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './components/App'
-import { getStore } from './redux/store'
+import { initStore, getStore } from './redux/store'
 import { ErrorBoundary } from './components/Error/ErrorBoundary'
 import { showErrorToast } from './components/utils/errorToast'
 import theme from './components/styling/theme'
@@ -26,7 +26,8 @@ globalThis.addEventListener('error', (event) => {
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
-  const store = await getStore()
+  await initStore()
+  const store = getStore()
   createRoot(rootElement).render(
     <StrictMode>
       <ErrorBoundary>

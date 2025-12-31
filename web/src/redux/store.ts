@@ -9,7 +9,7 @@ export type StoreOptions = { undoLimit?: number }
 
 let _store: Store<RootState> | undefined
 
-// Optional: call before getStore() to configure with custom options
+// Must be called before getStore(). Call once at app startup.
 export async function initStore(options?: StoreOptions): Promise<void> {
   if (_store) {
     throw new Error('Store already initialized')
@@ -19,6 +19,8 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   const rootReducer = createRootReducer(undoLimit)
   const maybePersistedState: RootState | undefined = await loadPersistedState()
 
+  // KJA1 fix
+  // eslint-disable-next-line require-atomic-updates -- Safe: initStore is called once at startup
   _store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(eventsMiddleware()),
@@ -52,12 +54,8 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   })
 }
 
-// Lazily initializes store with defaults on first call
-export async function getStore(): Promise<Store<RootState>> {
-  if (!_store) {
-    await initStore()
-  }
-  assertDefined(_store)
+export function getStore(): Store<RootState> {
+  assertDefined(_store, 'Store not initialized. Call initStore() first.')
   return _store
 }
 

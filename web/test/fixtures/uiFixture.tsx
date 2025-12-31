@@ -2,11 +2,12 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { expect } from 'vitest'
-import { store } from '../../src/redux/store'
+import { getStore } from '../../src/redux/store'
 import { PlayerActions } from '../../src/components/GameControls/PlayerActions'
 
 export const ui = {
   renderPlayerActions(): void {
+    const store = getStore()
     render(
       <Provider store={store}>
         <PlayerActions />

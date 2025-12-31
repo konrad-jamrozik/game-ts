@@ -19,7 +19,7 @@ describe(GameControls, () => {
 
   test("click 'next turn' button -> happy path", async () => {
     expect.hasAssertions()
-    const store = await getStore()
+    const store = getStore()
 
     render(
       <Provider store={store}>
@@ -40,7 +40,7 @@ describe(GameControls, () => {
 
   test("click 'restart game' button -> happy path", async () => {
     expect.hasAssertions()
-    const store = await getStore()
+    const store = getStore()
 
     // Set the reset controls to be expanded in the store
     store.dispatch(setResetControlsExpanded(true))

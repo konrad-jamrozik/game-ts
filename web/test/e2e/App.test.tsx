@@ -14,8 +14,8 @@ import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {
-  beforeEach(async () => {
-    const store = await getStore()
+  beforeEach(() => {
+    const store = getStore()
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
@@ -55,7 +55,7 @@ describe(App, () => {
   test('Execute subset of core logic and verify the game does not crash', async () => {
     expect.hasAssertions()
 
-    await step1StartWithDebugInitialState()
+    step1StartWithDebugInitialState()
     await step2AdvanceTurn()
     await step3SelectAgent002()
     await step4ClickCriminalOrganizationsLead()
@@ -75,8 +75,8 @@ describe(App, () => {
 /**
  * Step 1: Start with debug initial state (200 money, agents "000", "001", "002" available, mission "000" deployed)
  */
-async function step1StartWithDebugInitialState(): Promise<void> {
-  const store = await getStore()
+function step1StartWithDebugInitialState(): void {
+  const store = getStore()
   // Set up debug initial state
   // Start with 200 money so we can hire 4 agents (costs 200 total)
   // This leaves 0 money, and with high agent upkeep, projected balance will be negative

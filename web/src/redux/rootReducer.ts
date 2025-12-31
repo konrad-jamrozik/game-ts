@@ -19,7 +19,7 @@ export function createRootReducer(
 // Create a default instance to infer RootState type
 export type RootState = ReturnType<ReturnType<typeof createRootReducerInternal>>
 
-// KJA1 should not be eslint-disabled
+// KJA1 should not be eslint-disabled -- AI wrote "Return type is inferred to derive RootState"
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
 function createRootReducerInternal(undoLimit: number) {
   // 1. Start by creating a combined reducer having only one `gameState` reducer.
