@@ -4,6 +4,8 @@ KJA backlog:
 
 # Current milestone
 
+- Debug perf, see about_ai_performance.md, notably flamegraphs from browser devtools.
+-
 - Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
 
 - Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.

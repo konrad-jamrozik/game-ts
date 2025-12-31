@@ -111,7 +111,7 @@ function step1StartWithDebugInitialState(): void {
   expect(screen.getByText(/agent-002/iu)).toBeInTheDocument()
 
   // Should start in turn 1
-  const initialTurnValue = screen.getByLabelText(/turn/iu)
+  const initialTurnValue = screen.getByLabelText('Turn:')
   expect(initialTurnValue).toHaveTextContent('1')
 
   console.log('✅ Step 1 completed: Start with debug initial state')
@@ -125,7 +125,7 @@ function step1StartWithDebugInitialState(): void {
 async function step2AdvanceTurn(): Promise<void> {
   await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
-  const turnValue = screen.getByLabelText(/turn/iu)
+  const turnValue = screen.getByLabelText('Turn:')
   expect(turnValue).toHaveTextContent('2')
 
   // Verify mission "000" is in "Won" state
@@ -273,7 +273,7 @@ async function step10AdvanceTurnToGameOver(): Promise<void> {
   // after advancing turn once, agent upkeep costs will make money negative and trigger game over
   await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
 
-  const turnValueAfterGameOver = screen.getByLabelText(/turn/iu)
+  const turnValueAfterGameOver = screen.getByLabelText('Turn:')
   expect(turnValueAfterGameOver).toHaveTextContent('3')
 
   const currentMoneyValue = getCurrentMoneyValue()
@@ -321,7 +321,7 @@ async function step12ClickResetGame(): Promise<void> {
   await userEvent.click(resetGameButton)
 
   // Verify game resets to turn 1
-  const resetTurnValue = screen.getByLabelText(/turn/iu)
+  const resetTurnValue = screen.getByLabelText('Turn:')
   expect(resetTurnValue).toHaveTextContent('1')
 
   // Should have only "Criminal organizations" lead
