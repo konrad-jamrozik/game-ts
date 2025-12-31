@@ -25,9 +25,6 @@ const settingsSlice = createSlice({
     toggleResetControlsExpanded(state) {
       state.areResetControlsExpanded = !state.areResetControlsExpanded
     },
-    toggleRevealAllFactionProfiles(state) {
-      state.revealAllFactionProfiles = !state.revealAllFactionProfiles
-    },
     setRevealAllFactionProfiles(state, action: PayloadAction<boolean>) {
       state.revealAllFactionProfiles = action.payload
     },
@@ -49,7 +46,6 @@ const settingsSlice = createSlice({
 export const {
   setResetControlsExpanded,
   toggleResetControlsExpanded,
-  toggleRevealAllFactionProfiles,
   setRevealAllFactionProfiles,
   toggleRollSuccessfulLeadInvestigations,
   setRollSuccessfulLeadInvestigations,

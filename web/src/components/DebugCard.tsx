@@ -19,7 +19,7 @@ import {
 import {
   setRollSuccessfulLeadInvestigations,
   setRollSuccessfulCombat,
-  toggleRevealAllFactionProfiles,
+  setRevealAllFactionProfiles,
 } from '../redux/slices/settingsSlice'
 import { rand } from '../lib/primitives/rand'
 
@@ -28,6 +28,7 @@ export function DebugCard(): React.JSX.Element {
   const rollSuccessfulLeadInvestigations =
     useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations) ?? false
   const rollSuccessfulCombat = useAppSelector((state) => state.settings.rollSuccessfulCombat) ?? false
+  const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
 
   // Sync rand override with persisted Redux state. The Redux state persists across page refreshes
   // (via IndexedDB), but rand overrides are in-memory only. This ensures that when the app loads
@@ -81,12 +82,12 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugAddEverything())
   }
 
-  function handleRevealAllFactionProfiles(): void {
-    dispatch(toggleRevealAllFactionProfiles())
-  }
-
   function handleTerminateRedDawn(): void {
     dispatch(debugTerminateRedDawn())
+  }
+
+  function handleRevealAllFactionProfilesChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setRevealAllFactionProfiles(event.target.checked))
   }
 
   function handleRollSuccessfulLeadInvestigationsChange(event: React.ChangeEvent<HTMLInputElement>): void {
@@ -121,9 +122,10 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleSpawnMissions}>
           Spawn missions
         </Button>
-        <Button variant="contained" onClick={handleRevealAllFactionProfiles}>
-          Reveal all faction profiles
-        </Button>
+        <FormControlLabel
+          control={<Checkbox checked={revealAllFactionProfiles} onChange={handleRevealAllFactionProfilesChange} />}
+          label="Reveal all faction profiles"
+        />
         <FormControlLabel
           control={
             <Checkbox
