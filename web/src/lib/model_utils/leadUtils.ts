@@ -4,6 +4,7 @@ import type { Lead } from '../model/leadModel'
 import type { LeadId } from '../model/modelIds'
 import type { Faction } from '../model/factionModel'
 import { isFactionTerminated } from './factionUtils'
+import type { Mission } from '../model/missionModel'
 
 export function getLeadById(id: LeadId): Lead {
   const found = dataTables.leads.find((lead) => lead.id === id)
@@ -39,4 +40,68 @@ export function isFactionForLeadTerminated(
   }
 
   return isFactionTerminated(faction, leadInvestigationCounts)
+}
+
+export type NegatedDepStatus = 'active' | 'inactive' | 'archived'
+
+export type ParsedDependencies = {
+  regular: string[]
+  negated: string[]
+}
+
+/**
+ * Parses dependencies into regular and negated dependencies.
+ * Negated dependencies start with '!' prefix.
+ */
+export function parseNegatedDependencies(dependsOn: string[]): ParsedDependencies {
+  const regular: string[] = []
+  const negated: string[] = []
+
+  for (const dep of dependsOn) {
+    if (dep.startsWith('!')) {
+      negated.push(dep.slice(1))
+    } else {
+      regular.push(dep)
+    }
+  }
+
+  return { regular, negated }
+}
+
+/**
+ * Determines the status of a lead based on negated dependencies.
+ * Checks mission states for each negated dependency:
+ * - Won = archived
+ * - Active/Deployed = inactive
+ * - Otherwise (no mission, Retreated, Wiped, Expired) = active
+ */
+export function getNegatedDepStatus(negatedDeps: string[], missions: Mission[]): NegatedDepStatus {
+  if (negatedDeps.length === 0) {
+    return 'active'
+  }
+
+  // Check each negated dependency against missions
+  for (const negatedDep of negatedDeps) {
+    const matchingMissions = missions.filter((m) => m.missionDataId === negatedDep)
+
+    if (matchingMissions.length === 0) {
+      // No matching mission exists, so dependency is satisfied (lead can be active)
+      continue
+    }
+
+    // Check if any matching mission is Won (archived)
+    if (matchingMissions.some((m) => m.state === 'Won')) {
+      return 'archived'
+    }
+
+    // Check if any matching mission is Active or Deployed (inactive)
+    if (matchingMissions.some((m) => m.state === 'Active' || m.state === 'Deployed')) {
+      return 'inactive'
+    }
+
+    // Mission exists but is in terminal non-success state (Retreated, Wiped, Expired)
+    // Lead can be active
+  }
+
+  return 'active'
 }

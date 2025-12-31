@@ -12,7 +12,12 @@ import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 import { getLeadsColumns, type LeadRow } from './getLeadsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
-import { isFactionForLeadTerminated } from '../../lib/model_utils/leadUtils'
+import {
+  isFactionForLeadTerminated,
+  parseNegatedDependencies,
+  getNegatedDepStatus,
+  type ParsedDependencies,
+} from '../../lib/model_utils/leadUtils'
 import { calculateLeadCounts } from './leadCounts'
 import { LeadsDataGridTitle } from './LeadsDataGridTitle'
 
@@ -21,19 +26,21 @@ export function LeadsDataGrid(): React.JSX.Element {
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
   const { leadInvestigationCounts, leadInvestigations, missions, factions } = gameState
-  const [showArchived, setShowArchived] = React.useState(false)
+  const [filterType, setFilterType] = React.useState<'active' | 'inactive' | 'archived'>('active')
 
   // Get mission data IDs that have won missions
   const wonMissionDataIds = new Set<string>(missions.filter((m) => m.state === 'Won').map((m) => m.missionDataId))
 
-  // Filter out leads that have unmet dependencies (same logic as LeadCards)
-  const discoveredLeads = dataTables.leads.filter((lead) =>
-    lead.dependsOn.every(
-      (dependencyId) => (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionDataIds.has(dependencyId),
-    ),
-  )
+  // Filter out leads that have unmet regular dependencies (negated dependencies don't affect discovery)
+  const discoveredLeads = dataTables.leads.filter((lead): boolean => {
+    const parsed: ParsedDependencies = parseNegatedDependencies(lead.dependsOn)
+    return parsed.regular.every(
+      (dependencyId: string): boolean =>
+        (leadInvestigationCounts[dependencyId] ?? 0) > 0 || wonMissionDataIds.has(dependencyId),
+    )
+  })
 
-  // Transform all discovered leads to rows (both active and archived)
+  // Transform all discovered leads to rows (active, inactive, and archived)
   const allRows: LeadRow[] = discoveredLeads.map((lead, index) => {
     const investigationsForLead = Object.values(leadInvestigations).filter(
       (investigation) => investigation.leadId === lead.id,
@@ -44,11 +51,20 @@ export function LeadsDataGrid(): React.JSX.Element {
     const activeInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Active').length
     const doneInvestigationCount = investigationsForLead.filter((inv) => inv.state === 'Done').length
 
+    // Check negated dependencies
+    const parsed: ParsedDependencies = parseNegatedDependencies(lead.dependsOn)
+    const negatedStatus = getNegatedDepStatus(parsed.negated, missions)
+
     // Determine if lead is archived:
     // - Non-repeatable leads with done investigations are archived
     // - Leads for terminated factions are archived
-    const isArchived =
-      (!lead.repeatable && hasDoneInvestigation) || isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
+    // - Negated dependency mission is Won
+    const isFactionTerminated = isFactionForLeadTerminated(lead, factions, leadInvestigationCounts)
+    const isArchived = (!lead.repeatable && hasDoneInvestigation) || isFactionTerminated || negatedStatus === 'archived'
+
+    // Determine if lead is inactive:
+    // - Negated dependency mission is Active or Deployed (and not archived)
+    const isInactive = negatedStatus === 'inactive' && !isArchived
 
     return {
       rowId: index,
@@ -59,13 +75,23 @@ export function LeadsDataGrid(): React.JSX.Element {
       hasActiveInvestigation,
       hasDoneInvestigation,
       isArchived,
+      isInactive,
       activeInvestigationCount,
       doneInvestigationCount,
     }
   })
 
-  // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY non-archived when unchecked
-  const rows: LeadRow[] = allRows.filter((row) => (showArchived ? row.isArchived : !row.isArchived))
+  // Filter rows based on filter type: show ONLY the selected type
+  const rows: LeadRow[] = allRows.filter((row): boolean => {
+    if (filterType === 'active') {
+      return !row.isArchived && !row.isInactive
+    }
+    if (filterType === 'inactive') {
+      return row.isInactive
+    }
+    // filterType === 'archived'
+    return row.isArchived
+  })
 
   const columns = getLeadsColumns()
 
@@ -108,7 +134,13 @@ export function LeadsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
 
-  const leadCounts = calculateLeadCounts(discoveredLeads, leadInvestigations, factions, leadInvestigationCounts)
+  const leadCounts = calculateLeadCounts(
+    discoveredLeads,
+    leadInvestigations,
+    factions,
+    leadInvestigationCounts,
+    missions,
+  )
   const title = <LeadsDataGridTitle counts={leadCounts} />
 
   return (
@@ -127,8 +159,8 @@ export function LeadsDataGrid(): React.JSX.Element {
       slots={{ toolbar: LeadsDataGridToolbar }}
       slotProps={{
         toolbar: {
-          showArchived,
-          onToggleArchived: setShowArchived,
+          filterType,
+          onFilterTypeChange: setFilterType,
         },
       }}
       showToolbar

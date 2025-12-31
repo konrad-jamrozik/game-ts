@@ -13,7 +13,7 @@ export function LeadsDataGridTitle({ counts }: LeadsDataGridTitleProps): React.J
         Leads: Active {counts.active} {counts.repeatable > 0 && `(Rpt: ${counts.repeatable})`}
       </Typography>
       <Typography variant="h6" component="span">
-        Arch {counts.archived}
+        Inactive {counts.inactive} | Arch {counts.archived}
       </Typography>
     </Box>
   )

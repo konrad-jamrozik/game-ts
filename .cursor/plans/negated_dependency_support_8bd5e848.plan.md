@@ -4,24 +4,24 @@ overview: ""
 todos:
   - id: helper-functions
     content: Add parseNegatedDependencies and getNegatedDepStatus helpers in leadUtils.ts
-    status: pending
+    status: completed
   - id: leadrow-type
     content: Add isInactive field to LeadRow type in getLeadsColumns.tsx
-    status: pending
+    status: completed
   - id: leadcounts
     content: Add inactive count to LeadCounts type and calculateLeadCounts function
-    status: pending
+    status: completed
   - id: datagrid-logic
     content: Update LeadsDataGrid discovery and state logic for negated dependencies
-    status: pending
+    status: completed
   - id: toolbar
     content: Change toolbar to radio-like filter with active/inactive/archived options
-    status: pending
+    status: completed
     dependencies:
       - leadrow-type
   - id: title
     content: Update LeadsDataGridTitle to display inactive count
-    status: pending
+    status: completed
     dependencies:
       - leadcounts
   - id: documentation

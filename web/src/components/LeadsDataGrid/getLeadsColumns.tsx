@@ -13,6 +13,7 @@ export type LeadRow = {
   hasActiveInvestigation: boolean
   hasDoneInvestigation: boolean
   isArchived: boolean
+  isInactive: boolean
   activeInvestigationCount: number
   doneInvestigationCount: number
 }
