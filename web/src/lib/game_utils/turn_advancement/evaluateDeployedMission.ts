@@ -25,6 +25,7 @@ import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimiti
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
 import type { DefensiveMissionData } from '../../data_tables/defensiveMissionsDataTable'
 import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/factionOperationLevelRuleset'
+import { log } from '../../primitives/logger'
 import type { AttackLog } from '../../model/turnReportModel'
 
 /**
@@ -228,7 +229,8 @@ function updateSurvivingAgent(
   addSkill(agent, survivalSkillGain)
 
   const totalSkillGain = f6add(battleSkillGain, survivalSkillGain)
-  console.log(
+  log.info(
+    'combat',
     `📈 Agent ${agent.id} gained ${f6fmtInt(totalSkillGain)} skill (${f6fmtInt(battleSkillGain)} from combat, ${f6fmtInt(survivalSkillGain)} from survival)`,
   )
 

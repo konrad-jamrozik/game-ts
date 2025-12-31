@@ -7,6 +7,7 @@ import { selectNextBestReadyAgent } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { calculateAgentCombatRating, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
+import { log } from '../../../lib/primitives/logger'
 
 export type DeploymentFeasibilityResult =
   | {
@@ -159,7 +160,7 @@ function logDeploymentStatistics(
     }
   }
 
-  console.log(logMessage)
+  log.info('missions', logMessage)
 }
 
 function selectNextMissionToDeploy(availableMissions: Mission[]): Mission | undefined {

@@ -1,6 +1,7 @@
 import Dexie from 'dexie'
 import type { RootReducerState } from './rootReducer'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
+import { log } from '../lib/primitives/logger'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'
@@ -85,8 +86,8 @@ export async function saveStateToDexie(state: RootReducerState): Promise<void> {
 export async function wipeStorage(): Promise<void> {
   try {
     await getDb().delete()
-    console.log('IndexedDB database wiped successfully')
+    log.info('persistence', 'IndexedDB database wiped successfully')
   } catch (error) {
-    console.error('Failed to wipe IndexedDB database', error)
+    log.warn('persistence', 'Failed to wipe IndexedDB database', error)
   }
 }

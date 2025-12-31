@@ -10,6 +10,7 @@ import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
 import { TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
+import { log } from '../../../lib/primitives/logger'
 
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
@@ -152,7 +153,7 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
     }
   }
 
-  console.log(`assignToLeadInvestigation: desired ${agentsToAssign} agents, assigned ${selectedAgentIds.length}`)
+  log.info('lead-investigation', `desired ${agentsToAssign} agents, assigned ${selectedAgentIds.length}`)
 }
 
 function getAvailableLeads(gameState: GameState): Lead[] {
@@ -214,8 +215,9 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
           0,
         )
 
-        console.log(
-          `selectLeadToInvestigate: Lead "${lead.id}" is deployable. ` +
+        log.info(
+          'lead-investigation',
+          `Lead "${lead.id}" is deployable. ` +
             `Mission combat rating: ${missionCombatRating.toFixed(2)}, ` +
             `Agent combat rating: ${agentCombatRating.toFixed(2)}, ` +
             `Min. target combat rating: ${targetCombatRating.toFixed(2)}`,
@@ -226,8 +228,9 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
         // Only need to find one deployable mission per lead
         break
       } else if (feasibility.reason === 'insufficientCombatRating') {
-        console.log(
-          `selectLeadToInvestigate: Passed on lead "${lead.id}" due to insufficient combat rating. ` +
+        log.info(
+          'lead-investigation',
+          `Passed on lead "${lead.id}" due to insufficient combat rating. ` +
             `Infeasibility reason: ${feasibility.reason}` +
             `Infeasibility details: ${feasibility.details}`,
         )

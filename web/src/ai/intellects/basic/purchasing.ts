@@ -13,6 +13,7 @@ import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
+import { log } from '../../../lib/primitives/logger'
 import type { UpgradeNameOrNewAgent } from './types'
 import {
   REQUIRED_TURNS_OF_SAVINGS,
@@ -48,8 +49,9 @@ function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): v
   const minimumRequiredSavings = computeMinimumRequiredSavings(api)
 
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
-  console.log(
-    `spendMoney: cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
+  log.info(
+    'purchasing',
+    `cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
   )
 }
 
@@ -162,7 +164,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
 function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   if (priority === 'newAgent') {
     api.hireAgent()
-    console.log(`spendMoney: purchased newAgent 🪖`)
+    log.success('purchasing', 'purchased newAgent 🪖')
     return
   }
 
@@ -193,9 +195,9 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 
   if (priority === 'Agent cap' || priority === 'Transport cap' || priority === 'Training cap') {
-    console.log(`spendMoney: purchased cap 🏦 ${priority}`)
+    log.success('purchasing', `purchased cap 🏦 ${priority}`)
   } else {
-    console.log(`spendMoney: purchased upgrade ⏫ ${priority}`)
+    log.success('purchasing', `purchased upgrade ⏫ ${priority}`)
   }
 }
 
@@ -222,8 +224,9 @@ function logBuyResult(
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   const increaseMessage = getIncreaseMessage(api, stateBeforeIncrease)
 
-  console.log(
-    `buy: Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCapUpgrades=${aiState.desiredAgentCapUpgrades}, transportCapUpgrades=${aiState.desiredTransportCapUpgrades}, trainingCapUpgrades=${aiState.desiredTrainingCapUpgrades}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
+  log.info(
+    'purchasing',
+    `Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCapUpgrades=${aiState.desiredAgentCapUpgrades}, transportCapUpgrades=${aiState.desiredTransportCapUpgrades}, trainingCapUpgrades=${aiState.desiredTrainingCapUpgrades}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
   )
 }
 

@@ -20,8 +20,11 @@ import {
   setRollSuccessfulLeadInvestigations,
   setRollSuccessfulCombat,
   setRevealAllFactionProfiles,
+  toggleLogCategory,
 } from '../redux/slices/settingsSlice'
 import { rand } from '../lib/primitives/rand'
+import { log } from '../lib/primitives/logger'
+import { LOG_CATEGORIES, type LogCategory, LOG_CATEGORY_LIST } from '../lib/primitives/logCategories'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -29,6 +32,7 @@ export function DebugCard(): React.JSX.Element {
     useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations) ?? false
   const rollSuccessfulCombat = useAppSelector((state) => state.settings.rollSuccessfulCombat) ?? false
   const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
+  const enabledLogCategories = useAppSelector((state) => state.settings.enabledLogCategories)
 
   // Sync rand override with persisted Redux state. The Redux state persists across page refreshes
   // (via IndexedDB), but rand overrides are in-memory only. This ensures that when the app loads
@@ -53,6 +57,13 @@ export function DebugCard(): React.JSX.Element {
       rand.reset('enemy_attack_roll')
     }
   }, [rollSuccessfulCombat])
+
+  // Sync log category settings from Redux state to logger's internal state.
+  // This ensures that when the app loads and checkboxes were previously checked,
+  // the logger's internal state is restored.
+  React.useEffect(() => {
+    log.syncAll(enabledLogCategories ?? {})
+  }, [enabledLogCategories])
 
   function handleSpawnMissions(): void {
     dispatch(debugSpawnMissions())
@@ -96,6 +107,10 @@ export function DebugCard(): React.JSX.Element {
 
   function handleRollSuccessfulCombatChange(event: React.ChangeEvent<HTMLInputElement>): void {
     dispatch(setRollSuccessfulCombat(event.target.checked))
+  }
+
+  function handleLogCategoryChange(category: LogCategory): void {
+    dispatch(toggleLogCategory(category))
   }
 
   return (
@@ -142,6 +157,22 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleTerminateRedDawn}>
           Terminate Red Dawn
         </Button>
+        <Stack spacing={0.5} sx={{ marginTop: 2 }}>
+          <div>Console Logging</div>
+          {LOG_CATEGORY_LIST.map((category) => (
+            <FormControlLabel
+              key={category}
+              control={
+                <Checkbox
+                  checked={enabledLogCategories?.[category] ?? false}
+                  onChange={() => handleLogCategoryChange(category)}
+                  size="small"
+                />
+              }
+              label={LOG_CATEGORIES[category].badge}
+            />
+          ))}
+        </Stack>
       </Stack>
     </ExpandableCard>
   )

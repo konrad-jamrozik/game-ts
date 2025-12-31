@@ -7,6 +7,7 @@ import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
 import { MAX_READY_URGENT_EXHAUSTION_PCT, TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER } from './constants'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { estimateAgentContractingIncome, unassignAgentsFromTraining } from './utils'
+import { log } from '../../../lib/primitives/logger'
 
 export function assignToContractingWithPriority(api: PlayTurnAPI): void {
   const { gameState } = api
@@ -14,8 +15,9 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
 
   // If projected income is already non-negative, no need to assign agents
   if (projectedIncome >= 0) {
-    console.log(
-      `assignToContractingWithPriority: projected income ${projectedIncome.toFixed(2)} is non-negative, no assignment needed`,
+    log.info(
+      'agents',
+      `projected income ${projectedIncome.toFixed(2)} is non-negative, no assignment needed`,
     )
     return
   }
@@ -48,12 +50,14 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
     unassignAgentsFromTraining(api, selectedAgents)
     api.assignAgentsToContracting(selectedAgents.map((a) => a.id))
     const finalProjectedIncome = getMoneyTurnDiff(gameState)
-    console.log(
-      `assignToContractingWithPriority: assigned ${selectedAgents.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
+    log.info(
+      'agents',
+      `assigned ${selectedAgents.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
     )
   } else {
-    console.log(
-      `assignToContractingWithPriority: projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`,
+    log.info(
+      'agents',
+      `projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`,
     )
   }
 }
@@ -88,7 +92,7 @@ export function assignToContracting(api: PlayTurnAPI): void {
     api.assignAgentsToContracting(selectedAgentIds)
   }
 
-  console.log(`assignToContracting: desired ${desiredAgentCount} agents, assigned ${selectedAgentIds.length}`)
+  log.info('agents', `desired ${desiredAgentCount} agents, assigned ${selectedAgentIds.length}`)
 }
 
 export function assignLeftoverToContracting(api: PlayTurnAPI): void {
@@ -117,7 +121,8 @@ function logLeftoverContractingStatistics(gameState: GameState, assignedCount: n
   const inTrainingAgents = gameState.agents.filter((a) => a.assignment === 'Training').length
   const totalAvailable = standbyAgents + inTrainingAgents
 
-  console.log(
-    `assignLeftoverToContracting: assigned ${assignedCount} agents, ${totalAvailable} total Standby/InTraining (${standbyAgents} Standby, ${inTrainingAgents} InTraining)`,
+  log.info(
+    'agents',
+    `assigned ${assignedCount} agents, ${totalAvailable} total Standby/InTraining (${standbyAgents} Standby, ${inTrainingAgents} InTraining)`,
   )
 }

@@ -26,6 +26,7 @@ import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { evaluateAttack } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
 import { compareIdsNumeric } from '../../primitives/stringPrimitives'
+import { log } from '../../primitives/logger'
 import type { RoundLog, AttackLog } from '../../model/turnReportModel'
 import type { BattleOutcome } from '../../model/outcomeTypes'
 
@@ -241,10 +242,12 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     true,
   )
 
-  console.log(
+  log.info(
+    'combat',
     `Agent casualties: ${agentCasualties} / ${agents.length} (${agentsWounded} wounded, ${agentsTerminated} terminated)`,
   )
-  console.log(
+  log.info(
+    'combat',
     `Enemy casualties: ${enemyCasualties} / ${enemies.length} (${enemiesWounded} wounded, ${enemiesTerminated} terminated)`,
   )
 
@@ -295,7 +298,8 @@ function logRetreat(retreatResult: RetreatResult): void {
   const agentsSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
   const enemyToAgentsSkillRatioFmt = f6fmtPctDec0(retreatResult.enemyToAgentsSkillRatio)
   const enemyToAgentsSkillThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
-  console.log(
+  log.info(
+    'combat',
     `🏃 Agent mission commander orders retreat! ` +
       `Agents Current/Total skill = ${agentsSkillPctFmt} < ${agentsSkillThresholdFmt} threshold. ` +
       `Enemy/Agents skill ratio = ${enemyToAgentsSkillRatioFmt} >= ${enemyToAgentsSkillThresholdFmt} threshold.`,
@@ -415,9 +419,9 @@ function showRoundStatus(
 ): void {
   if (battleConcluded) {
     const roundsStr = pluralize('round', rounds)
-    console.log(`\n========== 📊 Battle Concluded after ${rounds} ${roundsStr} ==========`)
+    log.info('combat', `\n========== 📊 Battle Concluded after ${rounds} ${roundsStr} ==========`)
   } else {
-    console.log(`\n========== ⚔️ Combat Round ${rounds} ==========`)
+    log.info('combat', `\n========== ⚔️ Combat Round ${rounds} ==========`)
   }
 
   // Current agent statistics
@@ -434,10 +438,12 @@ function showRoundStatus(
   const enemySkillPct = f6fmtPctDec0(currentEnemyEffectiveSkill, initialEnemySkill)
   const enemyHpPct = fmtPctDec0(currentEnemyHitPoints, toF(initialEnemyHitPoints))
 
-  console.log(
+  log.info(
+    'combat',
     `👤👤 Agents: ${activeAgents.length} units, ${f6fmtInt(currentAgentEffectiveSkill)} total skill (${agentSkillPct}), ${currentAgentHitPoints} HP (${agentHpPct})`,
   )
-  console.log(
+  log.info(
+    'combat',
     `👺👺 Enemies: ${activeEnemies.length} units, ${f6fmtInt(currentEnemyEffectiveSkill)} total skill (${enemySkillPct}), ${currentEnemyHitPoints} HP (${enemyHpPct})`,
   )
 }

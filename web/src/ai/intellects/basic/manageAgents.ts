@@ -11,6 +11,7 @@ import {
 } from './contractingAssignment'
 import { assignToLeadInvestigation } from './leadInvestigation'
 import { assignToTraining } from './trainingAssignment'
+import { log } from '../../../lib/primitives/logger'
 
 export function manageAgents(api: PlayTurnAPI): void {
   unassignExhaustedAgents(api)
@@ -51,7 +52,8 @@ function logAgentStatistics(gameState: GameState): void {
   const totalAgents = notTerminated(gameState.agents).length
   const readyAgentsPct = totalAgents > 0 ? ((readyAgents.length / totalAgents) * 100).toFixed(1) : '0.0'
 
-  console.log(
-    `unassignExhaustedAgents: ${standbyAgents.length} standby, ${inTrainingAgents.length} in training, ${readyAgents.length} ready (${readyAgentsPct}% of ${totalAgents} total agents)`,
+  log.info(
+    'agents',
+    `${standbyAgents.length} standby, ${inTrainingAgents.length} in training, ${readyAgents.length} ready (${readyAgentsPct}% of ${totalAgents} total agents)`,
   )
 }

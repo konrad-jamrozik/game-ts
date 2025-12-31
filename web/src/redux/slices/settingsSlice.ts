@@ -1,4 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { LogCategory } from '../../lib/primitives/logCategories'
 
 export type SettingsState = {
   areResetControlsExpanded: boolean
@@ -6,6 +7,7 @@ export type SettingsState = {
   // Optional because persisted state saved before this field existed won't have it
   rollSuccessfulLeadInvestigations?: boolean
   rollSuccessfulCombat?: boolean
+  enabledLogCategories?: Partial<Record<LogCategory, boolean>>
 }
 
 const initialState: SettingsState = {
@@ -25,6 +27,9 @@ const settingsSlice = createSlice({
     toggleResetControlsExpanded(state) {
       state.areResetControlsExpanded = !state.areResetControlsExpanded
     },
+    toggleRevealAllFactionProfiles(state) {
+      state.revealAllFactionProfiles = !state.revealAllFactionProfiles
+    },
     setRevealAllFactionProfiles(state, action: PayloadAction<boolean>) {
       state.revealAllFactionProfiles = action.payload
     },
@@ -40,6 +45,15 @@ const settingsSlice = createSlice({
     setRollSuccessfulCombat(state, action: PayloadAction<boolean>) {
       state.rollSuccessfulCombat = action.payload
     },
+    toggleLogCategory(state, action: PayloadAction<LogCategory>) {
+      state.enabledLogCategories ??= {}
+      const current = state.enabledLogCategories[action.payload] ?? false
+      state.enabledLogCategories[action.payload] = !current
+    },
+    setLogCategory(state, action: PayloadAction<{ category: LogCategory; enabled: boolean }>) {
+      state.enabledLogCategories ??= {}
+      state.enabledLogCategories[action.payload.category] = action.payload.enabled
+    },
   },
 })
 
@@ -51,5 +65,7 @@ export const {
   setRollSuccessfulLeadInvestigations,
   toggleRollSuccessfulCombat,
   setRollSuccessfulCombat,
+  toggleLogCategory,
+  setLogCategory,
 } = settingsSlice.actions
 export default settingsSlice.reducer
