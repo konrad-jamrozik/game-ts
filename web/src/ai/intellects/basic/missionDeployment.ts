@@ -4,7 +4,7 @@ import type { Mission } from '../../../lib/model/missionModel'
 import type { Agent } from '../../../lib/model/agentModel'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { MAX_ENEMIES_PER_AGENT, TARGET_AGENT_THREAT_MULTIPLIER } from './constants'
+import { MAX_ENEMIES_PER_AGENT, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { calculateAgentThreatAssessment, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 
@@ -29,7 +29,7 @@ export function canDeployMissionWithCurrentResources(
 ): DeploymentFeasibilityResult {
   const minimumRequiredAgents = ceil(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
   const enemyCombatRating = mission.combatRating
-  const targetCombatRating = enemyCombatRating * TARGET_AGENT_THREAT_MULTIPLIER
+  const targetCombatRating = enemyCombatRating * TARGET_COMBAT_RATING_MULTIPLIER
 
   const selectedAgents: Agent[] = []
   let currentCombatRating = 0

@@ -3,7 +3,7 @@ export const REQUIRED_TURNS_OF_SAVINGS = 5
 
 // Constants for canDeployMissionWithCurrentResources function
 export const MAX_ENEMIES_PER_AGENT = 3
-export const TARGET_AGENT_THREAT_MULTIPLIER = 1.2
+export const TARGET_COMBAT_RATING_MULTIPLIER = 1.2
 
 // Constants for assignToContracting and assignToContractingWithPriority functions
 export const TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER = 1.2
