@@ -5,12 +5,14 @@ export type SettingsState = {
   revealAllFactionProfiles: boolean
   // Optional because persisted state saved before this field existed won't have it
   rollSuccessfulLeadInvestigations?: boolean
+  rollSuccessfulCombat?: boolean
 }
 
 const initialState: SettingsState = {
   areResetControlsExpanded: true,
   revealAllFactionProfiles: false,
   rollSuccessfulLeadInvestigations: false,
+  rollSuccessfulCombat: false,
 }
 
 const settingsSlice = createSlice({
@@ -35,6 +37,12 @@ const settingsSlice = createSlice({
     setRollSuccessfulLeadInvestigations(state, action: PayloadAction<boolean>) {
       state.rollSuccessfulLeadInvestigations = action.payload
     },
+    toggleRollSuccessfulCombat(state) {
+      state.rollSuccessfulCombat = !(state.rollSuccessfulCombat ?? false)
+    },
+    setRollSuccessfulCombat(state, action: PayloadAction<boolean>) {
+      state.rollSuccessfulCombat = action.payload
+    },
   },
 })
 
@@ -45,5 +53,7 @@ export const {
   setRevealAllFactionProfiles,
   toggleRollSuccessfulLeadInvestigations,
   setRollSuccessfulLeadInvestigations,
+  toggleRollSuccessfulCombat,
+  setRollSuccessfulCombat,
 } = settingsSlice.actions
 export default settingsSlice.reducer

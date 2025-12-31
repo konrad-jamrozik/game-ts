@@ -16,13 +16,18 @@ import {
   debugAddEverything,
   debugTerminateRedDawn,
 } from '../redux/slices/gameStateSlice'
-import { setRollSuccessfulLeadInvestigations, toggleRevealAllFactionProfiles } from '../redux/slices/settingsSlice'
+import {
+  setRollSuccessfulLeadInvestigations,
+  setRollSuccessfulCombat,
+  toggleRevealAllFactionProfiles,
+} from '../redux/slices/settingsSlice'
 import { rand } from '../lib/primitives/rand'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const rollSuccessfulLeadInvestigations =
     useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations) ?? false
+  const rollSuccessfulCombat = useAppSelector((state) => state.settings.rollSuccessfulCombat) ?? false
 
   // Sync rand override with persisted Redux state. The Redux state persists across page refreshes
   // (via IndexedDB), but rand overrides are in-memory only. This ensures that when the app loads
@@ -35,6 +40,18 @@ export function DebugCard(): React.JSX.Element {
       rand.reset('lead-investigation')
     }
   }, [rollSuccessfulLeadInvestigations])
+
+  // Sync rand overrides for combat rolls with persisted Redux state. When checked, agent attacks
+  // always succeed (agent_attack_roll = 1) and enemy attacks always fail (enemy_attack_roll = 0).
+  React.useEffect(() => {
+    if (rollSuccessfulCombat) {
+      rand.set('agent_attack_roll', 1)
+      rand.set('enemy_attack_roll', 0)
+    } else {
+      rand.reset('agent_attack_roll')
+      rand.reset('enemy_attack_roll')
+    }
+  }, [rollSuccessfulCombat])
 
   function handleSpawnMissions(): void {
     dispatch(debugSpawnMissions())
@@ -76,6 +93,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(setRollSuccessfulLeadInvestigations(event.target.checked))
   }
 
+  function handleRollSuccessfulCombatChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setRollSuccessfulCombat(event.target.checked))
+  }
+
   return (
     <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
@@ -111,6 +132,10 @@ export function DebugCard(): React.JSX.Element {
             />
           }
           label="Roll successful lead investigations"
+        />
+        <FormControlLabel
+          control={<Checkbox checked={rollSuccessfulCombat} onChange={handleRollSuccessfulCombatChange} />}
+          label="Roll successful combat"
         />
         <Button variant="contained" onClick={handleTerminateRedDawn}>
           Terminate Red Dawn
