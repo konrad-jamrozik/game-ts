@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import App from '../../src/components/App'
-import { store } from '../../src/redux/store'
+import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
@@ -14,7 +14,8 @@ import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
 import { verifyMissionState, selectAgents, selectLead, selectMission } from '../utils/testComponentUtils'
 
 describe(App, () => {
-  beforeEach(() => {
+  beforeEach(async () => {
+    const store = await getStore()
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
@@ -54,7 +55,7 @@ describe(App, () => {
   test('Execute subset of core logic and verify the game does not crash', async () => {
     expect.hasAssertions()
 
-    step1StartWithDebugInitialState()
+    await step1StartWithDebugInitialState()
     await step2AdvanceTurn()
     await step3SelectAgent002()
     await step4ClickCriminalOrganizationsLead()
@@ -74,7 +75,8 @@ describe(App, () => {
 /**
  * Step 1: Start with debug initial state (200 money, agents "000", "001", "002" available, mission "000" deployed)
  */
-function step1StartWithDebugInitialState(): void {
+async function step1StartWithDebugInitialState(): Promise<void> {
+  const store = await getStore()
   // Set up debug initial state
   // Start with 200 money so we can hire 4 agents (costs 200 total)
   // This leaves 0 money, and with high agent upkeep, projected balance will be negative

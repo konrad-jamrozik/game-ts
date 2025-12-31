@@ -16,12 +16,27 @@ import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
-import { store } from '../../src/redux/store'
+import { getStore } from '../../src/redux/store'
 import { agFix } from './agentFixture'
+
+let cachedStore: Awaited<ReturnType<typeof getStore>> | undefined
+
+export async function getCachedStore() {
+  if (!cachedStore) {
+    cachedStore = await getStore()
+  }
+  return cachedStore
+}
 
 export const st = {
   get gameState(): GameState {
-    return store.getState().undoable.present.gameState
+    // KJA1 sort out why this cannot simply be "return store.getState().undoable.present.gameState"
+    // This getter is synchronous, so we need the store to be initialized
+    // It will be initialized by setupAllTests.ts before any test runs
+    if (!cachedStore) {
+      throw new Error('Store not initialized. Ensure setupAllTests.ts runs before tests.')
+    }
+    return cachedStore.getState().undoable.present.gameState
   },
 
   bldAgentInStandby: (id: AgentId): Agent => st.bldAgent(id, 'Standby'),
@@ -63,12 +78,14 @@ export const st = {
     }
   },
 
-  arrangeGameState(updates: Partial<GameState>): void {
+  async arrangeGameState(updates: Partial<GameState>): Promise<void> {
+    const store = await getCachedStore()
     const customState = { ...bldInitialState(), ...updates }
     store.dispatch(reset({ customState }))
   },
 
-  arrangeSelection(options: { agents?: AgentId[]; lead?: LeadId; mission?: MissionId }): void {
+  async arrangeSelection(options: { agents?: AgentId[]; lead?: LeadId; mission?: MissionId }): Promise<void> {
+    const store = await getCachedStore()
     if (options.agents) {
       store.dispatch(setAgentSelection(options.agents))
     }

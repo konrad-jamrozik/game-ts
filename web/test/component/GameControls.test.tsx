@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
-import { store } from '../../src/redux/store'
+import { getStore } from '../../src/redux/store'
 import { GameControls } from '../../src/components/GameControls/GameControls'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 
@@ -19,6 +19,7 @@ describe(GameControls, () => {
 
   test("click 'next turn' button -> happy path", async () => {
     expect.hasAssertions()
+    const store = await getStore()
 
     render(
       <Provider store={store}>
@@ -39,6 +40,7 @@ describe(GameControls, () => {
 
   test("click 'restart game' button -> happy path", async () => {
     expect.hasAssertions()
+    const store = await getStore()
 
     // Set the reset controls to be expanded in the store
     store.dispatch(setResetControlsExpanded(true))

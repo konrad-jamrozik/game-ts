@@ -3,7 +3,7 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Provider } from 'react-redux'
 import App from './components/App'
-import { store } from './redux/store'
+import { getStore } from './redux/store'
 import { ErrorBoundary } from './components/Error/ErrorBoundary'
 import { showErrorToast } from './components/utils/errorToast'
 import theme from './components/styling/theme'
@@ -26,19 +26,21 @@ globalThis.addEventListener('error', (event) => {
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
-  createRoot(rootElement).render(
-    <StrictMode>
-      <ErrorBoundary>
-        <ThemeProvider theme={theme} defaultMode="dark">
-          <CssBaseline enableColorScheme>
-            <Provider store={store}>
-              <App />
-            </Provider>
-          </CssBaseline>
-        </ThemeProvider>
-      </ErrorBoundary>
-    </StrictMode>,
-  )
+  getStore().then((store) => {
+    createRoot(rootElement).render(
+      <StrictMode>
+        <ErrorBoundary>
+          <ThemeProvider theme={theme} defaultMode="dark">
+            <CssBaseline enableColorScheme>
+              <Provider store={store}>
+                <App />
+              </Provider>
+            </CssBaseline>
+          </ThemeProvider>
+        </ErrorBoundary>
+      </StrictMode>,
+    )
+  })
 } else {
   console.error('Could not find #root element! Ensure that index.html has an element with id="root"')
 }
