@@ -1,27 +1,33 @@
-import { combineReducers } from 'redux'
-import undoable from 'redux-undo'
-import eventsReducer from './slices/eventsSlice'
+import { combineReducers, type Reducer } from 'redux'
+import undoable, { type StateWithHistory } from 'redux-undo'
+import eventsReducer, { type EventsState } from './slices/eventsSlice'
 import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
-import selectionReducer from './slices/selectionSlice'
-import settingsReducer from './slices/settingsSlice'
-import expansionReducer from './slices/expansionSlice'
-import aiStateReducer from './slices/aiStateSlice'
+import selectionReducer, { type SelectionState } from './slices/selectionSlice'
+import settingsReducer, { type SettingsState } from './slices/settingsSlice'
+import expansionReducer, { type ExpansionState } from './slices/expansionSlice'
+import aiStateReducer, { type BasicIntellectState } from './slices/aiStateSlice'
+import type { GameState } from '../lib/model/gameStateModel'
 
 export const DEFAULT_UNDO_LIMIT = 500
 
-export function createRootReducer(
-  undoLimit: number = DEFAULT_UNDO_LIMIT,
-): ReturnType<typeof createRootReducerInternal> {
-  return createRootReducerInternal(undoLimit)
+type RootReducerState = {
+  undoable: StateWithHistory<UndoableCombinedState>
+  events: EventsState
+  settings: SettingsState
+  selection: SelectionState
+  expansion: ExpansionState
 }
 
-// Create a default instance to infer RootState type
-export type RootState = ReturnType<ReturnType<typeof createRootReducerInternal>>
+// Define explicit types for the state structure
+type UndoableCombinedState = {
+  gameState: GameState
+  aiState: BasicIntellectState
+}
 
-// KJA1 should not be eslint-disabled -- AI wrote "Return type is inferred to derive RootState"
-// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-function createRootReducerInternal(undoLimit: number) {
+export type RootState = RootReducerState
+
+export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reducer<RootReducerState> {
   // 1. Start by creating a combined reducer having only one `gameState` reducer.
   const combinedReducer = combineReducers({
     gameState: gameStateReducer,
