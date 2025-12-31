@@ -161,6 +161,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   }
 }
 
+// KJA1 this is on a hot path per profileAi.ts. Invoked many times;
 function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   if (priority === 'newAgent') {
     api.hireAgent()

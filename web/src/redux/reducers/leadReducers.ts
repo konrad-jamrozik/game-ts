@@ -57,6 +57,7 @@ export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadIn
     const investigation = state.leadInvestigations[investigationId]
     assertDefined(investigation, `Investigation not found: ${investigationId}`)
 
+    // KJA1 this may be hot path per profileAi.ts
     // Add agents to investigation (throw error on duplicates)
     for (const agentId of agentIds) {
       assertNotIn(
