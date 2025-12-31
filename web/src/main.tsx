@@ -26,21 +26,20 @@ globalThis.addEventListener('error', (event) => {
 
 const rootElement = document.querySelector('#root')
 if (rootElement) {
-  getStore().then((store) => {
-    createRoot(rootElement).render(
-      <StrictMode>
-        <ErrorBoundary>
-          <ThemeProvider theme={theme} defaultMode="dark">
-            <CssBaseline enableColorScheme>
-              <Provider store={store}>
-                <App />
-              </Provider>
-            </CssBaseline>
-          </ThemeProvider>
-        </ErrorBoundary>
-      </StrictMode>,
-    )
-  })
+  const store = await getStore()
+  createRoot(rootElement).render(
+    <StrictMode>
+      <ErrorBoundary>
+        <ThemeProvider theme={theme} defaultMode="dark">
+          <CssBaseline enableColorScheme>
+            <Provider store={store}>
+              <App />
+            </Provider>
+          </CssBaseline>
+        </ThemeProvider>
+      </ErrorBoundary>
+    </StrictMode>,
+  )
 } else {
   console.error('Could not find #root element! Ensure that index.html has an element with id="root"')
 }

@@ -3,6 +3,7 @@ import { debounce } from 'radash'
 import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootState } from './rootReducer'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
+import { assertDefined } from '../lib/primitives/assertPrimitives'
 
 export type StoreOptions = { undoLimit?: number }
 
@@ -56,13 +57,8 @@ export async function getStore(): Promise<Store<RootState>> {
   if (!_store) {
     await initStore()
   }
-  // After the check above and potential initStore() call, _store is guaranteed to be defined
-  // This is safe because initStore() always sets _store before returning
-  const store = _store
-  if (!store) {
-    throw new Error('Store initialization failed - this should never happen')
-  }
-  return store
+  assertDefined(_store)
+  return _store
 }
 
 export type AppDispatch = Store<RootState>['dispatch']
