@@ -19,13 +19,22 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   const rootReducer = createRootReducer(undoLimit)
   const maybePersistedState: RootState | undefined = await loadPersistedState()
 
-  // KJA1 fix
-  // eslint-disable-next-line require-atomic-updates -- Safe: initStore is called once at startup
-  _store = configureStore({
+  // Create store in local variable first to avoid async race condition
+  const store = configureStore({
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(eventsMiddleware()),
     ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
   })
+
+  // Guard against concurrent calls: another (earlier) initStore() call could have completed
+  // during the await above and set _store. TypeScript's control flow analysis
+  // doesn't track mutations across await boundaries, so it incorrectly narrows
+  // _store to always be undefined here.
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+  if (_store !== undefined) {
+    throw new Error('Store already initialized')
+  }
+  _store = store
 
   // If no persisted state was loaded, add a "New game started" event
   if (!maybePersistedState) {
