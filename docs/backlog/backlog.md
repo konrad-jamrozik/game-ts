@@ -4,10 +4,21 @@ KJA backlog:
 
 # Current milestone
 
-- BUG to fix: see fix_investigation_agent_assignment. First add assertion and see if it captures it.
+- Debug why AI apparently refuses to deploy to HQ, just gets stuck on stronghold.
 
-- See onenote for problem with ratio
-- also often 1 faction is ignore, as the mission is too easy and AI just goes for harder missions
+- Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more detials.
+
+- Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
+  - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
+     Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
+     Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
+
+- When persisting undoable state, persist player actions only for the current turn,
+  - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
+
+- Add "debug log" checkboxes to the debug card. Which control which console.log statements are emitted.
+
+- Make "Reveal all faction profiles" in debug card into a checkbox.
 
 - Does the `<Strict> mode` continue double rendering even for vite preview>
 
