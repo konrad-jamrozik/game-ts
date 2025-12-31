@@ -2,10 +2,14 @@ import { configureStore, type Store } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
 import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootReducerState } from './rootReducer'
 import { eventsMiddleware } from './eventsMiddleware'
-import { loadPersistedState, saveStateToDexie } from './persist'
+import { initPersistence, loadPersistedState, saveStateToDexie } from './persist'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
-export type StoreOptions = { undoLimit?: number }
+export type StoreOptions = {
+  undoLimit?: number
+  /** Set to false to disable IndexedDB persistence (useful for tests). Defaults to true. */
+  enablePersistence?: boolean
+}
 
 let _store: Store<RootReducerState> | undefined
 let _initStoreCalled = false
@@ -18,8 +22,16 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   _initStoreCalled = true
 
   const undoLimit = options?.undoLimit ?? DEFAULT_UNDO_LIMIT
+  const enablePersistence = options?.enablePersistence ?? true
   const rootReducer = createRootReducer(undoLimit)
-  const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
+
+  // Initialize persistence (creates Dexie instance) before loading state.
+  // This ensures fake-indexeddb is available in tests before Dexie is created.
+  let maybePersistedState: RootReducerState | undefined
+  if (enablePersistence) {
+    initPersistence()
+    maybePersistedState = await loadPersistedState()
+  }
 
   _store = configureStore({
     reducer: rootReducer,
@@ -43,15 +55,18 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     )
   }
 
-  const debouncedSave = debounce({ delay: 300 }, async () => {
-    if (_store) {
-      await saveStateToDexie(_store.getState())
-    }
-  })
+  // Only set up persistence subscription if enabled
+  if (enablePersistence) {
+    const debouncedSave = debounce({ delay: 300 }, async () => {
+      if (_store) {
+        await saveStateToDexie(_store.getState())
+      }
+    })
 
-  _store.subscribe(() => {
-    debouncedSave()
-  })
+    _store.subscribe(() => {
+      debouncedSave()
+    })
+  }
 }
 
 export function getStore(): Store<RootReducerState> {

@@ -7,12 +7,10 @@ import { resetAllFixtures } from '../fixtures/resetAllFixtures'
 import { rand } from '../../src/lib/primitives/rand'
 import { initStore } from '../../src/redux/store'
 
-// Mock IndexedDB for tests
-import 'fake-indexeddb/auto'
-
 // Initialize store with undoLimit: 0 for AI tests (no undo history needed)
+// Disable persistence to avoid debounced save race conditions after tests complete
 beforeAll(async () => {
-  await initStore({ undoLimit: 0 })
+  await initStore({ undoLimit: 0, enablePersistence: false })
 })
 
 beforeEach(() => {

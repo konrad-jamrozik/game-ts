@@ -1,9 +1,10 @@
 import Dexie from 'dexie'
 import type { RootReducerState } from './rootReducer'
+import { assertDefined } from '../lib/primitives/assertPrimitives'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'
-const STATE_VERSION = 2
+const STATE_VERSION = 1
 
 // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
 interface PersistedState {
@@ -23,14 +24,27 @@ class GameDexie extends Dexie {
   }
 }
 
-const db = new GameDexie()
+let _db: GameDexie | undefined
+
+/**
+ * Initialize the Dexie database. Must be called before other persist functions.
+ * This is called by initStore() to ensure proper initialization order.
+ */
+export function initPersistence(): void {
+  _db ??= new GameDexie()
+}
+
+function getDb(): GameDexie {
+  assertDefined(_db, 'Persistence not initialized. Call initPersistence() first.')
+  return _db
+}
 
 /**
  * Load persisted state from IndexedDB and apply migrations if needed
  */
 export async function loadPersistedState(): Promise<RootReducerState | undefined> {
   try {
-    const record = await db.game.get(STORE_KEY)
+    const record = await getDb().game.get(STORE_KEY)
     if (!record) {
       return undefined
     }
@@ -38,7 +52,7 @@ export async function loadPersistedState(): Promise<RootReducerState | undefined
     if (record.version !== STATE_VERSION) {
       // Add migration logic here
       console.warn('Persisted state version mismatch. Resetting state.')
-      await db.game.delete(STORE_KEY)
+      await getDb().game.delete(STORE_KEY)
       return undefined
     }
 
@@ -59,7 +73,7 @@ export async function saveStateToDexie(state: RootReducerState): Promise<void> {
       version: STATE_VERSION,
       rootState: state,
     }
-    await db.game.put(record)
+    await getDb().game.put(record)
   } catch (error) {
     console.error('Failed to save state to Dexie', error)
   }
@@ -70,7 +84,7 @@ export async function saveStateToDexie(state: RootReducerState): Promise<void> {
  */
 export async function wipeStorage(): Promise<void> {
   try {
-    await db.delete()
+    await getDb().delete()
     console.log('IndexedDB database wiped successfully')
   } catch (error) {
     console.error('Failed to wipe IndexedDB database', error)
