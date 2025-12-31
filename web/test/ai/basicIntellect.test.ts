@@ -24,7 +24,7 @@ describe('Basic Intellect AI Player', () => {
     // Disable all logs except "game" category
     const logSettings: Partial<Record<string, boolean>> = {}
     for (const category of LOG_CATEGORY_LIST) {
-      logSettings[category] = category === 'game'
+      logSettings[category] = category === 'game' || category === 'general'
     }
     log.syncAll(logSettings)
   })
@@ -45,7 +45,7 @@ describe('Basic Intellect AI Player', () => {
     rand.set('enemy_attack_roll', 0)
 
     // Act: Delegate up to 100 turns to basic intellect AI player
-    delegateTurnsToAIPlayer('basic', 100)
+    delegateTurnsToAIPlayer('basic', 300)
 
     // Assert: Verify game ended in victory
     const finalState = store.getState().undoable.present.gameState

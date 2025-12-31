@@ -13,7 +13,8 @@ import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
 import { recallAgentsLogic } from '../../../redux/reducers/agentReducers'
 import { bldMission } from '../../factories/missionFactory'
-import { getFactionById } from '../../model_utils/factionUtils'
+import { getFactionById, getFactionName } from '../../model_utils/factionUtils'
+import { log } from '../../primitives/logger'
 import type { FactionId } from '../../model/modelIds'
 
 /**
@@ -147,6 +148,8 @@ function completeInvestigation(
  */
 export function terminateFaction(state: GameState, factionId: FactionId): void {
   const faction = getFactionById(state, factionId)
+  const factionName = getFactionName(faction)
+  log.info('general', `Faction "${factionName}" terminated`)
   faction.turnsUntilNextOperation = Infinity
   faction.suppressionTurns = 0
 
