@@ -15,6 +15,7 @@ import { truncateEventsTo } from '../../redux/slices/eventsSlice'
 import { reset } from '../../redux/slices/gameStateSlice'
 import { clearAllSelection } from '../../redux/slices/selectionSlice'
 import { setResetControlsExpanded } from '../../redux/slices/settingsSlice'
+import { log } from '../../lib/primitives/logger'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { useTheme, type SxProps } from '@mui/material/styles'
@@ -48,6 +49,7 @@ export function ResetControls(): React.JSX.Element {
   const labelSx: SxProps = { backgroundColor: theme.palette.background.cardContent }
 
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
+    log.info('player', 'Reset to turn 1')
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
     dispatch(resetAiState())

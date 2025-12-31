@@ -5,6 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSlice'
 import { setViewCharts } from '../../redux/slices/selectionSlice'
+import { log } from '../../lib/primitives/logger'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
@@ -16,6 +17,9 @@ export function GameControls(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
 
   function handleAdvanceTurn(): void {
+    const currentTurn = gameState.turn
+    const nextTurn = currentTurn + 1
+    log.info('player', `Advance to turn ${nextTurn}`)
     dispatch(advanceTurn())
   }
 
