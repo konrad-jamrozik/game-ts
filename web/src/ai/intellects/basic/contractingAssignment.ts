@@ -15,10 +15,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
 
   // If projected income is already non-negative, no need to assign agents
   if (projectedIncome >= 0) {
-    log.info(
-      'agents',
-      `projected income ${projectedIncome.toFixed(2)} is non-negative, no assignment needed`,
-    )
+    log.info('agents', `projected income ${projectedIncome.toFixed(2)} is non-negative, no assignment needed`)
     return
   }
 
@@ -55,10 +52,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
       `assigned ${selectedAgents.length} agents to ensure non-negative income. Projected income: ${finalProjectedIncome.toFixed(2)}`,
     )
   } else {
-    log.info(
-      'agents',
-      `projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`,
-    )
+    log.info('agents', `projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`)
   }
 }
 
