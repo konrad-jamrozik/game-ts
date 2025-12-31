@@ -29,6 +29,7 @@ describe('Basic Intellect AI Player', () => {
     log.syncAll(logSettings)
   })
 
+  // KJA1 make this test faster. See excel, timing tab chart.
   // This test runs for 40-50 seconds, ~220 turns, and reports:
   // SerializableStateInvariantMiddleware took 34ms, which is more than the warning threshold of 32ms.
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.

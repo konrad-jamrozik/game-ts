@@ -4,8 +4,6 @@ KJA backlog:
 
 # Current milestone
 
-- Bug: active lead in spite of faction being terminated.
-
 - Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
 
 - Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
@@ -24,18 +22,10 @@ KJA backlog:
   - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
 - Better turn reset controls, working well with the new undo/persistence setup.
 
-- Add "debug log" checkboxes to the debug card. Which control which console.log statements are emitted.
-
-- Make "Reveal all faction profiles" in debug card into a checkbox.
-
 - Does the `<Strict> mode` continue double rendering even for vite preview>
 
-- Add tests leveraging AI: e.g. "delegate 20 turns to do nothing intellect" that verifies
-  game is lost
-  - Or test that normal AI can go for 10 turn without causing assertion failure
-    (may want to keep random seed for repro)
-- Add tests leveraging debug actions and AI. E.g. AI that quickly wins the game by investigating relevant leads in order
-  and overwhelming the enemy with super-soldiers.
+- Add more AI tests:
+- e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
 
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
 - Charts for stats over time, at the bottom of the screen.
@@ -46,12 +36,6 @@ KJA backlog:
   - Hardest mission completed by total enemy skill
   - Agents, and what they do: contracting, investigating leads, on missions, etc.
   - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
-
-# Logging
-
-Now I am using console.log but I want to spice up my logging. Notably, I want to make it conditional. In the UI I will
-have a series of checkboxes that will govern which logs actually output. Also would be nice if I would have some built-in
-fancy log formatting features a'ls Python's rich. Knowing this requirement, can you suggest something for my app?
 
 # Dev ergonomics
 
@@ -67,10 +51,6 @@ Make sure that my ps1 profile doesn't output stuff when used by agent, but outpu
   - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
 // NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
-
-# P2 UI refinement
-
-# P0 Game content
 
 # Ideas
 
@@ -126,6 +106,7 @@ Make sure that my ps1 profile doesn't output stuff when used by agent, but outpu
 
 # Performance Optimizations
 
+- See notes on basicIntellect.test.ts performance
 - performance clue from dev console:
   // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
   // If your state or actions are very large, you may want to disable the middleware as it might cause too much
