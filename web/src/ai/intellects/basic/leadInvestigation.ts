@@ -1,7 +1,6 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead } from '../../../lib/model/leadModel'
-import type { Mission } from '../../../lib/model/missionModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
@@ -9,7 +8,7 @@ import { selectNextBestReadyAgent } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining, calculateAgentThreatAssessment } from './utils'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
-import { isFactionForLeadTerminated } from '../../../lib/model_utils/leadUtils'
+import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
 import { TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 
 /**
@@ -157,53 +156,12 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
 }
 
 function getAvailableLeads(gameState: GameState): Lead[] {
-  const allLeads = dataTables.leads
-  const availableLeads: Lead[] = []
+  // Get all available leads using shared logic
+  const availableLeads = getAvailableLeadsForInvestigation(gameState)
 
-  for (const lead of allLeads) {
-    // Never investigate the deep state lead
-    // It exists primarily for debugging purposes. Scheduled to be removed later.
-    if (lead.id === 'lead-deep-state') {
-      continue
-    }
-
-    // Skip leads for terminated factions (archived leads)
-    if (isFactionForLeadTerminated(lead, gameState.factions, gameState.leadInvestigationCounts)) {
-      continue
-    }
-
-    // Check if lead dependencies are met
-    const dependenciesMet = lead.dependsOn.every((depId) => {
-      // Check if it's a mission dependency (completed missions)
-      if (depId.startsWith('missiondata-')) {
-        // Check if there's a mission with this missionDataId that has been won
-        const missionWon = gameState.missions.some(
-          (mission: Mission) => mission.missionDataId === depId && mission.state === 'Won',
-        )
-        return missionWon
-      }
-      // Check if it's a lead dependency (investigation count > 0)
-      const investigationCount = gameState.leadInvestigationCounts[depId] ?? 0
-      return investigationCount > 0
-    })
-
-    if (dependenciesMet) {
-      // Check if lead is repeatable or hasn't been investigated yet
-      const investigationCount = gameState.leadInvestigationCounts[lead.id] ?? 0
-      if (lead.repeatable || investigationCount === 0) {
-        // Check if there's an active investigation
-        const hasActiveInvestigation = Object.values(gameState.leadInvestigations).some(
-          (inv) => inv.leadId === lead.id && inv.state === 'Active',
-        )
-        // Include if no active investigation (can start new one)
-        if (!hasActiveInvestigation) {
-          availableLeads.push(lead)
-        }
-      }
-    }
-  }
-
-  return availableLeads
+  // Filter out the deep state lead (AI-specific exclusion)
+  // It exists primarily for debugging purposes. Scheduled to be removed later.
+  return availableLeads.filter((lead) => lead.id !== 'lead-deep-state')
 }
 
 function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): Lead | undefined {
