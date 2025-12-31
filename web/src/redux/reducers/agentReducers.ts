@@ -87,8 +87,15 @@ export function removeAgentsFromInvestigation(
 }
 
 export const recallAgents = asPlayerAction<string[]>((state: GameState, action) => {
-  const agentIdsToRecall = action.payload
+  recallAgentsLogic(state, action.payload)
+})
 
+/**
+ * Recalls agents from their current assignments (investigations, contracting, training).
+ * Removes agents from lead investigations if applicable, and sets them to Standby/InTransit/Available.
+ * This is the core logic that can be called from game logic or Redux actions.
+ */
+export function recallAgentsLogic(state: GameState, agentIdsToRecall: readonly string[]): void {
   for (const agent of state.agents) {
     if (agentIdsToRecall.includes(agent.id)) {
       // Check if agent is assigned to a lead investigation
@@ -114,4 +121,4 @@ export const recallAgents = asPlayerAction<string[]>((state: GameState, action) 
       }
     }
   }
-})
+}

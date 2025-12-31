@@ -11,7 +11,7 @@ import { getLeadIntelFromAgents, getLeadSuccessChance } from '../../ruleset/lead
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
-import { removeAgentsFromInvestigation } from '../../../redux/reducers/agentReducers'
+import { recallAgentsLogic } from '../../../redux/reducers/agentReducers'
 import { bldMission } from '../../factories/missionFactory'
 import { getFactionById } from '../../model_utils/factionUtils'
 import type { FactionId } from '../../model/modelIds'
@@ -72,8 +72,8 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
 
 /**
  * Unassigns agents with exhaustion >= 100 from the investigation.
- * Applies proportional intel loss and sets agents to InTransit/Standby.
- * Marks investigation as Abandoned if all agents are removed.
+ * Recalls agents which removes them from investigation, applies proportional intel loss,
+ * and sets them to Standby/InTransit. Marks investigation as Abandoned if all agents are removed.
  */
 function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigation): void {
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
@@ -85,15 +85,9 @@ function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigat
     return
   }
 
-  // Remove exhausted agents from investigation and apply proportional loss
+  // Recall exhausted agents (removes from investigation and sets to Standby/InTransit)
   const exhaustedAgentIds = exhaustedAgents.map((agent) => agent.id)
-  removeAgentsFromInvestigation(state, investigation, exhaustedAgentIds)
-
-  // Set agents to InTransit/Standby
-  for (const agent of exhaustedAgents) {
-    agent.assignment = 'Standby'
-    agent.state = 'InTransit'
-  }
+  recallAgentsLogic(state, exhaustedAgentIds)
 }
 
 /**
@@ -168,14 +162,7 @@ export function terminateFaction(state: GameState, factionId: FactionId): void {
     }
     // Abandon investigation and return agents to Standby/InTransit
     const agentIdsToRemove = [...investigation.agentIds]
-    removeAgentsFromInvestigation(state, investigation, agentIdsToRemove)
-    for (const agentId of agentIdsToRemove) {
-      const agent = state.agents.find((a) => a.id === agentId)
-      if (agent !== undefined) {
-        agent.assignment = 'Standby'
-        agent.state = 'InTransit'
-      }
-    }
+    recallAgentsLogic(state, agentIdsToRemove)
   }
 }
 
