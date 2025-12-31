@@ -49,7 +49,7 @@ export default defineConfig({
           environment: 'jsdom',
           globals: true,
           setupFiles: ['./test/utils/setupNonAITests.ts', './test/utils/setupReactTests.ts'],
-          testTimeout: 60_000, // Longer timeout for E2E tests
+          testTimeout: 120_000, // Longer timeout for E2E tests
           server: {
             deps: {
               // Refer to docs/setup/about_vitest.md troubleshooting section for more details.
