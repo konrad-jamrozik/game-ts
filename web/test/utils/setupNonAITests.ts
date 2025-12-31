@@ -13,10 +13,8 @@ import { rand } from '../../src/lib/primitives/rand'
 import { cancelPendingSave, initStore } from '../../src/redux/store'
 
 // Initialize store before all tests
-// Disable persistence by default to avoid IndexedDB issues in jsdom environment
-// Enable it in specific tests that need to test IndexedDB integration
 beforeAll(async () => {
-  await initStore({ enablePersistence: false })
+  await initStore()
 })
 
 beforeEach(() => {

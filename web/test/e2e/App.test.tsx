@@ -52,7 +52,7 @@ describe(App, () => {
    *     - Verify "Archived leads (0)" appears
    *     - Verify agents "000", "001", "002" are no longer present (reset to initial state)
    */
-  test('Execute subset of core logic and verify the game does not crash', async () => {
+  test('Execute App E2E test', async () => {
     expect.hasAssertions()
 
     step1StartWithDebugInitialState()
