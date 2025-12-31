@@ -6,8 +6,9 @@ import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { log } from '../../lib/primitives/logger'
 
 export function advanceTurn(state: GameState): void {
-  log.info('game', `Advance to turn ${state.turn + 1}`)
+  log.info('game', `Advancing to turn ${state.turn + 1}`)
   const turnReport = evaluateTurn(state)
+  log.info('game', `Advanced to turn ${state.turn}`)
   state.turnStartReport = turnReport
 
   // Check for game win/loss after turn advancement

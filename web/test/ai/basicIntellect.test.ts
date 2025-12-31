@@ -29,6 +29,10 @@ describe('Basic Intellect AI Player', () => {
     log.syncAll(logSettings)
   })
 
+  // This test runs for 40-50 seconds, ~220 turns, and reports:
+  // SerializableStateInvariantMiddleware took 34ms, which is more than the warning threshold of 32ms.
+  // If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
+  // It is disabled in production builds, so you don't need to worry about that.
   test('AI player wins game within 250 turns while cheating', () => {
     const store = getStore()
     // Arrange: Set up standard initial game state with 100,000 money
