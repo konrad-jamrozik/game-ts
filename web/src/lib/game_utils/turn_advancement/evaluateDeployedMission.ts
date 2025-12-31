@@ -159,25 +159,25 @@ function calculateCombatStats(
   }
 
   // Process attack logs
-  for (const log of attackLogs) {
-    if (log.attackerType === 'Agent') {
+  for (const attackLog of attackLogs) {
+    if (attackLog.attackerType === 'Agent') {
       // Agent attacking enemy
-      const stats = statsByAgentId.get(log.agentId)
+      const stats = statsByAgentId.get(attackLog.agentId)
       if (stats !== undefined) {
         // Add damage dealt
-        if (log.damage !== undefined) {
-          stats.damageDealt += log.damage
+        if (attackLog.damage !== undefined) {
+          stats.damageDealt += attackLog.damage
         }
         // Check for kill (defender HP <= 0 after damage)
-        if (log.defenderHpAfterDamage <= 0) {
+        if (attackLog.defenderHpAfterDamage <= 0) {
           stats.kills += 1
         }
       }
     } else {
       // Enemy attacking agent
-      const stats = statsByAgentId.get(log.agentId)
-      if (stats !== undefined && log.damage !== undefined) {
-        stats.damageReceived += log.damage
+      const stats = statsByAgentId.get(attackLog.agentId)
+      if (stats !== undefined && attackLog.damage !== undefined) {
+        stats.damageReceived += attackLog.damage
       }
     }
   }
