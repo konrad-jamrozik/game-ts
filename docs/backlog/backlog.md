@@ -47,6 +47,12 @@ KJA backlog:
   - Agents, and what they do: contracting, investigating leads, on missions, etc.
   - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
 
+# Logging
+
+Now I am using console.log but I want to spice up my logging. Notably, I want to make it conditional. In the UI I will
+have a series of checkboxes that will govern which logs actually output. Also would be nice if I would have some built-in
+fancy log formatting features a'ls Python's rich. Knowing this requirement, can you suggest something for my app?
+
 # Dev ergonomics
 
 Make sure that my ps1 profile doesn't output stuff when used by agent, but outputs when used by me.
