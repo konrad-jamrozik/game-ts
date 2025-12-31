@@ -23,9 +23,13 @@ KJA backlog:
 - Better turn reset controls, working well with the new undo/persistence setup.
 
 - Does the `<Strict> mode` continue double rendering even for vite preview>
+  - Note: removing this doesn't speed up tests.
 
 - Add more AI tests:
 - e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
+- "aggressive AI" that tries to win the game as fast as possible, assuming cheats are on, so it always wins all rolls.
+  So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
+  before the exhaustion causes them to lose so much effective skill that commander orders retreat.
 
 - Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
 - Charts for stats over time, at the bottom of the screen.
