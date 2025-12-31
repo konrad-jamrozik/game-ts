@@ -3,7 +3,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 export type SettingsState = {
   areResetControlsExpanded: boolean
   revealAllFactionProfiles: boolean
-  rollSuccessfulLeadInvestigations: boolean
+  // Optional because persisted state saved before this field existed won't have it
+  rollSuccessfulLeadInvestigations?: boolean
 }
 
 const initialState: SettingsState = {
@@ -29,7 +30,7 @@ const settingsSlice = createSlice({
       state.revealAllFactionProfiles = action.payload
     },
     toggleRollSuccessfulLeadInvestigations(state) {
-      state.rollSuccessfulLeadInvestigations = !state.rollSuccessfulLeadInvestigations
+      state.rollSuccessfulLeadInvestigations = !(state.rollSuccessfulLeadInvestigations ?? false)
     },
     setRollSuccessfulLeadInvestigations(state, action: PayloadAction<boolean>) {
       state.rollSuccessfulLeadInvestigations = action.payload

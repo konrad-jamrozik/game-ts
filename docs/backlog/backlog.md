@@ -43,7 +43,11 @@ KJA backlog:
   - Agents, and what they do: contracting, investigating leads, on missions, etc.
   - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
 
-# P0 Game mechanics
+# Dev ergonomics
+
+Make sure that my ps1 profile doesn't output stuff when used by agent, but outputs when used by me.
+
+# Game mechanics ideas
 
 - At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
   how quickly they go through activity levels.

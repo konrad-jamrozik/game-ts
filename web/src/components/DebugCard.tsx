@@ -21,7 +21,8 @@ import { rand } from '../lib/primitives/rand'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const rollSuccessfulLeadInvestigations = useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations)
+  const rollSuccessfulLeadInvestigations =
+    useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations) ?? false
 
   // Sync rand override with persisted Redux state. The Redux state persists across page refreshes
   // (via IndexedDB), but rand overrides are in-memory only. This ensures that when the app loads
