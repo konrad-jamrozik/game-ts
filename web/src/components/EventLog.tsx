@@ -41,17 +41,6 @@ export function EventLog(): React.JSX.Element {
   const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)
   const currentActionsCount = useAppSelector((state) => state.undoable.present.gameState.actionsCount)
 
-  // KJA1 on next turn, also delete events that have fallen out beyond undo range, i.e. there are no more corresponding game
-  // states for them. But allow events from one extra turn in the past. So e.g. if:
-  // turn is 123
-  // undo limit is 50
-  // and undoing 50 times would take player all the way back to turn 80
-  // then events should be kept for turns 79-123.
-  // Another example:
-  // turn is 10
-  // undo limit is 0
-  // player can see all events from turn 9 and 10.
-
   // Hide events that are currently undone (beyond the undo pointer)
   // and also hide any legacy undo/redo/reset text events that may exist in persisted state
   const visibleEvents = events.filter((event) => {
