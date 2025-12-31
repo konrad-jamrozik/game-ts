@@ -234,6 +234,10 @@ export default plugTypescriptEslint.config([
       // https://eslint.org/docs/latest/rules/max-depth
       'max-depth': 'off',
 
+      // Allow underscore prefix for private module-level variables
+      // https://eslint.org/docs/latest/rules/no-underscore-dangle
+      'no-underscore-dangle': 'off',
+
       // Turned off default-case checks because type-aware oxlint via typescript-eslint(switch-exhaustiveness-check)
       // correctly identifies when `switch` doesn't need `default` case.
       // Read more about it in docs/setup/about_oxlint.md#fix-for-default-case
