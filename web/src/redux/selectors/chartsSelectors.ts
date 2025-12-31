@@ -1,4 +1,4 @@
-import type { RootState } from '../rootReducer'
+import type { RootReducerState } from '../rootReducer'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
 import type { Agent } from '../../lib/model/agentModel'
@@ -68,7 +68,7 @@ export type SituationReportDatasetRow = {
   panicPct: number
 }
 
-export function selectChartsDatasets(state: RootState): ChartsDatasets {
+export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const statesByTurn = selectTurnSnapshotsForCharts(state)
 
   const missionIds = new Set<string>()
@@ -153,7 +153,7 @@ export function selectChartsDatasets(state: RootState): ChartsDatasets {
   return { assets, agentSkill, agentReadiness, missions, battleStats, situationReport }
 }
 
-function selectTurnSnapshotsForCharts(state: RootState): GameState[] {
+function selectTurnSnapshotsForCharts(state: RootReducerState): GameState[] {
   const allSnapshotsInOrder: GameState[] = [
     ...state.undoable.past.map((s) => s.gameState),
     state.undoable.present.gameState,

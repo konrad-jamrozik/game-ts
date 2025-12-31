@@ -1,5 +1,5 @@
 import Dexie from 'dexie'
-import type { RootState } from './rootReducer'
+import type { RootReducerState } from './rootReducer'
 
 const DB_NAME = 'GameStateDB'
 const STORE_KEY = 'main'
@@ -9,7 +9,7 @@ const STATE_VERSION = 2
 interface PersistedState {
   id: string
   version: number
-  rootState: RootState
+  rootState: RootReducerState
 }
 
 class GameDexie extends Dexie {
@@ -28,7 +28,7 @@ const db = new GameDexie()
 /**
  * Load persisted state from IndexedDB and apply migrations if needed
  */
-export async function loadPersistedState(): Promise<RootState | undefined> {
+export async function loadPersistedState(): Promise<RootReducerState | undefined> {
   try {
     const record = await db.game.get(STORE_KEY)
     if (!record) {
@@ -52,7 +52,7 @@ export async function loadPersistedState(): Promise<RootState | undefined> {
 /**
  * Save selected state to IndexedDB
  */
-export async function saveStateToDexie(state: RootState): Promise<void> {
+export async function saveStateToDexie(state: RootReducerState): Promise<void> {
   try {
     const record: PersistedState = {
       id: STORE_KEY,

@@ -24,9 +24,9 @@ import type { UpgradeName } from '../lib/data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 import type { GameState } from '../lib/model/gameStateModel'
 import { getPlayerActionsApi } from './playerActionsApi'
-import type { RootState } from './rootReducer'
+import type { RootReducerState } from './rootReducer'
 
-export function getPlayTurnApi(store: Store<RootState>, options?: { strict?: boolean }): PlayTurnAPI {
+export function getPlayTurnApi(store: Store<RootReducerState>, options?: { strict?: boolean }): PlayTurnAPI {
   const strict = options?.strict ?? false
 
   const initialGameState = getCurrentGameState(store)
@@ -185,7 +185,7 @@ export function getPlayTurnApi(store: Store<RootState>, options?: { strict?: boo
   return api
 }
 
-function getCurrentAiState(store: Store<RootState>): BasicIntellectState {
+function getCurrentAiState(store: Store<RootReducerState>): BasicIntellectState {
   const rootState = store.getState()
   const present = rootState.undoable.present
   if (!('aiState' in present)) {
@@ -194,6 +194,6 @@ function getCurrentAiState(store: Store<RootState>): BasicIntellectState {
   return present.aiState
 }
 
-function getCurrentGameState(store: Store<RootState>): GameState {
+function getCurrentGameState(store: Store<RootReducerState>): GameState {
   return store.getState().undoable.present.gameState
 }

@@ -11,7 +11,7 @@ import type { GameState } from '../lib/model/gameStateModel'
 
 export const DEFAULT_UNDO_LIMIT = 500
 
-type RootReducerState = {
+export type RootReducerState = {
   undoable: StateWithHistory<UndoableCombinedState>
   events: EventsState
   settings: SettingsState
@@ -24,8 +24,6 @@ type UndoableCombinedState = {
   gameState: GameState
   aiState: BasicIntellectState
 }
-
-export type RootState = RootReducerState
 
 export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reducer<RootReducerState> {
   // 1. Start by creating a combined reducer having only one `gameState` reducer.

@@ -15,7 +15,7 @@ import {
   sackAgents,
 } from './slices/gameStateSlice'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
-import type { RootState } from './rootReducer'
+import type { RootReducerState } from './rootReducer'
 import { fmtAgentCount } from '../lib/model_utils/formatUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
@@ -32,7 +32,7 @@ function hasType(obj: unknown): obj is { type: string } {
 
 // eslint disabled per https://redux.js.org/usage/usage-with-typescript#type-checking-middleware
 // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-export function eventsMiddleware(): Middleware<{}, RootState> {
+export function eventsMiddleware(): Middleware<{}, RootReducerState> {
   // eslint-disable-next-line unicorn/consistent-function-scoping
   return (store) => (next) => (action) => {
     // Get the state before the action for comparison

@@ -9,7 +9,7 @@ import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { wipeStorage } from '../../redux/persist'
-import type { RootState } from '../../redux/rootReducer'
+import type { RootReducerState } from '../../redux/rootReducer'
 import { resetAiState } from '../../redux/slices/aiStateSlice'
 import { truncateEventsTo } from '../../redux/slices/eventsSlice'
 import { reset } from '../../redux/slices/gameStateSlice'
@@ -33,16 +33,16 @@ function handleWipeStorageClick(): void {
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
-  const undoable = useAppSelector((state: RootState) => state.undoable)
+  const undoable = useAppSelector((state: RootReducerState) => state.undoable)
   const canUndo = undoable.past.length > 0
   const canRedo = undoable.future.length > 0
-  const currentTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.turn)
+  const currentTurn = useAppSelector((state: RootReducerState) => state.undoable.present.gameState.turn)
   const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
   const nextEntryTurn = canRedo ? undoable.future.at(0)?.gameState.turn : undefined
   const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
   const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
-  const actionsThisTurn = useAppSelector((state: RootState) => state.undoable.present.gameState.actionsCount)
-  const availableUndoSteps = useAppSelector((state: RootState) => state.undoable.past.length)
+  const actionsThisTurn = useAppSelector((state: RootReducerState) => state.undoable.present.gameState.actionsCount)
+  const availableUndoSteps = useAppSelector((state: RootReducerState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
   const theme = useTheme()
   const labelSx: SxProps = { backgroundColor: theme.palette.background.cardContent }

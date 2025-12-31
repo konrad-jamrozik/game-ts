@@ -1,13 +1,13 @@
 import { configureStore, type Store } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
-import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootState } from './rootReducer'
+import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootReducerState } from './rootReducer'
 import { eventsMiddleware } from './eventsMiddleware'
 import { loadPersistedState, saveStateToDexie } from './persist'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
 
 export type StoreOptions = { undoLimit?: number }
 
-let _store: Store<RootState> | undefined
+let _store: Store<RootReducerState> | undefined
 let _initStoreCalled = false
 
 // Must be called before getStore(). Call once at app startup.
@@ -19,7 +19,7 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 
   const undoLimit = options?.undoLimit ?? DEFAULT_UNDO_LIMIT
   const rootReducer = createRootReducer(undoLimit)
-  const maybePersistedState: RootState | undefined = await loadPersistedState()
+  const maybePersistedState: RootReducerState | undefined = await loadPersistedState()
 
   _store = configureStore({
     reducer: rootReducer,
@@ -54,9 +54,9 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   })
 }
 
-export function getStore(): Store<RootState> {
+export function getStore(): Store<RootReducerState> {
   assertDefined(_store, 'Store not initialized. Call initStore() first.')
   return _store
 }
 
-export type AppDispatch = Store<RootState>['dispatch']
+export type AppDispatch = Store<RootReducerState>['dispatch']
