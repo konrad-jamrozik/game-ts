@@ -8,7 +8,7 @@ import { assertDefined } from '../lib/primitives/assertPrimitives'
 export type StoreOptions = { undoLimit?: number }
 
 let _store: Store<RootState> | undefined
-let _initializing = false
+let _initializationStarted = false
 
 // Must be called before getStore(). Call once at app startup.
 export async function initStore(options?: StoreOptions): Promise<void> {
@@ -16,10 +16,10 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   if (_store) {
     throw new Error('Store already initialized')
   }
-  if (_initializing) {
+  if (_initializationStarted) {
     throw new Error('Store initialization already in progress')
   }
-  _initializing = true
+  _initializationStarted = true
 
   const undoLimit = options?.undoLimit ?? DEFAULT_UNDO_LIMIT
   const rootReducer = createRootReducer(undoLimit)
@@ -30,8 +30,6 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(eventsMiddleware()),
     ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
   })
-  // eslint-disable-next-line require-atomic-updates -- Safe: _initializing lock prevents concurrent calls
-  _store = store
 
   // If no persisted state was loaded, add a "New game started" event
   if (!maybePersistedState) {
@@ -58,6 +56,9 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   store.subscribe(() => {
     debouncedSave()
   })
+
+  // eslint-disable-next-line require-atomic-updates -- Safe: _initializationStarted lock prevents concurrent calls
+  _store = store
 }
 
 export function getStore(): Store<RootState> {
