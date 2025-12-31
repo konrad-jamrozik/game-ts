@@ -4,15 +4,15 @@ overview: Fix a race condition where agents assigned to an investigation that co
 todos:
   - id: fix-update-in-transit
     content: Modify updateInTransitAgents to check investigation state before transitioning
-    status: pending
+    status: completed
   - id: add-investigation-validation
     content: Add validateInvestigationAssignment to validateAgentInvariants.ts
-    status: pending
+    status: completed
     dependencies:
       - fix-update-in-transit
   - id: run-qcheck
     content: Run qcheck to verify the fix compiles and passes linting
-    status: pending
+    status: completed
     dependencies:
       - add-investigation-validation
 ---

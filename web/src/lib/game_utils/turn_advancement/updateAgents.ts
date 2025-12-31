@@ -81,8 +81,15 @@ export function updateInTransitAgents(state: GameState): void {
       } else if (agent.assignment === 'Recovery') {
         agent.state = 'Recovering'
       } else if (typeof agent.assignment === 'string' && agent.assignment.startsWith('investigation-')) {
-        // Agents assigned to lead investigation transition to OnAssignment
-        agent.state = 'OnAssignment'
+        // Check if investigation is still active before transitioning
+        const investigation = state.leadInvestigations[agent.assignment]
+        if (investigation?.state === 'Active') {
+          agent.state = 'OnAssignment'
+        } else {
+          // Investigation completed or abandoned while agent was in transit
+          agent.state = 'Available'
+          agent.assignment = 'Standby'
+        }
       } else {
         agent.state = 'Available'
       }
