@@ -29,7 +29,7 @@ describe('Basic Intellect AI Player', () => {
     log.syncAll(logSettings)
   })
 
-  test('AI player wins game within 100 turns with favorable conditions', () => {
+  test('AI player wins game within 250 turns while cheating', () => {
     const store = getStore()
     // Arrange: Set up standard initial game state with 100,000 money
     const initialState = bldInitialState()
@@ -45,7 +45,7 @@ describe('Basic Intellect AI Player', () => {
     rand.set('enemy_attack_roll', 0)
 
     // Act: Delegate up to 100 turns to basic intellect AI player
-    delegateTurnsToAIPlayer('basic', 300)
+    delegateTurnsToAIPlayer('basic', 250)
 
     // Assert: Verify game ended in victory
     const finalState = store.getState().undoable.present.gameState

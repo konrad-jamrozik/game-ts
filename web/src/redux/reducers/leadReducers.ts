@@ -3,6 +3,7 @@ import type { AgentId, LeadId, LeadInvestigationId } from '../../lib/model/model
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
+import { log } from '../../lib/primitives/logger'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
@@ -40,6 +41,11 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
         agent.assignment = investigationId
         agent.state = 'InTransit'
       }
+    }
+
+    // Log when "Peace on Earth" investigation starts
+    if (leadId === 'lead-peace-on-earth') {
+      log.info('general', 'Peace on Earth investigation started')
     }
   },
 )

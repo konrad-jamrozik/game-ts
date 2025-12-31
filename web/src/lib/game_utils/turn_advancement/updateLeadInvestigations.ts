@@ -128,6 +128,11 @@ function completeInvestigation(
   // Check if this is a terminate-cult lead completion and terminate the faction if so
   maybeTerminateFactionFromLeadId(state, investigation.leadId)
 
+  // Log when "Peace on Earth" investigation completes
+  if (investigation.leadId === 'lead-peace-on-earth') {
+    log.info('general', 'Peace on Earth investigation completed')
+  }
+
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
   investigation.agentIds = []
