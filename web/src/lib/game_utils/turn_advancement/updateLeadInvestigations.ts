@@ -149,12 +149,34 @@ function completeInvestigation(
 /**
  * Terminates a faction by setting its operation counter to Infinity and suppression to 0.
  * The terminated state itself is derived from lead investigation counts, so no flag is set.
- * Existing missions and investigations continue naturally.
+ * Abandons all active investigations for this faction's leads and returns agents to InTransit/Standby.
  */
 export function terminateFaction(state: GameState, factionId: FactionId): void {
   const faction = getFactionById(state, factionId)
   faction.turnsUntilNextOperation = Infinity
   faction.suppressionTurns = 0
+
+  // Abandon all active investigations for this faction's leads
+  const facId = faction.factionDataId.replace('factiondata-', '')
+  for (const investigation of Object.values(state.leadInvestigations)) {
+    if (investigation.state !== 'Active') {
+      continue
+    }
+    // KJA3 is this case ven possible?
+    if (!investigation.leadId.startsWith(`lead-${facId}-`)) {
+      continue
+    }
+    // Abandon investigation and return agents to Standby/InTransit
+    const agentIdsToRemove = [...investigation.agentIds]
+    removeAgentsFromInvestigation(state, investigation, agentIdsToRemove)
+    for (const agentId of agentIdsToRemove) {
+      const agent = state.agents.find((a) => a.id === agentId)
+      if (agent !== undefined) {
+        agent.assignment = 'Standby'
+        agent.state = 'InTransit'
+      }
+    }
+  }
 }
 
 /**
