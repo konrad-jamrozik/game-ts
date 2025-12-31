@@ -98,15 +98,95 @@ do {
 } while (!battleEnded)
 ```
 
-## Profiling with Browser DevTools (Flamegraphs)
+## Profiling with Flamegraphs
 
-Browser DevTools provide powerful profiling capabilities including flamegraph visualization. Here's how to use them with Vitest tests:
+### Important: Vitest Runs Tests in Web Workers
 
-### Option 1: Using Vitest Browser Mode
+**Warning**: If you try to profile Vitest tests using browser DevTools (via `vitest --ui`), you will NOT see your JavaScript functions in the flamegraph. This is because **Vitest runs tests in Web Workers**, not on the main thread. The main thread only handles the UI, so you'll see browser rendering activities (Paint, Recalculate style, etc.) instead of your actual test code.
 
-Vitest supports running tests directly in a browser. This gives you access to browser DevTools.
+**Recommended approach**: Use Node.js CPU profiling (Option 1 below) to get accurate flamegraphs of your JavaScript code.
 
-1. **Install browser provider** (if not already installed):
+### Option 1: Node.js CPU Profiling (Recommended)
+
+This is the most reliable way to profile JavaScript execution. It bypasses browser complexity entirely.
+
+1. **Run the test with CPU profiling enabled**:
+
+   ```powershell
+   cd web
+   node --cpu-prof --cpu-prof-interval=100 node_modules/vitest/vitest.mjs run test/ai/basicIntellect.test.ts
+   ```
+
+   This creates a `.cpuprofile` file (e.g., `CPU.20241231.123456.12345.0.001.cpuprofile`) in the `web` folder.
+
+2. **Load the profile in Chrome DevTools**:
+   - Open Chrome and navigate to any page (even `about:blank`)
+   - Open DevTools (F12 or Ctrl+Shift+I)
+   - Go to the **Performance** tab
+   - Click the **↑ Upload** button (or drag-drop the `.cpuprofile` file)
+
+3. **Analyze the flamegraph**:
+   - You'll see your actual function names: `evaluateTurn`, `evaluateBattle`, `effectiveSkill`, etc.
+   - Use Bottom-Up view to see which functions took the most time
+   - Use Call Tree view to see the call hierarchy
+
+**Tip**: The `--cpu-prof-interval=100` flag sets sampling to 100μs for more detailed profiles. Default is 1000μs (1ms).
+
+### Option 2: Standalone Profiling Script
+
+For more control, create a script that runs the AI directly without Vitest overhead:
+
+1. **Create `web/scripts/profile-ai.ts`**:
+
+   ```typescript
+   import { initStore, getStore } from '../src/redux/store'
+   import { reset } from '../src/redux/slices/gameStateSlice'
+   import { clearEvents } from '../src/redux/slices/eventsSlice'
+   import { bldInitialState } from '../src/lib/factories/gameStateFactory'
+   import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnToAIPlayer'
+   import { rand } from '../src/lib/primitives/rand'
+
+   async function main() {
+     await initStore({ undoLimit: 0, enablePersistence: false })
+     const store = getStore()
+
+     const customState = { ...bldInitialState(), money: 100_000 }
+     store.dispatch(reset({ customState }))
+     store.dispatch(clearEvents())
+
+     // Configure for deterministic success
+     rand.set('lead-investigation', 1)
+     rand.set('agent_attack_roll', 1)
+     rand.set('enemy_attack_roll', 0)
+
+     console.log('Starting AI turns...')
+     const startTime = performance.now()
+     delegateTurnsToAIPlayer('basic', 100)
+     const endTime = performance.now()
+     console.log(`Done! Total time: ${(endTime - startTime).toFixed(0)}ms`)
+   }
+
+   main()
+   ```
+
+2. **Run with CPU profiling**:
+
+   ```powershell
+   cd web
+   npx tsx --cpu-prof scripts/profile-ai.ts
+   ```
+
+3. **Load the generated `.cpuprofile` file** in Chrome DevTools as described above.
+
+### Option 3: Browser Profiling (Alternative Methods)
+
+If you need browser-based profiling, here are approaches that work around the Web Worker issue:
+
+#### Option 3a: Vitest Browser Mode
+
+Vitest can run tests directly in a browser context (not in a worker):
+
+1. **Install browser provider**:
 
    ```bash
    npm install -D @vitest/browser playwright
@@ -119,53 +199,23 @@ Vitest supports running tests directly in a browser. This gives you access to br
 
    export default defineConfig({
      test: {
-       // Use browser mode for profiling
        browser: {
          enabled: true,
-         name: 'chromium', // or 'firefox', 'webkit'
+         name: 'chromium',
          provider: 'playwright',
-         headless: false, // Set to false to see the browser
+         headless: false,
        },
      },
    })
    ```
 
-3. **Run a specific test**:
+3. **Run the test**: `npx vitest --browser test/ai/basicIntellect.test.ts`
 
-   ```bash
-   npx vitest --browser test/ai/basicIntellect.test.ts
-   ```
+4. **Profile in the browser** using DevTools Performance tab.
 
-4. **Profile in the browser**:
-   - The browser window will open with Vitest UI
-   - Open DevTools (F12 or Ctrl+Shift+I)
-   - Go to the **Performance** tab
-   - Click **Record** (or Ctrl+E)
-   - Click the button to run your test in Vitest UI
-   - Click **Stop** after the test completes
-   - Analyze the flamegraph
+#### Option 3b: Standalone HTML Test Runner
 
-### Option 2: Using Vitest UI with Instrumented Code
-
-If browser mode setup is complex, you can run Vitest UI and manually profile:
-
-1. **Run Vitest UI**:
-
-   ```bash
-   npx vitest --ui
-   ```
-
-2. **Open the UI URL** in Chrome (usually `http://localhost:51204/__vitest__/`)
-
-3. **Open Chrome DevTools** → **Performance** tab
-
-4. **Start recording**, then run your test from the Vitest UI
-
-5. **Stop recording** and analyze the flamegraph
-
-### Option 3: Create a Standalone HTML Test Runner
-
-Create a minimal HTML page that runs the performance-critical code:
+Create a minimal HTML page that runs the performance-critical code directly on the main thread:
 
 1. **Create `web/test/perf/ai-perf-test.html`**:
 
@@ -247,9 +297,9 @@ Create a minimal HTML page that runs the performance-critical code:
 
 ### Reading the Flamegraph
 
-In Chrome DevTools Performance tab:
+In Chrome DevTools Performance tab after loading a `.cpuprofile`:
 
-1. **Bottom-Up view**: Shows which functions took the most total time
+1. **Bottom-Up view**: Shows which functions took the most total time (start here!)
 2. **Call Tree view**: Shows the call hierarchy with time breakdown
 3. **Flame Chart**: Visual representation where:
    - X-axis = time
@@ -264,23 +314,7 @@ In Chrome DevTools Performance tab:
 - Repeated patterns indicate loops or recursive calls
 - Look for functions like `evaluateBattle`, `effectiveSkill`, `selectNextBestReadyAgent`
 
-### Option 4: Node.js CPU Profiling
-
-For command-line profiling without a browser:
-
-```bash
-# Generate a CPU profile
-node --cpu-prof --cpu-prof-dir=./profiles npx vitest run test/ai/basicIntellect.test.ts
-
-# This creates a .cpuprofile file that can be loaded in Chrome DevTools
-```
-
-Load the `.cpuprofile` file:
-
-1. Open Chrome DevTools (even on a blank page)
-2. Go to **Performance** tab
-3. Click **Load profile** (or drag-drop the file)
-4. Analyze the flamegraph
+**Tip**: Use the **Filter** box to search for specific function names like `evaluate` or `Battle`.
 
 ## Optimization Suggestions
 
