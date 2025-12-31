@@ -13,6 +13,7 @@ import {
 export function validateAgentInvariants(agent: Agent, state: GameState): void {
   validateAgentLocalInvariants(agent, state)
   validateMissionAssignment(agent, state)
+  validateInvestigationAssignment(agent, state)
 }
 
 export function validateAgentLocalInvariants(agent: Agent, state?: GameState): void {
@@ -122,4 +123,25 @@ function validateMissionAssignment(agent: Agent, state: GameState): void {
   const missionId = agent.assignment
   const mission = state.missions.find((m) => m.id === missionId)
   assertDefined(mission, `Agent ${agent.id} is assigned to ${missionId}, but the mission does not exist`)
+}
+
+function validateInvestigationAssignment(agent: Agent, state: GameState): void {
+  if (!agent.assignment.startsWith('investigation-')) {
+    return
+  }
+  const investigationId = agent.assignment
+  const investigation = state.leadInvestigations[investigationId]
+  assertDefined(
+    investigation,
+    `Agent ${agent.id} is assigned to ${investigationId}, but the investigation does not exist`,
+  )
+
+  // If agent is OnAssignment to an investigation, the investigation must be Active
+  if (agent.state === 'OnAssignment') {
+    assertEqual(
+      investigation.state,
+      'Active',
+      `Agent ${agent.id} is OnAssignment to ${investigationId} but investigation state is ${investigation.state}`,
+    )
+  }
 }
