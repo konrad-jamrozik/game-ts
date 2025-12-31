@@ -47,8 +47,6 @@ sequenceDiagram
     Note over updateInTransitAgents: Sees assignment starts with 'investigation-'<br/>Blindly sets state = 'OnAssignment'<br/>BUG: Investigation is already Done!
 ```
 
-
-
 ### Example Scenario
 
 1. **Turn 50 (Player Action)**: Agent-043 assigned to investigation-021
@@ -57,14 +55,14 @@ sequenceDiagram
 - `agent.assignment = 'investigation-021'`
 - `investigation.agentIds = ['agent-043']`
 
-2. **Turn 50 to 51 (evaluateTurn, Step 7)**: `updateLeadInvestigations` runs
+1. **Turn 50 to 51 (evaluateTurn, Step 7)**: `updateLeadInvestigations` runs
 
 - Investigation-021 rolls success and completes
 - `investigatingAgents()` is called - but it only returns agents where `state === 'OnAssignment'`
 - Agent-043 has `state = 'InTransit'`, so it's **NOT found**
 - Investigation marked `Done`, `agentIds = []`, but agent-043's assignment is **NOT reset**
 
-3. **Turn 50 to 51 (evaluateTurn, Step 8)**: `updateInTransitAgents` runs
+1. **Turn 50 to 51 (evaluateTurn, Step 8)**: `updateInTransitAgents` runs
 
 - Agent-043 has `state = 'InTransit'` and `assignment = 'investigation-021'`
 - Code at line 83-85 sees assignment starts with `'investigation-'`
