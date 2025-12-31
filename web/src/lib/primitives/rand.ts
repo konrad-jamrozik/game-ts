@@ -7,7 +7,7 @@ import { assertDefined, assertGreaterThanOrEqual, assertInRange, assertLessThan 
 function newRand(): {
   readonly get: (label?: string) => number
   readonly set: (label: string, value: number) => void
-  readonly reset: () => void
+  readonly reset: (label?: string) => void
 } {
   const overrides = new Map<string, number>()
 
@@ -34,8 +34,12 @@ function newRand(): {
       overrides.set(label, adjustedValue)
     },
 
-    reset(): void {
-      overrides.clear()
+    reset(label?: string): void {
+      if (label !== undefined) {
+        overrides.delete(label)
+      } else {
+        overrides.clear()
+      }
     },
   } as const
 }

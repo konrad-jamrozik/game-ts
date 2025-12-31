@@ -102,7 +102,7 @@ function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigat
 function rollAndLogInvestigationResult(investigation: LeadInvestigation): { success: boolean; successChance: number } {
   const lead = getLeadById(investigation.leadId)
   const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
-  const rollResult = rollAgainstProbabilityQuantized(successChance)
+  const rollResult = rollAgainstProbabilityQuantized(successChance, 'lead-investigation')
   // const rollResultStr = fmtRollResultQuantized(rollResult)
   // console.log(`${investigation.id} result: ${rollResultStr}`)
   return { success: rollResult.success, successChance }

@@ -1,7 +1,9 @@
 import Button from '@mui/material/Button'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch } from '../redux/hooks'
+import { useAppDispatch, useAppSelector } from '../redux/hooks'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import {
@@ -14,10 +16,24 @@ import {
   debugAddEverything,
   debugTerminateRedDawn,
 } from '../redux/slices/gameStateSlice'
-import { toggleRevealAllFactionProfiles } from '../redux/slices/settingsSlice'
+import { setRollSuccessfulLeadInvestigations, toggleRevealAllFactionProfiles } from '../redux/slices/settingsSlice'
+import { rand } from '../lib/primitives/rand'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
+  const rollSuccessfulLeadInvestigations = useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations)
+
+  // Sync rand override with persisted Redux state. The Redux state persists across page refreshes
+  // (via IndexedDB), but rand overrides are in-memory only. This ensures that when the app loads
+  // and the checkbox was previously checked, the rand override is restored so lead investigations
+  // continue to succeed.
+  React.useEffect(() => {
+    if (rollSuccessfulLeadInvestigations) {
+      rand.set('lead-investigation', 1)
+    } else {
+      rand.reset('lead-investigation')
+    }
+  }, [rollSuccessfulLeadInvestigations])
 
   function handleSpawnMissions(): void {
     dispatch(debugSpawnMissions())
@@ -55,6 +71,10 @@ export function DebugCard(): React.JSX.Element {
     dispatch(debugTerminateRedDawn())
   }
 
+  function handleRollSuccessfulLeadInvestigationsChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setRollSuccessfulLeadInvestigations(event.target.checked))
+  }
+
   return (
     <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
@@ -82,6 +102,15 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleRevealAllFactionProfiles}>
           Reveal all faction profiles
         </Button>
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={rollSuccessfulLeadInvestigations}
+              onChange={handleRollSuccessfulLeadInvestigationsChange}
+            />
+          }
+          label="Roll successful lead investigations"
+        />
         <Button variant="contained" onClick={handleTerminateRedDawn}>
           Terminate Red Dawn
         </Button>

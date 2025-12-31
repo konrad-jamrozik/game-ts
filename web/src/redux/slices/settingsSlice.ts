@@ -3,11 +3,13 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 export type SettingsState = {
   areResetControlsExpanded: boolean
   revealAllFactionProfiles: boolean
+  rollSuccessfulLeadInvestigations: boolean
 }
 
 const initialState: SettingsState = {
   areResetControlsExpanded: true,
   revealAllFactionProfiles: false,
+  rollSuccessfulLeadInvestigations: false,
 }
 
 const settingsSlice = createSlice({
@@ -26,6 +28,12 @@ const settingsSlice = createSlice({
     setRevealAllFactionProfiles(state, action: PayloadAction<boolean>) {
       state.revealAllFactionProfiles = action.payload
     },
+    toggleRollSuccessfulLeadInvestigations(state) {
+      state.rollSuccessfulLeadInvestigations = !state.rollSuccessfulLeadInvestigations
+    },
+    setRollSuccessfulLeadInvestigations(state, action: PayloadAction<boolean>) {
+      state.rollSuccessfulLeadInvestigations = action.payload
+    },
   },
 })
 
@@ -34,5 +42,7 @@ export const {
   toggleResetControlsExpanded,
   toggleRevealAllFactionProfiles,
   setRevealAllFactionProfiles,
+  toggleRollSuccessfulLeadInvestigations,
+  setRollSuccessfulLeadInvestigations,
 } = settingsSlice.actions
 export default settingsSlice.reducer
