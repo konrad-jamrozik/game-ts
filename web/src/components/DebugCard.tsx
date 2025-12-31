@@ -21,6 +21,7 @@ import {
   setRollSuccessfulCombat,
   setRevealAllFactionProfiles,
   toggleLogCategory,
+  setAllLogCategories,
 } from '../redux/slices/settingsSlice'
 import { rand } from '../lib/primitives/rand'
 import { log } from '../lib/primitives/logger'
@@ -113,6 +114,12 @@ export function DebugCard(): React.JSX.Element {
     dispatch(toggleLogCategory(category))
   }
 
+  const allCategoriesEnabled = LOG_CATEGORY_LIST.every((category) => enabledLogCategories?.[category] === true)
+
+  function handleAllLogCategoriesChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setAllLogCategories(event.target.checked))
+  }
+
   return (
     <ExpandableCard id="debug" title="Debug" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={1}>
@@ -137,6 +144,9 @@ export function DebugCard(): React.JSX.Element {
         <Button variant="contained" onClick={handleSpawnMissions}>
           Spawn missions
         </Button>
+        <Button variant="contained" onClick={handleTerminateRedDawn}>
+          Terminate Red Dawn
+        </Button>
         <FormControlLabel
           control={<Checkbox checked={revealAllFactionProfiles} onChange={handleRevealAllFactionProfilesChange} />}
           label="Reveal all faction profiles"
@@ -154,11 +164,13 @@ export function DebugCard(): React.JSX.Element {
           control={<Checkbox checked={rollSuccessfulCombat} onChange={handleRollSuccessfulCombatChange} />}
           label="Roll successful combat"
         />
-        <Button variant="contained" onClick={handleTerminateRedDawn}>
-          Terminate Red Dawn
-        </Button>
+
         <Stack spacing={0.5} sx={{ marginTop: 2 }}>
           <div>Console Logging</div>
+          <FormControlLabel
+            control={<Checkbox checked={allCategoriesEnabled} onChange={handleAllLogCategoriesChange} size="small" />}
+            label="Everything"
+          />
           {LOG_CATEGORY_LIST.map((category) => (
             <FormControlLabel
               key={category}

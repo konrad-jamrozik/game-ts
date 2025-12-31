@@ -1,5 +1,5 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { LogCategory } from '../../lib/primitives/logCategories'
+import { LOG_CATEGORY_LIST, type LogCategory } from '../../lib/primitives/logCategories'
 
 export type SettingsState = {
   areResetControlsExpanded: boolean
@@ -54,6 +54,12 @@ const settingsSlice = createSlice({
       state.enabledLogCategories ??= {}
       state.enabledLogCategories[action.payload.category] = action.payload.enabled
     },
+    setAllLogCategories(state, action: PayloadAction<boolean>) {
+      state.enabledLogCategories ??= {}
+      for (const category of LOG_CATEGORY_LIST) {
+        state.enabledLogCategories[category] = action.payload
+      }
+    },
   },
 })
 
@@ -67,5 +73,6 @@ export const {
   setRollSuccessfulCombat,
   toggleLogCategory,
   setLogCategory,
+  setAllLogCategories,
 } = settingsSlice.actions
 export default settingsSlice.reducer
