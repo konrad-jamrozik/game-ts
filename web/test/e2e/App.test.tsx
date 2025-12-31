@@ -158,10 +158,12 @@ async function step4ClickCriminalOrganizationsLead(): Promise<void> {
  * - Verify the data grid in lead investigations card has a row containing "001 Criminal organizations"
  */
 async function step5ClickInvestigateLeadButton(): Promise<void> {
-  await userEvent.click(screen.getByRole('button', { name: /investigate lead/iu }))
+  await userEvent.click(screen.getByRole('button', { name: /investigate lead with.*agent/iu }))
 
   // Verify a new lead investigation appears in "Lead investigations"
-  expect(screen.getByText(/lead investigations/iu)).toBeInTheDocument()
+  // Use getAllByText since "lead investigations" appears in multiple places (checkbox label and card title)
+  const leadInvestigationElements = screen.getAllByText(/lead investigations/iu)
+  expect(leadInvestigationElements.length).toBeGreaterThan(0)
 
   // Verify the data grid in lead investigations card has a row containing "001 Criminal organizations"
   const gridRows = screen.getAllByRole('row')
