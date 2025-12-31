@@ -19,7 +19,7 @@ export function GameControls(): React.JSX.Element {
   function handleAdvanceTurn(): void {
     const currentTurn = gameState.turn
     const nextTurn = currentTurn + 1
-    log.info('player', `Advance to turn ${nextTurn}`)
+    log.info('game', `Advance to turn ${nextTurn}`)
     dispatch(advanceTurn())
   }
 

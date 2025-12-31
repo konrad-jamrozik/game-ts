@@ -8,6 +8,7 @@ export const LOG_CATEGORIES = {
   'turn-advancement': { badge: '⏭️ Turn', color: 'hsl(262, 47%, 42%)' },
   persistence: { badge: '💾 Persist', color: 'hsl(199, 18%, 46%)' },
   player: { badge: '⚡ Player', color: 'hsl(14, 73.40%, 31.00%)' },
+  game: { badge: '🌍 Game', color: 'hsl(210, 99.00%, 34.30%)' },
   general: { badge: '📝 Log', color: '#hsl(0, 0%, 62%)' },
 } as const
 
@@ -27,5 +28,6 @@ export const LOG_CATEGORY_LIST: LogCategory[] = [
   'turn-advancement',
   'persistence',
   'player',
+  'game',
   'general',
 ]
