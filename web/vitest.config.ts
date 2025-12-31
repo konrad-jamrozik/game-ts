@@ -58,6 +58,16 @@ export default defineConfig({
           },
         },
       },
+      {
+        test: {
+          name: 'ai',
+          include: ['test/ai/*.test*'],
+          environment: 'node',
+          globals: true,
+          setupFiles: ['./test/utils/setupAllTests.ts'],
+          testTimeout: 60_000, // Longer timeout for AI tests
+        },
+      },
     ],
   },
 })

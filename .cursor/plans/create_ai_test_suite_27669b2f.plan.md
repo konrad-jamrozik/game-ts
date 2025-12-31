@@ -4,10 +4,10 @@ overview: ""
 todos:
   - id: vitest-config
     content: Add AI test project configuration to vitest.config.ts
-    status: pending
+    status: completed
   - id: create-test
     content: Create web/test/ai/basicIntellect.test.ts with the AI test
-    status: pending
+    status: completed
     dependencies:
       - vitest-config
 ---
