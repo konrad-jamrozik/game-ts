@@ -6,7 +6,10 @@ KJA backlog:
 
 - Debug why AI apparently refuses to deploy to HQ, just gets stuck on stronghold.
 
-- Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more detials.
+- Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
+
+- Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
+  - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
 
 - Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
@@ -15,6 +18,7 @@ KJA backlog:
 
 - When persisting undoable state, persist player actions only for the current turn,
   - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
+- Better turn reset controls, working well with the new undo/persistence setup.
 
 - Add "debug log" checkboxes to the debug card. Which control which console.log statements are emitted.
 
