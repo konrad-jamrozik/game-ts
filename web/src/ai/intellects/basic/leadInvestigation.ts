@@ -5,7 +5,7 @@ import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
-import { pickAtRandom, unassignAgentsFromTraining, calculateAgentThreatAssessment } from './utils'
+import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
@@ -210,7 +210,7 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
       if (feasibility.canDeploy) {
         // Calculate agent combat rating from selected agents
         const agentCombatRating = feasibility.selectedAgents.reduce(
-          (sum, agent) => sum + calculateAgentThreatAssessment(agent),
+          (sum, agent) => sum + calculateAgentCombatRating(agent),
           0,
         )
 
@@ -226,19 +226,10 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
         // Only need to find one deployable mission per lead
         break
       } else if (feasibility.reason === 'insufficientCombatRating') {
-        // Extract agent combat rating from details string
-        // Format: "Gathered X agents with total combat rating of Y against required Z"
-        const detailsRegex = /total combat rating of (?<agentRating>[\d.]+) against required (?<requiredRating>[\d.]+)/u
-        const detailsMatch = detailsRegex.exec(feasibility.details)
-        const agentRatingStr = detailsMatch?.groups?.['agentRating']
-        const agentCombatRating =
-          agentRatingStr !== undefined && agentRatingStr !== '' ? Number.parseFloat(agentRatingStr) : 0
-
         console.log(
           `selectLeadToInvestigate: Passed on lead "${lead.id}" due to insufficient combat rating. ` +
-            `Mission combat rating: ${missionCombatRating.toFixed(2)}, ` +
-            `Agent combat rating: ${agentCombatRating.toFixed(2)}, ` +
-            `Min. target combat rating: ${targetCombatRating.toFixed(2)}`,
+            `Infeasibility reason: ${feasibility.reason}` +
+            `Infeasibility details: ${feasibility.details}`,
         )
       }
     }

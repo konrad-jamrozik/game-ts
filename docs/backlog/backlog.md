@@ -16,6 +16,10 @@ KJA backlog:
      Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
      Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
 
+- AI assigns only 1 agent to non-repeatable leads.
+
+- Add pagination to agents data grid
+
 - When persisting undoable state, persist player actions only for the current turn,
   - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
 - Better turn reset controls, working well with the new undo/persistence setup.

@@ -58,18 +58,18 @@ export function pickAtRandomFromLowestExhaustion(agents: Agent[]): Agent {
   return pickAtRandom(agentsWithMinExhaustion)
 }
 
-export function calculateAgentThreatAssessment(agent: Agent): number {
+export function calculateAgentCombatRating(agent: Agent): number {
   const hpMultiplier = toF(agent.hitPoints) / 100
   const damageMultiplier = (agent.weapon.damage * 2) / 100
   const multiplier = 1 + hpMultiplier + damageMultiplier
   const agentThreat = f6mult(agent.skill, multiplier)
 
   // Normalize by dividing by initial agent combat rating (same as mission combat rating)
-  const initialAgentThreat = calculateInitialAgentThreatAssessment()
+  const initialAgentThreat = calculateInitialAgentCombatRating()
   return agentThreat / initialAgentThreat
 }
 
-function calculateInitialAgentThreatAssessment(): number {
+function calculateInitialAgentCombatRating(): number {
   const hpMultiplier = toF(initialAgent.hitPoints) / 100
   const damageMultiplier = (initialAgent.weapon.damage * 2) / 100
   const multiplier = 1 + hpMultiplier + damageMultiplier
