@@ -106,77 +106,51 @@ do {
 
 **Recommended approach**: Use Node.js CPU profiling (Option 1 below) to get accurate flamegraphs of your JavaScript code.
 
-### Option 1: Node.js CPU Profiling (Recommended)
+### Option 1: Standalone Script with tsx (Recommended)
 
-This is the most reliable way to profile JavaScript execution. It bypasses browser complexity entirely.
+This is the most reliable way to profile JavaScript execution. It runs the AI directly without Vitest (which uses workers that complicate profiling).
 
-1. **Run the test with CPU profiling enabled**:
+1. **Run the profiling script**:
 
    ```powershell
    cd web
-   node --cpu-prof --cpu-prof-interval=100 node_modules/vitest/vitest.mjs run test/ai/basicIntellect.test.ts
+   npx tsx --cpu-prof scripts/profileAi.ts
    ```
 
-   This creates a `.cpuprofile` file (e.g., `CPU.20241231.123456.12345.0.001.cpuprofile`) in the `web` folder.
+   This creates **two** `.cpuprofile` files in the `web` folder, e.g.:
+   - `CPU.20251231.014747.3076.0.001.cpuprofile`
+   - `CPU.20251231.014747.3076.1.002.cpuprofile`
+
+   Either file can be used for analysis (they capture the same execution).
 
 2. **Load the profile in Chrome DevTools**:
    - Open Chrome and navigate to any page (even `about:blank`)
    - Open DevTools (F12 or Ctrl+Shift+I)
    - Go to the **Performance** tab
-   - Click the **↑ Upload** button (or drag-drop the `.cpuprofile` file)
+   - Click the **↑ Upload** button (or drag-drop one of the `.cpuprofile` files)
 
 3. **Analyze the flamegraph**:
    - You'll see your actual function names: `evaluateTurn`, `evaluateBattle`, `effectiveSkill`, etc.
-   - Use Bottom-Up view to see which functions took the most time
-   - Use Call Tree view to see the call hierarchy
+   - Use **Bottom-Up** view to see which functions took the most time
+   - Use **Call Tree** view to see the call hierarchy
+   - Use the **Filter** box to search for specific functions
 
-**Tip**: The `--cpu-prof-interval=100` flag sets sampling to 100μs for more detailed profiles. Default is 1000μs (1ms).
+**Note**: The script at `web/scripts/profileAi.ts` runs 200 turns by default. Edit `TURNS_TO_PLAY` to adjust.
 
-### Option 2: Standalone Profiling Script
+### About the Profiling Script
 
-For more control, use the script that runs the AI directly without Vitest overhead.
+The script `web/scripts/profileAi.ts` does the following:
 
-The script already exists at `web/scripts/profileAi.ts`. Here's how it works:
+1. Initializes the Redux store with no undo history (for speed)
+2. Sets up initial game state with 100,000 money (to enable lots of hiring/upgrades)
+3. Configures `rand` for deterministic success (investigations and combat always succeed)
+4. Runs the AI player for N turns (default: 200)
+5. Prints timing statistics
 
-   ```typescript
-   import { initStore, getStore } from '../src/redux/store'
-   import { reset } from '../src/redux/slices/gameStateSlice'
-   import { clearEvents } from '../src/redux/slices/eventsSlice'
-   import { bldInitialState } from '../src/lib/factories/gameStateFactory'
-   import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnToAIPlayer'
-   import { rand } from '../src/lib/primitives/rand'
-
-   async function main() {
-     await initStore({ undoLimit: 0, enablePersistence: false })
-     const store = getStore()
-
-     const customState = { ...bldInitialState(), money: 100_000 }
-     store.dispatch(reset({ customState }))
-     store.dispatch(clearEvents())
-
-     // Configure for deterministic success
-     rand.set('lead-investigation', 1)
-     rand.set('agent_attack_roll', 1)
-     rand.set('enemy_attack_roll', 0)
-
-     console.log('Starting AI turns...')
-     const startTime = performance.now()
-     delegateTurnsToAIPlayer('basic', 100)
-     const endTime = performance.now()
-     console.log(`Done! Total time: ${(endTime - startTime).toFixed(0)}ms`)
-   }
-
-   main()
-   ```
-
-**Run with CPU profiling**:
-
-```powershell
-cd web
-npx tsx --cpu-prof scripts/profileAi.ts
-```
-
-Load the generated `.cpuprofile` file in Chrome DevTools as described in Option 1.
+You can edit the script to adjust:
+- `TURNS_TO_PLAY` - number of turns to simulate
+- `money` - starting money amount
+- `rand.set()` calls - to test different RNG scenarios
 
 ### Option 3: Browser Profiling (Alternative Methods)
 

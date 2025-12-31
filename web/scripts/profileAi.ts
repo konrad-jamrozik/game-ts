@@ -1,0 +1,47 @@
+/**
+ * Standalone AI profiling script.
+ *
+ * This script runs the AI directly without Vitest, enabling accurate CPU profiling.
+ *
+ * Usage:
+ *   cd web
+ *   npx tsx --cpu-prof scripts/profileAi.ts
+ *
+ * Then load the generated .cpuprofile file in Chrome DevTools → Performance tab.
+ */
+import { initStore, getStore } from '../src/redux/store'
+import { reset } from '../src/redux/slices/gameStateSlice'
+import { clearEvents } from '../src/redux/slices/eventsSlice'
+import { bldInitialState } from '../src/lib/factories/gameStateFactory'
+import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnToAIPlayer'
+import { rand } from '../src/lib/primitives/rand'
+
+const TURNS_TO_PLAY = 200
+
+console.log('Initializing store...')
+await initStore({ undoLimit: 0, enablePersistence: false })
+const store = getStore()
+
+console.log('Setting up game state with 100,000 money...')
+const customState = { ...bldInitialState(), money: 100_000 }
+store.dispatch(reset({ customState }))
+store.dispatch(clearEvents())
+
+// Configure for deterministic success (same as the test)
+rand.set('lead-investigation', 1)
+rand.set('agent_attack_roll', 1)
+rand.set('enemy_attack_roll', 0)
+
+console.log(`Starting AI for ${TURNS_TO_PLAY} turns...`)
+const startTime = performance.now()
+delegateTurnsToAIPlayer('basic', TURNS_TO_PLAY)
+const endTime = performance.now()
+
+const totalMs = endTime - startTime
+const avgMs = totalMs / TURNS_TO_PLAY
+
+console.log('========================================')
+console.log(`Done! Total time: ${totalMs.toFixed(0)}ms`)
+console.log(`Average per turn: ${avgMs.toFixed(1)}ms`)
+console.log(`Final turn: ${store.getState().undoable.present.gameState.turn}`)
+console.log('========================================')
