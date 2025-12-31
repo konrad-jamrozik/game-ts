@@ -17,9 +17,6 @@ export function GameControls(): React.JSX.Element {
   const gameState = useAppSelector((state) => state.undoable.present.gameState)
 
   function handleAdvanceTurn(): void {
-    const currentTurn = gameState.turn
-    const nextTurn = currentTurn + 1
-    log.info('game', `Advance to turn ${nextTurn}`)
     dispatch(advanceTurn())
   }
 

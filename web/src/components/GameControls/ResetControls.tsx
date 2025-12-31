@@ -49,7 +49,6 @@ export function ResetControls(): React.JSX.Element {
   const labelSx: SxProps = { backgroundColor: theme.palette.background.cardContent }
 
   function handleResetGame(event?: React.MouseEvent<HTMLButtonElement>): void {
-    log.info('game', 'Reset to turn 1')
     const useDebug = Boolean(event && (event.ctrlKey || event.metaKey))
     dispatch(reset(useDebug ? { debug: true } : undefined))
     dispatch(resetAiState())

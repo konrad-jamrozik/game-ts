@@ -7,6 +7,8 @@ import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnToAIPlayer'
 import { isGameWon } from '../../src/lib/game_utils/gameStateChecks'
 import { rand } from '../../src/lib/primitives/rand'
+import { log } from '../../src/lib/primitives/logger'
+import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
 
 describe('Basic Intellect AI Player', () => {
   // Store is initialized by setupAITests.ts with undoLimit: 0
@@ -19,6 +21,12 @@ describe('Basic Intellect AI Player', () => {
     store.dispatch(clearEvents())
     // Reset rand overrides
     rand.reset()
+    // Disable all logs except "game" category
+    const logSettings: Partial<Record<string, boolean>> = {}
+    for (const category of LOG_CATEGORY_LIST) {
+      logSettings[category] = category === 'game'
+    }
+    log.syncAll(logSettings)
   })
 
   test('AI player wins game within 100 turns with favorable conditions', () => {
