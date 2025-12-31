@@ -4,7 +4,7 @@ overview: Fix the regex bug in `isFactionForLeadTerminated` that fails to correc
 todos:
   - id: fix-regex
     content: Fix isFactionForLeadTerminated to use startsWith instead of greedy regex
-    status: pending
+    status: completed
 ---
 
 # Fix Lead Archival Bug for Terminated Factions
@@ -65,3 +65,13 @@ This approach:
 4. Returns the termination status if a match is found
 
 This matches the pattern used in `validateTerminatedFactionLeads` and `terminateFaction`, ensuring consistency across the codebase.
+
+## Verification
+
+Run the AI tests to verify the fix works:
+
+```powershell
+npm run test:ai
+```
+
+The AI tests exercise faction termination scenarios and will catch the lead archival validation failure if the bug persists.

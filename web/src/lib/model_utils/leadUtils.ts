@@ -26,21 +26,15 @@ export function isFactionForLeadTerminated(
   factions: Faction[],
   leadInvestigationCounts: Record<string, number>,
 ): boolean {
-  // Extract faction ID from lead ID (pattern: lead-{facId}-...)
-  // For example: 'lead-red-dawn-profile' -> 'red-dawn'
-  const leadIdMatch = /^lead-(?<facId>.+)-/u.exec(lead.id)
-  if (leadIdMatch === null) {
-    return false
+  // Find the faction whose leads include this lead
+  // Lead IDs follow pattern: lead-{facId}-{leadName}
+  for (const faction of factions) {
+    const facId = faction.factionDataId.replace('factiondata-', '')
+    if (lead.id.startsWith(`lead-${facId}-`)) {
+      return isFactionTerminated(faction, leadInvestigationCounts)
+    }
   }
-  const facId = leadIdMatch[1]
-
-  // Find faction by matching factionDataId (e.g., 'factiondata-red-dawn' matches 'red-dawn')
-  const faction = factions.find((f) => f.factionDataId === `factiondata-${facId}`)
-  if (faction === undefined) {
-    return false
-  }
-
-  return isFactionTerminated(faction, leadInvestigationCounts)
+  return false
 }
 
 export type NegatedDepStatus = 'active' | 'inactive' | 'archived'
