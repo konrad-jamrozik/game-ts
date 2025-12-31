@@ -4,7 +4,7 @@
 {
   // Applicability of this config.
   // --------------------
-  "include": ["src", "test"],
+  "include": ["src", "test", "scripts/profileAi.ts"],
   "exclude": ["test/utils/unusedNodeTestUtils.ts"],
 
   "extends": "./tsconfig.json",
