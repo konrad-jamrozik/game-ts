@@ -1,4 +1,12 @@
-<!-- daf7892a-f903-43b7-9520-10a23256635e 1aa9a5bf-cb79-4916-9242-7b7bfd6b7484 -->
+---
+name: Add 3D Globe to Game
+overview: ""
+todos:
+  - id: b0aeabad-326d-4b5e-a128-438393f603ae
+    content: Add Globe component to App.tsx layout
+    status: pending
+---
+
 # Add 3D Globe to Game
 
 ## Library Selection
@@ -106,14 +114,3 @@ Add to `web/package.json`:
 - Show mission deployment paths as arcs
 - Heat maps for faction activity
 - Time-based visualization of mission history
-
-### To-dos
-
-- [ ] Add location data (lat/lng) to Mission, Lead, and MissionSite types in model.ts
-- [ ] Add sample coordinates to missions and leads collections
-- [ ] Install react-globe-gl and three dependencies
-- [ ] Create Globe.tsx component with react-globe-gl integration
-- [ ] Style globe component to match game theme (dark mode)
-- [ ] Connect Globe component to Redux store to read missions/leads
-- [ ] Implement marker click handlers and selection logic
-- [ ] Add Globe component to App.tsx layout
