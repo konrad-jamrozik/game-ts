@@ -3,7 +3,8 @@ import Stack from '@mui/material/Stack'
 import { Fragment, useEffect } from 'react'
 import { runAppInit } from './utils/runAppInit'
 import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
-import { DebugCard } from './DebugCard'
+import { DebugActionsCard } from './DebugActionsCard'
+import { DebugSettingsCard } from './DebugSettingsCard'
 import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
@@ -78,7 +79,8 @@ function App(): React.JSX.Element {
           <AIPlayerSection />
           <PlayerActions />
           <EventLog />
-          <DebugCard />
+          <DebugActionsCard />
+          <DebugSettingsCard />
         </Stack>
       </Grid>
       <Grid>

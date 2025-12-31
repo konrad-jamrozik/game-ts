@@ -25,6 +25,7 @@ import {
   type ValidationResult,
 } from '../lib/model_utils/validatePlayerActions'
 import { assertTrue } from '../lib/primitives/assertPrimitives'
+import { log } from '../lib/primitives/logger'
 import type { GameState } from '../lib/model/gameStateModel'
 import type { AppDispatch } from './store'
 
@@ -33,7 +34,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
 
   const api: PlayerActionsAPI = {
     hireAgent(gameState: GameState): ActionResult {
-      console.log('⚡ Player action: hire agent')
+      log.info('player', 'hire agent')
       const validation = validateHireAgent(gameState)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -42,7 +43,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     sackAgents(gameState: GameState, agentIds: AgentId[]): ActionResult {
-      console.log('⚡ Player action: sack agents. Agent IDs:', agentIds)
+      log.info('player', 'sack agents. Agent IDs:', agentIds)
       const validation = validateSackAgents(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -51,7 +52,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     assignAgentsToContracting(gameState: GameState, agentIds: AgentId[]): ActionResult {
-      console.log('⚡ Player action: assign agents to contracting. Agent IDs:', agentIds)
+      log.info('player', 'assign agents to contracting. Agent IDs:', agentIds)
       const validation = validateAssignToContracting(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -60,7 +61,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     assignAgentsToTraining(gameState: GameState, agentIds: AgentId[]): ActionResult {
-      console.log('⚡ Player action: assign agents to training. Agent IDs:', agentIds)
+      log.info('player', 'assign agents to training. Agent IDs:', agentIds)
       const validation = validateAssignToTraining(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -69,7 +70,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     recallAgents(gameState: GameState, agentIds: AgentId[]): ActionResult {
-      console.log('⚡ Player action: recall agents. Agent IDs:', agentIds)
+      log.info('player', 'recall agents. Agent IDs:', agentIds)
       const validation = validateRecallAgents(gameState, agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -78,7 +79,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     startLeadInvestigation(gameState: GameState, params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult {
-      console.log('⚡ Player action: start lead investigation. Lead ID:', params.leadId, 'Agent IDs:', params.agentIds)
+      log.info('player', 'start lead investigation. Lead ID:', params.leadId, 'Agent IDs:', params.agentIds)
       const validation = validateStartLeadInvestigation(gameState, params.agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -90,8 +91,9 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
       gameState: GameState,
       params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
     ): ActionResult {
-      console.log(
-        'Player action: add agents to investigation. Investigation ID:',
+      log.info(
+        'player',
+        'add agents to investigation. Investigation ID:',
         params.investigationId,
         'Agent IDs:',
         params.agentIds,
@@ -104,12 +106,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     deployAgentsToMission(gameState: GameState, params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult {
-      console.log(
-        'Player action: deploy agents to mission. Mission ID:',
-        params.missionId,
-        'Agent IDs:',
-        params.agentIds,
-      )
+      log.info('player', 'deploy agents to mission. Mission ID:', params.missionId, 'Agent IDs:', params.agentIds)
       const validation = validateDeployAgents(gameState, params.missionId, params.agentIds)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
@@ -118,7 +115,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     },
 
     buyUpgrade(gameState: GameState, upgradeName: UpgradeName): ActionResult {
-      console.log('⚡ Player action: buy upgrade. Upgrade:', upgradeName)
+      log.info('player', 'buy upgrade. Upgrade:', upgradeName)
       const validation = validateBuyUpgrade(gameState, upgradeName)
       const errorResult = handleValidationError(strict, validation)
       if (errorResult) return errorResult
