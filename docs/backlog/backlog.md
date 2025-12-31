@@ -4,7 +4,7 @@ KJA backlog:
 
 # Current milestone
 
-- Debug why AI apparently refuses to deploy to HQ, just gets stuck on stronghold.
+- Bug: active lead in spite of faction being terminated.
 
 - Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
 
