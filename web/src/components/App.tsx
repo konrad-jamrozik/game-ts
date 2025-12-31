@@ -19,6 +19,7 @@ import { UpgradesCard } from './Assets/UpgradesCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
+import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
 
@@ -29,6 +30,17 @@ function App(): React.JSX.Element {
   useEffect(() => {
     runAppInit()
   }, [])
+
+  // Check if we're on the wipe route - if so, render WipeStorage component instead
+  const pathname = globalThis.location.pathname
+  if (pathname.endsWith('/wipe')) {
+    return (
+      <Fragment>
+        <WipeStorage />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
 
   if (viewCharts) {
     return (
