@@ -1,9 +1,9 @@
 import { configureStore, type Store } from '@reduxjs/toolkit'
 import { debounce } from 'radash'
-import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootReducerState } from './rootReducer'
+import { assertDefined } from '../lib/primitives/assertPrimitives'
 import { eventsMiddleware } from './eventsMiddleware'
 import { initPersistence, loadPersistedState, saveStateToDexie } from './persist'
-import { assertDefined } from '../lib/primitives/assertPrimitives'
+import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootReducerState } from './rootReducer'
 
 export type StoreOptions = {
   undoLimit?: number
@@ -13,7 +13,8 @@ export type StoreOptions = {
 
 type DebouncedSaveFunction = ReturnType<typeof debounce<[]>>
 
-let _store: Store<RootReducerState> | undefined
+export type AppStore = Store<RootReducerState>
+let _store: AppStore | undefined
 let _initStoreCalled = false
 let _debouncedSave: DebouncedSaveFunction | undefined
 
@@ -72,7 +73,7 @@ export async function initStore(options?: StoreOptions): Promise<void> {
   }
 }
 
-export function getStore(): Store<RootReducerState> {
+export function getStore(): AppStore {
   assertDefined(_store, 'Store not initialized. Call initStore() first.')
   return _store
 }
@@ -89,4 +90,4 @@ export function cancelPendingSave(): void {
   _debouncedSave?.cancel()
 }
 
-export type AppDispatch = Store<RootReducerState>['dispatch']
+export type AppDispatch = AppStore['dispatch']

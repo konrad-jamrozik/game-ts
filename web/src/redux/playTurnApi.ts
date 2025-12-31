@@ -1,32 +1,31 @@
-import type { Store } from '@reduxjs/toolkit'
+import type { UpgradeName } from '../lib/data_tables/upgrades'
+import type { GameState } from '../lib/model/gameStateModel'
+import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
+import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
+import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
+import { getPlayerActionsApi } from './playerActionsApi'
 import {
-  incrementActualWeaponDamageUpgrades,
-  incrementActualTrainingSkillGainUpgrades,
+  incrementActualAgentCapUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
   incrementActualHitPointsRecoveryUpgrades,
-  incrementActualAgentCapUpgrades,
-  incrementActualTransportCapUpgrades,
   incrementActualTrainingCapUpgrades,
-  incrementDesiredAgentCount,
+  incrementActualTrainingSkillGainUpgrades,
+  incrementActualTransportCapUpgrades,
+  incrementActualWeaponDamageUpgrades,
   incrementDesiredAgentCapUpgrades,
-  incrementDesiredTransportCapUpgrades,
-  incrementDesiredTrainingCapUpgrades,
-  incrementDesiredWeaponDamageUpgrades,
-  incrementDesiredTrainingSkillGainUpgrades,
+  incrementDesiredAgentCount,
   incrementDesiredExhaustionRecoveryUpgrades,
   incrementDesiredHitPointsRecoveryUpgrades,
+  incrementDesiredTrainingCapUpgrades,
+  incrementDesiredTrainingSkillGainUpgrades,
+  incrementDesiredTransportCapUpgrades,
+  incrementDesiredWeaponDamageUpgrades,
   type BasicIntellectState,
   type DesiredCountName,
 } from './slices/aiStateSlice'
-import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
-import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
-import type { UpgradeName } from '../lib/data_tables/upgrades'
-import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
-import type { GameState } from '../lib/model/gameStateModel'
-import { getPlayerActionsApi } from './playerActionsApi'
-import type { RootReducerState } from './rootReducer'
+import type { AppStore } from './store'
 
-export function getPlayTurnApi(store: Store<RootReducerState>, options?: { strict?: boolean }): PlayTurnAPI {
+export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }): PlayTurnAPI {
   const strict = options?.strict ?? false
 
   const initialGameState = getCurrentGameState(store)
@@ -185,7 +184,7 @@ export function getPlayTurnApi(store: Store<RootReducerState>, options?: { stric
   return api
 }
 
-function getCurrentAiState(store: Store<RootReducerState>): BasicIntellectState {
+function getCurrentAiState(store: AppStore): BasicIntellectState {
   const rootState = store.getState()
   const present = rootState.undoable.present
   if (!('aiState' in present)) {
@@ -194,6 +193,6 @@ function getCurrentAiState(store: Store<RootReducerState>): BasicIntellectState 
   return present.aiState
 }
 
-function getCurrentGameState(store: Store<RootReducerState>): GameState {
+function getCurrentGameState(store: AppStore): GameState {
   return store.getState().undoable.present.gameState
 }
