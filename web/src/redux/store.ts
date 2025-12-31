@@ -11,8 +11,11 @@ export type StoreOptions = {
   enablePersistence?: boolean
 }
 
+type DebouncedSaveFunction = ReturnType<typeof debounce<[]>>
+
 let _store: Store<RootReducerState> | undefined
 let _initStoreCalled = false
+let _debouncedSave: DebouncedSaveFunction | undefined
 
 // Must be called before getStore(). Call once at app startup.
 export async function initStore(options?: StoreOptions): Promise<void> {
@@ -57,14 +60,14 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 
   // Only set up persistence subscription if enabled
   if (enablePersistence) {
-    const debouncedSave = debounce({ delay: 300 }, async () => {
+    _debouncedSave = debounce({ delay: 300 }, async () => {
       if (_store) {
         await saveStateToDexie(_store.getState())
       }
     })
 
     _store.subscribe(() => {
-      debouncedSave()
+      _debouncedSave?.()
     })
   }
 }
@@ -72,6 +75,18 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 export function getStore(): Store<RootReducerState> {
   assertDefined(_store, 'Store not initialized. Call initStore() first.')
   return _store
+}
+
+/** Flush any pending debounced saves immediately. Useful in tests. */
+export function flushPendingSave(): void {
+  if (_debouncedSave?.isPending() === true) {
+    _debouncedSave.flush()
+  }
+}
+
+/** Cancel any pending debounced saves. Useful in tests to prevent saves after test cleanup. */
+export function cancelPendingSave(): void {
+  _debouncedSave?.cancel()
 }
 
 export type AppDispatch = Store<RootReducerState>['dispatch']
