@@ -118,11 +118,27 @@ class Profiler {
     // Sort functions: AI first, AdvT second, then alphabetically by abbreviated name
     const sortedFunctionNames = Profiler.sortFunctionNames([...functionNames])
 
-    // Build header row
+    // Build header row - group by metric type first, then by function
     const headerParts: string[] = ['Turn']
+    // First all 'tot' columns
     for (const functionName of sortedFunctionNames) {
       const headerName = Profiler.getHeaderName(functionName)
-      headerParts.push(`${headerName} cnt`, `${headerName} avg`, `${headerName} max`, `${headerName} tot`)
+      headerParts.push(`${headerName} tot`)
+    }
+    // Then all 'cnt' columns
+    for (const functionName of sortedFunctionNames) {
+      const headerName = Profiler.getHeaderName(functionName)
+      headerParts.push(`${headerName} cnt`)
+    }
+    // Then all 'avg' columns
+    for (const functionName of sortedFunctionNames) {
+      const headerName = Profiler.getHeaderName(functionName)
+      headerParts.push(`${headerName} avg`)
+    }
+    // Finally all 'max' columns
+    for (const functionName of sortedFunctionNames) {
+      const headerName = Profiler.getHeaderName(functionName)
+      headerParts.push(`${headerName} max`)
     }
     const header = headerParts.join(',')
 
@@ -138,20 +154,42 @@ class Profiler {
 
       const rowParts: string[] = [turn.toString()]
 
+      // Collect stats for all functions first
+      const functionStats = new Map<string, { calls: number; avg: number; max: number; tot: number }>()
       for (const functionName of sortedFunctionNames) {
         const stats = turnData.get(functionName)
         if (stats === undefined || stats.calls === 0) {
-          // No calls for this function in this turn
-          rowParts.push('0', '', '', '')
+          functionStats.set(functionName, { calls: 0, avg: 0, max: 0, tot: 0 })
         } else {
           const sortedDurations = [...stats.durations].toSorted((a, b) => a - b)
           const max = sortedDurations.at(-1) ?? 0
           const sum = sortedDurations.reduce((acc, d) => acc + d, 0)
           const avg = sum / sortedDurations.length
           const tot = sum
-
-          rowParts.push(stats.calls.toString(), avg.toFixed(3), max.toFixed(3), tot.toFixed(3))
+          functionStats.set(functionName, { calls: stats.calls, avg, max, tot })
         }
+      }
+
+      // Add columns grouped by metric type: tot, cnt, avg, max
+      // First all 'tot' values
+      for (const functionName of sortedFunctionNames) {
+        const stats = functionStats.get(functionName) ?? { calls: 0, avg: 0, max: 0, tot: 0 }
+        rowParts.push(stats.tot === 0 ? '' : stats.tot.toFixed(0))
+      }
+      // Then all 'cnt' values
+      for (const functionName of sortedFunctionNames) {
+        const stats = functionStats.get(functionName) ?? { calls: 0, avg: 0, max: 0, tot: 0 }
+        rowParts.push(stats.calls === 0 ? '0' : stats.calls.toString())
+      }
+      // Then all 'avg' values
+      for (const functionName of sortedFunctionNames) {
+        const stats = functionStats.get(functionName) ?? { calls: 0, avg: 0, max: 0, tot: 0 }
+        rowParts.push(stats.avg === 0 ? '' : stats.avg.toFixed(0))
+      }
+      // Finally all 'max' values
+      for (const functionName of sortedFunctionNames) {
+        const stats = functionStats.get(functionName) ?? { calls: 0, avg: 0, max: 0, tot: 0 }
+        rowParts.push(stats.max === 0 ? '' : stats.max.toFixed(0))
       }
 
       rows.push(rowParts.join(','))
