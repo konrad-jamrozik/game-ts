@@ -60,3 +60,7 @@ const csvPath = 'profile-results.csv'
 // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- node:fs works at runtime with tsx
 writeFileSync(csvPath, csv, 'utf8')
 console.log(`\nProfiler CSV written to: ${csvPath}`)
+
+// Print agent count
+const gameState = store.getState().undoable.present.gameState
+console.log(`\nAgent count: ${gameState.agents.length}`)
