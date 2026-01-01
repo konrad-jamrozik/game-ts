@@ -127,6 +127,110 @@ In Chrome DevTools Performance tab after loading a `.cpuprofile`:
 
 **Tip**: Use the **Filter** box to search for specific function names like `evaluate` or `Battle`.
 
+### How to Make Functions Profilable
+
+V8's CPU profiler captures function names based on the function's `.name` property. Not all JavaScript functions have meaningful names in the profiler output. Here's how to ensure your functions show up correctly.
+
+#### What Shows Names vs `(anonymous)`
+
+| Pattern                                | Profiler Shows | Why                                    |
+| -------------------------------------- | -------------- | -------------------------------------- |
+| `function myFunc() {}`                 | `myFunc`       | Named function declaration             |
+| `const myFunc = function myFunc() {}`  | `myFunc`       | Named function expression              |
+| `const myFunc = () => {}`              | `(anonymous)`  | Arrow functions have no name           |
+| `{ myMethod() {} }`                    | `(anonymous)`  | Object literal methods are anonymous   |
+| `{ myMethod: () => {} }`               | `(anonymous)`  | Arrow function in object literal       |
+
+#### Instead of Arrow Functions, Use Named Function Expressions
+
+Arrow functions cannot have names. If you need a function to appear in flamegraphs:
+
+```typescript
+// ❌ BAD - Shows as (anonymous)
+const processData = (data: Data) => {
+  // ...
+}
+
+// ✅ GOOD - Shows as "processData"
+const processData = function processData(data: Data) {
+  // ...
+}
+
+// ✅ ALSO GOOD - Function declaration
+function processData(data: Data) {
+  // ...
+}
+```
+
+#### Instead of Inline Object Methods, Define Functions First
+
+Methods defined inline in object literals are anonymous:
+
+```typescript
+// ❌ BAD - myMethod shows as (anonymous)
+const api = {
+  myMethod(params: Params): Result {
+    // ...
+  },
+}
+
+// ✅ GOOD - Shows as "myMethod"
+function myMethod(params: Params): Result {
+  // ...
+}
+
+const api = {
+  myMethod,
+}
+```
+
+#### When Wrapping Functions, Preserve the Name
+
+Wrapper functions that return arrow functions lose the original function's name:
+
+```typescript
+// ❌ BAD - Returns anonymous arrow function
+function wrap<T extends (...args: any[]) => any>(fn: T): T {
+  return ((...args) => {
+    console.log('before')
+    const result = fn(...args)
+    console.log('after')
+    return result
+  }) as T
+}
+
+// ✅ GOOD - Preserves function name using Object.defineProperty
+function wrap<T extends (...args: any[]) => any>(name: string, fn: T): T {
+  const wrapper = function (...args: Parameters<T>): ReturnType<T> {
+    console.log('before')
+    const result = fn(...args)
+    console.log('after')
+    return result
+  }
+  Object.defineProperty(wrapper, 'name', { value: name, configurable: true })
+  return wrapper as T
+}
+```
+
+#### Common Patterns That Hide Function Names
+
+1. **`profiler.wrap()` returning arrow function** - The wrapper is anonymous even though the wrapped function has a name. Fix: Use `Object.defineProperty` to set `.name`.
+
+2. **Object literal APIs** (like `PlayTurnAPI`, `PlayerActionsAPI`) - All methods defined inline are anonymous. Fix: Define each method as a named function first, then reference it in the object.
+
+3. **Higher-order functions with arrow returns** - `asPlayerAction()` returns `{ reducer: (...) => {...} }` where the reducer is anonymous. Fix: Use named function expressions.
+
+4. **Redux Toolkit action creators** - RTK does set proper names on generated action creators, so `dispatch(myAction())` will show `myAction` in the profiler.
+
+#### Quick Reference
+
+To make a function visible in flamegraphs:
+
+1. Use `function name() {}` declarations when possible
+2. For const assignments, use `const name = function name() {}`
+3. For wrapper functions, use `Object.defineProperty(fn, 'name', { value: 'name' })`
+4. For object methods, define the function separately first
+
 ## Possible Alternative Approaches
 
 ### Vitest Browser Mode
