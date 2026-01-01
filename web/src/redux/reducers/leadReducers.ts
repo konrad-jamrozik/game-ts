@@ -61,7 +61,16 @@ function addAgentsToInvestigationReducer(
   const investigation = state.leadInvestigations[investigationId]
   assertDefined(investigation, `Investigation not found: ${investigationId}`)
 
-  // KJA1 this is on a hot path per profileAi.ts
+  validateAgentsNotAlreadyAssigned(investigation, agentIds, investigationId)
+  addAgentIdsToInvestigation(investigation, agentIds)
+  assignAgentsToInvestigation(state, investigationId, agentIds)
+}
+
+function validateAgentsNotAlreadyAssignedImpl(
+  investigation: GameState['leadInvestigations'][string],
+  agentIds: AgentId[],
+  investigationId: LeadInvestigationId,
+): void {
   // Add agents to investigation (throw error on duplicates)
   for (const agentId of agentIds) {
     assertNotIn(
@@ -70,10 +79,24 @@ function addAgentsToInvestigationReducer(
       `Agent ${agentId} is already assigned to investigation ${investigationId}`,
     )
   }
+}
+
+const validateAgentsNotAlreadyAssigned = profiler.wrap(
+  'validateAgentsNotAlreadyAssigned',
+  validateAgentsNotAlreadyAssignedImpl,
+)
+
+function addAgentIdsToInvestigation(investigation: GameState['leadInvestigations'][string], agentIds: AgentId[]): void {
   for (const agentId of agentIds) {
     investigation.agentIds.push(agentId)
   }
+}
 
+function assignAgentsToInvestigation(
+  state: GameState,
+  investigationId: LeadInvestigationId,
+  agentIds: AgentId[],
+): void {
   // Assign agents to investigation (they enter InTransit state)
   for (const agent of state.agents) {
     if (agentIds.includes(agent.id)) {
