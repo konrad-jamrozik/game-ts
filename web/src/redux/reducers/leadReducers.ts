@@ -69,6 +69,8 @@ function addAgentsToInvestigationReducer(
       investigation.agentIds,
       `Agent ${agentId} is already assigned to investigation ${investigationId}`,
     )
+  }
+  for (const agentId of agentIds) {
     investigation.agentIds.push(agentId)
   }
 
