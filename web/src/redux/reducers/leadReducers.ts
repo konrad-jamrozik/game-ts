@@ -52,6 +52,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
   },
 )
 
+// KJA1 this is on a hot path per profileAi.ts.
 function addAgentsToInvestigationReducer(
   state: GameState,
   action: PayloadAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>,
@@ -81,18 +82,20 @@ function validateAgentsNotAlreadyAssignedImpl(
   }
 }
 
-const validateAgentsNotAlreadyAssigned = profiler.wrap(
-  'validateAgentsNotAlreadyAssigned',
-  validateAgentsNotAlreadyAssignedImpl,
-)
+const validateAgentsNotAlreadyAssigned = profiler.wrap('F1Val', validateAgentsNotAlreadyAssignedImpl)
 
-function addAgentIdsToInvestigation(investigation: GameState['leadInvestigations'][string], agentIds: AgentId[]): void {
+function addAgentIdsToInvestigationImpl(
+  investigation: GameState['leadInvestigations'][string],
+  agentIds: AgentId[],
+): void {
   for (const agentId of agentIds) {
     investigation.agentIds.push(agentId)
   }
 }
 
-function assignAgentsToInvestigation(
+const addAgentIdsToInvestigation = profiler.wrap('F2Add', addAgentIdsToInvestigationImpl)
+
+function assignAgentsToInvestigationImpl(
   state: GameState,
   investigationId: LeadInvestigationId,
   agentIds: AgentId[],
@@ -106,7 +109,9 @@ function assignAgentsToInvestigation(
   }
 }
 
-const wrappedReducer = profiler.wrap('addAgentsToInvestigation', addAgentsToInvestigationReducer)
+const assignAgentsToInvestigation = profiler.wrap('F3Asgn', assignAgentsToInvestigationImpl)
+
+const wrappedReducer = profiler.wrap('FAddRed', addAgentsToInvestigationReducer)
 
 export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>(
   wrappedReducer,

@@ -49,6 +49,12 @@ class Profiler {
     if (functionName === 'dispatchAdvanceTurn') {
       return 'AdvT'
     }
+    if (functionName === 'F2add') {
+      return 'F2add'
+    }
+    if (functionName === 'F3ass') {
+      return 'F3ass'
+    }
     // Default: abbreviate the name
     return Profiler.abbreviateName(functionName)
   }
