@@ -3,6 +3,7 @@ import { advanceTurn } from '../redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../redux/playTurnApi'
 import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
+import { profiler } from '../lib/primitives/profiler'
 
 export function delegateTurnToAIPlayer(intellectName: string): void {
   const intellect = getIntellect(intellectName)
@@ -32,6 +33,9 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
     }
 
     const turnNumber = i + 1
+
+    // Mark turn boundary for profiler
+    profiler.startTurn(turnNumber)
 
     // Measure delegateTurnToAIPlayer
     const delegateStart = performance.now()

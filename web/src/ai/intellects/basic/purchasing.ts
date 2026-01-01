@@ -14,6 +14,7 @@ import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
+import { profiler } from '../../../lib/primitives/profiler'
 import type { UpgradeNameOrNewAgent } from './types'
 import {
   REQUIRED_TURNS_OF_SAVINGS,
@@ -147,6 +148,8 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAge
   return moneyAfterPurchase >= minimumRequiredSavings
 }
 
+const executePurchase = profiler.wrap('executePurchase', executePurchaseImpl)
+
 function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   executePurchase(api, priority)
 
@@ -162,7 +165,7 @@ function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
 }
 
 // KJA1 this is on a hot path per profileAi.ts. Invoked many times;
-function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+function executePurchaseImpl(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   if (priority === 'newAgent') {
     api.hireAgent()
     log.success('purchasing', 'purchased newAgent 🪖')

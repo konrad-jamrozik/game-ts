@@ -4,7 +4,7 @@
 {
   // Applicability of this config.
   // --------------------
-  "include": ["vite.config.ts", "vitest.config.ts", "test/utils/unusedNodeTestUtils.ts"],
+  "include": ["vite.config.ts", "vitest.config.ts", "test/utils/unusedNodeTestUtils.ts", "scripts/**/*.ts"],
 
   "extends": "./tsconfig.json",
   "compilerOptions": {

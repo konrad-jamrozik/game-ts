@@ -8,13 +8,17 @@
  *   npx tsx --cpu-prof scripts/profileAi.ts
  *
  * Then load the generated .cpuprofile file in Chrome DevTools → Performance tab.
+ * The profiler CSV output is written to profile-results.csv.
  */
+// @ts-expect-error - node:fs is available at runtime via tsx, but TypeScript can't resolve it in this config
+import { writeFileSync } from 'node:fs'
 import { initStore, getStore } from '../src/redux/store'
 import { reset } from '../src/redux/slices/gameStateSlice'
 import { clearEvents } from '../src/redux/slices/eventsSlice'
 import { bldInitialState } from '../src/lib/factories/gameStateFactory'
 import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnToAIPlayer'
 import { rand } from '../src/lib/primitives/rand'
+import { profiler } from '../src/lib/primitives/profiler'
 
 const TURNS_TO_PLAY = 200
 
@@ -32,6 +36,10 @@ rand.set('lead-investigation', 1)
 rand.set('agent_attack_roll', 1)
 rand.set('enemy_attack_roll', 0)
 
+// Enable profiler
+profiler.enabled = true
+profiler.reset()
+
 console.log(`Starting AI for ${TURNS_TO_PLAY} turns...`)
 const startTime = performance.now()
 delegateTurnsToAIPlayer('basic', TURNS_TO_PLAY)
@@ -45,3 +53,10 @@ console.log(`Done! Total time: ${totalMs.toFixed(0)}ms`)
 console.log(`Average per turn: ${avgMs.toFixed(1)}ms`)
 console.log(`Final turn: ${store.getState().undoable.present.gameState.turn}`)
 console.log('========================================')
+
+// Generate and write CSV
+const csv = profiler.generateCSV()
+const csvPath = 'profile-results.csv'
+// eslint-disable-next-line @typescript-eslint/no-unsafe-call -- node:fs works at runtime with tsx
+writeFileSync(csvPath, csv, 'utf8')
+console.log(`\nProfiler CSV written to: ${csvPath}`)

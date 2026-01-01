@@ -2,6 +2,23 @@
 
 KJA backlog:
 
+# Prompt
+
+So I ran profileAi.ts and identified few functions on a hot path, see my comments "KJA1 this is on a hot path per profileAi.ts"
+I want now to take a closer look and have flexibility in deciding what to profile.
+
+I want to introduce some kind of function decorator/wrapper where I can adorn functions with it, so that when I run
+profileAi.ts the decorator gathers profiling telemetry: measures, for each turn, for each adorned function:
+- total call count of given function in given turn
+- min, avg, max, p90 ms of all calls of given function in given turn
+Then it should print it out to a csv file so I can copy paste it into excel.
+
+I.e. it should output a table like, where F1, F2 etc. are names of the adorned functions:
+
+Turn,F1 calls,F1 min ms,F1 avg ms,F1 p90 ms,F1 max ms,F2 calls,F2 min ms, ...
+1, 5, 30, 43.3, 90, 100, 7, 14, ...
+2, ...
+
 # Current milestone
 
 - Debug perf, see about_ai_performance.md, notably flamegraphs from browser devtools.

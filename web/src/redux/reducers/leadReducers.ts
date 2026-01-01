@@ -1,9 +1,11 @@
+import type { PayloadAction } from '@reduxjs/toolkit'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { AgentId, LeadId, LeadInvestigationId } from '../../lib/model/modelIds'
 import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitives'
 import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
 import { log } from '../../lib/primitives/logger'
+import { profiler } from '../../lib/primitives/profiler'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
@@ -50,30 +52,37 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
   },
 )
 
+function addAgentsToInvestigationReducer(
+  state: GameState,
+  action: PayloadAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>,
+): void {
+  const { investigationId, agentIds } = action.payload
+
+  const investigation = state.leadInvestigations[investigationId]
+  assertDefined(investigation, `Investigation not found: ${investigationId}`)
+
+  // KJA1 this is on a hot path per profileAi.ts
+  // Add agents to investigation (throw error on duplicates)
+  for (const agentId of agentIds) {
+    assertNotIn(
+      agentId,
+      investigation.agentIds,
+      `Agent ${agentId} is already assigned to investigation ${investigationId}`,
+    )
+    investigation.agentIds.push(agentId)
+  }
+
+  // Assign agents to investigation (they enter InTransit state)
+  for (const agent of state.agents) {
+    if (agentIds.includes(agent.id)) {
+      agent.assignment = investigationId
+      agent.state = 'InTransit'
+    }
+  }
+}
+
+const wrappedReducer = profiler.wrap('addAgentsToInvestigation', addAgentsToInvestigationReducer)
+
 export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>(
-  (state: GameState, action) => {
-    const { investigationId, agentIds } = action.payload
-
-    const investigation = state.leadInvestigations[investigationId]
-    assertDefined(investigation, `Investigation not found: ${investigationId}`)
-
-    // KJA1 this may be hot path per profileAi.ts
-    // Add agents to investigation (throw error on duplicates)
-    for (const agentId of agentIds) {
-      assertNotIn(
-        agentId,
-        investigation.agentIds,
-        `Agent ${agentId} is already assigned to investigation ${investigationId}`,
-      )
-      investigation.agentIds.push(agentId)
-    }
-
-    // Assign agents to investigation (they enter InTransit state)
-    for (const agent of state.agents) {
-      if (agentIds.includes(agent.id)) {
-        agent.assignment = investigationId
-        agent.state = 'InTransit'
-      }
-    }
-  },
+  wrappedReducer,
 )
