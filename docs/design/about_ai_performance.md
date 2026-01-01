@@ -29,7 +29,7 @@ Location: `web/src/lib/game_utils/turn_advancement/evaluateBattle.ts`
 
 ### 2. Double Game State Validation
 
-`validateGameStateInvariants()` is called **twice** per turn advancement - once at the start and once at the end of `evaluateTurn()`. This iterates through all agents and leads.
+`validateGameStateInvariants()` is called **twice** per turn advancement - once at the start and once at the end of `evaluateTurn()`. This is by design, validating the game state at both the beginning and end of turn. This iterates through all agents and leads.
 
 Location: `web/src/lib/game_utils/turn_advancement/evaluateTurn.ts` (lines 53 and 119)
 
@@ -58,57 +58,11 @@ Location: `web/src/ai/intellects/basic/leadInvestigation.ts`
 
 This is a development-only middleware that deep-checks state serialization. The test logs show it taking 34ms+ per action, exceeding the 32ms warning threshold.
 
-## Debugging Techniques
-
-### Adding Granular Timing
-
-Add `performance.now()` measurements around suspected bottlenecks:
-
-```typescript
-// Example: In evaluateTurn.ts
-function evaluateTurn(state: GameState): TurnReport {
-  const timings: Record<string, number> = {}
-  
-  let t0 = performance.now()
-  validateGameStateInvariants(state)
-  timings['validation1'] = performance.now() - t0
-  
-  // ... other code ...
-  
-  t0 = performance.now()
-  const { rewards, missionReports } = evaluateDeployedMissions(state)
-  timings['evaluateDeployedMissions'] = performance.now() - t0
-  
-  console.table(timings)
-  return turnReport
-}
-```
-
-### Battle-Specific Timing
-
-```typescript
-// In evaluateBattle.ts
-do {
-  const roundStart = performance.now()
-  // ... round evaluation ...
-  console.log(
-    `Round ${roundIdx}: ${(performance.now() - roundStart).toFixed(1)}ms, ` +
-    `agents: ${activeAgents.length}, enemies: ${activeEnemies.length}`
-  )
-} while (!battleEnded)
-```
-
 ## Profiling with Flamegraphs
 
-### Important: Vitest Runs Tests in Web Workers
+### Standalone Script with tsx
 
-**Warning**: If you try to profile Vitest tests using browser DevTools (via `vitest --ui`), you will NOT see your JavaScript functions in the flamegraph. This is because **Vitest runs tests in Web Workers**, not on the main thread. The main thread only handles the UI, so you'll see browser rendering activities (Paint, Recalculate style, etc.) instead of your actual test code.
-
-**Recommended approach**: Use Node.js CPU profiling (Option 1 below) to get accurate flamegraphs of your JavaScript code.
-
-### Option 1: Standalone Script with tsx (Recommended)
-
-This is the most reliable way to profile JavaScript execution. It runs the AI directly without Vitest (which uses workers that complicate profiling).
+This script is used in conjunction with the `Profiler` class (`web/src/lib/primitives/profiler.ts`) to profile JavaScript execution. It runs the AI directly without Vitest (which uses workers that complicate profiling).
 
 1. **Run the profiling script**:
 
@@ -152,11 +106,30 @@ You can edit the script to adjust:
 - `money` - starting money amount
 - `rand.set()` calls - to test different RNG scenarios
 
-### Option 3: Browser Profiling (Alternative Methods)
+### Reading the Flamegraph
 
-If you need browser-based profiling, here are approaches that work around the Web Worker issue:
+In Chrome DevTools Performance tab after loading a `.cpuprofile`:
 
-#### Option 3a: Vitest Browser Mode
+1. **Bottom-Up view**: Shows which functions took the most total time (start here!)
+2. **Call Tree view**: Shows the call hierarchy with time breakdown
+3. **Flame Chart**: Visual representation where:
+   - X-axis = time
+   - Y-axis = call stack depth
+   - Width of bar = time spent in that function
+   - Look for wide bars (time-consuming functions)
+
+**What to look for:**
+
+- Wide bars at the bottom indicate expensive leaf functions
+- Tall stacks indicate deep call hierarchies
+- Repeated patterns indicate loops or recursive calls
+- Look for functions like `evaluateBattle`, `effectiveSkill`, `selectNextBestReadyAgent`
+
+**Tip**: Use the **Filter** box to search for specific function names like `evaluate` or `Battle`.
+
+## Possible Alternative Approaches
+
+### Vitest Browser Mode
 
 Vitest can run tests directly in a browser context (not in a worker):
 
@@ -187,7 +160,13 @@ Vitest can run tests directly in a browser context (not in a worker):
 
 4. **Profile in the browser** using DevTools Performance tab.
 
-#### Option 3b: Standalone HTML Test Runner
+## Rejected Approaches
+
+### Profiling Vitest Tests with Browser DevTools
+
+If you try to profile Vitest tests using browser DevTools (via `vitest --ui`), you will NOT see your JavaScript functions in the flamegraph. This is because **Vitest runs tests in Web Workers**, not on the main thread. The main thread only handles the UI, so you'll see browser rendering activities (Paint, Recalculate style, etc.) instead of your actual test code.
+
+### Standalone HTML Test Runner
 
 Create a minimal HTML page that runs the performance-critical code directly on the main thread:
 
@@ -268,27 +247,6 @@ Create a minimal HTML page that runs the performance-critical code directly on t
    - Click "Run Test" button
    - Click Stop
    - Analyze flamegraph
-
-### Reading the Flamegraph
-
-In Chrome DevTools Performance tab after loading a `.cpuprofile`:
-
-1. **Bottom-Up view**: Shows which functions took the most total time (start here!)
-2. **Call Tree view**: Shows the call hierarchy with time breakdown
-3. **Flame Chart**: Visual representation where:
-   - X-axis = time
-   - Y-axis = call stack depth
-   - Width of bar = time spent in that function
-   - Look for wide bars (time-consuming functions)
-
-**What to look for:**
-
-- Wide bars at the bottom indicate expensive leaf functions
-- Tall stacks indicate deep call hierarchies
-- Repeated patterns indicate loops or recursive calls
-- Look for functions like `evaluateBattle`, `effectiveSkill`, `selectNextBestReadyAgent`
-
-**Tip**: Use the **Filter** box to search for specific function names like `evaluate` or `Battle`.
 
 ## Optimization Suggestions
 
