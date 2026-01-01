@@ -99,7 +99,7 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
         unassignAgentsFromTraining(api, [agent])
         // KJA1 this is on a hot path per profileAi.ts. Invoked many times;
         // instead, try to assign multiple agents at once.
-        api.addAgentsToInvestigation({
+        api.addAgentsToInvestigationPlayTurnApi({
           investigationId: existingInvestigation.id,
           agentIds: [agent.id],
         })
@@ -140,7 +140,7 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
       )
 
       if (existingInvestigation) {
-        api.addAgentsToInvestigation({
+        api.addAgentsToInvestigationPlayTurnApi({
           investigationId: existingInvestigation.id,
           agentIds: [agent.id],
         })

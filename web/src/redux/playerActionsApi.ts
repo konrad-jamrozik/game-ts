@@ -108,7 +108,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
       return { success: true }
     },
 
-    addAgentsToInvestigation: wrappedAddAgentsToInvestigation,
+    addAgentsToInvestigationPlayerActionsApi: wrappedAddAgentsToInvestigation,
 
     deployAgentsToMission(gameState: GameState, params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult {
       log.info('player', 'deploy agents to mission. Mission ID:', params.missionId, 'Agent IDs:', params.agentIds)

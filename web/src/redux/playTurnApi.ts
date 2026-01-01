@@ -83,8 +83,11 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
       return result
     },
 
-    addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult {
-      const result = baseApi.addAgentsToInvestigation(api.gameState, params)
+    addAgentsToInvestigationPlayTurnApi(params: {
+      investigationId: LeadInvestigationId
+      agentIds: AgentId[]
+    }): ActionResult {
+      const result = baseApi.addAgentsToInvestigationPlayerActionsApi(api.gameState, params)
       if (result.success) {
         updateGameState()
       }
