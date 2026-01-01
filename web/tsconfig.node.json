@@ -4,7 +4,9 @@
 {
   // Applicability of this config.
   // --------------------
-  "include": ["vite.config.ts", "vitest.config.ts", "test/utils/unusedNodeTestUtils.ts", "scripts/**/*.ts"],
+  "include": ["vite.config.ts", "vitest.config.ts", "test/utils/unusedNodeTestUtils.ts"],
+  // Exclude profileAi.ts - it imports app code and is type-checked via tsconfig.app.json
+  "exclude": ["scripts/profileAi.ts"],
 
   "extends": "./tsconfig.json",
   "compilerOptions": {

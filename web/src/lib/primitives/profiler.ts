@@ -16,11 +16,11 @@ type FunctionStats = {
 type TurnData = Map<string, FunctionStats>
 
 class Profiler {
-  enabled = false
+  public enabled = false
   private currentTurn = 0
-  private data: Map<number, TurnData> = new Map()
+  private readonly data = new Map<number, TurnData>()
 
-  startTurn(turn: number): void {
+  public startTurn(turn: number): void {
     this.currentTurn = turn
     // Initialize turn data if it doesn't exist
     if (!this.data.has(turn)) {
@@ -28,23 +28,98 @@ class Profiler {
     }
   }
 
-  wrap<T extends (...args: any[]) => any>(name: string, fn: T): T {
-    if (!this.enabled) {
-      // Return original function when disabled (zero overhead)
-      return fn
-    }
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public wrap<T extends (...args: any[]) => any>(name: string, fn: T): T {
+    // Note: We check `enabled` at call time, not at wrap time.
+    // This is because `wrap()` is called at module load time,
+    // but `enabled` is set later in the profiling script.
+    const recordCallBound = this.recordCall.bind(this)
+    const isEnabledBound = this.isEnabled.bind(this)
 
-    const wrapped = ((...args: Parameters<T>) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-type-assertion
+    return ((...args: Parameters<T>): any => {
+      if (!isEnabledBound()) {
+        return fn(...args)
+      }
+
       const start = performance.now()
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
       const result = fn(...args)
       const end = performance.now()
       const duration = end - start
 
-      this.recordCall(name, duration)
+      recordCallBound(name, duration)
       return result
     }) as T
+  }
 
-    return wrapped
+  public generateCSV(): string {
+    // Collect all function names across all turns
+    const functionNames = new Set<string>()
+    for (const turnData of this.data.values()) {
+      for (const functionName of turnData.keys()) {
+        functionNames.add(functionName)
+      }
+    }
+
+    const sortedFunctionNames = [...functionNames].toSorted()
+
+    // Build header row
+    const headerParts: string[] = ['Turn']
+    for (const functionName of sortedFunctionNames) {
+      headerParts.push(
+        `${functionName} calls`,
+        `${functionName} min ms`,
+        `${functionName} avg ms`,
+        `${functionName} p90 ms`,
+        `${functionName} max ms`,
+      )
+    }
+    const header = headerParts.join(',')
+
+    // Build data rows
+    const sortedTurns = [...this.data.keys()].toSorted((a, b) => a - b)
+    const rows: string[] = [header]
+
+    for (const turn of sortedTurns) {
+      const turnData = this.data.get(turn)
+      if (turnData === undefined) {
+        continue
+      }
+
+      const rowParts: string[] = [turn.toString()]
+
+      for (const functionName of sortedFunctionNames) {
+        const stats = turnData.get(functionName)
+        if (stats === undefined || stats.calls === 0) {
+          // No calls for this function in this turn
+          rowParts.push('0', '', '', '', '')
+        } else {
+          const sortedDurations = [...stats.durations].toSorted((a, b) => a - b)
+          const min = sortedDurations.at(0) ?? 0
+          const max = sortedDurations.at(-1) ?? 0
+          const sum = sortedDurations.reduce((acc, d) => acc + d, 0)
+          const avg = sum / sortedDurations.length
+          const p90Index = Math.ceil(sortedDurations.length * 0.9) - 1
+          const p90 = sortedDurations.at(Math.max(0, p90Index)) ?? 0
+
+          rowParts.push(stats.calls.toString(), min.toFixed(3), avg.toFixed(3), p90.toFixed(3), max.toFixed(3))
+        }
+      }
+
+      rows.push(rowParts.join(','))
+    }
+
+    return rows.join('\n')
+  }
+
+  public reset(): void {
+    this.currentTurn = 0
+    this.data.clear()
+  }
+
+  private isEnabled(): boolean {
+    return this.enabled
   }
 
   private recordCall(functionName: string, duration: number): void {
@@ -64,71 +139,6 @@ class Profiler {
       stats.calls += 1
       stats.durations.push(duration)
     }
-  }
-
-  generateCSV(): string {
-    // Collect all function names across all turns
-    const functionNames = new Set<string>()
-    for (const turnData of this.data.values()) {
-      for (const functionName of turnData.keys()) {
-        functionNames.add(functionName)
-      }
-    }
-
-    const sortedFunctionNames = Array.from(functionNames).sort()
-
-    // Build header row
-    const headerParts: string[] = ['Turn']
-    for (const functionName of sortedFunctionNames) {
-      headerParts.push(
-        `${functionName} calls`,
-        `${functionName} min ms`,
-        `${functionName} avg ms`,
-        `${functionName} p90 ms`,
-        `${functionName} max ms`,
-      )
-    }
-    const header = headerParts.join(',')
-
-    // Build data rows
-    const sortedTurns = Array.from(this.data.keys()).sort((a, b) => a - b)
-    const rows: string[] = [header]
-
-    for (const turn of sortedTurns) {
-      const turnData = this.data.get(turn)
-      if (turnData === undefined) {
-        continue
-      }
-
-      const rowParts: string[] = [turn.toString()]
-
-      for (const functionName of sortedFunctionNames) {
-        const stats = turnData.get(functionName)
-        if (stats === undefined || stats.calls === 0) {
-          // No calls for this function in this turn
-          rowParts.push('0', '', '', '', '')
-        } else {
-          const sortedDurations = [...stats.durations].sort((a, b) => a - b)
-          const min = sortedDurations[0]!
-          const max = sortedDurations[sortedDurations.length - 1]!
-          const sum = sortedDurations.reduce((acc, d) => acc + d, 0)
-          const avg = sum / sortedDurations.length
-          const p90Index = Math.ceil(sortedDurations.length * 0.9) - 1
-          const p90 = sortedDurations[Math.max(0, p90Index)]!
-
-          rowParts.push(stats.calls.toString(), min.toFixed(3), avg.toFixed(3), p90.toFixed(3), max.toFixed(3))
-        }
-      }
-
-      rows.push(rowParts.join(','))
-    }
-
-    return rows.join('\n')
-  }
-
-  reset(): void {
-    this.currentTurn = 0
-    this.data.clear()
   }
 }
 

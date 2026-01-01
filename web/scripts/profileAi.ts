@@ -10,7 +10,7 @@
  * Then load the generated .cpuprofile file in Chrome DevTools → Performance tab.
  * The profiler CSV output is written to profile-results.csv.
  */
-// @ts-expect-error - node:fs is available at runtime via tsx, but TypeScript can't resolve it in this config
+// @ts-expect-error - node:fs works at runtime with tsx but isn't in tsconfig.app.json
 import { writeFileSync } from 'node:fs'
 import { initStore, getStore } from '../src/redux/store'
 import { reset } from '../src/redux/slices/gameStateSlice'
