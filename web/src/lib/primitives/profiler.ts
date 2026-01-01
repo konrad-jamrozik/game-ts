@@ -20,6 +20,65 @@ class Profiler {
   private currentTurn = 0
   private readonly data = new Map<number, TurnData>()
 
+  private static abbreviateName(name: string): string {
+    // Split camelCase/PascalCase into words by detecting capital letters
+    const words: string[] = []
+    let currentWord = ''
+    for (const char of name) {
+      if (char >= 'A' && char <= 'Z' && currentWord.length > 0) {
+        // Capital letter starts a new word
+        words.push(currentWord)
+        currentWord = char
+      } else {
+        currentWord += char
+      }
+    }
+    if (currentWord.length > 0) {
+      words.push(currentWord)
+    }
+
+    // Take first 2 characters of each word
+    return words.map((word) => word.slice(0, 2)).join('')
+  }
+
+  private static getHeaderName(functionName: string): string {
+    // Special header mappings
+    if (functionName === 'delegateTurnToAIPlayer') {
+      return 'AI'
+    }
+    if (functionName === 'dispatchAdvanceTurn') {
+      return 'AdvT'
+    }
+    // Default: abbreviate the name
+    return Profiler.abbreviateName(functionName)
+  }
+
+  private static sortFunctionNames(functionNames: string[]): string[] {
+    const aiName = 'delegateTurnToAIPlayer'
+    const advTName = 'dispatchAdvanceTurn'
+
+    const aiIndex = functionNames.indexOf(aiName)
+    const advTIndex = functionNames.indexOf(advTName)
+
+    const others = functionNames.filter((name) => name !== aiName && name !== advTName)
+    const sortedOthers = others.toSorted((a, b) => {
+      const abbrevA = Profiler.abbreviateName(a)
+      const abbrevB = Profiler.abbreviateName(b)
+      return abbrevA.localeCompare(abbrevB)
+    })
+
+    const result: string[] = []
+    if (aiIndex !== -1) {
+      result.push(aiName)
+    }
+    if (advTIndex !== -1) {
+      result.push(advTName)
+    }
+    result.push(...sortedOthers)
+
+    return result
+  }
+
   public startTurn(turn: number): void {
     this.currentTurn = turn
     // Initialize turn data if it doesn't exist
@@ -62,18 +121,14 @@ class Profiler {
       }
     }
 
-    const sortedFunctionNames = [...functionNames].toSorted()
+    // Sort functions: AI first, AdvT second, then alphabetically by abbreviated name
+    const sortedFunctionNames = Profiler.sortFunctionNames([...functionNames])
 
     // Build header row
     const headerParts: string[] = ['Turn']
     for (const functionName of sortedFunctionNames) {
-      headerParts.push(
-        `${functionName} calls`,
-        `${functionName} min ms`,
-        `${functionName} avg ms`,
-        `${functionName} p90 ms`,
-        `${functionName} max ms`,
-      )
+      const headerName = Profiler.getHeaderName(functionName)
+      headerParts.push(`${headerName} cnt`, `${headerName} avg`, `${headerName} max`, `${headerName} tot`)
     }
     const header = headerParts.join(',')
 
@@ -93,17 +148,15 @@ class Profiler {
         const stats = turnData.get(functionName)
         if (stats === undefined || stats.calls === 0) {
           // No calls for this function in this turn
-          rowParts.push('0', '', '', '', '')
+          rowParts.push('0', '', '', '')
         } else {
           const sortedDurations = [...stats.durations].toSorted((a, b) => a - b)
-          const min = sortedDurations.at(0) ?? 0
           const max = sortedDurations.at(-1) ?? 0
           const sum = sortedDurations.reduce((acc, d) => acc + d, 0)
           const avg = sum / sortedDurations.length
-          const p90Index = Math.ceil(sortedDurations.length * 0.9) - 1
-          const p90 = sortedDurations.at(Math.max(0, p90Index)) ?? 0
+          const tot = sum
 
-          rowParts.push(stats.calls.toString(), min.toFixed(3), avg.toFixed(3), p90.toFixed(3), max.toFixed(3))
+          rowParts.push(stats.calls.toString(), avg.toFixed(3), max.toFixed(3), tot.toFixed(3))
         }
       }
 

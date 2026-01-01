@@ -5,7 +5,7 @@ import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 import { profiler } from '../lib/primitives/profiler'
 
-export function delegateTurnToAIPlayer(intellectName: string): void {
+function delegateTurnToAIPlayerImpl(intellectName: string): void {
   const intellect = getIntellect(intellectName)
   const store = getStore()
 
@@ -20,6 +20,8 @@ export function delegateTurnToAIPlayer(intellectName: string): void {
     }
   }
 }
+
+export const delegateTurnToAIPlayer = profiler.wrap('delegateTurnToAIPlayer', delegateTurnToAIPlayerImpl)
 
 export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
   const store = getStore()
@@ -67,6 +69,8 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
   console.table(timingData)
 }
 
-function dispatchAdvanceTurn(store: AppStore): void {
+function dispatchAdvanceTurnImpl(store: AppStore): void {
   store.dispatch(advanceTurn())
 }
+
+const dispatchAdvanceTurn = profiler.wrap('dispatchAdvanceTurn', dispatchAdvanceTurnImpl)
