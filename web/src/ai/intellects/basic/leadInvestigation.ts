@@ -13,7 +13,7 @@ import { TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
 import { profiler } from '../../../lib/primitives/profiler'
 
-export const assignToLeadInvestigation = profiler.wrap('assignToLeadInvestigation', assignToLeadInvestigationImpl)
+export const assignToLeadInvestigation = profiler.wrap('A1_asgn', assignToLeadInvestigationImpl)
 
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.

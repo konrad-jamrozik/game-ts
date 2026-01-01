@@ -21,7 +21,7 @@ function delegateTurnToAIPlayerImpl(intellectName: string): void {
   }
 }
 
-export const delegateTurnToAIPlayer = profiler.wrap('delegateTurnToAIPlayer', delegateTurnToAIPlayerImpl)
+export const delegateTurnToAIPlayer = profiler.wrap('_AI', delegateTurnToAIPlayerImpl)
 
 export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
   const store = getStore()
@@ -73,4 +73,4 @@ function dispatchAdvanceTurnImpl(store: AppStore): void {
   store.dispatch(advanceTurn())
 }
 
-const dispatchAdvanceTurn = profiler.wrap('dispatchAdvanceTurn', dispatchAdvanceTurnImpl)
+const dispatchAdvanceTurn = profiler.wrap('_AdvT', dispatchAdvanceTurnImpl)

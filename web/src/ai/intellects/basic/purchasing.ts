@@ -148,7 +148,7 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAge
   return moneyAfterPurchase >= minimumRequiredSavings
 }
 
-const executePurchase = profiler.wrap('executePurchase', executePurchaseImpl)
+const executePurchase = profiler.wrap('P1_exP', executePurchaseImpl)
 
 function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   executePurchase(api, priority)

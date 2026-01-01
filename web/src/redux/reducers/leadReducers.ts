@@ -82,7 +82,7 @@ function validateAgentsNotAlreadyAssignedImpl(
   }
 }
 
-const validateAgentsNotAlreadyAssigned = profiler.wrap('F1Val', validateAgentsNotAlreadyAssignedImpl)
+const validateAgentsNotAlreadyAssigned = profiler.wrap('A4_Red1_val', validateAgentsNotAlreadyAssignedImpl)
 
 function addAgentIdsToInvestigationImpl(
   investigation: GameState['leadInvestigations'][string],
@@ -93,7 +93,7 @@ function addAgentIdsToInvestigationImpl(
   }
 }
 
-const addAgentIdsToInvestigation = profiler.wrap('F2Add', addAgentIdsToInvestigationImpl)
+const addAgentIdsToInvestigation = profiler.wrap('A4_Red2_add', addAgentIdsToInvestigationImpl)
 
 function assignAgentsToInvestigationImpl(
   state: GameState,
@@ -109,9 +109,9 @@ function assignAgentsToInvestigationImpl(
   }
 }
 
-const assignAgentsToInvestigation = profiler.wrap('F3Asgn', assignAgentsToInvestigationImpl)
+const assignAgentsToInvestigation = profiler.wrap('A4_Red3_asgn', assignAgentsToInvestigationImpl)
 
-const wrappedReducer = profiler.wrap('FAddRed', addAgentsToInvestigationReducer)
+const wrappedReducer = profiler.wrap('A3_Red', addAgentsToInvestigationReducer)
 
 export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>(
   wrappedReducer,

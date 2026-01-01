@@ -42,21 +42,9 @@ class Profiler {
   }
 
   private static getHeaderName(functionName: string): string {
-    // Special header mappings
-    if (functionName === 'delegateTurnToAIPlayer') {
-      return 'AI'
-    }
-    if (functionName === 'dispatchAdvanceTurn') {
-      return 'AdvT'
-    }
-    if (functionName === 'F2add') {
-      return 'F2add'
-    }
-    if (functionName === 'F3ass') {
-      return 'F3ass'
-    }
     // Default: abbreviate the name
-    return Profiler.abbreviateName(functionName)
+    // return Profiler.abbreviateName(functionName)
+    return functionName
   }
 
   private static sortFunctionNames(functionNames: string[]): string[] {

@@ -26,11 +26,32 @@ import {
 } from '../lib/model_utils/validatePlayerActions'
 import { assertTrue } from '../lib/primitives/assertPrimitives'
 import { log } from '../lib/primitives/logger'
+import { profiler } from '../lib/primitives/profiler'
 import type { GameState } from '../lib/model/gameStateModel'
 import type { AppDispatch } from './store'
 
 export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: boolean }): PlayerActionsAPI {
   const strict = options?.strict ?? false
+
+  function addAgentsToInvestigationImpl(
+    gameState: GameState,
+    params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
+  ): ActionResult {
+    log.info(
+      'player',
+      'add agents to investigation. Investigation ID:',
+      params.investigationId,
+      'Agent IDs:',
+      params.agentIds,
+    )
+    const validation = validateAddAgentsToInvestigation(gameState, params.agentIds)
+    const errorResult = handleValidationError(strict, validation)
+    if (errorResult) return errorResult
+    dispatch(addAgentsToInvestigation(params))
+    return { success: true }
+  }
+
+  const wrappedAddAgentsToInvestigation = profiler.wrap('A2_add', addAgentsToInvestigationImpl)
 
   const api: PlayerActionsAPI = {
     hireAgent(gameState: GameState): ActionResult {
@@ -87,23 +108,7 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
       return { success: true }
     },
 
-    addAgentsToInvestigation(
-      gameState: GameState,
-      params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
-    ): ActionResult {
-      log.info(
-        'player',
-        'add agents to investigation. Investigation ID:',
-        params.investigationId,
-        'Agent IDs:',
-        params.agentIds,
-      )
-      const validation = validateAddAgentsToInvestigation(gameState, params.agentIds)
-      const errorResult = handleValidationError(strict, validation)
-      if (errorResult) return errorResult
-      dispatch(addAgentsToInvestigation(params))
-      return { success: true }
-    },
+    addAgentsToInvestigation: wrappedAddAgentsToInvestigation,
 
     deployAgentsToMission(gameState: GameState, params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult {
       log.info('player', 'deploy agents to mission. Mission ID:', params.missionId, 'Agent IDs:', params.agentIds)
