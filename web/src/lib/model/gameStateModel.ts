@@ -6,9 +6,10 @@ import type { LeadInvestigation } from './leadModel'
 import type { Mission } from './missionModel'
 
 export type GameState = {
-  // Session
   turn: number
+  // Metadata
   actionsCount: number
+  totalAgentsHired: number // Used to generate next agent ID.
   // Situation
   panic: Fixed6
   factions: Faction[]
@@ -16,6 +17,7 @@ export type GameState = {
   money: number
   funding: number
   agents: Agent[]
+  terminatedAgents: Agent[]
   agentCap: number
   transportCap: number
   trainingCap: number

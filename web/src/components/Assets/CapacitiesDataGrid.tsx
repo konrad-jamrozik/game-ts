@@ -6,7 +6,7 @@ import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/s
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
-import { notTerminated, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
+import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
@@ -15,7 +15,7 @@ export function CapacitiesDataGrid(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
-  const currentAgentCount = notTerminated(gameState.agents).length
+  const currentAgentCount = gameState.agents.length
   const remainingAgentCap = Math.max(gameState.agentCap - currentAgentCount, 0)
   const remainingTransportCap = getRemainingTransportCap(gameState.missions, gameState.transportCap)
   const agentsInTraining = onTrainingAssignment(gameState.agents).length

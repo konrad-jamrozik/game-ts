@@ -2,7 +2,6 @@ import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead, LeadInvestigation } from '../../../lib/model/leadModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
-import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgents } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
@@ -270,7 +269,7 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
 }
 
 function computeTargetAgentCountForInvestigation(gameState: GameState): number {
-  const totalAgentCount = notTerminated(gameState.agents).length
+  const totalAgentCount = gameState.agents.length
   // At least 1 agent, plus 1 extra for each 10 agents
   return 1 + Math.floor(totalAgentCount / 10)
 }

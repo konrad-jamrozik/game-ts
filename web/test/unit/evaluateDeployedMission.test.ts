@@ -132,10 +132,10 @@ describe(evaluateDeployedMission, () => {
     // Mission should be wiped (all agents terminated)
     expect(mission1.state).toBe('Wiped')
 
-    // All agents should be terminated
-    const terminatedAgents = gameState.agents.filter((agent) => agent.state === 'KIA')
-
-    expect(terminatedAgents).toHaveLength(2)
+    // All agents should be terminated and moved to terminatedAgents
+    expect(gameState.agents).toHaveLength(0)
+    expect(gameState.terminatedAgents).toHaveLength(2)
+    expect(gameState.terminatedAgents.every((agent) => agent.state === 'KIA')).toBe(true)
   })
 })
 

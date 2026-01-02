@@ -2,7 +2,6 @@ import type { RootReducerState } from '../rootReducer'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
 import type { Agent } from '../../lib/model/agentModel'
-import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { f6c0, toF } from '../../lib/primitives/fixed6'
@@ -170,7 +169,7 @@ function selectTurnSnapshotsForCharts(state: RootReducerState): GameState[] {
 }
 
 function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
-  const agents = notTerminated(gameState.agents)
+  const agents = gameState.agents
   const maxEffSkills = agents.map((agent) => getMaxEffectiveSkill(agent))
   const currentEffSkills = agents.map((agent) => toF(effectiveSkill(agent)))
 
@@ -190,7 +189,7 @@ function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
 }
 
 function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
-  const agents = notTerminated(gameState.agents)
+  const agents = gameState.agents
 
   const maxHitPoints = agents.map((agent) => toF(agent.maxHitPoints))
   const hitPoints = agents.map((agent) => toF(agent.hitPoints))

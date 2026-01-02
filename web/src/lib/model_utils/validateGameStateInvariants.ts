@@ -8,11 +8,20 @@ import { assertTrue } from '../primitives/assertPrimitives'
 /**
  * Validates the entire game state invariants.
  * Throws an Error if any invariant is violated.
+ *
+ * Note: terminatedAgents are NOT validated here because they are immutable
+ * after termination. They are validated once at the point of termination
+ * (in sackAgents reducer and moveKilledAgentsToTerminated).
  */
 export function validateGameStateInvariants(state: GameState): void {
-  // Validate all agents
+  // Validate all alive agents
   for (const agent of state.agents) {
     validateAgentInvariants(agent, state)
+    // Agents in 'agents' array must not be terminated
+    assertTrue(
+      agent.state !== 'KIA' && agent.state !== 'Sacked',
+      `Agent ${agent.id} in agents array has terminated state: ${agent.state}`,
+    )
   }
 
   // Validate terminated faction leads

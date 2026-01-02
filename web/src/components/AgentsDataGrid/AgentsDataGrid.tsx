@@ -5,7 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
 import { setAgentSelection } from '../../redux/slices/selectionSlice'
-import { notTerminated, withIds } from '../../lib/model_utils/agentUtils'
+import { withIds } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
@@ -68,8 +68,11 @@ export function AgentsDataGrid(): React.JSX.Element {
   const terminatedIds = agentsReport && 'terminatedAgentIds' in agentsReport ? agentsReport.terminatedAgentIds : []
   const agentsTerminatedThisTurnIds = new Set<string>(terminatedIds)
 
+  // Merge alive and terminated agents for display
+  const allAgents = [...gameState.agents, ...gameState.terminatedAgents]
+
   // Transform agents array to include rowId for DataGrid
-  const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
+  const allRows: AgentRow[] = allAgents.map((agent, index) => ({
     ...agent,
     rowId: index,
   }))
@@ -83,10 +86,10 @@ export function AgentsDataGrid(): React.JSX.Element {
     agentsTerminatedThisTurnIds,
   )
 
-  const maxSkillNonTerminated = getMaxSkillNonTerminated(allRows)
+  const maxSkillAlive = getMaxSkillAlive(allRows)
   const columns = getAgentsColumns(
     rows,
-    maxSkillNonTerminated,
+    maxSkillAlive,
     gameState.missions,
     gameState.turn,
     gameState.hitPointsRecoveryPct,
@@ -138,7 +141,7 @@ export function AgentsDataGrid(): React.JSX.Element {
         })()
       : undefined
 
-  const agentCounts = calculateAgentCounts(gameState.agents)
+  const agentCounts = calculateAgentCounts(allAgents)
   const title = <AgentsDataGridTitle counts={agentCounts} />
 
   return (
@@ -177,7 +180,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   )
 }
 
-function getMaxSkillNonTerminated(rows: AgentRow[]): Fixed6 {
-  const activeRows = notTerminated(rows)
-  return activeRows.reduce((max, row) => f6max(max, row.skill), f6c0)
+function getMaxSkillAlive(rows: AgentRow[]): Fixed6 {
+  const aliveRows = rows.filter((row) => row.state !== 'KIA' && row.state !== 'Sacked')
+  return aliveRows.reduce((max, row) => f6max(max, row.skill), f6c0)
 }

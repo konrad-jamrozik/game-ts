@@ -7,28 +7,41 @@ import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils
 import type { LeadInvestigation } from '../../lib/model/leadModel'
 import { bldAgent } from '../../lib/factories/agentFactory'
 import { bldWeapon } from '../../lib/factories/weaponFactory'
+import { validateAgentInvariants } from '../../lib/model_utils/validateAgentInvariants'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const newAgent = bldAgent({
-    agentCount: state.agents.length,
+    agentCount: state.totalAgentsHired,
     turnHired: state.turn,
     weapon: bldWeapon({ damage: state.weaponDamage }),
     state: 'InTransit',
     assignment: 'Standby',
   })
   state.agents.push(newAgent)
+  state.totalAgentsHired += 1
   state.money -= AGENT_HIRE_COST
 })
 
 export const sackAgents = asPlayerAction<string[]>((state: GameState, action) => {
   const agentIdsToSack = action.payload
+  const agentsToSack: typeof state.agents = []
+  const agentsToKeep: typeof state.agents = []
+
   for (const agent of state.agents) {
     if (agentIdsToSack.includes(agent.id)) {
       agent.state = 'Sacked'
       agent.assignment = 'Sacked'
       agent.turnTerminated = state.turn
+      // Validate agent invariants before moving to terminatedAgents (one-time validation)
+      validateAgentInvariants(agent, state)
+      agentsToSack.push(agent)
+    } else {
+      agentsToKeep.push(agent)
     }
   }
+
+  state.agents = agentsToKeep
+  state.terminatedAgents.push(...agentsToSack)
 })
 
 export const assignAgentsToContracting = asPlayerAction<string[]>((state: GameState, action) => {

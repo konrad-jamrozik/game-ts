@@ -19,7 +19,8 @@ import {
   type Fixed6,
   toF6r,
 } from '../../primitives/fixed6'
-import { addSkill, notTerminated, withIds } from '../../model_utils/agentUtils'
+import { addSkill, withIds } from '../../model_utils/agentUtils'
+import { validateAgentInvariants } from '../../model_utils/validateAgentInvariants'
 import { evaluateBattle, type BattleReport } from './evaluateBattle'
 import { assertDefined, assertNotBothTrue } from '../../primitives/assertPrimitives'
 import { canParticipateInBattle } from '../../ruleset/missionRuleset'
@@ -61,6 +62,9 @@ export function evaluateDeployedMission(
     battleReport.initialAgentExhaustionByAgentId,
   )
 
+  // Move KIA agents from agents to terminatedAgents
+  moveKilledAgentsToTerminated(state, deployedAgents)
+
   // Determine mission outcome
   const noEnemyCanParticipate = !canAnyEnemyParticipateInBattle(mission.enemies)
   assertNotBothTrue(noEnemyCanParticipate, battleReport.retreated, 'No enemies can participate and player retreated')
@@ -84,13 +88,35 @@ function canAnyEnemyParticipateInBattle(enemies: Enemy[]): boolean {
   return enemies.some((enemy) => canParticipateInBattle(enemy))
 }
 
+function moveKilledAgentsToTerminated(state: GameState, deployedAgents: Agent[]): void {
+  const killedAgentIds = new Set(deployedAgents.filter((a) => a.state === 'KIA').map((a) => a.id))
+  if (killedAgentIds.size === 0) return
+
+  const killedAgents: Agent[] = []
+  const survivingAgents: Agent[] = []
+
+  for (const agent of state.agents) {
+    if (killedAgentIds.has(agent.id)) {
+      // Validate agent invariants before moving to terminatedAgents (one-time validation)
+      validateAgentInvariants(agent, state)
+      killedAgents.push(agent)
+    } else {
+      survivingAgents.push(agent)
+    }
+  }
+
+  state.agents = survivingAgents
+  // Use reassignment instead of push to work both in immer drafts and plain objects
+  state.terminatedAgents = [...state.terminatedAgents, ...killedAgents]
+}
+
 function getAgentExhaustionAfterBattle(
   deployedAgents: Agent[],
   initialAgentExhaustionByAgentId: Record<string, Fixed6>,
 ): number {
   // Calculate final exhaustion gain AFTER updateAgentsAfterBattle (which includes casualty penalty)
   // Only count surviving agents (terminated agents don't contribute to exhaustion gain)
-  const survivingAgents = notTerminated(deployedAgents)
+  const survivingAgents = deployedAgents.filter((a) => a.state !== 'KIA')
   const finalAgentExhaustion = f6sumBy(survivingAgents, (agent) => agent.exhaustionPct)
   // Calculate initial exhaustion for only the surviving agents
   const initialSurvivingAgentExhaustion = f6sumBy(

@@ -9,7 +9,6 @@ import {
   type UpgradeName,
 } from '../../../lib/data_tables/upgrades'
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
-import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
@@ -65,7 +64,7 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
 
 function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   const { gameState, aiState } = api
-  const actualAgentCount = notTerminated(gameState.agents).length
+  const actualAgentCount = gameState.agents.length
 
   // Priority 1: Buy agents until desired agent count is reached
   if (actualAgentCount < aiState.desiredAgentCount) {
@@ -202,7 +201,7 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
 }
 
 function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
-  const actualAgentCount = notTerminated(gameState.agents).length
+  const actualAgentCount = gameState.agents.length
   return (
     actualAgentCount >= aiState.desiredAgentCount &&
     aiState.actualAgentCapUpgrades >= aiState.desiredAgentCapUpgrades &&

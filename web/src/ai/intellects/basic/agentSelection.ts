@@ -1,6 +1,6 @@
 import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
-import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
+import { available, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
 import type { SelectNextBestReadyAgentsOptions } from './types'
 import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT } from './constants'
@@ -15,7 +15,7 @@ export function selectNextBestReadyAgents(
 ): Agent[] {
   const { includeInTraining = true, keepReserve = true, maxExhaustionPct = MAX_READY_EXHAUSTION_PCT } = options ?? {}
   const availableAgents = available(gameState.agents)
-  const totalAgentCount = notTerminated(gameState.agents).length
+  const totalAgentCount = gameState.agents.length
 
   const readyAvailableAgents = filterReadyAgents(availableAgents, maxExhaustionPct, excludeAgentIds)
   const readyInTrainingAgents = getReadyInTrainingAgents(

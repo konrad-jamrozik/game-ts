@@ -17,7 +17,7 @@ function spawn10Agents(state: GameState): void {
     const skill = toF6(120 + index * 20)
 
     const newAgent = bldAgent({
-      agentCount: state.agents.length,
+      agentCount: state.totalAgentsHired,
       turnHired: state.turn,
       weapon: bldWeapon({ damage: state.weaponDamage }),
       state: 'Available',
@@ -25,6 +25,7 @@ function spawn10Agents(state: GameState): void {
       skill,
     })
     state.agents.push(newAgent)
+    state.totalAgentsHired += 1
   }
 }
 

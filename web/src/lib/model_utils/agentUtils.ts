@@ -25,16 +25,8 @@ export function addSkillFromTraining(agent: Agent, amount: Fixed6): void {
   agent.skillFromTraining = f6add(agent.skillFromTraining, amount)
 }
 
-export function notTerminated(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state !== 'KIA' && agent.state !== 'Sacked')
-}
-
 export function inTransit(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'InTransit')
-}
-
-export function terminated(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state === 'KIA')
 }
 
 export function available(agents: Agent[]): Agent[] {

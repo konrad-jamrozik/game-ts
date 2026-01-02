@@ -6,12 +6,7 @@ import type { Enemy } from '../../src/lib/model/enemyModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { Mission } from '../../src/lib/model/missionModel'
 import type { AgentId, LeadId, MissionDataId, MissionId } from '../../src/lib/model/modelIds'
-import {
-  available,
-  isActivityAssignment,
-  onContractingAssignment,
-  terminated,
-} from '../../src/lib/model_utils/agentUtils'
+import { available, isActivityAssignment, onContractingAssignment } from '../../src/lib/model_utils/agentUtils'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
@@ -104,11 +99,12 @@ export const st = {
   },
 
   expectTerminatedAgentCount(expectedCount: number): void {
-    expect(terminated(st.gameState.agents)).toHaveLength(expectedCount)
+    expect(st.gameState.terminatedAgents).toHaveLength(expectedCount)
   },
 
   expectAgentState(agentId: string, expectedState: Agent['state']): void {
-    const agent = st.gameState.agents.find((ag) => ag.id === agentId)
+    const allAgents = [...st.gameState.agents, ...st.gameState.terminatedAgents]
+    const agent = allAgents.find((ag) => ag.id === agentId)
     expect(agent).toBeDefined()
     if (agent) {
       expect(agent.state).toBe(expectedState)
@@ -116,7 +112,8 @@ export const st = {
   },
 
   expectAgentAssignment(agentId: string, expectedAssignment: Agent['assignment']): void {
-    const agent = st.gameState.agents.find((ag) => ag.id === agentId)
+    const allAgents = [...st.gameState.agents, ...st.gameState.terminatedAgents]
+    const agent = allAgents.find((ag) => ag.id === agentId)
     expect(agent).toBeDefined()
     if (agent) {
       expect(agent.assignment).toBe(expectedAssignment)

@@ -1,6 +1,6 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
-import { available, notTerminated } from '../../../lib/model_utils/agentUtils'
+import { available } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
 import { MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT, MAX_READY_EXHAUSTION_PCT } from './constants'
 import { deployToMissions } from './missionDeployment'
@@ -49,7 +49,7 @@ function logAgentStatistics(gameState: GameState): void {
     const exhaustionPct = toF(agent.exhaustionPct)
     return exhaustionPct <= MAX_READY_EXHAUSTION_PCT
   })
-  const totalAgents = notTerminated(gameState.agents).length
+  const totalAgents = gameState.agents.length
   const readyAgentsPct = totalAgents > 0 ? ((readyAgents.length / totalAgents) * 100).toFixed(1) : '0.0'
 
   log.info(

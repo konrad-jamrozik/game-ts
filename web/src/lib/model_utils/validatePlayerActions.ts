@@ -2,7 +2,7 @@ import type { GameState } from '../model/gameStateModel'
 import type { AgentId, MissionId } from '../model/modelIds'
 import { AGENT_HIRE_COST } from '../data_tables/constants'
 import { getUpgradePrice, type UpgradeName } from '../data_tables/upgrades'
-import { notTerminated, onTrainingAssignment } from './agentUtils'
+import { onTrainingAssignment } from './agentUtils'
 import { validateAvailableAgents, validateNotExhaustedAgents, validateOnAssignmentAgents } from './validateAgents'
 import { getRemainingTransportCap, validateMissionDeployment, getMissionById } from './missionUtils'
 
@@ -16,8 +16,8 @@ export function validateHireAgent(gameState: GameState): ValidationResult {
     return { isValid: false, errorMessage: 'Insufficient funds' }
   }
 
-  // Validate agent cap (only count non-terminated agents)
-  if (notTerminated(gameState.agents).length >= gameState.agentCap) {
+  // Validate agent cap
+  if (gameState.agents.length >= gameState.agentCap) {
     return {
       isValid: false,
       errorMessage: `Cannot hire more than ${gameState.agentCap} agents (agent cap reached)`,

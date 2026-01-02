@@ -36,6 +36,8 @@ export const initialGameState: GameState = {
   hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
   weaponDamage: initialWeapon.damage,
   agents: bldInitialAgents(),
+  terminatedAgents: [],
+  totalAgentsHired: 4,
   // Leads
   leadInvestigationCounts: {},
   leadInvestigations: {},
