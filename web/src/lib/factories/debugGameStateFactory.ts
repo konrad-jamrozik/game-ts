@@ -30,11 +30,11 @@ export function bldDebugGameStateOverrides(initialGameState: GameState): Partial
   // Enrich debug state with a diverse set of agents covering different states/assignments/attributes
   const missionId: MissionId = 'mission-000'
   const deepStateInvestigationId: LeadInvestigationId = 'investigation-000'
-  const { debugAgents, onMissionAgentIds, deepStateInvestigationAgentIds } = bldDebugAgents(
-    missionId,
-    deepStateInvestigationId,
-  )
-  gameStateOverrides.agents = debugAgents
+  const { aliveAgents, terminatedAgents, totalAgentsHired, onMissionAgentIds, deepStateInvestigationAgentIds } =
+    bldDebugAgents(missionId, deepStateInvestigationId)
+  gameStateOverrides.agents = aliveAgents
+  gameStateOverrides.terminatedAgents = terminatedAgents
+  gameStateOverrides.totalAgentsHired = totalAgentsHired
 
   gameStateOverrides.missions = bldDebugMissions(missionId, onMissionAgentIds)
 
@@ -46,12 +46,17 @@ export function bldDebugGameStateOverrides(initialGameState: GameState): Partial
   return gameStateOverrides
 }
 
-function bldDebugAgents(
-  missionId: MissionId,
-  deepStateInvestigationId: LeadInvestigationId,
-): { debugAgents: Agent[]; onMissionAgentIds: AgentId[]; deepStateInvestigationAgentIds: AgentId[] } {
+type DebugAgentsResult = {
+  aliveAgents: Agent[]
+  terminatedAgents: Agent[]
+  totalAgentsHired: number
+  onMissionAgentIds: AgentId[]
+  deepStateInvestigationAgentIds: AgentId[]
+}
+
+function bldDebugAgents(missionId: MissionId, deepStateInvestigationId: LeadInvestigationId): DebugAgentsResult {
   const onMissionAgentIds: AgentId[] = []
-  const agents: Agent[] = []
+  const allAgents: Agent[] = []
 
   // prettier-ignore
   type AgentRow = readonly [
@@ -99,7 +104,7 @@ function bldDebugAgents(
           : assignmentType
 
     const agentParams: Parameters<typeof bldAgent>[0] = {
-      agentCount: agents.length,
+      agentCount: allAgents.length,
       state,
       assignment,
       skill: toF6(skill),
@@ -119,7 +124,7 @@ function bldDebugAgents(
     }
 
     const agent = bldAgent(agentParams)
-    agents.push(agent)
+    allAgents.push(agent)
 
     if (agent.assignment === missionId) {
       onMissionAgentIds.push(agent.id)
@@ -127,13 +132,23 @@ function bldDebugAgents(
   }
 
   const deepStateInvestigationAgentIds: AgentId[] = []
-  for (const agent of agents) {
+  for (const agent of allAgents) {
     if (agent.assignment === deepStateInvestigationId) {
       deepStateInvestigationAgentIds.push(agent.id)
     }
   }
 
-  return { debugAgents: agents, onMissionAgentIds, deepStateInvestigationAgentIds }
+  // Separate alive agents from terminated agents
+  const aliveAgents = allAgents.filter((a) => a.state !== 'KIA' && a.state !== 'Sacked')
+  const terminatedAgents = allAgents.filter((a) => a.state === 'KIA' || a.state === 'Sacked')
+
+  return {
+    aliveAgents,
+    terminatedAgents,
+    totalAgentsHired: allAgents.length,
+    onMissionAgentIds,
+    deepStateInvestigationAgentIds,
+  }
 }
 
 function bldDebugMissions(missionId: MissionId, onMissionAgentIds: AgentId[]): GameState['missions'] {
