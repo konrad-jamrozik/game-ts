@@ -24,6 +24,7 @@ export type AssetsDatasetRow = {
   contracting: number
   upkeep: number
   rewards: number
+  expenditures: number
 }
 
 export type AgentSkillDatasetRow = {
@@ -73,6 +74,7 @@ export type SituationReportDatasetRow = {
 
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const statesByTurn = selectTurnSnapshotsForCharts(state)
+  const { firstByTurn, lastByTurn } = selectTurnSnapshotsWithFirst(state)
 
   const missionIds = new Set<string>()
   const expiredMissionIds = new Set<string>()
@@ -100,6 +102,22 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     // Get rewards from turn report (per-turn, not cumulative)
     const turnRewards = turnStartReport?.assets.moneyBreakdown.missionRewards ?? 0
 
+    // KJA3 review if this expenditure tracking is correct. Note this is the only reason
+    // to have selectTurnSnapshotsWithFirst
+    //
+    // Calculate expenditures: compare money at start vs end of turn
+    // First snapshot of turn N: right after turn advancement from N-1 (includes income)
+    // Last snapshot of turn N: right before turn advancement to N+1 (includes expenditures from player actions)
+    // Expenditures = money at start of turn - money at end of turn
+    const firstSnapshot = firstByTurn.get(turn)
+    const lastSnapshot = lastByTurn.get(turn)
+    let expenditures = 0
+    if (firstSnapshot !== undefined && lastSnapshot !== undefined) {
+      // Money decreases during player actions (hiring agents, buying upgrades)
+      // So expenditures = firstSnapshot.money - lastSnapshot.money
+      expenditures = Math.max(0, firstSnapshot.money - lastSnapshot.money)
+    }
+
     // --- Asset totals (direct from state)
     assets.push({
       turn,
@@ -109,6 +127,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       contracting: getContractingIncome(gameState),
       upkeep: getAgentUpkeep(gameState),
       rewards: turnRewards,
+      expenditures,
     })
 
     // --- Agent skill (derived)
@@ -176,6 +195,29 @@ function selectTurnSnapshotsForCharts(state: RootReducerState): GameState[] {
 
   const turnsAscending = [...byTurn.keys()].toSorted((a, b) => a - b)
   return turnsAscending.map((turn) => byTurn.get(turn)).filter((x) => x !== undefined)
+}
+
+function selectTurnSnapshotsWithFirst(state: RootReducerState): {
+  firstByTurn: Map<number, GameState>
+  lastByTurn: Map<number, GameState>
+} {
+  const allSnapshotsInOrder: GameState[] = [
+    ...state.undoable.past.map((s) => s.gameState),
+    state.undoable.present.gameState,
+  ]
+
+  // Keep the first and last snapshot for each turn
+  const firstByTurn = new Map<number, GameState>()
+  const lastByTurn = new Map<number, GameState>()
+
+  for (const snapshot of allSnapshotsInOrder) {
+    if (!firstByTurn.has(snapshot.turn)) {
+      firstByTurn.set(snapshot.turn, snapshot)
+    }
+    lastByTurn.set(snapshot.turn, snapshot)
+  }
+
+  return { firstByTurn, lastByTurn }
 }
 
 function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
