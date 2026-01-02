@@ -19,7 +19,7 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { NumberField } from './NumberField'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
-export function AIPlayerSection(): React.JSX.Element {
+export function AIPlayerCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
@@ -70,9 +70,9 @@ export function AIPlayerSection(): React.JSX.Element {
 
   return (
     <ExpandableCard
-      id="ai-player-section"
+      id="ai-player-card"
       title="AI Player"
-      defaultExpanded={false}
+      defaultExpanded={true}
       sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
     >
       <Stack spacing={2}>

@@ -8,7 +8,7 @@ import { DebugSettingsCard } from './DebugSettingsCard'
 import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
-import { AIPlayerSection } from './GameControls/AIPlayerSection'
+import { AIPlayerCard } from './GameControls/AIPlayerCard'
 import { LeadInvestigationsDataGrid } from './LeadInvestigationsDataGrid/LeadInvestigationsDataGrid'
 import { LeadsDataGrid } from './LeadsDataGrid/LeadsDataGrid'
 import { MissionsDataGrid } from './MissionsDataGrid/MissionsDataGrid'
@@ -76,7 +76,7 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2} alignItems="center">
           <GameControls />
-          <AIPlayerSection />
+          <AIPlayerCard />
           <PlayerActions />
           <EventLog />
           <DebugActionsCard />
