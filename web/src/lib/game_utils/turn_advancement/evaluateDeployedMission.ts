@@ -62,9 +62,9 @@ export function evaluateDeployedMission(
   )
 
   // Determine mission outcome
-  const allEnemiesNeutralized = !canAnyEnemyParticipateInBattle(mission.enemies)
-  assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
-  if (allEnemiesNeutralized) {
+  const noEnemyCanParticipate = !canAnyEnemyParticipateInBattle(mission.enemies)
+  assertNotBothTrue(noEnemyCanParticipate, battleReport.retreated, 'No enemies can participate and player retreated')
+  if (noEnemyCanParticipate) {
     mission.state = 'Won'
   } else if (battleReport.retreated) {
     mission.state = 'Retreated'

@@ -40,7 +40,7 @@
 			}
 		},
 		{
-			"label": "Test UI",
+			"label": "Test",
 			"type": "shell",
 			"command": "testui",
 			"isBackground": true,
@@ -53,7 +53,7 @@
 			"label": "Setup terminals",
 			"dependsOn": [
 				"Dev server",
-				"Test UI",
+				"Test",
 			],
 			"dependsOrder": "parallel",
 			"problemMatcher": []

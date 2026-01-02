@@ -31,6 +31,12 @@ import { log } from '../../primitives/logger'
 import type { RoundLog, AttackLog } from '../../model/turnReportModel'
 import type { BattleOutcome } from '../../model/outcomeTypes'
 
+type CombatRoundResult = {
+  attackLogs: AttackLog[]
+  activeAgents: Agent[]
+  activeEnemies: Enemy[]
+}
+
 export type BattleReport = {
   rounds: number
   agentCasualties: number
@@ -86,6 +92,10 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const roundLogs: RoundLog[] = []
   const attackLogs: AttackLog[] = []
 
+  // Initialize active lists once before the battle loop
+  let activeAgents = agents.filter((agent) => canParticipateInBattle(agent))
+  let activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
+
   let roundIdx = 0
   let combatRounds = 0
   let retreated = false
@@ -95,8 +105,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     combatRounds += 1
 
     // Capture round state at start of round (before combat)
-    const activeAgentsAtRoundStart = agents.filter((agent) => canParticipateInBattle(agent))
-    const activeEnemiesAtRoundStart = enemies.filter((enemy) => canParticipateInBattle(enemy))
+    const activeAgentsAtRoundStart = activeAgents
+    const activeEnemiesAtRoundStart = activeEnemies
     const agentSkillAtRoundStart = f6sumBy(activeAgentsAtRoundStart, (agent) => effectiveSkill(agent))
     const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
     const enemySkillAtRoundStart = f6sumBy(activeEnemiesAtRoundStart, (enemy) => effectiveSkill(enemy))
@@ -106,18 +116,28 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     // // Show round status with detailed statistics
     // showRoundStatus(
     //   roundIdx,
-    //   agents,
-    //   enemies,
+    //   activeAgentsAtRoundStart,
+    //   activeEnemiesAtRoundStart,
     //   initialAgentEffectiveSkill,
     //   initialAgentHitPoints,
     //   initialEnemySkill,
     //   initialEnemyHitPoints,
     // )
 
-    const roundAttackLogs = evaluateCombatRound(agents, agentStats, enemies, initialEnemyEffectiveSkillMap, roundIdx)
-    attackLogs.push(...roundAttackLogs)
+    const roundResult = evaluateCombatRound(
+      activeAgentsAtRoundStart,
+      agentStats,
+      activeEnemiesAtRoundStart,
+      initialEnemyEffectiveSkillMap,
+      roundIdx,
+    )
+    attackLogs.push(...roundResult.attackLogs)
 
-    const sideEliminated = isSideEliminated(agents, enemies)
+    // Update active lists for next round
+    activeAgents = roundResult.activeAgents
+    activeEnemies = roundResult.activeEnemies
+
+    const sideEliminated = isSideEliminated(activeAgents, activeEnemies)
 
     // Create round log entry for current round showing state at round START (before combat).
     // Status is always 'Ongoing' here; the final battle outcome is recorded in the end-of-battle log.
@@ -142,7 +162,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
 
     // Check for retreat after logging current round
     if (!sideEliminated) {
-      const retreatResult = shouldRetreat(agents, agentStats, enemies)
+      const retreatResult = shouldRetreat(activeAgents, agentStats, activeEnemies)
       retreated = retreatResult.shouldRetreat
       if (retreated) {
         logRetreat(retreatResult)
@@ -156,8 +176,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   // Create end-of-battle round log showing final state after all combat.
   // This provides a consistent pattern: all combat round logs show state at round start,
   // and this final log shows the state after the battle concludes.
-  const activeAgentsAtBattleEnd = agents.filter((agent) => canParticipateInBattle(agent))
-  const activeEnemiesAtBattleEnd = enemies.filter((enemy) => canParticipateInBattle(enemy))
+  const activeAgentsAtBattleEnd = activeAgents
+  const activeEnemiesAtBattleEnd = activeEnemies
   const agentSkillAtBattleEnd = f6sumBy(activeAgentsAtBattleEnd, (agent) => effectiveSkill(agent))
   const agentHpAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => toF(agent.hitPoints))
   const enemySkillAtBattleEnd = f6sumBy(activeEnemiesAtBattleEnd, (enemy) => effectiveSkill(enemy))
@@ -228,8 +248,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
 
   showRoundStatus(
     combatRounds,
-    agents,
-    enemies,
+    activeAgentsAtBattleEnd,
+    activeEnemiesAtBattleEnd,
     initialAgentEffectiveSkill,
     initialAgentHitPoints,
     initialEnemySkill,
@@ -277,11 +297,9 @@ function bldAgentsCombatStats(agents: Agent[]): AgentCombatStats[] {
   }))
 }
 
-function isSideEliminated(agents: Agent[], enemies: Enemy[]): boolean {
-  // A side is eliminated when all units are either terminated (HP <= 0) or incapacitated (effective skill < 10% base)
-  const allAgentsEliminated = agents.every((agent) => f6le(agent.hitPoints, f6c0) || !canParticipateInBattle(agent))
-  const allEnemiesEliminated = enemies.every((enemy) => f6le(enemy.hitPoints, f6c0) || !canParticipateInBattle(enemy))
-  return allAgentsEliminated || allEnemiesEliminated
+function isSideEliminated(activeAgents: Agent[], activeEnemies: Enemy[]): boolean {
+  // A side is eliminated when there are no active units remaining
+  return activeAgents.length === 0 || activeEnemies.length === 0
 }
 
 function logRetreat(retreatResult: RetreatResult): void {
@@ -302,12 +320,12 @@ function logRetreat(retreatResult: RetreatResult): void {
 }
 
 function evaluateCombatRound(
-  agents: Agent[],
+  activeAgents: Agent[],
   agentStats: AgentCombatStats[],
-  enemies: Enemy[],
+  activeEnemies: Enemy[],
   initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
   roundNumber: number,
-): AttackLog[] {
+): CombatRoundResult {
   const attackLogs: AttackLog[] = []
 
   // Track attack counts per target for fair distribution
@@ -317,28 +335,27 @@ function evaluateCombatRound(
   // Calculate effective skills at round start to prevent targets from becoming more attractive
   // as they take damage during the round
   const effectiveSkillsAtRoundStart = new Map<string, Fixed6>()
-  for (const agent of agents) {
-    if (canParticipateInBattle(agent)) {
-      effectiveSkillsAtRoundStart.set(agent.id, effectiveSkill(agent))
-    }
+  for (const agent of activeAgents) {
+    effectiveSkillsAtRoundStart.set(agent.id, effectiveSkill(agent))
   }
-  for (const enemy of enemies) {
-    if (canParticipateInBattle(enemy)) {
-      effectiveSkillsAtRoundStart.set(enemy.id, effectiveSkill(enemy))
-    }
+  for (const enemy of activeEnemies) {
+    effectiveSkillsAtRoundStart.set(enemy.id, effectiveSkill(enemy))
   }
 
   // console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
-  const activeAgents = agents.filter((agent) => canParticipateInBattle(agent))
-  activeAgents.sort(compareActorsBySkillDescending)
+  const sortedActiveAgents = [...activeAgents]
+  sortedActiveAgents.sort(compareActorsBySkillDescending)
 
   // Each agent attacks
-  for (const agent of activeAgents) {
-    processAttack(
+  let currentActiveEnemies = activeEnemies
+  const stillActiveAgents: Agent[] = []
+  for (const agent of sortedActiveAgents) {
+    // Update active enemies list after previous attacks
+    currentActiveEnemies = processAttack(
       agent,
-      enemies,
+      currentActiveEnemies,
       enemyAttackCounts,
       agentStats,
       initialEnemyEffectiveSkillMap,
@@ -347,18 +364,25 @@ function evaluateCombatRound(
       attackLogs,
       'agent_attack_roll',
     )
+    // Check if attacker is still active after attacking (may have become exhausted)
+    if (canParticipateInBattle(agent)) {
+      stillActiveAgents.push(agent)
+    }
   }
 
   // console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
 
-  // Enemies attack back
-  const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
-  activeEnemies.sort(compareActorsBySkillDescending)
+  // Enemies attack back (using currentActiveEnemies after agents attacked)
+  const sortedActiveEnemies = [...currentActiveEnemies]
+  sortedActiveEnemies.sort(compareActorsBySkillDescending)
 
-  for (const enemy of activeEnemies) {
-    processAttack(
+  let currentActiveAgents = stillActiveAgents
+  const stillActiveEnemies: Enemy[] = []
+  for (const enemy of sortedActiveEnemies) {
+    // Update active agents list after previous attacks
+    currentActiveAgents = processAttack(
       enemy,
-      agents,
+      currentActiveAgents,
       agentAttackCounts,
       agentStats,
       initialEnemyEffectiveSkillMap,
@@ -367,14 +391,44 @@ function evaluateCombatRound(
       attackLogs,
       'enemy_attack_roll',
     )
+    // Check if attacker is still active after attacking (may have become exhausted)
+    if (canParticipateInBattle(enemy)) {
+      stillActiveEnemies.push(enemy)
+    }
   }
 
-  return attackLogs
+  return {
+    attackLogs,
+    activeAgents: currentActiveAgents,
+    activeEnemies: stillActiveEnemies,
+  }
 }
 
 function processAttack(
+  attacker: Agent,
+  activeTargets: Enemy[],
+  attackCounts: Map<string, number>,
+  agentStats: AgentCombatStats[],
+  initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
+  roundNumber: number,
+  attackLogs: AttackLog[],
+  attackType: 'agent_attack_roll',
+): Enemy[]
+function processAttack(
+  attacker: Enemy,
+  activeTargets: Agent[],
+  attackCounts: Map<string, number>,
+  agentStats: AgentCombatStats[],
+  initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
+  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
+  roundNumber: number,
+  attackLogs: AttackLog[],
+  attackType: 'enemy_attack_roll',
+): Agent[]
+function processAttack(
   attacker: Agent | Enemy,
-  potentialTargets: Agent[] | Enemy[],
+  activeTargets: Agent[] | Enemy[],
   attackCounts: Map<string, number>,
   agentStats: AgentCombatStats[],
   initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
@@ -382,64 +436,84 @@ function processAttack(
   roundNumber: number,
   attackLogs: AttackLog[],
   attackType: 'agent_attack_roll' | 'enemy_attack_roll',
-): void {
-  // Skip if terminated or incapacitated during this round
-  if (canParticipateInBattle(attacker)) {
-    const activeTargets = potentialTargets.filter((target) => canParticipateInBattle(target))
-    const target = selectTarget(activeTargets, attackCounts, attacker, effectiveSkillsAtRoundStart)
-    if (target) {
-      const isAttackerAgent = isAgent(attacker)
-      const isTargetAgent = isAgent(target)
+): Agent[] | Enemy[] {
+  // Attacker is guaranteed to be active since caller passes only active attackers
+  const target = selectTarget(activeTargets as (Agent | Enemy)[], attackCounts, attacker, effectiveSkillsAtRoundStart)
+  if (target) {
+    const isAttackerAgent = isAgent(attacker)
+    const isTargetAgent = isAgent(target)
 
-      // Get attacker stats/skill
-      let attackerStats: AgentCombatStats | undefined
-      let attackerSkillAtStart: Fixed6
-      if (isAttackerAgent) {
-        const foundStats = agentStats.find((stats) => stats.id === attacker.id)
-        assertDefined(foundStats)
-        attackerStats = foundStats
-        attackerSkillAtStart = foundStats.initialEffectiveSkill
-      } else {
-        attackerStats = undefined
-        attackerSkillAtStart = initialEnemyEffectiveSkillMap.get(attacker.id) ?? f6c0
-      }
-
-      // Get defender stats/skill
-      let defenderStats: AgentCombatStats | undefined
-      let defenderSkillAtStart: Fixed6
-      if (isTargetAgent) {
-        const foundStats = agentStats.find((stats) => stats.id === target.id)
-        assertDefined(foundStats)
-        defenderStats = foundStats
-        defenderSkillAtStart = foundStats.initialEffectiveSkill
-      } else {
-        defenderStats = undefined
-        defenderSkillAtStart = initialEnemyEffectiveSkillMap.get(target.id) ?? f6c0
-      }
-
-      const currentAttackCount = attackCounts.get(target.id) ?? 0
-      const attackLog = evaluateAttack(
-        attacker,
-        attackerStats,
-        target,
-        defenderStats,
-        attackerSkillAtStart,
-        defenderSkillAtStart,
-        roundNumber,
-        attackType,
-        currentAttackCount + 1,
-      )
-      attackLogs.push(attackLog)
-      // Increment attack count for this target
-      attackCounts.set(target.id, currentAttackCount + 1)
+    // Get attacker stats/skill
+    let attackerStats: AgentCombatStats | undefined
+    let attackerSkillAtStart: Fixed6
+    if (isAttackerAgent) {
+      const foundStats = agentStats.find((stats) => stats.id === attacker.id)
+      assertDefined(foundStats)
+      attackerStats = foundStats
+      attackerSkillAtStart = foundStats.initialEffectiveSkill
+    } else {
+      attackerStats = undefined
+      attackerSkillAtStart = initialEnemyEffectiveSkillMap.get(attacker.id) ?? f6c0
     }
+
+    // Get defender stats/skill
+    let defenderStats: AgentCombatStats | undefined
+    let defenderSkillAtStart: Fixed6
+    if (isTargetAgent) {
+      const foundStats = agentStats.find((stats) => stats.id === target.id)
+      assertDefined(foundStats)
+      defenderStats = foundStats
+      defenderSkillAtStart = foundStats.initialEffectiveSkill
+    } else {
+      defenderStats = undefined
+      defenderSkillAtStart = initialEnemyEffectiveSkillMap.get(target.id) ?? f6c0
+    }
+
+    const currentAttackCount = attackCounts.get(target.id) ?? 0
+    const attackLog = evaluateAttack(
+      attacker,
+      attackerStats,
+      target,
+      defenderStats,
+      attackerSkillAtStart,
+      defenderSkillAtStart,
+      roundNumber,
+      attackType,
+      currentAttackCount + 1,
+    )
+    attackLogs.push(attackLog)
+    // Increment attack count for this target
+    attackCounts.set(target.id, currentAttackCount + 1)
   }
+
+  // Filter out the attacked target if it became incapacitated after the attack
+  // Only the attacked target's state changed (hitPoints/exhaustion), so other targets don't need re-checking
+  if (!target) {
+    // No target was attacked, return list as-is
+    return activeTargets
+  }
+
+  // Type narrowing based on the first element to determine the array type
+  if (activeTargets.length === 0) {
+    return activeTargets
+  }
+  const firstTarget = activeTargets[0]
+  if (!firstTarget) {
+    return activeTargets
+  }
+
+  if (isAgent(firstTarget)) {
+    // activeTargets must be Agent[], filter out attacked target if incapacitated
+    return activeTargets.filter((t): t is Agent => isAgent(t) && (t.id !== target.id || canParticipateInBattle(t)))
+  }
+  // activeTargets must be Enemy[], filter out attacked target if incapacitated
+  return activeTargets.filter((t): t is Enemy => !isAgent(t) && (t.id !== target.id || canParticipateInBattle(t)))
 }
 
 function showRoundStatus(
   rounds: number,
-  agents: Agent[],
-  enemies: Enemy[],
+  activeAgents: Agent[],
+  activeEnemies: Enemy[],
   initialAgentEffectiveSkill: Fixed6,
   initialAgentHitPoints: Fixed6,
   initialEnemySkill: Fixed6,
@@ -454,14 +528,12 @@ function showRoundStatus(
   }
 
   // Current agent statistics
-  const activeAgents = agents.filter((agent) => canParticipateInBattle(agent))
   const currentAgentEffectiveSkill = f6sumBy(activeAgents, (agent) => effectiveSkill(agent))
   const currentAgentHitPoints = sum(activeAgents, (agent) => toF(agent.hitPoints))
   const agentSkillPct = f6fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, toF(initialAgentHitPoints))
 
   // Current enemy statistics
-  const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
   const currentEnemyEffectiveSkill = f6sumBy(activeEnemies, (enemy) => effectiveSkill(enemy))
   const currentEnemyHitPoints = sum(activeEnemies, (enemy) => toF(enemy.hitPoints))
   const enemySkillPct = f6fmtPctDec0(currentEnemyEffectiveSkill, initialEnemySkill)

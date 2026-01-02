@@ -81,6 +81,7 @@ export function selectTarget<T extends Agent | Enemy>(
     }
   }
 
+  // KJA3 this silly fallback is inefficient
   // Fallback: No target in valid skill range, pick at random from targets
   // with minimum number of attacks only
   const targetsWithMinAttacks = availableTargets.filter(
