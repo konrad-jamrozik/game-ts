@@ -18,12 +18,14 @@ import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnsToAIPlayer'
 import { profiler } from '../src/lib/primitives/profiler'
 import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
 import { setupCheatingGameState } from '../test/utils/aiTestSetup'
+import { debugConfig } from '../src/lib/primitives/debugConfig'
 
 const TURNS_TO_PLAY = 200
 
 async function main(): Promise<void> {
+  debugConfig.setGameStateInvariantsFrequency(50)
   console.log('Initializing store...')
-  await initStore({ undoLimit: 0, enablePersistence: false })
+  await initStore({ undoLimit: 0, enablePersistence: false, enableDefaultMiddleware: false })
   setupCheatingGameState()
   const store = getStore()
 

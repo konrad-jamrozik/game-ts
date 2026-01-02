@@ -2,28 +2,8 @@
 
 KJA backlog:
 
-# Prompt
-
-When I run
-
-npx tsx --cpu-prof scripts/profileAi.ts
-
-And I look a the resulting flamegraph in Google Chrome DevTools Performance tab, I see:
-- ...
-- assignToLeadInvestigationImpl
-- addAgentsToInvestigation
-- (anonymous)
-- (anonymous)
-- ...
-
-This is not expected to me. Specifically:
-- assignToLeadInvestigationImpl calls api.addAgentsToInvestigationPlayTurnApi but I don't see it in the flamegraph. Why?
-- addAgentsToInvestigation is a wrapper around addAgentsToInvestigationReducer but I don't see it in the flamegraph, just (anonymous). Why?
-
 # Current milestone
 
-- Debug perf, see about_ai_performance.md, notably flamegraphs from browser devtools.
--
 - Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
 
 - Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.

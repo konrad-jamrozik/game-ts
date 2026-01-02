@@ -20,6 +20,4 @@ beforeAll(async () => {
 beforeEach(() => {
   resetAllFixtures()
   rand.reset()
-  // Reset debugConfig frequency to 50 (in case any test changed it)
-  debugConfig.setGameStateInvariantsFrequency(50)
 })
