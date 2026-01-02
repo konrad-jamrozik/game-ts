@@ -11,7 +11,7 @@ export type PlayerActionsAPI = {
   assignAgentsToTraining(gameState: GameState, agentIds: AgentId[]): ActionResult
   recallAgents(gameState: GameState, agentIds: AgentId[]): ActionResult
   startLeadInvestigation(gameState: GameState, params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult
-  // KJA temp
+  // KJA temp addAgentsToInvestigationPlayerActionsApi
   addAgentsToInvestigationPlayerActionsApi(
     gameState: GameState,
     params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
