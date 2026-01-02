@@ -55,5 +55,9 @@ describe('Basic Intellect AI Player', () => {
     // Assert: Verify game ended in victory
     const finalState = store.getState().undoable.present.gameState
     expect(isGameWon(finalState)).toBe(true)
+
+    // Print agent count
+    const gameState = store.getState().undoable.present.gameState
+    console.log(`\nAgent count: ${gameState.agents.length}`)
   })
 })

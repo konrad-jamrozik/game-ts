@@ -5,7 +5,7 @@ import type { AgentId } from '../../../lib/model/modelIds'
 import { getAgentUpkeep, getContractingIncome, getMoneyTurnDiff } from '../../../lib/ruleset/moneyRuleset'
 import { AGENT_CONTRACTING_INCOME } from '../../../lib/data_tables/constants'
 import { MAX_READY_URGENT_EXHAUSTION_PCT, TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER } from './constants'
-import { selectNextBestReadyAgent } from './agentSelection'
+import { selectNextBestReadyAgents } from './agentSelection'
 import { estimateAgentContractingIncome, unassignAgentsFromTraining } from './utils'
 import { log } from '../../../lib/primitives/logger'
 
@@ -23,8 +23,9 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
 
   // Assign agents until projected income becomes non-negative
   while (projectedIncome < 0) {
-    const agent = selectNextBestReadyAgent(
+    const agents = selectNextBestReadyAgents(
       gameState,
+      1,
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
       {
@@ -32,6 +33,7 @@ export function assignToContractingWithPriority(api: PlayTurnAPI): void {
         maxExhaustionPct: MAX_READY_URGENT_EXHAUSTION_PCT,
       },
     )
+    const agent = agents[0]
     if (agent === undefined) {
       // No more agents available to assign
       break
@@ -69,9 +71,10 @@ export function assignToContracting(api: PlayTurnAPI): void {
   const desiredAgentCount = incomeGap > 0 ? Math.ceil(incomeGap / baseAgentIncome) : 0
 
   while (currentIncome < targetIncome) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+    const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
       includeInTraining: false,
     })
+    const agent = agents[0]
     if (agent === undefined) {
       break
     }
@@ -93,14 +96,16 @@ export function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
   const selectedAgentIds: AgentId[] = []
 
-  let agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+  let agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
     includeInTraining: false,
   })
+  let agent = agents[0]
   while (agent !== undefined) {
     selectedAgentIds.push(agent.id)
-    agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+    agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
       includeInTraining: false,
     })
+    agent = agents[0]
   }
 
   if (selectedAgentIds.length > 0) {

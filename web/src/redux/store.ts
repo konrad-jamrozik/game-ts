@@ -41,6 +41,7 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
+        // Default middleware causes significant performance hit. See about_profiling.md
         immutableCheck: false,
         serializableCheck: false,
         actionCreatorCheck: false,

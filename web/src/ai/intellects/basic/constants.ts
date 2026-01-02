@@ -9,7 +9,7 @@ export const TARGET_COMBAT_RATING_MULTIPLIER = 1.2
 export const TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER = 1.2
 export const MAX_READY_URGENT_EXHAUSTION_PCT = 25
 
-// Constants for selectNextBestReadyAgent function
+// Constants for selectNextBestReadyAgents function
 export const MAX_READY_EXHAUSTION_PCT = 5
 export const AGENT_RESERVE_PCT = 0.2
 

@@ -3,7 +3,7 @@ import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Mission } from '../../../lib/model/missionModel'
 import type { Agent } from '../../../lib/model/agentModel'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
-import { selectNextBestReadyAgent } from './agentSelection'
+import { selectNextBestReadyAgents } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { calculateAgentCombatRating, pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
@@ -37,12 +37,14 @@ export function canDeployMissionWithCurrentResources(
 
   // Phase 1: Select agents until meeting minimum count requirement
   while (selectedAgents.length < minimumRequiredAgents) {
-    const agent = selectNextBestReadyAgent(
+    const agents = selectNextBestReadyAgents(
       gameState,
+      1,
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
       { includeInTraining: true, keepReserve: false },
     )
+    const agent = agents[0]
     if (agent === undefined) {
       break // No more agents available
     }
@@ -59,12 +61,14 @@ export function canDeployMissionWithCurrentResources(
 
   // Phase 2: Continue selecting if combat rating requirement not yet met
   while (currentCombatRating < targetCombatRating) {
-    const agent = selectNextBestReadyAgent(
+    const agents = selectNextBestReadyAgents(
       gameState,
+      1,
       selectedAgents.map((a) => a.id),
       selectedAgents.length,
       { includeInTraining: true, keepReserve: false },
     )
+    const agent = agents[0]
     if (agent === undefined) {
       break // No more agents available
     }

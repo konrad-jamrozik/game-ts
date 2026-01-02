@@ -1,7 +1,7 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { AgentId } from '../../../lib/model/modelIds'
 import { onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
-import { selectNextBestReadyAgent } from './agentSelection'
+import { selectNextBestReadyAgents } from './agentSelection'
 import { log } from '../../../lib/primitives/logger'
 
 export function assignToTraining(api: PlayTurnAPI): void {
@@ -12,9 +12,10 @@ export function assignToTraining(api: PlayTurnAPI): void {
   const selectedAgentIds: AgentId[] = []
 
   for (let i = 0; i < availableTrainingSlots; i += 1) {
-    const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+    const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
       includeInTraining: false,
     })
+    const agent = agents[0]
     if (agent === undefined) {
       break
     }

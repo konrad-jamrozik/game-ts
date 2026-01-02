@@ -2,46 +2,78 @@ import type { Agent } from '../../../lib/model/agentModel'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import { available, notTerminated, onTrainingAssignment } from '../../../lib/model_utils/agentUtils'
 import { toF } from '../../../lib/primitives/fixed6'
-import type { SelectNextBestReadyAgentOptions } from './types'
+import type { SelectNextBestReadyAgentsOptions } from './types'
 import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT } from './constants'
 import { pickAtRandomFromLowestExhaustion } from './utils'
 
-export function selectNextBestReadyAgent(
+export function selectNextBestReadyAgents(
   gameState: GameState,
+  agentCount: number,
   excludeAgentIds: string[],
   alreadySelectedCount: number,
-  options?: SelectNextBestReadyAgentOptions,
-): Agent | undefined {
+  options?: SelectNextBestReadyAgentsOptions,
+): Agent[] {
   const { includeInTraining = true, keepReserve = true, maxExhaustionPct = MAX_READY_EXHAUSTION_PCT } = options ?? {}
   const availableAgents = available(gameState.agents)
-  const trainingAgents = onTrainingAssignment(gameState.agents)
-
   const totalAgentCount = notTerminated(gameState.agents).length
 
-  // Filter out agents with exhaustion >= maxExhaustionPct and excluded agents
-  const filterReadyAgents = (agents: Agent[]): Agent[] =>
-    agents.filter((agent: Agent) => {
-      const exhaustionPct = toF(agent.exhaustionPct)
-      return exhaustionPct <= maxExhaustionPct && !excludeAgentIds.includes(agent.id)
-    })
+  const readyAvailableAgents = filterReadyAgents(availableAgents, maxExhaustionPct, excludeAgentIds)
+  const readyInTrainingAgents = getReadyInTrainingAgents(
+    gameState,
+    includeInTraining,
+    maxExhaustionPct,
+    excludeAgentIds,
+  )
 
-  const readyAvailableAgents = filterReadyAgents(availableAgents)
-  const readyInTrainingAgents = filterReadyAgents(trainingAgents)
+  const selectedAgents: Agent[] = []
+  const excludeSet = new Set(excludeAgentIds)
+  let currentAlreadySelectedCount = alreadySelectedCount
 
-  // Consider ready available agents first. If includeInTraining is true, also consider ready in training agents.
-  const consideredAgents: Agent[] =
-    includeInTraining && readyAvailableAgents.length === 0 ? readyInTrainingAgents : readyAvailableAgents
+  for (let i = 0; i < agentCount; i += 1) {
+    // Filter out already selected agents
+    const availableNotExcluded = readyAvailableAgents.filter((a) => !excludeSet.has(a.id))
+    const trainingNotExcluded = readyInTrainingAgents.filter((a) => !excludeSet.has(a.id))
 
-  // Return no agent if none available
-  if (consideredAgents.length === 0) {
-    return undefined
+    // Consider ready available agents first. If includeInTraining is true, also consider ready in training agents.
+    const consideredAgents: Agent[] =
+      includeInTraining && availableNotExcluded.length === 0 ? trainingNotExcluded : availableNotExcluded
+
+    // Return if no agents available
+    if (consideredAgents.length === 0) {
+      break
+    }
+
+    // Return if less than 20% of all agents will be ready after selecting currentAlreadySelectedCount agents (only if keepReserve is true)
+    if (keepReserve && consideredAgents.length - currentAlreadySelectedCount < totalAgentCount * AGENT_RESERVE_PCT) {
+      break
+    }
+
+    // Pick agent with lowest exhaustion, randomly if tied
+    const selectedAgent = pickAtRandomFromLowestExhaustion(consideredAgents)
+    selectedAgents.push(selectedAgent)
+    excludeSet.add(selectedAgent.id)
+    currentAlreadySelectedCount += 1
   }
 
-  // Return no agent if less than 20% of all agents will be ready after selecting alreadySelectedCount agents (only if keepReserve is true)
-  if (keepReserve && consideredAgents.length - alreadySelectedCount < totalAgentCount * AGENT_RESERVE_PCT) {
-    return undefined
-  }
+  return selectedAgents
+}
 
-  // Pick agent with lowest exhaustion, randomly if tied
-  return pickAtRandomFromLowestExhaustion(consideredAgents)
+function getReadyInTrainingAgents(
+  gameState: GameState,
+  includeInTraining: boolean,
+  maxExhaustionPct: number,
+  excludeAgentIds: string[],
+): Agent[] {
+  if (!includeInTraining) {
+    return []
+  }
+  const trainingAgents = onTrainingAssignment(gameState.agents)
+  return filterReadyAgents(trainingAgents, maxExhaustionPct, excludeAgentIds)
+}
+
+function filterReadyAgents(agents: Agent[], maxExhaustionPct: number, excludeAgentIds: string[]): Agent[] {
+  return agents.filter((agent: Agent) => {
+    const exhaustionPct = toF(agent.exhaustionPct)
+    return exhaustionPct <= maxExhaustionPct && !excludeAgentIds.includes(agent.id)
+  })
 }

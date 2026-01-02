@@ -4,7 +4,7 @@ import type { Lead, LeadInvestigation } from '../../../lib/model/leadModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
-import { selectNextBestReadyAgent } from './agentSelection'
+import { selectNextBestReadyAgents } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
 import type { Agent } from '../../../lib/model/agentModel'
 import { bldMission } from '../../../lib/factories/missionFactory'
@@ -91,9 +91,10 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
       const remainingToAssign = agentsToAssign - i
       const agentsToAdd: Agent[] = []
       for (let j = 0; j < remainingToAssign; j += 1) {
-        const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+        const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
           includeInTraining: true,
         })
+        const agent = agents[0]
         if (agent === undefined) {
           break
         }
@@ -123,9 +124,10 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
         repeatableLeadSelected = lead
       }
 
-      const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
+      const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
         includeInTraining: true,
       })
+      const agent = agents[0]
       if (agent === undefined) {
         break
       }
