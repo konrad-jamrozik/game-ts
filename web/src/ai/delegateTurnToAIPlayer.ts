@@ -5,6 +5,14 @@ import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 import { profiler } from '../lib/primitives/profiler'
 
+// eslint-disable-next-line camelcase
+export const delegateTurnToAIPlayer = _AI_delegateTurnToAIPlayer
+
+// eslint-disable-next-line @typescript-eslint/naming-convention, camelcase
+function _AI_delegateTurnToAIPlayer(intellectName: string): void {
+  return delegateTurnToAIPlayerImpl(intellectName)
+}
+
 function delegateTurnToAIPlayerImpl(intellectName: string): void {
   const intellect = getIntellect(intellectName)
   const store = getStore()
@@ -20,8 +28,6 @@ function delegateTurnToAIPlayerImpl(intellectName: string): void {
     }
   }
 }
-
-export const delegateTurnToAIPlayer = profiler.wrap('_AI', delegateTurnToAIPlayerImpl)
 
 export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
   const store = getStore()
