@@ -10,6 +10,16 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
 
+const CHART_HEIGHT = 300
+const AXIS_TICK_FONT_SIZE = 14
+const AXIS_LABEL_FONT_SIZE = 16
+const LEGEND_FONT_SIZE = 14
+
+const axisConfig = {
+  tickLabelStyle: { fontSize: AXIS_TICK_FONT_SIZE },
+  labelStyle: { fontSize: AXIS_LABEL_FONT_SIZE },
+}
+
 function withNoMarkers<T extends Record<string, unknown>>(series: T[]): (T & { showMark: false })[] {
   return series.map((s) => ({ ...s, showMark: false }))
 }
@@ -66,7 +76,15 @@ export function ChartsScreen(): React.JSX.Element {
         <ChartsPanel title="Money">
           <LineChart
             dataset={datasets.assets}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main },
               { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main },
@@ -77,16 +95,29 @@ export function ChartsScreen(): React.JSX.Element {
               },
               { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
 
         <ChartsPanel title="Agent skill">
           <LineChart
             dataset={datasets.agentSkill}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               { dataKey: 'maxEffectiveSkillMin', label: 'Max eff. skill (min)' },
               { dataKey: 'maxEffectiveSkillAvg', label: 'Max eff. skill (avg)' },
@@ -95,16 +126,29 @@ export function ChartsScreen(): React.JSX.Element {
               { dataKey: 'maxEffectiveSkillSum', label: 'Max eff. skill (sum)' },
               { dataKey: 'currentEffectiveSkillSum', label: 'Current eff. skill (sum)' },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
 
         <ChartsPanel title="Agent readiness">
           <LineChart
             dataset={datasets.agentReadiness}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               { dataKey: 'maxHitPointsAvg', label: 'Max HP (avg)' },
               { dataKey: 'maxHitPointsMax', label: 'Max HP (max)' },
@@ -115,16 +159,29 @@ export function ChartsScreen(): React.JSX.Element {
               { dataKey: 'recoveryTurnsAvg', label: 'Recovery turns (avg)' },
               { dataKey: 'recoveryTurnsMax', label: 'Recovery turns (max)' },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
 
         <ChartsPanel title="Missions">
           <LineChart
             dataset={datasets.missions}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               { dataKey: 'spawned', label: 'Spawned (total)' },
               { dataKey: 'expired', label: 'Expired (total)' },
@@ -132,16 +189,29 @@ export function ChartsScreen(): React.JSX.Element {
               { dataKey: 'retreated', label: 'Retreated (total)' },
               { dataKey: 'wiped', label: 'Wiped (total)' },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
 
         <ChartsPanel title="Battle stats (total over missions)">
           <LineChart
             dataset={datasets.battleStats}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               { dataKey: 'agentsDeployed', label: 'Agents deployed' },
               { dataKey: 'agentsKia', label: 'Agents KIA' },
@@ -149,16 +219,29 @@ export function ChartsScreen(): React.JSX.Element {
               { dataKey: 'agentsUnscathed', label: 'Agents unscathed' },
               { dataKey: 'enemiesKia', label: 'Enemies KIA' },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
 
         <ChartsPanel title="Situation report">
           <LineChart
             dataset={datasets.situationReport}
-            xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[axisConfig]}
             series={withNoMarkers([
               {
                 dataKey: 'panicPct',
@@ -166,9 +249,14 @@ export function ChartsScreen(): React.JSX.Element {
                 valueFormatter: (v: number | null) => (typeof v === 'number' ? `${v.toFixed(2)}%` : ''),
               },
             ])}
-            height={300}
+            height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
+            sx={{
+              '& .MuiChartsLegend-label': {
+                fontSize: LEGEND_FONT_SIZE,
+              },
+            }}
           />
         </ChartsPanel>
       </Box>
