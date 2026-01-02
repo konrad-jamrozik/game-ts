@@ -4,6 +4,7 @@ import { assertDefined } from '../lib/primitives/assertPrimitives'
 import { eventsMiddleware } from './eventsMiddleware'
 import { initPersistence, loadPersistedState, saveStateToDexie } from './persist'
 import { createRootReducer, DEFAULT_UNDO_LIMIT, type RootReducerState } from './rootReducer'
+import { addTextEvent } from './slices/eventsSlice'
 
 export type StoreOptions = {
   undoLimit?: number
@@ -54,13 +55,11 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 
   // If no persisted state was loaded, add a "New game started" event
   if (!maybePersistedState) {
-    // Import addEvent dynamically to avoid circular dependency
-    const { addTextEvent: addEvent } = await import('./slices/eventsSlice')
     const state = _store.getState()
     const { gameState } = state.undoable.present
 
     _store.dispatch(
-      addEvent({
+      addTextEvent({
         message: 'New game started',
         turn: gameState.turn,
         actionsCount: gameState.actionsCount,
