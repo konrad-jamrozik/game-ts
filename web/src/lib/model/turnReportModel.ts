@@ -143,7 +143,7 @@ export type RoundLog = {
   enemySkillTotal: Fixed6
   enemyHp: number
   enemyHpTotal: number
-  skillRatio: Fixed6
+  combatRatingRatio: number
 }
 
 export type AttackLog = {

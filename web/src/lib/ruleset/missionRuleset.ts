@@ -4,11 +4,13 @@ import type { Mission } from '../model/missionModel'
 import type { MissionState } from '../model/outcomeTypes'
 import type { Agent, AgentCombatStats } from '../model/agentModel'
 import { effectiveSkill } from './skillRuleset'
-import { toF6, f6div, f6ge, f6le, f6lt, f6mult, f6sumBy, type Fixed6, toF6r } from '../primitives/fixed6'
+import { calculateCombatRating } from './combatRatingRuleset'
+import { sum } from 'radash'
+import { toF6r, f6mult, f6le } from '../primitives/fixed6'
 import {
-  AGENTS_SKILL_RETREAT_THRESHOLD,
+  AGENTS_COMBAT_RATING_RETREAT_THRESHOLD,
   COMBAT_INCAPACITATION_THRESHOLD,
-  RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
+  RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD,
 } from '../data_tables/constants'
 
 /**
@@ -53,24 +55,24 @@ export function isMissionConcluded(mission: Mission): boolean {
  */
 export type RetreatResult = {
   shouldRetreat: boolean
-  agentsTotalOriginalEffectiveSkill: Fixed6
-  agentsTotalCurrentEffectiveSkill: Fixed6
-  enemyToAgentsSkillRatio: Fixed6
+  agentsTotalOriginalCombatRating: number
+  agentsTotalCurrentCombatRating: number
+  enemyToAgentsCombatRatingRatio: number
 }
 
 /**
- * Determines whether agents should retreat from battle based on their current combat effectiveness
+ * Determines whether agents should retreat from battle based on their current combat rating
  * and enemy strength.
  *
  * Retreat occurs when BOTH of the following conditions are met:
- * 1. Agents' total current effective skill is less than RETREAT_THRESHOLD (50%) of their original effective skill
- * 2. Enemy total effective skill is at least RETREAT_ENEMY_SKILL_THRESHOLD (80%) of agents' current effective skill
+ * 1. Agents' total current combat rating is less than RETREAT_THRESHOLD (50%) of their original combat rating
+ * 2. Enemy total combat rating is at least RETREAT_ENEMY_COMBAT_RATING_THRESHOLD (80%) of agents' current combat rating
  *
  * This ensures agents only retreat when they are both weakened AND facing a strong enemy force,
  * preventing unnecessary retreats when agents are weakened but enemies are also significantly damaged.
  *
  * @param activeAgents - Array of agents that can currently participate in battle
- * @param agentStats - Array of combat statistics for each agent, including their initial effective skill
+ * @param agentStats - Array of combat statistics for each agent, including their initial combat rating
  * @param activeEnemies - Array of enemies that can currently participate in battle
  * @returns RetreatResult containing the retreat decision and calculated values for logging
  */
@@ -79,37 +81,26 @@ export function shouldRetreat(
   agentStats: AgentCombatStats[],
   activeEnemies: Enemy[],
 ): RetreatResult {
-  const agentsTotalOriginalEffectiveSkill = f6sumBy(agentStats, (stats) => stats.initialEffectiveSkill)
-  const agentsTotalCurrentEffectiveSkill = f6sumBy(activeAgents, (agent) => effectiveSkill(agent))
+  const agentsTotalOriginalCombatRating = sum(agentStats, (stats) => stats.initialCombatRating)
+  const agentsTotalCurrentCombatRating = sum(activeAgents, (agent) => calculateCombatRating(agent))
 
-  const agentsEffectiveSkillThreshold = toF6r(f6mult(agentsTotalOriginalEffectiveSkill, AGENTS_SKILL_RETREAT_THRESHOLD))
+  const agentsCombatRatingThreshold = agentsTotalOriginalCombatRating * AGENTS_COMBAT_RATING_RETREAT_THRESHOLD
 
-  // Check if agents' effective skill is below threshold of 50% of original effective skill
-  const agentsBelowThreshold = f6lt(agentsTotalCurrentEffectiveSkill, agentsEffectiveSkillThreshold)
+  // Check if agents' combat rating is below threshold of 50% of original combat rating
+  const agentsBelowThreshold = agentsTotalCurrentCombatRating < agentsCombatRatingThreshold
 
-  // Check if enemy effective skill is at least 80% of agents' current effective skill
-  const enemyTotalCurrentEffectiveSkill = f6sumBy(activeEnemies, (enemy) => effectiveSkill(enemy))
-  const enemyToAgentsSkillRatio = toF6r(f6div(enemyTotalCurrentEffectiveSkill, agentsTotalCurrentEffectiveSkill))
-  const enemyToAgentsSkillThreshold = toF6(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
-  const enemyAboveThreshold = f6ge(enemyToAgentsSkillRatio, enemyToAgentsSkillThreshold)
+  // Check if enemy combat rating is at least 80% of agents' current combat rating
+  const enemyTotalCurrentCombatRating = sum(activeEnemies, (enemy) => calculateCombatRating(enemy))
+  const enemyToAgentsCombatRatingRatio =
+    agentsTotalCurrentCombatRating > 0 ? enemyTotalCurrentCombatRating / agentsTotalCurrentCombatRating : 0
+  const enemyAboveThreshold = enemyToAgentsCombatRatingRatio >= RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD
 
-  // console.log(
-  //   `Retreat evaluation: ` +
-  //     `agents current skill = ${toF(agentsTotalCurrentEffectiveSkill)}, ` +
-  //     `agents original skill = ${toF(agentsTotalOriginalEffectiveSkill)}, ` +
-  //     `agents threshold = ${toF(agentsEffectiveSkillThreshold)}, ` +
-  //     `agents below threshold = ${agentsBelowThreshold}, ` +
-  //     `enemy current skill = ${toF(enemyTotalCurrentEffectiveSkill)}, ` +
-  //     `enemy/agents ratio = ${toF(enemyToAgentsSkillRatio)}, ` +
-  //     `enemy/agents threshold = ${RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD}, ` +
-  //     `enemy above threshold = ${enemyAboveThreshold}`,
-  // )
-  // Retreat when agents are below threshold AND enemy skill is at least 80% of agent skill
+  // Retreat when agents are below threshold AND enemy combat rating is at least 80% of agent combat rating
   const result = {
     shouldRetreat: agentsBelowThreshold && enemyAboveThreshold,
-    agentsTotalOriginalEffectiveSkill,
-    agentsTotalCurrentEffectiveSkill,
-    enemyToAgentsSkillRatio,
+    agentsTotalOriginalCombatRating,
+    agentsTotalCurrentCombatRating,
+    enemyToAgentsCombatRatingRatio,
   }
   return result
 }

@@ -25,7 +25,7 @@ export type BattleLogRow = {
   enemySkillTotal: Fixed6
   enemyHp: number
   enemyHpTotal: number
-  skillRatio: Fixed6
+  combatRatingRatio: number
 }
 
 type GetBattleLogColumnsParams = {
@@ -33,7 +33,7 @@ type GetBattleLogColumnsParams = {
   maxInitialSkill: Fixed6
   maxHp: number
   maxCount: number
-  maxRatio: Fixed6
+  maxCombatRatingRatio: number
 }
 
 export function getBattleLogColumns({
@@ -41,7 +41,7 @@ export function getBattleLogColumns({
   maxInitialSkill,
   maxHp,
   maxCount,
-  maxRatio,
+  maxCombatRatingRatio,
 }: GetBattleLogColumnsParams): GridColDef<BattleLogRow>[] {
   const columns: GridColDef<BattleLogRow>[] = [
     {
@@ -49,16 +49,6 @@ export function getBattleLogColumns({
       headerName: 'R',
       width: columnWidths['battle_log.round_number'],
       type: 'number',
-    },
-    {
-      field: 'status',
-      headerName: 'Status',
-      width: columnWidths['battle_log.status'],
-      renderCell: (params: GridRenderCellParams<BattleLogRow>): React.JSX.Element => {
-        // Display "Retreat" instead of "Retreated" in battle log
-        const displayStatus = params.row.status === 'Retreated' ? 'Retreat' : params.row.status
-        return <MyChip chipValue={displayStatus} />
-      },
     },
     {
       field: 'agentCount',
@@ -119,12 +109,12 @@ export function getBattleLogColumns({
         renderBattleHpCell(params.row.enemyHp, params.row.enemyHpTotal, maxHp),
     },
     {
-      field: 'skillRatio',
-      headerName: 'Ratio',
-      width: columnWidths['battle_log.skill_ratio'],
+      field: 'combatRatingRatio',
+      headerName: 'CR ratio',
+      width: columnWidths['battle_log.combat_rating_ratio'],
       cellClassName: 'battle-log-skill-cell',
-      renderCell: (params: GridRenderCellParams<BattleLogRow, Fixed6>): React.JSX.Element =>
-        renderRatioCell(params.row.skillRatio, maxRatio),
+      renderCell: (params: GridRenderCellParams<BattleLogRow, number>): React.JSX.Element =>
+        renderCombatRatingRatioCell(params.row.combatRatingRatio, maxCombatRatingRatio),
     },
   ]
 
@@ -166,21 +156,20 @@ function renderBattleHpCell(currentHp: number, maxHp: number, battleMaxHp: numbe
   )
 }
 
-function renderRatioCell(currentRatio: Fixed6, maxRatio: Fixed6): React.JSX.Element {
+function renderCombatRatingRatioCell(currentRatio: number, maxRatio: number): React.JSX.Element {
   // Calculate fill percentage: current ratio normalized to max ratio (0-100%)
-  const fillPct = maxRatio.value > 0 ? Math.min(100, (currentRatio.value / maxRatio.value) * 100) : 0
+  const fillPct = maxRatio > 0 ? Math.min(100, (currentRatio / maxRatio) * 100) : 0
 
   // Calculate color percentage: current ratio vs 100% ratio (1.0)
   // 0% ratio (0.0) = green, 100% ratio (1.0) = red, >100% ratio (>1.0) = red (clamped to 1.0)
-  // Fixed6 stores 1.0 as 1_000_000, so divide by 1_000_000 to get the ratio value
-  const ratioValue = currentRatio.value / 1_000_000
-  const colorPct = Math.max(0, Math.min(1, ratioValue))
+  const colorPct = Math.max(0, Math.min(1, currentRatio))
 
   // Note: For ratio, we reverse the color mapping - 0% ratio = green, 100% ratio = red
   // So we pass (1 - colorPct) to invert the color scale
+  const ratioPct = fmtPctDec0(currentRatio)
   return (
     <ColorBar fillPct={fillPct} colorPct={1 - colorPct}>
-      {f6fmtPctDec0(currentRatio)}
+      {ratioPct}
     </ColorBar>
   )
 }

@@ -2,6 +2,16 @@
 
 KJA backlog:
 
+# Prompt
+
+Improve battle log:
+
+- Remove "Status" column. Instead, once the battle is over, at the bottom of the table there should be message
+  with a summary. In the same place that is used to display retreat explanation.
+  The message should start with a chip like "Won" or "Retreated", in appropriate color, and then the text message.
+- Rename "Ratio" to "CR ratio" and make it compare combat ratings, not sill. This means retreat logic should
+  also look at CR, not skill.
+
 # Current milestone
 
 - Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.

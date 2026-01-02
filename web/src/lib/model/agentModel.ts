@@ -36,5 +36,6 @@ export type Agent = Actor & {
 export type AgentCombatStats = {
   id: AgentId
   initialEffectiveSkill: Fixed6
+  initialCombatRating: number
   skillGained: Fixed6
 }

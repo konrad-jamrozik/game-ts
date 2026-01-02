@@ -5,14 +5,16 @@ import { BATTLE_LOG_CARD_WIDTH } from '../Common/widthConstants'
 import type { MissionId } from '../../lib/model/modelIds'
 import { useMissionReport } from './useMissionReport'
 import { getBattleLogColumns, type BattleLogRow } from './getBattleLogColumns'
-import { f6c0, f6max, f6div, f6fmtPctDec0 } from '../../lib/primitives/fixed6'
+import { f6c0, f6max } from '../../lib/primitives/fixed6'
 import {
-  AGENTS_SKILL_RETREAT_THRESHOLD,
-  RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD,
+  AGENTS_COMBAT_RATING_RETREAT_THRESHOLD,
+  RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD,
 } from '../../lib/data_tables/constants'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
+import { MyChip } from '../Common/MyChip'
+import type { BattleOutcome } from '../../lib/model/outcomeTypes'
 
 type BattleLogCardProps = {
   missionId: MissionId
@@ -39,30 +41,40 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
   // Compute battle-wide max count from all rows
   const maxCount = rows.reduce((max, row) => Math.max(max, Math.max(row.agentCountTotal, row.enemyCountTotal)), 0)
 
-  // Compute battle-wide max ratio from all rows (ratio can go up and down, so we need the max across all rounds)
-  const maxRatio = rows.reduce((max, row) => f6max(max, row.skillRatio), f6c0)
+  // Compute battle-wide max combat rating ratio from all rows (ratio can go up and down, so we need the max across all rounds)
+  const maxCombatRatingRatio = rows.reduce((max, row) => Math.max(max, row.combatRatingRatio), 0)
 
-  const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount, maxRatio })
+  const columns = getBattleLogColumns({ rows, maxInitialSkill, maxHp, maxCount, maxCombatRatingRatio })
 
-  // Check if battle ended in retreat and calculate explanation
+  // Determine battle outcome and summary message
   const lastRoundLog = roundLogs.at(-1)
-  let retreatExplanation: string | undefined = undefined
-  if (lastRoundLog?.status === 'Retreated') {
-    const agentSkillCurrent = lastRoundLog.agentSkill
-    const agentSkillOriginal = lastRoundLog.agentSkillTotal
+  let battleSummary: { outcome: BattleOutcome; message: string } | undefined = undefined
+  if (lastRoundLog !== undefined && lastRoundLog.status !== 'Ongoing') {
+    const outcome = lastRoundLog.status
+    if (outcome === 'Retreated') {
+      // Calculate agent combat rating percentage (current vs original)
+      // We need to reconstruct this from the battle report or calculate it
+      // For now, we'll use a simplified message based on the combat rating ratio
+      const enemyToAgentCombatRatingRatio = lastRoundLog.combatRatingRatio
+      const enemyToAgentCombatRatingRatioFmt = fmtPctDec0(enemyToAgentCombatRatingRatio)
+      const enemyToAgentCombatRatingThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD)
+      const agentsCombatRatingThresholdFmt = fmtPctDec0(AGENTS_COMBAT_RATING_RETREAT_THRESHOLD)
 
-    // Calculate agent skill percentage (current vs original)
-    const agentSkillPct = f6div(agentSkillCurrent, agentSkillOriginal)
-    const agentSkillPctFmt = fmtPctDec0(agentSkillPct)
-    const agentSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
-
-    // Use the skillRatio from the round log instead of recalculating
-    // This ensures consistency with the retreat decision calculation
-    const enemyToAgentRatio = lastRoundLog.skillRatio
-    const enemyToAgentRatioFmt = f6fmtPctDec0(enemyToAgentRatio)
-    const enemyToAgentThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
-
-    retreatExplanation = `The mission commander ordered a retreat because the agents' combat effectiveness had dropped to ${agentSkillPctFmt} of their original strength (below the ${agentSkillThresholdFmt} threshold), while the enemy force remained at ${enemyToAgentRatioFmt} of the agents' current strength (at or above the ${enemyToAgentThresholdFmt} threshold).`
+      battleSummary = {
+        outcome: 'Retreated',
+        message: `The mission commander ordered a retreat because the agents' combat rating had dropped below ${agentsCombatRatingThresholdFmt} of their original combat rating, while the enemy force remained at ${enemyToAgentCombatRatingRatioFmt} of the agents' current combat rating (at or above the ${enemyToAgentCombatRatingThresholdFmt} threshold).`,
+      }
+    } else if (outcome === 'Won') {
+      battleSummary = {
+        outcome: 'Won',
+        message: 'The mission was completed successfully. All enemy units were eliminated.',
+      }
+    } else if (outcome === 'Wiped') {
+      battleSummary = {
+        outcome: 'Wiped',
+        message: 'All agents were terminated in battle.',
+      }
+    }
   }
 
   return (
@@ -78,10 +90,11 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
           },
         }}
       />
-      {retreatExplanation !== undefined && (
-        <Box sx={{ mt: 2, mb: 1, px: 1 }}>
+      {battleSummary !== undefined && (
+        <Box sx={{ mt: 2, mb: 1, px: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+          <MyChip chipValue={battleSummary.outcome} />
           <Typography variant="body2" color="text.secondary">
-            {retreatExplanation}
+            {battleSummary.message}
           </Typography>
         </Box>
       )}

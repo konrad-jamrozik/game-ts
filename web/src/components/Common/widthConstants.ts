@@ -110,14 +110,13 @@ export const COMBAT_LOG_CARD_WIDTH =
 export const BATTLE_LOG_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +
   columnWidths['battle_log.round_number'] +
-  columnWidths['battle_log.status'] +
   columnWidths['battle_log.agent_count'] +
   columnWidths['battle_log.agent_skill'] +
   columnWidths['battle_log.agent_hp'] +
   columnWidths['battle_log.enemy_count'] +
   columnWidths['battle_log.enemy_skill'] +
   columnWidths['battle_log.enemy_hp'] +
-  columnWidths['battle_log.skill_ratio'] // borders + padding + filler + columns
+  columnWidths['battle_log.combat_rating_ratio'] // borders + padding + filler + columns
 
 export const MISSION_DETAILS_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['mission_details.key'] + columnWidths['mission_details.value'] // borders + padding + filler + columns

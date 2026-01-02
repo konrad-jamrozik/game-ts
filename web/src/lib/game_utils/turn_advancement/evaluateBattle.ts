@@ -2,11 +2,9 @@ import pluralize from 'pluralize'
 import { sum } from 'radash'
 import {
   f6c0,
-  toF6r,
   f6fmtInt,
   f6fmtPctDec0,
   f6cmp,
-  f6div,
   f6eq,
   f6sumBy,
   f6gt,
@@ -18,9 +16,13 @@ import {
 import type { Actor } from '../../model/actorModel'
 import type { Enemy } from '../../model/enemyModel'
 import type { Agent, AgentCombatStats } from '../../model/agentModel'
-import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD } from '../../data_tables/constants'
+import {
+  AGENTS_COMBAT_RATING_RETREAT_THRESHOLD,
+  RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD,
+} from '../../data_tables/constants'
 import { shouldRetreat, canParticipateInBattle, type RetreatResult } from '../../ruleset/missionRuleset'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
+import { calculateCombatRating } from '../../ruleset/combatRatingRuleset'
 import { assertDefined, assertNotEmpty } from '../../primitives/assertPrimitives'
 import { isAgent } from '../../model_utils/agentUtils'
 import { fmtPctDec0 } from '../../primitives/formatPrimitives'
@@ -111,7 +113,10 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
     const enemySkillAtRoundStart = f6sumBy(activeEnemiesAtRoundStart, (enemy) => effectiveSkill(enemy))
     const enemyHpAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => toF(enemy.hitPoints))
-    const skillRatioAtRoundStart = toF6r(f6div(enemySkillAtRoundStart, agentSkillAtRoundStart))
+    const agentCombatRatingAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => calculateCombatRating(agent))
+    const enemyCombatRatingAtRoundStart = sum(activeEnemiesAtRoundStart, (enemy) => calculateCombatRating(enemy))
+    const combatRatingRatioAtRoundStart =
+      agentCombatRatingAtRoundStart > 0 ? enemyCombatRatingAtRoundStart / agentCombatRatingAtRoundStart : 0
 
     // // Show round status with detailed statistics
     // showRoundStatus(
@@ -156,7 +161,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
       enemySkillTotal: initialEnemySkill,
       enemyHp: enemyHpAtRoundStart,
       enemyHpTotal: toF(initialEnemyHitPoints),
-      skillRatio: skillRatioAtRoundStart,
+      combatRatingRatio: combatRatingRatioAtRoundStart,
     }
     roundLogs.push(roundLog)
 
@@ -182,11 +187,12 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const agentHpAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => toF(agent.hitPoints))
   const enemySkillAtBattleEnd = f6sumBy(activeEnemiesAtBattleEnd, (enemy) => effectiveSkill(enemy))
   const enemyHpAtBattleEnd = sum(activeEnemiesAtBattleEnd, (enemy) => toF(enemy.hitPoints))
-  // When all agents are terminated, skill ratio is undefined (division by zero).
+  const agentCombatRatingAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => calculateCombatRating(agent))
+  const enemyCombatRatingAtBattleEnd = sum(activeEnemiesAtBattleEnd, (enemy) => calculateCombatRating(enemy))
+  // When all agents are terminated, combat rating ratio is undefined (division by zero).
   // Use 0 as a placeholder - the 'Wiped' status already conveys the battle outcome.
-  const skillRatioAtBattleEnd = f6eq(agentSkillAtBattleEnd, f6c0)
-    ? f6c0
-    : toF6r(f6div(enemySkillAtBattleEnd, agentSkillAtBattleEnd))
+  const combatRatingRatioAtBattleEnd =
+    agentCombatRatingAtBattleEnd > 0 ? enemyCombatRatingAtBattleEnd / agentCombatRatingAtBattleEnd : 0
 
   const allAgentsTerminated = agents.every((agent) => f6le(agent.hitPoints, f6c0))
   const endOfBattleStatus: BattleOutcome = retreated ? 'Retreated' : allAgentsTerminated ? 'Wiped' : 'Won'
@@ -206,7 +212,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     enemySkillTotal: initialEnemySkill,
     enemyHp: enemyHpAtBattleEnd,
     enemyHpTotal: toF(initialEnemyHitPoints),
-    skillRatio: skillRatioAtBattleEnd,
+    combatRatingRatio: combatRatingRatioAtBattleEnd,
   }
   roundLogs.push(endOfBattleLog)
 
@@ -293,6 +299,7 @@ function bldAgentsCombatStats(agents: Agent[]): AgentCombatStats[] {
   return agents.map((agent: Agent) => ({
     id: agent.id,
     initialEffectiveSkill: effectiveSkill(agent),
+    initialCombatRating: calculateCombatRating(agent),
     skillGained: f6c0,
   }))
 }
@@ -303,19 +310,19 @@ function isSideEliminated(activeAgents: Agent[], activeEnemies: Enemy[]): boolea
 }
 
 function logRetreat(retreatResult: RetreatResult): void {
-  const agentsEffectiveSkillPct = f6div(
-    retreatResult.agentsTotalCurrentEffectiveSkill,
-    retreatResult.agentsTotalOriginalEffectiveSkill,
-  )
-  const agentsSkillPctFmt = fmtPctDec0(agentsEffectiveSkillPct)
-  const agentsSkillThresholdFmt = fmtPctDec0(AGENTS_SKILL_RETREAT_THRESHOLD)
-  const enemyToAgentsSkillRatioFmt = f6fmtPctDec0(retreatResult.enemyToAgentsSkillRatio)
-  const enemyToAgentsSkillThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD)
+  const agentsCombatRatingPct =
+    retreatResult.agentsTotalOriginalCombatRating > 0
+      ? retreatResult.agentsTotalCurrentCombatRating / retreatResult.agentsTotalOriginalCombatRating
+      : 0
+  const agentsCombatRatingPctFmt = fmtPctDec0(agentsCombatRatingPct)
+  const agentsCombatRatingThresholdFmt = fmtPctDec0(AGENTS_COMBAT_RATING_RETREAT_THRESHOLD)
+  const enemyToAgentsCombatRatingRatioFmt = fmtPctDec0(retreatResult.enemyToAgentsCombatRatingRatio)
+  const enemyToAgentsCombatRatingThresholdFmt = fmtPctDec0(RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD)
   log.info(
     'combat',
     `🏃 Agent mission commander orders retreat! ` +
-      `Agents Current/Total skill = ${agentsSkillPctFmt} < ${agentsSkillThresholdFmt} threshold. ` +
-      `Enemy/Agents skill ratio = ${enemyToAgentsSkillRatioFmt} >= ${enemyToAgentsSkillThresholdFmt} threshold.`,
+      `Agents Current/Total combat rating = ${agentsCombatRatingPctFmt} < ${agentsCombatRatingThresholdFmt} threshold. ` +
+      `Enemy/Agents combat rating ratio = ${enemyToAgentsCombatRatingRatioFmt} >= ${enemyToAgentsCombatRatingThresholdFmt} threshold.`,
   )
 }
 
