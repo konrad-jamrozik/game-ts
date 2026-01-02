@@ -6,6 +6,7 @@
  * Usage:
  *   cd web
  *   npx tsx --cpu-prof scripts/profileAi.ts
+ *   npx tsx --cpu-prof --cpu-prof-interval=250 scripts/profileAi.ts
  *
  * Then load the generated .cpuprofile file in Chrome DevTools → Performance tab.
  * The profiler CSV output is written to profile-results.csv.
@@ -30,7 +31,7 @@ async function main(): Promise<void> {
   profiler.enabled = true
   profiler.reset()
 
-  console.log(`Starting AI for ${TURNS_TO_PLAY} turns...`)
+  console.log(`Running AI for ${TURNS_TO_PLAY} turns...`)
   const startTime = performance.now()
   delegateTurnsToAIPlayer('basic', TURNS_TO_PLAY)
   const endTime = performance.now()

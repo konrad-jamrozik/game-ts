@@ -5,7 +5,6 @@ import { assertDefined, assertNotIn } from '../../lib/primitives/assertPrimitive
 import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
 import { log } from '../../lib/primitives/logger'
-import { profiler } from '../../lib/primitives/profiler'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
@@ -52,7 +51,6 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
   },
 )
 
-// KJA1 this is on a hot path per profileAi.ts.
 function addAgentsToInvestigationReducer(
   state: GameState,
   action: PayloadAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>,
@@ -62,17 +60,7 @@ function addAgentsToInvestigationReducer(
   const investigation = state.leadInvestigations[investigationId]
   assertDefined(investigation, `Investigation not found: ${investigationId}`)
 
-  validateAgentsNotAlreadyAssigned(investigation, agentIds, investigationId)
-  addAgentIdsToInvestigation(investigation, agentIds)
-  assignAgentsToInvestigation(state, investigationId, agentIds)
-}
-
-function validateAgentsNotAlreadyAssigned(
-  investigation: GameState['leadInvestigations'][string],
-  agentIds: AgentId[],
-  investigationId: LeadInvestigationId,
-): void {
-  // Add agents to investigation (throw error on duplicates)
+  // Validate agents not already assigned (throw error on duplicates)
   for (const agentId of agentIds) {
     assertNotIn(
       agentId,
@@ -80,22 +68,12 @@ function validateAgentsNotAlreadyAssigned(
       `Agent ${agentId} is already assigned to investigation ${investigationId}`,
     )
   }
-}
 
-export function addAgentIdsToInvestigation(
-  investigation: GameState['leadInvestigations'][string],
-  agentIds: AgentId[],
-): void {
+  // Add agent IDs to investigation
   for (const agentId of agentIds) {
     investigation.agentIds.push(agentId)
   }
-}
 
-function assignAgentsToInvestigation(
-  state: GameState,
-  investigationId: LeadInvestigationId,
-  agentIds: AgentId[],
-): void {
   // Assign agents to investigation (they enter InTransit state)
   for (const agent of state.agents) {
     if (agentIds.includes(agent.id)) {
