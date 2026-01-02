@@ -1,5 +1,37 @@
 # AI Turn Performance Analysis
 
+- [AI Turn Performance Analysis](#ai-turn-performance-analysis)
+  - [Performance Characteristics](#performance-characteristics)
+  - [Key Performance Bottlenecks](#key-performance-bottlenecks)
+    - [1. Battle Evaluation (`evaluateBattle.ts`)](#1-battle-evaluation-evaluatebattlets)
+    - [2. Double Game State Validation](#2-double-game-state-validation)
+    - [3. AI Agent Selection - Repeated O(n) Operations](#3-ai-agent-selection---repeated-on-operations)
+    - [4. Lead Investigation Selection](#4-lead-investigation-selection)
+    - [5. Redux SerializableStateInvariantMiddleware](#5-redux-serializablestateinvariantmiddleware)
+  - [Profiling with Flamegraphs](#profiling-with-flamegraphs)
+    - [Standalone Script with tsx](#standalone-script-with-tsx)
+    - [About the Profiling Script](#about-the-profiling-script)
+    - [Reading the Flamegraph](#reading-the-flamegraph)
+    - [How to Make Functions Profilable](#how-to-make-functions-profilable)
+      - [What Shows Names vs `(anonymous)`](#what-shows-names-vs-anonymous)
+      - [Instead of Arrow Functions, Use Named Function Expressions](#instead-of-arrow-functions-use-named-function-expressions)
+      - [Instead of Inline Object Methods, Define Functions First](#instead-of-inline-object-methods-define-functions-first)
+      - [Wrapper Functions and Flamegraph Visibility](#wrapper-functions-and-flamegraph-visibility)
+      - [Common Patterns That Actually Hide Function Names](#common-patterns-that-actually-hide-function-names)
+      - [Quick Reference](#quick-reference)
+  - [Possible Alternative Approaches](#possible-alternative-approaches)
+    - [Vitest Browser Mode](#vitest-browser-mode)
+  - [Rejected Approaches](#rejected-approaches)
+    - [Profiling Vitest Tests with Browser DevTools](#profiling-vitest-tests-with-browser-devtools)
+    - [Standalone HTML Test Runner](#standalone-html-test-runner)
+  - [Optimization Suggestions](#optimization-suggestions)
+    - [Quick Wins](#quick-wins)
+    - [Medium-Effort Optimizations](#medium-effort-optimizations)
+    - [Architectural Changes](#architectural-changes)
+  - [Monitoring Performance Over Time](#monitoring-performance-over-time)
+  - [Related Files](#related-files)
+- [Profiling learnings](#profiling-learnings)
+
 This document analyzes performance bottlenecks in AI turn execution and provides guidance for debugging, profiling, and optimization.
 
 ## Performance Characteristics
@@ -415,3 +447,7 @@ test('AI turn performance stays reasonable', () => {
 - `web/src/lib/game_utils/turn_advancement/evaluateBattle.ts` - Battle simulation
 - `web/src/redux/store.ts` - Redux store configuration
 - `web/test/ai/basicIntellect.test.ts` - AI performance test
+
+# Profiling learnings
+
+- `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))`
