@@ -94,12 +94,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     combatRounds += 1
 
     // Capture round state at start of round (before combat)
-    const activeAgentsAtRoundStart = agents.filter(
-      (agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent),
-    )
-    const activeEnemiesAtRoundStart = enemies.filter(
-      (enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy),
-    )
+    const activeAgentsAtRoundStart = agents.filter((agent) => canParticipateInBattle(agent))
+    const activeEnemiesAtRoundStart = enemies.filter((enemy) => canParticipateInBattle(enemy))
     const agentSkillAtRoundStart = f6sumBy(activeAgentsAtRoundStart, (agent) => effectiveSkill(agent))
     const agentHpAtRoundStart = sum(activeAgentsAtRoundStart, (agent) => toF(agent.hitPoints))
     const enemySkillAtRoundStart = f6sumBy(activeEnemiesAtRoundStart, (enemy) => effectiveSkill(enemy))
@@ -159,10 +155,8 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   // Create end-of-battle round log showing final state after all combat.
   // This provides a consistent pattern: all combat round logs show state at round start,
   // and this final log shows the state after the battle concludes.
-  const activeAgentsAtBattleEnd = agents.filter((agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent))
-  const activeEnemiesAtBattleEnd = enemies.filter(
-    (enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy),
-  )
+  const activeAgentsAtBattleEnd = agents.filter((agent) => canParticipateInBattle(agent))
+  const activeEnemiesAtBattleEnd = enemies.filter((enemy) => canParticipateInBattle(enemy))
   const agentSkillAtBattleEnd = f6sumBy(activeAgentsAtBattleEnd, (agent) => effectiveSkill(agent))
   const agentHpAtBattleEnd = sum(activeAgentsAtBattleEnd, (agent) => toF(agent.hitPoints))
   const enemySkillAtBattleEnd = f6sumBy(activeEnemiesAtBattleEnd, (enemy) => effectiveSkill(enemy))
@@ -323,12 +317,12 @@ function evaluateCombatRound(
   // as they take damage during the round
   const effectiveSkillsAtRoundStart = new Map<string, Fixed6>()
   for (const agent of agents) {
-    if (f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent)) {
+    if (canParticipateInBattle(agent)) {
       effectiveSkillsAtRoundStart.set(agent.id, effectiveSkill(agent))
     }
   }
   for (const enemy of enemies) {
-    if (f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy)) {
+    if (canParticipateInBattle(enemy)) {
       effectiveSkillsAtRoundStart.set(enemy.id, effectiveSkill(enemy))
     }
   }
@@ -336,14 +330,14 @@ function evaluateCombatRound(
   // console.log('\n----- 👤🗡️ Agent Attack Phase -----')
 
   // Agents attack in order of least skilled to most skilled
-  const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent))
+  const activeAgents = agents.filter((agent) => canParticipateInBattle(agent))
   activeAgents.sort(compareActorsBySkillDescending)
 
   // Each agent attacks
   for (const agent of activeAgents) {
     // Skip if terminated or incapacitated during this round
-    if (f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent)) {
-      const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy))
+    if (canParticipateInBattle(agent)) {
+      const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
       const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
       if (target) {
         const attackerStats = agentStats.find((stats) => stats.id === agent.id)
@@ -372,13 +366,13 @@ function evaluateCombatRound(
   // console.log('\n----- 👺🗡️ Enemy Attack Phase -----')
 
   // Enemies attack back
-  const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy))
+  const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
   activeEnemies.sort(compareActorsBySkillDescending)
 
   for (const enemy of activeEnemies) {
     // Skip if terminated or incapacitated during this round
-    if (f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy)) {
-      const currentActiveAgents = agents.filter((agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent))
+    if (canParticipateInBattle(enemy)) {
+      const currentActiveAgents = agents.filter((agent) => canParticipateInBattle(agent))
       const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
       if (target) {
         const defenderStats = agentStats.find((stats) => stats.id === target.id)
@@ -425,14 +419,14 @@ function showRoundStatus(
   }
 
   // Current agent statistics
-  const activeAgents = agents.filter((agent) => f6gt(agent.hitPoints, f6c0) && canParticipateInBattle(agent))
+  const activeAgents = agents.filter((agent) => canParticipateInBattle(agent))
   const currentAgentEffectiveSkill = f6sumBy(activeAgents, (agent) => effectiveSkill(agent))
   const currentAgentHitPoints = sum(activeAgents, (agent) => toF(agent.hitPoints))
   const agentSkillPct = f6fmtPctDec0(currentAgentEffectiveSkill, initialAgentEffectiveSkill)
   const agentHpPct = fmtPctDec0(currentAgentHitPoints, toF(initialAgentHitPoints))
 
   // Current enemy statistics
-  const activeEnemies = enemies.filter((enemy) => f6gt(enemy.hitPoints, f6c0) && canParticipateInBattle(enemy))
+  const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
   const currentEnemyEffectiveSkill = f6sumBy(activeEnemies, (enemy) => effectiveSkill(enemy))
   const currentEnemyHitPoints = sum(activeEnemies, (enemy) => toF(enemy.hitPoints))
   const enemySkillPct = f6fmtPctDec0(currentEnemyEffectiveSkill, initialEnemySkill)
