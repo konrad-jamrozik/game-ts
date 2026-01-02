@@ -39,7 +39,12 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 
   _store = configureStore({
     reducer: rootReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware().prepend(eventsMiddleware()),
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        immutableCheck: false,
+        serializableCheck: false,
+        actionCreatorCheck: false,
+      }).prepend(eventsMiddleware()),
     ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
   })
 
