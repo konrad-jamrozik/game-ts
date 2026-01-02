@@ -139,6 +139,11 @@ class Profiler {
     // Sort functions: AI first, AdvT second, then alphabetically by abbreviated name
     const sortedFunctionNames = Profiler.sortFunctionNames([...functionNames])
 
+    // If no function data was captured, return empty string
+    if (sortedFunctionNames.length === 0) {
+      return ''
+    }
+
     // Build header row - group by metric type first, then by function
     const headerParts: string[] = ['Turn']
     // First all 'tot' columns
