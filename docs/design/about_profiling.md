@@ -452,3 +452,20 @@ test('AI turn performance stays reasonable', () => {
 
 - `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))` took 98.22 ms for 1601 agents,
   while the underlying `addAgentsToInvestigationReducer` took only about 10.8 ms across 7 invocations, so 1.5 ms on average.
+  - This is 11% of total, so overhead of dispatch is 9.1x.
+- But turing off default middleware speeds it up approx 2.5x. E.g. for 1571 agents the `dispatch(addAgentsToInvestigation(params))` took `38.09 ms`
+  out of which `addAgentsToInvestigationReducer` was 14.7 ms across 5 invocations, so 7 ms on average.
+  - This is 38.5% of total, so overhead of dispatch is 2.6x.
+  - https://redux-toolkit.js.org/api/getDefaultMiddleware#customizing-the-included-middleware
+  - ```typescript
+      _store = configureStore({
+      reducer: rootReducer,
+      middleware: (getDefaultMiddleware) =>
+        getDefaultMiddleware({
+          immutableCheck: false,
+          serializableCheck: false,
+          actionCreatorCheck: false,
+        }).prepend(eventsMiddleware()),
+      ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
+    })
+    ```
