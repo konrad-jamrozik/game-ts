@@ -5,6 +5,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { f6c0, toF } from '../../lib/primitives/fixed6'
+import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRuleset'
 
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
@@ -20,6 +21,8 @@ export type AssetsDatasetRow = {
   agentCount: number
   funding: number
   money: number
+  contracting: number
+  upkeep: number
 }
 
 export type AgentSkillDatasetRow = {
@@ -99,6 +102,8 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       agentCount: agents.length,
       funding,
       money,
+      contracting: getContractingIncome(gameState),
+      upkeep: getAgentUpkeep(gameState),
     })
 
     // --- Agent skill (derived)

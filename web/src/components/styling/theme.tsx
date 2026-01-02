@@ -7,11 +7,11 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple, amber } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
-  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
   // export default function createPalette(palette: PaletteOptions): Palette;
   interface Palette {
     agentStateAvailable: PaletteColorOptions
@@ -22,9 +22,13 @@ declare module '@mui/material/styles' {
     agentStateInTraining: PaletteColorOptions
     agentStateTerminated: PaletteColorOptions
     agentStateDefault: PaletteColorOptions
+    moneyBalance: PaletteColorOptions
+    moneyFunding: PaletteColorOptions
+    moneyContracting: PaletteColorOptions
+    moneyUpkeep: PaletteColorOptions
   }
 
-  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
   // export default function createPalette(palette: PaletteOptions): Palette;
   interface PaletteOptions {
     background?: Partial<TypeBackground>
@@ -36,6 +40,10 @@ declare module '@mui/material/styles' {
     agentStateInTraining?: PaletteColorOptions
     agentStateTerminated?: PaletteColorOptions
     agentStateDefault?: PaletteColorOptions
+    moneyBalance?: PaletteColorOptions
+    moneyFunding?: PaletteColorOptions
+    moneyContracting?: PaletteColorOptions
+    moneyUpkeep?: PaletteColorOptions
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -145,6 +153,30 @@ const colorSystemOptions: ColorSystemOptions = {
         main: defaultTheme.palette.grey[800],
       },
       name: 'agentStateDefault',
+    }),
+    moneyBalance: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[800],
+      },
+      name: 'moneyBalance',
+    }),
+    moneyFunding: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[500],
+      },
+      name: 'moneyFunding',
+    }),
+    moneyContracting: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[600],
+      },
+      name: 'moneyContracting',
+    }),
+    moneyUpkeep: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[500],
+      },
+      name: 'moneyUpkeep',
     }),
   },
 }

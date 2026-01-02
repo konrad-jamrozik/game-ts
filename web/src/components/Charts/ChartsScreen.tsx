@@ -4,15 +4,19 @@ import Grid from '@mui/material/Grid'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
+import { useTheme } from '@mui/material/styles'
 import * as React from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
+// Import theme to ensure module augmentation is visible to TypeScript
+import '../styling/theme'
 
 export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const datasets = useAppSelector(selectChartsDatasets)
+  const theme = useTheme()
 
   function handleBackClick(): void {
     dispatch(clearViewCharts())
@@ -64,14 +68,15 @@ export function ChartsScreen(): React.JSX.Element {
               },
             }}
           >
-            <ChartsPanel title="Assets">
+            <ChartsPanel title="Money">
               <LineChart
                 dataset={datasets.assets}
                 xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
                 series={[
-                  { dataKey: 'agentCount', label: 'Agent count' },
-                  { dataKey: 'funding', label: 'Funding' },
-                  { dataKey: 'money', label: 'Money' },
+                  { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main },
+                  { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main },
+                  { dataKey: 'contracting', label: 'Contracting', color: theme.palette.moneyContracting.main },
+                  { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main },
                 ]}
                 height={300}
                 grid={{ horizontal: true }}
@@ -179,7 +184,7 @@ function ChartsPanel(props: { title: string; children: React.ReactNode }): React
     <Paper
       elevation={2}
       sx={{
-        width: 'min(560px, 100%)',
+        width: 'min(700px, 100%)',
         padding: 2,
       }}
     >
