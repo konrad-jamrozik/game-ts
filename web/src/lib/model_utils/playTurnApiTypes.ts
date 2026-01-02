@@ -13,8 +13,8 @@ export type PlayTurnAPI = {
   assignAgentsToTraining(agentIds: AgentId[]): ActionResult
   recallAgents(agentIds: AgentId[]): ActionResult
   startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult
-  // KJA temp addAgentsToInvestigationPlayTurnApi
-  addAgentsToInvestigationPlayTurnApi(params: {
+  // KJA temp addAgentsToInvestigationPlayTurnApi2
+  addAgentsToInvestigationPlayTurnApi2(params: {
     investigationId: LeadInvestigationId
     agentIds: AgentId[]
   }): ActionResult

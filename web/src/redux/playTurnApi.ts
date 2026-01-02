@@ -83,7 +83,7 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
       return result
     },
 
-    addAgentsToInvestigationPlayTurnApi(params: {
+    addAgentsToInvestigationPlayTurnApi2(params: {
       investigationId: LeadInvestigationId
       agentIds: AgentId[]
     }): ActionResult {
