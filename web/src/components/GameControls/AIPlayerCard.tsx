@@ -15,20 +15,21 @@ import { delegateTurnToAIPlayer, delegateTurnsToAIPlayer } from '../../ai/delega
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
 import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../../redux/slices/selectionSlice'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
-import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { NumberField } from './NumberField'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+
+const DEFAULT_AI_INTELLECT = 'basic'
+const DEFAULT_AI_TURN_COUNT = 50
+const DEFAULT_AUTO_ADVANCE_TURN = true
 
 export function AIPlayerCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
-  const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? false)
-  const aiTurnCount = useAppSelector((state) => state.selection.aiTurnCount ?? 1)
+  const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? DEFAULT_AUTO_ADVANCE_TURN)
+  const aiTurnCount = useAppSelector((state) => state.selection.aiTurnCount ?? DEFAULT_AI_TURN_COUNT)
   const intellectNames = getAllIntellectNames()
-  assertDefined(intellectNames[0], 'No intellect names found')
-  const initialIntellect = intellectNames[0]
-  const selectedIntellect = selectedAIIntellect ?? initialIntellect
+  const selectedIntellect = selectedAIIntellect ?? DEFAULT_AI_INTELLECT
 
   const gameLost = isGameLost(gameState)
   const gameWon = isGameWon(gameState)
@@ -69,12 +70,7 @@ export function AIPlayerCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard
-      id="ai-player-card"
-      title="AI Player"
-      defaultExpanded={true}
-      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
-    >
+    <ExpandableCard id="ai-player-card" title="AI Player" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
       <Stack spacing={2}>
         <FormControl fullWidth>
           <InputLabel id="ai-intellect-select-label">AI Player Intellect</InputLabel>
