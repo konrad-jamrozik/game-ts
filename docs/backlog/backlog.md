@@ -31,15 +31,7 @@ KJA backlog:
   So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
   before the exhaustion causes them to lose so much effective skill that commander orders retreat.
 
-- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
-- Charts for stats over time, at the bottom of the screen.
-  - Panic
-  - Each faction threat level, suppression, panic increase
-  - Money
-  - Cumulative missions completed successfully, failed, expired
-  - Hardest mission completed by total enemy skill
-  - Agents, and what they do: contracting, investigating leads, on missions, etc.
-  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
+- Fixup charts, see below
 
 # Dev ergonomics
 
@@ -156,26 +148,10 @@ Make sure that my ps1 profile doesn't output stuff when used by agent, but outpu
     },  
   ```
 
-# DONE in MLS-6
+# Charts
 
-- Delete the intel espionage gathering. I.e. ensure that agents can no longer be assigned to espionage / intel gathering missions.
-  Delete all related code symbols: reducer, model, all of that.
-  Do not touch lead investigation accumulated intel concept or related symbols needed for it. This stays in the code.
+## Charts prompt
 
-- Switch away from `Threat level` to `Activity level` system and associated `Faction operations` documented in [about_faction_activity_level.md](../design/about_faction_activity_level.md)
-- Implement the faction operations system as documented
-  - Implement the panic increase penalty
-  - Implement the funding decrease penalty
-- Update suppression system as documented
-- Delete threat level and threat increase concepts
-
-The agents data grid "Skill" column color bar shows grey bar to denote 100% of agent skill. Apply the same for the Skill column in the combat log.
-
-Create "Charts" button in Game Controls, under the "Expand all" and "Collapse all" buttons. Center the button.
-The button will open a new screen, similar as the mission details screen. It will also have "Back to Command Center" button,
-in the center top.
-Below it there will be series of MUI line charts (use MUI MCP to learn about them). Each chart will be plotting various values, over all the available game states,
-starting from the first available, to the current one. So on the X axis it will be turn number of given state.
 Now I will tell you what will be plotted on these charts, from left to right:
 - Chart 1: Assets
   - Agent count, Funding, Money
@@ -207,3 +183,15 @@ Now I will tell you what will be plotted on these charts, from left to right:
   - Panic level
 
 - Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
+
+## Charts todos
+
+- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
+- Charts for stats over time, at the bottom of the screen.
+  - Panic
+  - Each faction threat level, suppression, panic increase
+  - Money
+  - Cumulative missions completed successfully, failed, expired
+  - Hardest mission completed by total enemy skill
+  - Agents, and what they do: contracting, investigating leads, on missions, etc.
+  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
