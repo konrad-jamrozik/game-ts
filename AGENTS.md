@@ -64,6 +64,9 @@ If the changes are minor, you can instead only run `oxlint`.
 
 Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 
+**Never run `npx`**. Many commands can be run directly, such as `oxlint`, `qcheck`, `format`, `eslint`, `dev`, `depcruise`, etc.
+Refer to `scripts/game-ts.psm1` for the full list of available commands.
+
 ## Task completion and communication
 
 **Important**: Every time you finish a task, include a short commit message in your response. The commit message should:
