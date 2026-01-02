@@ -16,7 +16,7 @@ import { initStore, getStore } from '../src/redux/store'
 import { reset } from '../src/redux/slices/gameStateSlice'
 import { clearEvents } from '../src/redux/slices/eventsSlice'
 import { bldInitialState } from '../src/lib/factories/gameStateFactory'
-import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnToAIPlayer'
+import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnsToAIPlayer'
 import { rand } from '../src/lib/primitives/rand'
 import { profiler } from '../src/lib/primitives/profiler'
 

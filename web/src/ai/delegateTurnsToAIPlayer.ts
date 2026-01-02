@@ -5,22 +5,6 @@ import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 import { profiler } from '../lib/primitives/profiler'
 
-export function delegateTurnToAIPlayer(intellectName: string): void {
-  const intellect = getIntellect(intellectName)
-  const store = getStore()
-
-  const api = getPlayTurnApi(store, { strict: true })
-  intellect.playTurn(api)
-
-  const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
-  if (autoAdvanceTurn) {
-    const finalState = api.gameState
-    if (!isGameEnded(finalState)) {
-      store.dispatch(advanceTurn())
-    }
-  }
-}
-
 export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
   const store = getStore()
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
@@ -51,4 +35,20 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
 
 function dispatchAdvanceTurn(store: AppStore): void {
   store.dispatch(advanceTurn())
+}
+
+export function delegateTurnToAIPlayer(intellectName: string): void {
+  const intellect = getIntellect(intellectName)
+  const store = getStore()
+
+  const api = getPlayTurnApi(store, { strict: true })
+  intellect.playTurn(api)
+
+  const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
+  if (autoAdvanceTurn) {
+    const finalState = api.gameState
+    if (!isGameEnded(finalState)) {
+      store.dispatch(advanceTurn())
+    }
+  }
 }
