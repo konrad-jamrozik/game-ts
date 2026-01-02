@@ -1,11 +1,12 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
-import type { Lead } from '../../../lib/model/leadModel'
+import type { Lead, LeadInvestigation } from '../../../lib/model/leadModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgent } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
+import type { Agent } from '../../../lib/model/agentModel'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
@@ -78,35 +79,38 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
       }
     }
 
-    // If we already selected a repeatable lead, pile agents on it
+    // If we already selected a repeatable lead, batch-pile all remaining agents on it
     if (repeatableLeadSelected !== undefined) {
-      const { gameState: currentGameState } = api
-      const { leadInvestigations: currentLeadInvestigations } = currentGameState
-      const selectedLeadId = repeatableLeadSelected.id
-      const existingInvestigation = Object.values(currentLeadInvestigations).find(
-        (inv) => inv.leadId === selectedLeadId && inv.state === 'Active',
-      )
+      const existingInvestigation = findActiveInvestigation(api.gameState, repeatableLeadSelected.id)
+      if (existingInvestigation === undefined) {
+        // Investigation was completed or abandoned, break
+        break
+      }
 
-      if (existingInvestigation !== undefined) {
+      // Batch-select all remaining agents
+      const remainingToAssign = agentsToAssign - i
+      const agentsToAdd: Agent[] = []
+      for (let j = 0; j < remainingToAssign; j += 1) {
         const agent = selectNextBestReadyAgent(gameState, selectedAgentIds, selectedAgentIds.length, {
           includeInTraining: true,
         })
         if (agent === undefined) {
           break
         }
-
+        agentsToAdd.push(agent)
         selectedAgentIds.push(agent.id)
-        unassignAgentsFromTraining(api, [agent])
-        // KJA1 this is on a hot path per profileAi.ts. Invoked many times, each team necessitating underlying
-        // game state update. Instead, invoke it only once, with all the selected agents at once.
+      }
+
+      if (agentsToAdd.length > 0) {
+        // Single batch operations
+        unassignAgentsFromTraining(api, agentsToAdd)
         api.addAgentsToInvestigationPlayTurnApi2({
           investigationId: existingInvestigation.id,
-          agentIds: [agent.id],
+          agentIds: agentsToAdd.map((a) => a.id),
         })
-      } else {
-        // Investigation was completed or abandoned, break
-        break
       }
+      // Exit main loop - all agents assigned
+      break
     } else {
       // Select a new lead to investigate
       const lead = selectLeadToInvestigate(availableLeads, gameState)
@@ -134,10 +138,7 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
       // Check if there's an existing investigation for this lead
       // Re-read gameState to get the latest state after previous API calls
       const { gameState: currentGameState } = api
-      const { leadInvestigations: currentLeadInvestigations } = currentGameState
-      const existingInvestigation = Object.values(currentLeadInvestigations).find(
-        (inv) => inv.leadId === lead.id && inv.state === 'Active',
-      )
+      const existingInvestigation = findActiveInvestigation(currentGameState, lead.id)
 
       if (existingInvestigation) {
         api.addAgentsToInvestigationPlayTurnApi2({
@@ -159,6 +160,10 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
   }
 
   log.info('lead-investigation', `desired ${agentsToAssign} agents, assigned ${selectedAgentIds.length}`)
+}
+
+function findActiveInvestigation(gameState: GameState, leadId: LeadId): LeadInvestigation | undefined {
+  return Object.values(gameState.leadInvestigations).find((inv) => inv.leadId === leadId && inv.state === 'Active')
 }
 
 function getAvailableLeads(gameState: GameState): Lead[] {
