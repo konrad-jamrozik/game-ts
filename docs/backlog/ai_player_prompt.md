@@ -46,14 +46,15 @@ export type AIPlayerIntellect = {
 **Main delegation function:**
 ```typescript
 // web/src/lib/ai/delegateTurnToAIPlayer.ts
-import { store } from '../../redux/store'
+import { getStore } from '../../redux/store'
+import { getCurrentTurnStateFromStore } from '../../redux/storeUtils'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { isGameOver } from '../../lib/game_utils/gameStateChecks'
 import type { AIPlayerIntellect } from './types'
 
 export function delegateTurnToAIPlayer(intellect: AIPlayerIntellect): void {
   // Provide functions to read state and dispatch actions
-  const getState = () => store.getState().undoable.present.gameState
+  const getState = () => getCurrentTurnStateFromStore(store)
   const dispatch = store.dispatch
   
   // Let the intellect play its turn
@@ -114,7 +115,7 @@ export const basicIntellect: AIPlayerIntellect = {
 
 **Key points:**
 - The Redux store is exported from `web/src/redux/store.ts` and can be accessed directly
-- Game state is at `store.getState().undoable.present.gameState` (wrapped in undoable reducer)
+- Game state is at `getCurrentTurnGameState(store)` (wrapped in undoable reducer)
 - All player actions from `gameStateSlice.ts` are available (hireAgent, assignAgentsToContracting, deployAgentsToMission, etc.)
 - Redux updates are synchronous - after `dispatch()`, the state is immediately updated
 - No React hooks needed - the AI code uses `store.getState()` and `store.dispatch()` directly

@@ -1,17 +1,17 @@
 import { getStore, type AppStore } from '../redux/store'
 import { advanceTurn } from '../redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../redux/playTurnApi'
+import { getCurrentTurnStateFromStore } from '../redux/storeUtils'
 import { isGameEnded } from '../lib/game_utils/gameStateChecks'
 import { getIntellect } from './intellectRegistry'
 import { profiler } from '../lib/primitives/profiler'
-import type { GameState } from '../lib/model/gameStateModel'
 
 export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number): void {
   const store = getStore()
   const autoAdvanceTurn = store.getState().selection.autoAdvanceTurn ?? false
 
   for (let i = 0; i < turnCount; i += 1) {
-    const currentState = getCurrentTurnGameState(store)
+    const currentState = getCurrentTurnStateFromStore(store)
     if (isGameEnded(currentState)) {
       break
     }
@@ -26,7 +26,7 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
     // Only advance turn if auto-advance is disabled, since delegateTurnToAIPlayer
     // already handles turn advancement when auto-advance is enabled
     if (!autoAdvanceTurn) {
-      const afterState = getCurrentTurnGameState(store)
+      const afterState = getCurrentTurnStateFromStore(store)
       if (!isGameEnded(afterState)) {
         dispatchAdvanceTurn(store)
       }
@@ -52,8 +52,4 @@ export function delegateTurnToAIPlayer(intellectName: string): void {
 
 function dispatchAdvanceTurn(store: AppStore): void {
   store.dispatch(advanceTurn())
-}
-
-function getCurrentTurnGameState(store: AppStore): GameState {
-  return store.getState().undoable.present.gameState
 }

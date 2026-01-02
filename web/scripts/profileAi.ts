@@ -19,6 +19,7 @@ import { bldInitialState } from '../src/lib/factories/gameStateFactory'
 import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnsToAIPlayer'
 import { rand } from '../src/lib/primitives/rand'
 import { profiler } from '../src/lib/primitives/profiler'
+import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
 
 const TURNS_TO_PLAY = 200
 
@@ -51,7 +52,7 @@ const avgMs = totalMs / TURNS_TO_PLAY
 console.log('========================================')
 console.log(`Done! Total time: ${totalMs.toFixed(0)}ms`)
 console.log(`Average per turn: ${avgMs.toFixed(1)}ms`)
-console.log(`Final turn: ${store.getState().undoable.present.gameState.turn}`)
+console.log(`Final turn: ${getCurrentTurnStateFromStore(store).turn}`)
 console.log('========================================')
 
 // Generate and write CSV
@@ -62,5 +63,5 @@ writeFileSync(csvPath, csv, 'utf8')
 console.log(`\nProfiler CSV written to: ${csvPath}`)
 
 // Print agent count
-const gameState = store.getState().undoable.present.gameState
+const gameState = getCurrentTurnStateFromStore(store)
 console.log(`\nAgent count: ${gameState.agents.length}`)

@@ -9,6 +9,7 @@ import { isGameWon } from '../../src/lib/game_utils/gameStateChecks'
 import { rand } from '../../src/lib/primitives/rand'
 import { log } from '../../src/lib/primitives/logger'
 import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
+import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
 
 describe('Basic Intellect AI Player', () => {
   // Store is initialized by setupAITests.ts with undoLimit: 0
@@ -54,11 +55,11 @@ describe('Basic Intellect AI Player', () => {
     delegateTurnsToAIPlayer('basic', 250)
 
     // Assert: Verify game ended in victory
-    const finalState = store.getState().undoable.present.gameState
+    const finalState = getCurrentTurnStateFromStore(store)
     expect(isGameWon(finalState)).toBe(true)
 
     // Print agent count
-    const gameState = store.getState().undoable.present.gameState
+    const gameState = getCurrentTurnStateFromStore(store)
     console.log(`\nAgent count: ${gameState.agents.length}`)
   })
 })

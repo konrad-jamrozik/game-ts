@@ -14,7 +14,6 @@ import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
 import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
-import { profiler } from '../../../lib/primitives/profiler'
 import type { UpgradeNameOrNewAgent } from './types'
 import {
   REQUIRED_TURNS_OF_SAVINGS,

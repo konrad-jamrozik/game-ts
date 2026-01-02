@@ -1,9 +1,9 @@
 import type { UpgradeName } from '../lib/data_tables/upgrades'
-import type { GameState } from '../lib/model/gameStateModel'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../lib/model/modelIds'
 import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
 import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
 import { getPlayerActionsApi } from './playerActionsApi'
+import { getCurrentTurnStateFromStore } from './storeUtils'
 import {
   incrementActualAgentCapUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
@@ -28,7 +28,7 @@ import type { AppStore } from './store'
 export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }): PlayTurnAPI {
   const strict = options?.strict ?? false
 
-  const initialGameState = getCurrentGameState(store)
+  const initialGameState = getCurrentTurnStateFromStore(store)
   const baseApi = getPlayerActionsApi(store.dispatch, { strict })
 
   const api: PlayTurnAPI = {
@@ -174,7 +174,7 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
   }
 
   function updateGameState(): void {
-    api.gameState = getCurrentGameState(store)
+    api.gameState = getCurrentTurnStateFromStore(store)
   }
 
   function updateAiState(): void {
@@ -191,8 +191,4 @@ function getCurrentAiState(store: AppStore): BasicIntellectState {
     throw new Error('aiState not found in undoable.present - this should never happen')
   }
   return present.aiState
-}
-
-function getCurrentGameState(store: AppStore): GameState {
-  return store.getState().undoable.present.gameState
 }
