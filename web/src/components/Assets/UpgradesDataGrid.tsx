@@ -6,10 +6,11 @@ import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/s
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function UpgradesDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
   const upgradeRows: UpgradeRow[] = [

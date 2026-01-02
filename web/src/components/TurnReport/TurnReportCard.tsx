@@ -6,12 +6,13 @@ import { RIGHT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { formatAssets } from './formatAssets'
 import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView } from './TurnReportTreeView'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 /**
  * CSS Grid component for displaying turn advancement reports
  */
 export function TurnReportCard(): React.ReactElement {
-  const report = useAppSelector((state) => state.undoable.present.gameState.turnStartReport)
+  const report = useAppSelector((state) => getCurrentTurnState(state).turnStartReport)
 
   const assetsDefaultExpandedItems: readonly string[] = [
     // 'money-summary',

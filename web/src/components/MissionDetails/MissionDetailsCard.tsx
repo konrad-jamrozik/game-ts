@@ -72,6 +72,7 @@ import type { MissionState } from '../../lib/model/outcomeTypes'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
 import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 type MissionDetailsRow = {
   id: number
@@ -85,7 +86,7 @@ type MissionDetailsCardProps = {
 }
 
 export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): React.JSX.Element {
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const { missions } = gameState
 
   const mission = missions.find((m) => m.id === missionId)

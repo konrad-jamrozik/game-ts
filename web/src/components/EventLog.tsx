@@ -9,6 +9,7 @@ import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatUtils'
+import { getCurrentTurnState } from '../redux/storeUtils'
 
 function formatMissionRewards(event: Extract<GameEvent, { type: 'MissionCompleted' }>): string {
   const { rewards } = event
@@ -38,8 +39,8 @@ function renderPrimaryListItemText(event: GameEvent): string {
 
 export function EventLog(): React.JSX.Element {
   const events = useAppSelector((state) => state.events.events)
-  const currentTurn = useAppSelector((state) => state.undoable.present.gameState.turn)
-  const currentActionsCount = useAppSelector((state) => state.undoable.present.gameState.actionsCount)
+  const currentTurn = useAppSelector((state) => getCurrentTurnState(state).turn)
+  const currentActionsCount = useAppSelector((state) => getCurrentTurnState(state).actionsCount)
 
   // Hide events that are currently undone (beyond the undo pointer)
   // and also hide any legacy undo/redo/reset text events that may exist in persisted state

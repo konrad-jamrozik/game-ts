@@ -14,11 +14,12 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { getDiscoveredLeads, getLeadStatus } from '../../lib/model_utils/leadUtils'
 import { calculateLeadCounts } from './leadCounts'
 import { LeadsDataGridTitle } from './LeadsDataGridTitle'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const [filterType, setFilterType] = React.useState<'active' | 'inactive' | 'archived'>('active')
 
   // Get all discovered leads using shared logic

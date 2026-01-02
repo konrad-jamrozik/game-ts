@@ -12,6 +12,7 @@ import { ExpandableCard } from './Common/ExpandableCard'
 import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
+import { getCurrentTurnState } from '../redux/storeUtils'
 
 function getFactionRows(
   faction: {
@@ -75,7 +76,7 @@ function getFactionRows(
 }
 
 export function SituationReportCard(): React.JSX.Element {
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const { panic, factions, leadInvestigationCounts } = gameState
   const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
 

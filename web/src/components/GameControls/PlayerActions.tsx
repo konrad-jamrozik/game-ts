@@ -12,6 +12,7 @@ import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUti
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { handleInvestigateLead } from './handleInvestigateLead'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function PlayerActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -21,7 +22,7 @@ export function PlayerActions(): React.JSX.Element {
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
 
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const [showAlert, setShowAlert] = React.useState(false)
   const [alertMessage, setAlertMessage] = React.useState('')
 

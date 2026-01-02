@@ -4,9 +4,10 @@ import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
 import { notTerminated } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getAssetsColumns, type AssetRow } from './getAssetsColumns'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function AssetsDataGrid(): React.JSX.Element {
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const moneyProjected = getMoneyNewBalance(gameState)
   const moneyDiff = moneyProjected - gameState.money
   const agentCount = notTerminated(gameState.agents).length

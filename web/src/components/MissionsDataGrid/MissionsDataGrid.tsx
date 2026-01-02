@@ -22,10 +22,11 @@ import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
 import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateMissionCounts } from './missionCounts'
 import { MissionsDataGridTitle } from './MissionsDataGridTitle'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const { missions, turnStartReport } = gameState
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
   const [showArchived, setShowArchived] = React.useState(false)

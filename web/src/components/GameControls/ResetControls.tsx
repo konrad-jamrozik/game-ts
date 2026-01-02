@@ -19,6 +19,7 @@ import { log } from '../../lib/primitives/logger'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { useTheme, type SxProps } from '@mui/material/styles'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -37,12 +38,12 @@ export function ResetControls(): React.JSX.Element {
   const undoable = useAppSelector((state: RootReducerState) => state.undoable)
   const canUndo = undoable.past.length > 0
   const canRedo = undoable.future.length > 0
-  const currentTurn = useAppSelector((state: RootReducerState) => state.undoable.present.gameState.turn)
+  const currentTurn = useAppSelector((state: RootReducerState) => getCurrentTurnState(state).turn)
   const previousEntryTurn = canUndo ? undoable.past.at(-1)?.gameState.turn : undefined
   const nextEntryTurn = canRedo ? undoable.future.at(0)?.gameState.turn : undefined
   const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
   const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
-  const actionsThisTurn = useAppSelector((state: RootReducerState) => state.undoable.present.gameState.actionsCount)
+  const actionsThisTurn = useAppSelector((state: RootReducerState) => getCurrentTurnState(state).actionsCount)
   const availableUndoSteps = useAppSelector((state: RootReducerState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
   const theme = useTheme()

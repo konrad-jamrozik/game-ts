@@ -17,10 +17,11 @@ import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { NumberField } from './NumberField'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
   const autoAdvanceTurn = useAppSelector((state) => state.selection.autoAdvanceTurn ?? false)
   const aiTurnCount = useAppSelector((state) => state.selection.aiTurnCount ?? 1)

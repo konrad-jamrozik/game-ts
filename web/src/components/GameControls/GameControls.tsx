@@ -10,10 +10,11 @@ import { ExpandableCard } from '../Common/ExpandableCard'
 import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
 
   function handleAdvanceTurn(): void {
     dispatch(advanceTurn())

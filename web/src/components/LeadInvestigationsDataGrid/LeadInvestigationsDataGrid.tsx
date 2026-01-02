@@ -27,10 +27,11 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getLeadInvestigationsColumns, type LeadInvestigationRow } from './getLeadInvestigationsColumns'
 import { calculateLeadInvestigationCounts } from './leadInvestigationCounts'
 import { LeadInvestigationsDataGridTitle } from './LeadInvestigationsDataGridTitle'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const { leadInvestigations, agents, turnStartReport } = gameState
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
   const [showActive, setShowActive] = React.useState(true)

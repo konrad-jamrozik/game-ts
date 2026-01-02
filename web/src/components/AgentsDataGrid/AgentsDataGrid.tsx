@@ -15,10 +15,11 @@ import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
 import { initialAgent } from '../../lib/factories/agentFactory'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const gameState = useAppSelector((state) => state.undoable.present.gameState)
+  const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
   const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
