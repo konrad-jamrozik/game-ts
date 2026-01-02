@@ -44,6 +44,6 @@ describe('Basic Intellect AI Player', () => {
 
     // Print agent count
     const gameState = getCurrentTurnStateFromStore(store)
-    console.log(`\nAgent count: ${gameState.agents.length}`)
+    console.log(`\nAgent count: ${gameState.agents.length}. Terminated: ${gameState.terminatedAgents.length}`)
   })
 })

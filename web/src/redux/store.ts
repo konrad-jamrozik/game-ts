@@ -9,6 +9,8 @@ export type StoreOptions = {
   undoLimit?: number
   /** Set to false to disable IndexedDB persistence (useful for tests). Defaults to true. */
   enablePersistence?: boolean
+  /** Enable Redux default middleware checks. Defaults to true. */
+  enableDefaultMiddleware?: boolean
 }
 
 type DebouncedSaveFunction = ReturnType<typeof debounce<[]>>
@@ -27,6 +29,7 @@ export async function initStore(options?: StoreOptions): Promise<void> {
 
   const undoLimit = options?.undoLimit ?? DEFAULT_UNDO_LIMIT
   const enablePersistence = options?.enablePersistence ?? true
+  const enableDefaultMiddleware = options?.enableDefaultMiddleware ?? true
   const rootReducer = createRootReducer(undoLimit)
 
   // Initialize persistence (creates Dexie instance) before loading state.
@@ -42,10 +45,9 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         // Default middleware causes significant performance hit. See about_profiling.md
-        // KJA3 make this configurable, true by default, disabled in AI stress-tests and profiling
-        immutableCheck: false,
-        serializableCheck: false,
-        actionCreatorCheck: false,
+        immutableCheck: enableDefaultMiddleware,
+        serializableCheck: enableDefaultMiddleware,
+        actionCreatorCheck: enableDefaultMiddleware,
       }).prepend(eventsMiddleware()),
     ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
   })

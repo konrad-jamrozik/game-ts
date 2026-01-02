@@ -4,6 +4,7 @@ import { isFactionTerminated } from './factionUtils'
 import { getLeadStatus } from './leadUtils'
 import { dataTables } from '../data_tables/dataTables'
 import { assertTrue } from '../primitives/assertPrimitives'
+import { debugConfig } from '../primitives/debugConfig'
 
 /**
  * Validates the entire game state invariants.
@@ -14,6 +15,9 @@ import { assertTrue } from '../primitives/assertPrimitives'
  * (in sackAgents reducer and moveKilledAgentsToTerminated).
  */
 export function validateGameStateInvariants(state: GameState): void {
+  const freq = debugConfig.gameStateInvariantsFrequency
+  if (freq === 0) return
+  if (freq > 1 && state.turn % freq !== 0) return
   // Validate all alive agents
   for (const agent of state.agents) {
     validateAgentInvariants(agent, state)
