@@ -81,6 +81,7 @@ class Profiler {
   }
 
   public startTurn(turn: number): void {
+    /*#__NOINLINE__*/
     this.currentTurn = turn
     // Initialize turn data if it doesn't exist
     if (!this.data.has(turn)) {
