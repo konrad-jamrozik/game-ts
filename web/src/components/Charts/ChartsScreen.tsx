@@ -10,6 +10,10 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
 
+function withNoMarkers<T extends Record<string, unknown>>(series: T[]): (T & { showMark: false })[] {
+  return series.map((s) => ({ ...s, showMark: false }))
+}
+
 export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const datasets = useAppSelector(selectChartsDatasets)
@@ -63,17 +67,16 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.assets}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
-              { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main, showMark: false },
-              { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main, showMark: false },
+            series={withNoMarkers([
+              { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main },
+              { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main },
               {
                 dataKey: 'contracting',
                 label: 'Contracting',
                 color: theme.palette.moneyContracting.main,
-                showMark: false,
               },
-              { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main, showMark: false },
-            ]}
+              { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main },
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -84,14 +87,14 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.agentSkill}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
-              { dataKey: 'maxEffectiveSkillMin', label: 'Max eff. skill (min)', showMark: false },
-              { dataKey: 'maxEffectiveSkillAvg', label: 'Max eff. skill (avg)', showMark: false },
-              { dataKey: 'maxEffectiveSkillMedian', label: 'Max eff. skill (median)', showMark: false },
-              { dataKey: 'maxEffectiveSkillP90', label: 'Max eff. skill (p90)', showMark: false },
-              { dataKey: 'maxEffectiveSkillSum', label: 'Max eff. skill (sum)', showMark: false },
-              { dataKey: 'currentEffectiveSkillSum', label: 'Current eff. skill (sum)', showMark: false },
-            ]}
+            series={withNoMarkers([
+              { dataKey: 'maxEffectiveSkillMin', label: 'Max eff. skill (min)' },
+              { dataKey: 'maxEffectiveSkillAvg', label: 'Max eff. skill (avg)' },
+              { dataKey: 'maxEffectiveSkillMedian', label: 'Max eff. skill (median)' },
+              { dataKey: 'maxEffectiveSkillP90', label: 'Max eff. skill (p90)' },
+              { dataKey: 'maxEffectiveSkillSum', label: 'Max eff. skill (sum)' },
+              { dataKey: 'currentEffectiveSkillSum', label: 'Current eff. skill (sum)' },
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -102,16 +105,16 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.agentReadiness}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
-              { dataKey: 'maxHitPointsAvg', label: 'Max HP (avg)', showMark: false },
-              { dataKey: 'maxHitPointsMax', label: 'Max HP (max)', showMark: false },
-              { dataKey: 'hitPointsAvg', label: 'HP (avg)', showMark: false },
-              { dataKey: 'hitPointsMax', label: 'HP (max)', showMark: false },
-              { dataKey: 'exhaustionAvg', label: 'Exhaustion (avg)', showMark: false },
-              { dataKey: 'exhaustionMax', label: 'Exhaustion (max)', showMark: false },
-              { dataKey: 'recoveryTurnsAvg', label: 'Recovery turns (avg)', showMark: false },
-              { dataKey: 'recoveryTurnsMax', label: 'Recovery turns (max)', showMark: false },
-            ]}
+            series={withNoMarkers([
+              { dataKey: 'maxHitPointsAvg', label: 'Max HP (avg)' },
+              { dataKey: 'maxHitPointsMax', label: 'Max HP (max)' },
+              { dataKey: 'hitPointsAvg', label: 'HP (avg)' },
+              { dataKey: 'hitPointsMax', label: 'HP (max)' },
+              { dataKey: 'exhaustionAvg', label: 'Exhaustion (avg)' },
+              { dataKey: 'exhaustionMax', label: 'Exhaustion (max)' },
+              { dataKey: 'recoveryTurnsAvg', label: 'Recovery turns (avg)' },
+              { dataKey: 'recoveryTurnsMax', label: 'Recovery turns (max)' },
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -122,13 +125,13 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.missions}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
-              { dataKey: 'spawned', label: 'Spawned (total)', showMark: false },
-              { dataKey: 'expired', label: 'Expired (total)', showMark: false },
-              { dataKey: 'won', label: 'Completed successfully (total)', showMark: false },
-              { dataKey: 'retreated', label: 'Retreated (total)', showMark: false },
-              { dataKey: 'wiped', label: 'Wiped (total)', showMark: false },
-            ]}
+            series={withNoMarkers([
+              { dataKey: 'spawned', label: 'Spawned (total)' },
+              { dataKey: 'expired', label: 'Expired (total)' },
+              { dataKey: 'won', label: 'Completed successfully (total)' },
+              { dataKey: 'retreated', label: 'Retreated (total)' },
+              { dataKey: 'wiped', label: 'Wiped (total)' },
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -139,13 +142,13 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.battleStats}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
-              { dataKey: 'agentsDeployed', label: 'Agents deployed', showMark: false },
-              { dataKey: 'agentsKia', label: 'Agents KIA', showMark: false },
-              { dataKey: 'agentsWounded', label: 'Agents wounded', showMark: false },
-              { dataKey: 'agentsUnscathed', label: 'Agents unscathed', showMark: false },
-              { dataKey: 'enemiesKia', label: 'Enemies KIA', showMark: false },
-            ]}
+            series={withNoMarkers([
+              { dataKey: 'agentsDeployed', label: 'Agents deployed' },
+              { dataKey: 'agentsKia', label: 'Agents KIA' },
+              { dataKey: 'agentsWounded', label: 'Agents wounded' },
+              { dataKey: 'agentsUnscathed', label: 'Agents unscathed' },
+              { dataKey: 'enemiesKia', label: 'Enemies KIA' },
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
@@ -156,14 +159,13 @@ export function ChartsScreen(): React.JSX.Element {
           <LineChart
             dataset={datasets.situationReport}
             xAxis={[{ dataKey: 'turn', label: 'Turn', valueFormatter: formatTurn }]}
-            series={[
+            series={withNoMarkers([
               {
                 dataKey: 'panicPct',
                 label: 'Panic (%)',
                 valueFormatter: (v: number | null) => (typeof v === 'number' ? `${v.toFixed(2)}%` : ''),
-                showMark: false,
               },
-            ]}
+            ])}
             height={300}
             grid={{ horizontal: true }}
             slotProps={{ tooltip: { trigger: 'axis' } }}
