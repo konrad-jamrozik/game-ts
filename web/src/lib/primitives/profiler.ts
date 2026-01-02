@@ -89,24 +89,27 @@ class Profiler {
     const recordCallBound = this.recordCall.bind(this)
     const isEnabledBound = this.isEnabled.bind(this)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, func-names -- name is set dynamically below
-    const wrapper = function (...args: Parameters<T>): any {
-      if (!isEnabledBound()) {
-        return fn(...args)
-      }
+    // Use computed property name with method shorthand to create a function
+    // with a dynamic name that V8's profiler will recognize.
+    // Object.defineProperty on .name doesn't update V8's internal debug name.
+    const wrapperName = `_P_${name}`
+    const { [wrapperName]: wrapper } = {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      [wrapperName](...args: Parameters<T>): any {
+        if (!isEnabledBound()) {
+          return fn(...args)
+        }
 
-      const start = performance.now()
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const result = fn(...args)
-      const end = performance.now()
-      const duration = end - start
+        const start = performance.now()
+        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+        const result = fn(...args)
+        const end = performance.now()
+        const duration = end - start
 
-      recordCallBound(name, duration)
-      return result
+        recordCallBound(name, duration)
+        return result
+      },
     }
-
-    // Set wrapper name for flamegraph visibility (prefixed with _P_ for "Profiler")
-    Object.defineProperty(wrapper, 'name', { value: `_P_${name}`, configurable: true })
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return wrapper as T
