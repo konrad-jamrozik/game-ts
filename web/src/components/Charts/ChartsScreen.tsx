@@ -20,6 +20,14 @@ const axisConfig = {
   labelStyle: { fontSize: AXIS_LABEL_FONT_SIZE },
 }
 
+const legendSlotProps = {
+  legend: {
+    sx: {
+      fontSize: LEGEND_FONT_SIZE,
+    },
+  },
+}
+
 function withNoMarkers<T extends Record<string, unknown>>(series: T[]): (T & { showMark: false })[] {
   return series.map((s) => ({ ...s, showMark: false }))
 }
@@ -97,11 +105,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
@@ -128,11 +134,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
@@ -161,11 +165,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
@@ -191,11 +193,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
@@ -221,11 +221,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
@@ -251,11 +249,9 @@ export function ChartsScreen(): React.JSX.Element {
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
-            slotProps={{ tooltip: { trigger: 'axis' } }}
-            sx={{
-              '& .MuiChartsLegend-label': {
-                fontSize: LEGEND_FONT_SIZE,
-              },
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
             }}
           />
         </ChartsPanel>
