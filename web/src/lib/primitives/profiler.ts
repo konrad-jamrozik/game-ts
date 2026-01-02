@@ -89,27 +89,32 @@ class Profiler {
     const recordCallBound = this.recordCall.bind(this)
     const isEnabledBound = this.isEnabled.bind(this)
 
-    // Use computed property name with method shorthand to create a function
-    // with a dynamic name that V8's profiler will recognize.
-    // Object.defineProperty on .name doesn't update V8's internal debug name.
+    // Use new Function() to create a wrapper with a dynamic name that V8's profiler
+    // will recognize. Other approaches (Object.defineProperty, computed property names)
+    // don't reliably set V8's internal debug name after transpilation.
+    // This is safe because `name` comes from our own code, not user input.
     const wrapperName = `_P_${name}`
-    const { [wrapperName]: wrapper } = {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      [wrapperName](...args: Parameters<T>): any {
+    // eslint-disable-next-line @typescript-eslint/no-implied-eval, no-new-func
+    const createWrapper = new Function(
+      'isEnabledBound',
+      'fn',
+      'recordCallBound',
+      'name',
+      `return function ${wrapperName}(...args) {
         if (!isEnabledBound()) {
           return fn(...args)
         }
-
         const start = performance.now()
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const result = fn(...args)
         const end = performance.now()
         const duration = end - start
-
         recordCallBound(name, duration)
         return result
-      },
-    }
+      }`,
+    )
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-call
+    const wrapper = createWrapper(isEnabledBound, fn, recordCallBound, name)
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
     return wrapper as T
