@@ -27,6 +27,7 @@ declare module '@mui/material/styles' {
     moneyFunding: PaletteColor
     moneyContracting: PaletteColor
     moneyUpkeep: PaletteColor
+    moneyRewards: PaletteColor
   }
 
   // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
@@ -45,6 +46,7 @@ declare module '@mui/material/styles' {
     moneyFunding?: PaletteColorOptions
     moneyContracting?: PaletteColorOptions
     moneyUpkeep?: PaletteColorOptions
+    moneyRewards?: PaletteColorOptions
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -178,6 +180,12 @@ const colorSystemOptions: ColorSystemOptions = {
         main: red[500],
       },
       name: 'moneyUpkeep',
+    }),
+    moneyRewards: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[600],
+      },
+      name: 'moneyRewards',
     }),
   },
 }

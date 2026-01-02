@@ -102,6 +102,7 @@ export function ChartsScreen(): React.JSX.Element {
                 color: theme.palette.moneyContracting.main,
               },
               { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main },
+              { dataKey: 'rewards', label: 'Rewards', color: theme.palette.moneyRewards.main },
             ])}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}

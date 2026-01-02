@@ -23,6 +23,7 @@ export type AssetsDatasetRow = {
   money: number
   contracting: number
   upkeep: number
+  rewards: number
 }
 
 export type AgentSkillDatasetRow = {
@@ -94,7 +95,10 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const situationReport: SituationReportDatasetRow[] = []
 
   for (const gameState of statesByTurn) {
-    const { turn, agents, funding, money, panic } = gameState
+    const { turn, agents, funding, money, panic, turnStartReport } = gameState
+
+    // Get rewards from turn report (per-turn, not cumulative)
+    const turnRewards = turnStartReport?.assets.moneyBreakdown.missionRewards ?? 0
 
     // --- Asset totals (direct from state)
     assets.push({
@@ -104,6 +108,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       money,
       contracting: getContractingIncome(gameState),
       upkeep: getAgentUpkeep(gameState),
+      rewards: turnRewards,
     })
 
     // --- Agent skill (derived)
