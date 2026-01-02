@@ -1,6 +1,13 @@
 /**
- * Lightweight function profiler for collecting per-turn timing statistics.
+ * Lightweight function profiler for collecting per-turn call count and timing statistics.
+ * See about_profiling.md for more details.
  *
+ * Overall, prefer to use Chrome DevTools Performance tab flame charts, uploading result from profileAi.ts script.
+ * Use this Profiler only if you want to count function calls or for some reason get simplified stats.
+ *
+ * To analyze the profiler results, make a connect in Excel to the Profiler output .csv file, with comma delimiter.
+ *
+ * Usage example: see profileAi.ts script for usage example.
  * Usage:
  *   1. Wrap functions: export const myFunc = profiler.wrap('myFunc', myFuncImpl)
  *   2. Enable profiling: profiler.enabled = true
@@ -14,6 +21,9 @@ type FunctionStats = {
 }
 
 type TurnData = Map<string, FunctionStats>
+
+const AI_FUNCTION_NAME = 'delegateTurnToAIPlayer'
+const ADVANCE_TURN_FUNCTION_NAME = 'dispatchAdvanceTurn'
 
 class Profiler {
   public enabled = false
@@ -48,13 +58,10 @@ class Profiler {
   }
 
   private static sortFunctionNames(functionNames: string[]): string[] {
-    const aiName = 'delegateTurnToAIPlayer'
-    const advTName = 'dispatchAdvanceTurn'
+    const aiIndex = functionNames.indexOf(AI_FUNCTION_NAME)
+    const advTIndex = functionNames.indexOf(ADVANCE_TURN_FUNCTION_NAME)
 
-    const aiIndex = functionNames.indexOf(aiName)
-    const advTIndex = functionNames.indexOf(advTName)
-
-    const others = functionNames.filter((name) => name !== aiName && name !== advTName)
+    const others = functionNames.filter((name) => name !== AI_FUNCTION_NAME && name !== ADVANCE_TURN_FUNCTION_NAME)
     const sortedOthers = others.toSorted((a, b) => {
       const abbrevA = Profiler.abbreviateName(a)
       const abbrevB = Profiler.abbreviateName(b)
@@ -63,10 +70,10 @@ class Profiler {
 
     const result: string[] = []
     if (aiIndex !== -1) {
-      result.push(aiName)
+      result.push(AI_FUNCTION_NAME)
     }
     if (advTIndex !== -1) {
-      result.push(advTName)
+      result.push(ADVANCE_TURN_FUNCTION_NAME)
     }
     result.push(...sortedOthers)
 
