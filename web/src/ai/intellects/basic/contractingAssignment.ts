@@ -94,19 +94,11 @@ export function assignToContracting(api: PlayTurnAPI): void {
 
 export function assignLeftoverToContracting(api: PlayTurnAPI): void {
   const { gameState } = api
-  const selectedAgentIds: AgentId[] = []
 
-  let agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
+  const agents = selectNextBestReadyAgents(gameState, Number.MAX_SAFE_INTEGER, [], 0, {
     includeInTraining: false,
   })
-  let agent = agents[0]
-  while (agent !== undefined) {
-    selectedAgentIds.push(agent.id)
-    agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
-      includeInTraining: false,
-    })
-    agent = agents[0]
-  }
+  const selectedAgentIds = agents.map((a) => a.id)
 
   if (selectedAgentIds.length > 0) {
     api.assignAgentsToContracting(selectedAgentIds)

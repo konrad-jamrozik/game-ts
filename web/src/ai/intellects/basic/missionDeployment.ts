@@ -33,25 +33,14 @@ export function canDeployMissionWithCurrentResources(
   const targetCombatRating = enemyCombatRating * TARGET_COMBAT_RATING_MULTIPLIER
 
   const selectedAgents: Agent[] = []
-  let currentCombatRating = 0
 
   // Phase 1: Select agents until meeting minimum count requirement
-  while (selectedAgents.length < minimumRequiredAgents) {
-    const agents = selectNextBestReadyAgents(
-      gameState,
-      1,
-      selectedAgents.map((a) => a.id),
-      selectedAgents.length,
-      { includeInTraining: true, keepReserve: false },
-    )
-    const agent = agents[0]
-    if (agent === undefined) {
-      break // No more agents available
-    }
-
-    selectedAgents.push(agent)
-    currentCombatRating += calculateAgentCombatRating(agent)
-  }
+  const initialAgents = selectNextBestReadyAgents(gameState, minimumRequiredAgents, [], 0, {
+    includeInTraining: true,
+    keepReserve: false,
+  })
+  selectedAgents.push(...initialAgents)
+  let currentCombatRating = initialAgents.reduce((sum, a) => sum + calculateAgentCombatRating(a), 0)
 
   // Check if we have enough agents
   if (selectedAgents.length < minimumRequiredAgents) {

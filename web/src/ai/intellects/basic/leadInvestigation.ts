@@ -6,7 +6,6 @@ import { notTerminated } from '../../../lib/model_utils/agentUtils'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { selectNextBestReadyAgents } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
-import type { Agent } from '../../../lib/model/agentModel'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
@@ -89,18 +88,16 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
 
       // Batch-select all remaining agents
       const remainingToAssign = agentsToAssign - i
-      const agentsToAdd: Agent[] = []
-      for (let j = 0; j < remainingToAssign; j += 1) {
-        const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
+      const agentsToAdd = selectNextBestReadyAgents(
+        gameState,
+        remainingToAssign,
+        selectedAgentIds,
+        selectedAgentIds.length,
+        {
           includeInTraining: true,
-        })
-        const agent = agents[0]
-        if (agent === undefined) {
-          break
-        }
-        agentsToAdd.push(agent)
-        selectedAgentIds.push(agent.id)
-      }
+        },
+      )
+      selectedAgentIds.push(...agentsToAdd.map((a) => a.id))
 
       if (agentsToAdd.length > 0) {
         // Single batch operations
