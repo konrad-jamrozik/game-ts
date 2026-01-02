@@ -33,6 +33,8 @@ import type { AppDispatch } from './store'
 export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: boolean }): PlayerActionsAPI {
   const strict = options?.strict ?? false
 
+  const wrappedAddAgentsToInvestigation = profiler.wrap('A2_add', addAgentsToInvestigationImpl)
+
   function addAgentsToInvestigationImpl(
     gameState: GameState,
     params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
@@ -50,8 +52,6 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
     dispatch(addAgentsToInvestigation(params))
     return { success: true }
   }
-
-  const wrappedAddAgentsToInvestigation = profiler.wrap('A2_add', addAgentsToInvestigationImpl)
 
   const api: PlayerActionsAPI = {
     hireAgent(gameState: GameState): ActionResult {

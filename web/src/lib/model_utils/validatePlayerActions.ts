@@ -140,7 +140,7 @@ export function validateStartLeadInvestigation(gameState: GameState, agentIds: A
   return { isValid: true }
 }
 
-export const validateAddAgentsToInvestigation = profiler.wrap('A2.1_val', validateAddAgentsToInvestigationImpl)
+export const validateAddAgentsToInvestigation = profiler.wrap('A2_1_val', validateAddAgentsToInvestigationImpl)
 
 function validateAddAgentsToInvestigationImpl(gameState: GameState, agentIds: AgentId[]): ValidationResult {
   // Validate that all selected agents are available
