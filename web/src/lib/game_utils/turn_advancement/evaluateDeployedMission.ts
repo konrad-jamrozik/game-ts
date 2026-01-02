@@ -27,6 +27,7 @@ import type { DefensiveMissionData } from '../../data_tables/defensiveMissionsDa
 import { getMoneyRewardForOperation, getFundingRewardForOperation } from '../../ruleset/factionOperationLevelRuleset'
 import { log } from '../../primitives/logger'
 import type { AttackLog } from '../../model/turnReportModel'
+import type { Enemy } from '../../model/enemyModel'
 
 /**
  * Evaluates a deployed mission according to about_deployed_mission.md.
@@ -61,10 +62,7 @@ export function evaluateDeployedMission(
   )
 
   // Determine mission outcome
-  // Enemies are neutralized if they are either terminated (HP <= 0) or incapacitated (effective skill <= 10% base)
-  const allEnemiesNeutralized = mission.enemies.every(
-    (enemy) => f6le(enemy.hitPoints, f6c0) || !canParticipateInBattle(enemy),
-  )
+  const allEnemiesNeutralized = !canAnyEnemyParticipateInBattle(mission.enemies)
   assertNotBothTrue(allEnemiesNeutralized, battleReport.retreated, 'Both enemies neutralized and retreated')
   if (allEnemiesNeutralized) {
     mission.state = 'Won'
@@ -80,6 +78,10 @@ export function evaluateDeployedMission(
   const rewards = mission.state === 'Won' ? bldRewardsFromMissionData(missionData, mission.operationLevel) : undefined
 
   return { rewards, battleReport }
+}
+
+function canAnyEnemyParticipateInBattle(enemies: Enemy[]): boolean {
+  return enemies.some((enemy) => canParticipateInBattle(enemy))
 }
 
 function getAgentExhaustionAfterBattle(
