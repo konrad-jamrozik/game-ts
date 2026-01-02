@@ -1,22 +1,23 @@
 # Profiling Guide
 
 - [Profiling Guide](#profiling-guide)
-  - [How to Profile](#how-to-profile)
+- [How to Profile](#how-to-profile)
   - [Reading the Flamegraph](#reading-the-flamegraph)
-  - [How to Make Functions Profilable](#how-to-make-functions-profilable)
-    - [What Shows Names vs `(anonymous)`](#what-shows-names-vs-anonymous)
-    - [Instead of Arrow Functions, Use Named Function Expressions](#instead-of-arrow-functions-use-named-function-expressions)
-    - [Instead of Inline Object Methods, Define Functions First](#instead-of-inline-object-methods-define-functions-first)
-    - [Common Patterns That Hide Function Names](#common-patterns-that-hide-function-names)
-    - [Quick Reference](#quick-reference)
-  - [Possible Alternative Approaches](#possible-alternative-approaches)
-    - [Vitest Browser Mode](#vitest-browser-mode)
-  - [Rejected Approaches](#rejected-approaches)
-    - [Profiling Vitest Tests with Browser DevTools](#profiling-vitest-tests-with-browser-devtools)
-    - [Standalone HTML Test Runner](#standalone-html-test-runner)
-  - [Profiling Learnings](#profiling-learnings)
+- [How to Make Functions Profilable](#how-to-make-functions-profilable)
+  - [What Shows Names vs `(anonymous)`](#what-shows-names-vs-anonymous)
+  - [Instead of Arrow Functions, Use Named Function Expressions](#instead-of-arrow-functions-use-named-function-expressions)
+  - [Instead of Inline Object Methods, Define Functions First](#instead-of-inline-object-methods-define-functions-first)
+  - [Common Patterns That Hide Function Names](#common-patterns-that-hide-function-names)
+  - [Quick Reference](#quick-reference)
+- [Possible Alternative Approaches](#possible-alternative-approaches)
+  - [Vitest Browser Mode](#vitest-browser-mode)
+- [Rejected Approaches](#rejected-approaches)
+  - [Profiling Vitest Tests with Browser DevTools](#profiling-vitest-tests-with-browser-devtools)
+  - [Standalone HTML Test Runner](#standalone-html-test-runner)
+- [Profiling Learnings](#profiling-learnings)
+- [Appendix: Profiler Class](#appendix-profiler-class)
 
-## How to Profile
+# How to Profile
 
 The profiling script (`web/scripts/profileAi.ts`) runs the AI player for 200 turns without Vitest overhead, enabling accurate CPU profiling.
 
@@ -69,11 +70,11 @@ This is **profiler sampling artifact**, not actual inefficiency. The V8 profiler
 
 You can verify this by adding explicit `performance.now()` timing around suspected operations. If manual timing shows the operations take only milliseconds but the profiler shows seconds of self-time, it's dark matter - not actionable overhead.
 
-## How to Make Functions Profilable
+# How to Make Functions Profilable
 
 V8's CPU profiler captures function names based on the function's `.name` property. Not all JavaScript functions have meaningful names in the profiler output.
 
-### What Shows Names vs `(anonymous)`
+## What Shows Names vs `(anonymous)`
 
 | Pattern                                | Profiler Shows | Why                                    |
 | -------------------------------------- | -------------- | -------------------------------------- |
@@ -83,7 +84,7 @@ V8's CPU profiler captures function names based on the function's `.name` proper
 | `{ myMethod() {} }`                    | `(anonymous)`  | Object literal methods are anonymous   |
 | `{ myMethod: () => {} }`               | `(anonymous)`  | Arrow function in object literal       |
 
-### Instead of Arrow Functions, Use Named Function Expressions
+## Instead of Arrow Functions, Use Named Function Expressions
 
 Arrow functions cannot have names. If you need a function to appear in flamegraphs:
 
@@ -104,7 +105,7 @@ function processData(data: Data) {
 }
 ```
 
-### Instead of Inline Object Methods, Define Functions First
+## Instead of Inline Object Methods, Define Functions First
 
 Methods defined inline in object literals are anonymous:
 
@@ -126,7 +127,7 @@ const api = {
 }
 ```
 
-### Common Patterns That Hide Function Names
+## Common Patterns That Hide Function Names
 
 1. **Object literal methods** - Methods defined inline are anonymous. Fix: Define each method as a named function first.
 
@@ -134,7 +135,7 @@ const api = {
 
 3. **Arrow functions assigned to variables** - `const fn = () => {}` creates an anonymous function. Fix: Use `const fn = function fn() {}`.
 
-### Quick Reference
+## Quick Reference
 
 To make a function visible in flamegraphs:
 
@@ -142,9 +143,9 @@ To make a function visible in flamegraphs:
 2. For const assignments, use `const name = function name() {}`
 3. For object methods, define the function separately first
 
-## Possible Alternative Approaches
+# Possible Alternative Approaches
 
-### Vitest Browser Mode
+## Vitest Browser Mode
 
 Vitest can run tests directly in a browser context:
 
@@ -153,17 +154,17 @@ Vitest can run tests directly in a browser context:
 3. Run: `npx vitest --browser test/ai/basicIntellect.test.ts`
 4. Profile using DevTools Performance tab in the opened browser
 
-## Rejected Approaches
+# Rejected Approaches
 
-### Profiling Vitest Tests with Browser DevTools
+## Profiling Vitest Tests with Browser DevTools
 
 If you try to profile Vitest tests using browser DevTools (via `vitest --ui`), you will NOT see your JavaScript functions in the flamegraph. **Vitest runs tests in Web Workers**, not on the main thread. The main thread only handles the UI, so you'll see browser rendering activities instead of your actual test code.
 
-### Standalone HTML Test Runner
+## Standalone HTML Test Runner
 
 Creating an HTML page to run tests on the main thread adds complexity without benefits over the `tsx --cpu-prof` approach. The standalone script is simpler and produces the same quality profiles.
 
-## Profiling Learnings
+# Profiling Learnings
 
 - Be wary of the "dark matter" self-time. See [Reading the Flamegraph](#reading-the-flamegraph) for more details.
 - `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))` took 98.22 ms for 1601 agents,
@@ -192,3 +193,18 @@ Creating an HTML page to run tests on the main thread adds complexity without be
       If your state or actions are very large, you may want to disable the middleware as it might cause too much of a slowdown in development mode. See https://      redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
       It is disabled in production builds, so you don't need to worry about that.
     ```
+
+# Appendix: Profiler Class
+
+The `Profiler` class (`web/src/lib/primitives/profiler.ts`) is a lightweight alternative for collecting per-turn call counts and timing statistics. Use it when you need:
+
+- **Function call counts** per turn
+- **Simplified CSV stats** (total, count, avg, max per function per turn)
+- **Per-turn breakdown** to identify which turns are slow
+
+**Prefer Chrome DevTools flamegraphs** for most profiling. The Profiler class is useful when you want to count how many times a function is called or track timing trends across turns.
+
+**Usage:**
+- Wrap appropriate functions with `profiler.wrap('functionName', functionName)`
+- Run the `profileAi.ts` script as described above.
+- Review & import to Excel the output .csv file.
