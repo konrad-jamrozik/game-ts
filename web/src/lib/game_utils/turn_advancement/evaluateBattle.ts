@@ -22,6 +22,7 @@ import { AGENTS_SKILL_RETREAT_THRESHOLD, RETREAT_ENEMY_TO_AGENTS_SKILL_THRESHOLD
 import { shouldRetreat, canParticipateInBattle, type RetreatResult } from '../../ruleset/missionRuleset'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
 import { assertDefined, assertNotEmpty } from '../../primitives/assertPrimitives'
+import { isAgent } from '../../model_utils/agentUtils'
 import { fmtPctDec0 } from '../../primitives/formatPrimitives'
 import { evaluateAttack } from './evaluateAttack'
 import { selectTarget } from './selectTarget'
@@ -335,7 +336,7 @@ function evaluateCombatRound(
 
   // Each agent attacks
   for (const agent of activeAgents) {
-    processAgentAttack(
+    processAttack(
       agent,
       enemies,
       enemyAttackCounts,
@@ -344,6 +345,7 @@ function evaluateCombatRound(
       effectiveSkillsAtRoundStart,
       roundNumber,
       attackLogs,
+      'agent_attack_roll',
     )
   }
 
@@ -354,7 +356,7 @@ function evaluateCombatRound(
   activeEnemies.sort(compareActorsBySkillDescending)
 
   for (const enemy of activeEnemies) {
-    processEnemyAttack(
+    processAttack(
       enemy,
       agents,
       agentAttackCounts,
@@ -363,84 +365,73 @@ function evaluateCombatRound(
       effectiveSkillsAtRoundStart,
       roundNumber,
       attackLogs,
+      'enemy_attack_roll',
     )
   }
 
   return attackLogs
 }
 
-function processAgentAttack(
-  agent: Agent,
-  enemies: Enemy[],
-  enemyAttackCounts: Map<string, number>,
+function processAttack(
+  attacker: Agent | Enemy,
+  potentialTargets: Agent[] | Enemy[],
+  attackCounts: Map<string, number>,
   agentStats: AgentCombatStats[],
   initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
   effectiveSkillsAtRoundStart: Map<string, Fixed6>,
   roundNumber: number,
   attackLogs: AttackLog[],
+  attackType: 'agent_attack_roll' | 'enemy_attack_roll',
 ): void {
   // Skip if terminated or incapacitated during this round
-  if (canParticipateInBattle(agent)) {
-    const activeEnemies = enemies.filter((enemy) => canParticipateInBattle(enemy))
-    const target = selectTarget(activeEnemies, enemyAttackCounts, agent, effectiveSkillsAtRoundStart)
+  if (canParticipateInBattle(attacker)) {
+    const activeTargets = potentialTargets.filter((target) => canParticipateInBattle(target))
+    const target = selectTarget(activeTargets, attackCounts, attacker, effectiveSkillsAtRoundStart)
     if (target) {
-      const attackerStats = agentStats.find((stats) => stats.id === agent.id)
-      assertDefined(attackerStats)
-      const attackerSkillAtStart = attackerStats.initialEffectiveSkill
-      const defenderSkillAtStart = initialEnemyEffectiveSkillMap.get(target.id) ?? f6c0
-      const currentAttackCount = enemyAttackCounts.get(target.id) ?? 0
-      const attackLog = evaluateAttack(
-        agent,
-        attackerStats,
-        target,
-        undefined,
-        attackerSkillAtStart,
-        defenderSkillAtStart,
-        roundNumber,
-        'agent_attack_roll',
-        currentAttackCount + 1,
-      )
-      attackLogs.push(attackLog)
-      // Increment attack count for this enemy
-      enemyAttackCounts.set(target.id, currentAttackCount + 1)
-    }
-  }
-}
+      const isAttackerAgent = isAgent(attacker)
+      const isTargetAgent = isAgent(target)
 
-function processEnemyAttack(
-  enemy: Enemy,
-  agents: Agent[],
-  agentAttackCounts: Map<string, number>,
-  agentStats: AgentCombatStats[],
-  initialEnemyEffectiveSkillMap: Map<string, Fixed6>,
-  effectiveSkillsAtRoundStart: Map<string, Fixed6>,
-  roundNumber: number,
-  attackLogs: AttackLog[],
-): void {
-  // Skip if terminated or incapacitated during this round
-  if (canParticipateInBattle(enemy)) {
-    const currentActiveAgents = agents.filter((agent) => canParticipateInBattle(agent))
-    const target = selectTarget(currentActiveAgents, agentAttackCounts, enemy, effectiveSkillsAtRoundStart)
-    if (target) {
-      const defenderStats = agentStats.find((stats) => stats.id === target.id)
-      assertDefined(defenderStats)
-      const attackerSkillAtStart = initialEnemyEffectiveSkillMap.get(enemy.id) ?? f6c0
-      const defenderSkillAtStart = defenderStats.initialEffectiveSkill
-      const currentAttackCount = agentAttackCounts.get(target.id) ?? 0
+      // Get attacker stats/skill
+      let attackerStats: AgentCombatStats | undefined
+      let attackerSkillAtStart: Fixed6
+      if (isAttackerAgent) {
+        const foundStats = agentStats.find((stats) => stats.id === attacker.id)
+        assertDefined(foundStats)
+        attackerStats = foundStats
+        attackerSkillAtStart = foundStats.initialEffectiveSkill
+      } else {
+        attackerStats = undefined
+        attackerSkillAtStart = initialEnemyEffectiveSkillMap.get(attacker.id) ?? f6c0
+      }
+
+      // Get defender stats/skill
+      let defenderStats: AgentCombatStats | undefined
+      let defenderSkillAtStart: Fixed6
+      if (isTargetAgent) {
+        const foundStats = agentStats.find((stats) => stats.id === target.id)
+        assertDefined(foundStats)
+        defenderStats = foundStats
+        defenderSkillAtStart = foundStats.initialEffectiveSkill
+      } else {
+        defenderStats = undefined
+        defenderSkillAtStart = initialEnemyEffectiveSkillMap.get(target.id) ?? f6c0
+      }
+
+      const currentAttackCount = attackCounts.get(target.id) ?? 0
       const attackLog = evaluateAttack(
-        enemy,
-        undefined,
+        attacker,
+        attackerStats,
         target,
         defenderStats,
         attackerSkillAtStart,
         defenderSkillAtStart,
         roundNumber,
-        'enemy_attack_roll',
+        attackType,
         currentAttackCount + 1,
       )
       attackLogs.push(attackLog)
-      // Increment attack count for this agent
-      agentAttackCounts.set(target.id, currentAttackCount + 1)
+      // Increment attack count for this target
+      attackCounts.set(target.id, currentAttackCount + 1)
     }
   }
 }
