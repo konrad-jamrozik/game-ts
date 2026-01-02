@@ -95,7 +95,7 @@ function addAgentIdsToInvestigationImpl(
 
 const addAgentIdsToInvestigation = profiler.wrap('A4_Red2_add', addAgentIdsToInvestigationImpl)
 
-function assignAgentsToInvestigationImpl(
+function assignAgentsToInvestigation(
   state: GameState,
   investigationId: LeadInvestigationId,
   agentIds: AgentId[],
@@ -109,10 +109,6 @@ function assignAgentsToInvestigationImpl(
   }
 }
 
-const assignAgentsToInvestigation = profiler.wrap('A4_Red3_asgn', assignAgentsToInvestigationImpl)
-
-const wrappedReducer = profiler.wrap('A3_Red', addAgentsToInvestigationReducer)
-
 export const addAgentsToInvestigation = asPlayerAction<{ investigationId: LeadInvestigationId; agentIds: AgentId[] }>(
-  wrappedReducer,
+  addAgentsToInvestigationReducer,
 )

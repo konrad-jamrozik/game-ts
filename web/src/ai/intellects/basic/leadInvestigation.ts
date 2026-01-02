@@ -11,9 +11,6 @@ import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
 import { TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
-import { profiler } from '../../../lib/primitives/profiler'
-
-export const assignToLeadInvestigation = profiler.wrap('A1_asgn', assignToLeadInvestigationImpl)
 
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
@@ -45,7 +42,7 @@ export const assignToLeadInvestigation = profiler.wrap('A1_asgn', assignToLeadIn
  * - All agents allocated to lead investigation are concentrated on a single repeatable lead
  *   when one is selected, maximizing investigation efficiency
  */
-function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
+export function assignToLeadInvestigation(api: PlayTurnAPI): void {
   const { gameState } = api
   const availableLeads = getAvailableLeads(gameState)
   if (availableLeads.length === 0) {

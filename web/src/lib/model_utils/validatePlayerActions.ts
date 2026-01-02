@@ -5,7 +5,6 @@ import { getUpgradePrice, type UpgradeName } from '../data_tables/upgrades'
 import { notTerminated, onTrainingAssignment } from './agentUtils'
 import { validateAvailableAgents, validateNotExhaustedAgents, validateOnAssignmentAgents } from './validateAgents'
 import { getRemainingTransportCap, validateMissionDeployment, getMissionById } from './missionUtils'
-import { profiler } from '../primitives/profiler'
 
 export type ValidationResult =
   | Readonly<{ isValid: true; errorMessage?: never }>
@@ -140,9 +139,7 @@ export function validateStartLeadInvestigation(gameState: GameState, agentIds: A
   return { isValid: true }
 }
 
-export const validateAddAgentsToInvestigation = profiler.wrap('A2_1_val', validateAddAgentsToInvestigationImpl)
-
-function validateAddAgentsToInvestigationImpl(gameState: GameState, agentIds: AgentId[]): ValidationResult {
+export function validateAddAgentsToInvestigation(gameState: GameState, agentIds: AgentId[]): ValidationResult {
   // Validate that all selected agents are available
   const availabilityValidation = validateAvailableAgents(gameState.agents, agentIds)
   if (!availabilityValidation.isValid) {
