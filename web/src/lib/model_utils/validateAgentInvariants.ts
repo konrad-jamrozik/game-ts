@@ -33,6 +33,7 @@ export function validateAgentLocalInvariants(agent: Agent, state?: GameState): v
  * Implementation optimized with assignments to local consts due to being on hot path.
  */
 function validateBasicStatRanges(agent: Agent): void {
+  const id = agent.id
   const hp = agent.hitPoints
   const maxHp = agent.maxHitPoints
   const exhaustionPct = agent.exhaustionPct
@@ -41,11 +42,11 @@ function validateBasicStatRanges(agent: Agent): void {
   const f6fmtMaxHp = f6fmtInt(maxHp)
   const f6fmtExhaustionPct = f6fmtInt(exhaustionPct)
   const f6fmtSkill = f6fmtInt(skill)
-  f6assertGreaterThanOrEqual(hp, f6c0, `Agent ${agent.id} has invalid hit points: ${f6fmtHp}/${f6fmtMaxHp}`)
-  f6assertLessThanOrEqual(hp, maxHp, `Agent ${agent.id} has invalid hit points: ${f6fmtHp}/${f6fmtMaxHp}`)
-  f6assertNonNeg(exhaustionPct, `Agent ${agent.id} has negative exhaustionPct: ${f6fmtExhaustionPct}`)
-  f6assertNonNeg(skill, `Agent ${agent.id} has negative skill: ${f6fmtSkill}`)
-  f6assertAboveZero(maxHp, `Agent ${agent.id} has non-positive maxHitPoints: ${f6fmtMaxHp}`)
+  f6assertGreaterThanOrEqual(hp, f6c0, `Agent ${id} has invalid hit points: ${f6fmtHp}/${f6fmtMaxHp}`)
+  f6assertLessThanOrEqual(hp, maxHp, `Agent ${id} has invalid hit points: ${f6fmtHp}/${f6fmtMaxHp}`)
+  f6assertNonNeg(exhaustionPct, `Agent ${id} has negative exhaustionPct: ${f6fmtExhaustionPct}`)
+  f6assertNonNeg(skill, `Agent ${id} has negative skill: ${f6fmtSkill}`)
+  f6assertAboveZero(maxHp, `Agent ${id} has non-positive maxHitPoints: ${f6fmtMaxHp}`)
 }
 
 function validateTermination(agent: Agent): void {
