@@ -57,8 +57,6 @@ export function delegateTurnsToAIPlayer(intellectName: string, turnCount: number
   }
 }
 
-function dispatchAdvanceTurnImpl(store: AppStore): void {
+function dispatchAdvanceTurn(store: AppStore): void {
   store.dispatch(advanceTurn())
 }
-
-const dispatchAdvanceTurn = profiler.wrap('_AdvT', dispatchAdvanceTurnImpl)

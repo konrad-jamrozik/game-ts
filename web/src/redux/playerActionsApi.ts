@@ -113,7 +113,8 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
       return { success: true }
     },
 
-    addAgentsToInvestigationPlayerActionsApi: addAgentsToInvestigationSafe,
+    // KJA1 weird?
+    addAgentsToInvestigation: addAgentsToInvestigationSafe,
 
     deployAgentsToMission(gameState: GameState, params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult {
       log.info('player', 'deploy agents to mission. Mission ID:', params.missionId, 'Agent IDs:', params.agentIds)

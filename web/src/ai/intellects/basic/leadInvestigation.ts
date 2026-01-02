@@ -99,7 +99,7 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       if (agentsToAdd.length > 0) {
         // Single batch operations
         unassignAgentsFromTraining(api, agentsToAdd)
-        api.addAgentsToInvestigationPlayTurnApi2({
+        api.addAgentsToInvestigation({
           investigationId: existingInvestigation.id,
           agentIds: agentsToAdd.map((a) => a.id),
         })
@@ -137,7 +137,7 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       const existingInvestigation = findActiveInvestigation(currentGameState, lead.id)
 
       if (existingInvestigation) {
-        api.addAgentsToInvestigationPlayTurnApi2({
+        api.addAgentsToInvestigation({
           investigationId: existingInvestigation.id,
           agentIds: [agent.id],
         })

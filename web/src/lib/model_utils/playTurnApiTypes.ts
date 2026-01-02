@@ -13,11 +13,7 @@ export type PlayTurnAPI = {
   assignAgentsToTraining(agentIds: AgentId[]): ActionResult
   recallAgents(agentIds: AgentId[]): ActionResult
   startLeadInvestigation(params: { leadId: LeadId; agentIds: AgentId[] }): ActionResult
-  // KJA temp addAgentsToInvestigationPlayTurnApi2
-  addAgentsToInvestigationPlayTurnApi2(params: {
-    investigationId: LeadInvestigationId
-    agentIds: AgentId[]
-  }): ActionResult
+  addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult
   deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult
   buyUpgrade(upgradeName: UpgradeName): ActionResult
   incrementActualWeaponDamageUpgrades(): void

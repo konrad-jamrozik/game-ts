@@ -62,7 +62,7 @@ function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies)
   // Assert that investigation exists (will throw if not found)
   getLeadInvestigationById(selectedInvestigationId, gameState)
 
-  const result = api.addAgentsToInvestigationPlayerActionsApi(gameState, {
+  const result = api.addAgentsToInvestigation(gameState, {
     investigationId: selectedInvestigationId,
     agentIds: selectedAgentIds,
   })
