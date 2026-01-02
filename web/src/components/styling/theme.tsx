@@ -4,6 +4,7 @@ import {
   type ColorSystemOptions,
   type Components,
   type CssVarsTheme,
+  type PaletteColor,
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
@@ -14,18 +15,18 @@ declare module '@mui/material/styles' {
   // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
   // export default function createPalette(palette: PaletteOptions): Palette;
   interface Palette {
-    agentStateAvailable: PaletteColorOptions
-    agentStateInTransit: PaletteColorOptions
-    agentStateOnAssignment: PaletteColorOptions
-    agentStateOnMission: PaletteColorOptions
-    agentStateRecovering: PaletteColorOptions
-    agentStateInTraining: PaletteColorOptions
-    agentStateTerminated: PaletteColorOptions
-    agentStateDefault: PaletteColorOptions
-    moneyBalance: PaletteColorOptions
-    moneyFunding: PaletteColorOptions
-    moneyContracting: PaletteColorOptions
-    moneyUpkeep: PaletteColorOptions
+    agentStateAvailable: PaletteColor
+    agentStateInTransit: PaletteColor
+    agentStateOnAssignment: PaletteColor
+    agentStateOnMission: PaletteColor
+    agentStateRecovering: PaletteColor
+    agentStateInTraining: PaletteColor
+    agentStateTerminated: PaletteColor
+    agentStateDefault: PaletteColor
+    moneyBalance: PaletteColor
+    moneyFunding: PaletteColor
+    moneyContracting: PaletteColor
+    moneyUpkeep: PaletteColor
   }
 
   // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts

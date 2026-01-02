@@ -11,7 +11,6 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
 // Import theme to ensure module augmentation is visible to TypeScript
-import '../styling/theme'
 
 export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
