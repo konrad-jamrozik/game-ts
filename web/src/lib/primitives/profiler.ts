@@ -89,8 +89,8 @@ class Profiler {
     const recordCallBound = this.recordCall.bind(this)
     const isEnabledBound = this.isEnabled.bind(this)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-type-assertion
-    return ((...args: Parameters<T>): any => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any, func-names -- name is set dynamically below
+    const wrapper = function (...args: Parameters<T>): any {
       if (!isEnabledBound()) {
         return fn(...args)
       }
@@ -103,7 +103,13 @@ class Profiler {
 
       recordCallBound(name, duration)
       return result
-    }) as T
+    }
+
+    // Set wrapper name for flamegraph visibility (prefixed with _P_ for "Profiler")
+    Object.defineProperty(wrapper, 'name', { value: `_P_${name}`, configurable: true })
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-type-assertion
+    return wrapper as T
   }
 
   public generateCSV(): string {

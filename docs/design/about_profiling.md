@@ -184,43 +184,32 @@ const api = {
 }
 ```
 
-#### When Wrapping Functions, Preserve the Name
+#### Wrapper Functions and Flamegraph Visibility
 
-Wrapper functions that return arrow functions lose the original function's name:
+Wrapper functions don't hide the wrapped function's name - the wrapped function still shows its name in the flamegraph. The wrapper adds a frame above it.
 
-```typescript
-// ❌ BAD - Returns anonymous arrow function
-function wrap<T extends (...args: any[]) => any>(fn: T): T {
-  return ((...args) => {
-    console.log('before')
-    const result = fn(...args)
-    console.log('after')
-    return result
-  }) as T
-}
+Our `profiler.wrap()` names its wrappers with a `_P_` prefix for easy identification in flamegraphs:
 
-// ✅ GOOD - Preserves function name using Object.defineProperty
-function wrap<T extends (...args: any[]) => any>(name: string, fn: T): T {
-  const wrapper = function (...args: Parameters<T>): ReturnType<T> {
-    console.log('before')
-    const result = fn(...args)
-    console.log('after')
-    return result
-  }
-  Object.defineProperty(wrapper, 'name', { value: name, configurable: true })
-  return wrapper as T
-}
+```text
+Flamegraph call stack (caller on top):
+┌─────────────────────────────────────────────────────┐
+│ _P_myFunc         ← the profiler wrapper (named!)   │
+├─────────────────────────────────────────────────────┤
+│ myFuncImpl        ← the wrapped function            │
+└─────────────────────────────────────────────────────┘
 ```
 
-#### Common Patterns That Hide Function Names
+So when you see `_P_myFunc` → `myFuncImpl` in a flamegraph, you know `_P_myFunc` is a profiler wrapper timing the call to `myFuncImpl`.
 
-1. **`profiler.wrap()` returning arrow function** - The wrapper is anonymous even though the wrapped function has a name. Fix: Use `Object.defineProperty` to set `.name`.
+#### Common Patterns That Actually Hide Function Names
 
-2. **Object literal APIs** (like `PlayTurnAPI`, `PlayerActionsAPI`) - All methods defined inline are anonymous. Fix: Define each method as a named function first, then reference it in the object.
+1. **Object literal methods** (like `PlayTurnAPI`, `PlayerActionsAPI`) - Methods defined inline are anonymous. The method name exists only as a property key, not as the function's `.name`. Fix: Define each method as a named function first, then reference it in the object.
 
-3. **Higher-order functions with arrow returns** - `asPlayerAction()` returns `{ reducer: (...) => {...} }` where the reducer is anonymous. Fix: Use named function expressions.
+2. **Higher-order functions with inline reducers** - `asPlayerAction()` returns `{ reducer(state, action) {...} }` where the reducer method is anonymous. Fix: Define the reducer as a named function, then reference it.
 
-4. **Redux Toolkit action creators** - RTK does set proper names on generated action creators, so `dispatch(myAction())` will show `myAction` in the profiler.
+3. **Arrow functions assigned to variables** - `const fn = () => {}` creates an anonymous function. The variable name doesn't become the function's `.name`. Fix: Use `const fn = function fn() {}`.
+
+4. **Redux Toolkit action creators** - Note: RTK **does** set proper names on generated action creators, so `dispatch(myAction())` will show `myAction` in the profiler. This is not a problem area.
 
 #### Quick Reference
 
