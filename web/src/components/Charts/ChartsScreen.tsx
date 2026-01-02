@@ -14,10 +14,16 @@ const CHART_HEIGHT = 300
 const AXIS_TICK_FONT_SIZE = 14
 const AXIS_LABEL_FONT_SIZE = 16
 const LEGEND_FONT_SIZE = 14
+const Y_AXIS_WIDTH = 55
 
 const axisConfig = {
   tickLabelStyle: { fontSize: AXIS_TICK_FONT_SIZE },
   labelStyle: { fontSize: AXIS_LABEL_FONT_SIZE },
+}
+
+const yAxisConfig = {
+  ...axisConfig,
+  width: Y_AXIS_WIDTH,
 }
 
 const legendSlotProps = {
@@ -92,7 +98,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main },
               { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main },
@@ -125,7 +131,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               { dataKey: 'maxEffectiveSkillMin', label: 'Max eff. skill (min)' },
               { dataKey: 'maxEffectiveSkillAvg', label: 'Max eff. skill (avg)' },
@@ -154,7 +160,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               { dataKey: 'maxHitPointsAvg', label: 'Max HP (avg)' },
               { dataKey: 'maxHitPointsMax', label: 'Max HP (max)' },
@@ -185,7 +191,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               { dataKey: 'spawned', label: 'Spawned (total)' },
               { dataKey: 'expired', label: 'Expired (total)' },
@@ -213,7 +219,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               { dataKey: 'agentsDeployed', label: 'Agents deployed' },
               { dataKey: 'agentsKia', label: 'Agents KIA' },
@@ -241,7 +247,7 @@ export function ChartsScreen(): React.JSX.Element {
                 ...axisConfig,
               },
             ]}
-            yAxis={[axisConfig]}
+            yAxis={[yAxisConfig]}
             series={withNoMarkers([
               {
                 dataKey: 'panicPct',
