@@ -42,6 +42,7 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         // Default middleware causes significant performance hit. See about_profiling.md
+        // KJA3 make this configurable, true by default, disabled in AI stress-tests and profiling
         immutableCheck: false,
         serializableCheck: false,
         actionCreatorCheck: false,

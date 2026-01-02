@@ -13,30 +13,18 @@
 // @ts-expect-error - node:fs works at runtime with tsx but isn't in tsconfig.app.json
 import { writeFileSync } from 'node:fs'
 import { initStore, getStore } from '../src/redux/store'
-import { reset } from '../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../src/redux/slices/eventsSlice'
-import { bldInitialState } from '../src/lib/factories/gameStateFactory'
 import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnsToAIPlayer'
-import { rand } from '../src/lib/primitives/rand'
 import { profiler } from '../src/lib/primitives/profiler'
 import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
+import { setupCheatingGameState } from '../test/utils/aiTestSetup'
 
 const TURNS_TO_PLAY = 200
 
 async function main(): Promise<void> {
   console.log('Initializing store...')
   await initStore({ undoLimit: 0, enablePersistence: false })
+  setupCheatingGameState()
   const store = getStore()
-
-  console.log('Setting up game state with 100,000 money...')
-  const customState = { ...bldInitialState(), money: 100_000 }
-  store.dispatch(reset({ customState }))
-  store.dispatch(clearEvents())
-
-  // Configure for deterministic success (same as the test)
-  rand.set('lead-investigation', 1)
-  rand.set('agent_attack_roll', 1)
-  rand.set('enemy_attack_roll', 0)
 
   // Enable profiler
   profiler.enabled = true
