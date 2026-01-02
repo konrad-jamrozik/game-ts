@@ -23,45 +23,62 @@ import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
 
 const TURNS_TO_PLAY = 200
 
-console.log('Initializing store...')
-await initStore({ undoLimit: 0, enablePersistence: false })
-const store = getStore()
+async function main(): Promise<void> {
+  console.log('Initializing store...')
+  await initStore({ undoLimit: 0, enablePersistence: false })
+  const store = getStore()
 
-console.log('Setting up game state with 100,000 money...')
-const customState = { ...bldInitialState(), money: 100_000 }
-store.dispatch(reset({ customState }))
-store.dispatch(clearEvents())
+  console.log('Setting up game state with 100,000 money...')
+  const customState = { ...bldInitialState(), money: 100_000 }
+  store.dispatch(reset({ customState }))
+  store.dispatch(clearEvents())
 
-// Configure for deterministic success (same as the test)
-rand.set('lead-investigation', 1)
-rand.set('agent_attack_roll', 1)
-rand.set('enemy_attack_roll', 0)
+  // Configure for deterministic success (same as the test)
+  rand.set('lead-investigation', 1)
+  rand.set('agent_attack_roll', 1)
+  rand.set('enemy_attack_roll', 0)
 
-// Enable profiler
-profiler.enabled = true
-profiler.reset()
+  // Enable profiler
+  profiler.enabled = true
+  profiler.reset()
 
-console.log(`Starting AI for ${TURNS_TO_PLAY} turns...`)
-const startTime = performance.now()
-delegateTurnsToAIPlayer('basic', TURNS_TO_PLAY)
-const endTime = performance.now()
+  console.log(`Starting AI for ${TURNS_TO_PLAY} turns...`)
+  const startTime = performance.now()
+  delegateTurnsToAIPlayer('basic', TURNS_TO_PLAY)
+  const endTime = performance.now()
 
-const totalMs = endTime - startTime
-const avgMs = totalMs / TURNS_TO_PLAY
+  const totalMs = endTime - startTime
+  const avgMs = totalMs / TURNS_TO_PLAY
 
-console.log('========================================')
-console.log(`Done! Total time: ${totalMs.toFixed(0)}ms`)
-console.log(`Average per turn: ${avgMs.toFixed(1)}ms`)
-console.log(`Final turn: ${getCurrentTurnStateFromStore(store).turn}`)
-console.log('========================================')
+  console.log('========================================')
+  console.log(`Done! Total time: ${totalMs.toFixed(0)}ms`)
+  console.log(`Average per turn: ${avgMs.toFixed(1)}ms`)
+  console.log(`Final turn: ${getCurrentTurnStateFromStore(store).turn}`)
+  console.log('========================================')
 
-// Generate and write CSV
-const csv = profiler.generateCSV()
-const csvPath = 'profile-results.csv'
-// eslint-disable-next-line @typescript-eslint/no-unsafe-call -- node:fs works at runtime with tsx
-writeFileSync(csvPath, csv, 'utf8')
-console.log(`\nProfiler CSV written to: ${csvPath}`)
+  writeProfilerCSVIfDataExists()
 
-// Print agent count
-const gameState = getCurrentTurnStateFromStore(store)
-console.log(`\nAgent count: ${gameState.agents.length}`)
+  // Print agent count
+  const gameState = getCurrentTurnStateFromStore(store)
+  console.log(`\nAgent count: ${gameState.agents.length}`)
+}
+
+function writeProfilerCSVIfDataExists(): void {
+  // Generate and write CSV
+  const csv = profiler.generateCSV()
+  const csvLines = csv.split('\n')
+  // CSV has data if it has more than just the header row
+  const hasData = csvLines.length > 1
+
+  if (hasData) {
+    const csvPath = 'profile-results.csv'
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call -- node:fs works at runtime with tsx
+    writeFileSync(csvPath, csv, 'utf8')
+    console.log(`\nProfiler CSV written to: ${csvPath}`)
+  } else {
+    console.log('\nNo profiler CSV generated. The profiler did not record any data.')
+    console.log('This usually means no profiled functions were called, or profiler.startTurn() was never invoked.')
+  }
+}
+
+await main()
