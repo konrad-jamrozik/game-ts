@@ -450,4 +450,5 @@ test('AI turn performance stays reasonable', () => {
 
 # Profiling learnings
 
-- `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))`
+- `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))` took 98.22 ms for 1601 agents,
+  while the underlying `addAgentsToInvestigationReducer` took only about 10.8 ms across 7 invocations, so 1.5 ms on average.
