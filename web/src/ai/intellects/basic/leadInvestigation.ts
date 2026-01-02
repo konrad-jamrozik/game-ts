@@ -97,8 +97,8 @@ function assignToLeadInvestigationImpl(api: PlayTurnAPI): void {
 
         selectedAgentIds.push(agent.id)
         unassignAgentsFromTraining(api, [agent])
-        // KJA1 this is on a hot path per profileAi.ts. Invoked many times;
-        // instead, try to assign multiple agents at once.
+        // KJA1 this is on a hot path per profileAi.ts. Invoked many times, each team necessitating underlying
+        // game state update. Instead, invoke it only once, with all the selected agents at once.
         api.addAgentsToInvestigationPlayTurnApi2({
           investigationId: existingInvestigation.id,
           agentIds: [agent.id],

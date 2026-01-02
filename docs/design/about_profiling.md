@@ -453,6 +453,7 @@ test('AI turn performance stays reasonable', () => {
 - `dispatch` is expensive. E.g.  `dispatch(addAgentsToInvestigation(params))` took 98.22 ms for 1601 agents,
   while the underlying `addAgentsToInvestigationReducer` took only about 10.8 ms across 7 invocations, so 1.5 ms on average.
   - This is 11% of total, so overhead of dispatch is 9.1x.
+  - This is probably because the `gameState` is large with 1601 agents, and `dispatch` must update the game state.
 - But turing off default middleware speeds it up approx 2.5x. E.g. for 1571 agents the `dispatch(addAgentsToInvestigation(params))` took `38.09 ms`
   out of which `addAgentsToInvestigationReducer` was 14.7 ms across 5 invocations, so 7 ms on average.
   - This is 38.5% of total, so overhead of dispatch is 2.6x.
