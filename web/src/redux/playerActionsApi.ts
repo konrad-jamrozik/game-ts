@@ -32,25 +32,6 @@ import type { AppDispatch } from './store'
 export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: boolean }): PlayerActionsAPI {
   const strict = options?.strict ?? false
 
-  // KJA1 make all other functions here follow this pattern
-  function addAgentsToInvestigationSafe(
-    gameState: GameState,
-    params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
-  ): ActionResult {
-    log.info(
-      'player',
-      'add agents to investigation. Investigation ID:',
-      params.investigationId,
-      'Agent IDs:',
-      params.agentIds,
-    )
-    const validation = validateAddAgentsToInvestigation(gameState, params.agentIds)
-    const errorResult = handleValidationError(strict, validation)
-    if (errorResult) return errorResult
-    dispatchAddAgentsToInvestigation(params)
-    return { success: true }
-  }
-
   function dispatchAddAgentsToInvestigation(params: {
     investigationId: LeadInvestigationId
     agentIds: AgentId[]
@@ -113,8 +94,23 @@ export function getPlayerActionsApi(dispatch: AppDispatch, options?: { strict?: 
       return { success: true }
     },
 
-    // KJA1 weird?
-    addAgentsToInvestigation: addAgentsToInvestigationSafe,
+    addAgentsToInvestigation(
+      gameState: GameState,
+      params: { investigationId: LeadInvestigationId; agentIds: AgentId[] },
+    ): ActionResult {
+      log.info(
+        'player',
+        'add agents to investigation. Investigation ID:',
+        params.investigationId,
+        'Agent IDs:',
+        params.agentIds,
+      )
+      const validation = validateAddAgentsToInvestigation(gameState, params.agentIds)
+      const errorResult = handleValidationError(strict, validation)
+      if (errorResult) return errorResult
+      dispatchAddAgentsToInvestigation(params)
+      return { success: true }
+    },
 
     deployAgentsToMission(gameState: GameState, params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult {
       log.info('player', 'deploy agents to mission. Mission ID:', params.missionId, 'Agent IDs:', params.agentIds)
