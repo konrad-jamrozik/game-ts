@@ -10,7 +10,7 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
 const baselineSkill = toF(initialAgent.skill)
 
-const colors: readonly string[] = [
+const agentSkillBandColors: readonly string[] = [
   purple[50],
   purple[100],
   purple[200],
@@ -24,7 +24,7 @@ const colors: readonly string[] = [
 ] as const
 
 function getColor(idx: number): string {
-  const color = colors[idx]
+  const color = agentSkillBandColors[idx]
   assertDefined(color, `Color index ${idx} is out of bounds`)
   return color
 }
