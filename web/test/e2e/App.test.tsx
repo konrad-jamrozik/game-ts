@@ -234,11 +234,11 @@ async function step9HireAgent3Times(): Promise<void> {
  * (one in Game Controls and one in AI Player card).
  */
 function getNextTurnButton(): HTMLElement {
-  const gameControlsCard = screen.getByText('Game Controls').closest('.MuiCard-root')
-  if (!(gameControlsCard instanceof HTMLElement)) {
-    throw new TypeError('Game Controls card not found or not an HTMLElement')
-  }
-  return within(gameControlsCard).getByRole('button', { name: /next turn/iu })
+  const buttons = screen.getAllByRole('button', { name: /next turn/iu })
+  // Game Controls card renders before AI Player card, so its button is first
+  const [button] = buttons
+  assertDefined(button, 'Next turn button not found')
+  return button
 }
 
 /**
