@@ -14,10 +14,9 @@ const baselineSkill = toF(initialAgent.skill)
 // For 10 colors with step = 510/9 ≈ 56.67
 // Reversed order: first color is pure green, last is pure red
 // Progressive transparency: starting from fully opaque (1.0) to more transparent
-// Alpha step: (1.0 - 0.294) / 9 ≈ 0.078, so we go from 1.0 to 0.294
 const agentSkillBandColors: readonly string[] = [
-  'hsla(120, 100%, 50%, 1)',
-  'hsla(108, 100%, 50%, 1)',
+  'hsla(120, 100%, 50%, 0.9)',
+  'hsla(108, 100%, 50%, 0.9)',
   'hsla(96, 100%, 50%, 0.9)',
   'hsla(84, 100%, 50%, 0.8)',
   'hsla(72, 100%, 50%, 0.7)',
