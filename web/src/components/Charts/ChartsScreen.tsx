@@ -9,8 +9,14 @@ import { useTheme } from '@mui/material/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import * as React from 'react'
-import { LineChart } from '@mui/x-charts/LineChart'
-import { BarChart } from '@mui/x-charts/BarChart'
+import { LineChart, LinePlot } from '@mui/x-charts/LineChart'
+import { ChartContainer } from '@mui/x-charts/ChartContainer'
+import { BarPlot } from '@mui/x-charts/BarChart'
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid'
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
@@ -138,7 +144,7 @@ export function ChartsScreen(): React.JSX.Element {
         <ChartsPanel
           title="Cash Flow"
           renderChart={(height) => (
-            <BarChart
+            <ChartContainer
               dataset={datasets.balanceSheet}
               xAxis={[
                 {
@@ -152,6 +158,7 @@ export function ChartsScreen(): React.JSX.Element {
               series={[
                 // Positive values (stack above zero, first touches zero)
                 {
+                  type: 'bar',
                   dataKey: 'funding',
                   label: 'Funding',
                   stack: 'balance',
@@ -159,12 +166,14 @@ export function ChartsScreen(): React.JSX.Element {
                   color: theme.palette.balanceIncomeFunding.dark,
                 },
                 {
+                  type: 'bar',
                   dataKey: 'contracting',
                   label: 'Contracting income',
                   stack: 'balance',
                   color: theme.palette.balanceIncomeContracting.main,
                 },
                 {
+                  type: 'bar',
                   dataKey: 'rewards',
                   label: 'Rewards from missions',
                   stack: 'balance',
@@ -172,37 +181,56 @@ export function ChartsScreen(): React.JSX.Element {
                 },
                 // Negative values (stack below zero, first touches zero)
                 {
+                  type: 'bar',
                   dataKey: 'upkeep',
                   label: 'Upkeep',
                   stack: 'balance',
                   color: theme.palette.balanceExpenseUpkeep.main,
                 },
                 {
+                  type: 'bar',
                   dataKey: 'agentHiring',
                   label: 'Agent hiring expenditures',
                   stack: 'balance',
                   color: theme.palette.balanceExpenseAgentHiring.main,
                 },
                 {
+                  type: 'bar',
                   dataKey: 'capIncreases',
                   label: 'Cap increase expenditures',
                   stack: 'balance',
                   color: theme.palette.balanceExpenseCapIncreases.main,
                 },
                 {
+                  type: 'bar',
                   dataKey: 'upgrades',
                   label: 'Upgrade expenditures',
                   stack: 'balance',
                   color: theme.palette.balanceExpenseUpgrades.main,
                 },
+                // Net flow line (golden)
+                {
+                  type: 'line',
+                  dataKey: 'netFlow',
+                  label: 'Net flow',
+                  showMark: false,
+                  color: theme.palette.balanceNetFlow.main,
+                },
               ]}
               height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
+            >
+              <ChartsGrid horizontal />
+              <BarPlot />
+              <LinePlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip trigger="axis" />
+              <ChartsLegend
+                sx={{
+                  fontSize: LEGEND_FONT_SIZE,
+                }}
+              />
+            </ChartContainer>
           )}
         />
 

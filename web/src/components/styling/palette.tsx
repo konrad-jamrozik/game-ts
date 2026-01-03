@@ -28,6 +28,7 @@ declare module '@mui/material/styles' {
     balanceExpenseAgentHiring: PaletteColor
     balanceExpenseCapIncreases: PaletteColor
     balanceExpenseUpgrades: PaletteColor
+    balanceNetFlow: PaletteColor
   }
 
   // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
@@ -55,6 +56,7 @@ declare module '@mui/material/styles' {
     balanceExpenseAgentHiring?: PaletteColorOptions
     balanceExpenseCapIncreases?: PaletteColorOptions
     balanceExpenseUpgrades?: PaletteColorOptions
+    balanceNetFlow?: PaletteColorOptions
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -234,6 +236,12 @@ export function createPaletteOptions(): PaletteOptions {
         main: red[300],
       },
       name: 'balanceExpenseUpgrades',
+    }),
+    balanceNetFlow: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[400],
+      },
+      name: 'balanceNetFlow',
     }),
   }
 }

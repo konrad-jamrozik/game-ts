@@ -82,6 +82,7 @@ export type BalanceSheetDatasetRow = {
   agentHiring: number // negative (stored as negative)
   upgrades: number // negative (stored as negative)
   capIncreases: number // negative (stored as negative)
+  netFlow: number // sum of all above (income - expenses)
 }
 
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
@@ -193,6 +194,14 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     // --- Cash Flow (income and expenses per turn)
     const contractingIncome = getContractingIncome(gameState)
     const upkeepCost = getAgentUpkeep(gameState)
+    const netFlow =
+      gameState.funding +
+      contractingIncome +
+      turnRewards -
+      upkeepCost -
+      gameState.turnExpenditures.agentHiring -
+      gameState.turnExpenditures.upgrades -
+      gameState.turnExpenditures.capIncreases
     balanceSheet.push({
       turn,
       funding: gameState.funding,
@@ -202,6 +211,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       agentHiring: -gameState.turnExpenditures.agentHiring, // negative
       upgrades: -gameState.turnExpenditures.upgrades, // negative
       capIncreases: -gameState.turnExpenditures.capIncreases, // negative
+      netFlow,
     })
   }
 
