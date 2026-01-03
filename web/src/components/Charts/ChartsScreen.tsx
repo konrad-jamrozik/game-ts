@@ -428,9 +428,7 @@ function ChartsPanel(props: { title: string; renderChart: (height: number) => Re
           <Typography variant="h5" sx={{ mb: 2 }}>
             {props.title}
           </Typography>
-          <Box sx={{ height: 'calc(100% - 60px)' }}>
-            {props.renderChart(getFullscreenHeight())}
-          </Box>
+          <Box sx={{ height: 'calc(100% - 60px)' }}>{props.renderChart(getFullscreenHeight())}</Box>
         </Box>
       </Dialog>
     </>
