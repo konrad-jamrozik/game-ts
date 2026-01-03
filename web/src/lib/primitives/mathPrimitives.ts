@@ -281,7 +281,7 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
   // Compute nearest-rank indices (0-based)
   // For n >= 1: ceil(p * n) - 1 is always in range [0, n-1] for p in (0, 1]
   const i25 = ceil(0.25 * n) - 1
-  const i50 = ceil(0.50 * n) - 1
+  const i50 = ceil(0.5 * n) - 1
   const i75 = ceil(0.75 * n) - 1
 
   // Compute threshold values
