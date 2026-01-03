@@ -58,6 +58,19 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       },
     },
     {
+      field: 'concludedTurn',
+      headerName: 'Turn',
+      width: columnWidths['missions.turn'],
+      align: 'right',
+      valueGetter: (_value, row: MissionRow) => row.concludedTurn,
+      renderCell: (params: GridRenderCellParams<MissionRow, number | undefined>): React.JSX.Element => {
+        if (params.value !== undefined) {
+          return <span aria-label={`missions-row-turn-${params.id}`}>{params.value}</span>
+        }
+        return <span aria-label={`missions-row-turn-${params.id}`}>-</span>
+      },
+    },
+    {
       field: 'expiresIn',
       headerName: 'ExpIn',
       width: columnWidths['missions.expires_in'],

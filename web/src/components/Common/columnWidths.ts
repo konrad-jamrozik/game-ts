@@ -25,6 +25,7 @@ export const columnWidths = {
   'missions.enemies': 80,
   'missions.avg_skill': 80,
   'missions.details': 100,
+  'missions.turn': 70,
 
   // Leads columns
   'leads.id': 340,

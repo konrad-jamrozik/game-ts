@@ -75,6 +75,7 @@ export function evaluateDeployedMission(
   } else {
     mission.state = 'Wiped'
   }
+  mission.concludedTurn = state.turn
 
   // Return mission rewards to be applied later, don't apply them immediately
   // For offensive missions, rewards come from mission data

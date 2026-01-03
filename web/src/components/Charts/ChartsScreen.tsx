@@ -148,6 +148,7 @@ export function ChartsScreen(): React.JSX.Element {
               dataset={datasets.balanceSheet}
               xAxis={[
                 {
+                  scaleType: 'band',
                   dataKey: 'turn',
                   label: 'Turn',
                   valueFormatter: formatTurn,

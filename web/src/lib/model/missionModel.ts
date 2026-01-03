@@ -40,4 +40,9 @@ export type Mission = {
    * Stored as a field so it doesn't change as enemies are killed.
    */
   combatRating: number
+  /**
+   * The turn at which this mission concluded or expired.
+   * Only set when mission state is Won, Wiped, Retreated, or Expired.
+   */
+  concludedTurn?: number | undefined
 }

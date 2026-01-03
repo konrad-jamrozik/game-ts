@@ -168,6 +168,7 @@ function updateActiveMissions(state: GameState): ExpiredMissionReport[] {
       mission.expiresIn -= 1
       if (mission.expiresIn <= 0) {
         mission.state = 'Expired'
+        mission.concludedTurn = state.turn
         const missionData = getMissionDataById(mission.missionDataId)
         const { operationLevel, id: missionId } = mission
 
