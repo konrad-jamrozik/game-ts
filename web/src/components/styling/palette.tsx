@@ -1,0 +1,172 @@
+/* eslint-disable @typescript-eslint/consistent-type-definitions */
+import { createTheme, type PaletteOptions } from '@mui/material/styles'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
+
+// https://mui.com/material-ui/customization/theming/#typescript
+declare module '@mui/material/styles' {
+  // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
+  // TypeBackground is a member of export interface Palette {
+  interface TypeBackground {
+    cardHeader: string
+    cardContent: string
+    nestedCardContent: string
+    leadCardHeader: string
+    leadContent: string
+    missionCardHeader: string
+    missionCardContent: string
+  }
+}
+
+const defaultTheme = createTheme()
+
+export function createPaletteOptions(): PaletteOptions {
+  return {
+    primary: {
+      main: defaultTheme.palette.primary.main,
+    },
+    error: {
+      main: defaultTheme.palette.error.main,
+    },
+    success: {
+      main: defaultTheme.palette.success.main,
+    },
+    // https://colors.artyclick.com/color-shades-finder/?color=#404040
+    background: {
+      default: 'hsl(0, 0%, 12.9%)',
+      paper: 'hsl(0, 0%, 16%)',
+      cardHeader: 'hsl(0, 0%, 20%)', // Two shades darker than hsl(0, 0%, 25.10%)
+      cardContent: 'hsl(0, 0.00%, 25.10%)',
+      nestedCardContent: 'hsl(0, 0.00%, 22.10%)',
+      leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      leadContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
+      missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
+    },
+    agentStateAvailable: {
+      main: defaultTheme.palette.success.main,
+      light: defaultTheme.palette.success.light,
+      dark: defaultTheme.palette.success.dark,
+      contrastText: defaultTheme.palette.success.contrastText,
+    },
+    agentStateInTransit: defaultTheme.palette.augmentColor({
+      color: {
+        main: blue[700],
+      },
+      name: 'agentStateInTransit',
+    }),
+    agentStateOnAssignment: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[700],
+      },
+      name: 'agentStateOnAssignment',
+    }),
+    agentStateOnMission: defaultTheme.palette.augmentColor({
+      color: {
+        main: deepPurple[500],
+      },
+      name: 'agentStateOnMission',
+    }),
+    agentStateRecovering: defaultTheme.palette.augmentColor({
+      color: {
+        main: deepOrange[700],
+      },
+      name: 'agentStateRecovering',
+    }),
+    agentStateInTraining: defaultTheme.palette.augmentColor({
+      color: {
+        main: cyan[800],
+      },
+      name: 'agentStateInTraining',
+    }),
+    agentStateTerminated: {
+      main: defaultTheme.palette.error.main,
+      light: defaultTheme.palette.error.light,
+      dark: defaultTheme.palette.error.dark,
+      contrastText: defaultTheme.palette.error.contrastText,
+    },
+    agentStateDefault: defaultTheme.palette.augmentColor({
+      color: {
+        main: defaultTheme.palette.grey[800],
+      },
+      name: 'agentStateDefault',
+    }),
+    moneyBalance: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[800],
+      },
+      name: 'moneyBalance',
+    }),
+    moneyFunding: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[500],
+      },
+      name: 'moneyFunding',
+    }),
+    moneyContracting: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[600],
+      },
+      name: 'moneyContracting',
+    }),
+    moneyUpkeep: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[500],
+      },
+      name: 'moneyUpkeep',
+    }),
+    moneyRewards: defaultTheme.palette.augmentColor({
+      color: {
+        main: amber[700],
+      },
+      name: 'moneyRewards',
+    }),
+    moneyExpenditures: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[600],
+      },
+      name: 'moneyExpenditures',
+    }),
+    balanceIncomeFunding: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[800],
+      },
+      name: 'balanceIncomeFunding',
+    }),
+    balanceIncomeContracting: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[600],
+      },
+      name: 'balanceIncomeContracting',
+    }),
+    balanceIncomeRewards: defaultTheme.palette.augmentColor({
+      color: {
+        main: green[400],
+      },
+      name: 'balanceIncomeRewards',
+    }),
+    balanceExpenseUpkeep: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[900],
+      },
+      name: 'balanceExpenseUpkeep',
+    }),
+    balanceExpenseAgentHiring: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[700],
+      },
+      name: 'balanceExpenseAgentHiring',
+    }),
+    balanceExpenseCapIncreases: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[500],
+      },
+      name: 'balanceExpenseCapIncreases',
+    }),
+    balanceExpenseUpgrades: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[300],
+      },
+      name: 'balanceExpenseUpgrades',
+    }),
+  }
+}
