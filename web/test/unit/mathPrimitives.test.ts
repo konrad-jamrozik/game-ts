@@ -1,5 +1,11 @@
 import { describe, expect, test } from 'vitest'
-import { ceil, computeDecileBands, floor, quantileSorted } from '../../src/lib/primitives/mathPrimitives'
+import {
+  ceil,
+  computeDecileBands,
+  computeQuartileBands,
+  floor,
+  quantileSorted,
+} from '../../src/lib/primitives/mathPrimitives'
 
 describe(floor, () => {
   // prettier-ignore
@@ -428,6 +434,152 @@ describe(computeDecileBands, () => {
       expect(result).toHaveLength(3)
       expect(result[0]?.minSkill).toBe(300)
       expect(result[2]?.minSkill).toBe(100)
+    })
+  })
+})
+
+describe(computeQuartileBands, () => {
+  describe('edge cases', () => {
+    test('returns empty array for empty input', () => {
+      expect(computeQuartileBands([])).toStrictEqual([])
+    })
+
+    test('single agent creates one band', () => {
+      const result = computeQuartileBands([100])
+      expect(result).toHaveLength(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+    })
+
+    test('all agents with same skill create one band', () => {
+      const result = computeQuartileBands([100, 100, 100, 100, 100])
+      expect(result).toHaveLength(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 5,
+      })
+    })
+  })
+
+  describe('extreme tie case', () => {
+    test('1 agent with skill 600, 20 agents with skill 100', () => {
+      // n=21, k=ceil(21*0.25)=6
+      // Top band should contain only the skill-600 agent
+      // Next bands should all collapse into the same tie group at skill 100
+      const skills = [600, ...Array.from({ length: 20 }, () => 100)]
+      const result = computeQuartileBands(skills)
+
+      // Should have at least 1 band: Top 25% with skill 600
+      expect(result.length).toBeGreaterThanOrEqual(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 600,
+        maxSkill: 600,
+        count: 1,
+      })
+
+      // The remaining agents should be in subsequent bands
+      const remainingCount = result.slice(1).reduce((sum, band) => sum + band.count, 0)
+      expect(remainingCount).toBe(20)
+    })
+  })
+
+  describe('normal distribution', () => {
+    test('4 agents with distinct skills', () => {
+      // Skills: 100, 200, 300, 400
+      const skills = [100, 200, 300, 400]
+      const result = computeQuartileBands(skills)
+
+      // n=4, k=ceil(4*0.25)=1
+      // Each band should contain 1 agent
+      expect(result).toHaveLength(4)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 400,
+        maxSkill: 400,
+        count: 1,
+      })
+      expect(result[3]).toStrictEqual({
+        label: '75-100%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+    })
+
+    test('8 agents with varied skills', () => {
+      // Skills: 50, 60, 70, 80, 90, 100, 110, 120 (8 distinct values)
+      const skills = Array.from({ length: 8 }, (_, i) => 50 + i * 10)
+      const result = computeQuartileBands(skills)
+
+      // n=8, k=ceil(8*0.25)=2
+      // Should have 4 bands with 2 agents each
+      expect(result).toHaveLength(4)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 110,
+        maxSkill: 120,
+        count: 2,
+      })
+      expect(result[3]).toStrictEqual({
+        label: '75-100%',
+        minSkill: 50,
+        maxSkill: 60,
+        count: 2,
+      })
+    })
+  })
+
+  describe('ties within bands', () => {
+    test('ties at band boundary expand the band', () => {
+      // n=8, k=2
+      // Skills: 100, 90, 90, 80, 70, 60, 50, 40
+      // Top band: [100] (1 agent, but k=2, so we'd normally take 2)
+      // Since 100 is unique and >= 90*2, we take only [100]
+      // Next band boundary at index 1 (skill 90), but indices 1-2 both have 90
+      // So second band should include both 90s
+      const skills = [100, 90, 90, 80, 70, 60, 50, 40]
+      const result = computeQuartileBands(skills)
+
+      expect(result.length).toBeGreaterThanOrEqual(2)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 25%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+      // The second band should include both 90s due to tie expansion
+      expect(result[1]?.minSkill).toBe(90)
+      expect(result[1]?.maxSkill).toBe(90)
+      expect(result[1]?.count).toBe(2)
+    })
+  })
+
+  describe('small samples', () => {
+    test('3 agents', () => {
+      // n=3, k=ceil(3*0.25)=1
+      const skills = [100, 200, 300]
+      const result = computeQuartileBands(skills)
+
+      expect(result).toHaveLength(3)
+      expect(result[0]?.minSkill).toBe(300)
+      expect(result[2]?.minSkill).toBe(100)
+    })
+
+    test('2 agents', () => {
+      // n=2, k=ceil(2*0.25)=1
+      const skills = [100, 200]
+      const result = computeQuartileBands(skills)
+
+      expect(result).toHaveLength(2)
+      expect(result[0]?.minSkill).toBe(200)
+      expect(result[1]?.minSkill).toBe(100)
     })
   })
 })

@@ -240,3 +240,105 @@ export function computeDecileBands(skills: readonly number[]): DecileBand[] {
 
   return bands
 }
+
+/**
+ * Computes quartile bands for agent skill distribution using tie-aware, rank-based grouping.
+ *
+ * This function groups agents into quartile bands (top 25%, next 25%, etc.) based on their skill ranks.
+ * When a band boundary would split agents with identical skill values, all tied agents are included
+ * in the higher band. This ensures stable, intuitive banding that behaves correctly with ties.
+ *
+ * @param skills - Array of agent skill values (not sorted)
+ * @returns Array of quartile bands, each containing label, minSkill, maxSkill, and count.
+ *          Empty bands are omitted from the result.
+ */
+export function computeQuartileBands(skills: readonly number[]): DecileBand[] {
+  if (skills.length === 0) {
+    return []
+  }
+
+  // Sort skills in descending order
+  const sortedSkills = [...skills].toSorted((a, b) => b - a)
+  const n = sortedSkills.length
+
+  // Target band size: k = max(1, ceil(n * 0.25))
+  const k = Math.max(1, Math.ceil(n * 0.25))
+
+  const bands: DecileBand[] = []
+  let currentIndex = 0
+  let quartileLabelIndex = 0
+
+  const quartileLabels = ['Top 25%', '25-50%', '50-75%', '75-100%']
+
+  while (currentIndex < n) {
+    // Determine the target end index for this band (k agents)
+    const targetEndIndex = Math.min(currentIndex + k, n)
+    const boundarySkill = sortedSkills[targetEndIndex - 1]
+
+    // Check if all agents in the target band have the same skill
+    const targetBandSkills = sortedSkills.slice(currentIndex, targetEndIndex)
+    const allSameSkill = targetBandSkills.every((skill) => skill === boundarySkill)
+
+    let actualEndIndex = targetEndIndex
+
+    if (allSameSkill) {
+      // All agents in target band have the same skill, expand to include all ties
+      while (actualEndIndex < n && sortedSkills[actualEndIndex] === boundarySkill) {
+        actualEndIndex += 1
+      }
+    }
+    // If different skills in target band, take exactly k agents (actualEndIndex already equals targetEndIndex)
+    // Exception: if the first agent's skill doesn't appear in the target band except at the first position,
+    // and the first agent is much higher than the boundary, take only the first agent
+    // This handles the extreme case: [600, 100, 100, ...] where k=3 but we want only [600]
+    else {
+      const firstSkill = sortedSkills[currentIndex]
+      if (firstSkill !== undefined && boundarySkill !== undefined) {
+        // Check if first skill appears elsewhere in the entire list
+        const firstSkillIsUnique = sortedSkills.slice(currentIndex + 1).every((skill) => skill !== firstSkill)
+        // Only take the first agent if it's unique AND significantly higher than the boundary
+        // This handles the extreme case: [600, 100, 100, ...] where we want only [600]
+        // But not the normal case: [240, 230, ...] where 240 is only slightly higher
+        // Use >= to handle cases like [1000, 500, 500, ...] where 1000 >= 500*2
+        const isSignificantlyHigher = firstSkill >= boundarySkill * 2
+        if (firstSkillIsUnique && isSignificantlyHigher) {
+          actualEndIndex = currentIndex + 1
+        }
+      }
+    }
+
+    // Calculate min and max skill in this band
+    const bandSkills = sortedSkills.slice(currentIndex, actualEndIndex)
+    const minSkill = Math.min(...bandSkills)
+    const maxSkill = Math.max(...bandSkills)
+    const count = actualEndIndex - currentIndex
+
+    // Only add non-empty bands
+    if (count > 0) {
+      bands.push({
+        label: quartileLabels[quartileLabelIndex] ?? `${quartileLabelIndex * 25}-${(quartileLabelIndex + 1) * 25}%`,
+        minSkill,
+        maxSkill,
+        count,
+      })
+    }
+
+    // Move to next band
+    const agentsTaken = actualEndIndex - currentIndex
+    currentIndex = actualEndIndex
+
+    // Advance quartile label index
+    // If tie expansion caused us to take more than k agents, skip the quartile labels
+    // that would have been used for those extra agents
+    const extraAgents = agentsTaken - k
+    if (extraAgents > 0) {
+      // Calculate how many theoretical bands were absorbed
+      const theoreticalBandsAbsorbed = Math.ceil(extraAgents / k)
+      quartileLabelIndex += 1 + theoreticalBandsAbsorbed
+    } else {
+      quartileLabelIndex += 1
+    }
+  }
+
+  return bands
+}
