@@ -19,7 +19,10 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
-import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
+import {
+  selectChartsDatasets,
+  type AgentSkillDistributionDatasetRow,
+} from '../../redux/selectors/chartsSelectors'
 import { purple } from '@mui/material/colors'
 
 const CHART_HEIGHT = 300
@@ -265,38 +268,123 @@ export function ChartsScreen(): React.JSX.Element {
 
         <ChartsPanel
           title="Agent skill distribution"
-          renderChart={(height) => (
-            <LineChart
-              dataset={datasets.agentSkillDistribution}
-              xAxis={[
-                {
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[yAxisConfig]}
-              series={withNoMarkers([
-                { dataKey: 'p0to10', label: '0-10%', stack: 'skill', area: true, color: purple[50] },
-                { dataKey: 'p10to20', label: '10-20%', stack: 'skill', area: true, color: purple[100] },
-                { dataKey: 'p20to30', label: '20-30%', stack: 'skill', area: true, color: purple[200] },
-                { dataKey: 'p30to40', label: '30-40%', stack: 'skill', area: true, color: purple[300] },
-                { dataKey: 'p40to50', label: '40-50%', stack: 'skill', area: true, color: purple[400] },
-                { dataKey: 'p50to60', label: '50-60%', stack: 'skill', area: true, color: purple[500] },
-                { dataKey: 'p60to70', label: '60-70%', stack: 'skill', area: true, color: purple[600] },
-                { dataKey: 'p70to80', label: '70-80%', stack: 'skill', area: true, color: purple[700] },
-                { dataKey: 'p80to90', label: '80-90%', stack: 'skill', area: true, color: purple[800] },
-                { dataKey: 'p90to100', label: '90-100%', stack: 'skill', area: true, color: purple[900] },
-              ])}
-              height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
-          )}
+          renderChart={(height) => {
+            function createSkillValueFormatter(
+              minSkillKey: keyof AgentSkillDistributionDatasetRow,
+            ): (value: number | null, context: { dataIndex: number }) => string {
+              return (_value, context): string => {
+                const datasetItem = datasets.agentSkillDistribution[context.dataIndex]
+                if (datasetItem === undefined) {
+                  return ''
+                }
+                const minSkill = datasetItem[minSkillKey]
+                return `Min skill: ${minSkill.toFixed(1)}`
+              }
+            }
+
+            return (
+              <LineChart
+                dataset={datasets.agentSkillDistribution}
+                xAxis={[
+                  {
+                    dataKey: 'turn',
+                    label: 'Turn',
+                    valueFormatter: formatTurn,
+                    ...axisConfig,
+                  },
+                ]}
+                yAxis={[yAxisConfig]}
+                series={withNoMarkers([
+                  {
+                    dataKey: 'p0to10',
+                    label: '0-10%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[50],
+                    valueFormatter: createSkillValueFormatter('minP0'),
+                  },
+                  {
+                    dataKey: 'p10to20',
+                    label: '10-20%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[100],
+                    valueFormatter: createSkillValueFormatter('minP10'),
+                  },
+                  {
+                    dataKey: 'p20to30',
+                    label: '20-30%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[200],
+                    valueFormatter: createSkillValueFormatter('minP20'),
+                  },
+                  {
+                    dataKey: 'p30to40',
+                    label: '30-40%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[300],
+                    valueFormatter: createSkillValueFormatter('minP30'),
+                  },
+                  {
+                    dataKey: 'p40to50',
+                    label: '40-50%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[400],
+                    valueFormatter: createSkillValueFormatter('minP40'),
+                  },
+                  {
+                    dataKey: 'p50to60',
+                    label: '50-60%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[500],
+                    valueFormatter: createSkillValueFormatter('minP50'),
+                  },
+                  {
+                    dataKey: 'p60to70',
+                    label: '60-70%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[600],
+                    valueFormatter: createSkillValueFormatter('minP60'),
+                  },
+                  {
+                    dataKey: 'p70to80',
+                    label: '70-80%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[700],
+                    valueFormatter: createSkillValueFormatter('minP70'),
+                  },
+                  {
+                    dataKey: 'p80to90',
+                    label: '80-90%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[800],
+                    valueFormatter: createSkillValueFormatter('minP80'),
+                  },
+                  {
+                    dataKey: 'p90to100',
+                    label: '90-100%',
+                    stack: 'skill',
+                    area: true,
+                    color: purple[900],
+                    valueFormatter: createSkillValueFormatter('minP90'),
+                  },
+                ])}
+                height={height}
+                grid={{ horizontal: true }}
+                slotProps={{
+                  tooltip: { trigger: 'axis' },
+                  ...legendSlotProps,
+                }}
+              />
+            )
+          }}
         />
 
         <ChartsPanel

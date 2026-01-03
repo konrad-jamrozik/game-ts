@@ -98,6 +98,17 @@ export type AgentSkillDistributionDatasetRow = {
   p70to80: number
   p80to90: number
   p90to100: number
+  // Min skill boundaries for tooltip display (skill needed to be in given percentile)
+  minP0: number
+  minP10: number
+  minP20: number
+  minP30: number
+  minP40: number
+  minP50: number
+  minP60: number
+  minP70: number
+  minP80: number
+  minP90: number
 }
 
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
@@ -342,6 +353,16 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
       p70to80: 0,
       p80to90: 0,
       p90to100: 0,
+      minP0: 0,
+      minP10: 0,
+      minP20: 0,
+      minP30: 0,
+      minP40: 0,
+      minP50: 0,
+      minP60: 0,
+      minP70: 0,
+      minP80: 0,
+      minP90: 0,
     }
   }
 
@@ -352,6 +373,7 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const sortedSkills = [...skills].toSorted((a, b) => a - b)
 
   // Calculate percentile boundary values (actual skill values)
+  const min = sortedSkills[0] ?? 0
   const p10 = quantileSorted(sortedSkills, 0.1)
   const p20 = quantileSorted(sortedSkills, 0.2)
   const p30 = quantileSorted(sortedSkills, 0.3)
@@ -377,6 +399,17 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
     p70to80: p80 - p70,
     p80to90: p90 - p80,
     p90to100: max - p90,
+    // Min skill boundaries for tooltip (skill needed to be at least in given percentile)
+    minP0: min,
+    minP10: p10,
+    minP20: p20,
+    minP30: p30,
+    minP40: p40,
+    minP50: p50,
+    minP60: p60,
+    minP70: p70,
+    minP80: p80,
+    minP90: p90,
   }
 }
 
