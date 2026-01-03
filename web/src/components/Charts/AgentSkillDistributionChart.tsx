@@ -18,13 +18,13 @@ const baselineSkill = toF(initialAgent.skill)
 function getColor(name: 'green' | 'yellow' | 'orange' | 'red'): string {
   switch (name) {
     case 'green':
-      return 'hsla(120, 100%, 50%, 0.9)'
+      return 'hsla(120, 75%, 40%, 1)'
     case 'yellow':
-      return 'hsla(60, 100%, 50%, 0.9)'
+      return 'hsla(60, 75%, 40%, 1)'
     case 'orange':
-      return 'hsla(30, 100%, 50%, 0.9)'
+      return 'hsla(30, 75%, 40%, 1)'
     case 'red':
-      return 'hsla(0, 100%, 50%, 0.9)'
+      return 'hsla(0, 75%, 40%, 1)'
   }
 }
 
