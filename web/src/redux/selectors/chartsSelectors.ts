@@ -190,7 +190,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       panicPct: toF(panic) * 100,
     })
 
-    // --- Balance sheet (income and expenses per turn)
+    // --- Cash Flow (income and expenses per turn)
     const contractingIncome = getContractingIncome(gameState)
     const upkeepCost = getAgentUpkeep(gameState)
     balanceSheet.push({

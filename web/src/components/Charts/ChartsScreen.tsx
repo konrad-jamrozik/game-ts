@@ -136,7 +136,7 @@ export function ChartsScreen(): React.JSX.Element {
         />
 
         <ChartsPanel
-          title="Balance sheet"
+          title="Cash Flow"
           renderChart={(height) => (
             <BarChart
               dataset={datasets.balanceSheet}
