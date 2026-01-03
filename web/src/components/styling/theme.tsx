@@ -217,13 +217,13 @@ const colorSystemOptions: ColorSystemOptions = {
     }),
     balanceIncomeContracting: defaultTheme.palette.augmentColor({
       color: {
-        main: green[500],
+        main: green[600],
       },
       name: 'balanceIncomeContracting',
     }),
     balanceIncomeRewards: defaultTheme.palette.augmentColor({
       color: {
-        main: green[200],
+        main: green[400],
       },
       name: 'balanceIncomeRewards',
     }),
