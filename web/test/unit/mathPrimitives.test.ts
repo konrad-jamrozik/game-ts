@@ -1,5 +1,5 @@
 import { describe, expect, test } from 'vitest'
-import { ceil, floor, quantileSorted } from '../../src/lib/primitives/mathPrimitives'
+import { ceil, computeDecileBands, floor, quantileSorted } from '../../src/lib/primitives/mathPrimitives'
 
 describe(floor, () => {
   // prettier-ignore
@@ -260,6 +260,174 @@ describe(quantileSorted, () => {
     test('q=0.2 returns 0 (lands on index 2)', () => {
       // pos = 10 * 0.2 = 2, lands exactly on index 2
       expect(quantileSorted(arr, 0.2)).toBe(0)
+    })
+  })
+})
+
+describe(computeDecileBands, () => {
+  describe('edge cases', () => {
+    test('returns empty array for empty input', () => {
+      expect(computeDecileBands([])).toStrictEqual([])
+    })
+
+    test('single agent creates one band', () => {
+      const result = computeDecileBands([100])
+      expect(result).toHaveLength(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+    })
+
+    test('all agents with same skill create one band', () => {
+      const result = computeDecileBands([100, 100, 100, 100, 100])
+      expect(result).toHaveLength(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 5,
+      })
+    })
+  })
+
+  describe('extreme tie case from spec', () => {
+    test('1 agent with skill 600, 20 agents with skill 100', () => {
+      // n=21, k=ceil(21*0.1)=3
+      // Top band should contain only the skill-600 agent
+      // Next bands should all collapse into the same tie group at skill 100
+      const skills = [600, ...Array.from({ length: 20 }, () => 100)]
+      const result = computeDecileBands(skills)
+
+      // Should have 2 bands: Top 10% with skill 600, and collapsed bands at skill 100
+      expect(result.length).toBeGreaterThanOrEqual(1)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 600,
+        maxSkill: 600,
+        count: 1,
+      })
+
+      // The remaining agents should be in subsequent bands
+      // Since k=3 and we have 20 agents with skill 100, they should be grouped
+      const remainingCount = result.slice(1).reduce((sum, band) => sum + band.count, 0)
+      expect(remainingCount).toBe(20)
+    })
+  })
+
+  describe('normal distribution', () => {
+    test('10 agents with distinct skills', () => {
+      // Skills: 100, 200, 300, ..., 1000
+      const skills = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000]
+      const result = computeDecileBands(skills)
+
+      // n=10, k=ceil(10*0.1)=1
+      // Each band should contain 1 agent
+      expect(result).toHaveLength(10)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 1000,
+        maxSkill: 1000,
+        count: 1,
+      })
+      expect(result[9]).toStrictEqual({
+        label: '90-100%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+    })
+
+    test('20 agents with varied skills', () => {
+      // Skills: 50, 60, 70, ..., 240 (20 distinct values)
+      const skills = Array.from({ length: 20 }, (_, i) => 50 + i * 10)
+      const result = computeDecileBands(skills)
+
+      // n=20, k=ceil(20*0.1)=2
+      // Should have 10 bands with 2 agents each
+      expect(result).toHaveLength(10)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 230,
+        maxSkill: 240,
+        count: 2,
+      })
+      expect(result[9]).toStrictEqual({
+        label: '90-100%',
+        minSkill: 50,
+        maxSkill: 60,
+        count: 2,
+      })
+    })
+  })
+
+  describe('ties within bands', () => {
+    test('ties at band boundary expand the band', () => {
+      // n=10, k=1
+      // Skills: 100, 90, 90, 80, 70, 60, 50, 40, 30, 20
+      // Top band: [100] (1 agent)
+      // Next band boundary at index 1 (skill 90), but indices 1-2 both have 90
+      // So second band should include both 90s
+      const skills = [100, 90, 90, 80, 70, 60, 50, 40, 30, 20]
+      const result = computeDecileBands(skills)
+
+      expect(result.length).toBeGreaterThanOrEqual(2)
+      expect(result[0]).toStrictEqual({
+        label: 'Top 10%',
+        minSkill: 100,
+        maxSkill: 100,
+        count: 1,
+      })
+      // The second band should include both 90s due to tie expansion
+      expect(result[1]?.minSkill).toBe(90)
+      expect(result[1]?.maxSkill).toBe(90)
+      expect(result[1]?.count).toBe(2)
+    })
+
+    test('multiple ties causing band absorption', () => {
+      // n=30, k=ceil(30*0.1)=3
+      // Skills: 1000 (1), 500 (10), 100 (19)
+      // Top band: [1000] (1 agent, but k=3, so we'd normally take 3)
+      // Since index 0 has 1000 and indices 1-10 have 500, we take just index 0
+      // Next: indices 1-3 have 500, but indices 1-10 all have 500, so we take all 10
+      // This absorbs multiple theoretical bands
+      const skills = [1000, ...Array.from({ length: 10 }, () => 500), ...Array.from({ length: 19 }, () => 100)]
+      const result = computeDecileBands(skills)
+
+      expect(result.length).toBeGreaterThanOrEqual(2)
+      expect(result[0]?.minSkill).toBe(1000)
+      expect(result[0]?.maxSkill).toBe(1000)
+      expect(result[0]?.count).toBe(1)
+
+      // The 500s should be in one or more bands
+      const fiveHundredBands = result.filter((b) => b.minSkill === 500 && b.maxSkill === 500)
+      const totalFiveHundred = fiveHundredBands.reduce((sum, b) => sum + b.count, 0)
+      expect(totalFiveHundred).toBe(10)
+    })
+  })
+
+  describe('small samples', () => {
+    test('5 agents', () => {
+      // n=5, k=ceil(5*0.1)=1
+      const skills = [100, 200, 300, 400, 500]
+      const result = computeDecileBands(skills)
+
+      // Should have 5 bands with 1 agent each
+      expect(result).toHaveLength(5)
+      expect(result[0]?.count).toBe(1)
+      expect(result[4]?.count).toBe(1)
+    })
+
+    test('3 agents', () => {
+      // n=3, k=ceil(3*0.1)=1
+      const skills = [100, 200, 300]
+      const result = computeDecileBands(skills)
+
+      expect(result).toHaveLength(3)
+      expect(result[0]?.minSkill).toBe(300)
+      expect(result[2]?.minSkill).toBe(100)
     })
   })
 })

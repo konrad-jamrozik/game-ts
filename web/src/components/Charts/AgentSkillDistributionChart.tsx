@@ -4,7 +4,7 @@ import { purple } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
-import { quantileSorted } from '../../lib/primitives/mathPrimitives'
+import { computeDecileBands } from '../../lib/primitives/mathPrimitives'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
 
 const baselineSkill = toF(initialAgent.skill)
@@ -98,79 +98,109 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Extract skill values (not effective skill, just skill)
   const skills = aliveAgents.map((agent) => toF(agent.skill))
 
-  // Sort skills in ascending order
-  const sortedSkills = [...skills].toSorted((a, b) => a - b)
+  // Compute decile bands using tie-aware, rank-based grouping
+  const bands = computeDecileBands(skills)
 
-  // Calculate percentile boundary values (actual skill values)
-  const min = sortedSkills[0] ?? 0
-  const p10 = quantileSorted(sortedSkills, 0.1)
-  const p20 = quantileSorted(sortedSkills, 0.2)
-  const p30 = quantileSorted(sortedSkills, 0.3)
-  const p40 = quantileSorted(sortedSkills, 0.4)
-  const p50 = quantileSorted(sortedSkills, 0.5)
-  const p60 = quantileSorted(sortedSkills, 0.6)
-  const p70 = quantileSorted(sortedSkills, 0.7)
-  const p80 = quantileSorted(sortedSkills, 0.8)
-  const p90 = quantileSorted(sortedSkills, 0.9)
-  const max = sortedSkills.at(-1) ?? 0
+  // Map bands to the expected data structure
+  // The bands are returned in descending order (Top 10% first, then 10-20%, etc.)
+  // We need to map them to p0to10, p10to20, ..., p90to100
+  // Empty bands will have zero height and zero count
 
-  // Count agents in each percentile band
-  // For each band, count agents with skill >= lower bound and < upper bound
-  // Except the first band, which is >= min and <= p10
-  // The special treatments of p10 for the lowest band is done to catch minimum values in the p0-p10 band,
-  // as otherwise they would end up in higher bands in case of skewed data, e.g. if data is 0,0,0,0,0,0,0,0,0,0,100,
-  // then 0 would be not in p0-p10 but higher, but it should be in p0-p10.
-  // This would happen because the check "s < p10" i.e. "0 < 0" would fail.
-  const countP0to10 = skills.filter((s) => s >= min && s <= p10).length
-  const countP10to20 = skills.filter((s) => s > p10 && s <= p20).length
-  const countP20to30 = skills.filter((s) => s > p20 && s <= p30).length
-  const countP30to40 = skills.filter((s) => s > p30 && s <= p40).length
-  const countP40to50 = skills.filter((s) => s > p40 && s <= p50).length
-  const countP50to60 = skills.filter((s) => s > p50 && s <= p60).length
-  const countP60to70 = skills.filter((s) => s > p60 && s <= p70).length
-  const countP70to80 = skills.filter((s) => s > p70 && s <= p80).length
-  const countP80to90 = skills.filter((s) => s > p80 && s <= p90).length
-  const countP90to100 = skills.filter((s) => s > p90).length
+  // Create a map from band labels to indices
+  const labelToIndex: Record<string, number> = {
+    'Top 10%': 0,
+    '10-20%': 1,
+    '20-30%': 2,
+    '30-40%': 3,
+    '40-50%': 4,
+    '50-60%': 5,
+    '60-70%': 6,
+    '70-80%': 7,
+    '80-90%': 8,
+    '90-100%': 9,
+  }
+
+  // Initialize arrays for all decile bands
+  const bandHeights = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  const bandMins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  const bandMaxs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  const bandCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+
+  // Process bands and assign to decile slots
+  // Bands are in descending order (Top 10% first)
+  let previousMax = baselineSkill
+  for (const band of bands) {
+    const index = labelToIndex[band.label]
+    if (index !== undefined) {
+      bandMins[index] = band.minSkill
+      bandMaxs[index] = band.maxSkill
+      bandCounts[index] = band.count
+      // Calculate height as difference from previous max
+      // Empty bands will have zero height (band.maxSkill equals previousMax)
+      if (band.count > 0) {
+        bandHeights[index] = band.maxSkill - previousMax
+        previousMax = band.maxSkill
+      }
+    }
+  }
+
+  // Find min and max skills across all agents
+  const min = skills.length > 0 ? Math.min(...skills) : 0
+  const max = skills.length > 0 ? Math.max(...skills) : 0
+
+  // Calculate boundary values, cascading down if bands are empty
+  // Each boundary is the maxSkill of the corresponding band, or the previous boundary if empty
+  const boundaries = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  let lastBoundary = min
+  for (let i = 0; i < 10; i += 1) {
+    const bandMax = bandMaxs[i]
+    if (bandMax !== undefined && bandMax > 0) {
+      boundaries[i] = bandMax
+      lastBoundary = bandMax
+    } else {
+      boundaries[i] = lastBoundary
+    }
+  }
 
   // Store differences between percentile boundaries so they stack to actual skill values.
-  // When stacked: p0to10 reaches p10, p0to10+p10to20 reaches p20, ..., sum reaches max.
+  // When stacked: p0to10 reaches max of band 0, p0to10+p10to20 reaches max of band 1, etc.
   //
   // The first band is offset by baselineSkill so the chart can start at baseline instead of 0.
   // The y-axis valueFormatter adds baselineSkill back for display.
   return {
     turn: gameState.turn,
-    p0to10: p10 - baselineSkill,
-    p10to20: p20 - p10,
-    p20to30: p30 - p20,
-    p30to40: p40 - p30,
-    p40to50: p50 - p40,
-    p50to60: p60 - p50,
-    p60to70: p70 - p60,
-    p70to80: p80 - p70,
-    p80to90: p90 - p80,
-    p90to100: max - p90,
+    p0to10: bandHeights[0] ?? 0,
+    p10to20: bandHeights[1] ?? 0,
+    p20to30: bandHeights[2] ?? 0,
+    p30to40: bandHeights[3] ?? 0,
+    p40to50: bandHeights[4] ?? 0,
+    p50to60: bandHeights[5] ?? 0,
+    p60to70: bandHeights[6] ?? 0,
+    p70to80: bandHeights[7] ?? 0,
+    p80to90: bandHeights[8] ?? 0,
+    p90to100: bandHeights[9] ?? 0,
     // Percentile boundary skill values for tooltip range display
     minP0: min,
-    minP10: p10,
-    minP20: p20,
-    minP30: p30,
-    minP40: p40,
-    minP50: p50,
-    minP60: p60,
-    minP70: p70,
-    minP80: p80,
-    minP90: p90,
+    minP10: boundaries[0] ?? min,
+    minP20: boundaries[1] ?? min,
+    minP30: boundaries[2] ?? min,
+    minP40: boundaries[3] ?? min,
+    minP50: boundaries[4] ?? min,
+    minP60: boundaries[5] ?? min,
+    minP70: boundaries[6] ?? min,
+    minP80: boundaries[7] ?? min,
+    minP90: boundaries[8] ?? min,
     // Agent counts in each percentile band
-    countP0to10,
-    countP10to20,
-    countP20to30,
-    countP30to40,
-    countP40to50,
-    countP50to60,
-    countP60to70,
-    countP70to80,
-    countP80to90,
-    countP90to100,
+    countP0to10: bandCounts[0] ?? 0,
+    countP10to20: bandCounts[1] ?? 0,
+    countP20to30: bandCounts[2] ?? 0,
+    countP30to40: bandCounts[3] ?? 0,
+    countP40to50: bandCounts[4] ?? 0,
+    countP50to60: bandCounts[5] ?? 0,
+    countP60to70: bandCounts[6] ?? 0,
+    countP70to80: bandCounts[7] ?? 0,
+    countP80to90: bandCounts[8] ?? 0,
+    countP90to100: bandCounts[9] ?? 0,
     // Total number of agents
     totalAgents: aliveAgents.length,
     // Maximum skill across all agents
