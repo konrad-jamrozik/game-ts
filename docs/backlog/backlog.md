@@ -4,13 +4,45 @@ KJA backlog:
 
 # Prompt
 
-Improve battle log:
+Change the algorithm how agents are allocated to band in the agent skill distribution chart. Do it like that.
 
-- Remove "Status" column. Instead, once the battle is over, at the bottom of the table there should be message
-  with a summary. In the same place that is used to display retreat explanation.
-  The message should start with a chip like "Won" or "Retreated", in appropriate color, and then the text message.
-- Rename "Ratio" to "CR ratio" and make it compare combat ratings, not sill. This means retreat logic should
-  also look at CR, not skill.
+The first visible band that appears is green (visible meaning skill of at least one agent is above baseline skill),
+the second one, on top of it, yellow, then orange, then red.
+
+But for the 2nd band (yellow to appear) there have to be at least 2 distinct skill values above baseline skill. Agents with the lower skill
+value are grouped into the first (green) band, and higher into the second (yellow) band.
+Then if third distinct, even higher skill value appears, it forms the third band (orange).
+And finally fourth distinct, even higher skill value appears, it forms the fourth band (red).
+If there are 4 or more distinct skill values, then each of the 4 visible bands can establish its own non-overlapping skill range, without any ties.
+If it is not clear to which band given skill value should be assigned, because it is tied / at the edge of bands, it always goes to the lower one.
+
+So e.g. if there are agents with skills: 110, 125, 150, 175, 200, then both 110 and 125 go to the first green band.
+In other words, the algorithm is like that, for 4 or more unique skill values above baseline skill (of 100):
+
+```
+  Determine number of distinct skill values above baseline skill (of 100)
+  Divide it by 4. The result determines number of distinct skill values in each band.
+  If there is any remainder, assign it greedily to the lowest bands: green, yellow, orange.
+  Now to determine what skill range each band actually has:
+  Iterate from lowest skill above baseline (so iterate from 101 upwards) over available distinct skill values,
+  and assign each skill value to given band, starting from lowest band, according to its quota.
+
+  Finally, expand each band skill upper range to be the next higher band bottom skill value - 1.
+```
+
+For example:
+
+```
+Distinct skill values: 110, 125, 150, 175, 200, 210, 230, 250, 270, 290
+Distinct skill values count: 10
+Divide by 4: 10 / 4 = 2.5, remainder 2.
+So each band gets 2 values, and in addition green and yellow bands get 1 more value.
+So skill ranges for bands:
+green: [110, 125, 150] -> final skill range: [101, 174]
+yellow: [175, 200, 210] -> final skill range: [175, 229]
+orange: [230, 250] -> final skill range: [230, 269]
+red: [270, 290] -> final skill range: [270, 290]
+```
 
 # Current milestone
 

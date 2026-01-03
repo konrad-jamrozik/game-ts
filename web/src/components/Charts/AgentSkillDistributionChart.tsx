@@ -3,7 +3,7 @@ import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
-import { computeQuartileBands } from '../../lib/primitives/mathPrimitives'
+import { computeDistinctSkillBands } from '../../lib/primitives/mathPrimitives'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
 
 const baselineSkill = toF(initialAgent.skill)
@@ -90,50 +90,48 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Extract skill values (not effective skill, just skill)
   const skills = aliveAgents.map((agent) => toF(agent.skill))
 
-  // Compute quartile bands using tie-aware, rank-based grouping
-  const bands = computeQuartileBands(skills)
+  // Compute distinct skill bands based on distinct skill values above baseline
+  const bands = computeDistinctSkillBands(skills, baselineSkill)
 
   // Map bands to the expected data structure
-  // The bands are returned in descending order (Top 25% first, then 25-50%, etc.)
-  // We need to map them to p0to25, p25to50, p50to75, p75to100
-  // Empty bands will have zero height and zero count
+  // The bands are returned in ascending order (green first, then yellow, orange, red)
+  // This matches the chart display order: p0to25 (green) → p75to100 (red)
 
-  // Create a map from band labels to indices
-  // Note: computeQuartileBands returns bands in descending skill order (Top 25% = highest skills)
-  // But the chart displays from bottom (p0to25 = lowest skills) to top (p75to100 = highest skills)
-  // So we invert the mapping: highest skills → p75to100 (index 3), lowest skills → p0to25 (index 0)
-  const labelToIndex: Record<string, number> = {
-    'Top 25%': 3, // highest skills → top of chart
-    '25-50%': 2,
-    '50-75%': 1,
-    '75-100%': 0, // lowest skills → bottom of chart
+  // Create a map from band names to indices
+  const bandToIndex: Record<'green' | 'yellow' | 'orange' | 'red', number> = {
+    green: 0, // p0to25 (lowest band)
+    yellow: 1, // p25to50
+    orange: 2, // p50to75
+    red: 3, // p75to100 (highest band)
   }
 
-  // Initialize arrays for all quartile bands
+  // Initialize arrays for all bands
   const bandHeights = [0, 0, 0, 0]
   const bandMins = [0, 0, 0, 0]
   const bandMaxs = [0, 0, 0, 0]
   const bandCounts = [0, 0, 0, 0]
+  const bandRangeMins = [0, 0, 0, 0]
+  const bandRangeMaxs = [0, 0, 0, 0]
 
-  // First pass: assign min/max/count to correct indices
+  // Assign band data to correct indices
   for (const band of bands) {
-    const index = labelToIndex[band.label]
-    if (index !== undefined) {
-      bandMins[index] = band.minSkill
-      bandMaxs[index] = band.maxSkill
-      bandCounts[index] = band.count
-    }
+    const index = bandToIndex[band.band]
+    bandMins[index] = band.minSkill
+    bandMaxs[index] = band.maxSkill
+    bandRangeMins[index] = band.skillRangeMin
+    bandRangeMaxs[index] = band.skillRangeMax
+    bandCounts[index] = band.count
   }
 
-  // Second pass: calculate heights from bottom (index 0) to top (index 3)
+  // Calculate heights from bottom (index 0) to top (index 3) using expanded ranges
   // This ensures heights are always positive and stack correctly
   let previousBoundary = baselineSkill
   for (let i = 0; i < 4; i += 1) {
-    const bandMax = bandMaxs[i]
+    const bandRangeMax = bandRangeMaxs[i]
     const bandCount = bandCounts[i]
-    if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
-      bandHeights[i] = bandMax - previousBoundary
-      previousBoundary = bandMax
+    if (bandRangeMax !== undefined && bandCount !== undefined && bandCount > 0) {
+      bandHeights[i] = bandRangeMax - previousBoundary
+      previousBoundary = bandRangeMax
     }
   }
 
@@ -143,19 +141,24 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
 
   // Calculate boundary values for tooltip display
   // Each boundary[i] represents the upper bound of band i (which equals lower bound of band i+1)
+  // Use the expanded range max for boundaries
   // Cascading: if a band is empty, use the previous boundary
   const boundaries = [0, 0, 0, 0]
-  let lastBoundary = min
+  // Start with baseline+1 for the first band if there are any bands, otherwise use min
+  let lastBoundary = bands.length > 0 ? baselineSkill + 1 : min
   for (let i = 0; i < 4; i += 1) {
-    const bandMax = bandMaxs[i]
+    const bandRangeMax = bandRangeMaxs[i]
     const bandCount = bandCounts[i]
-    if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
-      boundaries[i] = bandMax
-      lastBoundary = bandMax
+    if (bandRangeMax !== undefined && bandCount !== undefined && bandCount > 0) {
+      boundaries[i] = bandRangeMax
+      lastBoundary = bandRangeMax
     } else {
       boundaries[i] = lastBoundary
     }
   }
+
+  // Determine minP0: use the minimum skill of the first band if it exists, otherwise use overall min
+  const minP0 = bands.length > 0 && bands[0] !== undefined ? bands[0].minSkill : min
 
   // Store differences between percentile boundaries so they stack to actual skill values.
   // When stacked: p0to25 reaches max of band 0, p0to25+p25to50 reaches max of band 1, etc.
@@ -169,10 +172,10 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
     p50to75: bandHeights[2] ?? 0,
     p75to100: bandHeights[3] ?? 0,
     // Percentile boundary skill values for tooltip range display
-    minP0: min,
-    minP25: boundaries[0] ?? min,
-    minP50: boundaries[1] ?? min,
-    minP75: boundaries[2] ?? min,
+    minP0,
+    minP25: boundaries[0] ?? minP0,
+    minP50: boundaries[1] ?? minP0,
+    minP75: boundaries[2] ?? minP0,
     // Maximum skill values for each band (for determining visibility)
     maxP0to25: bandMaxs[0] ?? 0,
     maxP25to50: bandMaxs[1] ?? 0,

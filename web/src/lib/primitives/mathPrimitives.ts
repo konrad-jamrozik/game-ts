@@ -241,6 +241,136 @@ export function computeDecileBands(skills: readonly number[]): DecileBand[] {
   return bands
 }
 
+export type DistinctSkillBand = {
+  band: 'green' | 'yellow' | 'orange' | 'red'
+  minSkill: number // actual minimum skill in this band
+  maxSkill: number // actual maximum skill in this band
+  skillRangeMin: number // expanded range min (for coloring)
+  skillRangeMax: number // expanded range max (for coloring)
+  count: number // number of agents in this band
+}
+
+/**
+ * Computes skill bands based on distinct skill values above baseline.
+ *
+ * The algorithm groups agents into 1-4 bands (green, yellow, orange, red) based on
+ * the number of distinct skill values above baseline skill. When there are 4+ distinct
+ * values, they are divided equally among the 4 bands, with remainders distributed
+ * greedily to lower bands first.
+ *
+ * @param skills - Array of agent skill values (not sorted)
+ * @param baselineSkill - Baseline skill value (typically 100). Only skills above this are considered.
+ * @returns Array of skill bands, ordered from lowest (green) to highest (red).
+ *          Only bands with agents above baseline are included.
+ */
+export function computeDistinctSkillBands(
+  skills: readonly number[],
+  baselineSkill: number,
+): DistinctSkillBand[] {
+  if (skills.length === 0) {
+    return []
+  }
+
+  // Filter to only skills above baseline
+  const skillsAboveBaseline = skills.filter((skill) => skill > baselineSkill)
+
+  if (skillsAboveBaseline.length === 0) {
+    return []
+  }
+
+  // Get distinct skill values above baseline, sorted ascending
+  const distinctSkills = [...new Set(skillsAboveBaseline)].toSorted((a, b) => a - b)
+  const distinctCount = distinctSkills.length
+
+  // Determine number of visible bands based on distinct skill count
+  const numBands = Math.min(distinctCount, 4)
+
+  if (numBands === 0) {
+    return []
+  }
+
+  // Calculate quota for each band when we have 4+ distinct values
+  const bandQuotas: number[] = []
+  if (distinctCount >= 4) {
+    const baseQuota = Math.floor(distinctCount / 4)
+    const remainder = distinctCount % 4
+    // Distribute remainder greedily to lower bands: green, yellow, orange
+    bandQuotas[0] = baseQuota + (remainder >= 1 ? 1 : 0) // green
+    bandQuotas[1] = baseQuota + (remainder >= 2 ? 1 : 0) // yellow
+    bandQuotas[2] = baseQuota + (remainder >= 3 ? 1 : 0) // orange
+    bandQuotas[3] = baseQuota // red
+  } else {
+    // For fewer than 4 distinct values, each band gets 1 distinct value
+    for (let i = 0; i < numBands; i += 1) {
+      bandQuotas[i] = 1
+    }
+  }
+
+  // Assign distinct skill values to bands
+  const bandDistinctValues: number[][] = [[], [], [], []]
+  let distinctIndex = 0
+  for (let bandIndex = 0; bandIndex < numBands; bandIndex += 1) {
+    const quota = bandQuotas[bandIndex] ?? 0
+    for (let q = 0; q < quota; q += 1) {
+      const skillValue = distinctSkills[distinctIndex]
+      if (skillValue !== undefined) {
+        bandDistinctValues[bandIndex]?.push(skillValue)
+        distinctIndex += 1
+      }
+    }
+  }
+
+  // Build bands with actual min/max from distinct values
+  const bands: DistinctSkillBand[] = []
+  const bandNames: ('green' | 'yellow' | 'orange' | 'red')[] = ['green', 'yellow', 'orange', 'red']
+
+  for (let bandIndex = 0; bandIndex < numBands; bandIndex += 1) {
+    const distinctValues = bandDistinctValues[bandIndex]
+    if (distinctValues === undefined || distinctValues.length === 0) {
+      continue
+    }
+
+    const minSkill = Math.min(...distinctValues)
+    const maxSkill = Math.max(...distinctValues)
+
+    // Count agents in this band (all agents with skills in the distinct values range)
+    const count = skillsAboveBaseline.filter((skill) => distinctValues.includes(skill)).length
+
+    // Determine expanded range
+    // For the lowest band (green), start from baseline + 1
+    // For other bands, start from the minimum skill in the band
+    const skillRangeMin = bandIndex === 0 ? baselineSkill + 1 : minSkill
+
+    // For the highest band (red), range extends to infinity (use maxSkill as placeholder)
+    // For other bands, range extends to next band's bottom - 1
+    let skillRangeMax: number
+    if (bandIndex === numBands - 1) {
+      // Highest band: use maxSkill (will be handled in chart as extending to max)
+      skillRangeMax = maxSkill
+    } else {
+      // Find the minimum skill of the next band
+      const nextBandDistinctValues = bandDistinctValues[bandIndex + 1]
+      if (nextBandDistinctValues !== undefined && nextBandDistinctValues.length > 0) {
+        const nextBandMin = Math.min(...nextBandDistinctValues)
+        skillRangeMax = nextBandMin - 1
+      } else {
+        skillRangeMax = maxSkill
+      }
+    }
+
+    bands.push({
+      band: bandNames[bandIndex] ?? 'green',
+      minSkill,
+      maxSkill,
+      skillRangeMin,
+      skillRangeMax,
+      count,
+    })
+  }
+
+  return bands
+}
+
 /**
  * Computes quartile bands for agent skill distribution using tie-aware, rank-based grouping.
  *
