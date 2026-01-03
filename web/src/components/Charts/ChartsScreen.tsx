@@ -19,10 +19,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
-import {
-  selectChartsDatasets,
-  type AgentSkillDistributionDatasetRow,
-} from '../../redux/selectors/chartsSelectors'
+import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
 import { purple } from '@mui/material/colors'
 
 const CHART_HEIGHT = 300
@@ -270,16 +267,26 @@ export function ChartsScreen(): React.JSX.Element {
           title="Agent skill distribution"
           renderChart={(height) => {
             function createSkillValueFormatter(
-              minSkillKey: keyof AgentSkillDistributionDatasetRow,
+              minSkillKey: 'minP0' | 'minP10' | 'minP20' | 'minP30' | 'minP40' | 'minP50' | 'minP60' | 'minP70' | 'minP80' | 'minP90',
+              countKey: 'countP0to10' | 'countP10to20' | 'countP20to30' | 'countP30to40' | 'countP40to50' | 'countP50to60' | 'countP60to70' | 'countP70to80' | 'countP80to90' | 'countP90to100',
             ): (value: number | null, context: { dataIndex: number }) => string {
               return (_value, context): string => {
                 const datasetItem = datasets.agentSkillDistribution[context.dataIndex]
                 if (datasetItem === undefined) {
                   return ''
                 }
-                const minSkill = datasetItem[minSkillKey]
-                return `Min skill: ${minSkill.toFixed(1)}`
+                const minSkill: number = datasetItem[minSkillKey]
+                const agentCount: number = datasetItem[countKey]
+                return `Min skill: ${minSkill.toFixed(1)}, Agents: ${agentCount}`
               }
+            }
+
+            function formatTurnWithTotalAgents(turn: number): string {
+              const datasetItem = datasets.agentSkillDistribution.find((item) => item.turn === turn)
+              if (datasetItem === undefined) {
+                return formatTurn(turn)
+              }
+              return `${formatTurn(turn)} (Total agents: ${datasetItem.totalAgents})`
             }
 
             return (
@@ -289,7 +296,7 @@ export function ChartsScreen(): React.JSX.Element {
                   {
                     dataKey: 'turn',
                     label: 'Turn',
-                    valueFormatter: formatTurn,
+                    valueFormatter: formatTurnWithTotalAgents,
                     ...axisConfig,
                   },
                 ]}
@@ -301,7 +308,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[50],
-                    valueFormatter: createSkillValueFormatter('minP0'),
+                    valueFormatter: createSkillValueFormatter('minP0', 'countP0to10'),
                   },
                   {
                     dataKey: 'p10to20',
@@ -309,7 +316,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[100],
-                    valueFormatter: createSkillValueFormatter('minP10'),
+                    valueFormatter: createSkillValueFormatter('minP10', 'countP10to20'),
                   },
                   {
                     dataKey: 'p20to30',
@@ -317,7 +324,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[200],
-                    valueFormatter: createSkillValueFormatter('minP20'),
+                    valueFormatter: createSkillValueFormatter('minP20', 'countP20to30'),
                   },
                   {
                     dataKey: 'p30to40',
@@ -325,7 +332,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[300],
-                    valueFormatter: createSkillValueFormatter('minP30'),
+                    valueFormatter: createSkillValueFormatter('minP30', 'countP30to40'),
                   },
                   {
                     dataKey: 'p40to50',
@@ -333,7 +340,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[400],
-                    valueFormatter: createSkillValueFormatter('minP40'),
+                    valueFormatter: createSkillValueFormatter('minP40', 'countP40to50'),
                   },
                   {
                     dataKey: 'p50to60',
@@ -341,7 +348,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[500],
-                    valueFormatter: createSkillValueFormatter('minP50'),
+                    valueFormatter: createSkillValueFormatter('minP50', 'countP50to60'),
                   },
                   {
                     dataKey: 'p60to70',
@@ -349,7 +356,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[600],
-                    valueFormatter: createSkillValueFormatter('minP60'),
+                    valueFormatter: createSkillValueFormatter('minP60', 'countP60to70'),
                   },
                   {
                     dataKey: 'p70to80',
@@ -357,7 +364,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[700],
-                    valueFormatter: createSkillValueFormatter('minP70'),
+                    valueFormatter: createSkillValueFormatter('minP70', 'countP70to80'),
                   },
                   {
                     dataKey: 'p80to90',
@@ -365,7 +372,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[800],
-                    valueFormatter: createSkillValueFormatter('minP80'),
+                    valueFormatter: createSkillValueFormatter('minP80', 'countP80to90'),
                   },
                   {
                     dataKey: 'p90to100',
@@ -373,7 +380,7 @@ export function ChartsScreen(): React.JSX.Element {
                     stack: 'skill',
                     area: true,
                     color: purple[900],
-                    valueFormatter: createSkillValueFormatter('minP90'),
+                    valueFormatter: createSkillValueFormatter('minP90', 'countP90to100'),
                   },
                 ])}
                 height={height}

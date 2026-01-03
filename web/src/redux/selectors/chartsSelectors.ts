@@ -109,6 +109,19 @@ export type AgentSkillDistributionDatasetRow = {
   minP70: number
   minP80: number
   minP90: number
+  // Agent counts in each percentile band
+  countP0to10: number
+  countP10to20: number
+  countP20to30: number
+  countP30to40: number
+  countP40to50: number
+  countP50to60: number
+  countP60to70: number
+  countP70to80: number
+  countP80to90: number
+  countP90to100: number
+  // Total number of agents
+  totalAgents: number
 }
 
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
@@ -143,9 +156,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     // Get rewards from turn report (per-turn, not cumulative)
     const turnRewards = turnStartReport?.assets.moneyBreakdown.missionRewards ?? 0
 
-    // KJA3 review if this expenditure tracking is correct. Note this is the only reason
-    // to have selectTurnSnapshotsWithFirst
-    //
     // Calculate expenditures: compare money at start vs end of turn
     // First snapshot of turn N: right after turn advancement from N-1 (includes income)
     // Last snapshot of turn N: right before turn advancement to N+1 (includes expenditures from player actions)
@@ -363,6 +373,17 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
       minP70: 0,
       minP80: 0,
       minP90: 0,
+      countP0to10: 0,
+      countP10to20: 0,
+      countP20to30: 0,
+      countP30to40: 0,
+      countP40to50: 0,
+      countP50to60: 0,
+      countP60to70: 0,
+      countP70to80: 0,
+      countP80to90: 0,
+      countP90to100: 0,
+      totalAgents: 0,
     }
   }
 
@@ -384,6 +405,20 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const p80 = quantileSorted(sortedSkills, 0.8)
   const p90 = quantileSorted(sortedSkills, 0.9)
   const max = sortedSkills.at(-1) ?? 0
+
+  // Count agents in each percentile band
+  // For each band, count agents with skill >= lower bound and < upper bound
+  // For the last band (p90to100), include agents >= p90
+  const countP0to10 = skills.filter((skill) => skill >= min && skill < p10).length
+  const countP10to20 = skills.filter((skill) => skill >= p10 && skill < p20).length
+  const countP20to30 = skills.filter((skill) => skill >= p20 && skill < p30).length
+  const countP30to40 = skills.filter((skill) => skill >= p30 && skill < p40).length
+  const countP40to50 = skills.filter((skill) => skill >= p40 && skill < p50).length
+  const countP50to60 = skills.filter((skill) => skill >= p50 && skill < p60).length
+  const countP60to70 = skills.filter((skill) => skill >= p60 && skill < p70).length
+  const countP70to80 = skills.filter((skill) => skill >= p70 && skill < p80).length
+  const countP80to90 = skills.filter((skill) => skill >= p80 && skill < p90).length
+  const countP90to100 = skills.filter((skill) => skill >= p90).length
 
   // Store differences between percentile boundaries so they stack to actual skill values.
   // When stacked: p0to10 reaches p10, p0to10+p10to20 reaches p20, ..., sum reaches max.
@@ -410,6 +445,19 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
     minP70: p70,
     minP80: p80,
     minP90: p90,
+    // Agent counts in each percentile band
+    countP0to10,
+    countP10to20,
+    countP20to30,
+    countP30to40,
+    countP40to50,
+    countP50to60,
+    countP60to70,
+    countP70to80,
+    countP80to90,
+    countP90to100,
+    // Total number of agents
+    totalAgents: aliveAgents.length,
   }
 }
 
