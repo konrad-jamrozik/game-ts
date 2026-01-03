@@ -240,7 +240,7 @@ export function ChartsScreen(): React.JSX.Element {
         />
 
         <ChartsPanel
-          title="Agent skill distribution"
+          title="Skill Ranges Covered by Agent Skill Percentiles"
           renderChart={(height) => <AgentSkillDistributionChart gameStates={gameStates} height={height} />}
         />
 

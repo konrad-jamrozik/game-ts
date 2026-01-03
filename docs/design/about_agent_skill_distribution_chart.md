@@ -1,62 +1,78 @@
 # About Agent Skill Distribution Chart
 
-This document explains how the agent skill distribution chart computes and displays skill bands based on distinct skill values above baseline.
+This document explains how the agent skill distribution chart computes and displays skill bands based on agent percentiles.
 
 ## Overview
 
-The agent skill distribution chart displays agent skills grouped into 1-4 bands (green, yellow, orange, red) based on **distinct skill values above baseline**. The algorithm ensures that bands are determined by the number of distinct skill values rather than agent counts, providing a stable and intuitive visualization of skill distribution.
+The agent skill distribution chart displays agent skills grouped into 1-4 bands (green, yellow, orange, red) based on **agent percentiles**. The algorithm groups agents by count (not distinct skill values), ensuring that each band represents approximately 25% of agents, with tie preservation at boundaries.
 
 ## Banding Algorithm
 
 ### Core Principles
 
-1. **Baseline filtering**: Only skills above baseline skill (typically 100) are considered
-2. **Distinct value grouping**: Bands are determined by distinct skill values, not agent counts
-3. **Progressive band visibility**: Number of visible bands depends on number of distinct skill values at or above baseline
-4. **Equal distribution**: When 4+ distinct values exist, they are divided equally among bands with remainders distributed to lower bands first
+1. **Baseline filtering**: Only skills at or above baseline skill (typically 100) are considered
+2. **Agent percentile grouping**: Bands are determined by agent count, not distinct skill values
+3. **Tie preservation**: When a band boundary would split agents with identical skill values, all tied agents are included in the current band
+4. **Progressive band visibility**: Empty bands are not displayed
 
 ### Algorithm Steps
 
 1. **Filter skills at or above baseline**: Only consider agents with skills >= baseline (100)
-2. **Get distinct skill values**: Extract unique skill values at or above baseline, sorted ascending
-3. **Determine number of bands**:
-   - 1 distinct value → 1 band (green only)
-   - 2 distinct values → 2 bands (green, yellow)
-   - 3 distinct values → 3 bands (green, yellow, orange)
-   - 4+ distinct values → 4 bands (green, yellow, orange, red)
-4. **Distribute distinct values** (when 4+ distinct values):
-   - Divide count by 4: `baseQuota = floor(distinctCount / 4)`
-   - Calculate remainder: `remainder = distinctCount % 4`
-   - Distribute remainder greedily to lower bands:
-     - Green: `baseQuota + (remainder >= 1 ? 1 : 0)`
-     - Yellow: `baseQuota + (remainder >= 2 ? 1 : 0)`
-     - Orange: `baseQuota + (remainder >= 3 ? 1 : 0)`
-     - Red: `baseQuota`
-5. **Assign distinct values to bands**: Iterate from lowest skill above baseline, assigning each distinct value to its band according to quota
-6. **Expand band ranges**: Set each band's upper range to `next_band_bottom - 1` (or use maxSkill for the highest band)
+2. **Sort agents by skill**: Sort all agents by skill in ascending order
+3. **Compute band size**: Calculate `N = max(1, floor(n / 4))` where `n` is the total number of agents
+4. **Assign percentile bands**:
+   - Process bands in order: **Green (bottom 25%)**, **Yellow (25–50%)**, **Orange (50–75%)**
+   - For each of these three bands:
+     - If no agents remain, the band is empty (not included in result)
+     - Otherwise, take the next `N` lowest-skill agents from the remaining set
+     - If this cutoff would split a tie (i.e., the next agent has the same skill value as the last taken agent), include **all** remaining agents with that same skill value in the current band
+   - The **Red (top 25%)** band contains all remaining agents
+5. **Rendering rule**: Do not display bands that are empty
 
-### Example from Specification
+### Examples
 
-Given distinct skill values: `110, 125, 150, 175, 200, 210, 230, 250, 270, 290` (10 values):
+**Example 1**
 
-- `10 / 4 = 2`, remainder `2`
-- Green: 3 values (`110, 125, 150`) → final range: `[101, 174]`
-- Yellow: 3 values (`175, 200, 210`) → final range: `[175, 229]`
-- Orange: 2 values (`230, 250`) → final range: `[230, 269]`
-- Red: 2 values (`270, 290`) → final range: `[270, 290]`
+Agent skills: `100 100 100 100 100 400 400 400 400 400` (10 agents)
+
+- `N = floor(10 / 4) = 2`
+- Green: Take 2, but all 5 have skill 100, so take all 5 (tie preservation)
+- Yellow: Remaining 5 have skill 400, take all 5 (ties)
+- Orange: absent (no agents remain)
+- Red: absent (no agents remain)
+
+Result:
+- Green: `100 100 100 100 100` (5 agents)
+- Yellow: `400 400 400 400 400` (5 agents)
+
+**Example 2**
+
+Agent skills: `100 100 200 200 200 300 300 400 400 400` (10 agents)
+
+- `N = floor(10 / 4) = 2`
+- Green: Take 2 (`100 100`), no tie at boundary
+- Yellow: Take 2, but boundary is 200 and there's a 3rd 200, so take all 3 with 200 (tie preservation)
+- Orange: Take 2 (`300 300`)
+- Red: Remaining 3 (`400 400 400`)
+
+Result:
+- Green: `100 100` (2 agents)
+- Yellow: `200 200 200` (3 agents)
+- Orange: `300 300` (2 agents)
+- Red: `400 400 400` (3 agents)
 
 ### Tie Handling
 
-When multiple agents share the same distinct skill value, **all agents with that skill are grouped into the same band**. This ensures stable, intuitive banding that behaves correctly with ties.
+When a band boundary would split agents with identical skill values, **all tied agents are included in the current band**. This ensures stable, intuitive banding that behaves correctly with ties.
 
-**Example**: If there are agents with skills `110, 110, 110, 125, 125, 150`:
-- All 3 agents with skill 110 go to green band
-- All 2 agents with skill 125 go to green band (if green has quota for both distinct values)
-- All agents with skill 150 go to their assigned band
+**Example**: With skills `100 100 100 200 200` and `N = 1`:
+- Green would normally take 1 agent (`100`)
+- But the next agent also has skill 100, so all 3 agents with skill 100 go to green band
+- Yellow gets the remaining 2 agents with skill 200
 
 ### Band Display
 
-- **Green band (lowest)**: Displayed as `[minSkill, maxSkill]` (closed interval), starts at `baseline + 1`
+- **Green band (bottom 25%)**: Displayed as `[minSkill, maxSkill]` (closed interval), starts at `baseline`
 - **Yellow, Orange, Red bands**: Displayed as `(minSkill, maxSkill]` (half-open interval)
 - **Empty bands**: Not displayed (zero height in the stacked chart)
 - **Band colors**: Green → Yellow → Orange → Red (from lowest to highest skills)
@@ -66,22 +82,23 @@ When multiple agents share the same distinct skill value, **all agents with that
 ### Skill Range Boundaries
 
 Skill range boundaries represent the **expanded ranges** used for visual display:
-- Each band's range extends from its minimum distinct skill value (or `baseline + 1` for green) to `next_band_bottom - 1`
-- The highest band (red) extends to its maximum distinct skill value
+- Each band's range extends from its minimum skill value (or `baseline` for green) to `next_band_bottom - 1`
+- The highest band (red) extends to its maximum skill value
 - These ranges ensure bands stack correctly in the chart without gaps
 
 ### Band Semantics
 
 Each band represents:
 - **Band name**: Color identifier (green, yellow, orange, red)
-- **Distinct skill values**: The unique skill values assigned to this band
+- **Percentile range**: Bottom 25%, 25–50%, 50–75%, or Top 25% of agents
 - **Skill range**: The expanded min/max range for visual display
-- **Agent count**: The number of agents with skills matching this band's distinct values
+- **Agent count**: The number of agents in this percentile band
 
 Bands are displayed as stacked areas in the chart, where:
 - The height of each band represents the expanded skill range it covers
 - Empty bands have zero height and are not visible
 - The chart starts at the baseline skill (initial agent skill) rather than zero
+- Percentages refer to **percentiles of agents**, not percentages of skill values
 
 ## Edge Cases
 
@@ -89,17 +106,17 @@ Bands are displayed as stacked areas in the chart, where:
 
 If all agents have skills below baseline, no bands are displayed (empty chart).
 
-### Single Distinct Value At Or Above Baseline
+### Single Agent At Or Above Baseline
 
-All agents at or above baseline are grouped into a single green band. This includes agents at exactly the baseline skill.
+The single agent is grouped into a green band.
 
-### Fewer Than 4 Distinct Values
+### Fewer Than 4 Agents
 
-When there are 1-3 distinct values, only that many bands are displayed (green, yellow, orange as needed).
+When there are fewer than 4 agents, bands are still processed in order, but some bands may be empty and not displayed.
 
-### Many Distinct Values
+### Many Agents With Same Skill
 
-When there are 4+ distinct values, they are divided equally among the 4 bands, with remainders distributed to lower bands first (green, yellow, orange).
+When many agents share the same skill value, tie preservation may cause a band to contain more than 25% of agents.
 
 ## Implementation Details
 

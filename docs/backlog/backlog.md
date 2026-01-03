@@ -2,6 +2,71 @@
 
 KJA backlog:
 
+# Prompt v2
+
+In agent skill distribution chart:
+- Clarify in chart title the percentage ranges are percentages of agents. So the chart should have title "Skill Ranges Covered by Agent Skill Percentiles"
+- Change legend to:
+  - Bottom 25% (agents)
+  - 25–50% percentile
+  - 50–75% percentile
+  - Top 25% (agents)
+- And same in tooltips.
+
+Change the algorithm how agents are allocated to band in the agent skill distribution chart.
+
+This algorithm determines the skill range represented by each of the four percentile bands (Green, Yellow, Orange, Red).
+
+### Steps
+
+1. **Sort agents**
+   - Sort all current agents by skill, in ascending order.
+
+2. **Compute band size**
+   - Let `n` be the total number of agents.
+   - Compute `N = max(1, floor(n / 4))`.
+
+3. **Assign percentile bands**
+   - Process bands in order: **Green (bottom 25%)**, **Yellow (25–50%)**, **Orange (50–75%)**.
+   - For each of these three bands:
+     - If no agents remain, the band is empty.
+     - Otherwise, take the next `N` lowest-skill agents from the remaining set.
+     - If this cutoff would split a tie (i.e., the next agent has the same skill value as the last taken agent), include **all** remaining agents with that same skill value in the current band.
+   - The **Red (top 25%)** band contains all remaining agents.
+
+4. **Rendering rule**
+   - Do not display bands that are empty.
+
+### Notes
+
+- Percentages refer to **percentiles of agents**, not percentages of skill values.
+- Due to tie preservation, a band may contain more than 25% of agents.
+- Some bands may be empty, especially when many agents share the same skill value.
+
+### Examples
+
+**Example 1**
+
+Agent skills:
+100 100 100 100 100 400 400 400 400 400
+
+Result:
+- Green: `100 100 100 100 100`
+- Yellow: `400 400 400 400 400`
+- Orange: absent
+- Red: absent
+
+**Example 2**
+
+Agent skills:
+100 100 200 200 200 300 300 400 400 400
+
+Result:
+- Green: `100 100`  (taking 2 because `floor(10 / 4) = 2`)
+- Yellow: `200 200 200`
+- Orange: `300 300`
+- Red: `400 400 400`
+
 # Prompt
 
 Change the algorithm how agents are allocated to band in the agent skill distribution chart. Do it like that.

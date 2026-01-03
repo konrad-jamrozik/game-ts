@@ -256,7 +256,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
       series={withNoMarkers([
         {
           dataKey: 'p0to25',
-          label: '0-25%',
+          label: 'Bottom 25% (agents)',
           stack: 'skill',
           area: true,
           color: getColor('green'),
@@ -264,7 +264,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
         },
         {
           dataKey: 'p25to50',
-          label: '25-50%',
+          label: '25–50% percentile',
           stack: 'skill',
           area: true,
           color: getColor('yellow'),
@@ -272,7 +272,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
         },
         {
           dataKey: 'p50to75',
-          label: '50-75%',
+          label: '50–75% percentile',
           stack: 'skill',
           area: true,
           color: getColor('orange'),
@@ -280,7 +280,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
         },
         {
           dataKey: 'p75to100',
-          label: '75-100%',
+          label: 'Top 25% (agents)',
           stack: 'skill',
           area: true,
           color: getColor('red'),

@@ -637,227 +637,196 @@ describe(computeDistinctSkillBands, () => {
     })
   })
 
-  describe('two distinct skill values', () => {
-    test('creates green and yellow bands', () => {
-      const result = computeDistinctSkillBands([110, 125], baselineSkill)
+  describe('example 1 from backlog: tie preservation', () => {
+    test('example 1: all agents with same skill in each band', () => {
+      // Skills: 100 100 100 100 100 400 400 400 400 400 (10 agents)
+      // N = floor(10/4) = 2
+      // Green: take 2, but all 5 have skill 100, so take all 5 (tie preservation)
+      // Yellow: remaining 5 have skill 400, take all 5 (ties)
+      // Orange: empty
+      // Red: empty
+      const skills = [100, 100, 100, 100, 100, 400, 400, 400, 400, 400]
+      const result = computeDistinctSkillBands(skills, baselineSkill)
+
       expect(result).toHaveLength(2)
       expect(result[0]).toStrictEqual({
         band: 'green',
-        minSkill: 110,
-        maxSkill: 110,
+        minSkill: 100,
+        maxSkill: 100,
         skillRangeMin: 100,
-        skillRangeMax: 124,
-        count: 1,
+        skillRangeMax: 399, // next band min - 1
+        count: 5,
       })
       expect(result[1]).toStrictEqual({
         band: 'yellow',
-        minSkill: 125,
-        maxSkill: 125,
-        skillRangeMin: 125,
-        skillRangeMax: 125,
-        count: 1,
+        minSkill: 400,
+        maxSkill: 400,
+        skillRangeMin: 400,
+        skillRangeMax: 400,
+        count: 5,
       })
     })
-
-    test('handles multiple agents per distinct value', () => {
-      const result = computeDistinctSkillBands([110, 110, 125, 125, 125], baselineSkill)
-      expect(result).toHaveLength(2)
-      expect(result[0]?.band).toBe('green')
-      expect(result[0]?.count).toBe(2)
-      expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.count).toBe(3)
-    })
   })
 
-  describe('three distinct skill values', () => {
-    test('creates green, yellow, and orange bands', () => {
-      const result = computeDistinctSkillBands([110, 125, 150], baselineSkill)
-      expect(result).toHaveLength(3)
-      expect(result[0]?.band).toBe('green')
-      expect(result[1]?.band).toBe('yellow')
-      expect(result[2]?.band).toBe('orange')
-    })
-  })
-
-  describe('four or more distinct skill values - spec example', () => {
-    test('example from spec: 10 distinct values', () => {
-      // Distinct skill values: 110, 125, 150, 175, 200, 210, 230, 250, 270, 290
-      // 10 / 4 = 2, remainder 2
-      // green: 3 values (110, 125, 150) → [101, 174]
-      // yellow: 3 values (175, 200, 210) → [175, 229]
-      // orange: 2 values (230, 250) → [230, 269]
-      // red: 2 values (270, 290) → [270, 290]
-      const skills = [110, 125, 150, 175, 200, 210, 230, 250, 270, 290]
+  describe('example 2 from backlog: mixed skills with tie preservation', () => {
+    test('example 2: mixed skills with ties at boundaries', () => {
+      // Skills: 100 100 200 200 200 300 300 400 400 400 (10 agents)
+      // N = floor(10/4) = 2
+      // Green: take 2 (100, 100), no tie at boundary
+      // Yellow: take 2, but boundary is 200 and there's a 3rd 200, so take all 3 with 200
+      // Orange: take 2 (300, 300)
+      // Red: remaining 3 (400, 400, 400)
+      const skills = [100, 100, 200, 200, 200, 300, 300, 400, 400, 400]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
       expect(result).toHaveLength(4)
-
-      // Green band: 3 distinct values
       expect(result[0]).toStrictEqual({
         band: 'green',
-        minSkill: 110,
-        maxSkill: 150,
+        minSkill: 100,
+        maxSkill: 100,
         skillRangeMin: 100,
-        skillRangeMax: 174,
-        count: 3,
+        skillRangeMax: 199, // next band min - 1
+        count: 2,
       })
-
-      // Yellow band: 3 distinct values
       expect(result[1]).toStrictEqual({
         band: 'yellow',
-        minSkill: 175,
-        maxSkill: 210,
-        skillRangeMin: 175,
-        skillRangeMax: 229,
+        minSkill: 200,
+        maxSkill: 200,
+        skillRangeMin: 200,
+        skillRangeMax: 299, // next band min - 1
         count: 3,
       })
-
-      // Orange band: 2 distinct values
       expect(result[2]).toStrictEqual({
         band: 'orange',
-        minSkill: 230,
-        maxSkill: 250,
-        skillRangeMin: 230,
-        skillRangeMax: 269,
+        minSkill: 300,
+        maxSkill: 300,
+        skillRangeMin: 300,
+        skillRangeMax: 399, // next band min - 1
         count: 2,
       })
-
-      // Red band: 2 distinct values
       expect(result[3]).toStrictEqual({
         band: 'red',
-        minSkill: 270,
-        maxSkill: 290,
-        skillRangeMin: 270,
-        skillRangeMax: 290,
-        count: 2,
+        minSkill: 400,
+        maxSkill: 400,
+        skillRangeMin: 400,
+        skillRangeMax: 400,
+        count: 3,
       })
     })
+  })
 
-    test('example from spec: 110 and 125 both go to green', () => {
-      // If there are agents with skills: 110, 125, 150, 175, 200
-      // 5 distinct values: 5 / 4 = 1, remainder 1
-      // green gets 2 values (110, 125), yellow/orange/red get 1 each
-      const skills = [110, 125, 150, 175, 200]
+  describe('normal distribution', () => {
+    test('4 agents: one per band', () => {
+      // Skills: 100, 200, 300, 400 (4 agents)
+      // N = floor(4/4) = 1
+      // Each band gets 1 agent
+      const skills = [100, 200, 300, 400]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
       expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
-      expect(result[0]?.maxSkill).toBe(125) // 2 distinct values: 110, 125
-      expect(result[0]?.count).toBe(2) // 110, 125
+      expect(result[0]?.minSkill).toBe(100)
+      expect(result[0]?.count).toBe(1)
+      expect(result[1]?.band).toBe('yellow')
+      expect(result[1]?.minSkill).toBe(200)
+      expect(result[1]?.count).toBe(1)
+      expect(result[2]?.band).toBe('orange')
+      expect(result[2]?.minSkill).toBe(300)
+      expect(result[2]?.count).toBe(1)
+      expect(result[3]?.band).toBe('red')
+      expect(result[3]?.minSkill).toBe(400)
+      expect(result[3]?.count).toBe(1)
     })
 
-    test('exactly 4 distinct values', () => {
-      // 4 / 4 = 1, no remainder
-      // Each band gets 1 distinct value
-      const skills = [110, 125, 150, 175]
+    test('8 agents: two per band', () => {
+      // Skills: 100, 100, 200, 200, 300, 300, 400, 400 (8 agents)
+      // N = floor(8/4) = 2
+      // Each band gets 2 agents
+      const skills = [100, 100, 200, 200, 300, 300, 400, 400]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
       expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
-      expect(result[0]?.maxSkill).toBe(110)
+      expect(result[0]?.minSkill).toBe(100)
+      expect(result[0]?.maxSkill).toBe(100)
+      expect(result[0]?.count).toBe(2)
       expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.minSkill).toBe(125)
+      expect(result[1]?.minSkill).toBe(200)
+      expect(result[1]?.count).toBe(2)
       expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(150)
+      expect(result[2]?.minSkill).toBe(300)
+      expect(result[2]?.count).toBe(2)
       expect(result[3]?.band).toBe('red')
-      expect(result[3]?.minSkill).toBe(175)
+      expect(result[3]?.minSkill).toBe(400)
+      expect(result[3]?.count).toBe(2)
     })
 
-    test('5 distinct values: remainder 1 goes to green', () => {
-      // 5 / 4 = 1, remainder 1
-      // green: 2 values, yellow/orange/red: 1 value each
-      const skills = [110, 125, 150, 175, 200]
+    test('12 agents: three per band', () => {
+      // Skills: 100, 100, 100, 200, 200, 200, 300, 300, 300, 400, 400, 400 (12 agents)
+      // N = floor(12/4) = 3
+      // Each band gets 3 agents
+      const skills = [100, 100, 100, 200, 200, 200, 300, 300, 300, 400, 400, 400]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
       expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
-      expect(result[0]?.maxSkill).toBe(125) // 2 values: 110, 125
+      expect(result[0]?.count).toBe(3)
       expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.minSkill).toBe(150)
+      expect(result[1]?.count).toBe(3)
       expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(175)
+      expect(result[2]?.count).toBe(3)
       expect(result[3]?.band).toBe('red')
-      expect(result[3]?.minSkill).toBe(200)
+      expect(result[3]?.count).toBe(3)
+    })
+  })
+
+  describe('tie preservation at boundaries', () => {
+    test('tie at green-yellow boundary expands green band', () => {
+      // Skills: 100, 100, 100, 200, 200, 300, 300, 400 (8 agents)
+      // N = floor(8/4) = 2
+      // Green: take 2, but index 2 also has 100, so take all 3 (tie preservation)
+      const skills = [100, 100, 100, 200, 200, 300, 300, 400]
+      const result = computeDistinctSkillBands(skills, baselineSkill)
+
+      expect(result[0]?.band).toBe('green')
+      expect(result[0]?.minSkill).toBe(100)
+      expect(result[0]?.count).toBe(3) // All 3 agents with 100
     })
 
-    test('6 distinct values: remainder 2 goes to green and yellow', () => {
-      // 6 / 4 = 1, remainder 2
-      // green: 2 values, yellow: 2 values, orange/red: 1 value each
-      const skills = [110, 125, 150, 175, 200, 225]
+    test('tie at yellow-orange boundary expands yellow band', () => {
+      // Skills: 100, 200, 200, 200, 300, 300, 400, 400 (8 agents)
+      // N = floor(8/4) = 2
+      // Green: take 2 (100, 200) - wait, that's wrong. Let me recalculate:
+      // Actually: Green takes first 2: 100, 200
+      // Yellow: should take next 2, but index 3 also has 200, so take all 3 with 200
+      const skills = [100, 200, 200, 200, 300, 300, 400, 400]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
-      expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
-      expect(result[0]?.maxSkill).toBe(125) // 2 values
+      expect(result[0]?.count).toBe(1) // Just 100
       expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.minSkill).toBe(150)
-      expect(result[1]?.maxSkill).toBe(175) // 2 values
-      expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(200)
-      expect(result[3]?.band).toBe('red')
-      expect(result[3]?.minSkill).toBe(225)
-    })
-
-    test('7 distinct values: remainder 3 goes to green, yellow, orange', () => {
-      // 7 / 4 = 1, remainder 3
-      // green: 2 values, yellow: 2 values, orange: 2 values, red: 1 value
-      const skills = [110, 125, 150, 175, 200, 225, 250]
-      const result = computeDistinctSkillBands(skills, baselineSkill)
-
-      expect(result).toHaveLength(4)
-      expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
-      expect(result[0]?.maxSkill).toBe(125) // 2 values
-      expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.minSkill).toBe(150)
-      expect(result[1]?.maxSkill).toBe(175) // 2 values
-      expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(200)
-      expect(result[2]?.maxSkill).toBe(225) // 2 values
-      expect(result[3]?.band).toBe('red')
-      expect(result[3]?.minSkill).toBe(250)
-    })
-
-    test('handles multiple agents per distinct value', () => {
-      // Distinct values: 110, 125, 150, 175
-      // 4 distinct values: 4 / 4 = 1, no remainder
-      // Each band gets 1 distinct value
-      // But multiple agents can have the same skill
-      const skills = [110, 110, 110, 125, 125, 150, 150, 150, 150, 175]
-      const result = computeDistinctSkillBands(skills, baselineSkill)
-
-      expect(result).toHaveLength(4)
-      expect(result[0]?.band).toBe('green')
-      expect(result[0]?.count).toBe(3) // 3 agents with 110
-      expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.count).toBe(2) // 2 agents with 125
-      expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.count).toBe(4) // 4 agents with 150
-      expect(result[3]?.band).toBe('red')
-      expect(result[3]?.count).toBe(1) // 1 agent with 175
+      expect(result[1]?.minSkill).toBe(200)
+      expect(result[1]?.count).toBe(3) // All 3 agents with 200
     })
   })
 
   describe('mixed skills above and below baseline', () => {
     test('filters out skills below baseline, includes baseline', () => {
-      const skills = [50, 75, 100, 110, 125, 150]
+      // Skills: 50, 75, 100, 110, 120, 130 (6 agents)
+      // After filtering: 100, 110, 120, 130 (4 agents)
+      // N = floor(4/4) = 1
+      const skills = [50, 75, 100, 110, 120, 130]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
-      // 100, 110, 125, 150 should be considered (4 distinct values)
-      // Skills below baseline (50, 75) are filtered out
       expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.minSkill).toBe(100)
       expect(result[1]?.band).toBe('yellow')
       expect(result[1]?.minSkill).toBe(110)
       expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(125)
+      expect(result[2]?.minSkill).toBe(120)
       expect(result[3]?.band).toBe('red')
-      expect(result[3]?.minSkill).toBe(150)
+      expect(result[3]?.minSkill).toBe(130)
     })
   })
 })
