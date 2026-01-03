@@ -267,8 +267,28 @@ export function ChartsScreen(): React.JSX.Element {
           title="Agent skill distribution"
           renderChart={(height) => {
             function createSkillValueFormatter(
-              minSkillKey: 'minP0' | 'minP10' | 'minP20' | 'minP30' | 'minP40' | 'minP50' | 'minP60' | 'minP70' | 'minP80' | 'minP90',
-              countKey: 'countP0to10' | 'countP10to20' | 'countP20to30' | 'countP30to40' | 'countP40to50' | 'countP50to60' | 'countP60to70' | 'countP70to80' | 'countP80to90' | 'countP90to100',
+              minSkillKey:
+                | 'minP0'
+                | 'minP10'
+                | 'minP20'
+                | 'minP30'
+                | 'minP40'
+                | 'minP50'
+                | 'minP60'
+                | 'minP70'
+                | 'minP80'
+                | 'minP90',
+              countKey:
+                | 'countP0to10'
+                | 'countP10to20'
+                | 'countP20to30'
+                | 'countP30to40'
+                | 'countP40to50'
+                | 'countP50to60'
+                | 'countP60to70'
+                | 'countP70to80'
+                | 'countP80to90'
+                | 'countP90to100',
             ): (value: number | null, context: { dataIndex: number }) => string {
               return (_value, context): string => {
                 const datasetItem = datasets.agentSkillDistribution[context.dataIndex]
