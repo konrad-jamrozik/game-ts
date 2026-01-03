@@ -240,4 +240,26 @@ describe(quantileSorted, () => {
       expect(quantileSorted(arr, 0.9)).toBe(9.1)
     })
   })
+
+  describe('skewed distribution with single outlier', () => {
+    // Array with 11 elements: 10 zeros and one 100 at the end
+    // This tests behavior when most values are identical with a single outlier
+    // pos = (length-1) * q = 10 * q
+    const arr = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 100]
+
+    test('q=0 returns 0 (first element)', () => {
+      // pos = 10 * 0 = 0, lands exactly on index 0
+      expect(quantileSorted(arr, 0)).toBe(0)
+    })
+
+    test('q=0.1 returns 0 (lands on index 1)', () => {
+      // pos = 10 * 0.1 = 1, lands exactly on index 1
+      expect(quantileSorted(arr, 0.1)).toBe(0)
+    })
+
+    test('q=0.2 returns 0 (lands on index 2)', () => {
+      // pos = 10 * 0.2 = 2, lands exactly on index 2
+      expect(quantileSorted(arr, 0.2)).toBe(0)
+    })
+  })
 })

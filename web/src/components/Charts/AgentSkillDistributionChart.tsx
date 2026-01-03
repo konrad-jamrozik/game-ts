@@ -113,17 +113,18 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
 
   // Count agents in each percentile band
   // For each band, count agents with skill >= lower bound and < upper bound
-  // For the last band (p90to100), include agents >= p90
-  const countP0to10 = skills.filter((skill) => skill >= min && skill < p10).length
-  const countP10to20 = skills.filter((skill) => skill >= p10 && skill < p20).length
-  const countP20to30 = skills.filter((skill) => skill >= p20 && skill < p30).length
-  const countP30to40 = skills.filter((skill) => skill >= p30 && skill < p40).length
-  const countP40to50 = skills.filter((skill) => skill >= p40 && skill < p50).length
-  const countP50to60 = skills.filter((skill) => skill >= p50 && skill < p60).length
-  const countP60to70 = skills.filter((skill) => skill >= p60 && skill < p70).length
-  const countP70to80 = skills.filter((skill) => skill >= p70 && skill < p80).length
-  const countP80to90 = skills.filter((skill) => skill >= p80 && skill < p90).length
-  const countP90to100 = skills.filter((skill) => skill >= p90).length
+  // Except the first band, which is >= min and <= p10
+  // This is done to catch minimum values in the p0-p10 band.
+  const countP0to10 = skills.filter((s) => s >= min && s <= p10).length
+  const countP10to20 = skills.filter((s) => s > p10 && s <= p20).length
+  const countP20to30 = skills.filter((s) => s > p20 && s <= p30).length
+  const countP30to40 = skills.filter((s) => s > p30 && s <= p40).length
+  const countP40to50 = skills.filter((s) => s > p40 && s <= p50).length
+  const countP50to60 = skills.filter((s) => s > p50 && s <= p60).length
+  const countP60to70 = skills.filter((s) => s > p60 && s <= p70).length
+  const countP70to80 = skills.filter((s) => s > p70 && s <= p80).length
+  const countP80to90 = skills.filter((s) => s > p80 && s <= p90).length
+  const countP90to100 = skills.filter((s) => s > p90).length
 
   // Store differences between percentile boundaries so they stack to actual skill values.
   // When stacked: p0to10 reaches p10, p0to10+p10to20 reaches p20, ..., sum reaches max.
