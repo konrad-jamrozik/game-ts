@@ -614,15 +614,16 @@ describe(computeSkillBands, () => {
   })
 
   describe('acceptance test 1: two-cluster case', () => {
-    test('1 1 1 1 1 4 4 4 4 4: Green = all 1s, Red = all 4s, Yellow/Orange empty', () => {
+    test('1 1 1 1 1 4 4 4 4 4: Green = all 1s, Dark Red = all 4s, Yellow/Orange/Red empty', () => {
       // This is the key acceptance test - the two-cluster case should put
-      // all 1s in Green (bottom 25%) and all 4s in Red (top 25%)
-      // n=10, i25=2, i50=4, i75=7
-      // p25=1, p50=1, p75=4
+      // all 1s in Green (bottom 25%) and all 4s in Dark Red (top 5%)
+      // n=10, i25=2, i50=4, i75=7, i95=9
+      // p25=1, p50=1, p75=4, p95=4
       // Green: skill <= 1 → all 1s (5)
       // Yellow: 1 < skill <= 1 → none
       // Orange: 1 < skill < 4 → none
-      // Red: skill >= 4 → all 4s (5)
+      // Red: 4 <= skill < 4 → none (p75 = p95 = 4)
+      // Dark Red: skill >= 4 → all 4s (5)
       const skills = [1, 1, 1, 1, 1, 4, 4, 4, 4, 4]
       const result = computeSkillBands(skills)
 
@@ -634,7 +635,7 @@ describe(computeSkillBands, () => {
         count: 5,
       })
       expect(result[1]).toStrictEqual({
-        band: 'red',
+        band: 'dark_red',
         minSkill: 4,
         maxSkill: 4,
         count: 5,
@@ -644,13 +645,14 @@ describe(computeSkillBands, () => {
 
   describe('acceptance test 2: four distinct values', () => {
     test('100 100 200 200 200 300 300 400 400 400: distributed across bands', () => {
-      // n=10, i25=2, i50=4, i75=7
+      // n=10, i25=2, i50=4, i75=7, i95=9
       // Sorted: [100, 100, 200, 200, 200, 300, 300, 400, 400, 400]
-      // p25=sSorted[2]=200, p50=sSorted[4]=200, p75=sSorted[7]=400
+      // p25=sSorted[2]=200, p50=sSorted[4]=200, p75=sSorted[7]=400, p95=sSorted[9]=400
       // Green: skill <= 200 → 100, 100, 200, 200, 200 (5)
       // Yellow: 200 < skill <= 200 → none
       // Orange: 200 < skill < 400 → 300, 300 (2)
-      // Red: skill >= 400 → 400, 400, 400 (3)
+      // Red: 400 <= skill < 400 → none (p75 = p95 = 400)
+      // Dark Red: skill >= 400 → 400, 400, 400 (3)
       const skills = [100, 100, 200, 200, 200, 300, 300, 400, 400, 400]
       const result = computeSkillBands(skills)
 
@@ -668,7 +670,7 @@ describe(computeSkillBands, () => {
         count: 2,
       })
       expect(result[2]).toStrictEqual({
-        band: 'red',
+        band: 'dark_red',
         minSkill: 400,
         maxSkill: 400,
         count: 3,
@@ -677,41 +679,42 @@ describe(computeSkillBands, () => {
   })
 
   describe('acceptance test 3: stability - bottom changes should not affect top', () => {
-    test('raising low-end skills does not reduce Red band when p75 unchanged', () => {
+    test('raising low-end skills does not reduce Dark Red band when p95 unchanged', () => {
       // Original: [1, 1, 1, 1, 5, 5, 5, 10, 10, 10]
-      // n=10, p75=sSorted[7]=10
-      // Red: skill >= 10 → 10, 10, 10 (3)
+      // n=10, p75=sSorted[7]=10, p95=sSorted[9]=10
+      // Dark Red: skill >= 10 → 10, 10, 10 (3)
       const original = [1, 1, 1, 1, 5, 5, 5, 10, 10, 10]
       const originalResult = computeSkillBands(original)
-      const originalRedBand = originalResult.find((b) => b.band === 'red')
+      const originalDarkRedBand = originalResult.find((b) => b.band === 'dark_red')
 
       // Modified: raise low-end skills from 1 to 3
       // [3, 3, 3, 3, 5, 5, 5, 10, 10, 10]
-      // p75 is still sSorted[7]=10
-      // Red should still be: skill >= 10 → 10, 10, 10 (3)
+      // p95 is still sSorted[9]=10
+      // Dark Red should still be: skill >= 10 → 10, 10, 10 (3)
       const modified = [3, 3, 3, 3, 5, 5, 5, 10, 10, 10]
       const modifiedResult = computeSkillBands(modified)
-      const modifiedRedBand = modifiedResult.find((b) => b.band === 'red')
+      const modifiedDarkRedBand = modifiedResult.find((b) => b.band === 'dark_red')
 
-      expect(originalRedBand?.count).toBe(3)
-      expect(modifiedRedBand?.count).toBe(3)
-      expect(originalRedBand).toStrictEqual(modifiedRedBand)
+      expect(originalDarkRedBand?.count).toBe(3)
+      expect(modifiedDarkRedBand?.count).toBe(3)
+      expect(originalDarkRedBand).toStrictEqual(modifiedDarkRedBand)
     })
   })
 
   describe('normal distribution', () => {
     test('4 agents with distinct skills: one per band', () => {
-      // n=4, i25=0, i50=1, i75=2
+      // n=4, i25=0, i50=1, i75=2, i95=3
       // Sorted: [100, 200, 300, 400]
-      // p25=100, p50=200, p75=300
+      // p25=100, p50=200, p75=300, p95=400
       // Green: skill <= 100 → 100 (1)
       // Yellow: 100 < skill <= 200 → 200 (1)
       // Orange: 200 < skill < 300 → none
-      // Red: skill >= 300 → 300, 400 (2)
+      // Red: 300 <= skill < 400 → 300 (1)
+      // Dark Red: skill >= 400 → 400 (1)
       const skills = [100, 200, 300, 400]
       const result = computeSkillBands(skills)
 
-      expect(result).toHaveLength(3)
+      expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.minSkill).toBe(100)
       expect(result[0]?.count).toBe(1)
@@ -720,22 +723,25 @@ describe(computeSkillBands, () => {
       expect(result[1]?.count).toBe(1)
       expect(result[2]?.band).toBe('red')
       expect(result[2]?.minSkill).toBe(300)
-      expect(result[2]?.maxSkill).toBe(400)
-      expect(result[2]?.count).toBe(2)
+      expect(result[2]?.count).toBe(1)
+      expect(result[3]?.band).toBe('dark_red')
+      expect(result[3]?.minSkill).toBe(400)
+      expect(result[3]?.count).toBe(1)
     })
 
     test('8 agents with distinct skills: proper quartile distribution', () => {
-      // n=8, i25=1, i50=3, i75=5
+      // n=8, i25=1, i50=3, i75=5, i95=7
       // Sorted: [10, 20, 30, 40, 50, 60, 70, 80]
-      // p25=20, p50=40, p75=60
+      // p25=20, p50=40, p75=60, p95=80
       // Green: skill <= 20 → 10, 20 (2)
       // Yellow: 20 < skill <= 40 → 30, 40 (2)
       // Orange: 40 < skill < 60 → 50 (1)
-      // Red: skill >= 60 → 60, 70, 80 (3)
+      // Red: 60 <= skill < 80 → 60, 70 (2)
+      // Dark Red: skill >= 80 → 80 (1)
       const skills = [10, 20, 30, 40, 50, 60, 70, 80]
       const result = computeSkillBands(skills)
 
-      expect(result).toHaveLength(4)
+      expect(result).toHaveLength(5)
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.count).toBe(2)
       expect(result[1]?.band).toBe('yellow')
@@ -743,7 +749,24 @@ describe(computeSkillBands, () => {
       expect(result[2]?.band).toBe('orange')
       expect(result[2]?.count).toBe(1)
       expect(result[3]?.band).toBe('red')
-      expect(result[3]?.count).toBe(3)
+      expect(result[3]?.count).toBe(2)
+      expect(result[4]?.band).toBe('dark_red')
+      expect(result[4]?.count).toBe(1)
+    })
+
+    test('20 agents: top 5% band correctly identifies highest skills', () => {
+      // n=20, i25=4, i50=9, i75=14, i95=18
+      // Sorted: [10, 20, 30, ..., 200]
+      // p25=50, p50=100, p75=150, p95=190
+      // Dark Red: skill >= 190 → 190, 200 (2 agents, top 10% but algorithm uses p95)
+      const skills = Array.from({ length: 20 }, (_, i) => 10 + i * 10)
+      const result = computeSkillBands(skills)
+
+      const darkRedBand = result.find((b) => b.band === 'dark_red')
+      expect(darkRedBand).toBeDefined()
+      expect(darkRedBand?.minSkill).toBe(190)
+      expect(darkRedBand?.maxSkill).toBe(200)
+      expect(darkRedBand?.count).toBeGreaterThanOrEqual(1)
     })
   })
 
@@ -752,6 +775,7 @@ describe(computeSkillBands, () => {
       // i25 = ceil(0.25) - 1 = 1 - 1 = 0
       // i50 = ceil(0.50) - 1 = 1 - 1 = 0
       // i75 = ceil(0.75) - 1 = 1 - 1 = 0
+      // i95 = ceil(0.95) - 1 = 1 - 1 = 0
       // All thresholds = 50, so everything goes to Green
       const result = computeSkillBands([50])
       expect(result).toHaveLength(1)
@@ -763,16 +787,17 @@ describe(computeSkillBands, () => {
       // i25 = ceil(0.5) - 1 = 1 - 1 = 0
       // i50 = ceil(1.0) - 1 = 1 - 1 = 0
       // i75 = ceil(1.5) - 1 = 2 - 1 = 1
+      // i95 = ceil(1.9) - 1 = 2 - 1 = 1
       // Sorted: [10, 20]
-      // p25=10, p50=10, p75=20
+      // p25=10, p50=10, p75=20, p95=20
       // Green: skill <= 10 → 10 (1)
-      // Red: skill >= 20 → 20 (1)
+      // Dark Red: skill >= 20 → 20 (1)
       const result = computeSkillBands([10, 20])
       expect(result).toHaveLength(2)
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.minSkill).toBe(10)
       expect(result[0]?.count).toBe(1)
-      expect(result[1]?.band).toBe('red')
+      expect(result[1]?.band).toBe('dark_red')
       expect(result[1]?.minSkill).toBe(20)
       expect(result[1]?.count).toBe(1)
     })
@@ -781,18 +806,19 @@ describe(computeSkillBands, () => {
       // i25 = ceil(0.75) - 1 = 1 - 1 = 0
       // i50 = ceil(1.5) - 1 = 2 - 1 = 1
       // i75 = ceil(2.25) - 1 = 3 - 1 = 2
+      // i95 = ceil(2.85) - 1 = 3 - 1 = 2
       // Sorted: [10, 20, 30]
-      // p25=10, p50=20, p75=30
+      // p25=10, p50=20, p75=30, p95=30
       // Green: skill <= 10 → 10 (1)
       // Yellow: 10 < skill <= 20 → 20 (1)
-      // Red: skill >= 30 → 30 (1)
+      // Dark Red: skill >= 30 → 30 (1)
       const result = computeSkillBands([10, 20, 30])
       expect(result).toHaveLength(3)
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.count).toBe(1)
       expect(result[1]?.band).toBe('yellow')
       expect(result[1]?.count).toBe(1)
-      expect(result[2]?.band).toBe('red')
+      expect(result[2]?.band).toBe('dark_red')
       expect(result[2]?.count).toBe(1)
     })
   })
@@ -815,12 +841,13 @@ describe(computeSkillBands, () => {
 
     test('three distinct values with ties', () => {
       // [1, 1, 1, 2, 2, 2, 3, 3, 3, 3] (n=10)
-      // i25=2, i50=4, i75=7
+      // i25=2, i50=4, i75=7, i95=9
       // Sorted: [1, 1, 1, 2, 2, 2, 3, 3, 3, 3]
-      // p25=1, p50=2, p75=3
+      // p25=1, p50=2, p75=3, p95=3
       // Green: skill <= 1 → 1, 1, 1 (3)
       // Yellow: 1 < skill <= 2 → 2, 2, 2 (3)
-      // Red: skill >= 3 → 3, 3, 3, 3 (4)
+      // Red: 3 <= skill < 3 → none (p75 = p95 = 3)
+      // Dark Red: skill >= 3 → 3, 3, 3, 3 (4)
       const skills = [1, 1, 1, 2, 2, 2, 3, 3, 3, 3]
       const result = computeSkillBands(skills)
 
@@ -829,7 +856,7 @@ describe(computeSkillBands, () => {
       expect(result[0]?.count).toBe(3)
       expect(result[1]?.band).toBe('yellow')
       expect(result[1]?.count).toBe(3)
-      expect(result[2]?.band).toBe('red')
+      expect(result[2]?.band).toBe('dark_red')
       expect(result[2]?.count).toBe(4)
     })
   })

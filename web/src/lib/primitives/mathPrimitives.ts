@@ -242,7 +242,7 @@ export function computeDecileBands(skills: readonly number[]): DecileBand[] {
 }
 
 export type SkillBand = {
-  band: 'green' | 'yellow' | 'orange' | 'red'
+  band: 'green' | 'yellow' | 'orange' | 'red' | 'dark_red'
   minSkill: number // actual minimum skill in this band
   maxSkill: number // actual maximum skill in this band
   count: number // number of agents in this band
@@ -257,16 +257,17 @@ export type SkillBand = {
  *
  * Algorithm:
  * 1. Sort skills ascending
- * 2. Compute nearest-rank indices: i25 = ceil(0.25 * n) - 1, i50 = ceil(0.50 * n) - 1, i75 = ceil(0.75 * n) - 1
- * 3. Get threshold values: p25 = sSorted[i25], p50 = sSorted[i50], p75 = sSorted[i75]
+ * 2. Compute nearest-rank indices: i25 = ceil(0.25 * n) - 1, i50 = ceil(0.50 * n) - 1, i75 = ceil(0.75 * n) - 1, i95 = ceil(0.95 * n) - 1
+ * 3. Get threshold values: p25 = sSorted[i25], p50 = sSorted[i50], p75 = sSorted[i75], p95 = sSorted[i95]
  * 4. Assign agents by value:
  *    - Green: skill <= p25
  *    - Yellow: p25 < skill <= p50
  *    - Orange: p50 < skill < p75
- *    - Red: skill >= p75
+ *    - Red: p75 <= skill < p95
+ *    - Dark Red: skill >= p95
  *
  * @param skills - Array of agent skill values (not sorted)
- * @returns Array of skill bands, ordered from lowest (green) to highest (red).
+ * @returns Array of skill bands, ordered from lowest (green) to highest (dark_red).
  *          Empty bands are omitted from the result.
  */
 export function computeSkillBands(skills: readonly number[]): SkillBand[] {
@@ -283,6 +284,7 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
   const i25 = ceil(0.25 * n) - 1
   const i50 = ceil(0.5 * n) - 1
   const i75 = ceil(0.75 * n) - 1
+  const i95 = ceil(0.95 * n) - 1
 
   // Compute threshold values
   // Note: cannot use assertDefined from assertPrimitives.ts here due to circular dependency
@@ -290,8 +292,9 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
   const p25 = sSorted[i25]
   const p50 = sSorted[i50]
   const p75 = sSorted[i75]
-  if (p25 === undefined || p50 === undefined || p75 === undefined) {
-    throw new Error(`Invalid percentile indices: i25=${i25}, i50=${i50}, i75=${i75} for n=${n}`)
+  const p95 = sSorted[i95]
+  if (p25 === undefined || p50 === undefined || p75 === undefined || p95 === undefined) {
+    throw new Error(`Invalid percentile indices: i25=${i25}, i50=${i50}, i75=${i75}, i95=${i95} for n=${n}`)
   }
 
   // Assign agents to bands based on value thresholds
@@ -299,6 +302,7 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
   const yellowSkills: number[] = []
   const orangeSkills: number[] = []
   const redSkills: number[] = []
+  const darkRedSkills: number[] = []
 
   for (const skill of skills) {
     if (skill <= p25) {
@@ -307,9 +311,12 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
       yellowSkills.push(skill)
     } else if (skill < p75) {
       orangeSkills.push(skill)
-    } else {
-      // skill >= p75
+    } else if (skill < p95) {
+      // p75 <= skill < p95
       redSkills.push(skill)
+    } else {
+      // skill >= p95
+      darkRedSkills.push(skill)
     }
   }
 
@@ -349,6 +356,15 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
       minSkill: Math.min(...redSkills),
       maxSkill: Math.max(...redSkills),
       count: redSkills.length,
+    })
+  }
+
+  if (darkRedSkills.length > 0) {
+    bands.push({
+      band: 'dark_red',
+      minSkill: Math.min(...darkRedSkills),
+      maxSkill: Math.max(...darkRedSkills),
+      count: darkRedSkills.length,
     })
   }
 
