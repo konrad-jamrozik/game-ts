@@ -107,17 +107,20 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Empty bands will have zero height and zero count
 
   // Create a map from band labels to indices
+  // Note: computeDecileBands returns bands in descending skill order (Top 10% = highest skills)
+  // But the chart displays from bottom (p0to10 = lowest skills) to top (p90to100 = highest skills)
+  // So we invert the mapping: highest skills → p90to100 (index 9), lowest skills → p0to10 (index 0)
   const labelToIndex: Record<string, number> = {
-    'Top 10%': 0,
-    '10-20%': 1,
-    '20-30%': 2,
-    '30-40%': 3,
-    '40-50%': 4,
-    '50-60%': 5,
-    '60-70%': 6,
-    '70-80%': 7,
-    '80-90%': 8,
-    '90-100%': 9,
+    'Top 10%': 9, // highest skills → top of chart
+    '10-20%': 8,
+    '20-30%': 7,
+    '30-40%': 6,
+    '40-50%': 5,
+    '50-60%': 4,
+    '60-70%': 3,
+    '70-80%': 2,
+    '80-90%': 1,
+    '90-100%': 0, // lowest skills → bottom of chart
   }
 
   // Initialize arrays for all decile bands
@@ -126,21 +129,25 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const bandMaxs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   const bandCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
-  // Process bands and assign to decile slots
-  // Bands are in descending order (Top 10% first)
-  let previousMax = baselineSkill
+  // First pass: assign min/max/count to correct indices
   for (const band of bands) {
     const index = labelToIndex[band.label]
     if (index !== undefined) {
       bandMins[index] = band.minSkill
       bandMaxs[index] = band.maxSkill
       bandCounts[index] = band.count
-      // Calculate height as difference from previous max
-      // Empty bands will have zero height (band.maxSkill equals previousMax)
-      if (band.count > 0) {
-        bandHeights[index] = band.maxSkill - previousMax
-        previousMax = band.maxSkill
-      }
+    }
+  }
+
+  // Second pass: calculate heights from bottom (index 0) to top (index 9)
+  // This ensures heights are always positive and stack correctly
+  let previousBoundary = baselineSkill
+  for (let i = 0; i < 10; i += 1) {
+    const bandMax = bandMaxs[i]
+    const bandCount = bandCounts[i]
+    if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
+      bandHeights[i] = bandMax - previousBoundary
+      previousBoundary = bandMax
     }
   }
 
@@ -148,13 +155,15 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const min = skills.length > 0 ? Math.min(...skills) : 0
   const max = skills.length > 0 ? Math.max(...skills) : 0
 
-  // Calculate boundary values, cascading down if bands are empty
-  // Each boundary is the maxSkill of the corresponding band, or the previous boundary if empty
+  // Calculate boundary values for tooltip display
+  // Each boundary[i] represents the upper bound of band i (which equals lower bound of band i+1)
+  // Cascading: if a band is empty, use the previous boundary
   const boundaries = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   let lastBoundary = min
   for (let i = 0; i < 10; i += 1) {
     const bandMax = bandMaxs[i]
-    if (bandMax !== undefined && bandMax > 0) {
+    const bandCount = bandCounts[i]
+    if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
       boundaries[i] = bandMax
       lastBoundary = bandMax
     } else {
