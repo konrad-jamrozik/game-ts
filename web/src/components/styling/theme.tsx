@@ -277,6 +277,9 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
       paper: {
         backgroundColor: theme.palette.background.paper,
       },
+      paperFullScreen: {
+        backgroundColor: theme.palette.background.paper,
+      },
     },
   },
   MuiDialogTitle: {
