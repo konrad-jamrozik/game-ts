@@ -412,7 +412,7 @@ function ChartsPanel(props: { title: string; renderChart: (height: number) => Re
         </Stack>
       </Paper>
       <Dialog fullScreen open={zoomed} onClose={handleCloseZoom} onKeyDown={handleDialogKeyDown}>
-        <Box sx={{ position: 'relative', height: '100%', p: 2, bgcolor: 'background.paper' }}>
+        <Paper elevation={2} sx={{ position: 'relative', height: '100%', p: 2 }}>
           <IconButton
             onClick={handleCloseZoom}
             aria-label="Close"
@@ -429,12 +429,12 @@ function ChartsPanel(props: { title: string; renderChart: (height: number) => Re
             {props.title}
           </Typography>
           <Box sx={{ height: 'calc(100% - 60px)' }}>{props.renderChart(getFullscreenHeight())}</Box>
-        </Box>
+        </Paper>
       </Dialog>
     </>
   )
 }
 
 function formatTurn(value: number): string {
-  return value.toString()
+  return `Turn ${value}`
 }
