@@ -433,6 +433,9 @@ export default plugTypescriptEslint.config([
       // I prefer if-else chains over switch statements in some cases
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prefer-switch.md
       'unicorn/prefer-switch': 'off',
+      // Sometimes using properties directly is more readable than destructuring
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/consistent-destructuring.md
+      'unicorn/consistent-destructuring': 'off',
     },
   },
   {
