@@ -5,6 +5,7 @@ import type { Agent } from '../../lib/model/agentModel'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
 import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { f6c0, toF } from '../../lib/primitives/fixed6'
+import { quantileSorted } from '../../lib/primitives/mathPrimitives'
 import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRuleset'
 
 export type ChartsDatasets = {
@@ -432,37 +433,6 @@ function normalizeMissionId(value: string): string | undefined {
     return undefined
   }
   return value
-}
-
-// KJA3 should I use some math lib for quantileSorted?
-/**
- * Calculates the quantile (percentile) of a sorted array using linear interpolation.
- *
- * For example, if q=0.3 (30th percentile), this returns the value such that 30% of the data
- * falls at or below it. The returned value represents the boundary: values less than this
- * are below the 30th percentile, values greater than or equal to this are at or above it.
- *
- * @param sortedAscending - Array of numbers sorted in ascending order
- * @param q - Quantile to calculate (0.0 to 1.0, where 0.5 is median, 0.9 is 90th percentile)
- * @returns The interpolated value at the specified quantile boundary
- */
-function quantileSorted(sortedAscending: readonly number[], q: number): number {
-  if (sortedAscending.length === 0) {
-    return 0
-  }
-  if (sortedAscending.length === 1) {
-    return sortedAscending[0] ?? 0
-  }
-
-  const clampedQ = Math.min(1, Math.max(0, q))
-  const pos = (sortedAscending.length - 1) * clampedQ
-  const lower = Math.floor(pos)
-  const upper = Math.ceil(pos)
-  const weight = pos - lower
-
-  const lowerVal = sortedAscending[lower] ?? 0
-  const upperVal = sortedAscending[upper] ?? lowerVal
-  return lowerVal + (upperVal - lowerVal) * weight
 }
 
 function sumNumbers(values: readonly number[]): number {

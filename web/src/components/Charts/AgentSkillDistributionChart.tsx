@@ -3,6 +3,7 @@ import { LineChart } from '@mui/x-charts/LineChart'
 import { purple } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF } from '../../lib/primitives/fixed6'
+import { quantileSorted } from '../../lib/primitives/mathPrimitives'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 export type AgentSkillDistributionDatasetRow = {
@@ -48,25 +49,6 @@ export type AgentSkillDistributionDatasetRow = {
 type AgentSkillDistributionChartProps = {
   gameStates: GameState[]
   height: number
-}
-
-function quantileSorted(sortedAscending: readonly number[], q: number): number {
-  if (sortedAscending.length === 0) {
-    return 0
-  }
-  if (sortedAscending.length === 1) {
-    return sortedAscending[0] ?? 0
-  }
-
-  const clampedQ = Math.min(1, Math.max(0, q))
-  const pos = (sortedAscending.length - 1) * clampedQ
-  const lower = Math.floor(pos)
-  const upper = Math.ceil(pos)
-  const weight = pos - lower
-
-  const lowerVal = sortedAscending[lower] ?? 0
-  const upperVal = sortedAscending[upper] ?? lowerVal
-  return lowerVal + (upperVal - lowerVal) * weight
 }
 
 function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistributionDatasetRow {
