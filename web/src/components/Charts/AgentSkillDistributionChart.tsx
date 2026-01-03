@@ -1,30 +1,17 @@
 import * as React from 'react'
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
-import { computeDecileBands } from '../../lib/primitives/mathPrimitives'
+import { computeQuintileBands } from '../../lib/primitives/mathPrimitives'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
 import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
-const baselineSkill = toF(initialAgent.skill)
-
-// Green → Yellow → Red gradient for skill bands (low skill = green, high skill = red)
-// Algorithm: increment green 0→255, then decrement red 255→0
-// For 10 colors with step = 510/9 ≈ 56.67
-// Reversed order: first color is pure green, last is pure red
-// Progressive transparency: starting from fully opaque (1.0) to more transparent
 const agentSkillBandColors: readonly string[] = [
-  'hsla(120, 100%, 50%, 0.9)',
-  'hsla(108, 100%, 50%, 0.9)',
-  'hsla(96, 100%, 50%, 0.9)',
-  'hsla(84, 100%, 50%, 0.8)',
-  'hsla(72, 100%, 50%, 0.7)',
-  'hsla(60, 100%, 50%, 0.6)',
-  'hsla(48, 100%, 50%, 0.5)',
-  'hsla(36, 100%, 50%, 0.4)',
-  'hsla(24, 100%, 50%, 0.3)',
-  'hsla(0, 100%, 50%, 0.2)',
+  'green', // 0-20%: inexperienced
+  'yellow', // 20-40%: experienced
+  'orange', // 40-60%: veterans
+  'red', // 60-80%: elite
+  'purple', // 80-100%: super-elite
 ] as const
 
 function getColor(idx: number): string {
@@ -35,38 +22,23 @@ function getColor(idx: number): string {
 
 export type AgentSkillDistributionDatasetRow = {
   turn: number
-  p0to10: number
-  p10to20: number
-  p20to30: number
-  p30to40: number
-  p40to50: number
-  p50to60: number
-  p60to70: number
-  p70to80: number
-  p80to90: number
-  p90to100: number
+  p0to20: number
+  p20to40: number
+  p40to60: number
+  p60to80: number
+  p80to100: number
   // Percentile boundary skill values for tooltip range display
   minP0: number
-  minP10: number
   minP20: number
-  minP30: number
   minP40: number
-  minP50: number
   minP60: number
-  minP70: number
   minP80: number
-  minP90: number
   // Agent counts in each percentile band
-  countP0to10: number
-  countP10to20: number
-  countP20to30: number
-  countP30to40: number
-  countP40to50: number
-  countP50to60: number
-  countP60to70: number
-  countP70to80: number
-  countP80to90: number
-  countP90to100: number
+  countP0to20: number
+  countP20to40: number
+  countP40to60: number
+  countP60to80: number
+  countP80to100: number
   // Total number of agents
   totalAgents: number
   // Maximum skill across all agents
@@ -84,36 +56,21 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   if (aliveAgents.length === 0) {
     return {
       turn: gameState.turn,
-      p0to10: 0,
-      p10to20: 0,
-      p20to30: 0,
-      p30to40: 0,
-      p40to50: 0,
-      p50to60: 0,
-      p60to70: 0,
-      p70to80: 0,
-      p80to90: 0,
-      p90to100: 0,
+      p0to20: 0,
+      p20to40: 0,
+      p40to60: 0,
+      p60to80: 0,
+      p80to100: 0,
       minP0: 0,
-      minP10: 0,
       minP20: 0,
-      minP30: 0,
       minP40: 0,
-      minP50: 0,
       minP60: 0,
-      minP70: 0,
       minP80: 0,
-      minP90: 0,
-      countP0to10: 0,
-      countP10to20: 0,
-      countP20to30: 0,
-      countP30to40: 0,
-      countP40to50: 0,
-      countP50to60: 0,
-      countP60to70: 0,
-      countP70to80: 0,
-      countP80to90: 0,
-      countP90to100: 0,
+      countP0to20: 0,
+      countP20to40: 0,
+      countP40to60: 0,
+      countP60to80: 0,
+      countP80to100: 0,
       totalAgents: 0,
       maxSkill: 0,
     }
@@ -122,51 +79,39 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Extract skill values (not effective skill, just skill)
   const skills = aliveAgents.map((agent) => toF(agent.skill))
 
-  // Compute decile bands using tie-aware, rank-based grouping
-  const bands = computeDecileBands(skills)
+  // Compute quintile bands using tie-aware, rank-based grouping
+  const bands = computeQuintileBands(skills)
 
   // Map bands to the expected data structure
-  // The bands are returned in descending order (Top 10% first, then 10-20%, etc.)
-  // We need to map them to p0to10, p10to20, ..., p90to100
-  // Empty bands will have zero height and zero count
+  // computeQuintileBands returns bands in descending skill order (highest skills first)
+  // We reverse them so lowest skills come first, then assign to indices 0, 1, 2, ...
+  // This ensures that if there are fewer than 5 bands, they fill from Inexperienced up:
+  // - 1 band → Inexperienced
+  // - 2 bands → Inexperienced, Experienced
+  // - 3 bands → Inexperienced, Experienced, Veterans
+  // - etc.
+  const reversedBands = bands.toReversed()
 
-  // Create a map from band labels to indices
-  // Note: computeDecileBands returns bands in descending skill order (Top 10% = highest skills)
-  // But the chart displays from bottom (p0to10 = lowest skills) to top (p90to100 = highest skills)
-  // So we invert the mapping: highest skills → p90to100 (index 9), lowest skills → p0to10 (index 0)
-  const labelToIndex: Record<string, number> = {
-    'Top 10%': 9, // highest skills → top of chart
-    '10-20%': 8,
-    '20-30%': 7,
-    '30-40%': 6,
-    '40-50%': 5,
-    '50-60%': 4,
-    '60-70%': 3,
-    '70-80%': 2,
-    '80-90%': 1,
-    '90-100%': 0, // lowest skills → bottom of chart
-  }
+  // Initialize arrays for all quintile bands
+  const bandHeights = [0, 0, 0, 0, 0]
+  const bandMins = [0, 0, 0, 0, 0]
+  const bandMaxs = [0, 0, 0, 0, 0]
+  const bandCounts = [0, 0, 0, 0, 0]
 
-  // Initialize arrays for all decile bands
-  const bandHeights = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  const bandMins = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  const bandMaxs = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-  const bandCounts = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-
-  // First pass: assign min/max/count to correct indices
-  for (const band of bands) {
-    const index = labelToIndex[band.label]
-    if (index !== undefined) {
-      bandMins[index] = band.minSkill
-      bandMaxs[index] = band.maxSkill
-      bandCounts[index] = band.count
+  // Assign bands to indices based on their position (first = Inexperienced, etc.)
+  for (let i = 0; i < reversedBands.length && i < 5; i += 1) {
+    const band = reversedBands[i]
+    if (band !== undefined) {
+      bandMins[i] = band.minSkill
+      bandMaxs[i] = band.maxSkill
+      bandCounts[i] = band.count
     }
   }
 
-  // Second pass: calculate heights from bottom (index 0) to top (index 9)
+  // Second pass: calculate heights from bottom (index 0) to top (index 4)
   // This ensures heights are always positive and stack correctly
-  let previousBoundary = baselineSkill
-  for (let i = 0; i < 10; i += 1) {
+  let previousBoundary = 0
+  for (let i = 0; i < 5; i += 1) {
     const bandMax = bandMaxs[i]
     const bandCount = bandCounts[i]
     if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
@@ -182,9 +127,9 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Calculate boundary values for tooltip display
   // Each boundary[i] represents the upper bound of band i (which equals lower bound of band i+1)
   // Cascading: if a band is empty, use the previous boundary
-  const boundaries = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+  const boundaries = [0, 0, 0, 0, 0]
   let lastBoundary = min
-  for (let i = 0; i < 10; i += 1) {
+  for (let i = 0; i < 5; i += 1) {
     const bandMax = bandMaxs[i]
     const bandCount = bandCounts[i]
     if (bandMax !== undefined && bandCount !== undefined && bandCount > 0) {
@@ -196,44 +141,26 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   }
 
   // Store differences between percentile boundaries so they stack to actual skill values.
-  // When stacked: p0to10 reaches max of band 0, p0to10+p10to20 reaches max of band 1, etc.
-  //
-  // The first band is offset by baselineSkill so the chart can start at baseline instead of 0.
-  // The y-axis valueFormatter adds baselineSkill back for display.
+  // When stacked: p0to20 reaches max of band 0, p0to20+p20to40 reaches max of band 1, etc.
   return {
     turn: gameState.turn,
-    p0to10: bandHeights[0] ?? 0,
-    p10to20: bandHeights[1] ?? 0,
-    p20to30: bandHeights[2] ?? 0,
-    p30to40: bandHeights[3] ?? 0,
-    p40to50: bandHeights[4] ?? 0,
-    p50to60: bandHeights[5] ?? 0,
-    p60to70: bandHeights[6] ?? 0,
-    p70to80: bandHeights[7] ?? 0,
-    p80to90: bandHeights[8] ?? 0,
-    p90to100: bandHeights[9] ?? 0,
+    p0to20: bandHeights[0] ?? 0,
+    p20to40: bandHeights[1] ?? 0,
+    p40to60: bandHeights[2] ?? 0,
+    p60to80: bandHeights[3] ?? 0,
+    p80to100: bandHeights[4] ?? 0,
     // Percentile boundary skill values for tooltip range display
     minP0: min,
-    minP10: boundaries[0] ?? min,
-    minP20: boundaries[1] ?? min,
-    minP30: boundaries[2] ?? min,
-    minP40: boundaries[3] ?? min,
-    minP50: boundaries[4] ?? min,
-    minP60: boundaries[5] ?? min,
-    minP70: boundaries[6] ?? min,
-    minP80: boundaries[7] ?? min,
-    minP90: boundaries[8] ?? min,
+    minP20: boundaries[0] ?? min,
+    minP40: boundaries[1] ?? min,
+    minP60: boundaries[2] ?? min,
+    minP80: boundaries[3] ?? min,
     // Agent counts in each percentile band
-    countP0to10: bandCounts[0] ?? 0,
-    countP10to20: bandCounts[1] ?? 0,
-    countP20to30: bandCounts[2] ?? 0,
-    countP30to40: bandCounts[3] ?? 0,
-    countP40to50: bandCounts[4] ?? 0,
-    countP50to60: bandCounts[5] ?? 0,
-    countP60to70: bandCounts[6] ?? 0,
-    countP70to80: bandCounts[7] ?? 0,
-    countP80to90: bandCounts[8] ?? 0,
-    countP90to100: bandCounts[9] ?? 0,
+    countP0to20: bandCounts[0] ?? 0,
+    countP20to40: bandCounts[1] ?? 0,
+    countP40to60: bandCounts[2] ?? 0,
+    countP60to80: bandCounts[3] ?? 0,
+    countP80to100: bandCounts[4] ?? 0,
     // Total number of agents
     totalAgents: aliveAgents.length,
     // Maximum skill across all agents
@@ -250,39 +177,9 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
   const dataset = buildAgentSkillDistributionDataset(gameStates)
 
   function createSkillValueFormatter(
-    lowerBoundKey:
-      | 'minP0'
-      | 'minP10'
-      | 'minP20'
-      | 'minP30'
-      | 'minP40'
-      | 'minP50'
-      | 'minP60'
-      | 'minP70'
-      | 'minP80'
-      | 'minP90',
-    upperBoundKey:
-      | 'minP10'
-      | 'minP20'
-      | 'minP30'
-      | 'minP40'
-      | 'minP50'
-      | 'minP60'
-      | 'minP70'
-      | 'minP80'
-      | 'minP90'
-      | 'maxSkill',
-    countKey:
-      | 'countP0to10'
-      | 'countP10to20'
-      | 'countP20to30'
-      | 'countP30to40'
-      | 'countP40to50'
-      | 'countP50to60'
-      | 'countP60to70'
-      | 'countP70to80'
-      | 'countP80to90'
-      | 'countP90to100',
+    lowerBoundKey: 'minP0' | 'minP20' | 'minP40' | 'minP60' | 'minP80',
+    upperBoundKey: 'minP20' | 'minP40' | 'minP60' | 'minP80' | 'maxSkill',
+    countKey: 'countP0to20' | 'countP20to40' | 'countP40to60' | 'countP60to80' | 'countP80to100',
     isFirstBand: boolean,
   ): (value: number | null, context: { dataIndex: number }) => string {
     return (_value, context): string => {
@@ -322,90 +219,49 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
         {
           ...axisConfig,
           width: Y_AXIS_WIDTH,
-          valueFormatter: (value: number | null): string =>
-            value === null ? '' : String(Math.round(value + baselineSkill)),
+          valueFormatter: (value: number | null): string => (value === null ? '' : String(Math.round(value))),
         },
       ]}
       series={withNoMarkers([
         {
-          dataKey: 'p0to10',
-          label: '0-10%',
+          dataKey: 'p0to20',
+          label: 'Inexperienced',
           stack: 'skill',
           area: true,
           color: getColor(0),
-          valueFormatter: createSkillValueFormatter('minP0', 'minP10', 'countP0to10', true),
+          valueFormatter: createSkillValueFormatter('minP0', 'minP20', 'countP0to20', true),
         },
         {
-          dataKey: 'p10to20',
-          label: '10-20%',
+          dataKey: 'p20to40',
+          label: 'Experienced',
           stack: 'skill',
           area: true,
           color: getColor(1),
-          valueFormatter: createSkillValueFormatter('minP10', 'minP20', 'countP10to20', false),
+          valueFormatter: createSkillValueFormatter('minP20', 'minP40', 'countP20to40', false),
         },
         {
-          dataKey: 'p20to30',
-          label: '20-30%',
+          dataKey: 'p40to60',
+          label: 'Veterans',
           stack: 'skill',
           area: true,
           color: getColor(2),
-          valueFormatter: createSkillValueFormatter('minP20', 'minP30', 'countP20to30', false),
+          valueFormatter: createSkillValueFormatter('minP40', 'minP60', 'countP40to60', false),
         },
         {
-          dataKey: 'p30to40',
-          label: '30-40%',
+          dataKey: 'p60to80',
+          label: 'Elite',
           stack: 'skill',
           area: true,
           color: getColor(3),
-          valueFormatter: createSkillValueFormatter('minP30', 'minP40', 'countP30to40', false),
+          valueFormatter: createSkillValueFormatter('minP60', 'minP80', 'countP60to80', false),
         },
         {
-          dataKey: 'p40to50',
-          label: '40-50%',
+          dataKey: 'p80to100',
+          label: 'Super-elite',
           stack: 'skill',
           area: true,
           color: getColor(4),
-          valueFormatter: createSkillValueFormatter('minP40', 'minP50', 'countP40to50', false),
-        },
-        {
-          dataKey: 'p50to60',
-          label: '50-60%',
-          stack: 'skill',
-          area: true,
-          color: getColor(5),
-          valueFormatter: createSkillValueFormatter('minP50', 'minP60', 'countP50to60', false),
-        },
-        {
-          dataKey: 'p60to70',
-          label: '60-70%',
-          stack: 'skill',
-          area: true,
-          color: getColor(6),
-          valueFormatter: createSkillValueFormatter('minP60', 'minP70', 'countP60to70', false),
-        },
-        {
-          dataKey: 'p70to80',
-          label: '70-80%',
-          stack: 'skill',
-          area: true,
-          color: getColor(7),
-          valueFormatter: createSkillValueFormatter('minP70', 'minP80', 'countP70to80', false),
-        },
-        {
-          dataKey: 'p80to90',
-          label: '80-90%',
-          stack: 'skill',
-          area: true,
-          color: getColor(8),
-          valueFormatter: createSkillValueFormatter('minP80', 'minP90', 'countP80to90', false),
-        },
-        {
-          dataKey: 'p90to100',
-          label: '90-100%',
-          stack: 'skill',
-          area: true,
-          color: getColor(9),
-          valueFormatter: createSkillValueFormatter('minP90', 'maxSkill', 'countP90to100', false),
+          valueFormatter: createSkillValueFormatter('minP80', 'maxSkill', 'countP80to100', false),
         },
       ])}
       height={height}
