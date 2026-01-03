@@ -6,8 +6,28 @@ import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
 import { computeDecileBands } from '../../lib/primitives/mathPrimitives'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
+import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
 const baselineSkill = toF(initialAgent.skill)
+
+const colors: readonly string[] = [
+  purple[50],
+  purple[100],
+  purple[200],
+  purple[300],
+  purple[400],
+  purple[500],
+  purple[600],
+  purple[700],
+  purple[800],
+  purple[900],
+] as const
+
+function getColor(idx: number): string {
+  const color = colors[idx]
+  assertDefined(color, `Color index ${idx} is out of bounds`)
+  return color
+}
 
 export type AgentSkillDistributionDatasetRow = {
   turn: number
@@ -308,7 +328,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '0-10%',
           stack: 'skill',
           area: true,
-          color: purple[50],
+          color: getColor(0),
           valueFormatter: createSkillValueFormatter('minP0', 'minP10', 'countP0to10', true),
         },
         {
@@ -316,7 +336,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '10-20%',
           stack: 'skill',
           area: true,
-          color: purple[100],
+          color: getColor(1),
           valueFormatter: createSkillValueFormatter('minP10', 'minP20', 'countP10to20', false),
         },
         {
@@ -324,7 +344,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '20-30%',
           stack: 'skill',
           area: true,
-          color: purple[200],
+          color: getColor(2),
           valueFormatter: createSkillValueFormatter('minP20', 'minP30', 'countP20to30', false),
         },
         {
@@ -332,7 +352,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '30-40%',
           stack: 'skill',
           area: true,
-          color: purple[300],
+          color: getColor(3),
           valueFormatter: createSkillValueFormatter('minP30', 'minP40', 'countP30to40', false),
         },
         {
@@ -340,7 +360,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '40-50%',
           stack: 'skill',
           area: true,
-          color: purple[400],
+          color: getColor(4),
           valueFormatter: createSkillValueFormatter('minP40', 'minP50', 'countP40to50', false),
         },
         {
@@ -348,7 +368,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '50-60%',
           stack: 'skill',
           area: true,
-          color: purple[500],
+          color: getColor(5),
           valueFormatter: createSkillValueFormatter('minP50', 'minP60', 'countP50to60', false),
         },
         {
@@ -356,7 +376,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '60-70%',
           stack: 'skill',
           area: true,
-          color: purple[600],
+          color: getColor(6),
           valueFormatter: createSkillValueFormatter('minP60', 'minP70', 'countP60to70', false),
         },
         {
@@ -364,7 +384,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '70-80%',
           stack: 'skill',
           area: true,
-          color: purple[700],
+          color: getColor(7),
           valueFormatter: createSkillValueFormatter('minP70', 'minP80', 'countP70to80', false),
         },
         {
@@ -372,7 +392,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '80-90%',
           stack: 'skill',
           area: true,
-          color: purple[800],
+          color: getColor(8),
           valueFormatter: createSkillValueFormatter('minP80', 'minP90', 'countP80to90', false),
         },
         {
@@ -380,7 +400,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: '90-100%',
           stack: 'skill',
           area: true,
-          color: purple[900],
+          color: getColor(9),
           valueFormatter: createSkillValueFormatter('minP90', 'maxSkill', 'countP90to100', false),
         },
       ])}
