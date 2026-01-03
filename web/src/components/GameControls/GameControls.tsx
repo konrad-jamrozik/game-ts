@@ -65,7 +65,7 @@ export function GameControls(): React.JSX.Element {
             })}
             disabled={gameEnded}
           >
-            {gameLost ? 'game over' : gameWon ? 'Game won' : 'next turn'}
+            {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
         </Stack>

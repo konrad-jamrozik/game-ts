@@ -118,12 +118,12 @@ function step1StartWithDebugInitialState(): void {
 }
 
 /**
- * Step 2: Click "next turn" button
+ * Step 2: Click "Next turn" button
  * - Verify turn advances to 2
  * - Verify mission "000" is in "Won" state.
  */
 async function step2AdvanceTurn(): Promise<void> {
-  await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
+  await userEvent.click(getNextTurnButton())
 
   const turnValue = screen.getByLabelText('Turn:')
   expect(turnValue).toHaveTextContent('2')
@@ -229,6 +229,19 @@ async function step9HireAgent3Times(): Promise<void> {
 }
 
 /**
+ * Get the "Next turn" button from the Game Controls card.
+ * This helper is needed because there are multiple "Next turn" buttons in the UI
+ * (one in Game Controls and one in AI Player card).
+ */
+function getNextTurnButton(): HTMLElement {
+  const gameControlsCard = screen.getByText('Game Controls').closest('.MuiCard-root')
+  if (!(gameControlsCard instanceof HTMLElement)) {
+    throw new TypeError('Game Controls card not found or not an HTMLElement')
+  }
+  return within(gameControlsCard).getByRole('button', { name: /next turn/iu })
+}
+
+/**
  * Get the current money value from the "Current" column of "Assets" card for "Money" row
  */
 function getCurrentMoneyValue(): number {
@@ -263,7 +276,7 @@ function verifyMoneyCurrentValueIsNegative(): number {
 }
 
 /**
- * Step 10: Click "next turn" button twice
+ * Step 10: Click "Next turn" button twice
  * - Verify turn advances to 4
  * - Verify the "Current" column of "Assets" card for "Money" row has a negative value
  * - Verify "Game over" button appears and is disabled (money goes negative due to upkeep)
@@ -271,7 +284,7 @@ function verifyMoneyCurrentValueIsNegative(): number {
 async function step10AdvanceTurnToGameOver(): Promise<void> {
   // After hiring multiple agents, the balance is low enough that
   // after advancing turn once, agent upkeep costs will make money negative and trigger game over
-  await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
+  await userEvent.click(getNextTurnButton())
 
   const turnValueAfterGameOver = screen.getByLabelText('Turn:')
   expect(turnValueAfterGameOver).toHaveTextContent('3')
@@ -281,7 +294,7 @@ async function step10AdvanceTurnToGameOver(): Promise<void> {
   // This may happen if e.g. the evaluation of completed mission resulted in an agent being
   // terminated, hence lower upkeep, hence player still having sufficient funds.
   if (currentMoneyValue > 0) {
-    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
+    await userEvent.click(getNextTurnButton())
   }
   verifyMoneyCurrentValueIsNegative()
 
