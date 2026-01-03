@@ -241,126 +241,115 @@ export function computeDecileBands(skills: readonly number[]): DecileBand[] {
   return bands
 }
 
-export type DistinctSkillBand = {
+export type SkillBand = {
   band: 'green' | 'yellow' | 'orange' | 'red'
   minSkill: number // actual minimum skill in this band
   maxSkill: number // actual maximum skill in this band
-  skillRangeMin: number // expanded range min (for coloring)
-  skillRangeMax: number // expanded range max (for coloring)
   count: number // number of agents in this band
 }
 
 /**
- * Computes skill bands based on agent percentiles (agent count).
+ * Computes skill bands using percentile-threshold banding (non-greedy, tie-safe).
  *
- * The algorithm groups agents into 1-4 bands (green, yellow, orange, red) based on
- * agent percentiles. Agents are sorted by skill ascending, then divided into quartiles
- * with tie preservation at boundaries.
+ * Uses fixed percentile cutpoint thresholds derived from rank positions to assign
+ * agents to bands. This approach prevents changes at the bottom from cascading
+ * upward and affecting the top band.
+ *
+ * Algorithm:
+ * 1. Sort skills ascending
+ * 2. Compute nearest-rank indices: i25 = ceil(0.25 * n) - 1, i50 = ceil(0.50 * n) - 1, i75 = ceil(0.75 * n) - 1
+ * 3. Get threshold values: p25 = sSorted[i25], p50 = sSorted[i50], p75 = sSorted[i75]
+ * 4. Assign agents by value:
+ *    - Green: skill <= p25
+ *    - Yellow: p25 < skill <= p50
+ *    - Orange: p50 < skill < p75
+ *    - Red: skill >= p75
  *
  * @param skills - Array of agent skill values (not sorted)
- * @param baselineSkill - Baseline skill value (typically 100). Only skills above this are considered.
  * @returns Array of skill bands, ordered from lowest (green) to highest (red).
- *          Only bands with agents above baseline are included.
+ *          Empty bands are omitted from the result.
  */
-export function computeDistinctSkillBands(skills: readonly number[], baselineSkill: number): DistinctSkillBand[] {
+export function computeSkillBands(skills: readonly number[]): SkillBand[] {
   if (skills.length === 0) {
     return []
   }
 
-  // Filter to skills at or above baseline
-  const skillsAtOrAboveBaseline = skills.filter((skill) => skill >= baselineSkill)
+  // Sort ascending
+  const sSorted = [...skills].toSorted((a, b) => a - b)
+  const n = sSorted.length
 
-  if (skillsAtOrAboveBaseline.length === 0) {
-    return []
+  // Compute nearest-rank indices (0-based)
+  // For n >= 1: ceil(p * n) - 1 is always in range [0, n-1] for p in (0, 1]
+  const i25 = ceil(0.25 * n) - 1
+  const i50 = ceil(0.50 * n) - 1
+  const i75 = ceil(0.75 * n) - 1
+
+  // Compute threshold values
+  // Note: cannot use assertDefined from assertPrimitives.ts here due to circular dependency
+  // (assertPrimitives imports hasAtMostDecimals from mathPrimitives)
+  const p25 = sSorted[i25]
+  const p50 = sSorted[i50]
+  const p75 = sSorted[i75]
+  if (p25 === undefined || p50 === undefined || p75 === undefined) {
+    throw new Error(`Invalid percentile indices: i25=${i25}, i50=${i50}, i75=${i75} for n=${n}`)
   }
 
-  // Sort agents by skill ascending
-  const sortedSkills = [...skillsAtOrAboveBaseline].toSorted((a, b) => a - b)
-  const n = sortedSkills.length
+  // Assign agents to bands based on value thresholds
+  const greenSkills: number[] = []
+  const yellowSkills: number[] = []
+  const orangeSkills: number[] = []
+  const redSkills: number[] = []
 
-  // Compute band size: N = max(1, floor(n / 4))
-  const N = Math.max(1, floor(n / 4))
-
-  const bands: DistinctSkillBand[] = []
-  const bandNames: ('green' | 'yellow' | 'orange' | 'red')[] = ['green', 'yellow', 'orange', 'red']
-  let currentIndex = 0
-
-  // Process Green, Yellow, Orange bands in order
-  for (let bandIndex = 0; bandIndex < 3; bandIndex += 1) {
-    if (currentIndex >= n) {
-      // No agents remain, band is empty
-      break
+  for (const skill of skills) {
+    if (skill <= p25) {
+      greenSkills.push(skill)
+    } else if (skill <= p50) {
+      yellowSkills.push(skill)
+    } else if (skill < p75) {
+      orangeSkills.push(skill)
+    } else {
+      // skill >= p75
+      redSkills.push(skill)
     }
+  }
 
-    // Determine target end index (taking N agents)
-    const targetEndIndex = Math.min(currentIndex + N, n)
-    const boundarySkill = sortedSkills[targetEndIndex - 1]
+  // Build bands array, omitting empty bands
+  const bands: SkillBand[] = []
 
-    // Check if the next agent after targetEndIndex has the same skill (tie)
-    let actualEndIndex = targetEndIndex
-    if (targetEndIndex < n) {
-      const nextSkill = sortedSkills[targetEndIndex]
-      if (nextSkill !== undefined && nextSkill === boundarySkill) {
-        // Include all agents with the same skill value
-        while (actualEndIndex < n && sortedSkills[actualEndIndex] === boundarySkill) {
-          actualEndIndex += 1
-        }
-      }
-    }
-
-    // Extract band skills
-    const bandSkills = sortedSkills.slice(currentIndex, actualEndIndex)
-    const minSkill = Math.min(...bandSkills)
-    const maxSkill = Math.max(...bandSkills)
-    const count = actualEndIndex - currentIndex
-
-    // Determine expanded range for visualization
-    // For the lowest band (green), start from baseline
-    const skillRangeMin = bandIndex === 0 ? baselineSkill : minSkill
-
-    // For non-red bands, range extends to next band's bottom - 1
-    // We'll update this after processing all bands
-    const skillRangeMax = maxSkill
-
+  if (greenSkills.length > 0) {
     bands.push({
-      band: bandNames[bandIndex] ?? 'green',
-      minSkill,
-      maxSkill,
-      skillRangeMin,
-      skillRangeMax,
-      count,
+      band: 'green',
+      minSkill: Math.min(...greenSkills),
+      maxSkill: Math.max(...greenSkills),
+      count: greenSkills.length,
     })
-
-    currentIndex = actualEndIndex
   }
 
-  // Red band gets all remaining agents
-  if (currentIndex < n) {
-    const bandSkills = sortedSkills.slice(currentIndex)
-    const minSkill = Math.min(...bandSkills)
-    const maxSkill = Math.max(...bandSkills)
-    const count = n - currentIndex
+  if (yellowSkills.length > 0) {
+    bands.push({
+      band: 'yellow',
+      minSkill: Math.min(...yellowSkills),
+      maxSkill: Math.max(...yellowSkills),
+      count: yellowSkills.length,
+    })
+  }
 
+  if (orangeSkills.length > 0) {
+    bands.push({
+      band: 'orange',
+      minSkill: Math.min(...orangeSkills),
+      maxSkill: Math.max(...orangeSkills),
+      count: orangeSkills.length,
+    })
+  }
+
+  if (redSkills.length > 0) {
     bands.push({
       band: 'red',
-      minSkill,
-      maxSkill,
-      skillRangeMin: minSkill,
-      skillRangeMax: maxSkill,
-      count,
+      minSkill: Math.min(...redSkills),
+      maxSkill: Math.max(...redSkills),
+      count: redSkills.length,
     })
-  }
-
-  // Update skillRangeMax for non-red bands to extend to next band's bottom - 1
-  for (let i = 0; i < bands.length - 1; i += 1) {
-    const currentBand = bands[i]
-    const nextBand = bands[i + 1]
-    if (currentBand !== undefined && nextBand !== undefined) {
-      bands[i] = {
-        ...currentBand,
-        skillRangeMax: nextBand.minSkill - 1,
-      }
-    }
   }
 
   return bands
