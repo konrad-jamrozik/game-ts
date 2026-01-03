@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LineChart } from '@mui/x-charts/LineChart'
+import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
 import { purple } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { initialAgent } from '../../lib/factories/agentFactory'
@@ -347,6 +347,11 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
       ])}
       height={height}
       grid={{ horizontal: true }}
+      sx={{
+        [`& .${lineElementClasses.root}`]: {
+          display: 'none',
+        },
+      }}
       slotProps={{
         tooltip: { trigger: 'axis' },
         ...legendSlotProps,
