@@ -2,9 +2,12 @@ import * as React from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
 import { purple } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
+import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
 import { quantileSorted } from '../../lib/primitives/mathPrimitives'
-import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
+import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
+
+const baselineSkill = toF(initialAgent.skill)
 
 export type AgentSkillDistributionDatasetRow = {
   turn: number
@@ -131,9 +134,12 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
 
   // Store differences between percentile boundaries so they stack to actual skill values.
   // When stacked: p0to10 reaches p10, p0to10+p10to20 reaches p20, ..., sum reaches max.
+  //
+  // The first band is offset by baselineSkill so the chart can start at baseline instead of 0.
+  // The y-axis valueFormatter adds baselineSkill back for display.
   return {
     turn: gameState.turn,
-    p0to10: p10,
+    p0to10: p10 - baselineSkill,
     p10to20: p20 - p10,
     p20to30: p30 - p20,
     p30to40: p40 - p30,
@@ -234,7 +240,14 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           ...axisConfig,
         },
       ]}
-      yAxis={[yAxisConfig]}
+      yAxis={[
+        {
+          ...axisConfig,
+          width: Y_AXIS_WIDTH,
+          valueFormatter: (value: number | null): string =>
+            value === null ? '' : String(Math.round(value + baselineSkill)),
+        },
+      ]}
       series={withNoMarkers([
         {
           dataKey: 'p0to10',
