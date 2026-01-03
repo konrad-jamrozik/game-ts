@@ -13,7 +13,16 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
   const upgradeName = action.payload
 
   // Deduct money
-  state.money -= getUpgradePrice(upgradeName)
+  const price = getUpgradePrice(upgradeName)
+  state.money -= price
+
+  // Track expenditure
+  // KJA3 introduce type like "CapUpgrade" and "AgentUpgrade" and make "Upgrade" be union of them.
+  if (upgradeName === 'Agent cap' || upgradeName === 'Transport cap' || upgradeName === 'Training cap') {
+    state.turnExpenditures.capIncreases += price
+  } else {
+    state.turnExpenditures.upgrades += price
+  }
 
   // Increase the selected upgrade by the increment amount
   switch (upgradeName) {

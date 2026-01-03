@@ -6,6 +6,7 @@ import Typography from '@mui/material/Typography'
 import { useTheme } from '@mui/material/styles'
 import * as React from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
+import { BarChart } from '@mui/x-charts/BarChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
@@ -66,7 +67,6 @@ export function ChartsScreen(): React.JSX.Element {
         padding: 2,
         paddingX: 1,
         bgcolor: '#30303052',
-        minHeight: '100vh',
       }}
     >
       <Stack spacing={2} alignItems="center" sx={{ marginBottom: 2 }}>
@@ -111,6 +111,72 @@ export function ChartsScreen(): React.JSX.Element {
               { dataKey: 'rewards', label: 'Rewards', color: theme.palette.moneyRewards.main },
               { dataKey: 'expenditures', label: 'Expenditures', color: theme.palette.moneyExpenditures.main },
             ])}
+            height={CHART_HEIGHT}
+            grid={{ horizontal: true }}
+            slotProps={{
+              tooltip: { trigger: 'axis' },
+              ...legendSlotProps,
+            }}
+          />
+        </ChartsPanel>
+
+        <ChartsPanel title="Balance sheet">
+          <BarChart
+            dataset={datasets.balanceSheet}
+            xAxis={[
+              {
+                dataKey: 'turn',
+                label: 'Turn',
+                valueFormatter: formatTurn,
+                ...axisConfig,
+              },
+            ]}
+            yAxis={[yAxisConfig]}
+            series={[
+              {
+                dataKey: 'funding',
+                label: 'Funding',
+                stack: 'balance',
+                stackOffset: 'diverging',
+                color: theme.palette.balanceIncome1.main,
+              },
+              {
+                dataKey: 'contracting',
+                label: 'Contracting income',
+                stack: 'balance',
+                color: theme.palette.balanceIncome2.main,
+              },
+              {
+                dataKey: 'rewards',
+                label: 'Rewards from missions',
+                stack: 'balance',
+                color: theme.palette.balanceIncome3.main,
+              },
+              {
+                dataKey: 'upkeep',
+                label: 'Upkeep',
+                stack: 'balance',
+                color: theme.palette.moneyUpkeep.main,
+              },
+              {
+                dataKey: 'agentHiring',
+                label: 'Agent hiring expenditures',
+                stack: 'balance',
+                color: theme.palette.moneyExpenditures.main,
+              },
+              {
+                dataKey: 'upgrades',
+                label: 'Upgrade expenditures',
+                stack: 'balance',
+                color: theme.palette.error.main,
+              },
+              {
+                dataKey: 'capIncreases',
+                label: 'Cap increase expenditures',
+                stack: 'balance',
+                color: theme.palette.error.dark,
+              },
+            ]}
             height={CHART_HEIGHT}
             grid={{ horizontal: true }}
             slotProps={{

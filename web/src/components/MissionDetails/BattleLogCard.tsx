@@ -15,6 +15,7 @@ import Box from '@mui/material/Box'
 import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { MyChip } from '../Common/MyChip'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
+import { assertEqual } from '../../lib/primitives/assertPrimitives'
 
 type BattleLogCardProps = {
   missionId: MissionId
@@ -69,7 +70,8 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
         outcome: 'Won',
         message: 'The mission was completed successfully. All enemy units were eliminated.',
       }
-    } else if (outcome === 'Wiped') {
+    } else {
+      assertEqual(outcome, 'Wiped')
       battleSummary = {
         outcome: 'Wiped',
         message: 'All agents were terminated in battle.',

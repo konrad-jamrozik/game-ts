@@ -38,6 +38,11 @@ export const initialGameState: GameState = {
   agents: bldInitialAgents(),
   terminatedAgents: [],
   totalAgentsHired: 4,
+  turnExpenditures: {
+    agentHiring: 0,
+    upgrades: 0,
+    capIncreases: 0,
+  },
   // Leads
   leadInvestigationCounts: {},
   leadInvestigations: {},

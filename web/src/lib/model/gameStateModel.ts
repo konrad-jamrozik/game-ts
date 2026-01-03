@@ -25,6 +25,11 @@ export type GameState = {
   exhaustionRecovery: Fixed6
   hitPointsRecoveryPct: Fixed6
   weaponDamage: number
+  turnExpenditures: {
+    agentHiring: number
+    upgrades: number
+    capIncreases: number
+  }
   // Archive
   leadInvestigationCounts: Record<string, number>
   leadInvestigations: Record<string, LeadInvestigation> // track ongoing investigations

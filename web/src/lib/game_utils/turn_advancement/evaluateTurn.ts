@@ -59,6 +59,7 @@ export default function evaluateTurn(state: GameState): TurnReport {
   const turn = state.turn + 1
   state.turn = turn
   state.actionsCount = 0
+  state.turnExpenditures = { agentHiring: 0, upgrades: 0, capIncreases: 0 }
 
   // 2. Compute agent upkeep
   const agentUpkeep = getAgentUpkeep(state)

@@ -14,6 +14,7 @@ export type ChartsDatasets = {
   missions: MissionsDatasetRow[]
   battleStats: BattleStatsDatasetRow[]
   situationReport: SituationReportDatasetRow[]
+  balanceSheet: BalanceSheetDatasetRow[]
 }
 
 export type AssetsDatasetRow = {
@@ -72,6 +73,17 @@ export type SituationReportDatasetRow = {
   panicPct: number
 }
 
+export type BalanceSheetDatasetRow = {
+  turn: number
+  funding: number // positive
+  contracting: number // positive
+  rewards: number // positive
+  upkeep: number // negative (stored as negative)
+  agentHiring: number // negative (stored as negative)
+  upgrades: number // negative (stored as negative)
+  capIncreases: number // negative (stored as negative)
+}
+
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const statesByTurn = selectTurnSnapshotsForCharts(state)
   const { firstByTurn, lastByTurn } = selectTurnSnapshotsWithFirst(state)
@@ -95,6 +107,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const missions: MissionsDatasetRow[] = []
   const battleStats: BattleStatsDatasetRow[] = []
   const situationReport: SituationReportDatasetRow[] = []
+  const balanceSheet: BalanceSheetDatasetRow[] = []
 
   for (const gameState of statesByTurn) {
     const { turn, agents, funding, money, panic, turnStartReport } = gameState
@@ -176,9 +189,23 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       turn,
       panicPct: toF(panic) * 100,
     })
+
+    // --- Balance sheet (income and expenses per turn)
+    const contractingIncome = getContractingIncome(gameState)
+    const upkeepCost = getAgentUpkeep(gameState)
+    balanceSheet.push({
+      turn,
+      funding: gameState.funding,
+      contracting: contractingIncome,
+      rewards: turnRewards,
+      upkeep: -upkeepCost, // negative
+      agentHiring: -gameState.turnExpenditures.agentHiring, // negative
+      upgrades: -gameState.turnExpenditures.upgrades, // negative
+      capIncreases: -gameState.turnExpenditures.capIncreases, // negative
+    })
   }
 
-  return { assets, agentSkill, agentReadiness, missions, battleStats, situationReport }
+  return { assets, agentSkill, agentReadiness, missions, battleStats, situationReport, balanceSheet }
 }
 
 function selectTurnSnapshotsForCharts(state: RootReducerState): GameState[] {
