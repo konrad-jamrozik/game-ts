@@ -8,7 +8,7 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple, amber, green, red, orange, indigo } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
