@@ -8,7 +8,7 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red, orange, teal } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -29,9 +29,13 @@ declare module '@mui/material/styles' {
     moneyUpkeep: PaletteColor
     moneyRewards: PaletteColor
     moneyExpenditures: PaletteColor
-    balanceIncome1: PaletteColor
-    balanceIncome2: PaletteColor
-    balanceIncome3: PaletteColor
+    balanceIncomeFunding: PaletteColor
+    balanceIncomeContracting: PaletteColor
+    balanceIncomeRewards: PaletteColor
+    balanceExpenseUpkeep: PaletteColor
+    balanceExpenseAgentHiring: PaletteColor
+    balanceExpenseCapIncreases: PaletteColor
+    balanceExpenseUpgrades: PaletteColor
   }
 
   // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
@@ -52,9 +56,13 @@ declare module '@mui/material/styles' {
     moneyUpkeep?: PaletteColorOptions
     moneyRewards?: PaletteColorOptions
     moneyExpenditures?: PaletteColorOptions
-    balanceIncome1?: PaletteColorOptions
-    balanceIncome2?: PaletteColorOptions
-    balanceIncome3?: PaletteColorOptions
+    balanceIncomeFunding?: PaletteColorOptions
+    balanceIncomeContracting?: PaletteColorOptions
+    balanceIncomeRewards?: PaletteColorOptions
+    balanceExpenseUpkeep?: PaletteColorOptions
+    balanceExpenseAgentHiring?: PaletteColorOptions
+    balanceExpenseCapIncreases?: PaletteColorOptions
+    balanceExpenseUpgrades?: PaletteColorOptions
   }
 
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
@@ -201,23 +209,47 @@ const colorSystemOptions: ColorSystemOptions = {
       },
       name: 'moneyExpenditures',
     }),
-    balanceIncome1: defaultTheme.palette.augmentColor({
+    balanceIncomeFunding: defaultTheme.palette.augmentColor({
       color: {
-        main: green[400],
+        main: green[300],
       },
-      name: 'balanceIncome1',
+      name: 'balanceIncomeFunding',
     }),
-    balanceIncome2: defaultTheme.palette.augmentColor({
+    balanceIncomeContracting: defaultTheme.palette.augmentColor({
       color: {
-        main: green[500],
+        main: teal[500],
       },
-      name: 'balanceIncome2',
+      name: 'balanceIncomeContracting',
     }),
-    balanceIncome3: defaultTheme.palette.augmentColor({
+    balanceIncomeRewards: defaultTheme.palette.augmentColor({
       color: {
-        main: green[600],
+        main: green[700],
       },
-      name: 'balanceIncome3',
+      name: 'balanceIncomeRewards',
+    }),
+    balanceExpenseUpkeep: defaultTheme.palette.augmentColor({
+      color: {
+        main: orange[500],
+      },
+      name: 'balanceExpenseUpkeep',
+    }),
+    balanceExpenseAgentHiring: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[500],
+      },
+      name: 'balanceExpenseAgentHiring',
+    }),
+    balanceExpenseCapIncreases: defaultTheme.palette.augmentColor({
+      color: {
+        main: deepOrange[600],
+      },
+      name: 'balanceExpenseCapIncreases',
+    }),
+    balanceExpenseUpgrades: defaultTheme.palette.augmentColor({
+      color: {
+        main: red[800],
+      },
+      name: 'balanceExpenseUpgrades',
     }),
   },
 }

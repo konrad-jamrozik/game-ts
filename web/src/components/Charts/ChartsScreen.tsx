@@ -133,48 +133,50 @@ export function ChartsScreen(): React.JSX.Element {
             ]}
             yAxis={[yAxisConfig]}
             series={[
+              // Positive values (stack above zero, first touches zero)
               {
                 dataKey: 'funding',
                 label: 'Funding',
                 stack: 'balance',
                 stackOffset: 'diverging',
-                color: theme.palette.balanceIncome1.main,
+                color: theme.palette.balanceIncomeFunding.main,
               },
               {
                 dataKey: 'contracting',
                 label: 'Contracting income',
                 stack: 'balance',
-                color: theme.palette.balanceIncome2.main,
+                color: theme.palette.balanceIncomeContracting.main,
               },
               {
                 dataKey: 'rewards',
                 label: 'Rewards from missions',
                 stack: 'balance',
-                color: theme.palette.balanceIncome3.main,
+                color: theme.palette.balanceIncomeRewards.main,
               },
+              // Negative values (stack below zero, first touches zero)
               {
                 dataKey: 'upkeep',
                 label: 'Upkeep',
                 stack: 'balance',
-                color: theme.palette.moneyUpkeep.main,
+                color: theme.palette.balanceExpenseUpkeep.main,
               },
               {
                 dataKey: 'agentHiring',
                 label: 'Agent hiring expenditures',
                 stack: 'balance',
-                color: theme.palette.moneyExpenditures.main,
-              },
-              {
-                dataKey: 'upgrades',
-                label: 'Upgrade expenditures',
-                stack: 'balance',
-                color: theme.palette.error.main,
+                color: theme.palette.balanceExpenseAgentHiring.main,
               },
               {
                 dataKey: 'capIncreases',
                 label: 'Cap increase expenditures',
                 stack: 'balance',
-                color: theme.palette.error.dark,
+                color: theme.palette.balanceExpenseCapIncreases.main,
+              },
+              {
+                dataKey: 'upgrades',
+                label: 'Upgrade expenditures',
+                stack: 'balance',
+                color: theme.palette.balanceExpenseUpgrades.main,
               },
             ]}
             height={CHART_HEIGHT}
