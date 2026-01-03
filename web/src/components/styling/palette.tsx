@@ -1,9 +1,62 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
-import { createTheme, type PaletteOptions } from '@mui/material/styles'
+import { createTheme, type PaletteColor, type PaletteColorOptions, type PaletteOptions } from '@mui/material/styles'
 import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
+  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
+  interface Palette {
+    agentStateAvailable: PaletteColor
+    agentStateInTransit: PaletteColor
+    agentStateOnAssignment: PaletteColor
+    agentStateOnMission: PaletteColor
+    agentStateRecovering: PaletteColor
+    agentStateInTraining: PaletteColor
+    agentStateTerminated: PaletteColor
+    agentStateDefault: PaletteColor
+    moneyBalance: PaletteColor
+    moneyFunding: PaletteColor
+    moneyContracting: PaletteColor
+    moneyUpkeep: PaletteColor
+    moneyRewards: PaletteColor
+    moneyExpenditures: PaletteColor
+    balanceIncomeFunding: PaletteColor
+    balanceIncomeContracting: PaletteColor
+    balanceIncomeRewards: PaletteColor
+    balanceExpenseUpkeep: PaletteColor
+    balanceExpenseAgentHiring: PaletteColor
+    balanceExpenseCapIncreases: PaletteColor
+    balanceExpenseUpgrades: PaletteColor
+  }
+
+  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
+  // export default function createPalette(palette: PaletteOptions): Palette;
+  interface PaletteOptions {
+    background?: Partial<TypeBackground>
+    agentStateAvailable?: PaletteColorOptions
+    agentStateInTransit?: PaletteColorOptions
+    agentStateOnAssignment?: PaletteColorOptions
+    agentStateOnMission?: PaletteColorOptions
+    agentStateRecovering?: PaletteColorOptions
+    agentStateInTraining?: PaletteColorOptions
+    agentStateTerminated?: PaletteColorOptions
+    agentStateDefault?: PaletteColorOptions
+    moneyBalance?: PaletteColorOptions
+    moneyFunding?: PaletteColorOptions
+    moneyContracting?: PaletteColorOptions
+    moneyUpkeep?: PaletteColorOptions
+    moneyRewards?: PaletteColorOptions
+    moneyExpenditures?: PaletteColorOptions
+    balanceIncomeFunding?: PaletteColorOptions
+    balanceIncomeContracting?: PaletteColorOptions
+    balanceIncomeRewards?: PaletteColorOptions
+    balanceExpenseUpkeep?: PaletteColorOptions
+    balanceExpenseAgentHiring?: PaletteColorOptions
+    balanceExpenseCapIncreases?: PaletteColorOptions
+    balanceExpenseUpgrades?: PaletteColorOptions
+  }
+
   // Defined in game-ts\web\node_modules\@mui\material\esm\styles\createPalette.d.ts
   // TypeBackground is a member of export interface Palette {
   interface TypeBackground {
@@ -11,9 +64,23 @@ declare module '@mui/material/styles' {
     cardContent: string
     nestedCardContent: string
     leadCardHeader: string
-    leadContent: string
+    leadCardContent: string
     missionCardHeader: string
     missionCardContent: string
+  }
+}
+
+// Defined in game-ts/web/node_modules/@mui/material/esm/Chip/Chip.d.ts
+declare module '@mui/material/Chip' {
+  interface ChipPropsColorOverrides {
+    agentStateAvailable: true
+    agentStateInTransit: true
+    agentStateOnAssignment: true
+    agentStateOnMission: true
+    agentStateRecovering: true
+    agentStateInTraining: true
+    agentStateTerminated: true
+    agentStateDefault: true
   }
 }
 
@@ -38,7 +105,7 @@ export function createPaletteOptions(): PaletteOptions {
       cardContent: 'hsl(0, 0.00%, 25.10%)',
       nestedCardContent: 'hsl(0, 0.00%, 22.10%)',
       leadCardHeader: 'hsl(213, 19%, 22%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
-      leadContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
+      leadCardContent: 'hsl(212.7,15.9%,27.1%)', // https://chatgpt.com/c/68808403-ffb0-8011-aa20-553a38ab2621
       missionCardHeader: 'hsl(0, 19%, 22%)', // Red variant of leadCardHeader
       missionCardContent: 'hsl(0, 16%, 27%)', // Red variant of leadCardContent
     },

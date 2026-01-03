@@ -4,81 +4,9 @@ import {
   type ColorSystemOptions,
   type Components,
   type CssVarsTheme,
-  type PaletteColor,
-  type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
 import { createPaletteOptions } from './palette'
-
-// https://mui.com/material-ui/customization/theming/#typescript
-declare module '@mui/material/styles' {
-  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
-  // export default function createPalette(palette: PaletteOptions): Palette;
-  interface Palette {
-    agentStateAvailable: PaletteColor
-    agentStateInTransit: PaletteColor
-    agentStateOnAssignment: PaletteColor
-    agentStateOnMission: PaletteColor
-    agentStateRecovering: PaletteColor
-    agentStateInTraining: PaletteColor
-    agentStateTerminated: PaletteColor
-    agentStateDefault: PaletteColor
-    moneyBalance: PaletteColor
-    moneyFunding: PaletteColor
-    moneyContracting: PaletteColor
-    moneyUpkeep: PaletteColor
-    moneyRewards: PaletteColor
-    moneyExpenditures: PaletteColor
-    balanceIncomeFunding: PaletteColor
-    balanceIncomeContracting: PaletteColor
-    balanceIncomeRewards: PaletteColor
-    balanceExpenseUpkeep: PaletteColor
-    balanceExpenseAgentHiring: PaletteColor
-    balanceExpenseCapIncreases: PaletteColor
-    balanceExpenseUpgrades: PaletteColor
-  }
-
-  // Defined in game-ts/web/node_modules/mui/material/esm/styles/createPalette.d.ts
-  // export default function createPalette(palette: PaletteOptions): Palette;
-  interface PaletteOptions {
-    background?: Partial<TypeBackground>
-    agentStateAvailable?: PaletteColorOptions
-    agentStateInTransit?: PaletteColorOptions
-    agentStateOnAssignment?: PaletteColorOptions
-    agentStateOnMission?: PaletteColorOptions
-    agentStateRecovering?: PaletteColorOptions
-    agentStateInTraining?: PaletteColorOptions
-    agentStateTerminated?: PaletteColorOptions
-    agentStateDefault?: PaletteColorOptions
-    moneyBalance?: PaletteColorOptions
-    moneyFunding?: PaletteColorOptions
-    moneyContracting?: PaletteColorOptions
-    moneyUpkeep?: PaletteColorOptions
-    moneyRewards?: PaletteColorOptions
-    moneyExpenditures?: PaletteColorOptions
-    balanceIncomeFunding?: PaletteColorOptions
-    balanceIncomeContracting?: PaletteColorOptions
-    balanceIncomeRewards?: PaletteColorOptions
-    balanceExpenseUpkeep?: PaletteColorOptions
-    balanceExpenseAgentHiring?: PaletteColorOptions
-    balanceExpenseCapIncreases?: PaletteColorOptions
-    balanceExpenseUpgrades?: PaletteColorOptions
-  }
-}
-
-// Defined in game-ts/web/node_modules/@mui/material/esm/Chip/Chip.d.ts
-declare module '@mui/material/Chip' {
-  interface ChipPropsColorOverrides {
-    agentStateAvailable: true
-    agentStateInTransit: true
-    agentStateOnAssignment: true
-    agentStateOnMission: true
-    agentStateRecovering: true
-    agentStateInTraining: true
-    agentStateTerminated: true
-    agentStateDefault: true
-  }
-}
 
 // Card content padding constant used across card components
 export const CARD_CONTENT_PADDING = 1
@@ -90,11 +18,6 @@ const colorSystemOptions: ColorSystemOptions = {
 let theme = createTheme({
   typography: {
     fontFamily: '"JetBrains Mono"',
-    //fontFamily: 'monospace',
-    //fontFamily: 'Roboto',
-    //fontFamily: 'Calibri',
-    //fontFamily: 'Lekton',
-    //fontFamily: '"Fira Code"',
   },
   colorSchemes: {
     dark: colorSystemOptions,
@@ -105,30 +28,6 @@ let theme = createTheme({
 })
 
 const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme> = {
-  // MuiDialog: {
-  //   styleOverrides: {
-  //     paper: {
-  //       backgroundColor: theme.palette.background.paper,
-  //     },
-  //     paperFullScreen: {
-  //       backgroundColor: theme.palette.background.paper,
-  //     },
-  //   },
-  // },
-  // MuiDialogTitle: {
-  //   styleOverrides: {
-  //     root: {
-  //       backgroundColor: theme.palette.background.paper,
-  //     },
-  //   },
-  // },
-  // MuiDialogActions: {
-  //   styleOverrides: {
-  //     root: {
-  //       backgroundColor: theme.palette.background.paper,
-  //     },
-  //   },
-  // },
   MuiCardHeader: {
     styleOverrides: {
       root: {
