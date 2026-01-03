@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/consistent-type-definitions */
 import {
   createTheme,
   type ColorSystemOptions,

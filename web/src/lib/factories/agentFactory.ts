@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/prefer-switch */
 import type { Agent } from '../model/agentModel'
 import type { AgentId } from '../model/modelIds'
 import { f6c0, f6c100, toF6 } from '../primitives/fixed6'
