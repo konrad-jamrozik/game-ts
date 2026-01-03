@@ -19,7 +19,7 @@ export type MissionRow = Mission & {
   displayId: string
 }
 
-export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState): GridColDef<MissionRow>[] {
+export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState, showArchived: boolean): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
       field: 'id',
@@ -58,19 +58,6 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
       },
     },
     {
-      field: 'concludedTurn',
-      headerName: 'Turn',
-      width: columnWidths['missions.turn'],
-      align: 'right',
-      valueGetter: (_value, row: MissionRow) => row.concludedTurn,
-      renderCell: (params: GridRenderCellParams<MissionRow, number | undefined>): React.JSX.Element => {
-        if (params.value !== undefined) {
-          return <span aria-label={`missions-row-turn-${params.id}`}>{params.value}</span>
-        }
-        return <span aria-label={`missions-row-turn-${params.id}`}>-</span>
-      },
-    },
-    {
       field: 'expiresIn',
       headerName: 'ExpIn',
       width: columnWidths['missions.expires_in'],
@@ -103,41 +90,59 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState):
     //     return <span aria-label={`missions-row-avg-skill-${params.id}`}>{displayValue}</span>
     //   },
     // },
-    {
-      field: 'details',
-      headerName: 'Details',
-      width: columnWidths['missions.details'],
-      sortable: false,
-      align: 'center',
-      headerAlign: 'center',
-      renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
-        function handleDetailsClick(): void {
-          dispatch(setViewMissionDetails(params.row.id))
-        }
-        return (
-          <Box
-            sx={{
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              height: '100%',
-              width: '100%',
-            }}
-          >
-            <Button
-              variant="contained"
-              size="small"
-              onClick={handleDetailsClick}
-              aria-label={`missions-row-details-${params.id}`}
-              sx={{ paddingY: 0, paddingX: 0.5, textTransform: 'none' }}
-            >
-              Details
-            </Button>
-          </Box>
-        )
-      },
-    },
   ]
+
+  // Add Turn column only when showing archived missions, positioned before Details column
+  if (showArchived) {
+    columns.push({
+      field: 'concludedTurn',
+      headerName: 'Turn',
+      width: columnWidths['missions.turn'],
+      align: 'right',
+      valueGetter: (_value, row: MissionRow) => row.concludedTurn,
+      renderCell: (params: GridRenderCellParams<MissionRow, number | undefined>): React.JSX.Element => {
+        if (params.value !== undefined) {
+          return <span aria-label={`missions-row-turn-${params.id}`}>{params.value}</span>
+        }
+        return <span aria-label={`missions-row-turn-${params.id}`}>-</span>
+      },
+    })
+  }
+
+  columns.push({
+    field: 'details',
+    headerName: 'Details',
+    width: columnWidths['missions.details'],
+    sortable: false,
+    align: 'center',
+    headerAlign: 'center',
+    renderCell: (params: GridRenderCellParams<MissionRow>): React.JSX.Element => {
+      function handleDetailsClick(): void {
+        dispatch(setViewMissionDetails(params.row.id))
+      }
+      return (
+        <Box
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            height: '100%',
+            width: '100%',
+          }}
+        >
+          <Button
+            variant="contained"
+            size="small"
+            onClick={handleDetailsClick}
+            aria-label={`missions-row-details-${params.id}`}
+            sx={{ paddingY: 0, paddingX: 0.5, textTransform: 'none' }}
+          >
+            Details
+          </Button>
+        </Box>
+      )
+    },
+  })
 
   return columns
 }
