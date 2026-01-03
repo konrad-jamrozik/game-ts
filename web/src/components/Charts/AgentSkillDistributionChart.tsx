@@ -215,9 +215,14 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
       const lowerBound: number = datasetItem[lowerBoundKey]
       const upperBound: number = datasetItem[upperBoundKey]
       const agentCount: number = datasetItem[countKey]
-      // First band uses closed bracket [, others use open bracket (
-      const leftBracket = isFirstBand ? '[' : '('
-      return `${leftBracket}${lowerBound.toFixed(1)}, ${upperBound.toFixed(1)}], Agents: ${agentCount}`
+      // Show "-" for empty bands (0 agents or impossible range)
+      if (agentCount === 0 || (lowerBound >= upperBound && !isFirstBand)) {
+        return '-'
+      }
+      // Use closed ranges [min, max] instead of open ranges (min, max]
+      // For non-first bands, add 1 to lower bound to convert from exclusive to inclusive
+      const effectiveLowerBound = isFirstBand ? lowerBound : lowerBound + 1
+      return `[${effectiveLowerBound.toFixed(1)}, ${upperBound.toFixed(1)}], Agents: ${agentCount}`
     }
   }
 

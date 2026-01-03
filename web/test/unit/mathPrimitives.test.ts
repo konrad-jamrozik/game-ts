@@ -593,8 +593,21 @@ describe(computeDistinctSkillBands, () => {
       expect(computeDistinctSkillBands([], baselineSkill)).toStrictEqual([])
     })
 
-    test('returns empty array when all skills are at or below baseline', () => {
-      expect(computeDistinctSkillBands([100, 99, 50], baselineSkill)).toStrictEqual([])
+    test('returns empty array when all skills are below baseline', () => {
+      expect(computeDistinctSkillBands([99, 50], baselineSkill)).toStrictEqual([])
+    })
+
+    test('agents at baseline create one green band', () => {
+      const result = computeDistinctSkillBands([100, 100, 100], baselineSkill)
+      expect(result).toHaveLength(1)
+      expect(result[0]).toStrictEqual({
+        band: 'green',
+        minSkill: 100,
+        maxSkill: 100,
+        skillRangeMin: 100,
+        skillRangeMax: 100,
+        count: 3,
+      })
     })
 
     test('single skill above baseline creates one green band', () => {
@@ -604,7 +617,7 @@ describe(computeDistinctSkillBands, () => {
         band: 'green',
         minSkill: 110,
         maxSkill: 110,
-        skillRangeMin: 101,
+        skillRangeMin: 100,
         skillRangeMax: 110,
         count: 1,
       })
@@ -617,7 +630,7 @@ describe(computeDistinctSkillBands, () => {
         band: 'green',
         minSkill: 110,
         maxSkill: 110,
-        skillRangeMin: 101,
+        skillRangeMin: 100,
         skillRangeMax: 110,
         count: 3,
       })
@@ -632,7 +645,7 @@ describe(computeDistinctSkillBands, () => {
         band: 'green',
         minSkill: 110,
         maxSkill: 110,
-        skillRangeMin: 101,
+        skillRangeMin: 100,
         skillRangeMax: 124,
         count: 1,
       })
@@ -684,7 +697,7 @@ describe(computeDistinctSkillBands, () => {
         band: 'green',
         minSkill: 110,
         maxSkill: 150,
-        skillRangeMin: 101,
+        skillRangeMin: 100,
         skillRangeMax: 174,
         count: 3,
       })
@@ -830,18 +843,21 @@ describe(computeDistinctSkillBands, () => {
   })
 
   describe('mixed skills above and below baseline', () => {
-    test('filters out skills at or below baseline', () => {
+    test('filters out skills below baseline, includes baseline', () => {
       const skills = [50, 75, 100, 110, 125, 150]
       const result = computeDistinctSkillBands(skills, baselineSkill)
 
-      // Only 110, 125, 150 should be considered (3 distinct values)
-      expect(result).toHaveLength(3)
+      // 100, 110, 125, 150 should be considered (4 distinct values)
+      // Skills below baseline (50, 75) are filtered out
+      expect(result).toHaveLength(4)
       expect(result[0]?.band).toBe('green')
-      expect(result[0]?.minSkill).toBe(110)
+      expect(result[0]?.minSkill).toBe(100)
       expect(result[1]?.band).toBe('yellow')
-      expect(result[1]?.minSkill).toBe(125)
+      expect(result[1]?.minSkill).toBe(110)
       expect(result[2]?.band).toBe('orange')
-      expect(result[2]?.minSkill).toBe(150)
+      expect(result[2]?.minSkill).toBe(125)
+      expect(result[3]?.band).toBe('red')
+      expect(result[3]?.minSkill).toBe(150)
     })
   })
 })

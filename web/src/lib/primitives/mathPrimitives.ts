@@ -263,23 +263,20 @@ export type DistinctSkillBand = {
  * @returns Array of skill bands, ordered from lowest (green) to highest (red).
  *          Only bands with agents above baseline are included.
  */
-export function computeDistinctSkillBands(
-  skills: readonly number[],
-  baselineSkill: number,
-): DistinctSkillBand[] {
+export function computeDistinctSkillBands(skills: readonly number[], baselineSkill: number): DistinctSkillBand[] {
   if (skills.length === 0) {
     return []
   }
 
-  // Filter to only skills above baseline
-  const skillsAboveBaseline = skills.filter((skill) => skill > baselineSkill)
+  // Filter to skills at or above baseline (baseline agents go to green band)
+  const skillsAtOrAboveBaseline = skills.filter((skill) => skill >= baselineSkill)
 
-  if (skillsAboveBaseline.length === 0) {
+  if (skillsAtOrAboveBaseline.length === 0) {
     return []
   }
 
-  // Get distinct skill values above baseline, sorted ascending
-  const distinctSkills = [...new Set(skillsAboveBaseline)].toSorted((a, b) => a - b)
+  // Get distinct skill values at or above baseline, sorted ascending
+  const distinctSkills = [...new Set(skillsAtOrAboveBaseline)].toSorted((a, b) => a - b)
   const distinctCount = distinctSkills.length
 
   // Determine number of visible bands based on distinct skill count
@@ -334,12 +331,12 @@ export function computeDistinctSkillBands(
     const maxSkill = Math.max(...distinctValues)
 
     // Count agents in this band (all agents with skills in the distinct values range)
-    const count = skillsAboveBaseline.filter((skill) => distinctValues.includes(skill)).length
+    const count = skillsAtOrAboveBaseline.filter((skill) => distinctValues.includes(skill)).length
 
     // Determine expanded range
-    // For the lowest band (green), start from baseline + 1
+    // For the lowest band (green), start from baseline (since baseline agents are included)
     // For other bands, start from the minimum skill in the band
-    const skillRangeMin = bandIndex === 0 ? baselineSkill + 1 : minSkill
+    const skillRangeMin = bandIndex === 0 ? baselineSkill : minSkill
 
     // For the highest band (red), range extends to infinity (use maxSkill as placeholder)
     // For other bands, range extends to next band's bottom - 1

@@ -12,13 +12,13 @@ The agent skill distribution chart displays agent skills grouped into 1-4 bands 
 
 1. **Baseline filtering**: Only skills above baseline skill (typically 100) are considered
 2. **Distinct value grouping**: Bands are determined by distinct skill values, not agent counts
-3. **Progressive band visibility**: Number of visible bands depends on number of distinct skill values above baseline
+3. **Progressive band visibility**: Number of visible bands depends on number of distinct skill values at or above baseline
 4. **Equal distribution**: When 4+ distinct values exist, they are divided equally among bands with remainders distributed to lower bands first
 
 ### Algorithm Steps
 
-1. **Filter skills above baseline**: Only consider agents with skills > baseline (100)
-2. **Get distinct skill values**: Extract unique skill values above baseline, sorted ascending
+1. **Filter skills at or above baseline**: Only consider agents with skills >= baseline (100)
+2. **Get distinct skill values**: Extract unique skill values at or above baseline, sorted ascending
 3. **Determine number of bands**:
    - 1 distinct value → 1 band (green only)
    - 2 distinct values → 2 bands (green, yellow)
@@ -85,13 +85,13 @@ Bands are displayed as stacked areas in the chart, where:
 
 ## Edge Cases
 
-### No Skills Above Baseline
+### No Skills At Or Above Baseline
 
-If all agents have skills at or below baseline, no bands are displayed (empty chart).
+If all agents have skills below baseline, no bands are displayed (empty chart).
 
-### Single Distinct Value Above Baseline
+### Single Distinct Value At Or Above Baseline
 
-All agents above baseline are grouped into a single green band.
+All agents at or above baseline are grouped into a single green band. This includes agents at exactly the baseline skill.
 
 ### Fewer Than 4 Distinct Values
 
