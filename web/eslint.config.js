@@ -430,6 +430,9 @@ export default plugTypescriptEslint.config([
       // I prefer minimalism
       // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v62.0.0/docs/rules/switch-case-braces.md
       'unicorn/switch-case-braces': 'off',
+      // I prefer if-else chains over switch statements in some cases
+      // https://github.com/sindresorhus/eslint-plugin-unicorn/blob/main/docs/rules/prefer-switch.md
+      'unicorn/prefer-switch': 'off',
     },
   },
   {
