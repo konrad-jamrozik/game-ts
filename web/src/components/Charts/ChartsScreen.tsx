@@ -412,7 +412,7 @@ function ChartsPanel(props: { title: string; renderChart: (height: number) => Re
         </Stack>
       </Paper>
       <Dialog fullScreen open={zoomed} onClose={handleCloseZoom} onKeyDown={handleDialogKeyDown}>
-        <Box sx={{ position: 'relative', height: '100%', p: 2 }}>
+        <Box sx={{ position: 'relative', height: '100%', p: 2, bgcolor: 'background.paper' }}>
           <IconButton
             onClick={handleCloseZoom}
             aria-label="Close"
