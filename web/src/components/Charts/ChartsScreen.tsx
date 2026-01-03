@@ -19,7 +19,7 @@ import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
 import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
-import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
+import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/selectors/chartsSelectors'
 import { AgentSkillDistributionChart } from './AgentSkillDistributionChart'
 import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
@@ -36,6 +36,7 @@ function getFullscreenHeight(): number {
 export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const datasets = useAppSelector(selectChartsDatasets)
+  const gameStates = useAppSelector(selectTurnSnapshotsForCharts)
   const theme = useTheme()
 
   function handleBackClick(): void {
@@ -240,9 +241,7 @@ export function ChartsScreen(): React.JSX.Element {
 
         <ChartsPanel
           title="Agent skill distribution"
-          renderChart={(height) => (
-            <AgentSkillDistributionChart dataset={datasets.agentSkillDistribution} height={height} />
-          )}
+          renderChart={(height) => <AgentSkillDistributionChart gameStates={gameStates} height={height} />}
         />
 
         <ChartsPanel
