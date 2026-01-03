@@ -19,7 +19,11 @@ export type MissionRow = Mission & {
   displayId: string
 }
 
-export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState, showArchived: boolean): GridColDef<MissionRow>[] {
+export function getMissionsColumns(
+  dispatch: AppDispatch,
+  gameState: GameState,
+  showArchived: boolean,
+): GridColDef<MissionRow>[] {
   const columns: GridColDef<MissionRow>[] = [
     {
       field: 'id',
@@ -34,13 +38,19 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState, 
       field: 'combatRating',
       headerName: 'CR',
       width: columnWidths['missions.combat_rating'],
-      align: 'right',
+      align: 'center',
+      headerAlign: 'center',
       valueGetter: (_value, row: MissionRow) => row.combatRating,
-      renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => (
-        <span aria-label={`missions-row-combat-rating-${params.id}`}>
-          {params.value !== undefined ? fmtDec1(params.value) : '-'}
-        </span>
-      ),
+      renderCell: (params: GridRenderCellParams<MissionRow, number>): React.JSX.Element => {
+        if (params.value !== undefined) {
+          return renderDecimalAlignedCell(fmtDec1(params.value), `missions-row-combat-rating-${params.id}`)
+        }
+        return (
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <span aria-label={`missions-row-combat-rating-${params.id}`}>-</span>
+          </Box>
+        )
+      },
     },
     {
       field: 'state',
@@ -98,13 +108,22 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState, 
       field: 'concludedTurn',
       headerName: 'Turn',
       width: columnWidths['missions.turn'],
-      align: 'right',
+      align: 'center',
+      headerAlign: 'center',
       valueGetter: (_value, row: MissionRow) => row.concludedTurn,
       renderCell: (params: GridRenderCellParams<MissionRow, number | undefined>): React.JSX.Element => {
         if (params.value !== undefined) {
-          return <span aria-label={`missions-row-turn-${params.id}`}>{params.value}</span>
+          return (
+            <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+              <span aria-label={`missions-row-turn-${params.id}`}>{params.value}</span>
+            </Box>
+          )
         }
-        return <span aria-label={`missions-row-turn-${params.id}`}>-</span>
+        return (
+          <Box sx={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+            <span aria-label={`missions-row-turn-${params.id}`}>-</span>
+          </Box>
+        )
       },
     })
   }
@@ -145,6 +164,34 @@ export function getMissionsColumns(dispatch: AppDispatch, gameState: GameState, 
   })
 
   return columns
+}
+
+function renderDecimalAlignedCell(value: string, ariaLabel: string): React.JSX.Element {
+  // Split the number at the decimal point for decimal alignment
+  const parts = value.split('.')
+  const integerPart = parts[0] ?? ''
+  const decimalPart = parts.length > 1 ? `.${parts[1]}` : ''
+
+  return (
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: '100%',
+      }}
+      aria-label={ariaLabel}
+    >
+      <Box sx={{ display: 'inline-flex', alignItems: 'baseline' }}>
+        <Box component="span" sx={{ width: '4ch', textAlign: 'right', display: 'inline-block' }}>
+          {integerPart}
+        </Box>
+        <Box component="span" sx={{ width: '2ch', textAlign: 'left', display: 'inline-block' }}>
+          {decimalPart}
+        </Box>
+      </Box>
+    </Box>
+  )
 }
 
 function renderExpiresInCell(expiresIn: number | 'never', rowId: string | number): React.JSX.Element {
