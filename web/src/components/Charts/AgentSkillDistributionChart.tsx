@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
-import { purple } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
@@ -10,17 +9,23 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 
 const baselineSkill = toF(initialAgent.skill)
 
+// Green → Yellow → Red gradient for skill bands (low skill = green, high skill = red)
+// Algorithm: increment green 0→255, then decrement red 255→0
+// For 10 colors with step = 510/9 ≈ 56.67
+// Reversed order: first color is pure green, last is pure red
+// Progressive transparency: starting from fully opaque (1.0) to more transparent
+// Alpha step: (1.0 - 0.294) / 9 ≈ 0.078, so we go from 1.0 to 0.294
 const agentSkillBandColors: readonly string[] = [
-  purple[50],
-  purple[100],
-  purple[200],
-  purple[300],
-  purple[400],
-  purple[500],
-  purple[600],
-  purple[700],
-  purple[800],
-  purple[900],
+  'hsla(120, 100%, 50%, 1)',
+  'hsla(108, 100%, 50%, 1)',
+  'hsla(96, 100%, 50%, 0.9)',
+  'hsla(84, 100%, 50%, 0.8)',
+  'hsla(72, 100%, 50%, 0.7)',
+  'hsla(60, 100%, 50%, 0.6)',
+  'hsla(48, 100%, 50%, 0.5)',
+  'hsla(36, 100%, 50%, 0.4)',
+  'hsla(24, 100%, 50%, 0.3)',
+  'hsla(0, 100%, 50%, 0.2)',
 ] as const
 
 function getColor(idx: number): string {
