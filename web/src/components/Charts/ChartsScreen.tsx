@@ -286,7 +286,7 @@ export function ChartsScreen(): React.JSX.Element {
               if (datasetItem === undefined) {
                 return formatTurn(turn)
               }
-              return `${formatTurn(turn)} (Total agents: ${datasetItem.totalAgents})`
+              return `${formatTurn(turn)} (Total agents: ${datasetItem.totalAgents}, Max skill: ${datasetItem.maxSkill.toFixed(1)})`
             }
 
             return (

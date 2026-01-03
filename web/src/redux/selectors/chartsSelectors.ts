@@ -122,6 +122,8 @@ export type AgentSkillDistributionDatasetRow = {
   countP90to100: number
   // Total number of agents
   totalAgents: number
+  // Maximum skill across all agents
+  maxSkill: number
 }
 
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
@@ -384,6 +386,7 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
       countP80to90: 0,
       countP90to100: 0,
       totalAgents: 0,
+      maxSkill: 0,
     }
   }
 
@@ -458,6 +461,8 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
     countP90to100,
     // Total number of agents
     totalAgents: aliveAgents.length,
+    // Maximum skill across all agents
+    maxSkill: max,
   }
 }
 
@@ -596,9 +601,13 @@ function normalizeMissionId(value: string): string | undefined {
 /**
  * Calculates the quantile (percentile) of a sorted array using linear interpolation.
  *
+ * For example, if q=0.3 (30th percentile), this returns the value such that 30% of the data
+ * falls at or below it. The returned value represents the boundary: values less than this
+ * are below the 30th percentile, values greater than or equal to this are at or above it.
+ *
  * @param sortedAscending - Array of numbers sorted in ascending order
  * @param q - Quantile to calculate (0.0 to 1.0, where 0.5 is median, 0.9 is 90th percentile)
- * @returns The interpolated value at the specified quantile
+ * @returns The interpolated value at the specified quantile boundary
  */
 function quantileSorted(sortedAscending: readonly number[], q: number): number {
   if (sortedAscending.length === 0) {
