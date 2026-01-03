@@ -20,12 +20,13 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
+import { purple } from '@mui/material/colors'
 
 const CHART_HEIGHT = 300
 const AXIS_TICK_FONT_SIZE = 14
 const AXIS_LABEL_FONT_SIZE = 16
 const LEGEND_FONT_SIZE = 14
-const Y_AXIS_WIDTH = 55
+const Y_AXIS_WIDTH = 60
 
 const axisConfig = {
   tickLabelStyle: { fontSize: AXIS_TICK_FONT_SIZE },
@@ -259,6 +260,110 @@ export function ChartsScreen(): React.JSX.Element {
                 ...legendSlotProps,
               }}
             />
+          )}
+        />
+
+        <ChartsPanel
+          title="Agent skill distribution"
+          renderChart={(height) => (
+            <ChartContainer
+              dataset={datasets.agentSkillDistribution}
+              xAxis={[
+                {
+                  scaleType: 'band',
+                  dataKey: 'turn',
+                  label: 'Turn',
+                  valueFormatter: formatTurn,
+                  ...axisConfig,
+                },
+              ]}
+              yAxis={[yAxisConfig]}
+              series={[
+                {
+                  type: 'bar',
+                  dataKey: 'p0to10',
+                  label: '0-10%',
+                  stack: 'skill',
+                  stackOffset: 'expand',
+                  color: purple[50],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p10to20',
+                  label: '10-20%',
+                  stack: 'skill',
+                  color: purple[100],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p20to30',
+                  label: '20-30%',
+                  stack: 'skill',
+                  color: purple[200],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p30to40',
+                  label: '30-40%',
+                  stack: 'skill',
+                  color: purple[300],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p40to50',
+                  label: '40-50%',
+                  stack: 'skill',
+                  color: purple[400],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p50to60',
+                  label: '50-60%',
+                  stack: 'skill',
+                  color: purple[500],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p60to70',
+                  label: '60-70%',
+                  stack: 'skill',
+                  color: purple[600],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p70to80',
+                  label: '70-80%',
+                  stack: 'skill',
+                  color: purple[700],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p80to90',
+                  label: '80-90%',
+                  stack: 'skill',
+                  color: purple[800],
+                },
+                {
+                  type: 'bar',
+                  dataKey: 'p90to100',
+                  label: '90-100%',
+                  stack: 'skill',
+                  color: purple[900],
+                },
+              ]}
+              height={height}
+            >
+              <ChartsGrid horizontal />
+              <BarPlot />
+              <ChartsXAxis />
+              <ChartsYAxis />
+              <ChartsTooltip trigger="axis" />
+              <ChartsLegend
+                sx={{
+                  fontSize: LEGEND_FONT_SIZE,
+                }}
+              />
+            </ChartContainer>
           )}
         />
 

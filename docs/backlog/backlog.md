@@ -109,6 +109,7 @@ Make sure that my ps1 profile doesn't output stuff when used by agent, but outpu
 # UI improvements
 
 - Use this for rich tree view? https://mui.com/blog/mui-x-v8/#new-customization-hook
+- Use charts color palettes? https://mui.com/x/react-charts/styling/#color-palette
 
 # Performance Optimizations
 

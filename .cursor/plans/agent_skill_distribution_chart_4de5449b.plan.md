@@ -4,16 +4,16 @@ overview: "Add a new \"Agent skill\" stacked bar chart that shows the distributi
 todos:
   - id: add-dataset-type
     content: Add AgentSkillDistributionDatasetRow type and update ChartsDatasets in chartsSelectors.ts
-    status: pending
+    status: completed
   - id: add-builder-fn
     content: Add bldAgentSkillDistributionRow() builder function in chartsSelectors.ts
-    status: pending
+    status: completed
   - id: wire-dataset
     content: Wire up agentSkillDistribution dataset in selectChartsDatasets
-    status: pending
+    status: completed
   - id: add-chart-panel
     content: Add Agent skill distribution chart panel in ChartsScreen.tsx with purple colors
-    status: pending
+    status: completed
 ---
 
 # Agent Skill Distribution Chart

@@ -15,6 +15,7 @@ export type ChartsDatasets = {
   battleStats: BattleStatsDatasetRow[]
   situationReport: SituationReportDatasetRow[]
   balanceSheet: BalanceSheetDatasetRow[]
+  agentSkillDistribution: AgentSkillDistributionDatasetRow[]
 }
 
 export type AssetsDatasetRow = {
@@ -85,6 +86,20 @@ export type BalanceSheetDatasetRow = {
   netFlow: number // sum of all above (income - expenses)
 }
 
+export type AgentSkillDistributionDatasetRow = {
+  turn: number
+  p0to10: number
+  p10to20: number
+  p20to30: number
+  p30to40: number
+  p40to50: number
+  p50to60: number
+  p60to70: number
+  p70to80: number
+  p80to90: number
+  p90to100: number
+}
+
 export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const statesByTurn = selectTurnSnapshotsForCharts(state)
   const { firstByTurn, lastByTurn } = selectTurnSnapshotsWithFirst(state)
@@ -109,6 +124,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const battleStats: BattleStatsDatasetRow[] = []
   const situationReport: SituationReportDatasetRow[] = []
   const balanceSheet: BalanceSheetDatasetRow[] = []
+  const agentSkillDistribution: AgentSkillDistributionDatasetRow[] = []
 
   for (const gameState of statesByTurn) {
     const { turn, agents, funding, money, panic, turnStartReport } = gameState
@@ -149,6 +165,9 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
 
     // --- Agent readiness (derived)
     agentReadiness.push(bldAgentReadinessRow(gameState))
+
+    // --- Agent skill distribution (derived)
+    agentSkillDistribution.push(bldAgentSkillDistributionRow(gameState))
 
     // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
     const missionBattleDeltas = updateMissionAndBattleAccumulators({
@@ -215,7 +234,16 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     })
   }
 
-  return { assets, agentSkill, agentReadiness, missions, battleStats, situationReport, balanceSheet }
+  return {
+    assets,
+    agentSkill,
+    agentReadiness,
+    missions,
+    battleStats,
+    situationReport,
+    balanceSheet,
+    agentSkillDistribution,
+  }
 }
 
 function selectTurnSnapshotsForCharts(state: RootReducerState): GameState[] {
@@ -295,6 +323,93 @@ function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
     exhaustionMax: maxNumbers(exhaustion),
     recoveryTurnsAvg: avgNumbers(recoveryTurns),
     recoveryTurnsMax: maxNumbers(recoveryTurns),
+  }
+}
+
+function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistributionDatasetRow {
+  const aliveAgents = gameState.agents
+
+  if (aliveAgents.length === 0) {
+    return {
+      turn: gameState.turn,
+      p0to10: 0,
+      p10to20: 0,
+      p20to30: 0,
+      p30to40: 0,
+      p40to50: 0,
+      p50to60: 0,
+      p60to70: 0,
+      p70to80: 0,
+      p80to90: 0,
+      p90to100: 0,
+    }
+  }
+
+  // Extract skill values (not effective skill, just skill)
+  const skills = aliveAgents.map((agent) => toF(agent.skill))
+
+  // Sort skills in ascending order
+  const sortedSkills = [...skills].toSorted((a, b) => a - b)
+
+  // Calculate percentile boundaries
+  const p10 = quantileSorted(sortedSkills, 0.1)
+  const p20 = quantileSorted(sortedSkills, 0.2)
+  const p30 = quantileSorted(sortedSkills, 0.3)
+  const p40 = quantileSorted(sortedSkills, 0.4)
+  const p50 = quantileSorted(sortedSkills, 0.5)
+  const p60 = quantileSorted(sortedSkills, 0.6)
+  const p70 = quantileSorted(sortedSkills, 0.7)
+  const p80 = quantileSorted(sortedSkills, 0.8)
+  const p90 = quantileSorted(sortedSkills, 0.9)
+
+  // Count agents in each percentile bucket
+  let p0to10 = 0
+  let p10to20 = 0
+  let p20to30 = 0
+  let p30to40 = 0
+  let p40to50 = 0
+  let p50to60 = 0
+  let p60to70 = 0
+  let p70to80 = 0
+  let p80to90 = 0
+  let p90to100 = 0
+
+  for (const skill of skills) {
+    if (skill <= p10) {
+      p0to10 += 1
+    } else if (skill <= p20) {
+      p10to20 += 1
+    } else if (skill <= p30) {
+      p20to30 += 1
+    } else if (skill <= p40) {
+      p30to40 += 1
+    } else if (skill <= p50) {
+      p40to50 += 1
+    } else if (skill <= p60) {
+      p50to60 += 1
+    } else if (skill <= p70) {
+      p60to70 += 1
+    } else if (skill <= p80) {
+      p70to80 += 1
+    } else if (skill <= p90) {
+      p80to90 += 1
+    } else {
+      p90to100 += 1
+    }
+  }
+
+  return {
+    turn: gameState.turn,
+    p0to10,
+    p10to20,
+    p20to30,
+    p30to40,
+    p40to50,
+    p50to60,
+    p60to70,
+    p70to80,
+    p80to90,
+    p90to100,
   }
 }
 
@@ -429,6 +544,14 @@ function normalizeMissionId(value: string): string | undefined {
   return value
 }
 
+// KJA3 should I use some math lib for quantileSorted?
+/**
+ * Calculates the quantile (percentile) of a sorted array using linear interpolation.
+ *
+ * @param sortedAscending - Array of numbers sorted in ascending order
+ * @param q - Quantile to calculate (0.0 to 1.0, where 0.5 is median, 0.9 is 90th percentile)
+ * @returns The interpolated value at the specified quantile
+ */
 function quantileSorted(sortedAscending: readonly number[], q: number): number {
   if (sortedAscending.length === 0) {
     return 0
