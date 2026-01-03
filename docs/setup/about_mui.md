@@ -226,6 +226,8 @@ Ultimately I have this problem because in `theme.tsx` I overrode `background: { 
 
 See OneNote `Color tools and palettes`.
 
+https://mui.com/material-ui/customization/color/
+
 MUI color utils:
 
 - https://github.com/mui/material-ui/blob/master/packages/mui-material/src/styles/index.d.ts#L52-L67

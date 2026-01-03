@@ -8,7 +8,7 @@ import {
   type PaletteColorOptions,
   type Theme,
 } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple, amber, green, red, orange, teal } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red, orange, indigo } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -211,43 +211,43 @@ const colorSystemOptions: ColorSystemOptions = {
     }),
     balanceIncomeFunding: defaultTheme.palette.augmentColor({
       color: {
-        main: green[300],
+        main: green[800],
       },
       name: 'balanceIncomeFunding',
     }),
     balanceIncomeContracting: defaultTheme.palette.augmentColor({
       color: {
-        main: teal[500],
+        main: green[500],
       },
       name: 'balanceIncomeContracting',
     }),
     balanceIncomeRewards: defaultTheme.palette.augmentColor({
       color: {
-        main: green[700],
+        main: green[200],
       },
       name: 'balanceIncomeRewards',
     }),
     balanceExpenseUpkeep: defaultTheme.palette.augmentColor({
       color: {
-        main: orange[500],
+        main: red[900],
       },
       name: 'balanceExpenseUpkeep',
     }),
     balanceExpenseAgentHiring: defaultTheme.palette.augmentColor({
       color: {
-        main: red[500],
+        main: red[700],
       },
       name: 'balanceExpenseAgentHiring',
     }),
     balanceExpenseCapIncreases: defaultTheme.palette.augmentColor({
       color: {
-        main: deepOrange[600],
+        main: red[500],
       },
       name: 'balanceExpenseCapIncreases',
     }),
     balanceExpenseUpgrades: defaultTheme.palette.augmentColor({
       color: {
-        main: red[800],
+        main: red[300],
       },
       name: 'balanceExpenseUpgrades',
     }),
