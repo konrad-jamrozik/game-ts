@@ -351,7 +351,7 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Sort skills in ascending order
   const sortedSkills = [...skills].toSorted((a, b) => a - b)
 
-  // Calculate percentile boundaries
+  // Calculate percentile boundary values (actual skill values)
   const p10 = quantileSorted(sortedSkills, 0.1)
   const p20 = quantileSorted(sortedSkills, 0.2)
   const p30 = quantileSorted(sortedSkills, 0.3)
@@ -361,55 +361,22 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const p70 = quantileSorted(sortedSkills, 0.7)
   const p80 = quantileSorted(sortedSkills, 0.8)
   const p90 = quantileSorted(sortedSkills, 0.9)
+  const max = sortedSkills.at(-1) ?? 0
 
-  // Count agents in each percentile bucket
-  let p0to10 = 0
-  let p10to20 = 0
-  let p20to30 = 0
-  let p30to40 = 0
-  let p40to50 = 0
-  let p50to60 = 0
-  let p60to70 = 0
-  let p70to80 = 0
-  let p80to90 = 0
-  let p90to100 = 0
-
-  for (const skill of skills) {
-    if (skill <= p10) {
-      p0to10 += 1
-    } else if (skill <= p20) {
-      p10to20 += 1
-    } else if (skill <= p30) {
-      p20to30 += 1
-    } else if (skill <= p40) {
-      p30to40 += 1
-    } else if (skill <= p50) {
-      p40to50 += 1
-    } else if (skill <= p60) {
-      p50to60 += 1
-    } else if (skill <= p70) {
-      p60to70 += 1
-    } else if (skill <= p80) {
-      p70to80 += 1
-    } else if (skill <= p90) {
-      p80to90 += 1
-    } else {
-      p90to100 += 1
-    }
-  }
-
+  // Store differences between percentile boundaries so they stack to actual skill values.
+  // When stacked: p0to10 reaches p10, p0to10+p10to20 reaches p20, ..., sum reaches max.
   return {
     turn: gameState.turn,
-    p0to10,
-    p10to20,
-    p20to30,
-    p30to40,
-    p40to50,
-    p50to60,
-    p60to70,
-    p70to80,
-    p80to90,
-    p90to100,
+    p0to10: p10,
+    p10to20: p20 - p10,
+    p20to30: p30 - p20,
+    p30to40: p40 - p30,
+    p40to50: p50 - p40,
+    p50to60: p60 - p50,
+    p60to70: p70 - p60,
+    p70to80: p80 - p70,
+    p80to90: p90 - p80,
+    p90to100: max - p90,
   }
 }
 
