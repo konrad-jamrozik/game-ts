@@ -106,7 +106,7 @@ export function ChartsScreen(): React.JSX.Element {
         }}
       >
         <ChartsPanel
-          title="Money"
+          title="Assets"
           renderChart={(height) => (
             <LineChart
               dataset={datasets.assets}
@@ -118,18 +118,13 @@ export function ChartsScreen(): React.JSX.Element {
                   ...axisConfig,
                 },
               ]}
-              yAxis={[yAxisConfig]}
+              yAxis={[
+                { id: 'moneyAxisId', ...yAxisConfig },
+                { id: 'agentAxisId', position: 'right', ...yAxisConfig },
+              ]}
               series={withNoMarkers([
-                { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main },
-                { dataKey: 'funding', label: 'Funding', color: theme.palette.moneyFunding.main },
-                {
-                  dataKey: 'contracting',
-                  label: 'Contracting',
-                  color: theme.palette.moneyContracting.main,
-                },
-                { dataKey: 'upkeep', label: 'Upkeep', color: theme.palette.moneyUpkeep.main },
-                { dataKey: 'rewards', label: 'Rewards', color: theme.palette.moneyRewards.main },
-                { dataKey: 'expenditures', label: 'Expenditures', color: theme.palette.moneyExpenditures.main },
+                { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main, yAxisId: 'moneyAxisId' },
+                { dataKey: 'agentCount', label: 'Agents', color: theme.palette.primary.main, yAxisId: 'agentAxisId' },
               ])}
               height={height}
               grid={{ horizontal: true }}
