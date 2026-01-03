@@ -114,7 +114,10 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   // Count agents in each percentile band
   // For each band, count agents with skill >= lower bound and < upper bound
   // Except the first band, which is >= min and <= p10
-  // This is done to catch minimum values in the p0-p10 band.
+  // The special treatments of p10 for the lowest band is done to catch minimum values in the p0-p10 band,
+  // as otherwise they would end up in higher bands in case of skewed data, e.g. if data is 0,0,0,0,0,0,0,0,0,0,100,
+  // then 0 would be not in p0-p10 but higher, but it should be in p0-p10.
+  // This would happen because the check "s < p10" i.e. "0 < 0" would fail.
   const countP0to10 = skills.filter((s) => s >= min && s <= p10).length
   const countP10to20 = skills.filter((s) => s > p10 && s <= p20).length
   const countP20to30 = skills.filter((s) => s > p20 && s <= p30).length
