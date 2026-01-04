@@ -6,6 +6,10 @@ KJA backlog:
 
 ## Next
 
+- Keep track of agents initial CR in mission log
+
+- In missions header, first show success, then fail, then expired
+
 - When persisting undoable state, persist player actions only for the current turn,
   - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
 - Better turn reset controls, working well with the new undo/persistence setup.
