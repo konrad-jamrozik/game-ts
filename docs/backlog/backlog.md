@@ -17,6 +17,8 @@ KJA backlog:
 
 - Consider adding "Exhausted" state when exhaustion >= 100%. Assignment is "Recovery", so same as state "Recovering".
 
+- Do the charts, see Charts below.
+
 ## MUI
 
 - Add pagination to agents data grid
@@ -44,7 +46,9 @@ KJA backlog:
   So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
   before the exhaustion causes them to lose so much effective skill that commander orders retreat.
 
-# Game mechanics ideas
+# ---- other / later ----
+
+## Game mechanics ideas
 
 - At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
   how quickly they go through activity levels.
@@ -55,7 +59,7 @@ KJA backlog:
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
 // NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
 
-# Ideas
+## Ideas
 
 - Add some mechanism that influences how long missions sites will last until expiration.
   Conceptually it denotes how early player learned about them. Maybe:
@@ -73,7 +77,7 @@ KJA backlog:
     intel gathered at any given turn, the more player knows the factions whereabouts.
   - Interrogating could give similar benefits
 
-# Domain model refactoring
+## Domain model refactoring
 
 - instead of the idiom `"leadInvestigationCounts[lead.id] ?? 0"` and `getLeadById(leadId)`
   do it the same way as `agentUtils`
@@ -93,22 +97,22 @@ KJA backlog:
   Because all other places should not return undefined, so no need to use it.
   In case of finding single item, it will basically become dotnet .Single()
 
-# Docs
+## Docs
 
 - Add a reference doc listing critical code components, like `evalTurn`
 - Update the AI instructions to reference the new docs
 
-# Tests
+## Tests
 
 - Address all 🚧 TODOS, except "not implemented yet", in [about_test_suite.md](../design/about_test_suite.md)
 - In tests, need a helper that does both `expect(X).toDefined()` and `assertDefined(X)`
 
-# UI improvements
+## UI improvements
 
 - Use this for rich tree view? https://mui.com/blog/mui-x-v8/#new-customization-hook
 - Use charts color palettes? https://mui.com/x/react-charts/styling/#color-palette
 
-# Performance Optimizations
+## Performance Optimizations
 
 - See notes on basicIntellect.test.ts performance
 - performance clue from dev console:
@@ -131,11 +135,11 @@ KJA backlog:
     - Accept larger initial bundle size (load everything at once)
     - No dynamic imports or lazy loading needed
 
-# Dev exp
+## Dev exp
 
 - Add ESLint server MCP: https://eslint.org/docs/latest/use/mcp
 
-# Maybe, future
+## Maybe, future
 
 - See `prompts.md` and `.cursor/plans` for more ideas.
 
@@ -157,6 +161,9 @@ KJA backlog:
   ```
 
 # Charts
+
+- Charts for agent hit points stats, weapon stats
+- Charts for details of current turn only, like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
 
 ## Charts prompt
 
