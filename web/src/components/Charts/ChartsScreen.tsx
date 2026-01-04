@@ -10,7 +10,8 @@ import CloseIcon from '@mui/icons-material/Close'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import * as React from 'react'
 import { LineChart, LinePlot } from '@mui/x-charts/LineChart'
-import { ChartContainer } from '@mui/x-charts/ChartContainer'
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
 import { BarPlot } from '@mui/x-charts/BarChart'
 import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
 import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
@@ -117,7 +118,7 @@ export function ChartsScreen(): React.JSX.Element {
         <ChartsPanel
           title="Cash Flow"
           renderChart={(height) => (
-            <ChartContainer
+            <ChartDataProvider
               dataset={datasets.balanceSheet}
               xAxis={[
                 {
@@ -193,18 +194,16 @@ export function ChartsScreen(): React.JSX.Element {
               ]}
               height={height}
             >
-              <ChartsGrid horizontal />
-              <BarPlot />
-              <LinePlot />
-              <ChartsXAxis />
-              <ChartsYAxis />
-              <ChartsTooltip trigger="axis" />
-              <ChartsLegend
-                sx={{
-                  fontSize: LEGEND_FONT_SIZE,
-                }}
-              />
-            </ChartContainer>
+              <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
+              <ChartsSurface>
+                <ChartsGrid horizontal />
+                <BarPlot />
+                <LinePlot />
+                <ChartsXAxis />
+                <ChartsYAxis />
+                <ChartsTooltip trigger="axis" />
+              </ChartsSurface>
+            </ChartDataProvider>
           )}
         />
 
