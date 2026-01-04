@@ -44,12 +44,26 @@ export function ResetControls(): React.JSX.Element {
   const willCrossTurnBoundaryOnNextUndo = canUndo && previousEntryTurn === currentTurn - 1
   const willCrossTurnBoundaryOnNextRedo = canRedo && nextEntryTurn === currentTurn + 1
   const actionsThisTurn = useAppSelector((state: RootReducerState) => getCurrentTurnState(state).actionsCount)
-  const availableUndoSteps = useAppSelector((state: RootReducerState) => state.undoable.past.length)
-  const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
 
-  // Check if we can revert to the previous turn (only when no actions in current turn)
+  // Count how many past states are from the current turn
+  // This tells us how many undo steps are available within this turn
+  const pastStatesForCurrentTurn = undoable.past.filter((s) => s.gameState.turn === currentTurn).length
+
+  // Detect if we're in a compacted state:
+  // actionsCount says we did actions, but there are no/fewer past states to undo to
+  // This happens after reverting to a turn whose individual actions were compacted
+  const isCompactedTurn = actionsThisTurn > 0 && pastStatesForCurrentTurn < actionsThisTurn
+
+  // Can only undo within current turn if we have past states from this turn
+  const canUndoWithinTurn = pastStatesForCurrentTurn > 0
+
+  const canResetTurn = actionsThisTurn > 0 && pastStatesForCurrentTurn >= actionsThisTurn
+
+  // Check if we can revert to the previous turn:
+  // - Either when no actions in current turn
+  // - Or when in a compacted state (can't undo individual actions, so allow reverting)
   const hasPreviousTurnInHistory = undoable.past.some((s) => s.gameState.turn < currentTurn)
-  const canRevertToPreviousTurn = actionsThisTurn === 0 && hasPreviousTurnInHistory
+  const canRevertToPreviousTurn = (actionsThisTurn === 0 || isCompactedTurn) && hasPreviousTurnInHistory
 
   // Find the index to jump to for reverting to end of previous turn
   // This finds the last state from the previous turn (the one just before turn advancement)
@@ -136,9 +150,15 @@ export function ResetControls(): React.JSX.Element {
             <Button
               variant="contained"
               onClick={handleUndo}
-              disabled={!canUndo || actionsThisTurn === 0}
+              disabled={!canUndo || !canUndoWithinTurn}
               sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
-              title={actionsThisTurn === 0 ? 'Use "Revert turn" to go back to previous turn' : undefined}
+              title={
+                isCompactedTurn
+                  ? 'Turn history was compacted. Use "Revert turn" to go back.'
+                  : !canUndoWithinTurn
+                    ? 'Use "Revert turn" to go back to previous turn'
+                    : undefined
+              }
             >
               Undo
             </Button>
@@ -160,9 +180,13 @@ export function ResetControls(): React.JSX.Element {
               title={
                 canResetTurn
                   ? 'Reset to start of current turn'
-                  : canRevertToPreviousTurn
-                    ? 'Revert to end of previous turn'
-                    : 'No prior state available'
+                  : isCompactedTurn && canRevertToPreviousTurn
+                    ? 'Turn history was compacted. Revert to end of previous turn.'
+                    : canRevertToPreviousTurn
+                      ? 'Revert to end of previous turn'
+                      : isCompactedTurn
+                        ? 'Turn history was compacted. No prior state available.'
+                        : 'No prior state available' // KJA3 this does not show up over disabled button. Other places have similar issues.
               }
             >
               {canResetTurn ? 'Reset turn' : 'Revert turn'}

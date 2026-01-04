@@ -30,7 +30,7 @@ describe('Basic Intellect AI Player', () => {
     log.syncAll(logSettings)
   })
 
-  // Note: as of 2026-01-01 this runs for about 7.7-9.0 seconds, simulating about 220 turns.
+  // Note: as of 2026-01-01 this runs for about 5.8-6.8 seconds, simulating about 220 turns.
   test('AI player wins game within 250 turns while cheating', () => {
     const store = getStore()
     setupCheatingGameState()
