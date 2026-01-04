@@ -10,10 +10,6 @@ KJA backlog:
 
 - In missions header, first show success, then fail, then expired
 
-- When persisting undoable state, persist player actions only for the current turn,
-  - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
-- Better turn reset controls, working well with the new undo/persistence setup.
-
 - Ensure that charts show data from last game state in given turn. This is relevant for the last 3 turns, that may
   have intermediate states due to player actions.
 
@@ -25,7 +21,7 @@ KJA backlog:
 
 ## MUI
 
-- Add pagination to agents data grid
+- Add pagination to agents data grid, and to other grids too.
 
 ## Perf
 
@@ -41,8 +37,6 @@ KJA backlog:
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
      Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
      Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
-
-- AI assigns only 1 agent to non-repeatable leads.
 
 - Add more AI tests:
 - e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
@@ -119,14 +113,7 @@ KJA backlog:
 ## Performance Optimizations
 
 - See notes on basicIntellect.test.ts performance
-- performance clue from dev console:
-  // eventsMiddleware.ts:49 ImmutableStateInvariantMiddleware took 68ms, which is more than the warning threshold of 32ms.
-  // If your state or actions are very large, you may want to disable the middleware as it might cause too much
-  of a slowdown in development mode. See https://redux-toolkit.js.org/api/getDefaultMiddleware for instructions.
-  // It is disabled in production builds, so you don't need to worry about that.
-  - Analyze state size and complexity
-  - Configure middleware threshold or disable for large operations
-  - Add conditional middleware configuration  
+
 - on npm run build
   (!) Some chunks are larger than 500 kB after minification. Consider:
   - Using dynamic import() to code-split the application
