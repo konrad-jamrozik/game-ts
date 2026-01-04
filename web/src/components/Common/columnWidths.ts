@@ -43,7 +43,7 @@ export const columnWidths = {
 
   // Agents columns
   'agents.id': 120,
-  'agents.state': 140,
+  'agents.state': 160,
   'agents.assignment': 140,
   'agents.skill': 160,
   'agents.hit_points': 80,

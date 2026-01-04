@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/consistent-type-definitions */
 import { createTheme, type PaletteColor, type PaletteColorOptions, type PaletteOptions } from '@mui/material/styles'
-import { blue, deepOrange, cyan, deepPurple, amber, green, red } from '@mui/material/colors'
+import { blue, deepOrange, cyan, deepPurple, amber, green, red, teal } from '@mui/material/colors'
 
 // https://mui.com/material-ui/customization/theming/#typescript
 declare module '@mui/material/styles' {
@@ -9,7 +9,8 @@ declare module '@mui/material/styles' {
   interface Palette {
     agentStateAvailable: PaletteColor
     agentStateInTransit: PaletteColor
-    agentStateOnAssignment: PaletteColor
+    agentStateContracting: PaletteColor
+    agentStateInvestigating: PaletteColor
     agentStateOnMission: PaletteColor
     agentStateRecovering: PaletteColor
     agentStateInTraining: PaletteColor
@@ -37,7 +38,8 @@ declare module '@mui/material/styles' {
     background?: Partial<TypeBackground>
     agentStateAvailable?: PaletteColorOptions
     agentStateInTransit?: PaletteColorOptions
-    agentStateOnAssignment?: PaletteColorOptions
+    agentStateContracting?: PaletteColorOptions
+    agentStateInvestigating?: PaletteColorOptions
     agentStateOnMission?: PaletteColorOptions
     agentStateRecovering?: PaletteColorOptions
     agentStateInTraining?: PaletteColorOptions
@@ -77,7 +79,8 @@ declare module '@mui/material/Chip' {
   interface ChipPropsColorOverrides {
     agentStateAvailable: true
     agentStateInTransit: true
-    agentStateOnAssignment: true
+    agentStateContracting: true
+    agentStateInvestigating: true
     agentStateOnMission: true
     agentStateRecovering: true
     agentStateInTraining: true
@@ -123,11 +126,17 @@ export function createPaletteOptions(): PaletteOptions {
       },
       name: 'agentStateInTransit',
     }),
-    agentStateOnAssignment: defaultTheme.palette.augmentColor({
+    agentStateContracting: defaultTheme.palette.augmentColor({
       color: {
         main: amber[700],
       },
-      name: 'agentStateOnAssignment',
+      name: 'agentStateContracting',
+    }),
+    agentStateInvestigating: defaultTheme.palette.augmentColor({
+      color: {
+        main: teal[600], // KJA2 fix color
+      },
+      name: 'agentStateInvestigating',
     }),
     agentStateOnMission: defaultTheme.palette.augmentColor({
       color: {

@@ -25,7 +25,7 @@ describe('Basic Intellect AI Player', () => {
     // Disable all logs except "game" category
     const logSettings: Partial<Record<string, boolean>> = {}
     for (const category of LOG_CATEGORY_LIST) {
-      logSettings[category] = category === 'game' || category === 'general'
+      logSettings[category] = false // category === 'game' || category === 'general'
     }
     log.syncAll(logSettings)
   })

@@ -6,7 +6,7 @@ import type { Enemy } from '../../src/lib/model/enemyModel'
 import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { Mission } from '../../src/lib/model/missionModel'
 import type { AgentId, LeadId, MissionDataId, MissionId } from '../../src/lib/model/modelIds'
-import { available, isActivityAssignment, onContractingAssignment } from '../../src/lib/model_utils/agentUtils'
+import { available, onContractingAssignment } from '../../src/lib/model_utils/agentUtils'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
@@ -25,7 +25,7 @@ export const st = {
 
   bldAgent(id: AgentId, assignment: AgentAssignment = 'Standby'): Agent {
     const state: AgentState =
-      assignment === 'Training' ? 'InTraining' : isActivityAssignment(assignment) ? 'OnAssignment' : 'Available'
+      assignment === 'Training' ? 'InTraining' : assignment === 'Contracting' ? 'Contracting' : 'Available'
     return agFix.bld({ id, state, assignment })
   },
 
@@ -133,8 +133,10 @@ export const st = {
   expectAgentsOnAssignment(agentIds: string[], assignment: AgentAssignment): void {
     agentIds.forEach((agentId) => {
       st.expectAgentAssignment(agentId, assignment)
-      if (isActivityAssignment(assignment)) {
-        st.expectAgentState(agentId, 'OnAssignment')
+      if (assignment === 'Contracting') {
+        st.expectAgentState(agentId, 'Contracting')
+      } else if (assignment === 'Training') {
+        st.expectAgentState(agentId, 'InTraining')
       }
     })
   },

@@ -1,36 +1,11 @@
 import * as React from 'react'
 import { BarChart } from '@mui/x-charts/BarChart'
+import { useTheme } from '@mui/material/styles'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { axisConfig, formatTurn, legendSlotProps, Y_AXIS_WIDTH } from './chartsUtils'
 import { isMissionAssignment } from '../../lib/model_utils/agentUtils'
 
-// Status colors with semantic gradient coding:
-// Good: Available, In training - shades of green
-// Bad: Recovering - red
-// Busy: Contracting, Investigating - shades of yellow/gold
-// Transient: In transit, On mission - blue and purple
-type StatusColorName = 'goodLight' | 'goodDark' | 'bad' | 'busyLight' | 'busyDark' | 'transientBlue' | 'transientPurple'
-
-function getColor(name: StatusColorName): string {
-  switch (name) {
-    case 'goodLight': // Available
-      return 'hsla(120, 65%, 55%, 1)' // bright green
-    case 'goodDark': // In training
-      return 'hsla(120, 65%, 35%, 1)' // dark green
-    case 'bad': // Recovering
-      return 'hsla(0, 70%, 50%, 1)' // red
-    case 'busyLight': // Contracting
-      return 'hsla(45, 90%, 55%, 1)' // gold/amber
-    case 'busyDark': // Investigating
-      return 'hsla(35, 85%, 45%, 1)' // darker orange-gold
-    case 'transientBlue': // In transit
-      return 'hsla(210, 80%, 45%, 1)' // blue
-    case 'transientPurple': // On mission
-      return 'hsla(280, 75%, 55%, 1)' // purple with better contrast
-  }
-}
-
-export type AgentStatusDatasetRow = {
+export type AgentStatusDistributionDatasetRow = {
   turn: number
   inTransit: number
   available: number
@@ -42,12 +17,12 @@ export type AgentStatusDatasetRow = {
   totalAgents: number
 }
 
-type AgentStatusChartProps = {
+type AgentStatusDistributionChartProps = {
   gameStates: GameState[]
   height: number
 }
 
-function bldAgentStatusRow(gameState: GameState): AgentStatusDatasetRow {
+function bldAgentStatusDistributionRow(gameState: GameState): AgentStatusDistributionDatasetRow {
   const aliveAgents = gameState.agents
 
   if (aliveAgents.length === 0) {
@@ -131,13 +106,14 @@ function bldAgentStatusRow(gameState: GameState): AgentStatusDatasetRow {
   }
 }
 
-function buildAgentStatusDataset(gameStates: GameState[]): AgentStatusDatasetRow[] {
-  return gameStates.map((gameState) => bldAgentStatusRow(gameState))
+function buildAgentStatusDistributionDataset(gameStates: GameState[]): AgentStatusDistributionDatasetRow[] {
+  return gameStates.map((gameState) => bldAgentStatusDistributionRow(gameState))
 }
 
-export function AgentStatusChart(props: AgentStatusChartProps): React.JSX.Element {
+export function AgentStatusDistributionChart(props: AgentStatusDistributionChartProps): React.JSX.Element {
   const { gameStates, height } = props
-  const dataset = buildAgentStatusDataset(gameStates)
+  const theme = useTheme()
+  const dataset = buildAgentStatusDistributionDataset(gameStates)
 
   function formatTurnWithTotalAgents(turn: number): string {
     const datasetItem = dataset.find((item) => item.turn === turn)
@@ -170,43 +146,43 @@ export function AgentStatusChart(props: AgentStatusChartProps): React.JSX.Elemen
           dataKey: 'available',
           label: 'Available',
           stack: 'status',
-          color: getColor('goodLight'),
+          color: theme.palette.agentStateAvailable.light,
         },
         {
           dataKey: 'inTraining',
           label: 'In training',
           stack: 'status',
-          color: getColor('goodDark'),
+          color: theme.palette.agentStateInTraining.light,
         },
         {
           dataKey: 'contracting',
           label: 'Contracting',
           stack: 'status',
-          color: getColor('busyLight'),
+          color: theme.palette.agentStateContracting.main,
         },
         {
           dataKey: 'investigating',
           label: 'Investigating',
           stack: 'status',
-          color: getColor('busyDark'),
+          color: theme.palette.agentStateInvestigating.main,
         },
         {
           dataKey: 'recovering',
           label: 'Recovering',
           stack: 'status',
-          color: getColor('bad'),
-        },
-        {
-          dataKey: 'onMission',
-          label: 'On mission',
-          stack: 'status',
-          color: getColor('transientPurple'),
+          color: theme.palette.agentStateRecovering.main,
         },
         {
           dataKey: 'inTransit',
           label: 'In transit',
           stack: 'status',
-          color: getColor('transientBlue'),
+          color: theme.palette.agentStateInTransit.main,
+        },
+        {
+          dataKey: 'onMission',
+          label: 'On mission',
+          stack: 'status',
+          color: theme.palette.agentStateOnMission.main,
         },
       ]}
       height={height}

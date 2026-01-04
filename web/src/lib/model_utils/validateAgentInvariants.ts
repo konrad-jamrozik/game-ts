@@ -136,12 +136,12 @@ function validateInvestigationAssignment(agent: Agent, state: GameState): void {
     `Agent ${agent.id} is assigned to ${investigationId}, but the investigation does not exist`,
   )
 
-  // If agent is OnAssignment to an investigation, the investigation must be Active
-  if (agent.state === 'OnAssignment') {
+  // If agent is Investigating an investigation, the investigation must be Active
+  if (agent.state === 'Investigating') {
     assertEqual(
       investigation.state,
       'Active',
-      `Agent ${agent.id} is OnAssignment to ${investigationId} but investigation state is ${investigation.state}`,
+      `Agent ${agent.id} is Investigating ${investigationId} but investigation state is ${investigation.state}`,
     )
   }
 }

@@ -9,7 +9,7 @@ describe(getContractingIncome, () => {
     // Create an agent with skill 110
     const agent = agFix.bld({
       skill: toF6(110),
-      state: 'OnAssignment',
+      state: 'Contracting',
       assignment: 'Contracting',
     })
 
@@ -32,7 +32,7 @@ describe(getContractingIncome, () => {
     const agents = Array.from({ length: 3 }, () =>
       agFix.bld({
         skill: toF6(120),
-        state: 'OnAssignment',
+        state: 'Contracting',
         assignment: 'Contracting',
       }),
     )

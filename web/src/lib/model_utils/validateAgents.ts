@@ -60,7 +60,7 @@ export function validateOnAssignmentAgents(agents: Agent[], selectedAgentIds: st
     agents,
     selectedAgentIds,
     (selectedAgents) => notOnAssignment(selectedAgents),
-    'This action can be done only on OnAssignment or InTraining agents!',
+    'This action can be done only on Contracting, Investigating, or InTraining agents!',
   )
 }
 

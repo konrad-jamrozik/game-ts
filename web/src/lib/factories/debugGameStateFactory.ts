@@ -77,7 +77,7 @@ function bldDebugAgents(missionId: MissionId, deepStateInvestigationId: LeadInve
       ['Available',        'Standby',       100,   '',     '',     '',       ''],
       ['InTransit',        'Recovery',      80,    20,     28,     1,        ''],
       ['InTransit',        'Contracting',   90,    '',     '',     2,        ''],
-      ['OnAssignment',     'Contracting',   110,   5,      '',     4,        ''],
+      ['Contracting',      'Contracting',   110,   5,      '',     4,        ''],
       ['Recovering',       'Recovery',      100,   8,      10,     2,        ''],
       ['Recovering',       'Recovery',      100,   120,    1,      1,        ''],
       ['OnMission',        'MISSION',       95,    15,     '',     1,        ''],
@@ -86,9 +86,9 @@ function bldDebugAgents(missionId: MissionId, deepStateInvestigationId: LeadInve
       ['OnMission',        'MISSION',       85,    7,      '',     1,        ''],
       ['InTraining',       'Training',      75,    '',     '',     '',       ''],
       ['InTraining',       'Training',      90,    3,      '',     1,        ''],
-      ['OnAssignment',     'DEEP_STATE',    105,   5,      '',     2,        ''],
+      ['Investigating',    'DEEP_STATE',    105,   5,      '',     2,        ''],
       ['KIA',              'KIA',           300,   '',      0,     '',       ''],
-      ['OnAssignment',     'DEEP_STATE',    115,   8,      '',     3,        ''],
+      ['Investigating',    'DEEP_STATE',    115,   8,      '',     3,        ''],
       ['OnMission',        'MISSION',       200,   0,      '',     5,        ''],
       
     ]

@@ -23,10 +23,14 @@ export function manageAgents(api: PlayTurnAPI): void {
   assignLeftoverToContracting(api)
 }
 
+// KJA2 need to use some util here?
 function unassignExhaustedAgents(api: PlayTurnAPI): void {
   const { gameState } = api
   const assignedAgents = gameState.agents.filter(
-    (agent) => agent.state === 'OnAssignment' || (agent.state === 'InTraining' && agent.assignment === 'Training'),
+    (agent) =>
+      agent.state === 'Contracting' ||
+      agent.state === 'Investigating' ||
+      (agent.state === 'InTraining' && agent.assignment === 'Training'),
   )
 
   const exhaustedAgents = assignedAgents.filter((agent) => {

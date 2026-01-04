@@ -79,7 +79,7 @@ export function validateAssignToTraining(gameState: GameState, agentIds: AgentId
 }
 
 export function validateRecallAgents(gameState: GameState, agentIds: AgentId[]): ValidationResult {
-  // Check if all selected agents are in "OnAssignment" state
+  // Check if all selected agents are in Contracting, Investigating, or InTraining state
   const validationResult = validateOnAssignmentAgents(gameState.agents, agentIds)
   if (!validationResult.isValid) {
     return { isValid: false, errorMessage: validationResult.errorMessage }

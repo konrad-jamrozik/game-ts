@@ -33,12 +33,17 @@ export function available(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'Available')
 }
 
+// KJA2 delete onAssignment?
 export function onAssignment(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state === 'OnAssignment')
+  return agents.filter((agent) => agent.state === 'Contracting' || agent.state === 'Investigating')
 }
 
 export function onContractingAssignment(agents: Agent[]): Agent[] {
-  return agents.filter((agent) => agent.state === 'OnAssignment' && agent.assignment === 'Contracting')
+  return agents.filter((agent) => agent.state === 'Contracting')
+}
+
+export function onInvestigating(agents: Agent[]): Agent[] {
+  return agents.filter((agent) => agent.state === 'Investigating')
 }
 
 export function deployedOnMission(agents: Agent[], missionId: MissionId): Agent[] {
@@ -56,7 +61,10 @@ export function onTrainingAssignment(agents: Agent[]): Agent[] {
 
 export function recallable(agents: Agent[]): Agent[] {
   return agents.filter(
-    (agent) => agent.state === 'OnAssignment' || (agent.state === 'InTraining' && agent.assignment === 'Training'),
+    (agent) =>
+      agent.state === 'Contracting' ||
+      agent.state === 'Investigating' ||
+      (agent.state === 'InTraining' && agent.assignment === 'Training'),
   )
 }
 
@@ -64,9 +72,13 @@ export function notAvailable(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state !== 'Available')
 }
 
+// KJA2 rename? See also the str message in the caller, validateOnAssignmentAgents
 export function notOnAssignment(agents: Agent[]): Agent[] {
   return agents.filter(
-    (agent) => agent.state !== 'OnAssignment' && !(agent.state === 'InTraining' && agent.assignment === 'Training'),
+    (agent) =>
+      agent.state !== 'Contracting' &&
+      agent.state !== 'Investigating' &&
+      !(agent.state === 'InTraining' && agent.assignment === 'Training'),
   )
 }
 
@@ -76,8 +88,11 @@ export function applyExhaustion(agents: Agent[], exhaustion: Fixed6): void {
   }
 }
 
+// KJA2 delete onAssignmentWithAssignmentId?
 export function onAssignmentWithAssignmentId(agents: Agent[], assignmentId: string): Agent[] {
-  return agents.filter((agent) => agent.assignment === assignmentId && agent.state === 'OnAssignment')
+  return agents.filter(
+    (agent) => agent.assignment === assignmentId && (agent.state === 'Contracting' || agent.state === 'Investigating'),
+  )
 }
 
 export function inTransitWithAssignmentId(agents: Agent[], assignmentId: string): Agent[] {
@@ -98,7 +113,7 @@ export function onRecoveryAssignment(agents: Agent[]): Agent[] {
 
 export function investigatingAgents(agents: Agent[], investigation: LeadInvestigation): Agent[] {
   const filteredAgents = withIds(agents, investigation.agentIds)
-  return onAssignmentWithAssignmentId(filteredAgents, investigation.id)
+  return filteredAgents.filter((agent) => agent.assignment === investigation.id && agent.state === 'Investigating')
 }
 
 // Type guard functions for agent assignments

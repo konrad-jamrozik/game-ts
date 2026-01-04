@@ -4,37 +4,37 @@ overview: "Split the \"OnAssignment\" agent state into two distinct states: \"Co
 todos:
   - id: update-type
     content: Update AgentState type in agentModel.ts to replace OnAssignment with Contracting | Investigating
-    status: pending
+    status: completed
   - id: update-palette
     content: Update palette.tsx - replace agentStateOnAssignment with agentStateContracting and agentStateInvestigating
-    status: pending
+    status: completed
   - id: update-model-palette
     content: Update modelPaletteUtils.ts to map new states to new palette colors
-    status: pending
+    status: completed
   - id: update-agent-utils
     content: Update agentUtils.ts - filtering functions for new states
-    status: pending
+    status: completed
   - id: update-validate-agents
     content: Update validateAgents.ts error message
-    status: pending
+    status: completed
   - id: update-validate-invariants
     content: Update validateAgentInvariants.ts to check for Investigating state
-    status: pending
+    status: completed
   - id: update-turn-advancement
     content: Update updateAgents.ts to set correct new states on arrival
-    status: pending
+    status: completed
   - id: update-ai-logic
     content: Update manageAgents.ts AI logic for new states
-    status: pending
+    status: completed
   - id: update-chart
     content: Update AgentStatusDistributionChart.tsx for new states and colors
-    status: pending
+    status: completed
   - id: update-debug-factory
     content: Update debugGameStateFactory.ts test data
-    status: pending
+    status: completed
   - id: verify-qcheck
     content: Run qcheck to verify all changes compile and pass linting
-    status: pending
+    status: completed
 ---
 
 # Split Agent State "OnAssignment" into "Contracting" and "Investigating"

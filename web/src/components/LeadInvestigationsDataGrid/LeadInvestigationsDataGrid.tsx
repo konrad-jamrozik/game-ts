@@ -136,7 +136,7 @@ function bldAllInvestigationRows(
     const lead = getLeadById(investigation.leadId)
     const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
-    // Count agents actively working on this investigation (OnAssignment state)
+    // Count agents actively working on this investigation (Investigating state)
     const activeAgents = investigatingAgents(agents, investigation).length
 
     // Count agents in transit to this investigation
