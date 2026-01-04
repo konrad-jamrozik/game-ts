@@ -20,6 +20,7 @@ import {
   TRAINING_CAP_RATIO,
   AGENT_COUNT_BASE,
   AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER,
+  MAX_WEAPON_DAMAGE,
 } from './constants'
 
 export function spendMoney(api: PlayTurnAPI): void {
@@ -300,28 +301,50 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
   }
 
   // Deterministic round-robin for stat upgrades
+  const { gameState } = api
   const sumStatUpgrades =
     aiState.actualWeaponDamageUpgrades +
     aiState.actualTrainingSkillGainUpgrades +
     aiState.actualExhaustionRecoveryUpgrades +
     aiState.actualHitPointsRecoveryUpgrades
 
-  const upgradeIndex = sumStatUpgrades % 4
-  switch (upgradeIndex) {
-    case 0:
-      api.increaseDesiredCount('weaponDamageUpgrades')
-      return
-    case 1:
-      api.increaseDesiredCount('trainingSkillGainUpgrades')
-      return
-    case 2:
-      api.increaseDesiredCount('exhaustionRecoveryUpgrades')
-      return
-    case 3:
-      api.increaseDesiredCount('hitPointsRecoveryUpgrades')
-      return
+  // Check if weapon damage is at max - if so, skip it in round-robin
+  const weaponDamageAtMax = gameState.weaponDamage >= MAX_WEAPON_DAMAGE
+  const numUpgradesInRotation = weaponDamageAtMax ? 3 : 4
+
+  const upgradeIndex = sumStatUpgrades % numUpgradesInRotation
+  if (weaponDamageAtMax) {
+    // Skip weapon damage, cycle through other 3 upgrades
+    switch (upgradeIndex) {
+      case 0:
+        api.increaseDesiredCount('trainingSkillGainUpgrades')
+        return
+      case 1:
+        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+        return
+      case 2:
+        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+        return
+    }
+    assertUnreachable('decideSomeDesiredCount: invalid upgrade index when weapon damage at max')
+  } else {
+    // Normal round-robin with all 4 upgrades
+    switch (upgradeIndex) {
+      case 0:
+        api.increaseDesiredCount('weaponDamageUpgrades')
+        return
+      case 1:
+        api.increaseDesiredCount('trainingSkillGainUpgrades')
+        return
+      case 2:
+        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+        return
+      case 3:
+        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+        return
+    }
+    assertUnreachable('decideSomeDesiredCount: invalid upgrade index')
   }
-  assertUnreachable('decideSomeDesiredCount: invalid upgrade index')
 }
 
 function decideDesiredAgentCount(api: PlayTurnAPI): void {

@@ -21,3 +21,4 @@ export const TRANSPORT_CAP_RATIO = 0.25
 export const TRAINING_CAP_RATIO = 0.3
 export const AGENT_COUNT_BASE = 8
 export const AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER = 3
+export const MAX_WEAPON_DAMAGE = 80

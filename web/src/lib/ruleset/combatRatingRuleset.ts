@@ -5,13 +5,12 @@ import { f6mult, toF, f6c0, f6c100, toF6 } from '../primitives/fixed6'
 import { effectiveSkill } from './skillRuleset'
 import { isAgent } from '../model_utils/agentUtils'
 
-const MAX_WEAPON_DAMAGE_FOR_CR = 50
-
 /**
  * Calculates the Combat Rating (CR) for an actor (agent or enemy).
- * Formula: effective skill * (1 + (hit points / 100) + (min(50, weapon damage) / 100))
+ * Formula: effective skill * (1 + (hit points / 100) + (weapon damage / 100))
  *
  * For terminated agents, treats them as having full hit points and 0% exhaustion.
+ *
  *
  * @param actor - The actor to calculate combat rating for
  * @returns The combat rating as a number
@@ -30,7 +29,7 @@ export function calculateCombatRating(actor: Actor): number {
 
   // Calculate multiplier: 1 + (hit points / 100) + (min(50,weapon damage) / 100)
   const hpMultiplier = toF(effectiveHitPoints) / 100
-  const damageMultiplier = Math.min(MAX_WEAPON_DAMAGE_FOR_CR, actor.weapon.damage) / 100
+  const damageMultiplier = actor.weapon.damage / 100
   const multiplier = 1 + hpMultiplier + damageMultiplier
 
   return f6mult(skill, multiplier)
