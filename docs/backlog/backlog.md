@@ -164,6 +164,7 @@ KJA backlog:
 
 - Charts for agent hit points stats, weapon stats
 - Charts for details of current turn only, like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
+- Charts showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
 
 ## Charts prompt
 

@@ -9,8 +9,9 @@ import {
   type UpgradeName,
 } from '../../../lib/data_tables/upgrades'
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
+import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
-import { assertUnreachable, assertLessThan } from '../../../lib/primitives/assertPrimitives'
+import { assertLessThan, assertDefined } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
 import type { UpgradeNameOrNewAgent } from './types'
@@ -20,7 +21,12 @@ import {
   TRAINING_CAP_RATIO,
   AGENT_COUNT_BASE,
   AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER,
-  MAX_WEAPON_DAMAGE,
+  MAX_DESIRED_WEAPON_DAMAGE,
+  MAX_DESIRED_AGENT_COUNT,
+  MAX_DESIRED_TRANSPORT_CAP,
+  MAX_DESIRED_TRAINING_CAP,
+  MAX_DESIRED_EXHAUSTION_RECOVERY_PCT,
+  MAX_DESIRED_HIT_POINTS_RECOVERY_PCT,
 } from './constants'
 
 export function spendMoney(api: PlayTurnAPI): void {
@@ -272,18 +278,18 @@ function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntelle
 }
 
 function decideSomeDesiredCount(api: PlayTurnAPI): void {
-  const { aiState } = api
+  const { aiState, gameState } = api
   // Priority picks (deterministic, checked first)
   const targetTransportCap = ceil(aiState.desiredAgentCount * TRANSPORT_CAP_RATIO)
   const currentTransportCap = computeTransportCap(aiState.desiredTransportCapUpgrades)
-  if (currentTransportCap < targetTransportCap) {
+  if (currentTransportCap < targetTransportCap && currentTransportCap < MAX_DESIRED_TRANSPORT_CAP) {
     api.increaseDesiredCount('transportCapUpgrades')
     return
   }
 
   const targetTrainingCap = ceil(aiState.desiredAgentCount * TRAINING_CAP_RATIO)
   const currentTrainingCap = computeTrainingCap(aiState.desiredTrainingCapUpgrades)
-  if (currentTrainingCap < targetTrainingCap) {
+  if (currentTrainingCap < targetTrainingCap && currentTrainingCap < MAX_DESIRED_TRAINING_CAP) {
     api.increaseDesiredCount('trainingCapUpgrades')
     return
   }
@@ -310,7 +316,19 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
   }
 
   // Deterministic round-robin for stat upgrades
-  const { gameState } = api
+  decideStatUpgrade(api, gameState)
+}
+
+function decideStatUpgrade(api: PlayTurnAPI, gameState: GameState): void {
+  const availableUpgrades = getAvailableStatUpgrades(gameState)
+
+  if (availableUpgrades.length === 0) {
+    // All stat upgrades are at max, just keep increasing hit points (no cap)
+    api.increaseDesiredCount('hitPointsUpgrades')
+    return
+  }
+
+  const { aiState } = api
   const sumStatUpgrades =
     aiState.actualWeaponDamageUpgrades +
     aiState.actualTrainingSkillGainUpgrades +
@@ -318,54 +336,57 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     aiState.actualHitPointsRecoveryUpgrades +
     aiState.actualHitPointsUpgrades
 
-  // Check if weapon damage is at max - if so, skip it in round-robin
-  const weaponDamageAtMax = gameState.weaponDamage >= MAX_WEAPON_DAMAGE
-  const numUpgradesInRotation = weaponDamageAtMax ? 4 : 5
+  const upgradeIndex = sumStatUpgrades % availableUpgrades.length
+  const selectedUpgrade = availableUpgrades[upgradeIndex]
+  assertDefined(
+    selectedUpgrade,
+    `Bug: upgradeIndex ${upgradeIndex} out of bounds for availableUpgrades (length ${availableUpgrades.length})`,
+  )
+  api.increaseDesiredCount(selectedUpgrade)
+}
 
-  const upgradeIndex = sumStatUpgrades % numUpgradesInRotation
-  if (weaponDamageAtMax) {
-    // Skip weapon damage, cycle through other 4 upgrades
-    switch (upgradeIndex) {
-      case 0:
-        api.increaseDesiredCount('hitPointsUpgrades')
-        return
-      case 1:
-        api.increaseDesiredCount('trainingSkillGainUpgrades')
-        return
-      case 2:
-        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
-        return
-      case 3:
-        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
-        return
-    }
-    assertUnreachable('decideSomeDesiredCount: invalid upgrade index when weapon damage at max')
-  } else {
-    // Normal round-robin with all 5 upgrades
-    switch (upgradeIndex) {
-      case 0:
-        api.increaseDesiredCount('hitPointsUpgrades')
-        return
-      case 1:
-        api.increaseDesiredCount('weaponDamageUpgrades')
-        return
-      case 2:
-        api.increaseDesiredCount('trainingSkillGainUpgrades')
-        return
-      case 3:
-        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
-        return
-      case 4:
-        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
-        return
-    }
-    assertUnreachable('decideSomeDesiredCount: invalid upgrade index')
-  }
+type StatUpgradeType =
+  | 'hitPointsUpgrades'
+  | 'weaponDamageUpgrades'
+  | 'trainingSkillGainUpgrades'
+  | 'exhaustionRecoveryUpgrades'
+  | 'hitPointsRecoveryUpgrades'
+
+function getAvailableStatUpgrades(gameState: GameState): StatUpgradeType[] {
+  // Build array of available stat upgrades by filtering based on caps
+  const allUpgrades: { type: StatUpgradeType; available: boolean }[] = [
+    // Hit points - always available (no cap)
+    { type: 'hitPointsUpgrades', available: true },
+    // Weapon damage - capped at MAX_WEAPON_DAMAGE
+    { type: 'weaponDamageUpgrades', available: gameState.weaponDamage < MAX_DESIRED_WEAPON_DAMAGE },
+    // Training skill gain - always available (no cap)
+    { type: 'trainingSkillGainUpgrades', available: true },
+    // Exhaustion recovery - capped at MAX_DESIRED_EXHAUSTION_RECOVERY_PCT
+    {
+      type: 'exhaustionRecoveryUpgrades',
+      available: toF(gameState.exhaustionRecovery) < MAX_DESIRED_EXHAUSTION_RECOVERY_PCT,
+    },
+    // Hit points recovery - capped at MAX_DESIRED_HIT_POINTS_RECOVERY_PCT
+    {
+      type: 'hitPointsRecoveryUpgrades',
+      available: toF(gameState.hitPointsRecoveryPct) < MAX_DESIRED_HIT_POINTS_RECOVERY_PCT,
+    },
+  ]
+
+  return allUpgrades.filter((u) => u.available).map((u) => u.type)
 }
 
 function decideDesiredAgentCount(api: PlayTurnAPI): void {
-  const { aiState } = api
-  // Special case: if at cap, increase agent cap instead
+  const { aiState, gameState } = api
+
+  // Check if we've reached the maximum desired agent count
+  if (aiState.desiredAgentCount >= MAX_DESIRED_AGENT_COUNT) {
+    // At max agent count, switch to stat upgrades
+    decideStatUpgrade(api, gameState)
+    return
+  }
+
+  // Special case: if at cap, increase agent cap instead (if not at max agent count)
   const currentAgentCap = computeAgentCap(aiState.desiredAgentCapUpgrades)
   if (aiState.desiredAgentCount === currentAgentCap) {
     api.increaseDesiredCount('agentCapUpgrades')
