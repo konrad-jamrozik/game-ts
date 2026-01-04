@@ -1,8 +1,14 @@
 import * as React from 'react'
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
+import { ChartContainer } from '@mui/x-charts/ChartContainer'
+import { BarPlot } from '@mui/x-charts/BarChart'
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid'
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useTheme } from '@mui/material/styles'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
+import { axisConfig, formatTurn, LEGEND_FONT_SIZE, Y_AXIS_WIDTH } from './chartsUtils'
 import { isMissionAssignment, isLeadInvestigationAssignment } from '../../lib/model_utils/agentUtils'
 
 export type AgentStatusDistributionDatasetRow = {
@@ -124,10 +130,11 @@ export function AgentStatusDistributionChart(props: AgentStatusDistributionChart
   }
 
   return (
-    <LineChart
+    <ChartContainer
       dataset={dataset}
       xAxis={[
         {
+          scaleType: 'band',
           dataKey: 'turn',
           label: 'Turn',
           valueFormatter: formatTurnWithTotalAgents,
@@ -140,68 +147,72 @@ export function AgentStatusDistributionChart(props: AgentStatusDistributionChart
           width: Y_AXIS_WIDTH,
         },
       ]}
-      series={withNoMarkers([
+      series={[
         {
-          dataKey: 'inTransit',
-          label: 'In transit',
-          stack: 'status',
-          area: true,
-          color: theme.palette.agentStateInTransit.main,
-        },
-        {
+          type: 'bar',
           dataKey: 'available',
           label: 'Available',
+          id: 'available',
           stack: 'status',
-          area: true,
-          color: theme.palette.agentStateAvailable.main,
+          color: theme.palette.agentStateAvailable.light,
         },
         {
-          dataKey: 'recovering',
-          label: 'Recovering',
-          stack: 'status',
-          area: true,
-          color: theme.palette.agentStateRecovering.main,
-        },
-        {
+          type: 'bar',
           dataKey: 'inTraining',
           label: 'In training',
+          id: 'inTraining',
           stack: 'status',
-          area: true,
-          color: theme.palette.agentStateInTraining.main,
+          color: theme.palette.agentStateInTraining.light,
         },
         {
+          type: 'bar',
           dataKey: 'contracting',
           label: 'Contracting',
+          id: 'contracting',
           stack: 'status',
-          area: true,
           color: theme.palette.agentStateOnAssignment.main,
         },
         {
+          type: 'bar',
           dataKey: 'investigating',
           label: 'Investigating',
+          id: 'investigating',
           stack: 'status',
-          area: true,
-          color: theme.palette.agentStateOnAssignment.light,
+          color: theme.palette.agentStateOnAssignment.dark,
         },
         {
+          type: 'bar',
+          dataKey: 'recovering',
+          label: 'Recovering',
+          id: 'recovering',
+          stack: 'status',
+          color: theme.palette.agentStateRecovering.main,
+        },
+        {
+          type: 'bar',
+          dataKey: 'inTransit',
+          label: 'In transit',
+          id: 'inTransit',
+          stack: 'status',
+          color: theme.palette.agentStateInTransit.main,
+        },
+        {
+          type: 'bar',
           dataKey: 'onMission',
           label: 'On mission',
+          id: 'onMission',
           stack: 'status',
-          area: true,
           color: theme.palette.agentStateOnMission.main,
         },
-      ])}
+      ]}
       height={height}
-      grid={{ horizontal: true }}
-      sx={{
-        [`& .${lineElementClasses.root}`]: {
-          display: 'none',
-        },
-      }}
-      slotProps={{
-        tooltip: { trigger: 'axis' },
-        ...legendSlotProps,
-      }}
-    />
+    >
+      <ChartsGrid horizontal />
+      <BarPlot />
+      <ChartsXAxis />
+      <ChartsYAxis />
+      <ChartsTooltip trigger="axis" />
+      <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
+    </ChartContainer>
   )
 }
