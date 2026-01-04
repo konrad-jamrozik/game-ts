@@ -8,6 +8,7 @@ import {
   incrementActualAgentCapUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
   incrementActualHitPointsRecoveryUpgrades,
+  incrementActualHitPointsUpgrades,
   incrementActualTrainingCapUpgrades,
   incrementActualTrainingSkillGainUpgrades,
   incrementActualTransportCapUpgrades,
@@ -16,6 +17,7 @@ import {
   incrementDesiredAgentCount,
   incrementDesiredExhaustionRecoveryUpgrades,
   incrementDesiredHitPointsRecoveryUpgrades,
+  incrementDesiredHitPointsUpgrades,
   incrementDesiredTrainingCapUpgrades,
   incrementDesiredTrainingSkillGainUpgrades,
   incrementDesiredTransportCapUpgrades,
@@ -127,6 +129,11 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
       updateAiState()
     },
 
+    incrementActualHitPointsUpgrades(): void {
+      store.dispatch(incrementActualHitPointsUpgrades())
+      updateAiState()
+    },
+
     incrementActualAgentCapUpgrades(): void {
       store.dispatch(incrementActualAgentCapUpgrades())
       updateAiState()
@@ -167,6 +174,9 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
           break
         case 'hitPointsRecoveryUpgrades':
           store.dispatch(incrementDesiredHitPointsRecoveryUpgrades())
+          break
+        case 'hitPointsUpgrades':
+          store.dispatch(incrementDesiredHitPointsUpgrades())
           break
       }
       updateAiState()

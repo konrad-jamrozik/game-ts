@@ -120,6 +120,7 @@ function getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntell
     aiState.desiredHitPointsRecoveryUpgrades,
     'Hit points recovery %',
   )
+  checkActualVsDesired(aiState.actualHitPointsUpgrades, aiState.desiredHitPointsUpgrades, 'Hit points')
 
   if (foundUpgrade === undefined) {
     const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
@@ -192,6 +193,9 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
     case 'Hit points recovery %':
       api.incrementActualHitPointsRecoveryUpgrades()
       break
+    case 'Hit points':
+      api.incrementActualHitPointsUpgrades()
+      break
   }
 
   if (priority === 'Agent cap' || priority === 'Transport cap' || priority === 'Training cap') {
@@ -211,7 +215,8 @@ function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectSta
     aiState.actualWeaponDamageUpgrades >= aiState.desiredWeaponDamageUpgrades &&
     aiState.actualTrainingSkillGainUpgrades >= aiState.desiredTrainingSkillGainUpgrades &&
     aiState.actualExhaustionRecoveryUpgrades >= aiState.desiredExhaustionRecoveryUpgrades &&
-    aiState.actualHitPointsRecoveryUpgrades >= aiState.desiredHitPointsRecoveryUpgrades
+    aiState.actualHitPointsRecoveryUpgrades >= aiState.desiredHitPointsRecoveryUpgrades &&
+    aiState.actualHitPointsUpgrades >= aiState.desiredHitPointsUpgrades
   )
 }
 
@@ -226,7 +231,7 @@ function logBuyResult(
 
   log.info(
     'purchasing',
-    `Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCapUpgrades=${aiState.desiredAgentCapUpgrades}, transportCapUpgrades=${aiState.desiredTransportCapUpgrades}, trainingCapUpgrades=${aiState.desiredTrainingCapUpgrades}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}`,
+    `Purchased ${purchaseItem}. ${increaseMessage}.\n  Desired counts: agents=${aiState.desiredAgentCount}, agentCapUpgrades=${aiState.desiredAgentCapUpgrades}, transportCapUpgrades=${aiState.desiredTransportCapUpgrades}, trainingCapUpgrades=${aiState.desiredTrainingCapUpgrades}, weaponDamageUpgrades=${aiState.desiredWeaponDamageUpgrades}, trainingSkillGainUpgrades=${aiState.desiredTrainingSkillGainUpgrades}, exhaustionRecoveryUpgrades=${aiState.desiredExhaustionRecoveryUpgrades}, hitPointsRecoveryUpgrades=${aiState.desiredHitPointsRecoveryUpgrades}, hitPointsUpgrades=${aiState.desiredHitPointsUpgrades}`,
   )
 }
 
@@ -260,6 +265,9 @@ function getIncreaseMessage(api: PlayTurnAPI, stateBeforeIncrease?: BasicIntelle
   if (aiState.desiredHitPointsRecoveryUpgrades > stateBeforeIncrease.desiredHitPointsRecoveryUpgrades) {
     return `Increased desired hitPointsRecoveryUpgrades to ${aiState.desiredHitPointsRecoveryUpgrades}`
   }
+  if (aiState.desiredHitPointsUpgrades > stateBeforeIncrease.desiredHitPointsUpgrades) {
+    return `Increased desired hitPointsUpgrades to ${aiState.desiredHitPointsUpgrades}`
+  }
   return 'No change detected'
 }
 
@@ -287,7 +295,8 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     aiState.actualWeaponDamageUpgrades +
     aiState.actualTrainingSkillGainUpgrades +
     aiState.actualExhaustionRecoveryUpgrades +
-    aiState.actualHitPointsRecoveryUpgrades
+    aiState.actualHitPointsRecoveryUpgrades +
+    aiState.actualHitPointsUpgrades
 
   // Note: if the multiplier for sumTotalAllAlreadyPurchasedUpgraded is too large,
   // then the AI player spends all money just buying agents and catching up with transport and training cap.
@@ -306,15 +315,16 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     aiState.actualWeaponDamageUpgrades +
     aiState.actualTrainingSkillGainUpgrades +
     aiState.actualExhaustionRecoveryUpgrades +
-    aiState.actualHitPointsRecoveryUpgrades
+    aiState.actualHitPointsRecoveryUpgrades +
+    aiState.actualHitPointsUpgrades
 
   // Check if weapon damage is at max - if so, skip it in round-robin
   const weaponDamageAtMax = gameState.weaponDamage >= MAX_WEAPON_DAMAGE
-  const numUpgradesInRotation = weaponDamageAtMax ? 3 : 4
+  const numUpgradesInRotation = weaponDamageAtMax ? 4 : 5
 
   const upgradeIndex = sumStatUpgrades % numUpgradesInRotation
   if (weaponDamageAtMax) {
-    // Skip weapon damage, cycle through other 3 upgrades
+    // Skip weapon damage, cycle through other 4 upgrades
     switch (upgradeIndex) {
       case 0:
         api.increaseDesiredCount('trainingSkillGainUpgrades')
@@ -325,10 +335,13 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
       case 2:
         api.increaseDesiredCount('hitPointsRecoveryUpgrades')
         return
+      case 3:
+        api.increaseDesiredCount('hitPointsUpgrades')
+        return
     }
     assertUnreachable('decideSomeDesiredCount: invalid upgrade index when weapon damage at max')
   } else {
-    // Normal round-robin with all 4 upgrades
+    // Normal round-robin with all 5 upgrades
     switch (upgradeIndex) {
       case 0:
         api.increaseDesiredCount('weaponDamageUpgrades')
@@ -341,6 +354,9 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
         return
       case 3:
         api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+        return
+      case 4:
+        api.increaseDesiredCount('hitPointsUpgrades')
         return
     }
     assertUnreachable('decideSomeDesiredCount: invalid upgrade index')

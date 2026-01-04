@@ -10,6 +10,7 @@ export type DesiredCountName =
   | 'trainingSkillGainUpgrades'
   | 'exhaustionRecoveryUpgrades'
   | 'hitPointsRecoveryUpgrades'
+  | 'hitPointsUpgrades'
 
 export type BasicIntellectState = {
   desiredAgentCount: number
@@ -22,6 +23,7 @@ export type BasicIntellectState = {
   desiredTrainingSkillGainUpgrades: number
   desiredExhaustionRecoveryUpgrades: number
   desiredHitPointsRecoveryUpgrades: number
+  desiredHitPointsUpgrades: number
   // Actual cap upgrade counts (number of upgrades bought so far)
   actualAgentCapUpgrades: number
   actualTransportCapUpgrades: number
@@ -31,6 +33,7 @@ export type BasicIntellectState = {
   actualTrainingSkillGainUpgrades: number
   actualExhaustionRecoveryUpgrades: number
   actualHitPointsRecoveryUpgrades: number
+  actualHitPointsUpgrades: number
 }
 
 function createInitialState(): BasicIntellectState {
@@ -44,6 +47,7 @@ function createInitialState(): BasicIntellectState {
     desiredTrainingSkillGainUpgrades: 0,
     desiredExhaustionRecoveryUpgrades: 0,
     desiredHitPointsRecoveryUpgrades: 0,
+    desiredHitPointsUpgrades: 0,
     actualAgentCapUpgrades: 0,
     actualTransportCapUpgrades: 0,
     actualTrainingCapUpgrades: 0,
@@ -51,6 +55,7 @@ function createInitialState(): BasicIntellectState {
     actualTrainingSkillGainUpgrades: 0,
     actualExhaustionRecoveryUpgrades: 0,
     actualHitPointsRecoveryUpgrades: 0,
+    actualHitPointsUpgrades: 0,
   }
 }
 
@@ -69,6 +74,9 @@ const aiStateSlice = createSlice({
     },
     incrementActualHitPointsRecoveryUpgrades(state) {
       state.actualHitPointsRecoveryUpgrades += 1
+    },
+    incrementActualHitPointsUpgrades(state) {
+      state.actualHitPointsUpgrades += 1
     },
     incrementActualAgentCapUpgrades(state) {
       state.actualAgentCapUpgrades += 1
@@ -103,6 +111,9 @@ const aiStateSlice = createSlice({
     incrementDesiredHitPointsRecoveryUpgrades(state) {
       state.desiredHitPointsRecoveryUpgrades += 1
     },
+    incrementDesiredHitPointsUpgrades(state) {
+      state.desiredHitPointsUpgrades += 1
+    },
     reset(state) {
       const initialState = createInitialState()
       Object.assign(state, initialState)
@@ -115,6 +126,7 @@ export const {
   incrementActualTrainingSkillGainUpgrades,
   incrementActualExhaustionRecoveryUpgrades,
   incrementActualHitPointsRecoveryUpgrades,
+  incrementActualHitPointsUpgrades,
   incrementActualAgentCapUpgrades,
   incrementActualTransportCapUpgrades,
   incrementActualTrainingCapUpgrades,
@@ -126,6 +138,7 @@ export const {
   incrementDesiredTrainingSkillGainUpgrades,
   incrementDesiredExhaustionRecoveryUpgrades,
   incrementDesiredHitPointsRecoveryUpgrades,
+  incrementDesiredHitPointsUpgrades,
   reset: resetAiState,
 } = aiStateSlice.actions
 

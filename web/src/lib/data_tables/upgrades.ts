@@ -8,6 +8,7 @@ export type UpgradeName =
   | 'Training skill gain'
   | 'Exhaustion recovery %'
   | 'Hit points recovery %'
+  | 'Hit points'
   | 'Weapon damage'
 
 export const UPGRADE_PRICES: Record<UpgradeName, number> = {
@@ -17,6 +18,7 @@ export const UPGRADE_PRICES: Record<UpgradeName, number> = {
   'Training skill gain': 500,
   'Exhaustion recovery %': 500,
   'Hit points recovery %': 500,
+  'Hit points': 500,
   'Weapon damage': 500,
 }
 
@@ -27,6 +29,7 @@ export const UPGRADE_INCREMENTS: Record<UpgradeName, number | Fixed6> = {
   'Training skill gain': toF6(0.1),
   'Exhaustion recovery %': toF6(0.5),
   'Hit points recovery %': toF6(0.2),
+  'Hit points': 1,
   'Weapon damage': 1,
 }
 

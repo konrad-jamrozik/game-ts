@@ -24,6 +24,7 @@ export type GameState = {
   trainingSkillGain: Fixed6
   exhaustionRecovery: Fixed6
   hitPointsRecoveryPct: Fixed6
+  agentMaxHitPoints: number
   weaponDamage: number
   turnExpenditures: {
     agentHiring: number

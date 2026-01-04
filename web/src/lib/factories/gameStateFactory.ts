@@ -34,6 +34,7 @@ export const initialGameState: GameState = {
   trainingSkillGain: TRAINING_SKILL_GAIN,
   exhaustionRecovery: AGENT_EXHAUSTION_RECOVERY_PER_TURN,
   hitPointsRecoveryPct: AGENT_HIT_POINTS_RECOVERY_PCT,
+  agentMaxHitPoints: 30,
   weaponDamage: initialWeapon.damage,
   agents: bldInitialAgents(),
   terminatedAgents: [],

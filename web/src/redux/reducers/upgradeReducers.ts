@@ -1,4 +1,4 @@
-import { f6add } from '../../lib/primitives/fixed6'
+import { f6add, f6eq, toF6 } from '../../lib/primitives/fixed6'
 import {
   getUpgradePrice,
   getUpgradeIncrement,
@@ -48,6 +48,21 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
     }
     case 'Hit points recovery %': {
       state.hitPointsRecoveryPct = f6add(state.hitPointsRecoveryPct, getUpgradeIncrementFixed6(upgradeName))
+      break
+    }
+    case 'Hit points': {
+      const increment = getUpgradeIncrement(upgradeName)
+      state.agentMaxHitPoints += increment
+      const incrementFixed6 = toF6(increment)
+      // Upgrade max hit points for all agents
+      for (const agent of state.agents) {
+        const wasAtFullHealth = f6eq(agent.hitPoints, agent.maxHitPoints)
+        agent.maxHitPoints = f6add(agent.maxHitPoints, incrementFixed6)
+        // If agent was at full health, also increase current hit points
+        if (wasAtFullHealth) {
+          agent.hitPoints = agent.maxHitPoints
+        }
+      }
       break
     }
     case 'Weapon damage': {

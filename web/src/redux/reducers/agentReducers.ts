@@ -8,12 +8,14 @@ import type { LeadInvestigation } from '../../lib/model/leadModel'
 import { bldAgent } from '../../lib/factories/agentFactory'
 import { bldWeapon } from '../../lib/factories/weaponFactory'
 import { validateAgentInvariants } from '../../lib/model_utils/validateAgentInvariants'
+import { toF6 } from '../../lib/primitives/fixed6'
 
 export const hireAgent = asPlayerAction((state: GameState) => {
   const newAgent = bldAgent({
     agentCount: state.totalAgentsHired,
     turnHired: state.turn,
     weapon: bldWeapon({ damage: state.weaponDamage }),
+    maxHitPoints: toF6(state.agentMaxHitPoints),
     state: 'InTransit',
     assignment: 'Standby',
   })

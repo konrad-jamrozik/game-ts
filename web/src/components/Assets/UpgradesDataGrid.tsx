@@ -38,8 +38,15 @@ export function UpgradesDataGrid(): React.JSX.Element {
       price: UPGRADE_PRICES['Hit points recovery %'],
     },
     {
-      name: 'Weapon damage',
+      name: 'Hit points',
       id: 10,
+      value: gameState.agentMaxHitPoints,
+      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Hit points']),
+      price: UPGRADE_PRICES['Hit points'],
+    },
+    {
+      name: 'Weapon damage',
+      id: 11,
       value: gameState.weaponDamage,
       upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Weapon damage']),
       price: UPGRADE_PRICES['Weapon damage'],

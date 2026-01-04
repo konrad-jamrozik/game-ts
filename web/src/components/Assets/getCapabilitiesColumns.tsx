@@ -13,6 +13,7 @@ export type UpgradeRow = {
     | 'Training skill gain'
     | 'Exhaustion recovery %'
     | 'Hit points recovery %'
+    | 'Hit points'
     | 'Weapon damage'
   displayedName?: string
   value: number | string
