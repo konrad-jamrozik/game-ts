@@ -21,8 +21,8 @@ import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/selectors/chartsSelectors'
-import { AgentSkillDistributionChart } from './AgentSkillDistributionChart'
-import { AgentStatusDistributionChart } from './AgentStatusDistributionChart'
+import { AgentSkillChart } from './AgentSkillChart'
+import { AgentStatusChart } from './AgentStatusChart'
 import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
@@ -241,12 +241,12 @@ export function ChartsScreen(): React.JSX.Element {
 
         <ChartsPanel
           title="Skill Ranges Covered by Agent Skill Percentiles"
-          renderChart={(height) => <AgentSkillDistributionChart gameStates={gameStates} height={height} />}
+          renderChart={(height) => <AgentSkillChart gameStates={gameStates} height={height} />}
         />
 
         <ChartsPanel
           title="Agent status distribution"
-          renderChart={(height) => <AgentStatusDistributionChart gameStates={gameStates} height={height} />}
+          renderChart={(height) => <AgentStatusChart gameStates={gameStates} height={height} />}
         />
 
         <ChartsPanel

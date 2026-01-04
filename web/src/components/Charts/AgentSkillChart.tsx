@@ -31,7 +31,7 @@ function getColor(name: 'green' | 'yellow' | 'orange' | 'red' | 'darkRed'): stri
   }
 }
 
-export type AgentSkillDistributionDatasetRow = {
+export type AgentSkillDatasetRow = {
   turn: number
   p0to25: number
   p25to50: number
@@ -62,12 +62,12 @@ export type AgentSkillDistributionDatasetRow = {
   maxSkill: number
 }
 
-type AgentSkillDistributionChartProps = {
+type AgentSkillChartProps = {
   gameStates: GameState[]
   height: number
 }
 
-function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistributionDatasetRow {
+function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
   const aliveAgents = gameState.agents
 
   if (aliveAgents.length === 0) {
@@ -223,13 +223,13 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   }
 }
 
-function buildAgentSkillDistributionDataset(gameStates: GameState[]): AgentSkillDistributionDatasetRow[] {
-  return gameStates.map((gameState) => bldAgentSkillDistributionRow(gameState))
+function buildAgentSkillDataset(gameStates: GameState[]): AgentSkillDatasetRow[] {
+  return gameStates.map((gameState) => bldAgentSkillRow(gameState))
 }
 
-export function AgentSkillDistributionChart(props: AgentSkillDistributionChartProps): React.JSX.Element {
+export function AgentSkillChart(props: AgentSkillChartProps): React.JSX.Element {
   const { gameStates, height } = props
-  const dataset = buildAgentSkillDistributionDataset(gameStates)
+  const dataset = buildAgentSkillDataset(gameStates)
 
   function createSkillValueFormatter(
     lowerBoundKey: 'minP0' | 'minP25' | 'minP50' | 'minP75' | 'minP95',
