@@ -24,9 +24,9 @@ function getColor(name: StatusColorName): string {
     case 'busyDark': // Investigating
       return 'hsla(35, 85%, 45%, 1)' // darker orange-gold
     case 'transientBlue': // In transit
-      return 'hsla(210, 70%, 50%, 1)' // blue
+      return 'hsla(210, 80%, 45%, 1)' // blue
     case 'transientPurple': // On mission
-      return 'hsla(270, 60%, 50%, 1)' // purple
+      return 'hsla(280, 75%, 55%, 1)' // purple with better contrast
   }
 }
 
@@ -197,16 +197,16 @@ export function AgentStatusChart(props: AgentStatusChartProps): React.JSX.Elemen
           color: getColor('bad'),
         },
         {
-          dataKey: 'inTransit',
-          label: 'In transit',
-          stack: 'status',
-          color: getColor('transientBlue'),
-        },
-        {
           dataKey: 'onMission',
           label: 'On mission',
           stack: 'status',
           color: getColor('transientPurple'),
+        },
+        {
+          dataKey: 'inTransit',
+          label: 'In transit',
+          stack: 'status',
+          color: getColor('transientBlue'),
         },
       ]}
       height={height}
