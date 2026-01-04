@@ -4,7 +4,25 @@ KJA backlog:
 
 # Current milestone
 
-- Compute ratio (for retreat) as combat rating, not skill. See onenote MLS6 for more details.
+## Next
+
+- Cursor plan: Implement the split on assignment state plan
+- Consider adding "Exhausted" state when exhaustion >= 100%. Assignment is "Recovery", so same as state "Recovering".
+- Remove obsolete charts
+- When persisting undoable state, persist player actions only for the current turn,
+  - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
+- Better turn reset controls, working well with the new undo/persistence setup.
+
+## MUI
+
+- Add pagination to agents data grid
+
+## Perf
+
+- Does the `<Strict> mode` continue double rendering even for vite preview?
+  - Note: removing this doesn't speed up tests. Confirmed.
+
+## AI
 
 - Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
   - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
@@ -16,26 +34,11 @@ KJA backlog:
 
 - AI assigns only 1 agent to non-repeatable leads.
 
-- Add pagination to agents data grid
-
-- When persisting undoable state, persist player actions only for the current turn,
-  - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
-- Better turn reset controls, working well with the new undo/persistence setup.
-
-- Does the `<Strict> mode` continue double rendering even for vite preview>
-  - Note: removing this doesn't speed up tests.
-
 - Add more AI tests:
 - e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
 - "aggressive AI" that tries to win the game as fast as possible, assuming cheats are on, so it always wins all rolls.
   So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
   before the exhaustion causes them to lose so much effective skill that commander orders retreat.
-
-- Fixup charts, see below
-
-# Dev ergonomics
-
-Make sure that my ps1 profile doesn't output stuff when used by agent, but outputs when used by me.
 
 # Game mechanics ideas
 
