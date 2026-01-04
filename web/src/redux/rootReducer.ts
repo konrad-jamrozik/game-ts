@@ -1,15 +1,15 @@
-import { combineReducers, type Reducer } from 'redux'
+import { combineReducers, type Reducer, type UnknownAction } from 'redux'
 import undoable, { type StateWithHistory } from 'redux-undo'
 import eventsReducer, { type EventsState } from './slices/eventsSlice'
 import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
+import { COMPACT_HISTORY, compactHistoryState, type UndoableCombinedState } from './slices/historyCompaction'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import selectionReducer, { type SelectionState } from './slices/selectionSlice'
 import settingsReducer, { type SettingsState } from './slices/settingsSlice'
 import expansionReducer, { type ExpansionState } from './slices/expansionSlice'
-import aiStateReducer, { type BasicIntellectState } from './slices/aiStateSlice'
-import type { GameState } from '../lib/model/gameStateModel'
+import aiStateReducer from './slices/aiStateSlice'
 
-export const DEFAULT_UNDO_LIMIT = 500
+export const DEFAULT_UNDO_LIMIT = 1000
 
 export type RootReducerState = {
   undoable: StateWithHistory<UndoableCombinedState>
@@ -19,11 +19,8 @@ export type RootReducerState = {
   expansion: ExpansionState
 }
 
-// Define explicit types for the state structure
-type UndoableCombinedState = {
-  gameState: GameState
-  aiState: BasicIntellectState
-}
+// Re-export UndoableCombinedState for consumers that import from rootReducer
+export type { UndoableCombinedState } from './slices/historyCompaction'
 
 export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reducer<RootReducerState> {
   // 1. Start by creating a combined reducer having only one `gameState` reducer.
@@ -49,13 +46,33 @@ export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reduc
     filter: (action) => isPlayerAction(action) || advanceTurn.match(action),
   })
 
-  // 3. Now actually combine the undoable `gameState` with all the other reducers.
+  // 3. Wrap the undoable reducer to handle COMPACT_HISTORY action
+  const undoableReducerWithCompaction = wrapWithCompaction(undoableReducer)
+
+  // 4. Now actually combine the undoable `gameState` with all the other reducers.
   // Combine undoable and non-undoable reducers
   return combineReducers({
-    undoable: undoableReducer,
+    undoable: undoableReducerWithCompaction,
     events: eventsReducer, // Events are not wrapped in undoable
     settings: settingsReducer, // Settings are not wrapped in undoable
     selection: selectionReducer, // Selection state is not wrapped in undoable
     expansion: expansionReducer, // Expansion state is not wrapped in undoable
   })
+}
+
+/**
+ * Wraps the undoable reducer to intercept COMPACT_HISTORY actions
+ * and apply turn-based history compaction.
+ */
+function wrapWithCompaction(
+  reducer: Reducer<StateWithHistory<UndoableCombinedState>>,
+): Reducer<StateWithHistory<UndoableCombinedState>> {
+  return (state, action: UnknownAction) => {
+    const newState = reducer(state, action)
+
+    if (action.type === COMPACT_HISTORY) {
+      return compactHistoryState(newState)
+    }
+    return newState
+  }
 }

@@ -46,6 +46,16 @@ export function ResetControls(): React.JSX.Element {
   const actionsThisTurn = useAppSelector((state: RootReducerState) => getCurrentTurnState(state).actionsCount)
   const availableUndoSteps = useAppSelector((state: RootReducerState) => state.undoable.past.length)
   const canResetTurn = actionsThisTurn > 0 && availableUndoSteps >= actionsThisTurn
+
+  // Check if we can revert to the previous turn (only when no actions in current turn)
+  const hasPreviousTurnInHistory = undoable.past.some((s) => s.gameState.turn < currentTurn)
+  const canRevertToPreviousTurn = actionsThisTurn === 0 && hasPreviousTurnInHistory
+
+  // Find the index to jump to for reverting to end of previous turn
+  // This finds the last state from the previous turn (the one just before turn advancement)
+  const revertToPreviousTurnIndex = canRevertToPreviousTurn
+    ? undoable.past.findLastIndex((s) => s.gameState.turn < currentTurn)
+    : -1
   const theme = useTheme()
   const labelSx: SxProps = { backgroundColor: theme.palette.background.cardContent }
 
@@ -81,6 +91,29 @@ export function ResetControls(): React.JSX.Element {
     }
   }
 
+  function handleRevertTurn(): void {
+    if (canRevertToPreviousTurn && revertToPreviousTurnIndex >= 0) {
+      const previousTurnState = undoable.past[revertToPreviousTurnIndex]
+      if (!previousTurnState) {
+        return
+      }
+      const targetTurn = previousTurnState.gameState.turn
+      const targetActionsCount = previousTurnState.gameState.actionsCount
+      log.info('game', `Revert to end of turn ${targetTurn}`)
+      // Jump to the last state of the previous turn
+      // jumpToPast takes the index in the past array (0-based from oldest)
+      dispatch(ActionCreators.jumpToPast(revertToPreviousTurnIndex))
+
+      // Permanently drop any events that occurred after that point
+      dispatch(
+        truncateEventsTo({
+          turn: targetTurn,
+          actionsCount: targetActionsCount,
+        }),
+      )
+    }
+  }
+
   function handleAccordionChange(_event: React.SyntheticEvent, isExpanded: boolean): void {
     dispatch(setResetControlsExpanded(isExpanded))
   }
@@ -103,8 +136,9 @@ export function ResetControls(): React.JSX.Element {
             <Button
               variant="contained"
               onClick={handleUndo}
-              disabled={!canUndo}
+              disabled={!canUndo || actionsThisTurn === 0}
               sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
+              title={actionsThisTurn === 0 ? 'Use "Revert turn" to go back to previous turn' : undefined}
             >
               Undo
             </Button>
@@ -120,12 +154,18 @@ export function ResetControls(): React.JSX.Element {
           <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
             <Button
               variant="contained"
-              onClick={handleResetTurn}
+              onClick={canResetTurn ? handleResetTurn : handleRevertTurn}
               sx={destructiveButtonSx}
-              disabled={!canResetTurn}
-              title={!canResetTurn ? 'No prior state at start of this turn' : undefined}
+              disabled={!canResetTurn && !canRevertToPreviousTurn}
+              title={
+                canResetTurn
+                  ? 'Reset to start of current turn'
+                  : canRevertToPreviousTurn
+                    ? 'Revert to end of previous turn'
+                    : 'No prior state available'
+              }
             >
-              Reset turn
+              {canResetTurn ? 'Reset turn' : 'Revert turn'}
             </Button>
             <Button
               variant="contained"

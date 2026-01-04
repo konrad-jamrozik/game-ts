@@ -39,7 +39,11 @@ const initialEventsState: EventsState = {
   nextEventId: 1,
 }
 
-const MAX_EVENTS = 10
+const MAX_EVENTS = 1000
+
+// Keep events for the last 3 turns (N, N-1, N-2)
+// This must match RECENT_TURNS_TO_KEEP in historyCompaction.ts
+const RECENT_TURNS_TO_KEEP = 3
 
 const eventsSlice = createSlice({
   name: 'events',
@@ -130,9 +134,29 @@ const eventsSlice = createSlice({
     clearEvents(state) {
       state.events = []
     },
+    // Remove events from turns older than the last 3 turns (N-3 and earlier)
+    compactEventsByTurn(state, action: PayloadAction<{ currentTurn: number }>) {
+      const { currentTurn } = action.payload
+      // Turns at or below this threshold will have their events removed
+      const oldTurnThreshold = currentTurn - RECENT_TURNS_TO_KEEP
+
+      // Remove events from old turns
+      state.events = state.events.filter((event) => event.turn > oldTurnThreshold)
+
+      // Also enforce overall limit
+      if (state.events.length > MAX_EVENTS) {
+        state.events.splice(MAX_EVENTS)
+      }
+    },
   },
 })
 
-export const { addTextEvent, addMissionCompletedEvent, addTurnAdvancementEvent, truncateEventsTo, clearEvents } =
-  eventsSlice.actions
+export const {
+  addTextEvent,
+  addMissionCompletedEvent,
+  addTurnAdvancementEvent,
+  truncateEventsTo,
+  clearEvents,
+  compactEventsByTurn,
+} = eventsSlice.actions
 export default eventsSlice.reducer

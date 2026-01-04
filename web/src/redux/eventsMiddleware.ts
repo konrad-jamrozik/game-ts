@@ -1,7 +1,14 @@
 import type { Middleware } from '@reduxjs/toolkit'
 import { ActionCreators } from 'redux-undo'
 import { getMissionDataById } from '../lib/model_utils/missionUtils'
-import { addTextEvent, addTurnAdvancementEvent, clearEvents, truncateEventsTo } from './slices/eventsSlice'
+import { compactHistory } from './slices/historyCompaction'
+import {
+  addTextEvent,
+  addTurnAdvancementEvent,
+  clearEvents,
+  compactEventsByTurn,
+  truncateEventsTo,
+} from './slices/eventsSlice'
 import {
   advanceTurn,
   assignAgentsToContracting,
@@ -67,6 +74,10 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
           actionsCount: gameState.actionsCount,
         }),
       )
+      // Compact undo history to keep only last state for turns N-3 and earlier
+      store.dispatch(compactHistory())
+      // Compact events log to remove events from turns N-3 and earlier
+      store.dispatch(compactEventsByTurn({ currentTurn: gameState.turn }))
     } else if (hireAgent.match(action)) {
       postTextEvent('Agent hired')
     } else if (sackAgents.match(action)) {

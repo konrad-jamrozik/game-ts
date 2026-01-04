@@ -4,22 +4,22 @@ overview: Implement turn-based history compaction that keeps all player action s
 todos:
   - id: create-compaction
     content: Create historyCompaction.ts with action type, constants (RECENT_TURNS_TO_KEEP=3), and compaction logic function
-    status: pending
+    status: completed
   - id: wrap-reducer
     content: Wrap undoable reducer in rootReducer.ts to handle COMPACT_HISTORY action
-    status: pending
+    status: completed
   - id: update-events-slice
     content: "Update eventsSlice.ts: change MAX_EVENTS to 500, add compactEventsByTurn reducer"
-    status: pending
+    status: completed
   - id: dispatch-compaction
     content: Update eventsMiddleware.ts to dispatch compactHistory() and compactEventsByTurn() after advanceTurn
-    status: pending
+    status: completed
   - id: update-reset-button
     content: "Update ResetControls.tsx: Reset turn vs Revert turn logic based on actionsThisTurn"
-    status: pending
+    status: completed
   - id: update-undo-button
     content: "Update ResetControls.tsx: Disable undo when actionsThisTurn === 0"
-    status: pending
+    status: completed
 ---
 
 # Undo History Compaction
