@@ -8,7 +8,7 @@ import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } 
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
-import { TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
+import { NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
 
 /**
@@ -117,39 +117,52 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
         repeatableLeadSelected = lead
       }
 
-      const agents = selectNextBestReadyAgents(gameState, 1, selectedAgentIds, selectedAgentIds.length, {
-        includeInTraining: true,
-      })
-      const agent = agents[0]
-      if (agent === undefined) {
+      // For non-repeatable leads, aim to have at least ceil(difficulty / divisor) agents
+      // For repeatable leads, just assign 1 agent (piling happens in next iterations)
+      const { gameState: currentGameState } = api
+      const existingInvestigation = findActiveInvestigation(currentGameState, lead.id)
+      const currentAgentsOnLead = existingInvestigation?.agentIds.length ?? 0
+      const minAgentsForNonRepeatable = Math.ceil(lead.difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR)
+      const agentsNeededForLead = lead.repeatable ? 1 : Math.max(1, minAgentsForNonRepeatable - currentAgentsOnLead)
+
+      const agents = selectNextBestReadyAgents(
+        gameState,
+        agentsNeededForLead,
+        selectedAgentIds,
+        selectedAgentIds.length,
+        {
+          includeInTraining: true,
+        },
+      )
+      if (agents.length === 0) {
         break
       }
 
-      selectedAgentIds.push(agent.id)
+      selectedAgentIds.push(...agents.map((a) => a.id))
 
-      // Unassign agent from training if needed
-      unassignAgentsFromTraining(api, [agent])
-
-      // Check if there's an existing investigation for this lead
-      // Re-read gameState to get the latest state after previous API calls
-      const { gameState: currentGameState } = api
-      const existingInvestigation = findActiveInvestigation(currentGameState, lead.id)
+      // Unassign agents from training if needed
+      unassignAgentsFromTraining(api, agents)
 
       if (existingInvestigation) {
         api.addAgentsToInvestigation({
           investigationId: existingInvestigation.id,
-          agentIds: [agent.id],
+          agentIds: agents.map((a) => a.id),
         })
       } else {
         api.startLeadInvestigation({
           leadId: lead.id,
-          agentIds: [agent.id],
+          agentIds: agents.map((a) => a.id),
         })
         // Remove the lead from availableLeads since it now has an active investigation
         const leadIndex = availableLeads.findIndex((l) => l.id === lead.id)
         if (leadIndex !== -1) {
           availableLeads.splice(leadIndex, 1)
         }
+      }
+
+      // For non-repeatable leads, adjust loop counter to account for batch assignment
+      if (!lead.repeatable && agents.length > 1) {
+        i += agents.length - 1
       }
     }
   }

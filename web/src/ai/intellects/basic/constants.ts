@@ -9,6 +9,9 @@ export const TARGET_COMBAT_RATING_MULTIPLIER = 1.2
 export const TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER = 1.2
 export const MAX_READY_URGENT_EXHAUSTION_PCT = 25
 
+// Constants for assignToLeadInvestigation function
+export const NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR = 8
+
 // Constants for selectNextBestReadyAgents function
 export const MAX_READY_EXHAUSTION_PCT = 5
 export const AGENT_RESERVE_PCT = 0.2
