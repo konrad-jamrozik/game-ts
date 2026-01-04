@@ -108,7 +108,7 @@ describe(PlayerActions, () => {
 
     await ui.recallAgents() // Act
 
-    ui.expectPlayerActionsAlert('This action can be done only on OnAssignment or InTraining agents!')
+    ui.expectPlayerActionsAlert('This action can be done only on Contracting, Investigating, or InTraining agents!')
     st.expectAgentState(agentId, 'Available') // Expect unchanged
   })
 
