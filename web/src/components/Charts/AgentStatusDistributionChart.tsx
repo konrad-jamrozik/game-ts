@@ -1,14 +1,8 @@
 import * as React from 'react'
-import { ChartContainer } from '@mui/x-charts/ChartContainer'
-import { BarPlot } from '@mui/x-charts/BarChart'
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
-import { ChartsGrid } from '@mui/x-charts/ChartsGrid'
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
-import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
+import { BarChart } from '@mui/x-charts/BarChart'
 import { useTheme } from '@mui/material/styles'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { axisConfig, formatTurn, LEGEND_FONT_SIZE, Y_AXIS_WIDTH } from './chartsUtils'
+import { axisConfig, formatTurn, legendSlotProps, Y_AXIS_WIDTH } from './chartsUtils'
 import { isMissionAssignment, isLeadInvestigationAssignment } from '../../lib/model_utils/agentUtils'
 
 export type AgentStatusDistributionDatasetRow = {
@@ -130,7 +124,7 @@ export function AgentStatusDistributionChart(props: AgentStatusDistributionChart
   }
 
   return (
-    <ChartContainer
+    <BarChart
       dataset={dataset}
       xAxis={[
         {
@@ -149,70 +143,54 @@ export function AgentStatusDistributionChart(props: AgentStatusDistributionChart
       ]}
       series={[
         {
-          type: 'bar',
           dataKey: 'available',
           label: 'Available',
-          id: 'available',
           stack: 'status',
           color: theme.palette.agentStateAvailable.light,
         },
         {
-          type: 'bar',
           dataKey: 'inTraining',
           label: 'In training',
-          id: 'inTraining',
           stack: 'status',
           color: theme.palette.agentStateInTraining.light,
         },
         {
-          type: 'bar',
           dataKey: 'contracting',
           label: 'Contracting',
-          id: 'contracting',
           stack: 'status',
           color: theme.palette.agentStateOnAssignment.main,
         },
         {
-          type: 'bar',
           dataKey: 'investigating',
           label: 'Investigating',
-          id: 'investigating',
           stack: 'status',
           color: theme.palette.agentStateOnAssignment.dark,
         },
         {
-          type: 'bar',
           dataKey: 'recovering',
           label: 'Recovering',
-          id: 'recovering',
           stack: 'status',
           color: theme.palette.agentStateRecovering.main,
         },
         {
-          type: 'bar',
           dataKey: 'inTransit',
           label: 'In transit',
-          id: 'inTransit',
           stack: 'status',
           color: theme.palette.agentStateInTransit.main,
         },
         {
-          type: 'bar',
           dataKey: 'onMission',
           label: 'On mission',
-          id: 'onMission',
           stack: 'status',
           color: theme.palette.agentStateOnMission.main,
         },
       ]}
       height={height}
-    >
-      <ChartsGrid horizontal />
-      <BarPlot />
-      <ChartsXAxis />
-      <ChartsYAxis />
-      <ChartsTooltip trigger="axis" />
-      <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
-    </ChartContainer>
+      grid={{ horizontal: true }}
+      slotProps={{
+        tooltip: { trigger: 'axis' },
+        ...legendSlotProps,
+      }}
+    />
   )
 }
