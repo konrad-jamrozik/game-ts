@@ -6,7 +6,13 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
+import {
+  clearInvestigationSelection,
+  clearLeadSelection,
+  setLeadSelection,
+  setLeadsFilterType,
+  type LeadsFilterType,
+} from '../../redux/slices/selectionSlice'
 import { DataGridCard } from '../Common/DataGridCard'
 import { LeadsDataGridToolbar } from './LeadsDataGridToolbar'
 import { getLeadsColumns, type LeadRow } from './getLeadsColumns'
@@ -20,7 +26,7 @@ export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const gameState = useAppSelector(getCurrentTurnState)
-  const [filterType, setFilterType] = React.useState<'active' | 'inactive' | 'archived'>('active')
+  const filterType: LeadsFilterType = useAppSelector((state) => state.selection.leadsFilterType ?? 'active')
 
   // Get all discovered leads using shared logic
   const discoveredLeads = getDiscoveredLeads(gameState)
@@ -125,7 +131,7 @@ export function LeadsDataGrid(): React.JSX.Element {
       slotProps={{
         toolbar: {
           filterType,
-          onFilterTypeChange: setFilterType,
+          onFilterTypeChange: (type: LeadsFilterType) => dispatch(setLeadsFilterType(type)),
         },
       }}
       showToolbar

@@ -6,7 +6,11 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { clearMissionSelection, setMissionSelection } from '../../redux/slices/selectionSlice'
+import {
+  clearMissionSelection,
+  setMissionSelection,
+  setMissionsShowArchived,
+} from '../../redux/slices/selectionSlice'
 import {
   getActiveOrDeployedMissions,
   getArchivedMissions,
@@ -29,7 +33,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const { missions, turnStartReport } = gameState
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
-  const [showArchived, setShowArchived] = React.useState(false)
+  const showArchived = useAppSelector((state) => state.selection.missionsShowArchived ?? false)
 
   const completedThisTurnIds: Set<string> = getCompletedMissionIds(turnStartReport)
 
@@ -131,7 +135,7 @@ export function MissionsDataGrid(): React.JSX.Element {
       slotProps={{
         toolbar: {
           showArchived,
-          onToggleArchived: setShowArchived,
+          onToggleArchived: (checked: boolean) => dispatch(setMissionsShowArchived(checked)),
         },
       }}
       showToolbar

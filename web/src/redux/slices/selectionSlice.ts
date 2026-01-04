@@ -2,6 +2,8 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../../lib/model/modelIds'
 import type { UpgradeName } from '../../lib/data_tables/upgrades'
 
+export type LeadsFilterType = 'active' | 'inactive' | 'archived'
+
 export type SelectionState = {
   agents: AgentId[]
   selectedLeadId?: LeadId
@@ -13,6 +15,16 @@ export type SelectionState = {
   aiTurnCount?: number
   viewMissionDetailsId?: MissionId
   viewCharts?: true
+  // Data grid filter states
+  missionsShowArchived?: boolean
+  leadsFilterType?: LeadsFilterType
+  investigationsShowActive?: boolean
+  investigationsShowDone?: boolean
+  investigationsShowAbandoned?: boolean
+  agentsShowTerminated?: boolean
+  agentsShowAvailable?: boolean
+  agentsShowRecovering?: boolean
+  agentsShowStats?: boolean
 }
 
 const initialState: SelectionState = {
@@ -79,6 +91,16 @@ const selectionSlice = createSlice({
       delete state.selectedUpgradeName
       delete state.viewMissionDetailsId
       delete state.viewCharts
+      // Clear data grid filter states
+      delete state.missionsShowArchived
+      delete state.leadsFilterType
+      delete state.investigationsShowActive
+      delete state.investigationsShowDone
+      delete state.investigationsShowAbandoned
+      delete state.agentsShowTerminated
+      delete state.agentsShowAvailable
+      delete state.agentsShowRecovering
+      delete state.agentsShowStats
       // Selections not deleted, i.e. preserved:
       // AI section selections (selectedAIIntellect, autoAdvanceTurn, and aiTurnCount)
     },
@@ -93,6 +115,34 @@ const selectionSlice = createSlice({
     },
     clearViewCharts(state) {
       delete state.viewCharts
+    },
+    // Data grid filter reducers
+    setMissionsShowArchived(state, action: PayloadAction<boolean>) {
+      state.missionsShowArchived = action.payload
+    },
+    setLeadsFilterType(state, action: PayloadAction<LeadsFilterType>) {
+      state.leadsFilterType = action.payload
+    },
+    setInvestigationsShowActive(state, action: PayloadAction<boolean>) {
+      state.investigationsShowActive = action.payload
+    },
+    setInvestigationsShowDone(state, action: PayloadAction<boolean>) {
+      state.investigationsShowDone = action.payload
+    },
+    setInvestigationsShowAbandoned(state, action: PayloadAction<boolean>) {
+      state.investigationsShowAbandoned = action.payload
+    },
+    setAgentsShowTerminated(state, action: PayloadAction<boolean>) {
+      state.agentsShowTerminated = action.payload
+    },
+    setAgentsShowAvailable(state, action: PayloadAction<boolean>) {
+      state.agentsShowAvailable = action.payload
+    },
+    setAgentsShowRecovering(state, action: PayloadAction<boolean>) {
+      state.agentsShowRecovering = action.payload
+    },
+    setAgentsShowStats(state, action: PayloadAction<boolean>) {
+      state.agentsShowStats = action.payload
     },
   },
 })
@@ -119,5 +169,15 @@ export const {
   clearViewMissionDetails,
   setViewCharts,
   clearViewCharts,
+  // Data grid filter actions
+  setMissionsShowArchived,
+  setLeadsFilterType,
+  setInvestigationsShowActive,
+  setInvestigationsShowDone,
+  setInvestigationsShowAbandoned,
+  setAgentsShowTerminated,
+  setAgentsShowAvailable,
+  setAgentsShowRecovering,
+  setAgentsShowStats,
 } = selectionSlice.actions
 export default selectionSlice.reducer

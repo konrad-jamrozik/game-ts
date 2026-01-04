@@ -17,6 +17,9 @@ import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
+  setInvestigationsShowActive,
+  setInvestigationsShowDone,
+  setInvestigationsShowAbandoned,
 } from '../../redux/slices/selectionSlice'
 import { filterLeadInvestigationRows } from './LeadInvestigationsDataGridUtils'
 import { getCompletedInvestigationIds } from '../../lib/model_utils/turnReportUtils'
@@ -34,9 +37,9 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const { leadInvestigations, agents, turnStartReport } = gameState
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
-  const [showActive, setShowActive] = React.useState(true)
-  const [showDone, setShowDone] = React.useState(false)
-  const [showAbandoned, setShowAbandoned] = React.useState(false)
+  const showActive = useAppSelector((state) => state.selection.investigationsShowActive ?? true)
+  const showDone = useAppSelector((state) => state.selection.investigationsShowDone ?? false)
+  const showAbandoned = useAppSelector((state) => state.selection.investigationsShowAbandoned ?? false)
 
   const completedThisTurnIds = getCompletedInvestigationIds(turnStartReport)
 
@@ -113,11 +116,11 @@ export function LeadInvestigationsDataGrid(): React.JSX.Element {
         slotProps={{
           toolbar: {
             showActive,
-            onToggleActive: setShowActive,
+            onToggleActive: (checked: boolean) => dispatch(setInvestigationsShowActive(checked)),
             showDone,
-            onToggleDone: setShowDone,
+            onToggleDone: (checked: boolean) => dispatch(setInvestigationsShowDone(checked)),
             showAbandoned,
-            onToggleAbandoned: setShowAbandoned,
+            onToggleAbandoned: (checked: boolean) => dispatch(setInvestigationsShowAbandoned(checked)),
           },
         }}
         showToolbar

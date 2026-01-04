@@ -4,7 +4,13 @@ import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
-import { setAgentSelection } from '../../redux/slices/selectionSlice'
+import {
+  setAgentSelection,
+  setAgentsShowTerminated,
+  setAgentsShowAvailable,
+  setAgentsShowRecovering,
+  setAgentsShowStats,
+} from '../../redux/slices/selectionSlice'
 import { withIds } from '../../lib/model_utils/agentUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AgentsToolbar } from './AgentsToolbar'
@@ -21,45 +27,45 @@ export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const [showOnlyTerminated, setShowOnlyTerminated] = React.useState(false)
-  const [showOnlyAvailable, setShowOnlyAvailable] = React.useState(false)
-  const [showRecovering, setShowRecovering] = React.useState(false)
-  const [showStats, setShowStats] = React.useState(false)
+  const showOnlyTerminated = useAppSelector((state) => state.selection.agentsShowTerminated ?? false)
+  const showOnlyAvailable = useAppSelector((state) => state.selection.agentsShowAvailable ?? false)
+  const showRecovering = useAppSelector((state) => state.selection.agentsShowRecovering ?? false)
+  const showStats = useAppSelector((state) => state.selection.agentsShowStats ?? false)
 
   // Handlers that enforce mutual exclusivity: only one checkbox can be selected at a time
   function handleToggleAvailable(checked: boolean): void {
-    setShowOnlyAvailable(checked)
+    dispatch(setAgentsShowAvailable(checked))
     if (checked) {
-      setShowOnlyTerminated(false)
-      setShowRecovering(false)
-      setShowStats(false)
+      dispatch(setAgentsShowTerminated(false))
+      dispatch(setAgentsShowRecovering(false))
+      dispatch(setAgentsShowStats(false))
     }
   }
 
   function handleToggleTerminated(checked: boolean): void {
-    setShowOnlyTerminated(checked)
+    dispatch(setAgentsShowTerminated(checked))
     if (checked) {
-      setShowOnlyAvailable(false)
-      setShowRecovering(false)
-      setShowStats(false)
+      dispatch(setAgentsShowAvailable(false))
+      dispatch(setAgentsShowRecovering(false))
+      dispatch(setAgentsShowStats(false))
     }
   }
 
   function handleToggleRecovering(checked: boolean): void {
-    setShowRecovering(checked)
+    dispatch(setAgentsShowRecovering(checked))
     if (checked) {
-      setShowOnlyTerminated(false)
-      setShowOnlyAvailable(false)
-      setShowStats(false)
+      dispatch(setAgentsShowTerminated(false))
+      dispatch(setAgentsShowAvailable(false))
+      dispatch(setAgentsShowStats(false))
     }
   }
 
   function handleToggleStats(checked: boolean): void {
-    setShowStats(checked)
+    dispatch(setAgentsShowStats(checked))
     if (checked) {
-      setShowOnlyTerminated(false)
-      setShowOnlyAvailable(false)
-      setShowRecovering(false)
+      dispatch(setAgentsShowTerminated(false))
+      dispatch(setAgentsShowAvailable(false))
+      dispatch(setAgentsShowRecovering(false))
     }
   }
 
