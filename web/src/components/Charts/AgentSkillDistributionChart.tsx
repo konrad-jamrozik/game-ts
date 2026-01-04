@@ -8,7 +8,7 @@ import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } 
 
 const baselineSkill = toF(initialAgent.skill)
 
-// Percentile band colors (static): bottom band = green, top band = dark_red
+// Percentile band colors (static): bottom band = green, top band = darkRed
 // When only one band is visible, it's green. As more bands become visible,
 // the newest visible band is green and older ones shift to warmer colors.
 // - p0to25 (bottom band, lowest skills) → GREEN
@@ -16,18 +16,18 @@ const baselineSkill = toF(initialAgent.skill)
 // - p50to75 → ORANGE
 // - p75to95 → RED
 // - p95to100 (top band, highest skills) → DARK_RED
-function getColor(name: 'green' | 'yellow' | 'orange' | 'red' | 'dark_red'): string {
+function getColor(name: 'green' | 'yellow' | 'orange' | 'red' | 'darkRed'): string {
   switch (name) {
     case 'green':
-      return 'hsla(120, 75%, 40%, 1)'
+      return 'hsla(120, 75%, 50%, 1)'
     case 'yellow':
-      return 'hsla(60, 75%, 40%, 1)'
+      return 'hsla(60, 75%, 50%, 1)'
     case 'orange':
-      return 'hsla(30, 75%, 40%, 1)'
+      return 'hsla(30, 75%, 50%, 1)'
     case 'red':
-      return 'hsla(0, 75%, 40%, 1)'
-    case 'dark_red':
-      return 'hsla(0, 75%, 25%, 1)'
+      return 'hsla(0, 75%, 50%, 1)'
+    case 'darkRed':
+      return 'hsla(0, 75%, 35%, 1)'
   }
 }
 
@@ -108,16 +108,16 @@ function bldAgentSkillDistributionRow(gameState: GameState): AgentSkillDistribut
   const bands = computeSkillBands(skillsAtOrAboveBaseline)
 
   // Map bands to the expected data structure
-  // The bands are returned in ascending order (green first, then yellow, orange, red, dark_red)
-  // This matches the chart display order: p0to25 (green) → p95to100 (dark_red)
+  // The bands are returned in ascending order (green first, then yellow, orange, red, darkRed)
+  // This matches the chart display order: p0to25 (green) → p95to100 (darkRed)
 
   // Create a map from band names to indices
-  const bandToIndex: Record<'green' | 'yellow' | 'orange' | 'red' | 'dark_red', number> = {
+  const bandToIndex: Record<'green' | 'yellow' | 'orange' | 'red' | 'darkRed', number> = {
     green: 0, // p0to25 (lowest band)
     yellow: 1, // p25to50
     orange: 2, // p50to75
     red: 3, // p75to95
-    dark_red: 4, // p95to100 (highest band)
+    darkRed: 4, // p95to100 (highest band)
   }
 
   // Initialize arrays for all bands
@@ -321,7 +321,7 @@ export function AgentSkillDistributionChart(props: AgentSkillDistributionChartPr
           label: 'Top 5% (agents)',
           stack: 'skill',
           area: true,
-          color: getColor('dark_red'),
+          color: getColor('darkRed'),
           valueFormatter: createSkillValueFormatter('minP95', 'maxSkill', 'countP95to100', false),
         },
       ])}

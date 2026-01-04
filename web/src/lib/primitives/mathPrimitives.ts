@@ -242,7 +242,7 @@ export function computeDecileBands(skills: readonly number[]): DecileBand[] {
 }
 
 export type SkillBand = {
-  band: 'green' | 'yellow' | 'orange' | 'red' | 'dark_red'
+  band: 'green' | 'yellow' | 'orange' | 'red' | 'darkRed'
   minSkill: number // actual minimum skill in this band
   maxSkill: number // actual maximum skill in this band
   count: number // number of agents in this band
@@ -267,7 +267,7 @@ export type SkillBand = {
  *    - Dark Red: skill >= p95
  *
  * @param skills - Array of agent skill values (not sorted)
- * @returns Array of skill bands, ordered from lowest (green) to highest (dark_red).
+ * @returns Array of skill bands, ordered from lowest (green) to highest (darkRed).
  *          Empty bands are omitted from the result.
  */
 export function computeSkillBands(skills: readonly number[]): SkillBand[] {
@@ -361,7 +361,7 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[] {
 
   if (darkRedSkills.length > 0) {
     bands.push({
-      band: 'dark_red',
+      band: 'darkRed',
       minSkill: Math.min(...darkRedSkills),
       maxSkill: Math.max(...darkRedSkills),
       count: darkRedSkills.length,

@@ -4,10 +4,10 @@ overview: Create a stacked area chart showing alive agents categorized by their 
 todos:
   - id: create-chart-component
     content: Create AgentStatusDistributionChart.tsx with dataset type, build function, and chart component
-    status: pending
+    status: completed
   - id: add-to-charts-screen
     content: Import and add the new chart to ChartsScreen.tsx
-    status: pending
+    status: completed
 ---
 
 # Agent Status Distribution Chart

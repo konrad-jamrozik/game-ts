@@ -4,7 +4,7 @@ This document explains how the agent skill distribution chart computes and displ
 
 ## Overview
 
-The agent skill distribution chart displays agent skills grouped into 1-5 bands (green, yellow, orange, red, dark_red) based on **agent percentiles**. The algorithm uses fixed percentile cutpoint thresholds derived from rank positions to assign agents to bands. This approach prevents changes at the bottom from cascading upward and affecting the top band.
+The agent skill distribution chart displays agent skills grouped into 1-5 bands (green, yellow, orange, red, darkRed) based on **agent percentiles**. The algorithm uses fixed percentile cutpoint thresholds derived from rank positions to assign agents to bands. This approach prevents changes at the bottom from cascading upward and affecting the top band.
 
 ## Banding Algorithm
 
@@ -102,7 +102,7 @@ Result:
 
 Each band represents:
 
-- **Band name**: Color identifier (green, yellow, orange, red, dark_red)
+- **Band name**: Color identifier (green, yellow, orange, red, darkRed)
 - **Percentile range**: Bottom 25%, 25–50%, 50–75%, 75–95%, or Top 5% of agents
 - **Skill range**: The min/max skill values in the band
 - **Agent count**: The number of agents in this percentile band
@@ -148,7 +148,7 @@ export function computeSkillBands(skills: readonly number[]): SkillBand[]
 
 Where `SkillBand` contains:
 
-- `band`: Color identifier ('green' | 'yellow' | 'orange' | 'red' | 'dark_red')
+- `band`: Color identifier ('green' | 'yellow' | 'orange' | 'red' | 'darkRed')
 - `minSkill`: Actual minimum skill in this band
 - `maxSkill`: Actual maximum skill in this band
 - `count`: Number of agents in this band

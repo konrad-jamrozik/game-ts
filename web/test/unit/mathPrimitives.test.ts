@@ -635,7 +635,7 @@ describe(computeSkillBands, () => {
         count: 5,
       })
       expect(result[1]).toStrictEqual({
-        band: 'dark_red',
+        band: 'darkRed',
         minSkill: 4,
         maxSkill: 4,
         count: 5,
@@ -670,7 +670,7 @@ describe(computeSkillBands, () => {
         count: 2,
       })
       expect(result[2]).toStrictEqual({
-        band: 'dark_red',
+        band: 'darkRed',
         minSkill: 400,
         maxSkill: 400,
         count: 3,
@@ -685,7 +685,7 @@ describe(computeSkillBands, () => {
       // Dark Red: skill >= 10 → 10, 10, 10 (3)
       const original = [1, 1, 1, 1, 5, 5, 5, 10, 10, 10]
       const originalResult = computeSkillBands(original)
-      const originalDarkRedBand = originalResult.find((b) => b.band === 'dark_red')
+      const originalDarkRedBand = originalResult.find((b) => b.band === 'darkRed')
 
       // Modified: raise low-end skills from 1 to 3
       // [3, 3, 3, 3, 5, 5, 5, 10, 10, 10]
@@ -693,7 +693,7 @@ describe(computeSkillBands, () => {
       // Dark Red should still be: skill >= 10 → 10, 10, 10 (3)
       const modified = [3, 3, 3, 3, 5, 5, 5, 10, 10, 10]
       const modifiedResult = computeSkillBands(modified)
-      const modifiedDarkRedBand = modifiedResult.find((b) => b.band === 'dark_red')
+      const modifiedDarkRedBand = modifiedResult.find((b) => b.band === 'darkRed')
 
       expect(originalDarkRedBand?.count).toBe(3)
       expect(modifiedDarkRedBand?.count).toBe(3)
@@ -724,7 +724,7 @@ describe(computeSkillBands, () => {
       expect(result[2]?.band).toBe('red')
       expect(result[2]?.minSkill).toBe(300)
       expect(result[2]?.count).toBe(1)
-      expect(result[3]?.band).toBe('dark_red')
+      expect(result[3]?.band).toBe('darkRed')
       expect(result[3]?.minSkill).toBe(400)
       expect(result[3]?.count).toBe(1)
     })
@@ -750,7 +750,7 @@ describe(computeSkillBands, () => {
       expect(result[2]?.count).toBe(1)
       expect(result[3]?.band).toBe('red')
       expect(result[3]?.count).toBe(2)
-      expect(result[4]?.band).toBe('dark_red')
+      expect(result[4]?.band).toBe('darkRed')
       expect(result[4]?.count).toBe(1)
     })
 
@@ -762,7 +762,7 @@ describe(computeSkillBands, () => {
       const skills = Array.from({ length: 20 }, (_, i) => 10 + i * 10)
       const result = computeSkillBands(skills)
 
-      const darkRedBand = result.find((b) => b.band === 'dark_red')
+      const darkRedBand = result.find((b) => b.band === 'darkRed')
       expect(darkRedBand).toBeDefined()
       expect(darkRedBand?.minSkill).toBe(190)
       expect(darkRedBand?.maxSkill).toBe(200)
@@ -797,7 +797,7 @@ describe(computeSkillBands, () => {
       expect(result[0]?.band).toBe('green')
       expect(result[0]?.minSkill).toBe(10)
       expect(result[0]?.count).toBe(1)
-      expect(result[1]?.band).toBe('dark_red')
+      expect(result[1]?.band).toBe('darkRed')
       expect(result[1]?.minSkill).toBe(20)
       expect(result[1]?.count).toBe(1)
     })
@@ -818,7 +818,7 @@ describe(computeSkillBands, () => {
       expect(result[0]?.count).toBe(1)
       expect(result[1]?.band).toBe('yellow')
       expect(result[1]?.count).toBe(1)
-      expect(result[2]?.band).toBe('dark_red')
+      expect(result[2]?.band).toBe('darkRed')
       expect(result[2]?.count).toBe(1)
     })
   })
@@ -856,7 +856,7 @@ describe(computeSkillBands, () => {
       expect(result[0]?.count).toBe(3)
       expect(result[1]?.band).toBe('yellow')
       expect(result[1]?.count).toBe(3)
-      expect(result[2]?.band).toBe('dark_red')
+      expect(result[2]?.band).toBe('darkRed')
       expect(result[2]?.count).toBe(4)
     })
   })
