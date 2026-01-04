@@ -327,16 +327,16 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     // Skip weapon damage, cycle through other 4 upgrades
     switch (upgradeIndex) {
       case 0:
-        api.increaseDesiredCount('trainingSkillGainUpgrades')
+        api.increaseDesiredCount('hitPointsUpgrades')
         return
       case 1:
-        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+        api.increaseDesiredCount('trainingSkillGainUpgrades')
         return
       case 2:
-        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
         return
       case 3:
-        api.increaseDesiredCount('hitPointsUpgrades')
+        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
         return
     }
     assertUnreachable('decideSomeDesiredCount: invalid upgrade index when weapon damage at max')
@@ -344,19 +344,19 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     // Normal round-robin with all 5 upgrades
     switch (upgradeIndex) {
       case 0:
-        api.increaseDesiredCount('weaponDamageUpgrades')
+        api.increaseDesiredCount('hitPointsUpgrades')
         return
       case 1:
-        api.increaseDesiredCount('trainingSkillGainUpgrades')
+        api.increaseDesiredCount('weaponDamageUpgrades')
         return
       case 2:
-        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
+        api.increaseDesiredCount('trainingSkillGainUpgrades')
         return
       case 3:
-        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
+        api.increaseDesiredCount('exhaustionRecoveryUpgrades')
         return
       case 4:
-        api.increaseDesiredCount('hitPointsUpgrades')
+        api.increaseDesiredCount('hitPointsRecoveryUpgrades')
         return
     }
     assertUnreachable('decideSomeDesiredCount: invalid upgrade index')
