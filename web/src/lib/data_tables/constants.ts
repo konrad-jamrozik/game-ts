@@ -47,15 +47,6 @@ export const RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD = 0.8
 // Units with effective skill at or below this percentage of their base skill are incapacitated and cannot participate in battle.
 export const COMBAT_INCAPACITATION_THRESHOLD = 0.1
 
-/** The total accumulated lead intel decays by this amount per 1 accumulated intel.
- */
-export const LEAD_INTEL_DECAY_PER_ONE_INTEL = 0.001 // 0.1% decay per intel point
-/**
- * The maximum amount of intel that can be lost through decay.
- * This cap exists to prevent intel decaying too fast.
- */
-export const MAX_INTEL_DECAY = 0.5
-
 // Lead investigation tuning constants
 export const AGENT_LEAD_INVESTIGATION_INTEL = 10
 export const LEAD_DIFFICULTY_MULTIPLIER = 100
