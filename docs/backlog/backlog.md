@@ -6,12 +6,16 @@ KJA backlog:
 
 ## Next
 
-- Cursor plan: Implement the split on assignment state plan
-- Consider adding "Exhausted" state when exhaustion >= 100%. Assignment is "Recovery", so same as state "Recovering".
-- Remove obsolete charts
 - When persisting undoable state, persist player actions only for the current turn,
   - For all the previous turns, persist only the final state of the turn (which also includes the turn start report)
 - Better turn reset controls, working well with the new undo/persistence setup.
+
+- Ensure that charts show data from last game state in given turn. This is relevant for the last 3 turns, that may
+  have intermediate states due to player actions.
+
+- Remove obsolete charts
+
+- Consider adding "Exhausted" state when exhaustion >= 100%. Assignment is "Recovery", so same as state "Recovering".
 
 ## MUI
 
