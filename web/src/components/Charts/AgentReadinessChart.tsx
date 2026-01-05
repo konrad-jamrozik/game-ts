@@ -11,14 +11,7 @@ import { toF } from '../../lib/primitives/fixed6'
 // Bad: Exhausted - red
 // Recovering: Recovering - dark red
 // Away: Away states - blue/purple
-type ReadinessColorName =
-  | 'ready'
-  | 'slightlyTired'
-  | 'tired'
-  | 'veryTired'
-  | 'exhausted'
-  | 'recovering'
-  | 'away'
+type ReadinessColorName = 'ready' | 'slightlyTired' | 'tired' | 'veryTired' | 'exhausted' | 'recovering' | 'away'
 
 function getColor(name: ReadinessColorName): string {
   switch (name) {
