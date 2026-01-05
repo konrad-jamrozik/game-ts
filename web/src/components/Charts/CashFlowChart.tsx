@@ -16,7 +16,15 @@ import { amber, green, red } from '@mui/material/colors'
 // Income: green shades (positive values)
 // Expenses: red shades (negative values)
 // Net flow: amber (line)
-type CashFlowColorName = 'funding' | 'contracting' | 'rewards' | 'upkeep' | 'agentHiring' | 'capIncreases' | 'upgrades' | 'netFlow'
+type CashFlowColorName =
+  | 'funding'
+  | 'contracting'
+  | 'rewards'
+  | 'upkeep'
+  | 'agentHiring'
+  | 'capIncreases'
+  | 'upgrades'
+  | 'netFlow'
 
 function getColor(name: CashFlowColorName): string {
   switch (name) {

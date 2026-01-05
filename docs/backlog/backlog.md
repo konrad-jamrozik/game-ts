@@ -11,11 +11,24 @@ KJA backlog:
 - Ensure that charts show data from last game state in given turn. This is relevant for the last 3 turns, that may
   have intermediate states due to player actions.
 
-- Remove obsolete charts
-
 - Consider adding "Exhausted" state when exhaustion >= 100%. Assignment is "Recovery", so same as state "Recovering".
 
-- Do the charts, see Charts below.
+## Charts
+
+- Charts for upgrades (similar to asset charts)
+- Overlay onto agent Combat rating chart two lines (use MUI colors https://mui.com/material-ui/customization/color/#color-palette):
+  - Red line: highest mission Combat Rating ever seen up until given turn
+  - Orange line: average mission Combat Rating averaged across all missions that appeared in last 20 turns
+- Chart for missions: cumulative missions completed successfully, failed, expired, etc.
+- Mode for charts: display only current turn, not historical. This may change display mode.
+  There would be charts like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
+- Charts showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
+- Charts showing cumulative agent KIA & sacked
+- Charts with each faction stats, like mission frequency, activity level, suppression, etc.
+- Chart with panic. It should be area chart stacking total panic by source faction that caused it.
+- Chart for most dangerous enemy type (and faction), e.g. how much damage agents have suffered from operatives
+- Chart for enemy types killed
+- Remove/update obsolete charts
 
 ## MUI
 
@@ -148,55 +161,3 @@ KJA backlog:
       width: 150,
     },  
   ```
-
-# Charts
-
-- Charts for agent hit points stats, weapon stats
-- Charts for details of current turn only, like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
-- Charts showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
-
-## Charts prompt
-
-Now I will tell you what will be plotted on these charts, from left to right:
-- Chart 1: Assets
-  - Agent count, Funding, Money
-- Chart 2: Agent skill
-  - Min, average, median and top 10% (90th percentile), and sum total of the following:
-    - Agent max effective skill
-  - Sum total of the following:
-    - Agent current effective skill
-- Chart 3: Agent readiness
-  - avg per agent, and max over all agents, of the following:
-    - Max hit points, current hit points
-    - Exhaustion
-    - Recovery turns
-- Chart 4: Missions
-  - Total missions ever:
-    - spawned
-    - expired
-    - completed successfully
-    - retreated
-    - resulting in wipe
-- Chart 5: Battle stats
-  - Total (over missions, so e.g. each mission deployment counts as one)
-    - Agents deployed on missions
-    - Agents KIAed during missions
-    - Agents wounded during missions
-    - Agents unscathed from missions
-    - Enemies KIAed during missions
-- Chart 5: Situation report
-  - Panic level
-
-- Display exhaustion as %. I.e. the current exhaustion of 67 should be displayed at 67%. Still store it as integer, rename to "exhaustionPct".
-
-## Charts todos
-
-- Fixup charts, see https://github.com/konrad-jamrozik/game/blob/2f0dad472a40acd738f49971acdb063080a4fe66/web/src/components/GameStatsLineChart.tsx#L67
-- Charts for stats over time, at the bottom of the screen.
-  - Panic
-  - Each faction threat level, suppression, panic increase
-  - Money
-  - Cumulative missions completed successfully, failed, expired
-  - Hardest mission completed by total enemy skill
-  - Agents, and what they do: contracting, investigating leads, on missions, etc.
-  - Agent skill: min, average, median (top 50%, 50th percentile), top 10% (90th percentile), max
