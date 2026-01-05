@@ -20,7 +20,6 @@ import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
-import { initialAgent } from '../../lib/factories/agentFactory'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function AgentsDataGrid(): React.JSX.Element {
@@ -139,13 +138,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   // Calculate total Combat Rating for selected agents (normalized)
   const selectedAgents = withIds(gameState.agents, agentSelection)
   const selectedAgentsCombatRating: number | undefined =
-    selectedAgents.length > 0
-      ? (() => {
-          const totalCR = sum(selectedAgents, (agent) => calculateCombatRating(agent))
-          const initialAgentCR = calculateCombatRating(initialAgent)
-          return totalCR / initialAgentCR
-        })()
-      : undefined
+    selectedAgents.length > 0 ? sum(selectedAgents, (agent) => calculateCombatRating(agent)) : undefined
 
   const agentCounts = calculateAgentCounts(allAgents)
   const title = <AgentsDataGridTitle counts={agentCounts} />
