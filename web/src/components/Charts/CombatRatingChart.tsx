@@ -35,7 +35,7 @@ function getColor(name: CombatRatingColorName): string {
   }
 }
 
-export type AgentCombatRatingDatasetRow = {
+export type CombatRatingDatasetRow = {
   turn: number
   readyCR: number
   tiredCR: number
@@ -43,17 +43,18 @@ export type AgentCombatRatingDatasetRow = {
   recoveringCR: number
   totalCR: number
   highestMissionCR: number
-  avgMissionCR20: number
+  p50MissionCR20: number
+  p80MissionCR20: number
 }
 
-type AgentCombatRatingChartProps = {
+type CombatRatingChartProps = {
   gameStates: GameState[]
   height: number
 }
 
-export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): React.JSX.Element {
+export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Element {
   const { gameStates, height } = props
-  const dataset = buildAgentCombatRatingDataset(gameStates)
+  const dataset = buildCombatRatingDataset(gameStates)
 
   function formatTurnWithTotalCR(turn: number): string {
     const datasetItem = dataset.find((item) => item.turn === turn)
@@ -116,12 +117,20 @@ export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): Reac
           color: red[500], // Bright red
         },
         {
-          id: 'avgMissionCR20',
+          id: 'p50MissionCR20',
           type: 'line',
-          dataKey: 'avgMissionCR20',
-          label: 'Avg Mission CR (20 turns)',
+          dataKey: 'p50MissionCR20',
+          label: 'P50 Mission CR (20 turns)',
           showMark: false,
           color: red[800], // Dark red
+        },
+        {
+          id: 'p80MissionCR20',
+          type: 'line',
+          dataKey: 'p80MissionCR20',
+          label: 'P80 Mission CR (20 turns)',
+          showMark: false,
+          color: red[600], // Medium red
         },
       ]}
       height={height}
@@ -145,7 +154,7 @@ export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): Reac
   )
 }
 
-function buildAgentCombatRatingDataset(gameStates: GameState[]): AgentCombatRatingDatasetRow[] {
+function buildCombatRatingDataset(gameStates: GameState[]): CombatRatingDatasetRow[] {
   // Collect all mission CRs per turn for computing metrics
   const missionCRsByTurn = new Map<number, number[]>()
 
@@ -159,11 +168,11 @@ function buildAgentCombatRatingDataset(gameStates: GameState[]): AgentCombatRati
   }
 
   let runningMaxMissionCR = 0
-  const dataset: AgentCombatRatingDatasetRow[] = []
+  const dataset: CombatRatingDatasetRow[] = []
 
   for (const gameState of gameStates) {
     const turn = gameState.turn
-    const agentRow = bldAgentCombatRatingRow(gameState)
+    const agentRow = bldCombatRatingRow(gameState)
 
     // Update running max with current turn's missions
     const currentMissionCRs = missionCRsByTurn.get(turn) ?? []
@@ -173,42 +182,53 @@ function buildAgentCombatRatingDataset(gameStates: GameState[]): AgentCombatRati
       }
     }
 
-    // Calculate 20-turn rolling average
-    const avgMissionCR20 = calculateRollingAvgMissionCR(turn, missionCRsByTurn, 20)
+    // Calculate 20-turn rolling percentiles
+    const { p50, p80 } = calculateRollingPercentilesMissionCR(turn, missionCRsByTurn, 20)
 
     dataset.push({
       ...agentRow,
       highestMissionCR: runningMaxMissionCR,
-      avgMissionCR20,
+      p50MissionCR20: p50,
+      p80MissionCR20: p80,
     })
   }
 
   return dataset
 }
 
-function calculateRollingAvgMissionCR(
+function calculateRollingPercentilesMissionCR(
   currentTurn: number,
   missionCRsByTurn: Map<number, number[]>,
   windowSize: number,
-): number {
+): { p50: number; p80: number } {
   const startTurn = Math.max(1, currentTurn - windowSize + 1)
-  let totalCR = 0
-  let missionCount = 0
+  const allCRs: number[] = []
 
   for (let turn = startTurn; turn <= currentTurn; turn += 1) {
     const missionCRs = missionCRsByTurn.get(turn) ?? []
-    for (const cr of missionCRs) {
-      totalCR += cr
-      missionCount += 1
-    }
+    allCRs.push(...missionCRs)
   }
 
-  return missionCount > 0 ? totalCR / missionCount : 0
+  if (allCRs.length === 0) {
+    return { p50: 0, p80: 0 }
+  }
+
+  // Sort in ascending order
+  const sorted = allCRs.toSorted((a, b) => a - b)
+
+  // Calculate percentiles
+  const p50Index = Math.floor((sorted.length - 1) * 0.5)
+  const p80Index = Math.floor((sorted.length - 1) * 0.8)
+
+  return {
+    p50: sorted[p50Index] ?? 0,
+    p80: sorted[p80Index] ?? 0,
+  }
 }
 
-function bldAgentCombatRatingRow(
+function bldCombatRatingRow(
   gameState: GameState,
-): Omit<AgentCombatRatingDatasetRow, 'highestMissionCR' | 'avgMissionCR20'> {
+): Omit<CombatRatingDatasetRow, 'highestMissionCR' | 'p50MissionCR20' | 'p80MissionCR20'> {
   const aliveAgents = gameState.agents
 
   if (aliveAgents.length === 0) {

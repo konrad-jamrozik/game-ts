@@ -19,7 +19,7 @@ KJA backlog:
 - Overlay onto agent Combat rating chart two lines (use MUI colors https://mui.com/material-ui/customization/color/#color-palette):
   - Red line: highest mission Combat Rating ever seen up until given turn
   - Orange line: average mission Combat Rating averaged across all missions that appeared in last 20 turns
-- Chart for missions: cumulative missions completed successfully, failed, expired, etc.
+- Chart for missions: cumulative missions completed successfully, failed, expired, wiped, etc. Split Offensive and defensive missions.
 - Mode for charts: display only current turn, not historical. This may change display mode.
   There would be charts like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
 - Chart showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
