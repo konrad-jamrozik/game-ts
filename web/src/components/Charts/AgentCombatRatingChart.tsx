@@ -1,7 +1,16 @@
 import * as React from 'react'
-import { BarChart } from '@mui/x-charts/BarChart'
+import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
+import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
+import { BarPlot } from '@mui/x-charts/BarChart'
+import { LinePlot } from '@mui/x-charts/LineChart'
+import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
+import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
+import { ChartsGrid } from '@mui/x-charts/ChartsGrid'
+import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
+import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
+import { red } from '@mui/material/colors'
 import type { GameState } from '../../lib/model/gameStateModel'
-import { axisConfig, formatTurn, legendSlotProps, Y_AXIS_WIDTH } from './chartsUtils'
+import { axisConfig, LEGEND_FONT_SIZE, yAxisConfig } from './chartsUtils'
 import { isMissionAssignment } from '../../lib/model_utils/agentUtils'
 import { toF } from '../../lib/primitives/fixed6'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
@@ -33,6 +42,8 @@ export type AgentCombatRatingDatasetRow = {
   awayCR: number
   recoveringCR: number
   totalCR: number
+  highestMissionCR: number
+  avgMissionCR20: number
 }
 
 type AgentCombatRatingChartProps = {
@@ -40,7 +51,156 @@ type AgentCombatRatingChartProps = {
   height: number
 }
 
-function bldAgentCombatRatingRow(gameState: GameState): AgentCombatRatingDatasetRow {
+export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): React.JSX.Element {
+  const { gameStates, height } = props
+  const dataset = buildAgentCombatRatingDataset(gameStates)
+
+  function formatTurnWithTotalCR(turn: number): string {
+    const datasetItem = dataset.find((item) => item.turn === turn)
+    if (datasetItem === undefined) {
+      return formatTurn(turn)
+    }
+    return `${formatTurn(turn)} (Total CR: ${datasetItem.totalCR.toFixed(2)})`
+  }
+
+  return (
+    <ChartDataProvider
+      dataset={dataset}
+      xAxis={[
+        {
+          scaleType: 'band',
+          dataKey: 'turn',
+          label: 'Turn',
+          valueFormatter: formatTurnWithTotalCR,
+          ...axisConfig,
+        },
+      ]}
+      yAxis={[yAxisConfig]}
+      series={[
+        // Bar series for agent combat ratings (stacked)
+        {
+          type: 'bar',
+          dataKey: 'readyCR',
+          label: 'Ready CR',
+          stack: 'combatRating',
+          color: getColor('ready'),
+        },
+        {
+          type: 'bar',
+          dataKey: 'tiredCR',
+          label: 'Tired CR',
+          stack: 'combatRating',
+          color: getColor('tired'),
+        },
+        {
+          type: 'bar',
+          dataKey: 'awayCR',
+          label: 'Away CR',
+          stack: 'combatRating',
+          color: getColor('away'),
+        },
+        {
+          type: 'bar',
+          dataKey: 'recoveringCR',
+          label: 'Recovering CR',
+          stack: 'combatRating',
+          color: getColor('recovering'),
+        },
+        // Line series for mission combat ratings
+        {
+          type: 'line',
+          dataKey: 'highestMissionCR',
+          label: 'Highest Mission CR',
+          showMark: false,
+          color: red[500], // Bright red
+        },
+        {
+          type: 'line',
+          dataKey: 'avgMissionCR20',
+          label: 'Avg Mission CR (20 turns)',
+          showMark: false,
+          color: red[800], // Dark red
+        },
+      ]}
+      height={height}
+    >
+      <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
+      <ChartsSurface>
+        <ChartsGrid horizontal />
+        <BarPlot />
+        <LinePlot />
+        <ChartsXAxis />
+        <ChartsYAxis />
+        <ChartsTooltip trigger="axis" />
+      </ChartsSurface>
+    </ChartDataProvider>
+  )
+}
+
+function buildAgentCombatRatingDataset(gameStates: GameState[]): AgentCombatRatingDatasetRow[] {
+  // Collect all mission CRs per turn for computing metrics
+  const missionCRsByTurn = new Map<number, number[]>()
+
+  for (const gameState of gameStates) {
+    const turn = gameState.turn
+    const missionCRs: number[] = []
+    for (const mission of gameState.missions) {
+      missionCRs.push(mission.combatRating)
+    }
+    missionCRsByTurn.set(turn, missionCRs)
+  }
+
+  let runningMaxMissionCR = 0
+  const dataset: AgentCombatRatingDatasetRow[] = []
+
+  for (const gameState of gameStates) {
+    const turn = gameState.turn
+    const agentRow = bldAgentCombatRatingRow(gameState)
+
+    // Update running max with current turn's missions
+    const currentMissionCRs = missionCRsByTurn.get(turn) ?? []
+    for (const cr of currentMissionCRs) {
+      if (cr > runningMaxMissionCR) {
+        runningMaxMissionCR = cr
+      }
+    }
+
+    // Calculate 20-turn rolling average
+    const avgMissionCR20 = calculateRollingAvgMissionCR(turn, missionCRsByTurn, 20)
+
+    dataset.push({
+      ...agentRow,
+      highestMissionCR: runningMaxMissionCR,
+      avgMissionCR20,
+    })
+  }
+
+  return dataset
+}
+
+function calculateRollingAvgMissionCR(
+  currentTurn: number,
+  missionCRsByTurn: Map<number, number[]>,
+  windowSize: number,
+): number {
+  const startTurn = Math.max(1, currentTurn - windowSize + 1)
+  let totalCR = 0
+  let missionCount = 0
+
+  for (let turn = startTurn; turn <= currentTurn; turn += 1) {
+    const missionCRs = missionCRsByTurn.get(turn) ?? []
+    for (const cr of missionCRs) {
+      totalCR += cr
+      missionCount += 1
+    }
+  }
+
+  return missionCount > 0 ? totalCR / missionCount : 0
+}
+
+function bldAgentCombatRatingRow(
+  gameState: GameState,
+): Omit<AgentCombatRatingDatasetRow, 'highestMissionCR' | 'avgMissionCR20'> {
   const aliveAgents = gameState.agents
 
   if (aliveAgents.length === 0) {
@@ -104,72 +264,6 @@ function bldAgentCombatRatingRow(gameState: GameState): AgentCombatRatingDataset
   }
 }
 
-function buildAgentCombatRatingDataset(gameStates: GameState[]): AgentCombatRatingDatasetRow[] {
-  return gameStates.map((gameState) => bldAgentCombatRatingRow(gameState))
-}
-
-export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): React.JSX.Element {
-  const { gameStates, height } = props
-  const dataset = buildAgentCombatRatingDataset(gameStates)
-
-  function formatTurnWithTotalCR(turn: number): string {
-    const datasetItem = dataset.find((item) => item.turn === turn)
-    if (datasetItem === undefined) {
-      return formatTurn(turn)
-    }
-    return `${formatTurn(turn)} (Total CR: ${datasetItem.totalCR.toFixed(2)})`
-  }
-
-  return (
-    <BarChart
-      dataset={dataset}
-      xAxis={[
-        {
-          scaleType: 'band',
-          dataKey: 'turn',
-          label: 'Turn',
-          valueFormatter: formatTurnWithTotalCR,
-          ...axisConfig,
-        },
-      ]}
-      yAxis={[
-        {
-          ...axisConfig,
-          width: Y_AXIS_WIDTH,
-        },
-      ]}
-      series={[
-        {
-          dataKey: 'readyCR',
-          label: 'Ready CR',
-          stack: 'combatRating',
-          color: getColor('ready'),
-        },
-        {
-          dataKey: 'tiredCR',
-          label: 'Tired CR',
-          stack: 'combatRating',
-          color: getColor('tired'),
-        },
-        {
-          dataKey: 'awayCR',
-          label: 'Away CR',
-          stack: 'combatRating',
-          color: getColor('away'),
-        },
-        {
-          dataKey: 'recoveringCR',
-          label: 'Recovering CR',
-          stack: 'combatRating',
-          color: getColor('recovering'),
-        },
-      ]}
-      height={height}
-      grid={{ horizontal: true }}
-      slotProps={{
-        tooltip: { trigger: 'axis' },
-        ...legendSlotProps,
-      }}
-    />
-  )
+function formatTurn(value: number): string {
+  return `Turn ${value}`
 }
