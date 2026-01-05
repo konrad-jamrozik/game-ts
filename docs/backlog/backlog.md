@@ -22,9 +22,9 @@ KJA backlog:
 - Chart for missions: cumulative missions completed successfully, failed, expired, etc.
 - Mode for charts: display only current turn, not historical. This may change display mode.
   There would be charts like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
-- Charts showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
-- Charts showing cumulative agent KIA & sacked
-- Charts with each faction stats, like mission frequency, activity level, suppression, etc.
+- Chart showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
+- Chart showing agent cumulative agent unscathed, wounded, incapacitated, KIA & sacked
+- Chart with each faction stats, like mission frequency, activity level, suppression, etc.
 - Chart with panic. It should be area chart stacking total panic by source faction that caused it.
 - Chart for most dangerous enemy type (and faction), e.g. how much damage agents have suffered from operatives
 - Chart for enemy types killed
