@@ -2,7 +2,7 @@ import * as React from 'react'
 import { LineChart } from '@mui/x-charts/LineChart'
 import type { AssetsDatasetRow } from '../../redux/selectors/chartsSelectors'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
-import { brown } from '@mui/material/colors'
+import { amber, blue, brown, lightGreen } from '@mui/material/colors'
 
 // Assets chart colors:
 // Money: green
@@ -15,15 +15,15 @@ type AssetsColorName = 'money' | 'agentCount' | 'agentCap' | 'transportCap' | 't
 function getColor(name: AssetsColorName): string {
   switch (name) {
     case 'money':
-      return 'hsla(120, 65%, 45%, 1)' // green
+      return lightGreen[600]
     case 'agentCount':
-      return brown[700] // brown dark
+      return brown[400] // brown dark
     case 'agentCap':
-      return brown[400] // brown light
+      return brown[200] // brown light
     case 'transportCap':
-      return 'hsla(210, 80%, 55%, 1)' // blue
+      return blue[600]
     case 'trainingCap':
-      return 'hsla(45, 90%, 55%, 1)' // gold/amber
+      return amber[400]
   }
 }
 
