@@ -106,6 +106,27 @@ export function ChartsScreen(): React.JSX.Element {
               series={withNoMarkers([
                 { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main, yAxisId: 'moneyAxisId' },
                 { dataKey: 'agentCount', label: 'Agents', color: theme.palette.primary.main, yAxisId: 'agentAxisId' },
+                {
+                  dataKey: 'agentCap',
+                  label: 'Agent cap',
+                  color: 'hsla(120, 65%, 45%, 1)',
+                  yAxisId: 'agentAxisId',
+                  strokeDasharray: '5 5',
+                },
+                {
+                  dataKey: 'transportCap',
+                  label: 'Transport cap',
+                  color: 'hsla(210, 80%, 55%, 1)',
+                  yAxisId: 'agentAxisId',
+                  strokeDasharray: '5 5',
+                },
+                {
+                  dataKey: 'trainingCap',
+                  label: 'Training cap',
+                  color: 'hsla(45, 90%, 55%, 1)',
+                  yAxisId: 'agentAxisId',
+                  strokeDasharray: '5 5',
+                },
               ])}
               height={height}
               grid={{ horizontal: true }}

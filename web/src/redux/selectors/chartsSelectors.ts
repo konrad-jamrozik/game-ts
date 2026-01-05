@@ -19,6 +19,9 @@ export type ChartsDatasets = {
 export type AssetsDatasetRow = {
   turn: number
   agentCount: number
+  agentCap: number
+  transportCap: number
+  trainingCap: number
   funding: number
   money: number
   contracting: number
@@ -119,6 +122,9 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     assets.push({
       turn,
       agentCount: agents.length,
+      agentCap: gameState.agentCap,
+      transportCap: gameState.transportCap,
+      trainingCap: gameState.trainingCap,
       funding,
       money,
       contracting: getContractingIncome(gameState),
