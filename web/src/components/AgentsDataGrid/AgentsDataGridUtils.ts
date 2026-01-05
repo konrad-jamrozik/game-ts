@@ -38,7 +38,8 @@ export function filterVisibleAgentColumns(
         col.field === 'service' ||
         col.field === 'missionsTotal' ||
         col.field === 'mission' ||
-        col.field === 'by',
+        col.field === 'by' ||
+        col.field === 'terminated',
     )
   }
   if (showRecovering) {

@@ -60,6 +60,7 @@ export const columnWidths = {
   'agents.missions_total': 70,
   'agents.mission': 80,
   'agents.by': 170,
+  'agents.terminated': 80,
 
   // Mission Details columns
   'mission_details.key': 160,

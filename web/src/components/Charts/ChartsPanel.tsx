@@ -83,9 +83,10 @@ export function ChartsPanel(props: ChartsPanelProps): React.JSX.Element {
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant="h5" sx={{ mb: 2 }}>
-            {props.title}
-          </Typography>
+          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
+            <Typography variant="h5">{props.title}</Typography>
+            {props.headerControls}
+          </Box>
           <Box sx={{ height: 'calc(100% - 60px)' }}>{props.renderChart(getFullscreenHeight())}</Box>
         </Paper>
       </Dialog>

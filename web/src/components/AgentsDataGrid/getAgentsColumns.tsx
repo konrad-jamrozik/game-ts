@@ -312,6 +312,19 @@ export function getAgentsColumns(
       field: 'mission',
       headerName: 'Mis',
       width: columnWidths['agents.mission'],
+      valueGetter: (_value, row: AgentRow): string => {
+        const { terminatedOnMissionId, assignment } = row
+        // Return display value without prefix for sorting and filtering
+        if (terminatedOnMissionId !== undefined) {
+          return fmtNoPrefix(terminatedOnMissionId, 'mission-')
+        }
+        // If agent was sacked (assignment is 'Sacked'), return "Sacked" for sorting
+        if (assignment === 'Sacked') {
+          return 'Sacked'
+        }
+        // Fallback: return empty string for sorting (will sort before other values)
+        return ''
+      },
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const { terminatedOnMissionId, assignment } = params.row
 
@@ -327,6 +340,16 @@ export function getAgentsColumns(
         }
         // Fallback (shouldn't happen for terminated agents, but just in case)
         return <span aria-label={`agents-row-mission-${params.id}`}>-</span>
+      },
+    },
+    {
+      field: 'terminated',
+      headerName: 'Terminated',
+      width: columnWidths['agents.terminated'],
+      valueGetter: (_value, row: AgentRow): number | undefined => row.turnTerminated,
+      renderCell: (params: GridRenderCellParams<AgentRow, number | undefined>): React.JSX.Element => {
+        const displayValue = params.value !== undefined ? params.value.toString() : '-'
+        return <span aria-label={`agents-row-terminated-${params.id}`}>{displayValue}</span>
       },
     },
     {
