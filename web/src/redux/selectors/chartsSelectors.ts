@@ -3,7 +3,6 @@ import type { GameState } from '../../lib/model/gameStateModel'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
 import type { Agent } from '../../lib/model/agentModel'
 import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
-import { getRemainingRecoveryTurns } from '../../lib/ruleset/recoveryRuleset'
 import { f6c0, toF } from '../../lib/primitives/fixed6'
 import { quantileSorted } from '../../lib/primitives/mathPrimitives'
 import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRuleset'
@@ -11,7 +10,6 @@ import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRul
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
   agentSkill: AgentSkillDatasetRow[]
-  agentReadiness: AgentReadinessDatasetRow[]
   missions: MissionsDatasetRow[]
   battleStats: BattleStatsDatasetRow[]
   situationReport: SituationReportDatasetRow[]
@@ -37,18 +35,6 @@ export type AgentSkillDatasetRow = {
   maxEffectiveSkillP90: number
   maxEffectiveSkillSum: number
   currentEffectiveSkillSum: number
-}
-
-export type AgentReadinessDatasetRow = {
-  turn: number
-  maxHitPointsAvg: number
-  maxHitPointsMax: number
-  hitPointsAvg: number
-  hitPointsMax: number
-  exhaustionAvg: number
-  exhaustionMax: number
-  recoveryTurnsAvg: number
-  recoveryTurnsMax: number
 }
 
 export type MissionsDatasetRow = {
@@ -105,7 +91,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
 
   const assets: AssetsDatasetRow[] = []
   const agentSkill: AgentSkillDatasetRow[] = []
-  const agentReadiness: AgentReadinessDatasetRow[] = []
   const missions: MissionsDatasetRow[] = []
   const battleStats: BattleStatsDatasetRow[] = []
   const situationReport: SituationReportDatasetRow[] = []
@@ -144,9 +129,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
 
     // --- Agent skill (derived)
     agentSkill.push(bldAgentSkillRow(gameState))
-
-    // --- Agent readiness (derived)
-    agentReadiness.push(bldAgentReadinessRow(gameState))
 
     // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
     const missionBattleDeltas = updateMissionAndBattleAccumulators({
@@ -216,7 +198,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   return {
     assets,
     agentSkill,
-    agentReadiness,
     missions,
     battleStats,
     situationReport,
@@ -280,27 +261,6 @@ function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
     maxEffectiveSkillP90: maxEffStats.p90,
     maxEffectiveSkillSum: maxEffStats.sum,
     currentEffectiveSkillSum,
-  }
-}
-
-function bldAgentReadinessRow(gameState: GameState): AgentReadinessDatasetRow {
-  const agents = gameState.agents
-
-  const maxHitPoints = agents.map((agent) => toF(agent.maxHitPoints))
-  const hitPoints = agents.map((agent) => toF(agent.hitPoints))
-  const exhaustion = agents.map((agent) => toF(agent.exhaustionPct))
-  const recoveryTurns = agents.map((agent) => getRemainingRecoveryTurns(agent, gameState.hitPointsRecoveryPct))
-
-  return {
-    turn: gameState.turn,
-    maxHitPointsAvg: avgNumbers(maxHitPoints),
-    maxHitPointsMax: maxNumbers(maxHitPoints),
-    hitPointsAvg: avgNumbers(hitPoints),
-    hitPointsMax: maxNumbers(hitPoints),
-    exhaustionAvg: avgNumbers(exhaustion),
-    exhaustionMax: maxNumbers(exhaustion),
-    recoveryTurnsAvg: avgNumbers(recoveryTurns),
-    recoveryTurnsMax: maxNumbers(recoveryTurns),
   }
 }
 
@@ -441,24 +401,4 @@ function sumNumbers(values: readonly number[]): number {
     acc += value
   }
   return acc
-}
-
-function avgNumbers(values: readonly number[]): number {
-  if (values.length === 0) {
-    return 0
-  }
-  return sumNumbers(values) / values.length
-}
-
-function maxNumbers(values: readonly number[]): number {
-  if (values.length === 0) {
-    return 0
-  }
-  let max = values[0] ?? 0
-  for (const value of values) {
-    if (value > max) {
-      max = value
-    }
-  }
-  return max
 }

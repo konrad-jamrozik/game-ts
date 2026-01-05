@@ -23,6 +23,7 @@ import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/selectors/chartsSelectors'
 import { AgentSkillChart } from './AgentSkillChart'
 import { AgentStatusChart } from './AgentStatusChart'
+import { AgentReadinessChart } from './AgentReadinessChart'
 import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
@@ -251,36 +252,7 @@ export function ChartsScreen(): React.JSX.Element {
 
         <ChartsPanel
           title="Agent readiness"
-          renderChart={(height) => (
-            <LineChart
-              dataset={datasets.agentReadiness}
-              xAxis={[
-                {
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[yAxisConfig]}
-              series={withNoMarkers([
-                { dataKey: 'maxHitPointsAvg', label: 'Max HP (avg)' },
-                { dataKey: 'maxHitPointsMax', label: 'Max HP (max)' },
-                { dataKey: 'hitPointsAvg', label: 'HP (avg)' },
-                { dataKey: 'hitPointsMax', label: 'HP (max)' },
-                { dataKey: 'exhaustionAvg', label: 'Exhaustion (avg)' },
-                { dataKey: 'exhaustionMax', label: 'Exhaustion (max)' },
-                { dataKey: 'recoveryTurnsAvg', label: 'Recovery turns (avg)' },
-                { dataKey: 'recoveryTurnsMax', label: 'Recovery turns (max)' },
-              ])}
-              height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
-          )}
+          renderChart={(height) => <AgentReadinessChart gameStates={gameStates} height={height} />}
         />
 
         <ChartsPanel

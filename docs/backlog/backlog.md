@@ -2,9 +2,7 @@
 
 KJA backlog:
 
-# Current milestone
-
-## Next
+# Next
 
 - Keep track of agents initial CR in mission log
 
@@ -44,7 +42,7 @@ KJA backlog:
   So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
   before the exhaustion causes them to lose so much effective skill that commander orders retreat.
 
-# ---- other / later ----
+# Later
 
 ## Game mechanics ideas
 
