@@ -574,6 +574,7 @@ function spawnDefensiveMission(state: GameState, faction: Faction): void {
     missionCount: state.missions.length,
     missionDataId: selectedMissionData.id,
     operationLevel,
+    turnDiscovered: state.turn,
   })
   state.missions.push(newMission)
 

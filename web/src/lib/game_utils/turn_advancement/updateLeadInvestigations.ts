@@ -208,6 +208,7 @@ function bldMissionsFromLeadCompletion(state: GameState, leadId: string): Missio
     const newMission = bldMission({
       missionCount: state.missions.length + createdMissions.length,
       missionDataId: missionData.id,
+      turnDiscovered: state.turn,
     })
     createdMissions.push(newMission)
   }

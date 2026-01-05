@@ -46,6 +46,7 @@ export function spawnMissions(state: GameState): void {
     const newMission = bldMission({
       missionCount: state.missions.length,
       missionDataId: missionData.id,
+      turnDiscovered: state.turn,
     })
     state.missions.push(newMission)
   }

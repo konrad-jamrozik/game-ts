@@ -220,6 +220,7 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
       const tempMission = bldMission({
         id: 'mission-simulated-for-deployment-assessment',
         missionDataId: missionData.id,
+        turnDiscovered: gameState.turn,
       })
 
       const missionCombatRating = tempMission.combatRating
@@ -318,6 +319,7 @@ function getMissionCombatRatingForLead(leadId: LeadId): number {
     const tempMission = bldMission({
       id: 'mission-simulated-for-combat-rating-assessment',
       missionDataId: missionData.id,
+      turnDiscovered: 0, // Temporary mission, not part of game state
     })
     const combatRating = tempMission.combatRating
     if (combatRating > maxCombatRating) {

@@ -20,6 +20,7 @@ export const initialMission: Mission = {
   enemies: [],
   operationLevel: undefined,
   combatRating: 0,
+  turnDiscovered: 0,
 }
 
 /**
@@ -34,8 +35,9 @@ type CreateMissionParams =
 
 type BaseCreateMissionParams = {
   missionDataId: Mission['missionDataId']
+  turnDiscovered: number
   enemyCounts?: Partial<EnemyCounts>
-} & Partial<Omit<Mission, 'enemies' | 'id' | 'missionDataId'>>
+} & Partial<Omit<Mission, 'enemies' | 'id' | 'missionDataId' | 'turnDiscovered'>>
 
 /**
  * Creates a new mission object.

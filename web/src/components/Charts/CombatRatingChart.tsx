@@ -155,16 +155,17 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
 }
 
 function buildCombatRatingDataset(gameStates: GameState[]): CombatRatingDatasetRow[] {
-  // Collect all mission CRs per turn for computing metrics
-  const missionCRsByTurn = new Map<number, number[]>()
+  // Collect all missions indexed by turnDiscovered
+  // Use latest gameState to get all historical missions
+  const latestGameState = gameStates.at(-1)
+  const missionsByDiscoveryTurn = new Map<number, number[]>()
 
-  for (const gameState of gameStates) {
-    const turn = gameState.turn
-    const missionCRs: number[] = []
-    for (const mission of gameState.missions) {
-      missionCRs.push(mission.combatRating)
+  if (latestGameState !== undefined) {
+    for (const mission of latestGameState.missions) {
+      const crs = missionsByDiscoveryTurn.get(mission.turnDiscovered) ?? []
+      crs.push(mission.combatRating)
+      missionsByDiscoveryTurn.set(mission.turnDiscovered, crs)
     }
-    missionCRsByTurn.set(turn, missionCRs)
   }
 
   let runningMaxMissionCR = 0
@@ -174,16 +175,18 @@ function buildCombatRatingDataset(gameStates: GameState[]): CombatRatingDatasetR
     const turn = gameState.turn
     const agentRow = bldCombatRatingRow(gameState)
 
-    // Update running max with current turn's missions
-    const currentMissionCRs = missionCRsByTurn.get(turn) ?? []
-    for (const cr of currentMissionCRs) {
-      if (cr > runningMaxMissionCR) {
-        runningMaxMissionCR = cr
+    // Update running max with missions discovered up to current turn
+    for (let discoveryTurn = 1; discoveryTurn <= turn; discoveryTurn += 1) {
+      const missionCRs = missionsByDiscoveryTurn.get(discoveryTurn) ?? []
+      for (const cr of missionCRs) {
+        if (cr > runningMaxMissionCR) {
+          runningMaxMissionCR = cr
+        }
       }
     }
 
     // Calculate 20-turn rolling percentiles
-    const { p50, p80 } = calculateRollingPercentilesMissionCR(turn, missionCRsByTurn, 20)
+    const { p50, p80 } = calculateRollingPercentilesMissionCR(turn, missionsByDiscoveryTurn, 20)
 
     dataset.push({
       ...agentRow,

@@ -41,6 +41,11 @@ export type Mission = {
    */
   combatRating: number
   /**
+   * The turn at which this mission was discovered/created.
+   * Used for historical analysis like computing mission CR percentiles over time.
+   */
+  turnDiscovered: number
+  /**
    * The turn at which this mission concluded or expired.
    * Only set when mission state is Won, Wiped, Retreated, or Expired.
    */

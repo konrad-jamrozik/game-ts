@@ -30,6 +30,7 @@ describe(evaluateDeployedMission, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemyCounts: { initiate: 1 },
+      turnDiscovered: 1,
     })
 
     // Create a minimal game state
@@ -75,6 +76,7 @@ describe(evaluateDeployedMission, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemyCounts: { initiate: 1 },
+      turnDiscovered: 1,
     })
 
     const gameState = bldMinimalGameState([agent1], [mission1])
@@ -123,6 +125,7 @@ describe(evaluateDeployedMission, () => {
       state: 'Deployed',
       expiresIn: 3,
       enemyCounts: { cultLeader: 3 },
+      turnDiscovered: 1,
     })
 
     const gameState = bldMinimalGameState([agent1, agent2], [mission1])

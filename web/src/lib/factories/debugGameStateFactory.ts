@@ -36,7 +36,7 @@ export function bldDebugGameStateOverrides(initialGameState: GameState): Partial
   gameStateOverrides.terminatedAgents = terminatedAgents
   gameStateOverrides.totalAgentsHired = totalAgentsHired
 
-  gameStateOverrides.missions = bldDebugMissions(missionId, onMissionAgentIds)
+  gameStateOverrides.missions = bldDebugMissions(missionId, onMissionAgentIds, initialGameState.turn)
 
   gameStateOverrides.leadInvestigations = bldDebugLeadInvestigations(
     deepStateInvestigationId,
@@ -151,19 +151,21 @@ function bldDebugAgents(missionId: MissionId, deepStateInvestigationId: LeadInve
   }
 }
 
-function bldDebugMissions(missionId: MissionId, onMissionAgentIds: AgentId[]): GameState['missions'] {
+function bldDebugMissions(missionId: MissionId, onMissionAgentIds: AgentId[], turn: number): GameState['missions'] {
   return [
     bldMission({
       id: missionId,
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: onMissionAgentIds,
       state: 'Deployed',
+      turnDiscovered: turn,
     }),
     bldMission({
       id: 'mission-001' as MissionId,
       missionDataId: 'missiondata-apprehend-red-dawn-member' as MissionDataId,
       agentIds: [],
       state: 'Active',
+      turnDiscovered: turn,
     }),
   ]
 }

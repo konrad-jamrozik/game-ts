@@ -55,6 +55,7 @@ export const st = {
       expiresIn: 3,
       enemies: [],
       combatRating: 0,
+      turnDiscovered: 1,
     }
   },
 
