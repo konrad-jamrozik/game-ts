@@ -7,6 +7,7 @@ import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRul
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
   missions: MissionsDatasetRow[]
+  missionsOutcome: MissionsOutcomeDatasetRow[]
   battleStats: BattleStatsDatasetRow[]
   situationReport: SituationReportDatasetRow[]
   balanceSheet: BalanceSheetDatasetRow[]
@@ -33,6 +34,16 @@ export type MissionsDatasetRow = {
   won: number
   retreated: number
   wiped: number
+}
+
+export type MissionsOutcomeDatasetRow = {
+  turn: number
+  offensiveWon: number
+  offensiveLost: number
+  offensiveExpired: number
+  defensiveWon: number
+  defensiveLost: number
+  defensiveExpired: number
 }
 
 export type BattleStatsDatasetRow = {
@@ -71,6 +82,13 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const retreatedMissionIds = new Set<string>()
   const wipedMissionIds = new Set<string>()
 
+  const offensiveWonMissionIds = new Set<string>()
+  const offensiveLostMissionIds = new Set<string>()
+  const offensiveExpiredMissionIds = new Set<string>()
+  const defensiveWonMissionIds = new Set<string>()
+  const defensiveLostMissionIds = new Set<string>()
+  const defensiveExpiredMissionIds = new Set<string>()
+
   const processedBattleMissionIds = new Set<string>()
   let agentsDeployed = 0
   let agentsKia = 0
@@ -80,6 +98,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
 
   const assets: AssetsDatasetRow[] = []
   const missions: MissionsDatasetRow[] = []
+  const missionsOutcome: MissionsOutcomeDatasetRow[] = []
   const battleStats: BattleStatsDatasetRow[] = []
   const situationReport: SituationReportDatasetRow[] = []
   const balanceSheet: BalanceSheetDatasetRow[] = []
@@ -127,6 +146,12 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       retreatedMissionIds,
       wipedMissionIds,
       processedBattleMissionIds,
+      offensiveWonMissionIds,
+      offensiveLostMissionIds,
+      offensiveExpiredMissionIds,
+      defensiveWonMissionIds,
+      defensiveLostMissionIds,
+      defensiveExpiredMissionIds,
     })
 
     agentsDeployed += missionBattleDeltas.agentsDeployed
@@ -142,6 +167,16 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       won: wonMissionIds.size,
       retreated: retreatedMissionIds.size,
       wiped: wipedMissionIds.size,
+    })
+
+    missionsOutcome.push({
+      turn,
+      offensiveWon: offensiveWonMissionIds.size,
+      offensiveLost: offensiveLostMissionIds.size,
+      offensiveExpired: offensiveExpiredMissionIds.size,
+      defensiveWon: defensiveWonMissionIds.size,
+      defensiveLost: defensiveLostMissionIds.size,
+      defensiveExpired: defensiveExpiredMissionIds.size,
     })
 
     battleStats.push({
@@ -186,6 +221,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   return {
     assets,
     missions,
+    missionsOutcome,
     battleStats,
     situationReport,
     balanceSheet,
@@ -239,6 +275,12 @@ function updateMissionAndBattleAccumulators(args: {
   retreatedMissionIds: Set<string>
   wipedMissionIds: Set<string>
   processedBattleMissionIds: Set<string>
+  offensiveWonMissionIds: Set<string>
+  offensiveLostMissionIds: Set<string>
+  offensiveExpiredMissionIds: Set<string>
+  defensiveWonMissionIds: Set<string>
+  defensiveLostMissionIds: Set<string>
+  defensiveExpiredMissionIds: Set<string>
 }): {
   agentsDeployed: number
   agentsTerminated: number
@@ -254,6 +296,12 @@ function updateMissionAndBattleAccumulators(args: {
     retreatedMissionIds,
     wipedMissionIds,
     processedBattleMissionIds,
+    offensiveWonMissionIds,
+    offensiveLostMissionIds,
+    offensiveExpiredMissionIds,
+    defensiveWonMissionIds,
+    defensiveLostMissionIds,
+    defensiveExpiredMissionIds,
   } = args
 
   const deltas = {
@@ -278,6 +326,15 @@ function updateMissionAndBattleAccumulators(args: {
     if (id !== undefined) {
       missionIds.add(id)
       expiredMissionIds.add(id)
+      // Classify by offensive/defensive
+      const mission = gameState.missions.find((m) => m.id === id)
+      if (mission !== undefined) {
+        if (mission.operationLevel === undefined) {
+          offensiveExpiredMissionIds.add(id)
+        } else {
+          defensiveExpiredMissionIds.add(id)
+        }
+      }
     }
   }
 
@@ -290,6 +347,16 @@ function updateMissionAndBattleAccumulators(args: {
         wonMissionIds,
         retreatedMissionIds,
         wipedMissionIds,
+      })
+
+      // Classify by offensive/defensive
+      const missionData = gameState.missions.find((m) => m.id === id)
+      const isOffensive = missionData?.operationLevel === undefined
+      applyBattleOutcomeToOutcomeSets(mission.outcome, id, isOffensive, {
+        offensiveWonMissionIds,
+        offensiveLostMissionIds,
+        defensiveWonMissionIds,
+        defensiveLostMissionIds,
       })
 
       if (!processedBattleMissionIds.has(id)) {
@@ -324,6 +391,33 @@ function applyBattleOutcomeToSets(
     return
   }
   sets.wipedMissionIds.add(missionId)
+}
+
+function applyBattleOutcomeToOutcomeSets(
+  outcome: BattleOutcome,
+  missionId: string,
+  isOffensive: boolean,
+  sets: {
+    offensiveWonMissionIds: Set<string>
+    offensiveLostMissionIds: Set<string>
+    defensiveWonMissionIds: Set<string>
+    defensiveLostMissionIds: Set<string>
+  },
+): void {
+  if (outcome === 'Won') {
+    if (isOffensive) {
+      sets.offensiveWonMissionIds.add(missionId)
+    } else {
+      sets.defensiveWonMissionIds.add(missionId)
+    }
+    return
+  }
+  // Lost includes both Retreated and Wiped
+  if (isOffensive) {
+    sets.offensiveLostMissionIds.add(missionId)
+  } else {
+    sets.defensiveLostMissionIds.add(missionId)
+  }
 }
 
 function normalizeMissionId(value: string): string | undefined {

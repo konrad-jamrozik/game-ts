@@ -18,6 +18,7 @@ import { AgentReadinessChart } from './AgentReadinessChart'
 import { CombatRatingChart } from './CombatRatingChart'
 import { AssetsChart } from './AssetsChart'
 import { CashFlowChart } from './CashFlowChart'
+import { MissionsChart } from './MissionsChart'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
@@ -108,36 +109,7 @@ export function ChartsScreen(): React.JSX.Element {
           renderChart={(height) => <CombatRatingChart gameStates={gameStates} height={height} />}
         />
 
-        <ChartsPanel
-          title="Missions"
-          renderChart={(height) => (
-            <LineChart
-              dataset={datasets.missions}
-              xAxis={[
-                {
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[yAxisConfig]}
-              series={withNoMarkers([
-                { dataKey: 'spawned', label: 'Spawned (total)' },
-                { dataKey: 'expired', label: 'Expired (total)' },
-                { dataKey: 'won', label: 'Completed successfully (total)' },
-                { dataKey: 'retreated', label: 'Retreated (total)' },
-                { dataKey: 'wiped', label: 'Wiped (total)' },
-              ])}
-              height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
-          )}
-        />
+        <ChartsPanel title="Missions" renderChart={(height) => <MissionsChart height={height} />} />
 
         <ChartsPanel
           title="Battle stats (total over missions)"

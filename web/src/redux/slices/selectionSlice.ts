@@ -25,6 +25,8 @@ export type SelectionState = {
   agentsShowAvailable?: boolean
   agentsShowRecovering?: boolean
   agentsShowStats?: boolean
+  missionsChartShowOffensive?: boolean
+  missionsChartShowDefensive?: boolean
 }
 
 const initialState: SelectionState = {
@@ -144,6 +146,12 @@ const selectionSlice = createSlice({
     setAgentsShowStats(state, action: PayloadAction<boolean>) {
       state.agentsShowStats = action.payload
     },
+    setMissionsChartShowOffensive(state, action: PayloadAction<boolean>) {
+      state.missionsChartShowOffensive = action.payload
+    },
+    setMissionsChartShowDefensive(state, action: PayloadAction<boolean>) {
+      state.missionsChartShowDefensive = action.payload
+    },
   },
 })
 
@@ -179,5 +187,7 @@ export const {
   setAgentsShowAvailable,
   setAgentsShowRecovering,
   setAgentsShowStats,
+  setMissionsChartShowOffensive,
+  setMissionsChartShowDefensive,
 } = selectionSlice.actions
 export default selectionSlice.reducer
