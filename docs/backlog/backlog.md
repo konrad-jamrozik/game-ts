@@ -43,6 +43,8 @@ KJA backlog:
 
 - Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
   - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
+  - Actually looks like manual human actions in general can throw AI off, not just undoing.
+    Probably because busting "actual" state. But I might have fixed it, not sure.
 
 - Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
