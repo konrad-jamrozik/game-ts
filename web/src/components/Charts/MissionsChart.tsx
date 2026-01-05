@@ -2,25 +2,15 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import Stack from '@mui/material/Stack'
-import { green, red } from '@mui/material/colors'
-import { BarChart } from '@mui/x-charts/BarChart'
+import { green, red, grey } from '@mui/material/colors'
+import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import {
-  setMissionsChartShowOffensive,
-  setMissionsChartShowDefensive,
-} from '../../redux/slices/selectionSlice'
+import { setMissionsChartShowOffensive, setMissionsChartShowDefensive } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
 import { axisConfig, formatTurn, legendSlotProps, Y_AXIS_WIDTH } from './chartsUtils'
 
-type MissionsChartProps = {
-  height: number
-}
-
-export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
-  const { height } = props
+export function MissionsChartControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const datasets = useAppSelector(selectChartsDatasets)
   const showOffensive = useAppSelector((state) => state.selection.missionsChartShowOffensive) ?? true
   const showDefensive = useAppSelector((state) => state.selection.missionsChartShowDefensive) ?? true
 
@@ -32,93 +22,138 @@ export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
     dispatch(setMissionsChartShowDefensive(event.target.checked))
   }
 
+  return (
+    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+      <FormControlLabel
+        control={<Checkbox checked={showOffensive} onChange={handleOffensiveChange} size="small" />}
+        label="Offensive"
+        sx={{ margin: 0 }}
+      />
+      <FormControlLabel
+        control={<Checkbox checked={showDefensive} onChange={handleDefensiveChange} size="small" />}
+        label="Defensive"
+        sx={{ margin: 0 }}
+      />
+    </Box>
+  )
+}
+
+type MissionsChartProps = {
+  height: number
+}
+
+export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
+  const { height } = props
+  const datasets = useAppSelector(selectChartsDatasets)
+  const showOffensive = useAppSelector((state) => state.selection.missionsChartShowOffensive) ?? true
+  const showDefensive = useAppSelector((state) => state.selection.missionsChartShowDefensive) ?? true
+
   const series = []
 
-  // Defensive missions (left bar)
+  // Interleave defensive and offensive by outcome type
+  // Order: Won (both), Lost (both), Expired (both)
+
+  // Won - Defensive first
   if (showDefensive) {
-    series.push(
-      {
-        dataKey: 'defensiveWon',
-        label: 'Defensive Won',
-        stack: 'defensive',
-        color: green[600],
-      },
-      {
-        dataKey: 'defensiveLost',
-        label: 'Defensive Lost',
-        stack: 'defensive',
-        color: red[600],
-      },
-      {
-        dataKey: 'defensiveExpired',
-        label: 'Defensive Expired',
-        stack: 'defensive',
-        color: red[900],
-      },
-    )
+    series.push({
+      dataKey: 'defensiveWon',
+      label: 'Defensive Won',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: green[700],
+    })
   }
 
-  // Offensive missions (right bar)
+  // Won - Offensive second
   if (showOffensive) {
-    series.push(
-      {
-        dataKey: 'offensiveWon',
-        label: 'Offensive Won',
-        stack: 'offensive',
-        color: green[600],
-      },
-      {
-        dataKey: 'offensiveLost',
-        label: 'Offensive Lost',
-        stack: 'offensive',
-        color: red[600],
-      },
-      {
-        dataKey: 'offensiveExpired',
-        label: 'Offensive Expired',
-        stack: 'offensive',
-        color: red[900],
-      },
-    )
+    series.push({
+      dataKey: 'offensiveWon',
+      label: 'Offensive Won',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: green[500],
+    })
+  }
+
+  // Lost - Defensive first
+  if (showDefensive) {
+    series.push({
+      dataKey: 'defensiveLost',
+      label: 'Defensive Lost',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: red[700],
+    })
+  }
+
+  // Lost - Offensive second
+  if (showOffensive) {
+    series.push({
+      dataKey: 'offensiveLost',
+      label: 'Offensive Lost',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: red[500],
+    })
+  }
+
+  // Expired - Defensive first (gray)
+  if (showDefensive) {
+    series.push({
+      dataKey: 'defensiveExpired',
+      label: 'Defensive Expired',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: grey[700],
+    })
+  }
+
+  // Expired - Offensive second (lighter gray)
+  if (showOffensive) {
+    series.push({
+      dataKey: 'offensiveExpired',
+      label: 'Offensive Expired',
+      stack: 'total',
+      area: true,
+      showMark: false,
+      color: grey[500],
+    })
   }
 
   return (
-    <Stack spacing={1}>
-      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center' }}>
-        <FormControlLabel
-          control={<Checkbox checked={showOffensive} onChange={handleOffensiveChange} />}
-          label="Offensive"
-        />
-        <FormControlLabel
-          control={<Checkbox checked={showDefensive} onChange={handleDefensiveChange} />}
-          label="Defensive"
-        />
-      </Box>
-      <BarChart
-        dataset={datasets.missionsOutcome}
-        xAxis={[
-          {
-            scaleType: 'band',
-            dataKey: 'turn',
-            label: 'Turn',
-            valueFormatter: formatTurn,
-            ...axisConfig,
-          },
-        ]}
-        yAxis={[
-          {
-            ...axisConfig,
-            width: Y_AXIS_WIDTH,
-          },
-        ]}
-        series={series}
-        height={height}
-        grid={{ horizontal: true }}
-        slotProps={{
-          tooltip: { trigger: 'axis' },
-          ...legendSlotProps,
-        }}
-      />
-    </Stack>
+    <LineChart
+      dataset={datasets.missionsOutcome}
+      xAxis={[
+        {
+          dataKey: 'turn',
+          label: 'Turn',
+          valueFormatter: formatTurn,
+          ...axisConfig,
+        },
+      ]}
+      yAxis={[
+        {
+          ...axisConfig,
+          width: Y_AXIS_WIDTH,
+        },
+      ]}
+      series={series}
+      height={height}
+      grid={{ horizontal: true }}
+      sx={{
+        [`& .${lineElementClasses.root}`]: {
+          display: 'none',
+        },
+      }}
+      slotProps={{
+        tooltip: { trigger: 'axis' },
+        ...legendSlotProps,
+      }}
+    />
   )
 }
