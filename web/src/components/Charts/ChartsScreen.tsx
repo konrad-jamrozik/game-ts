@@ -5,19 +5,10 @@ import IconButton from '@mui/material/IconButton'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
-import { useTheme } from '@mui/material/styles'
 import CloseIcon from '@mui/icons-material/Close'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
 import * as React from 'react'
-import { LineChart, LinePlot } from '@mui/x-charts/LineChart'
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
-import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
-import { BarPlot } from '@mui/x-charts/BarChart'
-import { ChartsXAxis } from '@mui/x-charts/ChartsXAxis'
-import { ChartsYAxis } from '@mui/x-charts/ChartsYAxis'
-import { ChartsGrid } from '@mui/x-charts/ChartsGrid'
-import { ChartsTooltip } from '@mui/x-charts/ChartsTooltip'
-import { ChartsLegend } from '@mui/x-charts/ChartsLegend'
+import { LineChart } from '@mui/x-charts/LineChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewCharts } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/selectors/chartsSelectors'
@@ -26,7 +17,8 @@ import { AgentStatusChart } from './AgentStatusChart'
 import { AgentReadinessChart } from './AgentReadinessChart'
 import { AgentCombatRatingChart } from './AgentCombatRatingChart'
 import { AssetsChart } from './AssetsChart'
-import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
+import { CashFlowChart } from './CashFlowChart'
+import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
 
@@ -42,7 +34,6 @@ export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const datasets = useAppSelector(selectChartsDatasets)
   const gameStates = useAppSelector(selectTurnSnapshotsForCharts)
-  const theme = useTheme()
 
   function handleBackClick(): void {
     dispatch(clearViewCharts())
@@ -94,126 +85,7 @@ export function ChartsScreen(): React.JSX.Element {
 
         <ChartsPanel
           title="Cash Flow"
-          renderChart={(height) => (
-            <ChartDataProvider
-              dataset={datasets.balanceSheet}
-              xAxis={[
-                {
-                  scaleType: 'band',
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[yAxisConfig]}
-              series={[
-                // Positive values (stack above zero, first touches zero)
-                {
-                  type: 'bar',
-                  dataKey: 'funding',
-                  label: 'Funding',
-                  stack: 'balance',
-                  stackOffset: 'diverging',
-                  color: theme.palette.balanceIncomeFunding.dark,
-                },
-                {
-                  type: 'bar',
-                  dataKey: 'contracting',
-                  label: 'Contracting income',
-                  stack: 'balance',
-                  color: theme.palette.balanceIncomeContracting.main,
-                },
-                {
-                  type: 'bar',
-                  dataKey: 'rewards',
-                  label: 'Rewards from missions',
-                  stack: 'balance',
-                  color: theme.palette.balanceIncomeRewards.light,
-                },
-                // Negative values (stack below zero, first touches zero)
-                {
-                  type: 'bar',
-                  dataKey: 'upkeep',
-                  label: 'Upkeep',
-                  stack: 'balance',
-                  color: theme.palette.balanceExpenseUpkeep.main,
-                },
-                {
-                  type: 'bar',
-                  dataKey: 'agentHiring',
-                  label: 'Agent hiring expenditures',
-                  stack: 'balance',
-                  color: theme.palette.balanceExpenseAgentHiring.main,
-                },
-                {
-                  type: 'bar',
-                  dataKey: 'capIncreases',
-                  label: 'Cap increase expenditures',
-                  stack: 'balance',
-                  color: theme.palette.balanceExpenseCapIncreases.main,
-                },
-                {
-                  type: 'bar',
-                  dataKey: 'upgrades',
-                  label: 'Upgrade expenditures',
-                  stack: 'balance',
-                  color: theme.palette.balanceExpenseUpgrades.main,
-                },
-                // Net flow line (golden)
-                {
-                  type: 'line',
-                  dataKey: 'netFlow',
-                  label: 'Net flow',
-                  showMark: false,
-                  color: theme.palette.balanceNetFlow.main,
-                },
-              ]}
-              height={height}
-            >
-              <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
-              <ChartsSurface>
-                <ChartsGrid horizontal />
-                <BarPlot />
-                <LinePlot />
-                <ChartsXAxis />
-                <ChartsYAxis />
-                <ChartsTooltip trigger="axis" />
-              </ChartsSurface>
-            </ChartDataProvider>
-          )}
-        />
-
-        <ChartsPanel
-          title="Agent skill"
-          renderChart={(height) => (
-            <LineChart
-              dataset={datasets.agentSkill}
-              xAxis={[
-                {
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[yAxisConfig]}
-              series={withNoMarkers([
-                { dataKey: 'maxEffectiveSkillMin', label: 'Max eff. skill (min)' },
-                { dataKey: 'maxEffectiveSkillAvg', label: 'Max eff. skill (avg)' },
-                { dataKey: 'maxEffectiveSkillMedian', label: 'Max eff. skill (median)' },
-                { dataKey: 'maxEffectiveSkillP90', label: 'Max eff. skill (p90)' },
-                { dataKey: 'maxEffectiveSkillSum', label: 'Max eff. skill (sum)' },
-                { dataKey: 'currentEffectiveSkillSum', label: 'Current eff. skill (sum)' },
-              ])}
-              height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
-          )}
+          renderChart={(height) => <CashFlowChart dataset={datasets.balanceSheet} height={height} />}
         />
 
         <ChartsPanel

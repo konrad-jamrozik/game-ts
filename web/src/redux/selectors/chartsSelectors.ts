@@ -1,15 +1,11 @@
 import type { RootReducerState } from '../rootReducer'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
-import type { Agent } from '../../lib/model/agentModel'
-import { effectiveSkill } from '../../lib/ruleset/skillRuleset'
-import { f6c0, toF } from '../../lib/primitives/fixed6'
-import { quantileSorted } from '../../lib/primitives/mathPrimitives'
+import { toF } from '../../lib/primitives/fixed6'
 import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRuleset'
 
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
-  agentSkill: AgentSkillDatasetRow[]
   missions: MissionsDatasetRow[]
   battleStats: BattleStatsDatasetRow[]
   situationReport: SituationReportDatasetRow[]
@@ -28,16 +24,6 @@ export type AssetsDatasetRow = {
   upkeep: number
   rewards: number
   expenditures: number
-}
-
-export type AgentSkillDatasetRow = {
-  turn: number
-  maxEffectiveSkillMin: number
-  maxEffectiveSkillAvg: number
-  maxEffectiveSkillMedian: number
-  maxEffectiveSkillP90: number
-  maxEffectiveSkillSum: number
-  currentEffectiveSkillSum: number
 }
 
 export type MissionsDatasetRow = {
@@ -93,7 +79,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   let enemiesKia = 0
 
   const assets: AssetsDatasetRow[] = []
-  const agentSkill: AgentSkillDatasetRow[] = []
   const missions: MissionsDatasetRow[] = []
   const battleStats: BattleStatsDatasetRow[] = []
   const situationReport: SituationReportDatasetRow[] = []
@@ -132,9 +117,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       rewards: turnRewards,
       expenditures,
     })
-
-    // --- Agent skill (derived)
-    agentSkill.push(bldAgentSkillRow(gameState))
 
     // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
     const missionBattleDeltas = updateMissionAndBattleAccumulators({
@@ -203,7 +185,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
 
   return {
     assets,
-    agentSkill,
     missions,
     battleStats,
     situationReport,
@@ -248,26 +229,6 @@ function selectTurnSnapshotsWithFirst(state: RootReducerState): {
   }
 
   return { firstByTurn, lastByTurn }
-}
-
-function bldAgentSkillRow(gameState: GameState): AgentSkillDatasetRow {
-  const agents = gameState.agents
-  const maxEffSkills = agents.map((agent) => getMaxEffectiveSkill(agent))
-  const currentEffSkills = agents.map((agent) => toF(effectiveSkill(agent)))
-
-  const maxEffStats = getSummaryStats(maxEffSkills)
-
-  const currentEffectiveSkillSum = sumNumbers(currentEffSkills)
-
-  return {
-    turn: gameState.turn,
-    maxEffectiveSkillMin: maxEffStats.min,
-    maxEffectiveSkillAvg: maxEffStats.avg,
-    maxEffectiveSkillMedian: maxEffStats.median,
-    maxEffectiveSkillP90: maxEffStats.p90,
-    maxEffectiveSkillSum: maxEffStats.sum,
-    currentEffectiveSkillSum,
-  }
 }
 
 function updateMissionAndBattleAccumulators(args: {
@@ -365,32 +326,6 @@ function applyBattleOutcomeToSets(
   sets.wipedMissionIds.add(missionId)
 }
 
-function getMaxEffectiveSkill(agent: Agent): number {
-  return toF(effectiveSkill({ ...agent, hitPoints: agent.maxHitPoints, exhaustionPct: f6c0 }))
-}
-
-function getSummaryStats(values: readonly number[]): {
-  min: number
-  avg: number
-  median: number
-  p90: number
-  sum: number
-} {
-  if (values.length === 0) {
-    return { min: 0, avg: 0, median: 0, p90: 0, sum: 0 }
-  }
-
-  const sorted = [...values].toSorted((a, b) => a - b)
-  const sum = sumNumbers(sorted)
-  return {
-    min: sorted[0] ?? 0,
-    avg: sum / sorted.length,
-    median: quantileSorted(sorted, 0.5),
-    p90: quantileSorted(sorted, 0.9),
-    sum,
-  }
-}
-
 function normalizeMissionId(value: string): string | undefined {
   if (value === '') {
     return undefined
@@ -399,12 +334,4 @@ function normalizeMissionId(value: string): string | undefined {
     return undefined
   }
   return value
-}
-
-function sumNumbers(values: readonly number[]): number {
-  let acc = 0
-  for (const value of values) {
-    acc += value
-  }
-  return acc
 }
