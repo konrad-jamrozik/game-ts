@@ -108,6 +108,7 @@ export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): Reac
         },
         // Line series for mission combat ratings
         {
+          id: 'highestMissionCR',
           type: 'line',
           dataKey: 'highestMissionCR',
           label: 'Highest Mission CR',
@@ -115,6 +116,7 @@ export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): Reac
           color: red[500], // Bright red
         },
         {
+          id: 'avgMissionCR20',
           type: 'line',
           dataKey: 'avgMissionCR20',
           label: 'Avg Mission CR (20 turns)',
@@ -125,7 +127,13 @@ export function AgentCombatRatingChart(props: AgentCombatRatingChartProps): Reac
       height={height}
     >
       <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
-      <ChartsSurface>
+      <ChartsSurface
+        sx={{
+          '& .MuiLineElement-root': {
+            strokeWidth: 3,
+          },
+        }}
+      >
         <ChartsGrid horizontal />
         <BarPlot />
         <LinePlot />
