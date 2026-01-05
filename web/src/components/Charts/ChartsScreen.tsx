@@ -24,6 +24,7 @@ import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/
 import { AgentSkillChart } from './AgentSkillChart'
 import { AgentStatusChart } from './AgentStatusChart'
 import { AgentReadinessChart } from './AgentReadinessChart'
+import { AgentCombatRatingChart } from './AgentCombatRatingChart'
 import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
@@ -253,6 +254,11 @@ export function ChartsScreen(): React.JSX.Element {
         <ChartsPanel
           title="Agent readiness"
           renderChart={(height) => <AgentReadinessChart gameStates={gameStates} height={height} />}
+        />
+
+        <ChartsPanel
+          title="Agent combat rating"
+          renderChart={(height) => <AgentCombatRatingChart gameStates={gameStates} height={height} />}
         />
 
         <ChartsPanel
