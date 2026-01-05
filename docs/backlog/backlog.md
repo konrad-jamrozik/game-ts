@@ -70,6 +70,15 @@ KJA backlog:
        growth factor of 150% narrows effective roll from 60-90 to 75-90.
 // NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
 
+- Very difficult missions that pose a dilemma to the player and force them to incur significant agent losses:
+  - These missions would result in massive penalties if they are not attended to by the player.
+  - But the player should struggle to muster enough agents to win with overwhelming force.
+  - So either the mission is just at the right difficulty where the player may or may not win (difficult to achieve)
+  - OR the mission gives credit for partial success. This way player is incentivized to not let the mission just expire:
+    instead, they deploy agents, suffer heavy losses, but achieve some objectives, drastically reducing the penalties.
+  - This should be general theme: much better to deploy agents, incur losses, and throw a wrench in enemy plans,
+    than to let the enemy to deploy missions unabated.
+
 ## Ideas
 
 - Add some mechanism that influences how long missions sites will last until expiration.
