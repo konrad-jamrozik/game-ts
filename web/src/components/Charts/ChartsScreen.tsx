@@ -25,6 +25,7 @@ import { AgentSkillChart } from './AgentSkillChart'
 import { AgentStatusChart } from './AgentStatusChart'
 import { AgentReadinessChart } from './AgentReadinessChart'
 import { AgentCombatRatingChart } from './AgentCombatRatingChart'
+import { AssetsChart } from './AssetsChart'
 import { axisConfig, formatTurn, LEGEND_FONT_SIZE, legendSlotProps, withNoMarkers, yAxisConfig } from './chartsUtils'
 
 const CHART_HEIGHT = 300
@@ -88,54 +89,7 @@ export function ChartsScreen(): React.JSX.Element {
       >
         <ChartsPanel
           title="Assets"
-          renderChart={(height) => (
-            <LineChart
-              dataset={datasets.assets}
-              xAxis={[
-                {
-                  dataKey: 'turn',
-                  label: 'Turn',
-                  valueFormatter: formatTurn,
-                  ...axisConfig,
-                },
-              ]}
-              yAxis={[
-                { id: 'moneyAxisId', ...yAxisConfig },
-                { id: 'agentAxisId', position: 'right', ...yAxisConfig },
-              ]}
-              series={withNoMarkers([
-                { dataKey: 'money', label: 'Money', color: theme.palette.moneyBalance.main, yAxisId: 'moneyAxisId' },
-                { dataKey: 'agentCount', label: 'Agents', color: theme.palette.primary.main, yAxisId: 'agentAxisId' },
-                {
-                  dataKey: 'agentCap',
-                  label: 'Agent cap',
-                  color: 'hsla(120, 65%, 45%, 1)',
-                  yAxisId: 'agentAxisId',
-                  strokeDasharray: '5 5',
-                },
-                {
-                  dataKey: 'transportCap',
-                  label: 'Transport cap',
-                  color: 'hsla(210, 80%, 55%, 1)',
-                  yAxisId: 'agentAxisId',
-                  strokeDasharray: '5 5',
-                },
-                {
-                  dataKey: 'trainingCap',
-                  label: 'Training cap',
-                  color: 'hsla(45, 90%, 55%, 1)',
-                  yAxisId: 'agentAxisId',
-                  strokeDasharray: '5 5',
-                },
-              ])}
-              height={height}
-              grid={{ horizontal: true }}
-              slotProps={{
-                tooltip: { trigger: 'axis' },
-                ...legendSlotProps,
-              }}
-            />
-          )}
+          renderChart={(height) => <AssetsChart dataset={datasets.assets} height={height} />}
         />
 
         <ChartsPanel

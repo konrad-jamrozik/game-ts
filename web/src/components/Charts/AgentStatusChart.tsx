@@ -18,7 +18,7 @@ function getColor(name: StatusColorName): string {
     case 'goodDark': // In training
       return 'hsla(120, 65%, 35%, 1)' // dark green
     case 'bad': // Recovering
-      return 'hsla(0, 70%, 50%, 1)' // red
+      return 'hsla(0, 70%, 35%, 1)' // dark red
     case 'busyLight': // Contracting
       return 'hsla(45, 90%, 55%, 1)' // gold/amber
     case 'busyDark': // Investigating
