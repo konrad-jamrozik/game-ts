@@ -17,10 +17,9 @@ KJA backlog:
 
 Problem:
 - Current turn display mode charts are often useless. Need pie chart.
-- Suppression doesn't show up in factions chart when played by AI, but appears to show up
-  when played by player. Is the suppression completely missing, or just doesn't render?
-  - Add test, run debug mode.
 - Factions chart should show suppression as bars.
+- Fix colors in factions chart.
+- The enemies killed chart should also count incapacitated enemies.
 
 ## MUI
 
