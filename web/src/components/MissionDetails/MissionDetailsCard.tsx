@@ -73,6 +73,10 @@ import { assertDefined } from '../../lib/primitives/assertPrimitives'
 import { Stack } from '@mui/material'
 import { isConcludedMissionState } from '../../lib/ruleset/missionRuleset'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { useMissionReport } from './useMissionReport'
+import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
+import { withIds } from '../../lib/model_utils/agentUtils'
+import { sum } from 'radash'
 
 type MissionDetailsRow = {
   id: number
@@ -93,6 +97,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   assertDefined(mission, `Mission with id ${missionId} not found`)
 
   const missionData = getMissionDataById(mission.missionDataId)
+  const missionReport = useMissionReport(missionId)
 
   const displayId = fmtNoPrefix(mission.id, 'mission-')
   const { state, expiresIn: expiresInValue, agentIds, enemies, combatRating: missionCombatRating } = mission
@@ -106,6 +111,17 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
   assertDefined(faction, `Faction with id ${factionId} not found for mission ${missionId}`)
   const enemyFaction = getFactionName(faction)
   const enemyCount = enemies.length
+
+  // Calculate agent combat rating
+  // For concluded missions, use the stored value from battle stats
+  // For deployed missions, calculate from current deployed agents
+  let agentCombatRating: number | undefined
+  if (missionReport?.battleStats.initialAgentCombatRating !== undefined) {
+    agentCombatRating = missionReport.battleStats.initialAgentCombatRating
+  } else if (state === 'Deployed' && agentIds.length > 0) {
+    const deployedAgents = withIds(gameState.agents, agentIds)
+    agentCombatRating = sum(deployedAgents, (agent) => calculateCombatRating(agent))
+  }
 
   const { operationLevel } = mission
   const rewards = bldRewardsFromMissionData(missionData, operationLevel)
@@ -126,7 +142,10 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
     { id: 5, key: 'Expires in', value: expiresIn },
     { id: 6, key: 'Agents deployed', value: agentsDeployedStr },
     { id: 7, key: 'Enemy count', value: String(enemyCount) },
-    { id: 8, key: 'Combat rating', value: fmtDec1(missionCombatRating) },
+    ...(agentCombatRating !== undefined
+      ? [{ id: 8, key: 'Agent combat rating', value: fmtDec1(agentCombatRating) }]
+      : []),
+    { id: 9, key: 'Enemy combat rating', value: fmtDec1(missionCombatRating) },
   ]
 
   const rewardRows: MissionDetailsRow[] = [

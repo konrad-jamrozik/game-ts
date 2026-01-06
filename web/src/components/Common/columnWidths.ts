@@ -63,7 +63,7 @@ export const columnWidths = {
   'agents.terminated': 80,
 
   // Mission Details columns
-  'mission_details.key': 160,
+  'mission_details.key': 190,
   'mission_details.value': 240,
 
   // Battle Log columns
@@ -71,9 +71,11 @@ export const columnWidths = {
   'battle_log.agent_count': 80,
   'battle_log.agent_skill': 130,
   'battle_log.agent_hp': 130,
+  'battle_log.agent_combat_rating': 100,
   'battle_log.enemy_count': 80,
   'battle_log.enemy_skill': 130,
   'battle_log.enemy_hp': 130,
+  'battle_log.enemy_combat_rating': 100,
   'battle_log.combat_rating_ratio': 100,
 
   // Combat Log columns

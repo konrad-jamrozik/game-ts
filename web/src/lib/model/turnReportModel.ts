@@ -180,6 +180,7 @@ export type BattleStats = {
   totalEnemySkillAtBattleStart: Fixed6
   initialAgentHitPoints: number
   initialEnemyHitPoints: number
+  initialAgentCombatRating: number
   totalDamageInflicted: number
   totalDamageTaken: number
   totalAgentSkillGain: Fixed6

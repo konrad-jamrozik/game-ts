@@ -50,6 +50,7 @@ export type BattleReport = {
   initialAgentHitPoints: Fixed6
   initialEnemySkill: Fixed6
   initialEnemyHitPoints: Fixed6
+  initialAgentCombatRating: number
   totalDamageInflicted: number
   totalDamageTaken: number
   initialAgentExhaustion: Fixed6
@@ -74,6 +75,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   const initialAgentHitPoints = f6sumBy(agents, (agent) => agent.maxHitPoints)
   const initialEnemySkill = f6sumBy(enemies, (enemy) => effectiveSkill(enemy))
   const initialEnemyHitPoints = f6sumBy(enemies, (enemy) => enemy.maxHitPoints)
+  const initialAgentCombatRating = sum(agents, (agent) => calculateCombatRating(agent))
 
   // Track initial agent exhaustion for calculating total exhaustion gain
   const initialAgentExhaustion = f6sumBy(agents, (agent) => agent.exhaustionPct)
@@ -283,6 +285,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     initialAgentHitPoints,
     initialEnemySkill,
     initialEnemyHitPoints,
+    initialAgentCombatRating,
     totalDamageInflicted,
     totalDamageTaken,
     initialAgentExhaustion,
