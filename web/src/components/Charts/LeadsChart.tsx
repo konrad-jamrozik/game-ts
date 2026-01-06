@@ -40,28 +40,33 @@ function buildLeadsDataset(gameStates: GameState[]): LeadsDatasetRow[] {
   // Track completed investigations for max time calculation (last 20 turns)
   const completedInvestigations: { startTurn: number; completionTurn: number }[] = []
 
-  let cumulativeNonRepeatable = 0
-  let cumulativeRepeatable = 0
-
   return gameStates.map((gameState) => {
+    // Use leadInvestigationCounts from game state - this tracks ALL completed investigations
+    // For repeatable leads: sum up all investigation counts
+    // For non-repeatable leads: count distinct leads completed (they can only be completed once)
+    let nonRepeatableCompleted = 0
+    let repeatableCompleted = 0
+
+    for (const [leadId, count] of Object.entries(gameState.leadInvestigationCounts)) {
+      const isRepeatable = leadRepeatableMap.get(leadId) ?? false
+      if (isRepeatable) {
+        // Sum all investigations of repeatable leads
+        repeatableCompleted += count
+      } else if (count > 0) {
+        // Non-repeatable leads can only be completed once, so count > 0 means completed
+        nonRepeatableCompleted += 1
+      }
+    }
+
+    // Track completion times from turn report for max time calculation
     const report = gameState.turnStartReport
     if (report && report.leadInvestigations) {
       for (const investigationReport of report.leadInvestigations) {
-        if (investigationReport.completed) {
-          const isRepeatable = leadRepeatableMap.get(investigationReport.leadId) ?? false
-          if (isRepeatable) {
-            cumulativeRepeatable += 1
-          } else {
-            cumulativeNonRepeatable += 1
-          }
-
-          // Track completion time if available
-          if (investigationReport.completionTurn !== undefined) {
-            completedInvestigations.push({
-              startTurn: investigationReport.startTurn,
-              completionTurn: investigationReport.completionTurn,
-            })
-          }
+        if (investigationReport.completed && investigationReport.completionTurn !== undefined) {
+          completedInvestigations.push({
+            startTurn: investigationReport.startTurn,
+            completionTurn: investigationReport.completionTurn,
+          })
         }
       }
     }
@@ -77,8 +82,8 @@ function buildLeadsDataset(gameStates: GameState[]): LeadsDatasetRow[] {
 
     return {
       turn: gameState.turn,
-      nonRepeatableCompleted: cumulativeNonRepeatable,
-      repeatableCompleted: cumulativeRepeatable,
+      nonRepeatableCompleted,
+      repeatableCompleted,
       maxCompletionTime,
     }
   })
