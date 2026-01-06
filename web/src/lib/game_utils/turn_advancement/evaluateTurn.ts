@@ -235,6 +235,7 @@ function evaluateDeployedMissions(state: GameState): {
       const {
         agentsWounded,
         agentsUnscathed,
+        agentsIncapacitated,
         retreated,
         agentsTerminated,
         enemyCasualties,
@@ -281,6 +282,7 @@ function evaluateDeployedMissions(state: GameState): {
         agentsDeployed,
         agentsUnscathed,
         agentsWounded,
+        agentsIncapacitated,
         agentsTerminated,
         enemiesTotal,
         enemiesUnscathed,

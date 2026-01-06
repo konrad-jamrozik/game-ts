@@ -1,15 +1,12 @@
 import type { RootReducerState } from '../rootReducer'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
-import { toF } from '../../lib/primitives/fixed6'
 import { getContractingIncome, getAgentUpkeep } from '../../lib/ruleset/moneyRuleset'
 
 export type ChartsDatasets = {
   assets: AssetsDatasetRow[]
   missions: MissionsDatasetRow[]
   missionsOutcome: MissionsOutcomeDatasetRow[]
-  battleStats: BattleStatsDatasetRow[]
-  situationReport: SituationReportDatasetRow[]
   balanceSheet: BalanceSheetDatasetRow[]
 }
 
@@ -46,20 +43,6 @@ export type MissionsOutcomeDatasetRow = {
   defensiveExpired: number
 }
 
-export type BattleStatsDatasetRow = {
-  turn: number
-  agentsDeployed: number
-  agentsKia: number
-  agentsWounded: number
-  agentsUnscathed: number
-  enemiesKia: number
-}
-
-export type SituationReportDatasetRow = {
-  turn: number
-  panicPct: number
-}
-
 export type BalanceSheetDatasetRow = {
   turn: number
   funding: number // positive
@@ -89,22 +72,13 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
   const defensiveLostMissionIds = new Set<string>()
   const defensiveExpiredMissionIds = new Set<string>()
 
-  const processedBattleMissionIds = new Set<string>()
-  let agentsDeployed = 0
-  let agentsKia = 0
-  let agentsWounded = 0
-  let agentsUnscathed = 0
-  let enemiesKia = 0
-
   const assets: AssetsDatasetRow[] = []
   const missions: MissionsDatasetRow[] = []
   const missionsOutcome: MissionsOutcomeDatasetRow[] = []
-  const battleStats: BattleStatsDatasetRow[] = []
-  const situationReport: SituationReportDatasetRow[] = []
   const balanceSheet: BalanceSheetDatasetRow[] = []
 
   for (const gameState of statesByTurn) {
-    const { turn, agents, funding, money, panic, turnStartReport } = gameState
+    const { turn, agents, funding, money, turnStartReport } = gameState
 
     // Get rewards from turn report (per-turn, not cumulative)
     const turnRewards = turnStartReport?.assets.moneyBreakdown.missionRewards ?? 0
@@ -137,15 +111,14 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       expenditures,
     })
 
-    // --- Missions + battle stats (cumulative over mission lifecycle, derived from state + turn reports)
-    const missionBattleDeltas = updateMissionAndBattleAccumulators({
+    // --- Missions (cumulative over mission lifecycle, derived from state + turn reports)
+    updateMissionAccumulators({
       gameState,
       missionIds,
       expiredMissionIds,
       wonMissionIds,
       retreatedMissionIds,
       wipedMissionIds,
-      processedBattleMissionIds,
       offensiveWonMissionIds,
       offensiveLostMissionIds,
       offensiveExpiredMissionIds,
@@ -153,12 +126,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       defensiveLostMissionIds,
       defensiveExpiredMissionIds,
     })
-
-    agentsDeployed += missionBattleDeltas.agentsDeployed
-    agentsKia += missionBattleDeltas.agentsTerminated
-    agentsWounded += missionBattleDeltas.agentsWounded
-    agentsUnscathed += missionBattleDeltas.agentsUnscathed
-    enemiesKia += missionBattleDeltas.enemiesTerminated
 
     missions.push({
       turn,
@@ -177,21 +144,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       defensiveWon: defensiveWonMissionIds.size,
       defensiveLost: defensiveLostMissionIds.size,
       defensiveExpired: defensiveExpiredMissionIds.size,
-    })
-
-    battleStats.push({
-      turn,
-      agentsDeployed,
-      agentsKia,
-      agentsWounded,
-      agentsUnscathed,
-      enemiesKia,
-    })
-
-    // --- Situation report (direct from state)
-    situationReport.push({
-      turn,
-      panicPct: toF(panic) * 100,
     })
 
     // --- Cash Flow (income and expenses per turn)
@@ -222,8 +174,6 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
     assets,
     missions,
     missionsOutcome,
-    battleStats,
-    situationReport,
     balanceSheet,
   }
 }
@@ -267,27 +217,20 @@ function selectTurnSnapshotsWithFirst(state: RootReducerState): {
   return { firstByTurn, lastByTurn }
 }
 
-function updateMissionAndBattleAccumulators(args: {
+function updateMissionAccumulators(args: {
   gameState: GameState
   missionIds: Set<string>
   expiredMissionIds: Set<string>
   wonMissionIds: Set<string>
   retreatedMissionIds: Set<string>
   wipedMissionIds: Set<string>
-  processedBattleMissionIds: Set<string>
   offensiveWonMissionIds: Set<string>
   offensiveLostMissionIds: Set<string>
   offensiveExpiredMissionIds: Set<string>
   defensiveWonMissionIds: Set<string>
   defensiveLostMissionIds: Set<string>
   defensiveExpiredMissionIds: Set<string>
-}): {
-  agentsDeployed: number
-  agentsTerminated: number
-  agentsWounded: number
-  agentsUnscathed: number
-  enemiesTerminated: number
-} {
+}): void {
   const {
     gameState,
     missionIds,
@@ -295,7 +238,6 @@ function updateMissionAndBattleAccumulators(args: {
     wonMissionIds,
     retreatedMissionIds,
     wipedMissionIds,
-    processedBattleMissionIds,
     offensiveWonMissionIds,
     offensiveLostMissionIds,
     offensiveExpiredMissionIds,
@@ -304,21 +246,13 @@ function updateMissionAndBattleAccumulators(args: {
     defensiveExpiredMissionIds,
   } = args
 
-  const deltas = {
-    agentsDeployed: 0,
-    agentsTerminated: 0,
-    agentsWounded: 0,
-    agentsUnscathed: 0,
-    enemiesTerminated: 0,
-  }
-
   for (const mission of gameState.missions) {
     missionIds.add(mission.id)
   }
 
   const report = gameState.turnStartReport
   if (!report) {
-    return deltas
+    return
   }
 
   for (const expired of report.expiredMissions) {
@@ -358,19 +292,8 @@ function updateMissionAndBattleAccumulators(args: {
         defensiveWonMissionIds,
         defensiveLostMissionIds,
       })
-
-      if (!processedBattleMissionIds.has(id)) {
-        processedBattleMissionIds.add(id)
-        deltas.agentsDeployed += mission.battleStats.agentsDeployed
-        deltas.agentsTerminated += mission.battleStats.agentsTerminated
-        deltas.agentsWounded += mission.battleStats.agentsWounded
-        deltas.agentsUnscathed += mission.battleStats.agentsUnscathed
-        deltas.enemiesTerminated += mission.battleStats.enemiesTerminated
-      }
     }
   }
-
-  return deltas
 }
 
 function applyBattleOutcomeToSets(

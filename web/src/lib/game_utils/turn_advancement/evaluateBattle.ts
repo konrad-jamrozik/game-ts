@@ -20,7 +20,7 @@ import {
   AGENTS_COMBAT_RATING_RETREAT_THRESHOLD,
   RETREAT_ENEMY_TO_AGENTS_COMBAT_RATING_THRESHOLD,
 } from '../../data_tables/constants'
-import { shouldRetreat, canParticipateInBattle, type RetreatResult } from '../../ruleset/missionRuleset'
+import { shouldRetreat, canParticipateInBattle, isIncapacitated, type RetreatResult } from '../../ruleset/missionRuleset'
 import { effectiveSkill } from '../../ruleset/skillRuleset'
 import { calculateCombatRating } from '../../ruleset/combatRatingRuleset'
 import { assertDefined, assertNotEmpty } from '../../primitives/assertPrimitives'
@@ -43,6 +43,7 @@ export type BattleReport = {
   rounds: number
   agentCasualties: number
   agentsTerminated: number
+  agentsIncapacitated: number
   enemyCasualties: number
   retreated: boolean
   agentSkillUpdates: Record<string, Fixed6>
@@ -218,8 +219,12 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
   }
   roundLogs.push(endOfBattleLog)
 
-  // Count casualties - terminated and wounded
+  // Count casualties - terminated, incapacitated, and wounded
   const agentsTerminated = agents.filter((agent) => f6le(agent.hitPoints, f6c0)).length
+  // Incapacitated: alive but effective skill fell to 10% or below of base skill
+  const agentsIncapacitated = agents.filter(
+    (agent) => f6gt(agent.hitPoints, f6c0) && isIncapacitated(agent),
+  ).length
   const agentsWounded = agents.filter((agent) => {
     const initialHp = initialAgentHitPointsMap.get(agent.id) ?? agent.maxHitPoints
     return f6gt(agent.hitPoints, f6c0) && f6lt(agent.hitPoints, initialHp)
@@ -278,6 +283,7 @@ export function evaluateBattle(agents: Agent[], enemies: Enemy[]): BattleReport 
     rounds: combatRounds,
     agentCasualties,
     agentsTerminated,
+    agentsIncapacitated,
     enemyCasualties,
     retreated,
     agentSkillUpdates,

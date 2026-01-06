@@ -53,9 +53,11 @@ export function evaluateAttack(
   const attackerIsAgent = isAgent(attacker)
   const defenderIsAgent = isAgent(defender)
 
-  // Extract agent/enemy IDs for AttackLog
+  // Extract agent/enemy IDs and enemy type for AttackLog
   const agentId = attackerIsAgent ? attacker.id : defender.id
   const enemyId = attackerIsAgent ? defender.id : attacker.id
+  // Get enemy type - one of attacker/defender is always an enemy
+  const enemyType = attackerIsAgent ? getEnemyType(defender) : getEnemyType(attacker)
 
   // Calculate roll percentage and threshold
   const rollPct = toF(rollResult.rollF4) * 100
@@ -113,6 +115,7 @@ export function evaluateAttack(
         roundNumber,
         agentId,
         enemyId,
+        enemyType,
         attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
         attackerSkill: attackerEffectiveSkill,
         attackerSkillAtStart,
@@ -159,6 +162,7 @@ export function evaluateAttack(
         roundNumber,
         agentId,
         enemyId,
+        enemyType,
         attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
         attackerSkill: attackerEffectiveSkill,
         attackerSkillAtStart,
@@ -210,6 +214,7 @@ export function evaluateAttack(
       roundNumber,
       agentId,
       enemyId,
+      enemyType,
       attackerType: attackerIsAgent ? 'Agent' : 'Enemy',
       attackerSkill: attackerEffectiveSkill,
       attackerSkillAtStart,
@@ -229,4 +234,11 @@ export function evaluateAttack(
   }
 
   return attackLog
+}
+
+function getEnemyType(actor: Agent | Enemy): Enemy['type'] {
+  if (isAgent(actor)) {
+    throw new Error('Expected enemy actor but got agent')
+  }
+  return actor.type
 }

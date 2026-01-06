@@ -2,6 +2,7 @@ import type { Fixed6 } from '../primitives/fixed6'
 import type { FactionId, LeadId } from './modelIds'
 import type { MissionRewards } from './missionModel'
 import type { AttackOutcome, BattleOutcome, BattleStatus } from './outcomeTypes'
+import type { EnemyType } from './enemyModel'
 
 export type TurnReport = BaseReport & {
   assets: AssetsReport
@@ -150,6 +151,7 @@ export type AttackLog = {
   roundNumber: number
   agentId: string
   enemyId: string
+  enemyType: EnemyType
   attackerType: 'Agent' | 'Enemy'
   attackerSkill: Fixed6
   attackerSkillAtStart: Fixed6
@@ -171,6 +173,7 @@ export type BattleStats = {
   agentsDeployed: number
   agentsUnscathed: number
   agentsWounded: number
+  agentsIncapacitated: number
   agentsTerminated: number
   enemiesTotal: number
   enemiesUnscathed: number
@@ -197,6 +200,15 @@ export type LeadInvestigationReport = {
   successChance: number
   intelDecay?: number
   createdMissions?: string[]
+  /**
+   * The turn on which this investigation was completed.
+   * Only set when completed is true.
+   */
+  completionTurn?: number
+  /**
+   * The turn on which this investigation started.
+   */
+  startTurn: number
 }
 
 export type ExpiredMissionReport = {

@@ -67,7 +67,9 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
     completed: success,
     accumulatedIntel: investigation.accumulatedIntel,
     successChance,
+    startTurn: investigation.startTurn,
     ...(createdMissions !== undefined && { createdMissions }),
+    ...(success && { completionTurn: state.turn }),
   }
 }
 

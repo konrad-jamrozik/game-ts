@@ -3,6 +3,7 @@ import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../../lib/
 import type { UpgradeName } from '../../lib/data_tables/upgrades'
 
 export type LeadsFilterType = 'active' | 'inactive' | 'archived'
+export type ChartsTurnRangeFilter = 'all' | 'last100' | 'currentTurn'
 
 export type SelectionState = {
   agents: AgentId[]
@@ -27,6 +28,7 @@ export type SelectionState = {
   agentsShowStats?: boolean
   missionsChartShowOffensive?: boolean
   missionsChartShowDefensive?: boolean
+  chartsTurnRangeFilter?: ChartsTurnRangeFilter
 }
 
 const initialState: SelectionState = {
@@ -152,6 +154,9 @@ const selectionSlice = createSlice({
     setMissionsChartShowDefensive(state, action: PayloadAction<boolean>) {
       state.missionsChartShowDefensive = action.payload
     },
+    setChartsTurnRangeFilter(state, action: PayloadAction<ChartsTurnRangeFilter>) {
+      state.chartsTurnRangeFilter = action.payload
+    },
   },
 })
 
@@ -189,5 +194,6 @@ export const {
   setAgentsShowStats,
   setMissionsChartShowOffensive,
   setMissionsChartShowDefensive,
+  setChartsTurnRangeFilter,
 } = selectionSlice.actions
 export default selectionSlice.reducer
