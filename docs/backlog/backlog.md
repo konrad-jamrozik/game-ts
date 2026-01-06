@@ -15,20 +15,68 @@ KJA backlog:
 
 ## Charts
 
-- Charts for upgrades (similar to asset charts)
-- Overlay onto agent Combat rating chart two lines (use MUI colors https://mui.com/material-ui/customization/color/#color-palette):
-  - Red line: highest mission Combat Rating ever seen up until given turn
-  - Orange line: average mission Combat Rating averaged across all missions that appeared in last 20 turns
-- Chart for missions: cumulative missions completed successfully, failed, expired, wiped, etc. Split Offensive and defensive missions.
-- Mode for charts: display only current turn, not historical. This may change display mode.
-  There would be charts like e.g. a pie chart of agent statuses, or agent skill, with one entry for each agent (X axis is agent ID)
-- Chart showing progress on leads and how long it takes to complete them on average, agents assigned, difficulty, repeatable, distinct count, per faction, etc.
-- Chart showing agent cumulative agent unscathed, wounded, incapacitated, KIA & sacked
-- Chart with each faction stats, like mission frequency, activity level, suppression, etc.
-- Chart with panic. It should be area chart stacking total panic by source faction that caused it.
-- Chart for most dangerous enemy type (and faction), e.g. how much damage agents have suffered from operatives
-- Chart for enemy types killed
-- Remove/update obsolete charts
+First, delete the obsolete charts:
+- Battle stats (total over missions)
+- Situation report
+
+Next, add a series of charts. Following the conventions of other charts, where each chart is in its own file that also has
+supporting functions like getColor() build row, build dataset, etc.
+
+When using colors, strive to use similar colors as other charts, getColor() functions, e.g. agent readiness.
+
+Chart 1: Upgrades
+
+Shows upgrade values. Biaxial line chart.
+Left Y axis: value of hit points (red), weapon base damage (orange)
+Right Y axis: training skill gain (dark green), exhaustion recovery % (yellow), hit points recovery % (dark red)
+
+Chart 2: Agent outcomes
+
+Line chart. Shows cumulative agents:
+- unscathed (green)
+- wounded (yellow)
+- incapacitated (orange)
+- KIA (red)
+- sacked (grey)
+
+Chart 3: Enemies killed by type
+
+Stacked area line chart. Shows cumulative enemies killed by player by type:
+- Initiate (any faction)
+- Operative (any faction)
+- and so on.
+Make the colors go over the gradient of green - yellow - orange - red - purple - blue, etc, so it is pleasant
+to the eye and incorporates all enemy types up to cult leader.
+
+Chart 4: Damage dealt by enemy type
+
+Stacked area line chart. Shows cumulative damage dealt by enemy type to player agents.
+Similar in design as "Enemies killed by type"
+
+Chart 5: Panic
+
+Stacked line area chart showing panic, stacked by faction source, where everything stacked is the total panic.
+
+Chart 6: Leads
+
+Line chart.
+- Cumulative non-repeatable leads successfully investigated
+- Cumulative investigations completed of repeatable leads
+- Max time to complete an investigation, for all investigations completed within last 20 turns.
+
+Chart 7: Factions
+
+Line chart. For each faction shows:
+- suppression turns
+- cumulative player defensive missions
+- cumulative player offensive missions
+
+Furthermore, add three radio buttons beside the "Back to command center" button:
+- All turns
+- Last 100 turns
+- Current turn
+
+That limits from how many turns the information is displayed in the charts.
 
 ## MUI
 
