@@ -69,6 +69,10 @@ Problem:
     instead, they deploy agents, suffer heavy losses, but achieve some objectives, drastically reducing the penalties.
   - This should be general theme: much better to deploy agents, incur losses, and throw a wrench in enemy plans,
     than to let the enemy to deploy missions unabated.
+  - Key mechanic: instead having all enemies at the start at the mission, more of them may spawn each round,
+    and possibly it may continue until specific round is reached or until player requests retreat.
+  - Mission idea: evacuation. The more rounds player agents spend on the mission, the more civilians successfully evacuated.
+  - Mission idea: hold until reinforcements arrive.
 
 ## Ideas
 
