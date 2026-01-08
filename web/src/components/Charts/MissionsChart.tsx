@@ -2,7 +2,7 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { green, red, grey } from '@mui/material/colors'
+import { green, red, grey, blue } from '@mui/material/colors'
 import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { setMissionsChartShowOffensive, setMissionsChartShowDefensive } from '../../redux/slices/selectionSlice'
@@ -125,6 +125,15 @@ export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
     })
   }
 
+  // Cumulative discovered missions line (no area, no stack)
+  series.push({
+    id: 'discovered',
+    dataKey: 'discovered',
+    label: 'Discovered',
+    showMark: false,
+    color: blue[700],
+  })
+
   return (
     <LineChart
       dataset={datasets.missionsOutcome}
@@ -146,8 +155,14 @@ export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
       height={height}
       grid={{ horizontal: true }}
       sx={{
+        // Hide lines for stacked area series (they only have area fill)
         [`& .${lineElementClasses.root}`]: {
           display: 'none',
+        },
+        // Show the discovered line with thick stroke
+        '& .MuiLineElement-series-discovered': {
+          display: 'initial',
+          strokeWidth: 3,
         },
       }}
       slotProps={{

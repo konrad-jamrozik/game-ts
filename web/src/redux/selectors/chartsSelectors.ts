@@ -41,6 +41,7 @@ export type MissionsOutcomeDatasetRow = {
   defensiveWon: number
   defensiveLost: number
   defensiveExpired: number
+  discovered: number
 }
 
 export type BalanceSheetDatasetRow = {
@@ -144,6 +145,7 @@ export function selectChartsDatasets(state: RootReducerState): ChartsDatasets {
       defensiveWon: defensiveWonMissionIds.size,
       defensiveLost: defensiveLostMissionIds.size,
       defensiveExpired: defensiveExpiredMissionIds.size,
+      discovered: missionIds.size,
     })
 
     // --- Cash Flow (income and expenses per turn)
