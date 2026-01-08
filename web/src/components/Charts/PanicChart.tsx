@@ -19,9 +19,9 @@ function getFactionColor(factionName: string): string {
 }
 
 export type PanicDatasetRow = {
+  [factionName: string]: number
   turn: number
   totalPanic: number
-  [factionName: string]: number
 }
 
 type PanicChartProps = {

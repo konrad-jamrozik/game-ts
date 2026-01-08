@@ -46,8 +46,8 @@ function getFactionOffensiveColor(factionName: string): string {
 }
 
 export type FactionsDatasetRow = {
-  turn: number
   [key: string]: number // Dynamic keys for each faction metric
+  turn: number
 }
 
 type FactionsChartProps = {
@@ -68,9 +68,7 @@ function buildFactionsDataset(gameStates: GameState[]): {
     for (const faction of gameState.factions) {
       const name = getFactionName(faction)
       factionNamesSet.add(name)
-      if (!cumulativeMissions[name]) {
-        cumulativeMissions[name] = { defensive: 0, offensive: 0 }
-      }
+      cumulativeMissions[name] ??= { defensive: 0, offensive: 0 }
     }
   }
 

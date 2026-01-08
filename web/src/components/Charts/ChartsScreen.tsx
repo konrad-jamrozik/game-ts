@@ -39,8 +39,6 @@ export function ChartsScreen(): React.JSX.Element {
   const filteredGameStates = filterByTurnRange(gameStates, turnRangeFilter, currentTurn)
   const filteredDatasets = {
     assets: filterByTurnRange(datasets.assets, turnRangeFilter, currentTurn),
-    missions: filterByTurnRange(datasets.missions, turnRangeFilter, currentTurn),
-    missionsOutcome: filterByTurnRange(datasets.missionsOutcome, turnRangeFilter, currentTurn),
     balanceSheet: filterByTurnRange(datasets.balanceSheet, turnRangeFilter, currentTurn),
   }
 
