@@ -15,7 +15,7 @@ import { selectChartsDatasets, selectTurnSnapshotsForCharts } from '../../redux/
 import { AgentSkillChart } from './AgentSkillChart'
 import { AgentStatusChart } from './AgentStatusChart'
 import { AgentReadinessChart } from './AgentReadinessChart'
-import { CombatRatingChart } from './CombatRatingChart'
+import { CombatRatingChart, CombatRatingChartControls } from './CombatRatingChart'
 import { AssetsChart } from './AssetsChart'
 import { CashFlowChart } from './CashFlowChart'
 import { MissionsChart, MissionsChartControls } from './MissionsChart'
@@ -125,6 +125,7 @@ export function ChartsScreen(): React.JSX.Element {
         <ChartsPanel
           title="Combat rating"
           renderChart={(height) => <CombatRatingChart gameStates={filteredGameStates} height={height} />}
+          headerControls={<CombatRatingChartControls />}
         />
 
         <ChartsPanel

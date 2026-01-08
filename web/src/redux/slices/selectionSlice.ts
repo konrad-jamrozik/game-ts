@@ -28,6 +28,8 @@ export type SelectionState = {
   agentsShowStats?: boolean
   missionsChartShowOffensive?: boolean
   missionsChartShowDefensive?: boolean
+  combatRatingChartShowAgentCR?: boolean
+  combatRatingChartShowMissionCR?: boolean
   chartsTurnRangeFilter?: ChartsTurnRangeFilter
 }
 
@@ -154,6 +156,12 @@ const selectionSlice = createSlice({
     setMissionsChartShowDefensive(state, action: PayloadAction<boolean>) {
       state.missionsChartShowDefensive = action.payload
     },
+    setCombatRatingChartShowAgentCR(state, action: PayloadAction<boolean>) {
+      state.combatRatingChartShowAgentCR = action.payload
+    },
+    setCombatRatingChartShowMissionCR(state, action: PayloadAction<boolean>) {
+      state.combatRatingChartShowMissionCR = action.payload
+    },
     setChartsTurnRangeFilter(state, action: PayloadAction<ChartsTurnRangeFilter>) {
       state.chartsTurnRangeFilter = action.payload
     },
@@ -194,6 +202,8 @@ export const {
   setAgentsShowStats,
   setMissionsChartShowOffensive,
   setMissionsChartShowDefensive,
+  setCombatRatingChartShowAgentCR,
+  setCombatRatingChartShowMissionCR,
   setChartsTurnRangeFilter,
 } = selectionSlice.actions
 export default selectionSlice.reducer

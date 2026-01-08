@@ -1,4 +1,7 @@
 import * as React from 'react'
+import Box from '@mui/material/Box'
+import Checkbox from '@mui/material/Checkbox'
+import FormControlLabel from '@mui/material/FormControlLabel'
 import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
 import { BarPlot } from '@mui/x-charts/BarChart'
@@ -14,6 +17,8 @@ import { axisConfig, LEGEND_FONT_SIZE, yAxisConfig } from './chartsUtils'
 import { isMissionAssignment } from '../../lib/model_utils/agentUtils'
 import { toF } from '../../lib/primitives/fixed6'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { setCombatRatingChartShowAgentCR, setCombatRatingChartShowMissionCR } from '../../redux/slices/selectionSlice'
 
 // Combat rating colors with semantic coding:
 // Good: Ready - bright green
@@ -47,6 +52,35 @@ export type CombatRatingDatasetRow = {
   p80MissionCR20: number
 }
 
+export function CombatRatingChartControls(): React.JSX.Element {
+  const dispatch = useAppDispatch()
+  const showAgentCR = useAppSelector((state) => state.selection.combatRatingChartShowAgentCR) ?? true
+  const showMissionCR = useAppSelector((state) => state.selection.combatRatingChartShowMissionCR) ?? true
+
+  function handleAgentCRChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setCombatRatingChartShowAgentCR(event.target.checked))
+  }
+
+  function handleMissionCRChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    dispatch(setCombatRatingChartShowMissionCR(event.target.checked))
+  }
+
+  return (
+    <Box sx={{ display: 'flex', gap: 1, alignItems: 'center' }}>
+      <FormControlLabel
+        control={<Checkbox checked={showAgentCR} onChange={handleAgentCRChange} size="small" />}
+        label="Agent CR"
+        sx={{ margin: 0 }}
+      />
+      <FormControlLabel
+        control={<Checkbox checked={showMissionCR} onChange={handleMissionCRChange} size="small" />}
+        label="Mission CR"
+        sx={{ margin: 0 }}
+      />
+    </Box>
+  )
+}
+
 type CombatRatingChartProps = {
   gameStates: GameState[]
   height: number
@@ -55,6 +89,8 @@ type CombatRatingChartProps = {
 export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Element {
   const { gameStates, height } = props
   const dataset = buildCombatRatingDataset(gameStates)
+  const showAgentCR = useAppSelector((state) => state.selection.combatRatingChartShowAgentCR) ?? true
+  const showMissionCR = useAppSelector((state) => state.selection.combatRatingChartShowMissionCR) ?? true
 
   function formatTurnWithTotalCR(turn: number): string {
     const datasetItem = dataset.find((item) => item.turn === turn)
@@ -62,6 +98,88 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
       return formatTurn(turn)
     }
     return `${formatTurn(turn)} (Total CR: ${datasetItem.totalCR.toFixed(2)})`
+  }
+
+  const series: (
+    | {
+        type: 'bar'
+        dataKey: string
+        label: string
+        stack: string
+        color: string
+      }
+    | {
+        id: string
+        type: 'line'
+        dataKey: string
+        label: string
+        showMark: boolean
+        color: string
+      }
+  )[] = []
+
+  // Bar series for agent combat ratings (stacked)
+  if (showAgentCR) {
+    series.push(
+      {
+        type: 'bar',
+        dataKey: 'readyCR',
+        label: 'Ready CR',
+        stack: 'combatRating',
+        color: getColor('ready'),
+      },
+      {
+        type: 'bar',
+        dataKey: 'tiredCR',
+        label: 'Tired CR',
+        stack: 'combatRating',
+        color: getColor('tired'),
+      },
+      {
+        type: 'bar',
+        dataKey: 'awayCR',
+        label: 'Away CR',
+        stack: 'combatRating',
+        color: getColor('away'),
+      },
+      {
+        type: 'bar',
+        dataKey: 'recoveringCR',
+        label: 'Recovering CR',
+        stack: 'combatRating',
+        color: getColor('recovering'),
+      },
+    )
+  }
+
+  // Line series for mission combat ratings
+  if (showMissionCR) {
+    series.push(
+      {
+        id: 'highestMissionCR',
+        type: 'line',
+        dataKey: 'highestMissionCR',
+        label: 'Highest Mission CR',
+        showMark: false,
+        color: red[500], // Bright red
+      },
+      {
+        id: 'p50MissionCR20',
+        type: 'line',
+        dataKey: 'p50MissionCR20',
+        label: 'P50 Mission CR (20 turns)',
+        showMark: false,
+        color: red[800], // Dark red
+      },
+      {
+        id: 'p80MissionCR20',
+        type: 'line',
+        dataKey: 'p80MissionCR20',
+        label: 'P80 Mission CR (20 turns)',
+        showMark: false,
+        color: red[600], // Medium red
+      },
+    )
   }
 
   return (
@@ -77,62 +195,7 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
         },
       ]}
       yAxis={[yAxisConfig]}
-      series={[
-        // Bar series for agent combat ratings (stacked)
-        {
-          type: 'bar',
-          dataKey: 'readyCR',
-          label: 'Ready CR',
-          stack: 'combatRating',
-          color: getColor('ready'),
-        },
-        {
-          type: 'bar',
-          dataKey: 'tiredCR',
-          label: 'Tired CR',
-          stack: 'combatRating',
-          color: getColor('tired'),
-        },
-        {
-          type: 'bar',
-          dataKey: 'awayCR',
-          label: 'Away CR',
-          stack: 'combatRating',
-          color: getColor('away'),
-        },
-        {
-          type: 'bar',
-          dataKey: 'recoveringCR',
-          label: 'Recovering CR',
-          stack: 'combatRating',
-          color: getColor('recovering'),
-        },
-        // Line series for mission combat ratings
-        {
-          id: 'highestMissionCR',
-          type: 'line',
-          dataKey: 'highestMissionCR',
-          label: 'Highest Mission CR',
-          showMark: false,
-          color: red[500], // Bright red
-        },
-        {
-          id: 'p50MissionCR20',
-          type: 'line',
-          dataKey: 'p50MissionCR20',
-          label: 'P50 Mission CR (20 turns)',
-          showMark: false,
-          color: red[800], // Dark red
-        },
-        {
-          id: 'p80MissionCR20',
-          type: 'line',
-          dataKey: 'p80MissionCR20',
-          label: 'P80 Mission CR (20 turns)',
-          showMark: false,
-          color: red[600], // Medium red
-        },
-      ]}
+      series={series as NonNullable<Parameters<typeof ChartDataProvider>[0]['series']>}
       height={height}
     >
       <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
