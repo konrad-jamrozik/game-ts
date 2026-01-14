@@ -4,6 +4,30 @@ KJA backlog:
 
 # Next
 
+## AI
+
+Smarter AI player that finishes game in less turns, even without cheating.
+
+- Keep less money and ready agents around once some agent threshold is reached.
+
+- Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
+  - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
+  - Actually looks like manual human actions in general can throw AI off, not just undoing.
+    Probably because busting "actual" state. But I might have fixed it, not sure.
+
+- Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
+  - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
+     Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
+     Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
+
+- Add more AI tests:
+- e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
+- "aggressive AI" that tries to win the game as fast as possible, assuming cheats are on, so it always wins all rolls.
+  So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
+  before the exhaustion causes them to lose so much effective skill that commander orders retreat.
+
+# Next - minor
+
 - Keep track of agents initial CR in mission log
 
 - In missions header, first show success, then fail, then expired
@@ -30,67 +54,7 @@ Problem:
 - Does the `<Strict> mode` continue double rendering even for vite preview?
   - Note: removing this doesn't speed up tests. Confirmed.
 
-## AI
-
-- Because of AI "exactly one desired" invariant checks, it doesn't play well with debug.
-  - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
-  - Actually looks like manual human actions in general can throw AI off, not just undoing.
-    Probably because busting "actual" state. But I might have fixed it, not sure.
-
-- Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
-  - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
-     Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
-     Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
-
-- Add more AI tests:
-- e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost
-- "aggressive AI" that tries to win the game as fast as possible, assuming cheats are on, so it always wins all rolls.
-  So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
-  before the exhaustion causes them to lose so much effective skill that commander orders retreat.
-
 # Later
-
-## Game mechanics ideas
-
-- At the game beginning each faction rolls hidden "growth factor" e.g. from 0.5 to 1.5 which compresses
-  how quickly they go through activity levels.
-  So e.g. when faction rolls the growth between range 60-90, and it rolls 70, then:
-  - if growth factor is 60%, then (70-60) * 0.6 = 6, so it actually rolled 70-6 = 64.
-  - if growth factor is 140%, then (90-70) *0.4 = 20*0.4 = 8, so it actually rolled 70+8 = 78.
-  - So growth factor of 50%  narrows effective roll from 60-90 to 60-75 and
-       growth factor of 150% narrows effective roll from 60-90 to 75-90.
-// NOTE: this should be opposite: growth factor of 50% should slow-down, not speed up
-
-- Very difficult missions that pose a dilemma to the player and force them to incur significant agent losses:
-  - These missions would result in massive penalties if they are not attended to by the player.
-  - But the player should struggle to muster enough agents to win with overwhelming force.
-  - So either the mission is just at the right difficulty where the player may or may not win (difficult to achieve)
-  - OR the mission gives credit for partial success. This way player is incentivized to not let the mission just expire:
-    instead, they deploy agents, suffer heavy losses, but achieve some objectives, drastically reducing the penalties.
-  - This should be general theme: much better to deploy agents, incur losses, and throw a wrench in enemy plans,
-    than to let the enemy to deploy missions unabated.
-  - Key mechanic: instead having all enemies at the start at the mission, more of them may spawn each round,
-    and possibly it may continue until specific round is reached or until player requests retreat.
-  - Mission idea: evacuation. The more rounds player agents spend on the mission, the more civilians successfully evacuated.
-  - Mission idea: hold until reinforcements arrive.
-
-## Ideas
-
-- Add some mechanism that influences how long missions sites will last until expiration.
-  Conceptually it denotes how early player learned about them. Maybe:
-  - Have some kind of "Threat detection" repeatable lead that when completed, gives turn-limited benefits of form:
-    - Increased expiration time of missions
-    - More precise insight when will the next offensive operation happen and what it will be.
-  - Or "Reveal operation" lead just tells you about current op.
-  - Note that conceptually "expires in" should elongate BEFORE, not AFTER. What does it mean?
-    If on turn 10 faction planned a mission for turn 18, then that mission site should still expire by turn 20.
-    If player wants to have "expires in" longer, they must discover the mission site earlier.
-    But then this is stupid in this sense that early detection doesn't mean the mission has started yet.
-    So need a new concept of "mission didn't start but we know when it will happen".
-    Expirations probably must remain very strict.
-  - Maybe agents could also gather intel against specific faction, and that intel will decay. So the more
-    intel gathered at any given turn, the more player knows the factions whereabouts.
-  - Interrogating could give similar benefits
 
 ## Domain model refactoring
 
@@ -149,7 +113,7 @@ Problem:
 
 ## Maybe, future
 
-- See `prompts.md` and `.cursor/plans` for more ideas.
+- See `prompts.md`, `ideas.md`, `long_term_backlog.md`, and `.cursor/plans` for more ideas.
 
 - Allow State column filtering:
   Per LLM, how to make MUI use enum for filtering:
