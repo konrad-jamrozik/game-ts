@@ -52,6 +52,7 @@ async function main(): Promise<void> {
   // Print agent count
   const gameState = getCurrentTurnStateFromStore(store)
   console.log(`\nAgent count: ${gameState.agents.length}. Terminated: ${gameState.terminatedAgents.length}`)
+  console.log(`\n.cpuprofile file should have been created.`)
 }
 
 function writeProfilerCSVIfDataExists(): void {
@@ -67,8 +68,9 @@ function writeProfilerCSVIfDataExists(): void {
     writeFileSync(csvPath, csv, 'utf8')
     console.log(`\nProfiler CSV written to: ${csvPath}`)
   } else {
-    console.log('\nNo profiler CSV generated. The profiler did not record any data.')
+    console.log('\nNo optional profiler CSV generated. The profiler did not record any data.')
     console.log('This usually means no profiled functions were called, or profiler.startTurn() was never invoked.')
+    console.log('However, the .cpuprofile file should still have been created.')
   }
 }
 

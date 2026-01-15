@@ -26,6 +26,7 @@ The profiling script (`web/scripts/profileAi.ts`) runs the AI player for 200 tur
    ```powershell
    cd web
    npx tsx --cpu-prof scripts/profileAi.ts
+   # With more precise profiling interval
    npx tsx --cpu-prof --cpu-prof-interval=100 scripts/profileAi.ts
    ```
 
