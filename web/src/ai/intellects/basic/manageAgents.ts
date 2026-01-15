@@ -11,16 +11,18 @@ import {
 } from './contractingAssignment'
 import { assignToLeadInvestigation } from './leadInvestigation'
 import { assignToTraining } from './trainingAssignment'
+import { getAssignableAgentsWithStats } from './agentSelection'
 import { log } from '../../../lib/primitives/logger'
 
 export function manageAgents(api: PlayTurnAPI): void {
   unassignExhaustedAgents(api)
-  assignToContractingWithPriority(api)
-  deployToMissions(api)
-  assignToContracting(api)
-  assignToLeadInvestigation(api)
-  assignToTraining(api)
-  assignLeftoverToContracting(api)
+  let remainingAgents = getAssignableAgentsWithStats(api.gameState)
+  remainingAgents = assignToContractingWithPriority(api, remainingAgents)
+  remainingAgents = deployToMissions(api, remainingAgents)
+  remainingAgents = assignToContracting(api, remainingAgents)
+  remainingAgents = assignToLeadInvestigation(api, remainingAgents)
+  remainingAgents = assignToTraining(api, remainingAgents)
+  assignLeftoverToContracting(api, remainingAgents)
 }
 
 // KJA2 need to use some util here?

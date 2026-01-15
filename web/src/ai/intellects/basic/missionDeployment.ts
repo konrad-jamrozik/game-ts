@@ -1,18 +1,17 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Mission } from '../../../lib/model/missionModel'
-import type { Agent } from '../../../lib/model/agentModel'
 import { getRemainingTransportCap, filterMissionsByState } from '../../../lib/model_utils/missionUtils'
-import { selectNextBestReadyAgents } from './agentSelection'
 import { MAX_ENEMIES_PER_AGENT, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
-import { calculateAgentCombatRating, pickAtRandom, unassignAgentsFromTraining } from './utils'
+import { removeAgentsById, selectNextBestReadyAgents, type AgentWithStats } from './agentSelection'
+import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
 
 export type DeploymentFeasibilityResult =
   | {
       canDeploy: true
-      selectedAgents: Agent[]
+      selectedAgents: AgentWithStats[]
     }
   | {
       canDeploy: false
@@ -27,20 +26,21 @@ export type DeploymentFeasibilityResult =
 export function canDeployMissionWithCurrentResources(
   gameState: GameState,
   mission: Mission,
+  agents: AgentWithStats[],
 ): DeploymentFeasibilityResult {
   const minimumRequiredAgents = ceil(mission.enemies.length / MAX_ENEMIES_PER_AGENT)
   const enemyCombatRating = mission.combatRating
   const targetCombatRating = enemyCombatRating * TARGET_COMBAT_RATING_MULTIPLIER
 
-  const selectedAgents: Agent[] = []
+  const selectedAgents: AgentWithStats[] = []
 
   // Phase 1: Select agents until meeting minimum count requirement
-  const initialAgents = selectNextBestReadyAgents(gameState, minimumRequiredAgents, [], 0, {
+  const initialAgents = selectNextBestReadyAgents(agents, minimumRequiredAgents, [], 0, gameState.agents.length, {
     includeInTraining: true,
     keepReserve: false,
   })
   selectedAgents.push(...initialAgents)
-  let currentCombatRating = initialAgents.reduce((sum, a) => sum + calculateAgentCombatRating(a), 0)
+  let currentCombatRating = initialAgents.reduce((sum, agent) => sum + agent.combatRating, 0)
 
   // Check if we have enough agents
   if (selectedAgents.length < minimumRequiredAgents) {
@@ -50,20 +50,21 @@ export function canDeployMissionWithCurrentResources(
 
   // Phase 2: Continue selecting if combat rating requirement not yet met
   while (currentCombatRating < targetCombatRating) {
-    const agents = selectNextBestReadyAgents(
-      gameState,
+    const nextAgents = selectNextBestReadyAgents(
+      agents,
       1,
-      selectedAgents.map((a) => a.id),
+      selectedAgents.map((agent) => agent.id),
       selectedAgents.length,
+      gameState.agents.length,
       { includeInTraining: true, keepReserve: false },
     )
-    const agent = agents[0]
-    if (agent === undefined) {
+    const selectedAgent = nextAgents[0]
+    if (selectedAgent === undefined) {
       break // No more agents available
     }
 
-    selectedAgents.push(agent)
-    currentCombatRating += calculateAgentCombatRating(agent)
+    selectedAgents.push(selectedAgent)
+    currentCombatRating += selectedAgent.combatRating
   }
 
   // Check if we have enough combat rating
@@ -82,7 +83,7 @@ export function canDeployMissionWithCurrentResources(
   return { canDeploy: true, selectedAgents }
 }
 
-export function deployToMissions(api: PlayTurnAPI): void {
+export function deployToMissions(api: PlayTurnAPI, agents: AgentWithStats[]): AgentWithStats[] {
   const { gameState } = api
   const activeMissions = filterMissionsByState(gameState.missions, ['Active'])
 
@@ -94,17 +95,19 @@ export function deployToMissions(api: PlayTurnAPI): void {
     details?: string
   }[] = []
 
+  let remainingAgents = agents
   let mission = selectNextMissionToDeploy(activeMissions)
   while (mission !== undefined) {
     deploymentsAttempted += 1
     const missionId = mission.id
-    const deployed = deployToMission(api, mission, cancelledDeployments)
+    const deployment = deployToMission(api, mission, remainingAgents, cancelledDeployments)
+    remainingAgents = deployment.remainingAgents
     // Remove the evaluated mission from the list
     const missionIndex = activeMissions.findIndex((m) => m.id === missionId)
     if (missionIndex !== -1) {
       activeMissions.splice(missionIndex, 1)
     }
-    if (deployed) {
+    if (deployment.deployed) {
       deploymentsSuccessful += 1
       mission = selectNextMissionToDeploy(activeMissions)
     } else {
@@ -113,6 +116,8 @@ export function deployToMissions(api: PlayTurnAPI): void {
   }
 
   logDeploymentStatistics(deploymentsAttempted, deploymentsSuccessful, cancelledDeployments)
+
+  return remainingAgents
 }
 
 function logDeploymentStatistics(
@@ -192,14 +197,15 @@ function selectNextMissionToDeploy(availableMissions: Mission[]): Mission | unde
 function deployToMission(
   api: PlayTurnAPI,
   mission: Mission,
+  agents: AgentWithStats[],
   cancelledDeployments: {
     missionId: string
     reason: 'insufficientAgentCount' | 'insufficientCombatRating' | 'insufficientTransport'
     details?: string
   }[],
-): boolean {
+): { deployed: boolean; remainingAgents: AgentWithStats[] } {
   const { gameState } = api
-  const feasibility = canDeployMissionWithCurrentResources(gameState, mission)
+  const feasibility = canDeployMissionWithCurrentResources(gameState, mission, agents)
 
   if (!feasibility.canDeploy) {
     cancelledDeployments.push({
@@ -207,7 +213,7 @@ function deployToMission(
       reason: feasibility.reason,
       details: feasibility.details,
     })
-    return false
+    return { deployed: false, remainingAgents: agents }
   }
 
   // Unassign agents from training if needed
@@ -217,5 +223,12 @@ function deployToMission(
     missionId: mission.id,
     agentIds: feasibility.selectedAgents.map((agent) => agent.id),
   })
-  return true
+
+  return {
+    deployed: true,
+    remainingAgents: removeAgentsById(
+      agents,
+      feasibility.selectedAgents.map((agent) => agent.id),
+    ),
+  }
 }

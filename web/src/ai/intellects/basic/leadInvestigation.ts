@@ -3,14 +3,15 @@ import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead, LeadInvestigation } from '../../../lib/model/leadModel'
 import type { AgentId, LeadId } from '../../../lib/model/modelIds'
 import { dataTables } from '../../../lib/data_tables/dataTables'
-import { selectNextBestReadyAgents } from './agentSelection'
-import { pickAtRandom, unassignAgentsFromTraining, calculateAgentCombatRating } from './utils'
+import { removeAgentsById, selectNextBestReadyAgents, type AgentWithStats } from './agentSelection'
+import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
 import { NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
 
+// KJA1 generate full spec of all such behaviors in manageAgents and spendMoney.
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
  *
@@ -41,17 +42,18 @@ import { log } from '../../../lib/primitives/logger'
  * - All agents allocated to lead investigation are concentrated on a single repeatable lead
  *   when one is selected, maximizing investigation efficiency
  */
-export function assignToLeadInvestigation(api: PlayTurnAPI): void {
+export function assignToLeadInvestigation(api: PlayTurnAPI, agents: AgentWithStats[]): AgentWithStats[] {
   const { gameState } = api
   const availableLeads = getAvailableLeads(gameState)
   if (availableLeads.length === 0) {
-    return
+    return agents
   }
 
   const targetAgentCount = computeTargetAgentCountForInvestigation(gameState)
   const currentAgentCount = countAgentsInvestigatingLeads(gameState)
   const agentsToAssign = targetAgentCount - currentAgentCount
 
+  const selectedAgents: AgentWithStats[] = []
   const selectedAgentIds: AgentId[] = []
   let repeatableLeadSelected: Lead | undefined = undefined
 
@@ -85,29 +87,32 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       // Batch-select all remaining agents
       const remainingToAssign = agentsToAssign - i
       const agentsToAdd = selectNextBestReadyAgents(
-        gameState,
+        agents,
         remainingToAssign,
         selectedAgentIds,
         selectedAgentIds.length,
+        gameState.agents.length,
         {
           includeInTraining: true,
         },
       )
-      selectedAgentIds.push(...agentsToAdd.map((a) => a.id))
+      selectedAgents.push(...agentsToAdd)
+      selectedAgentIds.push(...agentsToAdd.map((agent) => agent.id))
 
       if (agentsToAdd.length > 0) {
         // Single batch operations
         unassignAgentsFromTraining(api, agentsToAdd)
         api.addAgentsToInvestigation({
           investigationId: existingInvestigation.id,
-          agentIds: agentsToAdd.map((a) => a.id),
+          agentIds: agentsToAdd.map((agent) => agent.id),
         })
       }
       // Exit main loop - all agents assigned
       break
     } else {
+      const remainingAgents = removeAgentsById(agents, selectedAgentIds)
       // Select a new lead to investigate
-      const lead = selectLeadToInvestigate(availableLeads, gameState)
+      const lead = selectLeadToInvestigate(availableLeads, gameState, remainingAgents)
       if (lead === undefined) {
         break
       }
@@ -125,33 +130,35 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       const minAgentsForNonRepeatable = Math.ceil(lead.difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR)
       const agentsNeededForLead = lead.repeatable ? 1 : Math.max(1, minAgentsForNonRepeatable - currentAgentsOnLead)
 
-      const agents = selectNextBestReadyAgents(
-        gameState,
+      const selectedForLead = selectNextBestReadyAgents(
+        agents,
         agentsNeededForLead,
         selectedAgentIds,
         selectedAgentIds.length,
+        gameState.agents.length,
         {
           includeInTraining: true,
         },
       )
-      if (agents.length === 0) {
+      if (selectedForLead.length === 0) {
         break
       }
 
-      selectedAgentIds.push(...agents.map((a) => a.id))
+      selectedAgents.push(...selectedForLead)
+      selectedAgentIds.push(...selectedForLead.map((agent) => agent.id))
 
       // Unassign agents from training if needed
-      unassignAgentsFromTraining(api, agents)
+      unassignAgentsFromTraining(api, selectedForLead)
 
       if (existingInvestigation) {
         api.addAgentsToInvestigation({
           investigationId: existingInvestigation.id,
-          agentIds: agents.map((a) => a.id),
+          agentIds: selectedForLead.map((agent) => agent.id),
         })
       } else {
         api.startLeadInvestigation({
           leadId: lead.id,
-          agentIds: agents.map((a) => a.id),
+          agentIds: selectedForLead.map((agent) => agent.id),
         })
         // Remove the lead from availableLeads since it now has an active investigation
         const leadIndex = availableLeads.findIndex((l) => l.id === lead.id)
@@ -161,13 +168,15 @@ export function assignToLeadInvestigation(api: PlayTurnAPI): void {
       }
 
       // For non-repeatable leads, adjust loop counter to account for batch assignment
-      if (!lead.repeatable && agents.length > 1) {
-        i += agents.length - 1
+      if (!lead.repeatable && selectedForLead.length > 1) {
+        i += selectedForLead.length - 1
       }
     }
   }
 
   log.info('lead-investigation', `desired ${agentsToAssign} agents, assigned ${selectedAgentIds.length}`)
+
+  return removeAgentsById(agents, selectedAgentIds)
 }
 
 function findActiveInvestigation(gameState: GameState, leadId: LeadId): LeadInvestigation | undefined {
@@ -183,7 +192,11 @@ function getAvailableLeads(gameState: GameState): Lead[] {
   return availableLeads.filter((lead) => lead.id !== 'lead-deep-state')
 }
 
-function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): Lead | undefined {
+function selectLeadToInvestigate(
+  availableLeads: Lead[],
+  gameState: GameState,
+  agents: AgentWithStats[],
+): Lead | undefined {
   if (availableLeads.length === 0) {
     return undefined
   }
@@ -226,13 +239,13 @@ function selectLeadToInvestigate(availableLeads: Lead[], gameState: GameState): 
       const missionCombatRating = tempMission.combatRating
       const targetCombatRating = missionCombatRating * TARGET_COMBAT_RATING_MULTIPLIER
 
-      const feasibility = canDeployMissionWithCurrentResources(gameState, tempMission)
+      const feasibility = canDeployMissionWithCurrentResources(gameState, tempMission, agents)
       if (feasibility.canDeploy) {
         // Calculate agent combat rating from selected agents
-        const agentCombatRating = feasibility.selectedAgents.reduce(
-          (sum, agent) => sum + calculateAgentCombatRating(agent),
-          0,
-        )
+        let agentCombatRating = 0
+        for (const agent of feasibility.selectedAgents) {
+          agentCombatRating += agent.combatRating
+        }
 
         log.info(
           'lead-investigation',
