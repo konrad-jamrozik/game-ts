@@ -19,7 +19,7 @@
 
 # How to Profile
 
-The profiling script (`web/scripts/profileAi.ts`) runs the AI player for 200 turns without Vitest overhead, enabling accurate CPU profiling.
+The profiling script (`web/scripts/profileAi.ts`) runs the AI player for many turns without Vitest overhead, enabling accurate CPU profiling.
 
 1. **Run the profiling script**:
 

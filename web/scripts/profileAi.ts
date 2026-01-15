@@ -6,7 +6,7 @@
  * Usage:
  *   cd web
  *   npx tsx --cpu-prof scripts/profileAi.ts
- *   npx tsx --cpu-prof --cpu-prof-interval=250 scripts/profileAi.ts
+ *   npx tsx --cpu-prof --cpu-prof-interval=100 scripts/profileAi.ts
  *
  * Then load the generated .cpuprofile file in Chrome DevTools → Performance tab.
  * The profiler CSV output is written to profile-results.csv.
@@ -20,7 +20,7 @@ import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
 import { setupCheatingGameState } from '../test/utils/aiTestSetup'
 import { debugConfig } from '../src/lib/primitives/debugConfig'
 
-const TURNS_TO_PLAY = 200
+const TURNS_TO_PLAY = 250
 
 async function main(): Promise<void> {
   debugConfig.setGameStateInvariantsFrequency(50)
