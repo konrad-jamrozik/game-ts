@@ -17,10 +17,13 @@ See prompt.md
     Probably because busting "actual" state. But I might have fixed it, not sure.
   - Well OK I reproed it getting "Error: AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found none."
 
-- Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
+  When selecting leads to investigate, often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
      Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
      Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
+  - Have separate prioritizations for non-repeatable and repeatable leads. So e.g. AI player may say that at given turn for non-repeatable lead
+    faction priority 1 is Red Down, while for repeatable lead faction priority 1 is Exalt.
+  - Note this means that the non-repeatable lead will no longer be chosen at random.
 
 - Add more AI tests:
 - e.g. "delegate 20 turns to do nothing intellect" that verifies game is lost

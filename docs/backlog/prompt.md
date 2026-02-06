@@ -1,12 +1,12 @@
 # Prompt
 
-// KJA current work
+// KJA current work - see ai_behavior_test_suite plan and the follow-up plans, i.e. fix_undo_consistency_aistate and ai_faction_cycling_for_leads.
 
 Refactor the manageAgents of basicIntellect.ts to be more efficient and simpler.
 
 Specifically:
 
-- All the relevant agents should be queries once at the beginning. So no multiple calls to selectNextBestReadyAgents,
+- All the relevant agents should be queried once at the beginning. So no multiple calls to selectNextBestReadyAgents,
   but instead at once a list of all the agents from game state, and allocate them appropriately to various assignments,
   like contracting, mission deployments, training, lead investigations, etc.
 - This means you can no longer do `while (currentIncome < targetIncome) selectNextBestReadyAgents(...)` to figure out
