@@ -7,6 +7,7 @@ KJA backlog:
 ## AI
 
 Smarter AI player that finishes game in less turns, even without cheating.
+See prompt.md
 
 - Keep less money and ready agents around once some agent threshold is reached.
 
@@ -14,6 +15,7 @@ Smarter AI player that finishes game in less turns, even without cheating.
   - BUT FIRST fix the bug where undoing a turn and then asking AI to play the turn causes assertion failure.
   - Actually looks like manual human actions in general can throw AI off, not just undoing.
     Probably because busting "actual" state. But I might have fixed it, not sure.
+  - Well OK I reproed it getting "Error: AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found none."
 
 - Also often 1 faction is ignored, as the mission is too easy and AI just goes for harder missions
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.

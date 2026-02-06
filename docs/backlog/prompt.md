@@ -1,5 +1,7 @@
 # Prompt
 
+// KJA current work
+
 Refactor the manageAgents of basicIntellect.ts to be more efficient and simpler.
 
 Specifically:
