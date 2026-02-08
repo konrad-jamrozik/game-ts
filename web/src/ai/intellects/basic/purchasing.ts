@@ -1,3 +1,8 @@
+/**
+ * Purchasing logic for the Basic Intellect.
+ * For explanation, refer to the docs/ai/about_basic_intellect.md file.
+ */
+
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { BasicIntellectState } from '../../../redux/slices/aiStateSlice'
@@ -38,62 +43,6 @@ export function spendMoney(api: PlayTurnAPI): void {
 
   // Log why we didn't buy anything
   logFailedPurchase(api, priority)
-}
-
-function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
-  const { gameState } = api
-  let cost: number
-
-  if (priority === 'newAgent') {
-    cost = AGENT_HIRE_COST
-  } else {
-    cost = getUpgradePrice(priority)
-  }
-
-  const currentMoney = gameState.money
-  const moneyAfterPurchase = currentMoney - cost
-  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
-
-  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
-  log.info(
-    'purchasing',
-    `cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
-  )
-}
-
-function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
-  const { gameState } = api
-  const upkeepCosts = getAgentUpkeep(gameState)
-  const turnsToCover = REQUIRED_TURNS_OF_SAVINGS
-  const requiredSavings = upkeepCosts * turnsToCover
-  return requiredSavings
-}
-
-function ensureDesiredGoalExists(api: PlayTurnAPI): void {
-  // KJA this is silly why 50 iterations would be needed?
-  const MAX_ITERATIONS = 50
-  for (let i = 0; i < MAX_ITERATIONS; i += 1) {
-    const { gameState, aiState } = api
-    const actualAgentCount = gameState.agents.length
-
-    // Check if we have an actionable goal
-    // Agent goal is only actionable if we can actually hire (not at cap)
-    if (actualAgentCount < aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
-      return // Agent goal exists
-    }
-
-    if (findNextDesiredUpgrade(aiState) !== undefined) {
-      return // Upgrade goal exists
-    }
-
-    // No actionable goal - establish new goals
-    decideSomeDesiredCount(api)
-  }
-
-  // If we exhausted iterations, this is a genuine bug
-  throw new Error(
-    `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal`,
-  )
 }
 
 export function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
@@ -392,4 +341,60 @@ function decideDesiredAgentCount(api: PlayTurnAPI): void {
     return
   }
   api.increaseDesiredCount('agentCount')
+}
+
+function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+  const { gameState } = api
+  let cost: number
+
+  if (priority === 'newAgent') {
+    cost = AGENT_HIRE_COST
+  } else {
+    cost = getUpgradePrice(priority)
+  }
+
+  const currentMoney = gameState.money
+  const moneyAfterPurchase = currentMoney - cost
+  const minimumRequiredSavings = computeMinimumRequiredSavings(api)
+
+  const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
+  log.info(
+    'purchasing',
+    `cannot afford ${purchaseItem}. ${currentMoney.toFixed(2)} - ${cost.toFixed(2)} = ${moneyAfterPurchase.toFixed(2)} < ${minimumRequiredSavings.toFixed(2)} = minimum required savings`,
+  )
+}
+
+function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
+  const { gameState } = api
+  const upkeepCosts = getAgentUpkeep(gameState)
+  const turnsToCover = REQUIRED_TURNS_OF_SAVINGS
+  const requiredSavings = upkeepCosts * turnsToCover
+  return requiredSavings
+}
+
+function ensureDesiredGoalExists(api: PlayTurnAPI): void {
+  // KJA this is silly why 50 iterations would be needed?
+  const MAX_ITERATIONS = 50
+  for (let i = 0; i < MAX_ITERATIONS; i += 1) {
+    const { gameState, aiState } = api
+    const actualAgentCount = gameState.agents.length
+
+    // Check if we have an actionable goal
+    // Agent goal is only actionable if we can actually hire (not at cap)
+    if (actualAgentCount < aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
+      return // Agent goal exists
+    }
+
+    if (findNextDesiredUpgrade(aiState) !== undefined) {
+      return // Upgrade goal exists
+    }
+
+    // No actionable goal - establish new goals
+    decideSomeDesiredCount(api)
+  }
+
+  // If we exhausted iterations, this is a genuine bug
+  throw new Error(
+    `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal`,
+  )
 }

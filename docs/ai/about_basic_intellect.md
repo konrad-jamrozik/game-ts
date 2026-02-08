@@ -397,15 +397,22 @@ Priority order (first matching condition determines what to buy):
    - Exhaustion recovery upgrades
    - Hit points recovery upgrades
    - Hit points upgrades
+3. If all desired goals are met (no upgrade found where desired > actual), establish a new desired goal
+   by increasing one desired value by one, then repeat from step 1
 
-If all desired goals are met (no upgrade found where desired > actual), new desired goals are established:
-- If transport capacity is below 50% of desired agent count: increase desired transport cap upgrades
-- Else if training capacity is below 60% of desired agent count: increase desired training cap upgrades
-- Else if desired agent count is within budget relative to purchased upgrades: increase desired agent count or agent cap
-- Else: increase desired stat upgrades in round-robin order
+### How desired values are determined
 
-After establishing new goals, the priority computation repeats to determine what to buy next.
+Initial desired values:
+- Desired agent count starts at initial agent count plus one (ensuring there's an immediate hiring goal)
+- All desired upgrade counts start at zero
 
-Note: The desired values for each upgrade type are dynamically established based on what has been purchased,
-not predetermined by turn number. This ensures the player balances hiring agents, expanding capacities,
-and upgrading capabilities in response to current game state.
+Subsequent desired values are increased one at a time, only when all current desired goals are met.
+When this happens, exactly one desired value is increased by one, following this priority:
+1. Increase desired transport cap upgrades if current transport capacity is below 50% of desired agent count
+2. Else increase desired training cap upgrades if current training capacity is below 60% of desired agent count
+3. Else increase desired agent count (or agent cap upgrades if at cap) if the count is still within budget
+   relative to total purchased upgrades
+4. Else increase desired stat upgrades in round-robin order based on total stat upgrades purchased so far
+
+This incremental approach ensures the player balances hiring agents, expanding capacities, and upgrading
+capabilities in response to what has actually been purchased, rather than following a predetermined schedule.
