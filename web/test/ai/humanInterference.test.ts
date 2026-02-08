@@ -12,6 +12,7 @@ import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
 import { st } from '../fixtures/stateFixture'
 import { setupCheatingGameState } from '../utils/aiTestSetup'
 import { rand } from '../../src/lib/primitives/rand'
+import type { BasicIntellectState } from '../../src/redux/slices/aiStateSlice'
 
 describe('AI resilience to human actions', () => {
   beforeEach(() => {
@@ -73,17 +74,7 @@ describe('AI resilience to human actions', () => {
     delegateTurnsToAIPlayer('basic', 5)
 
     // Should have established new upgrade goals
-    const hasUpgradeGoal =
-      st.aiState.desiredAgentCapUpgrades > st.aiState.actualAgentCapUpgrades ||
-      st.aiState.desiredTransportCapUpgrades > st.aiState.actualTransportCapUpgrades ||
-      st.aiState.desiredTrainingCapUpgrades > st.aiState.actualTrainingCapUpgrades ||
-      st.aiState.desiredWeaponDamageUpgrades > st.aiState.actualWeaponDamageUpgrades ||
-      st.aiState.desiredTrainingSkillGainUpgrades > st.aiState.actualTrainingSkillGainUpgrades ||
-      st.aiState.desiredExhaustionRecoveryUpgrades > st.aiState.actualExhaustionRecoveryUpgrades ||
-      st.aiState.desiredHitPointsRecoveryUpgrades > st.aiState.actualHitPointsRecoveryUpgrades ||
-      st.aiState.desiredHitPointsUpgrades > st.aiState.actualHitPointsUpgrades
-
-    expect(hasUpgradeGoal).toBe(true)
+    expect(hasUpgradeGoal(st.aiState)).toBe(true)
   })
 
   test('AI recognizes human-purchased upgrades and does not double-purchase', () => {
@@ -197,3 +188,16 @@ describe('AI resilience to human actions', () => {
     expect(isGameWon(finalState)).toBe(true)
   })
 })
+
+function hasUpgradeGoal(aist: BasicIntellectState): boolean {
+  return (
+    aist.desiredAgentCapUpgrades > aist.actualAgentCapUpgrades ||
+    aist.desiredTransportCapUpgrades > aist.actualTransportCapUpgrades ||
+    aist.desiredTrainingCapUpgrades > aist.actualTrainingCapUpgrades ||
+    aist.desiredWeaponDamageUpgrades > aist.actualWeaponDamageUpgrades ||
+    aist.desiredTrainingSkillGainUpgrades > aist.actualTrainingSkillGainUpgrades ||
+    aist.desiredExhaustionRecoveryUpgrades > aist.actualExhaustionRecoveryUpgrades ||
+    aist.desiredHitPointsRecoveryUpgrades > aist.actualHitPointsRecoveryUpgrades ||
+    aist.desiredHitPointsUpgrades > aist.actualHitPointsUpgrades
+  )
+}
