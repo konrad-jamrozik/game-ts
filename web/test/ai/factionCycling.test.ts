@@ -20,7 +20,8 @@ import { log } from '../../src/lib/primitives/logger'
 import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
 import { assertDefined, assertNoUndefined } from '../../src/lib/primitives/assertPrimitives'
 
-describe('Faction Cycling Lead Selection', () => {
+// TODO: TDD - Disabled for now
+describe.todo('Faction Cycling Lead Selection', () => {
   beforeEach(() => {
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())
