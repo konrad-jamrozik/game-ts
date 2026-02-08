@@ -18,6 +18,7 @@ import type { AgentWithStats } from '../../src/ai/intellects/basic/agentSelectio
 import { rand } from '../../src/lib/primitives/rand'
 import { log } from '../../src/lib/primitives/logger'
 import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
+import { assertDefined, assertNoUndefined } from '../../src/lib/primitives/assertPrimitives'
 
 describe('Faction Cycling Lead Selection', () => {
   beforeEach(() => {
@@ -34,7 +35,7 @@ describe('Faction Cycling Lead Selection', () => {
     log.syncAll(logSettings)
   })
 
-  describe('getFactionPriorityOrder', () => {
+  describe(getFactionPriorityOrder, () => {
     test('returns all 3 factions in rotated order for turn 1, offset 0', () => {
       const priorities = getFactionPriorityOrder(1, 0)
       expect(priorities).toHaveLength(3)
@@ -86,7 +87,7 @@ describe('Faction Cycling Lead Selection', () => {
     })
   })
 
-  describe('selectLeadToInvestigate', () => {
+  describe(selectLeadToInvestigate, () => {
     test('prioritizes faction-agnostic non-repeatable leads over faction-specific', () => {
       const gameState = bldMinimalGameState({ turn: 1 })
       const agents = [bldAgentWithStats({})]
@@ -125,6 +126,7 @@ describe('Faction Cycling Lead Selection', () => {
       }
 
       const availableLeads = [redDawnLeads[0], exaltLeads[0], blackLotusLeads[0]]
+      assertNoUndefined(availableLeads)
 
       // Turn 1, offset 1 (non-repeatable): should prioritize Exalt first
       rand.set('lead-investigation', 0.5)
@@ -148,6 +150,7 @@ describe('Faction Cycling Lead Selection', () => {
 
       // Create leads that would be deployable (simplified - in real scenario would check deployability)
       const availableLeads = [redDawnLeads[0], exaltLeads[0]]
+      assertNoUndefined(availableLeads)
 
       // Turn 1, offset 0 (repeatable): should prioritize Red Dawn first
       rand.set('lead-investigation', 0.5)
@@ -232,6 +235,7 @@ describe('Faction Cycling Lead Selection', () => {
       // Create a scenario where first faction's leads aren't deployable
       // This is simplified - real test would need to ensure deployability constraints
       const availableLeads = [redDawnLeads[0], exaltLeads[0]]
+      assertNoUndefined(availableLeads)
 
       rand.set('lead-investigation', 0.5)
       const selected = selectLeadToInvestigate(availableLeads, gameState, agents)
@@ -289,6 +293,7 @@ describe('Faction Cycling Lead Selection', () => {
         // No active repeatable investigation yet, skip test
         return
       }
+      assertDefined(activeRepeatableInvestigations[0])
 
       const investigationId = activeRepeatableInvestigations[0].id
       const initialAgentCount = activeRepeatableInvestigations[0].agentIds.length
@@ -301,6 +306,7 @@ describe('Faction Cycling Lead Selection', () => {
 
       // Verify the investigation still exists
       expect(sameInvestigation).toBeDefined()
+      assertDefined(sameInvestigation)
 
       // Either investigation is still active with same or more agents (piling behavior),
       // or it completed/abandoned (also valid)

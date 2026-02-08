@@ -64,6 +64,15 @@ export function assertNotEmpty<T>(value: T[], errMsg = 'Value must not be empty'
   }
 }
 
+export function assertNoUndefined<T>(
+  value: (T | undefined)[],
+  errMsg = 'There must be no undefined values in the array',
+): asserts value is T[] {
+  if (value.includes(undefined)) {
+    throw new Error(errMsg)
+  }
+}
+
 export function assertNotNaN(value: number, errMsg = 'Value must not be NaN'): asserts value is number {
   if (Number.isNaN(value)) {
     throw new TypeError(errMsg)
