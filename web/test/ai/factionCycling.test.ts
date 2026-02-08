@@ -87,49 +87,6 @@ describe('Faction Cycling Lead Selection', () => {
   })
 
   describe('selectLeadToInvestigate', () => {
-    function bldAgentWithStats(agent: Parameters<typeof agFix.bld>[0]): AgentWithStats {
-      const builtAgent = agFix.bld(agent)
-      return {
-        ...builtAgent,
-        contractingIncome: 0,
-        combatRating: calculateAgentCombatRating(builtAgent),
-        exhaustionPctValue: 0,
-        isInTraining: false,
-      }
-    }
-
-    function bldMinimalGameState(overrides: Partial<GameState> = {}): GameState {
-      return {
-        ...bldInitialState(),
-        turn: 1,
-        agents: [],
-        leadInvestigationCounts: {},
-        leadInvestigations: {},
-        missions: [],
-        ...overrides,
-      }
-    }
-
-    function getLeadsByFaction(factionId: FactionId): Lead[] {
-      return dataTables.leads.filter((lead) => {
-        const facId = factionId.replace('faction-', '')
-        return lead.id.startsWith(`lead-${facId}-`)
-      })
-    }
-
-    function getFactionAgnosticLeads(): Lead[] {
-      return dataTables.leads.filter((lead) => {
-        // Check if lead doesn't match any faction pattern
-        for (const faction of dataTables.factions) {
-          const facId = faction.factionDataId.replace('factiondata-', '')
-          if (lead.id.startsWith(`lead-${facId}-`)) {
-            return false
-          }
-        }
-        return true
-      })
-    }
-
     test('prioritizes faction-agnostic non-repeatable leads over faction-specific', () => {
       const gameState = bldMinimalGameState({ turn: 1 })
       const agents = [bldAgentWithStats({})]
@@ -175,7 +132,7 @@ describe('Faction Cycling Lead Selection', () => {
 
       expect(selected).toBeDefined()
       // With offset=1, turn 1 should prioritize Exalt
-      expect(selected?.id).toMatch(/^lead-exalt-/)
+      expect(selected?.id).toMatch(/^lead-exalt-/u)
     })
 
     test('for repeatable leads, uses faction priority as primary sort key', () => {
@@ -357,3 +314,46 @@ describe('Faction Cycling Lead Selection', () => {
   })
 })
 // KJA lint failures
+
+function bldAgentWithStats(agent: Parameters<typeof agFix.bld>[0]): AgentWithStats {
+  const builtAgent = agFix.bld(agent)
+  return {
+    ...builtAgent,
+    contractingIncome: 0,
+    combatRating: calculateAgentCombatRating(builtAgent),
+    exhaustionPctValue: 0,
+    isInTraining: false,
+  }
+}
+
+function bldMinimalGameState(overrides: Partial<GameState> = {}): GameState {
+  return {
+    ...bldInitialState(),
+    turn: 1,
+    agents: [],
+    leadInvestigationCounts: {},
+    leadInvestigations: {},
+    missions: [],
+    ...overrides,
+  }
+}
+
+function getLeadsByFaction(factionId: FactionId): Lead[] {
+  return dataTables.leads.filter((lead) => {
+    const facId = factionId.replace('faction-', '')
+    return lead.id.startsWith(`lead-${facId}-`)
+  })
+}
+
+function getFactionAgnosticLeads(): Lead[] {
+  return dataTables.leads.filter((lead) => {
+    // Check if lead doesn't match any faction pattern
+    for (const faction of dataTables.factions) {
+      const facId = faction.factionDataId.replace('factiondata-', '')
+      if (lead.id.startsWith(`lead-${facId}-`)) {
+        return false
+      }
+    }
+    return true
+  })
+}
