@@ -252,9 +252,9 @@ function decideSomeDesiredCount(api: PlayTurnAPI): void {
     aiState.actualHitPointsRecoveryUpgrades +
     aiState.actualHitPointsUpgrades
 
-  // Note: if the multiplier for sumTotalAllAlreadyPurchasedUpgraded is too large,
-  // then the AI player spends all money just buying agents and catching up with transport and training cap.
   // Always roll for desiredAgentCount if condition is met
+  // Note: if the AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER is too large,
+  // then the AI player spends all money just buying agents and catching up with transport and training cap.
   if (
     aiState.desiredAgentCount <=
     AGENT_COUNT_BASE + sumTotalAllAlreadyPurchasedUpgraded * AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER

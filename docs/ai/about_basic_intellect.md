@@ -81,8 +81,8 @@ function manageAgents() {
 }
 
 function spendMoney() {
-  while (hasSufficientMoney()):             // See "Money savings"
-    let priority = computeNextBuyPriority() // See "Next buy priority"
+  while (hasSufficientMoney()):             // See "Money savings". Implemented in: spendMoney()
+    let priority = computeNextBuyPriority() // See "Next buy priority". Implemented in: computeNextBuyPriority()
     if (priority is not undefined and hasSufficientMoneyToBuy(priority)):
       buy(priority)
     else {
@@ -92,6 +92,8 @@ function spendMoney() {
 ```
 
 ## Unassignment
+
+Implemented in: `unassignExhaustedAgents()`
 
 ``` typescript
 function unassignExhaustedAgents() {
@@ -105,6 +107,8 @@ Exhausted agents perform poorly and should recover before being reassigned.
 Agents with exhaustion of 30% or above are unassigned to allow them to recover.
 
 ## Mission deployment
+
+Implemented in: `deployToMissions()`, `selectNextMissionToDeploy()`, `deployToMission()`
 
 The player deploys agents to missions by selecting the next best ready agents until the sum of agent threat levels
 is at least 120% of the assessed enemy threat level.
@@ -180,6 +184,8 @@ function deployToMission(mission) {
 
 ## Assignment to contracting
 
+Implemented in: `assignToContracting()`
+
 The player assigns agents to contracting to ensure that contracting income covers 120% of upkeep costs.
 This provides a buffer above the minimum required coverage.
 
@@ -213,6 +219,8 @@ function assignToContracting() {
 ```
 
 ## Lead investigation
+
+Implemented in: `assignToLeadInvestigation()`
 
 The player assigns agents to lead investigations as follows:
 
@@ -274,6 +282,8 @@ function selectLeadToInvestigate(availableLeads) {
 
 ## Assignment to training
 
+Implemented in: `assignToTraining()`
+
 The player assigns ready agents to training to ensure continuous skill improvement and that no agents are wasted sitting ready.
 
 Algorithm:
@@ -298,6 +308,8 @@ function assignToTraining() {
 
 ## Assignment of leftover agents to contracting
 
+Implemented in: `assignLeftoverToContracting()`
+
 The player assigns leftover ready agents to contracting to ensure that no agents are wasted and to maximize income.
 
 Algorithm:
@@ -319,6 +331,8 @@ function assignLeftoverToContracting() {
 ```
 
 ## Selecting next best ready agent
+
+Implemented in: `selectNextBestReadyAgent()`
 
 The player uses a unified function to select the next best ready agent for any assignment.
 This ensures consistent agent selection criteria across all assignment types.
@@ -348,6 +362,8 @@ function selectNextBestReadyAgent() {
 ```
 
 ## Money savings
+
+Implemented in: `hasSufficientMoneyToBuy()`, `computeMinimumRequiredSavings()`
 
 The player is allowed to spend money only if they have enough money saved up to not run out of money
 within the next 5 turns, assuming that only 50% of upkeep costs are covered by contracting income.
@@ -379,6 +395,8 @@ function computeMinimumRequiredSavings() {
 
 ## Next buy priority
 
+Implemented in: `computeNextBuyPriority()`, `findNextDesiredUpgrade()`, `ensureDesiredGoalExists()`
+
 When deciding what to buy, the player first computes the `next buy priority` item to buy,
 and buys it if they can afford it. If they cannot, they stop buying anything
 else in given turn. Instead, they will re-evaluate the next buy priority in the next turn.
@@ -388,7 +406,7 @@ The `next buy priority` is computed as follows:
 
 Priority order (first matching condition determines what to buy):
 1. If agent count is below desired count AND below agent cap: hire an agent
-2. Otherwise, find the first upgrade where actual is below desired, checking in this order:
+2. Otherwise, find the first upgrade where actual is below desired (via `findNextDesiredUpgrade()`), checking in this order:
    - Agent cap upgrades
    - Transport cap upgrades
    - Training cap upgrades
@@ -398,21 +416,21 @@ Priority order (first matching condition determines what to buy):
    - Hit points recovery upgrades
    - Hit points upgrades
 3. If all desired goals are met (no upgrade found where desired > actual), establish a new desired goal
-   by increasing one desired value by one, then repeat from step 1
+   by increasing one desired value by one (via `ensureDesiredGoalExists()`), then repeat from step 1
 
 ### How desired values are determined
 
-Initial desired values:
+Initial desired values (via `createInitialAiState()`):
 - Desired agent count starts at initial agent count plus one (ensuring there's an immediate hiring goal)
 - All desired upgrade counts start at zero
 
 Subsequent desired values are increased one at a time, only when all current desired goals are met.
-When this happens, exactly one desired value is increased by one, following this priority:
+When this happens, exactly one desired value is increased by one (via `decideSomeDesiredCount()`), following this priority:
 1. Increase desired transport cap upgrades if current transport capacity is below 50% of desired agent count
 2. Else increase desired training cap upgrades if current training capacity is below 60% of desired agent count
-3. Else increase desired agent count (or agent cap upgrades if at cap) if the count is still within budget
-   relative to total purchased upgrades
-4. Else increase desired stat upgrades in round-robin order based on total stat upgrades purchased so far
+3. Else increase desired agent count (via `decideDesiredAgentCount()`) or agent cap upgrades if at cap,
+   if the count is still within budget relative to total purchased upgrades
+4. Else increase desired stat upgrades in round-robin order (via `decideStatUpgrade()`) based on total stat upgrades purchased so far
 
 This incremental approach ensures the player balances hiring agents, expanding capacities, and upgrading
 capabilities in response to what has actually been purchased, rather than following a predetermined schedule.
