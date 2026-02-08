@@ -11,7 +11,7 @@ import {
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
-import { assertLessThan, assertDefined } from '../../../lib/primitives/assertPrimitives'
+import { assertDefined } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
 import type { UpgradeNameOrNewAgent } from './types'
@@ -69,34 +69,57 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return requiredSavings
 }
 
+function ensureDesiredGoalExists(api: PlayTurnAPI): void {
+  // KJA this is silly why 50 iterations would be needed?
+  const MAX_ITERATIONS = 50
+  for (let i = 0; i < MAX_ITERATIONS; i += 1) {
+    const { gameState, aiState } = api
+    const actualAgentCount = gameState.agents.length
+
+    // Check if we have an actionable goal
+    // Agent goal is only actionable if we can actually hire (not at cap)
+    if (actualAgentCount < aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
+      return // Agent goal exists
+    }
+
+    if (findNextDesiredUpgrade(aiState) !== undefined) {
+      return // Upgrade goal exists
+    }
+
+    // No actionable goal - establish new goals
+    decideSomeDesiredCount(api)
+  }
+
+  // If we exhausted iterations, this is a genuine bug
+  throw new Error(
+    `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal`,
+  )
+}
+
 export function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   const { gameState, aiState } = api
   const actualAgentCount = gameState.agents.length
 
   // Priority 1: Buy agents until desired agent count is reached
-  if (actualAgentCount < aiState.desiredAgentCount) {
-    // Assert we can actually hire (not at agent cap)
-    assertLessThan(
-      actualAgentCount,
-      gameState.agentCap,
-      `AI bug: Trying to hire agent but at cap. actualAgentCount=${actualAgentCount}, agentCap=${gameState.agentCap}, desiredAgentCount=${aiState.desiredAgentCount}`,
-    )
+  // Only actionable if we can actually hire (not at agent cap)
+  if (actualAgentCount < aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
     return 'newAgent'
   }
 
   // Find the one cap/upgrade where actual < desired
-  // If all goals are met, establish new goals via decideSomeDesiredCount
+  // If all goals are met, establish new goals via ensureDesiredGoalExists
   let upgrade = findNextDesiredUpgrade(aiState)
   if (upgrade === undefined) {
     // All desired counts are met, establish new goals
-    if (areAllDesiredCountsMet(gameState, aiState)) {
-      decideSomeDesiredCount(api)
-      // Try again after establishing new goals
-      upgrade = findNextDesiredUpgrade(api.aiState)
+    ensureDesiredGoalExists(api)
+    // Re-check after establishing new goals
+    // Agent goal is only actionable if we can actually hire (not at cap)
+    if (actualAgentCount < api.aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
+      return 'newAgent'
     }
-    // If still undefined, fall back to assertion-based function (will throw)
+    upgrade = findNextDesiredUpgrade(api.aiState)
     if (upgrade === undefined) {
-      return getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState)
+      throw new Error('AI bug: ensureDesiredGoalExists failed to establish an actionable goal after maximum iterations')
     }
   }
   return upgrade
@@ -104,27 +127,18 @@ export function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent 
 
 /**
  * Finds the next upgrade where desired > actual.
- * Returns undefined if all desired === actual or if multiple desired > actual.
- * This is a stub for TDD - will be refactored to handle resilience cases.
+ * Returns the first upgrade found (even if multiple exist), or undefined if none found.
+ * Logs a warning if multiple upgrades have desired > actual.
  */
 export function findNextDesiredUpgrade(aiState: BasicIntellectState): UpgradeName | undefined {
-  // Stub implementation: basic version that handles some cases
-  // This will be refactored in the undo consistency plan to handle gaps > 1 and multiple mismatches gracefully
   let foundUpgrade: UpgradeName | undefined
+  const allMatches: UpgradeName[] = []
 
   function checkActualVsDesired(actual: number, desired: number, upgradeName: UpgradeName): void {
     if (desired > actual) {
-      if (desired === actual + 1) {
-        if (foundUpgrade !== undefined) {
-          // Multiple upgrades with desired === actual + 1 - return undefined for now
-          foundUpgrade = undefined
-          return
-        }
-        foundUpgrade = upgradeName
-      } else {
-        // Gap > 1 - will be handled in refactor, for now return first found
-        foundUpgrade ??= upgradeName
-      }
+      allMatches.push(upgradeName)
+      // Pick the first one found
+      foundUpgrade ??= upgradeName
     }
   }
 
@@ -149,53 +163,10 @@ export function findNextDesiredUpgrade(aiState: BasicIntellectState): UpgradeNam
   )
   checkActualVsDesired(aiState.actualHitPointsUpgrades, aiState.desiredHitPointsUpgrades, 'Hit points')
 
-  return foundUpgrade
-}
-
-function getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntellectState): UpgradeName {
-  const mismatches: string[] = []
-  let foundUpgrade: UpgradeName | undefined
-
-  function checkActualVsDesired(actual: number, desired: number, upgradeName: UpgradeName): void {
-    if (actual !== desired) {
-      if (desired === actual + 1) {
-        if (foundUpgrade !== undefined) {
-          throw new Error(
-            `AI bug: Found multiple upgrades with desired === actual + 1: ${foundUpgrade} and ${upgradeName}`,
-          )
-        }
-        foundUpgrade = upgradeName
-      } else {
-        mismatches.push(`${upgradeName}: actual=${actual}, desired=${desired}`)
-      }
-    }
-  }
-
-  checkActualVsDesired(aiState.actualAgentCapUpgrades, aiState.desiredAgentCapUpgrades, 'Agent cap')
-  checkActualVsDesired(aiState.actualTransportCapUpgrades, aiState.desiredTransportCapUpgrades, 'Transport cap')
-  checkActualVsDesired(aiState.actualTrainingCapUpgrades, aiState.desiredTrainingCapUpgrades, 'Training cap')
-  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'Weapon damage')
-  checkActualVsDesired(
-    aiState.actualTrainingSkillGainUpgrades,
-    aiState.desiredTrainingSkillGainUpgrades,
-    'Training skill gain',
-  )
-  checkActualVsDesired(
-    aiState.actualExhaustionRecoveryUpgrades,
-    aiState.desiredExhaustionRecoveryUpgrades,
-    'Exhaustion recovery %',
-  )
-  checkActualVsDesired(
-    aiState.actualHitPointsRecoveryUpgrades,
-    aiState.desiredHitPointsRecoveryUpgrades,
-    'Hit points recovery %',
-  )
-  checkActualVsDesired(aiState.actualHitPointsUpgrades, aiState.desiredHitPointsUpgrades, 'Hit points')
-
-  if (foundUpgrade === undefined) {
-    const mismatchDetails = mismatches.length > 0 ? ` Mismatches: ${mismatches.join('; ')}` : ''
-    throw new Error(
-      `AI bug: Expected exactly one desired cap/upgrade to be exactly 1 above actual, but found none.${mismatchDetails}`,
+  if (allMatches.length > 1) {
+    log.warn(
+      'purchasing',
+      `Multiple upgrades have desired > actual: ${allMatches.join(', ')}. Selecting first: ${foundUpgrade}`,
     )
   }
 
@@ -220,16 +191,7 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAge
 
 function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
   executePurchase(api, priority)
-
-  const { gameState: gameStateAfter, aiState: aiStateAfter } = api
-
-  if (areAllDesiredCountsMet(gameStateAfter, aiStateAfter)) {
-    const stateBeforeIncrease = { ...aiStateAfter }
-    decideSomeDesiredCount(api)
-    logBuyResult(api, priority, stateBeforeIncrease)
-  } else {
-    logBuyResult(api, priority)
-  }
+  logBuyResult(api, priority)
 }
 
 function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
@@ -240,33 +202,6 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 
   api.buyUpgrade(priority)
-  // Track actual upgrade counts
-  switch (priority) {
-    case 'Agent cap':
-      api.incrementActualAgentCapUpgrades()
-      break
-    case 'Transport cap':
-      api.incrementActualTransportCapUpgrades()
-      break
-    case 'Training cap':
-      api.incrementActualTrainingCapUpgrades()
-      break
-    case 'Weapon damage':
-      api.incrementActualWeaponDamageUpgrades()
-      break
-    case 'Training skill gain':
-      api.incrementActualTrainingSkillGainUpgrades()
-      break
-    case 'Exhaustion recovery %':
-      api.incrementActualExhaustionRecoveryUpgrades()
-      break
-    case 'Hit points recovery %':
-      api.incrementActualHitPointsRecoveryUpgrades()
-      break
-    case 'Hit points':
-      api.incrementActualHitPointsUpgrades()
-      break
-  }
 
   if (priority === 'Agent cap' || priority === 'Transport cap' || priority === 'Training cap') {
     log.success('purchasing', `purchased cap 🏦 ${priority}`)

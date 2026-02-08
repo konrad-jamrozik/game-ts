@@ -1,5 +1,6 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
+import { buyUpgrade, reset as gameStateReset } from './gameStateSlice'
 
 export type DesiredCountName =
   | 'agentCount'
@@ -67,30 +68,6 @@ const aiStateSlice = createSlice({
   name: 'aiState',
   initialState: createInitialState(),
   reducers: {
-    incrementActualWeaponDamageUpgrades(state) {
-      state.actualWeaponDamageUpgrades += 1
-    },
-    incrementActualTrainingSkillGainUpgrades(state) {
-      state.actualTrainingSkillGainUpgrades += 1
-    },
-    incrementActualExhaustionRecoveryUpgrades(state) {
-      state.actualExhaustionRecoveryUpgrades += 1
-    },
-    incrementActualHitPointsRecoveryUpgrades(state) {
-      state.actualHitPointsRecoveryUpgrades += 1
-    },
-    incrementActualHitPointsUpgrades(state) {
-      state.actualHitPointsUpgrades += 1
-    },
-    incrementActualAgentCapUpgrades(state) {
-      state.actualAgentCapUpgrades += 1
-    },
-    incrementActualTransportCapUpgrades(state) {
-      state.actualTransportCapUpgrades += 1
-    },
-    incrementActualTrainingCapUpgrades(state) {
-      state.actualTrainingCapUpgrades += 1
-    },
     incrementDesiredAgentCount(state) {
       state.desiredAgentCount += 1
     },
@@ -121,22 +98,45 @@ const aiStateSlice = createSlice({
     loadState(state, action: PayloadAction<BasicIntellectState>) {
       Object.assign(state, action.payload)
     },
-    reset(state) {
+  },
+  extraReducers: (builder) => {
+    builder.addCase(buyUpgrade, (state, action) => {
+      const upgradeName = action.payload
+      switch (upgradeName) {
+        case 'Agent cap':
+          state.actualAgentCapUpgrades += 1
+          break
+        case 'Transport cap':
+          state.actualTransportCapUpgrades += 1
+          break
+        case 'Training cap':
+          state.actualTrainingCapUpgrades += 1
+          break
+        case 'Weapon damage':
+          state.actualWeaponDamageUpgrades += 1
+          break
+        case 'Training skill gain':
+          state.actualTrainingSkillGainUpgrades += 1
+          break
+        case 'Exhaustion recovery %':
+          state.actualExhaustionRecoveryUpgrades += 1
+          break
+        case 'Hit points recovery %':
+          state.actualHitPointsRecoveryUpgrades += 1
+          break
+        case 'Hit points':
+          state.actualHitPointsUpgrades += 1
+          break
+      }
+    })
+    builder.addCase(gameStateReset, (state) => {
       const initialState = createInitialState()
       Object.assign(state, initialState)
-    },
+    })
   },
 })
 
 export const {
-  incrementActualWeaponDamageUpgrades,
-  incrementActualTrainingSkillGainUpgrades,
-  incrementActualExhaustionRecoveryUpgrades,
-  incrementActualHitPointsRecoveryUpgrades,
-  incrementActualHitPointsUpgrades,
-  incrementActualAgentCapUpgrades,
-  incrementActualTransportCapUpgrades,
-  incrementActualTrainingCapUpgrades,
   incrementDesiredAgentCount,
   incrementDesiredAgentCapUpgrades,
   incrementDesiredTransportCapUpgrades,
@@ -147,7 +147,6 @@ export const {
   incrementDesiredHitPointsRecoveryUpgrades,
   incrementDesiredHitPointsUpgrades,
   loadState: loadAiState,
-  reset: resetAiState,
 } = aiStateSlice.actions
 
 export default aiStateSlice.reducer

@@ -4,28 +4,28 @@ overview: Eliminate undo inconsistency between gameState and aiState by making a
 todos:
   - id: extra-reducers
     content: Add extraReducers to aiStateSlice that listens for buyUpgrade and increments the corresponding actual* counter atomically
-    status: pending
+    status: completed
   - id: remove-increment-actual
     content: Remove all incrementActual* reducers/actions from aiStateSlice, PlayTurnAPI type, and playTurnApi.ts
-    status: pending
+    status: completed
   - id: refresh-aistate
     content: Add updateAiState() call to PlayTurnAPI.buyUpgrade() in playTurnApi.ts after updateGameState()
-    status: pending
+    status: completed
   - id: simplify-purchasing
     content: Remove all api.incrementActual*() calls from purchasing.ts executePurchase
-    status: pending
+    status: completed
   - id: refactor-find-upgrade
     content: Refactor findNextDesiredUpgrade to handle gaps > 1 and multiple matches (pick first, warn); remove getAndAssertExactlyOneDesiredStateIsOneAboveActual
-    status: pending
+    status: completed
   - id: add-ensure-goal
     content: Add ensureDesiredGoalExists(api) helper that calls decideSomeDesiredCount in a bounded loop until an actionable buy goal exists
-    status: pending
+    status: completed
   - id: restructure-desired
     content: Restructure computeNextBuyPriority to call ensureDesiredGoalExists when no goal found; move decideSomeDesiredCount from buy() into ensureDesiredGoalExists
-    status: pending
+    status: completed
   - id: run-qcheck
     content: Run qcheck to verify correctness
-    status: pending
+    status: completed
 isProject: false
 ---
 

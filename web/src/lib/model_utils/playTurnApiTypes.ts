@@ -16,13 +16,5 @@ export type PlayTurnAPI = {
   addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult
   deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult
   buyUpgrade(upgradeName: UpgradeName): ActionResult
-  incrementActualWeaponDamageUpgrades(): void
-  incrementActualTrainingSkillGainUpgrades(): void
-  incrementActualExhaustionRecoveryUpgrades(): void
-  incrementActualHitPointsRecoveryUpgrades(): void
-  incrementActualHitPointsUpgrades(): void
-  incrementActualAgentCapUpgrades(): void
-  incrementActualTransportCapUpgrades(): void
-  incrementActualTrainingCapUpgrades(): void
   increaseDesiredCount(name: DesiredCountName): void
 }

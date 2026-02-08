@@ -5,14 +5,6 @@ import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
 import { getPlayerActionsApi } from './playerActionsApi'
 import { getCurrentTurnStateFromStore } from './storeUtils'
 import {
-  incrementActualAgentCapUpgrades,
-  incrementActualExhaustionRecoveryUpgrades,
-  incrementActualHitPointsRecoveryUpgrades,
-  incrementActualHitPointsUpgrades,
-  incrementActualTrainingCapUpgrades,
-  incrementActualTrainingSkillGainUpgrades,
-  incrementActualTransportCapUpgrades,
-  incrementActualWeaponDamageUpgrades,
   incrementDesiredAgentCapUpgrades,
   incrementDesiredAgentCount,
   incrementDesiredExhaustionRecoveryUpgrades,
@@ -109,46 +101,6 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
       return result
     },
 
-    incrementActualWeaponDamageUpgrades(): void {
-      store.dispatch(incrementActualWeaponDamageUpgrades())
-      updateAiState()
-    },
-
-    incrementActualTrainingSkillGainUpgrades(): void {
-      store.dispatch(incrementActualTrainingSkillGainUpgrades())
-      updateAiState()
-    },
-
-    incrementActualExhaustionRecoveryUpgrades(): void {
-      store.dispatch(incrementActualExhaustionRecoveryUpgrades())
-      updateAiState()
-    },
-
-    incrementActualHitPointsRecoveryUpgrades(): void {
-      store.dispatch(incrementActualHitPointsRecoveryUpgrades())
-      updateAiState()
-    },
-
-    incrementActualHitPointsUpgrades(): void {
-      store.dispatch(incrementActualHitPointsUpgrades())
-      updateAiState()
-    },
-
-    incrementActualAgentCapUpgrades(): void {
-      store.dispatch(incrementActualAgentCapUpgrades())
-      updateAiState()
-    },
-
-    incrementActualTransportCapUpgrades(): void {
-      store.dispatch(incrementActualTransportCapUpgrades())
-      updateAiState()
-    },
-
-    incrementActualTrainingCapUpgrades(): void {
-      store.dispatch(incrementActualTrainingCapUpgrades())
-      updateAiState()
-    },
-
     increaseDesiredCount(name: DesiredCountName): void {
       switch (name) {
         case 'agentCount':
@@ -179,15 +131,12 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
           store.dispatch(incrementDesiredHitPointsUpgrades())
           break
       }
-      updateAiState()
+      updateGameState()
     },
   }
 
   function updateGameState(): void {
     api.gameState = getCurrentTurnStateFromStore(store)
-  }
-
-  function updateAiState(): void {
     api.aiState = getCurrentAiState(store)
   }
 
