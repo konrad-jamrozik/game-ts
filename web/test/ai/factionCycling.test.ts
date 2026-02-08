@@ -320,7 +320,6 @@ describe.todo('Faction Cycling Lead Selection', () => {
     })
   })
 })
-// KJA lint failures
 
 function bldAgentWithStats(agent: Parameters<typeof agFix.bld>[0]): AgentWithStats {
   const builtAgent = agFix.bld(agent)
