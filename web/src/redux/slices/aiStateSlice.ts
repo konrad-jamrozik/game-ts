@@ -1,4 +1,4 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { initialGameState } from '../../lib/factories/gameStateFactory'
 
 export type DesiredCountName =
@@ -36,7 +36,7 @@ export type BasicIntellectState = {
   actualHitPointsUpgrades: number
 }
 
-function createInitialState(): BasicIntellectState {
+export function createInitialAiState(): BasicIntellectState {
   return {
     // This is set to +1 to maintain the invariant that there is always at least one desired count above actual count.
     desiredAgentCount: initialGameState.agents.length + 1,
@@ -57,6 +57,10 @@ function createInitialState(): BasicIntellectState {
     actualHitPointsRecoveryUpgrades: 0,
     actualHitPointsUpgrades: 0,
   }
+}
+
+function createInitialState(): BasicIntellectState {
+  return createInitialAiState()
 }
 
 const aiStateSlice = createSlice({
@@ -114,6 +118,9 @@ const aiStateSlice = createSlice({
     incrementDesiredHitPointsUpgrades(state) {
       state.desiredHitPointsUpgrades += 1
     },
+    loadState(state, action: PayloadAction<BasicIntellectState>) {
+      Object.assign(state, action.payload)
+    },
     reset(state) {
       const initialState = createInitialState()
       Object.assign(state, initialState)
@@ -139,6 +146,7 @@ export const {
   incrementDesiredExhaustionRecoveryUpgrades,
   incrementDesiredHitPointsRecoveryUpgrades,
   incrementDesiredHitPointsUpgrades,
+  loadState: loadAiState,
   reset: resetAiState,
 } = aiStateSlice.actions
 

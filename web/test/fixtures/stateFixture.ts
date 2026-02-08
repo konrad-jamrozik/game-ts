@@ -12,11 +12,16 @@ import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
 import { getStore } from '../../src/redux/store'
+import { createInitialAiState, loadAiState, type BasicIntellectState } from '../../src/redux/slices/aiStateSlice'
 import { agFix } from './agentFixture'
 
 export const st = {
   get gameState(): GameState {
     return getStore().getState().undoable.present.gameState
+  },
+
+  get aiState(): BasicIntellectState {
+    return getStore().getState().undoable.present.aiState
   },
 
   bldAgentInStandby: (id: AgentId): Agent => st.bldAgent(id, 'Standby'),
@@ -63,6 +68,11 @@ export const st = {
     const store = getStore()
     const customState = { ...bldInitialState(), ...updates }
     store.dispatch(reset({ customState }))
+  },
+
+  arrangeAiState(updates: Partial<BasicIntellectState>): void {
+    const store = getStore()
+    store.dispatch(loadAiState({ ...createInitialAiState(), ...updates }))
   },
 
   arrangeSelection(options: { agents?: AgentId[]; lead?: LeadId; mission?: MissionId }): void {

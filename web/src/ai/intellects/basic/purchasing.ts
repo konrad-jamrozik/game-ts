@@ -69,7 +69,7 @@ function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   return requiredSavings
 }
 
-function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
+export function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   const { gameState, aiState } = api
   const actualAgentCount = gameState.agents.length
 
@@ -85,7 +85,71 @@ function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
   }
 
   // Find the one cap/upgrade where actual < desired
-  return getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState)
+  // If all goals are met, establish new goals via decideSomeDesiredCount
+  let upgrade = findNextDesiredUpgrade(aiState)
+  if (upgrade === undefined) {
+    // All desired counts are met, establish new goals
+    if (areAllDesiredCountsMet(gameState, aiState)) {
+      decideSomeDesiredCount(api)
+      // Try again after establishing new goals
+      upgrade = findNextDesiredUpgrade(api.aiState)
+    }
+    // If still undefined, fall back to assertion-based function (will throw)
+    if (upgrade === undefined) {
+      return getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState)
+    }
+  }
+  return upgrade
+}
+
+/**
+ * Finds the next upgrade where desired > actual.
+ * Returns undefined if all desired === actual or if multiple desired > actual.
+ * This is a stub for TDD - will be refactored to handle resilience cases.
+ */
+export function findNextDesiredUpgrade(aiState: BasicIntellectState): UpgradeName | undefined {
+  // Stub implementation: basic version that handles some cases
+  // This will be refactored in the undo consistency plan to handle gaps > 1 and multiple mismatches gracefully
+  let foundUpgrade: UpgradeName | undefined
+
+  function checkActualVsDesired(actual: number, desired: number, upgradeName: UpgradeName): void {
+    if (desired > actual) {
+      if (desired === actual + 1) {
+        if (foundUpgrade !== undefined) {
+          // Multiple upgrades with desired === actual + 1 - return undefined for now
+          foundUpgrade = undefined
+          return
+        }
+        foundUpgrade = upgradeName
+      } else {
+        // Gap > 1 - will be handled in refactor, for now return first found
+        foundUpgrade ??= upgradeName
+      }
+    }
+  }
+
+  checkActualVsDesired(aiState.actualAgentCapUpgrades, aiState.desiredAgentCapUpgrades, 'Agent cap')
+  checkActualVsDesired(aiState.actualTransportCapUpgrades, aiState.desiredTransportCapUpgrades, 'Transport cap')
+  checkActualVsDesired(aiState.actualTrainingCapUpgrades, aiState.desiredTrainingCapUpgrades, 'Training cap')
+  checkActualVsDesired(aiState.actualWeaponDamageUpgrades, aiState.desiredWeaponDamageUpgrades, 'Weapon damage')
+  checkActualVsDesired(
+    aiState.actualTrainingSkillGainUpgrades,
+    aiState.desiredTrainingSkillGainUpgrades,
+    'Training skill gain',
+  )
+  checkActualVsDesired(
+    aiState.actualExhaustionRecoveryUpgrades,
+    aiState.desiredExhaustionRecoveryUpgrades,
+    'Exhaustion recovery %',
+  )
+  checkActualVsDesired(
+    aiState.actualHitPointsRecoveryUpgrades,
+    aiState.desiredHitPointsRecoveryUpgrades,
+    'Hit points recovery %',
+  )
+  checkActualVsDesired(aiState.actualHitPointsUpgrades, aiState.desiredHitPointsUpgrades, 'Hit points')
+
+  return foundUpgrade
 }
 
 function getAndAssertExactlyOneDesiredStateIsOneAboveActual(aiState: BasicIntellectState): UpgradeName {
@@ -211,7 +275,7 @@ function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): voi
   }
 }
 
-function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
+export function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntellectState): boolean {
   const actualAgentCount = gameState.agents.length
   return (
     actualAgentCount >= aiState.desiredAgentCount &&

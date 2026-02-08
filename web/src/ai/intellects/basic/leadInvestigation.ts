@@ -1,7 +1,7 @@
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { GameState } from '../../../lib/model/gameStateModel'
 import type { Lead, LeadInvestigation } from '../../../lib/model/leadModel'
-import type { AgentId, LeadId } from '../../../lib/model/modelIds'
+import type { AgentId, FactionId, LeadId } from '../../../lib/model/modelIds'
 import { dataTables } from '../../../lib/data_tables/dataTables'
 import { removeAgentsById, selectNextBestReadyAgents, type AgentWithStats } from './agentSelection'
 import { pickAtRandom, unassignAgentsFromTraining } from './utils'
@@ -192,7 +192,15 @@ function getAvailableLeads(gameState: GameState): Lead[] {
   return availableLeads.filter((lead) => lead.id !== 'lead-deep-state')
 }
 
-function selectLeadToInvestigate(
+/**
+ * Returns faction priority order based on turn and offset.
+ * Stub implementation for TDD - throws error until implemented.
+ */
+export function getFactionPriorityOrder(_turn: number, _offset: number): FactionId[] {
+  throw new Error('getFactionPriorityOrder not yet implemented')
+}
+
+export function selectLeadToInvestigate(
   availableLeads: Lead[],
   gameState: GameState,
   agents: AgentWithStats[],
