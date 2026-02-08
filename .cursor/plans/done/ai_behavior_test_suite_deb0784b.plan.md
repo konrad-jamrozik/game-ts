@@ -4,22 +4,22 @@ overview: TDD test suite for the undo consistency plan. Write failing tests firs
 todos:
   - id: r2-export-purchasing-fns
     content: "R2: Export `findNextDesiredUpgrade`, `areAllDesiredCountsMet`, `computeNextBuyPriority` from `purchasing.ts`"
-    status: pending
+    status: completed
   - id: r3-load-ai-state
     content: "R3: Add `loadState` reducer to `aiStateSlice.ts` and export `createInitialAiState`"
-    status: pending
+    status: completed
   - id: r4-arrange-ai-state
     content: "R4: Add `arrangeAiState` and `aiState` getter to `stateFixture.ts`"
-    status: pending
+    status: completed
   - id: test-purchasing-resilience
     content: Write `web/test/ai/purchasingResilience.test.ts` with pure + integration tests for purchasing resilience
-    status: pending
+    status: completed
   - id: test-human-interference
     content: Write `web/test/ai/humanInterference.test.ts` with end-to-end human interference scenarios
-    status: pending
+    status: completed
   - id: run-qcheck
     content: Run `qcheck` to verify all tests compile and lint passes
-    status: pending
+    status: completed
 isProject: false
 ---
 

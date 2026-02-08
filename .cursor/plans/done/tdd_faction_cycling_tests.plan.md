@@ -4,13 +4,13 @@ overview: TDD test suite for the faction cycling plan. Write failing tests first
 todos:
   - id: r1-export-lead-fns
     content: "R1: Export `selectLeadToInvestigate` (and later `getFactionPriorityOrder`) from `leadInvestigation.ts`"
-    status: pending
+    status: completed
   - id: test-faction-cycling
     content: Write `web/test/ai/factionCycling.test.ts` with pure + integration tests for lead selection faction cycling
-    status: pending
+    status: completed
   - id: run-qcheck
     content: Run `qcheck` to verify all tests compile and lint passes
-    status: pending
+    status: completed
 isProject: false
 ---
 
