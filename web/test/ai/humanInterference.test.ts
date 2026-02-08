@@ -52,7 +52,7 @@ describe('AI resilience to human actions', () => {
   test('AI adapts when human hires enough agents to satisfy all AI agent goals', () => {
     st.arrangeGameState({ money: 100_000 })
 
-    // KJA why this has to be 3 turns and not 2 or 1?
+    // KJA why this has to be 3 turns? The test passes for less than 3 turns.
     // Run AI 3 turns to establish goals
     delegateTurnsToAIPlayer('basic', 3)
 
@@ -71,9 +71,12 @@ describe('AI resilience to human actions', () => {
 
     expect(st.gameState.agents.length).toBeGreaterThanOrEqual(desiredAgentCount)
 
+    // KJA Why this has to be 5 turns? The test passes for less than 5 turns.
     // AI runs 5 more turns
     delegateTurnsToAIPlayer('basic', 5)
 
+    // KJA the fact that hasUnfulfilledDesiredPurchaseGoal can ever be false is wrong;
+    // the underlying logic must always ensure that.
     // Should have established new upgrade goals
     expect(hasUnfulfilledDesiredPurchaseGoal(st.aiState)).toBe(true)
   })
@@ -87,6 +90,7 @@ describe('AI resilience to human actions', () => {
     const initialTransportCapDesired = st.aiState.desiredTransportCapUpgrades
     const initialTransportCapActual = st.aiState.actualTransportCapUpgrades
 
+    // KJA would be nice to have abstraction for it so it is just buyUpgrade
     // Human buys upgrade
     const store = getStore()
     const playerApi = getPlayerActionsApi(store.dispatch)
