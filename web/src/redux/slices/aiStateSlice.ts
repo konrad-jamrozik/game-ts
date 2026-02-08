@@ -14,7 +14,7 @@ export type DesiredCountName =
   | 'hitPointsUpgrades'
 
 // KJA move this to web/src/lib so that I can introduce utils on top of it akin to gameState Utils,
-// e,g, for hasUpgradeGoal (this function already exists but only in tests)
+// e,g, for hasUnfulfilledDesiredPurchaseGoal (this function already exists but only in tests)
 export type BasicIntellectState = {
   desiredAgentCount: number
   // Cap upgrade counts (number of upgrades bought/to buy)

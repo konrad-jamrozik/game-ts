@@ -52,6 +52,7 @@ describe('AI resilience to human actions', () => {
   test('AI adapts when human hires enough agents to satisfy all AI agent goals', () => {
     st.arrangeGameState({ money: 100_000 })
 
+    // KJA why this has to be 3 turns and not 2 or 1?
     // Run AI 3 turns to establish goals
     delegateTurnsToAIPlayer('basic', 3)
 
@@ -74,7 +75,7 @@ describe('AI resilience to human actions', () => {
     delegateTurnsToAIPlayer('basic', 5)
 
     // Should have established new upgrade goals
-    expect(hasUpgradeGoal(st.aiState)).toBe(true)
+    expect(hasUnfulfilledDesiredPurchaseGoal(st.aiState)).toBe(true)
   })
 
   test('AI recognizes human-purchased upgrades and does not double-purchase', () => {
@@ -189,7 +190,7 @@ describe('AI resilience to human actions', () => {
   })
 })
 
-function hasUpgradeGoal(aist: BasicIntellectState): boolean {
+function hasUnfulfilledDesiredPurchaseGoal(aist: BasicIntellectState): boolean {
   return (
     aist.desiredAgentCapUpgrades > aist.actualAgentCapUpgrades ||
     aist.desiredTransportCapUpgrades > aist.actualTransportCapUpgrades ||
