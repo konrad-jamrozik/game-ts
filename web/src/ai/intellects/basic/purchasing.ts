@@ -24,6 +24,9 @@ import {
   MAX_DESIRED_HIT_POINTS_RECOVERY_PCT,
 } from './constants'
 
+/**
+ * See this file header doc.
+ */
 export function spendMoney(api: PlayTurnAPI): number {
   let purchaseCount = 0
   while (hasSufficientMoney(api)) {
