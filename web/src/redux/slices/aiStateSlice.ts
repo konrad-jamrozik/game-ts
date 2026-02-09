@@ -4,7 +4,9 @@ import { buyUpgrade, reset as gameStateReset } from './gameStateSlice'
 // KJA2 move this to web/src/lib so that I can introduce utils on top of it akin to gameState Utils,
 // e.g. for hasUnfulfilledDesiredPurchaseGoal (this function already exists but only in tests)
 // e.g. store.getState().undoable.past.length
+// e.g. total upgrade count (used in spendMoney tests)
 // Note looks like I already have storeUtils.ts in redux
+// I also use some abstractions in stateFixture
 export type BasicIntellectState = {
   // Actual cap upgrade counts (number of upgrades bought so far)
   actualAgentCapUpgrades: number
