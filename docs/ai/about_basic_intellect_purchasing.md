@@ -67,10 +67,9 @@ Specifically, `chooseStatUpgrade()` will choose the next stat upgrade as follows
 - Exhaustion recovery upgrade, unless `MAX_DESIRED_EXHAUSTION_RECOVERY_PCT` of 50 was reached.
 - Hit points recovery upgrade, unless `MAX_DESIRED_HIT_POINTS_RECOVERY_PCT` of 50 was reached.
 
-# Test spec
+# Purchasing algorithm unit test suite
 
-This spec is covered by `web/test/ai/spendMoney.test.ts` unit test file which has following tests:
+Refer to:
 
-`Correctly spends 1_000 money in initial game state` - tests that the AI correctly spends 1_000 money in the initial game state.
-The test is arranged by overriding the money to be `1_000` in the otherwise default initial game state.
-The test asserts correctness by verifying correct amount of agents hired and upgrades purchased, both stat upgrades and cap upgrades.
+- `web/test/ai/spendMoney.test.ts`
+- `web/test/ai/buyUpgrade.test.ts`

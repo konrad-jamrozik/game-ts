@@ -84,6 +84,24 @@ The `selectLeadToInvestigate()` function decides which lead to investigate:
      (using `leadInvestigationCounts`).
   7. If multiple leads still tie, pick at random.
 
+## Why non-repeatable leads skip the deployability check
+
+Non-repeatable leads are selected unconditionally -- there is no `canDeployMissionWithCurrentResources()` check
+for them, unlike repeatable leads. This is intentional because non-repeatable and repeatable leads serve
+fundamentally different roles in the progression tree:
+
+- **Repeatable leads** (e.g., "Locate safehouse", "Locate outpost") directly spawn offensive missions.
+  Every offensive mission in the game depends on a repeatable lead. If the AI can't deploy the resulting
+  mission, investigating the lead would waste agents.
+- **Non-repeatable leads** are **progression gates** that unlock the next tier of the faction tree.
+  They fall into two categories:
+  - **Interrogation and analysis leads** (e.g., "Interrogate member", "Analyze command structure") --
+    these don't produce missions themselves; they unlock the next repeatable "Locate" lead in the chain.
+  - **Terminal leads** (e.g., "Terminate cult", "Peace on Earth") -- endgame objectives.
+
+Since non-repeatable leads don't directly produce missions, a deployability check would be meaningless.
+Their value lies in advancing the progression tree, which is always worth doing when available.
+
 ## Agent selection
 
 Agents are selected via `selectNextBestReadyAgents()` with `includeInTraining: true`, meaning agents currently
