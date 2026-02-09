@@ -2,10 +2,14 @@
 // to have beforeEach outside of describe blocks.
 /* eslint-disable vitest/require-top-level-describe */
 import { beforeAll, beforeEach } from 'vitest'
+import { ActionCreators } from 'redux-undo'
 import { resetAllFixtures } from '../fixtures/resetAllFixtures'
 import { rand } from '../../src/lib/primitives/rand'
 import { debugConfig } from '../../src/lib/primitives/debugConfig'
-import { initStore } from '../../src/redux/store'
+import { initStore, getStore } from '../../src/redux/store'
+import { reset } from '../../src/redux/slices/gameStateSlice'
+import { log } from '../../src/lib/primitives/logger'
+import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
 
 beforeAll(async () => {
   // Set invariant validation frequency to 50 turns for performance
@@ -19,6 +23,16 @@ beforeAll(async () => {
 })
 
 beforeEach(() => {
+  const store = getStore()
+  // Reset store to clean state and clear undo history
+  store.dispatch(ActionCreators.clearHistory())
+  store.dispatch(reset())
   resetAllFixtures()
   rand.reset()
+  // Disable all logs
+  const logSettings: Partial<Record<string, boolean>> = {}
+  for (const category of LOG_CATEGORY_LIST) {
+    logSettings[category] = false
+  }
+  log.setAll(logSettings)
 })

@@ -1,7 +1,5 @@
-import { describe, expect, test, beforeEach } from 'vitest'
-import { ActionCreators } from 'redux-undo'
+import { describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
-import { reset } from '../../src/redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import {
   spendMoney,
@@ -14,11 +12,6 @@ import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 import { getUpgradePrice } from '../../src/lib/data_tables/upgrades'
 
 describe(spendMoney, () => {
-  beforeEach(() => {
-    const store = getStore()
-    store.dispatch(ActionCreators.clearHistory())
-    store.dispatch(reset())
-  })
 
   test('Correctly spends 10_000 money in initial game state', () => {
     // Arrange

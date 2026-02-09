@@ -1,7 +1,5 @@
-import { describe, expect, test, beforeEach } from 'vitest'
-import { ActionCreators } from 'redux-undo'
+import { describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
-import { reset } from '../../src/redux/slices/gameStateSlice'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnsToAIPlayer'
 import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
 import { setupCheatingGameState } from '../utils/aiTestSetup'
@@ -15,24 +13,10 @@ import { agFix } from '../fixtures/agentFixture'
 import { calculateAgentCombatRating } from '../../src/ai/intellects/basic/utils'
 import type { AgentWithStats } from '../../src/ai/intellects/basic/agentSelection'
 import { rand } from '../../src/lib/primitives/rand'
-import { log } from '../../src/lib/primitives/logger'
-import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
 import { assertDefined, assertNoUndefined } from '../../src/lib/primitives/assertPrimitives'
 
 // KJA2 TODO: TDD - Disabled for now. See cursor plan 'ai_faction_cycling_for_leads'
 describe.todo('Faction Cycling Lead Selection', () => {
-  beforeEach(() => {
-    const store = getStore()
-    store.dispatch(ActionCreators.clearHistory())
-    store.dispatch(reset())
-    rand.reset()
-    // Disable all logs except "game" category
-    const logSettings: Partial<Record<string, boolean>> = {}
-    for (const category of LOG_CATEGORY_LIST) {
-      logSettings[category] = false
-    }
-    log.setAll(logSettings)
-  })
 
   describe(getFactionPriorityOrder, () => {
     test('returns all 3 factions in rotated order for turn 1, offset 0', () => {

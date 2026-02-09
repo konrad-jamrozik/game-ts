@@ -1,16 +1,7 @@
-import { describe, expect, test, beforeEach } from 'vitest'
-import { ActionCreators } from 'redux-undo'
-import { getStore } from '../../src/redux/store'
-import { reset } from '../../src/redux/slices/gameStateSlice'
+import { describe, expect, test } from 'vitest'
 import { st } from '../fixtures/stateFixture'
 
 describe('buyUpgrade', () => {
-  beforeEach(() => {
-    // KJA should this be in setupAITests.ts?
-    const store = getStore()
-    store.dispatch(ActionCreators.clearHistory())
-    store.dispatch(reset())
-  })
 
   test('human buyUpgrade atomically increments aiState.actual*', () => {
     st.arrangeGameState({ money: 100_000 })
