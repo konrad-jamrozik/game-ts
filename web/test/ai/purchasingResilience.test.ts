@@ -38,6 +38,8 @@ describe('Purchasing Resilience', () => {
       api.buyUpgrade('Transport cap')
       expect(st.gameState.money).toBeLessThan(moneyBefore)
       expect(st.aiState.actualTransportCapUpgrades).toBe(1)
+      // KJA here this should assert failure with "no undo possible, state missing"
+      // because test setup in setupAITests.ts set it to 0
       store.dispatch(ActionCreators.undo())
       expect(st.gameState.money).toBe(moneyBefore)
       expect(st.aiState.actualTransportCapUpgrades).toBe(0)

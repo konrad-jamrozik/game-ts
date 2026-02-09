@@ -33,8 +33,7 @@ export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reduc
   // undoable is from https://github.com/omnidan/redux-undo
   const undoableReducer = undoable(combinedReducer, {
     // Up to undoLimit player actions can be undone/redone.
-    // +1 because the current state, which is starting point, must be also accounted for.
-    limit: undoLimit + 1,
+    limit: undoLimit,
     // Note: because of this filter, we are going to take a snapshot of game state immediately
     // after each player action, and after turn advancement.
     // This means that no other events can happen after these events, otherwise they won't
