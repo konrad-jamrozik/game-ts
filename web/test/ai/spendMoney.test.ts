@@ -9,10 +9,9 @@ import {
   computeNextBuyPriority,
 } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
-import { assertAboveZero, assertEqual } from '../../src/lib/primitives/assertPrimitives'
+import { assertEqual } from '../../src/lib/primitives/assertPrimitives'
 import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 import { getUpgradePrice } from '../../src/lib/data_tables/upgrades'
-import { list } from 'radash'
 
 describe(spendMoney, () => {
   beforeEach(() => {
@@ -70,7 +69,6 @@ describe(spendMoney, () => {
 
   test('redoing spendMoney after undo leads to the same purchase count', () => {
     st.arrangeGameState({ agents: st.bldAgents({ count: 0 }), money: AGENT_HIRE_COST * 8 })
-    st.arrangeAiState({})
 
     const moneyBefore = st.gameState.money
     assertEqual(st.gameState.money, moneyBefore)

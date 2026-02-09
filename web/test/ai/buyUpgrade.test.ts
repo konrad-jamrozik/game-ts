@@ -24,7 +24,6 @@ describe('buyUpgrade', () => {
 
   test('undo after purchase reverts both gameState and aiState.actual*', () => {
     st.arrangeGameState({ agents: st.bldAgents({ count: 5 }), money: 100_000 })
-    st.arrangeAiState({})
 
     const moneyBefore = st.gameState.money
 

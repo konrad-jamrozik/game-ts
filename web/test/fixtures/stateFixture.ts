@@ -83,15 +83,16 @@ export const st = {
     }
   },
 
-  arrangeGameState(updates: Partial<GameState>): void {
+  arrangeGameState(updates: Partial<GameState> & { aiState?: Partial<BasicIntellectState> }): void {
     const store = getStore()
-    const customState = { ...bldInitialState(), ...updates }
+    const { aiState, ...gameStateUpdates } = updates
+    const customState = { ...bldInitialState(), ...gameStateUpdates }
     store.dispatch(reset({ customState }))
-  },
-
-  arrangeAiState(updates: Partial<BasicIntellectState>): void {
-    const store = getStore()
-    store.dispatch(loadAiState({ ...createInitialAiState(), ...updates }))
+    // Reset AI state after resetting game state
+    // If aiState is undefined or empty object, use initial state; otherwise merge with initial state
+    const shouldUseInitialState = aiState === undefined || Object.keys(aiState).length === 0
+    const finalAiState = shouldUseInitialState ? createInitialAiState() : { ...createInitialAiState(), ...aiState }
+    store.dispatch(loadAiState(finalAiState))
   },
 
   arrangeSelection(options: { agents?: AgentId[]; lead?: LeadId; mission?: MissionId }): void {
