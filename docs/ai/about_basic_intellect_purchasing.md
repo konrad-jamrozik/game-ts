@@ -2,7 +2,27 @@
 
 This document specifies how basic AI intellect decides what to purchase in a given turn.
 
-# Purchasing
+# Purchasing overall approach
+
+The purchasing logic balances three concerns: growing the agent workforce, scaling infrastructure
+(transport and training capacity) to support that workforce, and upgrading agent capabilities
+(stats) to handle increasingly difficult missions.
+
+The key insight is that agent hiring and stat upgrades are **interleaved**: the desired agent count
+grows as a function of purchased stat upgrades (`AGENT_COUNT_BASE` + `AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER`
+per stat upgrade). This means the AI alternates between phases of hiring agents and phases of
+buying stat upgrades, with infrastructure upgrades (transport and training caps) interspersed
+whenever capacity falls behind the agent count.
+
+The AI always maintains a **minimum savings buffer** before spending (see "Money savings" in
+`about_basic_intellect.md`), ensuring it won't run out of money within the next 5 turns even
+under pessimistic income assumptions.
+
+Within a single turn, the AI buys items one at a time in a loop, recomputing the next buy priority
+after each purchase. This means a single turn can include a mix of agent hires, cap upgrades, and
+stat upgrades, naturally adapting to whatever the current state demands.
+
+# Purchasing algorithm
 
 In the `spendMoney()` function the player decides what to buy in a loop, be repeatedly computing the next buy priority
 (via `computeNextBuyPriority()`) and buying it until they can no longer afford it.
