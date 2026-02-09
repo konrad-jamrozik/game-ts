@@ -16,7 +16,7 @@ import {
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
-import { assertDefined, assertTrue } from '../../../lib/primitives/assertPrimitives'
+import { assertDefined } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
 import type { BuyPriority } from './types'
@@ -397,11 +397,6 @@ function ensureDesiredGoalExists(api: PlayTurnAPI): void {
   }
 
   // If we exhausted iterations, this is a genuine bug
-  // Before throwing, verify the invariant one more time
-  assertTrue(
-    findNextDesiredUpgrade(api.aiState) !== undefined,
-    `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal. There must always be at least one upgrade goal (desired > actual for at least one upgrade type).`,
-  )
   throw new Error(
     `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal`,
   )
