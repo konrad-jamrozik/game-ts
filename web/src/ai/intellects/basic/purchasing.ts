@@ -48,7 +48,8 @@ export function computeNextBuyPriority(api: PlayTurnAPI): BuyPriority {
     MAX_DESIRED_AGENT_COUNT,
   )
   if (aliveAgents < maxDesiredAgents) {
-    return aliveAgents < gameState.agentCap ? 'newAgent' : 'Agent cap'
+    const result = aliveAgents < gameState.agentCap ? 'newAgent' : 'Agent cap'
+    return result
   }
   if (gameState.transportCap < aliveAgents * TRANSPORT_CAP_RATIO) {
     return 'Transport cap'
@@ -56,7 +57,8 @@ export function computeNextBuyPriority(api: PlayTurnAPI): BuyPriority {
   if (gameState.trainingCap < aliveAgents * TRAINING_CAP_RATIO) {
     return 'Training cap'
   }
-  return chooseStatUpgrade(api)
+  const statUpgrade = chooseStatUpgrade(api)
+  return statUpgrade
 }
 
 function hasSufficientMoney(api: PlayTurnAPI): boolean {
@@ -79,7 +81,8 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: BuyPriority): boole
   const currentMoney = gameState.money
   const moneyAfterPurchase = currentMoney - cost
   const minimumRequiredSavings = computeMinimumRequiredSavings(api)
-  return moneyAfterPurchase >= minimumRequiredSavings
+  const result = moneyAfterPurchase >= minimumRequiredSavings
+  return result
 }
 
 function buy(api: PlayTurnAPI, priority: BuyPriority): void {
@@ -186,5 +189,6 @@ function getAvailableStatUpgrades(api: PlayTurnAPI): UpgradeName[] {
     },
   ]
 
-  return allUpgrades.filter((u) => u.available).map((u) => u.type)
+  const available = allUpgrades.filter((u) => u.available).map((u) => u.type)
+  return available
 }

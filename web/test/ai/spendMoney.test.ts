@@ -61,11 +61,11 @@ describe(spendMoney, () => {
 
   test('Correctly spends money buying only agents when there are too few agents', () => {
     // Arrange: Start with 0 agents, 1 stat upgrade (so maxDesiredAgents = 8 + 4*1 = 12)
-    // Have enough money to buy 10 agents
+    // Have enough money to buy 10 agents (up to maxDesiredAgents)
     st.arrangeGameState({
       agents: st.bldAgents({ count: 0 }),
-      agentCap: 20, // High enough to allow 10 agents
-      money: 4000, // Enough for 10 agents + savings requirements
+      agentCap: 20, // High enough to allow 12 agents
+      money: 1000, // Enough for 10 agents + savings requirements
       aiState: {
         actualHitPointsUpgrades: 1, // 1 stat upgrade so maxDesiredAgents = 12
       },
@@ -76,7 +76,7 @@ describe(spendMoney, () => {
     // Act
     spendMoney(api)
 
-    // Assert - should have bought exactly 10 agents
+    // Assert - should have bought exactly 10 agents (up to maxDesiredAgents)
     expect(st.gameState.agents).toHaveLength(10)
     // Assert - no cap upgrades should have been purchased
     expect(st.aiState.actualTrainingCapUpgrades).toBe(0)
@@ -97,7 +97,7 @@ describe(spendMoney, () => {
       agentCap: 60,
       transportCap: 32, // 6 + 13*2 = 32, adequate for 50 agents (need 12.5)
       trainingCap: 16, // 0 + 4*4 = 16, adequate for 50 agents (need 15)
-      money: 10_000, // Enough for 6 stat upgrades (6 * 500 = 3000) + savings (50 agents * 10 * 5 = 2500)
+      money: 5500, // Enough for 6 stat upgrades (6 * 500 = 3000) + savings (50 agents * 10 * 5 = 2500)
       aiState: {
         // Cap upgrades already purchased to reach adequate caps
         actualTransportCapUpgrades: 13, // 6 + 13*2 = 32
@@ -125,7 +125,13 @@ describe(spendMoney, () => {
       st.aiState.actualHitPointsRecoveryUpgrades
 
     expect(totalStatUpgrades).toBe(6)
-    // Assert - round-robin order: Hit points (0), Weapon damage (1), Training skill gain (2), Exhaustion recovery (3), Hit points recovery (4), Hit points (5)
+    // Assert - round-robin order:
+    // - Hit points (0),
+    // - Weapon damage (1),
+    // - Training skill gain (2),
+    // - Exhaustion recovery (3),
+    // - Hit points recovery (4),
+    // - Hit points (5)
     expect(st.aiState.actualHitPointsUpgrades).toBe(2) // First (index 0) and last (index 5)
     expect(st.aiState.actualWeaponDamageUpgrades).toBe(1) // Index 1
     expect(st.aiState.actualTrainingSkillGainUpgrades).toBe(1) // Index 2
