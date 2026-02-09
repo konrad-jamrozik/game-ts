@@ -6,9 +6,11 @@ import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { getPlayerActionsApi } from '../../src/redux/playerActionsApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
+import { assertAboveZero } from '../../src/lib/primitives/assertPrimitives'
 
 describe('Purchasing Resilience', () => {
   beforeEach(() => {
+    // KJA should this be in setupAITests.ts?
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
@@ -43,18 +45,23 @@ describe('Purchasing Resilience', () => {
       expect(st.aiState.actualTransportCapUpgrades).toBe(0)
     })
 
-    test('spendMoney works after undo reverts all AI purchases', () => {
+    // KJA the assertion doesn't reflect this, need to assert that 2nd result of spendMoney is the same as first.
+    // Then move it to spendMoney test.
+    test('redoing spendMoney after undo leads to the same result', () => {
       st.arrangeGameState({ agents: st.bldAgents({ count: 5 }), money: 100_000 })
       st.arrangeAiState({})
       const store = getStore()
       const api = getPlayTurnApi(store)
-      spendMoney(api)
-      expect(st.gameState.money).toBeLessThan(100_000)
-      // Undo all purchases
-      while (store.getState().undoable.past.length > 0) {
-        store.dispatch(ActionCreators.undo())
-      }
       expect(st.gameState.money).toBe(100_000)
+
+      // Act
+      spendMoney(api)
+
+      expect(st.gameState.money).toBeLessThan(100_000)
+      assertAboveZero(store.getState().undoable.past.length)
+      store.dispatch(ActionCreators.undo())
+      expect(st.gameState.money).toBe(100_000)
+
       // AI should be able to purchase again
       const api2 = getPlayTurnApi(store)
       spendMoney(api2)
