@@ -134,7 +134,7 @@ export function createPaletteOptions(): PaletteOptions {
     }),
     agentStateInvestigating: defaultTheme.palette.augmentColor({
       color: {
-        main: teal[600], // KJA2 fix color
+        main: teal[600], // KJA3_2 fix color
       },
       name: 'agentStateInvestigating',
     }),

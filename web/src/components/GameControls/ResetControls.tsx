@@ -184,7 +184,7 @@ export function ResetControls(): React.JSX.Element {
                       ? 'Revert to end of previous turn'
                       : isCompactedTurn
                         ? 'Turn history was compacted. No prior state available.'
-                        : 'No prior state available' // KJA3 this does not show up over disabled button. Other places have similar issues.
+                        : 'No prior state available' // KJA3_3 this does not show up over disabled button. Other places have similar issues.
               }
             >
               {canResetTurn ? 'Reset turn' : 'Revert turn'}

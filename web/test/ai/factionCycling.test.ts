@@ -20,7 +20,7 @@ import { log } from '../../src/lib/primitives/logger'
 import { LOG_CATEGORY_LIST } from '../../src/lib/primitives/logCategories'
 import { assertDefined, assertNoUndefined } from '../../src/lib/primitives/assertPrimitives'
 
-// KJA TODO: TDD - Disabled for now. See cursor plan 'ai_faction_cycling_for_leads'
+// KJA2 TODO: TDD - Disabled for now. See cursor plan 'ai_faction_cycling_for_leads'
 describe.todo('Faction Cycling Lead Selection', () => {
   beforeEach(() => {
     const store = getStore()

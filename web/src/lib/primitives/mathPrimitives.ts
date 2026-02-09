@@ -88,7 +88,7 @@ export function hasAtMostDecimals(value: number, decimalPlaces: number): boolean
   return Math.abs(multiplied - floored) <= 1e-8
 }
 
-// KJA3 should I use some math lib for quantileSorted?
+// KJA3_3 should I use some math lib for quantileSorted?
 /**
  * Calculates the quantile (percentile) of a sorted array using linear interpolation.
  *

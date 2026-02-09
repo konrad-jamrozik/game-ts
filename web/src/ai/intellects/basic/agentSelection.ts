@@ -6,7 +6,7 @@ import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_RESERVE_PCT, MAX_READY_EXHAUSTION_PCT } from './constants'
 import { calculateAgentCombatRating, estimateAgentContractingIncome, pickAtRandom } from './utils'
 
-// KJA1 should be in types
+// KJA3_1 should be in types
 export type AgentWithStats = Agent & {
   contractingIncome: number
   combatRating: number
@@ -82,7 +82,7 @@ export function selectNextBestReadyAgents(
   return selectedAgents
 }
 
-// KJA1 should be in utils
+// KJA3_1 should be in utils
 export function removeAgentsById(agents: AgentWithStats[], agentIds: readonly AgentId[]): AgentWithStats[] {
   const idSet = new Set(agentIds)
   return agents.filter((agent) => !idSet.has(agent.id))
@@ -115,7 +115,7 @@ function filterReadyAgents(
   )
 }
 
-// KJA1 this should be in utils and replace the predecessor, but it causes circular import somehow.
+// KJA3_1 this should be in utils and replace the predecessor, but it causes circular import somehow.
 function pickAtRandomFromLowestExhaustion2(agents: AgentWithStats[]): AgentWithStats {
   if (agents.length === 0) {
     throw new Error('Cannot pick from empty array')

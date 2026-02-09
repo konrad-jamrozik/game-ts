@@ -166,7 +166,7 @@ export function terminateFaction(state: GameState, factionId: FactionId): void {
     if (investigation.state !== 'Active') {
       continue
     }
-    // KJA3 is this case even possible?
+    // KJA3_3 is this case even possible?
     if (!investigation.leadId.startsWith(`lead-${facId}-`)) {
       continue
     }

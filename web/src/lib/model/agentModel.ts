@@ -16,7 +16,7 @@ export type AgentState =
 
 // Assignment types for agents
 export type ActivityId = 'Contracting' | 'Training'
-// KJA3 "AssignmentState" is misleading, as we have "AgentState". I.e. the "State" suffix.
+// KJA3_3 "AssignmentState" is misleading, as we have "AgentState". I.e. the "State" suffix.
 export type AgentAssignmentState = 'Standby' | 'Recovery' | 'Sacked' | 'KIA'
 export type AgentAssignment = ActivityId | MissionId | LeadInvestigationId | AgentAssignmentState
 

@@ -23,7 +23,7 @@ export type UpgradeRow = {
   total?: number
 }
 
-// KJA3 split into two: getCapabilitiesColumns and getUpgradesColumns
+// KJA3_3 split into two: getCapabilitiesColumns and getUpgradesColumns
 export function getCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
   const columns: GridColDef<UpgradeRow>[] = [
     {

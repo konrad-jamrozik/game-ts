@@ -33,7 +33,7 @@ export function available(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'Available')
 }
 
-// KJA2 delete onAssignment?
+// KJA3_2 delete onAssignment?
 export function onAssignment(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state === 'Contracting' || agent.state === 'Investigating')
 }
@@ -72,7 +72,7 @@ export function notAvailable(agents: Agent[]): Agent[] {
   return agents.filter((agent) => agent.state !== 'Available')
 }
 
-// KJA2 rename? See also the str message in the caller, validateOnAssignmentAgents
+// KJA3_2 rename? See also the str message in the caller, validateOnAssignmentAgents
 export function notOnAssignment(agents: Agent[]): Agent[] {
   return agents.filter(
     (agent) =>
@@ -88,7 +88,7 @@ export function applyExhaustion(agents: Agent[], exhaustion: Fixed6): void {
   }
 }
 
-// KJA2 delete onAssignmentWithAssignmentId?
+// KJA3_2 delete onAssignmentWithAssignmentId?
 export function onAssignmentWithAssignmentId(agents: Agent[], assignmentId: string): Agent[] {
   return agents.filter(
     (agent) => agent.assignment === assignmentId && (agent.state === 'Contracting' || agent.state === 'Investigating'),

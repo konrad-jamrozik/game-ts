@@ -18,7 +18,7 @@ export function setupCheatingGameState(): void {
 
   // Configure for deterministic success
   // Lead investigations always succeed
-  // KJA3 -> lead_investigation
+  // KJA3_3 -> lead_investigation
   rand.set('lead-investigation', 1)
   // Combat always succeeds: agent attacks always hit, enemy attacks always miss
   rand.set('agent_attack_roll', 1)

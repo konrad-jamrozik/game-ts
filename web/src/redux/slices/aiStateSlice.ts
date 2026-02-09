@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { buyUpgrade, reset as gameStateReset } from './gameStateSlice'
 
-// KJA move this to web/src/lib so that I can introduce utils on top of it akin to gameState Utils,
+// KJA2 move this to web/src/lib so that I can introduce utils on top of it akin to gameState Utils,
 // e,g, for hasUnfulfilledDesiredPurchaseGoal (this function already exists but only in tests)
 export type BasicIntellectState = {
   // Actual cap upgrade counts (number of upgrades bought so far)

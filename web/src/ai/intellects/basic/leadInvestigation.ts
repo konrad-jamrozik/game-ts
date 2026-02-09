@@ -11,7 +11,7 @@ import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/lead
 import { NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
 
-// KJA1 generate full spec of all such behaviors in manageAgents and spendMoney.
+// KJA3_1 generate full spec of all such behaviors in manageAgents and spendMoney.
 /**
  * Assigns agents to lead investigations using a smart selection algorithm.
  *

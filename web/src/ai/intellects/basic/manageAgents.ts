@@ -25,7 +25,7 @@ export function manageAgents(api: PlayTurnAPI): void {
   assignLeftoverToContracting(api, remainingAgents)
 }
 
-// KJA2 need to use some util here?
+// KJA3_2 need to use some util here?
 function unassignExhaustedAgents(api: PlayTurnAPI): void {
   const { gameState } = api
   const assignedAgents = gameState.agents.filter(

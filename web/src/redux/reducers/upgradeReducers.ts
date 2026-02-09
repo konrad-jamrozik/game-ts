@@ -17,7 +17,7 @@ export const buyUpgrade = asPlayerAction<UpgradeName>((state: GameState, action)
   state.money -= price
 
   // Track expenditure
-  // KJA3 introduce type like "CapUpgrade" and "AgentUpgrade" and make "Upgrade" be union of them.
+  // KJA3_3 introduce type like "CapUpgrade" and "AgentUpgrade" and make "Upgrade" be union of them.
   if (upgradeName === 'Agent cap' || upgradeName === 'Transport cap' || upgradeName === 'Training cap') {
     state.turnExpenditures.capIncreases += price
   } else {

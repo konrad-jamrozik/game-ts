@@ -1,7 +1,5 @@
 # Prompt
 
-// KJA current work - see ai_behavior_test_suite plan and the follow-up plans, i.e. fix_undo_consistency_aistate and ai_faction_cycling_for_leads.
-
 Refactor the manageAgents of basicIntellect.ts to be more efficient and simpler.
 
 Specifically:
