@@ -29,6 +29,8 @@ describe('Basic Intellect AI Player', () => {
   })
 
   // Note: as of 2026-01-01 this runs for about 5.8-6.8 seconds, simulating about 220 turns.
+  // KJA increasing AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER from 4 to 20 makes this sometimes finish in
+  // 155 turns instead of ~190-210.
   test('AI player wins game within 250 turns while cheating', () => {
     const store = getStore()
     setupCheatingGameState()
