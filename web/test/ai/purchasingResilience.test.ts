@@ -6,7 +6,8 @@ import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { getPlayerActionsApi } from '../../src/redux/playerActionsApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
-import { assertAboveZero } from '../../src/lib/primitives/assertPrimitives'
+import { assertAboveZero, assertEqual } from '../../src/lib/primitives/assertPrimitives'
+import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 
 describe('Purchasing Resilience', () => {
   beforeEach(() => {
@@ -32,6 +33,7 @@ describe('Purchasing Resilience', () => {
     test('undo after purchase reverts both gameState and aiState.actual*', () => {
       st.arrangeGameState({ agents: st.bldAgents({ count: 5 }), money: 100_000 })
       st.arrangeAiState({})
+
       const moneyBefore = st.gameState.money
       const store = getStore()
       const api = getPlayTurnApi(store)
@@ -45,27 +47,33 @@ describe('Purchasing Resilience', () => {
       expect(st.aiState.actualTransportCapUpgrades).toBe(0)
     })
 
-    // KJA the assertion doesn't reflect this, need to assert that 2nd result of spendMoney is the same as first.
-    // Then move it to spendMoney test.
-    test('redoing spendMoney after undo leads to the same result', () => {
-      st.arrangeGameState({ agents: st.bldAgents({ count: 5 }), money: 100_000 })
+    test('redoing spendMoney after undo leads to the same purchase count', () => {
+      st.arrangeGameState({ agents: st.bldAgents({ count: 0 }), money: AGENT_HIRE_COST * 8 })
       st.arrangeAiState({})
+
+      const moneyBefore = st.gameState.money
       const store = getStore()
       const api = getPlayTurnApi(store)
-      expect(st.gameState.money).toBe(100_000)
+      assertEqual(st.gameState.money, moneyBefore)
 
-      // Act
-      spendMoney(api)
+      // Act 1/2
+      const purchaseCount1 = spendMoney(api)
 
-      expect(st.gameState.money).toBeLessThan(100_000)
-      assertAboveZero(store.getState().undoable.past.length)
-      store.dispatch(ActionCreators.undo())
-      expect(st.gameState.money).toBe(100_000)
+      expect(st.gameState.money).toBeLessThan(moneyBefore)
 
-      // AI should be able to purchase again
-      const api2 = getPlayTurnApi(store)
-      spendMoney(api2)
-      expect(st.gameState.money).toBeLessThan(100_000)
+      // Undo all purchases
+      for (let i = 0; i < purchaseCount1; i += 1) {
+        assertAboveZero(store.getState().undoable.past.length)
+        store.dispatch(ActionCreators.undo())
+      }
+
+      expect(st.gameState.money).toBe(moneyBefore)
+      api.updateCachedGameState()
+
+      // Act 2/2
+      const purchaseCount2 = spendMoney(api)
+
+      expect(purchaseCount2).toBe(purchaseCount1)
     })
   })
 })

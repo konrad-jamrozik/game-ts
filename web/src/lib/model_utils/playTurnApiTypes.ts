@@ -7,6 +7,7 @@ import type { ActionResult } from './playerActionsApiTypes'
 export type PlayTurnAPI = {
   gameState: GameState
   aiState: BasicIntellectState
+  updateCachedGameState(): void
   hireAgent(): ActionResult
   sackAgents(agentIds: AgentId[]): ActionResult
   assignAgentsToContracting(agentIds: AgentId[]): ActionResult

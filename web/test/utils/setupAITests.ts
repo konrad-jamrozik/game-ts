@@ -10,11 +10,12 @@ import { initStore } from '../../src/redux/store'
 beforeAll(async () => {
   // Set invariant validation frequency to 50 turns for performance
   debugConfig.setGameStateInvariantsFrequency(50)
-  // Initialize store for AI tests with undoLimit: 1 to avoid undo history overhead during long AI simulations
+  // Initialize store for AI tests with undoLimit: 10 to avoid undo history overhead during long AI simulations.
+  // But still need some small amount of undo history as some tests exercise undo logic.
   // Disable persistence to avoid debounced save race conditions after tests complete
   // Disable default middleware for performance
   // ⚠️ Per Opus 4.6, apparently redux-undo treats "undoLimit: 0" as "no limit" so 1 is the lowest valid value.
-  await initStore({ undoLimit: 1, enablePersistence: false, enableDefaultMiddleware: false })
+  await initStore({ undoLimit: 10, enablePersistence: false, enableDefaultMiddleware: false })
 })
 
 beforeEach(() => {

@@ -17,6 +17,10 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
     gameState: initialGameState,
     aiState: getCurrentAiState(store),
 
+    updateCachedGameState(): void {
+      updateGameState()
+    },
+
     hireAgent(): ActionResult {
       const result = baseApi.hireAgent(api.gameState)
       if (result.success) {

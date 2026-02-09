@@ -4,6 +4,9 @@ This document specifies how basic AI intellect decides what to purchase in a giv
 
 # Next buy priority (legacy, to replace with vNext)
 
+🛑 THIS SECTION IS OBSOLETE. vNEXT (below) has already been implemented. Just keeping it here until
+fully cursor plan, tests, and specs have been migrated to the vNext.
+
 Implemented in: `computeNextBuyPriority()`, `findNextDesiredUpgrade()`, `ensureDesiredGoalExists()`
 
 When deciding what to buy, the player first computes the `next buy priority` item to buy,

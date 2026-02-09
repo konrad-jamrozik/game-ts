@@ -24,16 +24,19 @@ import {
   MAX_DESIRED_HIT_POINTS_RECOVERY_PCT,
 } from './constants'
 
-export function spendMoney(api: PlayTurnAPI): void {
+export function spendMoney(api: PlayTurnAPI): number {
+  let purchaseCount = 0
   while (hasSufficientMoney(api)) {
     const priority = computeNextBuyPriority(api)
     if (hasSufficientMoneyToBuy(api, priority)) {
       buy(api, priority)
+      purchaseCount += 1
     } else {
       break
     }
   }
   logFailedPurchase(api, computeNextBuyPriority(api))
+  return purchaseCount
 }
 
 export function computeNextBuyPriority(api: PlayTurnAPI): BuyPriority {
@@ -81,7 +84,7 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: BuyPriority): boole
 
 function buy(api: PlayTurnAPI, priority: BuyPriority): void {
   executePurchase(api, priority)
-  logBuyResult(api, priority)
+  logBuyResult(priority)
 }
 
 function executePurchase(api: PlayTurnAPI, priority: BuyPriority): void {
@@ -100,7 +103,7 @@ function executePurchase(api: PlayTurnAPI, priority: BuyPriority): void {
   }
 }
 
-function logBuyResult(api: PlayTurnAPI, priority: BuyPriority): void {
+function logBuyResult(priority: BuyPriority): void {
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   log.info('purchasing', `Purchased ${purchaseItem}.`)
 }
