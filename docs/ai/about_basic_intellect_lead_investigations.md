@@ -2,7 +2,40 @@
 
 This document specifies how basic AI intellect decides which leads to investigate in a given turn.
 
-# Lead investigation assignment
+# Lead investigation assignment overall approach
+
+Lead investigations are the AI's intelligence pipeline: completing an investigation on a lead
+unlocks new missions to deploy agents to. The AI dedicates a small, scaling portion of its
+workforce to investigations (`1 + floor(totalAgents / 10)` agents).
+
+There are two kinds of leads: **non-repeatable** (one-time progression leads) and **repeatable**
+(recurring sources of missions). Non-repeatable leads are always prioritized, since they advance
+the game's progression. When only repeatable leads remain, the AI is selective -- it only
+investigates leads whose dependent missions it could actually deploy with current resources (enough
+agents, combat rating, and transport capacity). This avoids wasting agents on investigations that
+won't produce actionable missions.
+
+Once a repeatable lead is selected, all remaining investigation agents are **piled onto it** in a
+single batch, concentrating effort to complete the investigation as quickly as possible rather than
+spreading agents across multiple leads. This piling persists across turns: if a repeatable
+investigation is already active from a previous turn, new agents continue to pile onto it.
+
+For non-repeatable leads, agents are assigned proportionally to the lead's difficulty
+(`ceil(difficulty / 8)`), ensuring harder leads get more agents without overcommitting.
+
+## The non-repeatable lead agent count assignment heuristic
+
+The divisor of 8 is a heuristic that keeps investigation timelines reasonable across difficulty levels.
+For example, a difficulty-40 lead gets `ceil(40 / 8) = 5` agents. With 5 skill-100 agents, the
+team produces roughly `5^0.8 × 10 ≈ 36` Intel per turn initially (due to diminishing returns from
+the team-size exponent), against an effective difficulty of `40 × 100 = 4,000` Intel needed for
+100% success probability. Since success is checked probabilistically each turn (see
+`about_lead_investigations.md`), the investigation can complete well before reaching 100% -- but
+the 5-agent team ensures probability builds up fast enough that completion within a moderate number
+of turns is likely. A single agent on that same lead would produce only 10 Intel/turn, making
+progress far too slow.
+
+# Lead investigation assignment algorithm
 
 In the `assignToLeadInvestigation()` function the AI assigns agents to lead investigations. It first computes how many
 agents should be investigating (via `computeTargetAgentCountForInvestigation()`), subtracts the agents already
