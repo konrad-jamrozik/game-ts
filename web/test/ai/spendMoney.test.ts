@@ -5,6 +5,8 @@ import { reset } from '../../src/redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
+import { assertAboveZero, assertEqual } from '../../src/lib/primitives/assertPrimitives'
+import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 
 describe(spendMoney, () => {
   beforeEach(() => {
@@ -65,6 +67,35 @@ describe(spendMoney, () => {
 
     // Assert - money
     expect(st.gameState.money).toBe(600)
+  })
+
+  test('redoing spendMoney after undo leads to the same purchase count', () => {
+    st.arrangeGameState({ agents: st.bldAgents({ count: 0 }), money: AGENT_HIRE_COST * 8 })
+    st.arrangeAiState({})
+
+    const moneyBefore = st.gameState.money
+    const store = getStore()
+    const api = getPlayTurnApi(store)
+    assertEqual(st.gameState.money, moneyBefore)
+
+    // Act 1/2
+    const purchaseCount1 = spendMoney(api)
+
+    expect(st.gameState.money).toBeLessThan(moneyBefore)
+
+    // Undo all purchases
+    for (let i = 0; i < purchaseCount1; i += 1) {
+      assertAboveZero(store.getState().undoable.past.length)
+      store.dispatch(ActionCreators.undo())
+    }
+
+    expect(st.gameState.money).toBe(moneyBefore)
+    api.updateCachedGameState()
+
+    // Act 2/2
+    const purchaseCount2 = spendMoney(api)
+
+    expect(purchaseCount2).toBe(purchaseCount1)
   })
 })
 
