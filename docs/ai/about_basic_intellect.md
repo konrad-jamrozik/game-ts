@@ -434,3 +434,40 @@ When this happens, exactly one desired value is increased by one (via `decideSom
 
 This incremental approach ensures the player balances hiring agents, expanding capacities, and upgrading
 capabilities in response to what has actually been purchased, rather than following a predetermined schedule.
+
+## Purchasing vNext
+
+In the `spendMoney()` function the player decides what to buy in a loop, be repeatedly computing the next buy priority
+(via `computeNextBuyPriority()`) and buying it until they can no longer afford it.
+
+The `computeNextBuyPriority()` works by choosing exactly one unmet desired item to buy. That exactly one unmet
+desired item is chosen by `chooseOneUnmetDesiredItem()`. This means that once the AI player turn ends, there
+is going to be exactly one such unmet desired item to buy.
+
+Importantly, this cannot be guaranteed when the AI player turn starts, as human player action may have changed
+the actual counts, meaning more than one desired item may be unmet, or all of them may be met.
+
+For this reason, at the beginning of `spendMoney()` the AI player first resets the desired buy counts (via `resetDesiredBuyCounts()`)
+to match exactly the actual game state counts.
+
+### Choosing the one unmet desired item to buy
+
+The `chooseOneUnmetDesiredItem()` chooses the desired item by ensuring exactly one count is exactly one above
+the actual count. The relevant counts considered are:
+
+- Agent count
+- Cap upgrade counts (number of upgrades bought/to buy):
+  - Agent cap upgrades count
+  - Transport cap upgrades count
+  - Training cap upgrades count
+- Upgrade counts (number of upgrades bought/to buy):
+  - Weapon damage upgrades count
+  - Training skill gain upgrades count
+  - Exhaustion recovery upgrades count
+  - Hit points recovery upgrades count
+  - Hit points upgrades count
+
+They are initialized in `createInitialAiState()`, but the initial values do not matter, as they will be reset to
+the actual counts by the `resetDesiredBuyCounts()` function anyway.
+
+The `chooseOneUnmetDesiredItem()` chooses the desired item by following this algorithm: TODO // KJA

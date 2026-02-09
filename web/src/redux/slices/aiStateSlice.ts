@@ -42,7 +42,7 @@ export type BasicIntellectState = {
 export function createInitialAiState(): BasicIntellectState {
   return {
     // This is set to +1 to maintain the invariant that there is always at least one desired count above actual count.
-    desiredAgentCount: initialGameState.agents.length + 1,
+    desiredAgentCount: initialGameState.agents.length,
     desiredAgentCapUpgrades: 0,
     desiredTransportCapUpgrades: 0,
     desiredTrainingCapUpgrades: 0,
