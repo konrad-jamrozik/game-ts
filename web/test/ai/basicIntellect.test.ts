@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnsToAIPlayer'
 import { isGameWon } from '../../src/lib/game_utils/gameStateChecks'
 import { rand } from '../../src/lib/primitives/rand'
@@ -19,7 +18,6 @@ describe('Basic Intellect AI Player', () => {
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
-    store.dispatch(clearEvents())
     // Reset rand overrides
     rand.reset()
     // Disable all logs

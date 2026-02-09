@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnsToAIPlayer'
 import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
 import { setupCheatingGameState } from '../utils/aiTestSetup'
@@ -26,7 +25,6 @@ describe.todo('Faction Cycling Lead Selection', () => {
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
-    store.dispatch(clearEvents())
     rand.reset()
     // Disable all logs except "game" category
     const logSettings: Partial<Record<string, boolean>> = {}

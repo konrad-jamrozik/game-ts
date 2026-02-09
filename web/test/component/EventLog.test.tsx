@@ -3,7 +3,6 @@ import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
 import { EventLog } from '../../src/components/EventLog'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 
 function renderEventLog(): void {
@@ -20,7 +19,6 @@ describe(EventLog, () => {
     const store = getStore()
     // Reset the store before each test
     store.dispatch(reset())
-    store.dispatch(clearEvents())
   })
 
   test('happy path: no events', () => {

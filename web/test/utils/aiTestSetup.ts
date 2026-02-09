@@ -1,6 +1,5 @@
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
 import { rand } from '../../src/lib/primitives/rand'
 
@@ -14,7 +13,6 @@ export function setupCheatingGameState(): void {
   const store = getStore()
   const customState = { ...bldInitialState(), money: 100_000 }
   store.dispatch(reset({ customState }))
-  store.dispatch(clearEvents())
 
   // Configure for deterministic success
   // Lead investigations always succeed

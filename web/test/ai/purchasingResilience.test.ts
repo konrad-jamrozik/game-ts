@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { getPlayerActionsApi } from '../../src/redux/playerActionsApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
@@ -13,7 +12,6 @@ describe('Purchasing Resilience', () => {
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
-    store.dispatch(clearEvents())
   })
 
   describe('buyUpgrade atomicity via extraReducers', () => {

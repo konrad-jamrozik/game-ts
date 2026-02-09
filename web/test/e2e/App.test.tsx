@@ -6,7 +6,6 @@ import { ActionCreators } from 'redux-undo'
 import App from '../../src/components/App'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { rand } from '../../src/lib/primitives/rand'
@@ -19,7 +18,6 @@ describe(App, () => {
     // Reset store to clean state and clear undo history
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
-    store.dispatch(clearEvents())
   })
 
   /**
@@ -82,7 +80,6 @@ function step1StartWithDebugInitialState(): void {
   // This leaves 0 money, and with high agent upkeep, projected balance will be negative
   const debugState = bldInitialState({ debug: true })
   store.dispatch(reset({ customState: { ...debugState, money: 200 } }))
-  store.dispatch(clearEvents()) // Clear the reset event
 
   // Override enemy attack rolls to always fail (roll low) so missions end in 'Won' state
   rand.set('enemy_attack_roll', 0)

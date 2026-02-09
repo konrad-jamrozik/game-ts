@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { clearEvents } from '../../src/redux/slices/eventsSlice'
 import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
@@ -12,7 +11,6 @@ describe('spendMoney - vNext purchasing', () => {
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())
     store.dispatch(reset())
-    store.dispatch(clearEvents())
   })
 
   /**
