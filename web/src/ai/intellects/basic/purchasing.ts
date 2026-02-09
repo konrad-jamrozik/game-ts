@@ -16,10 +16,10 @@ import {
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
-import { assertDefined } from '../../../lib/primitives/assertPrimitives'
+import { assertDefined, assertTrue } from '../../../lib/primitives/assertPrimitives'
 import { ceil } from '../../../lib/primitives/mathPrimitives'
 import { log } from '../../../lib/primitives/logger'
-import type { UpgradeNameOrNewAgent } from './types'
+import type { BuyPriority } from './types'
 import {
   REQUIRED_TURNS_OF_SAVINGS,
   TRANSPORT_CAP_RATIO,
@@ -45,7 +45,7 @@ export function spendMoney(api: PlayTurnAPI): void {
   logFailedPurchase(api, priority)
 }
 
-export function computeNextBuyPriority(api: PlayTurnAPI): UpgradeNameOrNewAgent {
+export function computeNextBuyPriority(api: PlayTurnAPI): BuyPriority {
   const { gameState, aiState } = api
   const actualAgentCount = gameState.agents.length
 
@@ -122,7 +122,7 @@ export function findNextDesiredUpgrade(aiState: BasicIntellectState): UpgradeNam
   return foundUpgrade
 }
 
-function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): boolean {
+function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: BuyPriority): boolean {
   const { gameState } = api
   let cost: number
 
@@ -138,12 +138,12 @@ function hasSufficientMoneyToBuy(api: PlayTurnAPI, priority: UpgradeNameOrNewAge
   return moneyAfterPurchase >= minimumRequiredSavings
 }
 
-function buy(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+function buy(api: PlayTurnAPI, priority: BuyPriority): void {
   executePurchase(api, priority)
   logBuyResult(api, priority)
 }
 
-function executePurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+function executePurchase(api: PlayTurnAPI, priority: BuyPriority): void {
   if (priority === 'newAgent') {
     api.hireAgent()
     log.success('purchasing', 'purchased newAgent 🪖')
@@ -174,11 +174,7 @@ export function areAllDesiredCountsMet(gameState: GameState, aiState: BasicIntel
   )
 }
 
-function logBuyResult(
-  api: PlayTurnAPI,
-  priority: UpgradeNameOrNewAgent,
-  stateBeforeIncrease?: BasicIntellectState,
-): void {
+function logBuyResult(api: PlayTurnAPI, priority: BuyPriority, stateBeforeIncrease?: BasicIntellectState): void {
   const { aiState } = api
   const purchaseItem = priority === 'newAgent' ? 'newAgent' : priority
   const increaseMessage = getIncreaseMessage(api, stateBeforeIncrease)
@@ -343,7 +339,7 @@ function decideDesiredAgentCount(api: PlayTurnAPI): void {
   api.increaseDesiredCount('agentCount')
 }
 
-function logFailedPurchase(api: PlayTurnAPI, priority: UpgradeNameOrNewAgent): void {
+function logFailedPurchase(api: PlayTurnAPI, priority: BuyPriority): void {
   const { gameState } = api
   let cost: number
 
@@ -382,6 +378,13 @@ function ensureDesiredGoalExists(api: PlayTurnAPI): void {
     // Check if we have an actionable goal
     // Agent goal is only actionable if we can actually hire (not at cap)
     if (actualAgentCount < aiState.desiredAgentCount && actualAgentCount < gameState.agentCap) {
+      // KJA adding this invariant breaks a lot of tests.
+      // // Invariant: there must always be at least one upgrade goal (desired > actual)
+      // // This ensures the AI always has something to purchase beyond just agents
+      // assertTrue(
+      //   findNextDesiredUpgrade(aiState) !== undefined,
+      //   'AI bug: ensureDesiredGoalExists attempted to return with only an agent goal. There must always be at least one upgrade goal (desired > actual for at least one upgrade type).',
+      // )
       return // Agent goal exists
     }
 
@@ -394,6 +397,11 @@ function ensureDesiredGoalExists(api: PlayTurnAPI): void {
   }
 
   // If we exhausted iterations, this is a genuine bug
+  // Before throwing, verify the invariant one more time
+  assertTrue(
+    findNextDesiredUpgrade(api.aiState) !== undefined,
+    `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal. There must always be at least one upgrade goal (desired > actual for at least one upgrade type).`,
+  )
   throw new Error(
     `AI bug: ensureDesiredGoalExists exhausted ${MAX_ITERATIONS} iterations without establishing an actionable goal`,
   )
