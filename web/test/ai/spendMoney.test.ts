@@ -15,6 +15,32 @@ describe('spendMoney - vNext purchasing', () => {
     store.dispatch(clearEvents())
   })
 
+  /**
+   * Algorithm trace for 1,000 money (expected results)
+   *
+   * Starting from default initial state (4 agents, agentCap=20, transportCap=6, trainingCap=0, all upgrades=0),
+   * with money overridden to 1,000:
+   *
+   * - minSavings = agents x AGENT_UPKEEP_COST(10) x REQUIRED_TURNS_OF_SAVINGS(5)
+   * - targetAgentCount = min(8 + 4 x 0, 1000) = 8
+   *
+   * | Round | Priority     | Cost | Money after | minSavings     | Affordable?        | State after              |
+   * | ----- | ------------ | ---- | ----------- | -------------- | ------------------ | ------------------------ |
+   * | 1     | newAgent     | 50   | 950         | 200 (4 agents) | Yes                | agents=5, money=950      |
+   * | 2     | newAgent     | 50   | 900         | 250            | Yes                | agents=6, money=900      |
+   * | 3     | newAgent     | 50   | 850         | 300            | Yes                | agents=7, money=850      |
+   * | 4     | newAgent     | 50   | 800         | 350            | Yes                | agents=8, money=800      |
+   * | 5     | Training cap | 200  | 600         | 400 (8 agents) | Yes                | trainingCap=4, money=600 |
+   * | 6     | Hit points   | 500  | 100         | 400            | **No** (100 < 400) | STOP                     |
+   *
+   * Expected final state:
+   * - money: 600
+   * - agents: 8 (4 hired from initial 4)
+   * - Training cap upgrades: 1
+   * - All other cap upgrades: 0
+   * - All stat upgrades: 0
+   * - Total spent: 400 (4 x 50 + 1 x 200)
+   */
   test('Correctly spends 1_000 money in initial game state', () => {
     // Arrange
     st.arrangeGameState({ money: 1000 })
