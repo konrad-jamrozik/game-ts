@@ -26,6 +26,9 @@ See prompt.md for details on that.
   So it beelines the investigations needed and always sends few agents on a mission, just enough so they kill all enemies
   before the exhaustion causes them to lose so much effective skill that commander orders retreat.
 
+- Observation: increasing AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER from 4 to 20 makes the basicIntellect.test sometimes
+  finish in 155 turns instead of ~190-210.
+
 # Next - minor
 
 - Keep track of agents initial CR in mission log

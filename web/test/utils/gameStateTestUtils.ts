@@ -1,4 +1,3 @@
-// KJA the name aiTestSetup is confusing with setupAITests.ts. Call this aiTestUtils.ts.
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'

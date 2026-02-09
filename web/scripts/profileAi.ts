@@ -17,7 +17,7 @@ import { initStore, getStore } from '../src/redux/store'
 import { delegateTurnsToAIPlayer } from '../src/ai/delegateTurnsToAIPlayer'
 import { profiler } from '../src/lib/primitives/profiler'
 import { getCurrentTurnStateFromStore } from '../src/redux/storeUtils'
-import { setupCheatingGameState } from '../test/utils/aiTestSetup'
+import { setupCheatingGameState } from '../test/utils/gameStateTestUtils'
 import { debugConfig } from '../src/lib/primitives/debugConfig'
 
 const TURNS_TO_PLAY = 250

@@ -2,7 +2,7 @@ import { describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnsToAIPlayer'
 import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
-import { setupCheatingGameState } from '../utils/aiTestSetup'
+import { setupCheatingGameState } from '../utils/gameStateTestUtils'
 import { getFactionPriorityOrder, selectLeadToInvestigate } from '../../src/ai/intellects/basic/leadInvestigation'
 import { dataTables } from '../../src/lib/data_tables/dataTables'
 import type { GameState } from '../../src/lib/model/gameStateModel'
@@ -15,9 +15,8 @@ import type { AgentWithStats } from '../../src/ai/intellects/basic/agentSelectio
 import { rand } from '../../src/lib/primitives/rand'
 import { assertDefined, assertNoUndefined } from '../../src/lib/primitives/assertPrimitives'
 
-// KJA2 TODO: TDD - Disabled for now. See cursor plan 'ai_faction_cycling_for_leads'
+// KJA TODO: TDD - Disabled for now. See cursor plan 'ai_faction_cycling_for_leads'
 describe.todo('Faction Cycling Lead Selection', () => {
-
   describe(getFactionPriorityOrder, () => {
     test('returns all 3 factions in rotated order for turn 1, offset 0', () => {
       const priorities = getFactionPriorityOrder(1, 0)

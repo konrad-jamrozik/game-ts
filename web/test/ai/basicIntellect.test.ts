@@ -3,14 +3,10 @@ import { getStore } from '../../src/redux/store'
 import { delegateTurnsToAIPlayer } from '../../src/ai/delegateTurnsToAIPlayer'
 import { isGameWon } from '../../src/lib/game_utils/gameStateChecks'
 import { getCurrentTurnStateFromStore } from '../../src/redux/storeUtils'
-import { setupCheatingGameState } from '../utils/aiTestSetup'
+import { setupCheatingGameState } from '../utils/gameStateTestUtils'
 
 describe('Basic Intellect AI Player', () => {
-  // Store is initialized by setupAITests.ts with undoLimit: 10
-
   // Note: as of 2026-01-01 this runs for about 5.8-6.8 seconds, simulating about 220 turns.
-  // KJA increasing AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER from 4 to 20 makes this sometimes finish in
-  // 155 turns instead of ~190-210.
   test('AI player wins game within 250 turns while cheating', () => {
     const store = getStore()
     setupCheatingGameState()

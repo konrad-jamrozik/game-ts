@@ -12,7 +12,6 @@ import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 import { getUpgradePrice } from '../../src/lib/data_tables/upgrades'
 
 describe(spendMoney, () => {
-
   test('Correctly spends 10_000 money in initial game state', () => {
     // Arrange
     st.arrangeGameState({ money: 10_000 })
@@ -161,8 +160,3 @@ describe(spendMoney, () => {
     expect(purchaseCount2).toBe(purchaseCount1)
   })
 })
-
-// KJA curr work - add more tests for spendMoney, like
-// - "if way too many agents, do not purchase them for some time, just stat upgrades"
-// - "if way too little agents just purchase agents"
-// - "purchase correct amount of things given 10_000 money"
