@@ -2,52 +2,7 @@
 
 This document specifies how basic AI intellect decides what to purchase in a given turn.
 
-# Next buy priority (legacy, to replace with vNext)
-
-🛑 THIS SECTION IS OBSOLETE. vNEXT (below) has already been implemented. Just keeping it here until
-fully cursor plan, tests, and specs have been migrated to the vNext.
-
-Implemented in: `computeNextBuyPriority()`, `findNextDesiredUpgrade()`, `ensureDesiredGoalExists()`
-
-When deciding what to buy, the player first computes the `next buy priority` item to buy,
-and buys it if they can afford it. If they cannot, they stop buying anything
-else in given turn. Instead, they will re-evaluate the next buy priority in the next turn.
-If the same priority still remain top, then either player buys it or the process repeats.
-
-The `next buy priority` is computed as follows:
-
-Priority order (first matching condition determines what to buy):
-1. If agent count is below desired count AND below agent cap: hire an agent
-2. Otherwise, find the first upgrade where actual is below desired (via `findNextDesiredUpgrade()`), checking in this order:
-   - Agent cap upgrades
-   - Transport cap upgrades
-   - Training cap upgrades
-   - Weapon damage upgrades
-   - Training skill gain upgrades
-   - Exhaustion recovery upgrades
-   - Hit points recovery upgrades
-   - Hit points upgrades
-3. If all desired goals are met (no upgrade found where desired > actual), establish a new desired goal
-   by increasing one desired value by one (via `ensureDesiredGoalExists()`), then repeat from step 1
-
-## How desired values are determined (legacy, to replace with vNext)
-
-Initial desired values (via `createInitialAiState()`):
-- Desired agent count starts at initial agent count plus one (ensuring there's an immediate hiring goal)
-- All desired upgrade counts start at zero
-
-Subsequent desired values are increased one at a time, only when all current desired goals are met.
-When this happens, exactly one desired value is increased by one (via `decideSomeDesiredCount()`), following this priority:
-1. Increase desired transport cap upgrades if current transport capacity is below 50% of desired agent count
-2. Else increase desired training cap upgrades if current training capacity is below 60% of desired agent count
-3. Else increase desired agent count (via `decideDesiredAgentCount()`) or agent cap upgrades if at cap,
-   if the count is still within budget relative to total purchased upgrades
-4. Else increase desired stat upgrades in round-robin order (via `decideStatUpgrade()`) based on total stat upgrades purchased so far
-
-This incremental approach ensures the player balances hiring agents, expanding capacities, and upgrading
-capabilities in response to what has actually been purchased, rather than following a predetermined schedule.
-
-# Purchasing vNext
+# Purchasing
 
 In the `spendMoney()` function the player decides what to buy in a loop, be repeatedly computing the next buy priority
 (via `computeNextBuyPriority()`) and buying it until they can no longer afford it.
@@ -92,9 +47,9 @@ Specifically, `chooseStatUpgrade()` will choose the next stat upgrade as follows
 - Exhaustion recovery upgrade, unless `MAX_DESIRED_EXHAUSTION_RECOVERY_PCT` of 50 was reached.
 - Hit points recovery upgrade, unless `MAX_DESIRED_HIT_POINTS_RECOVERY_PCT` of 50 was reached.
 
-# Test spec for vNext
+# Test spec
 
-The vNext spec is covered by `web/test/ai/spendMoney.test.ts` unit test file which has following tests:
+This spec is covered by `web/test/ai/spendMoney.test.ts` unit test file which has following tests:
 
 `Correctly spends 1_000 money in initial game state` - tests that the AI correctly spends 1_000 money in the initial game state.
 The test is arranged by overriding the money to be `1_000` in the otherwise default initial game state.

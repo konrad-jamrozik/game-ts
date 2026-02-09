@@ -103,5 +103,3 @@ describe(spendMoney, () => {
 // - "if way too many agents, do not purchase them for some time, just stat upgrades"
 // - "if way too little agents just purchase agents"
 // - "purchase correct amount of things given 10_000 money"
-
-// KJA curr work: review/fix tests in purchasingResilience.test.ts and humanInterference.test.ts

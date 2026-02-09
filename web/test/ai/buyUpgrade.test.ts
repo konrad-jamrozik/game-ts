@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { getPlayerActionsApi } from '../../src/redux/playerActionsApi'
 import { st } from '../fixtures/stateFixture'
 
@@ -32,10 +31,10 @@ describe('buyUpgrade', () => {
 
     const moneyBefore = st.gameState.money
     const store = getStore()
-    const api = getPlayTurnApi(store)
+    const playerApi = getPlayerActionsApi(store.dispatch)
 
     // Act
-    api.buyUpgrade('Transport cap')
+    playerApi.buyUpgrade(st.gameState, 'Transport cap')
 
     expect(st.gameState.money).toBeLessThan(moneyBefore)
     expect(st.aiState.actualTransportCapUpgrades).toBe(1)
