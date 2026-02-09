@@ -1,5 +1,5 @@
 import type { GameState } from '../model/gameStateModel'
-import type { BasicIntellectState, DesiredCountName } from '../../redux/slices/aiStateSlice'
+import type { BasicIntellectState } from '../../redux/slices/aiStateSlice'
 import type { UpgradeName } from '../data_tables/upgrades'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../model/modelIds'
 import type { ActionResult } from './playerActionsApiTypes'
@@ -16,5 +16,4 @@ export type PlayTurnAPI = {
   addAgentsToInvestigation(params: { investigationId: LeadInvestigationId; agentIds: AgentId[] }): ActionResult
   deployAgentsToMission(params: { missionId: MissionId; agentIds: AgentId[] }): ActionResult
   buyUpgrade(upgradeName: UpgradeName): ActionResult
-  increaseDesiredCount(name: DesiredCountName): void
 }

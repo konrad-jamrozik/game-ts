@@ -83,7 +83,7 @@ function manageAgents() {
 function spendMoney() {
   while (hasSufficientMoney()):             // See "Money savings". Implemented in: spendMoney()
     let priority = computeNextBuyPriority() // See "Next buy priority". Implemented in: computeNextBuyPriority()
-    if (priority is not undefined and hasSufficientMoneyToBuy(priority)):
+    if (hasSufficientMoneyToBuy(priority)):
       buy(priority)
     else {
       break

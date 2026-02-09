@@ -4,22 +4,22 @@ overview: Replace the legacy "desired/actual" purchasing system with the vNext a
 todos:
   - id: rewrite-purchasing
     content: "Rewrite purchasing.ts: remove 6 legacy functions, rewrite spendMoney/computeNextBuyPriority, rename decideStatUpgrade->chooseStatUpgrade, add hasSufficientMoney/computeTotalStatUpgradesPurchased, adapt helpers"
-    status: pending
+    status: completed
   - id: update-constants
     content: "Update constants.ts: change AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER to 4, remove MAX_DESIRED_TRANSPORT_CAP/MAX_DESIRED_TRAINING_CAP, update comments"
-    status: pending
+    status: completed
   - id: strip-aistate-desired
     content: "Strip desired* fields from aiStateSlice.ts: remove DesiredCountName, desired* fields, incrementDesired* reducers/exports, simplify createInitialAiState"
-    status: pending
+    status: completed
   - id: update-playturn-api
     content: "Update PlayTurnAPI type and implementation: remove increaseDesiredCount from type and playTurnApi.ts"
-    status: pending
+    status: completed
   - id: update-spec-docs
     content: "Update docs/ai/about_basic_intellect.md and about_basic_intellect_purchasing.md: remove undefined check from spendMoney pseudocode, clarify computeNextBuyPriority always returns a value"
-    status: pending
+    status: completed
   - id: verify-qcheck
     content: Run qcheck to verify compilation and linting (tests expected to fail)
-    status: pending
+    status: completed
 isProject: false
 ---
 

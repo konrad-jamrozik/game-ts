@@ -4,19 +4,7 @@ import type { PlayTurnAPI } from '../lib/model_utils/playTurnApiTypes'
 import type { ActionResult } from '../lib/model_utils/playerActionsApiTypes'
 import { getPlayerActionsApi } from './playerActionsApi'
 import { getCurrentTurnStateFromStore } from './storeUtils'
-import {
-  incrementDesiredAgentCapUpgrades,
-  incrementDesiredAgentCount,
-  incrementDesiredExhaustionRecoveryUpgrades,
-  incrementDesiredHitPointsRecoveryUpgrades,
-  incrementDesiredHitPointsUpgrades,
-  incrementDesiredTrainingCapUpgrades,
-  incrementDesiredTrainingSkillGainUpgrades,
-  incrementDesiredTransportCapUpgrades,
-  incrementDesiredWeaponDamageUpgrades,
-  type BasicIntellectState,
-  type DesiredCountName,
-} from './slices/aiStateSlice'
+import type { BasicIntellectState } from './slices/aiStateSlice'
 import type { AppStore } from './store'
 
 export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }): PlayTurnAPI {
@@ -99,39 +87,6 @@ export function getPlayTurnApi(store: AppStore, options?: { strict?: boolean }):
         updateGameState()
       }
       return result
-    },
-
-    increaseDesiredCount(name: DesiredCountName): void {
-      switch (name) {
-        case 'agentCount':
-          store.dispatch(incrementDesiredAgentCount())
-          break
-        case 'agentCapUpgrades':
-          store.dispatch(incrementDesiredAgentCapUpgrades())
-          break
-        case 'transportCapUpgrades':
-          store.dispatch(incrementDesiredTransportCapUpgrades())
-          break
-        case 'trainingCapUpgrades':
-          store.dispatch(incrementDesiredTrainingCapUpgrades())
-          break
-        case 'weaponDamageUpgrades':
-          store.dispatch(incrementDesiredWeaponDamageUpgrades())
-          break
-        case 'trainingSkillGainUpgrades':
-          store.dispatch(incrementDesiredTrainingSkillGainUpgrades())
-          break
-        case 'exhaustionRecoveryUpgrades':
-          store.dispatch(incrementDesiredExhaustionRecoveryUpgrades())
-          break
-        case 'hitPointsRecoveryUpgrades':
-          store.dispatch(incrementDesiredHitPointsRecoveryUpgrades())
-          break
-        case 'hitPointsUpgrades':
-          store.dispatch(incrementDesiredHitPointsUpgrades())
-          break
-      }
-      updateGameState()
     },
   }
 

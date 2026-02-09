@@ -79,6 +79,8 @@ The exact algorithm for next buy priority is as follows:
   of the alive agents, desire a training cap increase.
 - Otherwise (i.e. when there is enough training capacity), desire a stat upgrade, according to `chooseStatUpgrade()`.
 
+Note: `computeNextBuyPriority()` always returns a defined `BuyPriority` (never `undefined`) because the branches are exhaustive: the final fallback is `chooseStatUpgrade()` which always has at least "Hit points" and "Training skill gain" available (both uncapped).
+
 Here `chooseStatUpgrade()` chooses a stat upgrade in round-robin fashion, but subject to maximum state upgrade count cap.
 Specifically, `chooseStatUpgrade()` will choose the next stat upgrade as follows, looping over the list in order:
 - Hit points upgrade,
