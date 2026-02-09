@@ -129,7 +129,7 @@ function logFailedPurchase(api: PlayTurnAPI, priority: BuyPriority): void {
   )
 }
 
-function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
+export function computeMinimumRequiredSavings(api: PlayTurnAPI): number {
   const { gameState } = api
   const upkeepCosts = getAgentUpkeep(gameState)
   const turnsToCover = REQUIRED_TURNS_OF_SAVINGS

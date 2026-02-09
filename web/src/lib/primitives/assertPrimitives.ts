@@ -15,7 +15,7 @@ export function assertDefined<T>(
   }
 }
 
-export function assertEqual<T>(left: T, right: T, errMsg = 'Values must be equal'): asserts left is T & NonNullable<T> {
+export function assertEqual<T, U extends T>(left: T, right: U, errMsg = 'Values must be equal'): asserts left is U {
   if (left !== right) {
     throw new Error(errMsg)
   }

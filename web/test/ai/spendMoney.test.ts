@@ -3,10 +3,15 @@ import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { getPlayTurnApi } from '../../src/redux/playTurnApi'
-import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
+import {
+  spendMoney,
+  computeMinimumRequiredSavings,
+  computeNextBuyPriority,
+} from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
 import { assertAboveZero, assertEqual } from '../../src/lib/primitives/assertPrimitives'
 import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
+import { getUpgradePrice } from '../../src/lib/data_tables/upgrades'
 
 describe(spendMoney, () => {
   beforeEach(() => {
@@ -16,34 +21,14 @@ describe(spendMoney, () => {
   })
 
   /**
-   * Algorithm trace for 1,000 money (expected results)
+   * Algorithm trace for 5,000 money (expected results)
    *
    * Starting from default initial state (4 agents, agentCap=20, transportCap=6, trainingCap=0, all upgrades=0),
-   * with money overridden to 1,000:
-   *
-   * - minSavings = agents x AGENT_UPKEEP_COST(10) x REQUIRED_TURNS_OF_SAVINGS(5)
-   * - targetAgentCount = min(8 + 4 x 0, 1000) = 8
-   *
-   * | Round | Priority     | Cost | Money after | minSavings     | Affordable?        | State after              |
-   * | ----- | ------------ | ---- | ----------- | -------------- | ------------------ | ------------------------ |
-   * | 1     | newAgent     | 50   | 950         | 200 (4 agents) | Yes                | agents=5, money=950      |
-   * | 2     | newAgent     | 50   | 900         | 250            | Yes                | agents=6, money=900      |
-   * | 3     | newAgent     | 50   | 850         | 300            | Yes                | agents=7, money=850      |
-   * | 4     | newAgent     | 50   | 800         | 350            | Yes                | agents=8, money=800      |
-   * | 5     | Training cap | 200  | 600         | 400 (8 agents) | Yes                | trainingCap=4, money=600 |
-   * | 6     | Hit points   | 500  | 100         | 400            | **No** (100 < 400) | STOP                     |
-   *
-   * Expected final state:
-   * - money: 600
-   * - agents: 8 (4 hired from initial 4)
-   * - Training cap upgrades: 1
-   * - All other cap upgrades: 0
-   * - All stat upgrades: 0
-   * - Total spent: 400 (4 x 50 + 1 x 200)
+   * with money overridden to 5,000.
    */
-  test('Correctly spends 1_000 money in initial game state', () => {
+  test('Correctly spends 5000 money in initial game state', () => {
     // Arrange
-    st.arrangeGameState({ money: 1000 })
+    st.arrangeGameState({ money: 5000 })
     const store = getStore()
     const api = getPlayTurnApi(store)
 
@@ -51,22 +36,35 @@ describe(spendMoney, () => {
     spendMoney(api)
 
     // Assert - agents
-    expect(st.gameState.agents).toHaveLength(8) // 4 initial + 4 hired
+    expect(st.gameState.agents).toHaveLength(24) // 4 initial + 20 hired
 
     // Assert - cap upgrades
-    expect(st.aiState.actualTrainingCapUpgrades).toBe(1)
-    expect(st.aiState.actualAgentCapUpgrades).toBe(0)
+    expect(st.aiState.actualTrainingCapUpgrades).toBe(2)
+    expect(st.aiState.actualAgentCapUpgrades).toBe(1)
     expect(st.aiState.actualTransportCapUpgrades).toBe(0)
 
     // Assert - stat upgrades
-    expect(st.aiState.actualWeaponDamageUpgrades).toBe(0)
-    expect(st.aiState.actualTrainingSkillGainUpgrades).toBe(0)
-    expect(st.aiState.actualExhaustionRecoveryUpgrades).toBe(0)
+    expect(st.aiState.actualHitPointsUpgrades).toBe(1)
+    expect(st.aiState.actualWeaponDamageUpgrades).toBe(1)
+    expect(st.aiState.actualTrainingSkillGainUpgrades).toBe(1)
+    expect(st.aiState.actualExhaustionRecoveryUpgrades).toBe(1)
     expect(st.aiState.actualHitPointsRecoveryUpgrades).toBe(0)
-    expect(st.aiState.actualHitPointsUpgrades).toBe(0)
 
     // Assert - money
-    expect(st.gameState.money).toBe(600)
+    expect(st.gameState.money).toBe(1400)
+
+    // Assert - minimum required savings
+    expect(computeMinimumRequiredSavings(api)).toBe(1200) // 24 agents * 10 upkeep * 5 turns = 1200
+
+    // Assert - next buy priority price
+    // After purchases: 24 agents, 4 stat upgrades total
+    // maxDesiredAgents = 8 + 4*4 = 24, so no more agents needed
+    // transportCap = 6, required = 24*0.25 = 6, so transport cap is sufficient
+    // trainingCap = 8, required = 24*0.3 = 7.2, so training cap is sufficient
+    // Next priority is stat upgrade: 4 % 5 = 4, which is 'Hit points recovery %' = 500
+    const nextPriority = computeNextBuyPriority(api)
+    assertEqual(nextPriority, 'Hit points recovery %')
+    expect(getUpgradePrice(nextPriority)).toBe(500)
   })
 
   test('redoing spendMoney after undo leads to the same purchase count', () => {
@@ -74,26 +72,24 @@ describe(spendMoney, () => {
     st.arrangeAiState({})
 
     const moneyBefore = st.gameState.money
-    const store = getStore()
-    const api = getPlayTurnApi(store)
     assertEqual(st.gameState.money, moneyBefore)
 
     // Act 1/2
-    const purchaseCount1 = spendMoney(api)
+    const purchaseCount1 = spendMoney(st.api)
 
     expect(st.gameState.money).toBeLessThan(moneyBefore)
 
     // Undo all purchases
     for (let i = 0; i < purchaseCount1; i += 1) {
-      assertAboveZero(store.getState().undoable.past.length)
-      store.dispatch(ActionCreators.undo())
+      assertAboveZero(st.pastLength)
+      st.undo()
     }
 
     expect(st.gameState.money).toBe(moneyBefore)
-    api.updateCachedGameState()
+    st.api.updateCachedGameState()
 
     // Act 2/2
-    const purchaseCount2 = spendMoney(api)
+    const purchaseCount2 = spendMoney(st.api)
 
     expect(purchaseCount2).toBe(purchaseCount1)
   })

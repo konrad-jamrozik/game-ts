@@ -14,6 +14,9 @@ import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../
 import { getStore } from '../../src/redux/store'
 import { createInitialAiState, loadAiState, type BasicIntellectState } from '../../src/redux/slices/aiStateSlice'
 import { agFix } from './agentFixture'
+import { getPlayTurnApi } from '../../src/redux/playTurnApi'
+import type { PlayTurnAPI } from '../../src/lib/model_utils/playTurnApiTypes'
+import { ActionCreators } from 'redux-undo'
 
 export const st = {
   get gameState(): GameState {
@@ -22,6 +25,18 @@ export const st = {
 
   get aiState(): BasicIntellectState {
     return getStore().getState().undoable.present.aiState
+  },
+
+  get api(): PlayTurnAPI {
+    return getPlayTurnApi(getStore())
+  },
+
+  get pastLength(): number {
+    return getStore().getState().undoable.past.length
+  },
+
+  undo(): void {
+    getStore().dispatch(ActionCreators.undo())
   },
 
   bldAgentInStandby: (id: AgentId): Agent => st.bldAgent(id, 'Standby'),

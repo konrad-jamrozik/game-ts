@@ -2,7 +2,6 @@ import { describe, expect, test, beforeEach } from 'vitest'
 import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { getPlayerActionsApi } from '../../src/redux/playerActionsApi'
 import { st } from '../fixtures/stateFixture'
 
 describe('buyUpgrade', () => {
@@ -15,11 +14,9 @@ describe('buyUpgrade', () => {
 
   test('human buyUpgrade atomically increments aiState.actual*', () => {
     st.arrangeGameState({ money: 100_000 })
-    const store = getStore()
-    const playerApi = getPlayerActionsApi(store.dispatch)
 
     // Act
-    playerApi.buyUpgrade(st.gameState, 'Transport cap')
+    st.api.buyUpgrade('Transport cap')
 
     // extraReducers should have incremented actual* in the same dispatch
     expect(st.aiState.actualTransportCapUpgrades).toBe(1)
@@ -30,16 +27,14 @@ describe('buyUpgrade', () => {
     st.arrangeAiState({})
 
     const moneyBefore = st.gameState.money
-    const store = getStore()
-    const playerApi = getPlayerActionsApi(store.dispatch)
 
     // Act
-    playerApi.buyUpgrade(st.gameState, 'Transport cap')
+    st.api.buyUpgrade('Transport cap')
 
     expect(st.gameState.money).toBeLessThan(moneyBefore)
     expect(st.aiState.actualTransportCapUpgrades).toBe(1)
 
-    store.dispatch(ActionCreators.undo())
+    st.undo()
 
     expect(st.gameState.money).toBe(moneyBefore)
     expect(st.aiState.actualTransportCapUpgrades).toBe(0)
