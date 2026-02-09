@@ -9,7 +9,7 @@ import { getUpgradePrice, type UpgradeName } from '../../../lib/data_tables/upgr
 import { getAgentUpkeep } from '../../../lib/ruleset/moneyRuleset'
 import { toF } from '../../../lib/primitives/fixed6'
 import { AGENT_HIRE_COST } from '../../../lib/data_tables/constants'
-import { assertDefined } from '../../../lib/primitives/assertPrimitives'
+import { assertAboveZero, assertDefined } from '../../../lib/primitives/assertPrimitives'
 import { log } from '../../../lib/primitives/logger'
 import type { BuyPriority } from './types'
 import {
@@ -146,11 +146,7 @@ function computeTotalStatUpgradesPurchased(aiState: BasicIntellectState): number
 
 function chooseStatUpgrade(api: PlayTurnAPI): UpgradeName {
   const availableUpgrades = getAvailableStatUpgrades(api)
-
-  if (availableUpgrades.length === 0) {
-    // All stat upgrades are at max, just keep increasing hit points (no cap)
-    return 'Hit points'
-  }
+  assertAboveZero(availableUpgrades.length, 'Expected at least one stat upgrade to be available')
 
   const { aiState } = api
   const sumStatUpgrades = computeTotalStatUpgradesPurchased(aiState)
@@ -159,7 +155,7 @@ function chooseStatUpgrade(api: PlayTurnAPI): UpgradeName {
   const selectedUpgrade = availableUpgrades[upgradeIndex]
   assertDefined(
     selectedUpgrade,
-    `Bug: upgradeIndex ${upgradeIndex} out of bounds for availableUpgrades (length ${availableUpgrades.length})`,
+    `UpgradeIndex ${upgradeIndex} out of bounds for availableUpgrades (length ${availableUpgrades.length})`,
   )
   return selectedUpgrade
 }
