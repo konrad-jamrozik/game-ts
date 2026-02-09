@@ -63,7 +63,7 @@ export function DebugCard(): React.JSX.Element {
   // This ensures that when the app loads and checkboxes were previously checked,
   // the logger's internal state is restored.
   React.useEffect(() => {
-    log.syncAll(enabledLogCategories ?? {})
+    log.setAll(enabledLogCategories ?? {})
   }, [enabledLogCategories])
 
   function handleSpawnMissions(): void {

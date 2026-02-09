@@ -1,6 +1,6 @@
 /**
  * A logger that can be controlled via UI checkboxes.
- * Categories are enabled/disabled via syncAll() called from React components.
+ * Categories are enabled/disabled via setAll() called from React components.
  * This follows the same pattern as rand.ts - internal state synced from Redux via React layer.
  */
 
@@ -12,7 +12,7 @@ function buildStyle(color: string): string {
 
 function newLogger(): {
   readonly setEnabled: (category: LogCategory, enabled: boolean) => void
-  readonly syncAll: (settings: Partial<Record<LogCategory, boolean>>) => void
+  readonly setAll: (settings: Partial<Record<LogCategory, boolean>>) => void
   readonly info: (category: LogCategory, message: string, ...args: unknown[]) => void
   readonly success: (category: LogCategory, message: string) => void
   readonly warn: (category: LogCategory, message: string, ...args: unknown[]) => void
@@ -30,10 +30,10 @@ function newLogger(): {
       enabledCategories.set(category, enabled)
     },
 
-    syncAll(settings: Partial<Record<LogCategory, boolean>>): void {
+    setAll(settings: Partial<Record<LogCategory, boolean>>): void {
       for (const [category, enabled] of Object.entries(settings)) {
         if (isLogCategory(category)) {
-          enabledCategories.set(category, enabled)
+          this.setEnabled(category, enabled)
         }
       }
     },

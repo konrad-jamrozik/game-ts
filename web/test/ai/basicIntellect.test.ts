@@ -27,7 +27,7 @@ describe('Basic Intellect AI Player', () => {
     for (const category of LOG_CATEGORY_LIST) {
       logSettings[category] = false // category === 'game' || category === 'general'
     }
-    log.syncAll(logSettings)
+    log.setAll(logSettings)
   })
 
   // Note: as of 2026-01-01 this runs for about 5.8-6.8 seconds, simulating about 220 turns.
@@ -35,7 +35,7 @@ describe('Basic Intellect AI Player', () => {
     const store = getStore()
     setupCheatingGameState()
 
-    // Act: Delegate up to 100 turns to basic intellect AI player
+    // Act
     delegateTurnsToAIPlayer('basic', 250)
 
     // Assert: Verify game ended in victory

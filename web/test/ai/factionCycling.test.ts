@@ -33,7 +33,7 @@ describe.todo('Faction Cycling Lead Selection', () => {
     for (const category of LOG_CATEGORY_LIST) {
       logSettings[category] = false
     }
-    log.syncAll(logSettings)
+    log.setAll(logSettings)
   })
 
   describe(getFactionPriorityOrder, () => {
