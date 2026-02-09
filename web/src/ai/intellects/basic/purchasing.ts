@@ -1,8 +1,3 @@
-/**
- * Purchasing logic for the Basic Intellect.
- * For explanation, refer to the docs/ai/about_basic_intellect.md file.
- */
-
 import type { PlayTurnAPI } from '../../../lib/model_utils/playTurnApiTypes'
 import type { BasicIntellectState } from '../../../redux/slices/aiStateSlice'
 import { getUpgradePrice, type UpgradeName } from '../../../lib/data_tables/upgrades'
@@ -25,7 +20,8 @@ import {
 } from './constants'
 
 /**
- * See this file header doc.
+ * Purchasing logic for the Basic Intellect.
+ * For explanation, refer to the docs/ai/about_basic_intellect_purchasing.md file.
  */
 export function spendMoney(api: PlayTurnAPI): number {
   let purchaseCount = 0
