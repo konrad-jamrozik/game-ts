@@ -4,16 +4,10 @@ overview: Create `web/test/ai/spendMoney.test.ts` with a test that verifies the 
 todos:
   - id: create-test
     content: Create `web/test/ai/spendMoney.test.ts` with the vNext test case
-    status: pending
-  - id: update-constant
-    content: Update `AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER` from 3 to 4 in `web/src/ai/intellects/basic/constants.ts`
-    status: pending
-  - id: implement-vnext
-    content: Rewrite `computeNextBuyPriority()` in `web/src/ai/intellects/basic/purchasing.ts` to use the direct vNext algorithm
-    status: pending
+    status: completed
   - id: verify
-    content: Run `qcheck` to verify all changes are correct
-    status: pending
+    content: Run `qcheck` to verify the test file is correct
+    status: completed
 isProject: false
 ---
 
@@ -23,16 +17,13 @@ isProject: false
 
 The vNext purchasing algorithm (documented in [docs/ai/about_basic_intellect_purchasing.md](docs/ai/about_basic_intellect_purchasing.md)) describes a simplified `computeNextBuyPriority()` that directly decides purchases based on actual state, without the legacy desired/actual tracking pattern. The test verifies the expected outcome of calling `spendMoney()` with 1,000 money.
 
-## Prerequisite: vNext implementation changes
+## Note: Test documents expected vNext behavior
 
-The test targets vNext behavior which differs from the current code. Before the test can pass, these implementation changes are needed in [web/src/ai/intellects/basic/purchasing.ts](web/src/ai/intellects/basic/purchasing.ts) and [web/src/ai/intellects/basic/constants.ts](web/src/ai/intellects/basic/constants.ts):
+This test is written to document the expected behavior of the vNext purchasing algorithm as specified in the documentation. The test will fail until the vNext implementation is completed in production code. The test serves as a specification for the vNext algorithm behavior:
 
-- Change `AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER` from `3` to `4` (per doc spec)
-- Rewrite `computeNextBuyPriority()` to use the direct vNext algorithm instead of the legacy `ensureDesiredGoalExists` / `decideSomeDesiredCount` pattern. The vNext algorithm checks actual counts directly:
-  1. If alive agents < min(AGENT_COUNT_BASE + MULTIPLIER * sumStatUpgrades, MAX_DESIRED_AGENT_COUNT): hire agent (or buy agent cap if at cap)
-  2. Else if transportCap < ceil(TRANSPORT_CAP_RATIO * aliveAgents): buy transport cap
-  3. Else if trainingCap < ceil(TRAINING_CAP_RATIO * aliveAgents): buy training cap
-  4. Else: stat upgrade via `chooseStatUpgrade()` round-robin
+- The vNext algorithm directly decides purchases based on actual state (not desired/actual tracking)
+- It uses `AGENT_HIRING_PURCHASED_UPGRADES_MULTIPLIER` of `4` (current code uses `3`)
+- Priority order: agents → transport cap → training cap → stat upgrades
 
 ## Algorithm trace for 1,000 money (expected results)
 
@@ -40,7 +31,6 @@ Starting from default initial state (4 agents, agentCap=20, transportCap=6, trai
 
 - **minSavings** = agents x AGENT_UPKEEP_COST(10) x REQUIRED_TURNS_OF_SAVINGS(5)
 - **targetAgentCount** = min(8 + 4 x 0, 1000) = 8
-
 
 | Round | Priority     | Cost | Money after | minSavings     | Affordable?        | State after              |
 | ----- | ------------ | ---- | ----------- | -------------- | ------------------ | ------------------------ |
@@ -50,7 +40,6 @@ Starting from default initial state (4 agents, agentCap=20, transportCap=6, trai
 | 4     | newAgent     | 50   | 800         | 350            | Yes                | agents=8, money=800      |
 | 5     | Training cap | 200  | 600         | 400 (8 agents) | Yes                | trainingCap=4, money=600 |
 | 6     | Hit points   | 500  | 100         | 400            | **No** (100 < 400) | STOP                     |
-
 
 **Expected final state:**
 
