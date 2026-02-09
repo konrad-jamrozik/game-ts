@@ -22,10 +22,10 @@ describe('Basic Intellect AI Player', () => {
     store.dispatch(clearEvents())
     // Reset rand overrides
     rand.reset()
-    // Disable all logs except "game" category
+    // Disable all logs
     const logSettings: Partial<Record<string, boolean>> = {}
     for (const category of LOG_CATEGORY_LIST) {
-      logSettings[category] = false // category === 'game' || category === 'general'
+      logSettings[category] = false
     }
     log.setAll(logSettings)
   })
