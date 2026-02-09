@@ -1,7 +1,7 @@
 import { combineReducers, type Reducer, type UnknownAction } from 'redux'
 import undoable, { type StateWithHistory } from 'redux-undo'
 import eventsReducer, { type EventsState } from './slices/eventsSlice'
-import gameStateReducer, { advanceTurn } from './slices/gameStateSlice'
+import gameStateReducer, { advanceTurn, reset } from './slices/gameStateSlice'
 import { COMPACT_HISTORY, compactHistoryState, type UndoableCombinedState } from './slices/historyCompaction'
 import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import selectionReducer, { type SelectionState } from './slices/selectionSlice'
@@ -35,14 +35,23 @@ export function createRootReducer(undoLimit: number = DEFAULT_UNDO_LIMIT): Reduc
     // Up to undoLimit player actions can be undone/redone.
     limit: undoLimit,
     // Note: because of this filter, we are going to take a snapshot of game state immediately
-    // after each player action, and after turn advancement.
+    // after each player action, and after turn advancement, and after reset [1].
     // This means that no other events can happen after these events, otherwise they won't
     // be included in the snapshot.
     // If this is needed, possible solution is to group actions together to always start with player action:
     // https://github.com/omnidan/redux-undo#custom-groupby-function
     // Also ChatGPT-5 advice which appears to be solid:
     // https://chatgpt.com/g/g-p-684e89e14dbc8191a947cc29c20ee528-game-ts/c/6899963d-0c10-8328-88e5-047f2ee93d88
-    filter: (action) => isPlayerAction(action) || advanceTurn.match(action),
+    //
+    // [1] Re why 'reset' is included in the filter: this is because by default syncFilter is false,
+    // see https://redux-undo.js.org/main/upgrading-to-1.0#id-0.x-behaviour-for-pushing-filtered-state-into-history-and-the-syncfilter-option
+    // To elaborate:
+    // Because syncFilter is false, redux-undo's internal _latestUnfiltered snapshot (what gets
+    // pushed to past[]) is only updated on filtered actions. So if non-filtered actions
+    // (e.g. reset) change present, the _latestUnfiltered is NOT going to be updated,
+    // so the next filtered action would push the stale  _latestUnfiltered
+    // to past[] instead of the actual pre-action present.
+    filter: (action) => isPlayerAction(action) || advanceTurn.match(action) || reset.match(action),
   })
 
   // 3. Wrap the undoable reducer to handle COMPACT_HISTORY action
