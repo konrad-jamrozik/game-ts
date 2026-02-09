@@ -2,7 +2,6 @@ import { describe, expect, test } from 'vitest'
 import { st } from '../fixtures/stateFixture'
 
 describe('buyUpgrade', () => {
-
   test('human buyUpgrade atomically increments aiState.actual*', () => {
     st.arrangeGameState({ money: 100_000 })
 

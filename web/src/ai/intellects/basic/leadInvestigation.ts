@@ -20,20 +20,22 @@ import { log } from '../../../lib/primitives/logger'
  * 2. Determines how many additional agents need to be assigned
  * 3. For each agent to assign:
  *    a. If a repeatable lead was already selected (in this turn or from a previous turn):
- *       - Pile all remaining agents onto that same investigation
- *       - Stop if the investigation is completed or abandoned
- *    b. Otherwise, select a new lead:
+ *       - Batch-select and pile all remaining agents onto that same investigation
+ *       - Stop if the investigation was completed or abandoned
+ *    b. Otherwise, select a new lead via selectLeadToInvestigate():
  *       - Prioritize non-repeatable leads (pick randomly if multiple available)
  *       - For repeatable leads only:
  *         * Sort by mission combat rating (descending - hardest missions first)
  *         * For each lead, check if the resulting mission could be deployed successfully
- *           with current resources (agents, threat, transport capacity)
+ *           with current resources (agent count, combat rating, transport capacity)
  *         * Collect all deployable leads
- *         * Among deployable leads, select those with the maximum threat level
+ *         * Among deployable leads, select those with the maximum combat rating
  *         * Among those, select the lead(s) with the fewest successful investigations
  *         * If multiple leads still tie, pick at random
  *         * If no leads would result in deployable missions, skip investigation entirely
- *    c. Assign the agent to the selected lead's investigation
+ *    c. Assign agents to the selected lead's investigation:
+ *       - For non-repeatable leads: assign ceil(difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR) agents
+ *       - For repeatable leads: assign 1 agent (piling happens in subsequent iterations)
  *    d. If the lead is repeatable, mark it for agent piling in subsequent iterations
  *
  * This ensures that:

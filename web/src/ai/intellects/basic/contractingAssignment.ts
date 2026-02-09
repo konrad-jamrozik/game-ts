@@ -55,7 +55,10 @@ export function assignToContractingWithPriority(api: PlayTurnAPI, agents: AgentW
     log.info('agents', `projected income ${projectedIncome.toFixed(2)} is negative but no agents available to assign`)
   }
 
-  return removeAgentsById(agents, selectedAgents.map((agent) => agent.id))
+  return removeAgentsById(
+    agents,
+    selectedAgents.map((agent) => agent.id),
+  )
 }
 
 export function assignToContracting(api: PlayTurnAPI, agents: AgentWithStats[]): AgentWithStats[] {
@@ -96,7 +99,10 @@ export function assignToContracting(api: PlayTurnAPI, agents: AgentWithStats[]):
 
   log.info('agents', `desired ${desiredAgentCount} agents, assigned ${selectedAgents.length}`)
 
-  return removeAgentsById(agents, selectedAgents.map((agent) => agent.id))
+  return removeAgentsById(
+    agents,
+    selectedAgents.map((agent) => agent.id),
+  )
 }
 
 export function assignLeftoverToContracting(api: PlayTurnAPI, agents: AgentWithStats[]): AgentWithStats[] {
