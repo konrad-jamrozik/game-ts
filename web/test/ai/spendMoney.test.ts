@@ -12,6 +12,7 @@ import { st } from '../fixtures/stateFixture'
 import { assertAboveZero, assertEqual } from '../../src/lib/primitives/assertPrimitives'
 import { AGENT_HIRE_COST } from '../../src/lib/data_tables/constants'
 import { getUpgradePrice } from '../../src/lib/data_tables/upgrades'
+import { list } from 'radash'
 
 describe(spendMoney, () => {
   beforeEach(() => {
@@ -80,10 +81,7 @@ describe(spendMoney, () => {
     expect(st.gameState.money).toBeLessThan(moneyBefore)
 
     // Undo all purchases
-    for (let i = 0; i < purchaseCount1; i += 1) {
-      assertAboveZero(st.pastLength)
-      st.undo()
-    }
+    st.undo(purchaseCount1)
 
     expect(st.gameState.money).toBe(moneyBefore)
     st.api.updateCachedGameState()

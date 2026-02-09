@@ -7,7 +7,7 @@ import type { GameState } from '../../src/lib/model/gameStateModel'
 import type { Mission } from '../../src/lib/model/missionModel'
 import type { AgentId, LeadId, MissionDataId, MissionId } from '../../src/lib/model/modelIds'
 import { available, onContractingAssignment } from '../../src/lib/model_utils/agentUtils'
-import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
+import { assertAboveZero, assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { toF6 } from '../../src/lib/primitives/fixed6'
 import { reset } from '../../src/redux/slices/gameStateSlice'
 import { setAgentSelection, setLeadSelection, setMissionSelection } from '../../src/redux/slices/selectionSlice'
@@ -35,8 +35,12 @@ export const st = {
     return getStore().getState().undoable.past.length
   },
 
-  undo(): void {
-    getStore().dispatch(ActionCreators.undo())
+  undo(count = 1): void {
+    assertAboveZero(count)
+    for (let i = 0; i < count; i += 1) {
+      assertAboveZero(st.pastLength)
+      getStore().dispatch(ActionCreators.undo())
+    }
   },
 
   bldAgentInStandby: (id: AgentId): Agent => st.bldAgent(id, 'Standby'),
