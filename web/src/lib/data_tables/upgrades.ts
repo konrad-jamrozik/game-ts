@@ -1,6 +1,7 @@
 import { toF6, type Fixed6, isF6 } from '../primitives/fixed6'
 import { AGENT_CAP, TRANSPORT_CAP, TRAINING_CAP } from './constants'
 
+// KJA need to distinguish cap upgrade from stat upgrade
 export type UpgradeName =
   | 'Agent cap'
   | 'Transport cap'
