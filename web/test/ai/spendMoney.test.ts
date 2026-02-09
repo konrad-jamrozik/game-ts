@@ -6,7 +6,7 @@ import { getPlayTurnApi } from '../../src/redux/playTurnApi'
 import { spendMoney } from '../../src/ai/intellects/basic/purchasing'
 import { st } from '../fixtures/stateFixture'
 
-describe('spendMoney - vNext purchasing', () => {
+describe(spendMoney, () => {
   beforeEach(() => {
     const store = getStore()
     store.dispatch(ActionCreators.clearHistory())

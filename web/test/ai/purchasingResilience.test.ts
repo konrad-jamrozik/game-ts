@@ -22,6 +22,8 @@ describe('Purchasing Resilience', () => {
       st.arrangeGameState({ money: 100_000 })
       const store = getStore()
       const playerApi = getPlayerActionsApi(store.dispatch)
+
+      // Act
       playerApi.buyUpgrade(st.gameState, 'Transport cap')
 
       // extraReducers should have incremented actual* in the same dispatch
@@ -37,7 +39,10 @@ describe('Purchasing Resilience', () => {
       const moneyBefore = st.gameState.money
       const store = getStore()
       const api = getPlayTurnApi(store)
+
+      // Act
       api.buyUpgrade('Transport cap')
+
       expect(st.gameState.money).toBeLessThan(moneyBefore)
       expect(st.aiState.actualTransportCapUpgrades).toBe(1)
 
