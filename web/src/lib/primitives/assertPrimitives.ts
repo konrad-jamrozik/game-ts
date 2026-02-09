@@ -15,9 +15,10 @@ export function assertDefined<T>(
   }
 }
 
-export function assertEqual<T, U extends T>(left: T, right: U, errMsg = 'Values must be equal'): asserts left is U {
+export function assertEqual<T, U extends T>(left: T, right: U, errMsg?: string): asserts left is U {
   if (left !== right) {
-    throw new Error(errMsg)
+    const message = errMsg ?? `Values must be equal. Left: ${String(left)}, Right: ${String(right)}`
+    throw new Error(message)
   }
 }
 
