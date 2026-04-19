@@ -7,7 +7,9 @@ KJA backlog:
 ## AI
 
 Smarter AI player that finishes game in less turns, even without cheating.
-See prompt.md for details on that.
+For details see:
+- basic_intellect_upgrade_prompt.md
+- long_playthrough_research.md
 
 - Keep less money and ready agents around once some agent threshold is reached.
 
