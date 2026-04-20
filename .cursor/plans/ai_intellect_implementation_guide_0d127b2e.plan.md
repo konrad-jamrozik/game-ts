@@ -4,13 +4,13 @@ overview: "Author a new doc `docs/ai/about_ai_player_intellect.md` — a generic
 todos:
   - id: draft-doc
     content: Write docs/ai/about_ai_player_intellect.md following the structure in the plan (intro, AIPlayerIntellect contract, registry, PlayTurnAPI walkthrough, control-flow section with mermaid sequence diagram, author invariants, step-by-step recipe, See also)
-    status: pending
+    status: completed
   - id: cross-link
     content: Add a one-line pointer to the new doc from docs/ai/about_basic_intellect.md so readers discover the generic guide
-    status: pending
+    status: completed
   - id: verify
     content: Run oxlint / qcheck per AGENTS.md; verify all markdown links resolve
-    status: pending
+    status: completed
 isProject: false
 ---
 

@@ -1,6 +1,9 @@
 
 # Basic AI player intellect
 
+For a generic guide to intellect interfaces and the control flow between the game engine
+and any intellect, see [about_ai_player_intellect.md](about_ai_player_intellect.md).
+
 # Key decisions
 
 On a high level, the basic AI player intellect strives to answer following questions,
