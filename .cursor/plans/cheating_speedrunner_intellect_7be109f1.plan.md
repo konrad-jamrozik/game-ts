@@ -26,6 +26,9 @@ todos:
   - id: test
     content: Add web/test/ai/cheatingSpeedrunner.test.ts asserting game won within 80 turns
     status: pending
+  - id: doc
+    content: Add docs/ai/about_cheating_speedrunner_intellect.md describing prerequisites, cheat mechanics, algorithm, and constants; cross-link from about_ai_player_intellect.md See also
+    status: pending
   - id: verify
     content: Run qcheck per AGENTS.md and confirm the test passes
     status: pending
@@ -35,6 +38,10 @@ isProject: false
 # Cheating Speedrunner Intellect
 
 ## Background
+
+The authoring contract for all intellects is documented in
+[docs/ai/about_ai_player_intellect.md](docs/ai/about_ai_player_intellect.md) and is
+followed here without deviation.
 
 Per [docs/backlog/long_playthrough_research.md](docs/backlog/long_playthrough_research.md), the two reasons `basicIntellect` needs ~210 turns when cheating are:
 
@@ -146,8 +153,25 @@ export const cheatingSpeedrunnerIntellect: AIPlayerIntellect = {
 
 ### Reuse considerations
 
-- `getAvailableLeadsForInvestigation`, `getMoneyTurnDiff`, `canParticipateInBattle`, `getRemainingTransportCap`: reused from `lib/` (OK per dependency rules).
+- `getAvailableLeadsForInvestigation`, `getMoneyTurnDiff`, `canParticipateInBattle`, `getRemainingTransportCap`: reused from `lib/` (OK per dependency rules - see "Invariants and rules for intellect authors" in [about_ai_player_intellect.md](../../docs/ai/about_ai_player_intellect.md)).
 - Agent selection (`ready` filter, sort by lowest exhaustion): implemented locally as a small helper in `agentAllocation.ts`. This duplicates ~10 LOC of what `basic/agentSelection.ts` does but keeps intellects decoupled per AGENTS.md guidance.
+
+### Authoring contract compliance
+
+Per [about_ai_player_intellect.md](../../docs/ai/about_ai_player_intellect.md), the
+intellect:
+
+- Reads state only through `api.gameState` (and never `api.aiState`, since this
+  intellect keeps no cross-turn bookkeeping).
+- Computes every precondition from `api.gameState` before dispatching an action
+  (agent readiness, transport slack, lead availability, money floor). It never
+  branches on `ActionResult.success === false`; strict-mode violations throw and
+  surface as bugs.
+- Does not dispatch `advanceTurn` itself; the engine owns turn advancement.
+- Does not cache collections across action calls. After each `api.*(...)` call,
+  the intellect re-reads `api.gameState` rather than reusing prior arrays.
+- Does not call `updateCachedGameState()`; no external state mutation is
+  performed, so the automatic post-action refresh is sufficient.
 
 ### Test
 
@@ -165,6 +189,16 @@ test('Cheating Speedrunner wins game within 80 turns while cheating', () => {
 ```
 
 The 80-turn budget has safety margin over the 46-turn theoretical parallel minimum. If the run exceeds this, the log output plus existing `log.info('ai', ...)` calls identify the stall.
+
+### Strategy documentation
+
+Following the convention set by `about_basic_intellect*.md` (intellect-specific
+heuristics live next to each intellect), add a short design doc at
+[docs/ai/about_cheating_speedrunner_intellect.md](docs/ai/about_cheating_speedrunner_intellect.md)
+covering: prerequisites (`setupCheatingGameState()`), the cheat mechanics it
+exploits, the per-turn algorithm, and the tuning constants. Cross-link from
+[docs/ai/about_ai_player_intellect.md](docs/ai/about_ai_player_intellect.md)'s
+"See also" section.
 
 ### Assumptions and trade-offs
 
