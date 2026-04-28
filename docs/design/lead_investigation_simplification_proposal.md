@@ -35,11 +35,11 @@ difficulty: number // visible progress denominator and baseline Skill 100 turn c
 
 When an investigation starts:
 
-```text
-actualDifficulty = difficulty * random(1.0, 1.5)
-```
+$$
+D_{\text{actual}} = D_{\text{visible}} \cdot \operatorname{random}(1.0, 1.5)
+$$
 
-The player sees the listed `difficulty`, not `actualDifficulty`. This means a Difficulty 5 lead has a visible 5-point target, but the actual success threshold may be anywhere from 5 to 7.5 progress points.
+The player sees the listed visible difficulty, not the actual difficulty. This means a Difficulty 5 lead has a visible 5-point target, but the actual success threshold may be anywhere from 5 to 7.5 progress points.
 
 ## Per-Turn Formula
 
@@ -47,10 +47,13 @@ The player sees the listed `difficulty`, not `actualDifficulty`. This means a Di
 
 Keep the current agent stacking shape, but express it in player-facing turn units:
 
-```text
-skillPower = sum(agentSkill / 100)
-teamPower = skillPower * (agentCount ^ 0.8 / agentCount)
-```
+$$
+P_{\text{skill}} = \sum \frac{\text{agentSkill}}{100}
+$$
+
+$$
+P_{\text{team}} = P_{\text{skill}} \cdot \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
+$$
 
 Examples:
 
@@ -64,22 +67,25 @@ Examples:
 
 This keeps diminishing returns, but the player can still reason from the baseline:
 
-```text
-visible target turns ~= difficulty / teamPower
-```
+$$
+\text{visibleTargetTurns} \approx \frac{D_{\text{visible}}}{P_{\text{team}}}
+$$
 
 ### 2. Add progress
 
-```text
-progressGain = teamPower
-progress = progress + progressGain
-```
+$$
+\Delta\text{progress} = P_{\text{team}}
+$$
+
+$$
+\text{progress}_{\text{new}} = \text{progress}_{\text{old}} + \Delta\text{progress}
+$$
 
 For a **Difficulty 5** lead with one **Skill 100** agent:
 
-```text
-progressGain = 1 progress point per turn
-```
+$$
+\Delta\text{progress} = 1
+$$
 
 That is the core intuition.
 
@@ -87,30 +93,70 @@ That is the core intuition.
 
 Use a cumulative probability curve, not a direct per-turn linear chance.
 
-```text
-x = min(1, progress / actualDifficulty)
-cumulativeSuccessChance = x ^ 3
-```
+$$
+\rho = \min\left(1, \frac{\text{progress}}{D_{\text{actual}}}\right)
+$$
 
-The exponent should be greater than 1. I would start with `3`:
+$$
+C = \rho^3
+$$
 
-- `x ^ 2` is moderately curved.
-- `x ^ 3` starts quite slow and rises sharply near the end.
-- `x ^ 4` is very slow early and may feel too inert.
+Here, $\rho$ is the progress ratio. The exponent should be greater than 1. I would start with `3`:
+
+- $\rho^2$ is moderately curved.
+- $\rho^3$ starts quite slow and rises sharply near the end.
+- $\rho^4$ is very slow early and may feel too inert.
 
 The actual per-turn success chance should be the increase in cumulative chance since the previous turn, conditional on not having succeeded yet:
 
-```text
-previousX = min(1, previousProgress / actualDifficulty)
-currentX = min(1, currentProgress / actualDifficulty)
+$$
+\rho_{\text{previous}} = \min\left(1, \frac{\text{previousProgress}}{D_{\text{actual}}}\right)
+$$
 
-previousCumulative = previousX ^ 3
-currentCumulative = currentX ^ 3
+$$
+\rho_{\text{current}} = \min\left(1, \frac{\text{currentProgress}}{D_{\text{actual}}}\right)
+$$
 
-turnSuccessChance = (currentCumulative - previousCumulative) / (1 - previousCumulative)
-```
+$$
+C_{\text{previous}} = \rho_{\text{previous}}^3
+$$
 
-This formula matters because it guarantees that total cumulative success probability at progress ratio `x` is exactly `x ^ 3`.
+$$
+C_{\text{current}} = \rho_{\text{current}}^3
+$$
+
+$$
+P_{\text{turn}} =
+\frac{C_{\text{current}} - C_{\text{previous}}}{1 - C_{\text{previous}}}
+$$
+
+This formula matters because it guarantees that total cumulative success probability at progress ratio $\rho$ is exactly $\rho^3$.
+
+The intuition:
+
+- $C_{\text{previous}}$ is the total chance that the investigation would already have succeeded before this turn.
+- $C_{\text{current}}$ is the total chance that the investigation should have succeeded by the end of this turn.
+- $C_{\text{current}} - C_{\text{previous}}$ is the new success chance added by this turn.
+- $1 - C_{\text{previous}}$ is the unresolved probability space still available, because the turn only happens in timelines where the investigation has not already succeeded.
+
+So the per-turn roll asks:
+
+$$
+P_{\text{turn}} =
+\frac{\text{new success chance added this turn}}{\text{chance the investigation was still unresolved}}
+$$
+
+For example, if cumulative success rises from 20% to 44%, this turn adds 24 percentage points of total success chance. But only the unresolved 80% of cases are still rolling, so the turn success chance is:
+
+$$
+\frac{44\% - 20\%}{100\% - 20\%} = 30\%
+$$
+
+After that roll, the total cumulative success chance is exactly 44%:
+
+$$
+20\% + (80\% \cdot 30\%) = 44\%
+$$
 
 For **Difficulty 10** with one **Skill 100** agent, assuming actual difficulty also happens to be 10:
 
@@ -140,9 +186,11 @@ If the hidden actual difficulty for that same Difficulty 10 lead is 15, the same
 
 Keep the existing proportional progress loss when agents are removed:
 
-```text
-newProgress = oldProgress * remainingTeamSkill / previousTeamSkill
-```
+$$
+\text{progress}_{\text{new}} =
+\text{progress}_{\text{old}} \cdot
+\frac{\text{remainingTeamSkill}}{\text{previousTeamSkill}}
+$$
 
 Example:
 
@@ -207,10 +255,13 @@ Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead 
 
 The displayed success percentage can be an estimate using visible difficulty:
 
-```text
-estimatedX = min(1, progress / difficulty)
-estimatedCumulativeSuccessChance = estimatedX ^ 3
-```
+$$
+\rho_{\text{estimated}} = \min\left(1, \frac{\text{progress}}{D_{\text{visible}}}\right)
+$$
+
+$$
+C_{\text{estimated}} = \rho_{\text{estimated}}^3
+$$
 
 The real roll should use hidden `actualDifficulty`, so the displayed chance can be labeled approximate.
 
