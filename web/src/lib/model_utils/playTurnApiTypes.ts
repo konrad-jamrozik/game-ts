@@ -6,7 +6,7 @@ import type { ActionResult } from './playerActionsApiTypes'
 
 export type PlayTurnAPI = {
   gameState: GameState
-  aiState: BasicIntellectState
+  aiState: BasicIntellectState // KJA3 _4 bad dependency, ties to Basic intellect; see about_ai_player_intellect.md
   updateCachedGameState(): void
   hireAgent(): ActionResult
   sackAgents(agentIds: AgentId[]): ActionResult
