@@ -270,6 +270,7 @@ sequenceDiagram
 
 # See also
 
+- [about_cheating_speedrunner_intellect.md](about_cheating_speedrunner_intellect.md)
 - [about_basic_intellect.md](about_basic_intellect.md)
 - [about_basic_intellect_lead_investigations.md](about_basic_intellect_lead_investigations.md)
 - [about_basic_intellect_purchasing.md](about_basic_intellect_purchasing.md)
