@@ -7,7 +7,7 @@ import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSl
 import { setViewCharts } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { ResetControls } from './ResetControls'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { getCurrentTurnState } from '../../redux/storeUtils'
@@ -42,7 +42,7 @@ export function GameControls(): React.JSX.Element {
       id="game-controls"
       title="Game Controls"
       defaultExpanded={true}
-      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
+      sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
     >
       <Stack>
         <Stack direction="row" justifyContent="space-between" alignItems="center">

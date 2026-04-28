@@ -75,12 +75,16 @@ function App(): React.JSX.Element {
     >
       <Grid>
         <Stack spacing={2} alignItems="center">
-          <GameControls />
-          <AIPlayerCard />
-          <PlayerActions />
           <EventLog />
           <DebugActionsCard />
           <DebugSettingsCard />
+        </Stack>
+      </Grid>
+      <Grid>
+        <Stack spacing={2} alignItems="center">
+          <GameControls />
+          <AIPlayerCard />
+          <PlayerActions />
         </Stack>
       </Grid>
       <Grid>

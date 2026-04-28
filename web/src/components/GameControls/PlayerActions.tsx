@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { ExpandableCard } from '../Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
@@ -144,7 +144,7 @@ export function PlayerActions(): React.JSX.Element {
       id="player-actions"
       title="Player Actions"
       defaultExpanded={true}
-      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
+      sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
     >
       <Stack direction="column" spacing={2}>
         <Stack direction="row" spacing={2}>

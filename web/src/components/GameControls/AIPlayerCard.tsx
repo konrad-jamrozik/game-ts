@@ -9,7 +9,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer, delegateTurnsToAIPlayer } from '../../ai/delegateTurnsToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
@@ -70,7 +70,7 @@ export function AIPlayerCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard id="ai-player-card" title="AI Player" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="ai-player-card" title="AI Player" defaultExpanded={true} sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}>
       <Stack spacing={2}>
         <FormControl fullWidth>
           <InputLabel id="ai-intellect-select-label">AI Player Intellect</InputLabel>
