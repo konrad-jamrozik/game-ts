@@ -57,13 +57,13 @@ $$
 
 Examples:
 
-| Team | Team Power | Meaning |
-| --- | ---: | --- |
-| 1 agent, Skill 100 | 1.00 | Baseline |
-| 1 agent, Skill 50 | 0.50 | Half speed |
-| 1 agent, Skill 200 | 2.00 | Double speed |
-| 2 agents, Skill 100 each | 1.74 | Faster than one, worse than two separate agents |
-| 3 agents, Skill 100 each | 2.41 | Faster again, but each extra agent adds less |
+| Team                     | Team Power | Meaning                                         |
+| ------------------------ | ---------: | ----------------------------------------------- |
+| 1 agent, Skill 100       |       1.00 | Baseline                                        |
+| 1 agent, Skill 50        |       0.50 | Half speed                                      |
+| 1 agent, Skill 200       |       2.00 | Double speed                                    |
+| 2 agents, Skill 100 each |       1.74 | Faster than one, worse than two separate agents |
+| 3 agents, Skill 100 each |       2.41 | Faster again, but each extra agent adds less    |
 
 This keeps diminishing returns, but the player can still reason from the baseline:
 
@@ -158,20 +158,69 @@ $$
 20\% + (80\% \cdot 30\%) = 44\%
 $$
 
-For **Difficulty 10** with one **Skill 100** agent, assuming actual difficulty also happens to be 10:
+For **Difficulty 10** with one **Skill 100** agent:
 
-| Turn | Progress | Cumulative Chance | Success Chance This Turn |
-| ---: | ---: | ---: | ---: |
-| 1 | 1/10 | 0.1% | 0.1% |
-| 2 | 2/10 | 0.8% | 0.7% |
-| 3 | 3/10 | 2.7% | 1.9% |
-| 4 | 4/10 | 6.4% | 3.8% |
-| 5 | 5/10 | 12.5% | 6.5% |
-| 6 | 6/10 | 21.6% | 10.4% |
-| 7 | 7/10 | 34.3% | 16.2% |
-| 8 | 8/10 | 51.2% | 25.7% |
-| 9 | 9/10 | 72.9% | 44.5% |
-| 10 | 10/10 | 100.0% | 100.0% |
+| Turn | Progress | CC @ T10 | TC @ T10 | CC @ T15 | TC @ T15 |
+| ---: | -------: | -------: | -------: | -------: | -------: |
+|    1 |     1/10 |     0.1% |     0.1% |     0.0% |     0.0% |
+|    2 |     2/10 |     0.8% |     0.7% |     0.2% |     0.2% |
+|    3 |     3/10 |     2.7% |     1.9% |     0.8% |     0.6% |
+|    4 |     4/10 |     6.4% |     3.8% |     1.9% |     1.1% |
+|    5 |     5/10 |    12.5% |     6.5% |     3.7% |     1.8% |
+|    6 |     6/10 |    21.6% |    10.4% |     6.4% |     2.8% |
+|    7 |     7/10 |    34.3% |    16.2% |    10.2% |     4.0% |
+|    8 |     8/10 |    51.2% |    25.7% |    15.2% |     5.6% |
+|    9 |     9/10 |    72.9% |    44.5% |    21.6% |     7.6% |
+|   10 |    10/10 |   100.0% |   100.0% |    29.6% |    10.2% |
+|   11 |    11/10 |   100.0% |   100.0% |    39.4% |    13.9% |
+|   12 |    12/10 |   100.0% |   100.0% |    51.2% |    19.4% |
+|   13 |    13/10 |   100.0% |   100.0% |    65.1% |    28.5% |
+|   14 |    14/10 |   100.0% |   100.0% |    81.3% |    46.4% |
+|   15 |    15/10 |   100.0% |   100.0% |   100.0% |   100.0% |
+
+Legend:
+
+- `CC` = cumulative chance that the investigation has succeeded by this turn.
+- `TC` = turn chance, the chance that the investigation succeeds on this turn if it has not already succeeded.
+- `T10` = hidden actual difficulty is 10.
+- `T15` = hidden actual difficulty is 15.
+
+### Excel Formulas
+
+To reproduce this table in Excel, use these inputs:
+
+| Cell | Meaning | Example |
+| --- | --- | ---: |
+| `B1` | Visible difficulty | `10` |
+| `B2` | Team power per turn | `1` |
+| `B3` | Minimum hidden actual difficulty | `=B1` |
+| `B4` | Maximum hidden actual difficulty | `=B1*1.5` |
+
+Then create this table starting on row 7:
+
+| Column | Header | Formula for row 7 |
+| --- | --- | --- |
+| `A` | `Turn` | `=1` |
+| `B` | `ProgressValue` | `=A7*$B$2` |
+| `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.##"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.##"))` |
+| `D` | `CC @ Tmin` | `=MIN(1,(B7/$B$3)^3)` |
+| `E` | `TC @ Tmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
+| `F` | `CC @ Tmax` | `=MIN(1,(B7/$B$4)^3)` |
+| `G` | `TC @ Tmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
+| `H` | `Success Range` | `="~"&TEXT(FLOOR(G7*100,1),"0")&"% - ~"&TEXT(CEILING(E7*100,1),"0")&"%"` |
+
+For row 8 and below:
+
+- `A8`: `=A7+1`
+- Copy columns `B:H` down from row 7.
+- Format `D:G` as percentages.
+- Hide `B` if you only want to display the player-facing progress label from `C`.
+
+In this setup:
+
+- `CC @ Tmin` and `TC @ Tmin` are the high-end success chances, because the hidden actual difficulty is as low as possible.
+- `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because the hidden actual difficulty is as high as possible.
+- `Success Range` rounds the lower turn chance down and the upper turn chance up.
 
 This is still unpredictable, but the range is easy to understand:
 
@@ -248,22 +297,42 @@ Lead: Deep state
 Agents: 2
 Est. progress: 1.74/10
 Proj.: 3.48/10 (+1.74, eff. 87%)
-Success %: ~1%
+Success %: ~0% - ~1%
 ```
 
 Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead of 2.00 because of team diminishing returns.
 
-The displayed success percentage can be an estimate using visible difficulty:
+The displayed success percentage should be a range. The lower chance bound assumes the hidden actual difficulty is at the top of the range:
 
 $$
-\rho_{\text{estimated}} = \min\left(1, \frac{\text{progress}}{D_{\text{visible}}}\right)
+D_{\text{actualMax}} = 1.5 \cdot D_{\text{visible}}
+$$
+
+The upper chance bound assumes the hidden actual difficulty is equal to the visible difficulty:
+
+$$
+D_{\text{actualMin}} = D_{\text{visible}}
+$$
+
+Calculate the per-turn chance for both endpoints using the same turn success formula:
+
+$$
+P_{\text{lower}} =
+P_{\text{turn}}\left(D_{\text{actualMax}}\right)
 $$
 
 $$
-C_{\text{estimated}} = \rho_{\text{estimated}}^3
+P_{\text{upper}} =
+P_{\text{turn}}\left(D_{\text{actualMin}}\right)
 $$
 
-The real roll should use hidden `actualDifficulty`, so the displayed chance can be labeled approximate.
+Then display the lower bound rounded down and the upper bound rounded up:
+
+```text
+Success %: floor(P_lower) - ceil(P_upper)
+```
+
+For example, in the table above, turn 8 has a turn success chance between 5.6% and 25.7%, so the UI should show about `~5% - ~26%`. Turn 11 has a range from 13.9% to 100%, so it should show about `~13% - 100%`. Turn 14 has a range from 46.4% to 100%, so it should show about `~46% - 100%`.
 
 ## Migration Notes
 
@@ -278,13 +347,13 @@ The implementation can remain close to the current system:
 
 Lead difficulty values would need rebalance because current values are not turn counts. A rough first-pass mapping could be:
 
-| Current Role | Current Difficulty Examples | Proposed Difficulty Range |
-| --- | ---: | ---: |
-| Intro leads | 1-2 | 2-4 turns |
-| Small faction leads | 5-10 | 5-8 turns |
-| Midgame location leads | 20-40 | 8-15 turns |
-| Major faction leads | 60-100 | 15-25 turns |
-| Endgame leads | 150-200 | 25-40 turns |
+| Current Role           | Current Difficulty Examples | Proposed Difficulty Range |
+| ---------------------- | --------------------------: | ------------------------: |
+| Intro leads            |                         1-2 |                 2-4 turns |
+| Small faction leads    |                        5-10 |                 5-8 turns |
+| Midgame location leads |                       20-40 |                8-15 turns |
+| Major faction leads    |                      60-100 |               15-25 turns |
+| Endgame leads          |                     150-200 |               25-40 turns |
 
 The exact values should be tuned against the intended campaign length, but the player-facing meaning should stay stable:
 
