@@ -4,6 +4,8 @@ KJA backlog:
 
 # Next
 
+- See lead_investigation_simplification_proposal.md
+
 ## AI
 
 Smarter AI player that finishes game in less turns, even without cheating.
