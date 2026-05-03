@@ -62,7 +62,7 @@ Examples:
 | 1 agent, Skill 100       |       1.00 | Baseline                                        |
 | 1 agent, Skill 50        |       0.50 | Half speed                                      |
 | 1 agent, Skill 200       |       2.00 | Double speed                                    |
-| 2 agents, Skill 100 each |       1.74 | Faster than one, worse than two separate agents |
+| 2 agents, Skill 100 each |       1.74 | Faster than one, less than double speed         |
 | 3 agents, Skill 100 each |       2.41 | Faster again, but each extra agent adds less    |
 
 This keeps diminishing returns, but the player can still reason from the baseline:
@@ -185,43 +185,6 @@ Legend:
 - `T10` = hidden actual difficulty is 10.
 - `T15` = hidden actual difficulty is 15.
 
-### Excel Formulas
-
-To reproduce this table in Excel, use these inputs:
-
-| Cell | Meaning | Example |
-| --- | --- | ---: |
-| `B1` | Visible difficulty | `10` |
-| `B2` | Team power per turn | `1` |
-| `B3` | Minimum hidden actual difficulty | `=B1` |
-| `B4` | Maximum hidden actual difficulty | `=B1*1.5` |
-
-Then create this table starting on row 7:
-
-| Column | Header | Formula for row 7 |
-| --- | --- | --- |
-| `A` | `Turn` | `=1` |
-| `B` | `ProgressValue` | `=A7*$B$2` |
-| `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.##"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.##"))` |
-| `D` | `CC @ Tmin` | `=MIN(1,(B7/$B$3)^3)` |
-| `E` | `TC @ Tmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
-| `F` | `CC @ Tmax` | `=MIN(1,(B7/$B$4)^3)` |
-| `G` | `TC @ Tmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
-| `H` | `Success Range` | `="~"&TEXT(FLOOR(G7*100,1),"0")&"% - ~"&TEXT(CEILING(E7*100,1),"0")&"%"` |
-
-For row 8 and below:
-
-- `A8`: `=A7+1`
-- Copy columns `B:H` down from row 7.
-- Format `D:G` as percentages.
-- Hide `B` if you only want to display the player-facing progress label from `C`.
-
-In this setup:
-
-- `CC @ Tmin` and `TC @ Tmin` are the high-end success chances, because the hidden actual difficulty is as low as possible.
-- `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because the hidden actual difficulty is as high as possible.
-- `Success Range` rounds the lower turn chance down and the upper turn chance up.
-
 This is still unpredictable, but the range is easy to understand:
 
 - It might finish early.
@@ -254,6 +217,18 @@ This preserves the current intuition:
 > The most skilled agents carry the most current context.
 
 Adding agents should not reduce progress. Removing agents should reduce progress immediately.
+
+## Key Player Intuitions
+
+| Concept | Player Feedback/Intuition |
+| :--- | :--- |
+| **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one Skill 100 agent, though the hidden actual threshold may make it run up to 50% longer. |
+| **Progress** | **Progress shows how much investigative work has been done.** More progress means the lead is closer to completion and the success chance range should usually rise. |
+| **Success % Range** | **The higher this range, the sooner the lead is likely to resolve.** The lower bound assumes the hidden actual difficulty is high; the upper bound assumes it is equal to the visible difficulty. |
+| **Team Power** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
+| **Hidden Threshold** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches the hidden actual difficulty. |
+| **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
+| **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
 
 ## Why This Is Simpler
 
@@ -358,3 +333,40 @@ Lead difficulty values would need rebalance because current values are not turn 
 The exact values should be tuned against the intended campaign length, but the player-facing meaning should stay stable:
 
 > Difficulty is the number of turns a Skill 100 agent should expect to spend.
+
+## Appendix: Excel Formulas
+
+To reproduce the Difficulty 10 example table in Excel, use these inputs:
+
+| Cell | Meaning | Example |
+| --- | --- | ---: |
+| `B1` | Visible difficulty | `10` |
+| `B2` | Team power per turn | `1` |
+| `B3` | Minimum hidden actual difficulty | `=B1` |
+| `B4` | Maximum hidden actual difficulty | `=B1*1.5` |
+
+Then create this table starting on row 7:
+
+| Column | Header | Formula for row 7 |
+| --- | --- | --- |
+| `A` | `Turn` | `=1` |
+| `B` | `ProgressValue` | `=A7*$B$2` |
+| `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.##"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.##"))` |
+| `D` | `CC @ Tmin` | `=MIN(1,(B7/$B$3)^3)` |
+| `E` | `TC @ Tmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
+| `F` | `CC @ Tmax` | `=MIN(1,(B7/$B$4)^3)` |
+| `G` | `TC @ Tmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
+| `H` | `Success Range` | `="~"&TEXT(FLOOR(G7*100,1),"0")&"% - ~"&TEXT(CEILING(E7*100,1),"0")&"%"` |
+
+For row 8 and below:
+
+- `A8`: `=A7+1`
+- Copy columns `B:H` down from row 7.
+- Format `D:G` as percentages.
+- Hide `B` if you only want to display the player-facing progress label from `C`.
+
+In this setup:
+
+- `CC @ Tmin` and `TC @ Tmin` are the high-end success chances, because the hidden actual difficulty is as low as possible.
+- `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because the hidden actual difficulty is as high as possible.
+- `Success Range` rounds the lower turn chance down and the upper turn chance up.

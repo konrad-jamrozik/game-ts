@@ -29,10 +29,9 @@ export const LEAD_INVESTIGATIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
   columnWidths['lead_investigations.name'] +
   columnWidths['lead_investigations.agents'] +
-  columnWidths['lead_investigations.intel'] +
-  columnWidths['lead_investigations.success_chance'] +
-  columnWidths['lead_investigations.resistance'] +
-  columnWidths['lead_investigations.projected_intel'] +
+  columnWidths['lead_investigations.progress'] +
+  columnWidths['lead_investigations.success_chance_range'] +
+  columnWidths['lead_investigations.projected_progress'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH =

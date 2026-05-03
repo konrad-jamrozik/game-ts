@@ -12,7 +12,12 @@ import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
-import { getLeadIntelFromAgents, getLeadResistance, getLeadSuccessChance } from '../../lib/ruleset/leadRuleset'
+import {
+  getLeadProgressFromAgents,
+  getLeadTeamPower,
+  getLeadTurnSuccessChanceRange,
+  sumAgentEffectiveSkills,
+} from '../../lib/ruleset/leadRuleset'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
@@ -137,7 +142,6 @@ function bldAllInvestigationRows(
 ): LeadInvestigationRow[] {
   return Object.values(leadInvestigations).map((investigation, index) => {
     const lead = getLeadById(investigation.leadId)
-    const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
 
     // Count agents actively working on this investigation (Investigating state)
     const activeAgents = investigatingAgents(agents, investigation).length
@@ -145,21 +149,28 @@ function bldAllInvestigationRows(
     // Count agents in transit to this investigation
     const agentsInTransit = inTransitWithAssignmentId(agents, investigation.id).length
 
-    // Calculate resistance for all investigations
-    const resistance = getLeadResistance(investigation.accumulatedIntel, lead.difficulty)
-
-    // For Successful investigations, skip projected intel calculations
-    let projectedIntel: number = investigation.accumulatedIntel
-    let intelDiff = 0
+    let projectedProgress: number = investigation.progress
+    let progressDiff = 0
+    let teamEfficiency = 0
+    let successChanceLower = 0
+    let successChanceUpper = 0
 
     if (investigation.state === 'Active') {
-      // Calculate projected intel using Probability Pressure system
       const agentsInvestigating = investigatingAgents(agents, investigation)
-      const intelGain = getLeadIntelFromAgents(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
-      projectedIntel = investigation.accumulatedIntel + intelGain
+      const progressGain = getLeadProgressFromAgents(agentsInvestigating)
+      projectedProgress = investigation.progress + progressGain
+      progressDiff = projectedProgress - investigation.progress
 
-      // Calculate diff for chip display
-      intelDiff = projectedIntel - investigation.accumulatedIntel
+      const skillPower = sumAgentEffectiveSkills(agentsInvestigating) / 100
+      teamEfficiency = skillPower === 0 ? 0 : getLeadTeamPower(agentsInvestigating) / skillPower
+
+      const successChanceRange = getLeadTurnSuccessChanceRange(
+        investigation.progress,
+        projectedProgress,
+        lead.difficulty,
+      )
+      successChanceLower = successChanceRange.lower
+      successChanceUpper = successChanceRange.upper
     }
 
     const rowState = investigation.state === 'Active' ? 'Active' : investigation.state === 'Done' ? 'Done' : 'Abandoned'
@@ -169,14 +180,16 @@ function bldAllInvestigationRows(
       id: investigation.id,
       rowId: index,
       name: fmtIdForDisplay(investigation.id, gameState),
-      intel: investigation.accumulatedIntel,
-      successChance,
+      progress: investigation.progress,
+      difficulty: lead.difficulty,
+      successChanceLower,
+      successChanceUpper,
       agents: activeAgents,
       agentsInTransit,
       startTurn: investigation.startTurn,
-      resistance,
-      projectedIntel,
-      intelDiff,
+      projectedProgress,
+      progressDiff,
+      teamEfficiency,
       state: rowState,
       completedThisTurn,
     }

@@ -1,25 +1,28 @@
 import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
-import { fmtDec1, fmtDec1Diff, fmtPctDec2 } from '../../lib/primitives/formatPrimitives'
+import { fmtDec1, fmtDec1Diff } from '../../lib/primitives/formatPrimitives'
 import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { LeadInvestigationId } from '../../lib/model/modelIds'
 import type { LeadInvestigationState } from '../../lib/model/outcomeTypes'
 import { columnWidths } from '../Common/columnWidths'
 import { MyChip } from '../Common/MyChip'
+import { ceil, floor } from '../../lib/primitives/mathPrimitives'
 
 export type LeadInvestigationRow = {
   id: LeadInvestigationId
   rowId: number
   name: string
-  intel: number
-  successChance: number
+  progress: number
+  difficulty: number
+  successChanceLower: number
+  successChanceUpper: number
   agents: number
   agentsInTransit: number
   startTurn: number
-  resistance: number
-  projectedIntel: number
-  intelDiff: number
+  projectedProgress: number
+  progressDiff: number
+  teamEfficiency: number
   state: LeadInvestigationState
   completedThisTurn: boolean
 }
@@ -53,9 +56,9 @@ export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<L
       },
     },
     {
-      field: 'successChance',
+      field: 'successChanceRange',
       headerName: 'Succ %',
-      width: columnWidths['lead_investigations.success_chance'],
+      width: columnWidths['lead_investigations.success_chance_range'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
         if (params.row.state === 'Done') {
           return <MyChip chipValue="Done" />
@@ -63,38 +66,30 @@ export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<L
         if (params.row.state === 'Abandoned') {
           return <MyChip chipValue="Abandoned" reverseColor={true} />
         }
-        return <span>{fmtPctDec2(params.row.successChance)}</span>
+        return <span>{fmtSuccessChanceRange(params.row.successChanceLower, params.row.successChanceUpper)}</span>
       },
     },
     {
-      field: 'intel',
-      headerName: 'Intel',
-      width: columnWidths['lead_investigations.intel'],
+      field: 'progress',
+      headerName: 'Progress',
+      width: columnWidths['lead_investigations.progress'],
       type: 'number',
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{fmtDec1(params.row.intel)}</span>
-      ),
-    },
-
-    {
-      field: 'resistance',
-      headerName: 'Resistance',
-      width: columnWidths['lead_investigations.resistance'],
-      renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => (
-        <span>{fmtPctDec2(params.row.resistance)}</span>
+        <span>{fmtProgress(params.row.progress, params.row.difficulty)}</span>
       ),
     },
     {
-      field: 'projectedIntel',
-      headerName: 'Proj. intel',
-      width: columnWidths['lead_investigations.projected_intel'],
+      field: 'projectedProgress',
+      headerName: 'Proj.',
+      width: columnWidths['lead_investigations.projected_progress'],
       renderCell: (params: GridRenderCellParams<LeadInvestigationRow>): React.JSX.Element => {
-        const { intel, projectedIntel } = params.row
-        const intelDiffFmt = fmtDec1Diff(intel, projectedIntel)
+        const { progress, difficulty, projectedProgress, teamEfficiency } = params.row
+        const progressDiffFmt = fmtDec1Diff(progress, projectedProgress)
         return (
           <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span>{fmtDec1(projectedIntel)}</span>
-            {intelDiffFmt !== undefined && <MyChip chipValue={intelDiffFmt} />}
+            <span>{fmtProgress(projectedProgress, difficulty)}</span>
+            {progressDiffFmt !== undefined && <MyChip chipValue={progressDiffFmt} />}
+            {progressDiffFmt !== undefined && <MyChip chipValue={`eff. ${fmtPctInt(teamEfficiency)}`} />}
           </div>
         )
       },
@@ -102,4 +97,16 @@ export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<L
   ]
 
   return columns
+}
+
+function fmtProgress(progress: number, difficulty: number): string {
+  return `${fmtDec1(progress)}/${fmtDec1(difficulty)}`
+}
+
+function fmtSuccessChanceRange(lower: number, upper: number): string {
+  return `~${floor(lower * 100)}% - ~${ceil(upper * 100)}%`
+}
+
+function fmtPctInt(value: number): string {
+  return `${floor(value * 100)}%`
 }

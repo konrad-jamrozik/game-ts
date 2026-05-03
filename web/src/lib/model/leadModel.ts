@@ -13,7 +13,8 @@ export type Lead = {
 export type LeadInvestigation = {
   id: LeadInvestigationId // unique investigation ID
   leadId: LeadId
-  accumulatedIntel: number
+  progress: number
+  actualDifficulty: number
   agentIds: AgentId[] // agents currently investigating this lead
   startTurn: number // turn when investigation started
   state: LeadInvestigationState

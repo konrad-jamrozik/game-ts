@@ -1,5 +1,4 @@
 import { dataTables } from '../../data_tables/dataTables'
-import { getLeadById } from '../../model_utils/leadUtils'
 import { applyExhaustion, investigatingAgents } from '../../model_utils/agentUtils'
 import type { LeadInvestigation } from '../../model/leadModel'
 import type { Mission } from '../../model/missionModel'
@@ -7,7 +6,7 @@ import type { Agent } from '../../model/agentModel'
 import type { GameState } from '../../model/gameStateModel'
 import { AGENT_EXHAUSTION_INCREASE_PER_TURN } from '../../data_tables/constants'
 import { f6c100, f6ge } from '../../primitives/fixed6'
-import { getLeadIntelFromAgents, getLeadSuccessChance } from '../../ruleset/leadRuleset'
+import { getLeadProgressFromAgents, getLeadTurnSuccessChance } from '../../ruleset/leadRuleset'
 import type { LeadInvestigationReport } from '../../model/turnReportModel'
 import { assertDefined } from '../../primitives/assertPrimitives'
 import { rollAgainstProbabilityQuantized } from '../../primitives/rolls'
@@ -18,7 +17,7 @@ import { log } from '../../primitives/logger'
 import type { FactionId } from '../../model/modelIds'
 
 /**
- * Updates lead investigations: applies decay, accumulates intel, checks for completion
+ * Updates lead investigations: accumulates progress, checks for completion
  * Returns reports for each investigation updated
  */
 export function updateLeadInvestigations(state: GameState): LeadInvestigationReport[] {
@@ -41,15 +40,11 @@ export function updateLeadInvestigations(state: GameState): LeadInvestigationRep
  * Processes a single active investigation
  */
 function processActiveInvestigation(state: GameState, investigation: LeadInvestigation): LeadInvestigationReport {
-  const { success, successChance } = rollAndLogInvestigationResult(investigation)
-
-  // No passive decay - Intel only decreases when agents are removed (handled in agentReducers)
-
-  // Accumulate new intel from assigned agents using Probability Pressure system
   const agentsInvestigating = investigatingAgents(state.agents, investigation)
-  const lead = getLeadById(investigation.leadId)
-  const intelGain = getLeadIntelFromAgents(agentsInvestigating, investigation.accumulatedIntel, lead.difficulty)
-  investigation.accumulatedIntel += intelGain
+  const previousProgress = investigation.progress
+  const progressGain = getLeadProgressFromAgents(agentsInvestigating)
+  investigation.progress += progressGain
+  const { success, successChance } = rollAndLogInvestigationResult(investigation, previousProgress)
 
   applyExhaustion(agentsInvestigating, AGENT_EXHAUSTION_INCREASE_PER_TURN)
 
@@ -65,7 +60,8 @@ function processActiveInvestigation(state: GameState, investigation: LeadInvesti
     investigationId: investigation.id,
     leadId: investigation.leadId,
     completed: success,
-    accumulatedIntel: investigation.accumulatedIntel,
+    progress: investigation.progress,
+    progressGain,
     successChance,
     startTurn: investigation.startTurn,
     ...(createdMissions !== undefined && { createdMissions }),
@@ -96,9 +92,11 @@ function unassignExhaustedAgents(state: GameState, investigation: LeadInvestigat
 /**
  * Rolls for investigation success and logs the result
  */
-function rollAndLogInvestigationResult(investigation: LeadInvestigation): { success: boolean; successChance: number } {
-  const lead = getLeadById(investigation.leadId)
-  const successChance = getLeadSuccessChance(investigation.accumulatedIntel, lead.difficulty)
+function rollAndLogInvestigationResult(
+  investigation: LeadInvestigation,
+  previousProgress: number,
+): { success: boolean; successChance: number } {
+  const successChance = getLeadTurnSuccessChance(previousProgress, investigation.progress, investigation.actualDifficulty)
   const rollResult = rollAgainstProbabilityQuantized(successChance, 'lead-investigation')
   // const rollResultStr = fmtRollResultQuantized(rollResult)
   // console.log(`${investigation.id} result: ${rollResultStr}`)

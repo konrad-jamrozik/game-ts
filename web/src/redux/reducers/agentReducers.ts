@@ -1,7 +1,7 @@
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { AGENT_HIRE_COST } from '../../lib/data_tables/constants'
-import { getLeadIntelLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
+import { getLeadProgressLoss, sumAgentEffectiveSkills } from '../../lib/ruleset/leadRuleset'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
 import { investigatingAgents, onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import type { LeadInvestigation } from '../../lib/model/leadModel'
@@ -68,7 +68,7 @@ export const assignAgentsToTraining = asPlayerAction<string[]>((state: GameState
 })
 
 /**
- * Removes agents from an investigation and applies proportional intel loss.
+ * Removes agents from an investigation and applies proportional progress loss.
  * Marks investigation as Abandoned if all agents are removed.
  * Returns the old and new skill sums for tracking purposes.
  */
@@ -88,10 +88,10 @@ export function removeAgentsFromInvestigation(
   const newAgents = investigatingAgents(state.agents, investigation)
   const newSkillSum = sumAgentEffectiveSkills(newAgents)
 
-  // Apply proportional intel loss
+  // Apply proportional progress loss
   if (oldSkillSum > newSkillSum) {
-    const intelLoss = getLeadIntelLoss(investigation.accumulatedIntel, oldSkillSum, newSkillSum)
-    investigation.accumulatedIntel = Math.max(0, investigation.accumulatedIntel - intelLoss)
+    const progressLoss = getLeadProgressLoss(investigation.progress, oldSkillSum, newSkillSum)
+    investigation.progress = Math.max(0, investigation.progress - progressLoss)
   }
 
   // If all agents are removed, mark investigation as Abandoned

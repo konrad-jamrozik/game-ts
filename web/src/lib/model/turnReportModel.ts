@@ -196,9 +196,9 @@ export type LeadInvestigationReport = {
   investigationId: string
   leadId: LeadId
   completed: boolean
-  accumulatedIntel: number
+  progress: number
+  progressGain: number
   successChance: number
-  intelDecay?: number
   createdMissions?: string[]
   /**
    * The turn on which this investigation was completed.

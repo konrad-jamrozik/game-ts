@@ -26,13 +26,12 @@ For non-repeatable leads, agents are assigned proportionally to the lead's diffi
 ## The non-repeatable lead agent count assignment heuristic
 
 The divisor of 8 is a heuristic that keeps investigation timelines reasonable across difficulty levels.
-For example, a difficulty-40 lead gets `ceil(40 / 8) = 5` agents. With 5 skill-100 agents, the
-team produces roughly `5^0.8 × 10 ≈ 36` Intel per turn initially (due to diminishing returns from
-the team-size exponent), against an effective difficulty of `40 × 100 = 4,000` Intel needed for
-100% success probability. Since success is checked probabilistically each turn (see
-`about_lead_investigations.md`), the investigation can complete well before reaching 100% -- but
-the 5-agent team ensures probability builds up fast enough that completion within a moderate number
-of turns is likely. A single agent on that same lead would produce only 10 Intel/turn, making
+For example, a difficulty-25 lead gets `ceil(25 / 8) = 4` agents. With 4 skill-100 agents, the
+team produces roughly `4^0.8 ≈ 3` progress per turn due to diminishing returns from the team-size
+exponent. Since success is checked probabilistically each turn (see
+`../design/lead_investigation_simplification_proposal.md`), the investigation can complete before
+reaching the hidden actual difficulty, while still being guaranteed once progress reaches that
+hidden threshold. A single agent on that same lead would produce only 1 progress per turn, making
 progress far too slow.
 
 # Lead investigation assignment algorithm

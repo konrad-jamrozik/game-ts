@@ -6,13 +6,15 @@ import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
 import { log } from '../../lib/primitives/logger'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
+import { rand } from '../../lib/primitives/rand'
+import { getActualLeadDifficulty } from '../../lib/ruleset/leadRuleset'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
   (state: GameState, action) => {
     const { leadId, agentIds } = action.payload
 
     // Ensure the lead exists (for clear error message + invariants)
-    getLeadById(leadId)
+    const lead = getLeadById(leadId)
 
     // Prevent starting a second active investigation for the same lead (repeatable or not).
     // Repeatable leads can be investigated multiple times, but only one at a time.
@@ -29,6 +31,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
       investigationCount,
       startTurn: state.turn,
       leadId,
+      actualDifficulty: getActualLeadDifficulty(lead.difficulty, rand.get('lead-actual-difficulty')),
       agentIds,
     })
     const investigationId = newInvestigation.id

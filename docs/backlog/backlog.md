@@ -4,7 +4,12 @@ KJA backlog:
 
 # Next
 
-- See lead_investigation_simplification_proposal.md
+## New investigations
+
+- Merge the pending changes to investigations
+  - Based on lead_investigation_simplification_proposal.md
+- Improve display, use the same color bar for progress as for agents skill
+  - Do not show `.0` in denominator
 
 ## AI
 

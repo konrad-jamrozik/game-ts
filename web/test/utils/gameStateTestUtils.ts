@@ -18,6 +18,7 @@ export function setupCheatingGameState(): void {
   // Lead investigations always succeed
   // KJA3_3 -> lead_investigation
   rand.set('lead-investigation', 1)
+  rand.set('lead-actual-difficulty', 0)
   // Combat always succeeds: agent attacks always hit, enemy attacks always miss
   rand.set('agent_attack_roll', 1)
   rand.set('enemy_attack_roll', 0)

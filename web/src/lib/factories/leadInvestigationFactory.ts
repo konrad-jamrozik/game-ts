@@ -10,7 +10,8 @@ import { assertDefined } from '../primitives/assertPrimitives'
 export const initialLeadInvestigation: LeadInvestigation = {
   id: 'investigation-ini' as LeadInvestigationId,
   leadId: 'lead-ini' as LeadId,
-  accumulatedIntel: 0,
+  progress: 0,
+  actualDifficulty: 1,
   agentIds: [],
   startTurn: 1,
   state: 'Active',
@@ -22,6 +23,7 @@ type CreateLeadInvestigationParams =
 
 type BaseCreateLeadInvestigationParams = Partial<Omit<LeadInvestigation, 'id' | 'leadId'>> & {
   leadId: LeadId
+  actualDifficulty: number
 }
 
 /**

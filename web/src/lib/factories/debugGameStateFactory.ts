@@ -178,6 +178,7 @@ function bldDebugLeadInvestigations(
     [deepStateInvestigationId]: bldLeadInvestigation({
       id: deepStateInvestigationId,
       leadId: 'lead-deep-state' as LeadId,
+      actualDifficulty: 10,
       agentIds: deepStateInvestigationAgentIds,
     }),
   }
