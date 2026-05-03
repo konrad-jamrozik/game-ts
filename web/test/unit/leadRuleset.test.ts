@@ -15,9 +15,12 @@ describe('leadRuleset', () => {
       [10, 0, 10],
       [10, 0.5, 12.5],
       [10, 1, 15],
-    ])('maps visible difficulty %d and random factor %d to actual difficulty %d', (difficulty, randomFactor, expected) => {
-      expect(getActualLeadDifficulty(difficulty, randomFactor)).toBeCloseTo(expected, 10)
-    })
+    ])(
+      'maps visible difficulty %d and random factor %d to actual difficulty %d',
+      (difficulty, randomFactor, expected) => {
+        expect(getActualLeadDifficulty(difficulty, randomFactor)).toBeCloseTo(expected, 10)
+      },
+    )
   })
 
   describe(getLeadCumulativeSuccessChance, () => {
@@ -27,9 +30,12 @@ describe('leadRuleset', () => {
       [5, 10, 0.125],
       [10, 10, 1],
       [15, 10, 1],
-    ])('returns cubic cumulative chance for progress=%d, actualDifficulty=%d', (progress, actualDifficulty, expected) => {
-      expect(getLeadCumulativeSuccessChance(progress, actualDifficulty)).toBeCloseTo(expected, 10)
-    })
+    ])(
+      'returns cubic cumulative chance for progress=%d, actualDifficulty=%d',
+      (progress, actualDifficulty, expected) => {
+        expect(getLeadCumulativeSuccessChance(progress, actualDifficulty)).toBeCloseTo(expected, 10)
+      },
+    )
   })
 
   describe(getLeadTurnSuccessChance, () => {

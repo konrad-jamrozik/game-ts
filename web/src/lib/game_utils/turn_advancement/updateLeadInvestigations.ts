@@ -96,7 +96,11 @@ function rollAndLogInvestigationResult(
   investigation: LeadInvestigation,
   previousProgress: number,
 ): { success: boolean; successChance: number } {
-  const successChance = getLeadTurnSuccessChance(previousProgress, investigation.progress, investigation.actualDifficulty)
+  const successChance = getLeadTurnSuccessChance(
+    previousProgress,
+    investigation.progress,
+    investigation.actualDifficulty,
+  )
   const rollResult = rollAgainstProbabilityQuantized(successChance, 'lead-investigation')
   // const rollResultStr = fmtRollResultQuantized(rollResult)
   // console.log(`${investigation.id} result: ${rollResultStr}`)

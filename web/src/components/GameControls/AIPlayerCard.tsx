@@ -70,7 +70,12 @@ export function AIPlayerCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard id="ai-player-card" title="AI Player" defaultExpanded={true} sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard
+      id="ai-player-card"
+      title="AI Player"
+      defaultExpanded={true}
+      sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
+    >
       <Stack spacing={2}>
         <FormControl fullWidth>
           <InputLabel id="ai-intellect-select-label">AI Player Intellect</InputLabel>
