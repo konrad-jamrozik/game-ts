@@ -85,17 +85,6 @@ The range should usually increase as progress increases.
 
 # 2. Formula Reference
 
-This section gives the core formulas in dependency order.
-
-## Constants
-
-| Constant | Meaning | Value |
-| :--- | :--- | :--- |
-| **Scaling exponent** | Controls diminishing returns from adding more agents, used in $\text{Count}^{0.8}$ | **0.8** |
-| **Minimum actual difficulty multiplier** | Actual difficulty is never lower than visible difficulty | **1.0** |
-| **Maximum actual difficulty multiplier** | Actual difficulty can be up to 50% higher than visible difficulty | **1.5** |
-| **Cumulative chance exponent** | Controls how slowly success starts and how sharply it rises near completion | **3** |
-
 ## Visible Difficulty
 
 Visible difficulty is an integer stored on the lead:
@@ -503,6 +492,17 @@ meaning should stay stable:
 | $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
 | $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. |
 | $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
+
+## Constants
+
+The table above uses inline following constants:
+
+| Constant | Value | Used in | Remarks |
+| :--- | :--- | :--- | :--- |
+| **Scaling exponent** | **0.8** | $P_{\text{eff}}$ - progress efficiency | Controls diminishing returns from assigning multiple agents. |
+| **Minimum actual difficulty multiplier** | **1.0** | $D_a$ - lead investigation actual difficulty | Actual difficulty is never lower than visible difficulty. |
+| **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty. |
+| **Cumulative chance exponent** | **3** | $P_c$ - accumulated success chance | Makes early success possible but unlikely, then rises sharply near completion. |
 
 # Excel formulas reference
 
