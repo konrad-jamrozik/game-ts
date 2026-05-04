@@ -8,10 +8,10 @@ chance.
 
 ### Lead
 
-A **lead** is an investigation target. Completing a lead can unlock new leads, reveal missions, or
-advance the game's progression tree.
+A **lead** is an investigation target. Completing a lead investigation can unlock new leads, reveal
+missions, or advance the game's progression tree.
 
-Every lead has:
+Every lead has following stored properties:
 
 - `difficulty`: the visible progress target and baseline turn count for one Skill 100 agent.
 - `repeatable`: whether the lead can be investigated more than once.
@@ -19,25 +19,49 @@ Every lead has:
 
 ### Repeatable Lead
 
-A **repeatable lead** can be completed multiple times, but only one active investigation for that
-lead can exist at a time. Repeatable leads usually represent recurring ways to find missions, such as
-locating faction members or bases.
+A **repeatable lead** can have multiple completed investigations, but only one active investigation
+for that lead can exist at a time. Repeatable leads usually represent recurring ways to find
+missions, such as locating faction members or bases.
 
-A non-repeatable lead can be completed only once. Non-repeatable leads usually represent progression
-steps, such as interrogating a captured target or resolving an endgame objective.
+A non-repeatable lead can have only one completed investigation. Non-repeatable leads usually
+represent progression steps, such as interrogating a captured target or resolving an endgame
+objective.
 
-### Lead Investigation
+### Lead Investigation Stored Properties
 
-A **lead investigation** is an active attempt to complete a lead. It stores:
+A **lead investigation** has following stored properties:
 
 ```ts
+id: LeadInvestigationId
+leadId: LeadId
 progress: number
 actualDifficulty: number // hidden integer, generated when the investigation starts
 agentIds: AgentId[]
+startTurn: number
+state: LeadInvestigationState
 ```
 
 The player sees visible lead difficulty and investigation progress. The player does not see
 `actualDifficulty`.
+
+### Completing a Lead Investigation
+
+To complete a lead investigation, the player assigns agents to it. Assigned agents produce
+**progress per turn**, which is added to the investigation's stored `progress`.
+
+The investigation has a hidden `actualDifficulty`, measured in progress points. Once `progress`
+reaches `actualDifficulty`, the investigation is guaranteed to complete.
+
+The UI shows investigation progress using visible lead difficulty as the denominator. This visible
+difficulty is the lower bound for actual difficulty; actual difficulty can be up to 150% higher.
+
+Progress per turn starts from effective agent skill: every 100 effective skill produces 1
+**progress by agent**. Progress by agent is then adjusted by **progress efficiency**.
+With equally skilled Skill 100 agents, this means `agentCount` agents produce about
+`agentCount ^ 0.8` progress per turn instead of scaling linearly.
+
+At the end of each turn, the investigation rolls for completion. The chance starts low and grows
+cubically as progress becomes a larger percentage of actual difficulty.
 
 ### Lead Difficulty
 
@@ -48,53 +72,41 @@ For example, a Difficulty 5 lead means:
 
 > One Skill 100 agent makes about 1 progress per turn against a visible target of 5.
 
-When an investigation starts, the game generates an integer **actual difficulty** from visible
-difficulty. Actual difficulty is hidden, and it is between 100% and 150% of visible difficulty,
-rounded down. The investigation is guaranteed to complete once progress reaches actual difficulty.
-
 ### Agent Assignment
 
-Agents assigned to an active investigation contribute progress every turn. More assigned agents
-produce more progress, but the team has diminishing returns: two Skill 100 agents are better than
-one, but worse than one agent with Skill 200.
+Agents assigned to an active investigation produce progress per turn. What matters is
+**effective skill**, not raw skill. Effective skill starts from the agent's skill, then applies
+penalties such as exhaustion and hit point loss.
 
-What matters for progress is **effective skill**, not raw skill. Effective skill starts from the
-agent's skill, then applies penalties such as exhaustion and hit point loss. Agents assigned to an
-investigation gain exhaustion each turn, so their future effective skill and progress gain can
-decline over time.
+Agents assigned to an investigation gain exhaustion each turn, so their future effective skill and
+progress per turn can decline over time.
 
 ### Lead Investigation Progress
 
 **Progress** is how much investigative work has been completed on the active investigation.
 
-Progress generally increases each turn by **progress gain**, the single per-turn amount produced by
-the assigned team. For an unresolved investigation, progress is effectively capped by actual
-difficulty: once progress reaches actual difficulty, completion is guaranteed.
+Progress generally increases each turn by **progress per turn**, the single amount produced by the
+assigned agents each turn.
 
-### Per-Turn Progress Gain
+### Progress per Turn
 
-Progress gain is the per-turn amount added to investigation progress.
+Progress per turn is the amount added to investigation progress each turn.
 
-It is computed from the assigned agents' effective skills. Each 100 effective skill contributes 1
-normalized skill power before team-size diminishing returns. For example, one agent with 100
-effective skill contributes 1 normalized skill power; one agent with 50 effective skill contributes
-0.5 normalized skill power.
+It is computed from progress by agent and progress efficiency.
 
-The team's normalized skill power is then reduced by the team-size diminishing returns factor. The
-result is the investigation's progress gain for that turn.
+### Progress Efficiency
 
-### Progress Gain Efficiency
+Progress efficiency depends on:
 
-Progress gain efficiency depends on:
-
-- **Agent skill:** higher skill produces more normalized skill power.
+- **Agent skill:** higher skill produces more progress by agent.
 - **Agent exhaustion:** exhaustion reduces effective skill after the no-impact exhaustion threshold.
 - **Agent hit points:** damage reduces effective skill.
-- **Number of assigned agents:** larger teams get diminishing returns from the agent-count exponent.
+- **Number of assigned agents:** larger agent groups get diminishing returns from the agent-count
+  exponent.
 
 For example:
 
-| Team | Team Power | Meaning |
+| Assigned Agents | Progress per Turn | Meaning |
 | --- | ---: | --- |
 | 1 agent, Skill 100 | 1.00 | Baseline |
 | 1 agent, Skill 50 | 0.50 | Half speed |
@@ -105,7 +117,7 @@ For example:
 ### Progress Loss on Agent Unassignment
 
 Removing agents from an investigation immediately reduces progress in proportion to the effective
-skill removed from the team.
+skill removed from the assigned agents.
 
 This represents loss of current context: the most skilled agents carry the most current investigative
 knowledge, so removing a highly skilled agent causes a larger progress loss than removing a rookie.
@@ -120,8 +132,7 @@ chance range because the player does not know actual difficulty.
 - The lower bound assumes actual difficulty is as high as possible.
 - The upper bound assumes actual difficulty is equal to visible difficulty.
 
-The range should usually increase as progress increases. The investigation can finish early from a
-success roll, but it is guaranteed once progress reaches actual difficulty.
+The range should usually increase as progress increases.
 
 ## 2. Formula Reference
 
@@ -183,31 +194,31 @@ $$
 1 - \frac{\max(0, \min(100, \text{exhaustionPct}) - \text{NO\_IMPACT\_EXHAUSTION})}{100}
 $$
 
-### Skill Power
+### Progress by Agent
 
-Skill power normalizes effective skill around 100:
-
-$$
-P_{\text{skill}} = \sum \frac{\text{effectiveSkill}}{100}
-$$
-
-### Team Power
-
-Team power applies diminishing returns based on assigned agent count:
+Progress by agent normalizes effective skill around 100:
 
 $$
-P_{\text{team}} = P_{\text{skill}} \cdot \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
+P_{\text{byAgent}} = \sum \frac{\text{effectiveSkill}}{100}
+$$
+
+### Progress Efficiency Formula
+
+Progress efficiency applies diminishing returns based on assigned agent count:
+
+$$
+E_{\text{progress}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
 $$
 
 This keeps the first agent highly valuable while making each additional stacked agent less efficient
 than the previous one.
 
-### Progress Gain
+### Progress per Turn Formula
 
-Progress gain is equal to team power:
+Progress per turn is progress by agent multiplied by progress efficiency:
 
 $$
-\Delta\text{progress} = P_{\text{team}}
+\Delta\text{progress} = P_{\text{byAgent}} \cdot E_{\text{progress}}
 $$
 
 Then add it to current progress:
@@ -218,12 +229,13 @@ $$
 
 ### Progress Loss
 
-When agents are removed, progress is recalibrated against the remaining team's effective skill:
+When agents are removed, progress is recalibrated against the effective skill of the remaining
+agents:
 
 $$
 \text{progress}_{\text{new}} =
 \text{progress}_{\text{old}} \cdot
-\frac{\text{remainingTeamSkill}}{\text{previousTeamSkill}}
+\frac{\text{remainingAgentSkill}}{\text{previousAgentSkill}}
 $$
 
 For example:
@@ -334,7 +346,7 @@ Success %: ~0% - ~1%
 ```
 
 Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead of 2.00 because of
-team diminishing returns.
+progress efficiency.
 
 ## 4. Key Player Intuitions
 
@@ -343,7 +355,7 @@ team diminishing returns.
 | **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one Skill 100 agent, though actual difficulty may make it run up to 50% longer. |
 | **Progress** | **Progress shows how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
 | **Success % Range** | **The higher this range, the sooner the lead is likely to resolve.** The lower bound assumes actual difficulty is high; the upper bound assumes it is equal to visible difficulty. |
-| **Team Power** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
+| **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
 | **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty. |
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
 | **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
@@ -458,8 +470,8 @@ That maps directly to player planning while retaining the desired feel:
   actual difficulty.
 - The conditional `P_turn` formula keeps the cumulative curve mathematically honest across repeated
   turn rolls.
-- Team power keeps the useful shape of the old agent stacking formula, but expresses it in progress
-  points instead of hidden Intel.
+- Progress efficiency keeps the useful shape of the old agent stacking formula, but expresses it in
+  progress per turn instead of hidden Intel.
 - Proportional loss preserves investigation recency and prevents parked investigations from being
   costless.
 
@@ -487,7 +499,7 @@ To reproduce the Difficulty 10 example table in Excel, use these inputs:
 | Cell | Meaning | Example |
 | --- | --- | ---: |
 | `B1` | Visible difficulty | `10` |
-| `B2` | Team power per turn | `1` |
+| `B2` | Progress per turn | `1` |
 | `B3` | Minimum actual difficulty | `=B1` |
 | `B4` | Maximum actual difficulty | `=FLOOR(B1*1.5,1)` |
 
@@ -518,3 +530,36 @@ In this setup:
 - `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because actual difficulty is as high
   as possible.
 - `Success Range` rounds the lower turn chance down and the upper turn chance up.
+
+## Appendix: Glossary
+
+- **Lead:** An investigation target that can have lead investigations started for it.
+- **Repeatable lead:** A lead that can be investigated repeatably, but only once at a time.
+- **Lead investigation:** A state object representing one active or past investigation of a lead.
+- **Lead visible difficulty:** The lead's shown difficulty value. It is the progress denominator shown in
+  the UI. It establishes the lower bound of actual difficulty.
+- **Lead investigation actual difficulty:** The hidden integer progress target for a specific lead investigation. It is
+  generated when the investigation starts and is between 100% and 150% of visible difficulty,
+  rounded down.
+- **Progress:** The investigation's accumulated work toward actual difficulty. When `Advance turn` is clicked,
+- the starting `Turn advancement progress` is added to the `Accumulated progress` value.
+- **Turn advancement progress:** The progress added to `Accumulated progress` when `Advance turn` is
+  clicked: `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) /
+  100` and `progressEfficiency = agentCount ^ 0.8 / agentCount`.
+- **Effective skill:** See `about_agents.md`.
+- **Progress by agent:** Effective skill normalized by dividing by 100. For example, 130 effective skill is
+  1.3 progress by agent.
+- **Progress efficiency:** The diminishing returns factor for stacked agents:
+  `agentCount ^ 0.8 / agentCount`.
+- **Progress loss:** The immediate reduction to progress when agents are unassigned from an
+  investigation.
+- **Turn advancement success chance:** The chance that an unresolved investigation completes during
+  this turn advancement. It is the conditional roll chance needed to move from the previous
+  accumulated success chance to the current accumulated success chance.
+- **Accumulated success chance:** The target total chance that an investigation should already have
+  completed at or before a given progress value: `min(1, progress / actualDifficulty) ^ 3`. It is
+  not a per-turn chance. The turn advancement success chance is derived from the difference between
+  previous and current accumulated success chance, conditional on the investigation still being
+  unresolved.
+- **Success chance range:** The UI's lower-to-upper estimate of the next turn's completion chance,
+  computed from the possible actual difficulty range.
