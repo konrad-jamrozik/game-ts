@@ -46,24 +46,22 @@ The player sees visible lead difficulty and investigation progress. The player d
 
 ## Completing a Lead Investigation
 
-TODO - rewrite this section it using the new concepts terminology, not this old one
+To complete a `lead investigation`, the player assigns agents to it. During turn advancement, the
+assigned agents produce `turn advancement progress`, which is added to the investigation's stored
+`progress`.
 
-To complete a lead investigation, the player assigns agents to it. Assigned agents produce
-**progress per turn**, which is added to the investigation's stored `progress`.
+The UI displays `progress` against `lead visible difficulty`. That visible difficulty is the lower
+bound of `lead investigation actual difficulty`; the actual difficulty is hidden and may be up to
+50% higher. Once `progress` reaches actual difficulty, the investigation is guaranteed to complete.
 
-The investigation has a hidden `actualDifficulty`, measured in progress points. Once `progress`
-reaches `actualDifficulty`, the investigation is guaranteed to complete.
+Turn advancement progress is based on `effective skill`. Every 100 effective skill contributes 1
+`progress by agent`, and `progress efficiency` applies the diminishing returns from assigning
+multiple agents.
 
-The UI shows investigation progress using visible lead difficulty as the denominator. This visible
-difficulty is the lower bound for actual difficulty; actual difficulty can be up to 150% higher.
-
-Progress per turn starts from effective agent skill: every 100 effective skill produces 1
-**progress by agent**. Progress by agent is then adjusted by **progress efficiency**.
-With equally skilled Skill 100 agents, this means `agentCount` agents produce about
-`agentCount ^ 0.8` progress per turn instead of scaling linearly.
-
-At the end of each turn, the investigation rolls for completion. The chance starts low and grows
-cubically as progress becomes a larger percentage of actual difficulty.
+After turn advancement progress is added, the game rolls `turn advancement success chance`. This
+creates a slight chance each turn to complete the investigation early. Because `accumulated success
+chance` is cubed, that chance grows slowly at first, then rapidly approaches 100% as `progress`
+nears actual difficulty. See [Lead Investigation Example](#6-lead-investigation-example).
 
 ## Progress Loss on Agent Unassignment
 
@@ -77,19 +75,23 @@ Adding agents does not reduce progress. Removing agents does.
 
 ## Success Chance Range Each Turn
 
-TODO - instead of showing %X - %Y it should show %Z +- W, where with each turn Z moves up a bit and W narrows down a lot.
-
 At the end of each turn, an active investigation rolls for completion. The UI should show a success
 chance range because the player does not know actual difficulty.
 
 - The lower bound assumes actual difficulty is as high as possible.
 - The upper bound assumes actual difficulty is equal to visible difficulty.
 
-The range should usually increase as progress increases.
+Display this range as `%Mid ± Err`:
+
+- `Mid` is the midpoint between lower and upper `turn advancement success chance`.
+- `Err` is half the distance between lower and upper `turn advancement success chance`.
+
+As `progress` increases, `Mid` generally rises. `Err` represents uncertainty from hidden actual
+difficulty and narrows toward zero as progress approaches the maximum possible actual difficulty.
 
 # 3. Suggested UI Wording
 
-TODO - review
+KJA TODO - actually implement this suggestion, and rename this section to "UI design" (so it UI independent)
 
 In the leads grid:
 
@@ -110,11 +112,12 @@ Lead: Deep state
 Agents: 2
 Est. progress: 1.74/10
 Proj.: 3.48/10 (+1.74, eff. 87%)
-Success %: ~0% - ~1%
+Success: ~2% ± 1%
 ```
 
 Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead of 2.00 because of
-progress efficiency.
+progress efficiency. `Success` is the displayed `turn advancement success chance` range, written as
+`Mid ± Err`.
 
 # 4. Key Player Intuitions
 
@@ -122,15 +125,13 @@ progress efficiency.
 | :--- | :--- |
 | **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one Skill 100 agent, though actual difficulty may make it run up to 50% longer. |
 | **Progress** | **Progress shows how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
-| **Success % Range** | **The higher this range, the sooner the lead is likely to resolve.** The lower bound assumes actual difficulty is high; the upper bound assumes it is equal to visible difficulty. |
+| **Success % Range** | **The higher `Mid`, the sooner the lead is likely to resolve.** `Err` shows uncertainty from hidden actual difficulty. |
 | **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
 | **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty. |
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
 | **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
 
-# 6. Difficulty 10 Example
-
-TODO - rename to "Lead investigation example"
+# 6. Lead Investigation Example
 
 For **Difficulty 10** with one **Skill 100** agent:
 
@@ -139,37 +140,33 @@ that row's turn advancement. For example, row `2` means the investigation advanc
 turn 2, progress increased from `1/10` to `2/10`, and $P_{\text{tadv}}$ is the success chance rolled during
 that turn advancement.
 
-TODO - reoder table rows so D15 are first, then D10
-
-| Turn | Progress | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 |
-| ---: | -------: | -------: | -------: | -------: | -------: |
-| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% |
-| 1 | 1/10 | 0.1% | 0.1% | 0.0% | 0.0% |
-| 2 | 2/10 | 0.8% | 0.7% | 0.2% | 0.2% |
-| 3 | 3/10 | 2.7% | 1.9% | 0.8% | 0.6% |
-| 4 | 4/10 | 6.4% | 3.8% | 1.9% | 1.1% |
-| 5 | 5/10 | 12.5% | 6.5% | 3.7% | 1.8% |
-| 6 | 6/10 | 21.6% | 10.4% | 6.4% | 2.8% |
-| 7 | 7/10 | 34.3% | 16.2% | 10.2% | 4.0% |
-| 8 | 8/10 | 51.2% | 25.7% | 15.2% | 5.6% |
-| 9 | 9/10 | 72.9% | 44.5% | 21.6% | 7.6% |
-| 10 | 10/10 | 100.0% | 100.0% | 29.6% | 10.2% |
-| 11 | 11/10 | 100.0% | 100.0% | 39.4% | 13.9% |
-| 12 | 12/10 | 100.0% | 100.0% | 51.2% | 19.4% |
-| 13 | 13/10 | 100.0% | 100.0% | 65.1% | 28.5% |
-| 14 | 14/10 | 100.0% | 100.0% | 81.3% | 46.4% |
-| 15 | 15/10 | 100.0% | 100.0% | 100.0% | 100.0% |
+| Turn | Progress | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | Displayed Success |
+| ---: | -------: | -------: | -------: | -------: | -------: | :--- |
+| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% | ~0% ± 0% |
+| 1 | 1/10 | 0.0% | 0.0% | 0.1% | 0.1% | ~0% ± 0% |
+| 2 | 2/10 | 0.2% | 0.2% | 0.8% | 0.7% | ~0% ± 0% |
+| 3 | 3/10 | 0.8% | 0.6% | 2.7% | 1.9% | ~1% ± 1% |
+| 4 | 4/10 | 1.9% | 1.1% | 6.4% | 3.8% | ~2% ± 1% |
+| 5 | 5/10 | 3.7% | 1.8% | 12.5% | 6.5% | ~4% ± 2% |
+| 6 | 6/10 | 6.4% | 2.8% | 21.6% | 10.4% | ~7% ± 4% |
+| 7 | 7/10 | 10.2% | 4.0% | 34.3% | 16.2% | ~10% ± 6% |
+| 8 | 8/10 | 15.2% | 5.6% | 51.2% | 25.7% | ~16% ± 10% |
+| 9 | 9/10 | 21.6% | 7.6% | 72.9% | 44.5% | ~26% ± 18% |
+| 10 | 10/10 | 29.6% | 10.2% | 100.0% | 100.0% | ~55% ± 45% |
+| 11 | 11/10 | 39.4% | 13.9% | 100.0% | 100.0% | ~57% ± 43% |
+| 12 | 12/10 | 51.2% | 19.4% | 100.0% | 100.0% | ~60% ± 40% |
+| 13 | 13/10 | 65.1% | 28.5% | 100.0% | 100.0% | ~64% ± 36% |
+| 14 | 14/10 | 81.3% | 46.4% | 100.0% | 100.0% | ~73% ± 27% |
+| 15 | 15/10 | 100.0% | 100.0% | 100.0% | 100.0% | ~100% ± 0% |
 
 Legend:
 
 - $P_c$ = accumulated success chance after the advancement that produced this row's progress value.
 - $P_{\text{tadv}}$ = turn advancement success chance, the chance rolled during the advancement that produced
   this row's progress value.
-- `D10` = actual difficulty is 10.
 - `D15` = actual difficulty is 15.
-
-TODO - add to the table row showing the displayed success chance range, using the new %Z - W approach, proposed
-in one of the todos above.
+- `D10` = actual difficulty is 10.
+- `Displayed Success` = `Mid ± Err` of the possible $P_{\text{tadv}}$ range.
 
 This is unpredictable, but the range is easy to understand:
 
@@ -179,58 +176,45 @@ This is unpredictable, but the range is easy to understand:
 - It becomes guaranteed when progress reaches actual difficulty.
 
 For example, in this table, turn 8 has a turn advancement success chance between 5.6% and 25.7%, so
-the UI should show about `~5% - ~26%`. Turn 11 has a range from 13.9% to 100%, so it should show
-about `~13% - 100%`. Turn 14 has a range from 46.4% to 100%, so it should show about
-`~46% - 100%`.
+the UI should show about `~16% ± 10%`. Turn 11 has a range from 13.9% to 100%, so it should show
+about `~57% ± 43%`. Turn 14 has a range from 46.4% to 100%, so it should show about
+`~73% ± 27%`.
 
 If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent investigation is
 guaranteed at 15 progress instead of 10.
 
 # 7. Design Rationale
 
-TODO - review. Never refer to "previous model". We don't care about it. The design must stand on itself.
-
-The previous model made Difficulty mean:
-
-> Intel needed for a 100% one-turn success chance.
-
-That was mathematically clear, but hard to reason about because the player had to mentally combine:
-
-- hidden Intel units,
-- the `Difficulty * 100` multiplier,
-- resistance from accumulated Intel,
-- random completion rolls,
-- agent stacking,
-- progress loss when agents leave.
-
-The current model makes Difficulty mean:
+The model makes Difficulty mean:
 
 > How many turns this takes for one normal competent agent.
 
-That maps directly to player planning while retaining the desired feel:
+That maps directly to player planning while retaining uncertainty and long-investigation pacing:
 
+- Visible difficulty gives the player a clear progress target and planning baseline.
 - Actual difficulty preserves uncertainty without making the visible number meaningless.
-- The cumulative probability curve allows early success while still guaranteeing completion at
-  actual difficulty.
-- The conditional `P_tadv` formula keeps the cumulative curve mathematically honest across repeated
-  turn advancement rolls.
-- Progress efficiency keeps the useful shape of the old agent stacking formula, but expresses it in
-  progress per turn instead of hidden Intel.
-- Proportional loss preserves investigation recency and prevents parked investigations from being
+- Cubic accumulated success chance makes early completion possible but unlikely, then rises sharply
+  near actual difficulty.
+- `P_tadv` keeps repeated turn advancement rolls consistent with the accumulated success curve.
+- Progress efficiency lets multiple agents help while keeping each additional agent less valuable
+  than the previous one.
+- Progress loss preserves assignment continuity and prevents parked investigations from being
   costless.
 
 # 8. Implementation Notes
 
-TODO - review for correctness and adherence to new terminology and formulas.
+KJA TODO - isn't this section incomplete and selective? Do we need it at all?
 
 The implementation follows these model concepts:
 
-- Leads store integer `difficulty`.
-- Active investigations store `progress` and hidden integer `actualDifficulty`.
+- Leads store integer visible difficulty as `difficulty`.
+- Active lead investigations store `progress` and hidden integer `actualDifficulty`.
 - `actualDifficulty` is initialized from `floor(difficulty * random(1.0, 1.5))`.
-- Turn advancement uses `getLeadTurnSuccessChance(previousProgress, currentProgress, actualDifficulty)`.
-- Agent progress uses `getLeadProgressFromAgents(agents)`.
-- Removing agents applies proportional progress loss.
+- Success chance ranges use `difficulty` as the minimum possible actual difficulty and
+  `floor(difficulty * 1.5)` as the maximum possible actual difficulty.
+- Turn advancement computes `turn advancement progress`, adds it to stored `progress`, then rolls
+  `P_tadv`.
+- Removing agents applies proportional progress loss to stored `progress`.
 - Exhaustion and mandatory withdrawal remain unchanged.
 
 Lead difficulty values should be tuned against the intended campaign length, but the player-facing
@@ -264,8 +248,9 @@ meaning should stay stable:
   `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) / 100` and
   `progressEfficiency = agentCount ^ 0.8 / agentCount`.
 
-- **`Turn advancement success chance range`:** The UI's lower-to-upper estimate of the next turn's completion chance,
-  computed from the possible `lead investigation actual difficulty` range.
+- **`Turn advancement success chance range`:** The UI's `Mid ± Err` estimate of the
+  next turn's completion chance, computed from the possible `lead investigation actual difficulty`
+  range.
 
 ## Advanced concepts, hidden from the UI
 
@@ -291,6 +276,9 @@ meaning should stay stable:
 
 # Formula reference
 
+<!-- markdownlint-disable MD051 -->
+<!-- Why? False positive on [intuition](#intuition-behind----turn-advancement-success-chance) -->
+
 | Definition | Formula | Remarks |
 | --- | --- | --- |
 | $D_v$ - lead visible difficulty | Given by the lead. | Visible difficulty is shown in the UI and establishes the lower bound of actual difficulty. |
@@ -304,6 +292,8 @@ meaning should stay stable:
 | $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
 | $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#intuition-behind----turn-advancement-success-chance). |
 | $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
+
+<!-- markdownlint-enable MD051 -->
 
 ## Constants
 
@@ -371,26 +361,29 @@ Then create this table starting on row 7:
 
 | Column | Header | Formula for row 7 |
 | --- | --- | --- |
-| `A` | `Turn` | `=1` |
+| `A` | `Turn` | `=0` |
 | `B` | `ProgressValue` | `=A7*$B$2` |
 | `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.#"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.#"))` |
-| `D` | `$P_c$ @ Dmin` | `=MIN(1,(B7/$B$3)^3)` |
-| `E` | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
-| `F` | `$P_c$ @ Dmax` | `=MIN(1,(B7/$B$4)^3)` |
-| `G` | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
-| `H` | `Success Range` | `="~"&TEXT(FLOOR(G7*100,1),"0")&"% - ~"&TEXT(CEILING(E7*100,1),"0")&"%"` |
+| `D` | `$P_c$ @ Dmax` | `=MIN(1,(B7/$B$4)^3)` |
+| `E` | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),0,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
+| `F` | `$P_c$ @ Dmin` | `=MIN(1,(B7/$B$3)^3)` |
+| `G` | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),0,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
+| `H` | `SuccessMid` | `=(E7+G7)/2` |
+| `I` | `SuccessErr` | `=(G7-E7)/2` |
+| `J` | `Displayed Success` | `="~"&TEXT(ROUND(H7*100,0),"0")&"% ± "&TEXT(ROUND(I7*100,0),"0")&"%"` |
 
 For row 8 and below:
 
 - `A8`: `=A7+1`
-- Copy columns `B:H` down from row 7.
-- Format `D:G` as percentages.
-- Hide `B` if you only want to display the player-facing progress label from `C`.
+- Copy columns `B:J` down from row 7.
+- Format `D:I` as percentages.
+- Hide `B`, `H`, and `I` if you only want to display the player-facing labels from `C` and `J`.
 
 In this setup:
 
-- `$P_c$ @ Dmin` and `$P_{\text{tadv}}$ @ Dmin` are the high-end success chances, because actual difficulty is as low
-  as possible.
 - `$P_c$ @ Dmax` and `$P_{\text{tadv}}$ @ Dmax` are the low-end success chances, because actual difficulty is as high
   as possible after rounding down.
-- `Success Range` rounds the lower turn chance down and the upper turn chance up.
+- `$P_c$ @ Dmin` and `$P_{\text{tadv}}$ @ Dmin` are the high-end success chances, because actual difficulty is as low
+  as possible.
+- `Displayed Success` shows `Mid ± Err` for the possible
+  `$P_{\text{tadv}}$` range.
