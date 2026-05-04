@@ -121,27 +121,8 @@ and never higher than 150% of visible difficulty.
 
 ## Effective Skill
 
-The lead investigation system uses each assigned agent's effective skill. Effective skill starts
-from the agent's base skill, then applies hit point and exhaustion penalties:
-
-$$
-\text{effectiveSkill} =
-\text{skill} \cdot \text{hitPointsMult} \cdot \text{exhaustionMult}
-$$
-
-Hit point multiplier:
-
-$$
-\text{hitPointsMult} =
-1 - \frac{\text{maxHitPoints} - \text{hitPoints}}{\text{maxHitPoints}}
-$$
-
-Exhaustion multiplier:
-
-$$
-\text{exhaustionMult} =
-1 - \frac{\max(0, \min(100, \text{exhaustionPct}) - \text{NO\_IMPACT\_EXHAUSTION})}{100}
-$$
+The lead investigation system uses each assigned agent's effective skill. Effective skill is
+dictated by hit points and exhaustion. See [about_agents.md](about_agents.md#effective-skill).
 
 ## Progress by Agent
 
@@ -156,7 +137,7 @@ $$
 Progress efficiency applies diminishing returns based on assigned agent count:
 
 $$
-E_{\text{progress}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
+P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
 $$
 
 This keeps the first agent highly valuable while making each additional stacked agent less efficient
@@ -167,7 +148,7 @@ than the previous one.
 Progress per turn is progress by agent multiplied by progress efficiency:
 
 $$
-\Delta\text{progress} = P_{\text{byAgent}} \cdot E_{\text{progress}}
+\Delta\text{progress} = P_{\text{byAgent}} \cdot P_{\text{eff}}
 $$
 
 Then add it to current progress:
@@ -507,7 +488,23 @@ meaning should stay stable:
   `turn advancement success chance` is derived from the difference between previous and current
   `accumulated success chance`, conditional on the `lead investigation` still being unresolved.
 
-# Appendix: Excel Formulas
+# Formula reference
+
+| Definition | Formula | Remarks |
+| --- | --- | --- |
+| $D_v$ - lead visible difficulty | Given by the lead. | Visible difficulty is shown in the UI and establishes the lower bound of actual difficulty. |
+| $S_{\text{eff}}$ - effective skill | See [about_agents.md](about_agents.md#effective-skill). | Effective skill is dictated by hit points and exhaustion. |
+| $P_{\text{agent}}$ - progress by agent | $P_{\text{agent}} = \sum \frac{S_{\text{eff}}}{100}$ | Every 100 effective skill contributes 1 progress by agent. |
+| $P_{\text{eff}}$ - progress efficiency | $P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}$ | More agents help, but each additional agent adds less. |
+| $\Delta p$ - turn advancement progress | $\Delta p = P_{\text{agent}} \cdot P_{\text{eff}}$ | When advancing from turn $n$ to turn $n+1$, $P_{\text{agent}}$ and $P_{\text{eff}}$ are computed from the turn $n$ state. |
+| $p_{n+1}$ - progress after turn advancement | $p_{n+1} = p_n + \Delta p$ | Advancing from turn $n$ to turn $n+1$ adds $\Delta p$. |
+| $D_a$ - lead investigation actual difficulty | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$ | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty. |
+| $\rho$ - progress ratio | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$ | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%. |
+| $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
+| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. |
+| $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
+
+# Excel formulas reference
 
 To reproduce the Difficulty 10 example table in Excel, use these inputs:
 
