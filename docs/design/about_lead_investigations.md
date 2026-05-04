@@ -46,6 +46,8 @@ The player sees visible lead difficulty and investigation progress. The player d
 
 ## Completing a Lead Investigation
 
+TODO - rewrite this section it using the new concepts terminology, not this old one
+
 To complete a lead investigation, the player assigns agents to it. Assigned agents produce
 **progress per turn**, which is added to the investigation's stored `progress`.
 
@@ -75,6 +77,8 @@ Adding agents does not reduce progress. Removing agents does.
 
 ## Success Chance Range Each Turn
 
+TODO - instead of showing %X - %Y it should show %Z +- W, where with each turn Z moves up a bit and W narrows down a lot.
+
 At the end of each turn, an active investigation rolls for completion. The UI should show a success
 chance range because the player does not know actual difficulty.
 
@@ -84,6 +88,8 @@ chance range because the player does not know actual difficulty.
 The range should usually increase as progress increases.
 
 # 3. Suggested UI Wording
+
+TODO - review
 
 In the leads grid:
 
@@ -124,12 +130,16 @@ progress efficiency.
 
 # 6. Difficulty 10 Example
 
+TODO - rename to "Lead investigation example"
+
 For **Difficulty 10** with one **Skill 100** agent:
 
 Row `0` is the starting state before any turn advancement. Each later row represents the state after
 that row's turn advancement. For example, row `2` means the investigation advanced from turn 1 to
 turn 2, progress increased from `1/10` to `2/10`, and $P_{\text{tadv}}$ is the success chance rolled during
 that turn advancement.
+
+TODO - reoder table rows so D15 are first, then D10
 
 | Turn | Progress | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 |
 | ---: | -------: | -------: | -------: | -------: | -------: |
@@ -158,7 +168,10 @@ Legend:
 - `D10` = actual difficulty is 10.
 - `D15` = actual difficulty is 15.
 
-This is still unpredictable, but the range is easy to understand:
+TODO - add to the table row showing the displayed success chance range, using the new %Z - W approach, proposed
+in one of the todos above.
+
+This is unpredictable, but the range is easy to understand:
 
 - It might finish early.
 - It becomes much more likely near the visible Difficulty.
@@ -174,6 +187,8 @@ If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent 
 guaranteed at 15 progress instead of 10.
 
 # 7. Design Rationale
+
+TODO - review. Never refer to "previous model". We don't care about it. The design must stand on itself.
 
 The previous model made Difficulty mean:
 
@@ -205,6 +220,8 @@ That maps directly to player planning while retaining the desired feel:
   costless.
 
 # 8. Implementation Notes
+
+TODO - review for correctness and adherence to new terminology and formulas.
 
 The implementation follows these model concepts:
 
