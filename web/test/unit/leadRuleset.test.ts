@@ -61,6 +61,13 @@ describe('leadRuleset', () => {
       expect(range.lower).toBeCloseTo(0.055_738_786_28, 10)
       expect(range.upper).toBeCloseTo(0.257_229_832_572, 10)
     })
+
+    test('floors maximum actual difficulty for chance ranges', () => {
+      const range = getLeadTurnSuccessChanceRange(4, 5, 5)
+
+      expect(range.lower).toBeCloseTo(0.218_637_992_832, 10)
+      expect(range.upper).toBe(1)
+    })
   })
 
   describe(getLeadProgressFromAgents, () => {

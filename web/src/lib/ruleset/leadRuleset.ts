@@ -92,7 +92,7 @@ export function getLeadTurnSuccessChanceRange(
   visibleDifficulty: number,
 ): LeadTurnSuccessChanceRange {
   const actualDifficultyMin = visibleDifficulty
-  const actualDifficultyMax = visibleDifficulty * 1.5
+  const actualDifficultyMax = Math.floor(visibleDifficulty * 1.5)
 
   return {
     lower: getLeadTurnSuccessChance(previousProgress, currentProgress, actualDifficultyMax),

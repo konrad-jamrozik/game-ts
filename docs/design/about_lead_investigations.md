@@ -501,7 +501,7 @@ To reproduce the Difficulty 10 example table in Excel, use these inputs:
 | `B1` | Visible difficulty | `10` |
 | `B2` | Progress per turn | `1` |
 | `B3` | Minimum actual difficulty | `=B1` |
-| `B4` | Maximum actual difficulty | `=FLOOR(B1*1.5,1)` |
+| `B4` | Maximum actual difficulty, rounded down | `=FLOOR(B1*1.5,1)` |
 
 Then create this table starting on row 7:
 
@@ -528,38 +528,39 @@ In this setup:
 - `CC @ Tmin` and `TC @ Tmin` are the high-end success chances, because actual difficulty is as low
   as possible.
 - `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because actual difficulty is as high
-  as possible.
+  as possible after rounding down.
 - `Success Range` rounds the lower turn chance down and the upper turn chance up.
 
 ## Appendix: Glossary
 
-- **Lead:** An investigation target that can have lead investigations started for it.
-- **Repeatable lead:** A lead that can be investigated repeatably, but only once at a time.
-- **Lead investigation:** A state object representing one active or past investigation of a lead.
-- **Lead visible difficulty:** The lead's shown difficulty value. It is the progress denominator shown in
-  the UI. It establishes the lower bound of actual difficulty.
-- **Lead investigation actual difficulty:** The hidden integer progress target for a specific lead investigation. It is
-  generated when the investigation starts and is between 100% and 150% of visible difficulty,
-  rounded down.
-- **Progress:** The investigation's accumulated work toward actual difficulty. When `Advance turn` is clicked,
-- the starting `Turn advancement progress` is added to the `Accumulated progress` value.
-- **Turn advancement progress:** The progress added to `Accumulated progress` when `Advance turn` is
-  clicked: `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) /
-  100` and `progressEfficiency = agentCount ^ 0.8 / agentCount`.
-- **Effective skill:** See `about_agents.md`.
-- **Progress by agent:** Effective skill normalized by dividing by 100. For example, 130 effective skill is
-  1.3 progress by agent.
-- **Progress efficiency:** The diminishing returns factor for stacked agents:
+- **`Lead`:** An investigation target that can have `lead investigation` records started for it.
+- **`Repeatable lead`:** A `lead` that can be investigated repeatably, but only once at a time.
+- **`Lead investigation`:** A state object representing one active or past investigation of a `lead`.
+- **`Lead visible difficulty`:** The `lead`'s shown difficulty value. It is the `progress`
+  denominator shown in the UI. It establishes the lower bound of `lead investigation actual difficulty`.
+- **`Lead investigation actual difficulty`:** The hidden integer `progress` target for a specific
+  `lead investigation`. It is generated when the investigation starts and is between 100% and 150%
+  of `lead visible difficulty`, rounded down.
+- **`Progress`:** The `lead investigation`'s accumulated work toward
+  `lead investigation actual difficulty`. When `Advance turn` is clicked, the computed
+  `turn advancement progress` is added to the `progress` value.
+- **`Turn advancement progress`:** The `progress` added to `progress` when `Advance turn` is clicked:
+  `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) / 100` and
+  `progressEfficiency = agentCount ^ 0.8 / agentCount`.
+- **`Effective skill`:** See `about_agents.md`.
+- **`Progress by agent`:** `Effective skill` normalized by dividing by 100. For example, 130
+  `effective skill` is 1.3 `progress by agent`.
+- **`Progress efficiency`:** The diminishing returns factor for stacked agents:
   `agentCount ^ 0.8 / agentCount`.
-- **Progress loss:** The immediate reduction to progress when agents are unassigned from an
-  investigation.
-- **Turn advancement success chance:** The chance that an unresolved investigation completes during
-  this turn advancement. It is the conditional roll chance needed to move from the previous
-  accumulated success chance to the current accumulated success chance.
-- **Accumulated success chance:** The target total chance that an investigation should already have
-  completed at or before a given progress value: `min(1, progress / actualDifficulty) ^ 3`. It is
-  not a per-turn chance. The turn advancement success chance is derived from the difference between
-  previous and current accumulated success chance, conditional on the investigation still being
-  unresolved.
-- **Success chance range:** The UI's lower-to-upper estimate of the next turn's completion chance,
-  computed from the possible actual difficulty range.
+- **`Progress loss`:** The immediate reduction to `progress` when agents are unassigned from a
+  `lead investigation`.
+- **`Turn advancement success chance`:** The chance that an unresolved `lead investigation` completes
+  during this turn advancement. It is the conditional roll chance needed to move from the previous
+  `accumulated success chance` to the current `accumulated success chance`.
+- **`Accumulated success chance`:** The target total chance that a `lead investigation` should
+  already have completed at or before a given `progress` value:
+  `min(1, progress / actualDifficulty) ^ 3`. It is not a per-turn chance. The
+  `turn advancement success chance` is derived from the difference between previous and current
+  `accumulated success chance`, conditional on the `lead investigation` still being unresolved.
+- **`Success chance range`:** The UI's lower-to-upper estimate of the next turn's completion chance,
+  computed from the possible `lead investigation actual difficulty` range.
