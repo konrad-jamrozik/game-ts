@@ -2,7 +2,27 @@
 
 This document describes the current lead investigation system: what the player sees, how assigned
 agents produce progress, how progress can be lost, and how the game computes each turn's success
-chance.
+chance.- [About Agent Lead Investigation System](#about-agent-lead-investigation-system)
+- [About Agent Lead Investigation System](#about-agent-lead-investigation-system)
+- [1. Gameplay Basics](#1-gameplay-basics)
+  - [Lead](#lead)
+  - [Repeatable Lead](#repeatable-lead)
+  - [Lead Investigation Stored Properties](#lead-investigation-stored-properties)
+  - [Completing a Lead Investigation](#completing-a-lead-investigation)
+  - [Progress Loss on Agent Unassignment](#progress-loss-on-agent-unassignment)
+  - [Success Chance Range Each Turn](#success-chance-range-each-turn)
+- [2. Suggested UI Wording](#2-suggested-ui-wording)
+- [3. Key Player Intuitions](#3-key-player-intuitions)
+- [4. Lead Investigation Example](#4-lead-investigation-example)
+- [5. Design Rationale](#5-design-rationale)
+- [6. Implementation Notes](#6-implementation-notes)
+- [7. Concept definitions](#7-concept-definitions)
+  - [Concepts visible in UI](#concepts-visible-in-ui)
+  - [Advanced concepts, hidden from the UI](#advanced-concepts-hidden-from-the-ui)
+- [8. Formula reference](#8-formula-reference)
+  - [Constants](#constants)
+- [9. Intuition behind $P\_{\\text{tadv}}$ - Turn Advancement Success Chance](#9-intuition-behind-p_texttadv---turn-advancement-success-chance)
+- [10. Excel formulas reference](#10-excel-formulas-reference)
 
 # 1. Gameplay Basics
 
@@ -61,7 +81,7 @@ multiple agents.
 After turn advancement progress is added, the game rolls `turn advancement success chance`. This
 creates a slight chance each turn to complete the investigation early. Because `accumulated success
 chance` is cubed, that chance grows slowly at first, then rapidly approaches 100% as `progress`
-nears actual difficulty. See [Lead Investigation Example](#6-lead-investigation-example).
+nears actual difficulty. See [Lead Investigation Example](#4-lead-investigation-example).
 
 ## Progress Loss on Agent Unassignment
 
@@ -89,9 +109,9 @@ Display this range as `%Mid ± Err`:
 As `progress` increases, `Mid` generally rises. `Err` represents uncertainty from hidden actual
 difficulty and narrows toward zero as progress approaches the maximum possible actual difficulty.
 
-# 3. Suggested UI Wording
+# 2. Suggested UI Wording
 
-KJA TODO - actually implement this suggestion, and rename this section to "UI design" (so it UI independent)
+KJA lead inv doc TODO - actually implement this suggestion, and rename this section to "UI design" (so it UI independent)
 
 In the leads grid:
 
@@ -119,7 +139,7 @@ Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead 
 progress efficiency. `Success` is the displayed `turn advancement success chance` range, written as
 `Mid ± Err`.
 
-# 4. Key Player Intuitions
+# 3. Key Player Intuitions
 
 | Concept | Player Feedback/Intuition |
 | :--- | :--- |
@@ -131,7 +151,7 @@ progress efficiency. `Success` is the displayed `turn advancement success chance
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
 | **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
 
-# 6. Lead Investigation Example
+# 4. Lead Investigation Example
 
 For **Difficulty 10** with one **Skill 100** agent:
 
@@ -183,7 +203,9 @@ about `~57% ± 43%`. Turn 14 has a range from 46.4% to 100%, so it should show a
 If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent investigation is
 guaranteed at 15 progress instead of 10.
 
-# 7. Design Rationale
+# 5. Design Rationale
+
+KJA lead inv doc TODO add notes on rejected alternative design, that will mostly trash the legacy design.
 
 The model makes Difficulty mean:
 
@@ -201,9 +223,9 @@ That maps directly to player planning while retaining uncertainty and long-inves
 - Progress loss preserves assignment continuity and prevents parked investigations from being
   costless.
 
-# 8. Implementation Notes
+# 6. Implementation Notes
 
-KJA TODO - isn't this section incomplete and selective? Do we need it at all?
+KJA lead inv doc TODO - isn't this section incomplete and selective? Do we need it at all?
 
 The implementation follows these model concepts:
 
@@ -222,7 +244,7 @@ meaning should stay stable:
 
 > Difficulty is the number of turns a Skill 100 agent should expect to spend.
 
-# Concept definitions
+# 7. Concept definitions
 
 ## Concepts visible in UI
 
@@ -274,10 +296,10 @@ meaning should stay stable:
   `turn advancement success chance` is derived from the difference between previous and current
   `accumulated success chance`, conditional on the `lead investigation` still being unresolved.
 
-# Formula reference
+# 8. Formula reference
 
 <!-- markdownlint-disable MD051 -->
-<!-- Why? False positive on [intuition](#intuition-behind----turn-advancement-success-chance) -->
+<!-- Why? False positive on [intuition](#9-intuition-behind----turn-advancement-success-chance) -->
 
 | Definition | Formula | Remarks |
 | --- | --- | --- |
@@ -290,7 +312,7 @@ meaning should stay stable:
 | $D_a$ - lead investigation actual difficulty | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$ | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty. |
 | $\rho$ - progress ratio | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$ | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%. |
 | $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
-| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#intuition-behind----turn-advancement-success-chance). |
+| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#9-intuition-behind----turn-advancement-success-chance). |
 | $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
 
 <!-- markdownlint-enable MD051 -->
@@ -306,7 +328,7 @@ The table above uses inline following constants:
 | **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty. |
 | **Cumulative chance exponent** | **3** | $P_c$ - accumulated success chance | Makes early success possible but unlikely, then rises sharply near completion. |
 
-# Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
+# 9. Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
 
 The formula reference above is enough to implement the system. This section explains why
 $P_{\text{tadv}}$ is written in conditional form.
@@ -346,7 +368,7 @@ $$
 20\% + (80\% \cdot 30\%) = 44\%
 $$
 
-# Excel formulas reference
+# 10. Excel formulas reference
 
 To reproduce the Difficulty 10 example table in Excel, use these inputs:
 
