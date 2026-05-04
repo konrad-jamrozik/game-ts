@@ -83,171 +83,6 @@ chance range because the player does not know actual difficulty.
 
 The range should usually increase as progress increases.
 
-# 2. Formula Reference
-
-## Visible Difficulty
-
-Visible difficulty is an integer stored on the lead:
-
-$$
-D_{\text{visible}}
-$$
-
-It is the progress denominator shown to the player and the baseline turn count for one Skill 100
-agent.
-
-## Actual Difficulty
-
-Actual difficulty is generated once, when the investigation starts:
-
-$$
-D_{\text{actual}} =
-\left\lfloor D_{\text{visible}} \cdot \operatorname{random}(1.0, 1.5) \right\rfloor
-$$
-
-Actual difficulty is hidden from the player. It is an integer, never lower than visible difficulty,
-and never higher than 150% of visible difficulty.
-
-## Effective Skill
-
-The lead investigation system uses each assigned agent's effective skill. Effective skill is
-dictated by hit points and exhaustion. See [about_agents.md](about_agents.md#effective-skill).
-
-## Progress by Agent
-
-Progress by agent normalizes effective skill around 100:
-
-$$
-P_{\text{byAgent}} = \sum \frac{\text{effectiveSkill}}{100}
-$$
-
-## Progress Efficiency Formula
-
-Progress efficiency applies diminishing returns based on assigned agent count:
-
-$$
-P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}
-$$
-
-This keeps the first agent highly valuable while making each additional stacked agent less efficient
-than the previous one.
-
-## Progress per Turn Formula
-
-Progress per turn is progress by agent multiplied by progress efficiency:
-
-$$
-\Delta\text{progress} = P_{\text{byAgent}} \cdot P_{\text{eff}}
-$$
-
-Then add it to current progress:
-
-$$
-\text{progress}_{\text{new}} = \text{progress}_{\text{old}} + \Delta\text{progress}
-$$
-
-## Progress Loss
-
-When agents are removed, progress is recalibrated against the effective skill of the remaining
-agents:
-
-$$
-\text{progress}_{\text{new}} =
-\text{progress}_{\text{old}} \cdot
-\frac{\text{remainingAgentSkill}}{\text{previousAgentSkill}}
-$$
-
-For example:
-
-- Progress is 8 out of 10.
-- Two agents were assigned: Skill 150 and Skill 50.
-- The Skill 150 agent is removed.
-- Remaining skill is 50 out of previous 200.
-- New progress is `8 * 50 / 200 = 2`.
-
-## Progress Ratio
-
-Progress ratio compares current progress against actual difficulty:
-
-$$
-\rho = \min\left(1, \frac{\text{progress}}{D_{\text{actual}}}\right)
-$$
-
-## Cumulative Success Chance
-
-Cumulative success chance is:
-
-$$
-P_c = \rho^3
-$$
-
-The exponent makes early success possible but unlikely, then raises success chance sharply near the
-end.
-
-## Turn Advancement Success Chance
-
-The turn advancement success chance is the success chance rolled when advancing the turn. It is the
-increase in cumulative chance since the previous turn, conditional on the investigation not having
-succeeded already:
-
-When advancing from turn $N$ to turn $N+1$:
-
-- `previous` means the investigation state before adding this turn's progress per turn, at the start
-  of turn advancement from turn $N$.
-- `current` means the investigation state after adding this turn's progress per turn, still during
-  the same turn advancement into turn $N+1$.
-
-$$
-\rho_{\text{previous}} = \min\left(1, \frac{\text{previousProgress}}{D_{\text{actual}}}\right)
-$$
-
-$$
-\rho_{\text{current}} = \min\left(1, \frac{\text{currentProgress}}{D_{\text{actual}}}\right)
-$$
-
-$$
-P_{c,\text{previous}} = \rho_{\text{previous}}^3
-$$
-
-$$
-P_{c,\text{current}} = \rho_{\text{current}}^3
-$$
-
-$$
-P_{\text{tadv}} =
-\frac{P_{c,\text{current}} - P_{c,\text{previous}}}{1 - P_{c,\text{previous}}}
-$$
-
-## Success Chance Range
-
-The UI should compute the turn advancement success chance twice:
-
-$$
-D_{\text{actualMax}} = \left\lfloor 1.5 \cdot D_{\text{visible}} \right\rfloor
-$$
-
-$$
-D_{\text{actualMin}} = D_{\text{visible}}
-$$
-
-Then:
-
-$$
-P_{\text{lower}} =
-P_{\text{tadv}}\left(D_{\text{actualMax}}\right)
-$$
-
-$$
-P_{\text{upper}} =
-P_{\text{tadv}}\left(D_{\text{actualMin}}\right)
-$$
-
-Display the lower bound rounded down and the upper bound rounded up:
-
-```text
-Success %: floor(P_lower) - ceil(P_upper)
-```
-
 # 3. Suggested UI Wording
 
 In the leads grid:
@@ -286,46 +121,6 @@ progress efficiency.
 | **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty. |
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
 | **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
-
-# 5. Advanced Probability Intuition
-
-The formulas above are enough to implement the system. This section explains why the turn
-advancement success chance formula is written in conditional form.
-
-The system uses a cumulative probability curve, not a direct per-turn linear chance. This formula
-matters because it guarantees that total cumulative success probability at progress ratio $\rho$ is
-exactly $\rho^3$.
-
-The intuition:
-
-- $P_{c,\text{previous}}$ is the total chance that the investigation would already have succeeded
-  before this turn.
-- $P_{c,\text{current}}$ is the total chance that the investigation should have succeeded by the end
-  of this turn.
-- $P_{c,\text{current}} - P_{c,\text{previous}}$ is the new success chance added by this turn.
-- $1 - P_{c,\text{previous}}$ is the unresolved probability space still available, because the turn
-  only happens in timelines where the investigation has not already succeeded.
-
-So the roll made during turn advancement asks:
-
-$$
-P_{\text{tadv}} =
-\frac{\text{new success chance added this turn}}{\text{chance the investigation was still unresolved}}
-$$
-
-For example, if cumulative success rises from 20% to 44%, this turn adds 24 percentage points of
-total success chance. But only the unresolved 80% of cases are still rolling, so the turn
-advancement success chance is:
-
-$$
-\frac{44\% - 20\%}{100\% - 20\%} = 30\%
-$$
-
-After that roll, the total cumulative success chance is exactly 44%:
-
-$$
-20\% + (80\% \cdot 30\%) = 44\%
-$$
 
 # 6. Difficulty 10 Example
 
@@ -490,7 +285,7 @@ meaning should stay stable:
 | $D_a$ - lead investigation actual difficulty | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$ | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty. |
 | $\rho$ - progress ratio | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$ | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%. |
 | $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
-| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. |
+| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#intuition-behind----turn-advancement-success-chance). |
 | $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
 
 ## Constants
@@ -503,6 +298,46 @@ The table above uses inline following constants:
 | **Minimum actual difficulty multiplier** | **1.0** | $D_a$ - lead investigation actual difficulty | Actual difficulty is never lower than visible difficulty. |
 | **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty. |
 | **Cumulative chance exponent** | **3** | $P_c$ - accumulated success chance | Makes early success possible but unlikely, then rises sharply near completion. |
+
+# Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
+
+The formula reference above is enough to implement the system. This section explains why
+$P_{\text{tadv}}$ is written in conditional form.
+
+The system uses a cumulative probability curve, not a direct per-turn linear chance. The
+$P_{\text{tadv}}$ formula makes repeated turn advancement rolls match the cumulative probability
+curve exactly.
+
+When advancing from turn $n$ to turn $n+1$:
+
+- $P_c(p_n, D_a)$ is the total chance that the investigation would already have succeeded before
+  adding progress for this turn advancement.
+- $P_c(p_{n+1}, D_a)$ is the total chance that the investigation should have succeeded after adding
+  progress for this turn advancement.
+- $P_c(p_{n+1}, D_a) - P_c(p_n, D_a)$ is the new success chance added by this turn advancement.
+- $1 - P_c(p_n, D_a)$ is the unresolved probability space still available, because the roll only
+  happens in timelines where the investigation has not already succeeded.
+
+So the roll made during turn advancement asks:
+
+$$
+P_{\text{tadv}} =
+\frac{\text{new success chance added by this turn advancement}}{\text{chance the investigation was still unresolved}}
+$$
+
+For example, if accumulated success chance rises from 20% to 44%, this turn advancement adds 24
+percentage points of total success chance. But only the unresolved 80% of cases are still rolling,
+so the turn advancement success chance is:
+
+$$
+\frac{44\% - 20\%}{100\% - 20\%} = 30\%
+$$
+
+After that roll, the accumulated success chance is exactly 44%:
+
+$$
+20\% + (80\% \cdot 30\%) = 44\%
+$$
 
 # Excel formulas reference
 
