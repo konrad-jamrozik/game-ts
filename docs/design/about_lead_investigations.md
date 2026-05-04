@@ -208,16 +208,24 @@ $$
 Cumulative success chance is:
 
 $$
-C = \rho^3
+P_c = \rho^3
 $$
 
 The exponent makes early success possible but unlikely, then raises success chance sharply near the
 end.
 
-## Turn Success Chance
+## Turn Advancement Success Chance
 
-The turn success chance is the increase in cumulative chance since the previous turn, conditional on
-the investigation not having succeeded already:
+The turn advancement success chance is the success chance rolled when advancing the turn. It is the
+increase in cumulative chance since the previous turn, conditional on the investigation not having
+succeeded already:
+
+When advancing from turn $N$ to turn $N+1$:
+
+- `previous` means the investigation state before adding this turn's progress per turn, at the start
+  of turn advancement from turn $N$.
+- `current` means the investigation state after adding this turn's progress per turn, still during
+  the same turn advancement into turn $N+1$.
 
 $$
 \rho_{\text{previous}} = \min\left(1, \frac{\text{previousProgress}}{D_{\text{actual}}}\right)
@@ -228,21 +236,21 @@ $$
 $$
 
 $$
-C_{\text{previous}} = \rho_{\text{previous}}^3
+P_{c,\text{previous}} = \rho_{\text{previous}}^3
 $$
 
 $$
-C_{\text{current}} = \rho_{\text{current}}^3
+P_{c,\text{current}} = \rho_{\text{current}}^3
 $$
 
 $$
-P_{\text{turn}} =
-\frac{C_{\text{current}} - C_{\text{previous}}}{1 - C_{\text{previous}}}
+P_{\text{tadv}} =
+\frac{P_{c,\text{current}} - P_{c,\text{previous}}}{1 - P_{c,\text{previous}}}
 $$
 
 ## Success Chance Range
 
-The UI should compute the turn success chance twice:
+The UI should compute the turn advancement success chance twice:
 
 $$
 D_{\text{actualMax}} = \left\lfloor 1.5 \cdot D_{\text{visible}} \right\rfloor
@@ -256,12 +264,12 @@ Then:
 
 $$
 P_{\text{lower}} =
-P_{\text{turn}}\left(D_{\text{actualMax}}\right)
+P_{\text{tadv}}\left(D_{\text{actualMax}}\right)
 $$
 
 $$
 P_{\text{upper}} =
-P_{\text{turn}}\left(D_{\text{actualMin}}\right)
+P_{\text{tadv}}\left(D_{\text{actualMin}}\right)
 $$
 
 Display the lower bound rounded down and the upper bound rounded up:
@@ -311,8 +319,8 @@ progress efficiency.
 
 # 5. Advanced Probability Intuition
 
-The formulas above are enough to implement the system. This section explains why the turn success
-chance formula is written in conditional form.
+The formulas above are enough to implement the system. This section explains why the turn
+advancement success chance formula is written in conditional form.
 
 The system uses a cumulative probability curve, not a direct per-turn linear chance. This formula
 matters because it guarantees that total cumulative success probability at progress ratio $\rho$ is
@@ -320,24 +328,24 @@ exactly $\rho^3$.
 
 The intuition:
 
-- $C_{\text{previous}}$ is the total chance that the investigation would already have succeeded
+- $P_{c,\text{previous}}$ is the total chance that the investigation would already have succeeded
   before this turn.
-- $C_{\text{current}}$ is the total chance that the investigation should have succeeded by the end
+- $P_{c,\text{current}}$ is the total chance that the investigation should have succeeded by the end
   of this turn.
-- $C_{\text{current}} - C_{\text{previous}}$ is the new success chance added by this turn.
-- $1 - C_{\text{previous}}$ is the unresolved probability space still available, because the turn
+- $P_{c,\text{current}} - P_{c,\text{previous}}$ is the new success chance added by this turn.
+- $1 - P_{c,\text{previous}}$ is the unresolved probability space still available, because the turn
   only happens in timelines where the investigation has not already succeeded.
 
-So the per-turn roll asks:
+So the roll made during turn advancement asks:
 
 $$
-P_{\text{turn}} =
+P_{\text{tadv}} =
 \frac{\text{new success chance added this turn}}{\text{chance the investigation was still unresolved}}
 $$
 
 For example, if cumulative success rises from 20% to 44%, this turn adds 24 percentage points of
-total success chance. But only the unresolved 80% of cases are still rolling, so the turn success
-chance is:
+total success chance. But only the unresolved 80% of cases are still rolling, so the turn
+advancement success chance is:
 
 $$
 \frac{44\% - 20\%}{100\% - 20\%} = 30\%
@@ -353,8 +361,14 @@ $$
 
 For **Difficulty 10** with one **Skill 100** agent:
 
-| Turn | Progress | CC @ T10 | TC @ T10 | CC @ T15 | TC @ T15 |
+Row `0` is the starting state before any turn advancement. Each later row represents the state after
+that row's turn advancement. For example, row `2` means the investigation advanced from turn 1 to
+turn 2, progress increased from `1/10` to `2/10`, and $P_{\text{tadv}}$ is the success chance rolled during
+that turn advancement.
+
+| Turn | Progress | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 |
 | ---: | -------: | -------: | -------: | -------: | -------: |
+| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% |
 | 1 | 1/10 | 0.1% | 0.1% | 0.0% | 0.0% |
 | 2 | 2/10 | 0.8% | 0.7% | 0.2% | 0.2% |
 | 3 | 3/10 | 2.7% | 1.9% | 0.8% | 0.6% |
@@ -373,11 +387,11 @@ For **Difficulty 10** with one **Skill 100** agent:
 
 Legend:
 
-- `CC` = cumulative chance that the investigation has succeeded by this turn.
-- `TC` = turn chance, the chance that the investigation succeeds on this turn if it has not already
-  succeeded.
-- `T10` = actual difficulty is 10.
-- `T15` = actual difficulty is 15.
+- $P_c$ = accumulated success chance after the advancement that produced this row's progress value.
+- $P_{\text{tadv}}$ = turn advancement success chance, the chance rolled during the advancement that produced
+  this row's progress value.
+- `D10` = actual difficulty is 10.
+- `D15` = actual difficulty is 15.
 
 This is still unpredictable, but the range is easy to understand:
 
@@ -386,9 +400,10 @@ This is still unpredictable, but the range is easy to understand:
 - It can run longer than the visible Difficulty because actual difficulty may be up to 150%.
 - It becomes guaranteed when progress reaches actual difficulty.
 
-For example, in this table, turn 8 has a turn success chance between 5.6% and 25.7%, so the UI
-should show about `~5% - ~26%`. Turn 11 has a range from 13.9% to 100%, so it should show about
-`~13% - 100%`. Turn 14 has a range from 46.4% to 100%, so it should show about `~46% - 100%`.
+For example, in this table, turn 8 has a turn advancement success chance between 5.6% and 25.7%, so
+the UI should show about `~5% - ~26%`. Turn 11 has a range from 13.9% to 100%, so it should show
+about `~13% - 100%`. Turn 14 has a range from 46.4% to 100%, so it should show about
+`~46% - 100%`.
 
 If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent investigation is
 guaranteed at 15 progress instead of 10.
@@ -417,8 +432,8 @@ That maps directly to player planning while retaining the desired feel:
 - Actual difficulty preserves uncertainty without making the visible number meaningless.
 - The cumulative probability curve allows early success while still guaranteeing completion at
   actual difficulty.
-- The conditional `P_turn` formula keeps the cumulative curve mathematically honest across repeated
-  turn rolls.
+- The conditional `P_tadv` formula keeps the cumulative curve mathematically honest across repeated
+  turn advancement rolls.
 - Progress efficiency keeps the useful shape of the old agent stacking formula, but expresses it in
   progress per turn instead of hidden Intel.
 - Proportional loss preserves investigation recency and prevents parked investigations from being
@@ -510,10 +525,10 @@ Then create this table starting on row 7:
 | `A` | `Turn` | `=1` |
 | `B` | `ProgressValue` | `=A7*$B$2` |
 | `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.#"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.#"))` |
-| `D` | `CC @ Tmin` | `=MIN(1,(B7/$B$3)^3)` |
-| `E` | `TC @ Tmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
-| `F` | `CC @ Tmax` | `=MIN(1,(B7/$B$4)^3)` |
-| `G` | `TC @ Tmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
+| `D` | `$P_c$ @ Dmin` | `=MIN(1,(B7/$B$3)^3)` |
+| `E` | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),D7,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
+| `F` | `$P_c$ @ Dmax` | `=MIN(1,(B7/$B$4)^3)` |
+| `G` | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),F7,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
 | `H` | `Success Range` | `="~"&TEXT(FLOOR(G7*100,1),"0")&"% - ~"&TEXT(CEILING(E7*100,1),"0")&"%"` |
 
 For row 8 and below:
@@ -525,8 +540,8 @@ For row 8 and below:
 
 In this setup:
 
-- `CC @ Tmin` and `TC @ Tmin` are the high-end success chances, because actual difficulty is as low
+- `$P_c$ @ Dmin` and `$P_{\text{tadv}}$ @ Dmin` are the high-end success chances, because actual difficulty is as low
   as possible.
-- `CC @ Tmax` and `TC @ Tmax` are the low-end success chances, because actual difficulty is as high
+- `$P_c$ @ Dmax` and `$P_{\text{tadv}}$ @ Dmax` are the low-end success chances, because actual difficulty is as high
   as possible after rounding down.
 - `Success Range` rounds the lower turn chance down and the upper turn chance up.
