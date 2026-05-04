@@ -1,6 +1,6 @@
 # About Agent Lead Investigation System
 
-> Legacy documentation: this describes the old Intel/resistance lead investigation system. For the current design, use [Lead Investigation Simplification Proposal](../design/lead_investigation_simplification_proposal.md).
+> Legacy documentation: this describes the old Intel/resistance lead investigation system. For the current design, use [About Agent Lead Investigation System](../design/about_lead_investigations.md).
 
 This document details the mechanics governing how agents investigate leads, balancing agent
 efficiency, accumulated knowledge, and an element of unpredictability.

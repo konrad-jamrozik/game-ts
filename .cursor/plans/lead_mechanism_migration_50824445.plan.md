@@ -24,12 +24,12 @@ isProject: false
 
 ## Scope
 
-Migrate the game to the new lead investigation mechanism described in [docs/design/lead_investigation_simplification_proposal.md](docs/design/lead_investigation_simplification_proposal.md). The old doc [docs/design/about_lead_investigations.md](docs/design/about_lead_investigations.md) should only be moved to a new legacy docs directory and given a short warning intro that points to the new doc.
+Migrate the game to the lead investigation mechanism now documented in [docs/design/about_lead_investigations.md](docs/design/about_lead_investigations.md). The old Intel/resistance design should remain only as legacy documentation with a short warning intro that points to the current doc.
 
 ## Documentation Changes
 
-- Create `docs/legacy/` and move `docs/design/about_lead_investigations.md` to `docs/legacy/about_lead_investigations.md`.
-- Add a warning at the top of the moved file only, for example: this is legacy documentation for the old Intel/resistance system; use [docs/design/lead_investigation_simplification_proposal.md](docs/design/lead_investigation_simplification_proposal.md) for the current design.
+- Keep the old Intel/resistance design in `docs/legacy/about_lead_investigations_legacy.md`.
+- Add a warning at the top of the moved file only, for example: this is legacy documentation for the old Intel/resistance system; use [docs/design/about_lead_investigations.md](docs/design/about_lead_investigations.md) for the current design.
 - Do not otherwise rewrite the old lead doc.
 - Optionally update any references from code comments or tests that still point to `docs/design/about_lead_investigations.md` so they point either to the legacy doc or to the new design, depending on whether the referenced behavior is old or new.
 

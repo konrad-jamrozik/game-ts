@@ -2,7 +2,7 @@ import { div, nonNeg } from '../primitives/mathPrimitives'
 import { toF } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
 import { LEAD_SCALING_EXPONENT } from '../data_tables/constants'
-import { assertAboveZero } from '../primitives/assertPrimitives'
+import { assertAboveZero, assertInRange, assertInteger } from '../primitives/assertPrimitives'
 import { effectiveSkill } from './skillRuleset'
 
 export type LeadTurnSuccessChanceRange = {
@@ -12,7 +12,10 @@ export type LeadTurnSuccessChanceRange = {
 
 export function getActualLeadDifficulty(visibleDifficulty: number, randomFactor: number): number {
   assertAboveZero(visibleDifficulty, 'Visible lead difficulty must be above zero')
-  return visibleDifficulty * (1 + randomFactor * 0.5)
+  assertInteger(visibleDifficulty, 'Visible lead difficulty must be an integer')
+  assertInRange(randomFactor, 0, 1, 'Lead actual difficulty random factor must be between 0 and 1')
+
+  return Math.floor(visibleDifficulty * (1 + randomFactor * 0.5))
 }
 
 /**

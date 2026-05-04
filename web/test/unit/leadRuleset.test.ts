@@ -13,12 +13,13 @@ describe('leadRuleset', () => {
   describe(getActualLeadDifficulty, () => {
     test.each([
       [10, 0, 10],
-      [10, 0.5, 12.5],
+      [10, 0.5, 12],
       [10, 1, 15],
+      [5, 1, 7],
     ])(
       'maps visible difficulty %d and random factor %d to actual difficulty %d',
       (difficulty, randomFactor, expected) => {
-        expect(getActualLeadDifficulty(difficulty, randomFactor)).toBeCloseTo(expected, 10)
+        expect(getActualLeadDifficulty(difficulty, randomFactor)).toBe(expected)
       },
     )
   })

@@ -7,9 +7,13 @@ KJA backlog:
 ## New investigations
 
 - Merge the pending changes to investigations
-  - Based on lead_investigation_simplification_proposal.md
+  - Based on docs/design/about_lead_investigations.md
 - Improve display, use the same color bar for progress as for agents skill
   - Do not show `.0` in denominator
+
+## Bugs
+
+Bug: when I click 'revert turn' and then 'redo' to go forward again, the event log doesn't show turn was advanced again.
 
 ## AI
 

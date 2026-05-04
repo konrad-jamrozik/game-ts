@@ -29,9 +29,9 @@ The divisor of 8 is a heuristic that keeps investigation timelines reasonable ac
 For example, a difficulty-25 lead gets `ceil(25 / 8) = 4` agents. With 4 skill-100 agents, the
 team produces roughly `4^0.8 ≈ 3` progress per turn due to diminishing returns from the team-size
 exponent. Since success is checked probabilistically each turn (see
-`../design/lead_investigation_simplification_proposal.md`), the investigation can complete before
-reaching the hidden actual difficulty, while still being guaranteed once progress reaches that
-hidden threshold. A single agent on that same lead would produce only 1 progress per turn, making
+`../design/about_lead_investigations.md`), the investigation can complete before
+reaching actual difficulty, while still being guaranteed once progress reaches actual difficulty.
+A single agent on that same lead would produce only 1 progress per turn, making
 progress far too slow.
 
 # Lead investigation assignment algorithm
