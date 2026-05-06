@@ -2,7 +2,8 @@
 
 This document describes the current lead investigation system: what the player sees, how assigned
 agents produce progress, how progress can be lost, and how the game computes each turn's success
-chance.- [About Agent Lead Investigation System](#about-agent-lead-investigation-system)
+chance.
+
 - [About Agent Lead Investigation System](#about-agent-lead-investigation-system)
 - [1. Gameplay Basics](#1-gameplay-basics)
   - [Lead](#lead)
@@ -66,22 +67,26 @@ The player sees visible lead difficulty and investigation progress. The player d
 
 ## Completing a Lead Investigation
 
-To complete a `lead investigation`, the player assigns agents to it. During turn advancement, the
-assigned agents produce `turn advancement progress`, which is added to the investigation's stored
-`progress`.
+To complete a `lead investigation`, the player assigns agents to it. Newly assigned agents first
+enter **In transit**: they have been routed to the lead but are not yet on station.
+
+During **turn advancement**, assigned agents that are **In transit** finish travel and become
+**Investigating**. Assigned agents that are **Investigating** during turn advancement produce
+`turn advancement progress`. That progress is added to the investigation's stored `progress`.
 
 The UI displays `progress` against `lead visible difficulty`. That visible difficulty is the lower
 bound of `lead investigation actual difficulty`; the actual difficulty is hidden and may be up to
-50% higher. Once `progress` reaches actual difficulty, the investigation is guaranteed to complete.
+50% higher (integer, rounded down). Once `progress` reaches actual difficulty, the investigation is
+guaranteed to complete.
 
-Turn advancement progress is based on `effective skill`. Every 100 effective skill contributes 1
+`Turn advancement progress` is based on `effective skill`. Every 100 effective skill contributes 1
 `progress by agent`, and `progress efficiency` applies the diminishing returns from assigning
 multiple agents.
 
 After turn advancement progress is added, the game rolls `turn advancement success chance`. This
-creates a slight chance each turn to complete the investigation early. Because `accumulated success
-chance` is cubed, that chance grows slowly at first, then rapidly approaches 100% as `progress`
-nears actual difficulty. See [Lead Investigation Example](#4-lead-investigation-example).
+creates a slight chance each turn to complete the investigation early. Because `accumulated success chance`
+is cubed, that chance grows slowly at first, then rapidly approaches 100% as `progress` nears actual difficulty.
+See [Lead Investigation Example](#4-lead-investigation-example).
 
 ## Progress Loss on Agent Unassignment
 
@@ -234,8 +239,9 @@ The implementation follows these model concepts:
 - `actualDifficulty` is initialized from `floor(difficulty * random(1.0, 1.5))`.
 - Success chance ranges use `difficulty` as the minimum possible actual difficulty and
   `floor(difficulty * 1.5)` as the maximum possible actual difficulty.
-- Turn advancement computes `turn advancement progress`, adds it to stored `progress`, then rolls
-  `P_tadv`.
+- Turn advancement first transitions assigned agents from **In transit** to **Investigating**.
+- Assigned agents that are **Investigating** during turn advancement compute `turn advancement
+  progress`; the game adds it to stored `progress`, then rolls `P_tadv`.
 - Removing agents applies proportional progress loss to stored `progress`.
 - Exhaustion and mandatory withdrawal remain unchanged.
 
@@ -266,7 +272,8 @@ meaning should stay stable:
 - **`Progress efficiency`:** The diminishing returns factor for stacked agents:
   `agentCount ^ 0.8 / agentCount`.
 
-- **`Turn advancement progress`:** The `progress` added to `progress` when `Advance turn` is clicked:
+- **`Turn advancement progress`:** The `progress` added to `progress` when `Advance turn` is clicked.
+  It is produced by assigned agents that are **Investigating** during turn advancement:
   `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) / 100` and
   `progressEfficiency = agentCount ^ 0.8 / agentCount`.
 
@@ -307,7 +314,7 @@ meaning should stay stable:
 | $S_{\text{eff}}$ - effective skill | See [about_agents.md](about_agents.md#effective-skill). | Effective skill is dictated by hit points and exhaustion. |
 | $P_{\text{agent}}$ - progress by agent | $P_{\text{agent}} = \sum \frac{S_{\text{eff}}}{100}$ | Every 100 effective skill contributes 1 progress by agent. |
 | $P_{\text{eff}}$ - progress efficiency | $P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}$ | More agents help, but each additional agent adds less. |
-| $\Delta p$ - turn advancement progress | $\Delta p = P_{\text{agent}} \cdot P_{\text{eff}}$ | When advancing from turn $n$ to turn $n+1$, $P_{\text{agent}}$ and $P_{\text{eff}}$ are computed from the turn $n$ state. |
+| $\Delta p$ - turn advancement progress | $\Delta p = P_{\text{agent}} \cdot P_{\text{eff}}$ | When advancing from turn $n$ to turn $n+1$, $P_{\text{agent}}$ and $P_{\text{eff}}$ are computed from assigned agents that are **Investigating** during turn advancement. |
 | $p_{n+1}$ - progress after turn advancement | $p_{n+1} = p_n + \Delta p$ | Advancing from turn $n$ to turn $n+1$ adds $\Delta p$. |
 | $D_a$ - lead investigation actual difficulty | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$ | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty. |
 | $\rho$ - progress ratio | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$ | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%. |
