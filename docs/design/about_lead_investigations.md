@@ -12,9 +12,9 @@ chance.
   - [Completing a Lead Investigation](#completing-a-lead-investigation)
   - [Progress Loss on Agent Unassignment](#progress-loss-on-agent-unassignment)
   - [Success Chance Each Turn](#success-chance-each-turn)
-- [2. UI Design](#2-ui-design)
-- [3. Key Player Intuitions](#3-key-player-intuitions)
-- [4. Lead Investigation Example](#4-lead-investigation-example)
+- [2. Key Player Intuitions](#2-key-player-intuitions)
+- [3. Lead Investigation Example](#3-lead-investigation-example)
+- [4. UI Design](#4-ui-design)
 - [5. Design Rationale](#5-design-rationale)
 - [6. Implementation Notes](#6-implementation-notes)
 - [7. Concept definitions](#7-concept-definitions)
@@ -34,7 +34,7 @@ missions, or advance the game's progression tree.
 
 Every lead has following stored properties:
 
-- `difficulty`: the visible progress target and baseline turn count for one Skill 100 agent.
+- `difficulty`: the visible progress target and baseline turn count for one effective skill 100 agent.
 - `repeatable`: whether the lead can be investigated more than once.
 - `dependsOn`: prerequisites that decide when the lead becomes available.
 
@@ -87,7 +87,7 @@ multiple agents.
 After turn advancement progress is added, the game rolls `turn advancement success chance`. This
 creates a slight chance each turn to complete the investigation early. Because `accumulated success chance`
 is cubed, that chance grows slowly at first, then rapidly approaches 100% as `progress` nears actual difficulty.
-See [Lead Investigation Example](#4-lead-investigation-example).
+See [Lead Investigation Example](#3-lead-investigation-example).
 
 ## Progress Loss on Agent Unassignment
 
@@ -99,119 +99,11 @@ knowledge, so removing a highly skilled agent causes a larger progress loss than
 
 Adding agents does not reduce progress. Removing agents does.
 
-# 2. UI Design
-
-The lead investigation UI helps the player answer three questions:
-
-- Which leads can I investigate?
-- Which agents are assigned, **In transit**, or already **Investigating**?
-- How much progress and completion chance will the next turn advancement produce?
-
-## Leads List
-
-Each available lead shows its name, difficulty, repeatability, and current investigation state.
-
-```text
-Deep state
-Difficulty: 5
-Status: Available
-```
-
-Repeatable leads include a `Repeatable` marker, meaning the lead can be investigated again after
-completion.
-
-```text
-Locate safehouse
-Difficulty: 3
-Repeatable
-Status: Available
-```
-
-Difficulty helper text appears where space permits:
-
-```text
-One agent with 100 effective skill produces 1 progress per turn, subject to efficiency penalty from assigning multiple agents to investigation.
-Actual difficulty is hidden and may be up to 50% higher (integer, rounded down).
-```
-
-## Active Investigations
-
-Each active investigation shows the lead name, assigned agent count, current progress, projected progress
-after the next turn advancement, progress efficiency, and success chance range.
-
-```text
-Lead: Deep state
-Agents: 2
-Progress: 1.74/10
-Next turn: 3.48/10 (+1.74, eff. 87%)
-Success: ~2% ± 1%
-```
-
-`Progress` uses `lead visible difficulty` as the denominator, even though actual difficulty may be
-higher. `Next turn` adds the current `turn advancement progress` estimate to current progress. `eff.
-87%` means two agents produce 1.74 progress instead of 2.00 because of `progress efficiency`.
-
-`Success` is the `turn advancement success chance range`, written as `Mid ± Err`. `Mid` estimates the
-next completion roll; `Err` communicates uncertainty from hidden actual difficulty.
-
-The `Success` range exists only because the exact `actualDifficulty` is hidden from the player:
-
-- The lower bound assumes actual difficulty is as high as possible.
-- The upper bound assumes actual difficulty is equal to visible difficulty.
-- `Mid` is the midpoint between lower and upper `turn advancement success chance`.
-- `Err` is half the distance between lower and upper `turn advancement success chance`.
-
-## Assigned Agent Status
-
-Assigned agents are grouped by lead investigation and show their lead work state:
-
-- **In transit:** assigned to a lead, but not yet producing progress.
-- **Investigating:** assigned to a lead and producing `turn advancement progress` during turn advancement.
-
-An active investigation with mixed agent states makes the timing clear:
-
-```text
-Lead: Deep state
-Investigating: Alice, Boris
-In transit: Casey
-Next turn: +1.74 progress from investigating agents
-```
-
-The `Next turn` estimate matches the model's `turn advancement progress` calculation for agents
-that are **Investigating** during turn advancement.
-
-## Completed Investigations
-
-Completed investigations keep a compact history entry with the lead name, completion turn, and agents
-involved. The exact hidden `actualDifficulty` stays omitted unless a debug view needs it.
-
-```text
-Deep state
-Completed on turn 18
-Agents: Alice, Boris
-```
-
-## Empty And Disabled States
-
-When no lead is available, the empty state explains the gameplay cause instead of showing an empty
-list alone.
-
-```text
-No leads available. Complete missions or interrogate captives to uncover new leads.
-```
-
-When a lead cannot start because another active investigation already exists for that lead, the
-disabled state names the blocking investigation.
-
-```text
-Already investigating this lead.
-```
-
-# 3. Key Player Intuitions
+# 2. Key Player Intuitions
 
 | Concept | Player Intuition |
 | :--- | :--- |
-| **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one Skill 100 agent, though actual difficulty may make it run up to 50% longer. |
+| **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one effective skill 100 agent, though actual difficulty may make it run up to 50% longer. |
 | **Progress** | **Progress represents how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
 | **Success Chance** | **The higher the completion chance, the sooner the lead is likely to resolve.** Progress makes completion increasingly likely until it becomes guaranteed. |
 | **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
@@ -219,9 +111,9 @@ Already investigating this lead.
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
 | **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player finishes the lead or rotates agents before exhaustion forces removals that cause progress loss. |
 
-# 4. Lead Investigation Example
+# 3. Lead Investigation Example
 
-For **Difficulty 10** with one **Skill 100** agent:
+For **Difficulty 10** with one **effective skill 100** agent:
 
 Row `0` is the starting state before any turn advancement. Each later row represents the state after
 that row's turn advancement. For example, row `2` means the investigation advanced from turn 1 to
@@ -268,6 +160,126 @@ actual difficulty is 10, turn 8 has a 25.7% `turn advancement success chance`.
 If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent investigation is
 guaranteed at 15 progress instead of 10.
 
+# 4. UI Design
+
+The lead investigation UI helps the player answer three questions:
+
+- Which leads can I investigate?
+- Which agents are assigned, **In transit**, or already **Investigating**?
+- How much progress and completion chance will the next turn advancement produce?
+
+## Leads List
+
+The leads data grid is the lead overview. Its visible columns are `Lead`, `Difficulty`, `Rpt.`, and
+`Investigation`.
+
+```text
+Lead                    Difficulty  Rpt.  Investigation
+Criminal organizations  3           No    None
+Deep state              10          No    None
+```
+
+`Investigation` is `None` when no active investigation exists for that lead. It becomes `Active` when
+the player starts investigating that lead.
+
+```text
+Lead                    Difficulty  Rpt.  Investigation
+Criminal organizations  3           No    Active
+Deep state              10          No    None
+```
+
+Repeatable leads use `Yes` in the `Rpt.` column. Non-repeatable leads use `No`.
+
+## Active Investigations
+
+The lead investigations data grid is the active investigation overview. Its visible columns are
+`Investigation`, `Ag #`, `Succ %`, `Progress`, and `Proj.`.
+
+```text
+Investigation               Ag #  Succ %      Progress  Proj.
+000 Criminal organizations  0 +1  ~0% - ~0%  0.0/3.0   0.0/3.0
+```
+
+In `Ag #`, a single number counts agents already producing progress. A `+N` suffix counts assigned
+agents that are still **In transit**. After turn advancement moves those agents to **Investigating**,
+the suffix is folded into the main count.
+
+```text
+Investigation               Ag #  Succ %      Progress  Proj.
+000 Criminal organizations  1     ~1% - ~4%  0.0/3.0   1.0/3.0 +1.0 eff. 100%
+```
+
+`Progress` uses `lead visible difficulty` as the denominator, even though actual difficulty may be
+higher. `Proj.` adds the current `turn advancement progress` estimate to current progress. `eff.
+100%` means the assigned agents produce their full raw progress because there is no multi-agent
+efficiency loss.
+
+`Succ %` is the `turn advancement success chance range`. The range exists only because the exact
+`actualDifficulty` is hidden from the player:
+
+- The lower bound assumes actual difficulty is as high as possible.
+- The upper bound assumes actual difficulty is equal to visible difficulty.
+- `Mid` is the midpoint between lower and upper `turn advancement success chance`.
+- `Err` is half the distance between lower and upper `turn advancement success chance`.
+
+## Assigned Agent Status
+
+The agents data grid shows lead work per agent. Its lead-investigation-relevant columns are `ID`,
+`State`, and `Assignment`.
+
+Before lead assignment, an available agent has `State` set to `Available` and `Assignment` set to
+`Standby`.
+
+```text
+ID         State      Assignment
+agent-000  Available  Standby
+```
+
+Immediately after lead assignment, the assigned agent has `State` set to `InTransit` and `Assignment`
+set to the investigation id.
+
+```text
+ID         State      Assignment
+agent-000  InTransit  invst-000
+```
+
+After turn advancement, that same assigned agent has `State` set to `Investigating` and the same
+`Assignment` value.
+
+```text
+ID         State          Assignment
+agent-000  Investigating  invst-000
+```
+
+The lead investigations grid and agents grid describe the same assignments from different angles:
+`Ag #` summarizes assignment counts per investigation, while `State` and `Assignment` show the
+per-agent values.
+
+## Completed Investigations
+
+Completed investigations appear in the same lead investigations data grid when the `done` filter is
+active. Abandoned investigations appear there when the `abandoned` filter is active.
+
+```text
+Investigation  Ag #  Succ %  Progress  Proj.
+```
+
+## Empty And Disabled States
+
+When no lead is available, the empty state explains the gameplay cause instead of showing an empty
+list alone.
+
+```text
+No leads available. Complete missions or interrogate captives to uncover new leads.
+```
+
+When a lead cannot start because another active investigation already exists for that lead, the
+disabled state names the blocking investigation.
+
+```text
+Already investigating this lead.
+```
+
 # 5. Design Rationale
 
 KJA lead inv doc TODO add notes on rejected alternative design, that will mostly trash the legacy design.
@@ -307,7 +319,7 @@ The implementation follows these model concepts:
 Lead difficulty values are tuned against the intended campaign length, but the player-facing meaning
 stays stable:
 
-> Difficulty is the number of turns a Skill 100 agent expects to spend.
+> Difficulty is the number of turns an effective skill 100 agent expects to spend.
 
 # 7. Concept definitions
 
