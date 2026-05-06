@@ -1,6 +1,6 @@
 # About Agent Lead Investigation System
 
-This document describes the current lead investigation system: what the player sees, how assigned
+This document describes the current lead investigation system: how leads are represented, how assigned
 agents produce progress, how progress can be lost, and how the game computes each turn's success
 chance.
 
@@ -11,15 +11,15 @@ chance.
   - [Lead Investigation Stored Properties](#lead-investigation-stored-properties)
   - [Completing a Lead Investigation](#completing-a-lead-investigation)
   - [Progress Loss on Agent Unassignment](#progress-loss-on-agent-unassignment)
-  - [Success Chance Range Each Turn](#success-chance-range-each-turn)
-- [2. Suggested UI Wording](#2-suggested-ui-wording)
+  - [Success Chance Each Turn](#success-chance-each-turn)
+- [2. UI Design](#2-ui-design)
 - [3. Key Player Intuitions](#3-key-player-intuitions)
 - [4. Lead Investigation Example](#4-lead-investigation-example)
 - [5. Design Rationale](#5-design-rationale)
 - [6. Implementation Notes](#6-implementation-notes)
 - [7. Concept definitions](#7-concept-definitions)
-  - [Concepts visible in UI](#concepts-visible-in-ui)
-  - [Advanced concepts, hidden from the UI](#advanced-concepts-hidden-from-the-ui)
+  - [Player-facing concepts](#player-facing-concepts)
+  - [Advanced concepts](#advanced-concepts)
 - [8. Formula reference](#8-formula-reference)
   - [Constants](#constants)
 - [9. Intuition behind $P\_{\\text{tadv}}$ - Turn Advancement Success Chance](#9-intuition-behind-p_texttadv---turn-advancement-success-chance)
@@ -62,26 +62,27 @@ startTurn: number
 state: LeadInvestigationState
 ```
 
-The player sees visible lead difficulty and investigation progress. The player does not see
-`actualDifficulty`.
+Lead difficulty and investigation progress are player-facing values. `actualDifficulty` is hidden.
 
 ## Completing a Lead Investigation
 
 To complete a `lead investigation`, the player assigns agents to it. Newly assigned agents first
 enter **In transit**: they have been routed to the lead but are not yet on station.
 
-During **turn advancement**, assigned agents that are **In transit** finish travel and become
+During **turn advancement**, assigned agents that are **In transit** become
 **Investigating**. Assigned agents that are **Investigating** during turn advancement produce
 `turn advancement progress`. That progress is added to the investigation's stored `progress`.
 
-The UI displays `progress` against `lead visible difficulty`. That visible difficulty is the lower
-bound of `lead investigation actual difficulty`; the actual difficulty is hidden and may be up to
-50% higher (integer, rounded down). Once `progress` reaches actual difficulty, the investigation is
+`Progress` is compared against `lead visible difficulty`. That visible difficulty is the lower bound
+of `lead investigation actual difficulty`; the actual difficulty is hidden and may be up to 50%
+higher (integer, rounded down). Once `progress` reaches actual difficulty, the investigation is
 guaranteed to complete.
 
 `Turn advancement progress` is based on `effective skill`. Every 100 effective skill contributes 1
 `progress by agent`, and `progress efficiency` applies the diminishing returns from assigning
 multiple agents.
+
+### Success chance each turn
 
 After turn advancement progress is added, the game rolls `turn advancement success chance`. This
 creates a slight chance each turn to complete the investigation early. Because `accumulated success chance`
@@ -98,63 +99,125 @@ knowledge, so removing a highly skilled agent causes a larger progress loss than
 
 Adding agents does not reduce progress. Removing agents does.
 
-## Success Chance Range Each Turn
+# 2. UI Design
 
-At the end of each turn, an active investigation rolls for completion. The UI should show a success
-chance range because the player does not know actual difficulty.
+The lead investigation UI helps the player answer three questions:
 
-- The lower bound assumes actual difficulty is as high as possible.
-- The upper bound assumes actual difficulty is equal to visible difficulty.
+- Which leads can I investigate?
+- Which agents are assigned, **In transit**, or already **Investigating**?
+- How much progress and completion chance will the next turn advancement produce?
 
-Display this range as `%Mid ± Err`:
+## Leads List
 
-- `Mid` is the midpoint between lower and upper `turn advancement success chance`.
-- `Err` is half the distance between lower and upper `turn advancement success chance`.
-
-As `progress` increases, `Mid` generally rises. `Err` represents uncertainty from hidden actual
-difficulty and narrows toward zero as progress approaches the maximum possible actual difficulty.
-
-# 2. Suggested UI Wording
-
-KJA lead inv doc TODO - actually implement this suggestion, and rename this section to "UI design" (so it UI independent)
-
-In the leads grid:
+Each available lead shows its name, difficulty, repeatability, and current investigation state.
 
 ```text
-Difficulty: 5 turns
+Deep state
+Difficulty: 5
+Status: Available
 ```
 
-In a tooltip:
+Repeatable leads include a `Repeatable` marker, meaning the lead can be investigated again after
+completion.
 
 ```text
-A Skill 100 agent makes about 1 progress per turn. The visible target is 5, but actual difficulty may be up to 50% higher.
+Locate safehouse
+Difficulty: 3
+Repeatable
+Status: Available
 ```
 
-In active investigations:
+Difficulty helper text appears where space permits:
+
+```text
+One agent with 100 effective skill produces 1 progress per turn, subject to efficiency penalty from assigning multiple agents to investigation.
+Actual difficulty is hidden and may be up to 50% higher (integer, rounded down).
+```
+
+## Active Investigations
+
+Each active investigation shows the lead name, assigned agent count, current progress, projected progress
+after the next turn advancement, progress efficiency, and success chance range.
 
 ```text
 Lead: Deep state
 Agents: 2
-Est. progress: 1.74/10
-Proj.: 3.48/10 (+1.74, eff. 87%)
+Progress: 1.74/10
+Next turn: 3.48/10 (+1.74, eff. 87%)
 Success: ~2% ± 1%
 ```
 
-Here, `eff. 87%` means two Skill 100 agents are producing 1.74 progress instead of 2.00 because of
-progress efficiency. `Success` is the displayed `turn advancement success chance` range, written as
-`Mid ± Err`.
+`Progress` uses `lead visible difficulty` as the denominator, even though actual difficulty may be
+higher. `Next turn` adds the current `turn advancement progress` estimate to current progress. `eff.
+87%` means two agents produce 1.74 progress instead of 2.00 because of `progress efficiency`.
+
+`Success` is the `turn advancement success chance range`, written as `Mid ± Err`. `Mid` estimates the
+next completion roll; `Err` communicates uncertainty from hidden actual difficulty.
+
+The `Success` range exists only because the exact `actualDifficulty` is hidden from the player:
+
+- The lower bound assumes actual difficulty is as high as possible.
+- The upper bound assumes actual difficulty is equal to visible difficulty.
+- `Mid` is the midpoint between lower and upper `turn advancement success chance`.
+- `Err` is half the distance between lower and upper `turn advancement success chance`.
+
+## Assigned Agent Status
+
+Assigned agents are grouped by lead investigation and show their lead work state:
+
+- **In transit:** assigned to a lead, but not yet producing progress.
+- **Investigating:** assigned to a lead and producing `turn advancement progress` during turn advancement.
+
+An active investigation with mixed agent states makes the timing clear:
+
+```text
+Lead: Deep state
+Investigating: Alice, Boris
+In transit: Casey
+Next turn: +1.74 progress from investigating agents
+```
+
+The `Next turn` estimate matches the model's `turn advancement progress` calculation for agents
+that are **Investigating** during turn advancement.
+
+## Completed Investigations
+
+Completed investigations keep a compact history entry with the lead name, completion turn, and agents
+involved. The exact hidden `actualDifficulty` stays omitted unless a debug view needs it.
+
+```text
+Deep state
+Completed on turn 18
+Agents: Alice, Boris
+```
+
+## Empty And Disabled States
+
+When no lead is available, the empty state explains the gameplay cause instead of showing an empty
+list alone.
+
+```text
+No leads available. Complete missions or interrogate captives to uncover new leads.
+```
+
+When a lead cannot start because another active investigation already exists for that lead, the
+disabled state names the blocking investigation.
+
+```text
+Already investigating this lead.
+```
 
 # 3. Key Player Intuitions
 
-| Concept | Player Feedback/Intuition |
+| Concept | Player Intuition |
 | :--- | :--- |
 | **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one Skill 100 agent, though actual difficulty may make it run up to 50% longer. |
-| **Progress** | **Progress shows how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
-| **Success % Range** | **The higher `Mid`, the sooner the lead is likely to resolve.** `Err` shows uncertainty from hidden actual difficulty. |
+| **Progress** | **Progress represents how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
+| **Success Chance** | **The higher the completion chance, the sooner the lead is likely to resolve.** Progress makes completion increasingly likely until it becomes guaranteed. |
 | **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
 | **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty. |
 | **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
-| **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player should finish the lead or rotate agents before exhaustion forces removals that cause progress loss. |
+| **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player finishes the lead or rotates agents before exhaustion forces removals that cause progress loss. |
 
 # 4. Lead Investigation Example
 
@@ -165,24 +228,24 @@ that row's turn advancement. For example, row `2` means the investigation advanc
 turn 2, progress increased from `1/10` to `2/10`, and $P_{\text{tadv}}$ is the success chance rolled during
 that turn advancement.
 
-| Turn | Progress | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | Displayed Success |
-| ---: | -------: | -------: | -------: | -------: | -------: | :--- |
-| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% | ~0% ± 0% |
-| 1 | 1/10 | 0.0% | 0.0% | 0.1% | 0.1% | ~0% ± 0% |
-| 2 | 2/10 | 0.2% | 0.2% | 0.8% | 0.7% | ~0% ± 0% |
-| 3 | 3/10 | 0.8% | 0.6% | 2.7% | 1.9% | ~1% ± 1% |
-| 4 | 4/10 | 1.9% | 1.1% | 6.4% | 3.8% | ~2% ± 1% |
-| 5 | 5/10 | 3.7% | 1.8% | 12.5% | 6.5% | ~4% ± 2% |
-| 6 | 6/10 | 6.4% | 2.8% | 21.6% | 10.4% | ~7% ± 4% |
-| 7 | 7/10 | 10.2% | 4.0% | 34.3% | 16.2% | ~10% ± 6% |
-| 8 | 8/10 | 15.2% | 5.6% | 51.2% | 25.7% | ~16% ± 10% |
-| 9 | 9/10 | 21.6% | 7.6% | 72.9% | 44.5% | ~26% ± 18% |
-| 10 | 10/10 | 29.6% | 10.2% | 100.0% | 100.0% | ~55% ± 45% |
-| 11 | 11/10 | 39.4% | 13.9% | 100.0% | 100.0% | ~57% ± 43% |
-| 12 | 12/10 | 51.2% | 19.4% | 100.0% | 100.0% | ~60% ± 40% |
-| 13 | 13/10 | 65.1% | 28.5% | 100.0% | 100.0% | ~64% ± 36% |
-| 14 | 14/10 | 81.3% | 46.4% | 100.0% | 100.0% | ~73% ± 27% |
-| 15 | 15/10 | 100.0% | 100.0% | 100.0% | 100.0% | ~100% ± 0% |
+| Turn | Progress | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 |
+| ---: | -------: | -------: | -------: | -------: | -------: |
+| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% |
+| 1 | 1/10 | 0.0% | 0.0% | 0.1% | 0.1% |
+| 2 | 2/10 | 0.2% | 0.2% | 0.8% | 0.7% |
+| 3 | 3/10 | 0.8% | 0.6% | 2.7% | 1.9% |
+| 4 | 4/10 | 1.9% | 1.1% | 6.4% | 3.8% |
+| 5 | 5/10 | 3.7% | 1.8% | 12.5% | 6.5% |
+| 6 | 6/10 | 6.4% | 2.8% | 21.6% | 10.4% |
+| 7 | 7/10 | 10.2% | 4.0% | 34.3% | 16.2% |
+| 8 | 8/10 | 15.2% | 5.6% | 51.2% | 25.7% |
+| 9 | 9/10 | 21.6% | 7.6% | 72.9% | 44.5% |
+| 10 | 10/10 | 29.6% | 10.2% | 100.0% | 100.0% |
+| 11 | 11/10 | 39.4% | 13.9% | 100.0% | 100.0% |
+| 12 | 12/10 | 51.2% | 19.4% | 100.0% | 100.0% |
+| 13 | 13/10 | 65.1% | 28.5% | 100.0% | 100.0% |
+| 14 | 14/10 | 81.3% | 46.4% | 100.0% | 100.0% |
+| 15 | 15/10 | 100.0% | 100.0% | 100.0% | 100.0% |
 
 Legend:
 
@@ -191,19 +254,16 @@ Legend:
   this row's progress value.
 - `D15` = actual difficulty is 15.
 - `D10` = actual difficulty is 10.
-- `Displayed Success` = `Mid ± Err` of the possible $P_{\text{tadv}}$ range.
 
-This is unpredictable, but the range is easy to understand:
+This is unpredictable, but the pattern is easy to understand:
 
 - It might finish early.
 - It becomes much more likely near the visible Difficulty.
 - It can run longer than the visible Difficulty because actual difficulty may be up to 150%.
 - It becomes guaranteed when progress reaches actual difficulty.
 
-For example, in this table, turn 8 has a turn advancement success chance between 5.6% and 25.7%, so
-the UI should show about `~16% ± 10%`. Turn 11 has a range from 13.9% to 100%, so it should show
-about `~57% ± 43%`. Turn 14 has a range from 46.4% to 100%, so it should show about
-`~73% ± 27%`.
+For example, if actual difficulty is 15, turn 8 has a 5.6% `turn advancement success chance`. If
+actual difficulty is 10, turn 8 has a 25.7% `turn advancement success chance`.
 
 If actual difficulty for that same Difficulty 10 lead is 15, the same one-agent investigation is
 guaranteed at 15 progress instead of 10.
@@ -237,22 +297,21 @@ The implementation follows these model concepts:
 - Leads store integer visible difficulty as `difficulty`.
 - Active lead investigations store `progress` and hidden integer `actualDifficulty`.
 - `actualDifficulty` is initialized from `floor(difficulty * random(1.0, 1.5))`.
-- Success chance ranges use `difficulty` as the minimum possible actual difficulty and
-  `floor(difficulty * 1.5)` as the maximum possible actual difficulty.
+- Success chance rolls use the investigation's hidden `actualDifficulty`.
 - Turn advancement first transitions assigned agents from **In transit** to **Investigating**.
 - Assigned agents that are **Investigating** during turn advancement compute `turn advancement
   progress`; the game adds it to stored `progress`, then rolls `P_tadv`.
 - Removing agents applies proportional progress loss to stored `progress`.
 - Exhaustion and mandatory withdrawal remain unchanged.
 
-Lead difficulty values should be tuned against the intended campaign length, but the player-facing
-meaning should stay stable:
+Lead difficulty values are tuned against the intended campaign length, but the player-facing meaning
+stays stable:
 
-> Difficulty is the number of turns a Skill 100 agent should expect to spend.
+> Difficulty is the number of turns a Skill 100 agent expects to spend.
 
 # 7. Concept definitions
 
-## Concepts visible in UI
+## Player-facing concepts
 
 - **`Lead`:** An investigation target that can have `lead investigation` records started for it.
 
@@ -260,8 +319,8 @@ meaning should stay stable:
 
 - **`Lead investigation`:** A state object representing one active or past investigation of a `lead`.
 
-- **`Lead visible difficulty`:** The `lead`'s shown difficulty value. It is the `progress`
-  denominator shown in the UI. It establishes the lower bound of `lead investigation actual difficulty`.
+- **`Lead visible difficulty`:** The `lead`'s player-facing difficulty value. It is the `progress`
+  denominator and establishes the lower bound of `lead investigation actual difficulty`.
 
 - **`Effective skill`:** See `about_agents.md`.
 
@@ -277,11 +336,7 @@ meaning should stay stable:
   `progressByAgent * progressEfficiency`, where `progressByAgent = sum(effectiveSkill) / 100` and
   `progressEfficiency = agentCount ^ 0.8 / agentCount`.
 
-- **`Turn advancement success chance range`:** The UI's `Mid ± Err` estimate of the
-  next turn's completion chance, computed from the possible `lead investigation actual difficulty`
-  range.
-
-## Advanced concepts, hidden from the UI
+## Advanced concepts
 
 - **`Progress by agent`:** `Effective skill` normalized by dividing by 100. For example, 130
   `effective skill` is 1.3 `progress by agent`.
@@ -297,8 +352,8 @@ meaning should stay stable:
   during this turn advancement. It is the conditional roll chance needed to move from the previous
   `accumulated success chance` to the current `accumulated success chance`.
 
-- **`Accumulated success chance`:** The target total chance that a `lead investigation` should
-  already have completed at or before a given `progress` value:
+- **`Accumulated success chance`:** The target total chance that a `lead investigation` has already
+  completed at or before a given `progress` value:
   `min(1, progress / actualDifficulty) ^ 3`. It is not a per-turn chance. The
   `turn advancement success chance` is derived from the difference between previous and current
   `accumulated success chance`, conditional on the `lead investigation` still being unresolved.
@@ -310,7 +365,7 @@ meaning should stay stable:
 
 | Definition | Formula | Remarks |
 | --- | --- | --- |
-| $D_v$ - lead visible difficulty | Given by the lead. | Visible difficulty is shown in the UI and establishes the lower bound of actual difficulty. |
+| $D_v$ - lead visible difficulty | Given by the lead. | Visible difficulty establishes the lower bound of actual difficulty. |
 | $S_{\text{eff}}$ - effective skill | See [about_agents.md](about_agents.md#effective-skill). | Effective skill is dictated by hit points and exhaustion. |
 | $P_{\text{agent}}$ - progress by agent | $P_{\text{agent}} = \sum \frac{S_{\text{eff}}}{100}$ | Every 100 effective skill contributes 1 progress by agent. |
 | $P_{\text{eff}}$ - progress efficiency | $P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}$ | More agents help, but each additional agent adds less. |
@@ -348,7 +403,7 @@ When advancing from turn $n$ to turn $n+1$:
 
 - $P_c(p_n, D_a)$ is the total chance that the investigation would already have succeeded before
   adding progress for this turn advancement.
-- $P_c(p_{n+1}, D_a)$ is the total chance that the investigation should have succeeded after adding
+- $P_c(p_{n+1}, D_a)$ is the total chance that the investigation has succeeded after adding
   progress for this turn advancement.
 - $P_c(p_{n+1}, D_a) - P_c(p_n, D_a)$ is the new success chance added by this turn advancement.
 - $1 - P_c(p_n, D_a)$ is the unresolved probability space still available, because the roll only
@@ -397,16 +452,13 @@ Then create this table starting on row 7:
 | `E` | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),0,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
 | `F` | `$P_c$ @ Dmin` | `=MIN(1,(B7/$B$3)^3)` |
 | `G` | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),0,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
-| `H` | `SuccessMid` | `=(E7+G7)/2` |
-| `I` | `SuccessErr` | `=(G7-E7)/2` |
-| `J` | `Displayed Success` | `="~"&TEXT(ROUND(H7*100,0),"0")&"% ± "&TEXT(ROUND(I7*100,0),"0")&"%"` |
 
 For row 8 and below:
 
 - `A8`: `=A7+1`
-- Copy columns `B:J` down from row 7.
-- Format `D:I` as percentages.
-- Hide `B`, `H`, and `I` if you only want to display the player-facing labels from `C` and `J`.
+- Copy columns `B:G` down from row 7.
+- Format `D:G` as percentages.
+- Column `C` is the compact progress label derived from the calculation columns.
 
 In this setup:
 
@@ -414,5 +466,3 @@ In this setup:
   as possible after rounding down.
 - `$P_c$ @ Dmin` and `$P_{\text{tadv}}$ @ Dmin` are the high-end success chances, because actual difficulty is as low
   as possible.
-- `Displayed Success` shows `Mid ± Err` for the possible
-  `$P_{\text{tadv}}$` range.
