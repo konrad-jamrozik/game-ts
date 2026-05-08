@@ -6,6 +6,8 @@ import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { handleInvestigateLead } from '../GameControls/handleInvestigateLead'
 
+export const LEADS_SCREEN_BUTTON_WIDTH = 240
+
 export function LeadInvestigationActions2(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
@@ -34,6 +36,7 @@ export function LeadInvestigationActions2(): React.JSX.Element {
         variant="contained"
         onClick={handleInvestigateLeadClick}
         disabled={!selectedLeadOrInvestigation || selectedAgentIds.length === 0}
+        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
       >
         {getInvestigateLeadButtonLabel(selectedLeadId, selectedInvestigationId, selectedAgentIds.length)}
       </Button>
@@ -47,11 +50,11 @@ function getInvestigateLeadButtonLabel(
   selectedAgentCount: number,
 ): string {
   if (selectedLeadId === undefined && selectedInvestigationId === undefined) {
-    return 'Select a lead to investigate'
+    return 'Select a lead'
   }
 
   if (selectedAgentCount === 0) {
-    return 'Select at least one agent to investigate'
+    return 'Select any ready agent'
   }
 
   if (selectedInvestigationId !== undefined) {

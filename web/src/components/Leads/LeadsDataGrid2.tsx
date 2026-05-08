@@ -22,29 +22,34 @@ import {
   sumAgentEffectiveSkills,
 } from '../../lib/ruleset/leadRuleset'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { getCurrentTurnState } from '../../redux/storeUtils'
 import {
   clearInvestigationSelection,
   clearLeadSelection,
   setInvestigationSelection,
   setLeadSelection,
+  setLeadsFilterType,
+  type LeadsFilterType,
 } from '../../redux/slices/selectionSlice'
-import { columnWidths } from '../Common/columnWidths'
+import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
+import { columnWidths } from '../Common/columnWidths'
 import { CURRENT_LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
 import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
+import { LeadsDataGridToolbar } from '../LeadsDataGrid/LeadsDataGridToolbar'
 
-export function CurrentLeadsDataGrid2(): React.JSX.Element {
+export function LeadsDataGrid2(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
+  const filterType = useAppSelector((state) => state.selection.leadsFilterType ?? 'active')
   const gameState = useAppSelector(getCurrentTurnState)
 
   const discoveredLeads = getDiscoveredLeads(gameState)
 
-  const rows: CurrentLeadRow2[] = bldCurrentLeadRows2(discoveredLeads, gameState)
-  const columns = getCurrentLeadColumns2()
+  const allRows: LeadRow2[] = bldLeadRows2(discoveredLeads, gameState)
+  const rows = allRows.filter((row) => row.status === filterType)
+  const columns = getLeadColumns2()
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -57,10 +62,14 @@ export function CurrentLeadsDataGrid2(): React.JSX.Element {
     } else {
       const [rowId] = selectedRowIds
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
-      if (row?.investigationStatus === 'None') {
+      if (row?.investigationStatus === 'None' && row.status === 'active') {
         dispatch(clearInvestigationSelection())
         dispatch(setLeadSelection(row.id))
-      } else if (row?.investigationStatus === 'Active' && row.activeInvestigationId !== undefined) {
+      } else if (
+        row?.investigationStatus === 'Active' &&
+        row.status === 'active' &&
+        row.activeInvestigationId !== undefined
+      ) {
         dispatch(clearLeadSelection())
         dispatch(setInvestigationSelection(row.activeInvestigationId))
       } else {
@@ -72,7 +81,9 @@ export function CurrentLeadsDataGrid2(): React.JSX.Element {
 
   const rowIds: GridRowId[] = []
   if (selectedLeadId !== undefined) {
-    const row = rows.find((rowCandidate) => rowCandidate.id === selectedLeadId && rowCandidate.investigationStatus === 'None')
+    const row = rows.find(
+      (rowCandidate) => rowCandidate.id === selectedLeadId && rowCandidate.investigationStatus === 'None',
+    )
     if (row) {
       rowIds.push(row.rowId)
     } else {
@@ -95,31 +106,40 @@ export function CurrentLeadsDataGrid2(): React.JSX.Element {
 
   return (
     <DataGridCard
-      id="current-leads-2"
+      id="leads-2"
       title={title}
       width={CURRENT_LEADS_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
-      getRowId={(row: CurrentLeadRow2) => row.rowId}
+      getRowId={(row: LeadRow2) => row.rowId}
       checkboxSelection
       disableMultipleRowSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      isRowSelectable={(params: GridRowParams<CurrentLeadRow2>) => !isRowDisabled(params.row)}
+      isRowSelectable={(params: GridRowParams<LeadRow2>) => !isRowDisabled(params.row)}
+      slots={{ toolbar: LeadsDataGridToolbar }}
+      slotProps={{
+        toolbar: {
+          filterType,
+          onFilterTypeChange: (type: LeadsFilterType) => dispatch(setLeadsFilterType(type)),
+        },
+      }}
+      showToolbar
     />
   )
 }
 
-type CurrentLeadInvestigationStatus2 = 'None' | 'Blocked' | 'Active' | 'Done'
+type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active'
 
-type CurrentLeadRow2 = {
+type LeadRow2 = {
   rowId: number
   id: LeadId
+  status: LeadsFilterType
   lead: string
   difficulty: number
   repeatable: boolean
   investigation: string
-  investigationStatus: CurrentLeadInvestigationStatus2
+  investigationStatus: LeadInvestigationStatus2
   activeInvestigationId?: LeadInvestigationId
   agents?: number
   progress?: number
@@ -130,42 +150,32 @@ type CurrentLeadRow2 = {
   successChanceUpper?: number
 }
 
-function bldCurrentLeadRows2(leads: readonly Lead[], gameState: GameState): CurrentLeadRow2[] {
-  const rows: CurrentLeadRow2[] = []
-
-  for (const lead of leads) {
-    const status = getLeadStatus(lead, gameState)
-    if (status.isArchived) {
-      continue
-    }
-
-    rows.push(bldCurrentLeadRow2(lead, rows.length, gameState))
-  }
-
-  return rows
+function bldLeadRows2(leads: readonly Lead[], gameState: GameState): LeadRow2[] {
+  return leads.map((lead, index) => bldLeadRow2(lead, index, gameState))
 }
 
-function bldCurrentLeadRow2(lead: Lead, rowId: number, gameState: GameState): CurrentLeadRow2 {
+function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 {
   const investigationsForLead = Object.values(gameState.leadInvestigations).filter(
     (investigation) => investigation.leadId === lead.id,
   )
   const activeInvestigation = investigationsForLead.find((investigation) => investigation.state === 'Active')
-  const doneInvestigation = investigationsForLead.find((investigation) => investigation.state === 'Done')
   const status = getLeadStatus(lead, gameState)
+  const rowStatus = getLeadFilterType2(status)
 
   const rowBase = {
     rowId,
     id: lead.id,
+    status: rowStatus,
     lead: lead.name,
     difficulty: lead.difficulty,
     repeatable: lead.repeatable,
   }
 
-  if (status.isInactive) {
+  if (rowStatus === 'inactive') {
     return {
       ...rowBase,
-      investigation: 'Blocked',
-      investigationStatus: 'Blocked',
+      investigation: 'Inactive',
+      investigationStatus: 'Inactive',
     }
   }
 
@@ -176,14 +186,6 @@ function bldCurrentLeadRow2(lead: Lead, rowId: number, gameState: GameState): Cu
       investigationStatus: 'Active',
       activeInvestigationId: activeInvestigation.id,
       ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
-    }
-  }
-
-  if (!lead.repeatable && doneInvestigation !== undefined) {
-    return {
-      ...rowBase,
-      investigation: 'Done',
-      investigationStatus: 'Done',
     }
   }
 
@@ -199,7 +201,7 @@ function bldActiveInvestigationDetails2(
   lead: Lead,
   agents: Agent[],
 ): Pick<
-  CurrentLeadRow2,
+  LeadRow2,
   | 'agents'
   | 'progress'
   | 'projectedProgress'
@@ -227,7 +229,7 @@ function bldActiveInvestigationDetails2(
   }
 }
 
-function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
+function getLeadColumns2(): GridColDef<LeadRow2>[] {
   return [
     {
       field: 'lead',
@@ -243,8 +245,8 @@ function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
       field: 'repeatable',
       headerName: 'Rpt.',
       width: columnWidths['current_leads.repeatable'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2, boolean>) => (
-        <span aria-label={`current-leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
+      renderCell: (params: GridRenderCellParams<LeadRow2, boolean>) => (
+        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
       ),
     },
     {
@@ -256,14 +258,13 @@ function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
       field: 'agents',
       headerName: 'Agents',
       width: columnWidths['current_leads.agents'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2, number | undefined>) =>
-        fmtOptionalNumber(params.value),
+      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>) => fmtOptionalNumber(params.value),
     },
     {
       field: 'progress',
       headerName: 'Progress',
       width: columnWidths['current_leads.progress'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
@@ -274,7 +275,7 @@ function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
       field: 'progressDiff',
       headerName: 'Projected',
       width: columnWidths['current_leads.projected'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
@@ -285,7 +286,7 @@ function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
       field: 'teamEfficiency',
       headerName: 'Eff.',
       width: columnWidths['current_leads.efficiency'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
@@ -296,9 +297,19 @@ function getCurrentLeadColumns2(): GridColDef<CurrentLeadRow2>[] {
       field: 'successChance',
       headerName: 'Success %',
       width: columnWidths['current_leads.success_chance'],
-      renderCell: (params: GridRenderCellParams<CurrentLeadRow2>) => fmtSuccessChanceRange2(params.row),
+      renderCell: (params: GridRenderCellParams<LeadRow2>) => fmtSuccessChanceRange2(params.row),
     },
   ]
+}
+
+function getLeadFilterType2(status: ReturnType<typeof getLeadStatus>): LeadsFilterType {
+  if (status.isArchived) {
+    return 'archived'
+  }
+  if (status.isInactive) {
+    return 'inactive'
+  }
+  return 'active'
 }
 
 function fmtActiveInvestigation(lead: Lead, gameState: GameState): string {
@@ -324,7 +335,7 @@ function fmtSignedDec2(value: number): string {
   return value > 0 ? `+${fmtDec2(value)}` : `-${fmtDec2(Math.abs(value))}`
 }
 
-function fmtSuccessChanceRange2(row: CurrentLeadRow2): string {
+function fmtSuccessChanceRange2(row: LeadRow2): string {
   if (row.successChanceLower === undefined || row.successChanceUpper === undefined) {
     return ''
   }
@@ -334,6 +345,6 @@ function fmtSuccessChanceRange2(row: CurrentLeadRow2): string {
   return `~${floor(midpoint * 100)}% +/- ${ceil(halfWidth * 100)}%`
 }
 
-function isRowDisabled(row: CurrentLeadRow2): boolean {
-  return row.investigationStatus !== 'None' && row.investigationStatus !== 'Active'
+function isRowDisabled(row: LeadRow2): boolean {
+  return row.status !== 'active'
 }

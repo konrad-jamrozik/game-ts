@@ -172,10 +172,11 @@ The lead investigations UI is composed of following UI components
   - 1st row
     - `Leads data grid`
   - 2nd row, left column
-    - Buttons from top to bottom:
-    - `"Investigate lead" button` left justified relative to the data grid in next row.
-    - `Next turn` right justified relative to the data grid in next row.
-    - `"Back to command center" button` to the right from `Next turn` button.
+    - Buttons from top to bottom
+      - `"Investigate lead" button`
+      - `Next turn`
+      - `"Back to command center" button`
+    - All buttons must be always of fixed width, taking into account the widest width of the `"Investigate lead" button`
   - 2nd row, right column
     - `Agents data grid for leads`
 
@@ -200,9 +201,9 @@ then the `"Investigate lead" button` becomes enabled. Clicking it will start the
 If the lead is already being investigated, then the button instead says `Add agents to investigation`. Clicking it will
 assign the agents to the lead.
 
-If zero leads are selected, the button becomes disabled saying `Select a lead to investigate`.
+If zero leads are selected, the button becomes disabled saying `Select a lead`.
 
-If a lead is selected but no agents are selected, the button becomes disabled saying `Select at least one agent to investigate`.
+If a lead is selected but no agents are selected, the button becomes disabled saying `Select any ready agent`.
 
 Note we assume at most one lead can be selected at a time, and only active lead can be selected.
 

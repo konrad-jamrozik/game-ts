@@ -7,10 +7,9 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { clearViewLeads } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { CURRENT_LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { AgentsDataGridForLeads2 } from './AgentsDataGridForLeads2'
-import { CurrentLeadsDataGrid2 } from './CurrentLeadsDataGrid2'
-import { LeadInvestigationActions2 } from './LeadInvestigationActions2'
+import { LeadsDataGrid2 } from './LeadsDataGrid2'
+import { LeadInvestigationActions2, LEADS_SCREEN_BUTTON_WIDTH } from './LeadInvestigationActions2'
 
 export function LeadsScreen2(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -50,24 +49,24 @@ export function LeadsScreen2(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} alignItems="center">
-        <Stack
-          direction="row"
-          justifyContent="space-between"
-          alignItems="flex-start"
-          sx={{ width: CURRENT_LEADS_DATA_GRID_WIDTH }}
-        >
-          <LeadInvestigationActions2 />
-          <Stack direction="row" spacing={2}>
-            <Button variant="contained" onClick={handleAdvanceTurn} disabled={gameEnded}>
+        <LeadsDataGrid2 />
+        <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="center">
+          <Stack spacing={2} alignItems="stretch" sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+            <LeadInvestigationActions2 />
+            <Button
+              variant="contained"
+              onClick={handleAdvanceTurn}
+              disabled={gameEnded}
+              sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+            >
               {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
             </Button>
-            <Button variant="contained" onClick={handleBackClick}>
+            <Button variant="contained" onClick={handleBackClick} sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
               Back to command center
             </Button>
           </Stack>
+          <AgentsDataGridForLeads2 />
         </Stack>
-        <CurrentLeadsDataGrid2 />
-        <AgentsDataGridForLeads2 />
       </Stack>
     </Box>
   )

@@ -18,12 +18,16 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
   function handleInactiveChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.checked) {
       onFilterTypeChange?.('inactive')
+    } else {
+      onFilterTypeChange?.('active')
     }
   }
 
   function handleArchivedChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.checked) {
       onFilterTypeChange?.('archived')
+    } else {
+      onFilterTypeChange?.('active')
     }
   }
 
@@ -44,7 +48,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="active"
+        label="Active"
       />
       <FormControlLabel
         control={
@@ -55,7 +59,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="inactive"
+        label="Inactive"
       />
       <FormControlLabel
         control={
@@ -66,7 +70,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="archived"
+        label="Archived"
       />
     </Toolbar>
   )
