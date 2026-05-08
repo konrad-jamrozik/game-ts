@@ -131,6 +131,7 @@ export function LeadsDataGrid(): React.JSX.Element {
       slotProps={{
         toolbar: {
           filterType,
+          leadCounts,
           onFilterTypeChange: (type: LeadsFilterType) => dispatch(setLeadsFilterType(type)),
         },
       }}

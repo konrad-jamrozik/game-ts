@@ -2,18 +2,20 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
 import * as React from 'react'
+import type { LeadCounts } from './leadCounts'
 
 // Allow passing custom props to the DataGrid toolbar slot for Leads grid
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
     filterType: 'active' | 'inactive' | 'archived'
+    leadCounts?: LeadCounts
     onFilterTypeChange?: (filterType: 'active' | 'inactive' | 'archived') => void
   }
 }
 
 export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
-  const { filterType, onFilterTypeChange } = props
+  const { filterType, leadCounts, onFilterTypeChange } = props
 
   function handleInactiveChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.checked) {
@@ -48,7 +50,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="Active"
+        label={`Active (${leadCounts?.active ?? 0})`}
       />
       <FormControlLabel
         control={
@@ -59,7 +61,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="Inactive"
+        label={`Inactive (${leadCounts?.inactive ?? 0})`}
       />
       <FormControlLabel
         control={
@@ -70,7 +72,7 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
             size="small"
           />
         }
-        label="Archived"
+        label={`Archived (${leadCounts?.archived ?? 0})`}
       />
     </Toolbar>
   )

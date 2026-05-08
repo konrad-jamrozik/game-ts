@@ -141,7 +141,7 @@ export function AgentsDataGrid(): React.JSX.Element {
     selectedAgents.length > 0 ? sum(selectedAgents, (agent) => calculateCombatRating(agent)) : undefined
 
   const agentCounts = calculateAgentCounts(allAgents)
-  const title = <AgentsDataGridTitle counts={agentCounts} />
+  const title = <AgentsDataGridTitle variant="commandCenter" counts={agentCounts} />
 
   return (
     <DataGridCard

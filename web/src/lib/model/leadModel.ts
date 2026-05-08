@@ -17,5 +17,6 @@ export type LeadInvestigation = {
   actualDifficulty: number
   agentIds: AgentId[] // agents currently investigating this lead
   startTurn: number // turn when investigation started
+  completionTurn?: number // turn when investigation successfully completed
   state: LeadInvestigationState
 }

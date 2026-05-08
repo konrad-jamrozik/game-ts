@@ -33,7 +33,7 @@ import {
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { columnWidths } from '../Common/columnWidths'
-import { CURRENT_LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
+import { LEADS_SCREEN_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
 import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
 import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
@@ -109,7 +109,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
     <DataGridCard
       id="leads-2"
       title={title}
-      width={CURRENT_LEADS_DATA_GRID_WIDTH}
+      width={LEADS_SCREEN_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: LeadRow2) => row.rowId}
@@ -122,6 +122,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
       slotProps={{
         toolbar: {
           filterType,
+          leadCounts,
           onFilterTypeChange: (type: LeadsFilterType) => dispatch(setLeadsFilterType(type)),
         },
       }}
@@ -130,7 +131,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
   )
 }
 
-type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active'
+type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done'
 
 type LeadRow2 = {
   rowId: number
@@ -160,6 +161,10 @@ function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 
     (investigation) => investigation.leadId === lead.id,
   )
   const activeInvestigation = investigationsForLead.find((investigation) => investigation.state === 'Active')
+  const doneInvestigation = investigationsForLead
+    .filter((investigation) => investigation.state === 'Done')
+    .toSorted(compareLeadInvestigationsByCompletionTurn2)
+    .at(-1)
   const status = getLeadStatus(lead, gameState)
   const rowStatus = getLeadFilterType2(status)
 
@@ -187,6 +192,14 @@ function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 
       investigationStatus: 'Active',
       activeInvestigationId: activeInvestigation.id,
       ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
+    }
+  }
+
+  if (rowStatus === 'archived' && !lead.repeatable && doneInvestigation !== undefined) {
+    return {
+      ...rowBase,
+      investigation: fmtDoneInvestigation2(doneInvestigation),
+      investigationStatus: 'Done',
     }
   }
 
@@ -235,17 +248,17 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     {
       field: 'lead',
       headerName: 'Lead',
-      width: columnWidths['current_leads.lead'],
+      width: columnWidths['leads_screen.lead'],
     },
     {
       field: 'difficulty',
       headerName: 'Diff.',
-      width: columnWidths['current_leads.difficulty'],
+      width: columnWidths['leads_screen.difficulty'],
     },
     {
       field: 'repeatable',
       headerName: 'Type',
-      width: columnWidths['current_leads.repeatable'],
+      width: columnWidths['leads_screen.repeatable'],
       renderCell: (params: GridRenderCellParams<LeadRow2, boolean>) => (
         <span aria-label={`leads-row-type-${params.id}`}>{leadRowTypeDisplay(params.value === true)}</span>
       ),
@@ -253,18 +266,18 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     {
       field: 'investigation',
       headerName: 'Investig.',
-      width: columnWidths['current_leads.investigation'],
+      width: columnWidths['leads_screen.investigation'],
     },
     {
       field: 'agents',
       headerName: 'Agents',
-      width: columnWidths['current_leads.agents'],
+      width: columnWidths['leads_screen.agents'],
       renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>) => fmtOptionalNumber(params.value),
     },
     {
       field: 'progress',
       headerName: 'Progress',
-      width: columnWidths['current_leads.progress'],
+      width: columnWidths['leads_screen.progress'],
       renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -275,7 +288,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     {
       field: 'progressDiff',
       headerName: 'Projected',
-      width: columnWidths['current_leads.projected'],
+      width: columnWidths['leads_screen.projected'],
       renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -286,7 +299,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     {
       field: 'teamEfficiency',
       headerName: 'Eff.',
-      width: columnWidths['current_leads.efficiency'],
+      width: columnWidths['leads_screen.efficiency'],
       renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -297,7 +310,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     {
       field: 'successChance',
       headerName: 'Success %',
-      width: columnWidths['current_leads.success_chance'],
+      width: columnWidths['leads_screen.success_chance'],
       renderCell: (params: GridRenderCellParams<LeadRow2>) => fmtSuccessChanceRange2(params.row),
     },
   ]
@@ -320,6 +333,22 @@ function fmtActiveInvestigation(lead: Lead, gameState: GameState): string {
 
   const ordinal = (gameState.leadInvestigationCounts[lead.id] ?? 0) + 1
   return `Active #${ordinal}`
+}
+
+function fmtDoneInvestigation2(investigation: LeadInvestigation): string {
+  if (investigation.completionTurn === undefined) {
+    return 'Done'
+  }
+
+  const paddedTurn = `${investigation.completionTurn}`.padStart(3).replaceAll(' ', '\u00A0')
+  return `Done T ${paddedTurn}`
+}
+
+function compareLeadInvestigationsByCompletionTurn2(
+  investigationA: LeadInvestigation,
+  investigationB: LeadInvestigation,
+): number {
+  return (investigationA.completionTurn ?? investigationA.startTurn) - (investigationB.completionTurn ?? investigationB.startTurn)
 }
 
 function fmtOptionalNumber(value: number | undefined): string {

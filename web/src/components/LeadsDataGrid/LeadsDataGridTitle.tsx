@@ -1,5 +1,5 @@
-import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
+import * as React from 'react'
 import type { LeadCounts } from './leadCounts'
 
 type LeadsDataGridTitleProps = {
@@ -8,14 +8,8 @@ type LeadsDataGridTitleProps = {
 
 export function LeadsDataGridTitle({ counts }: LeadsDataGridTitleProps): React.JSX.Element {
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
-      <Typography variant="h6" component="span">
-        Leads: Active {counts.active}{' '}
-        {counts.repeatable > 0 && `(Repeatable: ${counts.repeatable})`}
-      </Typography>
-      <Typography variant="h6" component="span">
-        Inactive {counts.inactive} | Arch {counts.archived}
-      </Typography>
-    </Box>
+    <Typography variant="h6" component="span">
+      Leads: {counts.all}
+    </Typography>
   )
 }

@@ -23,7 +23,10 @@ import {
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH } from '../Common/widthConstants'
-import { calculateAgentCounts } from '../AgentsDataGrid/agentCounts'
+import {
+  calculateAgentsForLeadsGridTitleCounts,
+  type AgentsForLeadsGridTitleCounts,
+} from '../AgentsDataGrid/agentCounts'
 import { AgentsDataGridTitle } from '../AgentsDataGrid/AgentsDataGridTitle'
 import { filterVisibleAgentColumns } from '../AgentsDataGrid/AgentsDataGridUtils'
 import { getAgentsColumns, type AgentRow } from '../AgentsDataGrid/getAgentsColumns'
@@ -32,6 +35,7 @@ declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
     leadsAgentsFilters?: LeadsAgentsFilterType[]
+    leadsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
     onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
   }
 }
@@ -94,8 +98,8 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
-  const agentCounts = calculateAgentCounts(gameState.agents)
-  const title = <AgentsDataGridTitle counts={agentCounts} />
+  const agentsForLeadsTitleCounts = calculateAgentsForLeadsGridTitleCounts(gameState.agents)
+  const title = <AgentsDataGridTitle variant="leads" counts={agentsForLeadsTitleCounts} />
 
   return (
     <DataGridCard
@@ -117,6 +121,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
       slotProps={{
         toolbar: {
           leadsAgentsFilters,
+          leadsAgentsFilterCounts: agentsForLeadsTitleCounts,
           onLeadsAgentsFiltersChange: (filters: LeadsAgentsFilterType[]) => dispatch(setLeadsAgentsFilters(filters)),
         },
       }}
@@ -132,9 +137,14 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 
 function AgentsForLeadsToolbar2(props: {
   leadsAgentsFilters?: LeadsAgentsFilterType[]
+  leadsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
   onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
 }): React.JSX.Element {
-  const { leadsAgentsFilters = DEFAULT_LEADS_AGENTS_FILTERS, onLeadsAgentsFiltersChange } = props
+  const {
+    leadsAgentsFilters = DEFAULT_LEADS_AGENTS_FILTERS,
+    leadsAgentsFilterCounts,
+    onLeadsAgentsFiltersChange,
+  } = props
 
   function handleFilterToggle(filter: LeadsAgentsFilterType, checked: boolean): void {
     if (checked) {
@@ -157,7 +167,7 @@ function AgentsForLeadsToolbar2(props: {
               size="small"
             />
           }
-          label="Ready"
+          label={`Ready (${leadsAgentsFilterCounts?.ready ?? 0})`}
         />
         <FormControlLabel
           control={
@@ -168,7 +178,7 @@ function AgentsForLeadsToolbar2(props: {
               size="small"
             />
           }
-          label="Away"
+          label={`Away (${leadsAgentsFilterCounts?.away ?? 0})`}
         />
         <FormControlLabel
           control={
@@ -179,7 +189,7 @@ function AgentsForLeadsToolbar2(props: {
               size="small"
             />
           }
-          label="Exhausted"
+          label={`Exhausted (${leadsAgentsFilterCounts?.exhausted ?? 0})`}
         />
         <FormControlLabel
           control={
@@ -190,7 +200,7 @@ function AgentsForLeadsToolbar2(props: {
               size="small"
             />
           }
-          label="Recovering"
+          label={`Recovering (${leadsAgentsFilterCounts?.recovering ?? 0})`}
         />
       </Box>
     </Toolbar>

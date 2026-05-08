@@ -54,7 +54,7 @@ function getInvestigateLeadButtonLabel(
   }
 
   if (selectedAgentCount === 0) {
-    return 'Select any ready agent'
+    return 'Select ready agents'
   }
 
   if (selectedInvestigationId !== undefined) {

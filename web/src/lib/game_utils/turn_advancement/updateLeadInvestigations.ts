@@ -139,6 +139,7 @@ function completeInvestigation(
 
   // Mark investigation as done and clear agent assignments
   investigation.state = 'Done'
+  investigation.completionTurn = state.turn
   investigation.agentIds = []
 
   // Return agents to InTransit state (they will transition to Available on next turn)

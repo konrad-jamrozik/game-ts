@@ -198,7 +198,7 @@ Clicking the `"Back to command center" button` in the `Leads screen` takes the p
 
 ## Investigating a lead
 
-Once player selects one lead in `Current leads data grid` and at least one available agent in `Agents data grid for leads`,
+Once player selects one lead in `Leads data grid` and at least one available agent in `Agents data grid for leads`,
 then the `"Investigate lead" button` becomes enabled. Clicking it will start the investigation with the selected lead and agents.
 
 If the lead is already being investigated, then the button instead says `Add agents to investigation`. Clicking it will
@@ -227,13 +227,25 @@ This grid has rows with following columns:
 | Eff.      | Investigation efficiency.              | `87%`                               |
 | Success % | Success chance range.                  | `~16% ± 10%`                        |
 
+### Leads data grid title
+
+Rendered as:
+
+```text
+Leads: {all}
+```
+
+`{all}` is the total count of leads that are not archived.
+
 ### Leads data grid toolbar
 
 The toolbar of the data grid has following filters, where always exactly 1 filter must be selected:
 
-- `Active` (selected by default)
-- `Inactive`
-- `Archived`
+- `Active ({active})` (selected by default)
+- `Inactive ({inactive})`
+- `Archived ({archived})`
+
+`{active}`, `{inactive}`, and `{archived}` count discovered leads in those states.
 
 If `Active` is selected, only active leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
 If `Inactive` is selected, only inactive leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
@@ -246,15 +258,21 @@ If `Active` is selected, user cannot unselect it.
 
 No more than one `Checkbox` can be selected at a time, and only rows with active leads can be selected.
 
-Possible values of `Type` are: `One-time` or `Repeatable`.
+Possible values of `Type` are: `One-time` or `Repeat.`.
 
-Possible values of `Investigation` are: `None`, `Inactive`, `Active` or `Active #N`
+Possible values of `Investigation` are: `None`, `Inactive`, `Active`, `Active #N` or `Done T #N`.
 
 `Active` applies only for leads that are not repeatable.
 
 `Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
-`Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None` or `Blocked`.
+`Done T #N` applies only for leads that are archived and which became archived because of a successful investigation.
+`T #` is the turn number at which the investigation was completed. To be exact, if investigation completed when advancing
+from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
+
+`#N` is padded to width 3, so e.g. `Done T   7` or `Done T 623`.
+
+`Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None`.
 
 `Success %` is the `turn advancement success chance range`. The range exists only because the exact
 `actualDifficulty` is hidden from the player:
@@ -277,12 +295,28 @@ This grid has rows with following columns:
 | Skill      | The skill of the agent      | `85/100 (85%)` |
 | Exhaustion | The exhaustion of the agent | `20.0%`        |
 
+### Agents data grid title
+
+Rendered on a single line, left aligned:
+
+```text
+Agents: {allActive}
+```
+
+`{allActive}` is the count of alive agents (excluding `KIA` and `Sacked`).
+
+The filter-specific counts are displayed next to the toolbar filters instead of in the title.
+
+### Agents data grid toolbar
+
 The toolbar of the data grid has following filters, where any number (0 to all) can be selected:
 
-- `Ready` (selected by default)
-- `Away`
-- `Exhausted`
-- `Recovering`
+- `Ready ({ready})` (selected by default)
+- `Away ({away})`
+- `Exhausted ({exhausted})`
+- `Recovering ({recovering})`
+
+`Ready`, `Away`, `Exhausted`, and `Recovering` use the same predicates as the corresponding toolbar filters on this grid.
 
 - Always at least one filter must be selected.
 - If `Ready` is selected, following agents are shown:

@@ -25,17 +25,17 @@ export const LEADS_DATA_GRID_WIDTH =
   columnWidths['leads.investigations'] +
   CHECKMARK_COLUMN_WIDTH
 
-export const CURRENT_LEADS_DATA_GRID_WIDTH =
+export const LEADS_SCREEN_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  columnWidths['current_leads.lead'] +
-  columnWidths['current_leads.difficulty'] +
-  columnWidths['current_leads.repeatable'] +
-  columnWidths['current_leads.investigation'] +
-  columnWidths['current_leads.agents'] +
-  columnWidths['current_leads.progress'] +
-  columnWidths['current_leads.projected'] +
-  columnWidths['current_leads.efficiency'] +
-  columnWidths['current_leads.success_chance'] +
+  columnWidths['leads_screen.lead'] +
+  columnWidths['leads_screen.difficulty'] +
+  columnWidths['leads_screen.repeatable'] +
+  columnWidths['leads_screen.investigation'] +
+  columnWidths['leads_screen.agents'] +
+  columnWidths['leads_screen.progress'] +
+  columnWidths['leads_screen.projected'] +
+  columnWidths['leads_screen.efficiency'] +
+  columnWidths['leads_screen.success_chance'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const LEAD_INVESTIGATIONS_DATA_GRID_WIDTH =
@@ -93,7 +93,7 @@ export const CONTROLS_COLUMN_CARD_WIDTH = 360
 export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
   MISSIONS_DATA_GRID_WIDTH,
   LEADS_DATA_GRID_WIDTH,
-  CURRENT_LEADS_DATA_GRID_WIDTH,
+  LEADS_SCREEN_DATA_GRID_WIDTH,
   LEAD_INVESTIGATIONS_DATA_GRID_WIDTH,
   AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH,
   AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH,

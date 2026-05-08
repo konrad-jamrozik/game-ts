@@ -1,3 +1,3 @@
-export function leadRowTypeDisplay(repeatable: boolean): 'Repeatable' | 'One-time' {
-  return repeatable ? 'Repeatable' : 'One-time'
+export function leadRowTypeDisplay(repeatable: boolean): 'Repeat.' | 'One-time' {
+  return repeatable ? 'Repeat.' : 'One-time'
 }
