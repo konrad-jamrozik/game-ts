@@ -171,7 +171,8 @@ The lead investigations UI is composed of following UI components
 - `Leads screen`
   - 1st row
     - `"Investigate lead" button` left justified relative to the data grid in next row.
-    - `"Back to command center" button` right justified relative to the data grid in next row.
+    - `Next turn` right justified relative to the data grid in next row.
+    - `"Back to command center" button` to the right from `Next turn` button.
   - 2nd row
     - `Current leads data grid`
   - 3rd row
@@ -265,7 +266,10 @@ The toolbar of the data grid has following filters, out of which 0 or 1 can be s
 - `Exhausted`
 - `Recovering`
 
-- If no filter is selected, only agents with assignment `Standby` or `Training` are shown, whose exhaustion is less than 30%.
+- If no filter is selected, only following agents are shown:
+  - with assignment `Standby` or `Training`,
+  - and NOT `InTransit`,
+  - and whose exhaustion is less than 30%.
 - If `Away` is selected, only agents in state `InTransit` or `Contracting` or `Investigating` or `OnMission` are shown.
   However, agents with assignment `Recovery` are not shown.
 - If `Exhausted` is selected, only agents with assignment `Standby` or `Training` are shown, whose exhaustion is 30% or more.

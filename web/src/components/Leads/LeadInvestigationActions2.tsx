@@ -1,0 +1,78 @@
+import Alert from '@mui/material/Alert'
+import Button from '@mui/material/Button'
+import Collapse from '@mui/material/Collapse'
+import Stack from '@mui/material/Stack'
+import * as React from 'react'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import { getPlayerActionsApi } from '../../redux/playerActionsApi'
+import { getCurrentTurnState } from '../../redux/storeUtils'
+import { handleInvestigateLead } from '../GameControls/handleInvestigateLead'
+
+export function LeadInvestigationActions2(): React.JSX.Element {
+  const dispatch = useAppDispatch()
+  const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
+  const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
+  const agentSelection = useAppSelector((state) => state.selection.agents)
+  const gameState = useAppSelector(getCurrentTurnState)
+  const [showAlert, setShowAlert] = React.useState(false)
+  const [alertMessage, setAlertMessage] = React.useState('')
+
+  const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
+  const api = getPlayerActionsApi(dispatch)
+  const selectedLeadOrInvestigation = selectedLeadId !== undefined || selectedInvestigationId !== undefined
+
+  function handleInvestigateLeadClick(): void {
+    handleInvestigateLead({
+      api,
+      gameState,
+      dispatch,
+      selectedLeadId,
+      selectedInvestigationId,
+      selectedAgentIds,
+      setAlertMessage,
+      setShowAlert,
+    })
+  }
+
+  return (
+    <Stack spacing={2} alignItems="center">
+      <Button
+        variant="contained"
+        onClick={handleInvestigateLeadClick}
+        disabled={!selectedLeadOrInvestigation || selectedAgentIds.length === 0}
+      >
+        {getInvestigateLeadButtonLabel(selectedLeadId, selectedInvestigationId, selectedAgentIds.length)}
+      </Button>
+      <Collapse in={showAlert}>
+        <Alert
+          severity="error"
+          onClose={() => setShowAlert(false)}
+          sx={{ textAlign: 'center', alignItems: 'center' }}
+          aria-label="lead-investigation-actions-alert"
+        >
+          {alertMessage}
+        </Alert>
+      </Collapse>
+    </Stack>
+  )
+}
+
+function getInvestigateLeadButtonLabel(
+  selectedLeadId: string | undefined,
+  selectedInvestigationId: string | undefined,
+  selectedAgentCount: number,
+): string {
+  if (selectedLeadId === undefined && selectedInvestigationId === undefined) {
+    return 'Select a lead to investigate'
+  }
+
+  if (selectedAgentCount === 0) {
+    return 'Select at least one agent to investigate'
+  }
+
+  if (selectedInvestigationId !== undefined) {
+    return 'Add agents to investigation'
+  }
+
+  return 'Investigate lead'
+}

@@ -10,7 +10,7 @@ import * as React from 'react'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
 import type { Lead, LeadInvestigation } from '../../lib/model/leadModel'
-import type { LeadId } from '../../lib/model/modelIds'
+import type { LeadId, LeadInvestigationId } from '../../lib/model/modelIds'
 import { inTransitWithAssignmentId, investigatingAgents } from '../../lib/model_utils/agentUtils'
 import { getDiscoveredLeads, getLeadStatus } from '../../lib/model_utils/leadUtils'
 import { fmtDec1, fmtDec2 } from '../../lib/primitives/formatPrimitives'
@@ -23,7 +23,12 @@ import {
 } from '../../lib/ruleset/leadRuleset'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { clearInvestigationSelection, clearLeadSelection, setLeadSelection } from '../../redux/slices/selectionSlice'
+import {
+  clearInvestigationSelection,
+  clearLeadSelection,
+  setInvestigationSelection,
+  setLeadSelection,
+} from '../../redux/slices/selectionSlice'
 import { columnWidths } from '../Common/columnWidths'
 import { DataGridCard } from '../Common/DataGridCard'
 import { CURRENT_LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
@@ -33,6 +38,7 @@ import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
 export function CurrentLeadsDataGrid2(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
+  const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
   const gameState = useAppSelector(getCurrentTurnState)
 
   const discoveredLeads = getDiscoveredLeads(gameState)
@@ -47,25 +53,38 @@ export function CurrentLeadsDataGrid2(): React.JSX.Element {
 
     if (selectedRowIds.length === 0) {
       dispatch(clearLeadSelection())
+      dispatch(clearInvestigationSelection())
     } else {
       const [rowId] = selectedRowIds
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
-      if (row && !isRowDisabled(row)) {
+      if (row?.investigationStatus === 'None') {
         dispatch(clearInvestigationSelection())
         dispatch(setLeadSelection(row.id))
+      } else if (row?.investigationStatus === 'Active' && row.activeInvestigationId !== undefined) {
+        dispatch(clearLeadSelection())
+        dispatch(setInvestigationSelection(row.activeInvestigationId))
       } else {
         dispatch(clearLeadSelection())
+        dispatch(clearInvestigationSelection())
       }
     }
   }
 
   const rowIds: GridRowId[] = []
   if (selectedLeadId !== undefined) {
-    const row = rows.find((rowCandidate) => rowCandidate.id === selectedLeadId)
+    const row = rows.find((rowCandidate) => rowCandidate.id === selectedLeadId && rowCandidate.investigationStatus === 'None')
     if (row) {
       rowIds.push(row.rowId)
     } else {
       dispatch(clearLeadSelection())
+    }
+  }
+  if (selectedInvestigationId !== undefined) {
+    const row = rows.find((rowCandidate) => rowCandidate.activeInvestigationId === selectedInvestigationId)
+    if (row) {
+      rowIds.push(row.rowId)
+    } else {
+      dispatch(clearInvestigationSelection())
     }
   }
 
@@ -101,6 +120,7 @@ type CurrentLeadRow2 = {
   repeatable: boolean
   investigation: string
   investigationStatus: CurrentLeadInvestigationStatus2
+  activeInvestigationId?: LeadInvestigationId
   agents?: number
   progress?: number
   projectedProgress?: number
@@ -154,6 +174,7 @@ function bldCurrentLeadRow2(lead: Lead, rowId: number, gameState: GameState): Cu
       ...rowBase,
       investigation: fmtActiveInvestigation(lead, gameState),
       investigationStatus: 'Active',
+      activeInvestigationId: activeInvestigation.id,
       ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
     }
   }
@@ -314,5 +335,5 @@ function fmtSuccessChanceRange2(row: CurrentLeadRow2): string {
 }
 
 function isRowDisabled(row: CurrentLeadRow2): boolean {
-  return row.investigationStatus !== 'None'
+  return row.investigationStatus !== 'None' && row.investigationStatus !== 'Active'
 }

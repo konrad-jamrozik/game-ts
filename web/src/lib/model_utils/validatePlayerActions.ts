@@ -3,8 +3,14 @@ import type { AgentId, MissionId } from '../model/modelIds'
 import { AGENT_HIRE_COST } from '../data_tables/constants'
 import { getUpgradePrice, type UpgradeName } from '../data_tables/upgrades'
 import { onTrainingAssignment } from './agentUtils'
-import { validateAvailableAgents, validateNotExhaustedAgents, validateOnAssignmentAgents } from './validateAgents'
+import {
+  validateAgents,
+  validateAvailableAgents,
+  validateNotExhaustedAgents,
+  validateOnAssignmentAgents,
+} from './validateAgents'
 import { getRemainingTransportCap, validateMissionDeployment, getMissionById } from './missionUtils'
+import { f6ge, toF6 } from '../primitives/fixed6'
 
 export type ValidationResult =
   | Readonly<{ isValid: true; errorMessage?: never }>
@@ -124,35 +130,11 @@ export function validateDeployAgents(
 }
 
 export function validateStartLeadInvestigation(gameState: GameState, agentIds: AgentId[]): ValidationResult {
-  // Validate that all selected agents are available
-  const availabilityValidation = validateAvailableAgents(gameState.agents, agentIds)
-  if (!availabilityValidation.isValid) {
-    return { isValid: false, errorMessage: availabilityValidation.errorMessage }
-  }
-
-  // Validate that agents are not exhausted
-  const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, agentIds)
-  if (!exhaustionValidation.isValid) {
-    return { isValid: false, errorMessage: exhaustionValidation.errorMessage }
-  }
-
-  return { isValid: true }
+  return validateLeadInvestigationAgents(gameState, agentIds)
 }
 
 export function validateAddAgentsToInvestigation(gameState: GameState, agentIds: AgentId[]): ValidationResult {
-  // Validate that all selected agents are available
-  const availabilityValidation = validateAvailableAgents(gameState.agents, agentIds)
-  if (!availabilityValidation.isValid) {
-    return { isValid: false, errorMessage: availabilityValidation.errorMessage }
-  }
-
-  // Validate that agents are not exhausted
-  const exhaustionValidation = validateNotExhaustedAgents(gameState.agents, agentIds)
-  if (!exhaustionValidation.isValid) {
-    return { isValid: false, errorMessage: exhaustionValidation.errorMessage }
-  }
-
-  return { isValid: true }
+  return validateLeadInvestigationAgents(gameState, agentIds)
 }
 
 export function validateBuyUpgrade(gameState: GameState, upgradeName: UpgradeName): ValidationResult {
@@ -160,5 +142,24 @@ export function validateBuyUpgrade(gameState: GameState, upgradeName: UpgradeNam
   if (gameState.money < upgradePrice) {
     return { isValid: false, errorMessage: 'Insufficient funds' }
   }
+  return { isValid: true }
+}
+
+function validateLeadInvestigationAgents(gameState: GameState, agentIds: AgentId[]): ValidationResult {
+  const validation = validateAgents(
+    gameState.agents,
+    agentIds,
+    (selectedAgents) =>
+      selectedAgents.filter(
+        (agent) =>
+          (agent.assignment !== 'Standby' && agent.assignment !== 'Training') || f6ge(agent.exhaustionPct, toF6(30)),
+      ),
+    'Lead investigations require Standby or Training agents with exhaustion below 30.',
+  )
+
+  if (!validation.isValid) {
+    return { isValid: false, errorMessage: validation.errorMessage }
+  }
+
   return { isValid: true }
 }

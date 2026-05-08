@@ -4,7 +4,9 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch } from '../../redux/hooks'
 import { clearViewLeads } from '../../redux/slices/selectionSlice'
+import { AgentsDataGridForLeads2 } from './AgentsDataGridForLeads2'
 import { CurrentLeadsDataGrid2 } from './CurrentLeadsDataGrid2'
+import { LeadInvestigationActions2 } from './LeadInvestigationActions2'
 
 export function LeadsScreen2(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -39,6 +41,8 @@ export function LeadsScreen2(): React.JSX.Element {
           Back to command center
         </Button>
         <CurrentLeadsDataGrid2 />
+        <AgentsDataGridForLeads2 />
+        <LeadInvestigationActions2 />
       </Stack>
     </Box>
   )
