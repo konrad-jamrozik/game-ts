@@ -170,15 +170,14 @@ The lead investigations UI is composed of following UI components
 
 - `Leads screen`
   - 1st row
+    - `Leads data grid`
+  - 2nd row, left column
+    - Buttons from top to bottom:
     - `"Investigate lead" button` left justified relative to the data grid in next row.
     - `Next turn` right justified relative to the data grid in next row.
     - `"Back to command center" button` to the right from `Next turn` button.
-  - 2nd row
-    - `Current leads data grid`
-  - 3rd row
+  - 2nd row, right column
     - `Agents data grid for leads`
-  - 4th row
-    - `Archived leads data grid`
 
 - Additions to the `Command center screen`:
   - Inside the `Game controls` panel:
@@ -207,7 +206,7 @@ If a lead is selected but no agents are selected, the button becomes disabled sa
 
 Note we assume at most one lead can be selected at a time, and only active lead can be selected.
 
-## Current leads data grid
+## Leads data grid
 
 This grid has rows with following columns:
 
@@ -224,16 +223,30 @@ This grid has rows with following columns:
 | Eff.      | Investigation efficiency.              | `87%`                               |
 | Success % | Success chance range.                  | `~16% ± 10%`                        |
 
+### Leads data grid toolbar
+
+The toolbar of the data grid has following filters, where always exactly 1 filter must be selected:
+
+- `Active` (selected by default)
+- `Inactive`
+- `Archived`
+
+If `Active` is selected, only active leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
+If `Inactive` is selected, only inactive leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
+If `Archived` is selected, only archived leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
+
+If the users unselects `Inactive` or `Archived`, then `Active` is selected automatically.
+If `Active` is selected, user cannot unselect it.
+
+### Leads data grid column details
+
 No more than one `Checkbox` can be selected at a time, and only rows with active leads can be selected.
 
 Possible values of `Rpt.` are: `Yes` or `No`.
 
-Possible values of `Investigation` are: `None`, `Blocked`, `Active`, `Active #N`, `Done`.
+Possible values of `Investigation` are: `None`, `Inactive`, `Active` or `Active #N`
 
-`Active` and `Done` applies only for leads that are not repeatable.
-
-`Blocked` applies when lead cannot be investigated for whatever reason, e.g. because there is active
-mission resulting from previous investigation of this lead.
+`Active` applies only for leads that are not repeatable.
 
 `Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
