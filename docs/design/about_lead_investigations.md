@@ -260,7 +260,7 @@ This grid has rows with following columns:
 | Skill      | The skill of the agent      | `85/100 (85%)` |
 | Exhaustion | The exhaustion of the agent | `20.0%`        |
 
-The toolbar of the data grid has following filters, where 1 or more can be selected:
+The toolbar of the data grid has following filters, where any number (0 to all) can be selected:
 
 - `Ready` (selected by default)
 - `Away`
@@ -279,6 +279,8 @@ The toolbar of the data grid has following filters, where 1 or more can be selec
   - and NOT `InTransit`,
   - and whose exhaustion is 30% or more.
 - If `Recovering` is selected, agents in state `Recovering` are shown.
+
+If no filters is selected, no rows will be displayed, and the data grid should display "Please select at least one filter above".
 
 ## Archived leads data grid
 

@@ -1,8 +1,10 @@
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Typography from '@mui/material/Typography'
 import {
   createRowSelectionManager,
+  GridOverlay,
   Toolbar,
   type GridRowId,
   type GridRowParams,
@@ -108,7 +110,10 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow2(params.row, leadsAgentsFilters)}
-      slots={{ toolbar: AgentsForLeadsToolbar2 }}
+      slots={{
+        toolbar: AgentsForLeadsToolbar2,
+        ...(leadsAgentsFilters.length === 0 ? { noRowsOverlay: PleaseSelectLeadAgentFiltersOverlay } : {}),
+      }}
       slotProps={{
         toolbar: {
           leadsAgentsFilters,
@@ -137,9 +142,7 @@ function AgentsForLeadsToolbar2(props: {
       return
     }
 
-    if (leadsAgentsFilters.length > 1) {
-      onLeadsAgentsFiltersChange?.(leadsAgentsFilters.filter((selectedFilter) => selectedFilter !== filter))
-    }
+    onLeadsAgentsFiltersChange?.(leadsAgentsFilters.filter((selectedFilter) => selectedFilter !== filter))
   }
 
   return (
@@ -191,6 +194,16 @@ function AgentsForLeadsToolbar2(props: {
         />
       </Box>
     </Toolbar>
+  )
+}
+
+function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
+  return (
+    <GridOverlay>
+      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+        Please select at least one filter above
+      </Typography>
+    </GridOverlay>
   )
 }
 
