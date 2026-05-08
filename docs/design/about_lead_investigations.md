@@ -281,48 +281,7 @@ disabled state names the blocking investigation.
 Already investigating this lead.
 ```
 
-# 5. Design Rationale
-
-KJA lead inv doc TODO add notes on rejected alternative design, that will mostly trash the legacy design.
-
-The model makes Difficulty mean:
-
-> How many turns this takes for one normal competent agent.
-
-That maps directly to player planning while retaining uncertainty and long-investigation pacing:
-
-- Visible difficulty gives the player a clear progress target and planning baseline.
-- Actual difficulty preserves uncertainty without making the visible number meaningless.
-- Cubic accumulated success chance makes early completion possible but unlikely, then rises sharply
-  near actual difficulty.
-- `P_tadv` keeps repeated turn advancement rolls consistent with the accumulated success curve.
-- Progress efficiency lets multiple agents help while keeping each additional agent less valuable
-  than the previous one.
-- Progress loss preserves assignment continuity and prevents parked investigations from being
-  costless.
-
-# 6. Implementation Notes
-
-KJA lead inv doc TODO - isn't this section incomplete and selective? Do we need it at all?
-
-The implementation follows these model concepts:
-
-- Leads store integer visible difficulty as `difficulty`.
-- Active lead investigations store `progress` and hidden integer `actualDifficulty`.
-- `actualDifficulty` is initialized from `floor(difficulty * random(1.0, 1.5))`.
-- Success chance rolls use the investigation's hidden `actualDifficulty`.
-- Turn advancement first transitions assigned agents from **In transit** to **Investigating**.
-- Assigned agents that are **Investigating** during turn advancement compute `turn advancement
-  progress`; the game adds it to stored `progress`, then rolls `P_tadv`.
-- Removing agents applies proportional progress loss to stored `progress`.
-- Exhaustion and mandatory withdrawal remain unchanged.
-
-Lead difficulty values are tuned against the intended campaign length, but the player-facing meaning
-stays stable:
-
-> Difficulty is the number of turns an effective skill 100 agent expects to spend.
-
-# 7. Concept definitions
+# 5. Concept definitions
 
 ## Player-facing concepts
 
@@ -371,7 +330,7 @@ stays stable:
   `turn advancement success chance` is derived from the difference between previous and current
   `accumulated success chance`, conditional on the `lead investigation` still being unresolved.
 
-# 8. Formula reference
+# 6. Formula reference
 
 <!-- markdownlint-disable MD051 -->
 <!-- Why? False positive on [intuition](#9-intuition-behind----turn-advancement-success-chance) -->
@@ -403,7 +362,7 @@ The table above uses inline following constants:
 | **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty. |
 | **Cumulative chance exponent** | **3** | $P_c$ - accumulated success chance | Makes early success possible but unlikely, then rises sharply near completion. |
 
-# 9. Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
+# 7. Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
 
 The formula reference above is enough to implement the system. This section explains why
 $P_{\text{tadv}}$ is written in conditional form.
@@ -443,7 +402,7 @@ $$
 20\% + (80\% \cdot 30\%) = 44\%
 $$
 
-# 10. Excel formulas reference
+# 8. Excel formulas reference
 
 To reproduce the Difficulty 10 example table in Excel, use these inputs:
 
