@@ -10,20 +10,23 @@ chance.
   - [Repeatable Lead](#repeatable-lead)
   - [Lead Investigation Stored Properties](#lead-investigation-stored-properties)
   - [Completing a Lead Investigation](#completing-a-lead-investigation)
+    - [Success chance each turn](#success-chance-each-turn)
   - [Progress Loss on Agent Unassignment](#progress-loss-on-agent-unassignment)
-  - [Success Chance Each Turn](#success-chance-each-turn)
 - [2. Key Player Intuitions](#2-key-player-intuitions)
 - [3. Lead Investigation Example](#3-lead-investigation-example)
 - [4. UI Design](#4-ui-design)
-- [5. Design Rationale](#5-design-rationale)
-- [6. Implementation Notes](#6-implementation-notes)
-- [7. Concept definitions](#7-concept-definitions)
+  - [Leads List](#leads-list)
+  - [Active Investigations](#active-investigations)
+  - [Assigned Agent Status](#assigned-agent-status)
+  - [Completed Investigations](#completed-investigations)
+  - [Empty And Disabled States](#empty-and-disabled-states)
+- [5. Concept definitions](#5-concept-definitions)
   - [Player-facing concepts](#player-facing-concepts)
   - [Advanced concepts](#advanced-concepts)
-- [8. Formula reference](#8-formula-reference)
+- [6. Formula reference](#6-formula-reference)
   - [Constants](#constants)
-- [9. Intuition behind $P\_{\\text{tadv}}$ - Turn Advancement Success Chance](#9-intuition-behind-p_texttadv---turn-advancement-success-chance)
-- [10. Excel formulas reference](#10-excel-formulas-reference)
+- [7. Intuition behind $P\_{\\text{tadv}}$ - Turn Advancement Success Chance](#7-intuition-behind-p_texttadv---turn-advancement-success-chance)
+- [8. Excel formulas reference](#8-excel-formulas-reference)
 
 # 1. Gameplay Basics
 
@@ -163,59 +166,61 @@ guaranteed at 15 progress instead of 10.
 
 # 4. UI Design
 
-The lead investigation UI helps the player answer three questions:
+The lead investigations UI is composed of following UI components
 
-- Which leads can I investigate?
-- Which agents are assigned, **In transit**, or already **Investigating**?
-- How much progress and completion chance will the next turn advancement produce?
+- `Leads screen`
+  - 1st row
+    - `"Back to command center" button`
+  - 2nd row
+    - `Current leads data grid`
+  - 3rd row
+    - `Agents view for leads`
+  - 4th row
+    - `Archived leads data grid`
 
-## Leads List
+- Additions to the `Command center screen`:
+  - Inside the `Game controls` panel:
+    - `Leads` button
+  - Inside the `Situation report` panel:
+    - `Leads summary` data grid
 
-The leads data grid is the lead overview. Its visible columns are `Lead`, `Difficulty`, `Rpt.`, and
-`Investigation`.
+## Navigating between command center screen and leads screen
 
-```text
-Lead                    Difficulty  Rpt.  Investigation
-Criminal organizations  3           No    None
-Deep state              10          No    None
-```
+The player can click on the `Leads` button in the `Game controls` panel.
+It is placed to the left of the `Charts` button.
 
-`Investigation` is `None` when no active investigation exists for that lead. It becomes `Active` when
-the player starts investigating that lead.
+Clicking the `"Back to command center" button` in the `Leads screen` takes the player back to the command center.
 
-```text
-Lead                    Difficulty  Rpt.  Investigation
-Criminal organizations  3           No    Active
-Deep state              10          No    None
-```
+## Current leads data grid
 
-Repeatable leads use `Yes` in the `Rpt.` column. Non-repeatable leads use `No`.
+This grid has rows with following columns:
 
-## Active Investigations
+| Column | Description | Example |
+| --- | --- | --- |
+| Lead | The name of the lead. | `Locate Red Dawn training facility` |
+| Difficulty | The difficulty of the lead. | `10` |
+| Rpt. | Whether the lead is repeatable. | `Yes` |
+| Investigation | Investigation status. | `Active, #3` |
+| Agents | Number of agents assigned to the lead. | `2` |
+| Progress | Progress on the lead | `8.0/10` |
+| Projected | Projected progress on the lead | `+1.74` |
+| Efficiency | Investigation efficiency. | `87%` |
+| Success % | Success chance range. | `~16% ± 10%` |
 
-The lead investigations data grid is the active investigation overview. Its visible columns are
-`Investigation`, `Ag #`, `Succ %`, `Progress`, and `Proj.`.
+Possible values of `Rpt.` are: `Yes` or `No`.
 
-```text
-Investigation               Ag #  Succ %      Progress  Proj.
-000 Criminal organizations  0 +1  ~0% - ~0%  0.0/3.0   0.0/3.0
-```
+Possible values of `Investigation` are: `None`, `Blocked`, `Active`, `Active #N`, `Done`.
 
-In `Ag #`, a single number counts agents already producing progress. A `+N` suffix counts assigned
-agents that are still **In transit**. After turn advancement moves those agents to **Investigating**,
-the suffix is folded into the main count.
+`Active` and `Done` applies only for leads that are not repeatable.
 
-```text
-Investigation               Ag #  Succ %      Progress  Proj.
-000 Criminal organizations  1     ~1% - ~4%  0.0/3.0   1.0/3.0 +1.0 eff. 100%
-```
+`Blocked` applies when lead cannot be investigated for whatever reason, e.g. because there is active
+mission resulting from previous investigation of this lead.
 
-`Progress` uses `lead visible difficulty` as the denominator, even though actual difficulty may be
-higher. `Proj.` adds the current `turn advancement progress` estimate to current progress. `eff.
-100%` means the assigned agents produce their full raw progress because there is no multi-agent
-efficiency loss.
+`Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
-`Succ %` is the `turn advancement success chance range`. The range exists only because the exact
+`Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None` or `Blocked`.
+
+`Success %` is the `turn advancement success chance range`. The range exists only because the exact
 `actualDifficulty` is hidden from the player:
 
 - The lower bound assumes actual difficulty is as high as possible.
