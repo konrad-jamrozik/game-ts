@@ -134,7 +134,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
 type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done'
 
 type LeadRow2 = {
-  rowId: number
+  rowId: GridRowId
   id: LeadId
   status: LeadsFilterType
   lead: string
@@ -153,10 +153,10 @@ type LeadRow2 = {
 }
 
 function bldLeadRows2(leads: readonly Lead[], gameState: GameState): LeadRow2[] {
-  return leads.map((lead, index) => bldLeadRow2(lead, index, gameState))
+  return leads.flatMap((lead) => bldLeadRowsForLead2(lead, gameState))
 }
 
-function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 {
+function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
   const investigationsForLead = Object.values(gameState.leadInvestigations).filter(
     (investigation) => investigation.leadId === lead.id,
   )
@@ -169,7 +169,7 @@ function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 
   const rowStatus = getLeadFilterType2(status)
 
   const rowBase = {
-    rowId,
+    rowId: `lead:${lead.id}`,
     id: lead.id,
     status: rowStatus,
     lead: lead.name,
@@ -177,37 +177,71 @@ function bldLeadRow2(lead: Lead, rowId: number, gameState: GameState): LeadRow2 
     repeatable: lead.repeatable,
   }
 
+  const repeatableDoneRows = bldRepeatableDoneLeadRows2(lead, investigationsForLead)
+
   if (rowStatus === 'inactive') {
-    return {
-      ...rowBase,
-      investigation: 'Inactive',
-      investigationStatus: 'Inactive',
-    }
+    return [
+      {
+        ...rowBase,
+        investigation: 'Inactive',
+        investigationStatus: 'Inactive',
+      },
+      ...repeatableDoneRows,
+    ]
   }
 
   if (activeInvestigation !== undefined) {
-    return {
-      ...rowBase,
-      investigation: fmtActiveInvestigation(lead, gameState),
-      investigationStatus: 'Active',
-      activeInvestigationId: activeInvestigation.id,
-      ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
-    }
+    return [
+      {
+        ...rowBase,
+        investigation: fmtActiveInvestigation(lead, gameState),
+        investigationStatus: 'Active',
+        activeInvestigationId: activeInvestigation.id,
+        ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
+      },
+      ...repeatableDoneRows,
+    ]
   }
 
   if (rowStatus === 'archived' && !lead.repeatable && doneInvestigation !== undefined) {
-    return {
-      ...rowBase,
-      investigation: fmtDoneInvestigation2(doneInvestigation),
-      investigationStatus: 'Done',
-    }
+    return [
+      {
+        ...rowBase,
+        investigation: fmtDoneInvestigation2(doneInvestigation),
+        investigationStatus: 'Done',
+      },
+      ...repeatableDoneRows,
+    ]
   }
 
-  return {
-    ...rowBase,
-    investigation: 'None',
-    investigationStatus: 'None',
+  return [
+    {
+      ...rowBase,
+      investigation: 'None',
+      investigationStatus: 'None',
+    },
+    ...repeatableDoneRows,
+  ]
+}
+
+function bldRepeatableDoneLeadRows2(lead: Lead, investigationsForLead: readonly LeadInvestigation[]): LeadRow2[] {
+  if (!lead.repeatable) {
+    return []
   }
+
+  return investigationsForLead
+    .filter((investigation) => investigation.state === 'Done')
+    .toSorted(compareLeadInvestigationsByCompletionTurn2)
+    .map((investigation) => ({
+      rowId: `done:${investigation.id}`,
+      id: lead.id,
+      status: 'archived',
+      lead: lead.name,
+      difficulty: lead.difficulty,
+      repeatable: lead.repeatable,
+      investigation: fmtDoneInvestigation2(investigation),
+      investigationStatus: 'Done',
+    }))
 }
 
 function bldActiveInvestigationDetails2(

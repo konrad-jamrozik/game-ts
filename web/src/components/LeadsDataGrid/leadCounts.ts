@@ -32,6 +32,12 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
         repeatable += 1
       }
     }
+
+    if (lead.repeatable) {
+      archived += Object.values(gameState.leadInvestigations).filter(
+        (investigation) => investigation.leadId === lead.id && investigation.state === 'Done',
+      ).length
+    }
   }
 
   return {

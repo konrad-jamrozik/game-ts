@@ -245,7 +245,13 @@ The toolbar of the data grid has following filters, where always exactly 1 filte
 - `Inactive ({inactive})`
 - `Archived ({archived})`
 
-`{active}`, `{inactive}`, and `{archived}` count discovered leads in those states.
+`{active}` and `{inactive}` count discovered leads in those states. `{archived}` counts rows shown by the
+`Archived` filter:
+
+- **Archived one-time** rows: discovered one-time leads that are archived.
+- **Archived repeatable** rows: completed investigations of repeatable leads. A repeatable lead can still also
+  have its normal active/inactive lead row, because completed repeatable investigations are archived separately
+  from the lead itself.
 
 If `Active` is selected, only active leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
 If `Inactive` is selected, only inactive leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
@@ -266,7 +272,12 @@ Possible values of `Investigation` are: `None`, `Inactive`, `Active`, `Active #N
 
 `Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
-`Done T #N` applies only for leads that are archived and which became archived because of a successful investigation.
+`Done T #N` applies to archived rows created from a successful investigation:
+
+- For a one-time lead, the archived lead row shows `Done T #N` when the lead became archived because of that
+  successful investigation.
+- For a repeatable lead, each completed investigation gets its own archived row with `Done T #N`.
+
 `T #` is the turn number at which the investigation was completed. To be exact, if investigation completed when advancing
 from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 
