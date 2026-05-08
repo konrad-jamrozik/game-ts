@@ -295,48 +295,9 @@ The toolbar of the data grid has following filters, where any number (0 to all) 
 
 If no filters is selected, no rows will be displayed, and the data grid should display "Please select at least one filter above".
 
-## Archived leads data grid
-
-KJA leads TODO write this section
-
 ## Leads summary
 
 KJA leads TODO write this section
-
-## Assigned Agent Status
-
-KJA leads TODO adapt this section
-
-The agents data grid shows lead work per agent. Its lead-investigation-relevant columns are `ID`,
-`State`, and `Assignment`.
-
-Before lead assignment, an available agent has `State` set to `Available` and `Assignment` set to
-`Standby`.
-
-```text
-ID         State      Assignment
-agent-000  Available  Standby
-```
-
-Immediately after lead assignment, the assigned agent has `State` set to `InTransit` and `Assignment`
-set to the investigation id.
-
-```text
-ID         State      Assignment
-agent-000  InTransit  invst-000
-```
-
-After turn advancement, that same assigned agent has `State` set to `Investigating` and the same
-`Assignment` value.
-
-```text
-ID         State          Assignment
-agent-000  Investigating  invst-000
-```
-
-The lead investigations grid and agents grid describe the same assignments from different angles:
-`Ag #` summarizes assignment counts per investigation, while `State` and `Assignment` show the
-per-agent values.
 
 ## Completed Investigations
 
