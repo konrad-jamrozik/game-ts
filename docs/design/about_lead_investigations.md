@@ -104,15 +104,15 @@ Adding agents does not reduce progress. Removing agents does.
 
 # 2. Key Player Intuitions
 
-| Concept | Player Intuition |
-| :--- | :--- |
-| **Difficulty** | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one effective skill 100 agent, though actual difficulty may make it run up to 50% longer. |
-| **Progress** | **Progress represents how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
-| **Success Chance** | **The higher the completion chance, the sooner the lead is likely to resolve.** Progress makes completion increasingly likely until it becomes guaranteed. |
-| **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain. |
-| **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty. |
-| **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie. |
-| **Exhaustion** | **Do not let agents exhaust themselves on a long lead.** The player finishes the lead or rotates agents before exhaustion forces removals that cause progress loss. |
+| Concept               | Player Intuition                                                                                                                                                                                                                                                                                                       |
+| :-------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Difficulty**        | **Difficulty is the visible progress target and baseline turn count.** A Difficulty 10 lead takes about 10 turns for one effective skill 100 agent, though actual difficulty may make it run up to 50% longer.                                                                                                         |
+| **Progress**          | **Progress represents how much investigative work has been done.** For an unresolved investigation, progress is effectively capped by actual difficulty: once progress reaches actual difficulty, completion is guaranteed. Actual difficulty is an integer between 100% and 150% of visible difficulty, rounded down. |
+| **Success Chance**    | **The higher the completion chance, the sooner the lead is likely to resolve.** Progress makes completion increasingly likely until it becomes guaranteed.                                                                                                                                                             |
+| **Progress per Turn** | **The more agents, the faster the work, but each additional agent provides less benefit.** Going from 1 to 2 agents is a big gain; going from 10 to 11 is a small gain.                                                                                                                                                |
+| **Actual Difficulty** | **The exact completion turn is unpredictable.** The investigation can finish early from a success roll, but it is guaranteed once progress reaches actual difficulty.                                                                                                                                                  |
+| **Proportional Loss** | **The most skilled agents carry the most current context.** Removing a highly skilled agent causes a greater loss of progress than removing a rookie.                                                                                                                                                                  |
+| **Exhaustion**        | **Do not let agents exhaust themselves on a long lead.** The player finishes the lead or rotates agents before exhaustion forces removals that cause progress loss.                                                                                                                                                    |
 
 # 3. Lead Investigation Example
 
@@ -123,24 +123,24 @@ that row's turn advancement. For example, row `2` means the investigation advanc
 turn 2, progress increased from `1/10` to `2/10`, and $P_{\text{tadv}}$ is the success chance rolled during
 that turn advancement.
 
-| Turn | Progress | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | Mid ± Err |
-| ---: | -------: | -------: | -------: | -------: | -------: | :--- |
-| 0 | 0/10 | 0.0% | 0.0% | 0.0% | 0.0% | ~0% ± 0% |
-| 1 | 1/10 | 0.0% | 0.0% | 0.1% | 0.1% | ~0% ± 0% |
-| 2 | 2/10 | 0.2% | 0.2% | 0.8% | 0.7% | ~0% ± 0% |
-| 3 | 3/10 | 0.8% | 0.6% | 2.7% | 1.9% | ~1% ± 1% |
-| 4 | 4/10 | 1.9% | 1.1% | 6.4% | 3.8% | ~2% ± 1% |
-| 5 | 5/10 | 3.7% | 1.8% | 12.5% | 6.5% | ~4% ± 2% |
-| 6 | 6/10 | 6.4% | 2.8% | 21.6% | 10.4% | ~7% ± 4% |
-| 7 | 7/10 | 10.2% | 4.0% | 34.3% | 16.2% | ~10% ± 6% |
-| 8 | 8/10 | 15.2% | 5.6% | 51.2% | 25.7% | ~16% ± 10% |
-| 9 | 9/10 | 21.6% | 7.6% | 72.9% | 44.5% | ~26% ± 18% |
-| 10 | 10/10 | 29.6% | 10.2% | 100.0% | 100.0% | ~55% ± 45% |
-| 11 | 11/10 | 39.4% | 13.9% | 100.0% | 100.0% | ~57% ± 43% |
-| 12 | 12/10 | 51.2% | 19.4% | 100.0% | 100.0% | ~60% ± 40% |
-| 13 | 13/10 | 65.1% | 28.5% | 100.0% | 100.0% | ~64% ± 36% |
-| 14 | 14/10 | 81.3% | 46.4% | 100.0% | 100.0% | ~73% ± 27% |
-| 15 | 15/10 | 100.0% | 100.0% | 100.0% | 100.0% | ~100% ± 0% |
+| Turn | Progress | $P_c$ @ D15 | $P_{\text{tadv}}$ @ D15 | $P_c$ @ D10 | $P_{\text{tadv}}$ @ D10 | Mid ± Err  |
+| ---: | -------: | ----------: | ----------------------: | ----------: | ----------------------: | :--------- |
+|    0 |     0/10 |        0.0% |                    0.0% |        0.0% |                    0.0% | ~0% ± 0%   |
+|    1 |     1/10 |        0.0% |                    0.0% |        0.1% |                    0.1% | ~0% ± 0%   |
+|    2 |     2/10 |        0.2% |                    0.2% |        0.8% |                    0.7% | ~0% ± 0%   |
+|    3 |     3/10 |        0.8% |                    0.6% |        2.7% |                    1.9% | ~1% ± 1%   |
+|    4 |     4/10 |        1.9% |                    1.1% |        6.4% |                    3.8% | ~2% ± 1%   |
+|    5 |     5/10 |        3.7% |                    1.8% |       12.5% |                    6.5% | ~4% ± 2%   |
+|    6 |     6/10 |        6.4% |                    2.8% |       21.6% |                   10.4% | ~7% ± 4%   |
+|    7 |     7/10 |       10.2% |                    4.0% |       34.3% |                   16.2% | ~10% ± 6%  |
+|    8 |     8/10 |       15.2% |                    5.6% |       51.2% |                   25.7% | ~16% ± 10% |
+|    9 |     9/10 |       21.6% |                    7.6% |       72.9% |                   44.5% | ~26% ± 18% |
+|   10 |    10/10 |       29.6% |                   10.2% |      100.0% |                  100.0% | ~55% ± 45% |
+|   11 |    11/10 |       39.4% |                   13.9% |      100.0% |                  100.0% | ~57% ± 43% |
+|   12 |    12/10 |       51.2% |                   19.4% |      100.0% |                  100.0% | ~60% ± 40% |
+|   13 |    13/10 |       65.1% |                   28.5% |      100.0% |                  100.0% | ~64% ± 36% |
+|   14 |    14/10 |       81.3% |                   46.4% |      100.0% |                  100.0% | ~73% ± 27% |
+|   15 |    15/10 |      100.0% |                  100.0% |      100.0% |                  100.0% | ~100% ± 0% |
 
 Legend:
 
@@ -170,11 +170,12 @@ The lead investigations UI is composed of following UI components
 
 - `Leads screen`
   - 1st row
-    - `"Back to command center" button`
+    - `"Investigate lead" button` left justified relative to the data grid in next row.
+    - `"Back to command center" button` right justified relative to the data grid in next row.
   - 2nd row
     - `Current leads data grid`
   - 3rd row
-    - `Agents view for leads`
+    - `Agents data grid for leads`
   - 4th row
     - `Archived leads data grid`
 
@@ -191,21 +192,38 @@ It is placed to the left of the `Charts` button.
 
 Clicking the `"Back to command center" button` in the `Leads screen` takes the player back to the command center.
 
+## Investigating a lead
+
+Once player selects one lead in `Current leads data grid` and at least one available agent in `Agents data grid for leads`,
+then the `"Investigate lead" button` becomes enabled. Clicking it will start the investigation with the selected lead and agents.
+
+If the lead is already being investigated, then the button instead says `Add agents to investigation`. Clicking it will
+assign the agents to the lead.
+
+If zero leads are selected, the button becomes disabled saying `Select a lead to investigate`.
+
+If a lead is selected but no agents are selected, the button becomes disabled saying `Select at least one agent to investigate`.
+
+Note we assume at most one lead can be selected at a time, and only active lead can be selected.
+
 ## Current leads data grid
 
 This grid has rows with following columns:
 
-| Column | Description | Example |
-| --- | --- | --- |
-| Lead | The name of the lead. | `Locate Red Dawn training facility` |
-| Diff. | The difficulty of the lead. | `10` |
-| Rpt. | Whether the lead is repeatable. | `Yes` |
-| Investig. | Investigation status. | `Active, #3` |
-| Agents | Number of agents assigned to the lead. | `2` |
-| Progress | Progress on the lead | `8.0/10` |
-| Projected | Projected progress on the lead | `+1.74` |
-| Eff. | Investigation efficiency. | `87%` |
-| Success % | Success chance range. | `~16% ± 10%` |
+| Column    | Description                            | Example                             |
+| --------- | -------------------------------------- | ----------------------------------- |
+| Checkbox  | Mult-row selection checkbox            | N/A                                 |
+| Lead      | The name of the lead.                  | `Locate Red Dawn training facility` |
+| Diff.     | The difficulty of the lead.            | `10`                                |
+| Rpt.      | Whether the lead is repeatable.        | `Yes`                               |
+| Investig. | Investigation status.                  | `Active, #3`                        |
+| Agents    | Number of agents assigned to the lead. | `2`                                 |
+| Progress  | Progress on the lead                   | `8.0/10`                            |
+| Projected | Projected progress on the lead         | `+1.74`                             |
+| Eff.      | Investigation efficiency.              | `87%`                               |
+| Success % | Success chance range.                  | `~16% ± 10%`                        |
+
+No more than one `Checkbox` can be selected at a time, and only rows with active leads can be selected.
 
 Possible values of `Rpt.` are: `Yes` or `No`.
 
@@ -228,9 +246,30 @@ mission resulting from previous investigation of this lead.
 - `Mid` is the midpoint between lower and upper `turn advancement success chance`.
 - `Err` is half the distance between lower and upper `turn advancement success chance`.
 
-## Agents view for leads
+## Agents data grid for leads
 
-KJA leads TODO write this section
+This grid has rows with following columns:
+
+| Column     | Description                 | Example        |
+| ---------- | --------------------------- | -------------- |
+| Checkbox   | Mult-row selection checkbox | N/A            |
+| ID         | The id of the agent.        | `agent-000`    |
+| State      | The state of the agent      | `Available`    |
+| Assignment | The assignment of the agent | `Standby`      |
+| Skill      | The skill of the agent      | `85/100 (85%)` |
+| Exhaustion | The exhaustion of the agent | `20.0%`        |
+
+The toolbar of the data grid has following filters, out of which 0 or 1 can be selected:
+
+- `Away`
+- `Exhausted`
+- `Recovering`
+
+- If no filter is selected, only agents with assignment `Standby` or `Training` are shown, whose exhaustion is less than 30%.
+- If `Away` is selected, only agents in state `InTransit` or `Contracting` or `Investigating` or `OnMission` are shown.
+  However, agents with assignment `Recovery` are not shown.
+- If `Exhausted` is selected, only agents with assignment `Standby` or `Training` are shown, whose exhaustion is 30% or more.
+- If `Recovering` is selected, only agents in state `Recovering` are shown.
 
 ## Archived leads data grid
 
@@ -358,19 +397,19 @@ Already investigating this lead.
 <!-- markdownlint-disable MD051 -->
 <!-- Why? False positive on [intuition](#9-intuition-behind----turn-advancement-success-chance) -->
 
-| Definition | Formula | Remarks |
-| --- | --- | --- |
-| $D_v$ - lead visible difficulty | Given by the lead. | Visible difficulty establishes the lower bound of actual difficulty. |
-| $S_{\text{eff}}$ - effective skill | See [about_agents.md](about_agents.md#effective-skill). | Effective skill is dictated by hit points and exhaustion. |
-| $P_{\text{agent}}$ - progress by agent | $P_{\text{agent}} = \sum \frac{S_{\text{eff}}}{100}$ | Every 100 effective skill contributes 1 progress by agent. |
-| $P_{\text{eff}}$ - progress efficiency | $P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}$ | More agents help, but each additional agent adds less. |
-| $\Delta p$ - turn advancement progress | $\Delta p = P_{\text{agent}} \cdot P_{\text{eff}}$ | When advancing from turn $n$ to turn $n+1$, $P_{\text{agent}}$ and $P_{\text{eff}}$ are computed from assigned agents that are **Investigating** during turn advancement. |
-| $p_{n+1}$ - progress after turn advancement | $p_{n+1} = p_n + \Delta p$ | Advancing from turn $n$ to turn $n+1$ adds $\Delta p$. |
-| $D_a$ - lead investigation actual difficulty | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$ | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty. |
-| $\rho$ - progress ratio | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$ | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%. |
-| $P_c$ - accumulated success chance | $P_c(p, D_a) = \rho(p, D_a)^3$ | Accumulated success chance is progress ratio of actual difficulty, cubed. |
-| $P_{\text{tadv}}$ - turn advancement success chance | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#9-intuition-behind----turn-advancement-success-chance). |
-| $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$ | Removing agents loses progress in proportion to removed effective skill. |
+| Definition                                           | Formula                                                                                            | Remarks                                                                                                                                                                                                    |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| $D_v$ - lead visible difficulty                      | Given by the lead.                                                                                 | Visible difficulty establishes the lower bound of actual difficulty.                                                                                                                                       |
+| $S_{\text{eff}}$ - effective skill                   | See [about_agents.md](about_agents.md#effective-skill).                                            | Effective skill is dictated by hit points and exhaustion.                                                                                                                                                  |
+| $P_{\text{agent}}$ - progress by agent               | $P_{\text{agent}} = \sum \frac{S_{\text{eff}}}{100}$                                               | Every 100 effective skill contributes 1 progress by agent.                                                                                                                                                 |
+| $P_{\text{eff}}$ - progress efficiency               | $P_{\text{eff}} = \frac{\text{agentCount}^{0.8}}{\text{agentCount}}$                               | More agents help, but each additional agent adds less.                                                                                                                                                     |
+| $\Delta p$ - turn advancement progress               | $\Delta p = P_{\text{agent}} \cdot P_{\text{eff}}$                                                 | When advancing from turn $n$ to turn $n+1$, $P_{\text{agent}}$ and $P_{\text{eff}}$ are computed from assigned agents that are **Investigating** during turn advancement.                                  |
+| $p_{n+1}$ - progress after turn advancement          | $p_{n+1} = p_n + \Delta p$                                                                         | Advancing from turn $n$ to turn $n+1$ adds $\Delta p$.                                                                                                                                                     |
+| $D_a$ - lead investigation actual difficulty         | $D_a = \left\lfloor D_v \cdot \operatorname{random}(1.0, 1.5) \right\rfloor$                       | Actual difficulty is hidden, integer, and between 100% and 150% of visible difficulty.                                                                                                                     |
+| $\rho$ - progress ratio                              | $\rho(p, D_a) = \min\left(1, \frac{p}{D_a}\right)$                                                 | Progress ratio is measured against actual difficulty, not visible difficulty, and is capped at 100%.                                                                                                       |
+| $P_c$ - accumulated success chance                   | $P_c(p, D_a) = \rho(p, D_a)^3$                                                                     | Accumulated success chance is progress ratio of actual difficulty, cubed.                                                                                                                                  |
+| $P_{\text{tadv}}$ - turn advancement success chance  | $P_{\text{tadv}}(p_n, p_{n+1}, D_a) = \frac{P_c(p_{n+1}, D_a) - P_c(p_n, D_a)}{1 - P_c(p_n, D_a)}$ | When advancing from turn $n$ to turn $n+1$, the roll happens only in timelines where the investigation has not already succeeded. See [intuition](#9-intuition-behind----turn-advancement-success-chance). |
+| $p_{\text{new}}$ - progress after agent unassignment | $p_{\text{new}} = p_{\text{old}} \cdot \frac{S_{\text{remaining}}}{S_{\text{previous}}}$           | Removing agents loses progress in proportion to removed effective skill.                                                                                                                                   |
 
 <!-- markdownlint-enable MD051 -->
 
@@ -378,12 +417,12 @@ Already investigating this lead.
 
 The table above uses inline following constants:
 
-| Constant | Value | Used in | Remarks |
-| :--- | :--- | :--- | :--- |
-| **Scaling exponent** | **0.8** | $P_{\text{eff}}$ - progress efficiency | Controls diminishing returns from assigning multiple agents. |
-| **Minimum actual difficulty multiplier** | **1.0** | $D_a$ - lead investigation actual difficulty | Actual difficulty is never lower than visible difficulty. |
-| **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty. |
-| **Cumulative chance exponent** | **3** | $P_c$ - accumulated success chance | Makes early success possible but unlikely, then rises sharply near completion. |
+| Constant                                 | Value   | Used in                                      | Remarks                                                                        |
+| :--------------------------------------- | :------ | :------------------------------------------- | :----------------------------------------------------------------------------- |
+| **Scaling exponent**                     | **0.8** | $P_{\text{eff}}$ - progress efficiency       | Controls diminishing returns from assigning multiple agents.                   |
+| **Minimum actual difficulty multiplier** | **1.0** | $D_a$ - lead investigation actual difficulty | Actual difficulty is never lower than visible difficulty.                      |
+| **Maximum actual difficulty multiplier** | **1.5** | $D_a$ - lead investigation actual difficulty | Actual difficulty can be up to 50% higher than visible difficulty.             |
+| **Cumulative chance exponent**           | **3**   | $P_c$ - accumulated success chance           | Makes early success possible but unlikely, then rises sharply near completion. |
 
 # 7. Intuition behind $P_{\text{tadv}}$ - Turn Advancement Success Chance
 
@@ -429,24 +468,24 @@ $$
 
 To reproduce the Difficulty 10 example table in Excel, use these inputs:
 
-| Cell | Meaning | Example |
-| --- | --- | ---: |
-| `B1` | Visible difficulty | `10` |
-| `B2` | Progress per turn | `1` |
-| `B3` | Minimum actual difficulty | `=B1` |
+| Cell | Meaning                                 |            Example |
+| ---- | --------------------------------------- | -----------------: |
+| `B1` | Visible difficulty                      |               `10` |
+| `B2` | Progress per turn                       |                `1` |
+| `B3` | Minimum actual difficulty               |              `=B1` |
 | `B4` | Maximum actual difficulty, rounded down | `=FLOOR(B1*1.5,1)` |
 
 Then create this table starting on row 7:
 
-| Column | Header | Formula for row 7 |
-| --- | --- | --- |
-| `A` | `Turn` | `=0` |
-| `B` | `ProgressValue` | `=A7*$B$2` |
-| `C` | `Progress` | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.#"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.#"))` |
-| `D` | `$P_c$ @ Dmax` | `=MIN(1,(B7/$B$4)^3)` |
-| `E` | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),0,IF(D6>=1,1,(D7-D6)/(1-D6)))` |
-| `F` | `$P_c$ @ Dmin` | `=MIN(1,(B7/$B$3)^3)` |
-| `G` | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),0,IF(F6>=1,1,(F7-F6)/(1-F6)))` |
+| Column | Header                     | Formula for row 7                                                                                                    |
+| ------ | -------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| `A`    | `Turn`                     | `=0`                                                                                                                 |
+| `B`    | `ProgressValue`            | `=A7*$B$2`                                                                                                           |
+| `C`    | `Progress`                 | `=IF(RC[-1]=INT(RC[-1]),TEXT(RC[-1],"0"),TEXT(RC[-1],"0.#"))&"/"&IF(R1C2=INT(R1C2),TEXT(R1C2,"0"),TEXT(R1C2,"0.#"))` |
+| `D`    | `$P_c$ @ Dmax`             | `=MIN(1,(B7/$B$4)^3)`                                                                                                |
+| `E`    | `$P_{\text{tadv}}$ @ Dmax` | `=IF(ROW()=ROW($A$7),0,IF(D6>=1,1,(D7-D6)/(1-D6)))`                                                                  |
+| `F`    | `$P_c$ @ Dmin`             | `=MIN(1,(B7/$B$3)^3)`                                                                                                |
+| `G`    | `$P_{\text{tadv}}$ @ Dmin` | `=IF(ROW()=ROW($A$7),0,IF(F6>=1,1,(F7-F6)/(1-F6)))`                                                                  |
 
 For row 8 and below:
 
