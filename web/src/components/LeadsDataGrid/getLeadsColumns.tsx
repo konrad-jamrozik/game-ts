@@ -31,7 +31,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
     {
       field: 'difficulty',
-      headerName: 'Difficulty',
+      headerName: 'Diff.',
       width: columnWidths['leads.difficulty'],
       renderCell: (params: GridRenderCellParams<LeadRow, number>) => (
         <span aria-label={`leads-row-difficulty-${params.id}`}>{params.value}</span>
@@ -47,7 +47,7 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
     {
       field: 'investigations',
-      headerName: 'Investigation',
+      headerName: 'Investig.',
       width: columnWidths['leads.investigations'],
       renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element => {
         const { activeInvestigationCount, doneInvestigationCount } = params.row

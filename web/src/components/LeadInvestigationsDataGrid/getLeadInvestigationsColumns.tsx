@@ -31,7 +31,7 @@ export function getLeadInvestigationsColumns(gameState: GameState): GridColDef<L
   const columns: GridColDef<LeadInvestigationRow>[] = [
     {
       field: 'name',
-      headerName: 'Investigation',
+      headerName: 'Investig.',
       width: columnWidths['lead_investigations.name'],
       valueGetter: (_value, row: LeadInvestigationRow): string =>
         // Return the name field which already includes faction name for "Interrogate member" leads

@@ -20,12 +20,14 @@ import { UpgradesCard } from './Assets/UpgradesCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
+import { LeadsScreen2 } from './Leads/LeadsScreen2'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
 
 function App(): React.JSX.Element {
   const viewMissionDetailsId: MissionId | undefined = useAppSelector((state) => state.selection.viewMissionDetailsId)
+  const viewLeads = useAppSelector((state) => state.selection.viewLeads)
   const viewCharts = useAppSelector((state) => state.selection.viewCharts)
 
   useEffect(() => {
@@ -47,6 +49,15 @@ function App(): React.JSX.Element {
     return (
       <Fragment>
         <ChartsScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
+  if (viewLeads) {
+    return (
+      <Fragment>
+        <LeadsScreen2 />
         <ErrorToast />
       </Fragment>
     )

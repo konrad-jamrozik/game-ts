@@ -180,7 +180,7 @@ The lead investigations UI is composed of following UI components
 
 - Additions to the `Command center screen`:
   - Inside the `Game controls` panel:
-    - `Leads` button
+    - `Leads` button, to the right of the `Charts` button
   - Inside the `Situation report` panel:
     - `Leads summary` data grid
 
@@ -198,13 +198,13 @@ This grid has rows with following columns:
 | Column | Description | Example |
 | --- | --- | --- |
 | Lead | The name of the lead. | `Locate Red Dawn training facility` |
-| Difficulty | The difficulty of the lead. | `10` |
+| Diff. | The difficulty of the lead. | `10` |
 | Rpt. | Whether the lead is repeatable. | `Yes` |
-| Investigation | Investigation status. | `Active, #3` |
+| Investig. | Investigation status. | `Active, #3` |
 | Agents | Number of agents assigned to the lead. | `2` |
 | Progress | Progress on the lead | `8.0/10` |
 | Projected | Projected progress on the lead | `+1.74` |
-| Efficiency | Investigation efficiency. | `87%` |
+| Eff. | Investigation efficiency. | `87%` |
 | Success % | Success chance range. | `~16% ± 10%` |
 
 Possible values of `Rpt.` are: `Yes` or `No`.

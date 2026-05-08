@@ -15,6 +15,7 @@ export type SelectionState = {
   autoAdvanceTurn?: boolean
   aiTurnCount?: number
   viewMissionDetailsId?: MissionId
+  viewLeads?: true
   viewCharts?: true
   // Data grid filter states
   missionsShowArchived?: boolean
@@ -96,6 +97,7 @@ const selectionSlice = createSlice({
       delete state.selectedMissionId
       delete state.selectedUpgradeName
       delete state.viewMissionDetailsId
+      delete state.viewLeads
       delete state.viewCharts
       // Clear data grid filter states
       delete state.missionsShowArchived
@@ -115,6 +117,12 @@ const selectionSlice = createSlice({
     },
     clearViewMissionDetails(state) {
       delete state.viewMissionDetailsId
+    },
+    setViewLeads(state) {
+      state.viewLeads = true
+    },
+    clearViewLeads(state) {
+      delete state.viewLeads
     },
     setViewCharts(state) {
       state.viewCharts = true
@@ -188,6 +196,8 @@ export const {
   clearAllSelection,
   setViewMissionDetails,
   clearViewMissionDetails,
+  setViewLeads,
+  clearViewLeads,
   setViewCharts,
   clearViewCharts,
   // Data grid filter actions

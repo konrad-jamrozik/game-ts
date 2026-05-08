@@ -4,7 +4,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { expandAllCards, collapseAllCards } from '../../redux/slices/expansionSlice'
-import { setViewCharts } from '../../redux/slices/selectionSlice'
+import { setViewCharts, setViewLeads } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
@@ -30,6 +30,10 @@ export function GameControls(): React.JSX.Element {
 
   function handleCharts(): void {
     dispatch(setViewCharts())
+  }
+
+  function handleLeads(): void {
+    dispatch(setViewLeads())
   }
 
   const gameLost = isGameLost(gameState)
@@ -77,9 +81,12 @@ export function GameControls(): React.JSX.Element {
             Collapse all
           </Button>
         </Stack>
-        <Stack sx={{ paddingTop: 1, alignItems: 'center' }}>
-          <Button variant="contained" onClick={handleCharts} sx={{ width: '60%' }}>
+        <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
+          <Button variant="contained" onClick={handleCharts} fullWidth>
             Charts
+          </Button>
+          <Button variant="contained" onClick={handleLeads} fullWidth>
+            Leads
           </Button>
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
