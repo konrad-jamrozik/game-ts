@@ -8,6 +8,7 @@ chance.
 - [1. Gameplay Basics](#1-gameplay-basics)
   - [Lead](#lead)
   - [Repeatable Lead](#repeatable-lead)
+  - [One-time Lead](#one-time-lead)
   - [Lead Investigation Stored Properties](#lead-investigation-stored-properties)
   - [Completing a Lead Investigation](#completing-a-lead-investigation)
     - [Success chance each turn](#success-chance-each-turn)
@@ -47,7 +48,9 @@ A **repeatable lead** can have multiple completed investigations, but only one a
 for that lead can exist at a time. Repeatable leads usually represent recurring ways to find
 missions, such as locating faction members or bases.
 
-A non-repeatable lead can have only one completed investigation. Non-repeatable leads usually
+## One-time Lead
+
+A **one-time lead** (`repeatable === false`) can have only one completed investigation. One-time leads usually
 represent progression steps, such as interrogating a captured target or resolving an endgame
 objective.
 
@@ -216,7 +219,7 @@ This grid has rows with following columns:
 | Checkbox  | Mult-row selection checkbox            | N/A                                 |
 | Lead      | The name of the lead.                  | `Locate Red Dawn training facility` |
 | Diff.     | The difficulty of the lead.            | `10`                                |
-| Rpt.      | Whether the lead is repeatable.        | `Yes`                               |
+| Type      | Lead type.                             | `Repeatable`                        |
 | Investig. | Investigation status.                  | `Active, #3`                        |
 | Agents    | Number of agents assigned to the lead. | `2`                                 |
 | Progress  | Progress on the lead                   | `8.0/10`                            |
@@ -243,7 +246,7 @@ If `Active` is selected, user cannot unselect it.
 
 No more than one `Checkbox` can be selected at a time, and only rows with active leads can be selected.
 
-Possible values of `Rpt.` are: `Yes` or `No`.
+Possible values of `Type` are: `One-time` or `Repeatable`.
 
 Possible values of `Investigation` are: `None`, `Inactive`, `Active` or `Active #N`
 
@@ -336,6 +339,8 @@ Already investigating this lead.
 - **`Lead`:** An investigation target that can have `lead investigation` records started for it.
 
 - **`Repeatable lead`:** A `lead` that can be investigated repeatably, but only once at a time.
+
+- **`One-time lead`:** A `lead` with `repeatable === false`. It can complete at most one investigation; after that it becomes archived (unless other archive rules apply).
 
 - **`Lead investigation`:** A state object representing one active or past investigation of a `lead`.
 

@@ -143,6 +143,6 @@ export function LeadsDataGrid(): React.JSX.Element {
 function isRowDisabled(row: LeadRow): boolean {
   // For normal displayMode leads:
   // - Repeatable: disabled if hasActiveInvestigation (only 1 active investigation at a time)
-  // - Non-repeatable: disabled if hasActiveInvestigation OR hasDoneInvestigation
+  // - One-time: disabled if hasActiveInvestigation OR hasDoneInvestigation
   return row.hasActiveInvestigation || (!row.repeatable && row.hasDoneInvestigation)
 }

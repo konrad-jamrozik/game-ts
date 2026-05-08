@@ -20,7 +20,7 @@ Peace on Earth requires all three `lead-{facId}-terminate-cult` leads to be comp
 
 ## What are the minimal critical actions a player must do to win?
 
-### 1. Complete `lead-criminal-orgs` (D=1, non-repeatable)
+### 1. Complete `lead-criminal-orgs` (D=1, one-time)
 
 This is the shared root of all three faction chains. No prerequisites.
 
@@ -31,26 +31,26 @@ Each faction has an identical linear progression structure:
 | Step | Lead | D | Type | Then |
 |------|------|---|------|------|
 | 1 | Locate member | 2 | repeatable | → Apprehend member mission |
-| 2 | Interrogate member | 2 | non-repeatable | (unlocks safehouse) |
+| 2 | Interrogate member | 2 | one-time | (unlocks safehouse) |
 | 3 | Locate safehouse | 10 | repeatable | → Raid safehouse mission |
-| 4 | Interrogate handler | 2 | non-repeatable | (unlocks outpost) |
+| 4 | Interrogate handler | 2 | one-time | (unlocks outpost) |
 | 5 | Locate outpost | 20 | repeatable | → Raid outpost mission |
-| 6 | Interrogate soldier | 4 | non-repeatable | (unlocks training facility) |
+| 6 | Interrogate soldier | 4 | one-time | (unlocks training facility) |
 | 7 | Locate training facility | 30 | repeatable | → Raid training facility mission |
-| 8 | Interrogate lieutenant | 6 | non-repeatable | (unlocks logistics hub) |
+| 8 | Interrogate lieutenant | 6 | one-time | (unlocks logistics hub) |
 | 9 | Locate logistics hub | 40 | repeatable | → Raid logistics hub mission |
-| 10 | Interrogate commander | 10 | non-repeatable | (unlocks command center) |
+| 10 | Interrogate commander | 10 | one-time | (unlocks command center) |
 | 11 | Locate command center | 60 | repeatable | → Raid command center mission |
-| 12 | Analyze command structure | 15 | non-repeatable | (unlocks stronghold) |
+| 12 | Analyze command structure | 15 | one-time | (unlocks stronghold) |
 | 13 | Locate regional stronghold | 80 | repeatable | → Raid stronghold mission |
-| 14 | Interrogate high commander | 20 | non-repeatable | (unlocks HQ) |
+| 14 | Interrogate high commander | 20 | one-time | (unlocks HQ) |
 | 15 | Locate HQ | 100 | repeatable | → Raid HQ mission |
-| 16 | Interrogate cult leader | 30 | non-repeatable | (unlocks terminate) |
-| 17 | Terminate cult | 150 | non-repeatable | Faction terminated |
+| 16 | Interrogate cult leader | 30 | one-time | (unlocks terminate) |
+| 17 | Terminate cult | 150 | one-time | Faction terminated |
 
 Per faction: **17 investigations** and **8 offensive missions** that must be won.
 
-### 3. Complete `lead-peace-on-earth` (D=200, non-repeatable)
+### 3. Complete `lead-peace-on-earth` (D=200, one-time)
 
 After all 3 factions are terminated.
 
@@ -95,7 +95,7 @@ Each "locate → raid → interrogate" cycle:
 
 **= 5 turns per cycle.** There are 8 such cycles per faction (member through HQ).
 
-Then `terminate-cult` (non-repeatable, no mission afterward): 2 turns.
+Then `terminate-cult` (one-time, no mission afterward): 2 turns.
 
 **Per faction: 8 × 5 + 2 = 42 turns.**
 
@@ -137,7 +137,7 @@ multi-turn stalls at each difficulty tier transition.
 
 The AI processes one faction chain at a time because:
 - It investigates **one repeatable lead at a time** (piling all investigation agents onto it).
-- Non-repeatable leads are picked randomly, but they interleave within the same faction's chain.
+- One-time leads are picked randomly, but they interleave within the same faction's chain.
 - The `getFactionPriorityOrder` function that would enable faction cycling is a **stub that throws**.
 
 With sequential processing, the faction work alone takes ~126 turns minimum (3 × 42).

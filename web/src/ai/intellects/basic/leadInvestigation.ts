@@ -8,7 +8,7 @@ import { pickAtRandom, unassignAgentsFromTraining } from './utils'
 import { bldMission } from '../../../lib/factories/missionFactory'
 import { canDeployMissionWithCurrentResources } from './missionDeployment'
 import { getAvailableLeadsForInvestigation } from '../../../lib/model_utils/leadUtils'
-import { NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
+import { ONE_TIME_LEAD_DIFFICULTY_DIVISOR, TARGET_COMBAT_RATING_MULTIPLIER } from './constants'
 import { log } from '../../../lib/primitives/logger'
 
 /**
@@ -95,13 +95,13 @@ export function assignToLeadInvestigation(api: PlayTurnAPI, agents: AgentWithSta
         repeatableLeadSelected = lead
       }
 
-      // For non-repeatable leads, aim to have at least ceil(difficulty / divisor) agents
+      // For one-time leads, aim to have at least ceil(difficulty / divisor) agents
       // For repeatable leads, just assign 1 agent (piling happens in next iterations)
       const { gameState: currentGameState } = api
       const existingInvestigation = findActiveInvestigation(currentGameState, lead.id)
       const currentAgentsOnLead = existingInvestigation?.agentIds.length ?? 0
-      const minAgentsForNonRepeatable = Math.ceil(lead.difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR)
-      const agentsNeededForLead = lead.repeatable ? 1 : Math.max(1, minAgentsForNonRepeatable - currentAgentsOnLead)
+      const minAgentsForOneTime = Math.ceil(lead.difficulty / ONE_TIME_LEAD_DIFFICULTY_DIVISOR)
+      const agentsNeededForLead = lead.repeatable ? 1 : Math.max(1, minAgentsForOneTime - currentAgentsOnLead)
 
       const selectedForLead = selectNextBestReadyAgents(
         agents,
@@ -140,7 +140,7 @@ export function assignToLeadInvestigation(api: PlayTurnAPI, agents: AgentWithSta
         }
       }
 
-      // For non-repeatable leads, adjust loop counter to account for batch assignment
+      // For one-time leads, adjust loop counter to account for batch assignment
       if (!lead.repeatable && selectedForLead.length > 1) {
         i += selectedForLead.length - 1
       }
@@ -182,13 +182,13 @@ export function selectLeadToInvestigate(
     return undefined
   }
 
-  // Prioritize non-repeatable leads over repeatable leads
-  const nonRepeatableLeads = availableLeads.filter((lead) => !lead.repeatable)
-  if (nonRepeatableLeads.length > 0) {
-    return pickAtRandom(nonRepeatableLeads)
+  // Prioritize one-time leads over repeatable leads
+  const oneTimeLeads = availableLeads.filter((lead) => !lead.repeatable)
+  if (oneTimeLeads.length > 0) {
+    return pickAtRandom(oneTimeLeads)
   }
 
-  // If no non-repeatable leads, use smart selection for repeatable leads
+  // If no one-time leads, use smart selection for repeatable leads
   const repeatableLeads = availableLeads.filter((lead) => lead.repeatable)
 
   // Get leads with their mission combat ratings and sort by combat rating descending

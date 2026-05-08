@@ -153,7 +153,7 @@ export function getLeadStatus(lead: Lead, gameState: GameState): LeadStatus {
   const negatedStatus = getNegatedDepStatus(parsed.negated, gameState.missions)
 
   // Determine if lead is archived:
-  // - Non-repeatable leads with done investigations are archived
+  // - One-time leads with done investigations are archived
   // - Leads for terminated factions are archived
   // - Negated dependency mission is Won
   const leadFactionTerminated = isFactionForLeadTerminated(lead, gameState.factions, gameState.leadInvestigationCounts)

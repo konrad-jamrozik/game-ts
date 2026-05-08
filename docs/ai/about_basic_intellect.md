@@ -41,7 +41,7 @@ which is elaborated in further sections.
   - Prioritize missions by expiry time (earliest first), with HQ raids always chosen first.
   - Ensure there is enough transport capacity to deploy missions.
 - Ensure leads are being investigated by a target number of agents: 1 + floor(total agents / 10).
-  - Prioritize non-repeatable leads over repeatable leads.
+  - Prioritize one-time leads over repeatable leads.
 - Ensure there is at least enough money available so that the player won't run out of money
   within next 5 turns, assuming that the contracting income would cover only 50% of upkeep costs.
 - Ensure ready agents (with exhaustion <= 5%) are assigned to training when capacity allows.

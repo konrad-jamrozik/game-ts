@@ -60,17 +60,17 @@ describe.todo('Faction Cycling Lead Selection', () => {
       expect(turn1Offset1[2]).toBe('faction-red-dawn')
     })
 
-    test('repeatable and non-repeatable prioritize different factions on same turn', () => {
+    test('repeatable and one-time leads prioritize different factions on same turn', () => {
       const repeatablePriorities = getFactionPriorityOrder(1, 0)
-      const nonRepeatablePriorities = getFactionPriorityOrder(1, 1)
+      const oneTimeLeadPriorities = getFactionPriorityOrder(1, 1)
 
       // They should prioritize different factions
-      expect(repeatablePriorities[0]).not.toBe(nonRepeatablePriorities[0])
+      expect(repeatablePriorities[0]).not.toBe(oneTimeLeadPriorities[0])
     })
   })
 
   describe(selectLeadToInvestigate, () => {
-    test('prioritizes faction-agnostic non-repeatable leads over faction-specific', () => {
+    test('prioritizes faction-agnostic one-time leads over faction-specific', () => {
       const gameState = bldMinimalGameState({ turn: 1 })
       const agents = [bldAgentWithStats({})]
 
@@ -93,7 +93,7 @@ describe.todo('Faction Cycling Lead Selection', () => {
       expect(factionAgnosticLeads).toContain(selected)
     })
 
-    test('for non-repeatable faction leads, selects by faction priority order', () => {
+    test('for one-time faction leads, selects by faction priority order', () => {
       const gameState = bldMinimalGameState({ turn: 1 })
       const agents = [bldAgentWithStats({})]
 
@@ -110,7 +110,7 @@ describe.todo('Faction Cycling Lead Selection', () => {
       const availableLeads = [redDawnLeads[0], exaltLeads[0], blackLotusLeads[0]]
       assertNoUndefined(availableLeads)
 
-      // Turn 1, offset 1 (non-repeatable): should prioritize Exalt first
+      // Turn 1, offset 1 (one-time): should prioritize Exalt first
       rand.set('lead-investigation', 0.5)
       const selected = selectLeadToInvestigate(availableLeads, gameState, agents)
 

@@ -6,9 +6,11 @@ This document explains how leads are discovered and how their states (active, in
 
 Leads are discovered when their dependencies are met. Once discovered, leads can be in one of three states:
 
-- **Active**: The lead can be investigated
+- **Active**: The lead is discovered and not archived or inactive (see below)
 - **Inactive**: The lead was discovered but is temporarily unavailable due to negated dependencies
 - **Archived**: The lead is permanently completed or no longer relevant
+
+An **available** lead is an **active** lead that the game allows you to **start an investigation** on (or add agents to): it has **no active investigation**, and if the lead is **one-time** (`repeatable === false` in data), it has **not** already been successfully investigated. Repeatable leads can be available again after a prior investigation completes, as long as no investigation is currently active for that lead. See `getAvailableLeadsForInvestigation` in [`web/src/lib/model_utils/leadUtils.ts`](../web/src/lib/model_utils/leadUtils.ts).
 
 ## Dependency Types
 
@@ -40,7 +42,11 @@ A lead is active when:
 - All regular dependencies are met (lead is discovered)
 - All negated dependencies are satisfied (no blocking missions are active or won)
 
-Active leads can be investigated by assigning agents to them.
+Active does **not** by itself mean a new investigation can be started: a lead can be active while an investigation is already in progress, or (for one-time leads) after it has been completed and archived rules apply. **Available** captures the stricter “can investigate now” notion (see Overview).
+
+### Available lead
+
+**Available** means **active** and eligible to start (or join) an investigation under the current rules: **no** `Active` lead investigation for that lead, and either the lead is **repeatable** or it has **never** been successfully investigated (`leadInvestigationCounts[leadId] === 0`).
 
 ### Inactive
 
@@ -58,7 +64,7 @@ is still active.
 ### Archived
 
 A lead becomes archived when:
-- It's a non-repeatable lead that has been successfully investigated (`state === 'Done'`)
+- It's a **one-time** lead that has been successfully investigated (`state === 'Done'`)
 - The faction associated with the lead has been terminated
 - A negated dependency mission has been Won
 

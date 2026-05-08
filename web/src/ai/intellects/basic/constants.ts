@@ -10,7 +10,7 @@ export const TARGET_UPKEEP_CONTRACTING_COVERAGE_MULTIPLIER = 1.2
 export const MAX_READY_URGENT_EXHAUSTION_PCT = 25
 
 // Constants for assignToLeadInvestigation function
-export const NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR = 8
+export const ONE_TIME_LEAD_DIFFICULTY_DIVISOR = 8
 
 // Constants for selectNextBestReadyAgents function
 export const MAX_READY_EXHAUSTION_PCT = 5

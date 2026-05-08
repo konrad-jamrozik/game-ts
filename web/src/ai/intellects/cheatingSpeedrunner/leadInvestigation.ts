@@ -28,13 +28,13 @@ function isCompletedRepeatableLead(gameState: GameState, lead: Lead): boolean {
 }
 
 function compareLeadsByPriority(leadA: Lead, leadB: Lead): number {
-  const nonRepeatablePriorityDiff = getNonRepeatablePriority(leadB) - getNonRepeatablePriority(leadA)
-  if (nonRepeatablePriorityDiff !== 0) {
-    return nonRepeatablePriorityDiff
+  const oneTimePriorityDiff = getOneTimeLeadPriority(leadB) - getOneTimeLeadPriority(leadA)
+  if (oneTimePriorityDiff !== 0) {
+    return oneTimePriorityDiff
   }
   return leadA.id.localeCompare(leadB.id)
 }
 
-function getNonRepeatablePriority(lead: Lead): number {
+function getOneTimeLeadPriority(lead: Lead): number {
   return lead.repeatable ? 0 : 1
 }

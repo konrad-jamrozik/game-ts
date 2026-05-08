@@ -30,9 +30,9 @@ For details see, in chronological order:
   - Make the AI cycle over different factions for available missions. Like on turn 1 try first Red Dawn, then on turn 2 Exalt, and so on and loop back.
      Only if in given turn no mission for priority 1 faction can be deployed, try priority 2 faction, and so on.
      Observe that faction that is priority 2 on turn X will be priority 1 on turn X+1 and so on.
-  - Have separate prioritization for non-repeatable and repeatable leads. So e.g. AI player may say that at given turn for non-repeatable lead
+  - Have separate prioritization for one-time and repeatable leads. So e.g. AI player may say that at given turn for one-time lead
     faction priority 1 is Red Down, while for repeatable lead faction priority 1 is Exalt.
-  - Note this means that the non-repeatable lead will no longer be chosen at random.
+  - Note this means that the one-time lead will no longer be chosen at random.
   - See Cursor plans: ai_faction_cycling_for_leads_1a8f75f3.plan.md and tdd_faction_cycling_tests.plan.md for details.
 
 - Add more AI tests:

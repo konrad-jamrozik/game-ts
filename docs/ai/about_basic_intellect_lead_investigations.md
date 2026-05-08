@@ -8,8 +8,8 @@ Lead investigations are the AI's intelligence pipeline: completing an investigat
 unlocks new missions to deploy agents to. The AI dedicates a small, scaling portion of its
 workforce to investigations (`1 + floor(totalAgents / 10)` agents).
 
-There are two kinds of leads: **non-repeatable** (one-time progression leads) and **repeatable**
-(recurring sources of missions). Non-repeatable leads are always prioritized, since they advance
+There are two kinds of leads: **one-time** (progression leads, `repeatable === false`) and **repeatable**
+(recurring sources of missions). One-time leads are always prioritized, since they advance
 the game's progression. When only repeatable leads remain, the AI is selective -- it only
 investigates leads whose dependent missions it could actually deploy with current resources (enough
 agents, combat rating, and transport capacity). This avoids wasting agents on investigations that
@@ -20,10 +20,10 @@ single batch, concentrating effort to complete the investigation as quickly as p
 spreading agents across multiple leads. This piling persists across turns: if a repeatable
 investigation is already active from a previous turn, new agents continue to pile onto it.
 
-For non-repeatable leads, agents are assigned proportionally to the lead's difficulty
+For one-time leads, agents are assigned proportionally to the lead's difficulty
 (`ceil(difficulty / 8)`), ensuring harder leads get more agents without overcommitting.
 
-## The non-repeatable lead agent count assignment heuristic
+## The one-time lead agent count assignment heuristic
 
 The divisor of 8 is a heuristic that keeps investigation timelines reasonable across difficulty levels.
 For example, a difficulty-25 lead gets `ceil(25 / 8) = 4` agents. With 4 skill-100 agents, the
@@ -59,8 +59,8 @@ and current investigating agents). On each iteration:
 - Otherwise, call `selectLeadToInvestigate()` to pick a lead:
   - If no lead is selected (e.g., no deployable repeatable leads), stop.
   - If the selected lead is repeatable, mark it for piling in subsequent iterations.
-  - For non-repeatable leads: assign `ceil(difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR)` agents at once
-    (where `NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR` is 8), minus agents already on that lead's active investigation.
+  - For one-time leads: assign `ceil(difficulty / ONE_TIME_LEAD_DIFFICULTY_DIVISOR)` agents at once
+    (where `ONE_TIME_LEAD_DIFFICULTY_DIVISOR` is 8), minus agents already on that lead's active investigation.
   - For repeatable leads: assign 1 agent (piling happens in subsequent iterations).
   - If the lead already has an active investigation, add agents to it. Otherwise, start a new investigation.
 
@@ -68,7 +68,7 @@ and current investigating agents). On each iteration:
 
 The `selectLeadToInvestigate()` function decides which lead to investigate:
 
-- Prioritize non-repeatable leads over repeatable leads. If there are multiple non-repeatable leads, pick at random.
+- Prioritize one-time leads over repeatable leads. If there are multiple one-time leads, pick at random.
 - If there are only repeatable leads, use the following smart selection:
   1. For each repeatable lead, compute its mission combat rating via `getMissionCombatRatingForLead()`, which finds all
      dependent offensive missions and returns the maximum combat rating among them.
@@ -83,22 +83,22 @@ The `selectLeadToInvestigate()` function decides which lead to investigate:
      (using `leadInvestigationCounts`).
   7. If multiple leads still tie, pick at random.
 
-## Why non-repeatable leads skip the deployability check
+## Why one-time leads skip the deployability check
 
-Non-repeatable leads are selected unconditionally -- there is no `canDeployMissionWithCurrentResources()` check
-for them, unlike repeatable leads. This is intentional because non-repeatable and repeatable leads serve
+One-time leads are selected unconditionally -- there is no `canDeployMissionWithCurrentResources()` check
+for them, unlike repeatable leads. This is intentional because one-time and repeatable leads serve
 fundamentally different roles in the progression tree:
 
 - **Repeatable leads** (e.g., "Locate safehouse", "Locate outpost") directly spawn offensive missions.
   Every offensive mission in the game depends on a repeatable lead. If the AI can't deploy the resulting
   mission, investigating the lead would waste agents.
-- **Non-repeatable leads** are **progression gates** that unlock the next tier of the faction tree.
+- **One-time leads** are **progression gates** that unlock the next tier of the faction tree.
   They fall into two categories:
   - **Interrogation and analysis leads** (e.g., "Interrogate member", "Analyze command structure") --
     these don't produce missions themselves; they unlock the next repeatable "Locate" lead in the chain.
   - **Terminal leads** (e.g., "Terminate cult", "Peace on Earth") -- endgame objectives.
 
-Since non-repeatable leads don't directly produce missions, a deployability check would be meaningless.
+Since one-time leads don't directly produce missions, a deployability check would be meaningless.
 Their value lies in advancing the progression tree, which is always worth doing when available.
 
 ## Agent selection
@@ -148,7 +148,7 @@ function assignToLeadInvestigation() {
       let currentAgentsOnLead = findActiveInvestigation(lead)?.agentIds.length ?? 0
       let agentsNeeded = lead.repeatable
         ? 1
-        : max(1, ceil(lead.difficulty / NON_REPEATABLE_LEAD_DIFFICULTY_DIVISOR) - currentAgentsOnLead)
+        : max(1, ceil(lead.difficulty / ONE_TIME_LEAD_DIFFICULTY_DIVISOR) - currentAgentsOnLead)
 
       let agents = selectNextBestReadyAgents(agentsNeeded)
       assignAgentsToLead(agents, lead)
@@ -159,9 +159,9 @@ function assignToLeadInvestigation() {
 }
 
 function selectLeadToInvestigate(availableLeads) {
-  let nonRepeatableLeads = availableLeads.filter(lead => !lead.repeatable)
-  if (nonRepeatableLeads.length > 0):
-    return pickAtRandom(nonRepeatableLeads)
+  let oneTimeLeads = availableLeads.filter(lead => !lead.repeatable)
+  if (oneTimeLeads.length > 0):
+    return pickAtRandom(oneTimeLeads)
 
   // Smart selection for repeatable leads
   let leadsWithCombatRating = repeatableLeads.map(lead => {

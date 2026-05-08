@@ -5,11 +5,11 @@ import { dataTables } from '../../lib/data_tables/dataTables'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
 
 // Leads chart colors
-type LeadsColorName = 'nonRepeatable' | 'repeatable' | 'maxTime'
+type LeadsColorName = 'oneTime' | 'repeatable' | 'maxTime'
 
 function getColor(name: LeadsColorName): string {
   switch (name) {
-    case 'nonRepeatable':
+    case 'oneTime':
       return 'hsla(200, 70%, 50%, 1)' // blue
     case 'repeatable':
       return 'hsla(120, 60%, 45%, 1)' // green
@@ -20,7 +20,7 @@ function getColor(name: LeadsColorName): string {
 
 export type LeadsDatasetRow = {
   turn: number
-  nonRepeatableCompleted: number
+  oneTimeLeadsCompleted: number
   repeatableCompleted: number
   maxCompletionTime: number
 }
@@ -43,8 +43,8 @@ function buildLeadsDataset(gameStates: GameState[]): LeadsDatasetRow[] {
   return gameStates.map((gameState) => {
     // Use leadInvestigationCounts from game state - this tracks ALL completed investigations
     // For repeatable leads: sum up all investigation counts
-    // For non-repeatable leads: count distinct leads completed (they can only be completed once)
-    let nonRepeatableCompleted = 0
+    // For one-time leads: count distinct leads completed (they can only be completed once)
+    let oneTimeLeadsCompleted = 0
     let repeatableCompleted = 0
 
     for (const [leadId, count] of Object.entries(gameState.leadInvestigationCounts)) {
@@ -53,8 +53,8 @@ function buildLeadsDataset(gameStates: GameState[]): LeadsDatasetRow[] {
         // Sum all investigations of repeatable leads
         repeatableCompleted += count
       } else if (count > 0) {
-        // Non-repeatable leads can only be completed once, so count > 0 means completed
-        nonRepeatableCompleted += 1
+        // One-time leads can only be completed once, so count > 0 means completed
+        oneTimeLeadsCompleted += 1
       }
     }
 
@@ -82,7 +82,7 @@ function buildLeadsDataset(gameStates: GameState[]): LeadsDatasetRow[] {
 
     return {
       turn: gameState.turn,
-      nonRepeatableCompleted,
+      oneTimeLeadsCompleted,
       repeatableCompleted,
       maxCompletionTime,
     }
@@ -112,9 +112,9 @@ export function LeadsChart(props: LeadsChartProps): React.JSX.Element {
       ]}
       series={withNoMarkers([
         {
-          dataKey: 'nonRepeatableCompleted',
-          label: 'Non-repeatable leads completed',
-          color: getColor('nonRepeatable'),
+          dataKey: 'oneTimeLeadsCompleted',
+          label: 'One-time leads completed',
+          color: getColor('oneTime'),
         },
         {
           dataKey: 'repeatableCompleted',
