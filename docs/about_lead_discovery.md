@@ -50,6 +50,11 @@ A lead becomes inactive when:
 
 Inactive leads cannot be investigated. They will automatically reactivate if the blocking mission expires or fails.
 
+Typically repeatable leads remain active while missions created from them are active unless they explicitly
+declare a negated dependency for that mission. This way next investigation of the same lead can be started as soon
+as the previous investigation is completed, even if the mission resulting from the completion of the previous investigation
+is still active.
+
 ### Archived
 
 A lead becomes archived when:
