@@ -2,6 +2,7 @@ import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { fmtIdForDisplay } from '../../lib/model_utils/formatUtils'
+import { leadRowTypeDisplay } from './leadRowTypeDisplay'
 import type { LeadId } from '../../lib/model/modelIds'
 
 export type LeadRow = {
@@ -39,10 +40,10 @@ export function getLeadsColumns(): GridColDef<LeadRow>[] {
     },
     {
       field: 'repeatable',
-      headerName: 'Rpt.',
+      headerName: 'Type',
       width: columnWidths['leads.repeatable'],
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
+        <span aria-label={`leads-row-type-${params.id}`}>{leadRowTypeDisplay(params.value === true)}</span>
       ),
     },
     {

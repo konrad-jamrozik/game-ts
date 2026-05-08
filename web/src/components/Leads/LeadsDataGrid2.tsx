@@ -35,6 +35,7 @@ import { DataGridCard } from '../Common/DataGridCard'
 import { columnWidths } from '../Common/columnWidths'
 import { CURRENT_LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
+import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
 import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
 import { LeadsDataGridToolbar } from '../LeadsDataGrid/LeadsDataGridToolbar'
 
@@ -243,10 +244,10 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
     },
     {
       field: 'repeatable',
-      headerName: 'Rpt.',
+      headerName: 'Type',
       width: columnWidths['current_leads.repeatable'],
       renderCell: (params: GridRenderCellParams<LeadRow2, boolean>) => (
-        <span aria-label={`leads-row-repeatable-${params.id}`}>{params.value === true ? 'Yes' : 'No'}</span>
+        <span aria-label={`leads-row-type-${params.id}`}>{leadRowTypeDisplay(params.value === true)}</span>
       ),
     },
     {

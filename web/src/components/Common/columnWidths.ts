@@ -30,13 +30,13 @@ export const columnWidths = {
   // Leads columns
   'leads.id': 340,
   'leads.difficulty': 120,
-  'leads.repeatable': 60,
+  'leads.repeatable': 100,
   'leads.investigations': 180,
 
   // Current Leads columns
   'current_leads.lead': 340,
   'current_leads.difficulty': 80,
-  'current_leads.repeatable': 60,
+  'current_leads.repeatable': 100,
   'current_leads.investigation': 130,
   'current_leads.agents': 80,
   'current_leads.progress': 100,
