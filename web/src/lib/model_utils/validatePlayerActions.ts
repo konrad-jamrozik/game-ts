@@ -152,9 +152,11 @@ function validateLeadInvestigationAgents(gameState: GameState, agentIds: AgentId
     (selectedAgents) =>
       selectedAgents.filter(
         (agent) =>
-          (agent.assignment !== 'Standby' && agent.assignment !== 'Training') || f6ge(agent.exhaustionPct, toF6(30)),
+          (agent.assignment !== 'Standby' && agent.assignment !== 'Training') ||
+          agent.state === 'InTransit' ||
+          f6ge(agent.exhaustionPct, toF6(30)),
       ),
-    'Lead investigations require Standby or Training agents with exhaustion below 30.',
+    'Lead investigations require non-transiting Standby or Training agents with exhaustion below 30.',
   )
 
   if (!validation.isValid) {

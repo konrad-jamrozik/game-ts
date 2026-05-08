@@ -12,7 +12,12 @@ import * as React from 'react'
 import { f6c0, f6ge, f6lt, f6max, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import type { AgentId } from '../../lib/model/modelIds'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { clearAgentSelection, setAgentSelection, setLeadsAgentsFilter } from '../../redux/slices/selectionSlice'
+import {
+  clearAgentSelection,
+  setAgentSelection,
+  setLeadsAgentsFilters,
+  type LeadsAgentsFilterType,
+} from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH } from '../Common/widthConstants'
@@ -24,30 +29,30 @@ import { getAgentsColumns, type AgentRow } from '../AgentsDataGrid/getAgentsColu
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
-    leadsAgentsFilter?: LeadsAgentsFilterType2
-    onLeadsAgentsFilterChange?: (filter: LeadsAgentsFilterType2 | undefined) => void
+    leadsAgentsFilters?: LeadsAgentsFilterType[]
+    onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
   }
 }
 
-type LeadsAgentsFilterType2 = 'away' | 'exhausted' | 'recovering'
+const DEFAULT_LEADS_AGENTS_FILTERS: LeadsAgentsFilterType[] = ['ready']
 
 export function AgentsDataGridForLeads2(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const leadsAgentsFilter = useAppSelector((state) => state.selection.leadsAgentsFilter)
+  const leadsAgentsFilters = useAppSelector((state) => state.selection.leadsAgentsFilters ?? DEFAULT_LEADS_AGENTS_FILTERS)
 
   React.useEffect(() => {
-    if (leadsAgentsFilter !== undefined && agentSelection.length > 0) {
+    if (!leadsAgentsFilters.includes('ready') && agentSelection.length > 0) {
       dispatch(clearAgentSelection())
     }
-  }, [agentSelection.length, dispatch, leadsAgentsFilter])
+  }, [agentSelection.length, dispatch, leadsAgentsFilters])
 
   const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
     rowId: index,
   }))
-  const rows = filterLeadAgentRows2(allRows, leadsAgentsFilter)
+  const rows = filterLeadAgentRows2(allRows, leadsAgentsFilters)
   const maxSkillAlive = getMaxSkillAlive2(allRows)
   const columns = getAgentsColumns(
     rows,
@@ -67,7 +72,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 
     for (const rowId of includedRowIds) {
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
-      if (row && isSelectableLeadAgentRow2(row, leadsAgentsFilter)) {
+      if (row && isSelectableLeadAgentRow2(row, leadsAgentsFilters)) {
         agentIds.push(row.id)
       }
     }
@@ -76,7 +81,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
   }
 
   const rowIds: GridRowId[] = []
-  if (leadsAgentsFilter === undefined) {
+  if (leadsAgentsFilters.includes('ready')) {
     for (const agentId of agentSelection) {
       const row = rows.find((rowCandidate) => rowCandidate.id === agentId)
       if (row) {
@@ -102,13 +107,12 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow2(params.row, leadsAgentsFilter)}
+      isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow2(params.row, leadsAgentsFilters)}
       slots={{ toolbar: AgentsForLeadsToolbar2 }}
       slotProps={{
         toolbar: {
-          ...(leadsAgentsFilter !== undefined && { leadsAgentsFilter }),
-          onLeadsAgentsFilterChange: (filter: LeadsAgentsFilterType2 | undefined) =>
-            dispatch(setLeadsAgentsFilter(filter)),
+          leadsAgentsFilters,
+          onLeadsAgentsFiltersChange: (filters: LeadsAgentsFilterType[]) => dispatch(setLeadsAgentsFilters(filters)),
         },
       }}
       showToolbar
@@ -122,13 +126,20 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 }
 
 function AgentsForLeadsToolbar2(props: {
-  leadsAgentsFilter?: LeadsAgentsFilterType2
-  onLeadsAgentsFilterChange?: (filter: LeadsAgentsFilterType2 | undefined) => void
+  leadsAgentsFilters?: LeadsAgentsFilterType[]
+  onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
 }): React.JSX.Element {
-  const { leadsAgentsFilter, onLeadsAgentsFilterChange } = props
+  const { leadsAgentsFilters = DEFAULT_LEADS_AGENTS_FILTERS, onLeadsAgentsFiltersChange } = props
 
-  function handleFilterToggle(filter: LeadsAgentsFilterType2, checked: boolean): void {
-    onLeadsAgentsFilterChange?.(checked ? filter : undefined)
+  function handleFilterToggle(filter: LeadsAgentsFilterType, checked: boolean): void {
+    if (checked) {
+      onLeadsAgentsFiltersChange?.([...leadsAgentsFilters, filter])
+      return
+    }
+
+    if (leadsAgentsFilters.length > 1) {
+      onLeadsAgentsFiltersChange?.(leadsAgentsFilters.filter((selectedFilter) => selectedFilter !== filter))
+    }
   }
 
   return (
@@ -137,7 +148,18 @@ function AgentsForLeadsToolbar2(props: {
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilter === 'away'}
+              checked={leadsAgentsFilters.includes('ready')}
+              onChange={(event) => handleFilterToggle('ready', event.target.checked)}
+              slotProps={{ input: { 'aria-label': 'toggle-leads-ready-filter' } }}
+              size="small"
+            />
+          }
+          label="Ready"
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              checked={leadsAgentsFilters.includes('away')}
               onChange={(event) => handleFilterToggle('away', event.target.checked)}
               slotProps={{ input: { 'aria-label': 'toggle-leads-away-filter' } }}
               size="small"
@@ -148,7 +170,7 @@ function AgentsForLeadsToolbar2(props: {
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilter === 'exhausted'}
+              checked={leadsAgentsFilters.includes('exhausted')}
               onChange={(event) => handleFilterToggle('exhausted', event.target.checked)}
               slotProps={{ input: { 'aria-label': 'toggle-leads-exhausted-filter' } }}
               size="small"
@@ -159,7 +181,7 @@ function AgentsForLeadsToolbar2(props: {
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilter === 'recovering'}
+              checked={leadsAgentsFilters.includes('recovering')}
               onChange={(event) => handleFilterToggle('recovering', event.target.checked)}
               slotProps={{ input: { 'aria-label': 'toggle-leads-recovering-filter' } }}
               size="small"
@@ -174,32 +196,39 @@ function AgentsForLeadsToolbar2(props: {
 
 function filterLeadAgentRows2(
   allRows: readonly AgentRow[],
-  filter: LeadsAgentsFilterType2 | undefined,
+  filters: readonly LeadsAgentsFilterType[],
 ): AgentRow[] {
+  return allRows.filter((agent) => filters.some((filter) => matchesLeadAgentFilter2(agent, filter)))
+}
+
+function isSelectableLeadAgentRow2(agent: AgentRow, filters: readonly LeadsAgentsFilterType[]): boolean {
+  return filters.includes('ready') && isReadyLeadAgentRow2(agent)
+}
+
+function matchesLeadAgentFilter2(agent: AgentRow, filter: LeadsAgentsFilterType): boolean {
+  if (filter === 'ready') {
+    return isReadyLeadAgentRow2(agent)
+  }
+
   if (filter === 'away') {
-    return allRows.filter(
-      (agent) =>
-        agent.assignment !== 'Recovery' &&
-        (agent.state === 'InTransit' ||
-          agent.state === 'Contracting' ||
-          agent.state === 'Investigating' ||
-          agent.state === 'OnMission'),
+    return (
+      agent.assignment !== 'Recovery' &&
+      (agent.state === 'InTransit' ||
+        agent.state === 'Contracting' ||
+        agent.state === 'Investigating' ||
+        agent.state === 'OnMission')
     )
   }
 
   if (filter === 'exhausted') {
-    return allRows.filter((agent) => isAssignableLeadAgentAssignment2(agent) && f6ge(agent.exhaustionPct, toF6(30)))
+    return isAssignableLeadAgentAssignment2(agent) && agent.state !== 'InTransit' && f6ge(agent.exhaustionPct, toF6(30))
   }
 
-  if (filter === 'recovering') {
-    return allRows.filter((agent) => agent.state === 'Recovering')
-  }
-
-  return allRows.filter((agent) => isSelectableLeadAgentRow2(agent, filter))
+  return agent.state === 'Recovering'
 }
 
-function isSelectableLeadAgentRow2(agent: AgentRow, filter: LeadsAgentsFilterType2 | undefined): boolean {
-  return filter === undefined && isAssignableLeadAgentAssignment2(agent) && f6lt(agent.exhaustionPct, toF6(30))
+function isReadyLeadAgentRow2(agent: AgentRow): boolean {
+  return isAssignableLeadAgentAssignment2(agent) && agent.state !== 'InTransit' && f6lt(agent.exhaustionPct, toF6(30))
 }
 
 function isAssignableLeadAgentAssignment2(agent: AgentRow): boolean {

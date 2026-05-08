@@ -3,7 +3,7 @@ import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../../lib/
 import type { UpgradeName } from '../../lib/data_tables/upgrades'
 
 export type LeadsFilterType = 'active' | 'inactive' | 'archived'
-export type LeadsAgentsFilterType = 'away' | 'exhausted' | 'recovering'
+export type LeadsAgentsFilterType = 'ready' | 'away' | 'exhausted' | 'recovering'
 export type ChartsTurnRangeFilter = 'all' | 'last100' | 'currentTurn'
 
 export type SelectionState = {
@@ -28,7 +28,7 @@ export type SelectionState = {
   agentsShowAvailable?: boolean
   agentsShowRecovering?: boolean
   agentsShowStats?: boolean
-  leadsAgentsFilter?: LeadsAgentsFilterType
+  leadsAgentsFilters?: LeadsAgentsFilterType[]
   missionsChartShowOffensive?: boolean
   missionsChartShowDefensive?: boolean
   combatRatingChartShowAgentCR?: boolean
@@ -111,7 +111,7 @@ const selectionSlice = createSlice({
       delete state.agentsShowAvailable
       delete state.agentsShowRecovering
       delete state.agentsShowStats
-      delete state.leadsAgentsFilter
+      delete state.leadsAgentsFilters
       // Selections not deleted, i.e. preserved:
       // AI section selections (selectedAIIntellect, autoAdvanceTurn, and aiTurnCount)
     },
@@ -161,12 +161,8 @@ const selectionSlice = createSlice({
     setAgentsShowStats(state, action: PayloadAction<boolean>) {
       state.agentsShowStats = action.payload
     },
-    setLeadsAgentsFilter(state, action: PayloadAction<LeadsAgentsFilterType | undefined>) {
-      if (action.payload === undefined) {
-        delete state.leadsAgentsFilter
-      } else {
-        state.leadsAgentsFilter = action.payload
-      }
+    setLeadsAgentsFilters(state, action: PayloadAction<LeadsAgentsFilterType[]>) {
+      state.leadsAgentsFilters = action.payload
     },
     setMissionsChartShowOffensive(state, action: PayloadAction<boolean>) {
       state.missionsChartShowOffensive = action.payload
@@ -220,7 +216,7 @@ export const {
   setAgentsShowAvailable,
   setAgentsShowRecovering,
   setAgentsShowStats,
-  setLeadsAgentsFilter,
+  setLeadsAgentsFilters,
   setMissionsChartShowOffensive,
   setMissionsChartShowDefensive,
   setCombatRatingChartShowAgentCR,

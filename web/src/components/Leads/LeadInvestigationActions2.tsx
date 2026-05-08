@@ -1,6 +1,4 @@
-import Alert from '@mui/material/Alert'
 import Button from '@mui/material/Button'
-import Collapse from '@mui/material/Collapse'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -14,8 +12,6 @@ export function LeadInvestigationActions2(): React.JSX.Element {
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
   const agentSelection = useAppSelector((state) => state.selection.agents)
   const gameState = useAppSelector(getCurrentTurnState)
-  const [showAlert, setShowAlert] = React.useState(false)
-  const [alertMessage, setAlertMessage] = React.useState('')
 
   const selectedAgentIds = agentSelection.filter((id) => gameState.agents.some((agent) => agent.id === id))
   const api = getPlayerActionsApi(dispatch)
@@ -29,8 +25,6 @@ export function LeadInvestigationActions2(): React.JSX.Element {
       selectedLeadId,
       selectedInvestigationId,
       selectedAgentIds,
-      setAlertMessage,
-      setShowAlert,
     })
   }
 
@@ -43,16 +37,6 @@ export function LeadInvestigationActions2(): React.JSX.Element {
       >
         {getInvestigateLeadButtonLabel(selectedLeadId, selectedInvestigationId, selectedAgentIds.length)}
       </Button>
-      <Collapse in={showAlert}>
-        <Alert
-          severity="error"
-          onClose={() => setShowAlert(false)}
-          sx={{ textAlign: 'center', alignItems: 'center' }}
-          aria-label="lead-investigation-actions-alert"
-        >
-          {alertMessage}
-        </Alert>
-      </Collapse>
     </Stack>
   )
 }

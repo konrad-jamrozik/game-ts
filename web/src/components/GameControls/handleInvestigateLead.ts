@@ -14,8 +14,8 @@ export type HandleInvestigateLeadDependencies = {
   selectedLeadId: LeadId | undefined
   selectedInvestigationId: LeadInvestigationId | undefined
   selectedAgentIds: AgentId[]
-  setAlertMessage: (message: string) => void
-  setShowAlert: (show: boolean) => void
+  setAlertMessage?: (message: string) => void
+  setShowAlert?: (show: boolean) => void
 }
 
 /**
@@ -25,7 +25,8 @@ export type HandleInvestigateLeadDependencies = {
  * - 2. When a lead investigation is selected, then the selected agents are added to the investigation.
  *
  * In both cases, all of the selected agents must be available and not exhausted.
- * If either of these conditions is not met, an alert is shown to the player and the function returns early.
+ * If either of these conditions is not met and alert callbacks are provided, an alert is shown and the function returns early.
+ * If alert callbacks are omitted, a failed API result fails fast with an assertion error.
  *
  * All other cases should result in assertion failure, because it should not be possible for the
  * player to end up in such a state - UI should have prevented this.
@@ -56,7 +57,7 @@ export function handleInvestigateLead(deps: HandleInvestigateLeadDependencies): 
 }
 
 function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { api, gameState, dispatch, selectedInvestigationId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
+  const { api, gameState, dispatch, selectedInvestigationId, selectedAgentIds, setShowAlert } = deps
 
   assertDefined(selectedInvestigationId, 'Investigation ID must be defined')
   // Assert that investigation exists (will throw if not found)
@@ -67,18 +68,17 @@ function handleAddAgentsToInvestigation(deps: HandleInvestigateLeadDependencies)
     agentIds: selectedAgentIds,
   })
   if (!result.success) {
-    setAlertMessage(result.errorMessage)
-    setShowAlert(true)
+    handleInvestigateLeadApiFailure(deps, result.errorMessage)
     return
   }
 
-  setShowAlert(false)
+  setShowAlert?.(false)
   dispatch(clearInvestigationSelection())
   dispatch(clearAgentSelection())
 }
 
 function handleStartNewInvestigation(deps: HandleInvestigateLeadDependencies): void {
-  const { api, gameState, dispatch, selectedLeadId, selectedAgentIds, setAlertMessage, setShowAlert } = deps
+  const { api, gameState, dispatch, selectedLeadId, selectedAgentIds, setShowAlert } = deps
 
   assertDefined(selectedLeadId, 'Lead ID must be defined')
   const lead = getLeadById(selectedLeadId)
@@ -98,12 +98,21 @@ function handleStartNewInvestigation(deps: HandleInvestigateLeadDependencies): v
 
   const result = api.startLeadInvestigation(gameState, { leadId: selectedLeadId, agentIds: selectedAgentIds })
   if (!result.success) {
-    setAlertMessage(result.errorMessage)
-    setShowAlert(true)
+    handleInvestigateLeadApiFailure(deps, result.errorMessage)
     return
   }
 
-  setShowAlert(false)
+  setShowAlert?.(false)
   dispatch(clearLeadSelection())
   dispatch(clearAgentSelection())
+}
+
+function handleInvestigateLeadApiFailure(deps: HandleInvestigateLeadDependencies, errorMessage: string): void {
+  const { setAlertMessage, setShowAlert } = deps
+  if (setAlertMessage !== undefined && setShowAlert !== undefined) {
+    setAlertMessage(errorMessage)
+    setShowAlert(true)
+    return
+  }
+  assertTrue(false, errorMessage)
 }

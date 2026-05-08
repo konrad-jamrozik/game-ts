@@ -260,20 +260,25 @@ This grid has rows with following columns:
 | Skill      | The skill of the agent      | `85/100 (85%)` |
 | Exhaustion | The exhaustion of the agent | `20.0%`        |
 
-The toolbar of the data grid has following filters, out of which 0 or 1 can be selected:
+The toolbar of the data grid has following filters, where 1 or more can be selected:
 
+- `Ready` (selected by default)
 - `Away`
 - `Exhausted`
 - `Recovering`
 
-- If no filter is selected, only following agents are shown:
-  - with assignment `Standby` or `Training`,
+- Always at least one filter must be selected.
+- If `Ready` is selected, following agents are shown:
+  - with assignment `Standby` or `Training`
   - and NOT `InTransit`,
   - and whose exhaustion is less than 30%.
-- If `Away` is selected, only agents in state `InTransit` or `Contracting` or `Investigating` or `OnMission` are shown.
-  However, agents with assignment `Recovery` are not shown.
-- If `Exhausted` is selected, only agents with assignment `Standby` or `Training` are shown, whose exhaustion is 30% or more.
-- If `Recovering` is selected, only agents in state `Recovering` are shown.
+- If `Away` is selected, agents in state `InTransit` or `Contracting` or `Investigating` or `OnMission` are shown.
+  However, this excludes agents with assignment `Recovery`.
+- If `Exhausted` is selected, following agents are shown:
+  - with assignment `Standby` or `Training`
+  - and NOT `InTransit`,
+  - and whose exhaustion is 30% or more.
+- If `Recovering` is selected, agents in state `Recovering` are shown.
 
 ## Archived leads data grid
 
