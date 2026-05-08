@@ -228,7 +228,21 @@ mission resulting from previous investigation of this lead.
 - `Mid` is the midpoint between lower and upper `turn advancement success chance`.
 - `Err` is half the distance between lower and upper `turn advancement success chance`.
 
+## Agents view for leads
+
+KJA leads TODO write this section
+
+## Archived leads data grid
+
+KJA leads TODO write this section
+
+## Leads summary
+
+KJA leads TODO write this section
+
 ## Assigned Agent Status
+
+KJA leads TODO adapt this section
 
 The agents data grid shows lead work per agent. Its lead-investigation-relevant columns are `ID`,
 `State`, and `Assignment`.
@@ -263,6 +277,8 @@ per-agent values.
 
 ## Completed Investigations
 
+KJA leads TODO adapt this section
+
 Completed investigations appear in the same lead investigations data grid when the `done` filter is
 active. Abandoned investigations appear there when the `abandoned` filter is active.
 
@@ -271,6 +287,8 @@ Investigation  Ag #  Succ %  Progress  Proj.
 ```
 
 ## Empty And Disabled States
+
+KJA leads TODO adapt this section
 
 When no lead is available, the empty state explains the gameplay cause instead of showing an empty
 list alone.
