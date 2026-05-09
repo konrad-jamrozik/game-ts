@@ -7,11 +7,11 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { clearViewLeads } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { AgentsDataGridForLeads2 } from './AgentsDataGridForLeads2'
-import { LeadsDataGrid2 } from './LeadsDataGrid2'
-import { LeadInvestigationActions2, LEADS_SCREEN_BUTTON_WIDTH } from './LeadInvestigationActions2'
+import { AgentsDataGridForLeads } from './AgentsDataGridForLeads'
+import { LeadsDataGrid } from './LeadsDataGrid'
+import { LeadInvestigationActions, LEADS_SCREEN_BUTTON_WIDTH } from './LeadInvestigationActions'
 
-export function LeadsScreen2(): React.JSX.Element {
+export function LeadsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
 
@@ -49,10 +49,10 @@ export function LeadsScreen2(): React.JSX.Element {
       }}
     >
       <Stack spacing={2} alignItems="center">
-        <LeadsDataGrid2 />
+        <LeadsDataGrid />
         <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="center">
           <Stack spacing={2} alignItems="stretch" sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
-            <LeadInvestigationActions2 />
+            <LeadInvestigationActions />
             <Button
               variant="contained"
               onClick={handleAdvanceTurn}
@@ -65,7 +65,7 @@ export function LeadsScreen2(): React.JSX.Element {
               Back to command center
             </Button>
           </Stack>
-          <AgentsDataGridForLeads2 />
+          <AgentsDataGridForLeads />
         </Stack>
       </Stack>
     </Box>

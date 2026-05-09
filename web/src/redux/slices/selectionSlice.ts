@@ -21,9 +21,6 @@ export type SelectionState = {
   // Data grid filter states
   missionsShowArchived?: boolean
   leadsFilterType?: LeadsFilterType
-  investigationsShowActive?: boolean
-  investigationsShowDone?: boolean
-  investigationsShowAbandoned?: boolean
   agentsShowTerminated?: boolean
   agentsShowAvailable?: boolean
   agentsShowRecovering?: boolean
@@ -104,9 +101,6 @@ const selectionSlice = createSlice({
       // Clear data grid filter states
       delete state.missionsShowArchived
       delete state.leadsFilterType
-      delete state.investigationsShowActive
-      delete state.investigationsShowDone
-      delete state.investigationsShowAbandoned
       delete state.agentsShowTerminated
       delete state.agentsShowAvailable
       delete state.agentsShowRecovering
@@ -139,15 +133,6 @@ const selectionSlice = createSlice({
     },
     setLeadsFilterType(state, action: PayloadAction<LeadsFilterType>) {
       state.leadsFilterType = action.payload
-    },
-    setInvestigationsShowActive(state, action: PayloadAction<boolean>) {
-      state.investigationsShowActive = action.payload
-    },
-    setInvestigationsShowDone(state, action: PayloadAction<boolean>) {
-      state.investigationsShowDone = action.payload
-    },
-    setInvestigationsShowAbandoned(state, action: PayloadAction<boolean>) {
-      state.investigationsShowAbandoned = action.payload
     },
     setAgentsShowTerminated(state, action: PayloadAction<boolean>) {
       state.agentsShowTerminated = action.payload
@@ -209,9 +194,6 @@ export const {
   // Data grid filter actions
   setMissionsShowArchived,
   setLeadsFilterType,
-  setInvestigationsShowActive,
-  setInvestigationsShowDone,
-  setInvestigationsShowAbandoned,
   setAgentsShowTerminated,
   setAgentsShowAvailable,
   setAgentsShowRecovering,

@@ -27,12 +27,6 @@ export const columnWidths = {
   'missions.details': 100,
   'missions.turn': 70,
 
-  // Leads columns
-  'leads.id': 340,
-  'leads.difficulty': 120,
-  'leads.repeatable': 100,
-  'leads.investigations': 180,
-
   // Leads screen columns
   'leads_screen.lead': 340,
   'leads_screen.difficulty': 80,
@@ -44,13 +38,6 @@ export const columnWidths = {
   'leads_screen.projected': 100,
   'leads_screen.efficiency': 80,
   'leads_screen.success_chance': 130,
-
-  // Lead Investigations columns
-  'lead_investigations.name': 380,
-  'lead_investigations.agents': 80,
-  'lead_investigations.progress': 100,
-  'lead_investigations.success_chance_range': 120,
-  'lead_investigations.projected_progress': 190,
 
   // Agents columns
   'agents.id': 120,

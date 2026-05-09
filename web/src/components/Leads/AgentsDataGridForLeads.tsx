@@ -42,7 +42,7 @@ declare module '@mui/x-data-grid' {
 
 const DEFAULT_LEADS_AGENTS_FILTERS: LeadsAgentsFilterType[] = ['ready']
 
-export function AgentsDataGridForLeads2(): React.JSX.Element {
+export function AgentsDataGridForLeads(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
@@ -58,8 +58,8 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
     ...agent,
     rowId: index,
   }))
-  const rows = filterLeadAgentRows2(allRows, leadsAgentsFilters)
-  const maxSkillAlive = getMaxSkillAlive2(allRows)
+  const rows = filterLeadAgentRows(allRows, leadsAgentsFilters)
+  const maxSkillAlive = getMaxSkillAlive(allRows)
   const columns = getAgentsColumns(
     rows,
     maxSkillAlive,
@@ -78,7 +78,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 
     for (const rowId of includedRowIds) {
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
-      if (row && isSelectableLeadAgentRow2(row, leadsAgentsFilters)) {
+      if (row && isSelectableLeadAgentRow(row, leadsAgentsFilters)) {
         agentIds.push(row.id)
       }
     }
@@ -103,7 +103,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
 
   return (
     <DataGridCard
-      id="agents-for-leads-2"
+      id="agents-for-leads"
       title={title}
       ariaLabel="Agents for leads"
       width={AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH}
@@ -113,9 +113,9 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow2(params.row, leadsAgentsFilters)}
+      isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow(params.row, leadsAgentsFilters)}
       slots={{
-        toolbar: AgentsForLeadsToolbar2,
+        toolbar: AgentsForLeadsToolbar,
         noRowsOverlay: leadsAgentsFilters.length === 0 ? PleaseSelectLeadAgentFiltersOverlay : NoLeadAgentsFoundOverlay,
       }}
       slotProps={{
@@ -135,7 +135,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
   )
 }
 
-function AgentsForLeadsToolbar2(props: {
+function AgentsForLeadsToolbar(props: {
   leadsAgentsFilters?: LeadsAgentsFilterType[]
   leadsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
   onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
@@ -227,20 +227,20 @@ function NoLeadAgentsFoundOverlay(): React.JSX.Element {
   )
 }
 
-function filterLeadAgentRows2(
+function filterLeadAgentRows(
   allRows: readonly AgentRow[],
   filters: readonly LeadsAgentsFilterType[],
 ): AgentRow[] {
-  return allRows.filter((agent) => filters.some((filter) => matchesLeadAgentFilter2(agent, filter)))
+  return allRows.filter((agent) => filters.some((filter) => matchesLeadAgentFilter(agent, filter)))
 }
 
-function isSelectableLeadAgentRow2(agent: AgentRow, filters: readonly LeadsAgentsFilterType[]): boolean {
-  return filters.includes('ready') && isReadyLeadAgentRow2(agent)
+function isSelectableLeadAgentRow(agent: AgentRow, filters: readonly LeadsAgentsFilterType[]): boolean {
+  return filters.includes('ready') && isReadyLeadAgentRow(agent)
 }
 
-function matchesLeadAgentFilter2(agent: AgentRow, filter: LeadsAgentsFilterType): boolean {
+function matchesLeadAgentFilter(agent: AgentRow, filter: LeadsAgentsFilterType): boolean {
   if (filter === 'ready') {
-    return isReadyLeadAgentRow2(agent)
+    return isReadyLeadAgentRow(agent)
   }
 
   if (filter === 'away') {
@@ -254,21 +254,21 @@ function matchesLeadAgentFilter2(agent: AgentRow, filter: LeadsAgentsFilterType)
   }
 
   if (filter === 'exhausted') {
-    return isAssignableLeadAgentAssignment2(agent) && agent.state !== 'InTransit' && f6ge(agent.exhaustionPct, toF6(30))
+    return isAssignableLeadAgentAssignment(agent) && agent.state !== 'InTransit' && f6ge(agent.exhaustionPct, toF6(30))
   }
 
   return agent.state === 'Recovering'
 }
 
-function isReadyLeadAgentRow2(agent: AgentRow): boolean {
-  return isAssignableLeadAgentAssignment2(agent) && agent.state !== 'InTransit' && f6lt(agent.exhaustionPct, toF6(30))
+function isReadyLeadAgentRow(agent: AgentRow): boolean {
+  return isAssignableLeadAgentAssignment(agent) && agent.state !== 'InTransit' && f6lt(agent.exhaustionPct, toF6(30))
 }
 
-function isAssignableLeadAgentAssignment2(agent: AgentRow): boolean {
+function isAssignableLeadAgentAssignment(agent: AgentRow): boolean {
   return agent.assignment === 'Standby' || agent.assignment === 'Training'
 }
 
-function getMaxSkillAlive2(rows: readonly AgentRow[]): Fixed6 {
+function getMaxSkillAlive(rows: readonly AgentRow[]): Fixed6 {
   const aliveRows = rows.filter((row) => row.state !== 'KIA' && row.state !== 'Sacked')
   return aliveRows.reduce((max, row) => f6max(max, row.skill), f6c0)
 }

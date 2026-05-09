@@ -8,7 +8,7 @@ import { handleInvestigateLead } from '../GameControls/handleInvestigateLead'
 
 export const LEADS_SCREEN_BUTTON_WIDTH = 240
 
-export function LeadInvestigationActions2(): React.JSX.Element {
+export function LeadInvestigationActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)

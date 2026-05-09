@@ -44,7 +44,7 @@ import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
 import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
 import { LeadsDataGridToolbar } from '../LeadsDataGrid/LeadsDataGridToolbar'
 
-export function LeadsDataGrid2(): React.JSX.Element {
+export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
@@ -53,9 +53,9 @@ export function LeadsDataGrid2(): React.JSX.Element {
 
   const discoveredLeads = getDiscoveredLeads(gameState)
 
-  const allRows: LeadRow2[] = bldLeadRows2(discoveredLeads, gameState)
+  const allRows: LeadRow[] = bldLeadRows(discoveredLeads, gameState)
   const rows = allRows.filter((row) => row.status === filterType)
-  const columns = getLeadColumns2()
+  const columns = getLeadColumns()
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -112,18 +112,18 @@ export function LeadsDataGrid2(): React.JSX.Element {
 
   return (
     <DataGridCard
-      id="leads-2"
+      id="leads"
       title={title}
       width={LEADS_SCREEN_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
-      getRowId={(row: LeadRow2) => row.rowId}
+      getRowId={(row: LeadRow) => row.rowId}
       checkboxSelection
       disableMultipleRowSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      isRowSelectable={(params: GridRowParams<LeadRow2>) => !isRowDisabled(params.row)}
-      slots={{ toolbar: LeadsDataGridToolbar, noRowsOverlay: NoLeadsFoundOverlay2 }}
+      isRowSelectable={(params: GridRowParams<LeadRow>) => !isRowDisabled(params.row)}
+      slots={{ toolbar: LeadsDataGridToolbar, noRowsOverlay: NoLeadsFoundOverlay }}
       slotProps={{
         toolbar: {
           filterType,
@@ -136,7 +136,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
   )
 }
 
-function NoLeadsFoundOverlay2(): React.JSX.Element {
+function NoLeadsFoundOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
       <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
@@ -146,9 +146,9 @@ function NoLeadsFoundOverlay2(): React.JSX.Element {
   )
 }
 
-type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned' | 'Obsolete'
+type LeadInvestigationCellStatus = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned' | 'Obsolete'
 
-type LeadRow2 = {
+type LeadRow = {
   rowId: GridRowId
   id: LeadId
   status: LeadsFilterType
@@ -156,7 +156,7 @@ type LeadRow2 = {
   difficulty: number
   repeatable: boolean
   investigation: string
-  investigationStatus: LeadInvestigationStatus2
+  investigationStatus: LeadInvestigationCellStatus
   activeInvestigationId?: LeadInvestigationId
   investigationIdDigits?: string
   agents?: number
@@ -168,17 +168,17 @@ type LeadRow2 = {
   successChanceUpper?: number
 }
 
-function bldLeadRows2(leads: readonly Lead[], gameState: GameState): LeadRow2[] {
-  return leads.flatMap((lead) => bldLeadRowsForLead2(lead, gameState))
+function bldLeadRows(leads: readonly Lead[], gameState: GameState): LeadRow[] {
+  return leads.flatMap((lead) => bldLeadRowsForLead(lead, gameState))
 }
 
-function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
+function bldLeadRowsForLead(lead: Lead, gameState: GameState): LeadRow[] {
   const investigationsForLead = Object.values(gameState.leadInvestigations).filter(
     (investigation) => investigation.leadId === lead.id,
   )
   const activeInvestigation = investigationsForLead.find((investigation) => investigation.state === 'Active')
   const status = getLeadStatus(lead, gameState)
-  const rowStatus = getLeadFilterType2(status)
+  const rowStatus = getLeadFilterType(status)
 
   const rowBase = {
     rowId: `lead:${lead.id}`,
@@ -189,7 +189,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
     repeatable: lead.repeatable,
   }
 
-  const archivedInvestigationRows = bldArchivedInvestigationRows2(lead, investigationsForLead)
+  const archivedInvestigationRows = bldArchivedInvestigationRows(lead, investigationsForLead)
 
   if (rowStatus === 'inactive') {
     return [
@@ -210,14 +210,14 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigationStatus: 'Active',
         activeInvestigationId: activeInvestigation.id,
         investigationIdDigits: fmtLeadInvestigationIdDigits(activeInvestigation.id),
-        ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
+        ...bldActiveInvestigationDetails(activeInvestigation, lead, gameState.agents),
       },
       ...archivedInvestigationRows,
     ]
   }
 
   if (rowStatus === 'archived') {
-    if (hasArchivedInvestigationCorrespondingToArchivedLead2(lead, investigationsForLead)) {
+    if (hasArchivedInvestigationCorrespondingToArchivedLead(lead, investigationsForLead)) {
       return archivedInvestigationRows
     }
 
@@ -242,13 +242,13 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
   ]
 }
 
-function bldArchivedInvestigationRows2(
+function bldArchivedInvestigationRows(
   lead: Lead,
   investigationsForLead: readonly LeadInvestigation[],
-): LeadRow2[] {
+): LeadRow[] {
   const terminal = investigationsForLead.filter((i) => i.state === 'Done' || i.state === 'Abandoned')
 
-  return terminal.toSorted(compareLeadInvestigationsByCompletionTurn2).map((investigation) => {
+  return terminal.toSorted(compareLeadInvestigationsByCompletionTurn).map((investigation) => {
     if (investigation.state === 'Done') {
       return {
         rowId: `done:${investigation.id}`,
@@ -257,10 +257,10 @@ function bldArchivedInvestigationRows2(
         lead: lead.name,
         difficulty: lead.difficulty,
         repeatable: lead.repeatable,
-        investigation: fmtDoneInvestigation2(investigation),
+        investigation: fmtDoneInvestigation(investigation),
         investigationStatus: 'Done',
         investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
-      } satisfies LeadRow2
+      } satisfies LeadRow
     }
 
     return {
@@ -273,23 +273,23 @@ function bldArchivedInvestigationRows2(
       investigation: 'Abandoned',
       investigationStatus: 'Abandoned',
       investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
-    } satisfies LeadRow2
+    } satisfies LeadRow
   })
 }
 
-function hasArchivedInvestigationCorrespondingToArchivedLead2(
+function hasArchivedInvestigationCorrespondingToArchivedLead(
   lead: Lead,
   investigationsForLead: readonly LeadInvestigation[],
 ): boolean {
   return !lead.repeatable && investigationsForLead.some((investigation) => investigation.state === 'Done')
 }
 
-function bldActiveInvestigationDetails2(
+function bldActiveInvestigationDetails(
   investigation: LeadInvestigation,
   lead: Lead,
   agents: Agent[],
 ): Pick<
-  LeadRow2,
+  LeadRow,
   | 'agents'
   | 'progress'
   | 'projectedProgress'
@@ -317,7 +317,7 @@ function bldActiveInvestigationDetails2(
   }
 }
 
-function getLeadColumns2(): GridColDef<LeadRow2>[] {
+function getLeadColumns(): GridColDef<LeadRow>[] {
   return [
     {
       field: 'lead',
@@ -333,7 +333,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'repeatable',
       headerName: 'Type',
       width: columnWidths['leads_screen.repeatable'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, boolean>) => (
+      renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
         <span aria-label={`leads-row-type-${params.id}`}>{leadRowTypeDisplay(params.value === true)}</span>
       ),
     },
@@ -346,19 +346,19 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'investigationIdDigits',
       headerName: 'ID',
       width: columnWidths['leads_screen.investigation_id'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, string | undefined>) => params.value ?? '',
+      renderCell: (params: GridRenderCellParams<LeadRow, string | undefined>) => params.value ?? '',
     },
     {
       field: 'agents',
       headerName: 'Agents',
       width: columnWidths['leads_screen.agents'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>) => fmtOptionalNumber(params.value),
+      renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>) => fmtOptionalNumber(params.value),
     },
     {
       field: 'progress',
       headerName: 'Progress',
       width: columnWidths['leads_screen.progress'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
@@ -369,18 +369,18 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'progressDiff',
       headerName: 'Projected',
       width: columnWidths['leads_screen.projected'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
-        return fmtSignedDec2(params.value)
+        return fmtSignedProjectedDelta(params.value)
       },
     },
     {
       field: 'teamEfficiency',
       headerName: 'Eff.',
       width: columnWidths['leads_screen.efficiency'],
-      renderCell: (params: GridRenderCellParams<LeadRow2, number | undefined>): string => {
+      renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
         }
@@ -391,7 +391,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'successChance',
       headerName: 'Success %',
       width: columnWidths['leads_screen.success_chance'],
-      renderCell: (params: GridRenderCellParams<LeadRow2>): React.JSX.Element | string => {
+      renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element | string => {
         if (params.row.investigationStatus === 'Done') {
           return <MyChip chipValue="Done" />
         }
@@ -401,13 +401,13 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
         if (params.row.investigationStatus === 'Obsolete') {
           return <MyChip chipValue="Obsolete" noColor={true} />
         }
-        return fmtSuccessChanceRange2(params.row)
+        return fmtSuccessChanceSummary(params.row)
       },
     },
   ]
 }
 
-function getLeadFilterType2(status: ReturnType<typeof getLeadStatus>): LeadsFilterType {
+function getLeadFilterType(status: ReturnType<typeof getLeadStatus>): LeadsFilterType {
   if (status.isArchived) {
     return 'archived'
   }
@@ -426,7 +426,7 @@ function fmtActiveInvestigation(lead: Lead, gameState: GameState): string {
   return `Active #${ordinal}`
 }
 
-function fmtDoneInvestigation2(investigation: LeadInvestigation): string {
+function fmtDoneInvestigation(investigation: LeadInvestigation): string {
   if (investigation.completionTurn === undefined) {
     return 'Done'
   }
@@ -435,7 +435,7 @@ function fmtDoneInvestigation2(investigation: LeadInvestigation): string {
   return `Done T ${paddedTurn}`
 }
 
-function compareLeadInvestigationsByCompletionTurn2(
+function compareLeadInvestigationsByCompletionTurn(
   investigationA: LeadInvestigation,
   investigationB: LeadInvestigation,
 ): number {
@@ -449,14 +449,14 @@ function fmtOptionalNumber(value: number | undefined): string {
   return `${value}`
 }
 
-function fmtSignedDec2(value: number): string {
+function fmtSignedProjectedDelta(value: number): string {
   if (value === 0) {
     return '0.00'
   }
   return value > 0 ? `+${fmtDec2(value)}` : `-${fmtDec2(Math.abs(value))}`
 }
 
-function fmtSuccessChanceRange2(row: LeadRow2): string {
+function fmtSuccessChanceSummary(row: LeadRow): string {
   if (row.successChanceLower === undefined || row.successChanceUpper === undefined) {
     return ''
   }
@@ -466,6 +466,6 @@ function fmtSuccessChanceRange2(row: LeadRow2): string {
   return `~${floor(midpoint * 100)}% +/- ${ceil(halfWidth * 100)}%`
 }
 
-function isRowDisabled(row: LeadRow2): boolean {
+function isRowDisabled(row: LeadRow): boolean {
   return row.status !== 'active'
 }

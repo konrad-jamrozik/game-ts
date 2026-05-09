@@ -9,8 +9,6 @@ import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { AIPlayerCard } from './GameControls/AIPlayerCard'
-import { LeadInvestigationsDataGrid } from './LeadInvestigationsDataGrid/LeadInvestigationsDataGrid'
-import { LeadsDataGrid } from './LeadsDataGrid/LeadsDataGrid'
 import { MissionsDataGrid } from './MissionsDataGrid/MissionsDataGrid'
 import { PlayerActions } from './GameControls/PlayerActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
@@ -20,7 +18,7 @@ import { UpgradesCard } from './Assets/UpgradesCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
-import { LeadsScreen2 } from './Leads/LeadsScreen2'
+import { LeadsScreen } from './Leads/LeadsScreen'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
@@ -57,7 +55,7 @@ function App(): React.JSX.Element {
   if (viewLeads) {
     return (
       <Fragment>
-        <LeadsScreen2 />
+        <LeadsScreen />
         <ErrorToast />
       </Fragment>
     )
@@ -101,8 +99,6 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2}>
           <MissionsDataGrid />
-          <LeadsDataGrid />
-          <LeadInvestigationsDataGrid />
           <AgentsDataGrid />
         </Stack>
       </Grid>
