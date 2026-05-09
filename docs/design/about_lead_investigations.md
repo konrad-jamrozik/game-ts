@@ -185,7 +185,7 @@ The lead investigations UI is composed of following UI components
 
 - Additions to the `Command center screen`:
   - Inside the `Game controls` panel:
-    - `Leads` button, to the right of the `Charts` button
+    - `Leads` button, to the left of the `Charts` button
   - Inside the `Situation report` panel:
     - `Leads summary` data grid
 

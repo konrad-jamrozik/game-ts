@@ -82,11 +82,11 @@ export function GameControls(): React.JSX.Element {
           </Button>
         </Stack>
         <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
-          <Button variant="contained" onClick={handleCharts} fullWidth>
-            Charts
-          </Button>
           <Button variant="contained" onClick={handleLeads} fullWidth>
             Leads
+          </Button>
+          <Button variant="contained" onClick={handleCharts} fullWidth>
+            Charts
           </Button>
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
