@@ -192,7 +192,7 @@ describe(App, () => {
 takes:
 `Duration  752ms (transform 25ms, setup 89ms, collect 0ms, tests 0ms, environment 328ms, prepare 73ms)`
 
-Specifically, `AssetsDataGrid` appears to be slow, while `GameControls` and `PlayerActions` or `EventLog` is fast.
+Specifically, `AssetsDataGrid` appears to be slow, while `GameControls`, action components, or `EventLog` is fast.
 
 `collect` is explained in Vitest docs [on performance profiling](https://vitest.dev/guide/profiling-test-performance.html):
 

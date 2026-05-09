@@ -60,7 +60,9 @@ export const columnWidths = {
   'agents.by': 170,
   'agents.terminated': 80,
 
-  // Mission Details columns
+  // Agents grid on Missions screen
+  'agents.missions.cr': 72,
+  'agents.missions.unavailable': 120,
   'mission_details.key': 190,
   'mission_details.value': 240,
 

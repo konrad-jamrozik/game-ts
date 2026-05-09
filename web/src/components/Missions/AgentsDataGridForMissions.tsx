@@ -23,7 +23,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import {
   clearAgentSelection,
   setAgentSelection,
-  setLeadsAgentsFilters,
+  setMissionsAgentsFilters,
   type LeadsAgentsFilterType,
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
@@ -34,46 +34,41 @@ import {
   type AgentsForLeadsGridTitleCounts,
 } from '../AgentsDataGrid/agentCounts'
 import { AgentsDataGridTitle } from '../AgentsDataGrid/AgentsDataGridTitle'
-import { filterVisibleAgentColumns } from '../AgentsDataGrid/AgentsDataGridUtils'
-import { getAgentsColumns, type AgentRow } from '../AgentsDataGrid/getAgentsColumns'
+import type { AgentRow } from '../AgentsDataGrid/getAgentsColumns'
+import { getAgentsColumnsForMissions } from './getAgentsColumnsForMissions'
 
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
-    leadsAgentsFilters?: LeadsAgentsFilterType[]
-    leadsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
-    onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
+    missionsAgentsFilters?: LeadsAgentsFilterType[]
+    missionsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
+    onMissionsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
   }
 }
 
-const DEFAULT_LEADS_AGENTS_FILTERS: LeadsAgentsFilterType[] = ['ready']
+const DEFAULT_MISSIONS_AGENTS_FILTERS: LeadsAgentsFilterType[] = ['ready']
 
-export function AgentsDataGridForLeads(): React.JSX.Element {
+export function AgentsDataGridForMissions(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const leadsAgentsFilters = useAppSelector((state) => state.selection.leadsAgentsFilters ?? DEFAULT_LEADS_AGENTS_FILTERS)
+  const missionsAgentsFilters = useAppSelector(
+    (state) => state.selection.missionsAgentsFilters ?? DEFAULT_MISSIONS_AGENTS_FILTERS,
+  )
 
   React.useEffect(() => {
-    if (!leadsAgentsFilters.includes('ready') && agentSelection.length > 0) {
+    if (!missionsAgentsFilters.includes('ready') && agentSelection.length > 0) {
       dispatch(clearAgentSelection())
     }
-  }, [agentSelection.length, dispatch, leadsAgentsFilters])
+  }, [agentSelection.length, dispatch, missionsAgentsFilters])
 
   const allRows: AgentRow[] = gameState.agents.map((agent, index) => ({
     ...agent,
     rowId: index,
   }))
-  const rows = filterLeadAgentRows(allRows, leadsAgentsFilters)
+  const rows = filterMissionAgentRows(allRows, missionsAgentsFilters)
   const maxSkillAlive = getMaxSkillAlive(allRows)
-  const columns = getAgentsColumns(
-    rows,
-    maxSkillAlive,
-    gameState.missions,
-    gameState.turn,
-    gameState.hitPointsRecoveryPct,
-  )
-  const visibleColumns = filterVisibleAgentColumns(columns, false, false, false)
+  const columns = getAgentsColumnsForMissions(rows, maxSkillAlive, gameState.missions)
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: AgentId[] = []
@@ -84,7 +79,7 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
 
     for (const rowId of includedRowIds) {
       const row = rows.find((rowItem) => rowItem.rowId === rowId)
-      if (row && isSelectableLeadAgentRow(row, leadsAgentsFilters)) {
+      if (row && isSelectableMissionAgentRow(row, missionsAgentsFilters)) {
         agentIds.push(row.id)
       }
     }
@@ -93,7 +88,7 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
   }
 
   const rowIds: GridRowId[] = []
-  if (leadsAgentsFilters.includes('ready')) {
+  if (missionsAgentsFilters.includes('ready')) {
     for (const agentId of agentSelection) {
       const row = rows.find((rowCandidate) => rowCandidate.id === agentId)
       if (row) {
@@ -104,31 +99,35 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
 
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
-  const agentsForLeadsTitleCounts = calculateAgentsForLeadsGridTitleCounts(gameState.agents)
-  const title = <AgentsDataGridTitle variant="leads" counts={agentsForLeadsTitleCounts} />
+  const agentsForMissionsTitleCounts = calculateAgentsForLeadsGridTitleCounts(gameState.agents)
+  const title = <AgentsDataGridTitle variant="leads" counts={agentsForMissionsTitleCounts} />
 
   return (
     <DataGridCard
-      id="agents-for-leads"
+      id="agents-for-missions"
       title={title}
-      ariaLabel="Agents for leads"
+      ariaLabel="Agents for missions"
       width={AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH}
       rows={rows}
-      columns={visibleColumns}
+      columns={columns}
       getRowId={(row: AgentRow) => row.rowId}
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
-      isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow(params.row, leadsAgentsFilters)}
+      isRowSelectable={(params: GridRowParams<AgentRow>) =>
+        isSelectableMissionAgentRow(params.row, missionsAgentsFilters)
+      }
       slots={{
-        toolbar: AgentsForLeadsToolbar,
-        noRowsOverlay: leadsAgentsFilters.length === 0 ? PleaseSelectLeadAgentFiltersOverlay : NoLeadAgentsFoundOverlay,
+        toolbar: AgentsForMissionsToolbar,
+        noRowsOverlay:
+          missionsAgentsFilters.length === 0 ? PleaseSelectMissionsAgentFiltersOverlay : NoMissionsAgentsFoundOverlay,
       }}
       slotProps={{
         toolbar: {
-          leadsAgentsFilters,
-          leadsAgentsFilterCounts: agentsForLeadsTitleCounts,
-          onLeadsAgentsFiltersChange: (filters: LeadsAgentsFilterType[]) => dispatch(setLeadsAgentsFilters(filters)),
+          missionsAgentsFilters,
+          missionsAgentsFilterCounts: agentsForMissionsTitleCounts,
+          onMissionsAgentsFiltersChange: (filters: LeadsAgentsFilterType[]) =>
+            dispatch(setMissionsAgentsFilters(filters)),
         },
       }}
       showToolbar
@@ -141,24 +140,24 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
   )
 }
 
-function AgentsForLeadsToolbar(props: {
-  leadsAgentsFilters?: LeadsAgentsFilterType[]
-  leadsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
-  onLeadsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
+function AgentsForMissionsToolbar(props: {
+  missionsAgentsFilters?: LeadsAgentsFilterType[]
+  missionsAgentsFilterCounts?: AgentsForLeadsGridTitleCounts
+  onMissionsAgentsFiltersChange?: (filters: LeadsAgentsFilterType[]) => void
 }): React.JSX.Element {
   const {
-    leadsAgentsFilters = DEFAULT_LEADS_AGENTS_FILTERS,
-    leadsAgentsFilterCounts,
-    onLeadsAgentsFiltersChange,
+    missionsAgentsFilters = DEFAULT_MISSIONS_AGENTS_FILTERS,
+    missionsAgentsFilterCounts,
+    onMissionsAgentsFiltersChange,
   } = props
 
   function handleFilterToggle(filter: LeadsAgentsFilterType, checked: boolean): void {
     if (checked) {
-      onLeadsAgentsFiltersChange?.([...leadsAgentsFilters, filter])
+      onMissionsAgentsFiltersChange?.([...missionsAgentsFilters, filter])
       return
     }
 
-    onLeadsAgentsFiltersChange?.(leadsAgentsFilters.filter((selectedFilter) => selectedFilter !== filter))
+    onMissionsAgentsFiltersChange?.(missionsAgentsFilters.filter((selectedFilter) => selectedFilter !== filter))
   }
 
   return (
@@ -167,53 +166,53 @@ function AgentsForLeadsToolbar(props: {
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilters.includes('ready')}
+              checked={missionsAgentsFilters.includes('ready')}
               onChange={(event) => handleFilterToggle('ready', event.target.checked)}
-              slotProps={{ input: { 'aria-label': 'toggle-leads-ready-filter' } }}
+              slotProps={{ input: { 'aria-label': 'toggle-missions-ready-filter' } }}
               size="small"
             />
           }
-          label={`Ready (${leadsAgentsFilterCounts?.ready ?? 0})`}
+          label={`Ready (${missionsAgentsFilterCounts?.ready ?? 0})`}
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilters.includes('away')}
+              checked={missionsAgentsFilters.includes('away')}
               onChange={(event) => handleFilterToggle('away', event.target.checked)}
-              slotProps={{ input: { 'aria-label': 'toggle-leads-away-filter' } }}
+              slotProps={{ input: { 'aria-label': 'toggle-missions-away-filter' } }}
               size="small"
             />
           }
-          label={`Away (${leadsAgentsFilterCounts?.away ?? 0})`}
+          label={`Away (${missionsAgentsFilterCounts?.away ?? 0})`}
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilters.includes('exhausted')}
+              checked={missionsAgentsFilters.includes('exhausted')}
               onChange={(event) => handleFilterToggle('exhausted', event.target.checked)}
-              slotProps={{ input: { 'aria-label': 'toggle-leads-exhausted-filter' } }}
+              slotProps={{ input: { 'aria-label': 'toggle-missions-exhausted-filter' } }}
               size="small"
             />
           }
-          label={`Exhausted (${leadsAgentsFilterCounts?.exhausted ?? 0})`}
+          label={`Exhausted (${missionsAgentsFilterCounts?.exhausted ?? 0})`}
         />
         <FormControlLabel
           control={
             <Checkbox
-              checked={leadsAgentsFilters.includes('recovering')}
+              checked={missionsAgentsFilters.includes('recovering')}
               onChange={(event) => handleFilterToggle('recovering', event.target.checked)}
-              slotProps={{ input: { 'aria-label': 'toggle-leads-recovering-filter' } }}
+              slotProps={{ input: { 'aria-label': 'toggle-missions-recovering-filter' } }}
               size="small"
             />
           }
-          label={`Recovering (${leadsAgentsFilterCounts?.recovering ?? 0})`}
+          label={`Recovering (${missionsAgentsFilterCounts?.recovering ?? 0})`}
         />
       </Box>
     </Toolbar>
   )
 }
 
-function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
+function PleaseSelectMissionsAgentFiltersOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
       <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
@@ -223,7 +222,7 @@ function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
   )
 }
 
-function NoLeadAgentsFoundOverlay(): React.JSX.Element {
+function NoMissionsAgentsFoundOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
       <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
@@ -233,18 +232,18 @@ function NoLeadAgentsFoundOverlay(): React.JSX.Element {
   )
 }
 
-function filterLeadAgentRows(
+function filterMissionAgentRows(
   allRows: readonly AgentRow[],
   filters: readonly LeadsAgentsFilterType[],
 ): AgentRow[] {
-  return allRows.filter((agent) => filters.some((filter) => matchesLeadAgentFilter(agent, filter)))
+  return allRows.filter((agent) => filters.some((filter) => matchesMissionAgentFilter(agent, filter)))
 }
 
-function isSelectableLeadAgentRow(agent: AgentRow, filters: readonly LeadsAgentsFilterType[]): boolean {
+function isSelectableMissionAgentRow(agent: AgentRow, filters: readonly LeadsAgentsFilterType[]): boolean {
   return filters.includes('ready') && isReadyAgentForLeadsPanel(agent)
 }
 
-function matchesLeadAgentFilter(agent: AgentRow, filter: LeadsAgentsFilterType): boolean {
+function matchesMissionAgentFilter(agent: AgentRow, filter: LeadsAgentsFilterType): boolean {
   if (filter === 'ready') {
     return isReadyAgentForLeadsPanel(agent)
   }

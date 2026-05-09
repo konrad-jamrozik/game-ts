@@ -2,15 +2,13 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { Fragment, useEffect } from 'react'
 import { runAppInit } from './utils/runAppInit'
-import { AgentsDataGrid } from './AgentsDataGrid/AgentsDataGrid'
 import { DebugActionsCard } from './DebugActionsCard'
 import { DebugSettingsCard } from './DebugSettingsCard'
 import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { AIPlayerCard } from './GameControls/AIPlayerCard'
-import { MissionsDataGrid } from './MissionsDataGrid/MissionsDataGrid'
-import { PlayerActions } from './GameControls/PlayerActions'
+import { UpgradeActions } from './GameControls/UpgradeActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
 import { AssetsCard } from './Assets/AssetsCard'
 import { CapacitiesCard } from './Assets/CapacitiesCard'
@@ -19,6 +17,8 @@ import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
 import { LeadsScreen } from './Leads/LeadsScreen'
+import { MissionsScreen } from './Missions/MissionsScreen'
+import { AgentsScreen } from './Agents/AgentsScreen'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
@@ -26,6 +26,8 @@ import type { MissionId } from '../lib/model/modelIds'
 function App(): React.JSX.Element {
   const viewMissionDetailsId: MissionId | undefined = useAppSelector((state) => state.selection.viewMissionDetailsId)
   const viewLeads = useAppSelector((state) => state.selection.viewLeads)
+  const viewMissions = useAppSelector((state) => state.selection.viewMissions)
+  const viewAgents = useAppSelector((state) => state.selection.viewAgents)
   const viewCharts = useAppSelector((state) => state.selection.viewCharts)
 
   useEffect(() => {
@@ -56,6 +58,24 @@ function App(): React.JSX.Element {
     return (
       <Fragment>
         <LeadsScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
+  if (viewMissions) {
+    return (
+      <Fragment>
+        <MissionsScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
+  if (viewAgents) {
+    return (
+      <Fragment>
+        <AgentsScreen />
         <ErrorToast />
       </Fragment>
     )
@@ -93,13 +113,7 @@ function App(): React.JSX.Element {
         <Stack spacing={2} alignItems="center">
           <GameControls />
           <AIPlayerCard />
-          <PlayerActions />
-        </Stack>
-      </Grid>
-      <Grid>
-        <Stack spacing={2}>
-          <MissionsDataGrid />
-          <AgentsDataGrid />
+          <UpgradeActions />
         </Stack>
       </Grid>
       <Grid>

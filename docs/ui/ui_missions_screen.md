@@ -227,8 +227,9 @@ If the selected filters result in no rows being displayed, then the data grid sh
 
 Only `Ready` rows can be selected.
 
-Mission deployment requires selected agents to be in `Available` state and to have exhaustion below 100%.
-Agents in `Training` assignment are not deployable unless their current state is `Available`.
+Mission deployment requires selected agents to be `Ready`: with assignment `Standby` or `Training`,
+not in `InTransit` state, and with exhaustion below 30%.
+Agents in `InTraining` state with `Training` assignment are deployable when they satisfy this `Ready` predicate.
 
 `CR` is the selected agent's combat rating contribution, normalized against the initial hired agent combat rating.
 

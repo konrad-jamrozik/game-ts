@@ -1,5 +1,6 @@
 import type { Agent } from '../model/agentModel'
 import { withIds, notAvailable, notOnAssignment } from './agentUtils'
+import { isReadyAgentForLeadsPanel } from './agentReadinessUtils'
 import { f6c100, f6ge } from '../primitives/fixed6'
 import { assertDefined } from '../primitives/assertPrimitives'
 
@@ -52,6 +53,15 @@ export function validateAvailableAgents(agents: Agent[], selectedAgentIds: strin
     selectedAgentIds,
     (selectedAgents) => notAvailable(selectedAgents),
     'This action can be done only on available agents!',
+  )
+}
+
+export function validateReadyAgentsForMissionDeploy(agents: Agent[], selectedAgentIds: string[]): ValidateAgentsResult {
+  return validateAgents(
+    agents,
+    selectedAgentIds,
+    (selectedAgents) => selectedAgents.filter((agent) => !isReadyAgentForLeadsPanel(agent)),
+    'Deploy requires ready agents: Standby or Training assignment, not in transit, exhaustion below 30%.',
   )
 }
 

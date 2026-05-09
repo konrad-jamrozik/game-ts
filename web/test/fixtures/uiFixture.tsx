@@ -3,14 +3,34 @@ import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { expect } from 'vitest'
 import { getStore } from '../../src/redux/store'
-import { PlayerActions } from '../../src/components/GameControls/PlayerActions'
+import { AgentManagementActions } from '../../src/components/Agents/AgentManagementActions'
+import { MissionDeploymentActions } from '../../src/components/Missions/MissionDeploymentActions'
+import { LeadInvestigationActions } from '../../src/components/Leads/LeadInvestigationActions'
 
 export const ui = {
-  renderPlayerActions(): void {
+  renderAgentManagementActions(): void {
     const store = getStore()
     render(
       <Provider store={store}>
-        <PlayerActions />
+        <AgentManagementActions />
+      </Provider>,
+    )
+  },
+
+  renderMissionDeploymentActions(): void {
+    const store = getStore()
+    render(
+      <Provider store={store}>
+        <MissionDeploymentActions />
+      </Provider>,
+    )
+  },
+
+  renderLeadInvestigationActions(): void {
+    const store = getStore()
+    render(
+      <Provider store={store}>
+        <LeadInvestigationActions />
       </Provider>,
     )
   },
@@ -41,12 +61,23 @@ export const ui = {
   },
 
   expectInvestigateLeadButtonDisabled(): void {
-    const button = screen.getByRole('button', { name: /investigate lead/iu })
+    const button = screen.getByRole('button', { name: /select ready agents/iu })
     expect(button).toBeDisabled()
   },
 
-  expectPlayerActionsAlert(message: string | { hidden: true }): void {
-    const alert = screen.queryByRole('alert', { name: 'player-actions-alert' })
+  expectAgentManagementAlert(message: string | { hidden: true }): void {
+    const alert = screen.queryByRole('alert', { name: 'agent-management-actions-alert' })
+    if (typeof message === 'object' && 'hidden' in message) {
+      expect(alert).not.toBeInTheDocument()
+    } else {
+      expect(alert).toBeInTheDocument()
+      expect(alert).toBeVisible()
+      expect(alert).toHaveTextContent(message)
+    }
+  },
+
+  expectMissionDeploymentAlert(message: string | { hidden: true }): void {
+    const alert = screen.queryByRole('alert', { name: 'mission-deployment-actions-alert' })
     if (typeof message === 'object' && 'hidden' in message) {
       expect(alert).not.toBeInTheDocument()
     } else {

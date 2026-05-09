@@ -14,7 +14,9 @@ This file specifies the unit and component test suite for the project.
     - [`component/ErrorBoundary.test.tsx`](#componenterrorboundarytesttsx)
     - [`component/EventLog.test.tsx`](#componenteventlogtesttsx)
     - [`component/GameControls.test.tsx`](#componentgamecontrolstesttsx)
-    - [`component/PlayerActions.test.tsx`](#componentplayeractionstesttsx)
+    - [`component/AgentManagementActions.test.tsx`](#componentagentmanagementactionstesttsx)
+    - [`component/LeadInvestigationActions.test.tsx`](#componentleadinvestigationactionstesttsx)
+    - [`component/MissionDeploymentActions.test.tsx`](#componentmissiondeploymentactionstesttsx)
   - [Unit tests](#unit-tests)
     - [`unit/effectiveSkill.test.ts`](#uniteffectiveskilltestts)
     - [`unit/evaluateBattle.test.ts`](#unitevaluatebattletestts)
@@ -49,10 +51,10 @@ One happy path test per component, rendering the component:
   - Tests for `Advance turn` button.
   - Tests for `Restart game` button.
 
-- Tests for `PlayerActions.tsx`:
-  - For each player action:
-    - One happy path test
-    - One test resulting in alert
+- Tests for split player action components:
+  - Agent management actions.
+  - Lead investigation actions.
+  - Mission deployment actions.
   - Note: these tests arrange appropriate selection of agents, leads, mission sites, etc.
 
 - Tests for `EventLog.tsx`.
@@ -116,22 +118,31 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 - click 'advance turn' button -> happy path
 - click 'restart game' button -> happy path
 
-### `component/PlayerActions.test.tsx`
+### `component/AgentManagementActions.test.tsx`
 
+- selected-agent action buttons are disabled when no agents are selected
 - click 'hire agent' button -> happy path
 - click 'hire agent' button -> alert: insufficient funds
 - click 'sack agents' button -> happy path
 - click 'sack agents' button -> alert: agents in invalid states
 - click 'assign agents to contracting' button -> happy path
 - click 'assign agents to contracting' button -> alert: agents in invalid states
-- click 'assign agents to espionage' button -> happy path
-- click 'assign agents to espionage' button -> alert: agents in invalid states
 - click 'recall agents' button -> happy path
 - click 'recall agents' button -> alert: agents in invalid states
+
+### `component/LeadInvestigationActions.test.tsx`
+
 - click 'investigate lead' button -> happy path
-- click 'investigate lead' button -> alert: insufficient intel
-- click 'deploy agents to active mission site' button -> happy path
-- click 'deploy agents to active mission site' button -> alert: agents in invalid states
+- 'investigate lead' button is disabled when no agents selected
+
+### `component/MissionDeploymentActions.test.tsx`
+
+- click 'deploy agents to active mission' button -> happy path
+- click 'deploy agents to active mission' button -> happy path with ready training agent
+- click 'deploy agents to active mission' button -> alert: contracting agent is not ready
+- click 'deploy agents to active mission' button -> alert: in-transit agent is not ready
+- click 'deploy agents to active mission' button -> alert: exhausted agent is not ready
+- click 'deploy agents to active mission' button -> alert: transport cap exceeded by deployed missions
 
 ## Unit tests
 

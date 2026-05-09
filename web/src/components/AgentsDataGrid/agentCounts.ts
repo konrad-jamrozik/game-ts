@@ -1,6 +1,10 @@
 import { recovering } from '../../lib/model_utils/agentUtils'
+import {
+  isAwayAgentForLeadsPanel,
+  isExhaustedAgentForLeadsPanel,
+  isReadyAgentForLeadsPanel,
+} from '../../lib/model_utils/agentReadinessUtils'
 import type { Agent } from '../../lib/model/agentModel'
-import { f6ge, f6le, f6lt, toF6, type Fixed6 } from '../../lib/primitives/fixed6'
 
 export type AgentCounts = {
   allActive: number
@@ -38,15 +42,15 @@ export function calculateAgentsForLeadsGridTitleCounts(agents: readonly Agent[])
       recovering += 1
     }
 
-    if (matchesLeadsGridTitleReady(agent)) {
+    if (isReadyAgentForLeadsPanel(agent)) {
       ready += 1
     }
 
-    if (matchesLeadsGridTitleAway(agent)) {
+    if (isAwayAgentForLeadsPanel(agent)) {
       away += 1
     }
 
-    if (matchesLeadsGridTitleExhausted(agent)) {
+    if (isExhaustedAgentForLeadsPanel(agent)) {
       exhausted += 1
     }
   }
@@ -73,15 +77,10 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
 
     allActive += 1
 
-    const isAvailableOrTraining =
-      agent.state === 'Available' || (agent.state === 'InTraining' && agent.assignment === 'Training')
-
-    if (isAvailableOrTraining) {
-      if (f6le(agent.exhaustionPct, EXHAUSTION_THRESHOLD)) {
-        ready += 1
-      } else {
-        exhausted += 1
-      }
+    if (isReadyAgentForLeadsPanel(agent)) {
+      ready += 1
+    } else if (isExhaustedAgentForLeadsPanel(agent)) {
+      exhausted += 1
     }
   }
 
@@ -97,31 +96,3 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
   }
 }
 
-const EXHAUSTION_THRESHOLD: Fixed6 = toF6(5)
-const LEADS_AGENTS_GRID_EXHAUSTION_EXHAUSTED_AT: Fixed6 = toF6(30)
-
-function matchesLeadsGridTitleAway(agent: Agent): boolean {
-  return (
-    agent.assignment !== 'Recovery' &&
-    (agent.state === 'InTransit' ||
-      agent.state === 'Contracting' ||
-      agent.state === 'Investigating' ||
-      agent.state === 'OnMission')
-  )
-}
-
-function matchesLeadsGridTitleReady(agent: Agent): boolean {
-  return (
-    (agent.assignment === 'Standby' || agent.assignment === 'Training') &&
-    agent.state !== 'InTransit' &&
-    f6lt(agent.exhaustionPct, LEADS_AGENTS_GRID_EXHAUSTION_EXHAUSTED_AT)
-  )
-}
-
-function matchesLeadsGridTitleExhausted(agent: Agent): boolean {
-  return (
-    (agent.assignment === 'Standby' || agent.assignment === 'Training') &&
-    agent.state !== 'InTransit' &&
-    f6ge(agent.exhaustionPct, LEADS_AGENTS_GRID_EXHAUSTION_EXHAUSTED_AT)
-  )
-}

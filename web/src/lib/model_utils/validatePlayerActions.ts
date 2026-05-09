@@ -8,9 +8,10 @@ import {
   validateAvailableAgents,
   validateNotExhaustedAgents,
   validateOnAssignmentAgents,
+  validateReadyAgentsForMissionDeploy,
 } from './validateAgents'
 import { getRemainingTransportCap, validateMissionDeployment, getMissionById } from './missionUtils'
-import { f6ge, toF6 } from '../primitives/fixed6'
+import { isReadyAgentForLeadsPanel } from './agentReadinessUtils'
 
 export type ValidationResult =
   | Readonly<{ isValid: true; errorMessage?: never }>
@@ -98,10 +99,9 @@ export function validateDeployAgents(
   missionId: MissionId,
   agentIds: AgentId[],
 ): ValidationResult {
-  // Validate agents are available
-  const availabilityValidation = validateAvailableAgents(gameState.agents, agentIds)
-  if (!availabilityValidation.isValid) {
-    return { isValid: false, errorMessage: availabilityValidation.errorMessage }
+  const readinessValidation = validateReadyAgentsForMissionDeploy(gameState.agents, agentIds)
+  if (!readinessValidation.isValid) {
+    return { isValid: false, errorMessage: readinessValidation.errorMessage }
   }
 
   // Validate that agents are not exhausted
@@ -149,13 +149,7 @@ function validateLeadInvestigationAgents(gameState: GameState, agentIds: AgentId
   const validation = validateAgents(
     gameState.agents,
     agentIds,
-    (selectedAgents) =>
-      selectedAgents.filter(
-        (agent) =>
-          (agent.assignment !== 'Standby' && agent.assignment !== 'Training') ||
-          agent.state === 'InTransit' ||
-          f6ge(agent.exhaustionPct, toF6(30)),
-      ),
+    (selectedAgents) => selectedAgents.filter((agent) => !isReadyAgentForLeadsPanel(agent)),
     'Lead investigations require non-transiting Standby or Training agents with exhaustion below 30.',
   )
 

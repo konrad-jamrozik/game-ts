@@ -14,6 +14,13 @@ import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
 import { getAvailableLeadsForInvestigation } from '../lib/model_utils/leadUtils'
+import type { Agent } from '../lib/model/agentModel'
+import type { Mission } from '../lib/model/missionModel'
+import {
+  isExhaustedAgentForLeadsPanel,
+  isReadyAgentForLeadsPanel,
+  isRecoveringAgentForLeadsPanel,
+} from '../lib/model_utils/agentReadinessUtils'
 
 function getFactionRows(
   faction: {
@@ -110,6 +117,9 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
+  const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
+  const agentsSummaryRows = buildAgentsSummaryRows(gameState.agents)
+
   const discoveredFactions = revealAllFactionProfiles
     ? factions
     : factions.filter((faction) => isFactionDiscovered(faction, leadInvestigationCounts))
@@ -134,6 +144,10 @@ export function SituationReportCard(): React.JSX.Element {
         />
         <Typography variant="h6">Leads summary</Typography>
         <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
+        <Typography variant="h6">Missions summary</Typography>
+        <StyledDataGrid rows={missionsSummaryRows} columns={leadsSummaryColumns} aria-label="Missions summary data" />
+        <Typography variant="h6">Agents summary</Typography>
+        <StyledDataGrid rows={agentsSummaryRows} columns={leadsSummaryColumns} aria-label="Agents summary data" />
         {discoveredFactions.map((faction) => {
           const terminated = isFactionTerminated(faction, leadInvestigationCounts)
           return (
@@ -155,4 +169,49 @@ export function SituationReportCard(): React.JSX.Element {
       </Stack>
     </ExpandableCard>
   )
+}
+
+function buildMissionsSummaryRows(missions: Mission[]): SituationReportRow[] {
+  const missionSites = missions.filter((mission) => mission.state === 'Active').length
+  const expiringSoon = missions.filter(
+    (mission) =>
+      mission.state === 'Active' &&
+      mission.expiresIn !== 'never' &&
+      typeof mission.expiresIn === 'number' &&
+      mission.expiresIn <= 3,
+  ).length
+  const deployedMissions = missions.filter((mission) => mission.state === 'Deployed').length
+  return [
+    { id: 1, metric: 'Mission sites', value: String(missionSites) },
+    { id: 2, metric: 'Expiring soon', value: String(expiringSoon) },
+    { id: 3, metric: 'Deployed missions', value: String(deployedMissions) },
+  ]
+}
+
+function buildAgentsSummaryRows(agents: Agent[]): SituationReportRow[] {
+  let ready = 0
+  let exhausted = 0
+  let recovering = 0
+  let allActive = 0
+  for (const agent of agents) {
+    if (agent.state === 'KIA' || agent.state === 'Sacked') {
+      continue
+    }
+    allActive += 1
+    if (isRecoveringAgentForLeadsPanel(agent)) {
+      recovering += 1
+    }
+    if (isReadyAgentForLeadsPanel(agent)) {
+      ready += 1
+    } else if (isExhaustedAgentForLeadsPanel(agent)) {
+      exhausted += 1
+    }
+  }
+  const away = allActive - ready - exhausted - recovering
+  return [
+    { id: 1, metric: 'Ready agents', value: String(ready) },
+    { id: 2, metric: 'Exhausted agents', value: String(exhausted) },
+    { id: 3, metric: 'Recovering agents', value: String(recovering) },
+    { id: 4, metric: 'Away agents', value: String(away) },
+  ]
 }

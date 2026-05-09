@@ -18,6 +18,8 @@ export type SelectionState = {
   viewMissionDetailsId?: MissionId
   viewLeads?: true
   viewCharts?: true
+  viewMissions?: true
+  viewAgents?: true
   // Data grid filter states
   missionsShowArchived?: boolean
   leadsFilterType?: LeadsFilterType
@@ -26,6 +28,7 @@ export type SelectionState = {
   agentsShowRecovering?: boolean
   agentsShowStats?: boolean
   leadsAgentsFilters?: LeadsAgentsFilterType[]
+  missionsAgentsFilters?: LeadsAgentsFilterType[]
   missionsChartShowOffensive?: boolean
   missionsChartShowDefensive?: boolean
   combatRatingChartShowAgentCR?: boolean
@@ -98,6 +101,8 @@ const selectionSlice = createSlice({
       delete state.viewMissionDetailsId
       delete state.viewLeads
       delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
       // Clear data grid filter states
       delete state.missionsShowArchived
       delete state.leadsFilterType
@@ -106,26 +111,59 @@ const selectionSlice = createSlice({
       delete state.agentsShowRecovering
       delete state.agentsShowStats
       delete state.leadsAgentsFilters
+      delete state.missionsAgentsFilters
       // Selections not deleted, i.e. preserved:
       // AI section selections (selectedAIIntellect, autoAdvanceTurn, and aiTurnCount)
     },
     setViewMissionDetails(state, action: PayloadAction<MissionId>) {
       state.viewMissionDetailsId = action.payload
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
     },
     clearViewMissionDetails(state) {
       delete state.viewMissionDetailsId
     },
     setViewLeads(state) {
       state.viewLeads = true
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
+      delete state.viewMissionDetailsId
     },
     clearViewLeads(state) {
       delete state.viewLeads
     },
     setViewCharts(state) {
       state.viewCharts = true
+      delete state.viewLeads
+      delete state.viewMissions
+      delete state.viewAgents
+      delete state.viewMissionDetailsId
     },
     clearViewCharts(state) {
       delete state.viewCharts
+    },
+    setViewMissions(state) {
+      state.viewMissions = true
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewAgents
+      delete state.viewMissionDetailsId
+    },
+    clearViewMissions(state) {
+      delete state.viewMissions
+    },
+    setViewAgents(state) {
+      state.viewAgents = true
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewMissionDetailsId
+    },
+    clearViewAgents(state) {
+      delete state.viewAgents
     },
     // Data grid filter reducers
     setMissionsShowArchived(state, action: PayloadAction<boolean>) {
@@ -148,6 +186,9 @@ const selectionSlice = createSlice({
     },
     setLeadsAgentsFilters(state, action: PayloadAction<LeadsAgentsFilterType[]>) {
       state.leadsAgentsFilters = action.payload
+    },
+    setMissionsAgentsFilters(state, action: PayloadAction<LeadsAgentsFilterType[]>) {
+      state.missionsAgentsFilters = action.payload
     },
     setMissionsChartShowOffensive(state, action: PayloadAction<boolean>) {
       state.missionsChartShowOffensive = action.payload
@@ -191,6 +232,10 @@ export const {
   clearViewLeads,
   setViewCharts,
   clearViewCharts,
+  setViewMissions,
+  clearViewMissions,
+  setViewAgents,
+  clearViewAgents,
   // Data grid filter actions
   setMissionsShowArchived,
   setLeadsFilterType,
@@ -199,6 +244,7 @@ export const {
   setAgentsShowRecovering,
   setAgentsShowStats,
   setLeadsAgentsFilters,
+  setMissionsAgentsFilters,
   setMissionsChartShowOffensive,
   setMissionsChartShowDefensive,
   setCombatRatingChartShowAgentCR,
