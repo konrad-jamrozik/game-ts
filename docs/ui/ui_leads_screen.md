@@ -95,19 +95,24 @@ The toolbar of the data grid has following filters, where always exactly 1 filte
 
 - `Active ({active})` (selected by default)
 - `Inactive ({inactive})`
-- `Past investigations ({pastInvestigations})`
+- `Archived ({archived})`
 
 `{active}` and `{inactive}` count discovered leads in those states (see [About Lead Discovery](../about_lead_discovery.md)).
 
-`{past investigations}` counts investigations that are either `Done` or `Abandoned`.
+`{archived}` counts how many rows are shown when this filter is selected.
 
-The `{pastInvestigations}` badge counts how many rows are shown when this filter is selected (same categories as above).
+When `Archived` is selected, rows are shown for each of:
+
+- `Archived lead investigation`: a lead investigation that is either `Done` or `Abandoned`.
+- `Archived lead`: a lead that is itself archived, but whose archival is not already represented by a corresponding archived lead investigation.
+
+Count `Archived lead` rows when the lead is archived and there is no corresponding archived lead investigation for that archived lead. For example, if a faction is terminated and a lead becomes obsolete without any `Done` or `Abandoned` investigation causing that archival, the archived lead contributes one `Archived` row.
 
 If `Active` is selected, only active leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
 If `Inactive` is selected, only inactive leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
-If `Past investigations` is selected, only the rows for investigations that are either `Done` or `Abandoned` are shown.
+If `Archived` is selected, only archived lead investigation rows and archived lead rows are shown.
 
-If the users unselects `Inactive` or `Past investigations`, then `Active` is selected automatically.
+If the user unselects `Inactive` or `Archived`, then `Active` is selected automatically.
 If `Active` is selected, user cannot unselect it.
 
 ### Leads data grid column details
@@ -116,26 +121,32 @@ No more than one `Checkbox` can be selected at a time, and only rows with active
 
 Possible values of `Type` are: `One-time` or `Repeat.`.
 
-Possible values of `Investigation` include: `None`, `Inactive`, `Active`, `Active #N`, `Done T #N`, or `Abandoned`
-(terminal investigations shown when **Past investigations** filter is selected; see toolbar section above).
+Possible values of `Investigation` include: `None`, `Inactive`, `Active`, `Active #N`, `Done T #N`, `Abandoned`, or `Obsolete`
+(archived rows shown when **Archived** filter is selected; see toolbar section above).
 
 `Active` applies only for leads that are not repeatable.
 
 `Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
-`Done T #N` applies to rows in **Past investigations** that come from a successful investigation:
+`Done T #N` applies to **Archived** rows that come from a successful investigation:
 
 - For a one-time lead, the row shows `Done T #N` when the lead appears there because it became **Archived** after that success ([About Lead Discovery](../about_lead_discovery.md)).
-- For a repeatable lead, each completed investigation has its own **Past investigations** row with `Done T #N`.
+- For a repeatable lead, each completed investigation has its own **Archived** row with `Done T #N`.
 
 `T #` is the turn number at which the investigation was completed. To be exact, if investigation completed when advancing
 from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 
 `#N` is padded to width 3, so e.g. `Done T   7` or `Done T 623`.
 
+`Abandoned` applies to **Archived** rows that come from an abandoned investigation.
+
+`Obsolete` applies to **Archived** rows that come from an archived lead without a corresponding archived lead investigation. The `Obsolete` chip uses the same gray color as other gray chips.
+
 #### Investigation columns
 
 `ID`, `Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None`.
+
+For `Obsolete` rows, `ID`, `Agents`, `Progress`, `Projected`, and `Efficiency` are empty because there is no corresponding lead investigation record.
 
 `ID` is the ID of the investigation, just the number (including leading zeros).
 
@@ -147,8 +158,8 @@ from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 - `Mid` is the midpoint between lower and upper `turn advancement success chance`.
 - `Err` is half the distance between lower and upper `turn advancement success chance`.
 
-When `Past investigations` is selected, terminal investigation rows use `Success %` chips `Done` or `Abandoned`
-instead of a success-chance range.
+When `Archived` is selected, archived rows use `Success %` chips `Done`, `Abandoned`, or `Obsolete`
+instead of a success-chance range. `Obsolete` uses the "neutral" chip color.
 
 ## Agents data grid for leads
 
@@ -210,17 +221,6 @@ and `Assignment` column says `invst-NNN` where `NNN` is the investigation ID. It
 ## Leads summary
 
 KJA leads TODO write this section
-
-## Completed Investigations
-
-KJA leads TODO adapt this section
-
-Completed investigations appear in the same lead investigations data grid when the `done` filter is
-active. Abandoned investigations appear there when the `abandoned` filter is active.
-
-```text
-Investigation  Ag #  Succ %  Progress  Proj.
-```
 
 ## Empty And Disabled States
 

@@ -21,17 +21,18 @@ import { getDiscoveredLeads, getLeadStatus } from '../../lib/model_utils/leadUti
 import { calculateLeadCounts } from './leadCounts'
 import { LeadsDataGridTitle } from './LeadsDataGridTitle'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { normalizeLeadsFilterType } from './leadFilterUtils'
 
 export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const gameState = useAppSelector(getCurrentTurnState)
-  const filterType: LeadsFilterType = useAppSelector((state) => state.selection.leadsFilterType ?? 'active')
+  const filterType: LeadsFilterType = useAppSelector((state) => normalizeLeadsFilterType(state.selection.leadsFilterType))
 
   // Get all discovered leads using shared logic
   const discoveredLeads = getDiscoveredLeads(gameState)
 
-  // Transform all discovered leads to rows (active, inactive, and archived-for-past-filter)
+  // Transform all discovered leads to rows (active, inactive, and archived)
   const allRows: LeadRow[] = discoveredLeads.map((lead, index) => {
     const investigationsForLead = Object.values(gameState.leadInvestigations).filter(
       (investigation) => investigation.leadId === lead.id,
@@ -66,7 +67,7 @@ export function LeadsDataGrid(): React.JSX.Element {
     if (filterType === 'inactive') {
       return row.isInactive
     }
-    // filterType === 'past'
+    // filterType === 'archived'
     return row.isArchived
   })
 

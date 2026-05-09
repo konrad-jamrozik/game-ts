@@ -26,9 +26,9 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
     }
   }
 
-  function handlePastInvestigationsChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  function handleArchivedChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.checked) {
-      onFilterTypeChange?.('past')
+      onFilterTypeChange?.('archived')
     } else {
       onFilterTypeChange?.('active')
     }
@@ -67,13 +67,13 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
       <FormControlLabel
         control={
           <Checkbox
-            checked={filterType === 'past'}
-            onChange={handlePastInvestigationsChange}
-            slotProps={{ input: { 'aria-label': 'toggle-past-investigations-filter' } }}
+            checked={filterType === 'archived'}
+            onChange={handleArchivedChange}
+            slotProps={{ input: { 'aria-label': 'toggle-archived-filter' } }}
             size="small"
           />
         }
-        label={`Past investigations (${leadCounts?.pastInvestigations ?? 0})`}
+        label={`Archived (${leadCounts?.archived ?? 0})`}
       />
     </Toolbar>
   )

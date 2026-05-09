@@ -2,7 +2,7 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../../lib/model/modelIds'
 import type { UpgradeName } from '../../lib/data_tables/upgrades'
 
-export type LeadsFilterType = 'active' | 'inactive' | 'past'
+export type LeadsFilterType = 'active' | 'inactive' | 'archived'
 export type LeadsAgentsFilterType = 'ready' | 'away' | 'exhausted' | 'recovering'
 export type ChartsTurnRangeFilter = 'all' | 'last100' | 'currentTurn'
 

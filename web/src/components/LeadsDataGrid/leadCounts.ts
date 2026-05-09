@@ -1,4 +1,4 @@
-import type { Lead } from '../../lib/model/leadModel'
+import type { Lead, LeadInvestigation } from '../../lib/model/leadModel'
 import { getLeadStatus } from '../../lib/model_utils/leadUtils'
 import type { GameState } from '../../lib/model/gameStateModel'
 
@@ -7,8 +7,8 @@ export type LeadCounts = {
   active: number
   inactive: number
   repeatable: number
-  /** Rows visible when Past investigations toolbar filter is selected (see docs/ui/ui_leads_screen.md). */
-  pastInvestigations: number
+  /** Rows visible when Archived toolbar filter is selected (see docs/ui/ui_leads_screen.md). */
+  archived: number
 }
 
 export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameState): LeadCounts {
@@ -16,7 +16,7 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
   let active = 0
   let inactive = 0
   let repeatable = 0
-  let pastInvestigations = 0
+  let archived = 0
 
   for (const lead of discoveredLeads) {
     const status = getLeadStatus(lead, gameState)
@@ -32,15 +32,14 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
       }
     }
 
-    const terminalForLead = Object.values(gameState.leadInvestigations).filter(
+    const archivedInvestigationsForLead = Object.values(gameState.leadInvestigations).filter(
       (investigation) =>
         investigation.leadId === lead.id &&
         (investigation.state === 'Done' || investigation.state === 'Abandoned'),
     )
-    pastInvestigations += terminalForLead.length
-    if (status.isArchived && terminalForLead.length === 0) {
-      // Archived lead still shows one Past row without a Done/Abandoned record (e.g. faction terminated).
-      pastInvestigations += 1
+    archived += archivedInvestigationsForLead.length
+    if (status.isArchived && !hasArchivedInvestigationCorrespondingToArchivedLead(lead, archivedInvestigationsForLead)) {
+      archived += 1
     }
   }
 
@@ -49,6 +48,13 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
     active,
     inactive,
     repeatable,
-    pastInvestigations,
+    archived,
   }
+}
+
+function hasArchivedInvestigationCorrespondingToArchivedLead(
+  lead: Lead,
+  archivedInvestigationsForLead: readonly LeadInvestigation[],
+): boolean {
+  return !lead.repeatable && archivedInvestigationsForLead.some((investigation) => investigation.state === 'Done')
 }

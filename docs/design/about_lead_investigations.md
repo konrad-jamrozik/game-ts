@@ -179,6 +179,8 @@ Lead investigations UI (Leads screen layout, grids, toolbars, and states) is doc
 
 - **`Lead investigation`:** A state object representing one active or past investigation of a `lead`.
 
+- **`Archived lead investigation`:** A `lead investigation` that is either `Done` or `Abandoned`.
+
 - **`Lead visible difficulty`:** The `lead`'s player-facing difficulty value. It is the `progress`
   denominator and establishes the lower bound of `lead investigation actual difficulty`.
 

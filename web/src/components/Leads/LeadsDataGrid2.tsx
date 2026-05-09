@@ -37,6 +37,7 @@ import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
 import { LEADS_SCREEN_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
+import { normalizeLeadsFilterType } from '../LeadsDataGrid/leadFilterUtils'
 import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
 import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
 import { LeadsDataGridToolbar } from '../LeadsDataGrid/LeadsDataGridToolbar'
@@ -45,7 +46,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
-  const filterType = useAppSelector((state) => state.selection.leadsFilterType ?? 'active')
+  const filterType: LeadsFilterType = useAppSelector((state) => normalizeLeadsFilterType(state.selection.leadsFilterType))
   const gameState = useAppSelector(getCurrentTurnState)
 
   const discoveredLeads = getDiscoveredLeads(gameState)
@@ -133,7 +134,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
   )
 }
 
-type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned'
+type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned' | 'Obsolete'
 
 type LeadRow2 = {
   rowId: GridRowId
@@ -164,10 +165,6 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
     (investigation) => investigation.leadId === lead.id,
   )
   const activeInvestigation = investigationsForLead.find((investigation) => investigation.state === 'Active')
-  const doneInvestigation = investigationsForLead
-    .filter((investigation) => investigation.state === 'Done')
-    .toSorted(compareLeadInvestigationsByCompletionTurn2)
-    .at(-1)
   const status = getLeadStatus(lead, gameState)
   const rowStatus = getLeadFilterType2(status)
 
@@ -180,8 +177,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
     repeatable: lead.repeatable,
   }
 
-  const investigationHistoryRowsForPastFilter =
-    bldInvestigationHistoryRowsForPastFilter2(lead, investigationsForLead)
+  const archivedInvestigationRows = bldArchivedInvestigationRows2(lead, investigationsForLead)
 
   if (rowStatus === 'inactive') {
     return [
@@ -190,7 +186,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigation: 'Inactive',
         investigationStatus: 'Inactive',
       },
-      ...investigationHistoryRowsForPastFilter,
+      ...archivedInvestigationRows,
     ]
   }
 
@@ -204,19 +200,23 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigationIdDigits: fmtLeadInvestigationIdDigits(activeInvestigation.id),
         ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
       },
-      ...investigationHistoryRowsForPastFilter,
+      ...archivedInvestigationRows,
     ]
   }
 
-  if (rowStatus === 'past' && !lead.repeatable && doneInvestigation !== undefined) {
+  if (rowStatus === 'archived') {
+    if (hasArchivedInvestigationCorrespondingToArchivedLead2(lead, investigationsForLead)) {
+      return archivedInvestigationRows
+    }
+
     return [
       {
         ...rowBase,
-        investigation: fmtDoneInvestigation2(doneInvestigation),
-        investigationStatus: 'Done',
-        investigationIdDigits: fmtLeadInvestigationIdDigits(doneInvestigation.id),
+        rowId: `obsolete:${lead.id}`,
+        investigation: 'Obsolete',
+        investigationStatus: 'Obsolete',
       },
-      ...investigationHistoryRowsForPastFilter,
+      ...archivedInvestigationRows,
     ]
   }
 
@@ -226,24 +226,22 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
       investigation: 'None',
       investigationStatus: 'None',
     },
-    ...investigationHistoryRowsForPastFilter,
+    ...archivedInvestigationRows,
   ]
 }
 
-function bldInvestigationHistoryRowsForPastFilter2(
+function bldArchivedInvestigationRows2(
   lead: Lead,
   investigationsForLead: readonly LeadInvestigation[],
 ): LeadRow2[] {
-  const terminal = lead.repeatable
-    ? investigationsForLead.filter((i) => i.state === 'Done' || i.state === 'Abandoned')
-    : investigationsForLead.filter((i) => i.state === 'Abandoned')
+  const terminal = investigationsForLead.filter((i) => i.state === 'Done' || i.state === 'Abandoned')
 
   return terminal.toSorted(compareLeadInvestigationsByCompletionTurn2).map((investigation) => {
     if (investigation.state === 'Done') {
       return {
         rowId: `done:${investigation.id}`,
         id: lead.id,
-        status: 'past',
+        status: 'archived',
         lead: lead.name,
         difficulty: lead.difficulty,
         repeatable: lead.repeatable,
@@ -256,7 +254,7 @@ function bldInvestigationHistoryRowsForPastFilter2(
     return {
       rowId: `abandoned:${investigation.id}`,
       id: lead.id,
-      status: 'past',
+      status: 'archived',
       lead: lead.name,
       difficulty: lead.difficulty,
       repeatable: lead.repeatable,
@@ -265,6 +263,13 @@ function bldInvestigationHistoryRowsForPastFilter2(
       investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
     } satisfies LeadRow2
   })
+}
+
+function hasArchivedInvestigationCorrespondingToArchivedLead2(
+  lead: Lead,
+  investigationsForLead: readonly LeadInvestigation[],
+): boolean {
+  return !lead.repeatable && investigationsForLead.some((investigation) => investigation.state === 'Done')
 }
 
 function bldActiveInvestigationDetails2(
@@ -381,6 +386,9 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
         if (params.row.investigationStatus === 'Abandoned') {
           return <MyChip chipValue="Abandoned" reverseColor={true} />
         }
+        if (params.row.investigationStatus === 'Obsolete') {
+          return <MyChip chipValue="Obsolete" noColor={true} />
+        }
         return fmtSuccessChanceRange2(params.row)
       },
     },
@@ -389,7 +397,7 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
 
 function getLeadFilterType2(status: ReturnType<typeof getLeadStatus>): LeadsFilterType {
   if (status.isArchived) {
-    return 'past'
+    return 'archived'
   }
   if (status.isInactive) {
     return 'inactive'

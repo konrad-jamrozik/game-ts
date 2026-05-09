@@ -111,4 +111,4 @@ This ensures that once a player successfully investigates the HQ lead, they must
 - Mission states are checked against the `missions` array in game state
 - Lead state is recalculated each turn during turn advancement
 
-- The UI leads grid toolbar shows counts for **Active**, **Inactive**, and **Past investigations** filters (see [ui_leads_screen.md](../ui/ui_leads_screen.md)).
+- The UI leads grid toolbar shows counts for **Active**, **Inactive**, and **Archived** filters (see [ui_leads_screen.md](ui/ui_leads_screen.md)).
