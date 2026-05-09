@@ -2,15 +2,16 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
 import * as React from 'react'
+import type { LeadsFilterType } from '../../redux/slices/selectionSlice'
 import type { LeadCounts } from './leadCounts'
 
 // Allow passing custom props to the DataGrid toolbar slot for Leads grid
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
-    filterType: 'active' | 'inactive' | 'archived'
+    filterType: LeadsFilterType
     leadCounts?: LeadCounts
-    onFilterTypeChange?: (filterType: 'active' | 'inactive' | 'archived') => void
+    onFilterTypeChange?: (filterType: LeadsFilterType) => void
   }
 }
 
@@ -25,9 +26,9 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
     }
   }
 
-  function handleArchivedChange(event: React.ChangeEvent<HTMLInputElement>): void {
+  function handlePastInvestigationsChange(event: React.ChangeEvent<HTMLInputElement>): void {
     if (event.target.checked) {
-      onFilterTypeChange?.('archived')
+      onFilterTypeChange?.('past')
     } else {
       onFilterTypeChange?.('active')
     }
@@ -66,13 +67,13 @@ export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps
       <FormControlLabel
         control={
           <Checkbox
-            checked={filterType === 'archived'}
-            onChange={handleArchivedChange}
-            slotProps={{ input: { 'aria-label': 'toggle-archived-filter' } }}
+            checked={filterType === 'past'}
+            onChange={handlePastInvestigationsChange}
+            slotProps={{ input: { 'aria-label': 'toggle-past-investigations-filter' } }}
             size="small"
           />
         }
-        label={`Archived (${leadCounts?.archived ?? 0})`}
+        label={`Past investigations (${leadCounts?.pastInvestigations ?? 0})`}
       />
     </Toolbar>
   )

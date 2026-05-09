@@ -7,7 +7,8 @@ export type LeadCounts = {
   active: number
   inactive: number
   repeatable: number
-  archived: number
+  /** Rows visible when Past investigations toolbar filter is selected (see docs/ui/ui_leads_screen.md). */
+  pastInvestigations: number
 }
 
 export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameState): LeadCounts {
@@ -15,17 +16,15 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
   let active = 0
   let inactive = 0
   let repeatable = 0
-  let archived = 0
+  let pastInvestigations = 0
 
   for (const lead of discoveredLeads) {
     const status = getLeadStatus(lead, gameState)
 
-    if (status.isArchived) {
-      archived += 1
-    } else if (status.isInactive) {
+    if (status.isInactive) {
       all += 1
       inactive += 1
-    } else {
+    } else if (!status.isArchived) {
       all += 1
       active += 1
       if (lead.repeatable) {
@@ -33,10 +32,15 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
       }
     }
 
-    if (lead.repeatable) {
-      archived += Object.values(gameState.leadInvestigations).filter(
-        (investigation) => investigation.leadId === lead.id && investigation.state === 'Done',
-      ).length
+    const terminalForLead = Object.values(gameState.leadInvestigations).filter(
+      (investigation) =>
+        investigation.leadId === lead.id &&
+        (investigation.state === 'Done' || investigation.state === 'Abandoned'),
+    )
+    pastInvestigations += terminalForLead.length
+    if (status.isArchived && terminalForLead.length === 0) {
+      // Archived lead still shows one Past row without a Done/Abandoned record (e.g. faction terminated).
+      pastInvestigations += 1
     }
   }
 
@@ -45,6 +49,6 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
     active,
     inactive,
     repeatable,
-    archived,
+    pastInvestigations,
   }
 }

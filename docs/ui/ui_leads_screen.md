@@ -95,21 +95,19 @@ The toolbar of the data grid has following filters, where always exactly 1 filte
 
 - `Active ({active})` (selected by default)
 - `Inactive ({inactive})`
-- `Archived ({archived})`
+- `Past investigations ({pastInvestigations})`
 
-`{active}` and `{inactive}` count discovered leads in those states. `{archived}` counts rows shown by the
-`Archived` filter:
+`{active}` and `{inactive}` count discovered leads in those states (see [About Lead Discovery](../about_lead_discovery.md)).
 
-- **Archived one-time** rows: discovered one-time leads that are archived.
-- **Archived repeatable** rows: completed investigations of repeatable leads. A repeatable lead can still also
-  have its normal active/inactive lead row, because completed repeatable investigations are archived separately
-  from the lead itself.
+`{past investigations}` counts investigations that are either `Done` or `Abandoned`.
+
+The `{pastInvestigations}` badge counts how many rows are shown when this filter is selected (same categories as above).
 
 If `Active` is selected, only active leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
 If `Inactive` is selected, only inactive leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
-If `Archived` is selected, only archived leads are shown, as defined in [About Lead Discovery](../about_lead_discovery.md).
+If `Past investigations` is selected, only the rows for investigations that are either `Done` or `Abandoned` are shown.
 
-If the users unselects `Inactive` or `Archived`, then `Active` is selected automatically.
+If the users unselects `Inactive` or `Past investigations`, then `Active` is selected automatically.
 If `Active` is selected, user cannot unselect it.
 
 ### Leads data grid column details
@@ -118,17 +116,17 @@ No more than one `Checkbox` can be selected at a time, and only rows with active
 
 Possible values of `Type` are: `One-time` or `Repeat.`.
 
-Possible values of `Investigation` are: `None`, `Inactive`, `Active`, `Active #N` or `Done T #N`.
+Possible values of `Investigation` include: `None`, `Inactive`, `Active`, `Active #N`, `Done T #N`, or `Abandoned`
+(terminal investigations shown when **Past investigations** filter is selected; see toolbar section above).
 
 `Active` applies only for leads that are not repeatable.
 
 `Active #N` applies only for leads that are repeatable. First investigation is `#1`, second is `#2`, etc.
 
-`Done T #N` applies to archived rows created from a successful investigation:
+`Done T #N` applies to rows in **Past investigations** that come from a successful investigation:
 
-- For a one-time lead, the archived lead row shows `Done T #N` when the lead became archived because of that
-  successful investigation.
-- For a repeatable lead, each completed investigation gets its own archived row with `Done T #N`.
+- For a one-time lead, the row shows `Done T #N` when the lead appears there because it became **Archived** after that success ([About Lead Discovery](../about_lead_discovery.md)).
+- For a repeatable lead, each completed investigation has its own **Past investigations** row with `Done T #N`.
 
 `T #` is the turn number at which the investigation was completed. To be exact, if investigation completed when advancing
 from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
@@ -148,6 +146,9 @@ from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 - The upper bound assumes actual difficulty is equal to visible difficulty.
 - `Mid` is the midpoint between lower and upper `turn advancement success chance`.
 - `Err` is half the distance between lower and upper `turn advancement success chance`.
+
+When `Past investigations` is selected, terminal investigation rows use `Success %` chips `Done` or `Abandoned`
+instead of a success-chance range.
 
 ## Agents data grid for leads
 

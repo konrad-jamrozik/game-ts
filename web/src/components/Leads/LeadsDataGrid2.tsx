@@ -33,6 +33,7 @@ import {
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
+import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
 import { LEADS_SCREEN_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
@@ -132,7 +133,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
   )
 }
 
-type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done'
+type LeadInvestigationStatus2 = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned'
 
 type LeadRow2 = {
   rowId: GridRowId
@@ -179,7 +180,8 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
     repeatable: lead.repeatable,
   }
 
-  const repeatableDoneRows = bldRepeatableDoneLeadRows2(lead, investigationsForLead)
+  const investigationHistoryRowsForPastFilter =
+    bldInvestigationHistoryRowsForPastFilter2(lead, investigationsForLead)
 
   if (rowStatus === 'inactive') {
     return [
@@ -188,7 +190,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigation: 'Inactive',
         investigationStatus: 'Inactive',
       },
-      ...repeatableDoneRows,
+      ...investigationHistoryRowsForPastFilter,
     ]
   }
 
@@ -202,11 +204,11 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigationIdDigits: fmtLeadInvestigationIdDigits(activeInvestigation.id),
         ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
       },
-      ...repeatableDoneRows,
+      ...investigationHistoryRowsForPastFilter,
     ]
   }
 
-  if (rowStatus === 'archived' && !lead.repeatable && doneInvestigation !== undefined) {
+  if (rowStatus === 'past' && !lead.repeatable && doneInvestigation !== undefined) {
     return [
       {
         ...rowBase,
@@ -214,7 +216,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigationStatus: 'Done',
         investigationIdDigits: fmtLeadInvestigationIdDigits(doneInvestigation.id),
       },
-      ...repeatableDoneRows,
+      ...investigationHistoryRowsForPastFilter,
     ]
   }
 
@@ -224,29 +226,45 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
       investigation: 'None',
       investigationStatus: 'None',
     },
-    ...repeatableDoneRows,
+    ...investigationHistoryRowsForPastFilter,
   ]
 }
 
-function bldRepeatableDoneLeadRows2(lead: Lead, investigationsForLead: readonly LeadInvestigation[]): LeadRow2[] {
-  if (!lead.repeatable) {
-    return []
-  }
+function bldInvestigationHistoryRowsForPastFilter2(
+  lead: Lead,
+  investigationsForLead: readonly LeadInvestigation[],
+): LeadRow2[] {
+  const terminal = lead.repeatable
+    ? investigationsForLead.filter((i) => i.state === 'Done' || i.state === 'Abandoned')
+    : investigationsForLead.filter((i) => i.state === 'Abandoned')
 
-  return investigationsForLead
-    .filter((investigation) => investigation.state === 'Done')
-    .toSorted(compareLeadInvestigationsByCompletionTurn2)
-    .map((investigation) => ({
-      rowId: `done:${investigation.id}`,
+  return terminal.toSorted(compareLeadInvestigationsByCompletionTurn2).map((investigation) => {
+    if (investigation.state === 'Done') {
+      return {
+        rowId: `done:${investigation.id}`,
+        id: lead.id,
+        status: 'past',
+        lead: lead.name,
+        difficulty: lead.difficulty,
+        repeatable: lead.repeatable,
+        investigation: fmtDoneInvestigation2(investigation),
+        investigationStatus: 'Done',
+        investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
+      } satisfies LeadRow2
+    }
+
+    return {
+      rowId: `abandoned:${investigation.id}`,
       id: lead.id,
-      status: 'archived',
+      status: 'past',
       lead: lead.name,
       difficulty: lead.difficulty,
       repeatable: lead.repeatable,
-      investigation: fmtDoneInvestigation2(investigation),
-      investigationStatus: 'Done',
+      investigation: 'Abandoned',
+      investigationStatus: 'Abandoned',
       investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
-    }))
+    } satisfies LeadRow2
+  })
 }
 
 function bldActiveInvestigationDetails2(
@@ -356,14 +374,22 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'successChance',
       headerName: 'Success %',
       width: columnWidths['leads_screen.success_chance'],
-      renderCell: (params: GridRenderCellParams<LeadRow2>) => fmtSuccessChanceRange2(params.row),
+      renderCell: (params: GridRenderCellParams<LeadRow2>): React.JSX.Element | string => {
+        if (params.row.investigationStatus === 'Done') {
+          return <MyChip chipValue="Done" />
+        }
+        if (params.row.investigationStatus === 'Abandoned') {
+          return <MyChip chipValue="Abandoned" reverseColor={true} />
+        }
+        return fmtSuccessChanceRange2(params.row)
+      },
     },
   ]
 }
 
 function getLeadFilterType2(status: ReturnType<typeof getLeadStatus>): LeadsFilterType {
   if (status.isArchived) {
-    return 'archived'
+    return 'past'
   }
   if (status.isInactive) {
     return 'inactive'

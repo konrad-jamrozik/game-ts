@@ -31,7 +31,7 @@ export function LeadsDataGrid(): React.JSX.Element {
   // Get all discovered leads using shared logic
   const discoveredLeads = getDiscoveredLeads(gameState)
 
-  // Transform all discovered leads to rows (active, inactive, and archived)
+  // Transform all discovered leads to rows (active, inactive, and archived-for-past-filter)
   const allRows: LeadRow[] = discoveredLeads.map((lead, index) => {
     const investigationsForLead = Object.values(gameState.leadInvestigations).filter(
       (investigation) => investigation.leadId === lead.id,
@@ -66,7 +66,7 @@ export function LeadsDataGrid(): React.JSX.Element {
     if (filterType === 'inactive') {
       return row.isInactive
     }
-    // filterType === 'archived'
+    // filterType === 'past'
     return row.isArchived
   })
 
