@@ -38,6 +38,7 @@ export const columnWidths = {
   'leads_screen.difficulty': 80,
   'leads_screen.repeatable': 100,
   'leads_screen.investigation': 130,
+  'leads_screen.investigation_id': 72,
   'leads_screen.agents': 80,
   'leads_screen.progress': 100,
   'leads_screen.projected': 100,

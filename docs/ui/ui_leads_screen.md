@@ -72,6 +72,7 @@ This grid has rows with following columns:
 | Diff.     | The difficulty of the lead.            | `10`                                |
 | Type      | Lead type.                             | `Repeatable`                        |
 | Investig. | Investigation status.                  | `Active, #3`                        |
+| ID        | Investigation ID.                      | `042`                               |
 | Agents    | Number of agents assigned to the lead. | `2`                                 |
 | Progress  | Progress on the lead                   | `8.0/10`                            |
 | Projected | Projected progress on the lead         | `+1.74`                             |
@@ -134,7 +135,11 @@ from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 
 `#N` is padded to width 3, so e.g. `Done T   7` or `Done T 623`.
 
-`Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None`.
+#### Investigation columns
+
+`ID`, `Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None`.
+
+`ID` is the ID of the investigation, just the number (including leading zeros).
 
 `Success %` is the `turn advancement success chance range`. The range exists only because the exact
 `actualDifficulty` is hidden from the player:
@@ -194,6 +199,12 @@ The toolbar of the data grid has following filters, where any number (0 to all) 
 - If `Recovering` is selected, agents in state `Recovering` are shown.
 
 If no filters is selected, no rows will be displayed, and the data grid should display "Please select at least one filter above".
+
+### Agents data grid column details
+
+When an agent is on investigation, the `Assignment` columns says `Investigating`,
+and `Assignment` column says `invst-NNN` where `NNN` is the investigation ID. It is the same number that shows in the
+`ID` column of the leads data grid.
 
 ## Leads summary
 

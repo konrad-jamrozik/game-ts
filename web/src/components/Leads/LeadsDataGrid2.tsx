@@ -15,6 +15,7 @@ import { inTransitWithAssignmentId, investigatingAgents } from '../../lib/model_
 import { getDiscoveredLeads, getLeadStatus } from '../../lib/model_utils/leadUtils'
 import { fmtDec1, fmtDec2 } from '../../lib/primitives/formatPrimitives'
 import { ceil, floor } from '../../lib/primitives/mathPrimitives'
+import { fmtLeadInvestigationIdDigits } from '../../lib/model_utils/formatUtils'
 import {
   getLeadProgressFromAgents,
   getLeadTeamPower,
@@ -143,6 +144,7 @@ type LeadRow2 = {
   investigation: string
   investigationStatus: LeadInvestigationStatus2
   activeInvestigationId?: LeadInvestigationId
+  investigationIdDigits?: string
   agents?: number
   progress?: number
   projectedProgress?: number
@@ -197,6 +199,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         investigation: fmtActiveInvestigation(lead, gameState),
         investigationStatus: 'Active',
         activeInvestigationId: activeInvestigation.id,
+        investigationIdDigits: fmtLeadInvestigationIdDigits(activeInvestigation.id),
         ...bldActiveInvestigationDetails2(activeInvestigation, lead, gameState.agents),
       },
       ...repeatableDoneRows,
@@ -209,6 +212,7 @@ function bldLeadRowsForLead2(lead: Lead, gameState: GameState): LeadRow2[] {
         ...rowBase,
         investigation: fmtDoneInvestigation2(doneInvestigation),
         investigationStatus: 'Done',
+        investigationIdDigits: fmtLeadInvestigationIdDigits(doneInvestigation.id),
       },
       ...repeatableDoneRows,
     ]
@@ -241,6 +245,7 @@ function bldRepeatableDoneLeadRows2(lead: Lead, investigationsForLead: readonly 
       repeatable: lead.repeatable,
       investigation: fmtDoneInvestigation2(investigation),
       investigationStatus: 'Done',
+      investigationIdDigits: fmtLeadInvestigationIdDigits(investigation.id),
     }))
 }
 
@@ -301,6 +306,12 @@ function getLeadColumns2(): GridColDef<LeadRow2>[] {
       field: 'investigation',
       headerName: 'Investig.',
       width: columnWidths['leads_screen.investigation'],
+    },
+    {
+      field: 'investigationIdDigits',
+      headerName: 'ID',
+      width: columnWidths['leads_screen.investigation_id'],
+      renderCell: (params: GridRenderCellParams<LeadRow2, string | undefined>) => params.value ?? '',
     },
     {
       field: 'agents',

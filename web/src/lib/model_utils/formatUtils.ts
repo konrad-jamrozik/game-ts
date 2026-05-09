@@ -50,6 +50,11 @@ export function fmtLeadInvestigationId(numericId: number): LeadInvestigationId {
   return `investigation-${numericId.toString().padStart(3, '0')}`
 }
 
+/** Padded numeric segment for leads grid `ID` column (e.g. `042`); matches `invst-042` in agents assignment column. */
+export function fmtLeadInvestigationIdDigits(id: LeadInvestigationId): string {
+  return fmtNoPrefix(id, 'investigation-')
+}
+
 export function fmtEnemyId(type: EnemyType, numericId: number): EnemyId {
   return `enemy-${type}-${numericId.toString().padStart(3, '0')}`
 }
@@ -124,7 +129,7 @@ export function fmtIdForDisplay(
     const investigation = gameState.leadInvestigations[investigationId]
     assertDefined(investigation, `Lead investigation with id ${investigationId} not found`)
     const lead = getLeadById(investigation.leadId)
-    const numericPart = fmtNoPrefix(investigationId, 'investigation-')
+    const numericPart = fmtLeadInvestigationIdDigits(investigationId)
     return `${numericPart} ${lead.name}`
   }
 

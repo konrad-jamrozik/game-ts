@@ -31,6 +31,7 @@ export const LEADS_SCREEN_DATA_GRID_WIDTH =
   columnWidths['leads_screen.difficulty'] +
   columnWidths['leads_screen.repeatable'] +
   columnWidths['leads_screen.investigation'] +
+  columnWidths['leads_screen.investigation_id'] +
   columnWidths['leads_screen.agents'] +
   columnWidths['leads_screen.progress'] +
   columnWidths['leads_screen.projected'] +
