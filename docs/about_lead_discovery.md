@@ -9,8 +9,7 @@ Leads are discovered when their dependencies are met. Once discovered, leads can
 - **Active**: The lead is discovered and not archived or inactive (see below)
 - **Inactive**: The lead was discovered but is temporarily unavailable due to negated dependencies
 - **Archived**: The lead is permanently completed or no longer relevant
-
-An **available** lead is an **active** lead that the game allows you to **start an investigation** on (or add agents to): it has **no active investigation**, and if the lead is **one-time** (`repeatable === false` in data), it has **not** already been successfully investigated. Repeatable leads can be available again after a prior investigation completes, as long as no investigation is currently active for that lead. See `getAvailableLeadsForInvestigation` in [`web/src/lib/model_utils/leadUtils.ts`](../web/src/lib/model_utils/leadUtils.ts).
+- **Available**: The lead is `active` and a new investigation can be started for it.
 
 ## Dependency Types
 
@@ -46,7 +45,9 @@ Active does **not** by itself mean a new investigation can be started: a lead ca
 
 ### Available lead
 
-**Available** means **active** and eligible to start (or join) an investigation under the current rules: **no** `Active` lead investigation for that lead, and either the lead is **repeatable** or it has **never** been successfully investigated (`leadInvestigationCounts[leadId] === 0`).
+**Available** means **active** and eligible to start a new investigation under the current rules:
+- **no** `Active` lead investigation for that lead,
+- and either the lead is **repeatable** or it has **never** been successfully investigated (`leadInvestigationCounts[leadId] === 0`).
 
 ### Inactive
 

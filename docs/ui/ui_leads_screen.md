@@ -4,23 +4,24 @@ This document describes the UI design for agent lead investigations: the leads s
 data grids, toolbars, and empty or disabled states.
 
 - [Lead investigations UI (Leads screen)](#lead-investigations-ui-leads-screen)
-- [Screen layout](#screen-layout)
+- [Leads Screen layout](#leads-screen-layout)
 - [Navigating between command center screen and leads screen](#navigating-between-command-center-screen-and-leads-screen)
 - [Investigating a lead](#investigating-a-lead)
 - [Leads data grid](#leads-data-grid)
   - [Leads data grid title](#leads-data-grid-title)
-  - [Leads data grid toolbar](#leads-data-grid-toolbar)
+  - [Leads data grid filters toolbar](#leads-data-grid-filters-toolbar)
   - [Leads data grid column details](#leads-data-grid-column-details)
+    - [Investigation columns](#investigation-columns)
 - [Agents data grid for leads](#agents-data-grid-for-leads)
   - [Agents data grid title](#agents-data-grid-title)
-  - [Agents data grid toolbar](#agents-data-grid-toolbar)
-- [Leads summary](#leads-summary)
-- [Completed Investigations](#completed-investigations)
-- [Empty And Disabled States](#empty-and-disabled-states)
+  - [Agents data grid filters toolbar](#agents-data-grid-filters-toolbar)
+  - [Agents data grid column details](#agents-data-grid-column-details)
+- [Leads summary in situation report panel](#leads-summary-in-situation-report-panel)
+- [See also](#see-also)
 
-## Screen layout
+# Leads Screen layout
 
-The lead investigations UI is composed of following UI components
+The leads screen is composed of following UI components
 
 - `Leads screen`
   - 1st row
@@ -40,14 +41,14 @@ The lead investigations UI is composed of following UI components
   - Inside the `Situation report` panel:
     - `Leads summary` data grid
 
-## Navigating between command center screen and leads screen
+# Navigating between command center screen and leads screen
 
 The player can click on the `Leads` button in the `Game controls` panel.
 It is placed to the left of the `Charts` button.
 
 Clicking the `"Back to command center" button` in the `Leads screen` takes the player back to the command center.
 
-## Investigating a lead
+# Investigating a lead
 
 Once player selects one lead in `Leads data grid` and at least one available agent in `Agents data grid for leads`,
 then the `"Investigate lead" button` becomes enabled. Clicking it will start the investigation with the selected lead and agents.
@@ -61,7 +62,7 @@ If a lead is selected but no agents are selected, the button becomes disabled sa
 
 Note we assume at most one lead can be selected at a time, and only active lead can be selected.
 
-## Leads data grid
+# Leads data grid
 
 This grid has rows with following columns:
 
@@ -79,7 +80,7 @@ This grid has rows with following columns:
 | Eff.      | Investigation efficiency.              | `87%`                               |
 | Success % | Success chance range.                  | `~16% ± 10%`                        |
 
-### Leads data grid title
+## Leads data grid title
 
 Rendered as:
 
@@ -89,7 +90,7 @@ Leads: {all}
 
 `{all}` is the total count of leads that are not archived.
 
-### Leads data grid toolbar
+## Leads data grid filters toolbar
 
 The toolbar of the data grid has following filters, where always exactly 1 filter must be selected:
 
@@ -115,7 +116,9 @@ If `Archived` is selected, only archived lead investigation rows and archived le
 If the user unselects `Inactive` or `Archived`, then `Active` is selected automatically.
 If `Active` is selected, user cannot unselect it.
 
-### Leads data grid column details
+If the selected filters result in no rows being displayed, then the data grid should display "No leads found using selected filters".
+
+## Leads data grid column details
 
 No more than one `Checkbox` can be selected at a time, and only rows with active leads can be selected.
 
@@ -142,7 +145,7 @@ from turn `K` to `K+1`, then `#N` corresponds to `#K+1`.
 
 `Obsolete` applies to **Archived** rows that come from an archived lead without a corresponding archived lead investigation. The `Obsolete` chip uses the same gray color as other gray chips.
 
-#### Investigation columns
+### Investigation columns
 
 `ID`, `Agents`, `Progress`, `Projected`, `Efficiency`, `Success %` are all empty if investigation is `None`.
 
@@ -161,20 +164,20 @@ For `Obsolete` rows, `ID`, `Agents`, `Progress`, `Projected`, and `Efficiency` a
 When `Archived` is selected, archived rows use `Success %` chips `Done`, `Abandoned`, or `Obsolete`
 instead of a success-chance range. `Obsolete` uses the "neutral" chip color.
 
-## Agents data grid for leads
+# Agents data grid for leads
 
 This grid has rows with following columns:
 
-| Column     | Description                   | Example        |
-| ---------- | ----------------------------- | -------------- |
-| Checkbox   | Mult-row selection checkbox   | N/A            |
-| ID         | The id of the agent.          | `agent-000`    |
-| State      | The state of the agent        | `Available`    |
-| Assignment | The assignment of the agent   | `Standby`      |
-| Skill      | The skill of the agent        | `85/100 (85%)` |
-| Exhaustion | The exhaustion of the agent   | `20.0%`        |
+| Column     | Description                 | Example        |
+| ---------- | --------------------------- | -------------- |
+| Checkbox   | Mult-row selection checkbox | N/A            |
+| ID         | The id of the agent.        | `agent-000`    |
+| State      | The state of the agent      | `Available`    |
+| Assignment | The assignment of the agent | `Standby`      |
+| Skill      | The skill of the agent      | `85/100 (85%)` |
+| Exhaustion | The exhaustion of the agent | `20.0%`        |
 
-### Agents data grid title
+## Agents data grid title
 
 Rendered on a single line, left aligned:
 
@@ -186,7 +189,7 @@ Agents: {allActive}
 
 The filter-specific counts are displayed next to the toolbar filters instead of in the title.
 
-### Agents data grid toolbar
+## Agents data grid filters toolbar
 
 The toolbar of the data grid has following filters, where any number (0 to all) can be selected:
 
@@ -212,32 +215,39 @@ The toolbar of the data grid has following filters, where any number (0 to all) 
 
 If no filters is selected, no rows will be displayed, and the data grid should display "Please select at least one filter above".
 
-### Agents data grid column details
+If the selected filters result in no rows being displayed, then the data grid should display "No agents found using selected filters".
+
+## Agents data grid column details
 
 When an agent is on investigation, the `Assignment` columns says `Investigating`,
 and `Assignment` column says `invst-NNN` where `NNN` is the investigation ID. It is the same number that shows in the
 `ID` column of the leads data grid.
 
-## Leads summary
+# Leads summary in situation report panel
 
-KJA leads TODO write this section
+The `Leads summary` appears in the `Situation report` panel on the command center screen.
 
-## Empty And Disabled States
+It is rendered as a compact data grid with following columns:
 
-KJA leads TODO adapt this section
+| Column | Example          |
+| ------ | ---------------- |
+| Item   | `Investigations` |
+| Count  | `2`              |
 
-When no lead is available, the empty state explains the gameplay cause instead of showing an empty
-list alone.
+It has following rows:
 
-```text
-No leads available. Complete missions or interrogate captives to uncover new leads.
-```
+| Item              | Count                                           |
+| ----------------- | ----------------------------------------------- |
+| `Investigations`  | Number of lead investigations in `Active` state |
+| `Available leads` | Number of available leads                       |
 
-When a lead cannot start because another active investigation already exists for that lead, the
-disabled state names the blocking investigation.
+An `Active investigation` is a lead investigation that is `Active`, meaning it is currently being investigated by
+at least one agent. See [About Agent Lead Investigation System](../design/about_lead_investigations.md#active-lead-investigation).
 
-```text
-Already investigating this lead.
-```
+An `Available lead` is a lead that is active and can start a new investigation. See
+[About Lead Discovery](../about_lead_discovery.md#available-lead).
 
-For gameplay rules (progress, success chance, difficulty), see [About Agent Lead Investigation System](../design/about_lead_investigations.md).
+# See also
+
+- [About Lead Discovery](../about_lead_discovery.md)
+- [About Lead Investigations](../design/about_lead_investigations.md)

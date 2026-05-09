@@ -39,15 +39,19 @@ Every lead has following stored properties:
 
 ## Repeatable Lead
 
-A **repeatable lead** can have multiple completed investigations, but only one active investigation
+A **repeatable lead** can have multiple successfully completed investigations, but only one active investigation
 for that lead can exist at a time. Repeatable leads usually represent recurring ways to find
 missions, such as locating faction members or bases.
 
+There can be any amount of abandoned investigations for a repeatable lead.
+
 ## One-time Lead
 
-A **one-time lead** (`repeatable === false`) can have only one completed investigation. One-time leads usually
-represent progression steps, such as interrogating a captured target or resolving an endgame
+A **one-time lead** (`repeatable === false`) can have only one successfully completed investigation.
+One-time leads usually represent progression steps, such as interrogating a captured target or resolving an endgame
 objective.
+
+There can be any amount of abandoned investigations for a one-time lead.
 
 ## Lead Investigation Stored Properties
 
@@ -171,15 +175,23 @@ Lead investigations UI (Leads screen layout, grids, toolbars, and states) is doc
 
 ## Player-facing concepts
 
-- **`Lead`:** An investigation target that can have `lead investigation` records started for it.
+- **`Lead`:** An investigation target that can have a `lead investigation` started for it.
+
+- **`Available lead`:** A `lead` that is active and a new `lead investigation` can be started for it.
 
 - **`Repeatable lead`:** A `lead` that can be investigated repeatably, but only once at a time.
 
 - **`One-time lead`:** A `lead` with `repeatable === false`. It can complete at most one investigation; after that it becomes archived (unless other archive rules apply).
 
-- **`Lead investigation`:** A state object representing one active or past investigation of a `lead`.
+- **`Lead investigation`:** A state object representing one active or archived investigation of a `lead`.
+
+- **Active lead investigation**: A `lead investigation` that is `Active`, meaning it is currently being investigated by
+  at least one agent. If the investigation completes successfully on turn advancement, or all agents assigned to it
+  became unassigned, it becomes `Archived lead investigation`.
 
 - **`Archived lead investigation`:** A `lead investigation` that is either `Done` or `Abandoned`.
+  - Investigation is `Done` if it succeeded on turn advancement.
+  - Investigation becomes `Abandoned` if all assigned agents are unassigned.
 
 - **`Lead visible difficulty`:** The `lead`'s player-facing difficulty value. It is the `progress`
   denominator and establishes the lower bound of `lead investigation actual difficulty`.

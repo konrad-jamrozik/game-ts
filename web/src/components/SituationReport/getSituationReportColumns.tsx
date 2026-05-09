@@ -13,12 +13,17 @@ export type SituationReportRow = {
   levelProgressPct?: number
 }
 
-export function getSituationReportColumns(): GridColDef<SituationReportRow>[] {
+type SituationReportColumnOptions = {
+  metricHeaderName?: string
+  valueHeaderName?: string
+}
+
+export function getSituationReportColumns(options?: SituationReportColumnOptions): GridColDef<SituationReportRow>[] {
   const columns: GridColDef<SituationReportRow>[] = [
-    { field: 'metric', headerName: 'Metric', width: columnWidths['situation_report.metric'] },
+    { field: 'metric', headerName: options?.metricHeaderName ?? 'Metric', width: columnWidths['situation_report.metric'] },
     {
       field: 'value',
-      headerName: 'Value',
+      headerName: options?.valueHeaderName ?? 'Value',
       width: columnWidths['situation_report.value'],
       cellClassName: (params: GridCellParams<SituationReportRow>): string =>
         params.row.panicPct !== undefined || params.row.levelProgressPct !== undefined

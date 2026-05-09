@@ -116,7 +116,7 @@ export function AgentsDataGridForLeads2(): React.JSX.Element {
       isRowSelectable={(params: GridRowParams<AgentRow>) => isSelectableLeadAgentRow2(params.row, leadsAgentsFilters)}
       slots={{
         toolbar: AgentsForLeadsToolbar2,
-        ...(leadsAgentsFilters.length === 0 ? { noRowsOverlay: PleaseSelectLeadAgentFiltersOverlay } : {}),
+        noRowsOverlay: leadsAgentsFilters.length === 0 ? PleaseSelectLeadAgentFiltersOverlay : NoLeadAgentsFoundOverlay,
       }}
       slotProps={{
         toolbar: {
@@ -212,6 +212,16 @@ function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
     <GridOverlay>
       <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
         Please select at least one filter above
+      </Typography>
+    </GridOverlay>
+  )
+}
+
+function NoLeadAgentsFoundOverlay(): React.JSX.Element {
+  return (
+    <GridOverlay>
+      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+        No agents found using selected filters
       </Typography>
     </GridOverlay>
   )

@@ -13,6 +13,7 @@ import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
+import { getAvailableLeadsForInvestigation } from '../lib/model_utils/leadUtils'
 
 function getFactionRows(
   faction: {
@@ -84,6 +85,7 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPct = toF(panic) * 100
 
   const columns = getSituationReportColumns()
+  const leadsSummaryColumns = getSituationReportColumns({ metricHeaderName: 'Item', valueHeaderName: 'Count' })
 
   const panicRows: SituationReportRow[] = [
     {
@@ -92,6 +94,19 @@ export function SituationReportCard(): React.JSX.Element {
       value: panicPctStr,
       reverseColor: true,
       panicPct,
+    },
+  ]
+
+  const leadsSummaryRows: SituationReportRow[] = [
+    {
+      id: 1,
+      metric: 'Investigations',
+      value: `${Object.values(gameState.leadInvestigations).filter((investigation) => investigation.state === 'Active').length}`,
+    },
+    {
+      id: 2,
+      metric: 'Available leads',
+      value: `${getAvailableLeadsForInvestigation(gameState).length}`,
     },
   ]
 
@@ -117,6 +132,8 @@ export function SituationReportCard(): React.JSX.Element {
             },
           }}
         />
+        <Typography variant="h6">Leads summary</Typography>
+        <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
         {discoveredFactions.map((faction) => {
           const terminated = isFactionTerminated(faction, leadInvestigationCounts)
           return (

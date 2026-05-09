@@ -1,11 +1,13 @@
 import {
   createRowSelectionManager,
   type GridColDef,
+  GridOverlay,
   type GridRenderCellParams,
   type GridRowId,
   type GridRowParams,
   type GridRowSelectionModel,
 } from '@mui/x-data-grid'
+import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import type { Agent } from '../../lib/model/agentModel'
 import type { GameState } from '../../lib/model/gameStateModel'
@@ -121,7 +123,7 @@ export function LeadsDataGrid2(): React.JSX.Element {
       onRowSelectionModelChange={handleRowSelectionChange}
       rowSelectionModel={model}
       isRowSelectable={(params: GridRowParams<LeadRow2>) => !isRowDisabled(params.row)}
-      slots={{ toolbar: LeadsDataGridToolbar }}
+      slots={{ toolbar: LeadsDataGridToolbar, noRowsOverlay: NoLeadsFoundOverlay2 }}
       slotProps={{
         toolbar: {
           filterType,
@@ -131,6 +133,16 @@ export function LeadsDataGrid2(): React.JSX.Element {
       }}
       showToolbar
     />
+  )
+}
+
+function NoLeadsFoundOverlay2(): React.JSX.Element {
+  return (
+    <GridOverlay>
+      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+        No leads found using selected filters
+      </Typography>
+    </GridOverlay>
   )
 }
 
