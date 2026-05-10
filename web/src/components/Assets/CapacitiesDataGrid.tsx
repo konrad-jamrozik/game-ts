@@ -1,16 +1,15 @@
 import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
+import { getUpgradeIncrement, UPGRADE_PRICES } from '../../lib/data_tables/upgrades'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/data_tables/upgrades'
-import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
+import { clearUpgradeSelection, setUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
-import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
+import { getReadOnlyCapabilitiesColumns, getShopCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
-export function CapacitiesDataGrid(): React.JSX.Element {
+export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProps): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const selectedUpgradeName = useAppSelector((state) => state.selection.selectedUpgradeName)
@@ -28,7 +27,7 @@ export function CapacitiesDataGrid(): React.JSX.Element {
       value: `${remainingAgentCap} / ${gameState.agentCap}`,
       remaining: remainingAgentCap,
       total: gameState.agentCap,
-      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Agent cap']),
+      upgrade: getUpgradeIncrement('Agent cap'),
       price: UPGRADE_PRICES['Agent cap'],
     },
     {
@@ -37,7 +36,7 @@ export function CapacitiesDataGrid(): React.JSX.Element {
       value: `${remainingTransportCap} / ${gameState.transportCap}`,
       remaining: remainingTransportCap,
       total: gameState.transportCap,
-      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Transport cap']),
+      upgrade: getUpgradeIncrement('Transport cap'),
       price: UPGRADE_PRICES['Transport cap'],
     },
     {
@@ -46,12 +45,12 @@ export function CapacitiesDataGrid(): React.JSX.Element {
       value: `${remainingTrainingCap} / ${gameState.trainingCap}`,
       remaining: remainingTrainingCap,
       total: gameState.trainingCap,
-      upgrade: fmtUpgradeIncrement(UPGRADE_INCREMENTS['Training cap']),
+      upgrade: getUpgradeIncrement('Training cap'),
       price: UPGRADE_PRICES['Training cap'],
     },
   ]
 
-  function handleUpgradeSelectionChange(newSelectionModel: GridRowSelectionModel): void {
+  function handleCapacitySelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
     const existingRowIds = capacityRows.map((row) => row.id)
     const includedRowIds = existingRowIds.filter((id) => mgr.has(id))
@@ -67,24 +66,38 @@ export function CapacitiesDataGrid(): React.JSX.Element {
     }
   }
 
-  const selectedUpgradeRow = capacityRows.find((row) => row.name === selectedUpgradeName)
-  const upgradeSelectionModel: GridRowSelectionModel = {
+  const selectedCapacityRow = capacityRows.find((row) => row.name === selectedUpgradeName)
+  const capacitySelectionModel: GridRowSelectionModel = {
     type: 'include',
-    ids: selectedUpgradeRow ? new Set<GridRowId>([selectedUpgradeRow.id]) : new Set<GridRowId>(),
+    ids: selectedCapacityRow ? new Set<GridRowId>([selectedCapacityRow.id]) : new Set<GridRowId>(),
   }
 
-  const capacityColumns = getCapabilitiesColumns()
+  if (mode === 'shop') {
+    return (
+      <StyledDataGrid
+        rows={capacityRows}
+        columns={getShopCapabilitiesColumns()}
+        aria-label="Capacities"
+        checkboxSelection
+        rowSelectionModel={capacitySelectionModel}
+        onRowSelectionModelChange={handleCapacitySelectionChange}
+        disableRowSelectionOnClick={false}
+        disableMultipleRowSelection
+        sx={{
+          '& .capabilities-color-bar-cell': {
+            padding: '4px',
+          },
+        }}
+      />
+    )
+  }
 
   return (
     <StyledDataGrid
       rows={capacityRows}
-      columns={capacityColumns}
+      columns={getReadOnlyCapabilitiesColumns()}
       aria-label="Capacities"
-      checkboxSelection
-      rowSelectionModel={upgradeSelectionModel}
-      onRowSelectionModelChange={handleUpgradeSelectionChange}
-      disableRowSelectionOnClick={false}
-      disableMultipleRowSelection
+      disableRowSelectionOnClick
       sx={{
         '& .capabilities-color-bar-cell': {
           padding: '4px',
@@ -94,9 +107,6 @@ export function CapacitiesDataGrid(): React.JSX.Element {
   )
 }
 
-function fmtUpgradeIncrement(increment: number | Fixed6): number | string {
-  if (isF6(increment)) {
-    return f6fmtDec2(increment)
-  }
-  return increment
+type CapacitiesDataGridProps = {
+  mode?: 'readOnly' | 'shop'
 }

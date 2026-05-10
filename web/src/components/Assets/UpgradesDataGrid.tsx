@@ -5,7 +5,7 @@ import { UPGRADE_PRICES, UPGRADE_INCREMENTS } from '../../lib/data_tables/upgrad
 import { setUpgradeSelection, clearUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
-import { getCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
+import { getShopCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function UpgradesDataGrid(): React.JSX.Element {
@@ -75,7 +75,7 @@ export function UpgradesDataGrid(): React.JSX.Element {
     ids: selectedUpgradeRow ? new Set<GridRowId>([selectedUpgradeRow.id]) : new Set<GridRowId>(),
   }
 
-  const upgradeColumns = getCapabilitiesColumns()
+  const upgradeColumns = getShopCapabilitiesColumns()
 
   return (
     <StyledDataGrid

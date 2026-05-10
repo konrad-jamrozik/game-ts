@@ -8,8 +8,7 @@ export const columnWidths = {
 
   // Assets columns
   'assets.name': 160,
-  'assets.value': 100,
-  'assets.projected': 120,
+  'assets.value': 160,
 
   // Capabilities columns
   'capabilities.name': 180,

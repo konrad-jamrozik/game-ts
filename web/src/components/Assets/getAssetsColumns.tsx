@@ -8,7 +8,6 @@ export type AssetRow = {
   name: 'Money' | 'Agents' | 'Funding'
   displayedName?: string
   value: number
-  projected?: number
   diff?: number
 }
 
@@ -27,27 +26,24 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
       field: 'value',
       headerName: 'Current',
       width: columnWidths['assets.value'],
-    },
-    {
-      field: 'projected',
-      headerName: 'Projected',
-      width: columnWidths['assets.projected'],
-      renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
-        const { diff, name, projected } = params.row
-
-        if (projected === undefined) {
-          return <span />
-        }
-
-        return (
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span aria-label={`balance-sheet-row-${name.toLowerCase()}-projected`}>{projected}</span>
-            {diff !== undefined && <MyChip chipValue={diff} />}
-          </div>
-        )
-      },
+      renderCell: getAssetValueCell,
     },
   ]
 
   return columns
+}
+
+function getAssetValueCell(params: GridRenderCellParams<AssetRow>): React.JSX.Element {
+  const { diff, name, value } = params.row
+
+  if (name !== 'Money') {
+    return <span>{value}</span>
+  }
+
+  return (
+    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+      <span aria-label={`balance-sheet-row-${name.toLowerCase()}-current`}>{value}</span>
+      {diff !== undefined && <MyChip chipValue={diff} />}
+    </div>
+  )
 }

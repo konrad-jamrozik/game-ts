@@ -9,6 +9,7 @@ import {
   setViewCharts,
   setViewLeads,
   setViewMissions,
+  setViewUpgrades,
 } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
@@ -49,6 +50,10 @@ export function GameControls(): React.JSX.Element {
 
   function handleLeads(): void {
     dispatch(setViewLeads())
+  }
+
+  function handleUpgrades(): void {
+    dispatch(setViewUpgrades())
   }
 
   const gameLost = isGameLost(gameState)
@@ -111,6 +116,11 @@ export function GameControls(): React.JSX.Element {
             </Button>
             <Button variant="contained" onClick={handleCharts} fullWidth>
               Charts
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" onClick={handleUpgrades} fullWidth>
+              Upgrades
             </Button>
           </Stack>
         </Stack>

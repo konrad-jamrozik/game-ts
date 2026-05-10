@@ -67,22 +67,6 @@ Do not run tests, do not run `tsc`, do not run `build`. Only run `qcheck`.
 **Never run `npx`**. Many commands can be run directly, such as `oxlint`, `qcheck`, `format`, `eslint`, `dev`, `depcruise`, etc.
 Refer to `scripts/game-ts.psm1` for the full list of available commands.
 
-## Task completion and communication
-
-**Important**: Every time you finish a task, include a short commit message in your response. The commit message should:
-- Be concise and descriptive
-- Summarize all changes made in the given agent chat session (not just the latest changes)
-- Use imperative mood (e.g., "Add feature" not "Added feature")
-- Optionally include a brief bullet list of key changes if the task was complex
-
-Example:
-
-```text
-Reorganize components into logical subdirectories
-
-Group related components and move utility functions to component-specific files
-```
-
 ## Tech stack
 
 This project uses following technologies:

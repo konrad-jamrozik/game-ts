@@ -20,6 +20,7 @@ export type SelectionState = {
   viewCharts?: true
   viewMissions?: true
   viewAgents?: true
+  viewUpgrades?: true
   // Data grid filter states
   missionsShowArchived?: boolean
   leadsFilterType?: LeadsFilterType
@@ -103,6 +104,7 @@ const selectionSlice = createSlice({
       delete state.viewCharts
       delete state.viewMissions
       delete state.viewAgents
+      delete state.viewUpgrades
       // Clear data grid filter states
       delete state.missionsShowArchived
       delete state.leadsFilterType
@@ -121,6 +123,7 @@ const selectionSlice = createSlice({
       delete state.viewCharts
       delete state.viewMissions
       delete state.viewAgents
+      delete state.viewUpgrades
     },
     clearViewMissionDetails(state) {
       delete state.viewMissionDetailsId
@@ -130,6 +133,7 @@ const selectionSlice = createSlice({
       delete state.viewCharts
       delete state.viewMissions
       delete state.viewAgents
+      delete state.viewUpgrades
       delete state.viewMissionDetailsId
     },
     clearViewLeads(state) {
@@ -140,6 +144,7 @@ const selectionSlice = createSlice({
       delete state.viewLeads
       delete state.viewMissions
       delete state.viewAgents
+      delete state.viewUpgrades
       delete state.viewMissionDetailsId
     },
     clearViewCharts(state) {
@@ -150,6 +155,7 @@ const selectionSlice = createSlice({
       delete state.viewLeads
       delete state.viewCharts
       delete state.viewAgents
+      delete state.viewUpgrades
       delete state.viewMissionDetailsId
     },
     clearViewMissions(state) {
@@ -160,10 +166,22 @@ const selectionSlice = createSlice({
       delete state.viewLeads
       delete state.viewCharts
       delete state.viewMissions
+      delete state.viewUpgrades
       delete state.viewMissionDetailsId
     },
     clearViewAgents(state) {
       delete state.viewAgents
+    },
+    setViewUpgrades(state) {
+      state.viewUpgrades = true
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
+      delete state.viewMissionDetailsId
+    },
+    clearViewUpgrades(state) {
+      delete state.viewUpgrades
     },
     // Data grid filter reducers
     setMissionsShowArchived(state, action: PayloadAction<boolean>) {
@@ -236,6 +254,8 @@ export const {
   clearViewMissions,
   setViewAgents,
   clearViewAgents,
+  setViewUpgrades,
+  clearViewUpgrades,
   // Data grid filter actions
   setMissionsShowArchived,
   setLeadsFilterType,

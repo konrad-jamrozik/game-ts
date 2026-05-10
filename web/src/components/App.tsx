@@ -6,17 +6,16 @@ import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { AIPlayerCard } from './GameControls/AIPlayerCard'
-import { UpgradeActions } from './GameControls/UpgradeActions'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
 import { AssetsCard } from './Assets/AssetsCard'
 import { CapacitiesCard } from './Assets/CapacitiesCard'
-import { UpgradesCard } from './Assets/UpgradesCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
 import { LeadsScreen } from './Leads/LeadsScreen'
 import { MissionsScreen } from './Missions/MissionsScreen'
 import { AgentsScreen } from './Agents/AgentsScreen'
+import { UpgradesScreen } from './Upgrades/UpgradesScreen'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
@@ -27,6 +26,7 @@ function App(): React.JSX.Element {
   const viewMissions = useAppSelector((state) => state.selection.viewMissions)
   const viewAgents = useAppSelector((state) => state.selection.viewAgents)
   const viewCharts = useAppSelector((state) => state.selection.viewCharts)
+  const viewUpgrades = useAppSelector((state) => state.selection.viewUpgrades)
 
   useEffect(() => {
     runAppInit()
@@ -79,6 +79,15 @@ function App(): React.JSX.Element {
     )
   }
 
+  if (viewUpgrades) {
+    return (
+      <Fragment>
+        <UpgradesScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
   if (viewMissionDetailsId !== undefined) {
     return (
       <Fragment>
@@ -109,14 +118,12 @@ function App(): React.JSX.Element {
         <Stack spacing={2} alignItems="center">
           <GameControls />
           <AIPlayerCard />
-          <UpgradeActions />
         </Stack>
       </Grid>
       <Grid>
         <Stack spacing={2}>
           <AssetsCard />
           <CapacitiesCard />
-          <UpgradesCard />
           <SituationReportCard />
           <TurnReportCard />
         </Stack>

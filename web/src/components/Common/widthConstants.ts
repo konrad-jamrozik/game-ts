@@ -50,16 +50,10 @@ export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =
   columnWidths['agents.mission'] +
   columnWidths['agents.by']
 
-export const ASSETS_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value'] + columnWidths['assets.projected']
+export const ASSETS_DATA_GRID_WIDTH = DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value']
 
 export const CAPABILITIES_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH +
-  columnWidths['capabilities.name'] +
-  columnWidths['capabilities.value'] +
-  columnWidths['capabilities.upgrade'] +
-  columnWidths['capabilities.price'] +
-  CHECKMARK_COLUMN_WIDTH
+  DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
 
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['situation_report.metric'] + columnWidths['situation_report.value']
