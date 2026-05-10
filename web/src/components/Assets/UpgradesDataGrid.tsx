@@ -75,12 +75,10 @@ export function UpgradesDataGrid(): React.JSX.Element {
     ids: selectedUpgradeRow ? new Set<GridRowId>([selectedUpgradeRow.id]) : new Set<GridRowId>(),
   }
 
-  const upgradeColumns = getShopCapabilitiesColumns()
-
   return (
     <StyledDataGrid
       rows={upgradeRows}
-      columns={upgradeColumns}
+      columns={getShopCapabilitiesColumns()}
       aria-label="Upgrades"
       checkboxSelection
       rowSelectionModel={upgradeSelectionModel}
