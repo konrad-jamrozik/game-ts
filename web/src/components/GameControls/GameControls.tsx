@@ -88,10 +88,10 @@ export function GameControls(): React.JSX.Element {
         </Stack>
         <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
           <Button variant="contained" onClick={handleExpandAll} fullWidth>
-            Expand all
+            Expand
           </Button>
           <Button variant="contained" onClick={handleCollapseAll} fullWidth>
-            Collapse all
+            Collapse
           </Button>
         </Stack>
         <Stack spacing={2} sx={{ paddingTop: 1 }}>

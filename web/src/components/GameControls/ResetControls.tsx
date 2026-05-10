@@ -145,6 +145,8 @@ export function ResetControls(): React.JSX.Element {
         <Stack>
           <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} alignItems="center" justifyContent="center">
             <LabeledValue label="Actions" value={actionsThisTurn} sx={labelSx} />
+          </Stack>
+          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
             <Button
               variant="contained"
               onClick={handleUndo}
