@@ -13,6 +13,8 @@ import {
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { DebugActions } from './DebugActions'
+import { DebugSettings } from './DebugSettings'
 import { ResetControls } from './ResetControls'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { getCurrentTurnState } from '../../redux/storeUtils'
@@ -114,6 +116,12 @@ export function GameControls(): React.JSX.Element {
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
           <ResetControls />
+        </Stack>
+        <Stack sx={{ paddingTop: 1 }}>
+          <DebugActions />
+        </Stack>
+        <Stack sx={{ paddingTop: 1 }}>
+          <DebugSettings />
         </Stack>
       </Stack>
     </ExpandableCard>

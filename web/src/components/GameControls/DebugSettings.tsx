@@ -1,23 +1,22 @@
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Stack from '@mui/material/Stack'
+import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import { useAppDispatch, useAppSelector } from '../redux/hooks'
-import { ExpandableCard } from './Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
+import { log } from '../../lib/primitives/logger'
+import { LOG_CATEGORIES, LOG_CATEGORY_LIST, type LogCategory } from '../../lib/primitives/logCategories'
+import { rand } from '../../lib/primitives/rand'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import {
-  setRollSuccessfulLeadInvestigations,
-  setRollSuccessfulCombat,
-  setRevealAllFactionProfiles,
-  toggleLogCategory,
   setAllLogCategories,
-} from '../redux/slices/settingsSlice'
-import { rand } from '../lib/primitives/rand'
-import { log } from '../lib/primitives/logger'
-import { LOG_CATEGORIES, type LogCategory, LOG_CATEGORY_LIST } from '../lib/primitives/logCategories'
-import { Typography } from '@mui/material'
+  setRevealAllFactionProfiles,
+  setRollSuccessfulCombat,
+  setRollSuccessfulLeadInvestigations,
+  toggleLogCategory,
+} from '../../redux/slices/settingsSlice'
+import { GameControlsSection } from './GameControlsSection'
 
-export function DebugSettingsCard(): React.JSX.Element {
+export function DebugSettings(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const rollSuccessfulLeadInvestigations =
     useAppSelector((state) => state.settings.rollSuccessfulLeadInvestigations) ?? false
@@ -79,12 +78,7 @@ export function DebugSettingsCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard
-      id="debug-settings"
-      title="Debug settings"
-      defaultExpanded={true}
-      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
-    >
+    <GameControlsSection id="debug-settings" title="Debug settings">
       <Stack spacing={1}>
         <FormControlLabel
           control={<Checkbox checked={revealAllFactionProfiles} onChange={handleRevealAllFactionProfilesChange} />}
@@ -126,6 +120,6 @@ export function DebugSettingsCard(): React.JSX.Element {
           ))}
         </Stack>
       </Stack>
-    </ExpandableCard>
+    </GameControlsSection>
   )
 }

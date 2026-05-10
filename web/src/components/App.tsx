@@ -2,8 +2,6 @@ import Grid from '@mui/material/Grid'
 import Stack from '@mui/material/Stack'
 import { Fragment, useEffect } from 'react'
 import { runAppInit } from './utils/runAppInit'
-import { DebugActionsCard } from './DebugActionsCard'
-import { DebugSettingsCard } from './DebugSettingsCard'
 import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
@@ -105,8 +103,6 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2} alignItems="center">
           <EventLog />
-          <DebugActionsCard />
-          <DebugSettingsCard />
         </Stack>
       </Grid>
       <Grid>

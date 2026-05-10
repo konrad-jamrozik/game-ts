@@ -1,9 +1,7 @@
 import Button from '@mui/material/Button'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { useAppDispatch } from '../redux/hooks'
-import { ExpandableCard } from './Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
+import { useAppDispatch } from '../../redux/hooks'
 import {
   debugSpawnMissions,
   debugSetPanicToZero,
@@ -13,9 +11,10 @@ import {
   debugAddCapabilities,
   debugAddEverything,
   debugTerminateRedDawn,
-} from '../redux/slices/gameStateSlice'
+} from '../../redux/slices/gameStateSlice'
+import { GameControlsSection } from './GameControlsSection'
 
-export function DebugActionsCard(): React.JSX.Element {
+export function DebugActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
 
   function handleSpawnMissions(): void {
@@ -51,12 +50,7 @@ export function DebugActionsCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard
-      id="debug-actions"
-      title="Debug actions"
-      defaultExpanded={true}
-      sx={{ width: LEFT_COLUMN_CARD_WIDTH }}
-    >
+    <GameControlsSection id="debug-actions" title="Debug actions">
       <Stack spacing={1}>
         <Button variant="contained" onClick={handleAddEverything}>
           Add everything
@@ -83,6 +77,6 @@ export function DebugActionsCard(): React.JSX.Element {
           Terminate Red Dawn
         </Button>
       </Stack>
-    </ExpandableCard>
+    </GameControlsSection>
   )
 }
