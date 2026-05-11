@@ -4,6 +4,9 @@ import { DataGrid, type GridColDef, type DataGridProps, type GridRowModel } from
 import { sum } from 'radash'
 import { combineSx } from '../styling/stylePrimitives'
 
+const CHECKMARK_COLUMN_WIDTH = 50
+const DATA_GRID_BASE_WIDTH = 10
+
 type StyledDataGridProps = {
   rows: readonly GridRowModel[]
   columns: GridColDef[]
@@ -19,10 +22,12 @@ function defaultSx(theme: Theme): Record<string, unknown> {
 }
 
 export function StyledDataGrid({ rows, columns, sx, ...dataGridProps }: StyledDataGridProps): React.JSX.Element {
-  const colsMinWidth = sum(columns, (col) => col.minWidth ?? 0)
+  const columnsWidth = sum(columns, (col) => col.width ?? col.minWidth ?? 0)
+  const checkboxWidth = dataGridProps.checkboxSelection === true ? CHECKMARK_COLUMN_WIDTH : 0
+  const dataGridWidth = DATA_GRID_BASE_WIDTH + columnsWidth + checkboxWidth
 
   return (
-    <Box minWidth={colsMinWidth}>
+    <Box width={dataGridWidth} minWidth={dataGridWidth}>
       <DataGrid
         rows={rows}
         columns={columns}

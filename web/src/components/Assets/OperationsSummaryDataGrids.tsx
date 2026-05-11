@@ -9,6 +9,15 @@ import { columnWidths } from '../Common/columnWidths'
 import { getSituationReportColumns, type SituationReportRow } from '../SituationReport/getSituationReportColumns'
 
 export function OperationsSummaryDataGrids(): React.JSX.Element {
+  return (
+    <Stack direction="row" spacing={2} alignItems="flex-start">
+      <LeadsSummaryDataGrid />
+      <MissionsSummaryDataGrid />
+    </Stack>
+  )
+}
+
+export function LeadsSummaryDataGrid(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const leadsSummaryColumns = getSituationReportColumns({
     metricHeaderName: 'Leads',
@@ -16,13 +25,6 @@ export function OperationsSummaryDataGrids(): React.JSX.Element {
     metricWidth: columnWidths['operations_summary.name'],
     valueWidth: columnWidths['operations_summary.count'],
   })
-  const missionsSummaryColumns = getSituationReportColumns({
-    metricHeaderName: 'Missions',
-    valueHeaderName: 'Count',
-    metricWidth: columnWidths['operations_summary.name'],
-    valueWidth: columnWidths['operations_summary.count'],
-  })
-
   const leadsSummaryRows: SituationReportRow[] = [
     {
       id: 1,
@@ -36,14 +38,20 @@ export function OperationsSummaryDataGrids(): React.JSX.Element {
     },
   ]
 
+  return <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
+}
+
+export function MissionsSummaryDataGrid(): React.JSX.Element {
+  const gameState = useAppSelector(getCurrentTurnState)
+  const missionsSummaryColumns = getSituationReportColumns({
+    metricHeaderName: 'Missions',
+    valueHeaderName: 'Count',
+    metricWidth: columnWidths['operations_summary.name'],
+    valueWidth: columnWidths['operations_summary.count'],
+  })
   const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
 
-  return (
-    <Stack direction="row" spacing={2} alignItems="flex-start">
-      <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
-      <StyledDataGrid rows={missionsSummaryRows} columns={missionsSummaryColumns} aria-label="Missions summary data" />
-    </Stack>
-  )
+  return <StyledDataGrid rows={missionsSummaryRows} columns={missionsSummaryColumns} aria-label="Missions summary data" />
 }
 
 function buildMissionsSummaryRows(missions: Mission[]): SituationReportRow[] {

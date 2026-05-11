@@ -5,6 +5,7 @@ const BORDER_WIDTH = 1
 const PADDING_WIDTH = 8
 const MUI_DATA_GRID_COLUMN_FILLER = 19
 const DATA_GRID_BASE_WIDTH = 2 * BORDER_WIDTH + 2 * PADDING_WIDTH + MUI_DATA_GRID_COLUMN_FILLER
+const OPERATIONS_DATA_GRID_BASE_WIDTH = 10
 
 export const MISSIONS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
@@ -51,7 +52,7 @@ export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =
   columnWidths['agents.by']
 
 export const ASSET_SUMMARY_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value']
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value']
 
 export const ASSETS_DATA_GRID_WIDTH = 2 * ASSET_SUMMARY_DATA_GRID_WIDTH + 16
 
@@ -59,11 +60,16 @@ export const CAPABILITIES_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
 
 export const OPERATIONS_SUMMARY_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH + columnWidths['operations_summary.name'] + columnWidths['operations_summary.count']
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['operations_summary.name'] + columnWidths['operations_summary.count']
+
+const OPERATIONS_CAPABILITIES_DATA_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
+
+const OPERATIONS_SMALL_DATA_GRID_WIDTH = Math.max(ASSET_SUMMARY_DATA_GRID_WIDTH, OPERATIONS_SUMMARY_DATA_GRID_WIDTH)
 
 export const OPERATIONS_CARD_WIDTH = Math.max(
-  ASSETS_DATA_GRID_WIDTH + CAPABILITIES_DATA_GRID_WIDTH + 48,
-  2 * OPERATIONS_SUMMARY_DATA_GRID_WIDTH + 48,
+  2 * OPERATIONS_SMALL_DATA_GRID_WIDTH + OPERATIONS_CAPABILITIES_DATA_GRID_WIDTH + 48,
+  ASSETS_DATA_GRID_WIDTH,
 )
 
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =

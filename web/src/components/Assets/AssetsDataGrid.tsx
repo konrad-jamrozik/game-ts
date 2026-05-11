@@ -12,12 +12,20 @@ import { getAssetsColumns, type AssetRow } from './getAssetsColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 
 export function AssetsDataGrid(): React.JSX.Element {
-  const gameState = useAppSelector(getCurrentTurnState)
-  const projectedBalanceDiff = getMoneyNewBalance(gameState) - gameState.money
+  return (
+    <Stack direction="row" spacing={2} alignItems="flex-start">
+      <AgentsDataGrid />
+      <FinancesDataGrid />
+    </Stack>
+  )
+}
 
-  const readyAgents = gameState.agents.filter(isReadyAgentForLeadsPanel).length
-  const exhaustedAgents = gameState.agents.filter(isExhaustedAgentForLeadsPanel).length
-  const recoveringAgents = gameState.agents.filter(isRecoveringAgentForLeadsPanel).length
+export function AgentsDataGrid(): React.JSX.Element {
+  const gameState = useAppSelector(getCurrentTurnState)
+
+  const readyAgents = gameState.agents.filter((agent) => isReadyAgentForLeadsPanel(agent)).length
+  const exhaustedAgents = gameState.agents.filter((agent) => isExhaustedAgentForLeadsPanel(agent)).length
+  const recoveringAgents = gameState.agents.filter((agent) => isRecoveringAgentForLeadsPanel(agent)).length
   const activeAgents = gameState.agents.filter((agent) => agent.state !== 'KIA' && agent.state !== 'Sacked').length
   const awayAgents = activeAgents - readyAgents - exhaustedAgents - recoveringAgents
 
@@ -28,18 +36,22 @@ export function AssetsDataGrid(): React.JSX.Element {
     { name: 'Recovering', id: 5, value: recoveringAgents },
     { name: 'Total', id: 1, value: activeAgents },
   ]
+
+  const agentsColumns = getAssetsColumns({ nameHeaderName: 'Agents', valueHeaderName: 'Count' })
+
+  return <StyledDataGrid rows={agentsRows} columns={agentsColumns} aria-label="Agents" />
+}
+
+export function FinancesDataGrid(): React.JSX.Element {
+  const gameState = useAppSelector(getCurrentTurnState)
+  const projectedBalanceDiff = getMoneyNewBalance(gameState) - gameState.money
+
   const financesRows: AssetRow[] = [
     { name: 'Money', id: 1, value: gameState.money },
     { name: 'Projected', id: 2, diff: projectedBalanceDiff },
   ]
 
-  const agentsColumns = getAssetsColumns({ nameHeaderName: 'Agents', valueHeaderName: 'Count' })
   const financesColumns = getAssetsColumns({ nameHeaderName: 'Finances', valueHeaderName: 'Value' })
 
-  return (
-    <Stack direction="row" spacing={2} alignItems="flex-start">
-      <StyledDataGrid rows={agentsRows} columns={agentsColumns} aria-label="Agents" />
-      <StyledDataGrid rows={financesRows} columns={financesColumns} aria-label="Finances" />
-    </Stack>
-  )
+  return <StyledDataGrid rows={financesRows} columns={financesColumns} aria-label="Finances" />
 }
