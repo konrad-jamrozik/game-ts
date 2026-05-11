@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider'
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
 import { BarPlot } from '@mui/x-charts/BarChart'
 import { LinePlot } from '@mui/x-charts/LineChart'
@@ -56,7 +56,7 @@ export function CashFlowChart(props: CashFlowChartProps): React.JSX.Element {
   const { dataset, height } = props
 
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       dataset={dataset}
       xAxis={[
         {
@@ -141,6 +141,6 @@ export function CashFlowChart(props: CashFlowChartProps): React.JSX.Element {
         <ChartsYAxis />
         <ChartsTooltip trigger="axis" />
       </ChartsSurface>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   )
 }

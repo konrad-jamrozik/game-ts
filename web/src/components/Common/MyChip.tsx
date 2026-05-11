@@ -1,4 +1,4 @@
-import { Chip } from '@mui/material'
+import Chip from '@mui/material/Chip'
 import * as React from 'react'
 import { toF, isF6, type Fixed6 } from '../../lib/primitives/fixed6'
 import { f6str } from '../../lib/model_utils/formatUtils'

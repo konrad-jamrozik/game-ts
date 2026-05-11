@@ -31,7 +31,7 @@ export function LeadInvestigationActions(): React.JSX.Element {
   }
 
   return (
-    <Stack spacing={SECTION_GAP} alignItems="center">
+    <Stack spacing={SECTION_GAP} sx={{ alignItems: 'center' }}>
       <Button
         variant="contained"
         onClick={handleInvestigateLeadClick}

@@ -1,4 +1,3 @@
-import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { f6fmtInt, f6fmtPctDec0, toF, toF6 } from '../../lib/primitives/fixed6'
 import type { BattleStats, MissionReport } from '../../lib/model/turnReportModel'
 import { fmtNoPrefix, fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
@@ -8,11 +7,11 @@ import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
  * Format missions report as a tree structure for the MUI Tree View,
  * for the TurnReportTreeView component, to display it as part of the TurnReportCard component.
  */
-export function formatMissions(missions: readonly MissionReport[]): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+export function formatMissions(missions: readonly MissionReport[]): TurnReportTreeViewModelProps[] {
   return missions.map((mission) => formatMissionReport(mission))
 }
 
-function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatMissionReport(mission: MissionReport): TurnReportTreeViewModelProps {
   const displayId = fmtNoPrefix(mission.missionId, 'mission-')
   return {
     id: `mission-${mission.missionId}`,
@@ -47,7 +46,7 @@ function formatMissionReport(mission: MissionReport): TreeViewBaseItem<TurnRepor
 function formatRewards(
   missionId: string,
   rewards: NonNullable<MissionReport['rewards']>,
-): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+): TurnReportTreeViewModelProps {
   const children: TurnReportTreeViewModelProps[] = []
 
   if (rewards.money !== undefined) {
@@ -98,7 +97,7 @@ function formatRewards(
 function formatBattleStats(
   missionId: string,
   battleStats: BattleStats,
-): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+): TurnReportTreeViewModelProps {
   const {
     agentsDeployed,
     agentsUnscathed,

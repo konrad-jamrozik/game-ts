@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts/LineChart'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { toF } from '../../lib/primitives/fixed6'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
@@ -105,7 +105,7 @@ export function PanicChart(props: PanicChartProps): React.JSX.Element {
       height={height}
       grid={{ horizontal: true }}
       sx={{
-        [`& .${lineElementClasses.root}`]: {
+        '& .MuiLineElement-root': {
           display: 'none',
         },
       }}

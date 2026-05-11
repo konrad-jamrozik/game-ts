@@ -40,7 +40,7 @@ export function FactionsScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={CARD_GAP} alignItems="center">
+      <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
         <Typography variant="h5">Factions</Typography>
         <FactionDetailsDataGrid
           factions={factions}

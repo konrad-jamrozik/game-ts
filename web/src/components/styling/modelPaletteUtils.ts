@@ -1,4 +1,4 @@
-import type { ChipPropsColorOverrides } from '@mui/material'
+import type { ChipPropsColorOverrides } from '@mui/material/Chip'
 import type { AgentState } from '../../lib/model/agentModel'
 import type { OverridableStringUnion } from '@mui/types'
 

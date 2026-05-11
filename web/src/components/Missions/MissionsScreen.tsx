@@ -50,8 +50,8 @@ export function MissionsScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
-        <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
+      <Stack direction="row" spacing={CARD_GAP} sx={{ alignItems: 'flex-start', justifyContent: 'center' }}>
+        <Stack spacing={SECTION_GAP} sx={{ alignItems: 'stretch', width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           <MissionDeploymentActions />
           <Button
             variant="contained"
@@ -65,7 +65,7 @@ export function MissionsScreen(): React.JSX.Element {
             Back to command center
           </Button>
         </Stack>
-        <Stack spacing={CARD_GAP} alignItems="center">
+        <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
           <MissionsDataGrid />
           <AgentsDataGridForMissions />
         </Stack>

@@ -1,4 +1,3 @@
-import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import type { AgentsReport, MoneyBreakdown, ValueChange } from '../../lib/model/turnReportModel'
 import { f6fmtValueChange } from '../../lib/model_utils/formatUtils'
 import type { TurnReportTreeViewModelProps } from './TurnReportTreeView'
@@ -11,7 +10,7 @@ export function formatAssets(assetsReport: {
   moneyChange: ValueChange
   agentsReport: AgentsReport
   moneyBreakdown: MoneyBreakdown
-}): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+}): TurnReportTreeViewModelProps[] {
   return [
     formatMoneyReport(assetsReport.moneyChange, assetsReport.moneyBreakdown),
     formatAgentsReport(assetsReport.agentsReport),
@@ -21,7 +20,7 @@ export function formatAssets(assetsReport: {
 function formatMoneyReport(
   moneyChange: ValueChange,
   moneyBreakdown: MoneyBreakdown,
-): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+): TurnReportTreeViewModelProps {
   return {
     id: 'money-summary',
     label: `Money: ${f6fmtValueChange(moneyChange)}`,
@@ -30,7 +29,7 @@ function formatMoneyReport(
   }
 }
 
-function formatAgentsReport(agentsReport: AgentsReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatAgentsReport(agentsReport: AgentsReport): TurnReportTreeViewModelProps {
   return {
     id: 'agents-summary',
     label: 'Agents',

@@ -1,14 +1,14 @@
-import { Box } from '@mui/material'
+import Box from '@mui/material/Box'
 import { RichTreeView } from '@mui/x-tree-view/RichTreeView'
 import { TreeItem, type TreeItemProps, type TreeItemSlotProps, type TreeItemSlots } from '@mui/x-tree-view/TreeItem'
-import { useTreeItemModel, useTreeViewApiRef } from '@mui/x-tree-view/hooks'
-import type { TreeViewBaseItem, TreeViewDefaultItemModelProperties, TreeViewItemId } from '@mui/x-tree-view/models'
+import { useRichTreeViewApiRef, useTreeItemModel } from '@mui/x-tree-view/hooks'
+import type { TreeViewDefaultItemModelProperties, TreeViewItemId } from '@mui/x-tree-view/models'
 import * as React from 'react'
 import theme from '../styling/theme'
 import { TreeItemLabelWithChip, type TreeItemLabelWithChipProps } from './TreeItemLabelWithChip'
 
 type TurnReportTreeViewProps = {
-  items: TreeViewBaseItem<TurnReportTreeViewModelProps>[]
+  items: TurnReportTreeViewModelProps[]
   defaultExpandedItems?: readonly string[]
 }
 
@@ -21,23 +21,23 @@ type TurnReportTreeViewProps = {
  * Refer to the comment on 'children' property in TreeItemLabelWithChipProps for details.
  *
  */
-export type TurnReportTreeViewModelProps = TreeViewDefaultItemModelProperties &
-  Omit<TreeItemLabelWithChipProps, 'children'>
+export type TurnReportTreeViewModelProps = Omit<TreeViewDefaultItemModelProperties, 'children'> &
+  Omit<TreeItemLabelWithChipProps, 'children'> & {
+    children?: TurnReportTreeViewModelProps[]
+  }
 
 /**
  * Recursively collects all item IDs that have children starting from a specific item.
  * Based on the pattern from MUI TreeView documentation.
  */
 function getAllChildItemIds(
-  items: TreeViewBaseItem<TurnReportTreeViewModelProps>[],
+  items: TurnReportTreeViewModelProps[],
   targetItemId: TreeViewItemId,
 ): TreeViewItemId[] {
   const itemIds: TreeViewItemId[] = []
 
   // Find the target item first
-  function findTargetItem(
-    itemsToSearch: TreeViewBaseItem<TurnReportTreeViewModelProps>[],
-  ): TreeViewBaseItem<TurnReportTreeViewModelProps> | undefined {
+  function findTargetItem(itemsToSearch: TurnReportTreeViewModelProps[]): TurnReportTreeViewModelProps | undefined {
     for (const item of itemsToSearch) {
       if (item.id === targetItemId) {
         return item
@@ -58,7 +58,7 @@ function getAllChildItemIds(
   }
 
   // Recursively register all item IDs that have children, starting from the target item's children
-  function registerItemId(item: TreeViewBaseItem<TurnReportTreeViewModelProps>): void {
+  function registerItemId(item: TurnReportTreeViewModelProps): void {
     if (item.children !== undefined && item.children.length > 0) {
       itemIds.push(item.id)
       for (const child of item.children) {
@@ -82,7 +82,7 @@ function getAllChildItemIds(
  * Supports Ctrl+Click to expand an item and all its children recursively.
  */
 export function TurnReportTreeView({ items, defaultExpandedItems }: TurnReportTreeViewProps): React.ReactElement {
-  const apiRef = useTreeViewApiRef()
+  const apiRef = useRichTreeViewApiRef<TurnReportTreeViewModelProps>()
   const [expandedItems, setExpandedItems] = React.useState<string[]>(
     defaultExpandedItems !== undefined ? [...defaultExpandedItems] : [],
   )

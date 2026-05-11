@@ -75,7 +75,11 @@ export function ChartsScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack direction="row" spacing={CARD_GAP} alignItems="center" justifyContent="center" sx={{ marginBottom: CARD_GAP }}>
+      <Stack
+        direction="row"
+        spacing={CARD_GAP}
+        sx={{ alignItems: 'center', justifyContent: 'center', marginBottom: CARD_GAP }}
+      >
         <Button variant="contained" onClick={handleBackClick}>
           Back to command center
         </Button>

@@ -1,6 +1,6 @@
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
+import { Toolbar, type GridSlotProps } from '@mui/x-data-grid'
 import * as React from 'react'
 
 // Allow passing custom props to the DataGrid toolbar slot for Combat Log grid
@@ -14,7 +14,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function CombatLogToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+export function CombatLogToolbar(props: GridSlotProps['toolbar']): React.JSX.Element {
   const { showAgentAttacks, onToggleAgentAttacks, showEnemyAttacks, onToggleEnemyAttacks } = props
   return (
     <Toolbar>

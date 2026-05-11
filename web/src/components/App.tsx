@@ -122,26 +122,28 @@ function App(): React.JSX.Element {
       container
       direction="row"
       spacing={CARD_GAP}
-      paddingY={SCREEN_PADDING_Y}
-      paddingX={SCREEN_PADDING_X}
-      bgcolor={'#30303052'}
-      flexWrap={'wrap'}
-      justifyContent={'center'}
-      alignItems="stretch"
+      sx={{
+        paddingY: SCREEN_PADDING_Y,
+        paddingX: SCREEN_PADDING_X,
+        bgcolor: '#30303052',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'stretch',
+      }}
     >
       <Grid>
-        <Stack spacing={CARD_GAP} alignItems="center">
+        <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
           <GameControls />
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={CARD_GAP} alignItems="center">
+        <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
           <OperationsCard />
           <SituationReportCard />
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={CARD_GAP} alignItems="center">
+        <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
           <EventLog />
         </Stack>
       </Grid>

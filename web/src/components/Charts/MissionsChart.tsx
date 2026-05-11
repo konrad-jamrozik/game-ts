@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import { green, red, grey, blue } from '@mui/material/colors'
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts/LineChart'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { setMissionsChartShowOffensive, setMissionsChartShowDefensive } from '../../redux/slices/selectionSlice'
 import { selectChartsDatasets } from '../../redux/selectors/chartsSelectors'
@@ -156,7 +156,7 @@ export function MissionsChart(props: MissionsChartProps): React.JSX.Element {
       grid={{ horizontal: true }}
       sx={{
         // Hide lines for stacked area series (they only have area fill)
-        [`& .${lineElementClasses.root}`]: {
+        '& .MuiLineElement-root': {
           display: 'none',
         },
         // Show the discovered line with thick stroke

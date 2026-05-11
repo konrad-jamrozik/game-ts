@@ -69,14 +69,14 @@ export function WipeStorage(): React.JSX.Element | undefined {
       )}
       {status === 'success' && (
         <Fragment>
-          <Typography variant="h6" color="success.main">
+          <Typography variant="h6" sx={{ color: 'success.main' }}>
             Storage wiped! Redirecting...
           </Typography>
         </Fragment>
       )}
       {status === 'error' && (
         <Fragment>
-          <Typography variant="h6" color="error.main">
+          <Typography variant="h6" sx={{ color: 'error.main' }}>
             Failed to wipe storage. Please check the console for details.
           </Typography>
         </Fragment>

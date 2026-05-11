@@ -50,10 +50,10 @@ export function LeadsScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={CARD_GAP} alignItems="center">
+      <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
         <LeadsDataGrid />
-        <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
-          <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
+        <Stack direction="row" spacing={CARD_GAP} sx={{ alignItems: 'flex-start', justifyContent: 'center' }}>
+          <Stack spacing={SECTION_GAP} sx={{ alignItems: 'stretch', width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
             <LeadInvestigationActions />
             <Button
               variant="contained"

@@ -134,7 +134,7 @@ export function LeadsDataGrid(): React.JSX.Element {
 function NoLeadsFoundOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
-      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
         No leads found using selected filters
       </Typography>
     </GridOverlay>

@@ -48,14 +48,16 @@ export function MissionDetailsScreen(): React.JSX.Element {
         container
         direction="row"
         spacing={CARD_GAP}
-        paddingY={SCREEN_PADDING_Y}
-        paddingX={SCREEN_PADDING_X}
-        bgcolor={'#30303052'}
-        flexWrap={'wrap'}
-        justifyContent={'center'}
+        sx={{
+          paddingY: SCREEN_PADDING_Y,
+          paddingX: SCREEN_PADDING_X,
+          bgcolor: '#30303052',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
+        }}
       >
         <Grid>
-          <Stack spacing={CARD_GAP} alignItems="center">
+          <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
             <Button variant="contained" onClick={handleBackClick}>
               Back to command center
             </Button>

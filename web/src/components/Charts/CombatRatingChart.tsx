@@ -2,7 +2,7 @@ import * as React from 'react'
 import Box from '@mui/material/Box'
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { ChartDataProvider } from '@mui/x-charts/ChartDataProvider'
+import { ChartsDataProvider } from '@mui/x-charts/ChartsDataProvider'
 import { ChartsSurface } from '@mui/x-charts/ChartsSurface'
 import { BarPlot } from '@mui/x-charts/BarChart'
 import { LinePlot } from '@mui/x-charts/LineChart'
@@ -183,7 +183,7 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
   }
 
   return (
-    <ChartDataProvider
+    <ChartsDataProvider
       dataset={dataset}
       xAxis={[
         {
@@ -195,7 +195,7 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
         },
       ]}
       yAxis={[yAxisConfig]}
-      series={series as NonNullable<Parameters<typeof ChartDataProvider>[0]['series']>}
+      series={series as NonNullable<Parameters<typeof ChartsDataProvider>[0]['series']>}
       height={height}
     >
       <ChartsLegend sx={{ fontSize: LEGEND_FONT_SIZE }} />
@@ -213,7 +213,7 @@ export function CombatRatingChart(props: CombatRatingChartProps): React.JSX.Elem
         <ChartsYAxis />
         <ChartsTooltip trigger="axis" />
       </ChartsSurface>
-    </ChartDataProvider>
+    </ChartsDataProvider>
   )
 }
 

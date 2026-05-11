@@ -2,7 +2,7 @@ import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
-import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
+import { Toolbar, type GridSlotProps } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import type { AgentCounts } from './agentCounts'
@@ -24,7 +24,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+export function AgentsToolbar(props: GridSlotProps['toolbar']): React.JSX.Element {
   const {
     showOnlyTerminated,
     onToggleTerminated,
@@ -39,15 +39,15 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
   } = props
   return (
     <Toolbar>
-      <Box display="flex" alignItems="center" width="100%">
+      <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         {selectedAgentsCombatRating !== undefined && selectedAgentsCombatRating > 0 && (
-          <Box display="flex" alignItems="center" marginLeft={1}>
+          <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 1 }}>
             <Typography variant="body2" component="span">
               Combat rating: {fmtDec1(selectedAgentsCombatRating)}
             </Typography>
           </Box>
         )}
-        <Box display="flex" alignItems="center" marginLeft="auto">
+        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
           <FormControlLabel
             control={
               <Checkbox

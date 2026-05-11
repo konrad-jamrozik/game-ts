@@ -8,7 +8,7 @@ type MissionsDataGridTitleProps = {
 
 export function MissionsDataGridTitle({ counts }: MissionsDataGridTitleProps): React.JSX.Element {
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
       <Typography variant="h6" component="span">
         Missions: Active {counts.active}
       </Typography>

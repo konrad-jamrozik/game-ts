@@ -77,7 +77,7 @@ export function AgentManagementActions(): React.JSX.Element {
   }
 
   return (
-    <Stack spacing={SECTION_GAP} alignItems="center">
+    <Stack spacing={SECTION_GAP} sx={{ alignItems: 'center' }}>
       <Stack direction="row" spacing={CONTROL_ROW_GAP} sx={{ width: '100%' }}>
         <Button variant="contained" onClick={handleHireAgent} fullWidth sx={{ minWidth: 0 }}>
           Hire Agent

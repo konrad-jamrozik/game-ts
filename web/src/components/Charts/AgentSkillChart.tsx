@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts/LineChart'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { initialAgent } from '../../lib/factories/agentFactory'
 import { toF } from '../../lib/primitives/fixed6'
@@ -328,7 +328,7 @@ export function AgentSkillChart(props: AgentSkillChartProps): React.JSX.Element 
       height={height}
       grid={{ horizontal: true }}
       sx={{
-        [`& .${lineElementClasses.root}`]: {
+        '& .MuiLineElement-root': {
           display: 'none',
         },
       }}

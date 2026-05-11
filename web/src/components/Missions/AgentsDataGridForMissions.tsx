@@ -157,7 +157,7 @@ function AgentsForMissionsToolbar(props: {
 
   return (
     <Toolbar>
-      <Box display="flex" alignItems="center" justifyContent="flex-end" width="100%">
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}>
         <FormControlLabel
           control={
             <Checkbox
@@ -210,7 +210,7 @@ function AgentsForMissionsToolbar(props: {
 function PleaseSelectMissionsAgentFiltersOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
-      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
         Please select at least one filter above
       </Typography>
     </GridOverlay>
@@ -220,7 +220,7 @@ function PleaseSelectMissionsAgentFiltersOverlay(): React.JSX.Element {
 function NoMissionsAgentsFoundOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
-      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
         No agents found using selected filters
       </Typography>
     </GridOverlay>

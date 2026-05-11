@@ -36,7 +36,7 @@ export function TurnReportScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={CARD_GAP} alignItems="center">
+      <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
         <TurnReportCard />
         <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           Back to command center

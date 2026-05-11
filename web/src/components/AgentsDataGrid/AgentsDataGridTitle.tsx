@@ -11,7 +11,7 @@ export function AgentsDataGridTitle(props: AgentsDataGridTitleProps): React.JSX.
   if (props.variant === 'leads') {
     const { counts } = props
     return (
-      <Box display="flex" justifyContent="flex-start" width="100%">
+      <Box sx={{ display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
         <Typography variant="h6" component="span">
           Agents: {counts.allActive}
         </Typography>
@@ -21,7 +21,7 @@ export function AgentsDataGridTitle(props: AgentsDataGridTitleProps): React.JSX.
 
   const { counts } = props
   return (
-    <Box display="flex" justifyContent="space-between" width="100%">
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
       <Typography variant="h6" component="span">
         Agents: All {counts.allActive} | Rdy {counts.ready} | Exh {counts.exhausted} | Rcv {counts.recovering}
       </Typography>

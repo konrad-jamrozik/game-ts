@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { LineChart, lineElementClasses } from '@mui/x-charts/LineChart'
+import { LineChart } from '@mui/x-charts/LineChart'
 import type { GameState } from '../../lib/model/gameStateModel'
 import { ENEMY_TYPES, type EnemyType } from '../../lib/model/enemyModel'
 import { axisConfig, formatTurn, legendSlotProps, withNoMarkers, Y_AXIS_WIDTH } from './chartsUtils'
@@ -129,7 +129,7 @@ export function EnemiesKilledChart(props: EnemiesKilledChartProps): React.JSX.El
       height={height}
       grid={{ horizontal: true }}
       sx={{
-        [`& .${lineElementClasses.root}`]: {
+        '& .MuiLineElement-root': {
           display: 'none',
         },
       }}

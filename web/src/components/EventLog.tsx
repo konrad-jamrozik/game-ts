@@ -53,7 +53,7 @@ export function EventLog(): React.JSX.Element {
   return (
     <ExpandableCard id="event-log" title="Event Log" defaultExpanded={true} sx={{ width: EVENT_LOG_COLUMN_CARD_WIDTH }}>
       {visibleEvents.length === 0 ? (
-        <Typography variant="body2" color="text.secondary">
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
           No events yet
         </Typography>
       ) : (

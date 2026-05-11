@@ -105,7 +105,7 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
           }}
         >
           <MyChip chipValue={battleSummary.outcome} />
-          <Typography variant="body2" color="text.secondary">
+          <Typography variant="body2" sx={{ color: 'text.secondary' }}>
             {battleSummary.message}
           </Typography>
         </Box>

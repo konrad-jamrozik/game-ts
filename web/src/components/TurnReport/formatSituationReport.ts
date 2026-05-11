@@ -1,5 +1,4 @@
 import { sum } from 'radash'
-import type { TreeViewBaseItem } from '@mui/x-tree-view/models'
 import { f6c0, toF6, toF, f4fmtPctDec2Diff, f6gt } from '../../lib/primitives/fixed6'
 import { f6fmtValueChange } from '../../lib/model_utils/formatUtils'
 import { getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
@@ -24,7 +23,7 @@ export function formatSituationReport(
   factions: readonly FactionReport[],
   missions?: readonly MissionReport[],
   expiredMissions?: readonly ExpiredMissionReport[],
-): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+): TurnReportTreeViewModelProps[] {
   return [
     formatPanicReport(panicReport),
     {
@@ -53,7 +52,7 @@ export function formatSituationReport(
   ]
 }
 
-function formatPanicReport(panicReport: PanicReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatPanicReport(panicReport: PanicReport): TurnReportTreeViewModelProps {
   return {
     id: 'panic-summary',
     label: `Panic: ${f6fmtValueChange(panicReport.change)}`,
@@ -93,7 +92,7 @@ function formatPanicBreakdown(breakdown: PanicBreakdown): TurnReportTreeViewMode
   return rows
 }
 
-function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReportTreeViewModelProps> {
+function formatFactionBreakdown(fct: FactionReport): TurnReportTreeViewModelProps {
   const prevLevelName = getActivityLevelName(asActivityLevelOrd(fct.activityLevel.previous))
   const currLevelName = fct.isTerminated
     ? 'Terminated'
@@ -159,7 +158,7 @@ function formatFactionBreakdown(fct: FactionReport): TreeViewBaseItem<TurnReport
 function formatSuppressionChildren(
   factionId: string,
   missionImpacts: FactionReport['missionImpacts'],
-): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+): TurnReportTreeViewModelProps[] {
   const totalSuppressionAdded = sum(missionImpacts, (impact) => impact.suppressionAdded ?? 0)
 
   return totalSuppressionAdded !== 0
@@ -176,7 +175,7 @@ function formatSuppressionChildren(
 
 function formatExpiredMissions(
   expiredMissions: readonly ExpiredMissionReport[],
-): TreeViewBaseItem<TurnReportTreeViewModelProps>[] {
+): TurnReportTreeViewModelProps[] {
   return expiredMissions.map((expired) => {
     const displayId = fmtNoPrefix(expired.missionId, 'mission-')
     const children: TurnReportTreeViewModelProps[] = []

@@ -20,7 +20,7 @@ export function LabeledValue({ label, value, sx }: LabeledValueProps): React.JSX
 
   return (
     <Paper sx={combineSx(paperSx, sx)}>
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
+      <Stack direction="row" sx={{ alignItems: 'center', justifyContent: 'space-between' }}>
         {value === undefined ? (
           <Typography variant="body1">{label}</Typography>
         ) : (

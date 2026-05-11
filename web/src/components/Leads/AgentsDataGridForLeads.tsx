@@ -158,7 +158,7 @@ function AgentsForLeadsToolbar(props: {
 
   return (
     <Toolbar>
-      <Box display="flex" alignItems="center" justifyContent="flex-end" width="100%">
+      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', width: '100%' }}>
         <FormControlLabel
           control={
             <Checkbox
@@ -211,7 +211,7 @@ function AgentsForLeadsToolbar(props: {
 function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
-      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
         Please select at least one filter above
       </Typography>
     </GridOverlay>
@@ -221,7 +221,7 @@ function PleaseSelectLeadAgentFiltersOverlay(): React.JSX.Element {
 function NoLeadAgentsFoundOverlay(): React.JSX.Element {
   return (
     <GridOverlay>
-      <Typography variant="body2" color="text.secondary" textAlign="center" px={2}>
+      <Typography variant="body2" sx={{ color: 'text.secondary', textAlign: 'center', px: 2 }}>
         No agents found using selected filters
       </Typography>
     </GridOverlay>

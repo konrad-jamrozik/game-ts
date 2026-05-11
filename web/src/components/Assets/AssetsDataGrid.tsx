@@ -14,7 +14,7 @@ import { CARD_GAP } from '../styling/spacing'
 
 export function AssetsDataGrid(): React.JSX.Element {
   return (
-    <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start">
+    <Stack direction="row" spacing={CARD_GAP} sx={{ alignItems: 'flex-start' }}>
       <AgentsDataGrid />
       <FinancesDataGrid />
     </Stack>

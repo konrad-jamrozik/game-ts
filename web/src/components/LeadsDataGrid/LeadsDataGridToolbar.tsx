@@ -1,6 +1,6 @@
 import Checkbox from '@mui/material/Checkbox'
 import FormControlLabel from '@mui/material/FormControlLabel'
-import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
+import { Toolbar, type GridSlotProps } from '@mui/x-data-grid'
 import * as React from 'react'
 import type { LeadsFilterType } from '../../redux/slices/selectionSlice'
 import type { LeadCounts } from './leadCounts'
@@ -15,7 +15,7 @@ declare module '@mui/x-data-grid' {
   }
 }
 
-export function LeadsDataGridToolbar(props: NonNullable<GridSlotsComponentsProps['toolbar']>): React.JSX.Element {
+export function LeadsDataGridToolbar(props: GridSlotProps['toolbar']): React.JSX.Element {
   const { filterType, leadCounts, onFilterTypeChange } = props
 
   function handleInactiveChange(event: React.ChangeEvent<HTMLInputElement>): void {

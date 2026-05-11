@@ -57,7 +57,7 @@ export function MissionDeploymentActions(): React.JSX.Element {
     selectedMission.state !== 'Active'
 
   return (
-    <Stack spacing={SECTION_GAP} alignItems="center">
+    <Stack spacing={SECTION_GAP} sx={{ alignItems: 'center' }}>
       <Button
         variant="contained"
         onClick={handleDeployAgents}

@@ -23,7 +23,7 @@ export function StyledDataGrid({ rows, columns, width, sx, ...dataGridProps }: S
   const dataGridWidth = width ?? getDataGridWidth(columns, dataGridProps)
 
   return (
-    <Box width={dataGridWidth} minWidth={dataGridWidth}>
+    <Box sx={{ width: dataGridWidth, minWidth: dataGridWidth }}>
       <DataGrid
         rows={rows}
         columns={columns}
