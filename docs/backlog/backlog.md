@@ -27,6 +27,7 @@ KJA backlog:
   - Value -> `#`, narrow column
   - Investigations -> Invstg., narrow column
   - Agent/Transport/Training Cap -> drop `Cap`, narrow column
+- Narrow down game controls
 - Event log upgrades and styling
   - "Advanced to turn" should display in blue or violet color
   - "Expiring soon" should display in orange color
@@ -40,6 +41,8 @@ KJA backlog:
   - New repeatable lead available should display in blue color
   - New mission site available should display in blue color
   - New upgrade available should display in blue color
+- Stylize Event log header as Card header, just no folding behavior and no body.
+  - OR stylize cards more flatly! Same background color, just an outline
 
 - Bug: non-player-action events do not grey out in event log. E.g. I clicked "spawn missions",
   then I clicked "Undo", and the missions still show in white.
