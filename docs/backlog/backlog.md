@@ -52,6 +52,11 @@ KJA backlog:
 - Next operation in situation report is double-row high when no rows show up. Weird.
 - Bug: reset game -> delegate to basic AI -> click again -> nothing happens. In spite of `auto-advance` checkbox being checked. Re-checking solved. Busted state? By default shows as checked, but doesn't work?
 
+- Mission details has "back to command center" button but it should have two, also one for "Missions"
+
+- New screen: "Debug". 3 columns: debug actions, debug settings, console logging.
+  - Maybe show event log at the bottom
+
 ## New investigations
 
 - Merge the pending changes to investigations
