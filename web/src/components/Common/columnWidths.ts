@@ -6,6 +6,13 @@ export const columnWidths = {
   'situation_report.metric': 150,
   'situation_report.value': 100,
 
+  // Factions screen comparison table
+  'factions.name': 150,
+  'factions.activity_level': 260,
+  'factions.level_progress': 150,
+  'factions.next_operation': 150,
+  'factions.suppression': 150,
+
   // Agents mini grid (Operations card)
   'operations_agents.name': 150,
   'operations_agents.value': 80,

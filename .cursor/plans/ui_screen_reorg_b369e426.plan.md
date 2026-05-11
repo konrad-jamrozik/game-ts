@@ -19,7 +19,7 @@ todos:
     status: completed
   - id: verify-ui
     content: Run qcheck and browser-verify the updated UI layout and screens.
-    status: in_progress
+    status: completed
 isProject: false
 ---
 

@@ -1,13 +1,13 @@
-import { Typography } from '@mui/material'
-import Stack from '@mui/material/Stack'
+import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import Typography from '@mui/material/Typography'
 import * as React from 'react'
-import { Fragment } from 'react'
 import type { Faction } from '../../lib/model/factionModel'
 import { assertIsActivityLevelOrd } from '../../lib/model/modelOrdUtils'
 import { getActivityLevelByOrd, getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
 import { getFactionName, isFactionTerminated } from '../../lib/model_utils/factionUtils'
+import { ColorBar } from '../ColorBar/ColorBar'
+import { columnWidths } from '../Common/columnWidths'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
-import { getSituationReportColumns, type SituationReportRow } from '../SituationReport/getSituationReportColumns'
 import { getFactionNextOperationDisplay, getVisibleFactions } from './factionScreenUtils'
 
 type FactionDetailsDataGridProps = {
@@ -21,7 +21,6 @@ export function FactionDetailsDataGrid({
   leadInvestigationCounts,
   revealAllFactionProfiles,
 }: FactionDetailsDataGridProps): React.JSX.Element {
-  const columns = getSituationReportColumns()
   const visibleFactions = getVisibleFactions(factions, leadInvestigationCounts, revealAllFactionProfiles)
 
   if (visibleFactions.length === 0) {
@@ -29,30 +28,83 @@ export function FactionDetailsDataGrid({
   }
 
   return (
-    <Stack spacing={2}>
-      {visibleFactions.map((faction) => {
-        const terminated = isFactionTerminated(faction, leadInvestigationCounts)
-        return (
-          <Fragment key={faction.id}>
-            <Typography variant="h6">{getFactionName(faction)} faction</Typography>
-            <StyledDataGrid
-              rows={getFactionRows(faction, terminated)}
-              columns={columns}
-              aria-label={`${getFactionName(faction)} Report data`}
-              sx={{
-                '& .situation-report-color-bar-cell': {
-                  padding: '4px',
-                },
-              }}
-            />
-          </Fragment>
-        )
-      })}
-    </Stack>
+    <StyledDataGrid
+      rows={getFactionDetailsRows(visibleFactions, leadInvestigationCounts)}
+      columns={getFactionDetailsColumns()}
+      aria-label="Factions report data"
+      sx={{
+        '& .faction-level-progress-cell': {
+          padding: '4px',
+        },
+      }}
+    />
   )
 }
 
-function getFactionRows(faction: Faction, isTerminated: boolean): SituationReportRow[] {
+function getFactionDetailsRows(
+  factions: readonly Faction[],
+  leadInvestigationCounts: Record<string, number>,
+): FactionDetailsRow[] {
+  return factions.map((faction) => ({
+    id: faction.id,
+    name: getFactionName(faction),
+    ...getFactionRows(faction, isFactionTerminated(faction, leadInvestigationCounts)),
+  }))
+}
+
+function getFactionDetailsColumns(): GridColDef<FactionDetailsRow>[] {
+  return [
+    {
+      field: 'name',
+      headerName: 'Faction',
+      width: columnWidths['factions.name'],
+    },
+    {
+      field: 'activityLevel',
+      headerName: 'Activity level',
+      width: columnWidths['factions.activity_level'],
+      renderCell: getFactionCellRenderer('activityLevel'),
+    },
+    {
+      field: 'levelProgress',
+      headerName: 'Level progress',
+      width: columnWidths['factions.level_progress'],
+      cellClassName: (params): string =>
+        params.row.levelProgress.levelProgressPct !== undefined ? 'faction-level-progress-cell' : '',
+      renderCell: getFactionCellRenderer('levelProgress'),
+    },
+    {
+      field: 'nextOperation',
+      headerName: 'Next operation',
+      width: columnWidths['factions.next_operation'],
+      renderCell: getFactionCellRenderer('nextOperation'),
+    },
+    {
+      field: 'suppression',
+      headerName: 'Suppression',
+      width: columnWidths['factions.suppression'],
+      renderCell: getFactionCellRenderer('suppression'),
+    },
+  ]
+}
+
+function getFactionCellRenderer(field: FactionDetailsCellField) {
+  return (params: GridRenderCellParams<FactionDetailsRow>): React.JSX.Element => {
+    const cell = params.row[field]
+    if (cell.levelProgressPct !== undefined) {
+      const fillPct = Math.max(0, Math.min(100, cell.levelProgressPct))
+      const colorPct = fillPct / 100
+      return (
+        <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
+          {cell.value}
+        </ColorBar>
+      )
+    }
+    return <span>{cell.value}</span>
+  }
+}
+
+function getFactionRows(faction: Faction, isTerminated: boolean): FactionRows {
   assertIsActivityLevelOrd(faction.activityLevel)
   const config = getActivityLevelByOrd(faction.activityLevel)
   const levelName = isTerminated ? 'Terminated' : getActivityLevelName(faction.activityLevel)
@@ -67,29 +119,37 @@ function getFactionRows(faction: Faction, isTerminated: boolean): SituationRepor
   const levelProgressPct =
     isTerminated || config.turnsMin === Infinity ? undefined : (faction.turnsAtCurrentLevel / config.turnsMin) * 100
 
-  return [
-    {
-      id: 1,
-      metric: 'Activity level',
+  return {
+    activityLevel: {
       value: isTerminated ? 'Terminated' : `${faction.activityLevel} - ${levelName}`,
     },
-    {
-      id: 2,
-      metric: 'Level progress',
+    levelProgress: {
       value: progressionDisplay,
-      reverseColor: true, // Progress towards higher activity is bad
       ...(levelProgressPct !== undefined ? { levelProgressPct } : {}),
     },
-    {
-      id: 3,
-      metric: 'Next operation',
+    nextOperation: {
       value: getFactionNextOperationDisplay(faction, isTerminated),
-      reverseColor: true, // Lower is worse for player
     },
-    {
-      id: 4,
-      metric: 'Suppression',
+    suppression: {
       value: isTerminated ? '-' : faction.suppressionTurns > 0 ? `${faction.suppressionTurns} turns` : '-',
     },
-  ]
+  }
 }
+
+type FactionDetailsRow = {
+  id: string
+  name: string
+  activityLevel: FactionDetailsCell
+  levelProgress: FactionDetailsCell
+  nextOperation: FactionDetailsCell
+  suppression: FactionDetailsCell
+}
+
+type FactionDetailsCell = {
+  value: string
+  levelProgressPct?: number
+}
+
+type FactionRows = Omit<FactionDetailsRow, 'id' | 'name'>
+
+type FactionDetailsCellField = keyof FactionRows
