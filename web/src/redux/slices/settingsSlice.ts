@@ -2,7 +2,6 @@ import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
 import { LOG_CATEGORY_LIST, type LogCategory } from '../../lib/primitives/logCategories'
 
 export type SettingsState = {
-  areResetControlsExpanded: boolean
   revealAllFactionProfiles: boolean
   // Optional because persisted state saved before this field existed won't have it
   rollSuccessfulLeadInvestigations?: boolean
@@ -11,7 +10,6 @@ export type SettingsState = {
 }
 
 const initialState: SettingsState = {
-  areResetControlsExpanded: true,
   revealAllFactionProfiles: false,
   rollSuccessfulLeadInvestigations: false,
   rollSuccessfulCombat: false,
@@ -21,12 +19,6 @@ const settingsSlice = createSlice({
   name: 'settings',
   initialState,
   reducers: {
-    setResetControlsExpanded(state, action: PayloadAction<boolean>) {
-      state.areResetControlsExpanded = action.payload
-    },
-    toggleResetControlsExpanded(state) {
-      state.areResetControlsExpanded = !state.areResetControlsExpanded
-    },
     toggleRevealAllFactionProfiles(state) {
       state.revealAllFactionProfiles = !state.revealAllFactionProfiles
     },
@@ -64,8 +56,6 @@ const settingsSlice = createSlice({
 })
 
 export const {
-  setResetControlsExpanded,
-  toggleResetControlsExpanded,
   setRevealAllFactionProfiles,
   toggleRollSuccessfulLeadInvestigations,
   setRollSuccessfulLeadInvestigations,

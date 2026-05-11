@@ -6,6 +6,8 @@ export type ExpansionState = {
 
 export const ALL_CARD_IDS = [
   'game-controls',
+  'reset-controls',
+  'operations',
   'upgrade-actions',
   'ai-player-card',
   'event-log',

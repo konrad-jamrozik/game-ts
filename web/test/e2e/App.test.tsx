@@ -6,7 +6,7 @@ import { ActionCreators } from 'redux-undo'
 import App from '../../src/components/App'
 import { getStore } from '../../src/redux/store'
 import { reset } from '../../src/redux/slices/gameStateSlice'
-import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
+import { setCardExpanded } from '../../src/redux/slices/expansionSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 import { rand } from '../../src/lib/primitives/rand'
 import { bldInitialState } from '../../src/lib/factories/gameStateFactory'
@@ -85,7 +85,7 @@ function step1StartWithDebugInitialState(): void {
   rand.set('enemy_attack_roll', 0)
 
   // Set reset controls to collapsed by default for this test
-  store.dispatch(setResetControlsExpanded(false))
+  store.dispatch(setCardExpanded({ id: 'reset-controls', expanded: false }))
 
   render(
     <Provider store={store}>

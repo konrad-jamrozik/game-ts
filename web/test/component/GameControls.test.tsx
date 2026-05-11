@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
 import { GameControls } from '../../src/components/GameControls/GameControls'
-import { setResetControlsExpanded } from '../../src/redux/slices/settingsSlice'
+import { setCardExpanded } from '../../src/redux/slices/expansionSlice'
 
 describe(GameControls, () => {
   // This is commented out because I want to for the tests to reuse state.
@@ -43,7 +43,7 @@ describe(GameControls, () => {
     const store = getStore()
 
     // Set the reset controls to be expanded in the store
-    store.dispatch(setResetControlsExpanded(true))
+    store.dispatch(setCardExpanded({ id: 'reset-controls', expanded: true }))
 
     render(
       <Provider store={store}>

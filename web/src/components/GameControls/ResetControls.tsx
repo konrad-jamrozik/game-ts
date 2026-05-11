@@ -11,9 +11,9 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { wipeStorage } from '../../redux/persist'
 import type { RootReducerState } from '../../redux/rootReducer'
 import { truncateEventsTo } from '../../redux/slices/eventsSlice'
+import { setCardExpanded } from '../../redux/slices/expansionSlice'
 import { reset } from '../../redux/slices/gameStateSlice'
 import { clearAllSelection } from '../../redux/slices/selectionSlice'
-import { setResetControlsExpanded } from '../../redux/slices/settingsSlice'
 import { log } from '../../lib/primitives/logger'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
@@ -33,7 +33,7 @@ function handleWipeStorageClick(): void {
 
 export function ResetControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
-  const expanded = useAppSelector((state) => state.settings.areResetControlsExpanded)
+  const expanded = useAppSelector((state) => state.expansion.cards['reset-controls'] ?? true)
   const undoable = useAppSelector((state: RootReducerState) => state.undoable)
   const canUndo = undoable.past.length > 0
   const canRedo = undoable.future.length > 0
@@ -127,7 +127,7 @@ export function ResetControls(): React.JSX.Element {
   }
 
   function handleAccordionChange(_event: React.SyntheticEvent, isExpanded: boolean): void {
-    dispatch(setResetControlsExpanded(isExpanded))
+    dispatch(setCardExpanded({ id: 'reset-controls', expanded: isExpanded }))
   }
 
   // The disableGutters in Accordion prevents the heading text from slightly moving down vertically
