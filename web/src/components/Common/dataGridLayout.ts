@@ -13,14 +13,14 @@ export const DATA_GRID_CHECKBOX_COLUMN_WIDTH = 50
 
 /**
  * Extra non-column width added when sizing StyledDataGrid.
- * This is not the width of an empty grid; it is the small rendered DataGrid
- * frame/filler allowance beyond declared column widths.
+ * This includes the rendered DataGrid frame/filler allowance plus the vertical
+ * scrollbar gutter, so tall grids do not also get a tiny horizontal scrollbar.
  */
-export const STYLED_DATA_GRID_EXTRA_WIDTH_PX = 10
+export const STYLED_DATA_GRID_EXTRA_WIDTH_PX = 18
 
 export const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX = 2 * getSpacingPx(CARD_CONTENT_PADDING)
 
-export const SCREEN_ACTIONS_COLUMN_WIDTH = 240
+export const SCREEN_ACTIONS_COLUMN_WIDTH = 312
 
 export function getSpacingPx(spacing: number): number {
   return Number.parseFloat(theme.spacing(spacing))

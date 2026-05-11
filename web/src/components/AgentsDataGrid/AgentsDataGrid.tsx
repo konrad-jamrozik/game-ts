@@ -1,4 +1,4 @@
-import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
+import { createRowSelectionManager, type GridColDef, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
 import * as React from 'react'
 import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -12,15 +12,15 @@ import {
   setAgentsShowStats,
 } from '../../redux/slices/selectionSlice'
 import { withIds } from '../../lib/model_utils/agentUtils'
-import { DataGridCard } from '../Common/DataGridCard'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { AgentsToolbar } from './AgentsToolbar'
 import { filterAgentRows, filterVisibleAgentColumns } from './AgentsDataGridUtils'
 import { getAgentsColumns, type AgentRow } from './getAgentsColumns'
 import { calculateAgentCounts } from './agentCounts'
-import { AgentsDataGridTitle } from './AgentsDataGridTitle'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
+import { getDataGridWidth } from '../Common/dataGridLayout'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -140,16 +140,15 @@ export function AgentsDataGrid(): React.JSX.Element {
   const selectedAgentsCombatRating: number | undefined =
     selectedAgents.length > 0 ? sum(selectedAgents, (agent) => calculateCombatRating(agent)) : undefined
 
-  const agentCounts = calculateAgentCounts(allAgents)
-  const title = <AgentsDataGridTitle variant="commandCenter" counts={agentCounts} />
+  const agentCounts = getAgentsToolbarCounts(allRows, agentsTerminatedThisTurnIds)
+  const dataGridWidth = getStableAgentsDataGridWidth(columns)
 
   return (
-    <DataGridCard
-      id="agents"
-      title={title}
-      ariaLabel="Agents"
+    <StyledDataGrid
+      aria-label="Agents"
       rows={rows}
       columns={visibleColumns}
+      width={dataGridWidth}
       getRowId={(row: AgentRow) => row.rowId}
       checkboxSelection
       onRowSelectionModelChange={handleRowSelectionChange}
@@ -165,6 +164,7 @@ export function AgentsDataGrid(): React.JSX.Element {
           onToggleRecovering: handleToggleRecovering,
           showStats,
           onToggleStats: handleToggleStats,
+          agentCounts,
           ...(selectedAgentsCombatRating !== undefined && { selectedAgentsCombatRating }),
         },
       }}
@@ -181,4 +181,34 @@ export function AgentsDataGrid(): React.JSX.Element {
 function getMaxSkillAlive(rows: AgentRow[]): Fixed6 {
   const aliveRows = rows.filter((row) => row.state !== 'KIA' && row.state !== 'Sacked')
   return aliveRows.reduce((max, row) => f6max(max, row.skill), f6c0)
+}
+
+function getAgentsToolbarCounts(allRows: AgentRow[], agentsTerminatedThisTurnIds: Set<string>): ReturnType<typeof calculateAgentCounts> {
+  const baseCounts = calculateAgentCounts(allRows)
+  return {
+    ...baseCounts,
+    available: filterAgentRows(allRows, false, true, false, agentsTerminatedThisTurnIds).length,
+    recovering: filterAgentRows(allRows, false, false, true, agentsTerminatedThisTurnIds).length,
+    stats: filterAgentRows(allRows, false, false, false, agentsTerminatedThisTurnIds).length,
+    terminated: filterAgentRows(allRows, true, false, false, agentsTerminatedThisTurnIds).length,
+  }
+}
+
+function getStableAgentsDataGridWidth(columns: GridColDef[]): number {
+  return Math.max(
+    getAgentColumnsWidth(columns, false, false, false),
+    getAgentColumnsWidth(columns, true, false, false),
+    getAgentColumnsWidth(columns, false, true, false),
+    getAgentColumnsWidth(columns, false, false, true),
+  )
+}
+
+function getAgentColumnsWidth(
+  columns: GridColDef[],
+  showOnlyTerminated: boolean,
+  showRecovering: boolean,
+  showStats: boolean,
+): number {
+  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
+  return getDataGridWidth(visibleColumns, { checkboxSelection: true })
 }

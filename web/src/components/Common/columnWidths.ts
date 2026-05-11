@@ -64,7 +64,7 @@ export const columnWidths = {
   'agents.skill': 160,
   'agents.hit_points': 80,
   'agents.recovery': 90,
-  'agents.exhaustionPct': 70,
+  'agents.exhaustionPct': 110,
   'agents.skill_simple': 70,
   'agents.experience': 70,
   'agents.training': 70,

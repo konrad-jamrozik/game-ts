@@ -59,13 +59,13 @@ export function DebugActions(): React.JSX.Element {
           Set panic to zero
         </Button>
         <Button variant="contained" onClick={handleSetAllFactionsSuppression}>
-          Set all factions suppression to 100
+          Suppress all factions by 100
         </Button>
         <Button variant="contained" onClick={handleAddMoney}>
           Add 10000 money
         </Button>
         <Button variant="contained" onClick={handleAddCapabilities}>
-          Add 100 to cap capabilities
+          Add 100 to caps
         </Button>
         <Button variant="contained" onClick={handleSpawn10Agents}>
           Spawn 10 agents

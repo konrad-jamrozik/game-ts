@@ -7,6 +7,7 @@ import { getDataGridWidth } from './dataGridLayout'
 type StyledDataGridProps = {
   rows: readonly GridRowModel[]
   columns: GridColDef[]
+  width?: number
 } & Omit<DataGridProps, 'rows' | 'columns'>
 
 function defaultSx(theme: Theme): Record<string, unknown> {
@@ -18,8 +19,8 @@ function defaultSx(theme: Theme): Record<string, unknown> {
   }
 }
 
-export function StyledDataGrid({ rows, columns, sx, ...dataGridProps }: StyledDataGridProps): React.JSX.Element {
-  const dataGridWidth = getDataGridWidth(columns, dataGridProps)
+export function StyledDataGrid({ rows, columns, width, sx, ...dataGridProps }: StyledDataGridProps): React.JSX.Element {
+  const dataGridWidth = width ?? getDataGridWidth(columns, dataGridProps)
 
   return (
     <Box width={dataGridWidth} minWidth={dataGridWidth}>

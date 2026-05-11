@@ -2,8 +2,8 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
 import Accordion from '@mui/material/Accordion'
 import AccordionDetails from '@mui/material/AccordionDetails'
 import AccordionSummary from '@mui/material/AccordionSummary'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
-import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
@@ -143,26 +143,26 @@ export function ResetControls(): React.JSX.Element {
         <Typography component="span">Reset controls</Typography>
       </AccordionSummary>
       <AccordionDetails>
-        <Stack>
-          <Stack
-            direction="row"
-            spacing={CONTROL_ROW_GAP}
-            sx={{ paddingBottom: CONTROL_ROW_GAP }}
-            alignItems="center"
-            justifyContent="center"
-          >
-            <LabeledValue label="Actions" value={actionsThisTurn} sx={labelSx} />
-          </Stack>
-          <Stack
-            direction="row"
-            spacing={CONTROL_ROW_GAP}
-            sx={{ paddingBottom: CONTROL_ROW_GAP }}
-            justifyContent="center"
+        <Box
+          sx={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+            gap: CONTROL_ROW_GAP,
+          }}
+        >
+          <LabeledValue label="Actions" value={actionsThisTurn} sx={{ ...labelSx, width: '100%' }} />
+          <Box
+            sx={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+              columnGap: CONTROL_ROW_GAP,
+            }}
           >
             <Button
               variant="contained"
               onClick={handleUndo}
               disabled={!canUndo || !canUndoWithinTurn}
+              fullWidth
               sx={willCrossTurnBoundaryOnNextUndo ? destructiveButtonSx : {}}
               title={
                 isCompactedTurn
@@ -178,51 +178,47 @@ export function ResetControls(): React.JSX.Element {
               variant="contained"
               onClick={handleRedo}
               disabled={!canRedo}
+              fullWidth
               sx={willCrossTurnBoundaryOnNextRedo ? destructiveButtonSx : {}}
             >
               Redo
             </Button>
-          </Stack>
-          <Stack
-            direction="row"
-            spacing={CONTROL_ROW_GAP}
-            sx={{ paddingBottom: CONTROL_ROW_GAP }}
-            justifyContent="center"
+          </Box>
+          <Button
+            variant="contained"
+            onClick={canResetTurn ? handleResetTurn : handleRevertTurn}
+            sx={destructiveButtonSx}
+            disabled={!canResetTurn && !canRevertToPreviousTurn}
+            title={
+              canResetTurn
+                ? 'Reset to start of current turn'
+                : isCompactedTurn && canRevertToPreviousTurn
+                  ? 'Turn history was compacted. Revert to end of previous turn.'
+                  : canRevertToPreviousTurn
+                    ? 'Revert to end of previous turn'
+                    : isCompactedTurn
+                      ? 'Turn history was compacted. No prior state available.'
+                      : 'No prior state available' // KJA3_3 this does not show up over disabled button. Other places have similar issues.
+            }
           >
-            <Button
-              variant="contained"
-              onClick={canResetTurn ? handleResetTurn : handleRevertTurn}
-              sx={destructiveButtonSx}
-              disabled={!canResetTurn && !canRevertToPreviousTurn}
-              title={
-                canResetTurn
-                  ? 'Reset to start of current turn'
-                  : isCompactedTurn && canRevertToPreviousTurn
-                    ? 'Turn history was compacted. Revert to end of previous turn.'
-                    : canRevertToPreviousTurn
-                      ? 'Revert to end of previous turn'
-                      : isCompactedTurn
-                        ? 'Turn history was compacted. No prior state available.'
-                        : 'No prior state available' // KJA3_3 this does not show up over disabled button. Other places have similar issues.
-              }
-            >
-              {canResetTurn ? 'Reset turn' : 'Revert turn'}
-            </Button>
-            <Button
-              variant="contained"
-              onClick={handleResetGame}
-              sx={destructiveButtonSx}
-              title="Ctrl+Click to reset with debug assets"
-            >
-              Reset game
-            </Button>
-          </Stack>
-          <Stack direction="row" justifyContent="center">
-            <Button variant="contained" onClick={handleWipeStorageClick} sx={destructiveButtonSx}>
-              Wipe storage and reload
-            </Button>
-          </Stack>
-        </Stack>
+            {canResetTurn ? 'Reset turn' : 'Revert turn'}
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleResetGame}
+            sx={destructiveButtonSx}
+            title="Ctrl+Click to reset with debug assets"
+          >
+            Reset game
+          </Button>
+          <Button
+            variant="contained"
+            onClick={handleWipeStorageClick}
+            sx={{ ...destructiveButtonSx, gridColumn: '1 / -1' }}
+          >
+            Wipe storage and reload
+          </Button>
+        </Box>
       </AccordionDetails>
     </Accordion>
   )

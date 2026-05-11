@@ -32,7 +32,7 @@ export function getAgentsColumns(
   const columns: GridColDef[] = [
     {
       field: 'id',
-      headerName: 'ID',
+      headerName: 'Agent',
       width: columnWidths['agents.id'],
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => {
         const displayValue = fmtIdForDisplay(params.row.id)
@@ -151,7 +151,7 @@ export function getAgentsColumns(
     },
     {
       field: 'exhaustionPct',
-      headerName: 'Exh.',
+      headerName: 'Exhaustion',
       width: columnWidths['agents.exhaustionPct'],
       cellClassName: 'agents-color-bar-cell',
       sortComparator: bldFixed6SortComparator(

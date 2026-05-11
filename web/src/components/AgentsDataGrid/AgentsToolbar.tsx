@@ -5,6 +5,7 @@ import Box from '@mui/material/Box'
 import { Toolbar, type GridSlotsComponentsProps } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
+import type { AgentCounts } from './agentCounts'
 
 // Allow passing custom props to the DataGrid toolbar slot for Agents grid
 declare module '@mui/x-data-grid' {
@@ -19,6 +20,7 @@ declare module '@mui/x-data-grid' {
     showStats: boolean
     onToggleStats?: (checked: boolean) => void
     selectedAgentsCombatRating?: number
+    agentCounts?: AgentCounts
   }
 }
 
@@ -33,6 +35,7 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
     showStats,
     onToggleStats,
     selectedAgentsCombatRating,
+    agentCounts,
   } = props
   return (
     <Toolbar>
@@ -54,7 +57,7 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
                 size="small"
               />
             }
-            label="available"
+            label={`Available (${agentCounts?.available ?? 0})`}
           />
           <FormControlLabel
             control={
@@ -65,7 +68,7 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
                 size="small"
               />
             }
-            label="recovering"
+            label={`Recovering (${agentCounts?.recovering ?? 0})`}
           />
           <FormControlLabel
             control={
@@ -76,7 +79,7 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
                 size="small"
               />
             }
-            label="stats"
+            label={`Stats (${agentCounts?.stats ?? 0})`}
           />
           <FormControlLabel
             control={
@@ -87,7 +90,7 @@ export function AgentsToolbar(props: NonNullable<GridSlotsComponentsProps['toolb
                 size="small"
               />
             }
-            label="terminated"
+            label={`Terminated (${agentCounts?.terminated ?? 0})`}
           />
         </Box>
       </Box>

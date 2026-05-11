@@ -8,9 +8,12 @@ import type { Agent } from '../../lib/model/agentModel'
 
 export type AgentCounts = {
   allActive: number
+  available: number
   ready: number
   exhausted: number
   recovering: number
+  stats: number
+  terminated: number
   kia: number
   sacked: number
 }
@@ -60,6 +63,7 @@ export function calculateAgentsForLeadsGridTitleCounts(agents: readonly Agent[])
 
 export function calculateAgentCounts(agents: Agent[]): AgentCounts {
   let allActive = 0
+  let availableCount = 0
   let ready = 0
   let exhausted = 0
   let kia = 0
@@ -77,6 +81,10 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
 
     allActive += 1
 
+    if (agent.state === 'Available' || agent.state === 'InTraining') {
+      availableCount += 1
+    }
+
     if (isReadyAgentForLeadsPanel(agent)) {
       ready += 1
     } else if (isExhaustedAgentForLeadsPanel(agent)) {
@@ -88,9 +96,12 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
 
   return {
     allActive,
+    available: availableCount,
     ready,
     exhausted,
     recovering: recoveringCount,
+    stats: allActive,
+    terminated: kia + sacked,
     kia,
     sacked,
   }

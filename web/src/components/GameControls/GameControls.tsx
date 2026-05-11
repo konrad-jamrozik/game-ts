@@ -1,4 +1,5 @@
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -72,7 +73,6 @@ export function GameControls(): React.JSX.Element {
   const gameWon = isGameWon(gameState)
   const gameEnded = gameLost || gameWon
 
-  const labelWidthPx = 110
   return (
     <ExpandableCard
       id="game-controls"
@@ -81,7 +81,7 @@ export function GameControls(): React.JSX.Element {
       sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
     >
       <Stack>
-        <Stack direction="row" justifyContent="space-between" alignItems="center">
+        <ControlButtonRow>
           <Button
             variant="contained"
             onClick={handleAdvanceTurn}
@@ -100,49 +100,51 @@ export function GameControls(): React.JSX.Element {
               }),
             })}
             disabled={gameEnded}
+            fullWidth
           >
             {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
           </Button>
-          <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
-        </Stack>
-        <Stack direction="row" spacing={CONTROL_ROW_GAP} sx={{ paddingTop: SECTION_GAP }}>
+          <LabeledValue label="Turn" value={gameState.turn} sx={{ width: '100%' }} />
+        </ControlButtonRow>
+        <ControlButtonRow>
           <Button variant="contained" onClick={handleExpandAll} fullWidth>
             Expand
           </Button>
           <Button variant="contained" onClick={handleCollapseAll} fullWidth>
             Collapse
           </Button>
-        </Stack>
+        </ControlButtonRow>
         <Stack spacing={CONTROL_ROW_GAP}>
-          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
+          <ControlButtonRow>
             <Button variant="contained" onClick={handleAgents} fullWidth>
               Agents
             </Button>
             <Button variant="contained" onClick={handleMissions} fullWidth>
               Missions
             </Button>
-          </Stack>
-          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
+          </ControlButtonRow>
+          <ControlButtonRow>
             <Button variant="contained" onClick={handleLeads} fullWidth>
               Leads
             </Button>
             <Button variant="contained" onClick={handleCharts} fullWidth>
               Charts
             </Button>
-          </Stack>
-          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
+          </ControlButtonRow>
+          <ControlButtonRow>
             <Button variant="contained" onClick={handleUpgrades} fullWidth>
               Upgrades
             </Button>
             <Button variant="contained" onClick={handleTurnReport} fullWidth>
               Turn Report
             </Button>
-          </Stack>
-          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
+          </ControlButtonRow>
+          <ControlButtonRow>
             <Button variant="contained" onClick={handleFactions} fullWidth>
               Factions
             </Button>
-          </Stack>
+            <span />
+          </ControlButtonRow>
         </Stack>
         <Stack sx={{ paddingTop: SECTION_GAP }}>
           <ResetControls />
@@ -159,4 +161,24 @@ export function GameControls(): React.JSX.Element {
       </Stack>
     </ExpandableCard>
   )
+}
+
+function ControlButtonRow({ children, sx }: ControlButtonRowProps): React.JSX.Element {
+  return (
+    <Box
+      sx={{
+        display: 'grid',
+        gridTemplateColumns: 'repeat(2, minmax(0, 1fr))',
+        columnGap: CONTROL_ROW_GAP,
+        ...sx,
+      }}
+    >
+      {children}
+    </Box>
+  )
+}
+
+type ControlButtonRowProps = {
+  children: React.ReactNode
+  sx?: object
 }

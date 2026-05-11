@@ -34,13 +34,12 @@ import {
   type LeadsFilterType,
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { DataGridCard } from '../Common/DataGridCard'
 import { MyChip } from '../Common/MyChip'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { columnWidths } from '../Common/columnWidths'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
 import { normalizeLeadsFilterType } from '../LeadsDataGrid/leadFilterUtils'
 import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
-import { LeadsDataGridTitle } from '../LeadsDataGrid/LeadsDataGridTitle'
 import { LeadsDataGridToolbar } from '../LeadsDataGrid/LeadsDataGridToolbar'
 
 export function LeadsDataGrid(): React.JSX.Element {
@@ -107,12 +106,10 @@ export function LeadsDataGrid(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
   const leadCounts = calculateLeadCounts(discoveredLeads, gameState)
-  const title = <LeadsDataGridTitle counts={leadCounts} />
 
   return (
-    <DataGridCard
-      id="leads"
-      title={title}
+    <StyledDataGrid
+      aria-label="Leads"
       rows={rows}
       columns={columns}
       getRowId={(row: LeadRow) => row.rowId}

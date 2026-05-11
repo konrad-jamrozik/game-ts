@@ -7,11 +7,17 @@ import {
 } from '@mui/material/styles'
 import { createPaletteOptions } from './palette'
 import {
+  ACCORDION_DETAILS_PADDING,
+  ACCORDION_HEADER_CONTENT_MARGIN_Y,
+  ACCORDION_HEADER_MIN_HEIGHT_PX,
+  ACCORDION_HEADER_PADDING_X,
   BUTTON_LABEL_PADDING_X,
   BUTTON_LABEL_PADDING_Y,
   CARD_CONTENT_PADDING,
   CARD_HEADER_PADDING_X,
   CARD_HEADER_PADDING_Y,
+  FIELD_LABEL_PADDING_X,
+  FIELD_LABEL_PADDING_Y,
   SECTION_GAP,
 } from './spacing'
 
@@ -32,6 +38,42 @@ let theme = createTheme({
 })
 
 const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme> = {
+  MuiAccordion: {
+    styleOverrides: {
+      root: {
+        '&.Mui-expanded': {
+          margin: 0,
+        },
+      },
+    },
+  },
+  MuiAccordionSummary: {
+    styleOverrides: {
+      root: {
+        minHeight: ACCORDION_HEADER_MIN_HEIGHT_PX,
+        paddingLeft: theme.spacing(ACCORDION_HEADER_PADDING_X),
+        paddingRight: theme.spacing(ACCORDION_HEADER_PADDING_X),
+        '&.Mui-expanded': {
+          minHeight: ACCORDION_HEADER_MIN_HEIGHT_PX,
+        },
+      },
+      content: {
+        marginTop: theme.spacing(ACCORDION_HEADER_CONTENT_MARGIN_Y),
+        marginBottom: theme.spacing(ACCORDION_HEADER_CONTENT_MARGIN_Y),
+        '&.Mui-expanded': {
+          marginTop: theme.spacing(ACCORDION_HEADER_CONTENT_MARGIN_Y),
+          marginBottom: theme.spacing(ACCORDION_HEADER_CONTENT_MARGIN_Y),
+        },
+      },
+    },
+  },
+  MuiAccordionDetails: {
+    styleOverrides: {
+      root: {
+        padding: theme.spacing(ACCORDION_DETAILS_PADDING),
+      },
+    },
+  },
   MuiButton: {
     styleOverrides: {
       root: {
@@ -39,6 +81,18 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
           paddingX: BUTTON_LABEL_PADDING_X,
           paddingY: BUTTON_LABEL_PADDING_Y,
         }),
+      },
+    },
+  },
+  MuiInputLabel: {
+    styleOverrides: {
+      root: {
+        '&.MuiInputLabel-shrink': {
+          paddingLeft: theme.spacing(FIELD_LABEL_PADDING_X),
+          paddingRight: theme.spacing(FIELD_LABEL_PADDING_X),
+          paddingTop: theme.spacing(FIELD_LABEL_PADDING_Y),
+          paddingBottom: theme.spacing(FIELD_LABEL_PADDING_Y),
+        },
       },
     },
   },

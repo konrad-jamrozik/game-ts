@@ -1,6 +1,7 @@
 import { NumberField as BaseNumberField } from '@base-ui/react/number-field'
 import { useTheme } from '@mui/material/styles'
 import * as React from 'react'
+import { FIELD_LABEL_LEGEND_HEIGHT_PX, FIELD_LABEL_PADDING_X, FIELD_LABEL_PADDING_Y } from '../styling/spacing'
 
 export type NumberFieldProps = {
   value: number
@@ -70,7 +71,7 @@ export function NumberField({
                 overflow: 'hidden',
                 display: 'block',
                 padding: 0,
-                height: '13px',
+                height: `${FIELD_LABEL_LEGEND_HEIGHT_PX}px`,
                 fontSize: '0.75rem',
                 lineHeight: '13px',
                 visibility: 'visible',
@@ -81,8 +82,10 @@ export function NumberField({
             >
               <span
                 style={{
-                  paddingLeft: '5px',
-                  paddingRight: '5px',
+                  paddingLeft: theme.spacing(FIELD_LABEL_PADDING_X),
+                  paddingRight: theme.spacing(FIELD_LABEL_PADDING_X),
+                  paddingTop: theme.spacing(FIELD_LABEL_PADDING_Y),
+                  paddingBottom: theme.spacing(FIELD_LABEL_PADDING_Y),
                   display: 'inline-block',
                   opacity: disabled === true ? 0.5 : 1,
                   color: theme.palette.text.secondary,
