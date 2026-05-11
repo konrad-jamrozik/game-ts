@@ -11,17 +11,20 @@ export type AssetRow = {
   diff?: number
 }
 
-type AssetsColumnOptions = {
+export type AssetsColumnOptions = {
   nameHeaderName: string
   valueHeaderName: string
+  miniGrid: 'operations_agents' | 'operations_finances'
 }
 
 export function getAssetsColumns(options: AssetsColumnOptions): GridColDef<AssetRow>[] {
+  const { name: nameWidth, value: valueWidth } = getOperationsMiniGridColumnWidths(options.miniGrid)
+
   const columns: GridColDef<AssetRow>[] = [
     {
       field: 'name',
       headerName: options.nameHeaderName,
-      width: columnWidths['assets.name'],
+      width: nameWidth,
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -30,12 +33,27 @@ export function getAssetsColumns(options: AssetsColumnOptions): GridColDef<Asset
     {
       field: 'value',
       headerName: options.valueHeaderName,
-      width: columnWidths['assets.value'],
+      width: valueWidth,
       renderCell: getAssetValueCell,
     },
   ]
 
   return columns
+}
+
+function getOperationsMiniGridColumnWidths(
+  miniGrid: AssetsColumnOptions['miniGrid'],
+): { name: number; value: number } {
+  if (miniGrid === 'operations_agents') {
+    return {
+      name: columnWidths['operations_agents.name'],
+      value: columnWidths['operations_agents.value'],
+    }
+  }
+  return {
+    name: columnWidths['operations_finances.name'],
+    value: columnWidths['operations_finances.value'],
+  }
 }
 
 function getAssetValueCell(params: GridRenderCellParams<AssetRow>): React.JSX.Element {

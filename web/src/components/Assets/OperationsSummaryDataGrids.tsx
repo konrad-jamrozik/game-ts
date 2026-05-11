@@ -22,8 +22,8 @@ export function LeadsSummaryDataGrid(): React.JSX.Element {
   const leadsSummaryColumns = getSituationReportColumns({
     metricHeaderName: 'Leads',
     valueHeaderName: 'Count',
-    metricWidth: columnWidths['operations_summary.name'],
-    valueWidth: columnWidths['operations_summary.count'],
+    metricWidth: columnWidths['operations_leads_summary.metric'],
+    valueWidth: columnWidths['operations_leads_summary.count'],
   })
   const leadsSummaryRows: SituationReportRow[] = [
     {
@@ -46,8 +46,8 @@ export function MissionsSummaryDataGrid(): React.JSX.Element {
   const missionsSummaryColumns = getSituationReportColumns({
     metricHeaderName: 'Missions',
     valueHeaderName: 'Count',
-    metricWidth: columnWidths['operations_summary.name'],
-    valueWidth: columnWidths['operations_summary.count'],
+    metricWidth: columnWidths['operations_missions_summary.metric'],
+    valueWidth: columnWidths['operations_missions_summary.count'],
   })
   const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
 

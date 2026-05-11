@@ -1,4 +1,5 @@
 import { columnWidths } from './columnWidths'
+import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
 
 const CHECKMARK_COLUMN_WIDTH = 50
 const BORDER_WIDTH = 1
@@ -18,18 +19,18 @@ export const MISSIONS_DATA_GRID_WIDTH =
   columnWidths['missions.details'] +
   CHECKMARK_COLUMN_WIDTH
 
-export const LEADS_SCREEN_DATA_GRID_WIDTH =
+export const LEADS_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH +
-  columnWidths['leads_screen.lead'] +
-  columnWidths['leads_screen.difficulty'] +
-  columnWidths['leads_screen.repeatable'] +
-  columnWidths['leads_screen.investigation'] +
-  columnWidths['leads_screen.investigation_id'] +
-  columnWidths['leads_screen.agents'] +
-  columnWidths['leads_screen.progress'] +
-  columnWidths['leads_screen.projected'] +
-  columnWidths['leads_screen.efficiency'] +
-  columnWidths['leads_screen.success_chance'] +
+  columnWidths['leads.lead'] +
+  columnWidths['leads.difficulty'] +
+  columnWidths['leads.repeatable'] +
+  columnWidths['leads.investigation'] +
+  columnWidths['leads.investigation_id'] +
+  columnWidths['leads.agents'] +
+  columnWidths['leads.progress'] +
+  columnWidths['leads.projected'] +
+  columnWidths['leads.efficiency'] +
+  columnWidths['leads.success_chance'] +
   CHECKMARK_COLUMN_WIDTH
 
 export const AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH =
@@ -51,26 +52,47 @@ export const AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH =
   columnWidths['agents.mission'] +
   columnWidths['agents.by']
 
-export const ASSET_SUMMARY_DATA_GRID_WIDTH =
-  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['assets.name'] + columnWidths['assets.value']
+const OPERATIONS_AGENTS_MINI_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['operations_agents.name'] + columnWidths['operations_agents.value']
 
-export const ASSETS_DATA_GRID_WIDTH = 2 * ASSET_SUMMARY_DATA_GRID_WIDTH + 16
+const OPERATIONS_FINANCES_MINI_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['operations_finances.name'] + columnWidths['operations_finances.value']
 
-export const CAPABILITIES_DATA_GRID_WIDTH =
+export const AGENTS_AND_FINANCES_ROW_GRID_WIDTH =
+  OPERATIONS_AGENTS_MINI_GRID_WIDTH + OPERATIONS_FINANCES_MINI_GRID_WIDTH + 16
+
+export const CAPACITIES_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['capacities.name'] + columnWidths['capacities.value']
 
-export const OPERATIONS_SUMMARY_DATA_GRID_WIDTH =
-  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['operations_summary.name'] + columnWidths['operations_summary.count']
+const OPERATIONS_LEADS_SUMMARY_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH +
+  columnWidths['operations_leads_summary.metric'] +
+  columnWidths['operations_leads_summary.count']
 
-const OPERATIONS_CAPABILITIES_DATA_GRID_WIDTH =
+const OPERATIONS_MISSIONS_SUMMARY_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH +
+  columnWidths['operations_missions_summary.metric'] +
+  columnWidths['operations_missions_summary.count']
+
+const OPERATIONS_CAPACITIES_MINI_GRID_WIDTH =
   OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['capacities.name'] + columnWidths['capacities.value']
 
-const OPERATIONS_SMALL_DATA_GRID_WIDTH = Math.max(ASSET_SUMMARY_DATA_GRID_WIDTH, OPERATIONS_SUMMARY_DATA_GRID_WIDTH)
+/** Matches ExpandableCard CardContent `padding: CARD_CONTENT_PADDING` on every side. */
+const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX = 2 * Number.parseFloat(theme.spacing(CARD_CONTENT_PADDING))
 
-export const OPERATIONS_CARD_WIDTH = Math.max(
-  2 * OPERATIONS_SMALL_DATA_GRID_WIDTH + OPERATIONS_CAPABILITIES_DATA_GRID_WIDTH + 48,
-  ASSETS_DATA_GRID_WIDTH,
-)
+// Matches OperationsCard layout: left Stack (Agents, Capacities) | gap | right Stack (Finances, summaries).
+// Capacities sits below Agents, not in a third horizontal column — do not add its width again across the row.
+const OPERATIONS_INNER_COLUMNS_GAP_PX = 16
+
+export const OPERATIONS_CARD_WIDTH =
+  EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX +
+  Math.max(OPERATIONS_AGENTS_MINI_GRID_WIDTH, OPERATIONS_CAPACITIES_MINI_GRID_WIDTH) +
+  OPERATIONS_INNER_COLUMNS_GAP_PX +
+  Math.max(
+    OPERATIONS_FINANCES_MINI_GRID_WIDTH,
+    OPERATIONS_LEADS_SUMMARY_GRID_WIDTH,
+    OPERATIONS_MISSIONS_SUMMARY_GRID_WIDTH,
+  )
 
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['situation_report.metric'] + columnWidths['situation_report.value']
@@ -87,12 +109,16 @@ export const CONTROLS_COLUMN_CARD_WIDTH = 300
 
 export const MIDDLE_COLUMN_CARD_WIDTH = Math.max(
   MISSIONS_DATA_GRID_WIDTH,
-  LEADS_SCREEN_DATA_GRID_WIDTH,
+  LEADS_DATA_GRID_WIDTH,
   AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH,
   AGENTS_TERMINATED_VIEW_DATA_GRID_WIDTH,
 )
 
-export const ASSETS_CARD_WIDTH = Math.max(ASSETS_DATA_GRID_WIDTH, CAPABILITIES_DATA_GRID_WIDTH)
+/** Max layout width driven by Agents+Finances row vs Capacities DataGrid on Resources / upgrades column */
+export const AGENTS_FINANCES_OR_CAPACITIES_MAX_GRID_WIDTH = Math.max(
+  AGENTS_AND_FINANCES_ROW_GRID_WIDTH,
+  CAPACITIES_DATA_GRID_WIDTH,
+)
 
 export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
 
@@ -100,7 +126,7 @@ export const TURN_REPORT_CARD_WIDTH = Math.max(600)
 
 export const RIGHT_COLUMN_CARD_WIDTH = Math.max(
   OPERATIONS_CARD_WIDTH,
-  ASSETS_CARD_WIDTH,
+  AGENTS_FINANCES_OR_CAPACITIES_MAX_GRID_WIDTH,
   SITUATION_REPORT_CARD_WIDTH,
   TURN_REPORT_CARD_WIDTH,
 )

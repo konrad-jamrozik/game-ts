@@ -2,25 +2,33 @@
 // All get*Columns.tsx files must use constants from this file, never define widths directly
 
 export const columnWidths = {
-  // Situation Report columns
+  // Situation Report (faction / panic card)
   'situation_report.metric': 146,
   'situation_report.value': 160,
 
-  // Assets columns
-  'assets.name': 150,
-  'assets.value': 80,
+  // Agents mini grid (Operations card)
+  'operations_agents.name': 150,
+  'operations_agents.value': 80,
 
-  // Capacities columns
+  // Finances mini grid (Operations card)
+  'operations_finances.name': 150,
+  'operations_finances.value': 70,
+
+  // Capacities DataGrid (read-only + shop)
   'capacities.name': 130,
   'capacities.value': 100,
   'capacities.upgrade': 100,
   'capacities.price': 100,
 
-  // Operations summary columns
-  'operations_summary.name': 150,
-  'operations_summary.count': 70,
+  // Leads summary mini grid (Operations card)
+  'operations_leads_summary.metric': 150,
+  'operations_leads_summary.count': 70,
 
-  // Missions columns
+  // Missions summary mini grid (Operations card)
+  'operations_missions_summary.metric': 150,
+  'operations_missions_summary.count': 70,
+
+  // Mission sites DataGrid (Missions screen)
   'missions.combat_rating': 80,
   'missions.id': 400,
   'missions.state': 120,
@@ -30,19 +38,19 @@ export const columnWidths = {
   'missions.details': 100,
   'missions.turn': 70,
 
-  // Leads screen columns
-  'leads_screen.lead': 340,
-  'leads_screen.difficulty': 80,
-  'leads_screen.repeatable': 100,
-  'leads_screen.investigation': 130,
-  'leads_screen.investigation_id': 72,
-  'leads_screen.agents': 80,
-  'leads_screen.progress': 100,
-  'leads_screen.projected': 100,
-  'leads_screen.efficiency': 80,
-  'leads_screen.success_chance': 130,
+  // Leads investigations DataGrid
+  'leads.lead': 340,
+  'leads.difficulty': 80,
+  'leads.repeatable': 100,
+  'leads.investigation': 130,
+  'leads.investigation_id': 72,
+  'leads.agents': 80,
+  'leads.progress': 100,
+  'leads.projected': 100,
+  'leads.efficiency': 80,
+  'leads.success_chance': 130,
 
-  // Agents columns
+  // Agents roster DataGrid
   'agents.id': 120,
   'agents.state': 160,
   'agents.assignment': 140,
@@ -63,9 +71,9 @@ export const columnWidths = {
   'agents.by': 170,
   'agents.terminated': 80,
 
-  // Agents grid on Missions screen
-  'agents.missions.cr': 72,
-  'agents.missions.unavailable': 120,
+  // Agents embedded on Mission details / missions flow
+  'missions_screen_agents.cr': 72,
+  'missions_screen_agents.unavailable': 120,
   'mission_details.key': 190,
   'mission_details.value': 240,
 

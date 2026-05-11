@@ -37,7 +37,7 @@ import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
-import { LEADS_SCREEN_DATA_GRID_WIDTH } from '../Common/widthConstants'
+import { LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
 import { normalizeLeadsFilterType } from '../LeadsDataGrid/leadFilterUtils'
 import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
@@ -114,7 +114,7 @@ export function LeadsDataGrid(): React.JSX.Element {
     <DataGridCard
       id="leads"
       title={title}
-      width={LEADS_SCREEN_DATA_GRID_WIDTH}
+      width={LEADS_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: LeadRow) => row.rowId}
@@ -322,17 +322,17 @@ function getLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'lead',
       headerName: 'Lead',
-      width: columnWidths['leads_screen.lead'],
+      width: columnWidths['leads.lead'],
     },
     {
       field: 'difficulty',
       headerName: 'Diff.',
-      width: columnWidths['leads_screen.difficulty'],
+      width: columnWidths['leads.difficulty'],
     },
     {
       field: 'repeatable',
       headerName: 'Type',
-      width: columnWidths['leads_screen.repeatable'],
+      width: columnWidths['leads.repeatable'],
       renderCell: (params: GridRenderCellParams<LeadRow, boolean>) => (
         <span aria-label={`leads-row-type-${params.id}`}>{leadRowTypeDisplay(params.value === true)}</span>
       ),
@@ -340,24 +340,24 @@ function getLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'investigation',
       headerName: 'Investig.',
-      width: columnWidths['leads_screen.investigation'],
+      width: columnWidths['leads.investigation'],
     },
     {
       field: 'investigationIdDigits',
       headerName: 'ID',
-      width: columnWidths['leads_screen.investigation_id'],
+      width: columnWidths['leads.investigation_id'],
       renderCell: (params: GridRenderCellParams<LeadRow, string | undefined>) => params.value ?? '',
     },
     {
       field: 'agents',
       headerName: 'Agents',
-      width: columnWidths['leads_screen.agents'],
+      width: columnWidths['leads.agents'],
       renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>) => fmtOptionalNumber(params.value),
     },
     {
       field: 'progress',
       headerName: 'Progress',
-      width: columnWidths['leads_screen.progress'],
+      width: columnWidths['leads.progress'],
       renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -368,7 +368,7 @@ function getLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'progressDiff',
       headerName: 'Projected',
-      width: columnWidths['leads_screen.projected'],
+      width: columnWidths['leads.projected'],
       renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -379,7 +379,7 @@ function getLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'teamEfficiency',
       headerName: 'Eff.',
-      width: columnWidths['leads_screen.efficiency'],
+      width: columnWidths['leads.efficiency'],
       renderCell: (params: GridRenderCellParams<LeadRow, number | undefined>): string => {
         if (params.value === undefined) {
           return ''
@@ -390,7 +390,7 @@ function getLeadColumns(): GridColDef<LeadRow>[] {
     {
       field: 'successChance',
       headerName: 'Success %',
-      width: columnWidths['leads_screen.success_chance'],
+      width: columnWidths['leads.success_chance'],
       renderCell: (params: GridRenderCellParams<LeadRow>): React.JSX.Element | string => {
         if (params.row.investigationStatus === 'Done') {
           return <MyChip chipValue="Done" />

@@ -37,7 +37,11 @@ export function AgentsDataGrid(): React.JSX.Element {
     { name: 'Total', id: 1, value: activeAgents },
   ]
 
-  const agentsColumns = getAssetsColumns({ nameHeaderName: 'Agents', valueHeaderName: 'Count' })
+  const agentsColumns = getAssetsColumns({
+    nameHeaderName: 'Agents',
+    valueHeaderName: 'Count',
+    miniGrid: 'operations_agents',
+  })
 
   return <StyledDataGrid rows={agentsRows} columns={agentsColumns} aria-label="Agents" />
 }
@@ -51,7 +55,11 @@ export function FinancesDataGrid(): React.JSX.Element {
     { name: 'Projected', id: 2, diff: projectedBalanceDiff },
   ]
 
-  const financesColumns = getAssetsColumns({ nameHeaderName: 'Finances', valueHeaderName: 'Value' })
+  const financesColumns = getAssetsColumns({
+    nameHeaderName: 'Finances',
+    valueHeaderName: 'Value',
+    miniGrid: 'operations_finances',
+  })
 
   return <StyledDataGrid rows={financesRows} columns={financesColumns} aria-label="Finances" />
 }

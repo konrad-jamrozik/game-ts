@@ -64,7 +64,7 @@ export function getAgentsColumnsForMissions(
     {
       field: 'combatRating',
       headerName: 'CR',
-      width: columnWidths['agents.missions.cr'],
+      width: columnWidths['missions_screen_agents.cr'],
       align: 'center',
       headerAlign: 'center',
       type: 'number',
@@ -166,7 +166,7 @@ export function getAgentsColumnsForMissions(
     {
       field: 'unavailable',
       headerName: 'Unavailable',
-      width: columnWidths['agents.missions.unavailable'],
+      width: columnWidths['missions_screen_agents.unavailable'],
       sortable: false,
       valueGetter: (_value, row: AgentRow): string => getMissionAgentUnavailableReason(row),
       renderCell: (params: GridRenderCellParams<AgentRow, string>): React.JSX.Element => (
