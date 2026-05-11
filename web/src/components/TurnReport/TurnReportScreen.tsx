@@ -4,7 +4,7 @@ import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch } from '../../redux/hooks'
 import { clearViewTurnReport } from '../../redux/slices/selectionSlice'
-import { LEADS_SCREEN_BUTTON_WIDTH } from '../Leads/LeadInvestigationActions'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { TurnReportCard } from './TurnReportCard'
 
 export function TurnReportScreen(): React.JSX.Element {
@@ -37,7 +37,7 @@ export function TurnReportScreen(): React.JSX.Element {
     >
       <Stack spacing={2} alignItems="center">
         <TurnReportCard />
-        <Button variant="contained" onClick={handleBackClick} sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+        <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           Back to command center
         </Button>
       </Stack>

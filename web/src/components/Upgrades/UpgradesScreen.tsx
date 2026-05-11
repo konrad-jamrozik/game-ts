@@ -9,8 +9,8 @@ import { clearViewUpgrades } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { CapacitiesDataGrid } from '../Assets/CapacitiesDataGrid'
 import { UpgradesDataGrid } from '../Assets/UpgradesDataGrid'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { UpgradeActions } from '../GameControls/UpgradeActions'
-import { LEADS_SCREEN_BUTTON_WIDTH } from '../Leads/LeadInvestigationActions'
 
 export function UpgradesScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -54,17 +54,17 @@ export function UpgradesScreen(): React.JSX.Element {
           <CapacitiesDataGrid mode="shop" />
           <UpgradesDataGrid />
         </Stack>
-        <Stack spacing={2} alignItems="stretch" sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+        <Stack spacing={2} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           <UpgradeActions />
           <Button
             variant="contained"
             onClick={handleAdvanceTurn}
             disabled={gameEnded}
-            sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+            sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
           >
             {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
           </Button>
-          <Button variant="contained" onClick={handleBackClick} sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+          <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
             Back to command center
           </Button>
         </Stack>

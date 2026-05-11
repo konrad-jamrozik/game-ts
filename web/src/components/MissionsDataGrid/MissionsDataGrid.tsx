@@ -19,7 +19,6 @@ import { getCompletedMissionIds } from '../../lib/model_utils/turnReportUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
-import { MIDDLE_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { calculateMissionCounts } from './missionCounts'
 import { MissionsDataGridTitle } from './MissionsDataGridTitle'
 import { getCurrentTurnState } from '../../redux/storeUtils'
@@ -118,7 +117,6 @@ export function MissionsDataGrid(): React.JSX.Element {
     <DataGridCard
       id="missions"
       title={title}
-      width={MIDDLE_COLUMN_CARD_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: MissionRow) => row.rowId}

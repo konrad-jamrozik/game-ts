@@ -9,7 +9,7 @@ import { clearAgentSelection, clearMissionSelection } from '../../redux/slices/s
 import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUtils'
 import { asMissionId } from '../../lib/model/modelIds'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { LEADS_SCREEN_BUTTON_WIDTH } from '../Leads/LeadInvestigationActions'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 
 export function MissionDeploymentActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -61,7 +61,7 @@ export function MissionDeploymentActions(): React.JSX.Element {
         variant="contained"
         onClick={handleDeployAgents}
         disabled={deployDisabled}
-        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+        sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
       >
         {deployButtonLabel}
       </Button>
@@ -69,7 +69,7 @@ export function MissionDeploymentActions(): React.JSX.Element {
         <Alert
           severity="error"
           onClose={() => setShowAlert(false)}
-          sx={{ textAlign: 'center', alignItems: 'center', width: LEADS_SCREEN_BUTTON_WIDTH }}
+          sx={{ textAlign: 'center', alignItems: 'center', width: SCREEN_ACTIONS_COLUMN_WIDTH }}
           aria-label="mission-deployment-actions-alert"
         >
           {alertMessage}

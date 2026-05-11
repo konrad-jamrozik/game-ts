@@ -1,11 +1,8 @@
 import Box from '@mui/material/Box'
 import type { Theme } from '@mui/material/styles'
 import { DataGrid, type GridColDef, type DataGridProps, type GridRowModel } from '@mui/x-data-grid'
-import { sum } from 'radash'
 import { combineSx } from '../styling/stylePrimitives'
-
-const CHECKMARK_COLUMN_WIDTH = 50
-const DATA_GRID_BASE_WIDTH = 10
+import { getDataGridWidth } from './dataGridLayout'
 
 type StyledDataGridProps = {
   rows: readonly GridRowModel[]
@@ -22,9 +19,7 @@ function defaultSx(theme: Theme): Record<string, unknown> {
 }
 
 export function StyledDataGrid({ rows, columns, sx, ...dataGridProps }: StyledDataGridProps): React.JSX.Element {
-  const columnsWidth = sum(columns, (col) => col.width ?? col.minWidth ?? 0)
-  const checkboxWidth = dataGridProps.checkboxSelection === true ? CHECKMARK_COLUMN_WIDTH : 0
-  const dataGridWidth = DATA_GRID_BASE_WIDTH + columnsWidth + checkboxWidth
+  const dataGridWidth = getDataGridWidth(columns, dataGridProps)
 
   return (
     <Box width={dataGridWidth} minWidth={dataGridWidth}>

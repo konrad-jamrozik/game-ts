@@ -5,8 +5,7 @@ import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { handleInvestigateLead } from '../GameControls/handleInvestigateLead'
-
-export const LEADS_SCREEN_BUTTON_WIDTH = 240
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 
 export function LeadInvestigationActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -36,7 +35,7 @@ export function LeadInvestigationActions(): React.JSX.Element {
         variant="contained"
         onClick={handleInvestigateLeadClick}
         disabled={!selectedLeadOrInvestigation || selectedAgentIds.length === 0}
-        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+        sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
       >
         {getInvestigateLeadButtonLabel(selectedLeadId, selectedInvestigationId, selectedAgentIds.length)}
       </Button>

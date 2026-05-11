@@ -28,7 +28,6 @@ import {
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
-import { AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import {
   calculateAgentsForLeadsGridTitleCounts,
   type AgentsForLeadsGridTitleCounts,
@@ -107,7 +106,6 @@ export function AgentsDataGridForMissions(): React.JSX.Element {
       id="agents-for-missions"
       title={title}
       ariaLabel="Agents for missions"
-      width={AGENTS_DEFAULT_VIEW_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: AgentRow) => row.rowId}

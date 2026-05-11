@@ -9,7 +9,7 @@ import { clearAgentSelection } from '../../redux/slices/selectionSlice'
 import { fmtAgentCount } from '../../lib/model_utils/formatUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { LEADS_SCREEN_BUTTON_WIDTH } from '../Leads/LeadInvestigationActions'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 
 export function AgentManagementActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -95,7 +95,7 @@ export function AgentManagementActions(): React.JSX.Element {
         variant="contained"
         onClick={handleRecallAgents}
         disabled={selectedAgentIds.length === 0}
-        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+        sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
       >
         Recall {fmtAgentCount(selectedAgentIds.length)}
       </Button>
@@ -103,7 +103,7 @@ export function AgentManagementActions(): React.JSX.Element {
         variant="contained"
         onClick={handleAssignToContracting}
         disabled={selectedAgentIds.length === 0}
-        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+        sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
       >
         Assign {fmtAgentCount(selectedAgentIds.length)} to contracting
       </Button>
@@ -111,7 +111,7 @@ export function AgentManagementActions(): React.JSX.Element {
         variant="contained"
         onClick={handleAssignToTraining}
         disabled={selectedAgentIds.length === 0}
-        sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+        sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
       >
         Assign {fmtAgentCount(selectedAgentIds.length)} to training
       </Button>
@@ -119,7 +119,7 @@ export function AgentManagementActions(): React.JSX.Element {
         <Alert
           severity="error"
           onClose={() => setShowAlert(false)}
-          sx={{ textAlign: 'center', alignItems: 'center', width: LEADS_SCREEN_BUTTON_WIDTH }}
+          sx={{ textAlign: 'center', alignItems: 'center', width: SCREEN_ACTIONS_COLUMN_WIDTH }}
           aria-label="agent-management-actions-alert"
         >
           {alertMessage}

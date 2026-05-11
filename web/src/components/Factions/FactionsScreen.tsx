@@ -6,7 +6,7 @@ import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { clearViewFactions } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { LEADS_SCREEN_BUTTON_WIDTH } from '../Leads/LeadInvestigationActions'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { FactionDetailsDataGrid } from './FactionDetailsDataGrid'
 
 export function FactionsScreen(): React.JSX.Element {
@@ -46,7 +46,7 @@ export function FactionsScreen(): React.JSX.Element {
           leadInvestigationCounts={leadInvestigationCounts}
           revealAllFactionProfiles={revealAllFactionProfiles}
         />
-        <Button variant="contained" onClick={handleBackClick} sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+        <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           Back to command center
         </Button>
       </Stack>

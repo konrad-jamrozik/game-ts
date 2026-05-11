@@ -37,7 +37,6 @@ import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DataGridCard } from '../Common/DataGridCard'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
-import { LEADS_DATA_GRID_WIDTH } from '../Common/widthConstants'
 import { calculateLeadCounts } from '../LeadsDataGrid/leadCounts'
 import { normalizeLeadsFilterType } from '../LeadsDataGrid/leadFilterUtils'
 import { leadRowTypeDisplay } from '../LeadsDataGrid/leadRowTypeDisplay'
@@ -114,7 +113,6 @@ export function LeadsDataGrid(): React.JSX.Element {
     <DataGridCard
       id="leads"
       title={title}
-      width={LEADS_DATA_GRID_WIDTH}
       rows={rows}
       columns={columns}
       getRowId={(row: LeadRow) => row.rowId}

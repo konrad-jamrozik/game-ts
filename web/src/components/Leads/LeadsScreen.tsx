@@ -9,7 +9,8 @@ import { clearViewLeads } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { AgentsDataGridForLeads } from './AgentsDataGridForLeads'
 import { LeadsDataGrid } from './LeadsDataGrid'
-import { LeadInvestigationActions, LEADS_SCREEN_BUTTON_WIDTH } from './LeadInvestigationActions'
+import { LeadInvestigationActions } from './LeadInvestigationActions'
+import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 
 export function LeadsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -51,17 +52,17 @@ export function LeadsScreen(): React.JSX.Element {
       <Stack spacing={2} alignItems="center">
         <LeadsDataGrid />
         <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="center">
-          <Stack spacing={2} alignItems="stretch" sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+          <Stack spacing={2} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
             <LeadInvestigationActions />
             <Button
               variant="contained"
               onClick={handleAdvanceTurn}
               disabled={gameEnded}
-              sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}
+              sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
             >
               {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
             </Button>
-            <Button variant="contained" onClick={handleBackClick} sx={{ width: LEADS_SCREEN_BUTTON_WIDTH }}>
+            <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
               Back to command center
             </Button>
           </Stack>
