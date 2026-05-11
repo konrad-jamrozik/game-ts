@@ -30,10 +30,7 @@ export type TurnReportTreeViewModelProps = Omit<TreeViewDefaultItemModelProperti
  * Recursively collects all item IDs that have children starting from a specific item.
  * Based on the pattern from MUI TreeView documentation.
  */
-function getAllChildItemIds(
-  items: TurnReportTreeViewModelProps[],
-  targetItemId: TreeViewItemId,
-): TreeViewItemId[] {
+function getAllChildItemIds(items: TurnReportTreeViewModelProps[], targetItemId: TreeViewItemId): TreeViewItemId[] {
   const itemIds: TreeViewItemId[] = []
 
   // Find the target item first

@@ -46,7 +46,9 @@ export function LeadsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const selectedLeadId = useAppSelector((state) => state.selection.selectedLeadId)
   const selectedInvestigationId = useAppSelector((state) => state.selection.selectedInvestigationId)
-  const filterType: LeadsFilterType = useAppSelector((state) => normalizeLeadsFilterType(state.selection.leadsFilterType))
+  const filterType: LeadsFilterType = useAppSelector((state) =>
+    normalizeLeadsFilterType(state.selection.leadsFilterType),
+  )
   const gameState = useAppSelector(getCurrentTurnState)
 
   const discoveredLeads = getDiscoveredLeads(gameState)
@@ -237,10 +239,7 @@ function bldLeadRowsForLead(lead: Lead, gameState: GameState): LeadRow[] {
   ]
 }
 
-function bldArchivedInvestigationRows(
-  lead: Lead,
-  investigationsForLead: readonly LeadInvestigation[],
-): LeadRow[] {
+function bldArchivedInvestigationRows(lead: Lead, investigationsForLead: readonly LeadInvestigation[]): LeadRow[] {
   const terminal = investigationsForLead.filter((i) => i.state === 'Done' || i.state === 'Abandoned')
 
   return terminal.toSorted(compareLeadInvestigationsByCompletionTurn).map((investigation) => {
@@ -434,7 +433,10 @@ function compareLeadInvestigationsByCompletionTurn(
   investigationA: LeadInvestigation,
   investigationB: LeadInvestigation,
 ): number {
-  return (investigationA.completionTurn ?? investigationA.startTurn) - (investigationB.completionTurn ?? investigationB.startTurn)
+  return (
+    (investigationA.completionTurn ?? investigationA.startTurn) -
+    (investigationB.completionTurn ?? investigationB.startTurn)
+  )
 }
 
 function fmtOptionalNumber(value: number | undefined): string {

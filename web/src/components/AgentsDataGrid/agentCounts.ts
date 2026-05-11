@@ -106,4 +106,3 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
     sacked,
   }
 }
-

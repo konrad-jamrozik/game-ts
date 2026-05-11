@@ -17,10 +17,7 @@ export function formatAssets(assetsReport: {
   ]
 }
 
-function formatMoneyReport(
-  moneyChange: ValueChange,
-  moneyBreakdown: MoneyBreakdown,
-): TurnReportTreeViewModelProps {
+function formatMoneyReport(moneyChange: ValueChange, moneyBreakdown: MoneyBreakdown): TurnReportTreeViewModelProps {
   return {
     id: 'money-summary',
     label: `Money: ${f6fmtValueChange(moneyChange)}`,

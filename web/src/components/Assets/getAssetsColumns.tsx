@@ -41,9 +41,7 @@ export function getAssetsColumns(options: AssetsColumnOptions): GridColDef<Asset
   return columns
 }
 
-function getOperationsMiniGridColumnWidths(
-  miniGrid: AssetsColumnOptions['miniGrid'],
-): { name: number; value: number } {
+function getOperationsMiniGridColumnWidths(miniGrid: AssetsColumnOptions['miniGrid']): { name: number; value: number } {
   if (miniGrid === 'operations_agents') {
     return {
       name: columnWidths['operations_agents.name'],

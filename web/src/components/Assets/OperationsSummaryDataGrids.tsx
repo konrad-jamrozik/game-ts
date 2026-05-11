@@ -52,7 +52,9 @@ export function MissionsSummaryDataGrid(): React.JSX.Element {
   })
   const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
 
-  return <StyledDataGrid rows={missionsSummaryRows} columns={missionsSummaryColumns} aria-label="Missions summary data" />
+  return (
+    <StyledDataGrid rows={missionsSummaryRows} columns={missionsSummaryColumns} aria-label="Missions summary data" />
+  )
 }
 
 function buildMissionsSummaryRows(missions: Mission[]): SituationReportRow[] {

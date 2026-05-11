@@ -8,7 +8,8 @@ import { ui } from '../fixtures/uiFixture'
 describe('MissionDeploymentActions', () => {
   const agentId = 'agent-1' as AgentId
   const missionId = 'mission-1'
-  const readinessError = 'Deploy requires ready agents: Standby or Training assignment, not in transit, exhaustion below 30%.'
+  const readinessError =
+    'Deploy requires ready agents: Standby or Training assignment, not in transit, exhaustion below 30%.'
 
   test("click 'deploy agents to active mission' button -> happy path", async () => {
     st.arrangeGameState({

@@ -1,4 +1,9 @@
-import { createRowSelectionManager, type GridColDef, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
+import {
+  createRowSelectionManager,
+  type GridColDef,
+  type GridRowId,
+  type GridRowSelectionModel,
+} from '@mui/x-data-grid'
 import * as React from 'react'
 import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
@@ -183,7 +188,10 @@ function getMaxSkillAlive(rows: AgentRow[]): Fixed6 {
   return aliveRows.reduce((max, row) => f6max(max, row.skill), f6c0)
 }
 
-function getAgentsToolbarCounts(allRows: AgentRow[], agentsTerminatedThisTurnIds: Set<string>): ReturnType<typeof calculateAgentCounts> {
+function getAgentsToolbarCounts(
+  allRows: AgentRow[],
+  agentsTerminatedThisTurnIds: Set<string>,
+): ReturnType<typeof calculateAgentCounts> {
   const baseCounts = calculateAgentCounts(allRows)
   return {
     ...baseCounts,

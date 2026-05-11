@@ -2,10 +2,7 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { ExpandableCard } from '../Common/ExpandableCard'
-import {
-  OPERATIONS_CARD_WIDTH,
-  SITUATION_REPORT_EXPANDABLE_CARD_WIDTH,
-} from '../Common/widthConstants'
+import { OPERATIONS_CARD_WIDTH, SITUATION_REPORT_EXPANDABLE_CARD_WIDTH } from '../Common/widthConstants'
 import { AgentsDataGrid, FinancesDataGrid } from './AssetsDataGrid'
 import { CapacitiesDataGrid } from './CapacitiesDataGrid'
 import { LeadsSummaryDataGrid, MissionsSummaryDataGrid } from './OperationsSummaryDataGrids'
@@ -14,12 +11,7 @@ import { SituationReportContent } from '../SituationReportCard'
 
 export function OperationsCard(): React.JSX.Element {
   return (
-    <ExpandableCard
-      id="operations"
-      title="Operations"
-      defaultExpanded={true}
-      sx={{ width: OPERATIONS_CARD_WIDTH }}
-    >
+    <ExpandableCard id="operations" title="Operations" defaultExpanded={true} sx={{ width: OPERATIONS_CARD_WIDTH }}>
       <Stack spacing={CARD_GAP}>
         <Box sx={{ display: 'flex', gap: CARD_GAP, alignItems: 'flex-start' }}>
           <Stack spacing={CARD_GAP}>

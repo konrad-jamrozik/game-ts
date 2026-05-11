@@ -94,10 +94,7 @@ function formatRewards(
   }
 }
 
-function formatBattleStats(
-  missionId: string,
-  battleStats: BattleStats,
-): TurnReportTreeViewModelProps {
+function formatBattleStats(missionId: string, battleStats: BattleStats): TurnReportTreeViewModelProps {
   const {
     agentsDeployed,
     agentsUnscathed,

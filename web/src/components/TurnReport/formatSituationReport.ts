@@ -173,9 +173,7 @@ function formatSuppressionChildren(
     : []
 }
 
-function formatExpiredMissions(
-  expiredMissions: readonly ExpiredMissionReport[],
-): TurnReportTreeViewModelProps[] {
+function formatExpiredMissions(expiredMissions: readonly ExpiredMissionReport[]): TurnReportTreeViewModelProps[] {
   return expiredMissions.map((expired) => {
     const displayId = fmtNoPrefix(expired.missionId, 'mission-')
     const children: TurnReportTreeViewModelProps[] = []

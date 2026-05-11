@@ -227,10 +227,7 @@ function NoMissionsAgentsFoundOverlay(): React.JSX.Element {
   )
 }
 
-function filterMissionAgentRows(
-  allRows: readonly AgentRow[],
-  filters: readonly LeadsAgentsFilterType[],
-): AgentRow[] {
+function filterMissionAgentRows(allRows: readonly AgentRow[], filters: readonly LeadsAgentsFilterType[]): AgentRow[] {
   return allRows.filter((agent) => filters.some((filter) => matchesMissionAgentFilter(agent, filter)))
 }
 

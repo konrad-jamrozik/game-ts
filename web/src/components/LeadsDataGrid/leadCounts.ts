@@ -34,11 +34,13 @@ export function calculateLeadCounts(discoveredLeads: Lead[], gameState: GameStat
 
     const archivedInvestigationsForLead = Object.values(gameState.leadInvestigations).filter(
       (investigation) =>
-        investigation.leadId === lead.id &&
-        (investigation.state === 'Done' || investigation.state === 'Abandoned'),
+        investigation.leadId === lead.id && (investigation.state === 'Done' || investigation.state === 'Abandoned'),
     )
     archived += archivedInvestigationsForLead.length
-    if (status.isArchived && !hasArchivedInvestigationCorrespondingToArchivedLead(lead, archivedInvestigationsForLead)) {
+    if (
+      status.isArchived &&
+      !hasArchivedInvestigationCorrespondingToArchivedLead(lead, archivedInvestigationsForLead)
+    ) {
       archived += 1
     }
   }

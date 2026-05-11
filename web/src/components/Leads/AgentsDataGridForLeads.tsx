@@ -51,7 +51,9 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const leadsAgentsFilters = useAppSelector((state) => state.selection.leadsAgentsFilters ?? DEFAULT_LEADS_AGENTS_FILTERS)
+  const leadsAgentsFilters = useAppSelector(
+    (state) => state.selection.leadsAgentsFilters ?? DEFAULT_LEADS_AGENTS_FILTERS,
+  )
 
   React.useEffect(() => {
     if (!leadsAgentsFilters.includes('ready') && agentSelection.length > 0) {
@@ -228,10 +230,7 @@ function NoLeadAgentsFoundOverlay(): React.JSX.Element {
   )
 }
 
-function filterLeadAgentRows(
-  allRows: readonly AgentRow[],
-  filters: readonly LeadsAgentsFilterType[],
-): AgentRow[] {
+function filterLeadAgentRows(allRows: readonly AgentRow[], filters: readonly LeadsAgentsFilterType[]): AgentRow[] {
   return allRows.filter((agent) => filters.some((filter) => matchesLeadAgentFilter(agent, filter)))
 }
 
