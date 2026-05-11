@@ -17,3 +17,5 @@ export const CARD_GAP = 1
 export const SECTION_GAP = 1
 export const CONTROL_ROW_GAP = 1
 export const DATA_GRID_CELL_PADDING = 0.25
+export const EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X = 2
+export const EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y = 0

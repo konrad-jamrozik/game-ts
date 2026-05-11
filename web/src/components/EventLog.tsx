@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams, GridRowClassNameParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
@@ -12,6 +12,10 @@ import { EVENT_LOG_DATA_GRID_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertDefined, assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatUtils'
+import {
+  EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X,
+  EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y,
+} from './styling/spacing'
 
 export function EventLog(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -29,7 +33,17 @@ export function EventLog(): React.JSX.Element {
       <Typography variant="h6" component="div" sx={{ paddingX: 1, paddingY: 0.5 }}>
         Event Log
       </Typography>
-      <StyledDataGrid rows={rows} columns={columns} aria-label="Event Log" />
+      <StyledDataGrid
+        rows={rows}
+        columns={columns}
+        aria-label="Event Log"
+        getRowClassName={getEventLogRowClassName}
+        sx={(theme) => ({
+          '& .event-log-undone-row .MuiDataGrid-cell:not([data-field="timeTravelAction"])': {
+            color: theme.palette.text.disabled,
+          },
+        })}
+      />
     </Box>
   )
 }
@@ -87,16 +101,40 @@ function getEventLogColumns(onJump: (offset: number) => void): GridColDef<EventL
   ]
 }
 
+function getEventLogRowClassName(params: GridRowClassNameParams<EventLogRow>): string {
+  return params.row.timeTravelAction === 'Redo' ? 'event-log-undone-row' : ''
+}
+
 function renderTimeTravelButton(
   params: GridRenderCellParams<EventLogRow, TimeTravelAction>,
   onJump: (offset: number) => void,
 ): React.JSX.Element {
   const { jumpOffset, timeTravelAction } = params.row
   const handleClick = jumpOffset === undefined ? undefined : createTimeTravelClickHandler(jumpOffset, onJump)
+  const isUndo = timeTravelAction === 'Undo'
   return (
-    <Button variant="contained" size="small" disabled={jumpOffset === undefined} onClick={handleClick}>
-      {timeTravelAction}
-    </Button>
+    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+      <Button
+        variant="outlined"
+        size="small"
+        disabled={jumpOffset === undefined}
+        onClick={handleClick}
+        sx={(theme) => ({
+          paddingX: EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X,
+          paddingY: EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y,
+          minHeight: 24,
+          ...(isUndo && {
+            borderColor: theme.palette.primary.light,
+            color: theme.palette.primary.light,
+            '&:hover': {
+              borderColor: theme.palette.primary.main,
+            },
+          }),
+        })}
+      >
+        {timeTravelAction}
+      </Button>
+    </Box>
   )
 }
 
