@@ -4,8 +4,8 @@ export type ExpansionState = {
   cards: Record<string, boolean>
 }
 
+/** IDs for bulk expand/collapse. Excludes `game-controls` so the shell stays open while nested sections respond. */
 export const ALL_CARD_IDS = [
-  'game-controls',
   'reset-controls',
   'operations',
   'upgrade-actions',
