@@ -5,17 +5,22 @@ import { MyChip } from '../Common/MyChip'
 
 export type AssetRow = {
   id: number
-  name: 'Money' | 'Agents' | 'Projected'
+  name: 'Total' | 'Ready' | 'Exhausted' | 'Away' | 'Recovering' | 'Money' | 'Projected'
   displayedName?: string
   value?: number
   diff?: number
 }
 
-export function getAssetsColumns(): GridColDef<AssetRow>[] {
+type AssetsColumnOptions = {
+  nameHeaderName: string
+  valueHeaderName: string
+}
+
+export function getAssetsColumns(options: AssetsColumnOptions): GridColDef<AssetRow>[] {
   const columns: GridColDef<AssetRow>[] = [
     {
       field: 'name',
-      headerName: 'Asset',
+      headerName: options.nameHeaderName,
       width: columnWidths['assets.name'],
       renderCell: (params: GridRenderCellParams<AssetRow>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
@@ -24,7 +29,7 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     },
     {
       field: 'value',
-      headerName: 'Value',
+      headerName: options.valueHeaderName,
       width: columnWidths['assets.value'],
       renderCell: getAssetValueCell,
     },

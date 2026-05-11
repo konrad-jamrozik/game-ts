@@ -13,9 +13,7 @@ import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
-import { getAvailableLeadsForInvestigation } from '../lib/model_utils/leadUtils'
 import type { Agent } from '../lib/model/agentModel'
-import type { Mission } from '../lib/model/missionModel'
 import {
   isExhaustedAgentForLeadsPanel,
   isReadyAgentForLeadsPanel,
@@ -92,7 +90,6 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPct = toF(panic) * 100
 
   const columns = getSituationReportColumns()
-  const leadsSummaryColumns = getSituationReportColumns({ metricHeaderName: 'Item', valueHeaderName: 'Count' })
 
   const panicRows: SituationReportRow[] = [
     {
@@ -104,20 +101,7 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
-  const leadsSummaryRows: SituationReportRow[] = [
-    {
-      id: 1,
-      metric: 'Investigations',
-      value: `${Object.values(gameState.leadInvestigations).filter((investigation) => investigation.state === 'Active').length}`,
-    },
-    {
-      id: 2,
-      metric: 'Available leads',
-      value: `${getAvailableLeadsForInvestigation(gameState).length}`,
-    },
-  ]
-
-  const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
+  const agentsSummaryColumns = getSituationReportColumns({ metricHeaderName: 'Item', valueHeaderName: 'Count' })
   const agentsSummaryRows = buildAgentsSummaryRows(gameState.agents)
 
   const discoveredFactions = revealAllFactionProfiles
@@ -142,12 +126,8 @@ export function SituationReportCard(): React.JSX.Element {
             },
           }}
         />
-        <Typography variant="h6">Leads summary</Typography>
-        <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
-        <Typography variant="h6">Missions summary</Typography>
-        <StyledDataGrid rows={missionsSummaryRows} columns={leadsSummaryColumns} aria-label="Missions summary data" />
         <Typography variant="h6">Agents summary</Typography>
-        <StyledDataGrid rows={agentsSummaryRows} columns={leadsSummaryColumns} aria-label="Agents summary data" />
+        <StyledDataGrid rows={agentsSummaryRows} columns={agentsSummaryColumns} aria-label="Agents summary data" />
         {discoveredFactions.map((faction) => {
           const terminated = isFactionTerminated(faction, leadInvestigationCounts)
           return (
@@ -169,23 +149,6 @@ export function SituationReportCard(): React.JSX.Element {
       </Stack>
     </ExpandableCard>
   )
-}
-
-function buildMissionsSummaryRows(missions: Mission[]): SituationReportRow[] {
-  const missionSites = missions.filter((mission) => mission.state === 'Active').length
-  const expiringSoon = missions.filter(
-    (mission) =>
-      mission.state === 'Active' &&
-      mission.expiresIn !== 'never' &&
-      typeof mission.expiresIn === 'number' &&
-      mission.expiresIn <= 3,
-  ).length
-  const deployedMissions = missions.filter((mission) => mission.state === 'Deployed').length
-  return [
-    { id: 1, metric: 'Mission sites', value: String(missionSites) },
-    { id: 2, metric: 'Expiring soon', value: String(expiringSoon) },
-    { id: 3, metric: 'Deployed missions', value: String(deployedMissions) },
-  ]
 }
 
 function buildAgentsSummaryRows(agents: Agent[]): SituationReportRow[] {
