@@ -9,7 +9,7 @@ import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionU
 import { isFactionDiscovered } from '../lib/ruleset/factionRuleset'
 import { assertIsActivityLevelOrd } from '../lib/model/modelOrdUtils'
 import { ExpandableCard } from './Common/ExpandableCard'
-import { RIGHT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
+import { SITUATION_REPORT_EXPANDABLE_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
@@ -113,7 +113,7 @@ export function SituationReportCard(): React.JSX.Element {
       id="situation-report"
       title="Situation Report"
       defaultExpanded={true}
-      sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}
+      sx={{ width: SITUATION_REPORT_EXPANDABLE_CARD_WIDTH, alignSelf: 'flex-start' }}
     >
       <Stack spacing={2}>
         <StyledDataGrid

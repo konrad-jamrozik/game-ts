@@ -99,6 +99,14 @@ export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
 
 export const SITUATION_REPORT_FACTION_DATA_GRID_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
 
+/** Matches StyledDataGrid body width (`OPERATIONS_DATA_GRID_BASE_WIDTH` + situation_report columns). */
+export const SITUATION_REPORT_STYLED_DATA_GRID_WIDTH =
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['situation_report.metric'] + columnWidths['situation_report.value']
+
+/** ExpandableCard width: grid body + horizontal CardContent inset from ExpandableCard. */
+export const SITUATION_REPORT_EXPANDABLE_CARD_WIDTH =
+  EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX + SITUATION_REPORT_STYLED_DATA_GRID_WIDTH
+
 // ========================================
 // Card widths
 // ========================================
@@ -120,7 +128,7 @@ export const AGENTS_FINANCES_OR_CAPACITIES_MAX_GRID_WIDTH = Math.max(
   CAPACITIES_DATA_GRID_WIDTH,
 )
 
-export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDTH
+export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_EXPANDABLE_CARD_WIDTH
 
 export const TURN_REPORT_CARD_WIDTH = Math.max(600)
 
