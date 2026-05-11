@@ -12,10 +12,7 @@ import { EVENT_LOG_DATA_GRID_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertDefined, assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatUtils'
-import {
-  EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X,
-  EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y,
-} from './styling/spacing'
+import { EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X, EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y } from './styling/spacing'
 
 export function EventLog(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -87,9 +84,9 @@ function getEventLogRows(events: GameEvent[], undoable: RootReducerState['undoab
 
 function getEventLogColumns(onJump: (offset: number) => void): GridColDef<EventLogRow>[] {
   return [
-    { field: 'event', headerName: 'Event', width: columnWidths['event_log.event'] },
     { field: 'turn', headerName: 'T#', width: columnWidths['event_log.turn'] },
     { field: 'actionsCount', headerName: 'A#', width: columnWidths['event_log.actions_count'] },
+    { field: 'event', headerName: 'Event', width: columnWidths['event_log.event'] },
     {
       field: 'timeTravelAction',
       headerName: '',

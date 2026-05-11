@@ -9,10 +9,10 @@ export const columnWidths = {
   'situation_report.metrics.value': 140,
 
   // Event log
-  'event_log.event': 360,
-  'event_log.turn': 60,
-  'event_log.actions_count': 60,
-  'event_log.undo': 90,
+  'event_log.event': 440,
+  'event_log.turn': 45,
+  'event_log.actions_count': 45,
+  'event_log.undo': 65,
 
   // Factions screen comparison table
   'factions.name': 150,
