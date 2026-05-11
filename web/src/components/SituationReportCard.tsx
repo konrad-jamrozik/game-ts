@@ -6,8 +6,12 @@ import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionU
 import { ExpandableCard } from './Common/ExpandableCard'
 import { SITUATION_REPORT_EXPANDABLE_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
-import { columnWidths } from './Common/columnWidths'
-import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
+import {
+  getSituationReportNextOperationColumns,
+  getSituationReportPanicColumns,
+  type SituationReportNextOperationRow,
+  type SituationReportPanicRow,
+} from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
 import { getFactionNextOperationDisplay, getVisibleFactions } from './Factions/factionScreenUtils'
 import { CARD_GAP, DATA_GRID_CELL_PADDING } from './styling/spacing'
@@ -20,34 +24,24 @@ export function SituationReportContent(): React.JSX.Element {
   const panicPctStr = f6fmtPctDec2(panic)
   const panicPct = toF(panic) * 100
 
-  const panicColumns = getSituationReportColumns({
-    valueHeaderName: 'Panic',
-    hideMetricColumn: true,
-  })
-  const nextOperationColumns = getSituationReportColumns({
-    metricHeaderName: 'Next operation',
-    valueHeaderName: 'Turns',
-    metricWidth: columnWidths['situation_report.next_operations.metric'],
-    valueWidth: columnWidths['situation_report.next_operations.turns'],
-  })
+  const panicColumns = getSituationReportPanicColumns()
+  const nextOperationColumns = getSituationReportNextOperationColumns()
 
-  const panicRows: SituationReportRow[] = [
+  const panicRows: SituationReportPanicRow[] = [
     {
       id: 1,
-      metric: 'Panic',
-      value: panicPctStr,
-      reverseColor: true,
+      panic: panicPctStr,
       panicPct,
     },
   ]
 
   const discoveredFactions = getVisibleFactions(factions, leadInvestigationCounts, revealAllFactionProfiles)
-  const nextOperationRows: SituationReportRow[] = discoveredFactions.map((faction, index) => {
+  const nextOperationRows: SituationReportNextOperationRow[] = discoveredFactions.map((faction, index) => {
     const terminated = isFactionTerminated(faction, leadInvestigationCounts)
     return {
       id: index + 1,
-      metric: getFactionName(faction),
-      value: getFactionNextOperationDisplay(faction, terminated),
+      factionName: getFactionName(faction),
+      nextOperation: getFactionNextOperationDisplay(faction, terminated),
     }
   })
 

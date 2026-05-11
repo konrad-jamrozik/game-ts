@@ -3,67 +3,55 @@ import * as React from 'react'
 import { columnWidths } from '../Common/columnWidths'
 import { ColorBar } from '../ColorBar/ColorBar'
 
-export type SituationReportRow = {
+export type SituationReportNextOperationRow = {
   id: number
-  metric: string
-  value: string
-  diff?: string
-  reverseColor?: boolean
-  panicPct?: number
-  levelProgressPct?: number
+  factionName: string
+  nextOperation: string
 }
 
-type SituationReportColumnOptions = {
-  metricHeaderName?: string
-  valueHeaderName?: string
-  metricWidth?: number
-  valueWidth?: number
-  hideMetricColumn?: boolean
+export type SituationReportPanicRow = {
+  id: number
+  panic: string
+  panicPct: number
 }
 
-export function getSituationReportColumns(options?: SituationReportColumnOptions): GridColDef<SituationReportRow>[] {
-  const columns: GridColDef<SituationReportRow>[] =
-    options?.hideMetricColumn === true
-      ? []
-      : [
-          {
-            field: 'metric',
-            headerName: options?.metricHeaderName ?? 'Metric',
-            width: options?.metricWidth,
-          },
-        ]
-
-  columns.push({
-    field: 'value',
-    headerName: options?.valueHeaderName ?? 'Value',
-    width: options?.valueWidth ?? columnWidths['situation_report.metrics.value'],
-    cellClassName: (params: GridCellParams<SituationReportRow>): string =>
-      params.row.panicPct !== undefined || params.row.levelProgressPct !== undefined
-        ? 'situation-report-color-bar-cell'
-        : '',
-    renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
-      const { panicPct, levelProgressPct } = params.row
-      if (panicPct !== undefined) {
-        const fillPct = Math.max(0, Math.min(100, panicPct))
-        const colorPct = fillPct / 100
-        return (
-          <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
-            {params.value}
-          </ColorBar>
-        )
-      }
-      if (levelProgressPct !== undefined) {
-        const fillPct = Math.max(0, Math.min(100, levelProgressPct))
-        const colorPct = fillPct / 100
-        return (
-          <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
-            {params.value}
-          </ColorBar>
-        )
-      }
-      return <span>{params.value}</span>
+export function getSituationReportNextOperationColumns(): GridColDef<SituationReportNextOperationRow>[] {
+  return [
+    {
+      field: 'factionName',
+      headerName: 'Next operation',
+      width: columnWidths['situation_report.next_operations.metric'],
     },
-  })
+    {
+      field: 'nextOperation',
+      headerName: 'Turns',
+      width: columnWidths['situation_report.next_operations.turns'],
+    },
+  ]
+}
 
-  return columns
+export function getSituationReportPanicColumns(): GridColDef<SituationReportPanicRow>[] {
+  return [
+    {
+      field: 'panic',
+      headerName: 'Panic',
+      width: columnWidths['situation_report.metrics.value'],
+      cellClassName: getPanicCellClassName,
+      renderCell: getPanicCell,
+    },
+  ]
+}
+
+function getPanicCellClassName(_params: GridCellParams<SituationReportPanicRow>): string {
+  return 'situation-report-color-bar-cell'
+}
+
+function getPanicCell(params: GridRenderCellParams<SituationReportPanicRow>): React.JSX.Element {
+  const fillPct = Math.max(0, Math.min(100, params.row.panicPct))
+  const colorPct = fillPct / 100
+  return (
+    <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
+      {params.value}
+    </ColorBar>
+  )
 }
