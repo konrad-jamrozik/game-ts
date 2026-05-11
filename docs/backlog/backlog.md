@@ -4,6 +4,51 @@ KJA backlog:
 
 # Next
 
+## UI
+
+- make event log entries two line to display everything
+- clicking on completed mission should take directly to mission details, not just missions view
+- upgrade turn report
+  - spread it out horizontally, unfold by default
+- clicking on money or projection should go to turn report, unfold money sections
+- collapse/expand in main screen should not influence sub-screens, including turn report
+- need to display extra crucial info on sub-screens, like money available in agents, upgrades
+  - also wider "Capacity" column in upgrades.
+- fix agents grid header, now the counts are on next line
+- "stats" and "terminated" should not need to have such abbreviated columns
+- Operations should also show "contracting" agents and "in training"
+  - First indented under Away, 2nd indented under ready
+- clicking panic should take to turn report
+- Narrow down operations
+  - Situation report turns should not display stuff like `7 (suppr. 30)`. Just sum it up,
+    like `7+30`, narrow column
+  - Expiring soon -> expiring, narrow column
+  - Count -> `#`, narrow column
+  - Value -> `#`, narrow column
+  - Investigations -> Invstg., narrow column
+  - Agent/Transport/Training Cap -> drop `Cap`, narrow column
+- Event log upgrades and styling
+  - "Advanced to turn" should display in blue or violet color
+  - "Expiring soon" should display in orange color
+  - Successful mission should display in green color
+    - The 2-line view should say "Spoils available"
+    - Clicking on it should open appropriate section in turn report
+  - Failed mission should display in red color
+  - Investigation completed should display in green color
+  - Investigation abandoned should display in red color
+  - New one-time lead available should display in blue color
+  - New repeatable lead available should display in blue color
+  - New mission site available should display in blue color
+  - New upgrade available should display in blue color
+
+- Bug: non-player-action events do not grey out in event log. E.g. I clicked "spawn missions",
+  then I clicked "Undo", and the missions still show in white.
+- `Debug: add capabilities` -> `Debug: upgrade capacities.
+- Bug: once I clicked on previous turn report in event view, it continued to be shown in turn report
+  button from game controls. But it should show the latest one.
+- Next operation in situation report is double-row high when no rows show up. Weird.
+- Bug: reset game -> delegate to basic AI -> click again -> nothing happens. In spite of `auto-advance` checkbox being checked. Re-checking solved. Busted state? By default shows as checked, but doesn't work?
+
 ## New investigations
 
 - Merge the pending changes to investigations
