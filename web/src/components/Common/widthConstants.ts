@@ -22,10 +22,7 @@ const SITUATION_REPORT_NEXT_OPERATIONS_COLUMN_KEYS = [
   'situation_report.next_operations.turns',
 ] satisfies readonly ColumnWidthKey[]
 
-const SITUATION_REPORT_METRICS_COLUMN_KEYS = [
-  'situation_report.metrics.metric',
-  'situation_report.metrics.value',
-] satisfies readonly ColumnWidthKey[]
+const SITUATION_REPORT_METRICS_COLUMN_KEYS = ['situation_report.metrics.value'] satisfies readonly ColumnWidthKey[]
 
 const EVENT_LOG_COLUMN_KEYS = [
   'event_log.event',

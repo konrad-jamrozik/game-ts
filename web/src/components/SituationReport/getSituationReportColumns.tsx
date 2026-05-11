@@ -18,47 +18,52 @@ type SituationReportColumnOptions = {
   valueHeaderName?: string
   metricWidth?: number
   valueWidth?: number
+  hideMetricColumn?: boolean
 }
 
 export function getSituationReportColumns(options?: SituationReportColumnOptions): GridColDef<SituationReportRow>[] {
-  const columns: GridColDef<SituationReportRow>[] = [
-    {
-      field: 'metric',
-      headerName: options?.metricHeaderName ?? 'Metric',
-      width: options?.metricWidth ?? columnWidths['situation_report.metrics.metric'],
+  const columns: GridColDef<SituationReportRow>[] =
+    options?.hideMetricColumn === true
+      ? []
+      : [
+          {
+            field: 'metric',
+            headerName: options?.metricHeaderName ?? 'Metric',
+            width: options?.metricWidth,
+          },
+        ]
+
+  columns.push({
+    field: 'value',
+    headerName: options?.valueHeaderName ?? 'Value',
+    width: options?.valueWidth ?? columnWidths['situation_report.metrics.value'],
+    cellClassName: (params: GridCellParams<SituationReportRow>): string =>
+      params.row.panicPct !== undefined || params.row.levelProgressPct !== undefined
+        ? 'situation-report-color-bar-cell'
+        : '',
+    renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
+      const { panicPct, levelProgressPct } = params.row
+      if (panicPct !== undefined) {
+        const fillPct = Math.max(0, Math.min(100, panicPct))
+        const colorPct = fillPct / 100
+        return (
+          <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
+            {params.value}
+          </ColorBar>
+        )
+      }
+      if (levelProgressPct !== undefined) {
+        const fillPct = Math.max(0, Math.min(100, levelProgressPct))
+        const colorPct = fillPct / 100
+        return (
+          <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
+            {params.value}
+          </ColorBar>
+        )
+      }
+      return <span>{params.value}</span>
     },
-    {
-      field: 'value',
-      headerName: options?.valueHeaderName ?? 'Value',
-      width: options?.valueWidth ?? columnWidths['situation_report.metrics.value'],
-      cellClassName: (params: GridCellParams<SituationReportRow>): string =>
-        params.row.panicPct !== undefined || params.row.levelProgressPct !== undefined
-          ? 'situation-report-color-bar-cell'
-          : '',
-      renderCell: (params: GridRenderCellParams<SituationReportRow>): React.JSX.Element => {
-        const { panicPct, levelProgressPct } = params.row
-        if (panicPct !== undefined) {
-          const fillPct = Math.max(0, Math.min(100, panicPct))
-          const colorPct = fillPct / 100
-          return (
-            <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
-              {params.value}
-            </ColorBar>
-          )
-        }
-        if (levelProgressPct !== undefined) {
-          const fillPct = Math.max(0, Math.min(100, levelProgressPct))
-          const colorPct = fillPct / 100
-          return (
-            <ColorBar fillPct={fillPct} colorPct={colorPct} linearYellowToRed>
-              {params.value}
-            </ColorBar>
-          )
-        }
-        return <span>{params.value}</span>
-      },
-    },
-  ]
+  })
 
   return columns
 }

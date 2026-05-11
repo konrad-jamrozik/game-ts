@@ -22,6 +22,7 @@ export function SituationReportContent(): React.JSX.Element {
 
   const panicColumns = getSituationReportColumns({
     valueHeaderName: 'Panic',
+    hideMetricColumn: true,
   })
   const nextOperationColumns = getSituationReportColumns({
     metricHeaderName: 'Next operation',

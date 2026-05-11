@@ -4,9 +4,8 @@
 export const columnWidths = {
   // Situation Report (faction next operations + panic metrics)
   'situation_report.next_operations.metric': 150,
-  'situation_report.next_operations.turns': 70,
-  'situation_report.metrics.metric': 80,
-  'situation_report.metrics.value': 140,
+  'situation_report.next_operations.turns': 140,
+  'situation_report.metrics.value': 150,
 
   // Event log
   'event_log.event': 440,
