@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react'
+import { render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Provider } from 'react-redux'
 import { beforeEach, describe, expect, test } from 'vitest'
@@ -6,7 +6,7 @@ import { ActionCreators } from 'redux-undo'
 import { getStore } from '../../src/redux/store'
 import { EventLog } from '../../src/components/EventLog'
 import { hireAgent, reset } from '../../src/redux/slices/gameStateSlice'
-import { addTextEvent } from '../../src/redux/slices/eventsSlice'
+import { addTextEvent, addWorldTextEvent } from '../../src/redux/slices/eventsSlice'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 
 function renderEventLog(): void {
@@ -47,6 +47,33 @@ describe(EventLog, () => {
 
     expect(screen.getAllByText('Agent hired')).toHaveLength(1)
     expect(screen.getByRole('button', { name: 'Undo' })).toBeInTheDocument()
+  })
+
+  test('world events render without actions count or time travel button', () => {
+    expect.hasAssertions()
+    const store = getStore()
+
+    store.dispatch(hireAgent())
+    const { gameState } = store.getState().undoable.present
+    store.dispatch(
+      addWorldTextEvent({
+        message: 'New mission site available: Downtown',
+        turn: gameState.turn,
+        actionsCount: gameState.actionsCount,
+      }),
+    )
+
+    renderEventLog()
+
+    const actionRow = getEventLogRowByText('Agent hired')
+    const actionCells = within(actionRow).getAllByRole('gridcell')
+    expect(actionCells[1]).toHaveTextContent('1')
+    expect(within(actionRow).getByRole('button', { name: 'Undo' })).toBeInTheDocument()
+
+    const worldEventRow = getEventLogRowByText('New mission site available: Downtown')
+    const worldEventCells = within(worldEventRow).getAllByRole('gridcell')
+    expect(worldEventCells[1]).toHaveTextContent(/^$/u)
+    expect(within(worldEventRow).queryByRole('button', { name: /Undo|Redo/u })).not.toBeInTheDocument()
   })
 
   test('happy path: new game started', () => {
@@ -101,3 +128,10 @@ describe(EventLog, () => {
     expect(screen.getAllByText('Agent hired')).toHaveLength(1)
   })
 })
+
+function getEventLogRowByText(text: string): HTMLElement {
+  const eventTextCell = screen.getByText(text)
+  const row = eventTextCell.closest<HTMLElement>('[role="row"]')
+  assertDefined(row)
+  return row
+}

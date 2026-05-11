@@ -5,6 +5,7 @@ import { compactHistory } from './slices/historyCompaction'
 import {
   addTextEvent,
   addTurnAdvancementEvent,
+  addWorldTextEvent,
   clearEvents,
   compactEventsByTurn,
   truncateEventsTo,
@@ -12,9 +13,18 @@ import {
 } from './slices/eventsSlice'
 import {
   advanceTurn,
+  addAgentsToInvestigation,
   assignAgentsToContracting,
   assignAgentsToTraining,
   buyUpgrade,
+  debugAddCapabilities,
+  debugAddEverything,
+  debugAddMoney,
+  debugSetAllFactionsSuppression,
+  debugSetPanicToZero,
+  debugSpawn10Agents,
+  debugSpawnMissions,
+  debugTerminateRedDawn,
   deployAgentsToMission,
   hireAgent,
   startLeadInvestigation,
@@ -26,6 +36,7 @@ import { isPlayerAction } from './reducer_utils/asPlayerAction'
 import type { RootReducerState } from './rootReducer'
 import { fmtAgentCount } from '../lib/model_utils/formatUtils'
 import { assertDefined } from '../lib/primitives/assertPrimitives'
+import { getWorldEventLogMessages, type WorldEventLogMessage } from './slices/eventLogWorldEvents'
 
 // This unicorn prefer-regexp-test rule [1] incorrectly thinks that "match" comes from String and not from Redux actionCreator [2].
 // [1] https://github.com/sindresorhus/eslint-plugin-unicorn/blob/v57.0.0/docs/rules/prefer-regexp-test.md
@@ -70,6 +81,19 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
           ...(navigationTarget === undefined ? {} : { navigationTarget }),
         }),
       )
+    }
+
+    function postWorldEvents(worldEvents: WorldEventLogMessage[]): void {
+      for (const worldEvent of worldEvents.toReversed()) {
+        store.dispatch(
+          addWorldTextEvent({
+            message: worldEvent.message,
+            turn: gameState.turn,
+            actionsCount: gameState.actionsCount,
+            navigationTarget: worldEvent.navigationTarget,
+          }),
+        )
+      }
     }
 
     // Dispatch events based on the action
@@ -127,6 +151,29 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
     } else if (buyUpgrade.match(action)) {
       const upgradeName = action.payload
       postTextEvent(`Bought upg.: ${upgradeName}`, { type: 'UpgradesDrilldown', upgradeName })
+    } else if (addAgentsToInvestigation.match(action)) {
+      const { agentIds } = action.payload
+      const agentCount = agentIds.length
+      postTextEvent(`Added ${fmtAgentCount(agentCount)} to investigation`, {
+        type: 'LeadsDrilldown',
+        filter: 'activeInvestigations',
+      })
+    } else if (debugAddEverything.match(action)) {
+      postTextEvent('Debug: add everything')
+    } else if (debugSetPanicToZero.match(action)) {
+      postTextEvent('Debug: set panic to zero')
+    } else if (debugSetAllFactionsSuppression.match(action)) {
+      postTextEvent('Debug: suppress all factions')
+    } else if (debugAddMoney.match(action)) {
+      postTextEvent('Debug: add money')
+    } else if (debugSpawn10Agents.match(action)) {
+      postTextEvent('Debug: spawn 10 agents', { type: 'AgentsDrilldown', filter: 'all' })
+    } else if (debugAddCapabilities.match(action)) {
+      postTextEvent('Debug: add capabilities')
+    } else if (debugSpawnMissions.match(action)) {
+      postTextEvent('Debug: spawn missions', { type: 'MissionsDrilldown', filter: 'all' })
+    } else if (debugTerminateRedDawn.match(action)) {
+      postTextEvent('Debug: terminate Red Dawn', { type: 'LeadsDrilldown', filter: 'available' })
     } else if (reset.match(action)) {
       // Clear all events on full game reset
       store.dispatch(clearEvents())
@@ -136,6 +183,10 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
       // Do not create events for redo
     } else if (hasType(action) && ActionCreators.jumpToPast(0).type === action.type) {
       // Do not create events for reset turn
+    }
+
+    if (isPlayerAction(action) || advanceTurn.match(action)) {
+      postWorldEvents(getWorldEventLogMessages(previousGameState, gameState))
     }
 
     return result

@@ -67,8 +67,8 @@ type EventLogRow = {
   id: number
   event: string
   turn: number
-  actionsCount: number
-  timeTravelAction: TimeTravelAction
+  actionsCount: number | ''
+  timeTravelAction: TimeTravelAction | undefined
   jumpOffset: number | undefined
   navigationTarget: EventNavigationTarget | undefined
 }
@@ -89,14 +89,15 @@ function getEventLogRows(events: GameEvent[], undoable: RootReducerState['undoab
   const timeline = getTimeline(undoable)
   const presentIndex = undoable.past.length
   return events.map((event) => {
-    const target = getTimeTravelTarget(event, timeline, presentIndex)
+    const hasActionControls = hasEventActionControls(event)
+    const target = hasActionControls ? getTimeTravelTarget(event, timeline, presentIndex) : undefined
     return {
       id: event.id,
       event: renderPrimaryListItemText(event),
       turn: event.turn,
-      actionsCount: event.actionsCount,
-      timeTravelAction: target.action,
-      jumpOffset: target.offset,
+      actionsCount: hasActionControls ? event.actionsCount : '',
+      timeTravelAction: target?.action,
+      jumpOffset: target?.offset,
       navigationTarget: getEventNavigationTarget(event),
     }
   })
@@ -112,7 +113,7 @@ function getEventLogColumns(onJump: (offset: number) => void): GridColDef<EventL
       headerName: '',
       width: columnWidths['event_log.undo'],
       sortable: false,
-      renderCell: (params: GridRenderCellParams<EventLogRow, TimeTravelAction>): React.JSX.Element =>
+      renderCell: (params: GridRenderCellParams<EventLogRow, TimeTravelAction | undefined>): React.JSX.Element | undefined =>
         renderTimeTravelButton(params, onJump),
     },
   ]
@@ -130,10 +131,13 @@ function getEventLogRowClassName(params: GridRowClassNameParams<EventLogRow>): s
 }
 
 function renderTimeTravelButton(
-  params: GridRenderCellParams<EventLogRow, TimeTravelAction>,
+  params: GridRenderCellParams<EventLogRow, TimeTravelAction | undefined>,
   onJump: (offset: number) => void,
-): React.JSX.Element {
+): React.JSX.Element | undefined {
   const { jumpOffset, timeTravelAction } = params.row
+  if (timeTravelAction === undefined) {
+    return undefined
+  }
   const handleClick = jumpOffset === undefined ? undefined : createTimeTravelClickHandler(jumpOffset, onJump)
   const isUndo = timeTravelAction === 'Undo'
   return (
@@ -215,6 +219,10 @@ function getEventNavigationTarget(event: GameEvent): EventNavigationTarget | und
   }
   assertEqual(event.type, 'Text')
   return undefined
+}
+
+function hasEventActionControls(event: GameEvent): boolean {
+  return event.eventRowControl !== 'WorldEvent'
 }
 
 function getTimeTravelTarget(

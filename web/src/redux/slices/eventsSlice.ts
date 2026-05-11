@@ -5,11 +5,14 @@ import type { MissionId } from '../../lib/model/modelIds'
 import type { MissionState } from '../../lib/model/outcomeTypes'
 import type { AgentsFilterType, LeadsDrilldownFilter, MissionsFilterType } from './selectionSlice'
 
+export type EventRowControl = 'ActionControlled' | 'WorldEvent'
+
 export type BaseEventFields = {
   id: number
   timestamp: number
   turn: number
   actionsCount: number
+  eventRowControl: EventRowControl
   navigationTarget?: EventNavigationTarget
 }
 
@@ -54,6 +57,13 @@ export type TurnAdvancementEvent = BaseEventFields & {
 
 export type GameEvent = TextEvent | MissionCompletedEvent | TurnAdvancementEvent
 
+export type TextEventPayload = {
+  message: string
+  turn: number
+  actionsCount: number
+  navigationTarget?: EventNavigationTarget
+}
+
 export type EventsState = {
   events: GameEvent[]
   nextEventId: number
@@ -76,29 +86,15 @@ const eventsSlice = createSlice({
   reducers: {
     addTextEvent(
       state,
-      action: PayloadAction<{
-        message: string
-        turn: number
-        actionsCount: number
-        navigationTarget?: EventNavigationTarget
-      }>,
+      action: PayloadAction<TextEventPayload>,
     ) {
-      const event: TextEvent = {
-        id: state.nextEventId,
-        type: 'Text',
-        message: action.payload.message,
-        timestamp: Date.now(),
-        turn: action.payload.turn,
-        actionsCount: action.payload.actionsCount,
-        ...(action.payload.navigationTarget === undefined ? {} : { navigationTarget: action.payload.navigationTarget }),
-      }
-      state.events.unshift(event)
-      state.nextEventId += 1
-
-      // Keep only the most recent events
-      if (state.events.length > MAX_EVENTS) {
-        state.events.splice(MAX_EVENTS)
-      }
+      addTextEventToState(state, action.payload, 'ActionControlled')
+    },
+    addWorldTextEvent(
+      state,
+      action: PayloadAction<TextEventPayload>,
+    ) {
+      addTextEventToState(state, action.payload, 'WorldEvent')
     },
     addMissionCompletedEvent(
       state,
@@ -121,14 +117,10 @@ const eventsSlice = createSlice({
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
+        eventRowControl: 'ActionControlled',
         navigationTarget: { type: 'MissionsDrilldown', filter: 'archived' },
       }
-      state.events.unshift(event)
-      state.nextEventId += 1
-
-      if (state.events.length > MAX_EVENTS) {
-        state.events.splice(MAX_EVENTS)
-      }
+      addEventToState(state, event)
     },
     addTurnAdvancementEvent(
       state,
@@ -143,14 +135,10 @@ const eventsSlice = createSlice({
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
+        eventRowControl: 'ActionControlled',
         navigationTarget: { type: 'TurnReportDrilldown', turn: action.payload.turn },
       }
-      state.events.unshift(event)
-      state.nextEventId += 1
-
-      if (state.events.length > MAX_EVENTS) {
-        state.events.splice(MAX_EVENTS)
-      }
+      addEventToState(state, event)
     },
     // Permanently remove any events that occur after the specified timeline pointer
     // Events strictly after (turn, actionsCount) are dropped. Events at the same
@@ -187,8 +175,33 @@ const eventsSlice = createSlice({
   },
 })
 
+function addTextEventToState(state: EventsState, payload: TextEventPayload, eventRowControl: EventRowControl): void {
+  const event: TextEvent = {
+    id: state.nextEventId,
+    type: 'Text',
+    message: payload.message,
+    timestamp: Date.now(),
+    turn: payload.turn,
+    actionsCount: payload.actionsCount,
+    eventRowControl,
+    ...(payload.navigationTarget === undefined ? {} : { navigationTarget: payload.navigationTarget }),
+  }
+  addEventToState(state, event)
+}
+
+function addEventToState(state: EventsState, event: GameEvent): void {
+  state.events.unshift(event)
+  state.nextEventId += 1
+
+  // Keep only the most recent events
+  if (state.events.length > MAX_EVENTS) {
+    state.events.splice(MAX_EVENTS)
+  }
+}
+
 export const {
   addTextEvent,
+  addWorldTextEvent,
   addMissionCompletedEvent,
   addTurnAdvancementEvent,
   truncateEventsTo,

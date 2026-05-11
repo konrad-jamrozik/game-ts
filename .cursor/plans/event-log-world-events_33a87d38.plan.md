@@ -4,22 +4,22 @@ overview: Add non-action world events to the event log while keeping player/debu
 todos:
   - id: event-row-contract
     content: Add event metadata/action creator support for action-controlled rows versus world-event rows.
-    status: pending
+    status: completed
   - id: event-log-ui
     content: Render blank A# and no time-travel button for world-event rows in EventLog.
-    status: pending
+    status: completed
   - id: world-event-detectors
     content: Implement pure previous/current state detectors for requested mission, investigation, and lead events.
-    status: pending
+    status: completed
   - id: middleware-wiring
     content: Dispatch world events after player actions and turn advancement while preserving truncation and compaction behavior.
-    status: pending
+    status: completed
   - id: debug-action-events
     content: Add event log text for all undoable player actions currently missing from the event log.
-    status: pending
+    status: completed
   - id: verification
     content: Add focused tests and run qcheck.
-    status: pending
+    status: completed
 isProject: false
 ---
 
