@@ -71,10 +71,9 @@ export const UPGRADES_CARD_WIDTH = getDataGridCardWidthForColumnKeys(CAPACITIES_
   checkboxSelection: true,
 })
 
-export const SITUATION_REPORT_EXPANDABLE_CARD_WIDTH =
-  getDataGridCardWidthForColumnKeys(SITUATION_REPORT_COLUMN_KEYS)
+export const SITUATION_REPORT_EXPANDABLE_CARD_WIDTH = getDataGridCardWidthForColumnKeys(SITUATION_REPORT_COLUMN_KEYS)
 
-export const LEFT_COLUMN_CARD_WIDTH = 480
+export const EVENT_LOG_COLUMN_CARD_WIDTH = 598
 
 export const CONTROLS_COLUMN_CARD_WIDTH = 300
 
@@ -91,36 +90,33 @@ export const RIGHT_COLUMN_CARD_WIDTH = Math.max(
   TURN_REPORT_CARD_WIDTH,
 )
 
-export const COMBAT_LOG_CARD_WIDTH = getDataGridCardWidthForColumnKeys(
-  [
-    'combat_log.attack_id',
-    'combat_log.round_number',
-    'combat_log.agent_id',
-    'combat_log.enemy_id',
-    'combat_log.attacker_type',
-    'combat_log.effect',
-    'combat_log.attacker_skill',
-    'combat_log.defender_skill',
-    'combat_log.roll',
-    'combat_log.roll_diff',
-    'combat_log.damage',
-    'combat_log.defender_hp',
-  ] satisfies readonly ColumnWidthKey[],
-)
+export const COMBAT_LOG_CARD_WIDTH = getDataGridCardWidthForColumnKeys([
+  'combat_log.attack_id',
+  'combat_log.round_number',
+  'combat_log.agent_id',
+  'combat_log.enemy_id',
+  'combat_log.attacker_type',
+  'combat_log.effect',
+  'combat_log.attacker_skill',
+  'combat_log.defender_skill',
+  'combat_log.roll',
+  'combat_log.roll_diff',
+  'combat_log.damage',
+  'combat_log.defender_hp',
+] satisfies readonly ColumnWidthKey[])
 
-export const BATTLE_LOG_CARD_WIDTH = getDataGridCardWidthForColumnKeys(
-  [
-    'battle_log.round_number',
-    'battle_log.agent_count',
-    'battle_log.agent_skill',
-    'battle_log.agent_hp',
-    'battle_log.enemy_count',
-    'battle_log.enemy_skill',
-    'battle_log.enemy_hp',
-    'battle_log.combat_rating_ratio',
-  ] satisfies readonly ColumnWidthKey[],
-)
+export const BATTLE_LOG_CARD_WIDTH = getDataGridCardWidthForColumnKeys([
+  'battle_log.round_number',
+  'battle_log.agent_count',
+  'battle_log.agent_skill',
+  'battle_log.agent_hp',
+  'battle_log.enemy_count',
+  'battle_log.enemy_skill',
+  'battle_log.enemy_hp',
+  'battle_log.combat_rating_ratio',
+] satisfies readonly ColumnWidthKey[])
 
-export const MISSION_DETAILS_CARD_WIDTH = getDataGridCardWidthForColumnKeys(
-  ['mission_details.key', 'mission_details.value'] satisfies readonly ColumnWidthKey[],
-)
+export const MISSION_DETAILS_CARD_WIDTH = getDataGridCardWidthForColumnKeys([
+  'mission_details.key',
+  'mission_details.value',
+] satisfies readonly ColumnWidthKey[])

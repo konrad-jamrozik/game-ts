@@ -5,7 +5,7 @@ import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { ExpandableCard } from './Common/ExpandableCard'
-import { LEFT_COLUMN_CARD_WIDTH } from './Common/widthConstants'
+import { EVENT_LOG_COLUMN_CARD_WIDTH } from './Common/widthConstants'
 import type { GameEvent } from '../redux/slices/eventsSlice'
 import { assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatUtils'
@@ -51,7 +51,7 @@ export function EventLog(): React.JSX.Element {
   })
 
   return (
-    <ExpandableCard id="event-log" title="Event Log" defaultExpanded={true} sx={{ width: LEFT_COLUMN_CARD_WIDTH }}>
+    <ExpandableCard id="event-log" title="Event Log" defaultExpanded={true} sx={{ width: EVENT_LOG_COLUMN_CARD_WIDTH }}>
       {visibleEvents.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           No events yet

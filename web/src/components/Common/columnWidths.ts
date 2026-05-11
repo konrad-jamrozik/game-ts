@@ -3,7 +3,7 @@
 
 export const columnWidths = {
   // Situation Report (faction / panic card)
-  'situation_report.metric': 150,
+  'situation_report.metric': 160,
   'situation_report.value': 100,
 
   // Factions screen comparison table

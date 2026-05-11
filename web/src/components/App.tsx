@@ -130,20 +130,18 @@ function App(): React.JSX.Element {
     >
       <Grid>
         <Stack spacing={2} alignItems="center">
-          <EventLog />
-        </Stack>
-      </Grid>
-      <Grid>
-        <Stack spacing={2} alignItems="center">
           <GameControls />
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={2}>
-          <Stack direction="row" spacing={2} alignItems="flex-start">
-            <OperationsCard />
-            <SituationReportCard />
-          </Stack>
+        <Stack spacing={2} alignItems="center">
+          <OperationsCard />
+          <SituationReportCard />
+        </Stack>
+      </Grid>
+      <Grid>
+        <Stack spacing={2} alignItems="center">
+          <EventLog />
         </Stack>
       </Grid>
       <ErrorToast />
