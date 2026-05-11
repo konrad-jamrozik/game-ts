@@ -8,6 +8,7 @@ import { clearViewFactions } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { FactionDetailsDataGrid } from './FactionDetailsDataGrid'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y } from '../styling/spacing'
 
 export function FactionsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -34,12 +35,12 @@ export function FactionsScreen(): React.JSX.Element {
   return (
     <Box
       sx={{
-        padding: 2,
-        paddingX: 1,
+        paddingY: SCREEN_PADDING_Y,
+        paddingX: SCREEN_PADDING_X,
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={CARD_GAP} alignItems="center">
         <Typography variant="h5">Factions</Typography>
         <FactionDetailsDataGrid
           factions={factions}

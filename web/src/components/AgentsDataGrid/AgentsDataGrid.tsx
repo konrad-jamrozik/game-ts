@@ -20,6 +20,7 @@ import { calculateAgentCounts } from './agentCounts'
 import { AgentsDataGridTitle } from './AgentsDataGridTitle'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -170,7 +171,7 @@ export function AgentsDataGrid(): React.JSX.Element {
       showToolbar
       sx={{
         '& .agents-color-bar-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

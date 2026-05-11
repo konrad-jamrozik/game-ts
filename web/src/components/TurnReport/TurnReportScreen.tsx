@@ -6,6 +6,7 @@ import { useAppDispatch } from '../../redux/hooks'
 import { clearViewTurnReport } from '../../redux/slices/selectionSlice'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { TurnReportCard } from './TurnReportCard'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y } from '../styling/spacing'
 
 export function TurnReportScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -30,12 +31,12 @@ export function TurnReportScreen(): React.JSX.Element {
   return (
     <Box
       sx={{
-        padding: 2,
-        paddingX: 1,
+        paddingY: SCREEN_PADDING_Y,
+        paddingX: SCREEN_PADDING_X,
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={2} alignItems="center">
+      <Stack spacing={CARD_GAP} alignItems="center">
         <TurnReportCard />
         <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           Back to command center

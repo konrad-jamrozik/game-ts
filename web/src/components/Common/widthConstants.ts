@@ -4,7 +4,9 @@ import {
   getDataGridCardWidthForColumnKeys,
   getDataGridWidthForColumnKeys,
   getHorizontalStackWidth,
+  getSpacingPx,
 } from './dataGridLayout'
+import { CARD_GAP } from '../styling/spacing'
 
 const CAPACITIES_READ_ONLY_COLUMN_KEYS = ['capacities.name', 'capacities.value'] satisfies readonly ColumnWidthKey[]
 
@@ -42,7 +44,7 @@ const OPERATIONS_MISSIONS_SUMMARY_GRID_WIDTH = getDataGridWidthForColumnKeys([
 
 const OPERATIONS_CAPACITIES_MINI_GRID_WIDTH = getDataGridWidthForColumnKeys(CAPACITIES_READ_ONLY_COLUMN_KEYS)
 
-const OPERATIONS_INNER_COLUMNS_GAP_PX = 16
+const OPERATIONS_INNER_COLUMNS_GAP_PX = getSpacingPx(CARD_GAP)
 
 export const OPERATIONS_CARD_WIDTH =
   EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX +

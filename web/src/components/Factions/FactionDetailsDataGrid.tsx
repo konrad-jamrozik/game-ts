@@ -9,6 +9,7 @@ import { ColorBar } from '../ColorBar/ColorBar'
 import { columnWidths } from '../Common/columnWidths'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getFactionNextOperationDisplay, getVisibleFactions } from './factionScreenUtils'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 type FactionDetailsDataGridProps = {
   factions: readonly Faction[]
@@ -34,7 +35,7 @@ export function FactionDetailsDataGrid({
       aria-label="Factions report data"
       sx={{
         '& .faction-level-progress-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

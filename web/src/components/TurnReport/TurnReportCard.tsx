@@ -7,6 +7,7 @@ import { formatAssets } from './formatAssets'
 import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView } from './TurnReportTreeView'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { CARD_GAP } from '../styling/spacing'
 
 /**
  * CSS Grid component for displaying turn advancement reports
@@ -46,7 +47,7 @@ export function TurnReportCard(): React.ReactElement {
             display: 'grid',
             gridTemplateColumns: '1fr',
             gridTemplateRows: 'auto auto',
-            gap: 2, // `gap` adds spacing between grid items (2 is equivalent to 16px)
+            gap: CARD_GAP,
             // Thanks to `alignItems: 'start'` each card  will only take the vertical space its content needs,
             // preventing other cards in the same row from expanding vertically.
             // Note: this is needed only if 2 or more cards are in the same row.

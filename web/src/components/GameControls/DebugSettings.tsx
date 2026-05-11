@@ -15,6 +15,7 @@ import {
   toggleLogCategory,
 } from '../../redux/slices/settingsSlice'
 import { GameControlsSection } from './GameControlsSection'
+import { SECTION_GAP } from '../styling/spacing'
 
 export function DebugSettings(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -98,7 +99,7 @@ export function DebugSettings(): React.JSX.Element {
           label="Roll successful combat"
         />
 
-        <Stack spacing={0.5} sx={{ marginTop: 2 }}>
+        <Stack spacing={0.5} sx={{ marginTop: SECTION_GAP }}>
           <Typography variant="h6" sx={{ paddingLeft: 1 }}>
             Console Logging
           </Typography>

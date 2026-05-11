@@ -7,6 +7,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 import CloseIcon from '@mui/icons-material/Close'
 import ZoomInIcon from '@mui/icons-material/ZoomIn'
+import { CARD_GAP, SCREEN_PADDING_Y } from '../styling/spacing'
 
 const CHART_HEIGHT = 300
 
@@ -49,14 +50,14 @@ export function ChartsPanel(props: ChartsPanelProps): React.JSX.Element {
         sx={{
           width: '100%',
           height: '100%',
-          padding: 2,
+          padding: SCREEN_PADDING_Y,
           display: 'flex',
           flexDirection: 'column',
         }}
       >
         <Stack spacing={1} sx={{ flex: 1, minHeight: 0 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+            <Box sx={{ display: 'flex', gap: CARD_GAP, alignItems: 'center' }}>
               <Typography variant="h6">{props.title}</Typography>
               {props.headerControls}
             </Box>
@@ -70,7 +71,7 @@ export function ChartsPanel(props: ChartsPanelProps): React.JSX.Element {
         </Stack>
       </Paper>
       <Dialog fullScreen open={zoomed} onClose={handleCloseZoom} onKeyDown={handleDialogKeyDown}>
-        <Paper elevation={2} sx={{ position: 'relative', height: '100%', p: 2 }}>
+        <Paper elevation={2} sx={{ position: 'relative', height: '100%', p: SCREEN_PADDING_Y }}>
           <IconButton
             onClick={handleCloseZoom}
             aria-label="Close"
@@ -83,7 +84,7 @@ export function ChartsPanel(props: ChartsPanelProps): React.JSX.Element {
           >
             <CloseIcon />
           </IconButton>
-          <Box sx={{ display: 'flex', gap: 2, alignItems: 'center', mb: 2 }}>
+          <Box sx={{ display: 'flex', gap: CARD_GAP, alignItems: 'center', mb: CARD_GAP }}>
             <Typography variant="h5">{props.title}</Typography>
             {props.headerControls}
           </Box>

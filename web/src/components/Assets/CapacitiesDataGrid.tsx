@@ -8,6 +8,7 @@ import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getReadOnlyCapabilitiesColumns, getShopCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProps): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -85,7 +86,7 @@ export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProp
         disableMultipleRowSelection
         sx={{
           '& .capabilities-color-bar-cell': {
-            padding: '4px',
+            padding: DATA_GRID_CELL_PADDING,
           },
         }}
       />
@@ -100,7 +101,7 @@ export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProp
       disableRowSelectionOnClick
       sx={{
         '& .capabilities-color-bar-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

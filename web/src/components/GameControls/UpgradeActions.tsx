@@ -8,6 +8,7 @@ import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { SECTION_GAP } from '../styling/spacing'
 
 export function UpgradeActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -41,7 +42,7 @@ export function UpgradeActions(): React.JSX.Element {
       defaultExpanded={true}
       sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
     >
-      <Stack direction="column" spacing={2}>
+      <Stack direction="column" spacing={SECTION_GAP}>
         <Button variant="contained" onClick={handleBuyUpgrade} disabled={selectedUpgradeName === undefined} fullWidth>
           Buy upgrade
         </Button>

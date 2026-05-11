@@ -19,6 +19,7 @@ import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { LabeledValue } from '../Common/LabeledValue'
 import { useTheme, type SxProps } from '@mui/material/styles'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { CONTROL_ROW_GAP } from '../styling/spacing'
 
 function handleWipeStorageClick(): void {
   wipeStorage()
@@ -143,10 +144,21 @@ export function ResetControls(): React.JSX.Element {
       </AccordionSummary>
       <AccordionDetails>
         <Stack>
-          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} alignItems="center" justifyContent="center">
+          <Stack
+            direction="row"
+            spacing={CONTROL_ROW_GAP}
+            sx={{ paddingBottom: CONTROL_ROW_GAP }}
+            alignItems="center"
+            justifyContent="center"
+          >
             <LabeledValue label="Actions" value={actionsThisTurn} sx={labelSx} />
           </Stack>
-          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
+          <Stack
+            direction="row"
+            spacing={CONTROL_ROW_GAP}
+            sx={{ paddingBottom: CONTROL_ROW_GAP }}
+            justifyContent="center"
+          >
             <Button
               variant="contained"
               onClick={handleUndo}
@@ -171,7 +183,12 @@ export function ResetControls(): React.JSX.Element {
               Redo
             </Button>
           </Stack>
-          <Stack direction="row" spacing={2} sx={{ paddingBottom: 1 }} justifyContent="center">
+          <Stack
+            direction="row"
+            spacing={CONTROL_ROW_GAP}
+            sx={{ paddingBottom: CONTROL_ROW_GAP }}
+            justifyContent="center"
+          >
             <Button
               variant="contained"
               onClick={canResetTurn ? handleResetTurn : handleRevertTurn}

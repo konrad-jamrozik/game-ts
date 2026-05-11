@@ -35,6 +35,7 @@ import {
 import { AgentsDataGridTitle } from '../AgentsDataGrid/AgentsDataGridTitle'
 import { filterVisibleAgentColumns } from '../AgentsDataGrid/AgentsDataGridUtils'
 import { getAgentsColumns, type AgentRow } from '../AgentsDataGrid/getAgentsColumns'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
@@ -132,7 +133,7 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
       showToolbar
       sx={{
         '& .agents-color-bar-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

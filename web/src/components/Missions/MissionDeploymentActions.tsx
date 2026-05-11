@@ -10,6 +10,7 @@ import { fmtAgentCount, fmtMissionTarget } from '../../lib/model_utils/formatUti
 import { asMissionId } from '../../lib/model/modelIds'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
+import { SECTION_GAP } from '../styling/spacing'
 
 export function MissionDeploymentActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -56,7 +57,7 @@ export function MissionDeploymentActions(): React.JSX.Element {
     selectedMission.state !== 'Active'
 
   return (
-    <Stack spacing={2} alignItems="center">
+    <Stack spacing={SECTION_GAP} alignItems="center">
       <Button
         variant="contained"
         onClick={handleDeployAgents}

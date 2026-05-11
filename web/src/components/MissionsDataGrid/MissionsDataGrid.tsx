@@ -22,6 +22,7 @@ import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
 import { calculateMissionCounts } from './missionCounts'
 import { MissionsDataGridTitle } from './MissionsDataGridTitle'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 export function MissionsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -135,7 +136,7 @@ export function MissionsDataGrid(): React.JSX.Element {
       showToolbar
       sx={{
         '& .missions-expires-in-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

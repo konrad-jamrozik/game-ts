@@ -10,6 +10,7 @@ import { fmtAgentCount } from '../../lib/model_utils/formatUtils'
 import { destructiveButtonSx } from '../styling/stylePrimitives'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
+import { CONTROL_ROW_GAP, SECTION_GAP } from '../styling/spacing'
 
 export function AgentManagementActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -76,8 +77,8 @@ export function AgentManagementActions(): React.JSX.Element {
   }
 
   return (
-    <Stack spacing={2} alignItems="center">
-      <Stack direction="row" spacing={2} sx={{ width: '100%' }}>
+    <Stack spacing={SECTION_GAP} alignItems="center">
+      <Stack direction="row" spacing={CONTROL_ROW_GAP} sx={{ width: '100%' }}>
         <Button variant="contained" onClick={handleHireAgent} fullWidth sx={{ minWidth: 0 }}>
           Hire Agent
         </Button>

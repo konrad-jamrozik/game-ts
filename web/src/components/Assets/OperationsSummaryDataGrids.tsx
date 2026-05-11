@@ -7,10 +7,11 @@ import { getCurrentTurnState } from '../../redux/storeUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { columnWidths } from '../Common/columnWidths'
 import { getSituationReportColumns, type SituationReportRow } from '../SituationReport/getSituationReportColumns'
+import { CARD_GAP } from '../styling/spacing'
 
 export function OperationsSummaryDataGrids(): React.JSX.Element {
   return (
-    <Stack direction="row" spacing={2} alignItems="flex-start">
+    <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start">
       <LeadsSummaryDataGrid />
       <MissionsSummaryDataGrid />
     </Stack>

@@ -8,6 +8,7 @@ import { useMissionReport } from './useMissionReport'
 import { CombatLogToolbar } from './CombatLogToolbar'
 import { getCombatLogColumns, type CombatLogRow } from './getCombatLogColumns'
 import { f6c0, f6max } from '../../lib/primitives/fixed6'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 type CombatLogCardProps = {
   missionId: MissionId
@@ -77,7 +78,7 @@ export function CombatLogCard({ missionId }: CombatLogCardProps): React.JSX.Elem
             },
           },
           '& .combat-log-skill-cell': {
-            padding: '4px',
+            padding: DATA_GRID_CELL_PADDING,
           },
         }}
       />

@@ -3,6 +3,7 @@ import CircularProgress from '@mui/material/CircularProgress'
 import Typography from '@mui/material/Typography'
 import { Fragment, useEffect, useState } from 'react'
 import { wipeStorage } from '../redux/persist'
+import { CARD_GAP } from './styling/spacing'
 
 type WipeStatus = 'idle' | 'wiping' | 'success' | 'error'
 
@@ -57,7 +58,7 @@ export function WipeStorage(): React.JSX.Element | undefined {
         alignItems: 'center',
         justifyContent: 'center',
         minHeight: '100vh',
-        gap: 2,
+        gap: CARD_GAP,
       }}
     >
       {status === 'wiping' && (

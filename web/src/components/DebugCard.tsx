@@ -26,6 +26,7 @@ import {
 import { rand } from '../lib/primitives/rand'
 import { log } from '../lib/primitives/logger'
 import { LOG_CATEGORIES, type LogCategory, LOG_CATEGORY_LIST } from '../lib/primitives/logCategories'
+import { SECTION_GAP } from './styling/spacing'
 
 export function DebugCard(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -165,7 +166,7 @@ export function DebugCard(): React.JSX.Element {
           label="Roll successful combat"
         />
 
-        <Stack spacing={0.5} sx={{ marginTop: 2 }}>
+        <Stack spacing={0.5} sx={{ marginTop: SECTION_GAP }}>
           <div>Console Logging</div>
           <FormControlLabel
             control={<Checkbox checked={allCategoriesEnabled} onChange={handleAllLogCategoriesChange} size="small" />}

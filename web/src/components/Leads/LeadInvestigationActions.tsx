@@ -6,6 +6,7 @@ import { getPlayerActionsApi } from '../../redux/playerActionsApi'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { handleInvestigateLead } from '../GameControls/handleInvestigateLead'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
+import { SECTION_GAP } from '../styling/spacing'
 
 export function LeadInvestigationActions(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -30,7 +31,7 @@ export function LeadInvestigationActions(): React.JSX.Element {
   }
 
   return (
-    <Stack spacing={2} alignItems="center">
+    <Stack spacing={SECTION_GAP} alignItems="center">
       <Button
         variant="contained"
         onClick={handleInvestigateLeadClick}

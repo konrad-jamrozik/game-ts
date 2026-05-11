@@ -10,10 +10,11 @@ import { getMoneyNewBalance } from '../../lib/ruleset/moneyRuleset'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getAssetsColumns, type AssetRow } from './getAssetsColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { CARD_GAP } from '../styling/spacing'
 
 export function AssetsDataGrid(): React.JSX.Element {
   return (
-    <Stack direction="row" spacing={2} alignItems="flex-start">
+    <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start">
       <AgentsDataGrid />
       <FinancesDataGrid />
     </Stack>

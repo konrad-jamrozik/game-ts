@@ -7,6 +7,7 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { isF6, type Fixed6, f6fmtDec2 } from '../../lib/primitives/fixed6'
 import { getShopCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
 export function UpgradesDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -87,7 +88,7 @@ export function UpgradesDataGrid(): React.JSX.Element {
       disableMultipleRowSelection
       sx={{
         '& .capabilities-color-bar-cell': {
-          padding: '4px',
+          padding: DATA_GRID_CELL_PADDING,
         },
       }}
     />

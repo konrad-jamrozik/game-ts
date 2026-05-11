@@ -11,6 +11,7 @@ import { CapacitiesDataGrid } from '../Assets/CapacitiesDataGrid'
 import { UpgradesDataGrid } from '../Assets/UpgradesDataGrid'
 import { SCREEN_ACTIONS_COLUMN_WIDTH } from '../Common/dataGridLayout'
 import { UpgradeActions } from '../GameControls/UpgradeActions'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y, SECTION_GAP } from '../styling/spacing'
 
 export function UpgradesScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -44,17 +45,17 @@ export function UpgradesScreen(): React.JSX.Element {
   return (
     <Box
       sx={{
-        padding: 2,
-        paddingX: 1,
+        paddingY: SCREEN_PADDING_Y,
+        paddingX: SCREEN_PADDING_X,
         bgcolor: '#30303052',
       }}
     >
-      <Stack direction="row" spacing={2} alignItems="flex-start" justifyContent="center">
-        <Stack spacing={2} alignItems="center">
+      <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
+        <Stack spacing={CARD_GAP} alignItems="center">
           <CapacitiesDataGrid mode="shop" />
           <UpgradesDataGrid />
         </Stack>
-        <Stack spacing={2} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
+        <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           <UpgradeActions />
           <Button
             variant="contained"

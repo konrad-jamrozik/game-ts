@@ -16,7 +16,7 @@ import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { NumberField } from './NumberField'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { GameControlsSection } from './GameControlsSection'
-import { CARD_CONTENT_PADDING } from '../styling/theme'
+import { CARD_CONTENT_PADDING, SECTION_GAP } from '../styling/spacing'
 
 const DEFAULT_AI_INTELLECT = 'basic'
 const DEFAULT_AI_TURN_COUNT = 50
@@ -71,7 +71,7 @@ export function AIPlayerSection(): React.JSX.Element {
 
   return (
     <GameControlsSection id="ai-player-card" title="AI Player">
-      <Stack spacing={2} sx={{ paddingTop: CARD_CONTENT_PADDING }}>
+      <Stack spacing={SECTION_GAP} sx={{ paddingTop: CARD_CONTENT_PADDING }}>
         <FormControl fullWidth>
           <InputLabel id="ai-intellect-select-label">AI Player Intellect</InputLabel>
           <Select

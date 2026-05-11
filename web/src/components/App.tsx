@@ -18,6 +18,7 @@ import { FactionsScreen } from './Factions/FactionsScreen'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y } from './styling/spacing'
 
 function App(): React.JSX.Element {
   const viewMissionDetailsId: MissionId | undefined = useAppSelector((state) => state.selection.viewMissionDetailsId)
@@ -120,27 +121,27 @@ function App(): React.JSX.Element {
     <Grid
       container
       direction="row"
-      spacing={2}
-      padding={2}
-      paddingX={1}
+      spacing={CARD_GAP}
+      paddingY={SCREEN_PADDING_Y}
+      paddingX={SCREEN_PADDING_X}
       bgcolor={'#30303052'}
       flexWrap={'wrap'}
       justifyContent={'center'}
       alignItems="stretch"
     >
       <Grid>
-        <Stack spacing={2} alignItems="center">
+        <Stack spacing={CARD_GAP} alignItems="center">
           <GameControls />
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={2} alignItems="center">
+        <Stack spacing={CARD_GAP} alignItems="center">
           <OperationsCard />
           <SituationReportCard />
         </Stack>
       </Grid>
       <Grid>
-        <Stack spacing={2} alignItems="center">
+        <Stack spacing={CARD_GAP} alignItems="center">
           <EventLog />
         </Stack>
       </Grid>

@@ -27,6 +27,7 @@ import { DamageByEnemyChart } from './DamageByEnemyChart'
 import { PanicChart } from './PanicChart'
 import { LeadsChart } from './LeadsChart'
 import { FactionsChart } from './FactionsChart'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y } from '../styling/spacing'
 
 export function ChartsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -69,12 +70,12 @@ export function ChartsScreen(): React.JSX.Element {
   return (
     <Box
       sx={{
-        padding: 2,
-        paddingX: 1,
+        paddingY: SCREEN_PADDING_Y,
+        paddingX: SCREEN_PADDING_X,
         bgcolor: '#30303052',
       }}
     >
-      <Stack direction="row" spacing={2} alignItems="center" justifyContent="center" sx={{ marginBottom: 2 }}>
+      <Stack direction="row" spacing={CARD_GAP} alignItems="center" justifyContent="center" sx={{ marginBottom: CARD_GAP }}>
         <Button variant="contained" onClick={handleBackClick}>
           Back to command center
         </Button>
@@ -88,7 +89,7 @@ export function ChartsScreen(): React.JSX.Element {
       <Box
         sx={{
           display: 'grid',
-          gap: 2,
+          gap: CARD_GAP,
           gridTemplateColumns: {
             xs: '1fr',
             lg: 'repeat(2, 1fr)',

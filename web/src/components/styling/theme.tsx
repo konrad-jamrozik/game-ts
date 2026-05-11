@@ -6,9 +6,14 @@ import {
   type Theme,
 } from '@mui/material/styles'
 import { createPaletteOptions } from './palette'
-
-// Card content padding constant used across card components
-export const CARD_CONTENT_PADDING = 1
+import {
+  BUTTON_LABEL_PADDING_X,
+  BUTTON_LABEL_PADDING_Y,
+  CARD_CONTENT_PADDING,
+  CARD_HEADER_PADDING_X,
+  CARD_HEADER_PADDING_Y,
+  SECTION_GAP,
+} from './spacing'
 
 const colorSystemOptions: ColorSystemOptions = {
   palette: createPaletteOptions(),
@@ -27,13 +32,24 @@ let theme = createTheme({
 })
 
 const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsTheme> = {
+  MuiButton: {
+    styleOverrides: {
+      root: {
+        ...theme.unstable_sx({
+          paddingX: BUTTON_LABEL_PADDING_X,
+          paddingY: BUTTON_LABEL_PADDING_Y,
+        }),
+      },
+    },
+  },
   MuiCardHeader: {
     styleOverrides: {
       root: {
         backgroundColor: theme.palette.background.cardHeader,
         // https://mui.com/material-ui/customization/theme-components/#the-sx-syntax-experimental
         ...theme.unstable_sx({
-          paddingY: 1,
+          paddingX: CARD_HEADER_PADDING_X,
+          paddingY: CARD_HEADER_PADDING_Y,
         }),
       },
     },
@@ -43,6 +59,7 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
       root: {
         backgroundColor: theme.palette.background.cardContent,
         ...theme.unstable_sx({
+          padding: CARD_CONTENT_PADDING,
           // https://stackoverflow.com/a/71251997/986533
           '&:last-child': { paddingBottom: CARD_CONTENT_PADDING },
         }),
@@ -51,7 +68,7 @@ const components: Components<Omit<Theme, 'components' | 'palette'> & CssVarsThem
   },
   MuiStack: {
     defaultProps: {
-      spacing: 1,
+      spacing: SECTION_GAP,
     },
   },
 }

@@ -8,7 +8,8 @@ import Collapse from '@mui/material/Collapse'
 import IconButton from '@mui/material/IconButton'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import { setCardExpanded } from '../../redux/slices/expansionSlice'
-import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
+import theme from '../styling/theme'
+import { CARD_CONTENT_PADDING, CARD_HEADER_PADDING_X, CARD_HEADER_PADDING_Y } from '../styling/spacing'
 
 type ExpandableCardProps = {
   id: string
@@ -53,7 +54,7 @@ export function ExpandableCard({
         }
         title={title}
         slotProps={{ title: { variant: 'h6', component: 'div' } }}
-        sx={{ paddingY: 0.75 }}
+        sx={{ paddingX: CARD_HEADER_PADDING_X, paddingY: CARD_HEADER_PADDING_Y }}
       />
       <Collapse in={expanded} timeout="auto" unmountOnExit>
         <CardContent sx={cardContentSx}>{children}</CardContent>

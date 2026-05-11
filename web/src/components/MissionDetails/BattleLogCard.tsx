@@ -16,6 +16,7 @@ import { fmtPctDec0 } from '../../lib/primitives/formatPrimitives'
 import { MyChip } from '../Common/MyChip'
 import type { BattleOutcome } from '../../lib/model/outcomeTypes'
 import { assertEqual } from '../../lib/primitives/assertPrimitives'
+import { DATA_GRID_CELL_PADDING, SECTION_GAP } from '../styling/spacing'
 
 type BattleLogCardProps = {
   missionId: MissionId
@@ -88,12 +89,21 @@ export function BattleLogCard({ missionId }: BattleLogCardProps): React.JSX.Elem
         hideFooter
         sx={{
           '& .battle-log-skill-cell': {
-            padding: '4px',
+            padding: DATA_GRID_CELL_PADDING,
           },
         }}
       />
       {battleSummary !== undefined && (
-        <Box sx={{ mt: 2, mb: 1, px: 1, display: 'flex', alignItems: 'center', gap: 1 }}>
+        <Box
+          sx={{
+            mt: SECTION_GAP,
+            mb: SECTION_GAP,
+            px: SECTION_GAP,
+            display: 'flex',
+            alignItems: 'center',
+            gap: SECTION_GAP,
+          }}
+        >
           <MyChip chipValue={battleSummary.outcome} />
           <Typography variant="body2" color="text.secondary">
             {battleSummary.message}

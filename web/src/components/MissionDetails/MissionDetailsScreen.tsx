@@ -8,6 +8,7 @@ import { clearViewMissionDetails } from '../../redux/slices/selectionSlice'
 import { MissionDetailsCard } from './MissionDetailsCard'
 import { CombatLogCard } from './CombatLogCard'
 import { BattleLogCard } from './BattleLogCard'
+import { CARD_GAP, SCREEN_PADDING_X, SCREEN_PADDING_Y } from '../styling/spacing'
 
 export function MissionDetailsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -46,15 +47,15 @@ export function MissionDetailsScreen(): React.JSX.Element {
       <Grid
         container
         direction="row"
-        spacing={2}
-        padding={2}
-        paddingX={1}
+        spacing={CARD_GAP}
+        paddingY={SCREEN_PADDING_Y}
+        paddingX={SCREEN_PADDING_X}
         bgcolor={'#30303052'}
         flexWrap={'wrap'}
         justifyContent={'center'}
       >
         <Grid>
-          <Stack spacing={2} alignItems="center">
+          <Stack spacing={CARD_GAP} alignItems="center">
             <Button variant="contained" onClick={handleBackClick}>
               Back to command center
             </Button>
@@ -62,7 +63,7 @@ export function MissionDetailsScreen(): React.JSX.Element {
           </Stack>
         </Grid>
         <Grid>
-          <Stack spacing={2}>
+          <Stack spacing={CARD_GAP}>
             <BattleLogCard missionId={viewMissionDetailsId} />
           </Stack>
         </Grid>

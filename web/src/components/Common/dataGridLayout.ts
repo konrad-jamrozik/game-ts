@@ -1,5 +1,6 @@
 import type { DataGridProps, GridColDef } from '@mui/x-data-grid'
-import theme, { CARD_CONTENT_PADDING } from '../styling/theme'
+import theme from '../styling/theme'
+import { CARD_CONTENT_PADDING } from '../styling/spacing'
 import { columnWidths } from './columnWidths'
 
 export type ColumnWidthKey = keyof typeof columnWidths
@@ -17,10 +18,13 @@ export const DATA_GRID_CHECKBOX_COLUMN_WIDTH = 50
  */
 export const STYLED_DATA_GRID_EXTRA_WIDTH_PX = 10
 
-export const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX =
-  2 * Number.parseFloat(theme.spacing(CARD_CONTENT_PADDING))
+export const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX = 2 * getSpacingPx(CARD_CONTENT_PADDING)
 
 export const SCREEN_ACTIONS_COLUMN_WIDTH = 240
+
+export function getSpacingPx(spacing: number): number {
+  return Number.parseFloat(theme.spacing(spacing))
+}
 
 export function getColumnsWidth(columns: readonly Pick<GridColDef, 'width' | 'minWidth'>[]): number {
   return columns.reduce((total, column) => total + (column.width ?? column.minWidth ?? 0), 0)

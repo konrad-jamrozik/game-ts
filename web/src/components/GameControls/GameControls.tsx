@@ -22,6 +22,7 @@ import { DebugSettings } from './DebugSettings'
 import { ResetControls } from './ResetControls'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { CONTROL_ROW_GAP, SECTION_GAP } from '../styling/spacing'
 
 export function GameControls(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -104,7 +105,7 @@ export function GameControls(): React.JSX.Element {
           </Button>
           <LabeledValue label="Turn" value={gameState.turn} sx={{ width: labelWidthPx }} />
         </Stack>
-        <Stack direction="row" spacing={2} sx={{ paddingTop: 1 }}>
+        <Stack direction="row" spacing={CONTROL_ROW_GAP} sx={{ paddingTop: SECTION_GAP }}>
           <Button variant="contained" onClick={handleExpandAll} fullWidth>
             Expand
           </Button>
@@ -112,8 +113,8 @@ export function GameControls(): React.JSX.Element {
             Collapse
           </Button>
         </Stack>
-        <Stack spacing={2} sx={{ paddingTop: 1 }}>
-          <Stack direction="row" spacing={2}>
+        <Stack spacing={CONTROL_ROW_GAP}>
+          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
             <Button variant="contained" onClick={handleAgents} fullWidth>
               Agents
             </Button>
@@ -121,7 +122,7 @@ export function GameControls(): React.JSX.Element {
               Missions
             </Button>
           </Stack>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
             <Button variant="contained" onClick={handleLeads} fullWidth>
               Leads
             </Button>
@@ -129,7 +130,7 @@ export function GameControls(): React.JSX.Element {
               Charts
             </Button>
           </Stack>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
             <Button variant="contained" onClick={handleUpgrades} fullWidth>
               Upgrades
             </Button>
@@ -137,22 +138,22 @@ export function GameControls(): React.JSX.Element {
               Turn Report
             </Button>
           </Stack>
-          <Stack direction="row" spacing={2}>
+          <Stack direction="row" spacing={CONTROL_ROW_GAP}>
             <Button variant="contained" onClick={handleFactions} fullWidth>
               Factions
             </Button>
           </Stack>
         </Stack>
-        <Stack sx={{ paddingTop: 1 }}>
+        <Stack sx={{ paddingTop: SECTION_GAP }}>
           <ResetControls />
         </Stack>
-        <Stack sx={{ paddingTop: 1 }}>
+        <Stack sx={{ paddingTop: SECTION_GAP }}>
           <AIPlayerSection />
         </Stack>
-        <Stack sx={{ paddingTop: 1 }}>
+        <Stack sx={{ paddingTop: SECTION_GAP }}>
           <DebugActions />
         </Stack>
-        <Stack sx={{ paddingTop: 1 }}>
+        <Stack sx={{ paddingTop: SECTION_GAP }}>
           <DebugSettings />
         </Stack>
       </Stack>

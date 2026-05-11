@@ -66,6 +66,7 @@ import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MyChip } from '../Common/MyChip'
 import { columnWidths } from '../Common/columnWidths'
 import { MISSION_DETAILS_CARD_WIDTH } from '../Common/widthConstants'
+import { SECTION_GAP } from '../styling/spacing'
 import type { MissionRewards } from '../../lib/model/missionModel'
 import type { MissionId } from '../../lib/model/modelIds'
 import type { MissionState } from '../../lib/model/outcomeTypes'
@@ -185,7 +186,7 @@ export function MissionDetailsCard({ missionId }: MissionDetailsCardProps): Reac
       defaultExpanded={true}
       sx={{ width: MISSION_DETAILS_CARD_WIDTH }}
     >
-      <Stack spacing={2}>
+      <Stack spacing={SECTION_GAP}>
         <StyledDataGrid rows={detailsRows} columns={detailsColumns} aria-label="Mission Details" hideFooter />
         <StyledDataGrid rows={rewardRows} columns={rewardColumns} aria-label="Mission Rewards" hideFooter />
       </Stack>

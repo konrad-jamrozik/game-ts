@@ -9,6 +9,7 @@ import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
 import { getFactionNextOperationDisplay, getVisibleFactions } from './Factions/factionScreenUtils'
+import { DATA_GRID_CELL_PADDING, SECTION_GAP } from './styling/spacing'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
@@ -51,14 +52,14 @@ export function SituationReportCard(): React.JSX.Element {
       defaultExpanded={true}
       sx={{ width: SITUATION_REPORT_EXPANDABLE_CARD_WIDTH, alignSelf: 'flex-start' }}
     >
-      <Stack spacing={2}>
+      <Stack spacing={SECTION_GAP}>
         <StyledDataGrid
           rows={panicRows}
           columns={panicColumns}
           aria-label="Panic data"
           sx={{
             '& .situation-report-color-bar-cell': {
-              padding: '4px',
+              padding: DATA_GRID_CELL_PADDING,
             },
           }}
         />
