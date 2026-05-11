@@ -16,7 +16,7 @@ roster actions, data grid views, toolbar filters, and empty or disabled states.
     - [Stats columns](#stats-columns)
     - [Terminated columns](#terminated-columns)
 - [Action button states](#action-button-states)
-- [Agents summary in situation report panel](#agents-summary-in-situation-report-panel)
+- [Agent counts on command center](#agent-counts-on-command-center)
 - [See also](#see-also)
 
 # Agents Screen layout
@@ -40,11 +40,11 @@ The agents screen is composed of following UI components
 - Additions to the `Command center screen`:
   - Inside the `Game controls` panel:
     - `Agents` button, to the left of the `Leads` button
-  - Inside the `Situation report` panel:
-    - `Agents summary` data grid
+  - Inside the `Operations` panel:
+    - Compact `Agents` mini data grid (`Agents` / `Count` columns: Ready, Exhausted, Away, Recovering, Total)
 
 The `Command center screen` should no longer render the full `Agents data grid`.
-The command center keeps only the compact `Agents summary` in the `Situation report` panel and the `Agents` navigation button in the `Game controls` panel.
+The command center exposes the roster via the full `Agents screen` (`Agents` button) plus the compact Agents mini grid under `Operations` on the command center.
 
 # Navigating between command center screen and agents screen
 
@@ -254,36 +254,23 @@ If clicked with an invalid selection, it shows one of:
 Selection-based roster actions ignore selected IDs that are not in the current active roster.
 This means terminated agents can be inspected on the `Agents screen`, but they are not valid targets for roster-management actions.
 
-# Agents summary in situation report panel
+# Agent counts on command center
 
-The `Agents summary` appears in the `Situation report` panel on the command center screen.
+The command center exposes a compact two-column **`Agents`** mini grid inside the **`Operations`** card (not in `Situation report`):
 
-It is rendered as a compact data grid with following columns:
+| Agents (row label) | Count                                                          |
+| ------------------ | -------------------------------------------------------------- |
+| `Ready`            | Same readiness notion as `Rdy` in the `Agents data grid` title |
+| `Exhausted`        | Same as `Exh` in the title                                     |
+| `Away`             | Active agents not ready, exhausted, or recovering              |
+| `Recovering`       | Same as `Rcv` in the title                                     |
+| `Total`            | Active agents (not KIA / Sacked)                               |
 
-| Column | Example        |
-| ------ | -------------- |
-| Item   | `Ready agents` |
-| Count  | `3`            |
-
-It has following rows:
-
-| Item                | Count                                                                                      |
-| ------------------- | ------------------------------------------------------------------------------------------ |
-| `Ready agents`      | Number of ready agents, using the same count as `Rdy` in the `Agents data grid` title      |
-| `Exhausted agents`  | Number of exhausted agents, using the same count as `Exh` in the `Agents data grid` title  |
-| `Recovering agents` | Number of recovering agents, using the same count as `Rcv` in the `Agents data grid` title |
-| `Away agents`       | Number of active agents that are not ready, exhausted, or recovering                       |
-
-`Ready agents` and `Exhausted agents` use the same definitions as the `Ready` and `Exhausted` filters on the
-`Agents data grid for leads`.
-
-`Away agents` is computed as:
+`Away` is computed as:
 
 ```text
 {allActive} - {ready} - {exhausted} - {recovering}
 ```
-
-This includes agents in transit, contracting, investigating, on mission, and any other non-terminated agents that are not counted as ready, exhausted, or recovering.
 
 # See also
 
