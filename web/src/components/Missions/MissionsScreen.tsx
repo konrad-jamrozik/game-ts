@@ -50,23 +50,23 @@ export function MissionsScreen(): React.JSX.Element {
         bgcolor: '#30303052',
       }}
     >
-      <Stack spacing={CARD_GAP} alignItems="center">
-        <MissionsDataGrid />
-        <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
-          <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
-            <MissionDeploymentActions />
-            <Button
-              variant="contained"
-              onClick={handleAdvanceTurn}
-              disabled={gameEnded}
-              sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
-            >
-              {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
-            </Button>
-            <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
-              Back to command center
-            </Button>
-          </Stack>
+      <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
+        <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
+          <MissionDeploymentActions />
+          <Button
+            variant="contained"
+            onClick={handleAdvanceTurn}
+            disabled={gameEnded}
+            sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}
+          >
+            {gameLost ? 'Game over' : gameWon ? 'Game won' : 'Next turn'}
+          </Button>
+          <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
+            Back to command center
+          </Button>
+        </Stack>
+        <Stack spacing={CARD_GAP} alignItems="center">
+          <MissionsDataGrid />
           <AgentsDataGridForMissions />
         </Stack>
       </Stack>

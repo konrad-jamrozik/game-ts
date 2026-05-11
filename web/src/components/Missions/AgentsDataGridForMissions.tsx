@@ -27,12 +27,11 @@ import {
   type LeadsAgentsFilterType,
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
-import { DataGridCard } from '../Common/DataGridCard'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
 import {
   calculateAgentsForLeadsGridTitleCounts,
   type AgentsForLeadsGridTitleCounts,
 } from '../AgentsDataGrid/agentCounts'
-import { AgentsDataGridTitle } from '../AgentsDataGrid/AgentsDataGridTitle'
 import type { AgentRow } from '../AgentsDataGrid/getAgentsColumns'
 import { getAgentsColumnsForMissions } from './getAgentsColumnsForMissions'
 import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
@@ -100,13 +99,10 @@ export function AgentsDataGridForMissions(): React.JSX.Element {
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
   const agentsForMissionsTitleCounts = calculateAgentsForLeadsGridTitleCounts(gameState.agents)
-  const title = <AgentsDataGridTitle variant="leads" counts={agentsForMissionsTitleCounts} />
 
   return (
-    <DataGridCard
-      id="agents-for-missions"
-      title={title}
-      ariaLabel="Agents for missions"
+    <StyledDataGrid
+      aria-label="Agents for missions"
       rows={rows}
       columns={columns}
       getRowId={(row: AgentRow) => row.rowId}

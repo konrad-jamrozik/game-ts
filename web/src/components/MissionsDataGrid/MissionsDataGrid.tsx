@@ -16,11 +16,9 @@ import {
 } from '../../lib/model_utils/missionUtils'
 import { fmtNoPrefix } from '../../lib/primitives/formatPrimitives'
 import { getCompletedMissionIds } from '../../lib/model_utils/turnReportUtils'
-import { DataGridCard } from '../Common/DataGridCard'
+import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { MissionsDataGridToolbar } from './MissionsDataGridToolbar'
 import { getMissionsColumns, type MissionRow } from './getMissionsColumns'
-import { calculateMissionCounts } from './missionCounts'
-import { MissionsDataGridTitle } from './MissionsDataGridTitle'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
 
@@ -110,14 +108,12 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
-
-  const missionCounts = calculateMissionCounts(missions)
-  const title = <MissionsDataGridTitle counts={missionCounts} />
+  const activeCount = allActiveRows.length
+  const archivedCount = allArchivedRows.length
 
   return (
-    <DataGridCard
-      id="missions"
-      title={title}
+    <StyledDataGrid
+      aria-label="Missions"
       rows={rows}
       columns={columns}
       getRowId={(row: MissionRow) => row.rowId}
@@ -130,6 +126,8 @@ export function MissionsDataGrid(): React.JSX.Element {
       slotProps={{
         toolbar: {
           showArchived,
+          activeCount,
+          archivedCount,
           onToggleArchived: (checked: boolean) => dispatch(setMissionsShowArchived(checked)),
         },
       }}

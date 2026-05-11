@@ -51,10 +51,6 @@ export function UpgradesScreen(): React.JSX.Element {
       }}
     >
       <Stack direction="row" spacing={CARD_GAP} alignItems="flex-start" justifyContent="center">
-        <Stack spacing={CARD_GAP} alignItems="center">
-          <CapacitiesDataGrid mode="shop" />
-          <UpgradesDataGrid />
-        </Stack>
         <Stack spacing={SECTION_GAP} alignItems="stretch" sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           <UpgradeActions />
           <Button
@@ -68,6 +64,10 @@ export function UpgradesScreen(): React.JSX.Element {
           <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
             Back to command center
           </Button>
+        </Stack>
+        <Stack spacing={CARD_GAP} alignItems="center">
+          <CapacitiesDataGrid mode="shop" />
+          <UpgradesDataGrid />
         </Stack>
       </Stack>
     </Box>
