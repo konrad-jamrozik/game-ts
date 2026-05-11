@@ -55,6 +55,8 @@ export const ASSETS_DATA_GRID_WIDTH = DATA_GRID_BASE_WIDTH + columnWidths['asset
 export const CAPABILITIES_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
 
+export const OPERATIONS_CARD_WIDTH = ASSETS_DATA_GRID_WIDTH + CAPABILITIES_DATA_GRID_WIDTH + 48
+
 export const SITUATION_REPORT_PANIC_DATA_GRID_WIDTH =
   DATA_GRID_BASE_WIDTH + columnWidths['situation_report.metric'] + columnWidths['situation_report.value']
 
@@ -81,7 +83,12 @@ export const SITUATION_REPORT_CARD_WIDTH = SITUATION_REPORT_PANIC_DATA_GRID_WIDT
 
 export const TURN_REPORT_CARD_WIDTH = Math.max(600)
 
-export const RIGHT_COLUMN_CARD_WIDTH = Math.max(ASSETS_CARD_WIDTH, SITUATION_REPORT_CARD_WIDTH, TURN_REPORT_CARD_WIDTH)
+export const RIGHT_COLUMN_CARD_WIDTH = Math.max(
+  OPERATIONS_CARD_WIDTH,
+  ASSETS_CARD_WIDTH,
+  SITUATION_REPORT_CARD_WIDTH,
+  TURN_REPORT_CARD_WIDTH,
+)
 
 export const COMBAT_LOG_CARD_WIDTH =
   DATA_GRID_BASE_WIDTH +

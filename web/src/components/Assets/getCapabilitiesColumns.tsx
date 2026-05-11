@@ -50,7 +50,7 @@ function getBaseCapabilitiesColumns<Row extends CapabilityRow>(): GridColDef<Row
   return [
     {
       field: 'name',
-      headerName: 'Capability',
+      headerName: 'Capacity',
       width: columnWidths['capabilities.name'],
       renderCell: (params: GridRenderCellParams<Row>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
@@ -59,7 +59,7 @@ function getBaseCapabilitiesColumns<Row extends CapabilityRow>(): GridColDef<Row
     },
     {
       field: 'value',
-      headerName: 'Current',
+      headerName: 'Available',
       width: columnWidths['capabilities.value'],
       cellClassName: (params: GridCellParams<Row>): string =>
         params.row.remaining !== undefined && params.row.total !== undefined ? 'capabilities-color-bar-cell' : '',

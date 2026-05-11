@@ -7,8 +7,7 @@ import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { AIPlayerCard } from './GameControls/AIPlayerCard'
 import { TurnReportCard } from './TurnReport/TurnReportCard'
-import { AssetsCard } from './Assets/AssetsCard'
-import { CapacitiesCard } from './Assets/CapacitiesCard'
+import { OperationsCard } from './Assets/OperationsCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
@@ -122,8 +121,7 @@ function App(): React.JSX.Element {
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <AssetsCard />
-          <CapacitiesCard />
+          <OperationsCard />
           <SituationReportCard />
           <TurnReportCard />
         </Stack>

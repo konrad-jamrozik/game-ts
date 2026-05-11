@@ -5,9 +5,9 @@ import { MyChip } from '../Common/MyChip'
 
 export type AssetRow = {
   id: number
-  name: 'Money' | 'Agents' | 'Funding'
+  name: 'Money' | 'Agents' | 'Projected'
   displayedName?: string
-  value: number
+  value?: number
   diff?: number
 }
 
@@ -24,7 +24,7 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
     },
     {
       field: 'value',
-      headerName: 'Current',
+      headerName: 'Value',
       width: columnWidths['assets.value'],
       renderCell: getAssetValueCell,
     },
@@ -34,16 +34,13 @@ export function getAssetsColumns(): GridColDef<AssetRow>[] {
 }
 
 function getAssetValueCell(params: GridRenderCellParams<AssetRow>): React.JSX.Element {
-  const { diff, name, value } = params.row
-
-  if (name !== 'Money') {
-    return <span>{value}</span>
+  if (params.row.name === 'Projected') {
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', height: '100%' }}>
+        {params.row.diff !== undefined && <MyChip chipValue={params.row.diff} />}
+      </div>
+    )
   }
 
-  return (
-    <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-      <span aria-label={`balance-sheet-row-${name.toLowerCase()}-current`}>{value}</span>
-      {diff !== undefined && <MyChip chipValue={diff} />}
-    </div>
-  )
+  return <span>{params.row.value}</span>
 }

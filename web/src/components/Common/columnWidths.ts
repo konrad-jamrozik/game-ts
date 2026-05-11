@@ -7,11 +7,11 @@ export const columnWidths = {
   'situation_report.value': 160,
 
   // Assets columns
-  'assets.name': 160,
-  'assets.value': 160,
+  'assets.name': 100,
+  'assets.value': 100,
 
   // Capabilities columns
-  'capabilities.name': 180,
+  'capabilities.name': 150,
   'capabilities.value': 100,
   'capabilities.upgrade': 100,
   'capabilities.price': 100,
