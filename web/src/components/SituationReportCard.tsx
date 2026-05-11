@@ -1,4 +1,4 @@
-import Stack from '@mui/material/Stack'
+import Box from '@mui/material/Box'
 import * as React from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2, toF } from '../lib/primitives/fixed6'
@@ -6,12 +6,13 @@ import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionU
 import { ExpandableCard } from './Common/ExpandableCard'
 import { SITUATION_REPORT_EXPANDABLE_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
+import { columnWidths } from './Common/columnWidths'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
 import { getFactionNextOperationDisplay, getVisibleFactions } from './Factions/factionScreenUtils'
-import { DATA_GRID_CELL_PADDING, SECTION_GAP } from './styling/spacing'
+import { CARD_GAP, DATA_GRID_CELL_PADDING } from './styling/spacing'
 
-export function SituationReportCard(): React.JSX.Element {
+export function SituationReportContent(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const { panic, factions, leadInvestigationCounts } = gameState
   const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
@@ -19,10 +20,14 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPctStr = f6fmtPctDec2(panic)
   const panicPct = toF(panic) * 100
 
-  const panicColumns = getSituationReportColumns()
+  const panicColumns = getSituationReportColumns({
+    valueHeaderName: 'Panic',
+  })
   const nextOperationColumns = getSituationReportColumns({
     metricHeaderName: 'Next operation',
     valueHeaderName: 'Turns',
+    metricWidth: columnWidths['situation_report.next_operations.metric'],
+    valueWidth: columnWidths['situation_report.next_operations.turns'],
   })
 
   const panicRows: SituationReportRow[] = [
@@ -46,29 +51,31 @@ export function SituationReportCard(): React.JSX.Element {
   })
 
   return (
+    <Box sx={{ display: 'flex', gap: CARD_GAP, alignItems: 'flex-start' }}>
+      <StyledDataGrid rows={nextOperationRows} columns={nextOperationColumns} aria-label="Faction next operations" />
+      <StyledDataGrid
+        rows={panicRows}
+        columns={panicColumns}
+        aria-label="Panic data"
+        sx={{
+          '& .situation-report-color-bar-cell': {
+            padding: DATA_GRID_CELL_PADDING,
+          },
+        }}
+      />
+    </Box>
+  )
+}
+
+export function SituationReportCard(): React.JSX.Element {
+  return (
     <ExpandableCard
       id="situation-report"
       title="Situation Report"
       defaultExpanded={true}
       sx={{ width: SITUATION_REPORT_EXPANDABLE_CARD_WIDTH, alignSelf: 'flex-start' }}
     >
-      <Stack spacing={SECTION_GAP}>
-        <StyledDataGrid
-          rows={panicRows}
-          columns={panicColumns}
-          aria-label="Panic data"
-          sx={{
-            '& .situation-report-color-bar-cell': {
-              padding: DATA_GRID_CELL_PADDING,
-            },
-          }}
-        />
-        <StyledDataGrid
-          rows={nextOperationRows}
-          columns={nextOperationColumns}
-          aria-label="Faction next operations"
-        />
-      </Stack>
+      <SituationReportContent />
     </ExpandableCard>
   )
 }

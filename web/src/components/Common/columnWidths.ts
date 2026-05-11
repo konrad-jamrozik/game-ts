@@ -2,9 +2,17 @@
 // All get*Columns.tsx files must use constants from this file, never define widths directly
 
 export const columnWidths = {
-  // Situation Report (faction / panic card)
-  'situation_report.metric': 160,
-  'situation_report.value': 100,
+  // Situation Report (faction next operations + panic metrics)
+  'situation_report.next_operations.metric': 150,
+  'situation_report.next_operations.turns': 70,
+  'situation_report.metrics.metric': 80,
+  'situation_report.metrics.value': 140,
+
+  // Event log
+  'event_log.event': 360,
+  'event_log.turn': 60,
+  'event_log.actions_count': 60,
+  'event_log.undo': 90,
 
   // Factions screen comparison table
   'factions.name': 150,

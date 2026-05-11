@@ -25,12 +25,12 @@ export function getSituationReportColumns(options?: SituationReportColumnOptions
     {
       field: 'metric',
       headerName: options?.metricHeaderName ?? 'Metric',
-      width: options?.metricWidth ?? columnWidths['situation_report.metric'],
+      width: options?.metricWidth ?? columnWidths['situation_report.metrics.metric'],
     },
     {
       field: 'value',
       headerName: options?.valueHeaderName ?? 'Value',
-      width: options?.valueWidth ?? columnWidths['situation_report.value'],
+      width: options?.valueWidth ?? columnWidths['situation_report.metrics.value'],
       cellClassName: (params: GridCellParams<SituationReportRow>): string =>
         params.row.panicPct !== undefined || params.row.levelProgressPct !== undefined
           ? 'situation-report-color-bar-cell'

@@ -6,7 +6,6 @@ import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
 import { OperationsCard } from './Assets/OperationsCard'
-import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
 import { ChartsScreen } from './Charts/ChartsScreen'
 import { LeadsScreen } from './Leads/LeadsScreen'
@@ -139,7 +138,6 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={CARD_GAP} sx={{ alignItems: 'center' }}>
           <OperationsCard />
-          <SituationReportCard />
         </Stack>
       </Grid>
       <Grid>

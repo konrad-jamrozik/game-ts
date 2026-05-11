@@ -10,7 +10,6 @@ export const ALL_CARD_IDS = [
   'operations',
   'upgrade-actions',
   'ai-player-card',
-  'event-log',
   'debug-actions',
   'debug-settings',
   'missions',
