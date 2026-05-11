@@ -36,12 +36,12 @@ export function getShopCapabilitiesColumns(): GridColDef<UpgradeRow>[] {
     {
       field: 'upgrade',
       headerName: 'Upgrade',
-      width: columnWidths['capabilities.upgrade'],
+      width: columnWidths['capacities.upgrade'],
     },
     {
       field: 'price',
       headerName: 'Price',
-      width: columnWidths['capabilities.price'],
+      width: columnWidths['capacities.price'],
     },
   ]
 }
@@ -51,7 +51,7 @@ function getBaseCapabilitiesColumns<Row extends CapabilityRow>(): GridColDef<Row
     {
       field: 'name',
       headerName: 'Capacity',
-      width: columnWidths['capabilities.name'],
+      width: columnWidths['capacities.name'],
       renderCell: (params: GridRenderCellParams<Row>): React.JSX.Element => {
         const displayName = params.row.displayedName ?? params.row.name
         return <span>{displayName}</span>
@@ -60,7 +60,7 @@ function getBaseCapabilitiesColumns<Row extends CapabilityRow>(): GridColDef<Row
     {
       field: 'value',
       headerName: 'Available',
-      width: columnWidths['capabilities.value'],
+      width: columnWidths['capacities.value'],
       cellClassName: (params: GridCellParams<Row>): string =>
         params.row.remaining !== undefined && params.row.total !== undefined ? 'capabilities-color-bar-cell' : '',
       renderCell: (params: GridRenderCellParams<Row>): React.JSX.Element => {

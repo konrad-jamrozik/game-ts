@@ -8,13 +8,13 @@ export const columnWidths = {
 
   // Assets columns
   'assets.name': 150,
-  'assets.value': 70,
+  'assets.value': 80,
 
-  // Capabilities columns
-  'capabilities.name': 150,
-  'capabilities.value': 100,
-  'capabilities.upgrade': 100,
-  'capabilities.price': 100,
+  // Capacities columns
+  'capacities.name': 130,
+  'capacities.value': 100,
+  'capacities.upgrade': 100,
+  'capacities.price': 100,
 
   // Operations summary columns
   'operations_summary.name': 150,

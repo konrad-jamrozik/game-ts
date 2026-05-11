@@ -57,13 +57,13 @@ export const ASSET_SUMMARY_DATA_GRID_WIDTH =
 export const ASSETS_DATA_GRID_WIDTH = 2 * ASSET_SUMMARY_DATA_GRID_WIDTH + 16
 
 export const CAPABILITIES_DATA_GRID_WIDTH =
-  DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
+  DATA_GRID_BASE_WIDTH + columnWidths['capacities.name'] + columnWidths['capacities.value']
 
 export const OPERATIONS_SUMMARY_DATA_GRID_WIDTH =
   OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['operations_summary.name'] + columnWidths['operations_summary.count']
 
 const OPERATIONS_CAPABILITIES_DATA_GRID_WIDTH =
-  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['capabilities.name'] + columnWidths['capabilities.value']
+  OPERATIONS_DATA_GRID_BASE_WIDTH + columnWidths['capacities.name'] + columnWidths['capacities.value']
 
 const OPERATIONS_SMALL_DATA_GRID_WIDTH = Math.max(ASSET_SUMMARY_DATA_GRID_WIDTH, OPERATIONS_SUMMARY_DATA_GRID_WIDTH)
 
