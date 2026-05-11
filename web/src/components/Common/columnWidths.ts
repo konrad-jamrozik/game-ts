@@ -3,8 +3,8 @@
 
 export const columnWidths = {
   // Situation Report (faction / panic card)
-  'situation_report.metric': 146,
-  'situation_report.value': 160,
+  'situation_report.metric': 150,
+  'situation_report.value': 100,
 
   // Agents mini grid (Operations card)
   'operations_agents.name': 150,

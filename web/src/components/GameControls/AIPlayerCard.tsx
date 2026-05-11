@@ -8,8 +8,6 @@ import Select, { type SelectChangeEvent } from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { ExpandableCard } from '../Common/ExpandableCard'
-import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
 import { isGameLost, isGameWon } from '../../lib/game_utils/gameStateChecks'
 import { delegateTurnToAIPlayer, delegateTurnsToAIPlayer } from '../../ai/delegateTurnsToAIPlayer'
 import { getAllIntellectNames, getIntellect } from '../../ai/intellectRegistry'
@@ -17,12 +15,14 @@ import { setAIIntellectSelection, setAutoAdvanceTurn, setAITurnCount } from '../
 import { advanceTurn } from '../../redux/slices/gameStateSlice'
 import { NumberField } from './NumberField'
 import { getCurrentTurnState } from '../../redux/storeUtils'
+import { GameControlsSection } from './GameControlsSection'
+import { CARD_CONTENT_PADDING } from '../styling/theme'
 
 const DEFAULT_AI_INTELLECT = 'basic'
 const DEFAULT_AI_TURN_COUNT = 50
 const DEFAULT_AUTO_ADVANCE_TURN = true
 
-export function AIPlayerCard(): React.JSX.Element {
+export function AIPlayerSection(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const selectedAIIntellect = useAppSelector((state) => state.selection.selectedAIIntellect)
@@ -70,13 +70,8 @@ export function AIPlayerCard(): React.JSX.Element {
   }
 
   return (
-    <ExpandableCard
-      id="ai-player-card"
-      title="AI Player"
-      defaultExpanded={true}
-      sx={{ width: CONTROLS_COLUMN_CARD_WIDTH }}
-    >
-      <Stack spacing={2}>
+    <GameControlsSection id="ai-player-card" title="AI Player">
+      <Stack spacing={2} sx={{ paddingTop: CARD_CONTENT_PADDING }}>
         <FormControl fullWidth>
           <InputLabel id="ai-intellect-select-label">AI Player Intellect</InputLabel>
           <Select
@@ -120,6 +115,6 @@ export function AIPlayerCard(): React.JSX.Element {
           Delegate {aiTurnCount} turn{aiTurnCount !== 1 ? 's' : ''} to AI
         </Button>
       </Stack>
-    </ExpandableCard>
+    </GameControlsSection>
   )
 }

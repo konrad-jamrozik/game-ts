@@ -21,6 +21,8 @@ export type SelectionState = {
   viewMissions?: true
   viewAgents?: true
   viewUpgrades?: true
+  viewTurnReport?: true
+  viewFactions?: true
   // Data grid filter states
   missionsShowArchived?: boolean
   leadsFilterType?: LeadsFilterType
@@ -105,6 +107,8 @@ const selectionSlice = createSlice({
       delete state.viewMissions
       delete state.viewAgents
       delete state.viewUpgrades
+      delete state.viewTurnReport
+      delete state.viewFactions
       // Clear data grid filter states
       delete state.missionsShowArchived
       delete state.leadsFilterType
@@ -124,6 +128,8 @@ const selectionSlice = createSlice({
       delete state.viewMissions
       delete state.viewAgents
       delete state.viewUpgrades
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewMissionDetails(state) {
       delete state.viewMissionDetailsId
@@ -135,6 +141,8 @@ const selectionSlice = createSlice({
       delete state.viewAgents
       delete state.viewUpgrades
       delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewLeads(state) {
       delete state.viewLeads
@@ -146,6 +154,8 @@ const selectionSlice = createSlice({
       delete state.viewAgents
       delete state.viewUpgrades
       delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewCharts(state) {
       delete state.viewCharts
@@ -157,6 +167,8 @@ const selectionSlice = createSlice({
       delete state.viewAgents
       delete state.viewUpgrades
       delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewMissions(state) {
       delete state.viewMissions
@@ -168,6 +180,8 @@ const selectionSlice = createSlice({
       delete state.viewMissions
       delete state.viewUpgrades
       delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewAgents(state) {
       delete state.viewAgents
@@ -179,9 +193,37 @@ const selectionSlice = createSlice({
       delete state.viewMissions
       delete state.viewAgents
       delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+      delete state.viewFactions
     },
     clearViewUpgrades(state) {
       delete state.viewUpgrades
+    },
+    setViewTurnReport(state) {
+      state.viewTurnReport = true
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
+      delete state.viewUpgrades
+      delete state.viewMissionDetailsId
+      delete state.viewFactions
+    },
+    clearViewTurnReport(state) {
+      delete state.viewTurnReport
+    },
+    setViewFactions(state) {
+      state.viewFactions = true
+      delete state.viewLeads
+      delete state.viewCharts
+      delete state.viewMissions
+      delete state.viewAgents
+      delete state.viewUpgrades
+      delete state.viewMissionDetailsId
+      delete state.viewTurnReport
+    },
+    clearViewFactions(state) {
+      delete state.viewFactions
     },
     // Data grid filter reducers
     setMissionsShowArchived(state, action: PayloadAction<boolean>) {
@@ -256,6 +298,10 @@ export const {
   clearViewAgents,
   setViewUpgrades,
   clearViewUpgrades,
+  setViewTurnReport,
+  clearViewTurnReport,
+  setViewFactions,
+  clearViewFactions,
   // Data grid filter actions
   setMissionsShowArchived,
   setLeadsFilterType,

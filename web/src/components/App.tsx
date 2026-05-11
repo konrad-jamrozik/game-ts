@@ -5,8 +5,6 @@ import { runAppInit } from './utils/runAppInit'
 import { ErrorToast } from './Error/ErrorToast'
 import { EventLog } from './EventLog'
 import { GameControls } from './GameControls/GameControls'
-import { AIPlayerCard } from './GameControls/AIPlayerCard'
-import { TurnReportCard } from './TurnReport/TurnReportCard'
 import { OperationsCard } from './Assets/OperationsCard'
 import { SituationReportCard } from './SituationReportCard'
 import { MissionDetailsScreen } from './MissionDetails/MissionDetailsScreen'
@@ -15,6 +13,8 @@ import { LeadsScreen } from './Leads/LeadsScreen'
 import { MissionsScreen } from './Missions/MissionsScreen'
 import { AgentsScreen } from './Agents/AgentsScreen'
 import { UpgradesScreen } from './Upgrades/UpgradesScreen'
+import { TurnReportScreen } from './TurnReport/TurnReportScreen'
+import { FactionsScreen } from './Factions/FactionsScreen'
 import { WipeStorage } from './WipeStorage'
 import { useAppSelector } from '../redux/hooks'
 import type { MissionId } from '../lib/model/modelIds'
@@ -26,6 +26,8 @@ function App(): React.JSX.Element {
   const viewAgents = useAppSelector((state) => state.selection.viewAgents)
   const viewCharts = useAppSelector((state) => state.selection.viewCharts)
   const viewUpgrades = useAppSelector((state) => state.selection.viewUpgrades)
+  const viewTurnReport = useAppSelector((state) => state.selection.viewTurnReport)
+  const viewFactions = useAppSelector((state) => state.selection.viewFactions)
 
   useEffect(() => {
     runAppInit()
@@ -87,6 +89,24 @@ function App(): React.JSX.Element {
     )
   }
 
+  if (viewTurnReport) {
+    return (
+      <Fragment>
+        <TurnReportScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
+  if (viewFactions) {
+    return (
+      <Fragment>
+        <FactionsScreen />
+        <ErrorToast />
+      </Fragment>
+    )
+  }
+
   if (viewMissionDetailsId !== undefined) {
     return (
       <Fragment>
@@ -116,14 +136,14 @@ function App(): React.JSX.Element {
       <Grid>
         <Stack spacing={2} alignItems="center">
           <GameControls />
-          <AIPlayerCard />
         </Stack>
       </Grid>
       <Grid>
         <Stack spacing={2}>
-          <OperationsCard />
-          <SituationReportCard />
-          <TurnReportCard />
+          <Stack direction="row" spacing={2} alignItems="flex-start">
+            <OperationsCard />
+            <SituationReportCard />
+          </Stack>
         </Stack>
       </Grid>
       <ErrorToast />

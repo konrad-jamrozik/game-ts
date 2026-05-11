@@ -1,18 +1,14 @@
-import { Typography } from '@mui/material'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
-import { Fragment } from 'react'
 import { useAppSelector } from '../redux/hooks'
 import { f6fmtPctDec2, toF } from '../lib/primitives/fixed6'
-import { getActivityLevelByOrd, getActivityLevelName } from '../lib/model_utils/factionActivityLevelUtils'
 import { getFactionName, isFactionTerminated } from '../lib/model_utils/factionUtils'
-import { isFactionDiscovered } from '../lib/ruleset/factionRuleset'
-import { assertIsActivityLevelOrd } from '../lib/model/modelOrdUtils'
 import { ExpandableCard } from './Common/ExpandableCard'
 import { SITUATION_REPORT_EXPANDABLE_CARD_WIDTH } from './Common/widthConstants'
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { getSituationReportColumns, type SituationReportRow } from './SituationReport/getSituationReportColumns'
 import { getCurrentTurnState } from '../redux/storeUtils'
+import { getFactionNextOperationDisplay, getVisibleFactions } from './Factions/factionScreenUtils'
 
 export function SituationReportCard(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
@@ -22,7 +18,11 @@ export function SituationReportCard(): React.JSX.Element {
   const panicPctStr = f6fmtPctDec2(panic)
   const panicPct = toF(panic) * 100
 
-  const columns = getSituationReportColumns()
+  const panicColumns = getSituationReportColumns()
+  const nextOperationColumns = getSituationReportColumns({
+    metricHeaderName: 'Next operation',
+    valueHeaderName: 'Turns',
+  })
 
   const panicRows: SituationReportRow[] = [
     {
@@ -34,9 +34,15 @@ export function SituationReportCard(): React.JSX.Element {
     },
   ]
 
-  const discoveredFactions = revealAllFactionProfiles
-    ? factions
-    : factions.filter((faction) => isFactionDiscovered(faction, leadInvestigationCounts))
+  const discoveredFactions = getVisibleFactions(factions, leadInvestigationCounts, revealAllFactionProfiles)
+  const nextOperationRows: SituationReportRow[] = discoveredFactions.map((faction, index) => {
+    const terminated = isFactionTerminated(faction, leadInvestigationCounts)
+    return {
+      id: index + 1,
+      metric: getFactionName(faction),
+      value: getFactionNextOperationDisplay(faction, terminated),
+    }
+  })
 
   return (
     <ExpandableCard
@@ -48,7 +54,7 @@ export function SituationReportCard(): React.JSX.Element {
       <Stack spacing={2}>
         <StyledDataGrid
           rows={panicRows}
-          columns={columns}
+          columns={panicColumns}
           aria-label="Panic data"
           sx={{
             '& .situation-report-color-bar-cell': {
@@ -56,86 +62,12 @@ export function SituationReportCard(): React.JSX.Element {
             },
           }}
         />
-        {discoveredFactions.map((faction) => {
-          const terminated = isFactionTerminated(faction, leadInvestigationCounts)
-          return (
-            <Fragment key={faction.id}>
-              <Typography variant="h6">{getFactionName(faction)} faction</Typography>
-              <StyledDataGrid
-                rows={getFactionRows(faction, terminated)}
-                columns={columns}
-                aria-label={`${getFactionName(faction)} Report data`}
-                sx={{
-                  '& .situation-report-color-bar-cell': {
-                    padding: '4px',
-                  },
-                }}
-              />
-            </Fragment>
-          )
-        })}
+        <StyledDataGrid
+          rows={nextOperationRows}
+          columns={nextOperationColumns}
+          aria-label="Faction next operations"
+        />
       </Stack>
     </ExpandableCard>
   )
-}
-
-function getFactionRows(
-  faction: {
-    activityLevel: number
-    turnsAtCurrentLevel: number
-    targetTurnsForProgression: number
-    turnsUntilNextOperation: number
-    suppressionTurns: number
-  },
-  isTerminated: boolean,
-): SituationReportRow[] {
-  assertIsActivityLevelOrd(faction.activityLevel)
-  const config = getActivityLevelByOrd(faction.activityLevel)
-  const levelName = isTerminated ? 'Terminated' : getActivityLevelName(faction.activityLevel)
-
-  // Format progression display as "current/min" (see about_faction_activity_level.md)
-  // For terminated factions, show "-"
-  const progressionDisplay = isTerminated
-    ? '-'
-    : config.turnsMin === Infinity
-      ? '-'
-      : `${faction.turnsAtCurrentLevel}/${config.turnsMin}`
-  const levelProgressPct =
-    isTerminated || config.turnsMin === Infinity ? undefined : (faction.turnsAtCurrentLevel / config.turnsMin) * 100
-
-  // Format next operation display
-  // For terminated factions, show "-"
-  const nextOpDisplay = isTerminated
-    ? '-'
-    : faction.activityLevel === 0
-      ? '-'
-      : faction.suppressionTurns > 0
-        ? `${faction.turnsUntilNextOperation} (supp: ${faction.suppressionTurns})`
-        : String(faction.turnsUntilNextOperation)
-
-  return [
-    {
-      id: 1,
-      metric: 'Activity level',
-      value: isTerminated ? 'Terminated' : `${faction.activityLevel} - ${levelName}`,
-    },
-    {
-      id: 2,
-      metric: 'Level progress',
-      value: progressionDisplay,
-      reverseColor: true, // Progress towards higher activity is bad
-      ...(levelProgressPct !== undefined ? { levelProgressPct } : {}),
-    },
-    {
-      id: 3,
-      metric: 'Next operation',
-      value: nextOpDisplay,
-      reverseColor: true, // Lower is worse for player
-    },
-    {
-      id: 4,
-      metric: 'Suppression',
-      value: isTerminated ? '-' : faction.suppressionTurns > 0 ? `${faction.suppressionTurns} turns` : '-',
-    },
-  ]
 }

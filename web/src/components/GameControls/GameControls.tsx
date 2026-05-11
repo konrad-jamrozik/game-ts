@@ -9,11 +9,14 @@ import {
   setViewCharts,
   setViewLeads,
   setViewMissions,
+  setViewFactions,
+  setViewTurnReport,
   setViewUpgrades,
 } from '../../redux/slices/selectionSlice'
 import { LabeledValue } from '../Common/LabeledValue'
 import { ExpandableCard } from '../Common/ExpandableCard'
 import { CONTROLS_COLUMN_CARD_WIDTH } from '../Common/widthConstants'
+import { AIPlayerSection } from './AIPlayerCard'
 import { DebugActions } from './DebugActions'
 import { DebugSettings } from './DebugSettings'
 import { ResetControls } from './ResetControls'
@@ -54,6 +57,14 @@ export function GameControls(): React.JSX.Element {
 
   function handleUpgrades(): void {
     dispatch(setViewUpgrades())
+  }
+
+  function handleTurnReport(): void {
+    dispatch(setViewTurnReport())
+  }
+
+  function handleFactions(): void {
+    dispatch(setViewFactions())
   }
 
   const gameLost = isGameLost(gameState)
@@ -122,10 +133,21 @@ export function GameControls(): React.JSX.Element {
             <Button variant="contained" onClick={handleUpgrades} fullWidth>
               Upgrades
             </Button>
+            <Button variant="contained" onClick={handleTurnReport} fullWidth>
+              Turn Report
+            </Button>
+          </Stack>
+          <Stack direction="row" spacing={2}>
+            <Button variant="contained" onClick={handleFactions} fullWidth>
+              Factions
+            </Button>
           </Stack>
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
           <ResetControls />
+        </Stack>
+        <Stack sx={{ paddingTop: 1 }}>
+          <AIPlayerSection />
         </Stack>
         <Stack sx={{ paddingTop: 1 }}>
           <DebugActions />
