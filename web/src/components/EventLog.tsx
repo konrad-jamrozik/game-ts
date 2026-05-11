@@ -113,8 +113,9 @@ function getEventLogColumns(onJump: (offset: number) => void): GridColDef<EventL
       headerName: '',
       width: columnWidths['event_log.undo'],
       sortable: false,
-      renderCell: (params: GridRenderCellParams<EventLogRow, TimeTravelAction | undefined>): React.JSX.Element | undefined =>
-        renderTimeTravelButton(params, onJump),
+      renderCell: (
+        params: GridRenderCellParams<EventLogRow, TimeTravelAction | undefined>,
+      ): React.JSX.Element | undefined => renderTimeTravelButton(params, onJump),
     },
   ]
 }

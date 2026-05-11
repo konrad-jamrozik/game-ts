@@ -29,6 +29,7 @@ KJA backlog:
   - Agent/Transport/Training Cap -> drop `Cap`, narrow column
 - Narrow down game controls
 - Event log upgrades and styling
+  - `New mission site available: -> New m. site:`
   - "Advanced to turn" should display in blue or violet color
   - "Expiring soon" should display in orange color
   - Successful mission should display in green color

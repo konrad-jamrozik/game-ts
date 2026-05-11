@@ -84,16 +84,10 @@ const eventsSlice = createSlice({
   name: 'events',
   initialState: initialEventsState,
   reducers: {
-    addTextEvent(
-      state,
-      action: PayloadAction<TextEventPayload>,
-    ) {
+    addTextEvent(state, action: PayloadAction<TextEventPayload>) {
       addTextEventToState(state, action.payload, 'ActionControlled')
     },
-    addWorldTextEvent(
-      state,
-      action: PayloadAction<TextEventPayload>,
-    ) {
+    addWorldTextEvent(state, action: PayloadAction<TextEventPayload>) {
       addTextEventToState(state, action.payload, 'WorldEvent')
     },
     addMissionCompletedEvent(
