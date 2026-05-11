@@ -1,10 +1,13 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
-import type { AgentId, LeadId, LeadInvestigationId, MissionId } from '../../lib/model/modelIds'
+import type { AgentId, FactionId, LeadId, LeadInvestigationId, MissionId } from '../../lib/model/modelIds'
 import type { UpgradeName } from '../../lib/data_tables/upgrades'
 
 export type LeadsFilterType = 'active' | 'inactive' | 'archived'
 export type LeadsAgentsFilterType = 'ready' | 'away' | 'exhausted' | 'recovering'
 export type ChartsTurnRangeFilter = 'all' | 'last100' | 'currentTurn'
+export type AgentsFilterType = 'all' | 'ready' | 'exhausted' | 'away' | 'recovering' | 'terminated' | 'stats'
+export type MissionsFilterType = 'all' | 'expiringSoon' | 'deployed' | 'archived'
+export type LeadsDrilldownFilter = 'all' | 'available' | 'activeInvestigations'
 
 export type SelectionState = {
   agents: AgentId[]
@@ -24,12 +27,12 @@ export type SelectionState = {
   viewTurnReport?: true
   viewFactions?: true
   // Data grid filter states
-  missionsShowArchived?: boolean
+  agentsFilterType?: AgentsFilterType
+  missionsFilterType?: MissionsFilterType
+  leadsDrilldownFilter?: LeadsDrilldownFilter
+  selectedTurnReportTurn?: number
+  selectedFactionId?: FactionId
   leadsFilterType?: LeadsFilterType
-  agentsShowTerminated?: boolean
-  agentsShowAvailable?: boolean
-  agentsShowRecovering?: boolean
-  agentsShowStats?: boolean
   leadsAgentsFilters?: LeadsAgentsFilterType[]
   missionsAgentsFilters?: LeadsAgentsFilterType[]
   missionsChartShowOffensive?: boolean
@@ -110,12 +113,12 @@ const selectionSlice = createSlice({
       delete state.viewTurnReport
       delete state.viewFactions
       // Clear data grid filter states
-      delete state.missionsShowArchived
+      delete state.agentsFilterType
+      delete state.missionsFilterType
+      delete state.leadsDrilldownFilter
+      delete state.selectedTurnReportTurn
+      delete state.selectedFactionId
       delete state.leadsFilterType
-      delete state.agentsShowTerminated
-      delete state.agentsShowAvailable
-      delete state.agentsShowRecovering
-      delete state.agentsShowStats
       delete state.leadsAgentsFilters
       delete state.missionsAgentsFilters
       // Selections not deleted, i.e. preserved:
@@ -225,24 +228,66 @@ const selectionSlice = createSlice({
     clearViewFactions(state) {
       delete state.viewFactions
     },
-    // Data grid filter reducers
-    setMissionsShowArchived(state, action: PayloadAction<boolean>) {
-      state.missionsShowArchived = action.payload
+    openAgentsDrilldown(state, action: PayloadAction<AgentsFilterType>) {
+      setOnlyView(state, 'viewAgents')
+      state.agentsFilterType = action.payload
     },
+    openMissionsDrilldown(state, action: PayloadAction<MissionsFilterType>) {
+      setOnlyView(state, 'viewMissions')
+      state.missionsFilterType = action.payload
+    },
+    openLeadsDrilldown(state, action: PayloadAction<LeadsDrilldownFilter>) {
+      setOnlyView(state, 'viewLeads')
+      state.leadsFilterType = 'active'
+      state.leadsDrilldownFilter = action.payload
+    },
+    openTurnReportDrilldown(state, action: PayloadAction<number>) {
+      setOnlyView(state, 'viewTurnReport')
+      state.selectedTurnReportTurn = action.payload
+    },
+    openFactionsDrilldown: {
+      reducer(state, action: PayloadAction<FactionId | undefined>) {
+        setOnlyView(state, 'viewFactions')
+        if (action.payload === undefined) {
+          delete state.selectedFactionId
+        } else {
+          state.selectedFactionId = action.payload
+        }
+      },
+      prepare(factionId?: FactionId) {
+        return { payload: factionId }
+      },
+    },
+    openChartsDrilldown: {
+      reducer(state, action: PayloadAction<ChartsTurnRangeFilter | undefined>) {
+        setOnlyView(state, 'viewCharts')
+        if (action.payload === undefined) {
+          delete state.chartsTurnRangeFilter
+        } else {
+          state.chartsTurnRangeFilter = action.payload
+        }
+      },
+      prepare(turnRangeFilter?: ChartsTurnRangeFilter) {
+        return { payload: turnRangeFilter }
+      },
+    },
+    openUpgradesDrilldown: {
+      reducer(state, action: PayloadAction<UpgradeName | undefined>) {
+        setOnlyView(state, 'viewUpgrades')
+        if (action.payload === undefined) {
+          delete state.selectedUpgradeName
+        } else {
+          state.selectedUpgradeName = action.payload
+        }
+      },
+      prepare(upgradeName?: UpgradeName) {
+        return { payload: upgradeName }
+      },
+    },
+    // Data grid filter reducers
     setLeadsFilterType(state, action: PayloadAction<LeadsFilterType>) {
       state.leadsFilterType = action.payload
-    },
-    setAgentsShowTerminated(state, action: PayloadAction<boolean>) {
-      state.agentsShowTerminated = action.payload
-    },
-    setAgentsShowAvailable(state, action: PayloadAction<boolean>) {
-      state.agentsShowAvailable = action.payload
-    },
-    setAgentsShowRecovering(state, action: PayloadAction<boolean>) {
-      state.agentsShowRecovering = action.payload
-    },
-    setAgentsShowStats(state, action: PayloadAction<boolean>) {
-      state.agentsShowStats = action.payload
+      state.leadsDrilldownFilter = 'all'
     },
     setLeadsAgentsFilters(state, action: PayloadAction<LeadsAgentsFilterType[]>) {
       state.leadsAgentsFilters = action.payload
@@ -302,13 +347,15 @@ export const {
   clearViewTurnReport,
   setViewFactions,
   clearViewFactions,
+  openAgentsDrilldown,
+  openMissionsDrilldown,
+  openLeadsDrilldown,
+  openTurnReportDrilldown,
+  openFactionsDrilldown,
+  openChartsDrilldown,
+  openUpgradesDrilldown,
   // Data grid filter actions
-  setMissionsShowArchived,
   setLeadsFilterType,
-  setAgentsShowTerminated,
-  setAgentsShowAvailable,
-  setAgentsShowRecovering,
-  setAgentsShowStats,
   setLeadsAgentsFilters,
   setMissionsAgentsFilters,
   setMissionsChartShowOffensive,
@@ -318,3 +365,24 @@ export const {
   setChartsTurnRangeFilter,
 } = selectionSlice.actions
 export default selectionSlice.reducer
+
+type SelectionViewFlag =
+  | 'viewLeads'
+  | 'viewCharts'
+  | 'viewMissions'
+  | 'viewAgents'
+  | 'viewUpgrades'
+  | 'viewTurnReport'
+  | 'viewFactions'
+
+function setOnlyView(state: SelectionState, viewFlag: SelectionViewFlag): void {
+  delete state.viewLeads
+  delete state.viewCharts
+  delete state.viewMissions
+  delete state.viewAgents
+  delete state.viewUpgrades
+  delete state.viewTurnReport
+  delete state.viewFactions
+  delete state.viewMissionDetailsId
+  state[viewFlag] = true
+}

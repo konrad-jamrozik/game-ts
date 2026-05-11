@@ -14,6 +14,7 @@ export function FactionsScreen(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const { factions, leadInvestigationCounts } = useAppSelector(getCurrentTurnState)
   const revealAllFactionProfiles = useAppSelector((state) => state.settings.revealAllFactionProfiles)
+  const selectedFactionId = useAppSelector((state) => state.selection.selectedFactionId)
 
   function handleBackClick(): void {
     dispatch(clearViewFactions())
@@ -46,6 +47,7 @@ export function FactionsScreen(): React.JSX.Element {
           factions={factions}
           leadInvestigationCounts={leadInvestigationCounts}
           revealAllFactionProfiles={revealAllFactionProfiles}
+          selectedFactionId={selectedFactionId}
         />
         <Button variant="contained" onClick={handleBackClick} sx={{ width: SCREEN_ACTIONS_COLUMN_WIDTH }}>
           Back to command center

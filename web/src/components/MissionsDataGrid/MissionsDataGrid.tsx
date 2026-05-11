@@ -6,7 +6,12 @@ import {
 } from '@mui/x-data-grid'
 import * as React from 'react'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { clearMissionSelection, setMissionSelection, setMissionsShowArchived } from '../../redux/slices/selectionSlice'
+import {
+  clearMissionSelection,
+  openMissionsDrilldown,
+  setMissionSelection,
+  type MissionsFilterType,
+} from '../../redux/slices/selectionSlice'
 import {
   getActiveOrDeployedMissions,
   getArchivedMissions,
@@ -27,7 +32,7 @@ export function MissionsDataGrid(): React.JSX.Element {
   const gameState = useAppSelector(getCurrentTurnState)
   const { missions, turnStartReport } = gameState
   const selectedMissionId = useAppSelector((state) => state.selection.selectedMissionId)
-  const showArchived = useAppSelector((state) => state.selection.missionsShowArchived ?? false)
+  const filterType = useAppSelector((state) => state.selection.missionsFilterType ?? 'all')
 
   const completedThisTurnIds: Set<string> = getCompletedMissionIds(turnStartReport)
 
@@ -67,10 +72,14 @@ export function MissionsDataGrid(): React.JSX.Element {
     }
   })
 
-  // Filter rows based on archived checkbox: show ONLY archived when checked, ONLY active when unchecked
-  const rows: MissionRow[] = showArchived ? allArchivedRows : allActiveRows
+  const rows = filterMissionRows(allActiveRows, allArchivedRows, filterType)
+  const showArchived = filterType === 'archived'
 
   const columns = getMissionsColumns(dispatch, gameState, showArchived)
+
+  function handleFilterTypeChange(nextFilterType: MissionsFilterType): void {
+    dispatch(openMissionsDrilldown(nextFilterType))
+  }
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const mgr = createRowSelectionManager(newSelectionModel)
@@ -108,7 +117,9 @@ export function MissionsDataGrid(): React.JSX.Element {
 
   const idsSet = new Set<GridRowId>(rowIds)
   const model: GridRowSelectionModel = { type: 'include', ids: idsSet }
-  const activeCount = allActiveRows.length
+  const allCount = allActiveRows.length
+  const expiringSoonCount = filterMissionRows(allActiveRows, allArchivedRows, 'expiringSoon').length
+  const deployedCount = filterMissionRows(allActiveRows, allArchivedRows, 'deployed').length
   const archivedCount = allArchivedRows.length
 
   return (
@@ -125,10 +136,12 @@ export function MissionsDataGrid(): React.JSX.Element {
       slots={{ toolbar: MissionsDataGridToolbar }}
       slotProps={{
         toolbar: {
-          showArchived,
-          activeCount,
+          missionsFilterType: filterType,
+          allCount,
+          expiringSoonCount,
+          deployedCount,
           archivedCount,
-          onToggleArchived: (checked: boolean) => dispatch(setMissionsShowArchived(checked)),
+          onMissionsFilterTypeChange: handleFilterTypeChange,
         },
       }}
       showToolbar
@@ -139,4 +152,26 @@ export function MissionsDataGrid(): React.JSX.Element {
       }}
     />
   )
+}
+
+function filterMissionRows(
+  allActiveRows: readonly MissionRow[],
+  allArchivedRows: readonly MissionRow[],
+  filterType: MissionsFilterType,
+): MissionRow[] {
+  if (filterType === 'archived') {
+    return [...allArchivedRows]
+  }
+
+  if (filterType === 'expiringSoon') {
+    return allActiveRows.filter(
+      (mission) => mission.state === 'Active' && mission.expiresIn !== 'never' && mission.expiresIn <= 3,
+    )
+  }
+
+  if (filterType === 'deployed') {
+    return allActiveRows.filter((mission) => mission.state === 'Deployed')
+  }
+
+  return [...allActiveRows]
 }

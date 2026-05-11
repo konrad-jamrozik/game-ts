@@ -8,6 +8,7 @@ import {
   clearEvents,
   compactEventsByTurn,
   truncateEventsTo,
+  type EventNavigationTarget,
 } from './slices/eventsSlice'
 import {
   advanceTurn,
@@ -60,8 +61,15 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
     const state = store.getState()
     const { gameState } = state.undoable.present
 
-    function postTextEvent(message: string): void {
-      store.dispatch(addTextEvent({ message, turn: gameState.turn, actionsCount: gameState.actionsCount }))
+    function postTextEvent(message: string, navigationTarget?: EventNavigationTarget): void {
+      store.dispatch(
+        addTextEvent({
+          message,
+          turn: gameState.turn,
+          actionsCount: gameState.actionsCount,
+          ...(navigationTarget === undefined ? {} : { navigationTarget }),
+        }),
+      )
     }
 
     // Dispatch events based on the action
@@ -79,27 +87,30 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
       // Compact events log to remove events from turns N-3 and earlier
       store.dispatch(compactEventsByTurn({ currentTurn: gameState.turn }))
     } else if (hireAgent.match(action)) {
-      postTextEvent('Agent hired')
+      postTextEvent('Agent hired', { type: 'AgentsDrilldown', filter: 'all' })
     } else if (sackAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Sacked ${fmtAgentCount(agentCount)}`)
+      postTextEvent(`Sacked ${fmtAgentCount(agentCount)}`, { type: 'AgentsDrilldown', filter: 'terminated' })
     } else if (assignAgentsToContracting.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to contracting`)
+      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to contracting`, { type: 'AgentsDrilldown', filter: 'away' })
     } else if (assignAgentsToTraining.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to training`)
+      postTextEvent(`Asgn. ${fmtAgentCount(agentCount)} to training`, { type: 'AgentsDrilldown', filter: 'away' })
     } else if (recallAgents.match(action)) {
       const agentIds = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Recalled ${fmtAgentCount(agentCount)}`)
+      postTextEvent(`Recalled ${fmtAgentCount(agentCount)}`, { type: 'AgentsDrilldown', filter: 'all' })
     } else if (startLeadInvestigation.match(action)) {
       const { leadId, agentIds } = action.payload
       const agentCount = agentIds.length
-      postTextEvent(`Invst. lead: ${leadId} with ${fmtAgentCount(agentCount)}`)
+      postTextEvent(`Invst. lead: ${leadId} with ${fmtAgentCount(agentCount)}`, {
+        type: 'LeadsDrilldown',
+        filter: 'activeInvestigations',
+      })
     } else if (deployAgentsToMission.match(action)) {
       const { missionId, agentIds } = action.payload
       const agentCount = agentIds.length
@@ -109,10 +120,13 @@ export function eventsMiddleware(): Middleware<{}, RootReducerState> {
       assertDefined(mission, `Mission with id ${missionId} not found when logging deploy action`)
       const missionName = getMissionDataById(mission.missionDataId).name
 
-      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`)
+      postTextEvent(`Deployed ${fmtAgentCount(agentCount)} to mission: ${missionName}`, {
+        type: 'MissionsDrilldown',
+        filter: 'deployed',
+      })
     } else if (buyUpgrade.match(action)) {
       const upgradeName = action.payload
-      postTextEvent(`Bought upg.: ${upgradeName}`)
+      postTextEvent(`Bought upg.: ${upgradeName}`, { type: 'UpgradesDrilldown', upgradeName })
     } else if (reset.match(action)) {
       // Clear all events on full game reset
       store.dispatch(clearEvents())

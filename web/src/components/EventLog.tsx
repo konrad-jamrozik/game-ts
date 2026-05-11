@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
-import type { GridColDef, GridRenderCellParams, GridRowClassNameParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams, GridRowClassNameParams, GridRowParams } from '@mui/x-data-grid'
 import * as React from 'react'
 import { ActionCreators } from 'redux-undo'
 import { useAppDispatch, useAppSelector } from '../redux/hooks'
@@ -9,10 +9,19 @@ import type { RootReducerState, UndoableCombinedState } from '../redux/rootReduc
 import { StyledDataGrid } from './Common/StyledDataGrid'
 import { columnWidths } from './Common/columnWidths'
 import { EVENT_LOG_DATA_GRID_WIDTH } from './Common/widthConstants'
-import type { GameEvent } from '../redux/slices/eventsSlice'
+import type { EventNavigationTarget, GameEvent } from '../redux/slices/eventsSlice'
 import { assertDefined, assertEqual } from '../lib/primitives/assertPrimitives'
 import { f6str } from '../lib/model_utils/formatUtils'
 import { EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_X, EVENT_LOG_TIME_TRAVEL_BUTTON_PADDING_Y } from './styling/spacing'
+import type { AppDispatch } from '../redux/store'
+import {
+  openAgentsDrilldown,
+  openLeadsDrilldown,
+  openMissionsDrilldown,
+  openTurnReportDrilldown,
+  openUpgradesDrilldown,
+} from '../redux/slices/selectionSlice'
+import { combineSx, getClickableRowSx } from './styling/stylePrimitives'
 
 export function EventLog(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -25,6 +34,14 @@ export function EventLog(): React.JSX.Element {
     dispatch(ActionCreators.jump(offset))
   }
 
+  function handleRowClick(params: GridRowParams<EventLogRow>): void {
+    const { navigationTarget } = params.row
+    if (navigationTarget === undefined) {
+      return
+    }
+    dispatchEventNavigationTarget(dispatch, navigationTarget)
+  }
+
   return (
     <Box sx={{ width: EVENT_LOG_DATA_GRID_WIDTH }}>
       <Typography variant="h6" component="div" sx={{ paddingX: 1, paddingY: 0.5 }}>
@@ -35,11 +52,12 @@ export function EventLog(): React.JSX.Element {
         columns={columns}
         aria-label="Event Log"
         getRowClassName={getEventLogRowClassName}
-        sx={(theme) => ({
+        onRowClick={handleRowClick}
+        sx={combineSx(getClickableRowSx('& .event-log-clickable-row'), (theme) => ({
           '& .event-log-undone-row .MuiDataGrid-cell:not([data-field="timeTravelAction"])': {
             color: theme.palette.text.disabled,
           },
-        })}
+        }))}
       />
     </Box>
   )
@@ -52,6 +70,7 @@ type EventLogRow = {
   actionsCount: number
   timeTravelAction: TimeTravelAction
   jumpOffset: number | undefined
+  navigationTarget: EventNavigationTarget | undefined
 }
 
 type TimeTravelAction = 'Undo' | 'Redo'
@@ -78,6 +97,7 @@ function getEventLogRows(events: GameEvent[], undoable: RootReducerState['undoab
       actionsCount: event.actionsCount,
       timeTravelAction: target.action,
       jumpOffset: target.offset,
+      navigationTarget: getEventNavigationTarget(event),
     }
   })
 }
@@ -99,7 +119,14 @@ function getEventLogColumns(onJump: (offset: number) => void): GridColDef<EventL
 }
 
 function getEventLogRowClassName(params: GridRowClassNameParams<EventLogRow>): string {
-  return params.row.timeTravelAction === 'Redo' ? 'event-log-undone-row' : ''
+  const classNames: string[] = []
+  if (params.row.timeTravelAction === 'Redo') {
+    classNames.push('event-log-undone-row')
+  }
+  if (params.row.navigationTarget !== undefined) {
+    classNames.push('event-log-clickable-row')
+  }
+  return classNames.join(' ')
 }
 
 function renderTimeTravelButton(
@@ -110,7 +137,10 @@ function renderTimeTravelButton(
   const handleClick = jumpOffset === undefined ? undefined : createTimeTravelClickHandler(jumpOffset, onJump)
   const isUndo = timeTravelAction === 'Undo'
   return (
-    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
+    <Box
+      onClick={stopClickPropagation}
+      sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}
+    >
       <Button
         variant="outlined"
         size="small"
@@ -135,10 +165,56 @@ function renderTimeTravelButton(
   )
 }
 
-function createTimeTravelClickHandler(offset: number, onJump: (offset: number) => void): () => void {
-  return function handleTimeTravelClick(): void {
+function createTimeTravelClickHandler(
+  offset: number,
+  onJump: (offset: number) => void,
+): (event: React.MouseEvent<HTMLButtonElement>) => void {
+  return function handleTimeTravelClick(event: React.MouseEvent<HTMLButtonElement>): void {
+    event.stopPropagation()
     onJump(offset)
   }
+}
+
+function stopClickPropagation(event: React.MouseEvent): void {
+  event.stopPropagation()
+}
+
+function dispatchEventNavigationTarget(dispatch: AppDispatch, target: EventNavigationTarget): void {
+  switch (target.type) {
+    case 'AgentsDrilldown': {
+      dispatch(openAgentsDrilldown(target.filter))
+      return
+    }
+    case 'LeadsDrilldown': {
+      dispatch(openLeadsDrilldown(target.filter))
+      return
+    }
+    case 'MissionsDrilldown': {
+      dispatch(openMissionsDrilldown(target.filter))
+      return
+    }
+    case 'TurnReportDrilldown': {
+      dispatch(openTurnReportDrilldown(target.turn))
+      return
+    }
+    case 'UpgradesDrilldown': {
+      dispatch(openUpgradesDrilldown(target.upgradeName))
+    }
+  }
+}
+
+function getEventNavigationTarget(event: GameEvent): EventNavigationTarget | undefined {
+  if (event.navigationTarget !== undefined) {
+    return event.navigationTarget
+  }
+  if (event.type === 'TurnAdvancement') {
+    return { type: 'TurnReportDrilldown', turn: event.turn }
+  }
+  if (event.type === 'MissionCompleted') {
+    return { type: 'MissionsDrilldown', filter: 'archived' }
+  }
+  assertEqual(event.type, 'Text')
+  return undefined
 }
 
 function getTimeTravelTarget(

@@ -1,35 +1,46 @@
 import type { GridColDef } from '@mui/x-data-grid'
+import {
+  isAwayAgentForLeadsPanel,
+  isExhaustedAgentForLeadsPanel,
+  isReadyAgentForLeadsPanel,
+  isRecoveringAgentForLeadsPanel,
+} from '../../lib/model_utils/agentReadinessUtils'
+import type { AgentsFilterType } from '../../redux/slices/selectionSlice'
 import type { AgentRow } from './getAgentsColumns'
 
 export function filterAgentRows(
   allRows: AgentRow[],
-  showOnlyTerminated: boolean,
-  showOnlyAvailable: boolean,
-  showOnlyRecovering: boolean,
+  filterType: AgentsFilterType,
   agentsTerminatedThisTurnIds: Set<string>,
 ): AgentRow[] {
-  if (showOnlyAvailable) {
-    return allRows.filter((agent) => agent.state === 'Available' || agent.state === 'InTraining')
+  if (filterType === 'ready') {
+    return allRows.filter((agent) => isReadyAgentForLeadsPanel(agent))
   }
-  if (showOnlyTerminated) {
+
+  if (filterType === 'exhausted') {
+    return allRows.filter((agent) => isExhaustedAgentForLeadsPanel(agent))
+  }
+
+  if (filterType === 'away') {
+    return allRows.filter((agent) => isAwayAgentForLeadsPanel(agent))
+  }
+
+  if (filterType === 'terminated') {
     return allRows.filter((agent) => agent.state === 'KIA' || agent.state === 'Sacked')
   }
-  if (showOnlyRecovering) {
-    return allRows.filter((agent) => agent.assignment === 'Recovery')
+
+  if (filterType === 'recovering') {
+    return allRows.filter((agent) => isRecoveringAgentForLeadsPanel(agent))
   }
+
   // Default: show all non-terminated agents, plus agents terminated this turn
   return allRows.filter(
     (agent) => (agent.state !== 'KIA' && agent.state !== 'Sacked') || agentsTerminatedThisTurnIds.has(agent.id),
   )
 }
 
-export function filterVisibleAgentColumns(
-  columns: GridColDef[],
-  showOnlyTerminated: boolean,
-  showRecovering: boolean,
-  showStats: boolean,
-): GridColDef[] {
-  if (showOnlyTerminated) {
+export function filterVisibleAgentColumns(columns: GridColDef[], filterType: AgentsFilterType): GridColDef[] {
+  if (filterType === 'terminated') {
     return columns.filter(
       (col) =>
         col.field === 'id' ||
@@ -42,7 +53,8 @@ export function filterVisibleAgentColumns(
         col.field === 'terminated',
     )
   }
-  if (showRecovering) {
+
+  if (filterType === 'recovering') {
     return columns.filter(
       (col) =>
         col.field === 'id' ||
@@ -53,7 +65,8 @@ export function filterVisibleAgentColumns(
         col.field === 'skillSimple',
     )
   }
-  if (showStats) {
+
+  if (filterType === 'stats') {
     // When "stats" is selected, show only: id, skillSimple, experience, training, hitPointsMax, service, kills, damageDealt, damageReceived, missionsTotal
     return columns.filter(
       (col) =>

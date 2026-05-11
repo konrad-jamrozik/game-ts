@@ -1,13 +1,21 @@
-import type { GridColDef } from '@mui/x-data-grid'
+import type { GridColDef, GridRowParams } from '@mui/x-data-grid'
 import Stack from '@mui/material/Stack'
 import * as React from 'react'
 import { getAvailableLeadsForInvestigation } from '../../lib/model_utils/leadUtils'
 import type { Mission } from '../../lib/model/missionModel'
-import { useAppSelector } from '../../redux/hooks'
+import { assertUnreachable } from '../../lib/primitives/assertPrimitives'
+import { useAppDispatch, useAppSelector } from '../../redux/hooks'
+import {
+  openLeadsDrilldown,
+  openMissionsDrilldown,
+  type LeadsDrilldownFilter,
+  type MissionsFilterType,
+} from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { columnWidths } from '../Common/columnWidths'
 import { CARD_GAP } from '../styling/spacing'
+import { clickableRowSx } from '../styling/stylePrimitives'
 
 type OperationsSummaryRow = {
   id: number
@@ -32,6 +40,7 @@ export function OperationsSummaryDataGrids(): React.JSX.Element {
 }
 
 export function LeadsSummaryDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const leadsSummaryColumns = getOperationsSummaryColumns({
     metricHeaderName: 'Leads',
@@ -52,10 +61,23 @@ export function LeadsSummaryDataGrid(): React.JSX.Element {
     },
   ]
 
-  return <StyledDataGrid rows={leadsSummaryRows} columns={leadsSummaryColumns} aria-label="Leads summary data" />
+  function handleLeadsSummaryRowClick(params: GridRowParams<OperationsSummaryRow>): void {
+    dispatch(openLeadsDrilldown(getLeadsDrilldownFilter(params.row.metric)))
+  }
+
+  return (
+    <StyledDataGrid
+      rows={leadsSummaryRows}
+      columns={leadsSummaryColumns}
+      aria-label="Leads summary data"
+      onRowClick={handleLeadsSummaryRowClick}
+      sx={clickableRowSx}
+    />
+  )
 }
 
 export function MissionsSummaryDataGrid(): React.JSX.Element {
+  const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const missionsSummaryColumns = getOperationsSummaryColumns({
     metricHeaderName: 'Missions',
@@ -65,8 +87,18 @@ export function MissionsSummaryDataGrid(): React.JSX.Element {
   })
   const missionsSummaryRows = buildMissionsSummaryRows(gameState.missions)
 
+  function handleMissionsSummaryRowClick(params: GridRowParams<OperationsSummaryRow>): void {
+    dispatch(openMissionsDrilldown(getMissionsFilterType(params.row.metric)))
+  }
+
   return (
-    <StyledDataGrid rows={missionsSummaryRows} columns={missionsSummaryColumns} aria-label="Missions summary data" />
+    <StyledDataGrid
+      rows={missionsSummaryRows}
+      columns={missionsSummaryColumns}
+      aria-label="Missions summary data"
+      onRowClick={handleMissionsSummaryRowClick}
+      sx={clickableRowSx}
+    />
   )
 }
 
@@ -100,4 +132,28 @@ function buildMissionsSummaryRows(missions: Mission[]): OperationsSummaryRow[] {
     { id: 2, metric: 'Expiring soon', value: String(expiringSoon) },
     { id: 3, metric: 'Deployed', value: String(deployedMissions) },
   ]
+}
+
+function getLeadsDrilldownFilter(metric: string): LeadsDrilldownFilter {
+  switch (metric) {
+    case 'Investigations':
+      return 'activeInvestigations'
+    case 'Available':
+      return 'available'
+    default:
+      return assertUnreachable(metric)
+  }
+}
+
+function getMissionsFilterType(metric: string): MissionsFilterType {
+  switch (metric) {
+    case 'Sites':
+      return 'all'
+    case 'Expiring soon':
+      return 'expiringSoon'
+    case 'Deployed':
+      return 'deployed'
+    default:
+      return assertUnreachable(metric)
+  }
 }

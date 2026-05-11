@@ -1,10 +1,12 @@
 import type { GridCellParams, GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
 import * as React from 'react'
+import type { FactionId } from '../../lib/model/modelIds'
 import { columnWidths } from '../Common/columnWidths'
 import { ColorBar } from '../ColorBar/ColorBar'
 
 export type SituationReportNextOperationRow = {
-  id: number
+  id: FactionId
+  factionId: FactionId
   factionName: string
   nextOperation: string
 }

@@ -4,25 +4,25 @@ overview: Make command-center summary rows and event-log rows act as typed drill
 todos:
   - id: selection-state
     content: Add typed drilldown state and open* reducer actions in selectionSlice.
-    status: pending
+    status: completed
   - id: destination-filters
     content: Update destination screens in parallel after the shared selection contract exists.
-    status: pending
+    status: completed
   - id: operations-clicks
     content: Wire row click handlers and hover styling for Operations card grids.
-    status: pending
+    status: completed
   - id: situation-clicks
     content: Wire row click handlers and row identity for Situation Report grids.
-    status: pending
+    status: completed
   - id: event-log-clicks
     content: Add typed event navigation targets and EventLog row click handling without interfering with Undo/Redo.
-    status: pending
+    status: completed
   - id: integration-pass
     content: Merge the parallel workstreams and resolve shared selection/action naming.
-    status: pending
+    status: completed
   - id: verify
     content: Add focused coverage and run qcheck.
-    status: pending
+    status: completed
 isProject: false
 ---
 

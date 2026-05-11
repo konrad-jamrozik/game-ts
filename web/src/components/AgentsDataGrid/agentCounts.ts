@@ -10,6 +10,7 @@ export type AgentCounts = {
   allActive: number
   available: number
   ready: number
+  away: number
   exhausted: number
   recovering: number
   stats: number
@@ -31,7 +32,7 @@ export function calculateAgentsForLeadsGridTitleCounts(agents: readonly Agent[])
   let ready = 0
   let away = 0
   let exhausted = 0
-  let recovering = 0
+  let recoveringAgents = 0
   let allActive = 0
 
   for (const agent of agents) {
@@ -42,7 +43,7 @@ export function calculateAgentsForLeadsGridTitleCounts(agents: readonly Agent[])
     allActive += 1
 
     if (agent.state === 'Recovering') {
-      recovering += 1
+      recoveringAgents += 1
     }
 
     if (isReadyAgentForLeadsPanel(agent)) {
@@ -58,13 +59,14 @@ export function calculateAgentsForLeadsGridTitleCounts(agents: readonly Agent[])
     }
   }
 
-  return { ready, away, exhausted, recovering, allActive }
+  return { ready, away, exhausted, recovering: recoveringAgents, allActive }
 }
 
 export function calculateAgentCounts(agents: Agent[]): AgentCounts {
   let allActive = 0
   let availableCount = 0
   let ready = 0
+  let away = 0
   let exhausted = 0
   let kia = 0
   let sacked = 0
@@ -90,6 +92,10 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
     } else if (isExhaustedAgentForLeadsPanel(agent)) {
       exhausted += 1
     }
+
+    if (isAwayAgentForLeadsPanel(agent)) {
+      away += 1
+    }
   }
 
   const recoveringCount = recovering(agents).length
@@ -98,6 +104,7 @@ export function calculateAgentCounts(agents: Agent[]): AgentCounts {
     allActive,
     available: availableCount,
     ready,
+    away,
     exhausted,
     recovering: recoveringCount,
     stats: allActive,

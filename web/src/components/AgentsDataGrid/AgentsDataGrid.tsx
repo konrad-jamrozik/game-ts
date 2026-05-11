@@ -9,13 +9,7 @@ import { sum } from 'radash'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
 import type { AgentId } from '../../lib/model/modelIds'
 import { f6c0, f6max, type Fixed6 } from '../../lib/primitives/fixed6'
-import {
-  setAgentSelection,
-  setAgentsShowTerminated,
-  setAgentsShowAvailable,
-  setAgentsShowRecovering,
-  setAgentsShowStats,
-} from '../../redux/slices/selectionSlice'
+import { openAgentsDrilldown, setAgentSelection, type AgentsFilterType } from '../../redux/slices/selectionSlice'
 import { withIds } from '../../lib/model_utils/agentUtils'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { AgentsToolbar } from './AgentsToolbar'
@@ -31,47 +25,7 @@ export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
   const gameState = useAppSelector(getCurrentTurnState)
   const agentSelection = useAppSelector((state) => state.selection.agents)
-  const showOnlyTerminated = useAppSelector((state) => state.selection.agentsShowTerminated ?? false)
-  const showOnlyAvailable = useAppSelector((state) => state.selection.agentsShowAvailable ?? false)
-  const showRecovering = useAppSelector((state) => state.selection.agentsShowRecovering ?? false)
-  const showStats = useAppSelector((state) => state.selection.agentsShowStats ?? false)
-
-  // Handlers that enforce mutual exclusivity: only one checkbox can be selected at a time
-  function handleToggleAvailable(checked: boolean): void {
-    dispatch(setAgentsShowAvailable(checked))
-    if (checked) {
-      dispatch(setAgentsShowTerminated(false))
-      dispatch(setAgentsShowRecovering(false))
-      dispatch(setAgentsShowStats(false))
-    }
-  }
-
-  function handleToggleTerminated(checked: boolean): void {
-    dispatch(setAgentsShowTerminated(checked))
-    if (checked) {
-      dispatch(setAgentsShowAvailable(false))
-      dispatch(setAgentsShowRecovering(false))
-      dispatch(setAgentsShowStats(false))
-    }
-  }
-
-  function handleToggleRecovering(checked: boolean): void {
-    dispatch(setAgentsShowRecovering(checked))
-    if (checked) {
-      dispatch(setAgentsShowTerminated(false))
-      dispatch(setAgentsShowAvailable(false))
-      dispatch(setAgentsShowStats(false))
-    }
-  }
-
-  function handleToggleStats(checked: boolean): void {
-    dispatch(setAgentsShowStats(checked))
-    if (checked) {
-      dispatch(setAgentsShowTerminated(false))
-      dispatch(setAgentsShowAvailable(false))
-      dispatch(setAgentsShowRecovering(false))
-    }
-  }
+  const filterType = useAppSelector((state) => state.selection.agentsFilterType ?? 'all')
 
   // Get IDs of agents terminated during the last turn advancement from turnStartReport
   const agentsReport = gameState.turnStartReport?.assets.agentsReport
@@ -87,14 +41,8 @@ export function AgentsDataGrid(): React.JSX.Element {
     rowId: index,
   }))
 
-  // Apply filtering based on checkboxes
-  const rows: AgentRow[] = filterAgentRows(
-    allRows,
-    showOnlyTerminated,
-    showOnlyAvailable,
-    showRecovering,
-    agentsTerminatedThisTurnIds,
-  )
+  // Apply the normalized drilldown filter selected by summary rows or the toolbar.
+  const rows: AgentRow[] = filterAgentRows(allRows, filterType, agentsTerminatedThisTurnIds)
 
   const maxSkillAlive = getMaxSkillAlive(allRows)
   const columns = getAgentsColumns(
@@ -104,7 +52,11 @@ export function AgentsDataGrid(): React.JSX.Element {
     gameState.turn,
     gameState.hitPointsRecoveryPct,
   )
-  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
+  const visibleColumns = filterVisibleAgentColumns(columns, filterType)
+
+  function handleFilterTypeChange(nextFilterType: AgentsFilterType): void {
+    dispatch(openAgentsDrilldown(nextFilterType))
+  }
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: AgentId[] = []
@@ -161,14 +113,8 @@ export function AgentsDataGrid(): React.JSX.Element {
       slots={{ toolbar: AgentsToolbar }}
       slotProps={{
         toolbar: {
-          showOnlyTerminated,
-          onToggleTerminated: handleToggleTerminated,
-          showOnlyAvailable,
-          onToggleAvailable: handleToggleAvailable,
-          showRecovering,
-          onToggleRecovering: handleToggleRecovering,
-          showStats,
-          onToggleStats: handleToggleStats,
+          agentsFilterType: filterType,
+          onAgentsFilterTypeChange: handleFilterTypeChange,
           agentCounts,
           ...(selectedAgentsCombatRating !== undefined && { selectedAgentsCombatRating }),
         },
@@ -195,28 +141,26 @@ function getAgentsToolbarCounts(
   const baseCounts = calculateAgentCounts(allRows)
   return {
     ...baseCounts,
-    available: filterAgentRows(allRows, false, true, false, agentsTerminatedThisTurnIds).length,
-    recovering: filterAgentRows(allRows, false, false, true, agentsTerminatedThisTurnIds).length,
-    stats: filterAgentRows(allRows, false, false, false, agentsTerminatedThisTurnIds).length,
-    terminated: filterAgentRows(allRows, true, false, false, agentsTerminatedThisTurnIds).length,
+    allActive: filterAgentRows(allRows, 'all', agentsTerminatedThisTurnIds).length,
+    ready: filterAgentRows(allRows, 'ready', agentsTerminatedThisTurnIds).length,
+    exhausted: filterAgentRows(allRows, 'exhausted', agentsTerminatedThisTurnIds).length,
+    away: filterAgentRows(allRows, 'away', agentsTerminatedThisTurnIds).length,
+    recovering: filterAgentRows(allRows, 'recovering', agentsTerminatedThisTurnIds).length,
+    stats: filterAgentRows(allRows, 'stats', agentsTerminatedThisTurnIds).length,
+    terminated: filterAgentRows(allRows, 'terminated', agentsTerminatedThisTurnIds).length,
   }
 }
 
 function getStableAgentsDataGridWidth(columns: GridColDef[]): number {
   return Math.max(
-    getAgentColumnsWidth(columns, false, false, false),
-    getAgentColumnsWidth(columns, true, false, false),
-    getAgentColumnsWidth(columns, false, true, false),
-    getAgentColumnsWidth(columns, false, false, true),
+    getAgentColumnsWidth(columns, 'all'),
+    getAgentColumnsWidth(columns, 'recovering'),
+    getAgentColumnsWidth(columns, 'stats'),
+    getAgentColumnsWidth(columns, 'terminated'),
   )
 }
 
-function getAgentColumnsWidth(
-  columns: GridColDef[],
-  showOnlyTerminated: boolean,
-  showRecovering: boolean,
-  showStats: boolean,
-): number {
-  const visibleColumns = filterVisibleAgentColumns(columns, showOnlyTerminated, showRecovering, showStats)
+function getAgentColumnsWidth(columns: GridColDef[], filterType: AgentsFilterType): number {
+  const visibleColumns = filterVisibleAgentColumns(columns, filterType)
   return getDataGridWidth(visibleColumns, { checkboxSelection: true })
 }

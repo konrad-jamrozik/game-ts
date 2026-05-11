@@ -1,7 +1,8 @@
-import type { GridColDef, GridRenderCellParams } from '@mui/x-data-grid'
+import type { GridColDef, GridRenderCellParams, GridRowClassNameParams } from '@mui/x-data-grid'
 import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import type { Faction } from '../../lib/model/factionModel'
+import type { FactionId } from '../../lib/model/modelIds'
 import { assertIsActivityLevelOrd } from '../../lib/model/modelOrdUtils'
 import { getActivityLevelByOrd, getActivityLevelName } from '../../lib/model_utils/factionActivityLevelUtils'
 import { getFactionName, isFactionTerminated } from '../../lib/model_utils/factionUtils'
@@ -15,12 +16,14 @@ type FactionDetailsDataGridProps = {
   factions: readonly Faction[]
   leadInvestigationCounts: Record<string, number>
   revealAllFactionProfiles: boolean
+  selectedFactionId: FactionId | undefined
 }
 
 export function FactionDetailsDataGrid({
   factions,
   leadInvestigationCounts,
   revealAllFactionProfiles,
+  selectedFactionId,
 }: FactionDetailsDataGridProps): React.JSX.Element {
   const visibleFactions = getVisibleFactions(factions, leadInvestigationCounts, revealAllFactionProfiles)
 
@@ -33,9 +36,15 @@ export function FactionDetailsDataGrid({
       rows={getFactionDetailsRows(visibleFactions, leadInvestigationCounts)}
       columns={getFactionDetailsColumns()}
       aria-label="Factions report data"
+      getRowClassName={(params: GridRowClassNameParams<FactionDetailsRow>) =>
+        params.row.id === selectedFactionId ? 'selected-faction-row' : ''
+      }
       sx={{
         '& .faction-level-progress-cell': {
           padding: DATA_GRID_CELL_PADDING,
+        },
+        '& .selected-faction-row': {
+          bgcolor: 'action.selected',
         },
       }}
     />
@@ -138,7 +147,7 @@ function getFactionRows(faction: Faction, isTerminated: boolean): FactionRows {
 }
 
 type FactionDetailsRow = {
-  id: string
+  id: FactionId
   name: string
   activityLevel: FactionDetailsCell
   levelProgress: FactionDetailsCell

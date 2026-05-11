@@ -6,37 +6,26 @@ import { Toolbar, type GridSlotProps } from '@mui/x-data-grid'
 import * as React from 'react'
 import { fmtDec1 } from '../../lib/primitives/formatPrimitives'
 import type { AgentCounts } from './agentCounts'
+import type { AgentsFilterType } from '../../redux/slices/selectionSlice'
 
 // Allow passing custom props to the DataGrid toolbar slot for Agents grid
 declare module '@mui/x-data-grid' {
   // eslint-disable-next-line @typescript-eslint/consistent-type-definitions
   interface ToolbarPropsOverrides {
-    showOnlyTerminated: boolean
-    onToggleTerminated?: (checked: boolean) => void
-    showOnlyAvailable: boolean
-    onToggleAvailable?: (checked: boolean) => void
-    showRecovering: boolean
-    onToggleRecovering?: (checked: boolean) => void
-    showStats: boolean
-    onToggleStats?: (checked: boolean) => void
+    agentsFilterType: AgentsFilterType
+    onAgentsFilterTypeChange?: (filterType: AgentsFilterType) => void
     selectedAgentsCombatRating?: number
     agentCounts?: AgentCounts
   }
 }
 
 export function AgentsToolbar(props: GridSlotProps['toolbar']): React.JSX.Element {
-  const {
-    showOnlyTerminated,
-    onToggleTerminated,
-    showOnlyAvailable,
-    onToggleAvailable,
-    showRecovering,
-    onToggleRecovering,
-    showStats,
-    onToggleStats,
-    selectedAgentsCombatRating,
-    agentCounts,
-  } = props
+  const { agentsFilterType, onAgentsFilterTypeChange, selectedAgentsCombatRating, agentCounts } = props
+
+  function handleFilterChange(nextFilterType: AgentsFilterType, checked: boolean): void {
+    onAgentsFilterTypeChange?.(checked ? nextFilterType : 'all')
+  }
+
   return (
     <Toolbar>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
@@ -48,52 +37,55 @@ export function AgentsToolbar(props: GridSlotProps['toolbar']): React.JSX.Elemen
           </Box>
         )}
         <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showOnlyAvailable}
-                onChange={(event) => onToggleAvailable?.(event.target.checked)}
-                slotProps={{ input: { 'aria-label': 'toggle-available-filter' } }}
-                size="small"
-              />
-            }
-            label={`Available (${agentCounts?.available ?? 0})`}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showRecovering}
-                onChange={(event) => onToggleRecovering?.(event.target.checked)}
-                slotProps={{ input: { 'aria-label': 'toggle-recovering-view' } }}
-                size="small"
-              />
-            }
-            label={`Recovering (${agentCounts?.recovering ?? 0})`}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showStats}
-                onChange={(event) => onToggleStats?.(event.target.checked)}
-                slotProps={{ input: { 'aria-label': 'toggle-stats-view' } }}
-                size="small"
-              />
-            }
-            label={`Stats (${agentCounts?.stats ?? 0})`}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showOnlyTerminated}
-                onChange={(event) => onToggleTerminated?.(event.target.checked)}
-                slotProps={{ input: { 'aria-label': 'toggle-terminated-filter' } }}
-                size="small"
-              />
-            }
-            label={`Terminated (${agentCounts?.terminated ?? 0})`}
-          />
+          {renderFilterCheckbox('all', `All (${agentCounts?.allActive ?? 0})`, agentsFilterType, handleFilterChange)}
+          {renderFilterCheckbox('ready', `Ready (${agentCounts?.ready ?? 0})`, agentsFilterType, handleFilterChange)}
+          {renderFilterCheckbox(
+            'exhausted',
+            `Exhausted (${agentCounts?.exhausted ?? 0})`,
+            agentsFilterType,
+            handleFilterChange,
+          )}
+          {renderFilterCheckbox('away', `Away (${agentCounts?.away ?? 0})`, agentsFilterType, handleFilterChange)}
+          {renderFilterCheckbox(
+            'recovering',
+            `Recovering (${agentCounts?.recovering ?? 0})`,
+            agentsFilterType,
+            handleFilterChange,
+          )}
+          {renderFilterCheckbox('stats', `Stats (${agentCounts?.stats ?? 0})`, agentsFilterType, handleFilterChange)}
+          {renderFilterCheckbox(
+            'terminated',
+            `Terminated (${agentCounts?.terminated ?? 0})`,
+            agentsFilterType,
+            handleFilterChange,
+          )}
         </Box>
       </Box>
     </Toolbar>
+  )
+}
+
+function renderFilterCheckbox(
+  checkboxFilterType: AgentsFilterType,
+  label: string,
+  currentFilterType: AgentsFilterType,
+  onFilterChange: (filterType: AgentsFilterType, checked: boolean) => void,
+): React.JSX.Element {
+  function handleChange(event: React.ChangeEvent<HTMLInputElement>): void {
+    onFilterChange(checkboxFilterType, event.target.checked)
+  }
+
+  return (
+    <FormControlLabel
+      control={
+        <Checkbox
+          checked={currentFilterType === checkboxFilterType}
+          onChange={handleChange}
+          slotProps={{ input: { 'aria-label': `toggle-${checkboxFilterType}-filter` } }}
+          size="small"
+        />
+      }
+      label={label}
+    />
   )
 }

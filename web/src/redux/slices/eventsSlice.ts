@@ -1,14 +1,39 @@
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit'
+import type { UpgradeName } from '../../lib/data_tables/upgrades'
 import type { MissionRewards } from '../../lib/model/missionModel'
 import type { MissionId } from '../../lib/model/modelIds'
 import type { MissionState } from '../../lib/model/outcomeTypes'
+import type { AgentsFilterType, LeadsDrilldownFilter, MissionsFilterType } from './selectionSlice'
 
 export type BaseEventFields = {
   id: number
   timestamp: number
   turn: number
   actionsCount: number
+  navigationTarget?: EventNavigationTarget
 }
+
+export type EventNavigationTarget =
+  | {
+      type: 'AgentsDrilldown'
+      filter: AgentsFilterType
+    }
+  | {
+      type: 'LeadsDrilldown'
+      filter: LeadsDrilldownFilter
+    }
+  | {
+      type: 'MissionsDrilldown'
+      filter: MissionsFilterType
+    }
+  | {
+      type: 'TurnReportDrilldown'
+      turn: number
+    }
+  | {
+      type: 'UpgradesDrilldown'
+      upgradeName: UpgradeName
+    }
 
 export type TextEvent = BaseEventFields & {
   type: 'Text'
@@ -49,7 +74,15 @@ const eventsSlice = createSlice({
   name: 'events',
   initialState: initialEventsState,
   reducers: {
-    addTextEvent(state, action: PayloadAction<{ message: string; turn: number; actionsCount: number }>) {
+    addTextEvent(
+      state,
+      action: PayloadAction<{
+        message: string
+        turn: number
+        actionsCount: number
+        navigationTarget?: EventNavigationTarget
+      }>,
+    ) {
       const event: TextEvent = {
         id: state.nextEventId,
         type: 'Text',
@@ -57,6 +90,7 @@ const eventsSlice = createSlice({
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
+        ...(action.payload.navigationTarget === undefined ? {} : { navigationTarget: action.payload.navigationTarget }),
       }
       state.events.unshift(event)
       state.nextEventId += 1
@@ -87,6 +121,7 @@ const eventsSlice = createSlice({
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
+        navigationTarget: { type: 'MissionsDrilldown', filter: 'archived' },
       }
       state.events.unshift(event)
       state.nextEventId += 1
@@ -108,6 +143,7 @@ const eventsSlice = createSlice({
         timestamp: Date.now(),
         turn: action.payload.turn,
         actionsCount: action.payload.actionsCount,
+        navigationTarget: { type: 'TurnReportDrilldown', turn: action.payload.turn },
       }
       state.events.unshift(event)
       state.nextEventId += 1

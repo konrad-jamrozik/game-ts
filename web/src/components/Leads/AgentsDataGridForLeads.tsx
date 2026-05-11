@@ -74,7 +74,7 @@ export function AgentsDataGridForLeads(): React.JSX.Element {
     gameState.turn,
     gameState.hitPointsRecoveryPct,
   )
-  const visibleColumns = filterVisibleAgentColumns(columns, false, false, false)
+  const visibleColumns = filterVisibleAgentColumns(columns, 'all')
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
     const agentIds: AgentId[] = []

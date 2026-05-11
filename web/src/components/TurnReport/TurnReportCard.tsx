@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import Typography from '@mui/material/Typography'
 import * as React from 'react'
 import { useAppSelector } from '../../redux/hooks'
 import { ExpandableCard } from '../Common/ExpandableCard'
@@ -8,12 +9,17 @@ import { formatSituationReport } from './formatSituationReport'
 import { TurnReportTreeView } from './TurnReportTreeView'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { CARD_GAP } from '../styling/spacing'
+import { useTurnReportHistory } from './useTurnReportHistory'
 
 /**
  * CSS Grid component for displaying turn advancement reports
  */
 export function TurnReportCard(): React.ReactElement {
-  const report = useAppSelector((state) => getCurrentTurnState(state).turnStartReport)
+  const currentReport = useAppSelector((state) => getCurrentTurnState(state).turnStartReport)
+  const selectedTurn = useAppSelector((state) => state.selection.selectedTurnReportTurn)
+  const { getTurnReport } = useTurnReportHistory()
+  const report = selectedTurn === undefined ? currentReport : getTurnReport(selectedTurn)
+  const title = selectedTurn === undefined ? 'Turn Report' : `Turn Report - Turn ${selectedTurn}`
 
   const assetsDefaultExpandedItems: readonly string[] = [
     // 'money-summary',
@@ -37,7 +43,7 @@ export function TurnReportCard(): React.ReactElement {
   return (
     <ExpandableCard
       id="turn-report"
-      title="Turn Report"
+      title={title}
       defaultExpanded={true}
       sx={{ minWidth: RIGHT_COLUMN_CARD_WIDTH }}
     >
@@ -65,6 +71,11 @@ export function TurnReportCard(): React.ReactElement {
             />
           </ExpandableCard>
         </Box>
+      )}
+      {!report && (
+        <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+          No turn report available.
+        </Typography>
       )}
     </ExpandableCard>
   )

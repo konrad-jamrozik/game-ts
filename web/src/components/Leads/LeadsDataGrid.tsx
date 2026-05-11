@@ -31,6 +31,7 @@ import {
   setInvestigationSelection,
   setLeadSelection,
   setLeadsFilterType,
+  type LeadsDrilldownFilter,
   type LeadsFilterType,
 } from '../../redux/slices/selectionSlice'
 import { getCurrentTurnState } from '../../redux/storeUtils'
@@ -49,12 +50,13 @@ export function LeadsDataGrid(): React.JSX.Element {
   const filterType: LeadsFilterType = useAppSelector((state) =>
     normalizeLeadsFilterType(state.selection.leadsFilterType),
   )
+  const drilldownFilter = useAppSelector((state) => state.selection.leadsDrilldownFilter ?? 'all')
   const gameState = useAppSelector(getCurrentTurnState)
 
   const discoveredLeads = getDiscoveredLeads(gameState)
 
   const allRows: LeadRow[] = bldLeadRows(discoveredLeads, gameState)
-  const rows = allRows.filter((row) => row.status === filterType)
+  const rows = filterLeadRows(allRows, filterType, drilldownFilter)
   const columns = getLeadColumns()
 
   function handleRowSelectionChange(newSelectionModel: GridRowSelectionModel): void {
@@ -141,6 +143,24 @@ function NoLeadsFoundOverlay(): React.JSX.Element {
       </Typography>
     </GridOverlay>
   )
+}
+
+function filterLeadRows(
+  allRows: readonly LeadRow[],
+  filterType: LeadsFilterType,
+  drilldownFilter: LeadsDrilldownFilter,
+): LeadRow[] {
+  const filteredRows = allRows.filter((row) => row.status === filterType)
+
+  if (drilldownFilter === 'available') {
+    return filteredRows.filter((row) => row.status === 'active' && row.investigationStatus === 'None')
+  }
+
+  if (drilldownFilter === 'activeInvestigations') {
+    return filteredRows.filter((row) => row.status === 'active' && row.investigationStatus === 'Active')
+  }
+
+  return filteredRows
 }
 
 type LeadInvestigationCellStatus = 'None' | 'Inactive' | 'Active' | 'Done' | 'Abandoned' | 'Obsolete'

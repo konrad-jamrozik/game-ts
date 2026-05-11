@@ -1,14 +1,20 @@
-import { createRowSelectionManager, type GridRowId, type GridRowSelectionModel } from '@mui/x-data-grid'
+import {
+  createRowSelectionManager,
+  type GridRowId,
+  type GridRowParams,
+  type GridRowSelectionModel,
+} from '@mui/x-data-grid'
 import * as React from 'react'
 import { getUpgradeIncrement, UPGRADE_PRICES } from '../../lib/data_tables/upgrades'
 import { useAppDispatch, useAppSelector } from '../../redux/hooks'
-import { clearUpgradeSelection, setUpgradeSelection } from '../../redux/slices/selectionSlice'
+import { clearUpgradeSelection, openUpgradesDrilldown, setUpgradeSelection } from '../../redux/slices/selectionSlice'
 import { StyledDataGrid } from '../Common/StyledDataGrid'
 import { getRemainingTransportCap } from '../../lib/model_utils/missionUtils'
 import { onTrainingAssignment } from '../../lib/model_utils/agentUtils'
 import { getReadOnlyCapabilitiesColumns, getShopCapabilitiesColumns, type UpgradeRow } from './getCapabilitiesColumns'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
+import { clickableRowSx, combineSx } from '../styling/stylePrimitives'
 
 export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProps): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -67,6 +73,10 @@ export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProp
     }
   }
 
+  function handleCapacityRowClick(params: GridRowParams<UpgradeRow>): void {
+    dispatch(openUpgradesDrilldown(params.row.name))
+  }
+
   const selectedCapacityRow = capacityRows.find((row) => row.name === selectedUpgradeName)
   const capacitySelectionModel: GridRowSelectionModel = {
     type: 'include',
@@ -98,16 +108,19 @@ export function CapacitiesDataGrid({ mode = 'readOnly' }: CapacitiesDataGridProp
       rows={capacityRows}
       columns={getReadOnlyCapabilitiesColumns()}
       aria-label="Capacities"
+      onRowClick={handleCapacityRowClick}
       disableRowSelectionOnClick
-      sx={{
-        '& .capabilities-color-bar-cell': {
-          padding: DATA_GRID_CELL_PADDING,
-        },
-      }}
+      sx={combineSx(clickableRowSx, capacitiesColorBarSx)}
     />
   )
 }
 
 type CapacitiesDataGridProps = {
   mode?: 'readOnly' | 'shop'
+}
+
+const capacitiesColorBarSx = {
+  '& .capabilities-color-bar-cell': {
+    padding: DATA_GRID_CELL_PADDING,
+  },
 }
