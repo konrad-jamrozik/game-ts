@@ -16,7 +16,7 @@ export const DATA_GRID_CHECKBOX_COLUMN_WIDTH = 50
  * This includes the rendered DataGrid frame/filler allowance plus the vertical
  * scrollbar gutter, so tall grids do not also get a tiny horizontal scrollbar.
  */
-export const STYLED_DATA_GRID_EXTRA_WIDTH_PX = 18
+export const STYLED_DATA_GRID_EXTRA_WIDTH_PX = 20
 
 export const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX = 2 * getSpacingPx(CARD_CONTENT_PADDING)
 

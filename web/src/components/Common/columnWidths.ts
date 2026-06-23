@@ -1,5 +1,11 @@
 // Source of truth for all column widths across all data grids
 // All get*Columns.tsx files must use constants from this file, never define widths directly
+// Note: per MUI X DataGrid, web/node_modules/@mui/x-data-grid/colDef/gridStringColDef.js
+// minWidth is 50:
+// const GRID_STRING_COL_DEF = exports.GRID_STRING_COL_DEF = {
+//   width: 100,
+//   minWidth: 50,
+//   maxWidth: Infinity,
 
 export const columnWidths = {
   // Situation Report (faction next operations + panic metrics)
@@ -9,8 +15,8 @@ export const columnWidths = {
 
   // Event log
   'event_log.event': 410,
-  'event_log.turn': 45,
-  'event_log.actions_count': 45,
+  'event_log.turn': 50,
+  'event_log.actions_count': 50,
   'event_log.undo': 65,
 
   // Factions screen comparison table
