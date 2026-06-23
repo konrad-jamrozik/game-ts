@@ -51,7 +51,7 @@ KJA backlog:
 
 - Bug: non-player-action events do not grey out in event log. E.g. I clicked "spawn missions",
   then I clicked "Undo", and the missions still show in white.
-- `Debug: add capabilities` -> `Debug: upgrade capacities.
+- `Debug: add capabilities` -> `Debug: upgrade capacities`.
 - Bug: once I clicked on previous turn report in event view, it continued to be shown in turn report
   button from game controls. But it should show the latest one.
 - Next operation in situation report is double-row high when no rows show up. Weird.
