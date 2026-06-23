@@ -18,14 +18,8 @@ declare module '@mui/x-data-grid' {
 }
 
 export function MissionsDataGridToolbar(props: GridSlotProps['toolbar']): React.JSX.Element {
-  const {
-    missionsFilterType,
-    allCount,
-    expiringSoonCount,
-    deployedCount,
-    archivedCount,
-    onMissionsFilterTypeChange,
-  } = props
+  const { missionsFilterType, allCount, expiringSoonCount, deployedCount, archivedCount, onMissionsFilterTypeChange } =
+    props
 
   return (
     <Toolbar>
