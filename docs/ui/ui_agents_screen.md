@@ -155,7 +155,7 @@ It also shows agents terminated during the most recent turn advancement, so newl
 If one or more agents are selected and their combined combat rating is greater than 0, the toolbar displays:
 
 ```text
-Combat rating: {selectedAgentsCombatRating}
+CR: {selectedAgentsCombatRating}
 ```
 
 The `Agents screen` is the place to inspect terminated agents and career stats.

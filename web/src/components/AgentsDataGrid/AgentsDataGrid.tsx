@@ -19,7 +19,7 @@ import { calculateAgentCounts } from './agentCounts'
 import { calculateCombatRating } from '../../lib/ruleset/combatRatingRuleset'
 import { getCurrentTurnState } from '../../redux/storeUtils'
 import { DATA_GRID_CELL_PADDING } from '../styling/spacing'
-import { getDataGridWidth } from '../Common/dataGridLayout'
+import { AGENTS_ROSTER_TOOLBAR_MIN_WIDTH_PX, getDataGridWidth } from '../Common/dataGridLayout'
 
 export function AgentsDataGrid(): React.JSX.Element {
   const dispatch = useAppDispatch()
@@ -153,6 +153,7 @@ function getAgentsToolbarCounts(
 
 function getStableAgentsDataGridWidth(columns: GridColDef[]): number {
   return Math.max(
+    AGENTS_ROSTER_TOOLBAR_MIN_WIDTH_PX,
     getAgentColumnsWidth(columns, 'all'),
     getAgentColumnsWidth(columns, 'recovering'),
     getAgentColumnsWidth(columns, 'stats'),

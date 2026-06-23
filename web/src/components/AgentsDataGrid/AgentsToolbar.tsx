@@ -30,32 +30,32 @@ export function AgentsToolbar(props: GridSlotProps['toolbar']): React.JSX.Elemen
     <Toolbar>
       <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         {selectedAgentsCombatRating !== undefined && selectedAgentsCombatRating > 0 && (
-          <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 1 }}>
-            <Typography variant="body2" component="span">
-              Combat rating: {fmtDec1(selectedAgentsCombatRating)}
+          <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 1, flexShrink: 0 }}>
+            <Typography variant="body2" component="span" sx={{ whiteSpace: 'nowrap' }}>
+              CR: {fmtDec1(selectedAgentsCombatRating)}
             </Typography>
           </Box>
         )}
-        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto' }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 'auto', flexWrap: 'nowrap' }}>
           {renderFilterCheckbox('all', `All (${agentCounts?.allActive ?? 0})`, agentsFilterType, handleFilterChange)}
           {renderFilterCheckbox('ready', `Ready (${agentCounts?.ready ?? 0})`, agentsFilterType, handleFilterChange)}
           {renderFilterCheckbox(
             'exhausted',
-            `Exhausted (${agentCounts?.exhausted ?? 0})`,
+            `Exhstd (${agentCounts?.exhausted ?? 0})`,
             agentsFilterType,
             handleFilterChange,
           )}
           {renderFilterCheckbox('away', `Away (${agentCounts?.away ?? 0})`, agentsFilterType, handleFilterChange)}
           {renderFilterCheckbox(
             'recovering',
-            `Recovering (${agentCounts?.recovering ?? 0})`,
+            `Recv (${agentCounts?.recovering ?? 0})`,
             agentsFilterType,
             handleFilterChange,
           )}
           {renderFilterCheckbox('stats', `Stats (${agentCounts?.stats ?? 0})`, agentsFilterType, handleFilterChange)}
           {renderFilterCheckbox(
             'terminated',
-            `Terminated (${agentCounts?.terminated ?? 0})`,
+            `Trmnt (${agentCounts?.terminated ?? 0})`,
             agentsFilterType,
             handleFilterChange,
           )}
@@ -77,6 +77,12 @@ function renderFilterCheckbox(
 
   return (
     <FormControlLabel
+      sx={{
+        flexShrink: 0,
+        '& .MuiFormControlLabel-label': {
+          whiteSpace: 'nowrap',
+        },
+      }}
       control={
         <Checkbox
           checked={currentFilterType === checkboxFilterType}

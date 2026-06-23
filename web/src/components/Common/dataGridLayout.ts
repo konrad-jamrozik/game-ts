@@ -22,6 +22,9 @@ export const EXPANDABLE_CARD_CONTENT_HORIZONTAL_INSET_PX = 2 * getSpacingPx(CARD
 
 export const SCREEN_ACTIONS_COLUMN_WIDTH = 312
 
+/** Minimum width for the full-screen agents roster grid toolbar filter row. */
+export const AGENTS_ROSTER_TOOLBAR_MIN_WIDTH_PX = 1100
+
 export function getSpacingPx(spacing: number): number {
   return Number.parseFloat(theme.spacing(spacing))
 }
