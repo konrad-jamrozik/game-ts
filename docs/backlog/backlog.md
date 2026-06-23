@@ -4,6 +4,10 @@ KJA backlog:
 
 # Next
 
+- When I delegate enough turn to AI I get a red error toast
+  - "Error: Visible lead difficulty must be above zero"
+  - This happened at least twice
+
 ## UI
 
 - make event log entries two line to display everything

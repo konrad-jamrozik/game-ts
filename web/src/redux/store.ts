@@ -46,8 +46,26 @@ export async function initStore(options?: StoreOptions): Promise<void> {
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         // Default middleware causes significant performance hit. See about_profiling.md
-        immutableCheck: enableDefaultMiddleware,
-        serializableCheck: enableDefaultMiddleware,
+        // It is also forcefully disabled by RTK when running in prod, it has a check like:
+        //   if (process.env.NODE_ENV !== 'production')
+        //      ...try enable if set...
+        // so "vite preview" will result in these being false.
+        //
+        // immutableCheck: checks for accidental mutation of redux state outside of
+        // reducers or better dispatches, but I use immer which auto-freezes state.
+        // So this will mostly just give better error messages.
+        // The 'undoable' path is excluded because deep-scanning the undo history
+        // (up to DEFAULT_UNDO_LIMIT snapshots, each with the full game state) is what
+        // causes the multi-second dispatch slowdown. See about_profiling.md.
+        immutableCheck: enableDefaultMiddleware ? { ignoredPaths: ['undoable'] } : false,
+        // serializableCheck: checks for non-serializable values
+        // (Dates, Maps, Sets, class instances, functions, Promises) in state or actions.
+        // Preventing the persistence Dexie instance from getting junk into it.
+        // The 'undoable' path is excluded for the same performance reason as immutableCheck.
+        serializableCheck: enableDefaultMiddleware ? { ignoredPaths: ['undoable'] } : false,
+        // actionCreatorCheck:  It catches a narrow mistake: dispatching an action creator function
+        // itself instead of calling it — dispatch(setViewAgents) instead of dispatch(setViewAgents()).
+        // No performance hit.
         actionCreatorCheck: enableDefaultMiddleware,
       }).prepend(eventsMiddleware()),
     ...(maybePersistedState ? { preloadedState: maybePersistedState } : {}),
