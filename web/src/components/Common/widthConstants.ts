@@ -8,13 +8,16 @@ import {
 } from './dataGridLayout'
 import { CARD_GAP } from '../styling/spacing'
 
-const CAPACITIES_READ_ONLY_COLUMN_KEYS = ['capacities.name', 'capacities.value'] satisfies readonly ColumnWidthKey[]
+const OPERATIONS_CAPACITIES_READ_ONLY_COLUMN_KEYS = [
+  'operations_capacities.name',
+  'operations_capacities.value',
+] satisfies readonly ColumnWidthKey[]
 
-const CAPACITIES_SHOP_COLUMN_KEYS = [
-  'capacities.name',
-  'capacities.value',
-  'capacities.upgrade',
-  'capacities.price',
+const OPERATIONS_CAPACITIES_SHOP_COLUMN_KEYS = [
+  'operations_capacities.name',
+  'operations_capacities.value',
+  'operations_capacities.upgrade',
+  'operations_capacities.price',
 ] satisfies readonly ColumnWidthKey[]
 
 const SITUATION_REPORT_NEXT_OPERATIONS_COLUMN_KEYS = [
@@ -51,7 +54,9 @@ const OPERATIONS_MISSIONS_SUMMARY_GRID_WIDTH = getDataGridWidthForColumnKeys([
   'operations_missions_summary.count',
 ] satisfies readonly ColumnWidthKey[])
 
-const OPERATIONS_CAPACITIES_MINI_GRID_WIDTH = getDataGridWidthForColumnKeys(CAPACITIES_READ_ONLY_COLUMN_KEYS)
+const OPERATIONS_CAPACITIES_MINI_GRID_WIDTH = getDataGridWidthForColumnKeys(
+  OPERATIONS_CAPACITIES_READ_ONLY_COLUMN_KEYS,
+)
 
 const SITUATION_REPORT_NEXT_OPERATIONS_GRID_WIDTH = getDataGridWidthForColumnKeys(
   SITUATION_REPORT_NEXT_OPERATIONS_COLUMN_KEYS,
@@ -91,9 +96,11 @@ export const ASSETS_CARD_WIDTH =
     OPERATIONS_INNER_COLUMNS_GAP_PX,
   )
 
-export const CAPACITIES_CARD_WIDTH = getDataGridCardWidthForColumnKeys(CAPACITIES_READ_ONLY_COLUMN_KEYS)
+export const OPERATIONS_CAPACITIES_CARD_WIDTH = getDataGridCardWidthForColumnKeys(
+  OPERATIONS_CAPACITIES_READ_ONLY_COLUMN_KEYS,
+)
 
-export const UPGRADES_CARD_WIDTH = getDataGridCardWidthForColumnKeys(CAPACITIES_SHOP_COLUMN_KEYS, {
+export const UPGRADES_CARD_WIDTH = getDataGridCardWidthForColumnKeys(OPERATIONS_CAPACITIES_SHOP_COLUMN_KEYS, {
   checkboxSelection: true,
 })
 
@@ -108,7 +115,7 @@ export const TURN_REPORT_CARD_WIDTH = 600
 export const RIGHT_COLUMN_CARD_WIDTH = Math.max(
   OPERATIONS_CARD_WIDTH,
   ASSETS_CARD_WIDTH,
-  CAPACITIES_CARD_WIDTH,
+  OPERATIONS_CAPACITIES_CARD_WIDTH,
   UPGRADES_CARD_WIDTH,
   SITUATION_REPORT_CARD_WIDTH,
   TURN_REPORT_CARD_WIDTH,

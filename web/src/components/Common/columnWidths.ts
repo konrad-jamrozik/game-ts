@@ -8,7 +8,7 @@ export const columnWidths = {
   'situation_report.metrics.value': 150,
 
   // Event log
-  'event_log.event': 440,
+  'event_log.event': 410,
   'event_log.turn': 45,
   'event_log.actions_count': 45,
   'event_log.undo': 65,
@@ -24,23 +24,23 @@ export const columnWidths = {
   'operations_agents.name': 150,
   'operations_agents.value': 80,
 
+  // Capacities DataGrid (Operations Card, Upgrades screen)
+  'operations_capacities.name': 130,
+  'operations_capacities.value': 100,
+  'operations_capacities.upgrade': 100,
+  'operations_capacities.price': 100,
+
   // Finances mini grid (Operations card)
-  'operations_finances.name': 150,
-  'operations_finances.value': 70,
-
-  // Capacities DataGrid (read-only + shop)
-  'capacities.name': 130,
-  'capacities.value': 100,
-  'capacities.upgrade': 100,
-  'capacities.price': 100,
-
-  // Leads summary mini grid (Operations card)
-  'operations_leads_summary.metric': 150,
-  'operations_leads_summary.count': 70,
+  'operations_finances.name': 140,
+  'operations_finances.value': 80,
 
   // Missions summary mini grid (Operations card)
-  'operations_missions_summary.metric': 150,
-  'operations_missions_summary.count': 70,
+  'operations_missions_summary.metric': 140,
+  'operations_missions_summary.count': 80,
+
+  // Leads summary mini grid (Operations card)
+  'operations_leads_summary.metric': 140,
+  'operations_leads_summary.count': 80,
 
   // Mission sites DataGrid (Missions screen)
   'missions.combat_rating': 80,
