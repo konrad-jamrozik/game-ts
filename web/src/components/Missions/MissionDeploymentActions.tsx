@@ -51,10 +51,7 @@ export function MissionDeploymentActions(): React.JSX.Element {
   })
 
   const deployDisabled =
-    selectedMissionId === undefined ||
-    selectedAgentIds.length === 0 ||
-    selectedMission === undefined ||
-    selectedMission.state !== 'Active'
+    selectedMissionId === undefined || selectedAgentIds.length === 0 || selectedMission?.state !== 'Active'
 
   return (
     <Stack spacing={SECTION_GAP} sx={{ alignItems: 'center' }}>

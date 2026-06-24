@@ -40,6 +40,10 @@ It has project-specific documentation for setup, linting, formatting, testing, M
   that doesn't violate the code dependencies rules as expressed in `docs/design/about_code_dependencies.md` and `web/.dependency-cruiser.js`.
   If existing code needs to be moved to enable reuse, ensure the new location respects the dependency hierarchy
   (e.g., move shared logic to a lower-level directory that both consumers can depend on).
+- **Verify, don't assume, type-checking behavior**: Never claim that TypeScript will or won't type-check a construct
+  based on assumption or memory. Apply the change and verify with `qcheck` (or the IDE compiler/linter) before drawing
+  conclusions. When a linter suggests an autofix (e.g. `prefer-optional-chain`), apply the suggested fix first and confirm
+  it compiles, rather than working around it based on an unverified assumption. Prefer the most concise fix that passes.
 
 ## Key aspects and conventions of the project
 

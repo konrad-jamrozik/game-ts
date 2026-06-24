@@ -130,8 +130,7 @@ describe(EventLog, () => {
 })
 
 function getEventLogRowByText(text: string): HTMLElement {
-  const eventTextCell = screen.getByText(text)
-  const row = eventTextCell.closest<HTMLElement>('[role="row"]')
+  const row = screen.getAllByRole('row').find((candidate) => within(candidate).queryByText(text) !== null)
   assertDefined(row)
   return row
 }

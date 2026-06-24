@@ -34,8 +34,7 @@ function getExpiringMissionEvents(previousGameState: GameState, gameState: GameS
   return gameState.missions.flatMap((mission) => {
     const previousMission = previousGameState.missions.find((candidate) => candidate.id === mission.id)
     if (
-      previousMission === undefined ||
-      previousMission.state !== 'Active' ||
+      previousMission?.state !== 'Active' ||
       mission.state !== 'Active' ||
       typeof previousMission.expiresIn !== 'number' ||
       typeof mission.expiresIn !== 'number' ||
