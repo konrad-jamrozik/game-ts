@@ -4,6 +4,7 @@ KJA backlog:
 
 # Next
 
+- Implement step by step .cursor/plans/fix_failing_tests_2f3a71c2.plan.md
 - When I delegate enough turn to AI I get a red error toast
   - "Error: Visible lead difficulty must be above zero"
   - This happened at least twice
