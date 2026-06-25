@@ -42,14 +42,18 @@ describe(App, () => {
     expect(screen.getByLabelText('Turn:')).toHaveTextContent('1')
 
     // The debug fixture renders on the Leads and Agents screens, reached via the
-    // Game Controls navigation buttons.
+    // Game Controls navigation buttons. Each detail screen replaces the nav
+    // buttons with a "Back to command center" button, so we return home between
+    // screens.
     await userEvent.click(screen.getByRole('button', { name: 'Leads' }))
     expect(screen.getAllByText(/Criminal organizations/iu).length).toBeGreaterThan(0)
 
+    await userEvent.click(screen.getByRole('button', { name: 'Back to command center' }))
     await userEvent.click(screen.getByRole('button', { name: 'Agents' }))
     expect(screen.getByText(/agent-000/iu)).toBeInTheDocument()
 
     // Advancing a turn flows through the real store and middleware.
+    await userEvent.click(screen.getByRole('button', { name: 'Back to command center' }))
     await userEvent.click(getGameControlsNextTurnButton())
 
     expect(screen.getByLabelText('Turn:')).toHaveTextContent('2')
