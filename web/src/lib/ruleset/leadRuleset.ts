@@ -10,6 +10,13 @@ export type LeadTurnSuccessChanceRange = {
   upper: number
 }
 
+/**
+ * Implements the lead investigation spec for generating hidden actual difficulty:
+ * `actualDifficulty = floor(visibleDifficulty * random(1.0, 1.5))`.
+ *
+ * See `docs/design/about_lead_investigations.md`, "Lead Investigation Stored Properties",
+ * "Completing a Lead Investigation", and formula reference row `D_a`.
+ */
 export function getActualLeadDifficulty(visibleDifficulty: number, randomFactor: number): number {
   assertAboveZero(visibleDifficulty, 'Visible lead difficulty must be above zero')
   assertInteger(visibleDifficulty, 'Visible lead difficulty must be an integer')

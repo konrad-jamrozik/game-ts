@@ -12,9 +12,12 @@ import { agFix } from '../fixtures/agentFixture'
 describe('leadRuleset', () => {
   describe(getActualLeadDifficulty, () => {
     test.each([
-      [10, 0, 10],
-      [10, 0.5, 12],
-      [10, 1, 15],
+      [10, 0 / 6, 10],
+      [10, 1 / 6, 11],
+      [10, 2 / 6, 12],
+      [10, 3 / 6, 13],
+      [10, 4 / 6, 14],
+      [10, 5 / 6, 15],
       [5, 1, 7],
     ])(
       'maps visible difficulty %d and random factor %d to actual difficulty %d',
