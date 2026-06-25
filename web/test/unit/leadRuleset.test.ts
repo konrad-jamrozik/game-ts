@@ -19,6 +19,7 @@ describe('leadRuleset', () => {
       [10, 3 / 6, 13],
       [10, 4 / 6, 14],
       [10, 5 / 6, 15],
+      [10, 6 / 6, 15],
       [5, 1, 7],
     ])(
       'maps visible difficulty %d and labeled random roll %d to actual difficulty %d',
