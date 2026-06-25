@@ -142,7 +142,7 @@ export function roll0IncTo1Exc(label?: string): RangeRoll {
 }
 
 /**
- * Performs a range roll, uniformly selecting a random integer value from the given [min, max] range (both inclusive).
+ * Performs a range roll, uniformly selecting a random integer value from the given [min, max] range, both inclusive.
  *
  * @param min - Minimum value (inclusive)
  * @param max - Maximum value (inclusive)

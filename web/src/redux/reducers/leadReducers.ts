@@ -6,7 +6,6 @@ import { getLeadById } from '../../lib/model_utils/leadUtils'
 import { bldLeadInvestigation } from '../../lib/factories/leadInvestigationFactory'
 import { log } from '../../lib/primitives/logger'
 import { asPlayerAction } from '../reducer_utils/asPlayerAction'
-import { rand } from '../../lib/primitives/rand'
 import { getActualLeadDifficulty } from '../../lib/ruleset/leadRuleset'
 
 export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds: AgentId[] }>(
@@ -31,7 +30,7 @@ export const startLeadInvestigation = asPlayerAction<{ leadId: LeadId; agentIds:
       investigationCount,
       startTurn: state.turn,
       leadId,
-      actualDifficulty: getActualLeadDifficulty(lead.difficulty, rand.get('lead-actual-difficulty')),
+      actualDifficulty: getActualLeadDifficulty(lead.difficulty),
       agentIds,
     })
     const investigationId = newInvestigation.id

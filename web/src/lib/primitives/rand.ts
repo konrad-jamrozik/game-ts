@@ -1,5 +1,6 @@
 /**
- * A random number generator that can return fixed values for labeled random calls.
+ * A wrapper around a random number generator (Math.random())
+ * that can return fixed values for labeled random calls.
  */
 
 import { assertDefined, assertGreaterThanOrEqual, assertInRange, assertLessThan } from './assertPrimitives'

@@ -7,6 +7,7 @@ import {
   getLeadTurnSuccessChance,
   getLeadTurnSuccessChanceRange,
 } from '../../src/lib/ruleset/leadRuleset'
+import { rand } from '../../src/lib/primitives/rand'
 import { agFix } from '../fixtures/agentFixture'
 
 describe('leadRuleset', () => {
@@ -20,9 +21,11 @@ describe('leadRuleset', () => {
       [10, 5 / 6, 15],
       [5, 1, 7],
     ])(
-      'maps visible difficulty %d and random factor %d to actual difficulty %d',
-      (difficulty, randomFactor, expected) => {
-        expect(getActualLeadDifficulty(difficulty, randomFactor)).toBe(expected)
+      'maps visible difficulty %d and labeled random roll %d to actual difficulty %d',
+      (difficulty, randomRoll, expected) => {
+        rand.set('lead-actual-difficulty', randomRoll)
+
+        expect(getActualLeadDifficulty(difficulty)).toBe(expected)
       },
     )
   })

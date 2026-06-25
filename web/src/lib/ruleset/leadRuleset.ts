@@ -2,7 +2,8 @@ import { div, nonNeg } from '../primitives/mathPrimitives'
 import { toF } from '../primitives/fixed6'
 import type { Agent } from '../model/agentModel'
 import { LEAD_SCALING_EXPONENT } from '../data_tables/constants'
-import { assertAboveZero, assertInRange, assertInteger } from '../primitives/assertPrimitives'
+import { assertAboveZero, assertInteger } from '../primitives/assertPrimitives'
+import { rollIntIncToInc } from '../primitives/rolls'
 import { effectiveSkill } from './skillRuleset'
 
 export type LeadTurnSuccessChanceRange = {
@@ -17,16 +18,14 @@ export type LeadTurnSuccessChanceRange = {
  * See `docs/design/about_lead_investigations.md`, "Lead Investigation Stored Properties",
  * "Completing a Lead Investigation", and formula reference row `D_a`.
  */
-export function getActualLeadDifficulty(visibleDifficulty: number, randomFactor: number): number {
+export function getActualLeadDifficulty(visibleDifficulty: number): number {
   assertAboveZero(visibleDifficulty, 'Visible lead difficulty must be above zero')
   assertInteger(visibleDifficulty, 'Visible lead difficulty must be an integer')
-  assertInRange(randomFactor, 0, 1, 'Lead actual difficulty random factor must be between 0 and 1')
 
   const minimumActualDifficulty = visibleDifficulty
   const maximumActualDifficulty = Math.floor(visibleDifficulty * 1.5)
-  const difficultyCount = maximumActualDifficulty - minimumActualDifficulty + 1
 
-  return Math.min(maximumActualDifficulty, minimumActualDifficulty + Math.floor(randomFactor * difficultyCount))
+  return rollIntIncToInc(minimumActualDifficulty, maximumActualDifficulty, 'lead-actual-difficulty').roll
 }
 
 /**
