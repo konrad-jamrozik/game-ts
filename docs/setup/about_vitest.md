@@ -104,7 +104,14 @@ or `aria-labelledby` attribute of the element:
 
 or `aria-label` attribute of the element:
   https://developer.mozilla.org/en-US/docs/Web/Accessibility/ARIA/Reference/Attributes/aria-label
-  
+
+### Avoid overly-broad label matchers
+
+`getByLabelText` (and `getByRole` with `{ name }`) require a *single* match and search across all
+accessible-name sources (`<label for>`, `aria-labelledby`, `aria-label`). A loose regex like `/turn/iu`
+can unintentionally match several elements (e.g. `Turn:`, `Auto-advance turn`, `Turns to delegate`) and
+throw `getMultipleElementsFoundError`. Prefer specific matchers such as `/Turn:/iu`, or use exact strings.
+
 ## Vitest builtin/native UI selectors (locators)
 
 E.g. `getByRole`: https://vitest.dev/guide/browser/locators.html#getbyrole

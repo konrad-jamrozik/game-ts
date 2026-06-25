@@ -64,7 +64,7 @@ describe(GameControls, () => {
     await userEvent.click(resetButton)
 
     // Verify the game state was reset by checking the turn is back to 1
-    const turnValue = screen.getByLabelText(/turn/iu)
+    const turnValue = screen.getByLabelText(/Turn:/iu)
 
     expect(turnValue).toHaveTextContent('1')
   })
