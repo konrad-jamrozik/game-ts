@@ -19,7 +19,7 @@ todos:
     status: completed
   - id: cheating-speedrunner-src
     content: "cheatingSpeedrunner/agentAllocation.ts: selectReadyAgents exhaustion filter < 100 -> < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT"
-    status: pending
+    status: completed
   - id: verify-basic-intellect
     content: Verify basicIntellect passes with the difficulty-8 data fix
     status: pending
@@ -62,9 +62,9 @@ await userEvent.click(nextTurnButton)
  'New one-time lead available: Criminal organizations']
 ```
 
-### Source fix
+### Source fix (done)
 
-- `[web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts](web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts)` (#8): `selectReadyAgents` filters exhaustion `< 100`, but `validateDeployAgents` requires `< 30` (`LEADS_PANEL_READY_MAX_EXHAUSTION_PCT`), so the AI deploys agents the validator rejects. Change line 29 filter to `toF(agent.exhaustionPct) < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT` (already imported). This also fixes `countReadyAgents`/mission selection consistency.
+- `[web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts](web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts)` (#8): `selectReadyAgents` filtered exhaustion `< 100`, but `validateDeployAgents` requires `< 30` (`LEADS_PANEL_READY_MAX_EXHAUSTION_PCT`), so the AI deployed agents the validator rejected. The line 29 filter now uses `toF(agent.exhaustionPct) < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT` (already imported). This also fixes `countReadyAgents`/mission selection consistency.
 
 ### Larger rework: App e2e test (#6)
 

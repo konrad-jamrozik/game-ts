@@ -26,7 +26,7 @@ export function countReadyAgents(gameState: GameState): number {
 
 export function selectReadyAgents(gameState: GameState, agentCount: number): Agent[] {
   return available(gameState.agents)
-    .filter((agent) => toF(agent.exhaustionPct) < 100)
+    .filter((agent) => toF(agent.exhaustionPct) < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT)
     .toSorted(compareAgentsByReadiness)
     .slice(0, agentCount)
 }
