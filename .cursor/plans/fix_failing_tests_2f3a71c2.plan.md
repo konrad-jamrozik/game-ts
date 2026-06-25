@@ -1,13 +1,13 @@
 ---
 name: Fix failing tests
-overview: "Fix all 8 failing tests from the test:all run: mostly stale test expectations after recent UI/ruleset refactors, plus one AI source bug and the difficulty-0 data fix you already applied."
+overview: "Fix all 8 failing tests from the test:all run: mostly stale test expectations after recent UI/ruleset refactors, plus one AI source bug. The difficulty-0 data fix and actual-difficulty uniform-roll fix are already done."
 todos:
   - id: actual-difficulty-formula
     content: "leadRuleset.ts: make getActualLeadDifficulty a uniform integer roll over [D_v, floor(D_v*1.5)] so 150% is reachable"
-    status: pending
+    status: completed
   - id: lead-ruleset-test
-    content: "leadRuleset.test.ts: update [10,0.5] case from 12 -> 13 for the new uniform formula"
-    status: pending
+    content: "leadRuleset.test.ts: update getActualLeadDifficulty parametrized cases for the uniform rollIntIncToInc formula"
+    status: completed
   - id: eventlog-header-test
     content: "EventLog.test.tsx: drop the columnheader 'Undo' assertion (header is now empty)"
     status: pending
@@ -34,23 +34,15 @@ isProject: false
 
 ## Fix failing tests
 
-8 tests fail. Most are stale test expectations after recent refactors (world events, drilldown navigation, AI-player card moved into Game Controls). Two are real source bugs (AI deploy readiness, and the actual-difficulty roll never reaching 150%); one (difficulty-0) you already fixed in data.
+8 tests fail. Most are stale test expectations after recent refactors (world events, drilldown navigation, AI-player card moved into Game Controls). One remaining source bug is AI deploy readiness; difficulty-0 and actual-difficulty uniform roll are already fixed.
 
-### Source fix: actual lead difficulty can't reach 150% (#2)
+### Already fixed
 
-`[web/src/lib/ruleset/leadRuleset.ts](web/src/lib/ruleset/leadRuleset.ts)` `getActualLeadDifficulty` uses `floor(D_v * (1 + randomFactor * 0.5))`. Because `rand` returns `[0, 1)` (and `rand.set(...,1)` clamps to `0.999…`), the multiplier is strictly `< 1.5`, so for even difficulties the top value (exactly 150%) is unreachable: `D=10` caps at `14` instead of `15`. This contradicts the spec's stated max and `getLeadTurnSuccessChanceRange`, which already uses `floor(D_v*1.5)` as its worst case. Per your decision, make it a uniform integer roll over the inclusive range `[D_v, floor(D_v*1.5)]`:
+- `[web/src/lib/data_tables/leadsDataTable.ts](web/src/lib/data_tables/leadsDataTable.ts)` (#7): `lead-{facId}-interrogate-leader` difficulty is now `8` (was `0`), so it no longer trips `assertAboveZero` in `getActualLeadDifficulty`. Just verify basicIntellect passes on re-run.
 
-```ts
-const maxDifficulty = Math.floor(visibleDifficulty * 1.5)
-const span = maxDifficulty - visibleDifficulty + 1
-return Math.min(maxDifficulty, visibleDifficulty + Math.floor(randomFactor * span))
-```
-
-The `Math.min` guards the literal `randomFactor === 1` input still permitted by `assertInRange`. Effects: `leadInvestigationReducer.test.ts` already expects `15` and now passes unchanged (`D=10` via `rand.set(...,1)→0.999` gives `15`). Also update the spec formula in `[docs/design/about_lead_investigations.md](docs/design/about_lead_investigations.md)` (row 248) to describe the uniform inclusive-integer distribution.
+- **Actual lead difficulty can't reach 150% (#2):** `[web/src/lib/ruleset/leadRuleset.ts](web/src/lib/ruleset/leadRuleset.ts)` `getActualLeadDifficulty` now uses `rollIntIncToInc(visibleDifficulty, Math.floor(visibleDifficulty * 1.5), 'lead-actual-difficulty')` for a uniform integer roll over the inclusive range `[D_v, floor(D_v*1.5)]`, so 150% is reachable. `[web/test/unit/leadRuleset.test.ts](web/test/unit/leadRuleset.test.ts)` parametrized cases updated accordingly (six-bucket coverage for `D=10`). `leadInvestigationReducer.test.ts` already expected `15` and passes unchanged. Optional follow-up: update the spec formula in `[docs/design/about_lead_investigations.md](docs/design/about_lead_investigations.md)` (row 248) to describe the uniform inclusive-integer distribution.
 
 ### Test-only fixes
-
-- `[web/test/unit/leadRuleset.test.ts](web/test/unit/leadRuleset.test.ts)`: the new uniform roll changes one parametrized case — `[10, 0.5, 12]` becomes `[10, 0.5, 13]` (line 16). The `[10,0,10]`, `[10,1,15]`, and `[5,1,7]` cases still pass.
 
 - `[web/test/component/EventLog.test.tsx](web/test/component/EventLog.test.tsx)` (#3): the time-travel column now uses `headerName: ''` (see `[web/src/components/EventLog.tsx](web/src/components/EventLog.tsx)` line 113), so there is no `columnheader` named "Undo". Remove the `getByRole('columnheader', { name: 'Undo' })` assertion (line 37); keep the Event/T#/A# header assertions.
 
@@ -73,10 +65,6 @@ await userEvent.click(nextTurnButton)
 ### Source fix
 
 - `[web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts](web/src/ai/intellects/cheatingSpeedrunner/agentAllocation.ts)` (#8): `selectReadyAgents` filters exhaustion `< 100`, but `validateDeployAgents` requires `< 30` (`LEADS_PANEL_READY_MAX_EXHAUSTION_PCT`), so the AI deploys agents the validator rejects. Change line 29 filter to `toF(agent.exhaustionPct) < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT` (already imported). This also fixes `countReadyAgents`/mission selection consistency.
-
-### Already fixed by you
-
-- `[web/src/lib/data_tables/leadsDataTable.ts](web/src/lib/data_tables/leadsDataTable.ts)` (#7): `lead-{facId}-interrogate-leader` difficulty is now `8` (was `0`), so it no longer trips `assertAboveZero` in `getActualLeadDifficulty`. Just verify basicIntellect passes on re-run.
 
 ### Larger rework: App e2e test (#6)
 
