@@ -3,6 +3,19 @@ import userEvent from '@testing-library/user-event'
 import { expect } from 'vitest'
 import { assertDefined } from '../../src/lib/primitives/assertPrimitives'
 
+/**
+ * Get the "Next turn" button from the Game Controls card.
+ * This helper is needed because there are multiple "Next turn" buttons in the UI
+ * (one in Game Controls and one in AI Player card).
+ */
+export function getGameControlsNextTurnButton(): HTMLElement {
+  const buttons = screen.getAllByRole('button', { name: /next turn/iu })
+  // Game Controls card renders before AI Player card, so its button is first
+  const [button] = buttons
+  assertDefined(button, 'Next turn button not found')
+  return button
+}
+
 export function verifyMissionState(missionId: string, expectedState: string): void {
   // Verify mission is in the expected state
   // Find the row containing the mission ID

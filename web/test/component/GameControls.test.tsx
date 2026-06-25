@@ -5,6 +5,7 @@ import { describe, expect, test } from 'vitest'
 import { getStore } from '../../src/redux/store'
 import { GameControls } from '../../src/components/GameControls/GameControls'
 import { setCardExpanded } from '../../src/redux/slices/expansionSlice'
+import { getGameControlsNextTurnButton } from '../utils/testComponentUtils'
 
 describe(GameControls, () => {
   // This is commented out because I want to for the tests to reuse state.
@@ -32,7 +33,7 @@ describe(GameControls, () => {
     expect(turnValue).toHaveTextContent('1')
 
     // Click the next turn button
-    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
+    await userEvent.click(getGameControlsNextTurnButton())
 
     // Check updated turn value
     expect(turnValue).toHaveTextContent('2')
@@ -52,7 +53,7 @@ describe(GameControls, () => {
     )
 
     // First, click "next turn" to ensure the game state is "in progress"
-    await userEvent.click(screen.getByRole('button', { name: /next turn/iu }))
+    await userEvent.click(getGameControlsNextTurnButton())
 
     // Verify the button is accessible when expanded=true
     const resetButton = screen.getByRole('button', { name: /reset game/iu })

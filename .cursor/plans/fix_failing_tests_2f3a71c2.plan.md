@@ -10,13 +10,13 @@ todos:
     status: completed
   - id: eventlog-header-test
     content: "EventLog.test.tsx: drop the columnheader 'Undo' assertion (header is now empty)"
-    status: pending
+    status: completed
   - id: gamecontrols-test
     content: "GameControls.test.tsx: disambiguate duplicate 'Next turn' buttons via getAllByRole + first match"
-    status: pending
+    status: completed
   - id: worldevents-test
     content: "eventLogWorldEvents.test.ts: add 'New one-time lead available: Criminal organizations' to expected array"
-    status: pending
+    status: completed
   - id: cheating-speedrunner-src
     content: "cheatingSpeedrunner/agentAllocation.ts: selectReadyAgents exhaustion filter < 100 -> < MAX_EXHAUSTION_ALLOWED_ON_ASSIGNMENT"
     status: pending

@@ -34,7 +34,6 @@ describe(EventLog, () => {
     expect(screen.getByRole('columnheader', { name: 'Event' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'T#' })).toBeInTheDocument()
     expect(screen.getByRole('columnheader', { name: 'A#' })).toBeInTheDocument()
-    expect(screen.getByRole('columnheader', { name: 'Undo' })).toBeInTheDocument()
   })
 
   test('happy path: events', () => {

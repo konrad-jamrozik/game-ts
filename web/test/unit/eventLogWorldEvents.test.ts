@@ -65,6 +65,7 @@ describe(getWorldEventLogMessages, () => {
     expect(getMessages(previousGameState, gameState)).toStrictEqual([
       'Investigation completed: Deep state',
       'Investigation abandoned: Criminal organizations',
+      'New one-time lead available: Criminal organizations',
     ])
   })
 
