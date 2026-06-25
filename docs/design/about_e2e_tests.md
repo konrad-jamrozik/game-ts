@@ -8,67 +8,33 @@ For the full test suite design, see [About test suite](./about_test_suite.md).
 
 ## E2E Tests
 
+E2E tests render the entire `App` component (with the real Redux store and the
+events/persistence middleware) to guard the overall application wiring.
+
+Per-action behavior (advance turn, hire/sack agents, investigate leads, deploy
+missions, reset game) is covered more thoroughly by the component tests, and the
+turn-evaluation and game-over rules are covered by the unit tests. The e2e suite
+therefore intentionally stays minimal and only verifies that the whole app boots
+and that a turn can be advanced end to end.
+
 ## App.test.tsx
 
-### Test: Execute subset of core logic and verify the game does not crash
+### Test: App boots with debug state and advances a turn
 
-This test makes the player play the game starting in debug state, exercising following core logic:
-
-- Turn advancement
-- Mission evaluation
-- Lead investigation
-- Mission deployment
-- Agent hiring
-- Game termination as lost due to lack of money
-- Game reset
-
-Specifically:
+A full-App boot/smoke test.
 
 Given:
-- Game launched with a debug state in turn 1, that includes:
-  - A lead "Criminal organizations".
-  - A mission with ID "000".
-  - A deployed mission.
-  - Agents with ID "000", "001" and "002", all in "Available" state.
-When: user clicks "Advance turn" button.
-Then:
-- Mission evaluates
-- Turn advances
-- Mission with ID "000" now appears in "Archived missions".
-
-Next, in turn 2:
-
-When: user selects "Criminal organizations" lead and clicks "Investigate lead" button.
-Then:
-- The lead now appears in "Archived leads".
-
-Next, in turn 2:
-
-When:
-- Player selects mission with ID "001"
-- Player selects agents with ID "000", "001" and "002"
-- Player clicks "Deploy agents" button
+- The app is rendered with the debug initial state (see
+  `bldInitialState({ debug: true })` in
+  [gameStateFactory.ts](../../web/src/lib/factories/gameStateFactory.ts), which
+  builds the rich debug fixture defined in
+  [debugGameStateFactory.ts](../../web/src/lib/factories/debugGameStateFactory.ts)).
 
 Then:
-- Mission with ID "001" still appears in "Missions" but with "Status: Deployed".
+- The app renders without crashing in turn 1.
+- The debug fixture is visible (e.g. the "Criminal organizations" lead and the
+  "agent-000" row).
 
-Next, still in turn 2:
+When: the user clicks the Game Controls "Next turn" button.
 
-When:
-- Player repeats clicking "Hire agent" button until "New $ balance" in "Balance sheet" shows negative value.
-- Player clicks "Advance turn" button.
-Then:
-- Turn advances.
-- In place of "Advance turn" button, a disabled "Game over" button appears.
-
-Next, in turn 3:
-
-When:
-- Player unfolds "Reset controls" section.
-- Player clicks "Restart game" button.
-Then:
-- Game resets to turn 1.
-- There are no missions, normal nor archived.
-- There is only one lead: "Criminal organizations".
-- There are no archived leads.
-- There are no agents.
+Then: the turn advances to 2.

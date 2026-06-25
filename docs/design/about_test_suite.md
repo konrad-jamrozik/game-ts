@@ -22,6 +22,7 @@ This file specifies the unit and component test suite for the project.
     - [`unit/evaluateBattle.test.ts`](#unitevaluatebattletestts)
     - [`unit/evaluateDeployedMission.test.ts`](#unitevaluatedeployedmissiontestts)
     - [`unit/evaluateTurn.test.ts`](#unitevaluateturntestts)
+    - [`unit/gameStateChecks.test.ts`](#unitgamestatecheckstestts)
 
 For how to run tests and more on vitest setup, see [About vitest](../setup/about_vitest.md).
 
@@ -36,8 +37,9 @@ e.g. by ensuring appropriate items are selected.
 
 E2E tests are tests that test the entire application, meaning they render the entire `App.tsx` component.
 
-(🚧 needs review) There is one E2E test covering some core logic like "advance turn".
-For details, refer to [About E2E test suite](./about_e2e_tests.md).
+There is one E2E test: a full-App boot/smoke test that renders the app with the debug state and advances
+a turn, guarding the overall wiring. Per-action behavior and game-over rules are covered by the component
+and unit tests. For details, refer to [About E2E test suite](./about_e2e_tests.md).
 
 There are no other E2E tests.
 
@@ -48,8 +50,8 @@ Tests that render the component and test it by interacting with it.
 One happy path test per component, rendering the component:
 
 - Tests for `GameControls.tsx`:
-  - Tests for `Advance turn` button.
-  - Tests for `Restart game` button.
+  - Tests for `Next turn` button.
+  - Tests for `Reset game` button.
 
 - Tests for split player action components:
   - Agent management actions.
@@ -68,7 +70,8 @@ There are no other component tests.
 Tests that directly test the logic, without depending on react or simulating it.
 
 Tests that test directly the function powering the `GameControls.tsx` component:
-- (🚧 stub) Tests for `evaluateTurn.ts`
+- Tests for `evaluateTurn.ts` (happy path and player-lost-by-upkeep path)
+- Tests for `gameStateChecks.ts` (`isGameLost`, `isGameWon`, `isGameEnded`)
 - (🚧 needs review) Tests for `evaluateDeployedMission.ts`, which is invoked from `evaluateTurn.ts`
 - Tests for `evaluateBattle.ts`, which is invoked from `evaluateDeployedMission.ts`
 
@@ -98,7 +101,7 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ### `e2e/App.test.tsx`
 
-- Execute subset of core logic and verify the game does not crash
+- App boots with debug state and advances a turn
 
 ## Component tests
 
@@ -115,8 +118,8 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ### `component/GameControls.test.tsx`
 
-- click 'advance turn' button -> happy path
-- click 'restart game' button -> happy path
+- click 'next turn' button -> happy path
+- click 'reset game' button -> happy path
 
 ### `component/AgentManagementActions.test.tsx`
 
@@ -148,8 +151,19 @@ All tests are in `web/test/`. Below are all test names grouped by type (e2e, com
 
 ### `unit/evaluateTurn.test.ts`
 
-- _(TODO - write)_ happy path
-- _(TODO - write)_ happy path: player lost
+- happy path
+- player lost
+
+### `unit/gameStateChecks.test.ts`
+
+- isGameLost -> lost when money is negative
+- isGameLost -> lost when panic reaches 100%
+- isGameLost -> not lost in a healthy state
+- isGameWon -> won when "Peace on Earth" lead has been investigated
+- isGameWon -> not won when "Peace on Earth" lead has not been investigated
+- isGameEnded -> ended when the game is lost
+- isGameEnded -> ended when the game is won
+- isGameEnded -> not ended in a healthy in-progress state
 
 ### `unit/evaluateDeployedMission.test.ts`
 

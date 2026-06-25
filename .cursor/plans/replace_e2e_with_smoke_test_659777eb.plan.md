@@ -4,19 +4,19 @@ overview: Replace the oversized, drifted 12-step e2e in App.test.tsx with a slim
 todos:
   - id: smoke
     content: Replace App.test.tsx body with a slim full-App boot smoke test (render debug state, assert boot, advance one turn)
-    status: pending
+    status: completed
   - id: unit-evaluateturn
     content: Fill evaluateTurn.test.ts 'player lost' and 'happy path' todos using a low-money/upkeep state and isGameLost assertion
-    status: pending
+    status: completed
   - id: unit-checks
     content: Add gameStateChecks.test.ts covering isGameLost/isGameWon/isGameEnded
-    status: pending
+    status: completed
   - id: docs
     content: Rewrite about_e2e_tests.md and update about_test_suite.md to match the new tests and real debug fixture
-    status: pending
+    status: completed
   - id: verify
     content: Run qcheck and fix any errors
-    status: pending
+    status: completed
 isProject: false
 ---
 
