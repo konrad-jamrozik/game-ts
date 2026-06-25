@@ -4,10 +4,7 @@ KJA backlog:
 
 # Next
 
-- Implement step by step .cursor/plans/fix_failing_tests_2f3a71c2.plan.md
-- When I delegate enough turn to AI I get a red error toast
-  - "Error: Visible lead difficulty must be above zero"
-  - This happened at least twice
+- This happened at least twice
 - This test fails
   - C:\Users\spawa\repos\game-ts\web [main ≡]> npm run test:ai -- cheatingSpeedrunner.test.ts
   - Also not well documented how to run it (in about_vitest.md). Need command in game-ts.psm1.
