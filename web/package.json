@@ -72,6 +72,7 @@
     "@vitest/eslint-plugin": "^1.4.3",
     "@vitest/ui": "^4.0.10",
     "babel-plugin-react-compiler": "^19.1.0-rc.2",
+    "baseline-browser-mapping": "^2.10.38",
     "dependency-cruiser": "^17.3.5",
     "eslint": "^9.39.1",
     "eslint-import-resolver-typescript": "^4.4.4",
