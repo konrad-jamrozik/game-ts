@@ -12,7 +12,7 @@ export type LeadTurnSuccessChanceRange = {
 
 /**
  * Implements the lead investigation spec for generating hidden actual difficulty:
- * `actualDifficulty = floor(visibleDifficulty * random(1.0, 1.5))`.
+ * uniformly pick an integer between visible difficulty and 150% visible difficulty, rounded down.
  *
  * See `docs/design/about_lead_investigations.md`, "Lead Investigation Stored Properties",
  * "Completing a Lead Investigation", and formula reference row `D_a`.
@@ -22,7 +22,11 @@ export function getActualLeadDifficulty(visibleDifficulty: number, randomFactor:
   assertInteger(visibleDifficulty, 'Visible lead difficulty must be an integer')
   assertInRange(randomFactor, 0, 1, 'Lead actual difficulty random factor must be between 0 and 1')
 
-  return Math.floor(visibleDifficulty * (1 + randomFactor * 0.5))
+  const minimumActualDifficulty = visibleDifficulty
+  const maximumActualDifficulty = Math.floor(visibleDifficulty * 1.5)
+  const difficultyCount = maximumActualDifficulty - minimumActualDifficulty + 1
+
+  return Math.min(maximumActualDifficulty, minimumActualDifficulty + Math.floor(randomFactor * difficultyCount))
 }
 
 /**
